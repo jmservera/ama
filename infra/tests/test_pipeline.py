@@ -437,6 +437,8 @@ class PipelineTests(unittest.TestCase):
             calls = []
 
             def fake_az(*args):
+                if args[:2] == ("containerapp", "list"):
+                    return []
                 calls.append(args)
                 if args[:3] == ("deployment", "group", "what-if"):
                     parameter_path = Path(args[args.index("--parameters") + 1][1:])
@@ -534,17 +536,36 @@ class PipelineTests(unittest.TestCase):
                 patch.object(pipeline, "registry", return_value="example.azurecr.io"),
                 patch.object(pipeline, "check_sql"),
                 patch.object(
-                    pipeline, "az", return_value={"status": "Failed", "changes": []}
+                    pipeline, "az", side_effect=[[], {"status": "Failed", "changes": []}]
                 ) as az,
             ):
                 with self.assertRaises(pipeline.PipelineError):
                     pipeline.deployment(
                         ROOT / "infra", "dev", directory / "summary.json", directory
                     )
-            self.assertEqual(az.call_count, 1)
+            self.assertEqual(az.call_count, 2)
             self.assertEqual(
                 json.loads((directory / "summary.json").read_text())["status"], "Failed"
             )
+
+    def test_auth_lock_or_app_local_store_blocks_pipeline_before_plan_or_apply(self):
+        for tags in (
+            {"zava-forward-auth-lock": "other-session"},
+            {"zava-forward-credential-store": "app"},
+        ):
+            with (
+                TemporaryDirectory() as temporary,
+                patch.dict(os.environ, ENV),
+                patch.object(pipeline, "parameters", return_value={"parameters": {}}),
+                patch.object(pipeline, "az", return_value=[{"tags": tags}]) as az,
+                patch.object(pipeline, "release_images") as images,
+            ):
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.deployment(
+                        ROOT / "infra", "test", Path(temporary) / "summary.json", Path(temporary)
+                    )
+                images.assert_not_called()
+                self.assertEqual(az.call_count, 1)
 
     def test_real_cli_with_failing_fake_az_never_leaks_output(self):
         with TemporaryDirectory() as temporary:

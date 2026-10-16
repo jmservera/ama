@@ -309,12 +309,24 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
     output.write_text(json.dumps({"source_sha": sha, "status": "Failed"}) + "\n")
     subscription = str(UUID(required("AZURE_SUBSCRIPTION_ID")))
     compiled = parameters(infra, environment)
+    existing = az("containerapp", "list", "--resource-group", "ama")
+    if not isinstance(existing, list) or any(not isinstance(item, dict) for item in existing):
+        raise PipelineError("Cannot read deployed authentication state; deployment stopped")
+    if any((item.get("tags") or {}).get("zava-forward-auth-lock") for item in existing):
+        raise PipelineError("Authentication setup holds an advisory lock; wait before deploying")
+    if any(
+        (item.get("tags") or {}).get("zava-forward-credential-store") == "app" for item in existing
+    ):
+        raise PipelineError(
+            "App-local demo credential detected; this Key Vault pipeline cannot overwrite it. "
+            "Use the guarded dependency-only deployment with entraCredentialStore=app "
+            "and deployApplications=false"
+        )
     if images_directory is not None:
         images = release_images(images_directory, registry())
         compiled["parameters"].update({key: {"value": value} for key, value in images.items()})
     else:
         # Plan the actual deployed images, never replace an existing job by a placeholder.
-        existing = az("containerapp", "list", "--resource-group", "ama")
         jobs = az("containerapp", "job", "list", "--resource-group", "ama")
         targets = {
             "apiImage": f"ca-forward-{environment}-api",

@@ -1,0 +1,61 @@
+{
+  "task_id": "issue-360",
+  "task_slug": "demo-direct-ingress",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/demo-direct-ingress-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/demo-direct-ingress-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/demo-direct-ingress-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-16/demo-direct-ingress-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/demo-direct-ingress-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/demo-direct-ingress-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner-directed P05 continuation implemented and bounded acceptance audit recorded; existing research reused and historical full Review/critique not rerun. Final offline candidate passed 260 infra and 32 loopback API auth tests, scoped mypy/Ruff and documentation checks.",
+      "status": "complete-offline-partial-acceptance",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/demo-direct-ingress-review.md"
+    },
+    {
+      "decision": "One Review execution Complete; outcome Not accepted, RV-001 High and RV-002 Medium routed to distinct later implementation under original complete-working-offline request. Verdict remains historical, no second Review.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/demo-direct-ingress-review.md"
+    },
+    {
+      "decision": "Single critique executed: Revise. PC-001/002/003 applied directly in plan/details; no divergent decision.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-16/demo-direct-ingress-plan-critique.md"
+    },
+    {
+      "decision": "User explicitly requests research, plan, implementation, review and PR delivery in this task; no automatic follow-up loop selected.",
+      "status": "confirmed",
+      "evidence": "User task, 2026-10-16"
+    },
+    {
+      "decision": "Research executed; offline Planning Readiness Ready.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-16/demo-direct-ingress-research.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "strict-cross-host-exclusion",
+      "summary": "Advisory app tags and cooperating wrappers reject observed activity but do not prove atomic simultaneous-start exclusion or guard raw portal/deployment bypass.",
+      "resolution": "Serialize authorized sessions; establish an approved provider-enforced shared mutex and provider validation before claiming strict exclusion. Do not claim this acceptance criterion is complete."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Owner reviews updated PR 362 and explicit strict-lock/raw-deployment limitations; coordinator retains original live migration/browser/SQL/AI/retirement gates. Offline implementation c6c9b6b pushed; no automatic follow-up session."
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Establish strict cross-host exclusion before claiming that guarantee", "rationale": "Advisory refusal is implemented, but absolute simultaneous-start exclusion requires an approved provider-enforced shared mutex and validation.", "evidence": "P05 acceptance audit; infra/README.md coordination boundary"},
+    {"rank": 2, "task": "Human PR and migration/cost approval", "rationale": "Required before any live change; updated PR explicitly records partial acceptance and no Azure authorization.", "evidence": "PR 362; infra/README.md direct-demo proposal"},
+    {"rank": 3, "task": "Coordinator live direct sign-in, role, SQL and AI acceptance", "rationale": "Criterion d requires real deployment and identity-backed evidence; offline tests cannot substitute.", "evidence": "Issue 360 criterion d; cut-over evidence audit"},
+    {"rank": 4, "task": "Separately authorized selective retirement", "rationale": "Only after d and rollback window; never delete ama or shared services.", "evidence": "Issue 360 criterion e; migration runbook"}
+  ]
+}

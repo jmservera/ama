@@ -33,14 +33,163 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
 | Owner task direction, 2026-10-16 | Providers registered, ama costs acceptable, RG ownership available; SQL public access stays Disabled, no policy/tag/firewall bypass or peering; all private data-plane probes run inside the ama VNet |
 
+## Direct Demo Ingress Offline Scope (2026-10-16)
+
+Refs #360. Owner decision: the demo entry point is direct Container Apps HTTPS
+with Entra browser sign-in; Front Door is optional for production, not required
+for this synthetic demo. This supersedes the historical edge selection below,
+not its observations or unmet sign-in/feature gates. **No Azure resources,
+tenant objects, DNS, data or network settings were changed for this task.**
+The live facts below are supplied coordinator findings, not fresh Azure reads.
+
+The current `cae-cutover-test` is internal, Consumption, on `snet-aca`.
+Its internal setting is immutable; apps/jobs cannot move environments and
+their names must remain unique in `ama`. The replacement therefore needs a
+new external environment, dedicated delegated subnet/HTTPS NSG and distinctly
+named apps/jobs. Existing identities, images, private SQL/vault/storage/
+registry/Foundry/IoT and private endpoints are reused, not recreated.
+`demoDirectIngress` is independent of the forbidden broad public-data switch.
+Default/production behavior is retained, direct auth uses NoProxy and the app
+FQDN, and the demo tag/flag bypasses all Front Door discovery.
+
+### Single-command Authentication Continuation (2026-10-16)
+
+Refs #360. Owner follow-up replaces manual credential flags, roster creation,
+separate Entra check, and SQL check/apply/restart instructions with
+`python3 infra/scripts/setup-entra.py` (`--yes` for the single SQL confirmation).
+This continuation is offline implementation only, not a tenant/deployment
+receipt. The [runbook](../../infra/README.md#post-deployment-api-authentication-initialization)
+is the current operator contract; earlier step-by-step observations below
+remain historical.
+
+| Owner requirement | Offline evidence and limit |
+| --- | --- |
+| Automatic browser credential and private-vault preference | Named unexpired credential/storage matching, unique interrupted-handoff recovery, automatic direct-demo fallback on vault probe/write failure, and private temporary body files are mocked. Actual vault access, MI permission and token exchange are Not run |
+| No typed vault or identity | API secret references/attached identities, configured vault URI, deployment tags/resource lookup, and available Bicep outputs are used; optional overrides remain. Interactive ambiguity asks once; headless ambiguity stops with names, never invented choices |
+| Private roster onboarding/validation | Missing roster creates a 0700 directory/0600 placeholder template and stops before cloud calls. Placeholders, duplicate codes/IDs, non-GUID/zero IDs, unknown roles, groups, symlinks and incorrect modes are rejected. Candidate SQL codes/roles and private UPN lookup are helpers, not role approval |
+| Reconcile then check Entra | Default run rereads registration/auth/credential/runtime state and checks assignments before SQL. Mocked ordering is evidence, not real tenant/browser acceptance |
+| SQL binding and restart | Default checks, shows counts, asks once, applies and verifies serving replicas. Matching roster/revision evidence avoids redundant restart. Missing private connectivity/driver/authority produces an exact authorized-host command and explicitly unconfirmed SQL/restart |
+| Approved private execution route | Existing in-VNet proof initialization has no staff-roster or delegated Graph-profile transport. No new upload/job/permission mechanism is invented; authorized-host handoff is implemented. Live SQL binding/restart remains Not run |
+| Credential-store deployment protection | Store/name tags and default-Key-Vault Bicep parameter/guards exist. Guarded CLI and CI refuse full application deployment over app-local credentials. Explicit app mode permits dependency-only updates; no secret value is exported into ARM templates |
+| Coordination | Existing advisory tag, app/environment/revision update and running group-deployment refusals are mocked. Local exclusive lock and owned app-tag release are tested; conditional If-Match is used when available. A tag alone does not establish an Azure-enforced simultaneous-start mutex; that stronger cross-host guarantee remains unmet/unverified and raw portal changes require operator serialization |
+| Read-only and privacy boundaries | Check/dry-run do not mutate cloud resources or create a roster/profile, apply SQL or restart. Real identifiers/credentials/private datasets are absent from committed evidence. `ama` deletion, network opening and direct-mode Front Door discovery have no new path |
+| Original issue acceptance | Offline infrastructure/auth/documentation work does not satisfy migration/cost approval (c), live HTTPS/browser/roles/SQL/AI (d), or authorized edge retirement (e). No issue checkboxes changed |
+
+The SQL helper additionally discovers the configured server within `ama` and
+refuses anything except public access `Disabled`; role keys/full labels must
+match existing workbench positions before SQL writes. Juan Manuel Servera
+remains the synthetic exercise Legal, Compliance and DPO owner. This technical
+onboarding adds no legal interpretation, control activation, consent, safety
+or financial approval and makes no operational-readiness claim.
+
+Offline continuation receipt: 260 infra tests passed without skips, including
+local compiled Bicep guards; four production scripts passed scoped mypy;
+focused Ruff passed with no introduced baseline findings; 32 local loopback
+API authentication tests and Markdown/diff checks passed. No deployed probe
+was run, and no strict distributed-mutex or full live acceptance is claimed.
+
+### Proposed Migration and Approval Gates
+
+The canonical step-by-step
+[migration proposal](../../infra/README.md#direct-demo-ingress-migration-proposal-2026-10-16-360)
+covers environment-only then API-only staging, DNS, reused identity/RBAC and
+image/config checks, all queue/scheduled/import consumer drain/activation,
+rollback, cost sensitivity and selective retirement. It is written, **not
+reviewed or approved by the owner**. The coordinator must obtain approval
+before any replacement, deletion or spend; this task authorizes none.
+
+Keep old and new background consumers from acting concurrently against shared
+queues/token storage/ledger. Zero minimum replicas does not disable KEDA.
+Stage with background workloads omitted, drain or disposition old running
+executions and messages, then activate only one generation. Reverse the same
+boundary during rollback; do not restore stale shared SQL or reseed.
+Keep old callbacks and the old environment/edge through the approved rollback
+window. After verified d and a separate owner authorization, remove only the
+approved old workloads, environment-specific DNS/subnet/NSG and dedicated
+`afd-cutover-test` edge dependencies. Retain all shared services, private
+endpoints, identities/RBAC, VNet and resource group `ama`.
+
+Consumption has no standing environment charge by itself; replicas/jobs,
+logs/network, existing private endpoints and retained edge overlap still cost.
+Private-endpoint/planned-maintenance features can add management fees even
+on Consumption. The runbook records dated official billing sources and
+unquoted USD 23-78/API-month illustrative sensitivity, not a current account
+quote or approved budget. Exact rates/overlap remain owner approval inputs.
+
+### Historical MVP Difference
+
+History-only commit `15e8158` shows direct external ingress, browser EasyAuth,
+public welcome exclusions and app-FQDN callback generation. Its environment
+exposure depended on `allowPublicNetworkAccess`, which also opened backing
+services; that obsolete configuration is not copied. Historical owner sign-in
+reports and old names/datasets are not direct-src acceptance. No working-tree
+`mvp/` or `prototype/` code was restored or changed.
+
+### Issue 360 Acceptance Audit
+
+| Criterion | Offline status | Unmet acceptance boundary |
+| --- | --- | --- |
+| a. Explicit demo Bicep external environment, own subnet/NSG, independent private services and unchanged defaults/production | Implemented; offline validation recorded below | No deployed network/private-service readback or new environment observed |
+| b. Direct setup without Front Door command/permission/extension; optional edge retained | Implemented; fake CLI/auth regressions recorded below | No real directory/credential/roster changes, human sign-in or live tool completion |
+| c. Owner-reviewed and approved migration before replacement/deletion/spend | Proposal written; **Unmet** | Owner review and approval not performed or inferred |
+| d. Live HTTPS/welcome/health, API denial, browser sign-in, roles, SQL persistence and AI | **Not run / Unmet** | All replacement live checks await coordinator and owner authorization; browser JSON API 302 gap remains Refs #350 |
+| e. Retire demo Front Door after d and explicit owner authorization | **Not run / Unmet** | No deletion authorized/performed; `afd-cutover-test`, old environment and `ama` untouched |
+| f. Runbook, infra guide, ADR/architecture/evidence updated with historical separation | Updated offline | New deployment observations must be appended by the coordinator, not substituted for history |
+
+No issue body checkboxes are changed. The coordinator alone ticks those whose
+merge-time evidence proves acceptance. Offline tests do not prove criterion d
+or clear #349/#350. Probe credentials/claims, subscription/tenant/Entra IDs,
+roster, full login URLs and secret values must never enter the evidence.
+Juan Manuel Servera remains exercise Legal/Compliance/DPO owner; ADR 0005 is
+accepted for synthetic development only. Real owners and sources, legal
+interpretation, rule activation, consent, safety and financial commitments
+remain human boundaries; nothing here approves operational reliance.
+
+### Offline Validation Receipt
+
+All 234 infra unit tests passed with `REQUIRE_AZ_BICEP=1`, including compiled
+demo/default/guard/private-service controls, 54 setup tests and 18 probe tests.
+All root/module Bicep templates built and linted locally with `az bicep`;
+no deployment, what-if or Azure data/management request was run.
+CI-aligned Bicep-test Ruff/format, probe Ruff and setup production mypy passed.
+Broader setup Ruff and probe mypy still report pre-existing diagnostics, with
+none introduced; full lint/type cleanliness is not claimed.
+All 563 API tests passed with 110 conditional skips from the documented
+`src/api` working directory and absolute project test paths; the authentication
+subset runs a responsive local HTTP app against temporary synthetic fixtures.
+An initial root-directory discovery failed six project-relative imports and
+was rerun correctly without changing source. Documentation links/anchors and
+diff whitespace checks passed. None of these local checks prove real Entra,
+Azure SQL persistence, AI calls, owner approval or replacement deployment.
+
+The single post-implementation Review found two defects in that initial
+candidate and returned **Not accepted**: overlong demo job names and an
+ineffective role-denial probe against universally available `/api/me`.
+Routed implementation shortens only demo job suffixes (unchanged defaults)
+and tests supported name bounds/ledger-alert matching; role probes now require
+authenticated Contractor `/api/me` 200 followed by `/api/stats` 403.
+A real local trusted-provider/router regression covers that distinction.
+The original Review verdict is retained; corrections are subsequent
+implementation, not a second Review or retroactive conformance claim.
+After these corrections all 237 infra tests passed without skips; corrected
+template builds/lints, scoped Ruff/CI formatting and diff checks passed.
+Current main was then merged, including the device-code prompt and missing-tool
+diagnostics fixes. Final integrated infra discovery passed **238 tests** without
+skips, and integrated setup production mypy passed. PR #362 contains the offline
+implementation/corrections; its human review and CI are separate from local
+evidence. No live acceptance or issue checkbox is implied.
+
 ## Public Browser Restoration (2026-10-16)
+
+Historical #344 configuration and observations follow. The direct-demo decision
+above supersedes their edge prerequisite, not their limited observed results.
 
 Refs #344. Refs #143. Refs #200. The owner requires public browser entry again,
 with SQL private and no policy bypass. This supersedes the private-only entry
 point as the intended exercise access path, not the private SQL proof or the
 unchecked cut-over/sign-off gates.
 
-Selected edge: **Front Door Premium, WAF Prevention, Private Link to the
+Historically selected edge: **Front Door Premium, WAF Prevention, Private Link to the
 existing internal environment**. An API-only external environment was permitted
 but would require a new environment/subnet and parallel API or explicit
 replacement because `internal` cannot change in place. The chosen additive

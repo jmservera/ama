@@ -170,7 +170,7 @@ flowchart TB
         orchestrator -. checkpoints through API .-> api
         importer -. limited SQL role .-> sql
         importer -. quarantine .-> otherblob[("Same Blob account: other containers")]
-        edge["Front Door Premium/WAF: intended, not deployed"]
+        edge["Optional production Front Door/WAF; historical #344 deployment"]
     end
     m365["SharePoint/Excel: proposed; Teams: optional"] -. snapshot import .-> importer
     ops -. optional Teams Workflows .-> m365
@@ -195,12 +195,22 @@ they are not implemented or represented as deployed integrations here.
   Separate queue workers would add deployment, failure and permission
   boundaries; they remain deferred rather than being drawn as necessary
   infrastructure for the five capabilities.
-* Current exercise hosting uses documented development network exceptions.
+* These drawings retain the historical exercise hosting and its documented
+  development network exceptions, not the proposed #360 direct-demo rollout.
   Bicep declares VNet integration, two subnets, NSGs, private endpoints and DNS.
   Public access is also allowed in development. The default production
   profile and intended Front Door public edge/private backend are not the
   observed exercise.
   Network ranges in the drawing are IaC defaults, not newly measured routes.
+* Owner decision 2026-10-16 (Refs #360): the synthetic demo uses direct
+  Container Apps HTTPS with Entra browser sign-in, not a mandatory Front Door.
+  The [migration proposal](../../infra/README.md#direct-demo-ingress-migration-proposal-2026-10-16-360)
+  creates a separate external environment/subnet and suffixed apps/jobs,
+  retaining private backing services and identities. Default/production
+  isolation and the optional edge path remain unchanged. This is offline
+  configuration, not a live diagram update or observed sign-in; owner migration/
+  cost approval, SQL/AI proof and retirement authorization remain open in the
+  [cut-over audit](./cutover-evidence-pack.md#direct-demo-ingress-offline-scope-2026-10-16).
 * SQL append-only events and a hash chain are not proof of the proposed
   immutable external digest anchor. The `audit-archive` policy is defined
   unlocked in Bicep; the application does not implement/verify the complete

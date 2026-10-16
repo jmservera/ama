@@ -52,6 +52,30 @@ param publicEdgeRequiresApplications string
 @description('Must not be empty. Empty means environmentName=pilot with the development profile or allowPublicNetworkAccess=true; the pilot keeps every isolation control.')
 param pilotRequiresProductionProfile string
 
+@minLength(1)
+@description('Must not be empty. Empty means demoDirectIngress=true without deploymentProfile=development; direct demo ingress is never a production override.')
+param demoRequiresDevelopmentProfile string
+
+@minLength(1)
+@description('Must not be empty. Empty means demoDirectIngress=true with enablePublicEdge=true; select exactly one ingress mode.')
+param demoForbidsPublicEdge string
+
+@minLength(1)
+@description('Must not be empty. Empty means demoDirectIngress=true with allowPublicNetworkAccess=true; demo backing services must remain private.')
+param demoRequiresPrivateBackingServices string
+
+@minLength(1)
+@description('Must not be empty. Empty means demo applications lack entraClientId or use entraBearerOnly=true; shared demos require browser authentication. Environment-only staging may omit the audience.')
+param demoRequiresBrowserAuthentication string
+
+@minLength(1)
+@description('Must not be empty. Empty means app-local browser credentials were selected outside the authenticated direct-ingress demo.')
+param appCredentialRequiresDirectDemo string
+
+@minLength(1)
+@description('Must not be empty. Empty means app-local credentials would be overwritten by an application deployment; choose deployApplications=false or perform an authorized migration to Key Vault first.')
+param appCredentialBlocksApplicationDeployment string
+
 output checked array = [
   pilotRequiresProductionProfile
   publicEdgeRequiresProductionProfile
@@ -66,4 +90,10 @@ output checked array = [
   tokenStoreReadyRequiresTokenStore
   entraRoleMapRequiresEntraClientId
   bearerOnlyRequiresAudience
+  demoRequiresDevelopmentProfile
+  demoForbidsPublicEdge
+  demoRequiresPrivateBackingServices
+  demoRequiresBrowserAuthentication
+  appCredentialRequiresDirectDemo
+  appCredentialBlocksApplicationDeployment
 ]

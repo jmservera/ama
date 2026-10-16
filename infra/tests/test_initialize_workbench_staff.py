@@ -107,6 +107,27 @@ class StaffInitializationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 INIT.prepare_roster(self.db, wanted, directory)
 
+    def test_requested_role_must_match_the_existing_sql_position_before_directory_writes(self):
+        self.db.execute("ALTER TABLE cases ADD COLUMN contractor TEXT")
+        directory = INIT.Directory(Path("/private"))
+        with patch.object(directory, "request") as request, self.assertRaises(ValueError):
+            INIT.prepare_roster(self.db, [{"code": "RC-01", "userId": ONE,
+                                           "role": "ProgrammeManager"}], directory)
+        request.assert_not_called()
+
+    def test_sql_server_is_discovered_and_public_access_must_stay_disabled(self):
+        env = {"SQL_SERVER": "sql.example.invalid", "SQL_DATABASE": "synthetic"}
+        for access in ("Enabled", None, "Disabled"):
+            with self.subTest(access=access), patch.object(INIT, "azure", return_value=[{
+                "fullyQualifiedDomainName": env["SQL_SERVER"], "publicNetworkAccess": access,
+            }]):
+                if access == "Disabled":
+                    actual = INIT.sql_settings(env, "ama")
+                    self.assertEqual(actual["ZF_SQL_SERVER"], env["SQL_SERVER"])
+                else:
+                    with self.assertRaises(ValueError):
+                        INIT.sql_settings(env, "ama")
+
     def test_runtime_overlay_and_distinct_mapped_roles(self):
         roles = [ROLE, dict(ROLE, id="alias", value="Demo.Alias")]
         mapping = dict(MAP, **{"Demo.Coordinator": "Retrofit Programme Manager",

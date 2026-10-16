@@ -29,7 +29,7 @@
   },
   "manualSteps": [
     {"step": "Run python3 infra/scripts/setup-entra.py as an authorized application owner or administrator; supply private explicit-role roster mappings", "owner": "Juan Manuel Servera"},
-    {"step": "Complete any human admin consent and run private-network initialize-workbench-staff.py for SQL bindings/restart", "owner": "Juan Manuel Servera"},
+    {"step": "Complete any human admin consent; setup checks SQL bindings, requests one confirmation and restarts, or prints the exact authorized-private-host command when blocked", "owner": "Juan Manuel Servera"},
     {"step": "Tenant-level B2B guest and cross-tenant policy", "owner": "Juan Manuel Servera, open"}
   ]
 }

@@ -3,10 +3,13 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -14,11 +17,11 @@ import threading
 import time
 import uuid
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, NoReturn
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import quote, urlencode, urlsplit
 
 GRAPH = "https://graph.microsoft.com/v1.0/"
 ARM = "https://management.azure.com"
@@ -36,6 +39,8 @@ ASSIGNMENT_WRITE = {"AppRoleAssignment.ReadWrite.All", "Directory.ReadWrite.All"
                     "Directory.AccessAsUser.All"}
 APP_PORTAL = "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
 SP_PORTAL = "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview"
+LOCK_TAG = "zava-forward-auth-lock"
+STORE_TAG = "zava-forward-credential-store"
 
 
 class SetupError(Exception):
@@ -91,7 +96,8 @@ def private_path(path: Path, *, directory: bool = False, create: bool = False) -
         resolved.mkdir(mode=0o700, parents=True, exist_ok=True)
     if not resolved.exists():
         raise SetupError("Private input/profile is missing; see infra/README.md for setup.")
-    if (directory and not resolved.is_dir()) or resolved.stat().st_mode & 0o077:
+    if ((directory and not resolved.is_dir())
+            or stat.S_IMODE(resolved.stat().st_mode) != (0o700 if directory else 0o600)):
         raise SetupError("Private directories need mode 0700; private files need mode 0600.")
     return resolved
 
@@ -119,7 +125,7 @@ class Azure:
     def call(self, args: list[str], *, body: dict[str, Any] | None = None) -> Any:
         filename = None
         try:
-            if self.subscription and args[0] in ("containerapp", "afd", "keyvault"):
+            if self.subscription and args[0] in ("containerapp", "afd", "keyvault", "deployment", "identity"):
                 args = [*args, "--subscription", self.subscription]
             if body is not None:
                 if self.body_directory is None:
@@ -150,7 +156,9 @@ class Azure:
                         else "request")
                 raise AzureError(kind)
             return json.loads(result.stdout) if result.stdout.strip() else None
-        except (OSError, subprocess.TimeoutExpired):
+        except subprocess.TimeoutExpired:
+            raise AzureError("network") from None
+        except OSError:
             raise SetupError("Azure CLI could not run or timed out; check installation/network, then rerun.") from None
         except json.JSONDecodeError:
             raise SetupError("Azure CLI returned invalid JSON; update Azure CLI and rerun.") from None
@@ -158,14 +166,16 @@ class Azure:
             if filename:
                 Path(filename).unlink(missing_ok=True)
 
-    def rest(self, url: str, *, method: str = "GET", body: dict[str, Any] | None = None) -> Any:
+    def rest(self, url: str, *, method: str = "GET", body: dict[str, Any] | None = None,
+             etag: str | None = None) -> Any:
         parsed = urlsplit(url)
         if (parsed.scheme != "https" or parsed.netloc not in ("graph.microsoft.com", "management.azure.com")
                 or parsed.fragment or parsed.username):
             raise SetupError("Refusing an API request outside the fixed Graph/ARM hosts.")
         for attempt in range(5):
             try:
-                value = self.call(["rest", "--method", method, "--url", url], body=body)
+                headers = ["--headers", f"If-Match={etag}"] if etag else []
+                value = self.call(["rest", "--method", method, "--url", url, *headers], body=body)
                 if (method == "GET" and not isinstance(value, dict)) or (
                         value is not None and not isinstance(value, dict)):
                     raise SetupError("API response is not an object; refusing malformed service data.")
@@ -253,13 +263,20 @@ def preflight(operator: Azure) -> None:
         raise SetupError("Install Azure CLI: python3 -m pip install azure-cli; "
                          "Windows: winget install Microsoft.AzureCLI; macOS: brew install azure-cli")
     operator.call(["version"])
+
+
+def require_extension(operator: Azure, name: str) -> None:
     try:
-        operator.call(["extension", "show", "--name", "containerapp"])
+        operator.call(["extension", "show", "--name", name])
     except AzureError:
-        raise SetupError("Install the Container Apps extension in the isolated profile: "
-                         "mkdir -p ~/.azure/zava-entra-init && chmod 700 ~/.azure/zava-entra-init && "
-                         "AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init az extension add --name containerapp --upgrade. "
-                         "For --tenant-profile, use that private directory instead.") from None
+        profile = shlex.quote(str(operator.extension_directory.parent))
+        extensions = shlex.quote(str(operator.extension_directory))
+        raise SetupError(
+            f"Install missing {name} extension in the isolated extension directory: "
+            f"mkdir -p {profile} {extensions} && chmod 700 {profile} {extensions} && "
+            f"AZURE_CONFIG_DIR={profile} AZURE_EXTENSION_DIR={extensions} "
+            f"az extension add --name {name} --upgrade. Then rerun setup."
+        ) from None
 
 
 def token_permissions(cli: Azure, tenant: str | None = None) -> set[str]:
@@ -320,7 +337,7 @@ def contexts(args: argparse.Namespace, operator: Azure) -> tuple[Azure, Azure, s
         if object_id(graph_account["tenantId"]) != tenant:
             raise SetupError("Login returned a different tenant; refusing changes.") from None
         permissions = token_permissions(graph, tenant)
-    if not readonly and not permissions.intersection(APPLICATION_WRITE):
+    if not (readonly or args.list_staff or args.lookup_upn) and not permissions.intersection(APPLICATION_WRITE):
         if graph_account.get("user", {}).get("type") == "servicePrincipal":
             print("The selected login is a service principal without directory application-write authority.")
         authority_help()
@@ -334,7 +351,7 @@ def contexts(args: argparse.Namespace, operator: Azure) -> tuple[Azure, Azure, s
 
 
 def choose(rows: list[dict[str, Any]], explicit: str | None, role: str,
-           suffix: str, option: str) -> dict[str, Any]:
+           suffix: str, option: str, *, interactive: bool = False) -> dict[str, Any]:
     named = [r for r in rows if r.get("name") == explicit] if explicit else []
     tagged = [r for r in rows if r.get("tags", {}).get("zava-forward-role") == role]
     legacy = [r for r in rows if r.get("tags", {}).get("workload") == role]
@@ -342,6 +359,12 @@ def choose(rows: list[dict[str, Any]], explicit: str | None, role: str,
         r for r in rows if re.fullmatch(suffix, r.get("name", ""))]
     if len(candidates) != 1:
         names = ", ".join(sorted(label(r.get("name", "unnamed")) for r in candidates or rows)) or "(none)"
+        if interactive and not explicit and sys.stdin.isatty():
+            print(f"Found these {role} resources: {names}.")
+            answer = input(f"Which {role} should this run use (or Enter to stop and deploy it first)? ").strip()
+            selected = [r for r in candidates if r.get("name") == answer]
+            if len(selected) == 1:
+                return selected[0]
         raise SetupError(f"Cannot select one {role}. Candidates: {names}. Pass {option} with an exact name.")
     return candidates[0]
 
@@ -351,7 +374,16 @@ def discover(cli: Azure, args: argparse.Namespace, subscription: str) -> tuple[d
     rows = cli.call(["containerapp", "list", "-g", args.resource_group])
     if not isinstance(rows, list):
         raise SetupError("Container App discovery did not return a list.")
-    app = choose(rows, args.container_app, "api", r"ca-.+-api", "--container-app")
+    direct_rows = [r for r in rows if r.get("tags", {}).get("zava-forward-role") == "api"
+                   and r.get("tags", {}).get("zava-forward-ingress") == "direct"]
+    candidates = rows
+    if not args.container_app and direct_rows:
+        candidates = direct_rows
+    interactive = not (args.check or args.dry_run or args.yes)
+    app = choose(candidates, args.container_app, "api", r"ca-.+-api", "--container-app",
+                 interactive=interactive)
+    args.direct_ingress = (
+        args.direct_ingress or app.get("tags", {}).get("zava-forward-ingress") == "direct")
     name = app["name"]
     app = cli.call(["containerapp", "show", "-g", args.resource_group, "-n", name])
     if not isinstance(app, dict):
@@ -364,6 +396,29 @@ def discover(cli: Azure, args: argparse.Namespace, subscription: str) -> tuple[d
         raise SetupError("API has no ingress hostname; deploy the API first.")
     app_url = origin("https://" + fqdn)
     urls = {app_url}
+    if args.direct_ingress:
+        if args.edge_profile:
+            raise SetupError("--direct-ingress cannot use --edge-profile; select one ingress mode.")
+        properties = app.get("properties", {})
+        ingress = properties.get("configuration", {}).get("ingress", {})
+        environment_id = properties.get("environmentId") or properties.get("managedEnvironmentId")
+        prefix = (f"/subscriptions/{subscription}/resourceGroups/{args.resource_group}"
+                  "/providers/Microsoft.App/managedEnvironments/")
+        if (ingress.get("external") is not True or not isinstance(environment_id, str)
+                or not environment_id.lower().startswith(prefix.lower())
+                or not re.fullmatch(r"[A-Za-z0-9_-]+", environment_id[len(prefix):])):
+            raise SetupError(
+                "Direct ingress requires external API ingress in an environment in ama.")
+        environment = cli.rest(ARM + environment_id + f"?api-version={API_VERSION}")
+        vnet = environment.get("properties", {}).get("vnetConfiguration") or {}
+        if vnet.get("internal") is not False:
+            raise SetupError(
+                "Direct ingress requires a verified external Container Apps environment.")
+        if args.public_url and origin(args.public_url) != app_url:
+            raise SetupError("Direct public URL must match the selected API ingress FQDN.")
+        print(f"Selected direct API: {label(name)}; one API FQDN callback origin.")
+        return app, [app_url]
+    require_extension(cli, "cdn")
     profiles = cli.call(["afd", "profile", "list", "-g", args.resource_group])
     if not isinstance(profiles, list):
         raise SetupError("Front Door discovery did not return a list.")
@@ -445,18 +500,269 @@ def read_roster(path: Path, keys: set[str]) -> list[dict[str, str]]:
     for row in data:
         if not isinstance(row, dict):
             raise SetupError("Each roster row must be an object.")
+        if any(word in str(value).upper() for value in row.values()
+               for word in ("PLACEHOLDER", "REPLACE_", "<", "YOUR_")):
+            raise SetupError("Roster still contains template placeholders. Fill real existing staff codes, "
+                             "person object IDs and approved roles, then rerun; no cloud writes were made.")
         code, role = row.get("code"), row.get("role")
+        role = next((r["key"] for r in json.loads(MANIFEST.read_text())["appRoles"]
+                     if r["label"] == role), role)
         fields = [key for key in ("userId", "groupId") if key in row]
         if (not isinstance(code, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", code)
                 or code in codes or role not in keys or len(fields) != 1):
             raise SetupError("Roster needs distinct codes, an explicit manifest role and exactly one userId/groupId per row.")
         principal = identifier(row[fields[0]])
-        if not principal or principal in principals:
+        if not principal or principal == str(uuid.UUID(int=0)) or principal in principals:
             raise SetupError("Roster principal identifiers must be valid and distinct.")
         codes.add(code)
         principals.add(principal)
         out.append({"code": code, "role": role, "kind": "users" if fields[0] == "userId" else "groups", "id": principal})
     return out
+
+
+def prepare_private_roster(path: Path, *, readonly: bool) -> None:
+    if path.exists():
+        return
+    if readonly:
+        print("Roster: missing; a normal run will create a private template and stop.")
+        return
+    parent = private_path(path.parent, directory=True, create=True)
+    if path.is_symlink() or REPO in path.resolve().parents:
+        raise SetupError("Roster must be outside Git and must not be a symbolic link.")
+    with open(path, "x", opener=lambda p, flags: os.open(p, flags, 0o600)) as stream:
+        json.dump([{"code": "REPLACE_EXISTING_STAFF_CODE", "userId": "REPLACE_PERSON_OBJECT_ID",
+                    "role": "REPLACE_APPROVED_WORKBENCH_ROLE"}], stream, indent=2)
+        stream.write("\n")
+    private_path(parent, directory=True)
+    raise SetupError(
+        "Created the private roster TEMPLATE at " + str(path) + ". "
+        "Fill code with an existing workbench staff record; userId with that person's Entra "
+        "user object ID (not an application/client ID); role with that position's approved "
+        "workbench role. Do not invent identities or give everyone one broad role. "
+        "Use --list-staff for candidate codes/roles; --lookup-upn with --staff-code and "
+        "--staff-role can fill one entry when directory reads are permitted. Rerun this command.")
+
+
+def app_url(app: dict[str, Any]) -> str:
+    return ARM + app["id"] + f"?api-version={API_VERSION}"
+
+
+def coordination_status(cli: Azure, app: dict[str, Any]) -> None:
+    if app.get("tags", {}).get(LOCK_TAG):
+        raise SetupError("Another authentication session holds the app advisory lock. "
+                         "Wait; if interrupted, an authorized operator must verify it stopped "
+                         "before removing only the zava-forward-auth-lock tag.")
+    properties = app.get("properties", {})
+    if properties.get("provisioningState") != "Succeeded":
+        raise SetupError("API provisioning/revision update is in progress or failed; wait for Succeeded.")
+    environment_id = properties.get("environmentId") or properties.get("managedEnvironmentId")
+    if environment_id:
+        environment = cli.rest(ARM + environment_id + f"?api-version={API_VERSION}")
+        state = environment.get("properties", {}).get("provisioningState")
+        if state and state != "Succeeded":
+            raise SetupError("Container Apps environment provisioning is in progress or failed; wait.")
+    revisions = cli.call(["containerapp", "revision", "list", "-g", "ama", "-n", app["name"]])
+    if any(r.get("properties", {}).get("provisioningState") in ("Provisioning", "Updating")
+           or r.get("properties", {}).get("runningState") in ("Processing", "Activating")
+           for r in revisions):
+        raise SetupError("An API revision update is in progress; wait before changing authentication.")
+    deployments = cli.call(["deployment", "group", "list", "-g", "ama"])
+    if any(d.get("properties", {}).get("provisioningState") in
+           ("Accepted", "Running", "Creating", "Updating") for d in deployments):
+        raise SetupError("A resource-group deployment is running; authentication setup must wait.")
+
+
+@contextmanager
+def authentication_lock(cli: Azure, app: dict[str, Any], readonly: bool) -> Iterator[None]:
+    current = cli.rest(app_url(app))
+    coordination_status(cli, current)
+    if readonly:
+        yield
+        return
+    etag = current.get("etag")
+    if not isinstance(etag, str):
+        etag = None
+    token = uuid.uuid4().hex
+    tags = {**current.get("tags", {}), LOCK_TAG: token}
+    cli.rest(app_url(app), method="PATCH", body={"tags": tags}, etag=etag)
+    locked = cli.rest(app_url(app))
+    if locked.get("tags", {}).get(LOCK_TAG) != token:
+        raise SetupError("Another session acquired the authentication lock; no auth changes were made.")
+    try:
+        yield
+    finally:
+        latest = cli.rest(app_url(app))
+        if latest.get("tags", {}).get(LOCK_TAG) == token:
+            remaining = {k: v for k, v in latest.get("tags", {}).items() if k != LOCK_TAG}
+            cli.rest(app_url(app), method="PATCH", body={"tags": remaining},
+                     etag=latest.get("etag"))
+
+
+def discover_credential_target(cli: Azure, app: dict[str, Any],
+                               args: argparse.Namespace) -> tuple[str, str]:
+    secrets = app.get("properties", {}).get("configuration", {}).get("secrets") or []
+    attached = app.get("identity", {}).get("userAssignedIdentities") or {}
+    references = [s for s in secrets if s.get("keyVaultUrl")]
+    referenced_vaults = {urlsplit(s["keyVaultUrl"]).hostname.split(".")[0]
+                         for s in references if urlsplit(s["keyVaultUrl"]).hostname}
+    containers = app.get("properties", {}).get("template", {}).get("containers") or []
+    configured_vaults = {urlsplit(e.get("value", "")).hostname.split(".")[0]
+                         for c in containers for e in c.get("env", [])
+                         if e.get("name") == "KEY_VAULT_URI"
+                         and urlsplit(e.get("value", "")).hostname}
+    vaults = cli.call(["keyvault", "list", "-g", args.resource_group])
+    if args.vault:
+        candidates = [v for v in vaults if v["name"] == args.vault]
+    else:
+        candidates = [v for v in vaults if v["name"] in referenced_vaults]
+        if not candidates:
+            candidates = [v for v in vaults if v["name"] in configured_vaults]
+        if not candidates:
+            tags = app.get("tags", {})
+            candidates = [v for v in vaults if all(v.get("tags", {}).get(k) == tags[k]
+                          for k in ("environment", "purpose", "owner") if k in tags)
+                          and "environment" in tags]
+        if not candidates:
+            deployments = cli.call(["deployment", "group", "list", "-g", args.resource_group])
+            names = {d.get("properties", {}).get("outputs", {}).get(
+                "keyVaultName", {}).get("value") for d in deployments}
+            candidates = [v for v in vaults if v["name"] in names] or vaults
+    vault = choose(candidates, args.vault, "Key Vault", r".*", "--vault",
+                   interactive=not (args.yes or args.check or args.dry_run))["name"]
+    refs = {s.get("identity") for s in references
+            if urlsplit(s["keyVaultUrl"]).hostname == f"{vault}.vault.azure.net"
+            and s.get("identity") in attached}
+    if args.vault_identity:
+        identity = args.vault_identity
+    elif len(refs) == 1:
+        identity = next(iter(refs))
+    elif len(attached) == 1:
+        identity = next(iter(attached))
+    elif not attached and "SystemAssigned" in app.get("identity", {}).get("type", ""):
+        identity = "system"
+    else:
+        identities = cli.call(["identity", "list", "-g", args.resource_group])
+        tagged = {r["id"] for r in identities if r.get("id") in attached
+                  and (r.get("tags", {}).get("zava-forward-role") == "api"
+                       or r.get("name", "").endswith("-api"))}
+        if len(tagged) != 1:
+            deployments = cli.call(["deployment", "group", "list", "-g", args.resource_group])
+            principal_ids = {d.get("properties", {}).get("outputs", {}).get(
+                "identityPrincipalIds", {}).get("value", {}).get("api") for d in deployments}
+            tagged = {key for key, value in attached.items()
+                      if value.get("principalId") and value["principalId"] in principal_ids}
+        rows = [{"name": key.rsplit("/", 1)[-1], "resource": key} for key in tagged or attached]
+        selected = choose(rows, None, "attached API identity", r".*", "--vault-identity",
+                          interactive=not (args.yes or args.check or args.dry_run))
+        identity = selected["resource"]
+    if identity != "system" and identity not in attached:
+        raise SetupError("Key Vault identity must already be attached to the selected API.")
+    if identity == "system" and "SystemAssigned" not in app.get("identity", {}).get("type", ""):
+        raise SetupError("The API has no attached system-assigned identity; use its existing API identity.")
+    return vault, identity
+
+
+def staff_command(args: argparse.Namespace, app: dict[str, Any], *, apply: bool = False) -> list[str]:
+    command = [sys.executable, str(Path(__file__).with_name("initialize-workbench-staff.py")),
+               "--resource-group", "ama", "--container-app", app["name"],
+               "--roster", str(args.roster.expanduser()), "--tenant-profile", str(args.tenant_profile),
+               "--apply" if apply else "--check"]
+    return [*command, "--restart"] if apply else command
+
+
+def sql_staff_step(args: argparse.Namespace, app: dict[str, Any], *, readonly: bool,
+                   cli: Azure | None = None) -> bool:
+    cli = cli or Azure(Path(os.environ.get("AZURE_CONFIG_DIR", str(Path.home() / ".azure"))),
+                       body_directory=args.tenant_profile,
+                       extension_directory=args.tenant_profile / "cliextensions")
+    environment = {**cli.environment(), "ZF_SETUP_EXPECTED_APP": app["id"]}
+    if cli.subscription:
+        environment["ZF_SETUP_SUBSCRIPTION"] = cli.subscription
+
+    def run(apply: bool) -> tuple[int, dict[str, Any]]:
+        try:
+            result = subprocess.run(staff_command(args, app, apply=apply),
+                                    env=environment, capture_output=True, text=True,
+                                    timeout=600, check=False)
+        except (OSError, subprocess.TimeoutExpired):
+            result = subprocess.CompletedProcess([], 1, "", "")
+        if result.returncode not in (0, 2):
+            try:
+                failure = json.loads(result.stdout) if result.stdout.strip() else {}
+            except ValueError:
+                failure = {}
+            if isinstance(failure, dict) and failure.get("error") == "validation":
+                print("SQL preflight rejected the private roster or deployed auth/SQL controls. "
+                      "Review existing staff codes, approved roles, complete coverage and immutable "
+                      "bindings with --list-staff; SQL binding/restart: NOT confirmed.")
+                return result.returncode, {}
+            print("SQL binding: blocked (private SQL connectivity, installed drivers/packages or "
+                  "initializer authority unavailable); SQL binding/restart: NOT confirmed.")
+            print("From an authorized host with private SQL connectivity and the same private roster, run:")
+            command = ["python3", "infra/scripts/initialize-workbench-staff.py",
+                       *staff_command(args, app, apply=True)[2:]]
+            print(shlex.join(command))
+            print("Install first: python3 -m pip install -e src/core -e src/agents -e src/api pyodbc; "
+                  "install Microsoft ODBC Driver 18 for SQL Server. SQL public access must stay Disabled.")
+            return result.returncode, {}
+        try:
+            value = json.loads(result.stdout)
+        except ValueError:
+            raise SetupError("SQL initializer returned an invalid summary; binding/restart are unverified.") from None
+        if not isinstance(value, dict) or not all(isinstance(value.get(k), int)
+                                                  for k in ("staff_changes", "owner_labels")):
+            raise SetupError("SQL initializer summary is incomplete; binding/restart are unverified.")
+        return result.returncode, value
+
+    code, summary = run(False)
+    if code not in (0, 2):
+        return False
+    print(f"SQL plan: {summary['staff_changes']} staff binding(s), "
+          f"{summary['owner_labels']} owner label(s); checking serving-replica restart evidence.")
+    marker = hashlib.sha256(args.roster.read_bytes() + str(
+        app.get("properties", {}).get("latestReadyRevisionName", "")).encode()).hexdigest()
+    if code == 0 and app.get("tags", {}).get("zava-forward-staff-state") == marker:
+        print("SQL binding: current; replica restart: previously verified for this roster/revision.")
+        return True
+    if readonly:
+        print("SQL binding/restart: read-only, no changes or restart performed.")
+        return code == 0 and summary.get("restart_required") is False
+    if not args.yes and (
+        not sys.stdin.isatty()
+        or input("Apply these SQL bindings and restart the API replicas? [y/N] ").lower() != "y"
+    ):
+        print("SQL binding and replica restart: NOT done. Rerun with --yes after reviewing the plan.")
+        return False
+    code, summary = run(True)
+    done = code == 0 and summary.get("restart_required") is False
+    if done:
+        latest = cli.rest(app_url(app))
+        cli.rest(app_url(app), method="PATCH", body={
+            "tags": {**latest.get("tags", {}), "zava-forward-staff-state": marker}})
+    print("SQL binding: " + ("done; replica restart: verified." if done else "incomplete; replica restart: NOT verified."))
+    return done
+
+
+def lookup_person(graph: Azure, args: argparse.Namespace, roles: set[str]) -> None:
+    if args.check or args.dry_run:
+        raise SetupError("--lookup-upn writes only private output; do not combine it with read-only modes.")
+    definitions = json.loads(MANIFEST.read_text())["appRoles"]
+    args.staff_role = next((r["key"] for r in definitions if r["label"] == args.staff_role),
+                           args.staff_role)
+    if (args.staff_role not in roles or not args.staff_code
+            or not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", args.staff_code)):
+        raise SetupError("Supply an existing --staff-code and its approved --staff-role; use --list-staff.")
+    user = graph.rest(GRAPH + "users/" + quote(args.lookup_upn, safe="") +
+                      "?$select=id,accountEnabled,userType")
+    if user.get("accountEnabled") is not True or user.get("userType") != "Member":
+        raise SetupError("UPN did not identify an enabled member person; no private output was written.")
+    row = {"code": args.staff_code, "role": args.staff_role, "userId": object_id(user["id"])}
+    parent = private_path(args.roster.parent, directory=True, create=True)
+    with tempfile.NamedTemporaryFile(mode="w", dir=parent, prefix="person-", suffix=".json",
+                                     delete=False) as stream:
+        json.dump([row], stream, indent=2)
+    print("Person mapping saved privately at " + stream.name +
+          ". Review the code/role against --list-staff, then merge into roster.json; IDs were not printed.")
 
 
 def collection_filter(expression: str) -> str:
@@ -612,56 +918,67 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
     existing_ref = current.get("clientSecretSettingName")
     if args.bearer_only:
         return None, False
-    if (identifier(current.get("clientId")) == client and existing_ref and existing_ref != secret_name
+    now = datetime.now(timezone.utc)
+    valid = [c for c in registration.get("passwordCredentials", [])
+             if c.get("endDateTime") and
+             datetime.fromisoformat(c["endDateTime"].replace("Z", "+00:00")) > now]
+    matching = [s for s in secrets if any(c.get("displayName") == s["name"] for c in valid)
+                and s["name"].startswith(secret_name)]
+    if matching:
+        selected = next((s for s in matching if s["name"] == existing_ref), matching[-1])
+        return selected["name"], record_credential_store(cli, app, selected, readonly)
+    if (identifier(current.get("clientId")) == client and existing_ref
+            and not existing_ref.startswith(secret_name)
+            and any(c.get("displayName") == existing_ref for c in valid)
             and any(s["name"] == existing_ref for s in secrets)):
-        return existing_ref, False
+        selected = next(s for s in secrets if s["name"] == existing_ref)
+        return existing_ref, record_credential_store(cli, app, selected, readonly)
     action = (auth.get("globalValidation") or {}).get("unauthenticatedClientAction")
-    if action == "Return401" and not args.create_secret:
+    if action == "Return401" and not args.create_secret and not args.enable_browser:
         return None, False
-    stored = any(s["name"] == secret_name for s in secrets)
-    credentials = [c for c in registration.get("passwordCredentials", []) if c.get("displayName") == secret_name]
-    if stored and credentials:
-        expires = datetime.fromisoformat(credentials[-1].get("endDateTime", "").replace("Z", "+00:00"))
-        if expires <= datetime.now(timezone.utc):
-            raise SetupError("Setup credential is expired; use the documented credential rotation procedure.")
-        return secret_name, False
-    if stored or credentials:
-        print(f"Credential recovery: open {APP_PORTAL} > select the workbench registration > "
-              "Certificates & secrets. Review only the credential whose name starts with entra-. "
-              "A credential without matching app storage cannot be recovered; an authorized owner "
-              "must remove that orphaned setup credential before retrying --create-secret. "
-              "Never remove an in-use credential.")
-        raise SetupError("Credential/storage handoff is incomplete; auth was not switched. Human recovery required.")
     if not args.create_secret:
         return None, True
-    if readonly:
-        return secret_name, True
-    if args.secret_store == "keyvault":
-        vaults = cli.call(["keyvault", "list", "-g", args.resource_group])
-        candidates = [v for v in vaults if not args.vault or v["name"] == args.vault]
-        if len(candidates) != 1:
-            names = ", ".join(label(v["name"]) for v in candidates) or "(none)"
-            raise SetupError(f"Select a Key Vault in ama with --vault. Candidates: {names}. "
-                             "For private vaults, run inside the approved network or explicitly use --secret-store app.")
-        vault = candidates[0]["name"]
-        if not args.vault_identity and app.get("identity", {}).get("type") != "SystemAssigned":
-            raise SetupError("Pass --vault-identity for the API's Key Vault-enabled managed identity.")
-        if args.vault_identity and args.vault_identity not in app.get("identity", {}).get("userAssignedIdentities", {}):
-            raise SetupError("Key Vault identity must already be attached to the selected API.")
+    recorded_store = app.get("tags", {}).get(STORE_TAG)
+    if recorded_store not in (None, "keyvault", "app"):
+        raise SetupError("Recorded credential store is invalid; review the app store tag before retrying.")
+    store = args.secret_store or recorded_store or "keyvault"
+    vault = None
+    if store == "keyvault":
+        try:
+            vault, identity = discover_credential_target(cli, app, args)
+        except SetupError as error:
+            if not readonly:
+                raise
+            print("Browser credential missing/expired; storage discovery blocked: " + str(error))
+            return secret_name, True
         print("Checking selected Key Vault endpoint using secret metadata only; no secret values are read.")
         try:
             cli.call(["keyvault", "secret", "list", "--vault-name", vault, "--maxresults", "1"])
-        except AzureError:
-            raise SetupError("Selected Key Vault endpoint preflight failed; no credential was created. "
-                             "Check approved network access and secret-metadata list permission, "
-                             "or explicitly use --secret-store app. Vault networking was not changed.") from None
-    else:
-        vault = None
+        except AzureError as error:
+            if args.direct_ingress and args.secret_store is None and error.kind in (
+                    "permission", "request", "transient", "network"):
+                action = "would use" if readonly else "using"
+                print(f"Private Key Vault unavailable here; {action} the Container App secret store for this demo; vault networking stays private.")
+                vault, store = None, "app"
+            elif readonly:
+                print("Browser credential missing/expired; private Key Vault access is blocked here. "
+                      "Run setup from the approved private network; no changes made.")
+                return secret_name, True
+            else:
+                raise SetupError("Private Key Vault preflight failed; run from the approved network "
+                                 "with secret permissions. Vault networking was not changed.") from None
+    if readonly:
+        print("Browser credential missing/expired; would create it in " +
+              ("Key Vault with the attached API identity." if vault else "the Container App secret store."))
+        return secret_name, True
     app_url = ARM + app["id"] + f"?api-version={API_VERSION}"
     existing = cli.rest(ARM + app["id"] + f"/listSecrets?api-version={API_VERSION}", method="POST")
     preserved = existing.get("value")
     if not isinstance(preserved, list):
         raise SetupError("Cannot preserve existing app secrets; no new credential was created.")
+    # A unique handoff name lets an interrupted run reuse only a matched credential
+    # and storage pair, never an orphan's unrecoverable value.
+    secret_name += "-" + uuid.uuid4().hex[:12]
     expiration = (datetime.now(timezone.utc) + timedelta(days=180)).strftime("%Y-%m-%dT%H:%M:%SZ")
     password = graph.rest(GRAPH + f"applications/{object_id(registration['id'])}/addPassword",
                           method="POST", body={"passwordCredential": {
@@ -675,16 +992,27 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
             with tempfile.NamedTemporaryFile(mode="w", dir=args.tenant_profile, delete=False) as stream:
                 filename = stream.name
                 stream.write(password["secretText"])
-            result = cli.call(["keyvault", "secret", "set", "--vault-name", vault, "--name", secret_name,
-                               "--file", filename, "--expires", expiration])
-            new_secret.update(keyVaultUrl=result["id"], identity=args.vault_identity or "system")
+            try:
+                result = cli.call(["keyvault", "secret", "set", "--vault-name", vault, "--name", secret_name,
+                                   "--file", filename, "--expires", expiration])
+                new_secret.update(keyVaultUrl=result["id"], identity=identity)
+            except AzureError:
+                if not args.direct_ingress or args.secret_store is not None:
+                    raise
+                print("Private Key Vault write unavailable; using the Container App secret store for this demo; vault networking stays private.")
+                store = "app"
+                new_secret["value"] = password["secretText"]
         finally:
             if filename:
                 Path(filename).unlink(missing_ok=True)
     else:
         new_secret["value"] = password["secretText"]
     configuration = {**app["properties"]["configuration"], "secrets": [*preserved, new_secret]}
-    cli.rest(app_url, method="PATCH", body={"properties": {"configuration": configuration}})
+    latest = cli.rest(app_url)
+    cli.rest(app_url, method="PATCH", body={
+        "tags": {**latest.get("tags", {}), STORE_TAG: store,
+                 "zava-forward-credential-name": secret_name},
+        "properties": {"configuration": configuration}})
     wait_for(lambda: cli.rest(app_url),
              lambda a: any(s["name"] == secret_name for s in a["properties"]["configuration"].get("secrets", [])),
              "App secret reference is not confirmed; auth was not switched. Rerun to reconcile.")
@@ -697,13 +1025,28 @@ def aad_registration(auth: dict[str, Any]) -> dict[str, Any]:
     return provider.get("registration") or {}
 
 
+def record_credential_store(cli: Azure, app: dict[str, Any], secret: dict[str, Any],
+                            readonly: bool) -> bool:
+    store = "keyvault" if secret.get("keyVaultUrl") else "app"
+    wanted = {STORE_TAG: store, "zava-forward-credential-name": secret["name"]}
+    changed = not all(app.get("tags", {}).get(k) == v for k, v in wanted.items())
+    if readonly or not changed:
+        return changed
+    latest = cli.rest(app_url(app))
+    cli.rest(app_url(app), method="PATCH", body={"tags": {**latest.get("tags", {}), **wanted}})
+    return changed
+
+
 def auth_patch(current: dict[str, Any], client: str, tenant: str, urls: list[str],
-               secret: str | None, bearer: bool) -> dict[str, Any]:
+               secret: str | None, bearer: bool, *, direct: bool = False,
+               enable_browser: bool = False) -> dict[str, Any]:
     desired = json.loads(json.dumps(current))
     desired["platform"] = {**(desired.get("platform") or {}), "enabled": True}
     http = dict(desired.get("httpSettings") or {})
     http["requireHttps"] = True
-    if ((any(".azurefd.net" in url for url in urls) or len(urls) > 1)
+    if direct:
+        http["forwardProxy"] = {"convention": "NoProxy"}
+    elif ((any(".azurefd.net" in url for url in urls) or len(urls) > 1)
             and (http.get("forwardProxy") or {}).get("convention") != "Custom"):
         http["forwardProxy"] = {"convention": "Standard"}
     desired["httpSettings"] = http
@@ -723,7 +1066,8 @@ def auth_patch(current: dict[str, Any], client: str, tenant: str, urls: list[str
     validation = dict(desired.get("globalValidation") or {})
     if not current.get("globalValidation"):
         validation["excludedPaths"] = ["/healthz", "/readyz", "/", "/welcome.html", "/style.css", "/zava-logo.png", "/sign-in"]
-    if bearer or validation.get("unauthenticatedClientAction") in (None, "AllowAnonymous"):
+    if (bearer or enable_browser
+            or validation.get("unauthenticatedClientAction") in (None, "AllowAnonymous")):
         validation.update(unauthenticatedClientAction="Return401" if bearer else "RedirectToLoginPage",
                           redirectToProvider="azureactivedirectory")
     desired["globalValidation"] = validation
@@ -767,9 +1111,17 @@ def run_lock(profile: Path, readonly: bool) -> Iterator[None]:
 
 
 def setup(args: argparse.Namespace) -> int:
-    readonly = args.check or args.dry_run
+    readonly = args.check or args.dry_run or args.list_staff or bool(args.lookup_upn)
     if args.resource_group != "ama":
         raise SetupError("This exercise only permits resource group ama.")
+    args.roster = args.roster.expanduser()
+    manifest = json.loads(MANIFEST.read_text())
+    roles = {r["key"] for r in manifest["appRoles"]}
+    if not args.list_staff and not args.lookup_upn:
+        prepare_private_roster(args.roster, readonly=readonly)
+    roster = [] if args.lookup_upn or args.list_staff else read_roster(args.roster, roles)
+    if any(r["kind"] != "users" for r in roster):
+        raise SetupError("SQL staff binding needs individual userId entries, not groupId mappings.")
     unresolved_profile = args.tenant_profile.expanduser()
     if unresolved_profile.is_symlink():
         raise SetupError("Isolated profile must not be a symbolic link.")
@@ -779,19 +1131,43 @@ def setup(args: argparse.Namespace) -> int:
         raise SetupError("Setup profile must be isolated from the operator profile and outside Git.")
     if args.tenant_profile.exists():
         private_path(args.tenant_profile, directory=True)
-    print("1/6 Checking Python, Azure CLI and Container Apps extension.")
+    print("1/7 Checking Python, Azure CLI and Container Apps extension.")
     operator = Azure(operator_profile, extension_directory=args.tenant_profile / "cliextensions")
     preflight(operator)
-    print("2/6 Checking login, tenant binding, network and Graph access.")
+    require_extension(operator, "containerapp")
+    print("2/7 Checking login, tenant binding, network and Graph access.")
     cli, graph, tenant, subscription = contexts(args, operator)
-    manifest = json.loads(MANIFEST.read_text())
-    roster = read_roster(args.roster.expanduser(), {r["key"] for r in manifest["appRoles"]})
     if roster and not readonly and not token_permissions(graph).intersection(ASSIGNMENT_WRITE):
         authority_help()
         raise SetupError("Roster assignment permission is missing; no registration changes were made.")
-    with run_lock(args.tenant_profile, readonly):
-        print("3/6 Discovering the API and its linked public edge in ama.")
+    with run_lock(args.tenant_profile, readonly), ExitStack() as stack:
+        print("3/7 Discovering the API and its configured dependencies in ama.")
         app, urls = discover(cli, args, subscription)
+        if args.lookup_upn:
+            lookup_person(graph, args, roles)
+            return 0
+        if args.list_staff:
+            command = staff_command(args, app) + ["--list-candidates"]
+            result = subprocess.run(command, env=cli.environment(), capture_output=True, text=True,
+                                    timeout=120, check=False)
+            if result.returncode:
+                raise SetupError("Candidate staff lookup needs installed src packages and private SQL "
+                                 "connectivity. Run --list-staff from an authorized private-network host.")
+            candidates = json.loads(result.stdout)
+            print("Existing workbench positions (code / approved role):")
+            for row in candidates:
+                print(label(row["code"]) + " / " + label(row["role"]))
+            return 0
+        coordination_problem = None
+        try:
+            stack.enter_context(authentication_lock(cli, app, readonly))
+        except SetupError as error:
+            if not readonly:
+                raise
+            coordination_problem = str(error)
+            print("Coordination: blocked; " + str(error))
+        if args.direct_ingress and not args.bearer_only:
+            args.enable_browser = True
         auth_url = ARM + app["id"] + f"/authConfigs/current?api-version={API_VERSION}"
         try:
             current_auth = cli.rest(auth_url)["properties"]
@@ -799,9 +1175,12 @@ def setup(args: argparse.Namespace) -> int:
             if error.kind != "not-found":
                 raise
             current_auth = {}
+        action = (current_auth.get("globalValidation") or {}).get("unauthenticatedClientAction")
+        args.create_secret = args.create_secret or (
+            not args.bearer_only and (args.direct_ingress or action != "Return401"))
         configured = aad_registration(current_auth).get("clientId")
         resolved_roster = resolve_roster(graph, roster)
-        print("4/6 Reconciling application registration, callback URLs and enterprise app.")
+        print("4/7 Reconciling application registration, callback URLs and enterprise app.")
         reg = registration(graph, args.client_id or configured, args.registration_name)
         drift = 0
         if reg is None:
@@ -849,8 +1228,10 @@ def setup(args: argparse.Namespace) -> int:
                                                    for r in s.get("appRoles", [])) for v, rid in wanted.items()
                                                 if v.startswith("ZavaForward.")),
                                   "Enterprise-app roles have not propagated; rerun shortly.")
-        print("5/6 Checking private roster assignments and browser credential wiring.")
+        print("5/7 Checking private roster assignments and browser credential wiring.")
         remaining = []
+        if coordination_problem:
+            remaining.append(coordination_problem)
         if args.pending_domains:
             remaining.append("Linked custom domain validation/deployment pending; rerun to add its callback after approval.")
         if not roster:
@@ -867,12 +1248,14 @@ def setup(args: argparse.Namespace) -> int:
             drift += int(changed)
             service_mode = args.bearer_only or (
                 (current_auth.get("globalValidation") or {}).get("unauthenticatedClientAction") == "Return401"
-                and not args.create_secret)
+                and not args.create_secret and not args.enable_browser)
             if secret is None and not service_mode:
                 remaining.append("Browser credential missing: rerun with --create-secret "
                                  "(Key Vault default), or explicitly --create-secret --secret-store app.")
             else:
-                desired = auth_patch(current_auth, object_id(reg["appId"]), tenant, urls, secret, service_mode)
+                desired = auth_patch(
+                    current_auth, object_id(reg["appId"]), tenant, urls, secret, service_mode,
+                    direct=args.direct_ingress, enable_browser=args.enable_browser)
                 if desired.get("globalValidation", {}).get("unauthenticatedClientAction") == "Return401":
                     remaining.append("Bearer-only service action retained; browser sign-in still needs "
                                      "a valid credential and human-reviewed browser configuration.")
@@ -916,15 +1299,33 @@ def setup(args: argparse.Namespace) -> int:
         if latest_app["properties"].get("provisioningState") != "Succeeded":
             remaining.append("API provisioning is not Succeeded; inspect the Container App rollout "
                              "and rerun after it succeeds. Matching runtime values alone are incomplete.")
-        if sp:
-            print(f"Manual assignments, if authority is missing: {SP_PORTAL} > All applications > "
-                  f"{label(args.registration_name)} > Users and groups > Add user/group > select principal "
-                  "> Select a role > Assign.")
-        print("6/6 Summary: " + ("read-only; " if readonly else "") + f"{drift} reconciliation item(s).")
+        if not readonly and sp and reg:
+            verified_sp = graph.rest(GRAPH + f"servicePrincipals/{object_id(sp['id'])}")
+            outstanding = assign_roster(graph, verified_sp, resolved_roster, True)
+            latest_auth = cli.rest(auth_url)["properties"]
+            latest_reg = graph.rest(GRAPH + f"applications/{object_id(reg['id'])}")
+            verified_secret, credential_drift = secret_reference(
+                cli, graph, latest_app, latest_reg, latest_auth, args, True)
+            if (outstanding or desired_registration(latest_reg, urls, manifest, args.account_photo)
+                    or latest_auth != desired or credential_drift
+                    or verified_secret != secret or verified_sp.get("appRoleAssignmentRequired") is not True
+                    or runtime_patch(latest_app, object_id(reg["appId"]), tenant)):
+                remaining.append("Final Entra verification found drift; SQL was not applied.")
+        print("6/7 Checking SQL staff binding and serving-replica restart.")
+        sql_done = False
+        if roster and sp and not remaining:
+            sql_done = sql_staff_step(args, latest_app, readonly=readonly, cli=cli)
+        elif readonly and roster:
+            sql_done = sql_staff_step(args, latest_app, readonly=True, cli=cli)
+        else:
+            print("SQL binding: NOT done; replica restart: NOT done (earlier prerequisite incomplete).")
+        if not sql_done:
+            remaining.append("SQL binding and serving-replica restart are not confirmed.")
+        print("7/7 Summary: " + ("read-only; " if readonly else "") + f"{drift} reconciliation item(s).")
         for item in remaining:
             print("Remaining: " + item)
-        print("Separate acceptance: run the private-network SQL staff-binding/restart procedure in infra/README.md "
-              "and test an authorized person's browser sign-in. No SQL or network settings were changed.")
+        print("Separate acceptance: test an authorized person's real browser sign-in. "
+              "No network settings were changed.")
         return 2 if remaining or (readonly and drift) else 0
 
 
@@ -938,6 +1339,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("-g", "--resource-group", default="ama")
     result.add_argument("-n", "--container-app")
     result.add_argument("--edge-profile")
+    result.add_argument("--direct-ingress", action="store_true",
+                        help="Use only the verified external API FQDN; never discover Front Door")
     result.add_argument("--public-url", help="Verify this HTTPS origin is linked to the selected API")
     result.add_argument("--registration-name", default="zava-forward-api")
     result.add_argument("--client-id", type=object_id, help="Explicit intended registration; never printed")
@@ -948,10 +1351,18 @@ def parser() -> argparse.ArgumentParser:
     mode.add_argument("--check", action="store_true", help="Read-only verification; exit 2 for drift/incomplete")
     mode.add_argument("--dry-run", action="store_true", help="Read-only discovery and plan; never login or mutate")
     result.add_argument("--create-secret", action="store_true", help="Create only a missing app-bound browser credential")
-    result.add_argument("--secret-store", choices=("keyvault", "app"), default="keyvault")
+    result.add_argument("--secret-store", choices=("keyvault", "app"),
+                        help="Optional override; otherwise discover, prefer private Key Vault")
     result.add_argument("--vault", help="Key Vault name in ama")
     result.add_argument("--vault-identity", help="Key Vault-enabled managed identity already attached to the API")
+    result.add_argument("--yes", action="store_true", help="Approve the displayed SQL plan and replica restart")
+    result.add_argument("--list-staff", action="store_true", help="List only existing SQL staff codes/roles")
+    result.add_argument("--lookup-upn", help="Look up a person's object ID into the private roster, never stdout")
+    result.add_argument("--staff-code", help="Existing workbench position for --lookup-upn")
+    result.add_argument("--staff-role", help="Approved role for --lookup-upn")
     result.add_argument("--bearer-only", action="store_true", help="Explicit secretless service-test mode, not browser acceptance")
+    result.add_argument("--enable-browser", action="store_true",
+                        help="Explicitly replace Return401 with credential-backed browser login")
     result.add_argument("--account-photo", action="store_true", help="Merge delegated User.Read and poll human admin consent")
     result.add_argument("--wait-seconds", type=int, default=300, help="Bounded human-consent polling, 0 to report only")
     return result
@@ -966,6 +1377,8 @@ def main(argv: list[str] | None = None) -> int:
             raise SetupError("--check/--dry-run never log in; run --login separately.")
         if args.create_secret and args.bearer_only:
             raise SetupError("--create-secret and --bearer-only select different modes; use one.")
+        if args.enable_browser and args.bearer_only:
+            raise SetupError("--enable-browser and --bearer-only select different modes; use one.")
         return setup(args)
     except AzureError as error:
         if error.kind in ("permission", "login"):
@@ -973,16 +1386,19 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Blocked: {error}", file=sys.stderr)
         print("Summary: setup incomplete; successful earlier steps are retained. "
               "For an interrupted write, rerun discovery before retrying a mutation.", file=sys.stderr)
+        print("SQL binding and replica restart: NOT confirmed.", file=sys.stderr)
         return 1
     except SetupError as error:
         print(f"Blocked: {error}", file=sys.stderr)
         print("Summary: setup incomplete; successful earlier steps are retained. Resolve the blocker and rerun.",
               file=sys.stderr)
+        print("SQL binding and replica restart: NOT confirmed.", file=sys.stderr)
         return 1
     except (OSError, ValueError, KeyError, TypeError):
         print("Blocked: input or service response was unreadable/malformed; no raw payload was logged. "
               "Check the documented schema, CLI version and permissions, then rerun.", file=sys.stderr)
         print("Summary: setup incomplete; successful earlier steps may persist.", file=sys.stderr)
+        print("SQL binding and replica restart: NOT confirmed.", file=sys.stderr)
         return 1
     except KeyboardInterrupt:
         print("Stopped: interrupted. Earlier changes may persist; rerun to reconcile.", file=sys.stderr)

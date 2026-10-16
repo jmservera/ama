@@ -4,6 +4,8 @@ param tags object
 param vnetAddressPrefix string = '10.40.0.0/16'
 param acaSubnetPrefix string = '10.40.0.0/23'
 param privateEndpointSubnetPrefix string = '10.40.4.0/24'
+param demoDirectIngress bool = false
+param demoAcaSubnetPrefix string = '10.40.6.0/23'
 
 var dnsZones = [
   'privatelink${environment().suffixes.sqlServerHostname}'
@@ -94,13 +96,49 @@ resource acaNsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   }
 }
 
+resource demoAcaNsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = if (demoDirectIngress) {
+  name: 'nsg-${prefix}-aca-demo'
+  location: location
+  tags: tags
+  properties: {
+    securityRules: [
+      {
+        name: 'allow-internet-https-in'
+        properties: {
+          priority: 100
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: 'Internet'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '443'
+        }
+      }
+      {
+        name: 'allow-vnet-in'
+        properties: {
+          priority: 200
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: '*'
+          sourceAddressPrefix: 'VirtualNetwork'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '*'
+        }
+      }
+    ]
+  }
+}
+
 resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   name: 'vnet-${prefix}'
   location: location
   tags: tags
   properties: {
     addressSpace: { addressPrefixes: [vnetAddressPrefix] }
-    subnets: [
+    subnets: concat([
       {
         name: 'snet-aca'
         properties: {
@@ -122,7 +160,21 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
           privateEndpointNetworkPolicies: 'Enabled'
         }
       }
-    ]
+    ], demoDirectIngress ? [
+      {
+        name: 'snet-aca-demo'
+        properties: {
+          addressPrefix: demoAcaSubnetPrefix
+          networkSecurityGroup: { id: demoAcaNsg!.id }
+          delegations: [
+            {
+              name: 'aca-demo'
+              properties: { serviceName: 'Microsoft.App/environments' }
+            }
+          ]
+        }
+      }
+    ] : [])
   }
 }
 
@@ -146,6 +198,7 @@ output vnetId string = vnet.id
 output vnetName string = vnet.name
 output acaSubnetId string = vnet.properties.subnets[0].id
 output peSubnetId string = vnet.properties.subnets[1].id
+output demoAcaSubnetId string = demoDirectIngress ? resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, 'snet-aca-demo') : ''
 output zoneIds object = {
   sql: zones[0].id
   blob: zones[1].id

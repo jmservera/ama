@@ -43,6 +43,9 @@ param sqlAdminPrincipalType string = 'Group'
 param entraClientId string = ''
 @description('Key Vault and Container App secret name for browser authentication. Retain the private setup-selected name on redeploy; never put the secret value here.')
 param entraClientSecretName string = 'entra-client-secret'
+@description('Browser credential storage. App-local demo credentials block application redeployment; use deployApplications=false for dependency-only updates. Wrappers discover the deployed tag and refuse an unsafe full deployment.')
+@allowed(['keyvault', 'app'])
+param entraCredentialStore string = 'keyvault'
 @description('Explicit Entra role-value mapping for an existing registration. Empty uses the application defaults. Transitional mappings do not rename tenant roles.')
 param entraRoleMap object = {}
 @description('Provision private token-only storage and its maintenance identity/job for delegated Microsoft profile photos.')
@@ -55,6 +58,8 @@ param apiImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param enableApiAi bool = false
 @description('False bootstraps dependencies without exposing placeholder apps. Build/push the real image, provision the auth secret and seed SQL, then redeploy with true.')
 param deployApplications bool = true
+@description('Omit every agent and background job when false, allowing API-only staging without competing queue or scheduled consumers. Does not stop workloads already deployed in another generation.')
+param deployBackgroundWorkloads bool = true
 @description('Create the VNet-injected environment and DNS before SQL initialization, without starting workloads.')
 param deployEnvironmentOnly bool = false
 @description('Opt-in service smoke mode: validate bearer tokens without interactive login or a vault client secret. Requires entraClientId; incompatible with delegated token storage.')
@@ -65,6 +70,8 @@ param orchestratorImage string = ''
 param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 @description('Deploy Front Door Premium, a WAF policy and a Private Link origin to the internal environment (ADR 0002 decision 6). WARNING: Private Link to the managedEnvironments group of an internal VNet-injected environment is unverified for this configuration (open item). Production profile only; the private endpoint connection needs approval (infra/README.md, Public edge).')
 param enablePublicEdge bool = false
+@description('Development-only direct HTTPS demo in a separately named environment and subnet. Requires private backing services and browser Entra authentication when applications deploy; incompatible with Front Door.')
+param demoDirectIngress bool = false
 @description('Optional edge custom domain (managed TLS certificate). Empty uses the default azurefd.net host.')
 param edgeCustomDomain string = ''
 @allowed(['Detection', 'Prevention'])
@@ -116,6 +123,8 @@ var publicAccess = isDev && allowPublicNetworkAccess
 var purgeProtection = !isDev || keyVaultPurgeProtection
 
 var prefix = '${workload}-${environmentName}'
+var applicationPrefix = demoDirectIngress ? '${prefix}-demo' : prefix
+var ledgerJobName = demoDirectIngress ? 'job-${applicationPrefix}-audit' : 'job-${applicationPrefix}-ledger-verify'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
 var compact = replace(prefix, '-', '')
 var allTags = union(tags, {
@@ -146,6 +155,12 @@ module guard 'modules/guard.bicep' = {
     tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''
     entraRoleMapRequiresEntraClientId: empty(entraRoleMap) || !empty(entraClientId) ? 'ok' : ''
     bearerOnlyRequiresAudience: !entraBearerOnly || (!empty(entraClientId) && !enableEntraTokenStore && !entraTokenStoreReady) ? 'ok' : ''
+    demoRequiresDevelopmentProfile: !demoDirectIngress || isDev ? 'ok' : ''
+    demoForbidsPublicEdge: !demoDirectIngress || !enablePublicEdge ? 'ok' : ''
+    demoRequiresPrivateBackingServices: !demoDirectIngress || !allowPublicNetworkAccess ? 'ok' : ''
+    demoRequiresBrowserAuthentication: !demoDirectIngress || !deployApplications || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
+    appCredentialRequiresDirectDemo: entraCredentialStore != 'app' || (demoDirectIngress && !entraBearerOnly && !empty(entraClientId)) ? 'ok' : ''
+    appCredentialBlocksApplicationDeployment: entraCredentialStore != 'app' || !deployApplications ? 'ok' : ''
   }
 }
 
@@ -158,7 +173,7 @@ module identity 'modules/identity.bicep' = {
 module network 'modules/network.bicep' = {
   name: 'network'
   dependsOn: [guard]
-  params: { prefix: prefix, location: location, tags: allTags }
+  params: { prefix: prefix, location: location, tags: allTags, demoDirectIngress: demoDirectIngress }
 }
 
 module monitoring 'modules/monitoring.bicep' = {
@@ -305,11 +320,12 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
   params: {
     allowPublicNetworkAccess: publicAccess
     behindPublicEdge: enablePublicEdge
-    prefix: prefix
+    demoDirectIngress: demoDirectIngress
+    prefix: applicationPrefix
     location: location
     tags: allTags
     workspaceId: monitoring.outputs.workspaceId
-    infrastructureSubnetId: network.outputs.acaSubnetId
+    infrastructureSubnetId: demoDirectIngress ? network.outputs.demoAcaSubnetId : network.outputs.acaSubnetId
     vnetId: network.outputs.vnetId
     identityIds: identity.outputs.ids
     identityClientIds: identity.outputs.clientIds
@@ -324,7 +340,9 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
     entraClientSecretName: entraClientSecretName
+    entraCredentialStore: entraCredentialStore
     deployWorkloads: deployApplications
+    deployBackgroundWorkloads: deployBackgroundWorkloads
     entraBearerOnly: entraBearerOnly
     entraRoleMap: entraRoleMap
     tokenStoreReady: enableEntraTokenStore && entraTokenStoreReady
@@ -434,7 +452,7 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
 }
 
 resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
-  name: 'alert-${prefix}-api-5xx'
+  name: 'alert-${applicationPrefix}-api-5xx'
   location: 'global'
   tags: allTags
   properties: {
@@ -462,7 +480,7 @@ resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAppl
 }
 
 resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
-  name: 'alert-${prefix}-api-restarts'
+  name: 'alert-${applicationPrefix}-api-restarts'
   location: 'global'
   tags: allTags
   properties: {
@@ -488,8 +506,8 @@ resource apiRestarts 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployAp
   }
 }
 
-resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = if (deployApplications) {
-  name: 'alert-${prefix}-ledger-digest-mismatch'
+resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = if (deployApplications && deployBackgroundWorkloads) {
+  name: 'alert-${applicationPrefix}-ledger-digest-mismatch'
   location: location
   tags: allTags
   properties: {
@@ -503,7 +521,7 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
     criteria: {
       allOf: [
         {
-          query: 'ContainerAppConsoleLogs | where JobName startswith "job-${prefix}-ledger-verify" and Log has "LEDGER_DIGEST_ALERT"'
+          query: 'ContainerAppConsoleLogs | where JobName startswith "${ledgerJobName}" and Log has "LEDGER_DIGEST_ALERT"'
           timeAggregation: 'Count'
           operator: 'GreaterThan'
           threshold: 0
@@ -515,8 +533,8 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
   }
 }
 
-resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = if (deployApplications) {
-  name: 'alert-${prefix}-ledger-verify-missing'
+resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-preview' = if (deployApplications && deployBackgroundWorkloads) {
+  name: 'alert-${applicationPrefix}-ledger-verify-missing'
   location: location
   tags: allTags
   properties: {
@@ -530,7 +548,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
     criteria: {
       allOf: [
         {
-          query: 'ContainerAppConsoleLogs | where JobName startswith "job-${prefix}-ledger-verify" and Log has "LEDGER_DIGEST_OK" | where TimeGenerated > ago(26h)'
+          query: 'ContainerAppConsoleLogs | where JobName startswith "${ledgerJobName}" and Log has "LEDGER_DIGEST_OK" | where TimeGenerated > ago(26h)'
           timeAggregation: 'Count'
           operator: 'LessThan'
           threshold: 1
@@ -572,6 +590,7 @@ resource budget 'Microsoft.Consumption/budgets@2023-05-01' = {
 output apiInternalFqdn string = deployApplications ? apps!.outputs.apiFqdn : ''
 output containerRegistry string = registry.outputs.loginServer
 output sqlServer string = sql.outputs.fqdn
+output keyVaultName string = keyvault.outputs.name
 output iotHubName string = iotHub.outputs.name
 output iotHubConsumerGroup string = iotHub.outputs.consumerGroup
 output foundryEndpoint string = foundry.outputs.endpoint

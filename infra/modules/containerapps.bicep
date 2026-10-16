@@ -17,7 +17,10 @@ param modelDeploymentNames object
 param keyVaultUri string
 param entraClientId string
 param entraClientSecretName string = 'entra-client-secret'
+@allowed(['keyvault', 'app'])
+param entraCredentialStore string = 'keyvault'
 param deployWorkloads bool = true
+param deployBackgroundWorkloads bool = true
 param entraBearerOnly bool = false
 param entraRoleMap object = {}
 param tokenStoreReady bool = false
@@ -38,6 +41,8 @@ var queueEndpoint = 'https://${storageAccountName}.queue.${environment().suffixe
 var blobEndpoint = 'https://${storageAccountName}.blob.${environment().suffixes.storage}'
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
+@description('Use a separate external demo environment; backing-service network access is controlled independently in main.')
+param demoDirectIngress bool = false
 @description('True when Front Door fronts the app; EasyAuth then builds callback URLs from the forwarded edge host.')
 param behindPublicEdge bool = false
 @description('Map tile URL template (https). Empty means no map background in production.')
@@ -45,15 +50,17 @@ param tileUrl string = ''
 @description('Attribution text shown with the map tiles.')
 param tileAttribution string = ''
 
+var externalEnvironment = demoDirectIngress || allowPublicNetworkAccess
+
 resource environmentResource 'Microsoft.App/managedEnvironments@2025-07-01' = {
   name: 'cae-${prefix}'
   location: location
   tags: tags
   properties: {
     zoneRedundant: zoneRedundant
-    publicNetworkAccess: allowPublicNetworkAccess ? 'Enabled' : 'Disabled'
+    publicNetworkAccess: externalEnvironment ? 'Enabled' : 'Disabled'
     vnetConfiguration: {
-      internal: !allowPublicNetworkAccess
+      internal: !externalEnvironment
       infrastructureSubnetId: infrastructureSubnetId
     }
     workloadProfiles: [
@@ -74,7 +81,7 @@ resource diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' 
   }
 }
 
-module dns 'envDns.bicep' = if (!allowPublicNetworkAccess) {
+module dns 'envDns.bicep' = if (!externalEnvironment) {
   name: 'dns-${prefix}'
   params: {
     prefix: prefix
@@ -95,7 +102,7 @@ var commonEnv = [
 resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
   name: 'ca-${prefix}-api'
   location: location
-  tags: union(tags, { workload: 'api', 'zava-forward-role': 'api' })
+  tags: union(tags, { workload: 'api', 'zava-forward-role': 'api', 'zava-forward-credential-store': entraCredentialStore, 'zava-forward-credential-name': entraClientSecretName }, demoDirectIngress ? { 'zava-forward-ingress': 'direct' } : {})
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: { '${identityIds.api}': {} }
@@ -225,8 +232,8 @@ resource apiAuth 'Microsoft.App/containerApps/authConfigs@2025-07-01' = if (depl
   }
 }
 
-resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && !empty(tokenMaintenanceIdentityId)) {
-  name: 'job-${prefix}-auth-renewal'
+resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads && !empty(tokenMaintenanceIdentityId)) {
+  name: demoDirectIngress ? 'job-${prefix}-auth' : 'job-${prefix}-auth-renewal'
   location: location
   tags: union(tags, { workload: 'entra-token-maintenance', dataClassification: 'authentication-secrets' })
   identity: {
@@ -260,7 +267,7 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && !
 }
 
 // The agent runner has no database, blob or write credential. It reads context and posts proposals only through the API tool contract.
-resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
+resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads) {
   name: 'ca-${prefix}-agents'
   location: location
   tags: union(tags, { workload: 'agents' })
@@ -318,8 +325,8 @@ resource agents 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) 
   }
 }
 
-resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
-  name: 'job-${prefix}-orchestrator'
+resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads) {
+  name: demoDirectIngress ? 'job-${prefix}-orch' : 'job-${prefix}-orchestrator'
   location: location
   tags: union(tags, { workload: 'orchestrator' })
   identity: {
@@ -359,8 +366,8 @@ resource orchestrator 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
   }
 }
 
-resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
-  name: 'job-${prefix}-ledger-verify'
+resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads) {
+  name: demoDirectIngress ? 'job-${prefix}-audit' : 'job-${prefix}-ledger-verify'
   location: location
   tags: union(tags, { workload: 'ledger-verify' })
   identity: {
@@ -406,8 +413,8 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
   }
 }
 
-resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
-  name: 'job-${prefix}-import'
+resource importJob 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && deployBackgroundWorkloads) {
+  name: demoDirectIngress ? 'job-${prefix}-load' : 'job-${prefix}-import'
   location: location
   tags: union(tags, { workload: 'import' })
   identity: {
@@ -470,4 +477,4 @@ output environmentName string = environmentResource.name
 output apiFqdn string = deployWorkloads ? api!.properties.configuration.ingress.fqdn : ''
 output apiName string = deployWorkloads ? api!.name : ''
 output apiId string = deployWorkloads ? api!.id : ''
-output ledgerVerifyJobName string = deployWorkloads ? ledgerVerify!.name : ''
+output ledgerVerifyJobName string = deployWorkloads && deployBackgroundWorkloads ? ledgerVerify!.name : ''
