@@ -16,6 +16,20 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Derived role task queues (#76)
+
+`taskqueues` provides the shared, read-only `work-queues-1` definition/default
+contract and case task context. Store and SqlStore return identical projected
+context in staff list/detail; dynamic queue membership is evaluated before
+counting/paging, using the existing Store fallback rather than dialect-specific
+SQL. No schema, approval, assignment or event history changes are required.
+The API guide documents [definitions, source fields, snapshot clock, redaction
+and remaining owner decisions](../api/README.md#role-task-queues-and-shared-case-context-76).
+JSON/SQLite semantic tests cover seven/30/180-day boundaries, unknowns,
+handoff lifecycle, independent deadlines, missing named owners and 120-case
+paging/sort/export parity. Role-only responsibility never invents a named owner;
+draft policy and accepted AI advice cannot produce approved programme priority.
+
 ## Resident decisions and representatives (#86)
 
 `resident_decisions` records supplied human statements, never inferred consent.

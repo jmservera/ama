@@ -175,8 +175,11 @@ async function route() {
   }
 }
 
-const defaultListState = () => ({ q: "", stage: "", area: "", flag: "", sort: "urgent", wave: "", owner: "" });
-const listState = defaultListState();
+const defaultListState = () => {
+  const { view, ...filters } = me.work_queues?.default || {};
+  return filters;
+};
+const listState = {};
 const queueHref = () => queueOrigin === "all" ? "#/all" : "#/";
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
@@ -287,6 +290,31 @@ function pendingHandoffs() {
 }
 
 let briefingBox = null;
+function workSummary(work) {
+  return h("div", { class: "work-context" },
+    h("p", {}, `Current owner: ${work.owner}. Reason: ${work.reason}.`),
+    h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
+    h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; snapshot: ${work.as_of}.`),
+    work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
+    work.hazard_clocks.map((clock) => h("p", { class: "safety-clock" },
+      `Safety clock at snapshot: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing.`)));
+}
+
+function workSteps(work) {
+  return h("section", { class: "card", "aria-label": "Recorded task context" },
+    h("h2", {}, "Recorded task context"), workSummary(work),
+    work.blockers.length ? h("details", {}, h("summary", {}, "Blocked steps and prerequisites"),
+      h("ul", {}, work.blockers.map((step) => h("li", {},
+        `${step.step} (${step.current_stop ? "current stop" : "final-check prerequisite"}): ${step.reason} Named owner: ${step.owner}. Responsible role: ${step.responsible_role}. Next action: ${step.next_action}`,
+        h("p", { class: "muted" }, `Source: ${step.source}; version: ${step.version}.`))))) : h("p", {}, "No recorded blockers."),
+    work.overdue.length > 0 && h("ul", {}, work.overdue.map((task) => h("li", {},
+      `${task.task}: due ${task.due_at}; owner: ${task.owner}; completion: ${task.completion}.`))),
+    h("details", {}, h("summary", {}, "Task sources"),
+      h("p", {}, `Case ${work.case_id}; definition ${work.definition_version}; snapshot ${work.as_of}. Missing evidence stays Unknown; freshness does not establish validity.`),
+      h("ul", {}, work.evidence_freshness.map((item) => h("li", {},
+        `${item.kind}: ${item.status}; record date: ${item.recorded_at}; evidence: ${item.evidence}; source: ${item.source}; version: ${item.version}.`)))));
+}
+
 async function listView(view) {
   queueOrigin = view;
   const signal = routeController.signal;
@@ -299,7 +327,7 @@ async function listView(view) {
   let rows = [], total = 0, policy = "", cursor = null;
   const PAGE = 50;
   const render = () => {
-    workspaceStatus.textContent = `${me.user.role}. ${view === "mine" ? "My assigned cases" : "All permitted open cases"}. ${total} ${total === 1 ? "case" : "cases"}. Search: ${listState.q || "none"}. Stage: ${listState.stage || "any"}. Area: ${listState.area || "any"}. Wave: ${listState.wave || "any"}. Owner: ${listState.owner || "any"}. Show only: ${listState.flag || "any"}. Order: ${fx.sorts[listState.sort]}.`;
+    workspaceStatus.textContent = `${me.user.role}. ${view === "mine" ? "My assigned cases" : "All permitted open cases"}. ${total} ${total === 1 ? "case" : "cases"}. Search: ${listState.q || "none"}. Stage: ${listState.stage || "any"}. Area: ${listState.area || "any"}. Wave: ${listState.wave || "any"}. Owner: ${listState.owner || "any"}. Show only: ${listState.flag || "any"}. Work queue: ${listState.queue || "any"}. Order: ${fx.sorts[listState.sort]}. Default: ${me.work_queues.version}; selection: none.`;
     results.replaceChildren(...[
       h("p", { class: "muted" }, `${total} ${total === 1 ? "case" : "cases"}${listState.sort === "urgent" ? `. Ranked by policy version ${policy}, a fixed rule order (safety first). The order is the same every time.` : ""}`),
       h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {},
@@ -309,7 +337,8 @@ async function listView(view) {
             r.support && h("span", { class: "flag" }, "Needs extra support"),
             h("div", {}, `${r.address}, ${r.town} ${r.postcode}`),
             h("div", { class: "status" }, r.status),
-            h("div", { class: "next-action" }, "Next action: open case to review recorded steps"),
+            workSummary(r.work),
+            h("div", { class: "muted" }, `Queue reasons: ${r.work.queues.map((key) => me.work_queues.definitions.find((d) => d.id === key).label).join(", ") || "None under these definitions"}`),
             h("div", { class: "muted" }, `Rank ${r.rank}: ${r.reasons.slice(0, 3).join("; ")}`),
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
@@ -356,6 +385,7 @@ async function listView(view) {
     field("Local authority", "area", fx.areas.map((x) => [x, x])),
     field("Wave", "wave", fx.waves.map((x) => [x, x])),
     view === "all" && field("Owner", "owner", me.staff.map((x) => [x.code, x.name])),
+    field("Work queue", "queue", me.work_queues.definitions.map((d) => [d.id, d.label])),
     field("Show only", "flag", FLAGS),
     h("label", { for: "f-sort" }, "Sort by"), sort,
     h("p", {}, h("button", { id: "reset-queue", class: "alt", onclick: () => {
@@ -365,7 +395,13 @@ async function listView(view) {
       if (location.hash && location.hash !== "#/") location.hash = "#/";
       else route();
     } }, "Reset my queue")),
-    h("p", { class: "muted" }, "Returns to your assigned cases, safety-first order and first page. No records change."));
+    h("p", { class: "muted" }, `Default ${me.work_queues.version}: returns to your assigned cases, ${fx.sorts[me.work_queues.default.sort]}, first page and no case selection. No records change.`),
+    h("details", {}, h("summary", {}, "Queue definitions"),
+      h("p", {}, me.work_queues.status), h("p", {}, me.work_queues.clock),
+      h("p", {}, "Your authenticated role determines access. Work queue, search and other filters narrow the chosen own/all scope together; they never change your role."),
+      h("dl", {}, me.work_queues.definitions.flatMap((d) => [
+        h("dt", {}, d.label), h("dd", {}, d.definition, d.limitation ? ` Unavailable: ${d.limitation}` : "")
+      ]))));
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
     view === "mine" && pendingHandoffs(),
@@ -410,6 +446,8 @@ async function caseView(id) {
     (!c.handoff || !["Offered", "Received", "Escalated", "Accepted"].includes(c.handoff.state));
   const sugg = h("section", { class: "card" }, h("h2", {}, "Who could take this on"),
     h("p", { class: "muted" }, "Suggested by role and workload rules. You decide."),
+    workSummary(c.work),
+    h("p", {}, "These are proposed reviewers, not confirmed receiving owners. Review the recorded blocked steps and prerequisites above."),
     h("ul", { class: "list" }, c.suggestions.map((x) => h("li", {},
       h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
       canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));
@@ -424,6 +462,7 @@ async function caseView(id) {
       h("h1", {}, r.name, c.hazards.some((x) => !x.released) && h("span", { class: "flag danger" }, "Safety issue open")),
       h("span", { class: "muted" }, `Reference ${c.id}`)),
     h("div", { class: `status-line${openHaz.length ? " danger" : ""}`, role: "status" }, c.status),
+    workSteps(c.work),
     safetyPanel(c, id, refresh),
     h("div", { class: "grid" },
       h("section", { class: "card" }, h("h2", {}, "Contact"),
@@ -473,6 +512,8 @@ async function caseView(id) {
     financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),
+      h("p", {}, "Current task context below; event-time owners and reasons in the history remain unchanged."),
+      workSummary(c.work),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
         h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
 }

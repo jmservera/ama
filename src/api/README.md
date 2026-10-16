@@ -396,13 +396,13 @@ role simulator. No role-specific screen redesign or new permission is included.
 
 The shell has a keyboard skip link, named navigation, visible/semantic current
 destination and a persistent scope/result announcement. Each staff case row has
-one case-opening link, plain recorded status and a review prompt, not an
+one case-opening link, plain recorded status and a recorded next action, not an
 AI-invented workflow decision. Cases open full screen. Back to the list keeps
 the last mine/all scope and filters, but deliberately reloads page one: it does
 not promise restored pagination, selected row, scroll position or row focus.
 Direct case entry falls back to the own queue.
 
-"Reset my queue" clears search, stage, authority area, wave, owner, flag, sort
+"Reset my queue" clears search, stage, authority area, wave, owner, flag, work queue, sort
 and all-cases override; it restores own cases in the existing safety-first
 policy order, focuses the reset control and announces refreshed results.
 Obsolete loads/debounce are cancelled on route replacement; failed loads show
@@ -444,6 +444,90 @@ gates are unchanged; the isolated checks make no live model call and do not
 satisfy mandatory real-inference/SQL Server/Azure exercise acceptance.
 No SQL, deployment, resident consent or controlled approval behavior changed.
 Local Docker access was permission denied; image evidence must come from CI.
+
+## Role task queues and shared case context (#76)
+
+This is a bounded offline extension of the existing role workbench, not a new
+identity provider, role simulator, permission policy or operational acceptance.
+The [parity audit](../../docs/architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16)
+records each issue criterion before and after the change. The authenticated
+role still determines access; own/all scope, queue, search and other filters
+intersect and never grant rights.
+
+Staff `/api/me` now publishes `work_queues`: version `work-queues-1`, six
+definitions, availability/limitations, default filter state and null selection.
+The single existing reset consumes that server default, restores own cases in
+the existing deterministic order on page one, focuses itself and announces
+scope, all filters, version and result count. No case is selected automatically.
+No changes to records, ranking, assignments or approvals result from filtering
+or reset. No matches and no assigned open cases remain distinct.
+
+`GET /api/cases?queue=new` and `/api/cases.csv?queue=new` use the same filter
+before totals, ordering and pagination. Other filters/sorts still apply.
+Unknown queue IDs return 400 on both endpoints; an unavailable approved-priority
+queue returns an empty result, with its explanation in the visible definitions.
+Contractors cannot use staff queues and receive no new context or staff metadata.
+
+| Queue ID | Visible definition and source |
+| --- | --- |
+| `new` | Current `stage_since` is between zero and seven days old, inclusive. This describes arrival in the current stage, not case creation. |
+| `priority` | Open cases under an explicitly approved ranking policy with a named owner. The existing policy is draft, so this queue is unavailable/empty. Accepted AI advice never qualifies as approved programme priority. |
+| `stale` | Last supplied EPC record's `documents.at` is older than 30 days, Survey older than 180 days, or a technical sign-off explicitly needs reassessment. Record timestamps are review triggers, not certificate expiry or proof of source validity/currentness. |
+| `blocked` | Existing safety, unresolved stock and shared-building stops, plus unmet funding/resident/technical final-check prerequisites. Future-step prerequisites are labelled separately from current stops. |
+| `overdue` | An outstanding recorded handoff acceptance, case resident-update or external safety-service response/update deadline is strictly before the snapshot. Each completion is checked independently; accepting a handoff does not complete a resident-update commitment. No deadline is invented from stage age. |
+| `unowned` | Handoff Offered, Received or Escalated, with no accepted receiver. A proposed receiver is not a confirmed owner, and the sender keeps chase responsibility. Accepted/Completed/Declined/Withdrawn are excluded. |
+
+Evaluation uses the dataset `as_of`, with date-only values interpreted at UTC
+midnight. This reproducible snapshot is displayed, not presented as a live
+safety-service clock. Missing, malformed or future observation/record dates
+remain Unknown; timezone-less datetime values are Unknown. Future deadlines
+are not overdue; equal deadlines become overdue only after the snapshot.
+External timing authority remains with the existing hazard and repairs service.
+Legacy `noticed` alone cannot establish precise awareness or elapsed hours.
+
+Staff list/detail share the same `work` object: case/current owner, reason,
+one next action, origin/evidence/version/snapshot, blocker step/reason/named
+owner/responsible role/action, separate handoff owners, evidence-review status,
+outstanding deadlines and recorded hazard-clock observations. Safety/stock/
+building stops take precedence over a pending handoff, current-stage return
+or final-check prerequisite. A role-only responsibility keeps named owner
+Unknown; no person is assigned by inference. Missing next action prompts
+the case owner to record it rather than fabricating a workflow instruction.
+
+The case, current-context part of history, proposed-reviewer panel and
+"Task sources" disclosure reuse this same object. Historical events retain
+their event-time owner/reason; context refresh never rewrites those events.
+Case switching cancels obsolete loads and binds the displayed context to the
+selected case. Domain source comparisons and sign-off records remain intact.
+Human-written reason/action/source aliases follow existing need-to-know rules
+before serialization, including derived list/status fields; this does not
+approve the operational role/redaction matrix.
+
+The new core semantics/store tests and real loopback SQLite HTTP tests use
+constructed data, exact threshold/lifecycle expectations and 120 interleaved
+matching/nonmatching cases to verify pre-page filtering, cursor totals/order,
+sorting and CSV agreement. The extended existing Playwright check exercises
+the actual local app, all eight implemented roles, visible definitions,
+queue membership, current-context agreement, case switching, delayed responses,
+all-filter reset, focus/status and responsive layout. An alternate server
+default proves reset is not hardcoded in the browser.
+
+From the repository root, with `/tmp/zf164` already containing the project
+development dependencies (pip only), for targeted checks:
+
+```bash
+ROOT="$PWD"
+BASE="$ROOT/src/core/src:$ROOT/src/agents/src:$ROOT/src/api/src"
+(cd src/core && PYTHONPATH="$ROOT/src/core/tests:$BASE" /tmp/zf164/bin/python -m unittest discover -s tests -p 'test_taskqueues.py' -v)
+(cd src/api && PYTHONPATH="$ROOT/src/api/tests:$ROOT/src/core/tests:$ROOT/src/agents/tests:$BASE" /tmp/zf164/bin/python -m unittest discover -s tests -p 'test_task_queue_api.py' -v)
+(cd src/api && PYTHONPATH="$BASE" /tmp/zf164/bin/python -m checks.workbench_browser_check)
+```
+
+Operational queue-definition ratification, named ranking-policy approval and
+OQ-005/OD-14/OD-19 role/field/redaction/delegation decisions remain open.
+These engineering checks do not establish direct human accessibility/usability,
+real AI, SQL Server, Azure deployment or complete eleven-profile/nine-workflow
+acceptance. Refs #76; the issue is not closed by this slice.
 
 ## Return and handoff API (#83)
 

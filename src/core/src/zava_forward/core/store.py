@@ -9,7 +9,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, insights, ledger, projection, ranking, stock
+from . import ai_tasks, ai_prompts, buildings, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -228,6 +228,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return snap
 
     def _filtered(self, user, view, q, f):
+        taskqueues.validate_queue(f.get("queue", ""))
+        if f.get("queue") and projection.is_contractor(user):
+            raise PermissionError("Staff work queues are not available to contractors.")
         if view == "closed":
             if user["role"] not in MANAGER_ROLES:
                 raise PermissionError("Only a manager can see closed cases.")
@@ -237,6 +240,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             rows = [c for c in rows if projection.own_case(user, c)]
         elif view == "mine":
             rows = [c for c in rows if c["owner_code"] == user["code"]]
+        if f.get("queue"):
+            rows = [c for c in rows if f["queue"] in self.work_context(c, user)["queues"]]
         if q:
             ql = q.lower()
             # a contractor cannot search on the resident's name: that would reveal who lives where
@@ -278,14 +283,28 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 if projection.is_contractor(user):
                     r.pop("reasons")
                     out[i] = projection.contractor_summary(c, r)
-                elif view == "mine":
-                    r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
+                else:
+                    r["work"] = self.work_context(c, user)
+                    if not projection.can_see_reason(user) and r["status"].startswith("Waiting on "):
+                        r["status"] = "Waiting for the recorded next step"
+                    if view == "mine":
+                        r["focus"] = self.focus(c, user["role"], projection.can_see_reason(user))
             nxt = ranking.sql_key(page[-1]) if limit is not None and page and (sort in ("urgent", "", None) or sort not in insights.SORTS) and len(page) == limit else None
             return dict(items=out, total=total, limit=limit, offset=offset, sort=sort,
                         policy_version=ranking.CURRENT["version"], policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=len(ranks), next_cursor=nxt)
 
     def list_cases(self, user, view="mine", q="", filters=None, sort="urgent"):
         return self.page_cases(user, view, q, filters, sort)["items"]
+
+    def work_context(self, c, user):
+        return taskqueues.context(
+            c, as_of=self.as_of, reason_ok=user is None or projection.can_see_reason(user),
+            policy=ranking.CURRENT,
+            stock_queries=[q for q in c.get("stock_reconciliation", [])
+                           if stock.query_status(c, q["id"]) == "Unresolved"],
+            building_reasons=buildings.blockers(self.data, self.cases, c),
+            resident_reasons=resident_gate(c), technical_missing=missing_items(c),
+            handoff=handoff_view(c))
 
     def focus(self, c, role, reason_ok=True):
         """Role-specific facts for the card, as label/value pairs."""
@@ -337,6 +356,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             for row in d["stock_reconciliation"]:
                 row["status"] = stock.query_status(c, row["id"])
             d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
+            if user is None or not projection.is_contractor(user):
+                d["work"] = self.work_context(c, user)
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
             d["status"] = self.status_line(c)

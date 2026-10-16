@@ -69,11 +69,15 @@ def own_case(user, c):
 
 def contractor_summary(c, s):
     out = dict(s, needs_notice=needs_notice(c), named_contact=c["owner"])
+    if out.get("status", "").startswith("Waiting on "):
+        out["status"] = "Waiting for the recorded next step"
     return {k: out[k] for k in SUMMARY_FIELDS if k in out}
 
 
 def contractor_detail(c, d):
     out = dict(d, needs_notice=needs_notice(c), named_contact=c["owner"])
+    if out.get("status", "").startswith("Waiting on "):
+        out["status"] = "Waiting for the recorded next step"
     keep = {k: out[k] for k in DETAIL_FIELDS if k in out}
     keep["home"] = {k: c["home"][k] for k in ("address", "town", "postcode", "type")}
     keep["contractor"] = {"name": c["contractor"]["name"], "contact": c["contractor"]["contact"]}
@@ -132,7 +136,14 @@ def redact_staff_detail(user, d):
         for request in d.get("service_requests", []):
             request.pop("representative_ref", None)
     if not can_see_reason(user):
+        work = d.pop("work", None)  # Already projected by the shared queue read model.
         hold_notes(d)
+        if work is not None:
+            d["work"] = work
+        if d.get("status", "").startswith("Waiting on "):
+            d["status"] = "Waiting for the recorded next step"
+        if d.get("reason"):
+            d["reason"] = NOTE_HELD
         adjustment = d["resident"].get("adjustment")
         d["resident"]["adjustment"] = (
             "Unknown" if adjustment in (None, "", "Unknown") else
