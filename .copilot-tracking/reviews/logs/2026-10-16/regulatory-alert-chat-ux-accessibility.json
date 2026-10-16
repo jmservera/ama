@@ -1,0 +1,249 @@
+{
+  "outcome": "passed",
+  "scope": "Synthetic changed surfaces only; not a WCAG conformance certification",
+  "axe_version": "4.10.3",
+  "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+  "scans": [
+    {
+      "state": "alert-collapsed-chat",
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "state": "cited-answer",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "no-source-refused",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "320px-reflow",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "390px-reflow",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "1280px-reflow",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "200-percent-text-320px",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 23
+    },
+    {
+      "state": "source-changed-retained-risk",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "disabled-chat",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "Resident Liaison Officer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "state": "Building Safety Liaison",
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "state": "Retrofit Coordinator",
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "Quality Inspector",
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "Retrofit Programme Manager",
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "state": "Programme Support Officer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "Grants and Evidence Officer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "supplier-human-route",
+      "violations": [],
+      "incomplete": [],
+      "passes": 1
+    }
+  ],
+  "staff_comprehension": "Not run; unmet"
+}

@@ -3994,6 +3994,19 @@ metadata when the knowledge base was created.
   is unchanged. Owner agreement, independent grading, actual staff precision/
   acknowledgement/comprehension and continuing-stock acceptance remain unmet.
   Updated the knowledge-base index; did not modify memory or legal snapshots.
+## [2026-10-16] implementation | Regulatory alert and home chat UX (Refs #215)
+
+* Added the [API UX guide and criterion audit](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215)
+  and index route for seven audience patterns, plain-language presentation,
+  scoped home alerts, structured cited lookup and explicit doubt/missing-source
+  states. Reused merged deterministic checks, source monitoring and home chat;
+  no new rights, clocks, legal interpretation, approvals or sending.
+* Added a synthetic local SQL-backed browser exercise with automated WCAG 2.2
+  A/AA-tagged axe checks and keyboard/reflow assertions. This is bounded
+  engineering evidence, not complete conformance or staff acceptance.
+* Documented a repairs/housing/grants comprehension protocol and left actual
+  testing Not run/unmet. ADR 0005 acceptance remains synthetic-development-only;
+  real owners/sources, operational approval and measured chat value remain gaps.
 
 ## [2026-10-16] query | One-command Entra setup and public-edge discovery (Refs #351, Refs #344)
 
@@ -4098,6 +4111,48 @@ metadata when the knowledge base was created.
   comparative value and continuing-stock/Azure acceptance remain unmet.
   No issue checkbox, legal approval, live activation, private dataset, Azure
   resource or legacy application tree was changed.
+## [2026-10-16] implementation | Regulatory UX review regression gates
+
+* Refs #215. Merged origin/main into the existing PR branch and retained both
+  append-only log histories. Updated the [API engineering evidence](../../src/api/README.md#local-engineering-checks),
+  source README and index without changing issue checkboxes or human authority.
+* Wired the regulatory browser harness into src-api CI beside the design-system
+  browser check, with hash-verified axe 4.10.3 and uploaded JSON evidence.
+  Download failure warns and runs every non-axe assertion; wrong-hash content
+  fails. The exact new CI shell block passed locally with successful and
+  deliberately failed downloads; hosted CI remains pending, not claimed passed.
+* Measured 142 interactive targets across 17 browser states, minimum 24px in
+  both axes. Raised citation links from 18px inline boxes to 24px targets.
+  Removing the regulatory summary rule failed the real check at 1198 x 24px
+  against the retained 44px disclosure design floor; restoring it passed.
+  A 24px unstyled summary is not itself an AA violation.
+* Existing 86 API and 33 core regressions, three new harness tests, the existing
+  design-system browser check, API ruff/format/mypy passed. Axe still reports
+  eight contrast-incomplete states; full WCAG, real staff comprehension,
+  measured chat value and real owners/sources remain unmet. No operational
+  approval, rule activation, consent, safety or financial commitment is added.
+
+## [2026-10-16] implementation | Browser-free regulatory UX unit imports
+
+* Refs #215. Merged origin/main into the existing PR branch first, preserving
+  every line from both append-only log histories in order. Combined main's
+  privacy/retention warning and textarea association with the existing
+  accessible live-log/list and unavailable-chat fallback.
+* Reproduced the reported import failure in `/tmp/v215c` with editable core,
+  agents and API runtime distributions only. Deferred browser runtime imports
+  and retained Page typing under TYPE_CHECKING, without adding runtime
+  dependencies, skipping pure tests or weakening mypy. Added a subprocess
+  regression that explicitly rejects eager Playwright imports.
+* Full API discovery passes without Playwright and again with Playwright
+  1.64.0: 561 tests, 110 opt-in skips in each environment. All four harness
+  unit tests, 56 core regulatory regressions, API Ruff/format and strict mypy
+  pass. Existing source CI still executes both browser harnesses.
+* Both real synthetic loopback browser checks pass. The regulatory check with
+  hash-verified axe retains 17 states and 142 targets, zero detected violations
+  and eight contrast-incomplete states. Updated [API commands and evidence](../../src/api/README.md#local-engineering-checks),
+  source README and index. Full WCAG and staff comprehension remain unmet;
+  no issue checkboxes, actual legal/consent/safety/financial approvals, Azure
+  resources or real owner/source gaps are changed.
 ## [2026-10-16] implementation | Entra setup review findings and infra CI repair (Refs #351)
 
 * Merged current main into the existing setup topic without rewriting history;
