@@ -76,11 +76,16 @@ pipeline evidence and staff comparison/precision/acknowledgement/comprehension.
 <!-- rpi:phase id=P03 -->
 ### P03 Evidence and delivery
 
-* [ ] P03 complete; depends on P02
+* [x] P03 complete; depends on P02
 <!-- rpi:task id=P03-T01 -->
 * [x] P03-T01 Run tests, ruff, mypy and loopback app; record report and acceptance audit.
 <!-- rpi:task id=P03-T02 -->
-* [ ] P03-T02 Perform one post-implementation review, commit, push and open PR.
+* [x] P03-T02 Perform one post-implementation review, commit, push and open PR.
+
+Delivery: PR #355, main base, Refs #216 only. Review snapshot was Not accepted;
+RV-001 to RV-003 were corrected and regression-tested as recorded in changes,
+without a second review or independent closure claim. Full bounded local plan
+is delivered; issue-level owner/human/continuing-stock criteria remain unmet.
 
 ## Test Ownership and Targets
 

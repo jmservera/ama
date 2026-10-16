@@ -94,4 +94,7 @@ passed five tests. Canonical report regenerated with unchanged positive counts
 and zero invalid outputs. SQL home filter is an additional identity refinement. Final report regenerated
 and reproduced exactly by the full 93-test agents suite; lint, format and mypy
 passed after that refinement. No local source changes remain pending.
-Commit, push and PR creation are the only remaining P03-T02 actions.
+Source/artifact commit 7056d8d was pushed on feat/regulatory-eval-gates-216.
+PR #355 opened against main, using Refs #216 only and the six-criterion audit.
+No merge or issue-checkbox update. Final delivery-artifact status update follows
+in a separate ordinary commit; no history rewrite.
