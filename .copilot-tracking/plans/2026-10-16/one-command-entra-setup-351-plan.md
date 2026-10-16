@@ -4,7 +4,7 @@ description: Issue 351 implementation contract
 ms.date: 2026-10-16
 ---
 
-Task ID: 351. Slug: one-command-entra-setup-351. Status: Implement continuation.
+Task ID: 351. Slug: one-command-entra-setup-351. Status: Implement complete.
 
 Owner continuation (2026-10-16): merge origin/main first, resolve RV-001 through
 RV-003 with mutation-proven tests, reproduce all infra CI with installed source
@@ -82,8 +82,9 @@ binding remain unexecuted and must not be ticked as accepted.
 * [x] P02-T01: Add infra/tests/test_setup_entra.py; preserve old callback helper tests. Full 177-test infra suite and three safeguard mutation checks pass.
 * [x] P02-T02: Update infra README, knowledge index/log and run targeted validation.
 * [x] P02-T03: Execute one independent review; record audit and publish draft PR #356. Historical review retained; owner-selected later implementation resolves its source findings.
-* [ ] P02-T04: Reproduce and repair full infra CI, mutation-prove routed findings,
-  publish updated acceptance audit and mark existing PR ready.
+* [x] P02-T04: Reproduce and repair full infra CI, mutation-prove routed findings,
+  publish updated acceptance audit and mark existing PR ready. All eight hosted
+  checks pass at source commit 90da083; PR #356 marked ready.
 
 ## Test Ownership and Change Bounds
 

@@ -12,9 +12,10 @@ both append-only log sides. Full infra reproduction in a fresh pip venv with
 editable core/agents/api ran 169 tests: one failure in secret lifecycle's
 hardcoded URI assertion after secret-name parameterization. Source boundary
 is infra plus requested docs/RPI artifacts; no live tenant or private data.
-RV safeguards and regression coverage are implemented and validated locally;
-next action is publication and hosted checks. Original Review below remains
-historical, not rerun.
+RV safeguards and regression coverage are implemented and validated locally.
+Source commit 90da083 is pushed, all eight hosted checks pass, PR body is
+updated and `gh pr ready 356` succeeded. Original Review below remains
+historical, not rerun. This final evidence-only closeout does not alter source.
 
 ## Initial Delivery (Historical)
 
@@ -162,6 +163,9 @@ Final local results:
 | Setup ruff (Python 3.10 target), mypy; container tooling strict mypy | Passed |
 | Both CLI `--help` local launches; diff whitespace | Passed |
 | Five-distribution namespace CLI/import/no-init checks | Passed |
+| API suite from src/api with absolute core/agents test PYTHONPATH | 557 passed, 110 opt-in skips |
+| Source compileall and browser JavaScript syntax | Passed |
+| Hosted validate run 38944911484 and source run 38944911514 at 90da083 | All eight checks passed, including both previously failing jobs |
 | RV-001 in-memory removal of resolve_roster planned-conflict guard | KILLED by fresh zero-write regression, assertion failure |
 | RV-002 in-memory removal of selected-vault metadata try/probe | KILLED by unreachable-vault zero-credential regression, assertion failure |
 | RV-003 in-memory removal of final provisioning guard | KILLED by converged-runtime all-mode regression, assertion failure |
@@ -171,6 +175,11 @@ guard's AST source span with `pass`, execute the modified module in memory,
 patch the test module's SETUP reference and run the named behavioral unittest.
 Each variant failed assertions, not import/runner errors. Source files remained
 unchanged during mutation checks. No new mutation framework/dependency.
+
+Validation-command correction: an extra API run from repository root failed
+five module imports because its tests expect the project directory as cwd.
+Reran from `src/api`, exactly the workflow directory, with absolute test paths;
+557 tests passed (110 opt-in skips). No source workaround or test bypass.
 
 ### Current Acceptance Audit
 
@@ -184,11 +193,24 @@ unchanged during mutation checks. No new mutation framework/dependency.
 | Optional secret creation and selected-vault endpoint preflight | Proven offline, mutation-killed zero-credential regression; actual endpoint/write authority/secret validity UNMET |
 | Failed/non-ready no-op provisioning, check/dry-run | Proven offline in all three modes, mutation-killed; no remote writes/login in read-only mode |
 | Isolated login, Graph authority, consent instructions/polling | Proven with mocks; actual interactive login/authority/human consent UNMET |
-| Infra workflow validation | 177 tests, offline Bicep and exact infra/container static checks passed; hosted latest-head checks pending publication |
+| Infra workflow validation | 177 tests, offline Bicep and exact infra/container static checks passed; all eight hosted checks passed at source commit 90da083 |
 | Authorized browser sign-in, private SQL staff binding/restart | UNMET / not run; separate human/private-network operator gates |
 | Privacy, legal and safety/financial authority | No private data/roster/Azure mutation; no rule activation or invented approval |
-| Publication | Main merge committed, existing topic retained; final source/evidence commit, push and ready action pending |
+| Publication | Main merge d007c69; source/evidence 90da083 pushed without force; existing PR #356 body updated and marked ready after all eight hosted checks passed |
 
 Historical independent Review outcome remains Not accepted for its original
 assessed source. These later implementation dispositions do not relabel it
 conformant or imply new independent review. No issue-body criteria ticked.
+
+### Delivery Result
+
+Full plan P01/P02 implementation is Complete; no active implementation markers
+remain. Manual mode, Implement phase, session stopped; no automatic follow-up
+session or repeated Review. Source-readiness blockers are empty. Original
+Review is Complete / Not accepted for its assessed snapshot, with subsequent
+owner-selected implementation and mutation evidence recorded separately.
+
+Existing PR #356 is open and ready, not merged. The body removes the old draft
+blockers, uses Refs #351 only, and distinguishes local mock proof from every
+unmet live gate. Final closeout changes only RPI artifacts; application, infra,
+tests and workflow source are identical to the green source candidate.

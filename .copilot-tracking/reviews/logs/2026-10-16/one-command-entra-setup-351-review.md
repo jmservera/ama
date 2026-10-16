@@ -315,3 +315,9 @@ Graph/ARM writes, vault access/secret validity, human consent, SQL bindings/
 restart and authorized browser sign-in remain UNMET. The source changes and
 current acceptance audit are in the existing task changes record. Issue
 checkboxes remain unchanged and the owner retains the merge decision.
+
+Delivery evidence: source commit 90da083 passed all eight hosted checks
+(validation run 38944911484, source CI run 38944911514), including validate
+and src-namespace. `gh pr ready 356` succeeded. The local project-directory
+API run passed 557 tests with 110 opt-in skips. These are implementation and
+publication evidence, not a second independent Review or live acceptance.
