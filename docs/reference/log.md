@@ -4386,3 +4386,15 @@ metadata when the knowledge base was created.
   the exercise Legal, Compliance and DPO owner; dataset-specific reuse,
   competent method review and operational authority are not inferred.
   No issue checkboxes, executable files, private data or Azure state changed.
+## [2026-10-16] ingest | Explicit orchestrator image whitespace
+
+* Refs #339. Trim explicit `--orchestrator-image` before image selection so
+  empty or whitespace-only values use existing discovery and warned placeholder
+  fallback instead of forwarding a blank image to Bicep.
+* Expanded `infra/tests/test_deploy.py` subprocess coverage for empty/spaces/
+  tabs-newlines, existing-job and placeholder outcomes, what-if/apply and
+  padded explicit tags/digests/placeholder. Updated `infra/README.md`.
+* Validation is offline with isolated fake Azure CLI responses. No live Azure,
+  setup-entra changes, private datasets, operational approvals or issue ticks.
+* Expanded regressions failed in 11 subcases before normalization; all 19 deploy
+  tests pass after the fix, with scoped Ruff/format/mypy and local CLI help.

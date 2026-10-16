@@ -1,0 +1,50 @@
+{
+  "task_id": "issue-339",
+  "task_slug": "issue-339-orchestrator-image",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/issue-339-orchestrator-image-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/issue-339-orchestrator-image-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/issue-339-orchestrator-image-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-16/issue-339-orchestrator-image-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/issue-339-orchestrator-image-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/issue-339-orchestrator-image-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research reused; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "Research artifact, issue and existing CLI/test contracts"
+    },
+    {
+      "decision": "Full task phase progression delegated to explicit rpi-quick parent; no automatic follow-up session requested",
+      "status": "confirmed",
+      "evidence": "User requested end-to-end delivery and RPI artifacts; rpi-quick parent invoked"
+    },
+    {
+      "decision": "One critique executed: Revise; PC-001 rejected as unsupported execution constraint",
+      "status": "disposed",
+      "evidence": "Plan Critique Disposition and critique artifact"
+    },
+    {
+      "decision": "One Review executed Complete; outcome Conformant for CLI/tests/docs, publication pending",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/issue-339-orchestrator-image-review.md"
+    },
+    {
+      "decision": "Publication completed; all AC1-AC5 met",
+      "status": "verified",
+      "evidence": "Implementation commit 56d2d7c pushed; https://github.com/jmservera/ama/pull/366 opened against main with Refs #339"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "No further RPI work; owner/coordinator reviews hosted checks and merge"
+  },
+  "prioritized_follow_ups": []
+}
