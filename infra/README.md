@@ -761,6 +761,11 @@ deployment succeed. Multiple eligible edges require `--edge-profile`, unless
 one linked profile carries the role tag. `--public-url https://<edge-host>`
 asserts a discovered eligible origin; it cannot inject an unrelated callback.
 This handles both main's edge module and #344's additive existing-app edge.
+In particular, setup retains the existing `Custom` forwarding convention and
+`X-Forwarded-Host` / `X-Forwarded-Proto` header names used by the pending
+`public-edge-existing.bicep` and `edge-existing-auth.bicep` deployment.
+It does not replace that configuration with `Standard`. The legacy CLI also
+accepts `--public-url` through its delegation to setup.
 It does not create an edge, approve Private Link, validate DNS/certificates or
 open the private data network.
 
@@ -777,6 +782,9 @@ sign-in, requires HTTPS, and configures the matching issuer/audiences and
 trusted-proxy runtime settings while preserving unrelated container settings.
 Existing auth exclusions, token storage, other providers and bearer/browser
 action are preserved; an anonymous action is tightened, never enabled.
+Planned direct user/group memberships with different effective roles are
+rejected before any registration or enterprise-app create/update, including
+on a fresh setup. The same role through both a user and group is allowed.
 
 Browser credentials are optional and never printed. An existing same-client
 secret reference is reused without rotation; this does not prove its validity.
@@ -791,6 +799,14 @@ python3 infra/scripts/setup-entra.py --create-secret --secret-store app
 ```
 
 Key Vault is the default store; a unique vault in `ama` is auto-selected.
+Before minting a one-time credential, setup probes that vault's data endpoint
+with `az keyvault secret list --maxresults 1`, which returns metadata, never
+secret values. The operator needs metadata-list permission in addition to the
+separate secret-write permission. Denial, network failure or timeout stops
+before credential creation. A successful probe does not prove write authority
+or guarantee subsequent availability; later storage failures still require
+the interrupted-handoff recovery below. Existing credential reuse and
+read-only modes do not run this creation-only probe.
 The reference uses the specified attached API identity, or an existing
 system-assigned identity. Private-vault operations require the authorized
 network/operator path; a failure never changes networking or silently falls
@@ -831,10 +847,22 @@ human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
 `1` means blocked/error; `130` means interrupted. `--check` and `--dry-run`
 make no remote mutations, do not log in or create a missing private profile,
 and cannot be combined with `--login`. They need existing authorized sessions.
+A final fresh Container App read must report provisioning `Succeeded`.
+Failed, in-progress, canceled or missing provisioning state is incomplete
+(exit `2` on otherwise converged runs), even when runtime values already
+match, in ordinary no-op runs as well as `--check` / `--dry-run`.
 Successful earlier writes are retained on failure, so rerun discovery after
 an unknown write outcome. Mutating POSTs are not blindly retried.
 The old `initialize-api-auth.py` CLI forwards to this command with the same
 options; its imported callback-only Python function is retained for compatibility.
+
+Local regression evidence (2026-10-16): all 177 infra tests pass with the source
+distributions installed in an isolated pip venv, including compiled Bicep
+controls. Each RV-001/RV-002/RV-003 safeguard was independently removed in
+memory and its behavioral regression failed. This proves mocked command
+ordering, preservation and failure handling, not live directory permissions,
+vault connectivity/write authority, secret validity, consent, Private Link
+readiness, SQL bindings/restart or an authorized person's browser sign-in.
 
 ### Tenant staff and application-role initialization
 

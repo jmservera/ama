@@ -4,7 +4,14 @@ description: Issue 351 implementation contract
 ms.date: 2026-10-16
 ---
 
-Task ID: 351. Slug: one-command-entra-setup-351. Status: blocked after Review.
+Task ID: 351. Slug: one-command-entra-setup-351. Status: Implement continuation.
+
+Owner continuation (2026-10-16): merge origin/main first, resolve RV-001 through
+RV-003 with mutation-proven tests, reproduce all infra CI with installed source
+distributions, preserve pending PR #352 Custom forwarded-header compatibility,
+update evidence and existing PR #356, push without force and mark ready.
+Historical critique and independent Review remain unchanged; this is the
+explicitly selected later implementation of routed findings, not a review loop.
 
 ## Executive Summary
 
@@ -68,13 +75,15 @@ binding remain unexecuted and must not be ticked as accepted.
 
 <!-- P01 -->
 ### P01: Setup implementation
-* [ ] P01-T01: Implement CLI, discovery, directory convergence, private roster and auth wiring. Delivered but RV-001/RV-002/RV-003 block complete acceptance.
+* [x] P01-T01: Implement CLI, discovery, directory convergence, private roster and auth wiring. Routed safeguards now implemented and mutation-proven locally.
 * [x] P01-T02: Add minimal Bicep role tags and old CLI compatibility routing.
 <!-- P02 -->
 ### P02: Evidence and delivery
-* [ ] P02-T01: Add infra/tests/test_setup_entra.py; preserve old callback helper tests. 101 pass; fresh-conflict/vault-probe/failed-no-op cases remain per Review.
+* [x] P02-T01: Add infra/tests/test_setup_entra.py; preserve old callback helper tests. Full 177-test infra suite and three safeguard mutation checks pass.
 * [x] P02-T02: Update infra README, knowledge index/log and run targeted validation.
-* [x] P02-T03: Execute one independent review; record audit and publish draft PR #356. Ready delivery remains blocked by RV-001 through RV-003.
+* [x] P02-T03: Execute one independent review; record audit and publish draft PR #356. Historical review retained; owner-selected later implementation resolves its source findings.
+* [ ] P02-T04: Reproduce and repair full infra CI, mutation-prove routed findings,
+  publish updated acceptance audit and mark existing PR ready.
 
 ## Test Ownership and Change Bounds
 
@@ -85,6 +94,8 @@ one script; maximum new test files: one. RPI artifacts are explicitly requested.
 Tests owned by infra unittest; semantic scenarios plus legacy regression tests,
 ruff and mypy on new code; Bicep existing tests for changed module tags.
 Local CLI --help and mocked full-run are the applicable local app run.
+P02-T04 also covers the parameter-aware inventory assertion and exact workflow
+formatting; compiled policy checks continue to verify default/forwarding/use.
 
 ## Critique Disposition
 
@@ -115,10 +126,11 @@ directly; no divergent owner decision and no second critique.
 
 Live authorized tenant execution, human consent, SQL binding/restart and real
 browser sign-in after 344 are separate operator acceptance gates.
-The one independent Review is Complete / Not accepted. RV-003 (failed no-op
-check), RV-001 (fresh conflict before writes), and RV-002 (vault probe before
-credential creation) route to later rpi-implement; no second Review is required.
-Draft publication only until these implementation defects are resolved.
+The historical independent Review remains Complete / Not accepted at its
+assessed boundary. The owner explicitly selected its later implementation:
+RV-001, RV-002 and RV-003 are now resolved with targeted and mutation evidence.
+No second critique/Review is required or performed. Live tenant/consent/SQL/
+browser acceptance remains unmet, separately from source readiness.
 
 ## Handoff
 

@@ -6,6 +6,12 @@ ms.date: 2026-10-16
 
 ## P01
 
+Continuation boundary: validate planned membership conflicts during roster
+resolution before any registration/SP writes. Probe selected vault metadata
+without fetching values before addPassword. Require Succeeded provisioning
+for clean no-op checks and reruns. Preserve PR #352's Custom X-Forwarded-Host/
+Proto configuration while retaining linked-route callback discovery.
+
 P01-T01: Keep orchestration synchronous and explicit, backed by one CLI runner
 that suppresses raw failures. Reads may retry throttling/transient propagation;
 no blind mutation retry. Fetch all Graph pages with fixed-host validation.
@@ -35,6 +41,13 @@ to the supported tool, document changed broader CLI behavior. Tag only API,
 edge profile and endpoint resources.
 
 ## P02
+
+P02-T04: Use a private session venv and pip editable src/core, src/agents,
+src/api. Run all infra tests and workflow Bicep/lint commands, mutation checks
+for each routed finding, mypy and both local help launches. Repair the
+secret-inventory assertion to check the parameter default and interpolated URI,
+not require a hardcoded URI; retain compiled parameter forwarding/use checks.
+No mvp/prototype edits or live tenant acceptance.
 
 P02-T01: No live network tests. Stateful fake az covers creation then idempotent
 rerun, drift mode, failure outputs and preservation of auth/roles/redirects.

@@ -6,6 +6,10 @@ ms.date: 2026-10-16
 
 ## Scope and Evidence
 
+Historical independent Review: the findings and verdict below apply to the
+original assessed source. The owner's subsequent selected implementation
+disposition is appended at the end; it is not a second Review.
+
 * Task: 351, one-command-entra-setup-351.
 * Review date: 2026-10-16.
 * Review scope: one independent full post-implementation RPI review.
@@ -286,3 +290,28 @@ validation including the preservation patch, and record dispositions before
 publishing a ready PR. If publishing with unresolved findings, use a blocked
 draft PR. Do not run another independent Review or require live tenant
 deployment to finish these code corrections.
+
+## Later Owner-Selected Implementation Disposition (2026-10-16)
+
+This is execution evidence from the explicitly requested later implementation,
+not a new independent Review. Original execution Complete / Not accepted and
+its assessed boundary remain historical and unchanged.
+
+| Finding | Implemented disposition | Regression evidence |
+| --- | --- | --- |
+| RV-001 | Planned membership/role conflicts checked during resolve_roster before any app/SP writes | Fresh state, both roster orders, all three modes assert no writes or objects; matching roles allowed; removal of guard fails behavioral assertions |
+| RV-002 | Selected vault secret-metadata endpoint probed before addPassword; sanitized denial/network errors and existing recovery retained | Unreachable/denied endpoint and timeout create no credential; ordering/reuse/read-only checks; removal of probe creates credential and fails regression |
+| RV-003 | Final fresh provisioning read required independently of runtime drift | Failed, in-progress, canceled and unknown states incomplete in ordinary/check/dry-run; success recovers; removal of guard yields false clean exit and fails regression |
+
+All 177 infra tests passed, including 47 setup tests. Each in-memory safeguard
+mutation was killed by assertion failures, not runner/import errors. All Bicep
+templates build/lint offline and exact workflow infra/container lint/type
+checks pass. Secret-inventory parameter expectations and policy formatting
+repair the reproduced CI defects. Published PR #352 Custom forwarding is
+preserved by regression without editing that branch.
+
+These dispositions remove source-readiness blockers; actual tenant login,
+Graph/ARM writes, vault access/secret validity, human consent, SQL bindings/
+restart and authorized browser sign-in remain UNMET. The source changes and
+current acceptance audit are in the existing task changes record. Issue
+checkboxes remain unchanged and the owner retains the merge decision.

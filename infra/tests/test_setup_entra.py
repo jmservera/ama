@@ -119,6 +119,10 @@ class FakeAzure:
             value = self.routes
         elif args[:2] == ["keyvault", "list"]:
             value = [{"name": "fictional-vault"}]
+        elif args[:3] == ["keyvault", "secret", "list"]:
+            assert args[args.index("--vault-name") + 1] == "fictional-vault"
+            assert args[args.index("--maxresults") + 1] == "1"
+            value = []
         elif args[:3] == ["keyvault", "secret", "set"]:
             assert Path(args[args.index("--file") + 1]).read_text() == SECRET
             value = {"id": "https://fictional-vault.vault.azure.net/secrets/entra-generated/version"}
@@ -259,6 +263,16 @@ class SetupTests(unittest.TestCase):
         self.assertNotIn("hexadecimal", self.output.getvalue())
         self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"], "systemAssignedIdentity")
 
+    def test_managed_identity_sentinel_finds_existing_registration_and_rewires_uuid(self):
+        self.bootstrap()
+        self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"] = "systemAssignedIdentity"
+        before = copy.deepcopy(self.fake.reg)
+        self.assertEqual(self.invoke(), 0)
+        self.assertEqual(self.fake.reg, before)
+        self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"], CLIENT)
+        creates = [w for w in self.fake.writes if w[:2] == ("POST", SETUP.GRAPH + "applications")]
+        self.assertEqual(len(creates), 1)
+
     def test_disabled_null_auth_is_created_with_probe_exemptions(self):
         self.fake.auth = {"platform": None, "identityProviders": None, "globalValidation": None, "httpSettings": None}
         self.bootstrap()
@@ -365,6 +379,30 @@ class SetupTests(unittest.TestCase):
         self.assertIn("Planned group and user assignments conflict", self.output.getvalue())
         self.assertEqual(len(self.fake.writes), count)
 
+    def test_fresh_planned_user_group_conflict_precedes_all_directory_writes(self):
+        self.fake.memberships = [GROUP]
+        roster = [{"code": "fictional-team", "groupId": GROUP, "role": "Coordinator"},
+                  {"code": "fictional-officer", "userId": USER, "role": "SupportOfficer"}]
+        for rows in (roster, list(reversed(roster))):
+            for mode in ((), ("--check",), ("--dry-run",)):
+                with self.subTest(reversed=rows != roster, mode=mode):
+                    self.write_roster(rows)
+                    self.assertEqual(self.invoke(*mode), 1)
+                    self.assertIn("Planned group and user assignments conflict", self.output.getvalue())
+                    self.assertFalse(self.fake.writes)
+                    self.assertIsNone(self.fake.reg)
+                    self.assertIsNone(self.fake.sp)
+
+    def test_planned_matching_user_group_roles_are_allowed(self):
+        self.fake.memberships = [GROUP]
+        self.write_roster([{"code": "fictional-team", "groupId": GROUP, "role": "Coordinator"},
+                           {"code": "fictional-officer", "userId": USER, "role": "Coordinator"}])
+        self.bootstrap()
+        count = len(self.fake.writes)
+        self.assertEqual(self.invoke("--check"), 0)
+        self.assertEqual(self.invoke(), 0)
+        self.assertEqual(len(self.fake.writes), count)
+
     def test_existing_group_role_conflict_fails_without_new_assignments(self):
         self.bootstrap()
         self.fake.assignments = [{"principalId": GROUP, "resourceId": SP,
@@ -450,6 +488,47 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke(), 0)
         self.assertEqual(len(self.fake.writes), count)
 
+    def test_unreachable_vault_preflight_prevents_one_time_credential(self):
+        self.fake.fail = lambda a: a[:3] in (["keyvault", "secret", "list"],
+                                            ["keyvault", "secret", "set"])
+        self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 1)
+        self.assertFalse(self.fake.reg["passwordCredentials"])
+        self.assertFalse(any("/addPassword" in url for _, url, _ in self.fake.writes))
+        self.assertIn("Key Vault endpoint preflight failed", self.output.getvalue())
+        self.assertEqual(self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"]["clientId"],
+                         "systemAssignedIdentity")
+        self.assertFalse(list(self.profile.iterdir()))
+        self.fake.fail = None
+        self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 0)
+
+    def test_vault_metadata_probe_precedes_password_and_is_not_repeated_on_rerun(self):
+        self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 0)
+        commands = [command for command, _ in self.fake.calls]
+        probe = next(i for i, c in enumerate(commands) if c[1:4] == ["keyvault", "secret", "list"])
+        password = next(i for i, c in enumerate(commands) if any("/addPassword" in arg for arg in c))
+        self.assertLess(probe, password)
+        self.fake.calls.clear()
+        self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 0)
+        self.assertFalse(any(c[1:4] == ["keyvault", "secret", "list"] for c, _ in self.fake.calls))
+
+    def test_vault_endpoint_timeout_creates_no_credential_and_readonly_never_probes(self):
+        original = self.fake.run
+        def timeout(command, **kwargs):
+            if command[1:4] == ["keyvault", "secret", "list"]:
+                raise subprocess.TimeoutExpired("az", 120)
+            return original(command, **kwargs)
+        with patch.object(SETUP.subprocess, "run", side_effect=timeout):
+            self.assertEqual(self.invoke("--create-secret", "--vault-identity", "managed-identity"), 1)
+        self.assertFalse(self.fake.reg["passwordCredentials"])
+        self.assertFalse(any("/addPassword" in url for _, url, _ in self.fake.writes))
+        self.fake.calls.clear()
+        count = len(self.fake.writes)
+        for mode in ("--check", "--dry-run"):
+            self.assertEqual(self.invoke(mode, "--create-secret",
+                                         "--vault-identity", "managed-identity"), 2)
+        self.assertEqual(len(self.fake.writes), count)
+        self.assertFalse(any(c[1:4] == ["keyvault", "secret", "list"] for c, _ in self.fake.calls))
+
     def test_missing_vault_identity_fails_before_password_creation(self):
         self.assertEqual(self.invoke("--create-secret"), 1)
         self.assertFalse(self.fake.reg["passwordCredentials"])
@@ -460,6 +539,34 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke("--create-secret", "--secret-store", "app"), 1)
         self.assertIn("runtime authentication settings are not verified", self.output.getvalue())
         self.assertFalse(list(self.profile.iterdir()))
+
+    def test_converged_runtime_requires_successful_provisioning_in_every_mode(self):
+        self.bootstrap()
+        count = len(self.fake.writes)
+        for state in ("Failed", "Updating", "InProgress", "Canceled", None):
+            for mode in ((), ("--check",), ("--dry-run",)):
+                with self.subTest(state=state, mode=mode):
+                    self.fake.app["properties"]["provisioningState"] = state
+                    self.assertEqual(self.invoke(*mode), 2)
+                    self.assertIn("Remaining: API provisioning is not Succeeded", self.output.getvalue())
+                    self.assertEqual(len(self.fake.writes), count)
+        self.fake.app["properties"]["provisioningState"] = "Succeeded"
+        self.assertEqual(self.invoke("--check"), 0)
+        self.assertEqual(self.invoke(), 0)
+        self.assertEqual(len(self.fake.writes), count)
+
+    def test_pending_edge_custom_forward_headers_and_public_url_fit(self):
+        proxy = {"convention": "Custom", "customHostHeaderName": "X-Forwarded-Host",
+                 "customProtoHeaderName": "X-Forwarded-Proto"}
+        self.fake.auth["httpSettings"]["forwardProxy"] = copy.deepcopy(proxy)
+        self.assertEqual(self.invoke("--public-url", f"https://{EDGE}",
+                                     "--create-secret", "--secret-store", "app"), 0)
+        self.assertEqual(self.fake.auth["httpSettings"]["forwardProxy"], proxy)
+        self.assertIn(f"https://{EDGE}/.auth/login/aad/callback", self.fake.reg["web"]["redirectUris"])
+        count = len(self.fake.writes)
+        self.assertEqual(self.invoke("--public-url", f"https://{EDGE}", "--check"), 0)
+        self.assertEqual(self.invoke("--public-url", f"https://{EDGE}"), 0)
+        self.assertEqual(len(self.fake.writes), count)
 
     def test_unknown_creation_outcome_is_discovered_on_rerun_without_duplicate(self):
         original = self.fake.rest

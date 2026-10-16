@@ -93,3 +93,25 @@ Research disposition: executed. Planning Readiness: Ready.
 All three waves complete; internal/external claims grounded above, alternatives
 and remaining uncertainty explicit. No further discovery cycle would change
 the bounded implementation; live acceptance is a later operator gate.
+
+## Owner-Selected Implementation Continuation (2026-10-16)
+
+Research disposition: reused with focused current-source inspection. Planning
+Readiness: Ready. Main merged as d007c69 with both log sides retained.
+The current PR #352 head was fetched read-only after its named remote branch
+was unavailable. Unlike the earlier local snapshot above, the published
+`infra/modules/edge-existing-auth.bicep` uses Custom X-Forwarded-Host and
+X-Forwarded-Proto headers. Preserve that configuration; retain linked origin/
+route validation for `--public-url` and legacy CLI delegation. No branch edits.
+
+Installed core/agents/api editable with pip in a fresh isolated venv and
+reproduced 169 infra tests with one failure: secret lifecycle inventory expected
+a hardcoded URI despite the intentional secret-name parameter. Workflow
+inspection also found three formatting failures in the newly added compiled
+policy assertions. These are directly coupled CI regressions, not new scope.
+
+Known live sentinel remains owner-supplied evidence, not a tenant inspection.
+Mock cases now cover both creating a missing registration and finding an
+existing one before wiring the real UUID client; no private roster or dataset.
+Vault metadata listing is an endpoint preflight, not evidence of write
+authority; post-probe races still require explicit handoff recovery.

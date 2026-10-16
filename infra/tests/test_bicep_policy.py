@@ -592,9 +592,13 @@ class BicepPolicyTests(unittest.TestCase):
 
     def test_bearer_only_keeps_validation_and_omits_browser_secret(self) -> None:
         template = module_template(self.main, "containerapps")
-        self.assertEqual(template["parameters"]["entraClientSecretName"]["defaultValue"], "entra-client-secret")
+        self.assertEqual(
+            template["parameters"]["entraClientSecretName"]["defaultValue"], "entra-client-secret"
+        )
         apps = module(self.main, "containerapps")["properties"]["parameters"]
-        self.assertEqual(apps["entraClientSecretName"]["value"], "[parameters('entraClientSecretName')]")
+        self.assertEqual(
+            apps["entraClientSecretName"]["value"], "[parameters('entraClientSecretName')]"
+        )
         auth = resource(template, "Microsoft.App/containerApps/authConfigs")
         properties = auth["properties"]
         self.assertEqual(
@@ -612,7 +616,9 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertIn(
             "not(parameters('entraBearerOnly'))", api["properties"]["configuration"]["secrets"]
         )
-        self.assertIn("parameters('entraClientSecretName')", api["properties"]["configuration"]["secrets"])
+        self.assertIn(
+            "parameters('entraClientSecretName')", api["properties"]["configuration"]["secrets"]
+        )
         guard = module(self.main, "parameter-guard")["properties"]["parameters"]
         expression = guard["bearerOnlyRequiresAudience"]
         for overrides, expected in (

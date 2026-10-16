@@ -3,8 +3,8 @@
   "task_slug": "one-command-entra-setup-351",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "blocked",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/one-command-entra-setup-351-research.md",
@@ -39,17 +39,23 @@
       "decision": "Published draft PR #356; no merge or issue-body checkbox edits",
       "status": "complete",
       "evidence": "https://github.com/jmservera/ama/pull/356"
+    },
+    {
+      "decision": "Owner selected later implementation on existing branch; merge main first, resolve all routed findings, repair CI and mark existing PR ready",
+      "status": "confirmed",
+      "evidence": "Owner continuation 2026-10-16; main merged as d007c69; no automatic follow-up session"
+    },
+    {
+      "decision": "RV-001/RV-002/RV-003 implemented and mutation-proven; 177 infra tests, all offline Bicep and workflow static checks pass",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-16/one-command-entra-setup-351-changes.md"
     }
   ],
-  "blockers": [
-    {"id": "RV-001", "summary": "Fresh planned roster conflict is rejected after registration/SP writes", "resolution": "Later rpi-implement: validate planned effective role conflicts before directory writes"},
-    {"id": "RV-002", "summary": "Selected vault endpoint is not probed before credential creation", "resolution": "Later rpi-implement: bounded read-only vault connectivity preflight"},
-    {"id": "RV-003", "summary": "Already-failed runtime rollout can pass a no-op check", "resolution": "Later rpi-implement: inspect provisioning state even without a runtime patch"}
-  ],
-  "next_action": {"phase": "Implement", "action": "Later rpi-implement invocation resolves RV-001/RV-002/RV-003 on draft PR #356; no second Review required"},
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Finish workflow-directory API validation, commit and push source/evidence, update PR body, inspect hosted checks and mark PR #356 ready"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "RV-003: failed no-op rollout detection", "rationale": "Small local state guard removes a false clean check outcome", "evidence": "Independent Review memory-only reproduction"},
-    {"rank": 2, "task": "RV-001: fresh roster role-conflict preflight", "rationale": "Prevent directory mutations for known-invalid planned role mappings", "evidence": "Independent Review fresh fake-az reproduction: four writes before rejection"},
-    {"rank": 3, "task": "RV-002: selected vault endpoint preflight", "rationale": "Reduce avoidable orphan credentials without weakening networking; careful permission-boundary handling needed", "evidence": "Independent Review credential ordering assessment"}
+    {"rank": 1, "task": "Authorized tenant execution and consent", "rationale": "Live authority and vault behavior remain unproven by mocks", "evidence": "Current acceptance audit: tenant/vault/consent UNMET"},
+    {"rank": 2, "task": "Private-network SQL staff binding and restart", "rationale": "Directory assignments alone cannot authorize workbench staff", "evidence": "infra/README.md tenant staff procedure; separate operator gate"},
+    {"rank": 3, "task": "Authorized browser sign-in after public edge readiness", "rationale": "Configuration convergence is not end-to-end human sign-in acceptance", "evidence": "Current acceptance audit: browser acceptance UNMET"}
   ]
 }

@@ -6,6 +6,18 @@ ms.date: 2026-10-16
 
 ## Scope and State
 
+Current continuation: owner selected implementation of all routed findings
+and ready delivery on existing PR #356. Main merged as d007c69, preserving
+both append-only log sides. Full infra reproduction in a fresh pip venv with
+editable core/agents/api ran 169 tests: one failure in secret lifecycle's
+hardcoded URI assertion after secret-name parameterization. Source boundary
+is infra plus requested docs/RPI artifacts; no live tenant or private data.
+RV safeguards and regression coverage are implemented and validated locally;
+next action is publication and hosted checks. Original Review below remains
+historical, not rerun.
+
+## Initial Delivery (Historical)
+
 Full plan P01/P02 authorized by expanded owner request. Implementation delivered
 for review; the one independent Review is Complete / Not accepted. Three
 Medium findings block ready delivery. Publication will be draft, not accepted.
@@ -99,3 +111,84 @@ No claim that the script fully satisfies all expanded acceptance criteria.
 Live tenant execution, admin consent, private SQL bindings/restart and browser
 sign-in are unexecuted. Juan Manuel Servera remains the exercise Legal,
 Compliance and DPO owner; setup does not activate legal rules or grant approval.
+
+## Owner-Selected Later Implementation: P01-T01 / P02-T01 / P02-T04
+
+The owner explicitly requested continuation of PR #356 after Review, on the
+same branch, including main merge and ready publication. This is implementation
+of routed findings, not a second critique or post-implementation Review.
+
+* RV-001: moved role-key/membership conflict detection into roster resolution,
+  before registration discovery or any directory writes. Fresh state tests
+  cover both roster orders and ordinary/check/dry-run execution, asserting
+  zero writes and no registration/SP creation. Matching user/group roles
+  remain accepted and reruns idempotent.
+* RV-002: selected-vault metadata listing precedes addPassword. Denial and
+  timeout produce no credential; no secret values are fetched by the probe.
+  Successful ordering, recovery on subsequent rerun and no repeated probe on
+  existing credential reuse are covered. Read-only runs never probe. Metadata
+  visibility is not evidence of future write authority/network availability;
+  existing post-creation failure recovery is retained.
+* RV-003: a final fresh app read requires Succeeded provisioning independently
+  of runtime patch necessity. Failed, Updating, InProgress, Canceled and absent
+  state yield incomplete exit 2 on otherwise-converged ordinary/check/dry-run
+  runs, without writes. A subsequent Succeeded state returns clean again.
+* Compatibility: preserved the published PR #352 Custom host/proto header
+  configuration and linked callback, including public-url check/rerun.
+  Existing callback-only imported API is unchanged; legacy CLI delegates all
+  setup options. The sentinel's existing-registration lookup and UUID rewiring
+  now has an explicit regression in addition to fresh creation.
+* CI: repaired inventory expectations for the secret-name parameter/default
+  and interpolated URI. Existing compiled controls still check forwarding and
+  use. Formatted the three new policy assertions that violated workflow lint;
+  added explicit exception chaining for the setup login-boundary diagnostic.
+
+### Validation and Mutation Evidence
+
+Fresh private session venv: `pip install -e src/core -e src/agents -e src/api`.
+Initial full infra reproduction failed 1/169 tests at the inventory assertion.
+Ruff/mypy were initially absent; restored with pip after those failures.
+Namespace validation exposed missing orchestrator/importer distributions;
+installed those editable with pip, then all five namespace imports passed.
+
+Final local results:
+
+| Evidence | Result |
+| --- | --- |
+| `REQUIRE_AZ_BICEP=1 python -m unittest discover -s infra/tests -q`, installed distributions and absolute source test PYTHONPATH | 177 passed, no skips |
+| `python -m unittest infra.tests.test_setup_entra -q` | 47 passed |
+| Every `infra/*.bicep` and `infra/modules/*.bicep` build and lint | Passed offline |
+| Exact src-namespace workflow ruff/format selections, including container tooling | Passed |
+| Setup ruff (Python 3.10 target), mypy; container tooling strict mypy | Passed |
+| Both CLI `--help` local launches; diff whitespace | Passed |
+| Five-distribution namespace CLI/import/no-init checks | Passed |
+| RV-001 in-memory removal of resolve_roster planned-conflict guard | KILLED by fresh zero-write regression, assertion failure |
+| RV-002 in-memory removal of selected-vault metadata try/probe | KILLED by unreachable-vault zero-credential regression, assertion failure |
+| RV-003 in-memory removal of final provisioning guard | KILLED by converged-runtime all-mode regression, assertion failure |
+
+Mutation execution used an isolated session script: replace only the named
+guard's AST source span with `pass`, execute the modified module in memory,
+patch the test module's SETUP reference and run the named behavioral unittest.
+Each variant failed assertions, not import/runner errors. Source files remained
+unchanged during mutation checks. No new mutation framework/dependency.
+
+### Current Acceptance Audit
+
+| Criterion | Current evidence/status |
+| --- | --- |
+| No-argument stdlib setup; legacy CLI and tool guidance | Proven locally with mocked end-to-end runs and both CLI launches |
+| API discovery, candidates/overrides and linked edge callbacks | Proven offline; current published edge Custom headers retained, no branch edits |
+| Literal managed-identity sentinel creates/finds real registration and wires UUID client | Proven offline for both fresh and existing registration, idempotent reruns |
+| Additive registration/SP/roles/settings and preservation | Proven offline; no live mutation claim |
+| Private typed user/group roles and fresh conflict before writes | Proven offline, including mutation-killed fresh zero-write regression; actual private roster not read |
+| Optional secret creation and selected-vault endpoint preflight | Proven offline, mutation-killed zero-credential regression; actual endpoint/write authority/secret validity UNMET |
+| Failed/non-ready no-op provisioning, check/dry-run | Proven offline in all three modes, mutation-killed; no remote writes/login in read-only mode |
+| Isolated login, Graph authority, consent instructions/polling | Proven with mocks; actual interactive login/authority/human consent UNMET |
+| Infra workflow validation | 177 tests, offline Bicep and exact infra/container static checks passed; hosted latest-head checks pending publication |
+| Authorized browser sign-in, private SQL staff binding/restart | UNMET / not run; separate human/private-network operator gates |
+| Privacy, legal and safety/financial authority | No private data/roster/Azure mutation; no rule activation or invented approval |
+| Publication | Main merge committed, existing topic retained; final source/evidence commit, push and ready action pending |
+
+Historical independent Review outcome remains Not accepted for its original
+assessed source. These later implementation dispositions do not relabel it
+conformant or imply new independent review. No issue-body criteria ticked.

@@ -307,7 +307,7 @@ def contexts(args: argparse.Namespace, operator: Azure) -> tuple[Azure, Azure, s
         device_login(graph, tenant)
         graph_account = account(graph)
         if object_id(graph_account["tenantId"]) != tenant:
-            raise SetupError("Login returned a different tenant; refusing changes.")
+            raise SetupError("Login returned a different tenant; refusing changes.") from None
         permissions = token_permissions(graph, tenant)
     if not readonly and not permissions.intersection(APPLICATION_WRITE):
         if graph_account.get("user", {}).get("type") == "servicePrincipal":
@@ -549,6 +549,10 @@ def resolve_roster(graph: Azure, roster: list[dict[str, str]]) -> list[tuple[dic
         elif principal.get("securityEnabled") is not True:
             raise SetupError("Roster groups must be security-enabled groups.")
         resolved.append((row, groups | {row["id"]}))
+    for row, principals in resolved:
+        if any(other["id"] in principals and other["role"] != row["role"]
+               for other, _ in resolved):
+            raise SetupError("Planned group and user assignments conflict; correct the private roster before retrying.")
     return resolved
 
 
@@ -560,7 +564,6 @@ def assign_roster(graph: Azure, sp: dict[str, Any], resolved: list[tuple[dict[st
     roles = {r["value"]: r for r in sp.get("appRoles", []) if r.get("isEnabled") is True
              and "User" in r.get("allowedMemberTypes", [])}
     pending = []
-    effective: list[tuple[set[str], str]] = []
     unresolved = 0
     for row, principals in resolved:
         wanted = roles.get("ZavaForward." + row["role"])
@@ -574,12 +577,8 @@ def assign_roster(graph: Azure, sp: dict[str, Any], resolved: list[tuple[dict[st
                   and a.get("appRoleId") != "00000000-0000-0000-0000-000000000000"}
         if actual - {rid}:
             raise SetupError("A roster principal has conflicting effective app roles; review Users and groups in Entra.")
-        effective.append((principals, rid))
         if rid not in actual:
             pending.append({"principalId": row["id"], "resourceId": resource, "appRoleId": rid})
-    for principals, wanted_role in effective:
-        if any(a["principalId"] in principals and a["appRoleId"] != wanted_role for a in pending):
-            raise SetupError("Planned group and user assignments conflict; correct the private roster before retrying.")
     if pending and not readonly:
         permissions = token_permissions(graph)
         if not permissions.intersection(ASSIGNMENT_WRITE):
@@ -638,6 +637,13 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
             raise SetupError("Pass --vault-identity for the API's Key Vault-enabled managed identity.")
         if args.vault_identity and args.vault_identity not in app.get("identity", {}).get("userAssignedIdentities", {}):
             raise SetupError("Key Vault identity must already be attached to the selected API.")
+        print("Checking selected Key Vault endpoint using secret metadata only; no secret values are read.")
+        try:
+            cli.call(["keyvault", "secret", "list", "--vault-name", vault, "--maxresults", "1"])
+        except AzureError:
+            raise SetupError("Selected Key Vault endpoint preflight failed; no credential was created. "
+                             "Check approved network access and secret-metadata list permission, "
+                             "or explicitly use --secret-store app. Vault networking was not changed.") from None
     else:
         vault = None
     app_url = ARM + app["id"] + f"?api-version={API_VERSION}"
@@ -686,7 +692,8 @@ def auth_patch(current: dict[str, Any], client: str, tenant: str, urls: list[str
     desired["platform"] = {**(desired.get("platform") or {}), "enabled": True}
     http = dict(desired.get("httpSettings") or {})
     http["requireHttps"] = True
-    if any(".azurefd.net" in url for url in urls) or len(urls) > 1:
+    if ((any(".azurefd.net" in url for url in urls) or len(urls) > 1)
+            and (http.get("forwardProxy") or {}).get("convention") != "Custom"):
         http["forwardProxy"] = {"convention": "Standard"}
     desired["httpSettings"] = http
     providers = dict(desired.get("identityProviders") or {})
@@ -894,6 +901,10 @@ def setup(args: argparse.Namespace) -> int:
                              args.wait_seconds)
                 else:
                     remaining.append("Graph User.Read admin consent pending (individual users may consent at sign-in).")
+        latest_app = cli.rest(ARM + app["id"] + f"?api-version={API_VERSION}")
+        if latest_app["properties"].get("provisioningState") != "Succeeded":
+            remaining.append("API provisioning is not Succeeded; inspect the Container App rollout "
+                             "and rerun after it succeeds. Matching runtime values alone are incomplete.")
         if sp:
             print(f"Manual assignments, if authority is missing: {SP_PORTAL} > All applications > "
                   f"{label(args.registration_name)} > Users and groups > Add user/group > select principal "

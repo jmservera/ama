@@ -4057,3 +4057,26 @@ metadata when the knowledge base was created.
   Existing PR ready status requires all latest-head checks green. Hosted
   hardening and other unmet criteria remain Partial; owner review and all
   operational/legal/consent/safety/financial approvals remain separate.
+
+## [2026-10-16] implementation | Entra setup review findings and infra CI repair (Refs #351)
+
+* Merged current main into the existing setup topic without rewriting history;
+  retained both sides of the append-only log conflict. Read pending public-edge
+  changes without editing that branch; setup preserves its Custom forwarded
+  headers and supports the legacy CLI's delegated `--public-url`.
+* Moved planned effective user/group role-conflict rejection before any
+  registration/enterprise-app writes. Added selected-vault metadata-only
+  preflight before one-time credentials and final provisioning checks even
+  for converged runtime values. No secret values are read by the vault probe.
+* Reproduced the failing infra suite in an isolated pip venv with editable
+  source distributions; repaired the parameterized secret-inventory assertion
+  and the compiled-policy test's CI formatting. All 177 infra tests, all
+  template build/lint checks, workflow static checks, setup mypy and both
+  local CLI help launches pass. Each review safeguard's behavioral test fails
+  when its fix is removed in memory.
+* Updated the [infra guide](../../infra/README.md#post-deployment-api-authentication-initialization)
+  and [index](./README.md). Mock evidence proves sequencing/idempotence, not
+  tenant writes, live vault permissions, human consent, private SQL bindings/
+  restart or browser sign-in. No private roster/dataset was read and no Azure
+  policy, resource or network setting was changed. Exercise legal ownership
+  and the development-only ADR 0005 boundary remain unchanged.
