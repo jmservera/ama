@@ -2,21 +2,21 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T15:58:33+00:00",
-  "commit": "fa730d63190c200e36b9a09c890445f17e8cb164",
+  "scored_at": "2026-10-16T14:46:25+00:00",
+  "commit": "b1fd9042e007ebafcd3974b5fd0c8971e78aef16",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38763347056",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38917059258",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "3b6b9a783b413c3e44d57b81fd669f8c4d3adf3b5b623ac0d398d3f8c653192c",
-    "adr": "275f5ff093398a1170b0fd91d35bc80fe0a0d8016deac94ec47ccbfdc39974dd",
-    "solution-code": "0a295918240d8e97a81ac39568a67e7ed271cdedc71c09b1a67ad53314637bf3",
-    "infrastructure": "fab2d87f31ab28dd7d5f047f7f24e2ceaa06a89b0fcbfdf2b373b9b8e807bdb6",
+    "adr": "d5924c3033c45b516706214434257c24be01996d7ff84445af1b311d27d8ca90",
+    "solution-code": "bfdb8146ba717b013779dafac249ad66645bbe03b2caa3ad87b38f7a182585a6",
+    "infrastructure": "f38e43dda897bd125fe77f9547295c999ad4a07c5a4c74c254a27c0fb6481de6",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
-  "total": 47,
+  "total": 48,
   "sections": {
-    "A": 29,
+    "A": 30,
     "B": 13,
     "C": 5,
     "D": 0
@@ -56,11 +56,12 @@
       "rationale": "Release admission is a real, working, end-to-end capability (record/suspend/revoke API endpoints, SQL DDL, gating wired into invoke/claim/complete/review, passing test suite), not just fixtures. Already at ceiling (5); stays."
     },
     "A5": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistant_release.py:122-124"
+        "infra/main.bicep:494,521",
+        "infra/tests/test_bicep_policy.py:368-382"
       ],
-      "rationale": "New assistant_events audit records for release-recorded/suspended/revoked add retained audit trail, but no logging/metrics/cost measurement or instrumentation changed. No material change to the operations criterion."
+      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema (ContainerAppConsoleLogs_CL/Log_s) that could never fire. Diff corrects to resource-specific schema with a test asserting it; observability now functions, but still no measured cost/perf evidence."
     },
     "A6": {
       "score": 3,

@@ -28,6 +28,8 @@ private production profile. They do not authorize deployment.
 * `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
 * `scripts/deploy.py`: image-preserving infrastructure what-if/deploy wrapper; see [Orchestrator image selection](#orchestrator-image-selection-322).
+* `scripts/private-cutover-proof.py`, `cutover-proof.Dockerfile`: bounded
+  synthetic SQL/private-ingress proof executed inside the ama VNet.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
@@ -107,11 +109,110 @@ of an Azure rollout.
 
 | Control | production (default) | development |
 |---|---|---|
-| Network access | Private endpoints only, internal Container Apps environment | Also accepts external networks and gives the API a public FQDN (as `allowPublicNetworkAccess=true`) |
+| Network access | Private endpoints only, internal Container Apps environment | Public only when `allowPublicNetworkAccess=true`; explicit false keeps private networking |
 | Registry quarantine | Enabled: pushed images wait for scan and release | Disabled: new images can be pulled at once |
 | Key Vault | 90 day soft delete with purge protection | 7 day soft delete, no purge protection |
 
 `allowPublicNetworkAccess=true` and `keyVaultPurgeProtection=false` are rejected in the production profile (see Quality gates). Use `deploymentProfile=development` for a throwaway stack. Do not use the development profile as evidence for the private-network claims in ADR 0001.
+
+Development no longer overrides an explicit `allowPublicNetworkAccess=false`.
+The committed dev/test parameter files still explicitly select true. Private
+development retains development quarantine/purge settings, not production ones.
+
+### Private cut-over proof (2026-10-16)
+
+For the owner-authorized ama continuation, SQL public access must remain
+Disabled by policy. Do not add tags/exemptions, enable public SQL, attempt
+firewall changes or peer the operator VM. The VM is not on the ama VNet.
+Only management-plane Azure CLI commands run there; SQL, staff initialization
+and private HTTP smoke must run inside `vnet-cutover-test`.
+
+Build all images and capture digests before making ACR private. Use ACR Tasks
+with `src/acr-cutover.yaml` for the four workloads (BuildKit enabled there), then
+build the proof runner from the narrow `infra/` context:
+
+```bash
+az acr run -g ama -r <registry> -f acr-cutover.yaml --timeout 1800 src
+az acr build -g ama -r <registry> -f infra/cutover-proof.Dockerfile \
+  --build-arg API_IMAGE=<registry-server>/zava-forward-api@sha256:<digest> \
+  -t zava-forward-cutover-proof:<unique-tag> infra
+```
+
+The proof image inherits the installed packages and non-root user of the API
+image; it contains no dataset or credential. Do not attempt default ACR Tasks
+repair builds after isolation without an approved private task path.
+Always supply the captured orchestrator digest to `deploy.py`, avoiding
+operator-side tag discovery against a private registry.
+
+Run the wrapper's what-if, inspect scope and apply the same parameters:
+
+```bash
+python3 infra/scripts/deploy.py \
+  --resource-group ama --registry <registry> --workload cutover --environment test \
+  --parameters infra/main.bicepparam \
+  --orchestrator-image <registry-server>/zava-forward-orchestrator@sha256:<digest> \
+  --parameter allowPublicNetworkAccess=false \
+  --parameter deployApplications=false --parameter deployEnvironmentOnly=true \
+  --parameter sqlAdminGroupName=id-cutover-test-init \
+  --parameter sqlAdminGroupObjectId=<initializer-mi-principal-id> \
+  --parameter sqlAdminPrincipalType=Application \
+  --parameter entraClientId=<existing-application-client-id> \
+  --parameter entraBearerOnly=true \
+  --parameter alertEmail=<approved-mailbox> --parameter 'modelDeployments=[]'
+# Repeat with --apply only after reviewing the what-if.
+```
+
+`deployEnvironmentOnly=true` creates the environment and internal DNS without
+starting workloads. It is additive to `deployApplications`; neither flag deletes
+existing resources in incremental deployments. A dedicated ama initializer
+identity is SQL Entra Application administrator, attached to a manual job in
+that environment with registry-scoped AcrPull. Pass its client ID as
+`ZF_SQL_CLIENT_ID`, SQL FQDN/database as `ZF_SQL_SERVER`/`ZF_SQL_DATABASE`,
+and API/import MI client IDs as `PROOF_API_CLIENT_ID`/`PROOF_IMPORT_CLIENT_ID`.
+Run the proof image with argument `initialize`. It checks SQL DNS in
+`10.40.0.0/16` and system metadata/proof ownership before opening Store.
+Unknown databases are refused without case/staff reads or changes.
+Known tables include the installed API assistant schema, not arbitrary extra
+tables. An owned partial initialization may retry with the synthetic seed;
+populated cases are never reseeded by Store.
+
+Initialization grants Graph-free contained users by client UUID little-endian
+SID: API reader/writer/ddladmin for existing startup migrations, import
+reader/writer only. Administrator binding instead uses the initializer's
+principal ID. Do not confuse these identifiers or elevate API to administrator.
+The initializer remains the documented administrator of this proof stack.
+
+The runtime-generated seed has one fictional case, no staff or human bindings
+and a non-personal proof marker. It is not the continuing 60k/980-case workload.
+Deploy applications only after initialization, passing all four captured digests
+with `deployApplications=true`. `entraBearerOnly=true` is opt-in secretless
+service-test mode: tenant-specific issuer/audience validation, Return401, no
+browser client secret or delegated token store. It requires an identified
+existing client ID; it does not provision tenant roles or authorize MI as staff.
+Browser mode remains the default and requires the registration/vault secret.
+
+Run separate manual proof executions as API MI with argument `verify`; they
+reopen application SQL state without a seed and assert marker/case equality
+and zero staff. Use `smoke --base-url <private-api-origin>` for exact health 200,
+anonymous API 401, malformed bearer 401 and forged principal-header 401.
+Restart the serving revision, record before/after replicas and repeat both
+probes without initialization or reseeding. Missing probes are not passes.
+If an instrument correction is needed after ACR isolation, an explicit
+management-plane job-template command may carry the tracked Python runner
+source (`command: ['python', '-c', <source>]`, `args: ['verify']`), while retaining
+the same immutable ACR image, identity and network. Record the source SHA-256,
+the changed command and the new execution separately from image-baked runs.
+Do not change network policy just to rebuild the instrument.
+
+Human staff initialization is a distinct in-VNet task requiring an owner-supplied
+private roster and authorized Graph access. Never fabricate people, read an old
+private dataset or substitute MI. Record missing prerequisites as Blocked.
+Owner sign-off remains unchecked in the
+[cut-over pack](../docs/architecture/cutover-evidence-pack.md).
+
+Runner unit tests use installed source packages:
+`python3 -m unittest discover -s infra/tests -p test_private_cutover_proof.py -v`.
+Compiled profile/staging/auth-mode checks run in the existing infra suite.
 
 Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --parameters infra/main.bicepparam --parameter deploymentProfile=development` (what-if; add `--apply` only after review).
 
@@ -220,7 +321,11 @@ work is part of this offline gate.
 `allowPublicNetworkAccess` (default `false`) is a development switch. When `true`, the private endpoints stay in place but the following also accept external connections:
 
 * Storage, Key Vault, Foundry, Container Registry, Log Analytics and Application Insights: public network access enabled (network ACL default action `Allow`).
-* Azure SQL: public access enabled with a firewall rule `dev-external-access` covering all addresses. Entra-only authentication still applies. In the MCAPS subscription an external policy reverts SQL `publicNetworkAccess` to `Disabled` unless the resource group carries the tag `SecurityControl=Ignore` (observed 2026-10-08), so set that tag on the resource group first.
+* Azure SQL: the generic public development profile requests a wide firewall.
+  Do not use it for the ama cut-over proof: policy intentionally keeps public
+  access Disabled. Use the private recipe and explicit false switch; no SQL
+  firewall resource is submitted. Historical policy/tag exceptions are not
+  authorization to bypass this owner direction.
 * Container Apps environment: external (not internal) with public access enabled, so the API gets a public FQDN. The private DNS zone for the environment is not created.
 
 The Container Registry export policy is set to `enabled` in this mode because ACR requires it when public access is on. Identity and RBAC controls are unchanged (no keys, no SQL logins). Never set it to `true` outside a throwaway development stack, and do not use it as evidence for the private-network claims in ADR 0001.
@@ -309,15 +414,19 @@ Deployed on 2026-10-08 to resource group `ama` with `location=uksouth environmen
 
 Execution evidence is in the
 [cut-over pack](../docs/architecture/cutover-evidence-pack.md): four images
-built and passed bounded remote runtime checks, but the ama bootstrap failed
-on Microsoft.Devices registration and SQL public-interface restrictions.
-No application deployed or owner sign-off is established. Plain `az acr build`
+built and passed bounded remote runtime checks. The initial bootstrap failed
+on Microsoft.Devices registration and SQL public-interface restrictions; the
+owner-authorized [private continuation](#private-cut-over-proof-2026-10-16)
+has now deployed a healthy source API and passed bounded SQL/HTTP/restart proof.
+Tenant staff/authorized HTTP and owner sign-off remain outstanding. Plain `az acr build`
 failed on existing BuildKit-only `RUN --mount`; the tested alternative is
 `az acr run -r <registry> -f acr-cutover.yaml --timeout 1800 src`, using the
 [source task](../src/acr-cutover.yaml). This does not satisfy the unavailable
 local Docker checks or authorize subscription/tenant changes.
 
-Build and run locally before registry publication. ADR 0006 uses `src/` as
+Where Docker is available, build and run locally before registry publication.
+The 2026-10-16 owner direction instead permits ACR Tasks with no local Docker;
+its observed contracts are separately labelled in the pack. ADR 0006 uses `src/` as
 context so named workload packages can include sibling core; never use `mvp/`
 or the repository root as context. The API starts with `python -m zava_forward.api`.
 The token-store and ledger jobs use `orchestratorImage` with commands
@@ -328,19 +437,19 @@ existing identities and grants. No approval authority changes.
 ```bash
 docker build -f src/api/Dockerfile -t zava-forward-api:local src
 docker build -f src/orchestrator/Dockerfile -t zava-forward-orchestrator:local src
-az acr build -r <registry> -f src/api/Dockerfile -t zava-forward-api:<new-tag> src
-az acr build -r <registry> -f src/orchestrator/Dockerfile -t zava-forward-orchestrator:<new-tag> src
-az deployment group what-if -g ama -f infra/main.bicep -p <private-parameters> \
-  -p apiImage=<registry>.azurecr.io/zava-forward-api:<new-tag> \
-  orchestratorImage=<registry>.azurecr.io/zava-forward-orchestrator:<new-tag>
+az acr run -g ama -r <registry> -f acr-cutover.yaml --timeout 1800 src
+python3 infra/scripts/deploy.py --resource-group ama --registry <registry> \
+  --workload cutover --environment test --parameters <private-parameters> \
+  --orchestrator-image <registry-server>/zava-forward-orchestrator@sha256:<digest> \
+  --parameter apiImage=<registry-server>/zava-forward-api@sha256:<digest>
 ```
 
-Publish only after local image checks and review the what-if before deployment
+Publish after the applicable image checks and review the what-if before deployment
 to the existing `ama` resources. Use new immutable tags; never overwrite tags
 referenced by historical running revisions. The commands above are instructions,
-not evidence that a new image is deployed. Azure rollout/health, private data
-copy/encrypted backup and #201 owner sign-off remain unmet. No resources are
-created or changed by the local path-cut-over work.
+not themselves evidence of deployment. See the dated private continuation for
+actual source-image rollout/health results and its synthetic-only boundary.
+Private data copy/encrypted backup and #201 owner sign-off remain unmet.
 
 Existing `MVP CI` / `MVP validation` names and job/check IDs remain unchanged.
 The issue #200 owner decision (2026-10-15) retains them through cut-over; later
