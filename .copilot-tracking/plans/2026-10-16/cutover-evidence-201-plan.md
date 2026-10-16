@@ -129,3 +129,9 @@ All required human gates remain unchecked.
 
 Published evidence commit f5e5f65 on docs/cutover-evidence-pack-201 and PR #341
 against main. Publication does not certify deployed proof or accept cut-over.
+
+Publication amendment: merge upstream 79b153b without rewriting history to
+resolve #341's log conflict, revalidate changed core/infra, repeat remote
+build/contracts as db9 and exercise the newly available canonical deploy
+wrapper. Both bootstrap attempts Failed on the same platform prerequisites.
+Refreshed evidence remains preparation only; no new critique or Review.

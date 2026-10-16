@@ -64,3 +64,30 @@ https://github.com/jmservera/ama/pull/341 . Branch pushed without rewriting
 history; PR body checked for Refs-only linkage. Evidence pack explicitly
 not ready for cut-over. External subscription, SQL/network, tenant and owner
 gates remain unfulfilled. No owner approval or deletion authorized.
+
+## Publication integration amendment
+
+PR #341 initially conflicted with main after #337/#338 landed. Integrated
+upstream 79b153b with a non-rewriting merge, preserving both sides of the
+append-only reference log. This is a publication evidence refresh, not another
+critique, implementation Review or acceptance claim.
+
+Revalidated the changed core: 491 tests, 314.870s, one skip, Ruff/format/mypy
+passed. Updated infra suite: 103 passed; scoped CI Ruff/format and non-strict
+mypy passed. An additional non-CI strict mypy probe found 23 existing annotation
+errors in upstream deployment tests; disclosed, not silently fixed.
+
+ACR db9 rebuilt all four images after integration and passed all four remote
+contracts before pushing unique tags. Refreshed hashes and digests identify
+the actual working-tree inputs, not a future merge commit.
+
+Executed the new canonical infra/scripts/deploy.py against the same isolated
+ama stack with an explicit db9 orchestrator digest. What-if exited 0 (8 create,
+43 modify, 47 no change, 14 unsupported, 9 ignore; no delete). Apply exited 1:
+main deployment Failed, correlation d32ef897-d489-4fb9-a259-c614322cbc8e,
+same IoT registration and SQL public-interface blockers. Final inventory still
+65 generic resources and two budgets, no apps. No HTTP endpoint or smoke pass.
+Resources retained with charge risk; no provider, tenant or policy bypass.
+
+Canonical pack and generated evidence refreshed; owner checklist and Review
+outcome Residual work are unchanged. No second Review executed.

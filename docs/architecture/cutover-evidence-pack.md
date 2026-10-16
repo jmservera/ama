@@ -8,7 +8,8 @@ ms.topic: reference
 ## Decision and Scope
 
 Refs #200. Refs #201. Evidence prepared on 2026-10-16 against base
-`aedd616ffff8abfcf0379a538b895e4427147c8f`, plus the source changes in this PR.
+`aedd616ffff8abfcf0379a538b895e4427147c8f`, then refreshed after integrating
+`79b153b` (including #337 and #338), plus the source changes in this PR.
 **Cut-over is not ready for owner sign-off.** Four source images built and
 passed bounded remote image checks, but the infrastructure bootstrap failed.
 There is no deployed application, healthy revision or deployed smoke pass.
@@ -24,7 +25,7 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | --- | --- |
 | [#200 comments](https://github.com/jmservera/ama/issues/200), 2026-10-15 | Keep old workflow/check names through cut-over, then rename together in one PR |
 | [#201 comments](https://github.com/jmservera/ama/issues/201), 2026-10-15 | Juan Manuel Servera (@jmservera) signs off; no minimum soak; healthy src deployment and owner sign-off precede deletion |
-| [#322 comment](https://github.com/jmservera/ama/issues/322), 2026-10-16 | Future deploy-script resolution: existing job image, else newest registry tag, else visibly reported placeholder. Current template has not implemented this decision |
+| [#322 comment](https://github.com/jmservera/ama/issues/322), 2026-10-16 | Deploy-script resolution: existing job image, else newest registry tag, else visibly reported placeholder. Implemented by #337 and integrated here; explicit digest used for this evidence run |
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
 
 ## Current Parity Audit
@@ -98,15 +99,16 @@ PYTHONPATH=../core/tests python -m unittest discover -s tests -q
 
 | Check run locally | Actual result |
 | --- | --- |
-| Core complete suite after eight new audit tests | 482 tests, 175.926s, OK, one opt-in SQL skip |
-| Final audit tests, including subsequently added sandbox-row regression | Nine passed, 0.457s; final targeted run is additional to, not a 483-test full-suite claim |
+| Core complete suite after upstream integration and all nine audit tests | 491 tests, 314.870s, OK, one opt-in SQL skip; replaces the earlier 482-test run |
+| Audit tests before upstream integration | Nine passed, 0.457s; sandbox regression is also included in the latest complete core run |
 | Agents complete suite | 70 passed, 6.186s |
 | API complete suite | 542 tests, 205.126s, OK, 103 skipped, principally disposable SQL Server contracts |
 | Orchestrator complete suite | 22 passed, 3.181s |
 | Importer complete suite | 39 passed, 0.148s |
 | Ruff check, Ruff format check and mypy | Passed for all five projects; final core mypy checked 91 source files. Existing migration exemptions remain; this is not full typing/formatting cleanup |
 | Every `infra/*.bicep` and `infra/modules/*.bicep`, build and lint | Passed using Azure CLI 2.91.0 / Bicep 0.48.1 |
-| `REQUIRE_AZ_BICEP=1 python -m unittest discover -s infra/tests -q` | 86 passed, 24.912s |
+| `REQUIRE_AZ_BICEP=1 python -m unittest discover -s infra/tests -q` | 103 passed after integrating #337; earlier 86-test run passed in 24.912s |
+| New deployment-wrapper static checks | CI's scoped Ruff/format selector passed; `mypy --follow-imports=silent infra/scripts/deploy.py infra/tests/test_deploy.py` passed. Additional non-CI `--strict` probe failed with 23 missing-annotation/type-argument errors in upstream test code; no unrelated typing cleanup performed |
 | `python tools/rename-zava-tests.py` | 25 passed after pip installation of `tools/rename-zava-requirements.txt` |
 | Installed namespace and tracked-data checks | Five namespace locations, no namespace init; no tracked `src/**/data/**` |
 | `node --check` on every `src/api/src/zava_forward/api/web/*.js` | Passed |
@@ -122,9 +124,9 @@ Initial audit tests exposed stale targets and an omitted sandbox table shape;
 the final audit explicitly handles both.
 
 Historical matrix baseline: 719 tests with 92 skips on `736b387`, then 747
-tests with 92 skips before M6. The five complete runs above total 1,155 tests
-with 104 skips; the final additional sandbox test was run in the targeted
-nine-test suite. Growth reflects later source features and these audit tests,
+tests with 92 skips before M6. The five latest complete runs above total 1,164
+tests with 104 skips, including all nine audit tests in the complete core run.
+Growth reflects later source features and these audit tests,
 not a measured increase in line/branch coverage. Prototype's 15 retired tests
 were outside the historical baseline. Current SQL-dependent tests grew as
 features landed; opt-in SQL execution remains a separate gate. Equal-or-greater
@@ -138,7 +140,7 @@ Mutation evidence uses the same real audit and external test module:
   import/discovery errors. Restoring the corrections passes.
 * Substituting the actual `aedd616:src/.dockerignore` text makes the named
   golden-context regression fail. The old context also failed a real ACR
-  BuildKit build (`db6`); corrected context built successfully (`db7`, `db8`).
+  BuildKit build (`db6`); corrected context built successfully (`db7`-`db9`).
 * Missing-target, added-reference/drift, duplicate/unknown/empty matrix and
   excluded-before-read controls are exercised by the nine-test suite.
   No tracked source was mutated or reverted to run these negative controls.
@@ -167,11 +169,13 @@ inventory and source-input hashes.
 
 ### Commands and Effective Parameters
 
-There is no general deployment wrapper in this checkout. The repo's
-[two-stage recipe](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12)
-uses `az deployment group` with `infra/main.bicep`. Tenant/staff initializer
-scripts were inspected but not run: tenant mutation, private roster restoration
-and existing app credentials are not supplied by RG ownership.
+The initial bootstrap used the repo's
+[two-stage recipe](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12),
+`az deployment group` with `infra/main.bicep`. The subsequently merged
+[deploy wrapper](../../infra/scripts/deploy.py) from #337 is now the canonical
+entry point and was also executed below. Tenant/staff initializer scripts were
+inspected but not run: tenant mutation, private roster restoration and existing
+app credentials are not supplied by RG ownership.
 
 ```bash
 az account show --query '{subscription:id,tenant:tenantId}' -o json
@@ -225,6 +229,37 @@ Resource ID of the deployment is group ID plus
 SQL server ID is group ID plus
 `/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg`.
 
+After integrating #337, the canonical wrapper was run from the repository root
+with the same safe bootstrap parameters and the final orchestrator digest:
+
+```bash
+test "$(az account show --query id -o tsv)" = \
+  e51ebc89-79d0-4a52-a82b-01a292eefd5b
+python infra/scripts/deploy.py \
+  --resource-group ama --registry crcutovertestrzsrg \
+  --workload cutover --environment test --parameters infra/main.bicepparam \
+  --orchestrator-image crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:509d18af6288eb59d6f90eff1655a53dab9830d928140ff9798f7facc2cdaa01 \
+  --parameter deployApplications=false \
+  --parameter sqlAdminGroupName=cutover-evidence-principal \
+  --parameter sqlAdminGroupObjectId=2d4fe550-794a-4ee9-8093-e680ca02fe18 \
+  --parameter sqlAdminPrincipalType=Application \
+  --parameter alertEmail=8036360+jmservera@users.noreply.github.com \
+  --parameter 'modelDeployments=[]'
+# Repeat the same wrapper invocation with --apply after inspecting what-if.
+```
+
+The wrapper printed the exact digest with source `explicit
+--orchestrator-image`. Default what-if exited 0: eight Create, 43 Modify,
+47 NoChange, 14 Unsupported and nine Ignore, with no Delete. Modifications
+targeted the run-created cutover stack, not the pre-existing forward budget.
+The unsupported identity-dependent role assignments remain ama-scoped.
+The `--apply` attempt exited **1** at 2026-10-16 12:30 UTC, again failing
+on `MissingSubscriptionRegistration` and `DenyPublicEndpointEnabled`.
+Deployment ID is group ID plus `/providers/Microsoft.Resources/deployments/main`;
+correlation ID `d32ef897-d489-4fb9-a259-c614322cbc8e`. The sanitized JSON
+retains both attempts. Retrying through the wrapper does not resolve the
+platform prerequisites or constitute deployed-image proof.
+
 Do not advance to `deployApplications=true`: successful dependency provisioning,
 reachable/initialized SQL with managed-identity users, existing Entra client ID,
 vault auth-secret availability and safe synthetic initialization have not all
@@ -253,22 +288,25 @@ publishes unique `cutover-<run ID>` tags. A first stdin-template attempt (`db5`)
 failed because the service looked for `/workspace/-`; the checked-in task file
 avoids that CLI path problem. BuildKit then exposed the excluded runtime
 golden (`db6`); this PR adds only that file as an eval-context exception.
-`db7` built/pushed four images. Final `db8` rebuilt the final source audit and
-passed all four runtime checks before push, finishing 2026-10-16 12:16 UTC.
+`db7` built/pushed four images. `db8` rebuilt the source audit and passed all
+four runtime checks before push. Final `db9` repeated all four builds,
+contracts and pushes after integrating #337/#338, finishing
+2026-10-16 12:25 UTC.
 
-Registry: `crcutovertestrzsrg.azurecr.io`. Final tag: `cutover-db8`.
+Registry: `crcutovertestrzsrg.azurecr.io`. Final tag: `cutover-db9`.
 
 | Repository | Final digest |
 | --- | --- |
-| `zava-forward-api` | `sha256:df71013540f701d50e3d4e43aa75724af421f10d6a3359ba08da7cc8d8c3fa1c` |
-| `zava-forward-agents` | `sha256:15efeca7a3a99e75e977e2195e6ed6bd360bee84281c9ad4bc78ef91fd39f6dc` |
-| `zava-forward-orchestrator` | `sha256:323668fbd5a68267fb75c0bc48e9810b81ccb4b8f617819bca97ac36c0001926` |
-| `zava-forward-importer` | `sha256:93a2fc8e7004be01f5363b2c2d2bc1b65f19632551c2cb7f50c9b3e81fd926ad` |
+| `zava-forward-api` | `sha256:248c70fe3653fb9f7e11ff7bf50b54eb243c61e911c2bb30e19cb8370064064e` |
+| `zava-forward-agents` | `sha256:587a43f4110ed22e0c02cbdee9c3cf5dcd8df39ad214fcfcdea374fe799a9eed` |
+| `zava-forward-orchestrator` | `sha256:509d18af6288eb59d6f90eff1655a53dab9830d928140ff9798f7facc2cdaa01` |
+| `zava-forward-importer` | `sha256:53a00d7f34a0895798642c096dbb7dd9db13096fc1b9747017a3798e5f8537d5` |
 
 Run resource ID: group ID plus
-`/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/runs/db8`.
-The upload was a local working tree, not a Git-context build: base commit plus
-this PR's audit/context/task additions, identified by hashes in the JSON.
+`/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/runs/db9`.
+The upload was a local working tree, not a Git-context build: original base,
+integrated upstream `79b153b`, and this PR's audit/context/task additions,
+identified by hashes in the JSON.
 Do not relabel it as an image built from a future merge commit.
 
 All four remote contracts ran as UID 10001, checked read-only root, zero
@@ -352,7 +390,8 @@ verification is claimed and no protection mutation was attempted.
 
 ## Other Cut-Over Gates
 
-At inspection, `gh pr list --state open --limit 100` returned `[]`; thus no
+At initial inspection before publishing #341,
+`gh pr list --state open --limit 100` returned `[]`; thus no
 open PR on old paths was visible for dependent epics #113, #136, #165, #157,
 #149. All five epics remain open. This is a timestamped PR observation, not
 proof that their feature/acceptance criteria are complete; refresh before

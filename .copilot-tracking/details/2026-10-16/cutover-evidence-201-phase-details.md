@@ -59,3 +59,10 @@ review in this lifecycle.
 Resolve gh identity before commit, local noreply email for author and committer.
 Conventional message and Copilot trailer. Push current clean topic ancestry;
 PR against main with Refs #200 and Refs #201 only. No automatic merge.
+
+Publication refresh after concurrent main changes: preserve upstream #337/#338
+by merge, preserve all reference-log entries, revalidate affected core/infra
+and build the integrated source as ACR db9. Exercise #337's canonical deploy
+wrapper with scoped what-if and apply, keeping deployApplications=false.
+Capture its repeated platform failures, refreshed IDs/hashes and absent app;
+do not repeat critique/Review or promote evidence preparation to acceptance.
