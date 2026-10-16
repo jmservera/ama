@@ -3952,3 +3952,25 @@ metadata when the knowledge base was created.
   leases remain unverified before operational reliance. Search and monitoring
   costs are explicitly unknown; paid deployment, actual processing, real
   legal approval and benefit evidence are not authorized or proved here.
+
+## [2026-10-16] implementation | Regulatory security, privacy and audit (Refs #217)
+
+* Added separate trusted RegulatoryChat capability and matching local Entra
+  manifest/script declarations alongside RuleAuthor and RuleOwner. Direct and
+  generic regulatory-thread access deny without the capability; current token
+  roles cannot regain wider hazard access from the staff register.
+* Added metadata-only own-role retention review using existing chat settings,
+  explicit unknown source/card/check/alert/audit periods and no deletion or DPO
+  approval. SQL turn/referral audit now commits with messages/receipts; JSON
+  retains its separate-file atomicity limitation. Significant-decision checks
+  require recorded reasons, not just an evidence ID.
+* Extended the [draft DPIA for DPO review](./research/chat-memory-dpia.md)
+  with regulatory data flows, risks, rights/hold questions and unchecked human
+  gates. Juan Manuel Servera remains the exercise Legal, Compliance and DPO
+  owner; DPIA completion and real retention periods remain unmet.
+* Updated [API acceptance evidence](../../src/api/README.md#regulatory-security-privacy-and-audit-217),
+  [core controls](../../src/core/README.md#regulatory-privacy-and-audit-217),
+  [infra role declaration](../../infra/README.md#regulatory-assistant-capability-roles-217)
+  and index. Synthetic local tests, lint/type checks and loopback HTTP only;
+  no actual staff/resident data, Azure/tenant changes, model call or operational
+  legal approval. Issue checkboxes remain for merge-time coordination.
