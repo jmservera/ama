@@ -68,8 +68,9 @@ principal tests do not verify signatures or hosted ingress. Legal/Compliance/DPO
 owner nomination in #209 is not approval of any card. Approval events remain
 explicitly simulated, and non-exercise cards remain refused. Legacy display-name
 events are preserved verbatim and do not confer new email-bound authority.
-Rule-engine integration, a rule-card UI, real card/legal approvals, real tenant
-assignments and SQL Server/Azure acceptance are not delivered by this slice.
+A rule-card UI, real card/legal approvals, real tenant assignments and SQL
+Server/Azure acceptance are not delivered by this slice. The bounded exercise
+engine integration in #212 is described below; it supplies no missing approval.
 The current infrastructure registration script/manifest defines only workbench
 roles; adding and assigning the two dedicated rule capabilities is still an
 explicit administrator deployment follow-up, not an implicit role grant.
@@ -83,6 +84,68 @@ server and removes its temporary files. Run it from `src/api`:
 PYTHONPATH="$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests" \
   python3 -m unittest tests.test_auth.RuleHttpTests -q
 ```
+
+## Deterministic step-alert API (#212)
+
+The API composes the [bounded core engine](../core/README.md#deterministic-checks-and-alerts-212)
+over the existing SQL case store and law SQL adapter. JSON-only case stores
+cannot execute checks. There are no new approvals in delivered data: seeds stay
+unapproved exercise drafts, and prose-only cards cannot execute a guessed clock.
+An author may add the optional `check` contract documented in core when
+proposing a new version; the existing human approval lifecycle still applies.
+
+| Method and path | Contract |
+| --- | --- |
+| `GET /api/law/alerts?case={case_id}` | Role-scoped open alerts, grouped per home, ordered by due time and harm; omit `case` for the role's cross-home view. Includes owner-classified false-positive counts/rate and unclassified denominator. |
+| `POST /api/law/checks/{case_id}` | Empty object only. Recheck persisted SQL facts with a server-derived data trigger; return only checks in the caller's alert audience. No supplied facts, clock, awareness date, owner or suppression. |
+| `POST /api/law/alerts/{alert_id}/acknowledge` | Exact named owner and trusted rule-owner capability; body `{"note":"Human acknowledgement evidence"}`. |
+| `POST /api/law/alerts/{alert_id}/outcome` | Same authority, with human action/outcome evidence in `note`; breach risk must already be acknowledged. |
+| `POST /api/law/alerts/{alert_id}/false_positive` | Same authority; retained classification evidence only, never suppression or risk resolution. |
+| `POST /api/law/alerts/{alert_id}/confirmed` | Same authority; alternative retained classification. |
+
+Hazard audiences are Building Safety Liaison, Resident Liaison Officer and
+Retrofit Programme Manager. Decision-safeguard audiences are Retrofit
+Coordinator and Retrofit Programme Manager. The exact named owner may also
+read their alerts, subject to an authenticated supported staff role.
+Contractors and unknown roles cannot access either checks or alerts.
+Existing case authorization is rechecked for case-specific routes; all
+currently supported staff have case-read scope. Field-need projection also
+withholds disposition notes from roles without that need. No raw hazard notes,
+resident details or proposal text are included in check evidence pointers.
+Guessed alert IDs or unrelated owners are denied. Password sessions cannot
+acknowledge, close or classify alerts. All authority and disposition timestamps
+are server-derived; attempted overrides are rejected.
+
+Successful ordinary case mutations trigger a check after commit, using
+`step_transition` if the journey stage changed and `data_change` otherwise.
+Package/work-order, import and early-return AI/document routes are covered on
+the next scheduled SQL sweep, not synchronously by those endpoints. The core
+CLI is the bounded schedule entry point; no hosted timer is configured here.
+Data-trigger retries retain the original checkpoint time; a fresh scheduled
+minute is required to advance an unchanged clock.
+
+Alerts contain the safe action, named decision owner, clock/due time if
+applicable, exact citation/status, original evaluation time, current-control
+availability, and latest check result/time. This is not an independently
+refreshed compliance certificate. Advisory alerts disappear when a newer check
+is clear or the control is inactive. An unresolved breach stays visible and
+requires its owner outcome even if later checks change. No disposition releases
+a safety hold or sends a resident message.
+
+Unconfigured or failed engines return 503/unknown on alert service requests.
+For committed case work, `rule_checks.status: unknown` and the manual safety
+route are included in the successful case response, and the failure is logged;
+no successful or fresh persisted check is invented. Emergency reporting,
+referral, receipt, acceptance and independent human hazard work do not depend
+on engine availability. Continue the existing human emergency/hazard service,
+never wait for an alert, AI or a legal interpretation.
+
+Local core/API tests establish these bounded contracts, not live-platform
+acceptance. Alerts are API/step metadata only: no workbench alert UI, production
+timer, source/card legal approval, tenant capability assignment, staff
+comprehension/precision trial or continuing-stock Azure/SQL Server acceptance
+is delivered. The decision-safeguard evidence contract has no general-purpose
+writer in this slice; absent evidence remains unknown. Refs #212 remains open.
 
 ## Stock reconciliation API (#84)
 

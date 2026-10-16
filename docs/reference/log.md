@@ -3512,6 +3512,24 @@ metadata when the knowledge base was created.
   Azure revisions/job executions and #201/#202 owner sign-off remain unmet;
   `mvp/README.md` remains, with no deletion or invented approval.
 
+## [2026-10-16] ingest | Bounded deterministic checks and scoped alerts (Refs #212)
+
+* Extended new exercise card versions with optional immutable executable
+  contracts, visible before existing distinct named-owner approval. Seed cards
+  remain unapproved drafts; no legal interpretation, awareness date or
+  statutory duration was invented.
+* Added SQL-fact checks and atomic append-only checkpoints/alerts, explicit
+  source/status gating, per-home deadline/harm ordering, attention publication
+  limits, owner acknowledgement/outcome and false-positive classifications.
+  The engine has no model, resident-message or hold-release path.
+* Updated the [core contract and schedule](../../src/core/README.md#deterministic-checks-and-alerts-212),
+  [role-scoped alert API](../../src/api/README.md#deterministic-step-alert-api-212)
+  and knowledge-base routing. Failed checks remain visibly unknown while
+  independently committed hazard work remains available.
+* Local constructed SQL/HTTP evidence is distinct from actual legal approval.
+  Step UI, hosted scheduling, tenant assignments, real staff precision and
+  comprehension, retention policy, continuing-stock acceptance and live SQL
+  Server/Azure verification remain unmet. Refs #212, not issue closure.
 ## [2026-10-16] query | Resident first-contact retention and confirmed field matrix (#86)
 
 * Applied [owner retention/matrix decisions](https://github.com/jmservera/ama/issues/86#issuecomment-6209881675)
