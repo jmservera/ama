@@ -3997,3 +3997,24 @@ metadata when the knowledge base was created.
   change, private-data read or invented approvals. ADR 0005 remains synthetic
   development only; real owners/sources are still a gap. Issue checkboxes stay
   unchanged; the same PR stays draft until green CI is verified.
+
+## [2026-10-16] query | Integrated PR 347 validation and publication evidence
+
+* Refs #118. Concurrent main advanced while CI ran. Merged it again without
+  rewriting history and retained both log histories verbatim. Preserved new
+  agents/core test fixtures in the step-time absolute CI configuration.
+* Repeated full local validation: 517 core, 553 API, 77 agents, 22 orchestrator
+  and 39 importer tests pass, 111 opt-in skips total; all Ruff/format/mypy and
+  130 infra tests pass. Four integrated Docker builds and hardened/plain
+  startup contracts pass, including real API health/PNG.
+* Same-DB integrated image scans still have 61 HIGH/two CRITICAL unfixed
+  findings per image, zero fixable findings. Earlier uploaded CI artifacts
+  were downloaded and checked, not merely assumed to exist.
+* All 11 checks pass at integrated source candidate 8142553 (source CI
+  38936437239, API/SQL CI 38936437236, validation 38936437380).
+  An earlier browser navigation timeout passed the full local harness unchanged
+  and its CI rerun; no test bypass or speculative application change.
+* Final documentation/RPI closeout retains identical source/infra/workflows.
+  Existing PR ready status requires all latest-head checks green. Hosted
+  hardening and other unmet criteria remain Partial; owner review and all
+  operational/legal/consent/safety/financial approvals remain separate.

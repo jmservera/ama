@@ -60,6 +60,39 @@ github.workspace too early. Moved scoped path expressions to the unit-test step
 environment; regression prevents the old matrix form. This is directly coupled
 CI correctness, not unrelated cleanup. No source application logic changed.
 
+### C05 publication and concurrent-main integration
+
+Published corrections as ab1c5c0 and updated existing PR 347 (still draft).
+All 11 checks passed after one failed source API browser navigation timeout:
+full browser harness passed locally unchanged, followed by successful rerun
+of run 38934285993. No test bypass or speculative UI change. MVP CI
+38934285490 and MVP validation 38934285398 passed. Downloaded and verified
+all four source reports plus the existing API image report: every full report
+retains 61 HIGH/two CRITICAL, every fixable gate has zero findings.
+
+While CI ran, main advanced with c1deba4 (#348), making the PR log conflict.
+Merged again as 8142553; both prior log histories preserved verbatim.
+New agents tests need core fixtures: preserved the upstream dependency in
+the absolute-path step expression instead of retaining an unused matrix field.
+No infrastructure source conflict; containerapps.bicep now has no diff from main.
+Repeated full local checks after integration: core 517 (one skip), API 553
+(110 skips), agents 77, orchestrator 22, importer 39; all Ruff/format/mypy pass.
+Infra 130 tests and helper checks pass. All four integrated builds and real
+hardened/plain startup contracts pass; same-DB scans remain 61 HIGH/two
+CRITICAL unfixed per image, zero fixable.
+
+Integrated candidate 8142553 passes all 11 PR checks on the first attempt:
+Source projects CI 38936437239, MVP CI 38936437236, MVP validation 38936437380.
+No skipped/failed checks are counted as green. The final closeout changes only
+documentation/RPI evidence, with identical source/infra/workflow trees.
+Existing PR body is reconciled to current counts and explicit Partial criteria.
+PR ready remains gated on the latest evidence-only head checks; no new PR,
+merge, issue checkbox edits, Azure action or operational approval.
+Task implementation complete; manual session stopped. Original Review remains
+executed/Not accepted for full hosted hardening, with owner-directed dispositions
+recorded rather than a repeated Review. Remaining acceptance gaps are explicit
+follow-ups, not hidden implementation claims.
+
 ## Initial State
 
 Existing clean topic branch feat/hardened-deployment-ci-118, no open PR.

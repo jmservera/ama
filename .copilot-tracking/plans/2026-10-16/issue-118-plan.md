@@ -5,8 +5,10 @@ ms.date: 2026-10-16
 ---
 
 Task ID: 118. Slug: issue-118. Scope: full plan.
-Delivery status: PR 347 review CHANGES implementation in progress on the existing
-branch. User-directed continuation supersedes guard/unfixed-gating choices.
+Delivery status: owner-directed PR 347 CHANGES implementation complete on the
+existing branch. Integrated source candidate 8142553 passes all 11 PR checks.
+Evidence-only publication retains that exact executable tree; latest-head CI
+must remain green before ready. Full hosted acceptance remains Partial.
 
 ## Executive Summary
 
@@ -64,7 +66,7 @@ ready only after all PR CI is green; leave issue checkboxes to the coordinator.
 * [x] C03 Resolve latest same-tag digest, rebuild with fresh apt upgrade, compare
   before/after scans and split fixable gating from unfixed reporting.
 * [x] C04 Run local suites/Ruff/mypy/infra/Bicep and actual Docker/API checks.
-* [ ] C05 Reconcile README/evidence/log/RPI, push existing PR and confirm CI before ready.
+* [x] C05 Reconcile README/evidence/log/RPI, push existing PR and confirm CI before ready.
 
 The completed original markers below are historical, not current guard requirements.
 

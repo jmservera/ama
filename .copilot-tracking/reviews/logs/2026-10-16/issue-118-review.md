@@ -23,7 +23,14 @@ No CVE list, baseline, suppression or metadata deletion. Risk remains unresolved
 Validation: full local project suites/Ruff/mypy, 130 infra tests, all Bicep
 build/lint, four Docker contracts with real hardened/plain API health/PNG,
 actionlint and helper checks pass. Full hosted acceptance is still Not accepted.
-Publication remains on existing PR 347; ready is conditional on all CI green.
+After merging concurrent main, full local suites pass at 517 core/553 API/
+77 agents/22 orchestrator/39 importer, 111 skips total; lint/types and 130
+infra tests pass. All four integrated builds/runtime contracts/scans pass the
+owner-approved fixable-only gate with unchanged unfixed counts.
+All 11 integrated source candidate 8142553 PR checks pass (runs 38936437239,
+38936437236, 38936437380). Evidence-only closeout retains identical executable
+inputs. Publication remains existing PR 347; ready requires latest-head CI
+green. Hosted criterion remains Partial and unfixed risk unresolved.
 
 ## Opening Review State
 

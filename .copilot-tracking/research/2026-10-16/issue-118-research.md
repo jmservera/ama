@@ -22,6 +22,11 @@ PR run 38932286066 also exposed API/orchestrator test PYTHONPATH values rooted
 at /src: github.workspace was unavailable during matrix construction. Resolve
 workspace-dependent absolute paths in the step environment instead.
 Local Docker works using sudo; no Azure/private dataset needed.
+Concurrent main c1deba4 adds agents tests using core fixtures; retained that
+dependency after merge 8142553 in step-time absolute CI paths. Initial corrected
+CI is green, with uploaded counts independently checked; integrated-head
+validation is separate and must precede ready. All 11 integrated-source checks
+passed at 8142553 (runs 38936437239, 38936437236 and 38936437380).
 
 ## Evidence
 
