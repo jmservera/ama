@@ -14,6 +14,7 @@ import test_chatthreads as chattests
 import test_handoff_api as handofftests
 import test_mvp
 import test_sqlreads as reads
+import test_sqlqueues as queuetests
 import test_sqlstore as base
 import test_timecapture as timetests
 from zava_forward.core.sqlstore import SqlStore
@@ -188,6 +189,21 @@ class MssqlParity(reads.Parity):
     def tearDownClass(cls):
         reads.SqlStore = cls._orig
         super().tearDownClass()
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlQueueMembership(queuetests.SqlQueueMembership):
+    """Durable flags and cross-process queue writes on the opt-in real engine."""
+
+    def setUp(self):
+        self._last_seed = None
+        super().setUp()
+
+    def make_store(self, seed):
+        if self._last_seed != str(seed):
+            wipe()
+            self._last_seed = str(seed)
+        return factory(str(seed), str(seed.with_suffix(".sqlite")))
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

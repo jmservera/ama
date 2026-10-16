@@ -36,7 +36,10 @@ TABLES = {
   body NVARCHAR(MAX) NOT NULL, support INT NOT NULL DEFAULT 0, days INT NOT NULL DEFAULT 0, rkey {_t(200)} DEFAULT '',
   contractor {_t(200)} DEFAULT '', search NVARCHAR(MAX) {COLLATE} NOT NULL DEFAULT '', search_c NVARCHAR(MAX) {COLLATE} NOT NULL DEFAULT '',
   surname {_t(200)} DEFAULT '', last_contact {_t(40)} DEFAULT '0000', next_visit {_t(40)} DEFAULT '9999',
-  decision {_t(40)} DEFAULT '', fstatus {_t(40)} DEFAULT '')""",
+  decision {_t(40)} DEFAULT '', fstatus {_t(40)} DEFAULT '',
+  queue_new INT NOT NULL DEFAULT 0, queue_priority INT NOT NULL DEFAULT 0,
+  queue_stale INT NOT NULL DEFAULT 0, queue_blocked INT NOT NULL DEFAULT 0,
+  queue_overdue INT NOT NULL DEFAULT 0, queue_unowned INT NOT NULL DEFAULT 0)""",
     "recommendations": f"CREATE TABLE recommendations (id {_t(64)} PRIMARY KEY, rowversion BIGINT NOT NULL DEFAULT 1, seq BIGINT NOT NULL, "
                        f"[user] {_t(200)}, body NVARCHAR(MAX) NOT NULL)",
     "audit": f"""CREATE TABLE audit (

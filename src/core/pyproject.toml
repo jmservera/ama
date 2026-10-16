@@ -82,6 +82,8 @@ disallow_untyped_calls = false
 [[tool.mypy.overrides]]
 module = ["test_rule_engine", "tests.test_rule_engine",
           "test_taskqueues", "tests.test_taskqueues",
+          "test_sqlqueues", "tests.test_sqlqueues",
+          "test_queue_benchmark", "tests.test_queue_benchmark",
           "source_monitor_fixture", "tests.source_monitor_fixture",
           "test_source_monitor", "tests.test_source_monitor"]
 disallow_untyped_calls = false

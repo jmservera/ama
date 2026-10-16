@@ -20,20 +20,29 @@ per-user `ZF_DATA` folder, never under `src/`.
 
 `taskqueues` provides the shared, read-only `work-queues-1` definition/default
 contract and case task context. Store and SqlStore return identical projected
-context in staff list/detail. Queue reads use a process-local inverted case-ID
-index before filtering/counting/paging, shared by JSON and SQL stores rather
-than dialect-specific SQL. All six memberships are built together from the
-canonical evaluator under the store lock. The index is invalidated by the store
-version (including SQL change-sequence catch-up and shared-building changes),
-dataset `as_of`, ranking policy contents and the current resident-authority/
-retention day. No schema, approval, assignment or event history changes are
-required. Cached IDs never contain role-projected context: visibility, filters
-and returned narratives are checked anew for each request.
+context in staff list/detail. Both retain a process-local case-ID membership
+cache before filtering/counting/paging. JSON builds all six memberships together
+from the canonical evaluator on a cache miss.
 
-The first queue request after startup or invalidation still builds membership
-for every open case while holding the lock. Repeated pages avoid that work;
-CSV still projects every matching output row. This is a snapshot-cache
-optimisation, not a claim of constant-time reads or faster cold rebuilds.
+SqlStore and MssqlStore persist six `queue_*` integer columns, each indexed with
+the case ID. Seeding and case writes maintain membership in the same transaction
+as the body, sequence and audit. Ordinary unlinked-case writes evaluate only
+changed cases. Shared building/procurement and linked-home writes conservatively
+recompute all memberships using authoritative SQL bodies and shared documents,
+not a stale process copy. Older schemas add default-zero columns without marking
+them ready; startup backfills before certifying the complete generation. Reopening
+a populated database does not need the seed file.
+
+A persisted fingerprint covers queue definition version, dataset `as_of`,
+complete ranking policy and current resident-authority/retention day. Changes
+force a full refresh; flags, fingerprint and generation publish atomically.
+Every lookup, including a hot hit, checks freshness under a short cross-process
+writer lock and synchronises the case copy. A cache miss selects only IDs from
+the relevant covering SQL index. Filtering, global ranking and sorting still
+run in memory after lookup; they are not constant-time. Cached IDs contain no
+viewer-projected context: visibility, ownership, filters and returned narratives
+are checked anew for each request. No approval, assignment or event semantics
+change. CSV still projects every matching output row.
 The API guide documents [definitions, source fields, snapshot clock, redaction
 and remaining owner decisions](../api/README.md#role-task-queues-and-shared-case-context-76).
 JSON/SQLite semantic tests cover seven/30/180-day boundaries, unknowns,
@@ -47,38 +56,68 @@ Local Python 3.12 SQLite results, not Azure or private-stock evidence. The
 reproducible fixture is `test_sqlreads.queue_cases(60000)`, seed 5, snapshot
 2026-10-16: fictional Test Road homes with deterministic stage dates, EPC dates,
 handoffs and resident-update deadlines; 58,224 are open. Measurements exclude
-generation/database initialisation and include a lightweight evaluator counter.
-Values below are medians of three 50-row second-page reads (milliseconds);
-the unavailable priority queue has no page.
+generation/database initialisation and include the same lightweight evaluator
+counter in both runs. Baseline is the exact merged `Store`/`SqlStore` source at
+`aedd616` (#336), loaded in memory without altering the checkout. Three rounds
+per queue each commit a one-case `benchmark_revision` change, read the first
+50-row page with a cold application cache, then repeat that identical page.
+These are application-cold reads after a write, not flushed OS/database caches.
+The unavailable priority queue has no output rows.
 
-| Queue | Matches | Before | Indexed |
-| --- | ---: | ---: | ---: |
-| new | 19,375 | 2167.9 | 215.3 |
-| priority (draft policy) | 0 | 1931.9 | <0.1 |
-| stale | 14,539 | 2102.7 | 158.3 |
-| blocked | 58,224 | 2567.9 | 611.3 |
-| overdue | 18,326 | 2157.9 | 198.8 |
-| unowned | 11,675 | 2134.4 | 129.6 |
+All values are median milliseconds, before/after this SQL-membership change:
 
-The first `new` page, including cold global ranking and membership construction,
-was **3217.4 ms before and 3090.6 ms after**: cold latency is not materially
-improved. That request builds all queues; subsequent first pages reuse it.
-Repeated nonempty pages now evaluate 50 output contexts instead of 58,274
-contexts per request; the empty priority queue evaluates zero instead of
-58,224. Broad queues still filter/sort their candidate IDs; CSV still pays for
-every matching projected row. Results vary with hardware and concurrent load.
+| Queue | Matches | Cold before | Cold after | Repeat before | Repeat after | Write before / after |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| new | 19,375 | 2900.0 | 1062.9 | 60.8 | 54.1 | 16.6 / 5.1 |
+| priority (draft policy) | 0 | 2850.5 | 1140.5 | 0.2 | 0.2 | 6.1 / 4.7 |
+| stale | 14,539 | 3487.7 | 1107.9 | 59.2 | 41.0 | 4.2 / 4.7 |
+| blocked | 58,224 | 3153.5 | 1241.0 | 191.8 | 145.0 | 3.4 / 4.0 |
+| overdue | 18,326 | 3029.8 | 1157.0 | 55.3 | 54.3 | 2.5 / 3.6 |
+| unowned | 11,675 | 3032.2 | 1130.5 | 43.6 | 34.2 | 3.8 / 4.1 |
+
+Cold reads evaluate exactly 50 output contexts, down from 58,274; priority
+evaluates zero rather than 58,224. Repeat reads still evaluate output contexts.
+Global ranking is rebuilt after each write, even for the empty queue, and
+remains a significant cold cost. Across these rounds cold times ranged
+2281.6-4305.1 ms before and 474.9-1259.4 ms after. Baseline write outliers
+reached 1005.2 ms; final writes ranged 3.3-7.4 ms. These small, noisy samples
+do not establish a write-speed improvement or a production latency guarantee.
+
+Fresh database initialisation, measured separately including seed/backfill,
+was 14.213 s before and 15.029 s after. Day, policy, definition or snapshot
+refreshes and shared-dependency writes can still recompute the whole stock
+under the writer lock; their latency is not represented by the ordinary
+one-case write column. No live Azure SQL timings were collected.
+
+A later full-suite run after integrating `main` at `79b153b` observed cold
+medians of 1.33-2.00 s, repeat medians of 0.3-222.6 ms and initialisation of
+25.521 s. Context counts remained exactly 50/zero. This additional observation
+illustrates timing variability; the paired table is not a stable latency promise.
+
+The earlier cache-only #336 measurement was 3217.4/3090.6 ms for a first cold
+`new` page: it did not materially improve cold latency. That historical
+second-page experiment is not interchangeable with this post-write benchmark.
 
 Run from `src/core` in the installed pip venv:
 
 ```bash
-python -m unittest discover -s tests -p test_sqlreads.py -k test_queue_filters_at_60000 -v
+python -m unittest discover -s tests -p test_queue_benchmark.py -v
+python -m unittest discover -s tests -p test_sqlqueues.py -v
+python -m unittest discover -s tests -p test_taskqueues.py -v
 ```
 
-The regression checks all six warm reads against 1500 ms and, independently,
-requires no context evaluation beyond returned rows. It failed for all six
-queues against the original scan. JSON/SQLite tests also compare uncached
-selection across sorts, views, filters and search, exercise exports and
-authorisation, and check policy/snapshot/day/local/shared/cross-process refresh.
+The benchmark asserts bounded context calls, not a noisy cold-time ceiling.
+It fails for all six queues with the baseline source. Separate mutation checks
+also fail when SQL lookup, incremental writes or shared-dependency maintenance
+are disabled. The existing `test_sqlreads` scale test retains its 1500 ms
+repeat-page ceiling. JSON/SQLite parity covers every queue, sort and view,
+including positive approved priority, search, combined filters, exports and
+cursors. SQL tests verify physical flags, index plans, backfill without a seed,
+rollback and cross-process shared-context/generation handling. Server-free
+tests check SQL Server integer schema/migration, index translation and portable
+lookup/write statements. `MssqlQueueMembership` wires the same behavior tests
+into the existing opt-in SQL Server harness; skipped live tests are not evidence
+of actual Azure SQL execution.
 
 ## Resident decisions and representatives (#86)
 

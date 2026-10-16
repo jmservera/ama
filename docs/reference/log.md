@@ -3800,6 +3800,49 @@ metadata when the knowledge base was created.
 * Published PR #337 with Refs #322 only via a normal topic-branch push.
   Hosted checks were queued at handoff; the owner retains the merge decision.
 
+## [2026-10-16] update | Indexed SQL queue membership on every write (Refs #327)
+
+* Implemented the owner's follow-up to merged #336: six indexed integer flags
+  maintained transactionally by SqlStore seed/save, inherited by MssqlStore,
+  with the existing case-ID hot cache retained. Permissions and viewer context
+  remain request-time, after candidate lookup.
+* Existing rows are backfilled before publication. Fingerprint/generation
+  checks cover definition, snapshot, complete policy and resident-control day;
+  refresh-only changes invalidate other processes. Shared building/procurement
+  or linked-home writes conservatively refresh the whole membership generation
+  from authoritative SQL state. No approval or queue semantics change.
+* Updated the [core contract and measurement recipe](../../src/core/README.md#generated-60000-case-queue-timing-327-2026-10-16),
+  API README and knowledge-base routing. On the same generated 60,000-home/case
+  fixture (58,224 open), three-round median cold-after-write pages changed from
+  2.85-3.49 s to 1.06-1.24 s. Repeats were 0.2-191.8 ms before and 0.2-145.0 ms
+  after; the empty priority queue is included. New-page context evaluations fall
+  from 58,274 to 50 (58,224 to zero for priority).
+* Both runs used the same lightweight evaluator counter and identical fixture,
+  with baseline Store/SqlStore loaded from aedd616. Seed/backfill initialisation
+  measured 14.213/15.029 s; ordinary writes had 2.5-16.6/3.6-5.1 ms medians,
+  with noisy baseline outliers. Global ranking still rebuilds after writes;
+  full shared/clock/policy refreshes remain expensive and are not represented
+  by ordinary-write timings. These are local SQLite observations, not Azure,
+  private-stock, operational or constant-time performance claims.
+* Extended uncached parity to positive priority and every queue/sort/view.
+  Added physical flag, seed/backfill/reopen, index, rollback, authoritative
+  cross-process and portable SQL Server DDL/statement tests, with behavior
+  wired into the opt-in real-engine harness. All six benchmark assertions fail
+  on the original merged sources; three additional lookup/write/shared-write
+  mutations fail the intended assertions without editing package files.
+* Local pip-venv suites: core 487 tests (one skip), API 549 (110 skips),
+  agents 70, orchestrator 22, importer 39. All executed tests and all five
+  projects' Ruff check/format and mypy passed. SQL Server/Azure opt-ins were
+  not configured; those skips are not live compatibility evidence.
+* Published PR #340 with Refs #327 only and no issue-disposition reference.
+  Concurrent main updates #337/#338 were intentionally integrated into the
+  topic without rewriting history; only this append-only log conflicted, and
+  main's entire log remains an unchanged prefix. The integrated core suite
+  passed 495 tests (one skip), nine affected API/portable-SQL tests passed, and
+  core Ruff check/format and mypy passed again. Its additional full-suite
+  timings were 1.33-2.00 s cold and 0.3-222.6 ms repeated, with unchanged
+  bounded context counts; README records this variability. One RPI Review
+  was Conformant; hosted checks and the owner merge decision remain separate.
 ## [2026-10-16] update | Cut-over evidence refreshed after main integration (Refs #200, Refs #201)
 
 * Refreshed the [evidence pack](../architecture/cutover-evidence-pack.md) after
