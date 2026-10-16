@@ -2,6 +2,7 @@
 
 import copy
 import json
+import os
 import tempfile
 import unittest
 from collections.abc import Callable
@@ -111,6 +112,153 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(self.store.cases["ZF-1"], before)
         self.assertEqual(list(self.store.audit_entries()), audit)
 
+    def test_first_contact_retention_withdrawn_expired_and_purge(self) -> None:
+        from datetime import date
+
+        from zava_forward.core.resident_decisions import retention_schedule
+
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority(review_date="2026-02-01")
+        self.answer(status="Withdrawn")
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["contacts"] = [dict(at="2020-02-29T10:00", channel="Phone", outcome="SYN")]
+            c["resident"]["first_contact_at"] = "2020-02-29"
+            c["service_requests"] = [
+                dict(representative_ref="SYN-REP", outcome="SYN-COMPLAINT-OUTCOME")
+            ]
+            self.store.save()
+        with patch("zava_forward.core.controls.today", return_value="2025-02-27"):
+            schedule = retention_schedule(self.store.cases["ZF-1"])
+            self.assertEqual(schedule["due"], "2025-02-28")
+            self.assertFalse(schedule["expired"])
+        with patch("zava_forward.core.controls.today", return_value="2025-02-28"):
+            schedule = retention_schedule(self.store.cases["ZF-1"])
+            self.assertTrue(schedule["expired"])
+            rows = self.store.retention_due(self.pam, today=date(2025, 2, 28))["records"]
+            self.assertTrue(any(r["doc_id"] == "resident-decisions" for r in rows))
+            self.store.approve_retention_deletion(
+                self.pam, "ZF-1", "resident-decisions", today=date(2025, 2, 28)
+            )
+        again = self.open_store()
+        c = again.cases["ZF-1"]
+        for key in ("measure_decisions", "representative_authorities", "resident_safe_contact"):
+            self.assertNotIn(key, c)
+        self.assertEqual(c["resident"]["first_contact_at"], "2020-02-29")
+        self.assertEqual(c["decision"]["status"], "Not recorded")
+        self.assertNotIn("SYN-WISHES-CANARY", json.dumps(c))
+        self.assertEqual(len(c["contacts"]), 1)
+        self.assertEqual(c["service_requests"], [dict(outcome="SYN-COMPLAINT-OUTCOME")])
+        self.assertTrue(again.verify_audit())
+
+    def test_matrix_registered_writer_and_exact_private_fields(self) -> None:
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority()
+        self.answer()
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["adjustment"] = "SYN-VULNERABILITY"
+            c["contacts"] = [
+                dict(
+                    at="2026-10-16",
+                    channel="Phone",
+                    outcome="SYN-CONTACT-OUTCOME",
+                    note="SYN-CONTACT-NOTE",
+                    by="Sam Example",
+                )
+            ]
+            self.store.save()
+        with patch.dict("os.environ", {"ZF_REASON_ROLES": ""}):
+            for role in controls.RESIDENT_VIEW_ROLES:
+                text = json.dumps(self.store.detail("ZF-1", dict(self.sam, role=role)))
+                for visible in ("SYN-WISHES-CANARY", "SYN-SAFE-CANARY", "SYN-NOTE-CANARY"):
+                    self.assertIn(visible, text)
+                for held in ("SYN-VULNERABILITY", "SYN-CONTACT-NOTE", "SYN-CONTACT-OUTCOME"):
+                    self.assertNotIn(held, text)
+        self.assertNotIn(
+            "SYN-WISHES-CANARY",
+            json.dumps(self.store.detail("ZF-1", dict(self.sam, role="Quality Inspector"))),
+        )
+        for actor in (self.pam, dict(self.sam, email="agent@example.test")):
+            self.unchanged_failure(
+                partial(
+                    self.store.resident_action,
+                    actor,
+                    "ZF-1",
+                    dict(action="safe_contact_record", safe_contact_ref="FORGED", source="FORGED"),
+                )
+            )
+            self.unchanged_failure(partial(self.store.set_decision, actor, "ZF-1", "Accepted"))
+        detail = self.store.detail("ZF-1", self.rex)
+        self.assertEqual(detail["resident_safe_contact"], "SYN-SAFE-CANARY")
+        self.assertEqual(detail["measure_decisions"][0]["versions"][0]["note"], "SYN-NOTE-CANARY")
+        self.assertIn("SYN-WISHES-CANARY", json.dumps(detail))
+        flags = self.store.detail("ZF-1", self.kim)["resident_readiness"]
+        self.assertEqual(
+            flags,
+            [dict(measure=MEASURES[0], flag="Proceed"), dict(measure=MEASURES[1], flag="Hold")],
+        )
+
+    def test_first_contact_evidence_is_not_decision_date_and_never_resets(self) -> None:
+        from zava_forward.core.resident_decisions import retention_schedule
+
+        with patch.object(controls, "today", return_value="2026-10-16"):
+            c = copy.deepcopy(self.store.cases["ZF-1"])
+            c["decision"]["at"] = "2020-01-01"
+            c["contacts"] = [dict(at="invalid"), dict(at="2099-01-01")]
+            self.assertIsNone(retention_schedule(c)["due"])
+            c["contacts"].append(dict(at="2022-10-17T10:00"))
+            self.assertEqual(retention_schedule(c)["due"], "2027-10-17")
+            c["resident"]["first_contact_at"] = "2024-01-01"
+            self.assertEqual(retention_schedule(c)["due"], "2027-10-17")
+            with patch("zava_forward.core.resident_decisions.RESIDENT_RETENTION_YEARS", 2):
+                self.assertEqual(retention_schedule(c)["due"], "2024-10-17")
+        with (
+            patch.object(controls, "today", return_value="2026-10-16"),
+            patch.object(controls, "now", return_value="2026-10-16T10:00"),
+        ):
+            self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.assertEqual(retention_schedule(self.store.cases["ZF-1"])["due"], "2031-10-16")
+        self.store.log_call(self.sam, "ZF-1", "SYN", "SYN")
+        self.assertEqual(
+            self.open_store().cases["ZF-1"]["resident"]["first_contact_at"], "2026-10-16"
+        )
+
+    def test_retention_anniversary_holds_disclosure_and_legal_hold_blocks_purge(self) -> None:
+        from datetime import date
+
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority()
+        self.answer(answered_by="Their representative", representative_ref="SYN-REP-A")
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2021-10-16"
+            self.store.save()
+        disclosure = dict(
+            measure=MEASURES[0],
+            context_revision=1,
+            representative_ref="SYN-REP-A",
+            task="Receive information",
+        )
+        with patch.object(controls, "today", return_value="2026-10-15"):
+            self.action("disclosure_check", **disclosure)
+            self.assertFalse(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+        with patch.object(controls, "today", return_value="2026-10-16"):
+            for held in (False, True):
+                with self.store.lock:
+                    self.store._case("ZF-1")["legal_hold"] = dict(active=held)
+                    self.store.save()
+                self.unchanged_failure(lambda: self.action("disclosure_check", **disclosure))
+                self.assertTrue(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+            self.unchanged_failure(
+                lambda: self.store.approve_retention_deletion(
+                    self.pam, "ZF-1", "resident-decisions", today=date(2026, 10, 16)
+                )
+            )
+
     def test_unknown_scope_source_and_no_contact_or_legacy_inference(self) -> None:
         self.store.log_call(self.sam, "ZF-1", "Happy to go ahead", "Access agreed")
         self.store.set_decision(self.sam, "ZF-1", "Accepted")
@@ -189,7 +337,9 @@ class JsonResidentDecisions(unittest.TestCase):
         self.authority()
         self.assertTrue(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
         self.answer(answered_by="Their representative", representative_ref="SYN-REP-A")
-        for today, held in (("2098-12-31", False), ("2099-01-01", True)):
+        self.authority(review_date="2027-01-01")
+        self.answer(answered_by="Their representative", representative_ref="SYN-REP-A")
+        for today, held in (("2026-12-31", False), ("2027-01-01", True)):
             with patch.object(controls, "today", return_value=today):
                 self.assertEqual(
                     bool(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0]))), held
@@ -394,14 +544,14 @@ class JsonResidentDecisions(unittest.TestCase):
         audit = list(self.store.audit_entries())
         for actor in (self.sam, self.pam, self.rex, self.kim):
             detail = self.store.detail("ZF-1", actor)
-            if actor in (self.rex, self.kim):
+            if actor == self.kim:
                 text = json.dumps(detail)
                 for sentinel in ("SYN-AUTH-CANARY", "SYN-WISHES-CANARY", "SYN-SOURCE-CANARY"):
                     self.assertNotIn(sentinel, text)
             self.assertEqual(self.store.cases["ZF-1"], before)
         with patch.dict("os.environ", {"ZF_REASON_ROLES": "Retrofit Coordinator"}):
             detail = self.store.detail("ZF-1", self.sam)
-            self.assertNotIn("representative_authorities", detail)
+            self.assertIn("representative_authorities", detail)
         self.assertEqual(list(self.store.audit_entries()), audit)
         self.store.log_call(self.sam, "ZF-1", "SYN", "SYN")
         again = self.open_store()
@@ -429,6 +579,139 @@ class JsonResidentDecisions(unittest.TestCase):
                 self.assertIn("not approved", proposal["label"])
             self.assertEqual(service.call_count, 2)
         self.assertEqual(self.store.cases["ZF-1"], before)
+
+
+@unittest.skipUnless(
+    os.environ.get("ZF_RESIDENT_AZURE_TEST") == "1",
+    "Explicit isolated synthetic Azure SQL database required",
+)
+class AzureResidentDecisions(unittest.TestCase):
+    def test_synthetic_sqlstore_persistence_permissions_retention_and_audit(self) -> None:
+        from datetime import date
+
+        from zava_forward.core.mssqlstore import MssqlStore
+        from zava_forward.core.resident_decisions import retention_schedule
+
+        self.assertTrue(os.environ["ZF_SQL_DATABASE"].startswith("resident86test"))
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / "synthetic.json"
+            data = copy.deepcopy(DATA)
+            data["cases"][0]["contacts"] = [
+                dict(
+                    at="2021-10-17T10:00",
+                    channel="Phone",
+                    outcome="SYN",
+                    note="SYN",
+                    by="Sam Example",
+                )
+            ]
+            coordinator = dict(
+                code="RC-86",
+                name="Synthetic Coordinator",
+                email="rc86@example.test",
+                role="Retrofit Coordinator",
+            )
+            contractor = dict(
+                code="CON-86",
+                name="Synthetic Contractor",
+                email="con86@example.test",
+                role="Contractor",
+                contractor="Test Ltd",
+            )
+            data["staff"].extend([coordinator, contractor])
+            path.write_text(json.dumps(data))
+            store = MssqlStore(str(path), state_dir=root)
+            self.addCleanup(store.db.close)
+            self.assertIsInstance(store, SqlStore)
+            self.assertEqual(len(store.cases), len(DATA["cases"]))
+            sam, manager = data["staff"][:2]
+            store.technical_action(manager, "ZF-1", dict(action="design_submit", note="SYN"))
+
+            def action(name: str, **body: Any) -> None:
+                store.resident_action(sam, "ZF-1", dict(action=name, **body))
+
+            action(
+                "scope_record",
+                measure="Loft insulation",
+                design_version=1,
+                scope="SYN-SCOPE",
+                source="SYN",
+            )
+            action("safe_contact_record", safe_contact_ref="SYN-SAFE", source="SYN")
+            binding = dict(measure="Loft insulation", context_revision=1)
+            action(
+                "representative_record",
+                **binding,
+                representative_ref="SYN-REP",
+                status="Confirmed",
+                tasks=["Works decision", "Receive information"],
+                authority_date="2026-01-01",
+                review_date="2027-01-01",
+                safe_contact_ref="SYN-SAFE",
+                source="SYN-AUTH",
+                resident_wishes="SYN-WISHES",
+            )
+            answer = dict(**binding, status="Accepted", answered_by="The resident", source="SYN")
+            action("decision_record", **answer)
+            self.assertEqual(
+                store.detail("ZF-1", contractor)["resident_readiness"],
+                [dict(measure="Loft insulation", flag="Proceed")],
+            )
+            action("decision_record", **dict(answer, status="Withdrawn", note="SYN-WITHDRAWN"))
+            self.assertEqual(
+                store.detail("ZF-1", contractor)["resident_readiness"],
+                [dict(measure="Loft insulation", flag="Hold")],
+            )
+            before = copy.deepcopy(store.cases["ZF-1"])
+            with self.assertRaises(PermissionError):
+                store.resident_action(manager, "ZF-1", dict(action="safe_contact_record"))
+            self.assertEqual(store.cases["ZF-1"], before)
+            self.assertIn("SYN-WISHES", json.dumps(store.detail("ZF-1", coordinator)))
+            self.assertNotIn("SYN-WISHES", json.dumps(store.detail("ZF-1", contractor)))
+            reopened = MssqlStore(str(path), state_dir=root)
+            self.addCleanup(reopened.db.close)
+            self.assertEqual(reopened.cases["ZF-1"], before)
+            with patch.object(controls, "today", return_value="2026-10-16"):
+                self.assertEqual(retention_schedule(reopened.cases["ZF-1"])["due"], "2026-10-17")
+                self.assertFalse(retention_schedule(reopened.cases["ZF-1"])["expired"])
+            with patch.object(controls, "today", return_value="2026-10-17"):
+                self.assertTrue(retention_schedule(reopened.cases["ZF-1"])["expired"])
+                with self.assertRaises(ValueError):
+                    reopened.resident_action(
+                        sam,
+                        "ZF-1",
+                        dict(
+                            action="disclosure_check",
+                            **binding,
+                            representative_ref="SYN-REP",
+                            task="Receive information",
+                        ),
+                    )
+                reopened.approve_retention_deletion(
+                    manager, "ZF-1", "resident-decisions", today=date(2026, 10, 17)
+                )
+            final = MssqlStore(str(path), state_dir=root)
+            self.addCleanup(final.db.close)
+            for key in ("measure_decisions", "resident_safe_contact", "representative_authorities"):
+                self.assertNotIn(key, final.cases["ZF-1"])
+            self.assertNotIn("SYN-WISHES", json.dumps(final.cases["ZF-1"]))
+            self.assertEqual(final.cases["ZF-1"]["resident"]["first_contact_at"], "2021-10-17")
+            self.assertTrue(final.verify_audit())
+            mode = final.db.execute(
+                "SELECT is_ledger_on FROM sys.databases WHERE name=DB_NAME()"
+            ).fetchone()[0]
+            print(
+                json.dumps(
+                    dict(
+                        platform="Azure SQL",
+                        ledger_mode=bool(mode),
+                        current_payload_purged=True,
+                        restart_verified=True,
+                        audit_intact=True,
+                        synthetic_only=True,
+                    )
+                )
+            )
 
 
 class SqlResidentDecisions(JsonResidentDecisions):

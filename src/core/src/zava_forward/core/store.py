@@ -14,7 +14,7 @@ from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
-from .resident_decisions import ResidentDecisionMixin, measure_decision_view, resident_gate, resident_status
+from .resident_decisions import ResidentDecisionMixin, measure_decision_view, remember_first_contact, retention_schedule, resident_gate, resident_status
 from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
@@ -348,6 +348,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         d["checklist"] = self.checklist(c)
         d["technical_missing"] = missing_items(c)
         d["measure_decisions"] = measure_decision_view(c)
+        d["resident_retention"] = retention_schedule(c)
+        d["can_record_resident"] = bool(user and user.get("role") in projection.RESIDENT_RECORD_ROLES)
         d["contacts"] = list(reversed(d["contacts"]))[:40]
         if user is None:
             return d
@@ -442,19 +444,19 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             c["contacts"].append(dict(at=datetime.now().isoformat(timespec="minutes"), purpose="Update",
                                       channel=channel, direction="Outbound", outcome=outcome,
                                       note=(note or "")[:500], by=user["name"]))
+            remember_first_contact(c)
             self.audit(user["email"], "log_contact", case_id, outcome)
             self.save()
 
     def set_decision(self, user, case_id, status, note=""):
-        from . import controls
         if status not in DECISIONS:
             raise ValueError("Choose one of the listed answers.")
         with self.lock:
             c = self._case(case_id)
             self.guard_case_event(c)
-            controls.require_role(user, controls.RESIDENT_ROLES, "an authorised resident officer")
+            self.resident_recorder(user)
             c["decision"] = dict(status=status, by=user["name"], at=datetime.now().date().isoformat())
-            self.audit(user["email"], "resident_decision", case_id, f"{status} {note}".strip())
+            self.audit(user["email"], "resident_decision", case_id, status)
             self.save()
 
     def hand_over(self, user, case_id, to_email, note=""):

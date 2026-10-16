@@ -3443,3 +3443,30 @@ metadata when the knowledge base was created.
 * Refs #86 remains open: formal complaints/human acceptance, operational
   authority/retention and actual model/SQL Server/Azure evidence are not
   established. Local checks do not claim hosted CI, deployment or approval.
+
+## [2026-10-16] query | Resident first-contact retention and confirmed field matrix (#86)
+
+* Applied [owner retention/matrix decisions](https://github.com/jmservera/ama/issues/86#issuecomment-6209881675)
+  and the [first-interaction clarification](https://github.com/jmservera/ama/issues/86#issuecomment-6209904857):
+  five calendar years from first recorded resident contact, including withdrawn
+  decisions and expired authority. This supersedes the earlier one-month and
+  decision-date proposals; it is exercise policy, not legal advice.
+* Updated the [core contract](../../src/core/README.md#resident-decisions-and-representatives-86),
+  [API contract](../../src/api/README.md#resident-decisions-and-representative-api-86)
+  and index. Liaison/coordination staff record/view, managers view resident
+  fields, contractors see only per-measure Proceed/Hold resident flags, and
+  agent inputs exclude private resident evidence. Separate complaint/redress
+  rights remain unchanged. Missing contact history is Unknown.
+* Core 401 run/1 opt-in skip, API 517 run/99 opt-in skips and agents 70 passed.
+  Core/API Ruff, format and mypy passed; loopback application and exact
+  permission/retention regressions passed. New tests fail without the fix.
+* Real Azure SQL in ama/uksouth: isolated Basic database
+  resident86test20261016b, constructed DATA only. MssqlStore/SqlStore decisions,
+  withdrawal, permissions, anniversary expiry, reopened-state persistence,
+  current-payload purge and intact audit verified. Database ledger mode false.
+  No existing private database or properwarm input was read.
+* Current-payload deletion is manager-reviewed and legal-hold-aware, not a
+  configured automatic erasure job. Existing audit text, backups and SQL history
+  require separate retention design. Universal cross-case resident identity,
+  missing historical contact evidence, named human acceptance and formal
+  complaints integration remain open. Refs #86, never closes it.

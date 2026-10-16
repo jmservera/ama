@@ -9,7 +9,8 @@ from decimal import Decimal, InvalidOperation
 
 FINANCE_ROLES = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
 FINANCE_APPROVERS = ("Retrofit Programme Manager", "Programme Support Officer")
-RESIDENT_ROLES = ("Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer")
+RESIDENT_ROLES = ("Resident Liaison Officer", "Retrofit Coordinator")
+RESIDENT_VIEW_ROLES = RESIDENT_ROLES + ("Retrofit Programme Manager", "Programme Support Officer")
 BULK_KEYS = ("case_ids", "ids", "items", "all")
 
 
