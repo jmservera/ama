@@ -3925,3 +3925,7 @@ metadata when the knowledge base was created.
   legal interpretation/rule activation, consent, safety, financial commitments
   and operational reliance remain named human gates; Juan Manuel Servera is
   the exercise Legal/Compliance/DPO owner. No other approval was invented.
+* Published the implementation and honest acceptance boundaries as #352.
+  One postimplementation Review ran: Complete execution, Not accepted for full
+  #344 acceptance; tenant, browser API and positive-feature findings route to
+  #349/#350. No merge or issue-body tick was performed.

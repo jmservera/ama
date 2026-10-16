@@ -4,8 +4,8 @@ description: Bounded private-origin public edge for issue 344
 ms.date: 2026-10-16
 ---
 
-Task ID: 344. Slug: public-browser-access-344. Status: implemented and reviewed,
-publication pending; real-user and full feature acceptance Blocked.
+Task ID: 344. Slug: public-browser-access-344. Status: implemented, reviewed and
+published as PR #352; real-user and full feature acceptance Blocked.
 
 ## Executive Summary
 
@@ -81,7 +81,7 @@ Do not tick issue criteria; coordinator owns ticks at merge.
 ### P03: Review and publish
 
 * [x] P03-T01: Reconcile evidence and perform one postimplementation Review.
-* [ ] P03-T02: Resolve account, configure repo-local noreply email, commit with
+* [x] P03-T02: Resolve account, configure repo-local noreply email, commit with
   trailer, push and open PR; no merge.
 
 ## Locked Test and Change Ownership

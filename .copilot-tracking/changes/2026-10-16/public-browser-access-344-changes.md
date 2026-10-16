@@ -128,4 +128,9 @@ RV-001 routes the tenant prerequisite to #349, RV-002 routes browser API 401
 to later implementation under #350 after platform trust proof, and RV-003
 routes positive-user feature/configuration evidence under #350. No return to
 implementation, repeat Review or claim of finding closure.
-Commit/push/PR publication follows; it is not owner acceptance or merge.
+Implementation commit `33ac8fe` was authored/committed with the authenticated
+account's repository-local privacy-safe address and required Copilot trailer.
+Pushed feat/public-browser-access-344 and opened
+https://github.com/jmservera/ama/pull/352 against main. This publication is not
+owner acceptance or merge; issue criteria remain unchecked. A metadata-only
+commit records publication and the stopped manual session with blockers retained.
