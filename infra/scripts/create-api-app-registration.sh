@@ -36,6 +36,9 @@ roles=(
   "ProgrammeManager|Retrofit Programme Manager"
   "SupportOfficer|Programme Support Officer"
   "Contractor|Contractor"
+  "RuleAuthor|Regulatory rule author"
+  "RuleOwner|Regulatory named owner"
+  "RegulatoryChat|Regulatory chat user"
 )
 roles_json=$(python3 - "${roles[@]}" <<'PY'
 import json, sys, uuid

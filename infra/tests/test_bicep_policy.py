@@ -236,7 +236,17 @@ class BicepPolicyTests(unittest.TestCase):
             .get("template", {})
             .get("containers", [])
         }
-        self.assertEqual(containers["api"]["image"], "[parameters('apiImage')]")
+        for name, parameter in (
+            ("api", "apiImage"),
+            ("agents", "agentImage"),
+            ("orchestrator", "orchestratorImage"),
+            ("import", "importImage"),
+            ("auth-renewal", "orchestratorImage"),
+            ("ledger-verify", "orchestratorImage"),
+        ):
+            with self.subTest(container=name):
+                self.assertEqual(containers[name]["image"], f"[parameters('{parameter}')]")
+        self.assertEqual(len(containers), 6)
         for name, module, args in (
             ("auth-renewal", "token_store", []),
             ("ledger-verify", "digest_blob", ["--publish"]),
@@ -244,8 +254,68 @@ class BicepPolicyTests(unittest.TestCase):
             self.assertEqual(containers[name]["image"], "[parameters('orchestratorImage')]")
             self.assertEqual(
                 containers[name]["command"],
-                ["python", "-m", f"zava_forward.orchestrator.{module}", *args],
+                [
+                    "python",
+                    "-m",
+                    f"zava_forward.orchestrator.{module}",
+                    *args,
+                ],
             )
+
+    def test_api_replicas_probes_and_private_edge_contract(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        api = next(r for r in resources(apps) if r["type"] == "Microsoft.App/containerApps")
+        template = api["properties"]["template"]
+        self.assertEqual(template["scale"]["minReplicas"], 2)
+        self.assertEqual(template["scale"]["maxReplicas"], 4)
+        self.assertEqual(
+            template["containers"][0]["probes"],
+            [
+                {"type": "Liveness", "httpGet": {"path": "/healthz", "port": 8088}},
+                {"type": "Readiness", "httpGet": {"path": "/healthz", "port": 8088}},
+            ],
+        )
+        self.assertFalse(self.defaults["enablePublicEdge"])
+        edge = module(self.main, "edge")
+        self.assertEqual(edge["condition"], "[parameters('enablePublicEdge')]")
+        compiled = edge["properties"]["template"]
+        profile = resource(compiled, "Microsoft.Cdn/profiles")
+        waf = resource(compiled, "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies")
+        self.assertEqual(profile["sku"]["name"], "Premium_AzureFrontDoor")
+        self.assertEqual(waf["sku"]["name"], "Premium_AzureFrontDoor")
+        self.assertEqual(waf["properties"]["policySettings"]["enabledState"], "Enabled")
+        self.assertEqual(compiled["parameters"]["wafMode"]["defaultValue"], "Prevention")
+        origin = resource(compiled, "Microsoft.Cdn/profiles/originGroups/origins")
+        self.assertEqual(
+            origin["properties"]["sharedPrivateLinkResource"]["groupId"], "managedEnvironments"
+        )
+        self.assertEqual(
+            origin["properties"]["sharedPrivateLinkResource"]["privateLink"],
+            {"id": "[parameters('environmentId')]"},
+        )
+        policy = resource(compiled, "Microsoft.Cdn/profiles/securityPolicies")
+        self.assertEqual(
+            policy["properties"]["parameters"]["wafPolicy"]["id"],
+            "[resourceId('Microsoft.Network/FrontDoorWebApplicationFirewallPolicies', "
+            "variables('wafName'))]",
+        )
+        route = resource(compiled, "Microsoft.Cdn/profiles/afdEndpoints/routes")
+        self.assertEqual(route["properties"]["supportedProtocols"], ["Https"])
+        self.assertEqual(route["properties"]["forwardingProtocol"], "HttpsOnly")
+
+    def test_defender_opt_in_does_not_downgrade_existing_subscription_plans(self) -> None:
+        governance = compile_bicep("governance.bicep")
+        self.assertFalse(governance["parameters"]["enableDefenderPlans"]["defaultValue"])
+        pricing = resource(governance, "Microsoft.Security/pricings")
+        self.assertEqual(pricing["condition"], "[parameters('enableDefenderPlans')]")
+        self.assertEqual(pricing["properties"]["pricingTier"], "Standard")
+        self.assertEqual(
+            governance["parameters"]["defenderPlans"]["defaultValue"],
+            ["StorageAccounts", "SqlServers", "KeyVaults", "Containers"],
+        )
+        self.assertEqual(
+            governance["parameters"]["enforcementMode"]["defaultValue"], "DoNotEnforce"
+        )
 
     def test_production_is_the_default_profile(self) -> None:
         self.assertEqual(self.defaults["deploymentProfile"], "production")

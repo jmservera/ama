@@ -1,0 +1,10 @@
+# Full reports include unfixed findings; CI overrides ignore-unfixed for the fixable gate.
+# No repository ignore discovery, vulnerability allow-list or baseline.
+scan:
+  scanners:
+    - vuln
+severity:
+  - HIGH
+  - CRITICAL
+ignore-unfixed: false
+ignorefile: /dev/null
