@@ -5,6 +5,8 @@ ms.date: 2026-10-16
 ---
 
 Task ID: 118. Slug: issue-118. Scope: full plan.
+Delivery status: implemented and published as draft PR 347. Full hardened hosted
+acceptance remains blocked by RV-001/RV-002; no rollout or merge approval.
 
 ## Executive Summary
 
@@ -70,7 +72,7 @@ execution remain unmet and are reported honestly.
 <!-- rpi:task id=P03-T01 -->
 * [x] P03-T01 Run local validation, audit each criterion, update READMEs/index/log.
 <!-- rpi:task id=P03-T02 -->
-* [ ] P03-T02 Perform one review, persist findings, commit, push and open PR.
+* [x] P03-T02 Perform one review, persist findings, commit, push and open PR.
 
 ## Critique Disposition
 

@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/issue-118-research.md",
     "plan": ".copilot-tracking/plans/2026-10-16/issue-118-plan.md",
@@ -18,13 +18,14 @@
     {"decision": "Implement and publish full requested scope", "status": "confirmed", "evidence": "User request 2026-10-16"},
     {"decision": "Research reused; Planning Readiness Ready", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-10-16/issue-118-research.md"},
     {"decision": "Single critique executed; Revise verdict; PC-001 through PC-004 directly dispositioned", "status": "applied", "evidence": ".copilot-tracking/plans/2026-10-16/issue-118-plan.md"},
-    {"decision": "Single Review executed Complete; outcome Not accepted for full hardened hosted deployment; no new source defects identified in assessed scope", "status": "reviewed", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/issue-118-review.md"}
+    {"decision": "Single Review executed Complete; outcome Not accepted for full hardened hosted deployment; no new source defects identified in assessed scope", "status": "reviewed", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/issue-118-review.md"},
+    {"decision": "Bounded implementation published as open draft PR 347, no merge, no issue checkbox mutation", "status": "published", "evidence": "https://github.com/jmservera/ama/pull/347"}
   ],
   "blockers": [
     {"id": "hosted-runtime", "summary": "ACA schema lacks required runtime settings; no rollout", "resolution": "Separately reviewed supported host configuration with private runtime evidence"},
     {"id": "unfixed-cves", "summary": "Every image scan fails on 61 HIGH and 2 CRITICAL unfixed package findings", "resolution": "Base-image security remediation without suppression"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Publish requested PR without merging; retain RV-001/RV-002 as open acceptance gates"},
+  "next_action": {"phase": "Follow-up", "action": "Owner reviews draft PR 347; base-image Research and supported-hosting Plan must clear RV-002/RV-001 before hardened rollout"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Research compatible base-image security remediation", "rationale": "All scans currently fail on unfixed HIGH/CRITICAL packages; prevents green security acceptance", "evidence": "Review RV-002 and cutover criterion audit"},
     {"rank": 2, "task": "Plan supported hosted runtime enforcement", "rationale": "Current ACA schema lacks required kernel controls; blocks rollout and needs a reviewed hosting decision", "evidence": "Review RV-001 and Microsoft.App 2025-07-01 schema"}

@@ -68,3 +68,15 @@ One post-implementation Review executed, Complete; outcome Not accepted for
 full hardened hosted deployment. RV-001 routes supported hosting to later Plan;
 RV-002 routes unfixed base remediation to later Research. No repeated Review.
 Code delivery is ready for the explicitly requested PR with these gates open.
+
+## P03 Publication
+
+Committed implementation as 9a33120 on feat/hardened-deployment-ci-118, pushed
+without rewriting history, and opened draft PR 347 targeting main:
+https://github.com/jmservera/ama/pull/347 .
+Authenticated account id/login matched the required repo-local noreply email;
+both commits carry the required Copilot coauthor trailer. Issue body unchanged.
+PR is OPEN and draft, with original criteria individually audited. No merge.
+Immediately after creation GitHub reported no checks yet, not successful CI.
+Final publication metadata is committed separately; no production source changes
+were made after the single Review.
