@@ -79,41 +79,14 @@ jobs:
           docker exec zf-ro sh -c 'touch /state/probe && ! touch /app/probe 2>/dev/null && ! touch /probe 2>/dev/null'
           docker exec zf-ro sh -c 'grep -q "^CapEff:.0000000000000000$" /proc/1/status'
           docker rm -f zf-ro
-      - name: Gate fixable high and critical vulnerabilities
-        id: scan
+      - name: Scan image for high and critical vulnerabilities
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
-          version: v0.76.0
           image-ref: zavaforward-mvp:ci
           severity: HIGH,CRITICAL
           exit-code: "1"
           vuln-type: os,library
-          trivy-config: src/trivy.yaml
           ignore-unfixed: true
-          format: json
-          output: trivy-api.json
-      - name: Report all high and critical vulnerabilities including unfixed
-        if: ${{ !cancelled() && steps.scan.outcome != 'skipped' }}
-        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
-        with:
-          image-ref: zavaforward-mvp:ci
-          severity: HIGH,CRITICAL
-          exit-code: "0"
-          vuln-type: os,library
-          trivy-config: src/trivy.yaml
-          ignore-unfixed: false
-          format: json
-          output: trivy-api-all.json
-          skip-setup-trivy: true
-      - name: Retain fixable gate and full unfixed-inclusive scan evidence
-        if: ${{ !cancelled() && steps.scan.outcome != 'skipped' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: trivy-api-existing-image-job
-          path: |
-            trivy-api.json
-            trivy-api-all.json
-          if-no-files-found: error
       - name: Generate SBOM (SPDX)
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
