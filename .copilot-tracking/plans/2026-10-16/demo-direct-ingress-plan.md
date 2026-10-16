@@ -117,7 +117,7 @@ completed research, critique or historical Review. Reuse the active branch/PR.
 Implement only offline; do not call Azure or directory services.
 
 <!-- rpi:phase id=P05 -->
-### [ ] P05: Resilient authentication onboarding
+### [x] P05: Resilient authentication onboarding
 
 <!-- rpi:task id=P05-T01 -->
 #### [x] P05-T01: Discover credential dependencies, onboard private roster, coordinate and orchestrate SQL
@@ -131,7 +131,7 @@ block concurrent mutations. No usable in-VNet staff/roster transport exists in
 the proof initializer; provide an exact authorized-host command instead.
 
 <!-- rpi:task id=P05-T02 -->
-#### [ ] P05-T02: Protect app-local credentials and prove the offline contract
+#### [x] P05-T02: Protect app-local credentials and prove the offline contract
 
 Bicep/store guard, mocked Azure/SQL regressions, scoped lint/type checks,
 runbook/evidence/KB log and acceptance audit. Preserve unmet live/human gates.
@@ -145,7 +145,10 @@ hygiene passed. Bounded continuation acceptance audit is appended to the
 existing review artifact; historical Review/critique verdicts are unchanged.
 Absolute simultaneous-start exclusion is not established by advisory tags,
 and raw unguarded deployments remain outside the supported wrapper boundary.
-Live/human c/d/e gates remain unmet. Delivery is the remaining P05-T02 step.
+Live/human c/d/e gates remain unmet. P05-T02 delivery completed: implementation
+commit c6c9b6b pushed to feat/demo-direct-ingress and existing PR 362 updated.
+Implementation/delivery completion does not mark the strict mutex criterion
+or live acceptance complete.
 
 Details: .copilot-tracking/details/2026-10-16/demo-direct-ingress-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-16/demo-direct-ingress-changes.md.

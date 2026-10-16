@@ -16,7 +16,8 @@ diagnostics, 32 local loopback API auth tests, Markdown local targets and diff
 hygiene. Read-only credential plans include metadata-only target/reachability
 checks and explicit storage-blocked status. SQL validation failures have a
 sanitized structured failure category distinct from connectivity/driver errors.
-Delivery pending. Advisory simultaneous-start exclusion and unguarded portal/
+Delivery completed: c6c9b6b pushed and PR 362 updated on the existing branch.
+Advisory simultaneous-start exclusion and unguarded portal/
 raw deployment behavior are not proven guarantees; live/human gates remain.
 
 Task ID: issue-360. Slug: demo-direct-ingress.

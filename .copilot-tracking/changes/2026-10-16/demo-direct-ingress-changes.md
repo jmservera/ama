@@ -61,6 +61,17 @@ evidence and explicit coordination/raw-deployment/live gaps. No second critique,
 tenant authority, human approval, migration, Azure write, private-data read,
 resource retirement or issue checkbox update was performed.
 
+### P05 delivery receipt
+
+Implementation c6c9b6b committed with the authenticated account's repository-
+local privacy email and required Copilot trailer, then pushed non-forced to
+the existing feat/demo-direct-ingress branch. Updated existing PR 362 title/
+body with Refs #360, fresh 260/32 offline evidence, historical baseline
+separation, exact one-line invocation and explicit partial acceptance.
+P05/P05-T01/P05-T02 are complete for offline implementation/delivery.
+Strict atomic cross-host exclusion, raw deployment bypass and original human/
+live acceptance remain outside the completed evidence; no merge was performed.
+
 Task ID: issue-360. Slug: demo-direct-ingress. Full plan implementation.
 
 ## Execution

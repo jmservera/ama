@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Implement",
-  "status": "active",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/demo-direct-ingress-research.md",
@@ -49,12 +49,13 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Complete P05 delivery on the existing branch/PR, then record completed offline implementation separately from partial coordination/live acceptance."
+    "phase": "Follow-up",
+    "action": "Owner reviews updated PR 362 and explicit strict-lock/raw-deployment limitations; coordinator retains original live migration/browser/SQL/AI/retirement gates. Offline implementation c6c9b6b pushed; no automatic follow-up session."
   },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Human PR and migration/cost approval", "rationale": "Required before any live change; review corrections are tested but not independently re-reviewed.", "evidence": "PR 362; infra/README.md direct-demo proposal"},
-    {"rank": 2, "task": "Coordinator live direct sign-in, role, SQL and AI acceptance", "rationale": "Criterion d requires real deployment and identity-backed evidence; offline tests cannot substitute.", "evidence": "Issue 360 criterion d; cut-over evidence audit"},
-    {"rank": 3, "task": "Separately authorized selective retirement", "rationale": "Only after d and rollback window; never delete ama or shared services.", "evidence": "Issue 360 criterion e; migration runbook"}
+    {"rank": 1, "task": "Establish strict cross-host exclusion before claiming that guarantee", "rationale": "Advisory refusal is implemented, but absolute simultaneous-start exclusion requires an approved provider-enforced shared mutex and validation.", "evidence": "P05 acceptance audit; infra/README.md coordination boundary"},
+    {"rank": 2, "task": "Human PR and migration/cost approval", "rationale": "Required before any live change; updated PR explicitly records partial acceptance and no Azure authorization.", "evidence": "PR 362; infra/README.md direct-demo proposal"},
+    {"rank": 3, "task": "Coordinator live direct sign-in, role, SQL and AI acceptance", "rationale": "Criterion d requires real deployment and identity-backed evidence; offline tests cannot substitute.", "evidence": "Issue 360 criterion d; cut-over evidence audit"},
+    {"rank": 4, "task": "Separately authorized selective retirement", "rationale": "Only after d and rollback window; never delete ama or shared services.", "evidence": "Issue 360 criterion e; migration runbook"}
   ]
 }
