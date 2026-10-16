@@ -1,0 +1,27 @@
+{
+  "task_id": "issue-175",
+  "task_slug": "synthetic-dictionary-175",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/synthetic-dictionary-175-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/synthetic-dictionary-175-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/synthetic-dictionary-175-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/synthetic-dictionary-175-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/synthetic-dictionary-175-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/synthetic-dictionary-175-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "User requests end-to-end delivery and all RPI artifacts; progress phases under explicit task direction without assuming automatic-session consent.", "status": "confirmed", "evidence": "User task 2026-10-16"},
+    {"decision": "Offline only; no private dataset reads, legacy-tree changes or setup-entra.py edits.", "status": "confirmed", "evidence": "User task 2026-10-16"},
+    {"decision": "Research executed; Planning Readiness Ready for bounded delivery with AC2 blocked.", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-16/synthetic-dictionary-175-research.md"},
+    {"decision": "One critique executed, verdict Revise; PC-001/002/003 directly dispositioned. No second critique.", "status": "complete", "evidence": ".copilot-tracking/plans/2026-10-16/synthetic-dictionary-175-critique.md"},
+    {"decision": "One Review executed; outcome Residual work, RV-001 source provenance remains unmet. Assessed current register, checker/tests and documentation; no operational conformance.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/synthetic-dictionary-175-review.md"}
+  ],
+  "blockers": [{"id": "AC2", "summary": "Three historic source retrieval dates and verified licence terms unavailable in local metadata.", "resolution": "Owner verifies official source metadata; do not infer dates under offline scope."}],
+  "next_action": {"phase": "Follow-up", "action": "Push bounded offline delivery and open PR with Refs #175, explicit AC2 blocker and validation."},
+  "prioritized_follow_ups": [{"rank": 1, "task": "Verify historic external-source provenance", "rationale": "Direct remaining acceptance blocker; dates and terms cannot be fabricated offline.", "evidence": "RV-001; SRC-CENSUS-TS054, SRC-IMD-2025, SRC-ONS-BOUNDARIES"}]
+}
