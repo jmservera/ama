@@ -102,6 +102,17 @@ lint and type checks still run for every project. No Azure workflow was run for
 this implementation; federation, approvals, quarantine release and live checks
 remain setup/acceptance gaps.
 
+The `src-api` browser step also runs the
+[regulatory alert/chat UX regression](./api/README.md#local-engineering-checks)
+with hash-verified axe 4.10.3. If its pinned script cannot be downloaded,
+CI warns and still runs the non-axe assertions, including actual target sizes.
+The job uploads JSON evidence with explicit axe execution/skip status.
+API unit discovery also works with runtime-only installations: importing the
+regulatory harness does not load Playwright. Pure target-size and axe-integrity
+tests remain enabled without a browser; an isolated regression blocks accidental
+eager Playwright imports even in dev environments. Playwright stays in the API
+dev extra for typed browser checks, which still run in the dedicated CI step.
+
 [`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) runs the checks `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace` and `src-no-working-data`. The `mvp-ci` and `mvp-validation` workflows keep their check names; they install source packages and their filters cover all `src/` build inputs. The `mvp-ci` image job builds `src/api/Dockerfile` with `src/` as context (`docker build -f src/api/Dockerfile src`). API packages only core, agents and API; the Bicep jobs now select the separate orchestrator image. The API entry point is `python -m zava_forward.api`; CI version probes import its version explicitly instead of starting the server. Runtime and generated synthetic data default to the per-user `ZF_DATA` folder (`~/.zava-forward/data/` without it), never under `src/`. Existing temporary ruff/mypy migration exemptions remain in each `pyproject.toml`; general cleanup is separate work.
 
 Workflow/check naming remains unchanged for branch-protection continuity, following
