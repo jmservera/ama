@@ -3987,6 +3987,24 @@ metadata when the knowledge base was created.
   testing Not run/unmet. ADR 0005 acceptance remains synthetic-development-only;
   real owners/sources, operational approval and measured chat value remain gaps.
 
+## [2026-10-16] query | One-command Entra setup and public-edge discovery (Refs #351, Refs #344)
+
+* Added `infra/scripts/setup-entra.py` and routed the old auth initializer CLI
+  to it. The tool discovers the ama API/linked edge, preserves existing
+  redirects and roles, provisions missing registration/enterprise app,
+  reconciles explicit private user/group role mappings and wires auth.
+* Updated the [infra guide](../../infra/README.md#api-registration-management-with-the-existing-m365-session)
+  and [knowledge index](./README.md) with isolated device login, fictional
+  roster schema, human consent/authority, optional private secret storage and
+  interrupted-credential recovery. Added minimal API/edge discovery tags and
+  a browser secret-name parameter for later declarative redeployments.
+* Read the unpublished #344 branch and pending additive infra changes without
+  modifying them. Origin-linked edge discovery and preservation of auth
+  exclusions, token storage and bearer/browser action support both designs.
+* Evidence is offline mocked-az testing, not a tenant write, private roster
+  read, successful browser sign-in or operational approval. Private-network
+  SQL staff binding/restart, actual admin consent and human acceptance remain
+  separate gates. No private dataset or live Entra identifier was recorded.
 ## [2026-10-16] implementation | Regulatory security, privacy and audit (Refs #217)
 
 * Added separate trusted RegulatoryChat capability and matching local Entra
@@ -4096,3 +4114,25 @@ metadata when the knowledge base was created.
   source README and index. Full WCAG and staff comprehension remain unmet;
   no issue checkboxes, actual legal/consent/safety/financial approvals, Azure
   resources or real owner/source gaps are changed.
+## [2026-10-16] implementation | Entra setup review findings and infra CI repair (Refs #351)
+
+* Merged current main into the existing setup topic without rewriting history;
+  retained both sides of the append-only log conflict. Read pending public-edge
+  changes without editing that branch; setup preserves its Custom forwarded
+  headers and supports the legacy CLI's delegated `--public-url`.
+* Moved planned effective user/group role-conflict rejection before any
+  registration/enterprise-app writes. Added selected-vault metadata-only
+  preflight before one-time credentials and final provisioning checks even
+  for converged runtime values. No secret values are read by the vault probe.
+* Reproduced the failing infra suite in an isolated pip venv with editable
+  source distributions; repaired the parameterized secret-inventory assertion
+  and the compiled-policy test's CI formatting. All 177 infra tests, all
+  template build/lint checks, workflow static checks, setup mypy and both
+  local CLI help launches pass. Each review safeguard's behavioral test fails
+  when its fix is removed in memory.
+* Updated the [infra guide](../../infra/README.md#post-deployment-api-authentication-initialization)
+  and [index](./README.md). Mock evidence proves sequencing/idempotence, not
+  tenant writes, live vault permissions, human consent, private SQL bindings/
+  restart or browser sign-in. No private roster/dataset was read and no Azure
+  policy, resource or network setting was changed. Exercise legal ownership
+  and the development-only ADR 0005 boundary remain unchanged.

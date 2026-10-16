@@ -1,13 +1,11 @@
 """Synchronize a deployed API's callback without replacing its Entra registration."""
-import argparse
 import json
-import logging
 import os
-from pathlib import Path
 import re
 import subprocess
 import time
 import uuid
+from pathlib import Path
 
 
 def _azure(args: list[str], profile: Path, *, output: str = "json") -> str:
@@ -151,23 +149,11 @@ def initialize(
 
 
 def main() -> int:
-    """Run the callback-only initialization command."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-g", "--resource-group", required=True)
-    parser.add_argument("-n", "--container-app", required=True)
-    parser.add_argument("--tenant-profile", type=Path, help="Graph-authorised Azure CLI profile directory")
-    parser.add_argument("--login", action="store_true", help="Explicit isolated device-code login")
-    parser.add_argument("--check", action="store_true", help="Verify only; never patch the registration")
-    parser.add_argument("--account-photo", action="store_true", help="Also merge delegated own-user Graph User.Read; does not grant admin consent")
-    args = parser.parse_args()
-    try:
-        result = initialize(args.resource_group, args.container_app, tenant_profile=args.tenant_profile,
-                            login=args.login, check=args.check, account_photo=args.account_photo)
-    except (ValueError, RuntimeError, subprocess.CalledProcessError) as error:
-        logging.error("%s Use an authorised tenant profile; --login starts an isolated device-code login.", error)
-        return 1
-    print(json.dumps(result))
-    return 0
+    """Compatibility CLI; the imported callback-only API remains available."""
+    import runpy
+
+    setup = runpy.run_path(str(Path(__file__).with_name("setup-entra.py")))
+    return setup["main"]()
 
 
 if __name__ == "__main__":

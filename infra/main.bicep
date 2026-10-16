@@ -41,6 +41,8 @@ param sqlAdminGroupObjectId string
 param sqlAdminPrincipalType string = 'Group'
 @description('Entra app registration client ID protecting the workbench API. Leave empty to deploy without app authentication (not for shared use).')
 param entraClientId string = ''
+@description('Key Vault and Container App secret name for browser authentication. Retain the private setup-selected name on redeploy; never put the secret value here.')
+param entraClientSecretName string = 'entra-client-secret'
 @description('Explicit Entra role-value mapping for an existing registration. Empty uses the application defaults. Transitional mappings do not rename tenant roles.')
 param entraRoleMap object = {}
 @description('Provision private token-only storage and its maintenance identity/job for delegated Microsoft profile photos.')
@@ -321,6 +323,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     modelDeploymentNames: { standard: 'standard', capable: 'capable' }
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
+    entraClientSecretName: entraClientSecretName
     deployWorkloads: deployApplications
     entraBearerOnly: entraBearerOnly
     entraRoleMap: entraRoleMap
