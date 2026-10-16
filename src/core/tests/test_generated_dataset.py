@@ -1,7 +1,9 @@
 """Synthetic generator coverage without requiring private geography or billable services."""
+import argparse
 from datetime import date
 import importlib
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -35,6 +37,15 @@ def register():
 
 
 class GeneratedDatasetTests(unittest.TestCase):
+    def test_default_output_preserves_the_runtime_zf_data_filename(self):
+        parser = argparse.ArgumentParser()
+        with patch.dict(os.environ, {"ZF_DATA": "/tmp/zf200-custom.json"}):
+            with patch.object(builder.argparse, "ArgumentParser", return_value=parser):
+                with patch.object(parser, "parse_args", side_effect=RuntimeError("inspect defaults")):
+                    with self.assertRaisesRegex(RuntimeError, "inspect defaults"):
+                        builder.main()
+        self.assertEqual(parser.get_default("out"), "/tmp/zf200-custom.json")
+
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.TemporaryDirectory()

@@ -6,6 +6,84 @@ ms.date: 2026-10-16
 ms.topic: reference
 ---
 
+## Rule-card approval API (#211)
+
+The existing law store now exposes exercise rule cards, without an AI call or
+approval tool for agents. Configure the existing `ZF_LAW_DB`/`ZF_LAW_BLOBS` local
+test doubles or `ZF_LAW_STORE=mssql` deployment backend. Startup retains two
+labelled, unassigned draft seed cards. Creating a later assigned-email version
+does not approve it or change the seed's retained history.
+
+| Method and path | Contract |
+| --- | --- |
+| `GET /api/law/cards` | Latest version of each card, with exercise label and approval history |
+| `GET /api/law/cards/{card_id}` | Every version and event, plus currently eligible active version |
+| `GET /api/law/cards/reviews` | Source-change review records; no automatic interpretation |
+| `POST /api/law/cards` | New immutable exercise draft; authenticated rule author required |
+| `POST /api/law/cards/{card_id}/{version}/approve` | Named owner, distinct from the version's author |
+| `POST /api/law/cards/{card_id}/{version}/activate` | Named owner; version must be approved |
+| `POST /api/law/cards/{card_id}/{version}/hold` | Named owner; active card and nonempty `note` required |
+| `POST /api/law/cards/{card_id}/{version}/release` | Named owner; held card only |
+| `POST /api/law/cards/{card_id}/{version}/retire` | Named owner; approved, active or held card only |
+
+Draft body (synthetic example, replace the owner with a provisioned staff email):
+
+```json
+{
+  "card_id": "synthetic-example",
+  "title": "Exercise human review",
+  "trigger": "Synthetic proposed resident decision",
+  "applicability": "Synthetic exercise only",
+  "provisions": ["Illustrative citation, requires owner verification"],
+  "clock": "No operational duration approved",
+  "safe_default": "Route to the human review queue",
+  "escalation_role": "Named exercise owner",
+  "approver": "owner@example.test",
+  "effective": "2026-10-16",
+  "retirement": null
+}
+```
+
+Other POST bodies are `{}`, except hold: `{"note":"Exercise source doubt"}`.
+Actor, author, role, event date and exercise status are server-derived; attempts
+to supply those fields are rejected. Dates must be canonical ISO dates, with
+retirement after effective date. Domain/state denials return 409, malformed HTTP
+fields 400, insufficient capability 403, absent authentication 401 and an
+unconfigured law store 503. Unknown card history/routes return 404.
+
+All reads require an existing staff law-view role; contractors/unknown roles are
+denied. All writes additionally require the trusted-proxy provider and dedicated
+Entra claims `ZavaForward.RuleAuthor` or `ZavaForward.RuleOwner`, respectively.
+These reserved capabilities cannot supply a workbench role themselves, even
+through `ZF_ROLE_MAP`. They are derived only after one unique tenant/object-ID
+match to provisioned staff. Email fallback still permits existing workbench
+login but never rule authority. Password sessions and staff-file `rule_roles`
+cannot grant write authority. Existing `X-ZF-CSRF: 1` protection applies.
+The canonical provisioned email is retained, not a claimed email or display name.
+Having both capabilities never permits self-approval.
+
+These are code-level contracts, not tenant role assignments or legal delegation.
+The ingress must validate principals and prevent direct access; local synthetic
+principal tests do not verify signatures or hosted ingress. Legal/Compliance/DPO
+owner nomination in #209 is not approval of any card. Approval events remain
+explicitly simulated, and non-exercise cards remain refused. Legacy display-name
+events are preserved verbatim and do not confer new email-bound authority.
+Rule-engine integration, a rule-card UI, real card/legal approvals, real tenant
+assignments and SQL Server/Azure acceptance are not delivered by this slice.
+The current infrastructure registration script/manifest defines only workbench
+roles; adding and assigning the two dedicated rule capabilities is still an
+explicit administrator deployment follow-up, not an implicit role grant.
+
+The local app exercise in `tests/test_auth.py:RuleHttpTests` starts a loopback
+HTTP server over temporary synthetic data, checks health and app responses,
+executes the lifecycle and deny matrix, reopens persistence, then stops the
+server and removes its temporary files. Run it from `src/api`:
+
+```bash
+PYTHONPATH="$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests" \
+  python3 -m unittest tests.test_auth.RuleHttpTests -q
+```
+
 ## Stock reconciliation API (#84)
 
 `POST /api/cases/{id}/stock-reconciliation` records an unresolved staff query:
@@ -123,7 +201,9 @@ given. Module names without a path (`store`, `ranking`, `projection`, `quality`,
 Run the suites from `src/api` with
 `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests`, after
 `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`. When `ZF_DATA` is not
-set, the data file defaults to `data/zavaforward.json` under the current folder.
+set, the data file defaults to `~/.zava-forward/data/zavaforward.json`, outside
+the checkout. `ZF_DATA` accepts an explicit JSON file or a data directory;
+an explicit filename is preserved. Runtime and generator resolve the same folder.
 
 ## Resident decisions and representative API (#86)
 
@@ -801,9 +881,9 @@ it is git-ignored, binds to loopback only and must never be committed, deployed
 or shared. The repository must stay private.
 
 ```bash
-python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901   # writes to ZF_DATA, default ~/.zava-forward/data/zavaforward.json
 python3 -m pip install --no-deps -e src/core -e src/agents -e src/api   # modules moved in M1 to M5 (ADR 0006)
-ZF_PASSWORD=choose-a-password python3 -m zava_forward.api.server
+python3 support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py --seed 20260901   # writes to ZF_DATA, default ~/.zava-forward/data/zavaforward.json
+ZF_PASSWORD=choose-a-password python3 -m zava_forward.api
 ```
 
 Open `http://127.0.0.1:8088` and sign in with a staff email from the data (for

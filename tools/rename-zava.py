@@ -57,6 +57,8 @@ HISTORY_MANIFEST = ".copilot-tracking/renames/zava-forward-history.json"
 LOGO_WIDTH = .85
 LOGO_TOP = .1
 LOGO_MARGIN = .2
+WEB_ROOT = "src/api/src/zava_forward/api/web"
+POLICY_ROOT = "src/core/src/zava_forward/core/policies/"
 
 
 def _name_pattern(name: str) -> str:
@@ -125,7 +127,7 @@ def update_text(text: str, path: str, path_map: dict[str, str]) -> str:
     text = replace_names(text)
     if path.startswith("infra/"):
         text = re.sub(r"(?<![A-Za-z])warm(?=[-'])", "forward", text)
-    if path == "mvp/web/index.html":
+    if path == f"{WEB_ROOT}/index.html":
         text = re.sub(
             r'<span class="logo" aria-hidden="true">(?:PW|ZF)</span>',
             '<img class="zava-logo" src="/zava-logo.png" alt="Zava North Homes">', text,
@@ -138,9 +140,9 @@ def update_text(text: str, path: str, path_map: dict[str, str]) -> str:
         text = re.sub(r"<style>\.zava-logo\{[^}]+\}</style>", "", text)
     if path == ".github/extensions/program-workbench/assets/styles.css" and not re.search(r"\.zava-logo\s*\{", text):
         text += "\n.zava-logo { width:114px; height:40px; object-fit:contain; flex-shrink:0; background:#fff; padding:4px; }\n"
-    if path == "mvp/web/style.css" and ".zava-logo{" not in text:
+    if path == f"{WEB_ROOT}/style.css" and ".zava-logo{" not in text:
         text += "\n.zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:4px;padding:4px}\n"
-    if path == "mvp/web/style.css" and ".top nav{flex-wrap:wrap;min-width:0}" not in text:
+    if path == f"{WEB_ROOT}/style.css" and ".top nav{flex-wrap:wrap;min-width:0}" not in text:
         text += ".top{flex-wrap:wrap;gap:.75rem}.brand{flex-shrink:0}.top nav{flex-wrap:wrap;min-width:0}\n"
     for old, marker in protected.items():
         text = text.replace(marker, old)
@@ -386,7 +388,7 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
                     output = pptx_outputs[key]
             elif path.suffix.lower() in TEXT_SUFFIXES or path.name in ("Dockerfile", ".gitignore"):
                 output = update_text(raw.decode("utf-8"), old, path_map).encode("utf-8")
-                if old.startswith("mvp/policies/") and path.suffix == ".json" and output != raw:
+                if old.startswith(POLICY_ROOT) and path.suffix == ".json" and output != raw:
                     policy = json.loads(output)
                     if "content_hash" not in policy:
                         raise ValueError("Ranking policy is missing its required content_hash.")
@@ -434,7 +436,7 @@ def migrate(root: Path, *, apply: bool, logo: bytes | None) -> dict:
     if apply and logo:
         for path in slide_logos:
             atomic_write(path, logo)
-        atomic_write(root / "mvp/web/zava-logo.png", logo)
+        atomic_write(root / WEB_ROOT / "zava-logo.png", logo)
         if (root / ".github/extensions/program-workbench/assets").is_dir():
             atomic_write(root / ".github/extensions/program-workbench/assets/zava-logo.png", logo)
     report["status"] = "partial" if report["failures"] else (

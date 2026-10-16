@@ -2,7 +2,7 @@
 title: Zava Forward source projects
 description: Index of the isolated src projects, the dependency rule, local commands and image properties defined by ADR 0006
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-16
 ms.topic: reference
 ---
 
@@ -53,4 +53,10 @@ Each image keeps the pinned base digest of the former `mvp/Dockerfile` (now `api
 
 ## CI
 
-[`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) runs the checks `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace` and `src-no-working-data`. The `mvp-ci` and `mvp-validation` workflows keep their check names; they now also install `src/core` and `src/agents`, and the `mvp-ci` image job builds `src/api/Dockerfile` with `src/` as context (`docker build -f src/api/Dockerfile src`); the api image also carries the orchestrator wheel because the Bicep jobs still run in it. Generated synthetic data defaults to the per-user `ZF_DATA` folder (`~/.zava-forward/data/` without it), never under `src/`. The files moved in M1, M2, M3 and M5 keep their original formatting, so `core`, `api`, `orchestrator` and `agents` still carry temporary ruff and mypy exemptions for them (see each `pyproject.toml`). M6 removed the `importer` exemption; the rest needs about 2,300 lint findings and strict typing work, so it is tracked as a follow-up rather than mixed into a pure move.
+[`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) runs the checks `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace` and `src-no-working-data`. The `mvp-ci` and `mvp-validation` workflows keep their check names; they install source packages and their filters cover all `src/` build inputs. The `mvp-ci` image job builds `src/api/Dockerfile` with `src/` as context (`docker build -f src/api/Dockerfile src`). API packages only core, agents and API; the Bicep jobs now select the separate orchestrator image. The API entry point is `python -m zava_forward.api`; CI version probes import its version explicitly instead of starting the server. Runtime and generated synthetic data default to the per-user `ZF_DATA` folder (`~/.zava-forward/data/` without it), never under `src/`. Existing temporary ruff/mypy migration exemptions remain in each `pyproject.toml`; general cleanup is separate work.
+
+Workflow/check naming remains unchanged for branch-protection continuity, following
+the issue #200 owner decision of 2026-10-15. The post-cut-over naming question must
+be resolved in one deliberate PR. `mvp/README.md` is retained pending #201/#202
+owner sign-off; this path update does not complete the Azure deployment or private
+data copy/encrypted-backup gates.

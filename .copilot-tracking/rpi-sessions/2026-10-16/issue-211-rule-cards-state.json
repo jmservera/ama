@@ -1,0 +1,31 @@
+{
+  "task_id": "211",
+  "task_slug": "issue-211-rule-cards",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/issue-211-rule-cards-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/issue-211-rule-cards-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/issue-211-rule-cards-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/issue-211-rule-cards-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/issue-211-rule-cards-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/issue-211-rule-cards-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run full RPI loop and publish branch/PR", "status": "confirmed", "evidence": "Explicit user request 2026-10-16"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-16/issue-211-rule-cards-research.md"},
+    {"decision": "One critique executed; compatible corrections incorporated, PC-004 rejected, PC-005 bounded by one-pass protocol", "status": "implementation-ready", "evidence": ".copilot-tracking/plans/2026-10-16/issue-211-rule-cards-plan.md"},
+    {"decision": "One post-implementation Review executed; outcome Conformant for local labelled exercise slice, RV-001 through RV-004 are nonblocking residuals", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/issue-211-rule-cards-review.md"},
+    {"decision": "Authorized topic publication; first commit 2678443 pushed; PR 324 open to main with Refs #211 and explicit unmet operational criteria", "status": "complete", "evidence": "https://github.com/jmservera/ama/pull/324"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Await owner review of PR #324 or selected ranked follow-up; Stop automatic session and Switch to manual mode remain available. Do not start new work without selection."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Define and explicitly assign dedicated tenant rule capabilities", "rationale": "Small identity/deployment change unlocks the delivered API without granting authority through ordinary roles", "evidence": "RV-001; src/api/README.md"},
+    {"rank": 2, "task": "Run live SQL Server and hosted-ingress acceptance", "rationale": "Reuse existing opt-in tests to verify database portability and authenticated deployment boundaries", "evidence": "RV-002; changes artifact platform skips"},
+    {"rank": 3, "task": "Obtain human source and specific-card approval", "rationale": "Mandatory operational approval; cannot be automated or inferred from nomination", "evidence": "RV-003; unassigned draft seeds"}
+  ]
+}

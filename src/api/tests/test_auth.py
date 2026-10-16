@@ -15,6 +15,8 @@ import test_mvp
 from zava_forward.api import auth
 from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
+from zava_forward.core.lawstore import LawStore
+from zava_forward.core.rulecards import SEED_CARDS
 
 TENANT = "11111111-2222-3333-4444-555555555555"
 OID_SAM = "aaaaaaaa-0000-0000-0000-000000000001"
@@ -88,6 +90,28 @@ class TrustedProxyTests(Base):
         self.assertIsNone(self.who(h))
         self.assertEqual(self.who(h, ZF_AUTH_EMAIL_FALLBACK="1")["code"], "RLO-01")
 
+    def test_rule_capabilities_require_unique_object_binding(self):
+        roles = ("ZavaForward.LiaisonOfficer", "ZavaForward.RuleAuthor", "ZavaForward.RuleOwner")
+        self.store.staff["sam@example.test"]["rule_roles"] = ["forged"]
+        user = self.who(principal(roles=roles, email="someone-else@example.test"))
+        self.assertEqual(user["email"], "sam@example.test")
+        self.assertEqual(user["rule_roles"], ["rule_author", "rule_owner"])
+        self.assertEqual(self.who(principal())["rule_roles"], [])
+        for oid in ("unknown", None):
+            user = self.who(principal(roles=roles, oid=oid, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")
+            self.assertEqual(user["rule_roles"], [])
+        p = json.loads(base64.b64decode(principal(roles=roles, email="sam@example.test")))
+        p["claims"].append(dict(typ="oid", val="another"))
+        header = base64.b64encode(json.dumps(p).encode()).decode()
+        self.assertEqual(self.who(header, ZF_AUTH_EMAIL_FALLBACK="1")["rule_roles"], [])
+        self.store.staff["duplicate@example.test"] = dict(self.store.staff["sam@example.test"])
+        self.assertEqual(self.who(principal(roles=roles, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")["rule_roles"], [])
+        self.assertIsNone(self.who(principal(roles=roles)))
+
+    def test_reserved_rule_claim_cannot_be_mapped_to_staff_role(self):
+        for role in ("ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"):
+            self.assertIsNone(self.who(principal(roles=(role,)), ZF_ROLE_MAP=json.dumps({role: "Retrofit Programme Manager"})))
+
     def test_role_comes_from_token_not_staff_file(self):
         self.store.staff["sam@example.test"]["role"] = "Retrofit Programme Manager"
         self.assertEqual(self.who(principal())["role"], "Resident Liaison Officer")
@@ -103,6 +127,145 @@ class TrustedProxyTests(Base):
             auth.make_provider(self.store, "x", dict(ZF_ENV="production"))
         self.assertEqual(auth.make_provider(self.store, "x", {}).name, "password")
         self.assertEqual(auth.make_provider(self.store, "x", dict(ENV, ZF_ENV="production")).name, "trusted-proxy")
+
+
+class RuleHttpTests(Base):
+    def setUp(self):
+        super().setUp()
+        self.store.staff["pam@example.test"]["oid"] = "synthetic-owner-oid"
+        self.law = LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
+        self.app = App(self.store, provider=auth.TrustedProxyProvider(self.store, ENV), law=self.law)
+        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
+        self.thread = threading.Thread(target=self.httpd.serve_forever)
+        self.thread.start()
+        self.base = f"http://127.0.0.1:{self.httpd.server_port}"
+
+    def tearDown(self):
+        self.httpd.shutdown()
+        self.httpd.server_close()
+        self.thread.join()
+        self.law.close()
+        super().tearDown()
+
+    def headers(self, who="author", capabilities=None):
+        capabilities = capabilities if capabilities is not None else ("ZavaForward.RuleAuthor",) if who == "author" else ("ZavaForward.RuleOwner",)
+        oid = OID_SAM if who == "author" else "synthetic-owner-oid"
+        return {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.LiaisonOfficer", *capabilities), oid=oid), "X-ZF-CSRF": "1"}
+
+    def call(self, path="/api/law/cards", headers=None, body=None):
+        request = urllib.request.Request(self.base + path, data=json.dumps(body).encode() if body is not None else None,
+                                         headers=self.headers() if headers is None else headers)
+        try:
+            with urllib.request.urlopen(request, timeout=5) as response:
+                raw = response.read()
+                return response.status, json.loads(raw) if raw.startswith(b"{") else raw.decode()
+        except urllib.error.HTTPError as error:
+            return error.code, json.loads(error.read())
+
+    def draft(self, **kw):
+        return dict(SEED_CARDS[0], approver="pam@example.test", **kw)
+
+    def transition(self, action, headers=None, body=None, version=2):
+        return self.call(f"/api/law/cards/hazard-awareness-clock/{version}/{action}",
+                         self.headers("owner") if headers is None else headers, {} if body is None else body)
+
+    def test_running_local_app_full_lifecycle_and_retained_versions(self):
+        self.assertEqual(self.call("/healthz")[0], 200)
+        self.assertEqual(self.call("/app")[0], 200)
+        cards = self.call()[1]["cards"]
+        self.assertEqual(len(cards), 2)
+        self.assertTrue(all(c["state"] == "draft" and "EXERCISE CARD" in c["label"] and c["approved_by"] is None for c in cards))
+        self.assertEqual(self.call(body=self.draft())[0], 201)
+        for action in ("approve", "activate", "hold", "release", "retire"):
+            code, result = self.transition(action, body={"note": "Synthetic owner hold"} if action == "hold" else {})
+            self.assertEqual(code, 200, result)
+        history = self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"]
+        self.assertEqual([c["state"] for c in history], ["draft", "retired"])
+        self.assertEqual(history[-1]["author"], "sam@example.test")
+        self.assertEqual(history[-1]["approved_by"], "pam@example.test")
+        self.assertTrue(history[-1]["approved_on"])
+        self.assertTrue(all(e["simulated"] for e in history[-1]["events"]))
+        before = self.law.rules.history("hazard-awareness-clock")
+        self.law.rules.source_changed("awaabs-law-regulations-2025", 2)
+        self.assertEqual(self.law.rules.history("hazard-awareness-clock"), before)
+        self.assertEqual(len(self.call("/api/law/cards/reviews")[1]["reviews"]), 1)
+        self.law.close()
+        self.law = LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
+        self.app.law = self.law
+        self.assertEqual(self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"], before)
+
+    def test_body_cannot_supply_authority_or_dates(self):
+        for key, value in (("author", "pam@example.test"), ("role", "rule_owner"), ("actor", "pam@example.test"),
+                           ("today", "2020-01-01"), ("exercise", False)):
+            self.assertEqual(self.call(body=dict(self.draft(), **{key: value}))[0], 400)
+        self.assertEqual(len(self.law.rules.history("hazard-awareness-clock")), 1)
+        self.assertEqual(self.call(body=self.draft())[0], 201)
+        for key in ("role", "actor", "today", "approved_on"):
+            self.assertEqual(self.transition("approve", body={key: "forged"})[0], 400)
+        self.assertIsNone(self.law.rules.history("hazard-awareness-clock")[-1]["approved_by"])
+
+    def test_every_owner_transition_denies_wrong_capability_or_named_owner(self):
+        self.assertEqual(self.call(body=self.draft())[0], 201)
+        before = self.law.rules.history("hazard-awareness-clock")
+        wrong_owner = self.headers("author", ("ZavaForward.RuleOwner",))
+        for action in ("approve", "activate", "hold", "release", "retire"):
+            self.assertEqual(self.transition(action, self.headers())[0], 403)
+            self.assertEqual(self.transition(action, wrong_owner)[0], 409)
+            self.assertEqual(self.law.rules.history("hazard-awareness-clock"), before)
+        self.assertEqual(self.transition("activate")[0], 409)
+        self.assertEqual(self.transition("approve")[0], 200)
+        self.assertEqual(self.transition("activate")[0], 200)
+        self.assertEqual(self.transition("hold")[0], 409)
+        self.assertEqual(self.transition("hold", body={"note": "Synthetic hold"})[0], 200)
+        self.assertIsNone(self.law.rules.is_active("hazard-awareness-clock"))
+
+    def test_dual_roles_do_not_allow_self_approval(self):
+        fields = self.draft()
+        fields["approver"] = "sam@example.test"
+        dual = self.headers(capabilities=("ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"))
+        self.assertEqual(self.call(headers=dual, body=fields)[0], 201)
+        self.assertEqual(self.transition("approve", dual)[0], 409)
+        self.assertEqual(self.transition("approve", version=1)[0], 409)
+
+    def test_untrusted_fallback_agent_and_contractor_cannot_write(self):
+        self.assertEqual(self.call(headers={}, body=self.draft())[0], 401)
+        h = self.headers()
+        h.pop("X-ZF-CSRF")
+        self.assertEqual(self.call(headers=h, body=self.draft())[0], 403)
+        self.store.staff["sam@example.test"]["rule_roles"] = ["rule_author", "rule_owner"]
+        self.assertEqual(self.call(headers=self.headers(capabilities=()), body=self.draft())[0], 403)
+        for roles in (("agent",), ("ZavaForward.RuleAuthor",), ("ZavaForward.LiaisonOfficer", "ZavaForward.ProgrammeManager", "ZavaForward.RuleAuthor")):
+            h = {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles), "X-ZF-CSRF": "1"}
+            self.assertEqual(self.call(headers=h, body=self.draft())[0], 401)
+        self.app.provider = auth.TrustedProxyProvider(self.store, dict(ENV, ZF_AUTH_EMAIL_FALLBACK="1"))
+        h = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.LiaisonOfficer", "ZavaForward.RuleAuthor"),
+                                              oid="unknown", email="sam@example.test"), "X-ZF-CSRF": "1"}
+        self.assertEqual(self.call(headers=h, body=self.draft())[0], 403)
+        con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor", "ZavaForward.RuleOwner", "ZavaForward.RuleAuthor"),
+                                                oid="aaaaaaaa-0000-0000-0000-000000000009"), "X-ZF-CSRF": "1"}
+        for path in ("/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock"):
+            self.assertEqual(self.call(path, con)[0], 403)
+            self.assertEqual(self.call(path, con, {})[0], 403)
+        self.app.provider = auth.PasswordProvider(self.store, "synthetic")
+        cookie = self.app.provider.login("sam@example.test", "synthetic")
+        self.assertEqual(self.call(headers={"Cookie": f"zf_session={cookie}"}, body=self.draft())[0], 403)
+        self.assertEqual(len(self.law.rules.history("hazard-awareness-clock")), 1)
+
+    def test_errors_for_unavailable_store_missing_routes_and_malformed_fields(self):
+        self.assertEqual(self.call("/api/law/cards/missing")[0], 404)
+        for changes in (dict(provisions="not a list"), dict(effective="bad"), dict(title=123),
+                        dict(retirement="2020-01-01"), dict(approver="unknown@example.test")):
+            fields = dict(self.draft(), **changes)
+            self.assertIn(self.call(body=fields)[0], (400, 409))
+        self.assertEqual(self.transition("approve", version="bad")[0], 400)
+        self.assertEqual(self.transition("unknown")[0], 404)
+        self.assertEqual(self.call(body=dict(self.draft(), card_id="reviews"))[0], 409)
+        code, card = self.call(body=dict(self.draft(), card_id="  synthetic-trimmed  "))
+        self.assertEqual(code, 201)
+        self.assertEqual(card["versions"][0]["card_id"], "synthetic-trimmed")
+        self.app.law = None
+        self.assertEqual(self.call()[0], 503)
+        self.assertEqual(self.call(body=self.draft())[0], 503)
 
 
 class ProxyHttpTests(Base):
