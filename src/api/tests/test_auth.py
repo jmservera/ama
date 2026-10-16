@@ -108,6 +108,17 @@ class TrustedProxyTests(Base):
         self.assertEqual(self.who(principal(roles=roles, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")["rule_roles"], [])
         self.assertIsNone(self.who(principal(roles=roles)))
 
+    def test_regulatory_chat_is_a_separate_bound_capability_not_a_staff_role(self):
+        chat = "ZavaForward.RegulatoryChat"
+        roles = ("ZavaForward.LiaisonOfficer", chat)
+        self.assertEqual(self.who(principal(roles=roles))["rule_roles"], ["regulatory_chat"])
+        for oid in ("unknown", None):
+            user = self.who(principal(roles=roles, oid=oid, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")
+            self.assertEqual(user["rule_roles"], [])
+        self.assertIsNone(self.who(principal(roles=(chat,)), ZF_ROLE_MAP=json.dumps({chat: "Retrofit Programme Manager"})))
+        for capability in ("ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"):
+            self.assertNotIn("regulatory_chat", self.who(principal(roles=("ZavaForward.LiaisonOfficer", capability)))["rule_roles"])
+
     def test_reserved_rule_claim_cannot_be_mapped_to_staff_role(self):
         for role in ("ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"):
             self.assertIsNone(self.who(principal(roles=(role,)), ZF_ROLE_MAP=json.dumps({role: "Retrofit Programme Manager"})))

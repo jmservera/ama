@@ -28,6 +28,68 @@ def raw(bundle: dict[str, Any]) -> dict[str, Any]:
 
 
 class RegulatoryTests(unittest.TestCase):
+    def test_sql_turn_and_referral_audit_failure_roll_back_messages_and_ledger(self) -> None:
+        f, service, tid = self.make(sql=True)
+        before = service.history(f.user, tid)
+        head = f.store.ledger_head()
+        original = f.store._append_audit
+
+        def failed(entries: Any) -> None:
+            original(entries)
+            raise RuntimeError("synthetic audit failure after append")
+
+        with patch.object(f.store, "_append_audit", side_effect=failed):
+            with self.assertRaises(RuntimeError):
+                service.ask(f.user, tid, "hazard sources")
+        self.assertEqual(service.history(f.user, tid), before)
+        self.assertEqual(f.store.ledger_head(), head)
+        answer = service.ask(f.user, tid, "hazard sources")
+        before = service.history(f.user, tid)
+        head = f.store.ledger_head()
+        with patch.object(f.store, "_append_audit", side_effect=failed):
+            with self.assertRaises(RuntimeError):
+                service.doubt(f.user, tid, answer["turn"])
+        self.assertEqual(service.history(f.user, tid), before)
+        self.assertEqual(f.store.chat_list_threads(f.owner), [])
+        self.assertEqual(f.store.ledger_head(), head)
+        self.assertTrue(f.store.verify_ledger()["intact"])
+
+    def test_sql_turn_audit_survives_restart_without_content_and_referral_is_once(self) -> None:
+        f, service, tid = self.make(sql=True)
+        reply = service.ask(f.user, tid, "hazard sources")
+        receipt = service.doubt(f.user, tid, reply["turn"])
+        service.doubt(f.user, tid, reply["turn"])
+        reopened = f.open()
+        try:
+            events = list(reopened.audit_entries())
+            turns = [e for e in events if e["action"] == "chat.regulatory.turn"]
+            referrals = [e for e in events if e["action"] == "chat.regulatory.doubt"]
+            self.assertEqual((len(turns), len(referrals)), (1, 1))
+            meta = json.loads(turns[0]["detail"])
+            self.assertEqual(meta["citations"], [c["id"] for c in reply["citations"]])
+            self.assertEqual(len(meta["answer_hash"]), 64)
+            self.assertEqual(meta["role"], f.user["role"])
+            self.assertEqual(
+                json.loads(referrals[0]["detail"])["inbox_thread"], receipt["inbox_thread"]
+            )
+            self.assertNotIn(QUOTE, json.dumps(events))
+            self.assertNotIn("PRIVATE-", json.dumps(events))
+            self.assertTrue(reopened.verify_ledger()["intact"])
+        finally:
+            reopened.db.close()
+
+    def test_retention_status_includes_archived_own_role_only_without_messages(self) -> None:
+        f, service, tid = self.make(sql=True)
+        service.ask(f.user, tid, "hazard sources")
+        f.store.chat_archive(f.user, tid)
+        f.store.chat_create_thread(f.owner, case_id="ZF-1")
+        f.store.chat_create_thread(f.user, case_id="ZF-1", title="ordinary chat")
+        with patch.object(f.store.chat_repo, "messages", side_effect=AssertionError("No content")):
+            result = service.privacy_status(f.user)
+        self.assertEqual([r["thread_id"] for r in result["chat"]["records"]], [tid])
+        self.assertEqual(result["chat"]["status"], "unknown")
+        self.assertNotIn(QUOTE, json.dumps(result))
+
     def make(self, sql: bool = False) -> tuple[Fixture, RegulatoryChat, str]:
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
@@ -238,17 +300,16 @@ class RegulatoryTests(unittest.TestCase):
                 if sql:
                     reopened.db.close()
 
-    def test_post_commit_audit_error_is_not_misreported_as_rollback(self) -> None:
-        for sql in (False, True):
-            f, service, tid = self.make(sql)
-            reply = service.ask(f.user, tid, "hazard")
-            with patch.object(f.store, "_chat_event", side_effect=RuntimeError("audit failed")):
-                with self.assertRaises(RuntimeError):
-                    service.doubt(f.user, tid, reply["turn"])
-            self.assertEqual(len(service.inbox(f.owner)["threads"]), 1)
-            receipt = service.doubt(f.user, tid, reply["turn"])
-            self.assertEqual(receipt["status"], "sent-to-exercise-inbox")
-            self.assertEqual(len(service.inbox(f.owner)["threads"]), 1)
+    def test_json_post_commit_audit_error_is_not_misreported_as_rollback(self) -> None:
+        f, service, tid = self.make()
+        reply = service.ask(f.user, tid, "hazard")
+        with patch.object(f.store, "audit", side_effect=RuntimeError("audit failed")):
+            with self.assertRaises(RuntimeError):
+                service.doubt(f.user, tid, reply["turn"])
+        self.assertEqual(len(service.inbox(f.owner)["threads"]), 1)
+        receipt = service.doubt(f.user, tid, reply["turn"])
+        self.assertEqual(receipt["status"], "sent-to-exercise-inbox")
+        self.assertEqual(len(service.inbox(f.owner)["threads"]), 1)
 
     def test_missing_citation_and_draft_only_refuse(self) -> None:
         f, service, tid = self.make()

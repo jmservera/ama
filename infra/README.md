@@ -637,6 +637,22 @@ Open items:
 * Drop `db_ddladmin` from the api identity after schema migration moves out of app start.
 * Live `az role assignment list` comparison against a deployed group was not run here.
 
+## Regulatory assistant capability roles (#217)
+
+The Entra registration manifest keeps auxiliary `capabilityRoles` separate from
+the mutually exclusive staff `appRoles`. The registration script declares all
+three: `ZavaForward.RuleAuthor`, `ZavaForward.RuleOwner` and
+`ZavaForward.RegulatoryChat`. These supplement, never replace, one staff role.
+The API grants them only from a trusted claim bound to a uniquely provisioned
+principal; a local staff field or email fallback does not grant authority.
+Holding multiple capabilities never permits author self-approval.
+
+Manifest/script/API parity is checked in `test_identity_rbac`. This update
+changes local declarations only: no tenant role creation/assignment, identity
+administration, Azure deployment or actual revocation test was performed.
+Provisioning and human approval remain unmet operational gates. The synthetic
+exercise DPO is Juan Manuel Servera; no real-company delegation is inferred.
+
 ## Key Vault secret lifecycle
 
 Secrets are listed in [secret-inventory.json](secret-inventory.json) with an owner, rotation interval and expiry alert window. `infra/scripts/secret_lifecycle.py` checks vault metadata against it (never secret values), produces the access review record and prints the rotation steps. Run `python3 -m unittest discover -s infra/tests -q` for its tests.

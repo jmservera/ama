@@ -130,12 +130,16 @@ class NoSharedCredentialTests(unittest.TestCase):
 
 class EntraRegistrationTests(unittest.TestCase):
     def test_manifest_matches_script_and_mvp_role_map(self) -> None:
-        from zava_forward.api.auth import DEFAULT_ROLE_MAP
+        from zava_forward.api.auth import DEFAULT_ROLE_MAP, RULE_ROLE_MAP
         manifest = {f"ZavaForward.{r['key']}": r["label"] for r in ENTRA["appRoles"]}
         self.assertEqual(manifest, DEFAULT_ROLE_MAP)
+        capabilities = {f"ZavaForward.{r['key']}": r["capability"] for r in ENTRA["capabilityRoles"]}
+        self.assertEqual(capabilities, RULE_ROLE_MAP)
+        self.assertTrue(set(manifest).isdisjoint(capabilities))
         script = (ROOT / "scripts" / "create-api-app-registration.sh").read_text(encoding="utf-8")
         pairs = dict(re.findall(r'"(\w+)\|([^"]+)"', script))
-        self.assertEqual({f"ZavaForward.{k}": v for k, v in pairs.items()}, DEFAULT_ROLE_MAP)
+        labels = {f"ZavaForward.{r['key']}": r["label"] for r in ENTRA["capabilityRoles"]}
+        self.assertEqual({f"ZavaForward.{k}": v for k, v in pairs.items()}, DEFAULT_ROLE_MAP | labels)
         self.assertIn(f"name={ENTRA['displayName']}", script)
         self.assertIn("appRoleAssignmentRequired", script)
         self.assertIn(ENTRA["callbackPath"], script)
