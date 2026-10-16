@@ -105,3 +105,17 @@ delivery P03-T02. Review pointer:
 API skips reconciled without re-running: 98 declared SQL Server cases, two
 azure-core-dependent cases and one opt-in stock browser method. The separate
 shared-workbench/browser suite passed; the stock browser remains not run.
+
+## P03-T02 delivery
+
+Implementation commit 016da7e pushed to feat/src-task-queues-76 without force.
+Authenticated gh account resolves to id 8036360/login jmservera; both author
+and committer use 8036360+jmservera@users.noreply.github.com, with the required
+Copilot co-author trailer. No unrelated work was present or staged.
+
+Opened https://github.com/jmservera/ama/pull/325 against main, with Refs #76,
+before/after audit, source/definition boundaries, all validation and open
+owner/platform/human acceptance. No merge, deployment or issue closure.
+Finalization records this delivery in a separate evidence-only commit; source
+validation is unchanged. Hosted checks are separate and may still be pending.
+All P01-P03 tasks complete for the bounded offline delivery.

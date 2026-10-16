@@ -7,11 +7,13 @@ Task: #76; slug: role-task-queues-76. Scope: full bounded offline plan.
 
 ## Executive Summary
 
-Preserve delivered identity, role navigation, full-screen case and domain
-controls. Add a shared projected task context, six visible engineering queue
-definitions and versioned reset. Approved priority remains unavailable while
-the existing ranking policy is draft. Prove behavior with local synthetic
-JSON/SQLite, HTTP and browser checks, not live-platform or owner acceptance.
+Delivered shared projected task context, six visible engineering queue
+definitions and versioned reset, preserving identity, role navigation,
+full-screen case and domain controls. Approved priority remains unavailable
+while the existing ranking policy is draft. Five project suites, static checks
+and local JSON/SQLite/HTTP/Chromium checks passed. Review is Complete with
+Residual work for operational/live/human acceptance. PR #325 is open; no merge
+or issue closure.
 
 ## User Decisions and Requirements
 
@@ -85,10 +87,10 @@ Operational approval and live-platform evidence remain unmet.
 * [x] P02-T02: Run targeted then per-project suites, ruff/mypy and local Playwright.
 
 <!-- rpi:phase id=P03 -->
-### P03: Evidence and delivery
+### P03: Evidence and delivery (Complete)
 
 * [x] P03-T01: Update docs/index/log, record review and reconcile evidence.
-* [ ] P03-T02: Commit, push and create PR with Refs #76.
+* [x] P03-T02: Commit, push and create PR with Refs #76.
 
 ## Test Ownership and Candidate Lock
 
