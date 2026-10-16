@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -11,6 +14,32 @@ from checks.regulatory_ux_check import run, target_sizes
 
 
 class RegulatoryUxCheckTests(unittest.TestCase):
+    def test_import_does_not_require_playwright(self) -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                """
+import importlib.abc
+import sys
+
+class NoPlaywright(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == "playwright" or fullname.startswith("playwright."):
+            raise ModuleNotFoundError("Playwright must not be imported by unit discovery")
+
+sys.meta_path.insert(0, NoPlaywright())
+from checks.regulatory_ux_check import run, target_sizes
+assert callable(run) and callable(target_sizes)
+""",
+            ],
+            env={**os.environ, "PYTHONPATH": os.pathsep.join(sys.path)},
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_target_minimums(self) -> None:
         page = Mock()
         for width, height, minimum, passes in (

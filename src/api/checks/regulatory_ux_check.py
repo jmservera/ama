@@ -8,12 +8,14 @@ import json
 from datetime import timedelta
 from pathlib import Path
 from threading import Event
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
-from playwright.sync_api import Page, expect, sync_playwright
 from regulatory_fixture import NOW
 from test_regulatory_chat_api import RegulatoryApi
+
+if TYPE_CHECKING:
+    from playwright.sync_api import Page
 
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 ROLES = {
@@ -94,6 +96,8 @@ def scan(
 
 
 def open_home(page: Page, base: str) -> None:
+    from playwright.sync_api import expect
+
     page.goto(base + "/app#/case/ZF-1")
     page.reload()
     expect(page.locator("#regulatory-alerts")).to_be_visible()
@@ -101,6 +105,8 @@ def open_home(page: Page, base: str) -> None:
 
 
 def keyboard_activate(page: Page, selector: str, key: str = "Enter") -> None:
+    from playwright.sync_api import expect
+
     target = page.locator(selector)
     target.focus()
     expect(target).to_be_focused()
@@ -115,6 +121,8 @@ def keyboard_activate(page: Page, selector: str, key: str = "Enter") -> None:
 
 
 def keyboard_walk(page: Page, selector: str) -> None:
+    from playwright.sync_api import expect
+
     controls = page.locator(selector).locator(
         "summary:visible, a:visible, button:visible:enabled, "
         "input:visible:enabled, textarea:visible:enabled"
@@ -144,6 +152,8 @@ def run(axe_path: Path | None) -> dict[str, Any]:
         raw = axe_path.read_bytes()
         assert hashlib.sha256(raw).hexdigest() == AXE_SHA256, "Unexpected axe 4.10.3 content"
         axe = raw.decode()
+    from playwright.sync_api import expect, sync_playwright
+
     fixture = RegulatoryApi("runTest")
     reports: list[dict[str, Any]] = []
     fixture.setUp()

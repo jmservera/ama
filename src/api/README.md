@@ -1275,6 +1275,23 @@ Neither audience receives a new chat interface or invented source in this slice.
 
 ### Local engineering checks
 
+Unit discovery requires only the installed runtime distributions, not Playwright
+or a browser. The regulatory harness imports its browser APIs only when browser
+operations run; target-size boundary and axe-integrity assertions always run in
+the unit suite. A subprocess regression also blocks Playwright imports even
+when the dev extra is installed. From the repository root:
+
+```bash
+python3 -m venv /tmp/v215c
+/tmp/v215c/bin/pip install -e src/core -e src/agents -e src/api
+(cd src/api && PYTHONPATH="$PWD/../core/tests:$PWD/../agents/tests" \
+  /tmp/v215c/bin/python -m unittest discover -s tests -q)
+```
+
+Install `src/api[dev]` in that venv before running Ruff, mypy or browser checks.
+Playwright stays dev-only; asking to run a browser check without it fails
+explicitly rather than skipping browser coverage.
+
 The browser check uses the actual loopback HTTP app, SQL case store, law store
 and wholly constructed `regulatory_fixture` data. It does not read `ZF_DATA`
 or private working files. Provider calls are blocked; browser network access
@@ -1343,6 +1360,14 @@ the summary measured 1198 x 24px, below its 44px design floor. Restoring the rul
 passed both CI paths. The unstyled 24px summary alone is not an AA violation;
 the stronger assertion protects the existing intended target. Three harness
 unit tests also cover 24px boundaries, static supplier content and corrupt axe.
+The subsequent CI import-boundary repair adds a fourth harness test that
+rejects any discovery-time Playwright import, without skipping those assertions.
+After merging current main, the runtime-only `/tmp/v215c` environment reproduced
+the eager-import failure. With browser imports deferred, all 561 API tests pass
+(110 opt-in skips), both before and after installing Playwright 1.64.0.
+API Ruff/format and strict mypy pass; both source CI browser harnesses pass
+against the synthetic loopback app. Regulatory results remain 17 states,
+142 targets, zero detected axe violations and eight incomplete contrast states.
 The 86 targeted API and 33 core tests, design-system browser check and API
 ruff/format/mypy passed. Hosted CI is pending, not claimed passed: the owner
 requested push without waiting. Full issue acceptance remains unchanged.

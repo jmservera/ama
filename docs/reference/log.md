@@ -4074,3 +4074,25 @@ metadata when the knowledge base was created.
   eight contrast-incomplete states; full WCAG, real staff comprehension,
   measured chat value and real owners/sources remain unmet. No operational
   approval, rule activation, consent, safety or financial commitment is added.
+
+## [2026-10-16] implementation | Browser-free regulatory UX unit imports
+
+* Refs #215. Merged origin/main into the existing PR branch first, preserving
+  every line from both append-only log histories in order. Combined main's
+  privacy/retention warning and textarea association with the existing
+  accessible live-log/list and unavailable-chat fallback.
+* Reproduced the reported import failure in `/tmp/v215c` with editable core,
+  agents and API runtime distributions only. Deferred browser runtime imports
+  and retained Page typing under TYPE_CHECKING, without adding runtime
+  dependencies, skipping pure tests or weakening mypy. Added a subprocess
+  regression that explicitly rejects eager Playwright imports.
+* Full API discovery passes without Playwright and again with Playwright
+  1.64.0: 561 tests, 110 opt-in skips in each environment. All four harness
+  unit tests, 56 core regulatory regressions, API Ruff/format and strict mypy
+  pass. Existing source CI still executes both browser harnesses.
+* Both real synthetic loopback browser checks pass. The regulatory check with
+  hash-verified axe retains 17 states and 142 targets, zero detected violations
+  and eight contrast-incomplete states. Updated [API commands and evidence](../../src/api/README.md#local-engineering-checks),
+  source README and index. Full WCAG and staff comprehension remain unmet;
+  no issue checkboxes, actual legal/consent/safety/financial approvals, Azure
+  resources or real owner/source gaps are changed.
