@@ -797,6 +797,13 @@ to select the interval and rationale, including increased cadence around
 commencement; the code does not guess an interval from prose or turn
 likelihood into legal importance. Unconfigured sources are not monitored.
 
+`due(source_id, today)` measures cadence from the last successful retrieval,
+not the last attempt. Failures remain recorded but do not reset the timer:
+a due source stays eligible for the next run, including the next day. A source
+with no successful observation is always due. A successful retry starts a new
+cadence interval; success is not verification. Dates before the latest attempt,
+including a failed attempt, are rejected.
+
 `observe` accepts explicit UTF-8 bytes, publication metadata, provenance,
 discovery method and an exercise date, or an explicit retrieval error.
 It compares hashes/metadata against the retained law-store baseline and stores
