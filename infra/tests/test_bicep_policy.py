@@ -249,6 +249,55 @@ class BicepPolicyTests(unittest.TestCase):
             (INFRA / "main.pilot.example.bicepparam").read_text(encoding="utf-8"),
         )
 
+    def assert_orchestrator_image_contract(self, template: dict) -> None:
+        self.assertEqual(template["parameters"]["orchestratorImage"]["defaultValue"], "")
+        expression = module(template, "containerapps")["properties"]["parameters"][
+            "orchestratorImage"
+        ]
+        for value in (None, "", "registry/image:release", "registry/image@sha256:abc123"):
+            parameters = {
+                "orchestratorImage": (
+                    template["parameters"]["orchestratorImage"]["defaultValue"]
+                    if value is None
+                    else value
+                )
+            }
+            self.assertEqual(
+                evaluate(expression, parameters, template.get("variables", {})),
+                {"value": value or "mcr.microsoft.com/k8se/quickstart:latest"},
+            )
+
+    def test_orchestrator_image_empty_means_placeholder_explicit_image_is_preserved(self) -> None:
+        self.assert_orchestrator_image_contract(self.main)
+        template = module_template(self.main, "containerapps")
+        for name in ("orchestrator", "auth-renewal", "ledger-verify"):
+            container = next(
+                c
+                for r in template["resources"]
+                for c in r.get("properties", {}).get("template", {}).get("containers", [])
+                if c["name"] == name
+            )
+            self.assertEqual(container["image"], "[parameters('orchestratorImage')]")
+
+    def test_orchestrator_image_contract_rejects_default_and_forwarding_mutations(self) -> None:
+        for mutation in ("old-default", "empty-forwarding", "always-placeholder"):
+            with self.subTest(mutation=mutation):
+                template = deepcopy(self.main)
+                if mutation == "old-default":
+                    template["parameters"]["orchestratorImage"]["defaultValue"] = (
+                        "mcr.microsoft.com/k8se/quickstart:latest"
+                    )
+                else:
+                    module(template, "containerapps")["properties"]["parameters"][
+                        "orchestratorImage"
+                    ] = (
+                        "[createObject('value', parameters('orchestratorImage'))]"
+                        if mutation == "empty-forwarding"
+                        else "[createObject('value', 'mcr.microsoft.com/k8se/quickstart:latest')]"
+                    )
+                with self.assertRaises(AssertionError):
+                    self.assert_orchestrator_image_contract(template)
+
     def test_every_public_access_setting_follows_the_single_switch(self) -> None:
         self.assert_network_controls(self.main)
 

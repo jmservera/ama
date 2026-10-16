@@ -27,15 +27,16 @@ private production profile. They do not authorize deployment.
 * `scripts/initialize-workbench-staff.py`: private tenant-member/app-role/SQL binding reconciliation, with idempotent checks and serving-replica restart.
 * `scripts/configure-m365-provisioner-app.sh`: delegated Graph permissions for the app the m365 CLI uses to set up SharePoint and Teams.
 * `scripts/grant-sharepoint-access.sh`: optional Graph `Sites.Selected` grant for the SharePoint evidence store.
+* `scripts/deploy.py`: image-preserving infrastructure what-if/deploy wrapper; see [Orchestrator image selection](#orchestrator-image-selection-322).
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
 ## Deploy
 
 ```bash
-az group create -n rg-zava-forward-dev -l uksouth
-az deployment group what-if -g rg-zava-forward-dev -f infra/main.bicep -p infra/main.bicepparam
-az deployment group create -g rg-zava-forward-dev -f infra/main.bicep -p infra/main.bicepparam
+python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> \
+  --environment dev --parameters infra/main.bicepparam
+# After reviewing the what-if, repeat with --apply to deploy.
 ```
 
 Then run the SQL script from a host with private network access, push the
@@ -46,6 +47,59 @@ the dependencies without temporarily exposing an unauthenticated placeholder
 workbench. Build the real image, provision the vault auth secret and seed SQL,
 then deploy again with `deployApplications=true`, `entraClientId` and `apiImage`.
 The flag does not delete existing apps in incremental deployment mode.
+
+### Orchestrator image selection (#322)
+
+Owner decision, 2026-10-16: `orchestratorImage` defaults to `''` in
+`main.bicep`. Both omission and an explicit empty string mean
+`mcr.microsoft.com/k8se/quickstart:latest`; an explicit nonempty image tag or
+digest is forwarded unchanged. Bicep does not look up existing resources.
+The placeholder cannot run the Python auth-renewal and ledger-verify commands.
+Do not use a raw Bicep redeploy with an omitted/empty image to preserve jobs.
+
+Use `scripts/deploy.py` for redeployments. It resolves once before invoking
+`az deployment group what-if` (default) or `create` (`--apply`):
+
+1. Retain the existing real image from `job-{workload}-{environment}-orchestrator`,
+   `-auth-renewal` or `-ledger-verify`. Placeholder jobs do not hide a real image.
+   Different real images stop deployment; select an image explicitly to reconcile.
+2. Otherwise use the newest updated tag in the specified registry's
+   `zava-forward-orchestrator` repository (`show-tags --orderby time_desc --top 1`),
+   using that registry's actual login server, not an assumed Azure DNS suffix.
+3. Otherwise select the placeholder and print a warning that the maintenance
+   jobs cannot run. Registry/repository absence and an empty tag list are valid
+   bootstrap states; failed queries, denied access and malformed output stop
+   deployment rather than being treated as absence.
+
+Every run prints the full selected image and its source before the deployment
+command, including explicit overrides. Job and registry discovery is scoped to
+the supplied resource group. `--workload` defaults to `forward` and
+`--environment` to `dev`; these options determine both lookup names and the
+final Bicep parameters, overriding conflicting values in the parameter file.
+Set them explicitly when deploying test or pilot. The registry name is required
+even for a from-empty bootstrap; it need not exist yet in the group.
+
+To intentionally roll forward, pass `--orchestrator-image <tag-or-digest>`.
+This bypasses discovery, as does explicitly passing the placeholder (still
+warned). An empty option uses normal resolution. The wrapper owns the image
+parameter: an image set only in the parameter file is not an explicit override.
+Other overrides use repeatable `--parameter NAME=VALUE`; image, workload and
+environment must use their named options.
+
+```bash
+python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> \
+  --environment test --parameters <private-parameters> \
+  --orchestrator-image <registry-server>/zava-forward-orchestrator:<new-tag> \
+  --parameter apiImage=<registry-server>/zava-forward-api:<new-tag>
+```
+
+Review the printed choice and what-if, then repeat with `--apply`. Discovery
+runs again before applying; it is not an atomic lock on changing jobs/tags.
+For a reviewed rollout, pin the same explicit digest in both commands.
+The helper neither builds images nor creates/deletes resource groups.
+Application image builds still use only `src/` as context. Pipeline #138
+integration remains separate; these are offline-tested semantics, not evidence
+of an Azure rollout.
 
 ## Deployment profile
 
@@ -59,7 +113,7 @@ The flag does not delete existing apps in incremental deployment mode.
 
 `allowPublicNetworkAccess=true` and `keyVaultPurgeProtection=false` are rejected in the production profile (see Quality gates). Use `deploymentProfile=development` for a throwaway stack. Do not use the development profile as evidence for the private-network claims in ADR 0001.
 
-Example from the repository root: `az deployment group create -g ama -f infra/main.bicep -p infra/main.bicepparam -p deploymentProfile=development`.
+Example from the repository root: `python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> --parameters infra/main.bicepparam --parameter deploymentProfile=development` (what-if; add `--apply` only after review).
 
 ## Environments
 
@@ -123,9 +177,20 @@ for file in infra/*.bicep infra/modules/*.bicep; do
 done
 REQUIRE_AZ_BICEP=1 python3 -m unittest discover -s infra/tests -v
 python3 -m pip install 'ruff==0.17.1'
-ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py
-ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py
+ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
+ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
 ```
+
+Image-selection tests alone need only Python, with no Azure CLI or login:
+`python3 -m unittest discover -s infra/tests -p test_deploy.py -v`.
+They execute the real wrapper with a temporary fake `az` on `PATH`, checking
+selection precedence, query ordering, bootstrap warnings, errors, overrides,
+what-if/create arguments and exit codes. Four resolver mutations must fail
+the same assertions. The compiled Bicep suite checks default/empty/tag/digest
+behaviour and all three job image consumers; three template mutations must
+fail. Both suites run in the existing infra discovery step, not a new check.
+For local type checking in a pip venv, install `mypy` and run
+`mypy --check-untyped-defs infra/scripts/deploy.py infra/tests/test_deploy.py`.
 
 * `bicepconfig.json` explicitly enables the core analyzer and sets selected high-value rules to `error`: unused declarations, secrets in parameters or outputs, hardcoded environment URLs or locations, and unsafe resource identifiers. A temporary unused-parameter mutation proves both build and lint return nonzero with the named diagnostic. All entry points and standalone modules, including subscription-scoped governance, build and lint.
 * `tests/test_bicep_policy.py` checks locally compiled JSON, not a committed snapshot. Required public-access properties and module arguments must exist and follow the computed switch, including the optional token store and monitoring ingestion/query settings. Container Apps must be internal and SQL's wide-open development firewall must remain conditional. The full production/development, public-access and purge input matrix proves that production/public or production/no-purge combinations are rejected by the named guard, not silently accepted.

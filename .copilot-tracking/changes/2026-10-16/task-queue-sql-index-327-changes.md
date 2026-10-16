@@ -113,3 +113,40 @@ finding. No evidence-grounded new follow-up task is required for this slice.
 One post-implementation Review completed: Conformant for the local engineering
 boundary, no substantive findings or later corrective routing. Source and tests
 are frozen for publication. No live-engine or operational approval is inferred.
+
+## P03-T01: Published PR and integration with concurrent main
+
+Committed 318d7fe with the authenticated privacy-safe author/committer identity
+and requested co-author trailer; pushed normally and opened PR #340 targeting
+main with Refs #327 only. closingIssuesReferences is empty.
+While this work ran, main advanced through #337 (infrastructure) and #338
+(resident-retention behavior used by queue evaluation). GitHub reported an
+append-only knowledge-log conflict. Integrating origin/main at 79b153b into the
+topic is intentional evaluator compatibility work, not a rebase/history rewrite
+or PR merge. Only the log conflicted; all entries from both branches are retained.
+Affected core validation is being rerun; no second RPI Review is introduced.
+
+Integration validation completed: all 495 core tests ran successfully (one
+isolated-Azure skip), plus nine affected resident/queue API and portable-SQL
+tests. Core Ruff check/format and mypy passed again. No feature-source conflict
+or correction was needed. Main's knowledge log is verified byte-for-byte as an
+unchanged prefix, with this task's entry appended. Latest suite totals across
+the five projects are 1175 tests with 111 conditional skips (API/dependent full
+suites were run before integration, with affected API tests rerun afterward).
+
+The integrated full-suite benchmark also passed every structural assertion.
+This later run is deliberately disclosed rather than hidden behind the faster
+paired comparison: initialization 25.521 s; median write/cold/repeat milliseconds:
+
+| Queue | Integrated full-suite medians ms |
+| --- | --- |
+| new | 5.0 / 1996.8 / 82.9 |
+| priority | 12.9 / 1371.9 / 0.3 |
+| stale | 6.5 / 1548.7 / 61.4 |
+| blocked | 13.0 / 1710.3 / 222.6 |
+| overdue | 4.0 / 1359.7 / 65.2 |
+| unowned | 10.0 / 1325.6 / 40.0 |
+
+Cold context counts remain 50, or zero for priority. Raw session evidence:
+files/core-integrated-tests.txt. README discloses this variability separately
+from the adjacent baseline/final paired experiment.

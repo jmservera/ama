@@ -21,6 +21,6 @@
     {"decision": "One post-implementation Review executed; Complete / Conformant for the local engineering boundary; no findings", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/task-queue-sql-index-327-review.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "P03-T01 publication pending: commit, push topic and open requested PR, then persist delivery evidence"},
+  "next_action": {"phase": "Follow-up", "action": "PR 340 published; finish intentional main integration and affected validation, then persist delivery evidence"},
   "prioritized_follow_ups": []
 }

@@ -3707,6 +3707,68 @@ metadata when the knowledge base was created.
   defect; hosted PR checks and the owner merge decision remain separate.
 * Published PR #335 with Refs #332 only and no issue-closing references.
 
+## [2026-10-16] update | Resident retention restarts after approved deletion (Refs #86)
+
+* Implemented the [latest owner retention decision](https://github.com/jmservera/ama/issues/86)
+  in the [core resident contract](../../src/core/README.md#resident-decisions-and-representatives-86):
+  after manager-approved deletion, five calendar years starts from the first
+  newly recorded contact, not the deletion or decision date. No contact means
+  an Unknown origin/due date; subsequent contact does not extend the period.
+* Cleared the cached origin and retained a content-free count tombstone so
+  separately purposed old contact records cannot pin the new clock. Same-day
+  renewed contacts remain eligible. Older date-only deletions conservatively
+  exclude general contacts on/before deletion; fresh safe-contact evidence or
+  later-day general contact can establish their new period.
+* Replaced the obsolete pinning regression with inherited JSON/SQLite coverage
+  for returning residents through each contact route, repeated expiry/deletion/
+  renewal, legacy recovery, persistence, fresh scoped acceptance and exact
+  personal-data-free tombstone metadata. Old consent is never revived.
+* Removed the superseded README known limit and updated reference routing.
+  This is an owner-approved exercise rule, not legal advice, historical erasure,
+  live-platform evidence or resident acceptance. Existing issue #86 operational
+  and human acceptance work remains open. No private data, Docker or Azure
+  operation was involved.
+* Local pip-venv evidence: full core suite 482 tests with one explicit Azure
+  opt-in skip; all executed tests and three resident API tests passed. Core
+  Ruff check/format and mypy passed. All ten new inherited JSON/SQLite cases
+  failed semantic assertions against the complete original module in memory,
+  then passed against the installed changed code without package-file mutation.
+* Published PR #338 with Refs #86 only; no issue-disposition reference was
+  attached and #86 remained open. One RPI Review completed with a Conformant
+  outcome and no in-scope findings. Hosted checks and the owner's merge decision
+  remain separate from the local evidence.
+## [2026-10-16] update | Image-preserving infrastructure redeploy (Refs #322)
+
+* Applied the owner's 2026-10-16 decision: empty `orchestratorImage` in
+  `main.bicep` means the bootstrap placeholder; explicit tags/digests pass
+  unchanged to the orchestrator, auth-renewal and ledger-verify jobs.
+* Added the [canonical deploy wrapper](../../infra/README.md#orchestrator-image-selection-322),
+  because no deployment script existed under infra/ or tools/. It prints and
+  preserves a unique existing real job image, otherwise chooses the newest
+  updated registry tag, otherwise warns before using the placeholder.
+  Conflicting job images and discovery failures stop deployment. Explicit
+  image selection is required for intentional roll-forward or reconciliation.
+* Discovery distinguishes confirmed absence using group-scoped job/registry
+  lists and a registry repository list; no permission/network error is
+  interpreted as a bootstrap state. Default operation is what-if; `--apply`
+  performs deployment. Workload/environment options bind lookup and deployment
+  identity. No resource-group creation/deletion is performed by the helper.
+* Local pip-venv evidence: all 103 infra tests passed, including 15 fake-az
+  resolver tests and compiled Bicep parameter/consumer assertions. Four
+  resolver mutations and three compiled-template mutations fail the intended
+  assertions; the actual pre-change HEAD Bicep also fails the new contract.
+  Changed Python Ruff check/format and resolver/test mypy passed; main Bicep
+  build/lint and Git diff whitespace checks passed. Existing CI discovery and
+  check names remain unchanged; its lint selector now includes the new files.
+* Updated infrastructure deployment guidance and the knowledge-base routing
+  index. No Azure deployment, Docker execution, private data access, pipeline
+  #138 integration or live maintenance-job acceptance is claimed.
+* One final-candidate RPI critique passed and one implementation Review was
+  Conformant with no findings. Publication and hosted checks follow; merge
+  remains the owner's decision.
+* Published PR #337 with Refs #322 only via a normal topic-branch push.
+  Hosted checks were queued at handoff; the owner retains the merge decision.
+
 ## [2026-10-16] update | Indexed SQL queue membership on every write (Refs #327)
 
 * Implemented the owner's follow-up to merged #336: six indexed integer flags
@@ -3741,3 +3803,12 @@ metadata when the knowledge base was created.
   agents 70, orchestrator 22, importer 39. All executed tests and all five
   projects' Ruff check/format and mypy passed. SQL Server/Azure opt-ins were
   not configured; those skips are not live compatibility evidence.
+* Published PR #340 with Refs #327 only and no issue-disposition reference.
+  Concurrent main updates #337/#338 were intentionally integrated into the
+  topic without rewriting history; only this append-only log conflicted, and
+  main's entire log remains an unchanged prefix. The integrated core suite
+  passed 495 tests (one skip), nine affected API/portable-SQL tests passed, and
+  core Ruff check/format and mypy passed again. Its additional full-suite
+  timings were 1.33-2.00 s cold and 0.3-222.6 ms repeated, with unchanged
+  bounded context counts; README records this variability. One RPI Review
+  was Conformant; hosted checks and the owner merge decision remain separate.

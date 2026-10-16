@@ -32,14 +32,21 @@ RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_autho
 def first_contact(c, today=None):
     """Only actual contact evidence can establish the resident's first interaction."""
     today = date.fromisoformat(today or k.today())
-    candidates = [(c.get("resident") or {}).get("first_contact_at")]
-    candidates += [r.get("at") for key in ("contacts", "resident_contact_history")
-                   for r in c.get(key, [])]
+    deleted = c.get("resident_retention_deleted_at")
+    tombstone = c.get("resident_retention_tombstone")
+    offset = tombstone["contacts_before_deletion"] if tombstone else 0
+    legacy = bool(deleted and not tombstone)
+    candidates = [((c.get("resident") or {}).get("first_contact_at"), legacy)]
+    candidates += [(r.get("at"), legacy) for r in c.get("contacts", [])[offset:]]
+    candidates += [(r.get("at"), False) for r in c.get("resident_contact_history", [])]
     days = []
-    for raw in candidates:
+    for raw, legacy_contact in candidates:
         try:
             day = date.fromisoformat(str(raw)[:10])
         except ValueError:
+            continue
+        if deleted and (day.isoformat() < deleted or
+                        (legacy_contact and day.isoformat() == deleted)):
             continue
         if day <= today:
             days.append(day)
@@ -187,7 +194,9 @@ class ResidentDecisionMixin:
                 raise PermissionError("A legal hold blocks deletion on this case.")
             if not retention_schedule(c, today)["expired"]:
                 raise ValueError("Resident records are not past their first-contact retention period.")
-            remember_first_contact(c)
+            c["resident"].pop("first_contact_at", None)
+            # Contacts have a separate purpose; count their retained prefix without copying content.
+            c["resident_retention_tombstone"] = dict(contacts_before_deletion=len(c.get("contacts", [])))
             for key in RESIDENT_FIELDS:
                 c.pop(key, None)
             c["decision"] = dict(status=NOT_RECORDED, by=None, at=None)

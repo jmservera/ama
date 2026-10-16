@@ -89,6 +89,11 @@ refreshes and shared-dependency writes can still recompute the whole stock
 under the writer lock; their latency is not represented by the ordinary
 one-case write column. No live Azure SQL timings were collected.
 
+A later full-suite run after integrating `main` at `79b153b` observed cold
+medians of 1.33-2.00 s, repeat medians of 0.3-222.6 ms and initialisation of
+25.521 s. Context counts remained exactly 50/zero. This additional observation
+illustrates timing variability; the paired table is not a stable latency promise.
+
 The earlier cache-only #336 measurement was 3217.4/3090.6 ms for a first cold
 `new` page: it did not materially improve cold latency. That historical
 second-page experiment is not interchangeable with this post-write benchmark.
@@ -183,9 +188,9 @@ The [owner's first-contact clarification](https://github.com/jmservera/ama/issue
 sets retention to five calendar years from the resident's first recorded
 interaction, not the decision, withdrawal, authority expiry or work completion.
 `RESIDENT_RETENTION_YEARS` in `resident_decisions.py` is the configurable constant.
-The earliest valid nonfuture `contacts`/`resident_contact_history` timestamp or
+The earliest eligible valid nonfuture `contacts`/`resident_contact_history` timestamp or
 `resident.first_contact_at` establishes the origin. Recording contact or a
-resident-confirmed safe route preserves the earliest marker. Missing/invalid
+resident-confirmed safe route preserves the earliest marker until deletion. Missing/invalid
 history stays `Unknown`, never inferred from a decision; reconcile it before
 operational use. The schema has no universal cross-case resident identity:
 importers must preserve the resident's actual first-contact marker across cases,
@@ -199,17 +204,29 @@ authority use exactly the same schedule. The existing manager retention list
 includes a `resident-decisions` item; approve it through `retention-approve`
 to remove current scoped decisions, authorities, wishes, safe-contact references/
 history, resident reviews and scopes, reset the legacy answer, clear the resident
-representative and remove service-request representative references. The earliest
-contact marker and deletion date remain. Complaint outcomes and general contact
+representative and remove service-request representative references. The cached
+first-contact marker is cleared. A personal-data-free tombstone retains only the
+count of general contacts present at deletion, alongside the deletion date.
+Complaint outcomes and general contact
 records have separate purposes and are not silently deleted. Legal hold blocks
 deletion, not expiry. Deletion is manager-reviewed, not a configured automatic
 purge job. Existing ledger text, backups and SQL row history are not erased by
 current-payload removal; operational erasure needs a separately approved design.
 
-Known limit pending an owner rule (#86): after expiry and an approved deletion the
-first-contact marker is kept, so retention stays expired and the case refuses new
-resident decisions. Whether renewed contact starts a new period is an open owner
-decision; nothing here invents that rule.
+The [owner's restart decision](https://github.com/jmservera/ama/issues/86)
+(2026-10-16) starts a new five-year period from the first contact recorded after
+deletion, not from deletion itself. Until that contact, origin and due date are
+`Unknown`. The tombstone excludes the retained pre-deletion contact prefix, even
+when renewed contact has the same day/minute timestamp. Either a newly logged
+general contact or a newly confirmed safe-contact route can start the period;
+later contacts do not extend it. Old decisions, authority and scopes are not
+revived: staff must record fresh scoped evidence. Expiry still holds release and
+representative disclosure until manager-approved deletion and renewed evidence.
+Each later approved deletion establishes a new boundary. For older date-only
+deletion records without a count tombstone, general contacts on or before the
+deletion date are conservatively excluded because their same-day ordering cannot
+be recovered; a later-day contact or fresh safe-contact confirmation can establish
+the new period. Neither path infers resident consent.
 
 Cards, missing-decision filters and AI citation labels use current scoped
 status, not the legacy answer. The SQL missing-decision filter deliberately uses
