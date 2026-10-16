@@ -60,7 +60,7 @@ jobs:
         run: pip install $DEPS -e ".[dev]"
       - name: Unit tests and dependency-rule test
         env:
-          PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || matrix.project == 'orchestrator' && format('{0}/src/core/tests', github.workspace) || '' }}
+          PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || (matrix.project == 'orchestrator' || matrix.project == 'agents') && format('{0}/src/core/tests', github.workspace) || '' }}
         run: python -m unittest discover -s tests -v
       - name: Lint
         run: ruff check . && ruff format --check .

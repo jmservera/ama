@@ -74,6 +74,7 @@ disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
 module = ["test_rule_alerts", "tests.test_rule_alerts",
+          "test_regulatory_chat_api", "tests.test_regulatory_chat_api",
           "test_task_queue_api", "tests.test_task_queue_api"]
 disallow_untyped_calls = false
 
@@ -83,5 +84,5 @@ follow_imports = "skip"
 ignore_missing_imports = true
 # Runtime PYTHONPATH supplies the shared fixture, strictly checked by the core project.
 [[tool.mypy.overrides]]
-module = ["building_fixture", "dataset"]
+module = ["building_fixture", "dataset", "regulatory_fixture"]
 ignore_missing_imports = true

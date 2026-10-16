@@ -3917,6 +3917,25 @@ metadata when the knowledge base was created.
   read or human approval was performed or inferred. ADR 0005 remains only a
   synthetic-development acceptance with real owners/sources still a gap.
 
+## [2026-10-16] query | Bounded home-specific cited chat (Refs #214)
+
+* Added the synthetic-only cited lookup, source/fact envelope persistence,
+  current-role retrieval and selected-turn doubt inbox in src/core,
+  src/agents and src/api. Updated their READMEs with the contracts, eight-row
+  acceptance audit, privacy/copy semantics and explicit unmet boundaries.
+* Reused the merged law store, simulated card lifecycle, shared source gates
+  and isolated chat repositories. No legacy code, source snapshots, memory,
+  operational approvals or rule-engine state were changed.
+* Recorded exact cited-answer/refusal development evaluation and a same-source
+  deterministic-card-with-links comparator under src/agents/evals. Context-join
+  value is structural offline evidence, not measured staff time, AI benefit,
+  semantic conflict detection, human review or legal compliance.
+* Owner's 2026-10-16 direction accepts ADR 0005 for synthetic development only;
+  Juan Manuel Servera is the exercise Legal, Compliance and DPO owner.
+  Real sources/delegates/approvals, actual inference, continuing-stock,
+  Azure SQL and operational privacy/retention remain unmet. No issue acceptance
+  checkbox was updated; the coordinator retains merge-time ownership.
+
 ## [2026-10-16] query | Environment strategy and parameter checks (Refs #137, Refs #139)
 
 * Updated [infra environments](../../infra/README.md#environments), parameter
