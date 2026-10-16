@@ -297,6 +297,24 @@ class TransportTests(unittest.TestCase):
             self.execute()
         self.assert_private()
 
+    def test_timeout_with_decoded_result_never_returns_success(self):
+        self.fake.status = "Running"
+        clock = [0.0]
+
+        def sleep(_seconds):
+            if self.fake.polls:
+                clock[0] += 400
+
+        with (
+            patch.object(JOB.time, "monotonic", side_effect=lambda: clock[0]),
+            patch.object(JOB.time, "sleep", side_effect=sleep),
+            self.assertRaisesRegex(JOB.StaffJobError, "timed out"),
+        ):
+            self.execute()
+        self.assertGreater(self.fake.polls, 1)
+        self.assertEqual(len(self.fake.deleted), 1)
+        self.assert_private()
+
     def test_cleanup_failure_never_returns_success_and_has_owned_recovery_name(self):
         self.fake.fail_at = "delete"
         with self.assertRaisesRegex(JOB.StaffJobError, "cleanup NOT confirmed.*job-staff-"):
@@ -613,6 +631,45 @@ class WorkerTests(unittest.TestCase):
         self.assertNotIn("'*'", role)
         self.assertNotIn("Contributor", role)
         self.assertIn("Microsoft.App/containerApps/revisions/restart/action", role)
+
+
+class BuildContextTests(unittest.TestCase):
+    def test_every_dockerfile_copy_source_survives_dockerignore(self):
+        import fnmatch
+        import re
+
+        infra = ROOT / "infra"
+        rules = [
+            line.strip()
+            for line in (infra / ".dockerignore").read_text().splitlines()
+            if line.strip() and not line.startswith("#")
+        ]
+
+        def ignored(path):
+            result = False
+            for rule in rules:
+                negate = rule.startswith("!")
+                pattern = rule.lstrip("!").rstrip("/")
+                parts = path.split("/")
+                prefixes = ["/".join(parts[: i + 1]) for i in range(len(parts))]
+                if pattern == "**":
+                    hit = True
+                else:
+                    hit = any(fnmatch.fnmatchcase(prefix, pattern) for prefix in prefixes)
+                if hit:
+                    result = not negate
+            return result
+
+        sources = []
+        for line in (infra / "cutover-proof.Dockerfile").read_text().splitlines():
+            if line.startswith("COPY "):
+                words = [w for w in line.split()[1:] if not w.startswith("--")]
+                sources += words[:-1]
+        self.assertTrue(sources)
+        for source in sources:
+            self.assertTrue((infra / source).is_file(), source)
+            self.assertFalse(ignored(source), source)
+        self.assertTrue(re.search(r"entra/app-registration.json", " ".join(sources)))
 
 
 if __name__ == "__main__":
