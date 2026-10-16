@@ -26,8 +26,6 @@ param requiredTags array = [
   'owner'
 ]
 
-var policyDefinitionRoot = '/providers/Microsoft.Authorization/policyDefinitions'
-
 var builtInAssignments = [
   {
     key: 'sql-no-public'
@@ -50,7 +48,7 @@ resource builtIn 'Microsoft.Authorization/policyAssignments@2024-04-01' = [for i
   name: '${workload}-${item.key}'
   properties: {
     displayName: item.displayName
-    policyDefinitionId: '${subscription().id}${policyDefinitionRoot}/${item.definitionId}'
+    policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', item.definitionId)
     enforcementMode: enforcementMode
     metadata: { owner: 'Juan Manuel Servera', issue: 'jmservera/ama#147' }
   }
@@ -60,7 +58,7 @@ resource requireTag 'Microsoft.Authorization/policyAssignments@2024-04-01' = [fo
   name: '${workload}-tag-${toLower(tagName)}'
   properties: {
     displayName: 'Require tag ${tagName} on resource groups'
-    policyDefinitionId: '${subscription().id}${policyDefinitionRoot}/96670d01-0a4d-4649-9c89-2d3abc0a5025'
+    policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', '96670d01-0a4d-4649-9c89-2d3abc0a5025')
     enforcementMode: enforcementMode
     parameters: { tagName: { value: tagName } }
     metadata: { owner: 'Juan Manuel Servera', issue: 'jmservera/ama#147' }

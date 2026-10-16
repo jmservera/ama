@@ -1,23 +1,93 @@
 """Policy-as-code checks on the compiled Bicep: README security claims and parameter guards."""
+
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import unittest
+from copy import deepcopy
+from itertools import product
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 INFRA = Path(__file__).resolve().parents[1]
 CONFIG = json.loads((INFRA / "bicepconfig.json").read_text(encoding="utf-8"))
 PUBLIC = "[if(parameters('allowPublicNetworkAccess'), 'Enabled', 'Disabled')]"
-PUBLIC_PROPERTIES = ("publicNetworkAccess", "publicNetworkAccessForIngestion", "publicNetworkAccessForQuery")
-FORBIDDEN_KEY_FUNCTIONS = ("listKeys", "listAccountSas", "listCredentials", "listSecrets", "administratorLoginPassword")
+PUBLIC_PROPERTIES = (
+    "publicNetworkAccess",
+    "publicNetworkAccessForIngestion",
+    "publicNetworkAccessForQuery",
+)
+FORBIDDEN_KEY_FUNCTIONS = (
+    "listKeys",
+    "listAccountSas",
+    "listCredentials",
+    "listSecrets",
+    "administratorLoginPassword",
+)
+SERVICES = {
+    "storage": (
+        "Microsoft.Storage/storageAccounts",
+        {"blob": ["zoneIds.blob"], "queue": ["zoneIds.queue"]},
+    ),
+    "auth-token-store": ("Microsoft.Storage/storageAccounts", {"blob": ["blobZoneId"]}),
+    "sql": ("Microsoft.Sql/servers", {"sqlServer": ["zoneId"]}),
+    "keyvault": ("Microsoft.KeyVault/vaults", {"vault": ["zoneId"]}),
+    "registry": ("Microsoft.ContainerRegistry/registries", {"registry": ["zoneId"]}),
+    "foundry": (
+        "Microsoft.CognitiveServices/accounts",
+        {"account": ["zoneIds.cognitive", "zoneIds.openai", "zoneIds.aiServices"]},
+    ),
+    "iothub": (
+        "Microsoft.Devices/IotHubs",
+        {"iotHub": ["zoneIds.iotHub", "zoneIds.iotHubEndpoint"]},
+    ),
+    "monitoring": (
+        "microsoft.insights/privateLinkScopes",
+        {
+            "azuremonitor": [
+                "zoneIds.monitor",
+                "zoneIds.oms",
+                "zoneIds.ods",
+                "zoneIds.agentsvc",
+                "zoneIds.blob",
+            ]
+        },
+    ),
+}
+NETWORK_RESOURCES = {
+    **{
+        name: {kind: ("publicNetworkAccess",)}
+        for name, (kind, _) in SERVICES.items()
+        if name != "monitoring"
+    },
+    "monitoring": {
+        "Microsoft.OperationalInsights/workspaces": PUBLIC_PROPERTIES[1:],
+        "Microsoft.Insights/components": PUBLIC_PROPERTIES[1:],
+    },
+    "containerapps": {"Microsoft.App/managedEnvironments": ("publicNetworkAccess",)},
+}
+
+
+def module(template: dict, name: str) -> dict:
+    return next(r for r in template["resources"] if r["name"] == name)
+
+
+def module_template(template: dict, name: str) -> dict:
+    return module(template, name)["properties"]["template"]
+
+
+def resource(template: dict, kind: str) -> dict:
+    return next(r for r in resources(template) if r["type"] == kind)
 
 
 def compile_bicep(name: str) -> dict:
     result = subprocess.run(
         ["az", "bicep", "build", "--file", str(INFRA / name), "--stdout"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     if result.returncode:
         raise AssertionError(result.stderr)
@@ -37,7 +107,9 @@ def resources(template: dict):
 
 def evaluate(expression, parameters: dict, variables: dict):
     """Evaluate the small ARM expression subset used by the guard conditions."""
-    if not (isinstance(expression, str) and expression.startswith("[") and expression.endswith("]")):
+    if not (
+        isinstance(expression, str) and expression.startswith("[") and expression.endswith("]")
+    ):
         return expression
     source = re.sub(r"\b(if|or|and|not)\(", r"\1_(", expression[1:-1])
     scope = {
@@ -49,9 +121,10 @@ def evaluate(expression, parameters: dict, variables: dict):
         "empty": lambda a: not a,
         "parameters": lambda n: parameters[n],
         "variables": lambda n: evaluate(variables[n], parameters, variables),
-        "createObject": lambda *a: dict(zip(a[::2], a[1::2])),
+        "createObject": lambda *a: dict(zip(a[::2], a[1::2], strict=True)),
         "true": lambda: True,
         "null": lambda: None,
+        "format": lambda pattern, *args: pattern.format(*args),
     }
     return eval(source, {"__builtins__": {}}, scope)  # noqa: S307 - compiled repository template only
 
@@ -65,7 +138,11 @@ class BicepPolicyTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.main = compile_bicep("main.bicep")
         cls.guard = compile_bicep("modules/guard.bicep")
-        cls.defaults = {k: v.get("defaultValue") for k, v in cls.main["parameters"].items() if "defaultValue" in v}
+        cls.defaults = {
+            k: v.get("defaultValue")
+            for k, v in cls.main["parameters"].items()
+            if "defaultValue" in v
+        }
         cls.guard_module = next(r for r in cls.main["resources"] if r["name"] == "parameter-guard")
 
     def test_missing_az_is_a_failure_when_required(self) -> None:
@@ -83,28 +160,74 @@ class BicepPolicyTests(unittest.TestCase):
                 return True
             by_id = {
                 f"[resourceId('{r['type']}', '{r['name']}')]": r["name"]
-                for r in items if "/" not in r["name"] and r["type"] == "Microsoft.Resources/deployments"
+                for r in items
+                if "/" not in r["name"] and r["type"] == "Microsoft.Resources/deployments"
             }
-            return any(d in by_id and by_id[d] not in seen and waits(by_id[d], seen | {name}) for d in depends[name])
+            return any(
+                d in by_id and by_id[d] not in seen and waits(by_id[d], seen | {name})
+                for d in depends[name]
+            )
 
         for item in items:
             if item["name"] == "parameter-guard":
                 continue
-            self.assertTrue(waits(item["name"]), f"{item['name']} can deploy before the parameter guard")
+            self.assertTrue(
+                waits(item["name"]), f"{item['name']} can deploy before the parameter guard"
+            )
         self.assertEqual(depends["parameter-guard"], set())
 
     def test_lint_rules_are_errors(self) -> None:
+        self.assertIs(CONFIG["analyzers"]["core"]["enabled"], True)
         levels = {rule["level"] for rule in CONFIG["analyzers"]["core"]["rules"].values()}
         self.assertEqual(levels, {"error"})
-        for required in ("no-unused-params", "secure-secrets-in-params", "outputs-should-not-contain-secrets"):
+        for required in (
+            "no-unused-params",
+            "secure-secrets-in-params",
+            "outputs-should-not-contain-secrets",
+        ):
             self.assertIn(required, CONFIG["analyzers"]["core"]["rules"])
+
+    def test_configured_lint_error_fails_build_and_lint(self) -> None:
+        with TemporaryDirectory(prefix="ama-bicep-policy-") as directory:
+            path = Path(directory)
+            (path / "bicepconfig.json").write_text(json.dumps(CONFIG), encoding="utf-8")
+            source = path / "unused.bicep"
+            source.write_text("param unused string = 'mutation'\n", encoding="utf-8")
+            for action in ("build", "lint"):
+                with self.subTest(action=action):
+                    result = subprocess.run(
+                        ["az", "bicep", action, "--file", str(source)],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    self.assertIn("Error no-unused-params", result.stderr)
+
+    def test_governance_uses_tenant_scoped_builtin_policy_ids(self) -> None:
+        template = compile_bicep("governance.bicep")
+        assignments = [
+            r
+            for r in resources(template)
+            if r["type"] == "Microsoft.Authorization/policyAssignments"
+        ]
+        self.assertEqual(len(assignments), 2)
+        for assignment in assignments:
+            self.assertTrue(
+                assignment["properties"]["policyDefinitionId"].startswith(
+                    "[tenantResourceId('Microsoft.Authorization/policyDefinitions', "
+                ),
+                assignment["name"],
+            )
 
     def test_src_workload_images_and_job_commands(self) -> None:
         template = compile_bicep("modules/containerapps.bicep")
         containers = {
             container["name"]: container
             for resource in resources(template)
-            for container in resource.get("properties", {}).get("template", {}).get("containers", [])
+            for container in resource.get("properties", {})
+            .get("template", {})
+            .get("containers", [])
         }
         self.assertEqual(containers["api"]["image"], "[parameters('apiImage')]")
         for name, module, args in (
@@ -112,119 +235,533 @@ class BicepPolicyTests(unittest.TestCase):
             ("ledger-verify", "digest_blob", ["--publish"]),
         ):
             self.assertEqual(containers[name]["image"], "[parameters('orchestratorImage')]")
-            self.assertEqual(containers[name]["command"],
-                             ["python", "-m", f"zava_forward.orchestrator.{module}", *args])
+            self.assertEqual(
+                containers[name]["command"],
+                ["python", "-m", f"zava_forward.orchestrator.{module}", *args],
+            )
 
     def test_production_is_the_default_profile(self) -> None:
         self.assertEqual(self.defaults["deploymentProfile"], "production")
         self.assertIs(self.defaults["allowPublicNetworkAccess"], False)
         self.assertIs(self.defaults["keyVaultPurgeProtection"], True)
-        self.assertIn("param deploymentProfile = 'production'", (INFRA / "main.pilot.example.bicepparam").read_text(encoding="utf-8"))
+        self.assertIn(
+            "param deploymentProfile = 'production'",
+            (INFRA / "main.pilot.example.bicepparam").read_text(encoding="utf-8"),
+        )
 
     def test_every_public_access_setting_follows_the_single_switch(self) -> None:
-        seen = 0
-        for resource in resources(self.main):
-            for name in PUBLIC_PROPERTIES:
-                if name in resource.get("properties", {}):
-                    seen += 1
-                    self.assertEqual(resource["properties"][name], PUBLIC, f"{resource['type']}.{name}")
-        self.assertGreaterEqual(seen, 8)
+        self.assert_network_controls(self.main)
+
+    def assert_network_controls(self, template: dict) -> None:
+        for name, kinds in NETWORK_RESOURCES.items():
+            nested = module_template(template, name)
+            passed = module(template, name)["properties"]["parameters"]
+            self.assertEqual(
+                passed.get("allowPublicNetworkAccess"),
+                {"value": "[variables('publicAccess')]"},
+                name,
+            )
+            for kind, properties in kinds.items():
+                matches = [r for r in resources(nested) if r["type"] == kind]
+                self.assertEqual(len(matches), 1, f"{name}: missing/duplicate {kind}")
+                for prop in properties:
+                    self.assertEqual(matches[0]["properties"].get(prop), PUBLIC, f"{name}.{prop}")
+        environment = resource(
+            module_template(template, "containerapps"), "Microsoft.App/managedEnvironments"
+        )
+        self.assertEqual(
+            environment["properties"]["vnetConfiguration"].get("internal"),
+            "[not(parameters('allowPublicNetworkAccess'))]",
+        )
+        for firewall in resources(module_template(template, "sql")):
+            if firewall["type"] == "Microsoft.Sql/servers/firewallRules":
+                self.assertEqual(
+                    firewall.get("condition"), "[parameters('allowPublicNetworkAccess')]"
+                )
 
     def test_every_module_gets_the_computed_public_access(self) -> None:
         for module in self.main["resources"]:
             params = module.get("properties", {}).get("parameters", {})
             if "allowPublicNetworkAccess" in params:
-                self.assertEqual(params["allowPublicNetworkAccess"]["value"], "[variables('publicAccess')]", module["name"])
+                self.assertEqual(
+                    params["allowPublicNetworkAccess"]["value"],
+                    "[variables('publicAccess')]",
+                    module["name"],
+                )
 
     def test_production_profile_has_no_public_access(self) -> None:
         production = {**self.defaults, "deploymentProfile": "production"}
-        self.assertFalse(evaluate(self.main["variables"]["publicAccess"], production, self.main["variables"]))
-        self.assertTrue(evaluate(self.main["variables"]["purgeProtection"], production, self.main["variables"]))
+        self.assertFalse(
+            evaluate(self.main["variables"]["publicAccess"], production, self.main["variables"])
+        )
+        self.assertTrue(
+            evaluate(self.main["variables"]["purgeProtection"], production, self.main["variables"])
+        )
         development = {**production, "deploymentProfile": "development"}
-        self.assertTrue(evaluate(self.main["variables"]["publicAccess"], development, self.main["variables"]))
+        self.assertTrue(
+            evaluate(self.main["variables"]["publicAccess"], development, self.main["variables"])
+        )
 
     def test_no_keys_or_sql_logins(self) -> None:
-        text = json.dumps(self.main)
+        self.assert_key_controls(self.main)
+
+    def assert_key_controls(self, template: dict) -> None:
+        text = json.dumps(template).lower()
         for function in FORBIDDEN_KEY_FUNCTIONS:
-            self.assertNotIn(function, text)
+            self.assertNotIn(function.lower(), text)
         by_type: dict[str, list[dict]] = {}
-        for resource in resources(self.main):
+        for resource in resources(template):
             by_type.setdefault(resource["type"], []).append(resource.get("properties", {}))
         for props in by_type["Microsoft.Storage/storageAccounts"]:
-            self.assertIs(props["allowSharedKeyAccess"], False)
-            self.assertIs(props["allowBlobPublicAccess"], False)
+            self.assertIs(props.get("allowSharedKeyAccess"), False)
+            self.assertIs(props.get("allowBlobPublicAccess"), False)
         for props in by_type["Microsoft.ContainerRegistry/registries"]:
-            self.assertIs(props["adminUserEnabled"], False)
+            self.assertIs(props.get("adminUserEnabled"), False)
         for props in by_type["Microsoft.CognitiveServices/accounts"]:
-            self.assertIs(props["disableLocalAuth"], True)
+            self.assertIs(props.get("disableLocalAuth"), True)
         for props in by_type["Microsoft.Insights/components"]:
-            self.assertIs(props["DisableLocalAuth"], True)
+            self.assertIs(props.get("DisableLocalAuth"), True)
+        for props in by_type["Microsoft.Devices/IotHubs"]:
+            self.assertIs(props.get("disableLocalAuth"), True)
+            self.assertIs(props.get("disableModuleSAS"), True)
+        for props in by_type["Microsoft.OperationalInsights/workspaces"]:
+            self.assertIs(props.get("features", {}).get("disableLocalAuth"), True)
 
     def test_sql_is_entra_only(self) -> None:
-        servers = [r["properties"] for r in resources(self.main) if r["type"] == "Microsoft.Sql/servers"]
+        self.assert_sql_controls(self.main)
+
+    def assert_sql_controls(self, template: dict) -> None:
+        servers = [
+            r["properties"] for r in resources(template) if r["type"] == "Microsoft.Sql/servers"
+        ]
         self.assertTrue(servers)
         for props in servers:
-            self.assertIs(props["administrators"]["azureADOnlyAuthentication"], True)
+            self.assertIs(props.get("administrators", {}).get("azureADOnlyAuthentication"), True)
             self.assertNotIn("administratorLogin", props)
             self.assertNotIn("administratorLoginPassword", props)
 
     def test_key_vault_purge_protection_follows_profile(self) -> None:
-        vaults = [r["properties"] for r in resources(self.main) if r["type"] == "Microsoft.KeyVault/vaults"]
+        self.assert_purge_controls(self.main)
+
+    def assert_purge_controls(self, template: dict) -> None:
+        vaults = [
+            r["properties"] for r in resources(template) if r["type"] == "Microsoft.KeyVault/vaults"
+        ]
         self.assertTrue(vaults)
         for props in vaults:
-            self.assertEqual(props["enablePurgeProtection"], "[if(parameters('purgeProtection'), true(), null())]")
-            self.assertIs(props["enableRbacAuthorization"], True)
-        keyvault = next(m for m in self.main["resources"] if m["name"] == "keyvault")
-        self.assertEqual(keyvault["properties"]["parameters"]["purgeProtection"]["value"], "[variables('purgeProtection')]")
+            self.assertEqual(
+                props.get("enablePurgeProtection"),
+                "[if(parameters('purgeProtection'), true(), null())]",
+            )
+            self.assertIs(props.get("enableRbacAuthorization"), True)
+            self.assertIs(props.get("enableSoftDelete"), True)
+            self.assertEqual(
+                props.get("softDeleteRetentionInDays"), "[if(parameters('purgeProtection'), 90, 7)]"
+            )
+        keyvault = module(template, "keyvault")
+        self.assertEqual(
+            keyvault["properties"]["parameters"].get("purgeProtection"),
+            {"value": "[variables('purgeProtection')]"},
+        )
 
     def test_audit_containers_have_immutability_policies(self) -> None:
-        policies = [r for r in resources(self.main) if r["type"].endswith("/immutabilityPolicies")]
-        self.assertGreaterEqual(len(policies), 2)
+        self.assert_retention_controls(self.main)
+
+    def assert_retention_controls(self, template: dict) -> None:
+        storage = module_template(template, "storage")
+        policies = [r for r in resources(storage) if r["type"].endswith("/immutabilityPolicies")]
+        self.assertEqual(len(policies), 2)
+        names = {}
         for policy in policies:
-            self.assertIn("immutabilityPeriodSinceCreationInDays", policy["properties"])
+            self.assertNotIn("condition", policy)
+            name = evaluate(policy["name"], {"name": "fixture"}, storage["variables"])
+            names[name] = policy
+        for container, param, append in (
+            ("audit-archive", "auditImmutabilityDays", True),
+            ("ledger-digests", "ledgerDigestImmutabilityDays", False),
+        ):
+            name = f"fixture/default/{container}/default"
+            self.assertIn(name, names, f"missing policy on {container}")
+            props = names[name]["properties"]
+            self.assertEqual(
+                props.get("immutabilityPeriodSinceCreationInDays"), f"[parameters('{param}')]"
+            )
+            self.assertIs(props.get("allowProtectedAppendWrites"), append)
+            spec = storage["parameters"][param]
+            self.assertGreaterEqual(spec.get("minValue", 0), 1, param)
+            self.assertGreaterEqual(spec["defaultValue"], spec["minValue"], param)
 
     def test_each_data_service_has_a_private_endpoint(self) -> None:
-        groups = set()
+        self.assert_endpoint_controls(self.main)
 
-        def collect(template: dict) -> None:
-            items = template["resources"]
-            for item in items.values() if isinstance(items, dict) else items:
-                properties = item.get("properties", {})
-                if item["type"] != "Microsoft.Resources/deployments":
-                    continue
-                if "groupId" in properties.get("parameters", {}):
-                    groups.add(properties["parameters"]["groupId"]["value"])
-                if "template" in properties:
-                    collect(properties["template"])
-
-        collect(self.main)
-        self.assertTrue({"sqlServer", "blob", "queue", "vault", "registry", "account", "azuremonitor"} <= groups, groups)
+    def assert_endpoint_controls(self, template: dict) -> None:
+        for name, (kind, groups) in SERVICES.items():
+            nested = module_template(template, name)
+            target = resource(nested, kind)
+            endpoints = [
+                r
+                for r in nested["resources"]
+                if r["type"] == "Microsoft.Resources/deployments"
+                and "groupId" in r["properties"].get("parameters", {})
+            ]
+            self.assertEqual(len(endpoints), len(groups), name)
+            self.assertEqual(
+                {r["properties"]["parameters"]["groupId"]["value"] for r in endpoints},
+                set(groups),
+                name,
+            )
+            self.assertEqual(
+                module(template, name)["properties"]["parameters"].get("peSubnetId"),
+                {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', "
+                    "'network'), '2025-04-01').outputs.peSubnetId.value]"
+                },
+                name,
+            )
+            for endpoint in endpoints:
+                self.assertNotIn("condition", endpoint, name)
+                params = endpoint["properties"]["parameters"]
+                group = params["groupId"]["value"]
+                self.assertEqual(
+                    params.get("targetResourceId"),
+                    {"value": f"[resourceId('{kind}', {target['name'][1:-1]})]"},
+                    name,
+                )
+                self.assertEqual(
+                    params.get("subnetId"), {"value": "[parameters('peSubnetId')]"}, name
+                )
+                expected_zones = []
+                for zone in groups[group]:
+                    param, _, field = zone.partition(".")
+                    expected_zones.append(f"[parameters('{param}'){'.' + field if field else ''}]")
+                self.assertEqual(params.get("dnsZoneIds"), {"value": expected_zones}, name)
+                pe_template = endpoint["properties"]["template"]
+                pes = [
+                    r
+                    for r in resources(pe_template)
+                    if r["type"] == "Microsoft.Network/privateEndpoints"
+                ]
+                self.assertEqual(len(pes), 1, name)
+                self.assertNotIn("condition", pes[0], name)
+                self.assertEqual(
+                    pes[0]["properties"].get("subnet"), {"id": "[parameters('subnetId')]"}, name
+                )
+                connections = pes[0]["properties"].get("privateLinkServiceConnections", [])
+                self.assertEqual(len(connections), 1, name)
+                self.assertEqual(
+                    connections[0]["properties"],
+                    {
+                        "privateLinkServiceId": "[parameters('targetResourceId')]",
+                        "groupIds": ["[parameters('groupId')]"],
+                    },
+                    name,
+                )
+                dns = [
+                    r
+                    for r in resources(pe_template)
+                    if r["type"] == "Microsoft.Network/privateEndpoints/privateDnsZoneGroups"
+                ]
+                self.assertEqual(len(dns), 1, name)
+                self.assertNotIn("condition", dns[0], name)
+                self.assertEqual(
+                    evaluate(dns[0]["name"], {"name": "fixture"}, {}),
+                    evaluate(pes[0]["name"], {"name": "fixture"}, {}) + "/default",
+                    name,
+                )
+                self.assertEqual(
+                    dns[0]["properties"].get("copy"),
+                    [
+                        {
+                            "name": "privateDnsZoneConfigs",
+                            "count": "[length(parameters('dnsZoneIds'))]",
+                            "input": {
+                                "name": "[format('zone{0}', copyIndex('privateDnsZoneConfigs'))]",
+                                "properties": {
+                                    "privateDnsZoneId": "[parameters('dnsZoneIds')"
+                                    "[copyIndex('privateDnsZoneConfigs')]]"
+                                },
+                            },
+                        }
+                    ],
+                    name,
+                )
 
     def test_unsupported_parameter_combinations_are_rejected_with_a_named_check(self) -> None:
+        self.assert_parameter_controls(self.main)
+
+    def assert_parameter_controls(self, template: dict) -> None:
         guard_parameters = self.guard["parameters"]
+        defaults = {
+            k: v["defaultValue"] for k, v in template["parameters"].items() if "defaultValue" in v
+        }
         for name, spec in guard_parameters.items():
             self.assertEqual(spec["minLength"], 1, name)
             self.assertIn("Empty means", spec["metadata"]["description"], name)
-        passed = self.guard_module["properties"]["parameters"]
+        passed = module(template, "parameter-guard")["properties"]["parameters"]
         self.assertEqual(set(passed), set(guard_parameters))
 
         def failures(**overrides) -> set[str]:
-            values = {**self.defaults, "entraTokenStoreReady": False, **overrides}
+            values = {**defaults, "entraTokenStoreReady": False, **overrides}
             return {
-                name for name, arg in passed.items()
-                if not evaluate(arg, values, self.main["variables"])["value"]
+                name
+                for name, arg in passed.items()
+                if not evaluate(arg, values, template["variables"])["value"]
             }
 
         self.assertEqual(failures(), set())
-        self.assertEqual(failures(deploymentProfile="development", allowPublicNetworkAccess=True), set())
-        self.assertEqual(failures(allowPublicNetworkAccess=True), {"productionProfileForbidsPublicNetworkAccess"})
-        self.assertEqual(failures(keyVaultPurgeProtection=False), {"productionProfileRequiresKeyVaultPurgeProtection"})
-        self.assertEqual(failures(deploymentProfile="development", keyVaultPurgeProtection=False), set())
-        self.assertEqual(failures(evidenceStore="sharepoint", sharePointSiteId=""), {"sharePointEvidenceStoreRequiresSiteId"})
+        self.assertEqual(
+            failures(deploymentProfile="development", allowPublicNetworkAccess=True), set()
+        )
+        self.assertEqual(
+            failures(allowPublicNetworkAccess=True), {"productionProfileForbidsPublicNetworkAccess"}
+        )
+        self.assertEqual(
+            failures(keyVaultPurgeProtection=False),
+            {"productionProfileRequiresKeyVaultPurgeProtection"},
+        )
+        self.assertEqual(
+            failures(deploymentProfile="development", keyVaultPurgeProtection=False), set()
+        )
+        self.assertEqual(
+            failures(evidenceStore="sharepoint", sharePointSiteId=""),
+            {"sharePointEvidenceStoreRequiresSiteId"},
+        )
         self.assertEqual(failures(evidenceStore="sharepoint", sharePointSiteId="site"), set())
-        self.assertEqual(failures(entraTokenStoreReady=True, enableEntraTokenStore=False), {"tokenStoreReadyRequiresTokenStore"})
-        self.assertEqual(failures(entraRoleMap={"a": "b"}, entraClientId=""), {"entraRoleMapRequiresEntraClientId"})
+        self.assertEqual(
+            failures(entraTokenStoreReady=True, enableEntraTokenStore=False),
+            {"tokenStoreReadyRequiresTokenStore"},
+        )
+        self.assertEqual(
+            failures(entraRoleMap={"a": "b"}, entraClientId=""),
+            {"entraRoleMapRequiresEntraClientId"},
+        )
         self.assertEqual(failures(entraRoleMap={"a": "b"}, entraClientId="id"), set())
+        for profile, public, purge in product(
+            ("production", "development"), (False, True), (False, True)
+        ):
+            expected = set()
+            if profile == "production":
+                if public:
+                    expected.add("productionProfileForbidsPublicNetworkAccess")
+                if not purge:
+                    expected.add("productionProfileRequiresKeyVaultPurgeProtection")
+            overrides = {
+                "deploymentProfile": profile,
+                "allowPublicNetworkAccess": public,
+                "keyVaultPurgeProtection": purge,
+            }
+            self.assertEqual(failures(**overrides), expected, str(overrides))
+            if not expected:
+                self.assertEqual(
+                    evaluate(
+                        template["variables"]["publicAccess"],
+                        {**defaults, **overrides},
+                        template["variables"],
+                    ),
+                    profile == "development",
+                    str(overrides),
+                )
+                self.assertEqual(
+                    evaluate(
+                        template["variables"]["purgeProtection"],
+                        {**defaults, **overrides},
+                        template["variables"],
+                    ),
+                    profile == "production",
+                    str(overrides),
+                )
+            edge_expected = expected | (
+                {"publicEdgeRequiresProductionProfile"}
+                if profile != "production" or public
+                else set()
+            )
+            self.assertEqual(failures(**overrides, enablePublicEdge=True), edge_expected)
+            pilot_expected = expected | (
+                {"pilotRequiresProductionProfile"} if profile != "production" or public else set()
+            )
+            self.assertEqual(failures(**overrides, environmentName="pilot"), pilot_expected)
+        self.assertEqual(
+            failures(enablePublicEdge=True, deployApplications=False),
+            {"publicEdgeRequiresApplications"},
+        )
+
+    def assert_mutation_rejected(self, assertion, mutated: dict) -> None:
+        with self.assertRaises(AssertionError):
+            assertion(mutated)
+
+    def test_mutations_reject_missing_or_public_network_controls(self) -> None:
+        for name, kinds in NETWORK_RESOURCES.items():
+            for kind, properties in kinds.items():
+                for prop, remove in product(properties, (False, True)):
+                    with self.subTest(module=name, property=prop, remove=remove):
+                        mutated = deepcopy(self.main)
+                        props = resource(module_template(mutated, name), kind)["properties"]
+                        if remove:
+                            del props[prop]
+                        else:
+                            props[prop] = "Enabled"
+                        self.assert_mutation_rejected(self.assert_network_controls, mutated)
+            with self.subTest(module=name, forwarding="removed"):
+                mutated = deepcopy(self.main)
+                del module(mutated, name)["properties"]["parameters"]["allowPublicNetworkAccess"]
+                self.assert_mutation_rejected(self.assert_network_controls, mutated)
+        mutated = deepcopy(self.main)
+        resource(module_template(mutated, "containerapps"), "Microsoft.App/managedEnvironments")[
+            "properties"
+        ]["vnetConfiguration"]["internal"] = False
+        self.assert_mutation_rejected(self.assert_network_controls, mutated)
+        for remove in (False, True):
+            with self.subTest(firewall_condition_removed=remove):
+                mutated = deepcopy(self.main)
+                firewall = resource(
+                    module_template(mutated, "sql"), "Microsoft.Sql/servers/firewallRules"
+                )
+                if remove:
+                    del firewall["condition"]
+                else:
+                    firewall["condition"] = True
+                self.assert_mutation_rejected(self.assert_network_controls, mutated)
+
+    def test_mutations_reject_key_auth_and_key_functions(self) -> None:
+        controls = [
+            ("storage", "Microsoft.Storage/storageAccounts", "allowSharedKeyAccess", True),
+            ("auth-token-store", "Microsoft.Storage/storageAccounts", "allowSharedKeyAccess", True),
+            ("registry", "Microsoft.ContainerRegistry/registries", "adminUserEnabled", True),
+            ("foundry", "Microsoft.CognitiveServices/accounts", "disableLocalAuth", False),
+            ("monitoring", "Microsoft.Insights/components", "DisableLocalAuth", False),
+            ("iothub", "Microsoft.Devices/IotHubs", "disableLocalAuth", False),
+            ("iothub", "Microsoft.Devices/IotHubs", "disableModuleSAS", False),
+        ]
+        for name, kind, prop, value in controls:
+            for remove in (False, True):
+                with self.subTest(module=name, property=prop, remove=remove):
+                    mutated = deepcopy(self.main)
+                    props = resource(module_template(mutated, name), kind)["properties"]
+                    if remove:
+                        del props[prop]
+                    else:
+                        props[prop] = value
+                    self.assert_mutation_rejected(self.assert_key_controls, mutated)
+        mutated = deepcopy(self.main)
+        resource(
+            module_template(mutated, "monitoring"), "Microsoft.OperationalInsights/workspaces"
+        )["properties"]["features"]["disableLocalAuth"] = False
+        self.assert_mutation_rejected(self.assert_key_controls, mutated)
+        for function in FORBIDDEN_KEY_FUNCTIONS:
+            with self.subTest(function=function):
+                mutated = deepcopy(self.main)
+                mutated.setdefault("outputs", {})["credential"] = {
+                    "type": "string",
+                    "value": f"[{function}('fixture', '2024-01-01')]",
+                }
+                self.assert_mutation_rejected(self.assert_key_controls, mutated)
+
+    def test_mutations_reject_sql_and_purge_control_removal(self) -> None:
+        for remove in (False, True):
+            with self.subTest(control="entra-only", remove=remove):
+                mutated = deepcopy(self.main)
+                admin = resource(module_template(mutated, "sql"), "Microsoft.Sql/servers")[
+                    "properties"
+                ]["administrators"]
+                if remove:
+                    del admin["azureADOnlyAuthentication"]
+                else:
+                    admin["azureADOnlyAuthentication"] = False
+                self.assert_mutation_rejected(self.assert_sql_controls, mutated)
+            with self.subTest(control="purge", remove=remove):
+                mutated = deepcopy(self.main)
+                props = resource(module_template(mutated, "keyvault"), "Microsoft.KeyVault/vaults")[
+                    "properties"
+                ]
+                if remove:
+                    del props["enablePurgeProtection"]
+                else:
+                    props["enablePurgeProtection"] = False
+                self.assert_mutation_rejected(self.assert_purge_controls, mutated)
+        mutated = deepcopy(self.main)
+        module(mutated, "keyvault")["properties"]["parameters"]["purgeProtection"]["value"] = False
+        self.assert_mutation_rejected(self.assert_purge_controls, mutated)
+
+    def test_mutations_reject_missing_wrong_or_zero_retention(self) -> None:
+        kind = "Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies"
+        for index in (0, 1):
+            for change in ("remove", "target", "zero", "disabled"):
+                with self.subTest(policy=index, change=change):
+                    mutated = deepcopy(self.main)
+                    storage = module_template(mutated, "storage")
+                    policies = [r for r in resources(storage) if r["type"] == kind]
+                    policy = policies[index]
+                    if change == "remove":
+                        storage["resources"].remove(policy)
+                    elif change == "target":
+                        policy["name"] = (
+                            "[format('{0}/default/evidence/default', parameters('name'))]"
+                        )
+                    elif change == "disabled":
+                        policy["condition"] = False
+                    else:
+                        policy["properties"]["immutabilityPeriodSinceCreationInDays"] = 0
+                    self.assert_mutation_rejected(self.assert_retention_controls, mutated)
+        for param in ("auditImmutabilityDays", "ledgerDigestImmutabilityDays"):
+            mutated = deepcopy(self.main)
+            del module_template(mutated, "storage")["parameters"][param]["minValue"]
+            self.assert_mutation_rejected(self.assert_retention_controls, mutated)
+
+    def test_mutations_reject_missing_or_disconnected_private_endpoints(self) -> None:
+        for name in SERVICES:
+            for change in ("remove", "target", "subnet", "zones", "resource", "connection", "dns"):
+                with self.subTest(module=name, change=change):
+                    mutated = deepcopy(self.main)
+                    nested = module_template(mutated, name)
+                    endpoint = next(
+                        r
+                        for r in nested["resources"]
+                        if "groupId" in r.get("properties", {}).get("parameters", {})
+                    )
+                    params = endpoint["properties"]["parameters"]
+                    pe_template = endpoint["properties"]["template"]
+                    if change == "remove":
+                        nested["resources"].remove(endpoint)
+                    elif change in ("target", "subnet", "zones"):
+                        key = {
+                            "target": "targetResourceId",
+                            "subnet": "subnetId",
+                            "zones": "dnsZoneIds",
+                        }[change]
+                        params[key]["value"] = [] if change == "zones" else "wrong-resource"
+                    elif change == "resource":
+                        pe_template["resources"].remove(
+                            resource(pe_template, "Microsoft.Network/privateEndpoints")
+                        )
+                    elif change == "connection":
+                        resource(pe_template, "Microsoft.Network/privateEndpoints")["properties"][
+                            "privateLinkServiceConnections"
+                        ] = []
+                    else:
+                        pe_template["resources"].remove(
+                            resource(
+                                pe_template,
+                                "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                            )
+                        )
+                    self.assert_mutation_rejected(self.assert_endpoint_controls, mutated)
+
+    def test_mutations_reject_production_guard_bypass(self) -> None:
+        for name in (
+            "productionProfileForbidsPublicNetworkAccess",
+            "productionProfileRequiresKeyVaultPurgeProtection",
+        ):
+            with self.subTest(guard=name):
+                mutated = deepcopy(self.main)
+                module(mutated, "parameter-guard")["properties"]["parameters"][name] = {
+                    "value": "ok"
+                }
+                self.assert_mutation_rejected(self.assert_parameter_controls, mutated)
+        for variable, value in (("publicAccess", True), ("purgeProtection", False)):
+            with self.subTest(variable=variable):
+                mutated = deepcopy(self.main)
+                mutated["variables"][variable] = value
+                self.assert_mutation_rejected(self.assert_parameter_controls, mutated)
 
 
 if __name__ == "__main__":

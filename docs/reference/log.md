@@ -3612,3 +3612,30 @@ metadata when the knowledge base was created.
   were reopened with a comment. The coordinator merge gate now checks
   `closingIssuesReferences` before merging and reopens issues closed with unmet
   acceptance.
+
+## [2026-10-16] update | Offline Bicep quality gates (Refs #139)
+
+* Strengthened the existing [infra gates](../../infra/README.md#quality-gates):
+  per-service compiled endpoint/connection/DNS and public-access assertions,
+  local-auth controls, Entra-only SQL, purge/soft-delete/RBAC, exact audit
+  container targets and positive retention. Same-assertion mutations demonstrate
+  control removal or bypass is rejected; production/public/purge and named
+  unsupported-combination checks remain offline.
+* Reused the existing error-level linter and parameter guards. Source CI now
+  triggers for infra changes and runs all-template build/lint, infra tests and
+  scoped ruff within the existing namespace job. Existing workflow/job/check
+  names and the legacy validation gate are preserved per #321.
+* All-template build exposed subscription-prefixed built-in policy IDs in
+  governance; corrected to tenantResourceId without changing audit mode or
+  enabling Defender. Added the missing positive audit-retention bound, matching
+  the existing digest bound. No control was weakened.
+* Policies remain unlocked; legal retention/locking approval, live ARM guard
+  messages and private-network/Front Door acceptance are unverified. No
+  deployment, Azure resource access, private-data operation or #138 pipeline
+  work was performed.
+* Published PR #333. Local Bicep 0.48.1 build/lint passed for all entry points
+  and modules; 86 infra tests passed with no skips, including 131 compiled
+  mutation cases; scoped Ruff check/format passed. One RPI critique and one
+  Review completed; no in-scope defect, with live and owner-approval residuals
+  routed separately. CI names are unchanged; hosted checks remain separate
+  from these local results. No merge or issue disposition is implied.

@@ -106,20 +106,49 @@ Naming and tagging:
 
 ## Quality gates
 
-Run before a pull request (CI runs the same in `.github/workflows/mvp-validation.yml`):
+Run from the repository root before a pull request. These checks compile locally
+and need no Azure login, subscription access or deployment. Install the source
+packages first, preferably in a disposable virtual environment (pip only).
+Source CI runs the gates within the existing `namespace` / `src-namespace` job
+in `.github/workflows/src-ci.yml`, including on `infra/**` changes. The legacy
+`.github/workflows/mvp-validation.yml` infra checks and all existing job/check
+names remain unchanged, following the #321 cut-over decision.
 
 ```bash
-python3 -m pip install --no-deps -e src/core -e src/agents -e src/api
-az bicep build --file infra/main.bicep --stdout > /dev/null
-az bicep lint --file infra/main.bicep
-python3 -m unittest discover -s infra/tests -v
+python3 -m pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
+az bicep version
+for file in infra/*.bicep infra/modules/*.bicep; do
+  az bicep build --file "$file" --stdout > /dev/null || exit 1
+  az bicep lint --file "$file" || exit 1
+done
+REQUIRE_AZ_BICEP=1 python3 -m unittest discover -s infra/tests -v
+python3 -m pip install 'ruff==0.17.1'
+ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py
+ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py
 ```
 
-* `bicepconfig.json` sets every enabled linter rule to `error`, so a warning that matters (unused parameters, secrets in parameters or outputs, hardcoded environment URLs or locations, unsafe resource identifiers) fails `az bicep lint` and the build.
-* `tests/test_bicep_policy.py` compiles `main.bicep` and checks the claims in this README against the template: every public access setting follows the single computed switch, no storage or Application Insights/Foundry keys, no registry admin user, Entra-only SQL with no login or password, Key Vault purge protection and RBAC, immutability policies on the audit containers, and private endpoints for each data service. It evaluates the profile logic to show the default production profile cannot set public access.
-* `modules/guard.bicep` rejects unsupported parameter combinations before resources change: every module and top-level resource in `main.bicep` declares `dependsOn: [guard]` (directly or through another module), and a test fails if one can deploy first. CI sets `REQUIRE_AZ_BICEP=1`, so the infra tests fail rather than skip when `az` is missing. The failing parameter name states the problem: production profile with `allowPublicNetworkAccess=true` or `keyVaultPurgeProtection=false`, `evidenceStore=sharepoint` without `sharePointSiteId`, `entraTokenStoreReady` without `enableEntraTokenStore`, and `entraRoleMap` without `entraClientId`.
+* `bicepconfig.json` explicitly enables the core analyzer and sets selected high-value rules to `error`: unused declarations, secrets in parameters or outputs, hardcoded environment URLs or locations, and unsafe resource identifiers. A temporary unused-parameter mutation proves both build and lint return nonzero with the named diagnostic. All entry points and standalone modules, including subscription-scoped governance, build and lint.
+* `tests/test_bicep_policy.py` checks locally compiled JSON, not a committed snapshot. Required public-access properties and module arguments must exist and follow the computed switch, including the optional token store and monitoring ingestion/query settings. Container Apps must be internal and SQL's wide-open development firewall must remain conditional. The full production/development, public-access and purge input matrix proves that production/public or production/no-purge combinations are rejected by the named guard, not silently accepted.
+* Each data service must have its own unconditional endpoint module with the right target, subnet and DNS arguments, an actual private endpoint/connection and DNS-zone-group resources. Existing endpoint tests also check service DNS zones against `network.bicep`. No-shared-key/local-auth assertions cover storage, registry, Foundry, Application Insights, Log Analytics and IoT Hub; forbidden key/credential functions are checked case-insensitively. SQL remains Entra-only without an administrator login/password. Key Vault retains profile-driven purge protection, soft delete and RBAC.
+* Both `audit-archive` and `ledger-digests` must have policies on the correct container with positive, constrained retention. Mutated deep copies of the real compiled template must fail the same assertions for removed/disconnected endpoints, missing/public network settings or forwarding, external environment mode, unconditional SQL firewall, key authentication/functions, SQL authentication, purge protection, wrong/missing/zero retention and production guard bypass. Mutations never alter working Bicep files.
+* `modules/guard.bicep` uses descriptive `@minLength(1)` parameter constraints; every main resource waits for the guard directly or transitively. CI sets `REQUIRE_AZ_BICEP=1`, so absence of `az` fails rather than skips the compiled checks. Named rejection cases cover production/public access or disabled purge protection, pilot/development, public edge without production isolation or applications, SharePoint without a site ID, token-store readiness without the store, and a role map without an Entra client ID.
 
-Open items: confirm in a subscription that `az deployment group validate` (or `what-if`) reports the guard parameter name and description for an unsupported combination (not verified here, no Azure session); the tests check the compiled template, not the deployed resources, so live policy evidence (for example Azure Policy compliance) remains separate.
+Findings addressed in this offline slice (2026-10-16, Refs #139): audit retention
+previously lacked the positive minimum already used for digest retention; it
+now has `@minValue(1)`. All-file build exposed governance policy IDs incorrectly
+prefixed by the subscription ID; built-in definitions now use
+`tenantResourceId('Microsoft.Authorization/policyDefinitions', ...)`, with a
+compiled regression. Policy stays audit-only and Defender stays Free by default.
+Existing lint configuration and guards were reused, not newly invented.
+
+Limits and open items: immutability policies are intentionally created
+**unlocked**, not irreversible locked WORM; the 365-day defaults are not an
+approved legal retention schedule. Locking and retention approval remain owner
+actions, not something these tests perform. Confirm in a subscription that ARM
+validation reports the named guard and description and that deployed networking,
+DNS and the optional Front Door origin work; none is established by compiled
+JSON. No deployment, what-if, Azure Policy compliance check or #138 pipeline
+work is part of this offline gate.
 
 ## Development access from external networks
 
@@ -713,12 +742,8 @@ checks, not established by CLI authentication.
 
 ## Validate locally
 
-```bash
-az bicep build --file infra/main.bicep --stdout > /dev/null
-az bicep lint --file infra/main.bicep
-az bicep build --file infra/governance.bicep --stdout > /dev/null
-python3 -m unittest infra/tests/test_governance.py
-```
+Use the complete offline commands in [Quality gates](#quality-gates), including
+all Bicep entry points, compiled controls, mutation regressions and scoped ruff.
 
 ## IoT Hub (issue 140, ADR 0003 decision 6)
 
