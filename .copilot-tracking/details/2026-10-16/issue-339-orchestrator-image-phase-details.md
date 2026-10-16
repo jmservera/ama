@@ -14,8 +14,8 @@ ms.date: 2026-10-16
 <!-- rpi:phase id=P01 -->
 ## P01: Normalize and verify the deployment CLI
 
-Status: implementation validated; review and publication pending.
-P01-T01 complete; P01-T02 documentation/validation complete, publication pending.
+Status: complete; implementation validated, reviewed and published.
+P01-T01 and P01-T02 complete.
 No unresolved product decisions.
 Scope is explicit input only; do not normalize discovery outputs or change
 authentication, Bicep or setup-entra. Do not invoke live Azure.
@@ -51,3 +51,5 @@ whitespace-resolution and three padded explicit-image cases). After trimming:
 19 methods passed, including all 12 blank-resolution and six explicit-image
 subcases. Scoped Ruff lint/format and mypy passed. CLI help and diff check passed.
 README and append-only log updated. Full commands in changes artifact.
+One Review completed without defects. Implementation commit 56d2d7c pushed;
+PR https://github.com/jmservera/ama/pull/366 opened against main using Refs #339.

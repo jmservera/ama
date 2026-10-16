@@ -9,9 +9,10 @@ ms.date: 2026-10-16
 Task ID: issue-339. Slug: issue-339-orchestrator-image.
 Full plan scope: P01-T01 and P01-T02.
 Plan: .copilot-tracking/plans/2026-10-16/issue-339-orchestrator-image-plan.md.
-Implementation validated; P01-T01 complete. P01-T02 documentation and validation
-complete, publication pending. One critique complete, PC-001 disposed by parent
-in plan. No product blockers or significant divergences.
+Implementation validated; P01-T01 and P01-T02 complete. One critique complete,
+PC-001 disposed by parent in plan. One Review Complete, Conformant for assessed
+CLI/tests/docs. Publication completed afterward. No product blockers or
+significant divergences.
 
 ## Validation Preparation
 
@@ -55,7 +56,7 @@ run the real local deployment CLI against fake az; no HTTP application changed,
 so unrelated application startup is not needed. No Azure commands or live
 deployment validation performed; no live acceptance claimed.
 
-## Acceptance Audit Before Publication
+## Final Acceptance Audit
 
 | Criterion | Result | Evidence |
 | --- | --- | --- |
@@ -63,13 +64,22 @@ deployment validation performed; no live acceptance claimed.
 | AC2 current image / warned placeholder | Pass | Both resolution outcomes for each blank input/action; warning presence/absence |
 | AC3 padded explicit images | Pass | All six tag/digest/placeholder subcases; one deployment call, no discovery |
 | AC4 both actions / existing behavior | Pass | What-if/create exact command and image assertions; all 19 deploy regressions |
-| AC5 documentation / artifacts / PR | Partial | README/log/research/plan/changes present; Review and publication pending |
+| AC5 documentation / artifacts / PR | Pass | README/log/RPI artifacts; one completed Review; implementation commit 56d2d7c pushed and PR #366 opened |
 
 Issue #339 contains prose rather than a checkbox list. These criteria decompose
 that request plus caller constraints; no issue body changes were made.
 
-## Remaining Work and Review Handoff
+## Publication and Closeout
 
-Execute one post-implementation review of current CLI/tests/docs and evidence.
-Then commit/push/open PR with `Refs #339`; publication evidence completes AC5.
-No implementation blockers, open defects or routed follow-ups currently known.
+One post-implementation Review completed, Conformant for CLI/tests/docs; no
+findings or routed follow-ups. Parent completed publication afterward:
+
+* Implementation commit: 56d2d7c.
+* Branch: fix/orchestrator-image-whitespace-339, pushed to origin.
+* PR: https://github.com/jmservera/ama/pull/366, base main, body uses Refs #339.
+* Repository-local author/committer email verified from authenticated account;
+  required Copilot trailer included.
+* Hosted checks remain pending; no merge, issue ticks or live acceptance claim.
+
+All requested offline criteria met. This closeout update records publication,
+not another implementation or Review iteration.

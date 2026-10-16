@@ -9,7 +9,7 @@ ms.date: 2026-10-16
 * Task ID: issue-339
 * Task slug: issue-339-orchestrator-image
 * Plan date: 2026-10-16
-* Planning status: Ready; implementation validated, publication pending
+* Planning status: Complete; implemented, reviewed and published
 * Phase details: .copilot-tracking/details/2026-10-16/issue-339-orchestrator-image-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-16/issue-339-orchestrator-image-plan-critique.md
 
@@ -78,7 +78,7 @@ No live deployment acceptance is claimed.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Normalize and verify the deployment CLI
+### [x] P01: Normalize and verify the deployment CLI
 
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Add regression coverage and normalize input
@@ -91,7 +91,7 @@ No live deployment acceptance is claimed.
   Regression coverage: existing deploy suite, including authentication/errors.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Document, validate and publish
+#### [x] P01-T02: Document, validate and publish
 
 * Update infra README and append reference log; run focused unit tests, scoped
   Ruff/format/mypy and local CLI help. No service app changed, so no unrelated
@@ -122,7 +122,9 @@ No live deployment acceptance is claimed.
 ## Handoff
 
 * Changes: .copilot-tracking/changes/2026-10-16/issue-339-orchestrator-image-changes.md
-* Ready task after critique: P01-T01.
-* Implementation validated; P01-T02 publication remains pending.
-* Review scope: completed CLI/test/doc changes, then publication.
+* All plan tasks complete. CLI/test/doc Review executed once: Complete,
+  Conformant. Publication completed afterward by parent, not a second Review.
+* PR: https://github.com/jmservera/ama/pull/366 (Refs #339), main base.
+* Implementation commit: 56d2d7c; pushed without force.
+* Merge and issue ticks remain coordinator/owner decisions, not task blockers.
 * Blockers: none; critique finding disposition recorded.
