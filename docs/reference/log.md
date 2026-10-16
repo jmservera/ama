@@ -3577,3 +3577,11 @@ metadata when the knowledge base was created.
   Documented this as a known limit in `src/core/README.md`, pinned it with a
   core test, and asked the owner on #86 whether renewed contact restarts the
   period. No restart rule was invented.
+
+## [2026-10-16] update | Coordinator guards against accidental issue closing
+
+* PRs #321 and #326 auto-closed #200 and #86 because their bodies contained
+  close keywords followed by an issue number, one of them negated. Both issues
+  were reopened with a comment. The coordinator merge gate now checks
+  `closingIssuesReferences` before merging and reopens issues closed with unmet
+  acceptance.
