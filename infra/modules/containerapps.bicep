@@ -237,7 +237,7 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (!empty(tokenMaintena
     template: {
       containers: [{
         name: 'auth-renewal'
-        image: apiImage
+        image: orchestratorImage
         command: ['python', '-m', 'zava_forward.orchestrator.token_store']
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
@@ -376,7 +376,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = {
       containers: [
         {
           name: 'ledger-verify'
-          image: apiImage
+          image: orchestratorImage
           command: ['python', '-m', 'zava_forward.orchestrator.digest_blob', '--publish']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [

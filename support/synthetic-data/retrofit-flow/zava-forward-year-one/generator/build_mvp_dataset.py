@@ -31,7 +31,7 @@ from zava_forward.core.synthetic import stock_fabric as zf_stock_fabric
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGISTER = os.path.join(HERE, "..", "stock-geography", "private-north-east-stock-register.csv")
 from zf_mvp_coverage import enrich, receipt
-from zava_forward.core.synthetic import output_dir
+from zava_forward.core.data_paths import data_file
 
 STAGE = {
     "Identified": "Home identified", "Lease review": "Checking lease", "Deferred (resequenced)": "Rescheduled",
@@ -140,7 +140,7 @@ def shift(d, off):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260901)
-    ap.add_argument("--out", default=str(output_dir("zavaforward.json")))
+    ap.add_argument("--out", default=str(data_file()))
     ap.add_argument("--as-of", type=date.fromisoformat, default=date.today())
     a = ap.parse_args()
     seed = a.seed

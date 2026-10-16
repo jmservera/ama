@@ -8,7 +8,7 @@ a Directory Readers identity.
 
 Usage: create-sql-users.py <resource-group> <sql-server-name> <database> <identity-prefix>
 Example: create-sql-users.py ama sql-forward-test-rzsrg retrofit id-forward-test
-Needs the mssql-python driver (src/api/requirements.txt), for example on PYTHONPATH.
+Install the driver first: pip install --require-hashes -r src/api/requirements.txt.
 """
 import json
 import struct
