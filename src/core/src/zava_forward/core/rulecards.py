@@ -8,6 +8,7 @@ change is recorded as a review item and never alters an approved card. The two s
 labelled exercise fixtures: their approvals are simulated and are not law or real approval.
 """
 import json
+import re
 import sqlite3
 from contextlib import contextmanager
 from datetime import date
@@ -239,10 +240,17 @@ class RuleCardStore:
     @_mutation
     def activate(self, card_id, version, actor, role, today=None):
         """Make an approved version active, retiring nothing silently: any other active version is superseded by a retire event."""
+        from zava_forward.core.source_monitor import activation_guard
+        activation_guard(self, card_id)
+        self._activate(card_id, version, actor, role, today)
+
+    def _activate(self, card_id, version, actor, role, today=None):
         c = self._owner_only(card_id, version, actor, role)
         if self.state(card_id, version) != "approved":
             raise RuleError("only an approved version can be activated")
-        today = today or date.today().isoformat()
+        today = _day(today or date.today().isoformat())
+        if today < c["effective"] or (c["retirement"] and today >= c["retirement"]):
+            raise RuleError("activation must be within the card's effective dates")
         for row in self.sql.all("SELECT version FROM rule_card_version WHERE card_id=? AND version<>?", (card_id, version)):
             v = row["version"]
             if self.state(card_id, v) in ("active", "held"):
@@ -258,6 +266,8 @@ class RuleCardStore:
 
     @_mutation
     def release(self, card_id, version, actor, role, today=None):
+        from zava_forward.core.source_monitor import activation_guard
+        activation_guard(self, card_id)
         c = self._owner_only(card_id, version, actor, role)
         if self.state(card_id, version) != "held":
             raise RuleError("only a held card can be released")
@@ -306,7 +316,15 @@ class RuleCardStore:
     def source_changed(self, source_id, source_version, today=None, source_effective=None, prior_version=None):
         return self._source_changed(source_id, source_version, today, source_effective, prior_version)
 
-    def _source_changed(self, source_id, source_version, today=None, source_effective=None, prior_version=None):
+    def _source_cards(self, source_id):
+        found = set()
+        for row in self.sql.all("SELECT card_id, provisions FROM rule_card_version"):
+            for citation in json.loads(row["provisions"]):
+                if re.split(r"[@,\s(]", citation, maxsplit=1)[0] == source_id:
+                    found.add(row["card_id"])
+        return sorted(found)
+
+    def _source_changed(self, source_id, source_version, today=None, source_effective=None, prior_version=None, context=None):
         """Record a review item for each card citing the source. Approved cards are never modified.
 
         Each item names the affected rule card, its active version, the requirements and tests the card traces to,
@@ -316,11 +334,12 @@ class RuleCardStore:
         today = today or date.today().isoformat()
         prior_version = source_version - 1 if prior_version is None and source_version > 1 else prior_version
         hit = []
-        for row in self.sql.all("SELECT DISTINCT card_id FROM rule_card_version WHERE provisions LIKE ?", (f"%{source_id}%",)):
-            cid = row["card_id"]
+        for cid in self._source_cards(source_id):
             t = TRACE.get(cid, {})
             affected = dict(rules=[cid], active_version=self.is_active(cid, today), requirements=t.get("requirements", []), tests=t.get("tests", []),
-                            unmapped=not t)
+                            journeys=[], communications=[], unmapped=not t)
+            if context:
+                affected.update(context)
             self.sql.run("INSERT INTO rule_card_review (id, card_id, source_id, source_version, detected, status, note, affected, prior_version, source_effective) VALUES (?,?,?,?,?,?,?,?,?,?)",
                             (self._next_id("rule_card_review"), cid, source_id, source_version, today, "open", "Source changed. Owner to review and, if needed, draft a new card version.",
                              json.dumps(affected), prior_version, source_effective))
@@ -329,6 +348,10 @@ class RuleCardStore:
 
     @_mutation
     def assess_review(self, review_id, actor, role, today=None, *, interpretation, outcome, tests, effective, notification, rollback, hold=None):
+        return self._assess_review(review_id, actor, role, today, interpretation=interpretation, outcome=outcome,
+                                   tests=tests, effective=effective, notification=notification, rollback=rollback, hold=hold)
+
+    def _assess_review(self, review_id, actor, role, today=None, *, interpretation, outcome, tests, effective, notification, rollback, hold=None):
         """Record the named owner's assessment of a review item (RULE-021, AC-068). Only the owner of the card can do this.
 
         outcome is no_change or new_version_required. A new version still needs propose, approve and activate.
@@ -345,6 +368,7 @@ class RuleCardStore:
         if outcome not in ("no_change", "new_version_required"):
             raise RuleError("outcome must be no_change or new_version_required")
         rec = dict(interpretation=interpretation, outcome=outcome, tests=tests, effective=effective, notification=notification, rollback=rollback, hold=hold)
+        rec.update(simulated=bool(c["exercise"]), label=EXERCISE_LABEL if c["exercise"] else None)
         missing = [k for k in ("interpretation", "tests", "effective", "notification", "rollback") if not rec[k]]
         if missing:
             raise RuleError("missing assessment fields: " + ", ".join(missing))

@@ -178,6 +178,50 @@ def evaluate(
     return out
 
 
+def citation_eligibility(
+    law: Any, card: dict[str, Any], day: str
+) -> tuple[list[dict[str, Any]], str]:
+    """Shared runtime/release eligibility; discovery candidates are not provisions."""
+    citations = []
+    state = "active"
+    for pid in card["provisions"]:
+        try:
+            p = law.provision(pid)
+        except KeyError:
+            citations.append(dict(id=pid, status="missing"))
+            state = "unknown"
+            continue
+        latest = law.source(p["source_id"])["versions"][0]
+        citations.append(
+            {
+                k: p[k]
+                for k in (
+                    "id",
+                    "source_id",
+                    "version",
+                    "status",
+                    "effective",
+                    "retrieved",
+                    "review_status",
+                    "completeness",
+                    "hash",
+                )
+            }
+        )
+        if p["status"] in ("consultation", "historical") or p["effective"] and p["effective"] > day:
+            if state != "unknown":
+                state = "not applicable"
+        elif (
+            p["status"] not in ("in_force", "guidance")
+            or p["version"] != latest["version"]
+            or p["completeness"] != "full"
+            or p["review_status"] != "reviewed"
+            or p["retrieved"] > day
+        ):
+            state = "unknown"
+    return citations, state
+
+
 class RuleEngine:
     """Adapt legacy SQL/card interfaces; all output is exercise evidence, not legal approval."""
 
@@ -212,48 +256,7 @@ class RuleEngine:
                         )
 
     def _citations(self, card: dict[str, Any], day: str) -> tuple[list[dict[str, Any]], str]:
-        citations = []
-        state = "active"
-        for pid in card["provisions"]:
-            try:
-                p = self.law.provision(pid)
-            except KeyError:
-                citations.append(dict(id=pid, status="missing"))
-                state = "unknown"
-                continue
-            latest = self.law.source(p["source_id"])["versions"][0]
-            citations.append(
-                {
-                    k: p[k]
-                    for k in (
-                        "id",
-                        "source_id",
-                        "version",
-                        "status",
-                        "effective",
-                        "retrieved",
-                        "review_status",
-                        "completeness",
-                        "hash",
-                    )
-                }
-            )
-            if (
-                p["status"] in ("consultation", "historical")
-                or p["effective"]
-                and p["effective"] > day
-            ):
-                if state != "unknown":
-                    state = "not applicable"
-            elif (
-                p["status"] not in ("in_force", "guidance")
-                or p["version"] != latest["version"]
-                or p["completeness"] != "full"
-                or p["review_status"] != "reviewed"
-                or p["retrieved"] > day
-            ):
-                state = "unknown"
-        return citations, state
+        return citation_eligibility(self.law, card, day)
 
     def run(
         self,

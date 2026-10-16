@@ -3577,3 +3577,27 @@ metadata when the knowledge base was created.
   Documented this as a known limit in `src/core/README.md`, pinned it with a
   core test, and asked the owner on #86 whether renewed contact restarts the
   period. No restart rule was invented.
+
+## [2026-10-16] ingest | Offline source monitoring and regulatory reviews (Refs #213)
+
+* Extended delivered #127 on the merged #210/#211/#212 stores and evaluator,
+  entirely in `src/`. Added append-only per-source configuration, local
+  observations, unverified candidate differences, exact affected card
+  histories and explicit requirements/journeys/tests/communications.
+  Candidates remain outside the current law versions and search index;
+  detection never changes approved cards.
+* Recorded the exercise Legal, Compliance and DPO owner as Juan Manuel
+  Servera. Simulated provenance/completeness assessment binds exact targets,
+  fixture regression plans and effective dates; latest failures and stale
+  source/configuration/card evidence prevent activation. Named owner
+  rollback preserves prior events and cannot override intervening decisions.
+  No real approval, new legal interpretation or operational acceptance is
+  asserted.
+* Updated the [core contract and six-criterion audit](../../src/core/README.md#source-change-monitoring-and-review-213),
+  [offline job recipe](../../src/orchestrator/README.md#offline-source-change-job-213),
+  source index and knowledge routing. The job has no network, approval,
+  activation or communication path; no endpoint or role inventory changed.
+* Live official retrieval, hosted scheduling/missing-run alerts, exhaustive
+  impact mapping, verified new-source publication, actual human legal
+  approval, operational regression/notification delivery and live Azure/SQL
+  verification remain unmet. Refs #213, never issue closure.

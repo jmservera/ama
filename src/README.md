@@ -22,6 +22,10 @@ Skeleton projects created for issue #290 (ADR 0006 phase 1). They contain a vers
 
 ## Dependency rule
 
+The #213 offline [source-change job](./orchestrator/README.md#offline-source-change-job-213)
+uses the shared [monitor and owner-review contract](./core/README.md#source-change-monitoring-and-review-213).
+No API endpoint, deployment, live scraping or legal approval is added.
+
 * `api`, `agents`, `orchestrator` and `importer` may import `core`.
 * `api` may also import `agents` until #144 deploys `agents` as its own workload.
 * No project imports `api`, and `core` imports no workload.
