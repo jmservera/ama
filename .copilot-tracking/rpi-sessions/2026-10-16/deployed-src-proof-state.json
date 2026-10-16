@@ -1,0 +1,74 @@
+{
+  "task_id": "issues-200-201-deployed-src-proof",
+  "task_slug": "deployed-src-proof",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/deployed-src-proof-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/deployed-src-proof-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/deployed-src-proof-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-16/deployed-src-proof-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/deployed-src-proof-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/deployed-src-proof-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full lifecycle through explicit rpi-quick parent; Research executed, Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": "User requests complete deployment proof, RPI artifacts, push and PR; research artifact"
+    },
+    {
+      "decision": "Only ama; SQL public access disabled; all private data-plane execution inside VNet; no tenant or private roster fabrication",
+      "status": "confirmed",
+      "evidence": "Owner direction 2026-10-16"
+    },
+    {
+      "decision": "Single critique executed: Revise; PC-001 through PC-006 applied directly; plan Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-10-16/deployed-src-proof-plan.md"
+    },
+    {
+      "decision": "Single post-implementation Review executed Complete; outcome Residual work; bounded private proof supported, tenant/owner acceptance not complete",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/deployed-src-proof-review.md; RV-001 through RV-003 routed to distinct follow-ups"
+    },
+    {
+      "decision": "Requested manual delivery published; no automatic session or residual work started; issues remain open",
+      "status": "confirmed",
+      "evidence": "Commit 36dde3b5d0e8c939f1673989e475a1f9d0ce23d6 pushed to feat/deployed-from-src-proof-200; https://github.com/jmservera/ama/pull/342 targets main with Refs #200 and Refs #201; checks started"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "tenant-authorized-http",
+      "summary": "MI token acquisition for existing application returned HTTP 400; authorized HTTP not proved",
+      "resolution": "Owner or tenant administrator supplies approved API audience and role prerequisites; preserve private ingress and human/staff separation"
+    },
+    {
+      "id": "human-staff-initialization",
+      "summary": "No approved private roster or tenant Graph access; application lookup returned Insufficient privileges",
+      "resolution": "Owner supplies approved roster and tenant-authorized initialization path; do not fabricate staff"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Owner reviews PR 342 and supplies approved tenant/staff prerequisites for ranked follow-ups; no merge, sign-off or further implementation inferred"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve tenant prerequisites and prove authorized HTTP and staff initialization",
+      "rationale": "Only remaining requested smoke blockers; prerequisite ownership is outside RG permissions",
+      "evidence": "cutover-azure-evidence.json smoke.authorized_http and smoke.staff_initialization"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain functional worker acceptance and remaining owner cut-over evidence",
+      "rationale": "Image/CLI startup and synthetic persistence are not product or private-data acceptance",
+      "evidence": "cutover-evidence-pack.md worker bounds and unchecked owner checklist"
+    }
+  ]
+}

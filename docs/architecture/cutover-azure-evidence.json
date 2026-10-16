@@ -1,5 +1,5 @@
 {
-  "observed_at_utc": "2026-10-16T12:31:35.130956+00:00",
+  "observed_at_utc": "2026-10-16T14:24:20.822647+00:00",
   "base_commit": "aedd616ffff8abfcf0379a538b895e4427147c8f",
   "build_source": "local src working tree after integrating upstream 79b153b plus this PR additions; not a Git-context build",
   "resource_group_id": "/subscriptions/<subscription-id>/resourceGroups/ama",
@@ -15,7 +15,7 @@
     }
   },
   "deployment": {
-    "correlationId": "4758806b-a539-494a-a02e-4433215b7c27",
+    "correlationId": "<redacted-guid>",
     "error": {
       "additionalInfo": null,
       "code": "DeploymentFailed",
@@ -101,7 +101,7 @@
   },
   "iot_provider": {
     "namespace": "Microsoft.Devices",
-    "state": "NotRegistered"
+    "state": "Registered"
   },
   "image_run": {
     "createTime": "2026-10-16T12:24:07.826366+00:00",
@@ -143,14 +143,78 @@
     "orchestrator image contract PASS",
     "importer image contract PASS"
   ],
-  "deployed_apps": [],
+  "deployed_apps": [
+    {
+      "fqdn": "ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/containerapps/ca-cutover-test-api",
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+      "name": "ca-cutover-test-api",
+      "ready": "ca-cutover-test-api--bl42b7u",
+      "revision": "ca-cutover-test-api--bl42b7u",
+      "state": "Succeeded"
+    },
+    {
+      "fqdn": null,
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/containerapps/ca-cutover-test-agents",
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:79ec0c252c22e271fb5e833437dab1e217cca7f46cc683a48e4216c9c917fcf0",
+      "name": "ca-cutover-test-agents",
+      "ready": "ca-cutover-test-agents--z34vcua",
+      "revision": "ca-cutover-test-agents--z34vcua",
+      "state": "Succeeded"
+    }
+  ],
   "smoke": {
-    "status": "Blocked",
-    "endpoint_discovery_exit": 1,
-    "error": "ResourceNotFound: ca-cutover-test-api",
-    "health": "Not run: no endpoint",
-    "anonymous_api_denial": "Not run: no endpoint",
-    "authenticated_sql": "Not run: prerequisites unavailable"
+    "status": "Partially passed",
+    "bounded_private_infrastructure": "Passed",
+    "scope": "One-case synthetic infrastructure proof only, not continuing-stock or staff acceptance",
+    "health": {
+      "status": "Passed",
+      "http_status": 200,
+      "before_and_after_restart": true
+    },
+    "anonymous_api_denial": {
+      "status": "Passed",
+      "http_status": 401,
+      "path": "/api/me"
+    },
+    "malformed_bearer_denial": {
+      "status": "Passed",
+      "http_status": 401
+    },
+    "forged_principal_denial": {
+      "status": "Passed",
+      "http_status": 401
+    },
+    "sql_initialization": {
+      "status": "Passed",
+      "identity": "dedicated initializer MI",
+      "cases": 1,
+      "staff": 0
+    },
+    "authenticated_sql": {
+      "status": "Passed",
+      "identity": "API MI",
+      "seed_available": false
+    },
+    "restart_persistence": {
+      "status": "Passed",
+      "all_replicas_replaced": true,
+      "seed_available": false
+    },
+    "authorized_http": {
+      "status": "Blocked",
+      "phase": "MI token acquisition",
+      "http_status": 400,
+      "reason": "Existing application resource token unavailable; no workbench registration/app role or human staff binding supplied. No tenant permissions changed."
+    },
+    "staff_initialization": {
+      "status": "Blocked",
+      "reason": "No owner-supplied private human roster or approved tenant Graph permissions; read-only application lookup denied with Insufficient privileges."
+    },
+    "valid_token_issuer_audience_acceptance": {
+      "status": "Not run"
+    },
+    "owner_sign_off": "Not requested or inferred; all checklist items remain unchecked"
   },
   "retained_resources": [
     {
@@ -189,18 +253,13 @@
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.services.ai.azure.com",
-      "name": "privatelink.services.ai.azure.com",
-      "type": "Microsoft.Network/privateDnsZones"
-    },
-    {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net",
-      "name": "privatelink.database.windows.net",
-      "type": "Microsoft.Network/privateDnsZones"
-    },
-    {
       "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.monitor.azure.com",
       "name": "privatelink.monitor.azure.com",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.services.ai.azure.com",
+      "name": "privatelink.services.ai.azure.com",
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
@@ -209,8 +268,8 @@
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.azurecr.io",
-      "name": "privatelink.azurecr.io",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net",
+      "name": "privatelink.database.windows.net",
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
@@ -219,18 +278,23 @@
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net",
-      "name": "privatelink.blob.core.windows.net",
-      "type": "Microsoft.Network/privateDnsZones"
-    },
-    {
       "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.com",
       "name": "privatelink.oms.opinsights.azure.com",
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.azurecr.io",
+      "name": "privatelink.azurecr.io",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
       "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net",
       "name": "privatelink.queue.core.windows.net",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net",
+      "name": "privatelink.blob.core.windows.net",
       "type": "Microsoft.Network/privateDnsZones"
     },
     {
@@ -354,8 +418,8 @@
       "type": "Microsoft.Network/privateEndpoints"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-ampls-cutover-test.nic.1594de99-1566-4151-9663-fcfdd8fdec66",
-      "name": "pe-ampls-cutover-test.nic.1594de99-1566-4151-9663-fcfdd8fdec66",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-ampls-cutover-test.nic.<redacted-guid>",
+      "name": "pe-ampls-cutover-test.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
@@ -424,28 +488,28 @@
       "type": "Microsoft.Network/privateEndpoints"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-queue.nic.1ddfd037-2785-4fae-b574-883244181dd7",
-      "name": "pe-stcutovertestrzsrg-queue.nic.1ddfd037-2785-4fae-b574-883244181dd7",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-queue.nic.<redacted-guid>",
+      "name": "pe-stcutovertestrzsrg-queue.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-blob.nic.2f3de8c1-83d3-4e03-a836-f9d27a4bd6a1",
-      "name": "pe-stcutovertestrzsrg-blob.nic.2f3de8c1-83d3-4e03-a836-f9d27a4bd6a1",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-blob.nic.<redacted-guid>",
+      "name": "pe-stcutovertestrzsrg-blob.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-kv-cutovertest-rzsrg.nic.d0e3f239-6c7d-4fd2-a5d7-bd0d6f87c5cb",
-      "name": "pe-kv-cutovertest-rzsrg.nic.d0e3f239-6c7d-4fd2-a5d7-bd0d6f87c5cb",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-kv-cutovertest-rzsrg.nic.<redacted-guid>",
+      "name": "pe-kv-cutovertest-rzsrg.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-crcutovertestrzsrg.nic.581a4025-6197-43bf-9102-7af7e8083823",
-      "name": "pe-crcutovertestrzsrg.nic.581a4025-6197-43bf-9102-7af7e8083823",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-crcutovertestrzsrg.nic.<redacted-guid>",
+      "name": "pe-crcutovertestrzsrg.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-aif-cutover-test-rzsrg.nic.823cc344-e8b8-4f68-986b-88bc83d678eb",
-      "name": "pe-aif-cutover-test-rzsrg.nic.823cc344-e8b8-4f68-986b-88bc83d678eb",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-aif-cutover-test-rzsrg.nic.<redacted-guid>",
+      "name": "pe-aif-cutover-test-rzsrg.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
@@ -469,14 +533,124 @@
       "type": "Microsoft.Network/privateEndpoints"
     },
     {
-      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-sql-cutover-test-rzsrg.nic.15a1c17e-15c6-461f-851a-0a2ac4d9cde6",
-      "name": "pe-sql-cutover-test-rzsrg.nic.15a1c17e-15c6-461f-851a-0a2ac4d9cde6",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-sql-cutover-test-rzsrg.nic.<redacted-guid>",
+      "name": "pe-sql-cutover-test-rzsrg.nic.<redacted-guid>",
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
       "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/microsoft.insights/actiongroups/Application Insights Smart Detection",
       "name": "Application Insights Smart Detection",
       "type": "microsoft.insights/actiongroups"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.EventGrid/systemTopics/stcutovertestrzsrg-<redacted-guid>",
+      "name": "stcutovertestrzsrg-<redacted-guid>",
+      "type": "Microsoft.EventGrid/systemTopics"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init",
+      "name": "id-cutover-test-init",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg",
+      "name": "iot-cutover-test-rzsrg",
+      "type": "Microsoft.Devices/IotHubs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Insights/metricalerts/alert-cutover-test-sql-cpu",
+      "name": "alert-cutover-test-sql-cpu",
+      "type": "Microsoft.Insights/metricalerts"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+      "name": "cae-cutover-test",
+      "type": "Microsoft.App/managedEnvironments"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateEndpoints/pe-iot-cutover-test-rzsrg",
+      "name": "pe-iot-cutover-test-rzsrg",
+      "type": "Microsoft.Network/privateEndpoints"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/networkInterfaces/pe-iot-cutover-test-rzsrg.nic.<redacted-guid>",
+      "name": "pe-iot-cutover-test-rzsrg.nic.<redacted-guid>",
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+      "name": "jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+      "type": "Microsoft.Network/privateDnsZones"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init",
+      "name": "job-cutover-test-init",
+      "type": "Microsoft.App/jobs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/privateDnsZones/jollytree-20e6e99e.uksouth.azurecontainerapps.io/virtualNetworkLinks/link-cutover-test",
+      "name": "jollytree-20e6e99e.uksouth.azurecontainerapps.io/link-cutover-test",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-verify",
+      "name": "job-cutover-test-verify",
+      "type": "Microsoft.App/jobs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Insights/scheduledqueryrules/alert-cutover-test-ledger-digest-mismatch",
+      "name": "alert-cutover-test-ledger-digest-mismatch",
+      "type": "Microsoft.Insights/scheduledqueryrules"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Insights/scheduledqueryrules/alert-cutover-test-ledger-verify-missing",
+      "name": "alert-cutover-test-ledger-verify-missing",
+      "type": "Microsoft.Insights/scheduledqueryrules"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-ledger-verify",
+      "name": "job-cutover-test-ledger-verify",
+      "type": "Microsoft.App/jobs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-import",
+      "name": "job-cutover-test-import",
+      "type": "Microsoft.App/jobs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-api",
+      "name": "ca-cutover-test-api",
+      "type": "Microsoft.App/containerApps"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-agents",
+      "name": "ca-cutover-test-agents",
+      "type": "Microsoft.App/containerApps"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-orchestrator",
+      "name": "job-cutover-test-orchestrator",
+      "type": "Microsoft.App/jobs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Insights/metricalerts/alert-cutover-test-api-5xx",
+      "name": "alert-cutover-test-api-5xx",
+      "type": "Microsoft.Insights/metricalerts"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Insights/metricalerts/alert-cutover-test-api-restarts",
+      "name": "alert-cutover-test-api-restarts",
+      "type": "Microsoft.Insights/metricalerts"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-smoke",
+      "name": "job-cutover-test-smoke",
+      "type": "Microsoft.App/jobs"
+    },
+    {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-mi-http",
+      "name": "job-cutover-test-mi-http",
+      "type": "Microsoft.App/jobs"
     }
   ],
   "retained_budgets": [
@@ -572,7 +746,7 @@
     },
     "apply_exit_code": 1,
     "deployment": {
-      "correlationId": "d32ef897-d489-4fb9-a259-c614322cbc8e",
+      "correlationId": "<redacted-guid>",
       "error": {
         "additionalInfo": null,
         "code": "DeploymentFailed",
@@ -664,5 +838,543 @@
     },
     "deployed_apps": [],
     "smoke": "Blocked: no application endpoint; no HTTP pass"
+  },
+  "historical_smoke": {
+    "status": "Blocked",
+    "endpoint_discovery_exit": 1,
+    "error": "ResourceNotFound: ca-cutover-test-api",
+    "health": "Not run: no endpoint",
+    "anonymous_api_denial": "Not run: no endpoint",
+    "authenticated_sql": "Not run: prerequisites unavailable"
+  },
+  "historical_iot_provider": {
+    "namespace": "Microsoft.Devices",
+    "state": "NotRegistered"
+  },
+  "historical_retained_resource_count": 65,
+  "private_continuation": {
+    "observed_at_utc": "2026-10-16T14:24:20.822647+00:00",
+    "source_base": "3c2d9e9",
+    "authorization": "Owner task direction 2026-10-16: ama costs accepted, RG Owner; no policy/tag/firewall bypass or peering",
+    "deployment": {
+      "error": null,
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Resources/deployments/main",
+      "state": "Succeeded",
+      "time": "2026-10-16T14:17:06.699335+00:00"
+    },
+    "bootstrap": {
+      "status": "Succeeded",
+      "timestamp": "2026-10-16T14:03:51.478673+00:00"
+    },
+    "what_if_counts": {
+      "bootstrap": {
+        "Create": 9,
+        "Modify": 43,
+        "NoChange": 47,
+        "Unsupported": 18,
+        "Ignore": 11,
+        "Delete": 0
+      },
+      "initial_rollout": {
+        "Create": 10,
+        "Modify": 47,
+        "NoChange": 52,
+        "Unsupported": 18,
+        "Ignore": 16,
+        "Delete": 0
+      },
+      "corrected_rollout": {
+        "Create": 2,
+        "Modify": 53,
+        "NoChange": 54,
+        "Unsupported": 18,
+        "Ignore": 17,
+        "Delete": 0
+      }
+    },
+    "initial_rollout_failure": [
+      {
+        "error": {
+          "error": {
+            "additionalInfo": null,
+            "code": "BadRequest",
+            "details": null,
+            "message": "'where' operator: Failed to resolve table or column expression named 'ContainerAppConsoleLogs_CL'. A semantic error occurred.. The request had some invalid properties Activity ID: <redacted-guid>.",
+            "target": null
+          },
+          "status": "Failed"
+        },
+        "name": "alert-cutover-test-ledger-verify-missing"
+      },
+      {
+        "error": {
+          "error": {
+            "additionalInfo": null,
+            "code": "BadRequest",
+            "details": null,
+            "message": "'where' operator: Failed to resolve table or column expression named 'ContainerAppConsoleLogs_CL'. A semantic error occurred.. The request had some invalid properties Activity ID: <redacted-guid>.",
+            "target": null
+          },
+          "status": "Failed"
+        },
+        "name": "alert-cutover-test-ledger-digest-mismatch"
+      }
+    ],
+    "alert_correction": "Use Azure Monitor resource-specific ContainerAppConsoleLogs, JobName and Log; no query-validation bypass",
+    "image_runs": [
+      {
+        "createTime": "2026-10-16T13:50:59.930756+00:00",
+        "finishTime": "2026-10-16T13:52:27.796391+00:00",
+        "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/runs/dba",
+        "outputImages": [
+          {
+            "digest": "sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+            "registry": "crcutovertestrzsrg.azurecr.io",
+            "repository": "zava-forward-api",
+            "tag": "cutover-dba"
+          },
+          {
+            "digest": "sha256:79ec0c252c22e271fb5e833437dab1e217cca7f46cc683a48e4216c9c917fcf0",
+            "registry": "crcutovertestrzsrg.azurecr.io",
+            "repository": "zava-forward-agents",
+            "tag": "cutover-dba"
+          },
+          {
+            "digest": "sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+            "registry": "crcutovertestrzsrg.azurecr.io",
+            "repository": "zava-forward-orchestrator",
+            "tag": "cutover-dba"
+          },
+          {
+            "digest": "sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f",
+            "registry": "crcutovertestrzsrg.azurecr.io",
+            "repository": "zava-forward-importer",
+            "tag": "cutover-dba"
+          }
+        ],
+        "runId": "dba",
+        "startTime": "2026-10-16T13:51:00.132660+00:00",
+        "status": "Succeeded"
+      },
+      {
+        "createTime": "2026-10-16T13:53:04.505004+00:00",
+        "finishTime": "2026-10-16T13:53:24.626268+00:00",
+        "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/runs/dbb",
+        "outputImages": [
+          {
+            "digest": "sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+            "registry": "crcutovertestrzsrg.azurecr.io",
+            "repository": "zava-forward-cutover-proof",
+            "tag": "proof-20261016"
+          }
+        ],
+        "runId": "dbb",
+        "startTime": "2026-10-16T13:53:04.660955+00:00",
+        "status": "Succeeded"
+      }
+    ],
+    "environment": {
+      "domain": "jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+      "internal": true,
+      "ip": "10.40.0.184",
+      "public": "Disabled",
+      "state": "Succeeded",
+      "subnet": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.Network/virtualNetworks/vnet-cutover-test/subnets/snet-aca"
+    },
+    "registry": {
+      "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg",
+      "public": "Disabled",
+      "quarantine": "disabled"
+    },
+    "auth": {
+      "action": "Return401",
+      "clientSecretSettingName": null,
+      "enabled": true,
+      "issuer": "https://login.microsoftonline.com/<tenant-id>/v2.0",
+      "tokenStore": false
+    },
+    "api_revisions": [
+      {
+        "active": true,
+        "health": "Healthy",
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+        "name": "ca-cutover-test-api--bl42b7u",
+        "replicas": 2,
+        "running": "Running"
+      }
+    ],
+    "restart": {
+      "revision": "ca-cutover-test-api--bl42b7u",
+      "before": [
+        "ca-cutover-test-api--bl42b7u-c9c685d79-9pptb",
+        "ca-cutover-test-api--bl42b7u-c9c685d79-dsdq9"
+      ],
+      "after": [
+        "ca-cutover-test-api--bl42b7u-7698b9d7ff-xvgrk",
+        "ca-cutover-test-api--bl42b7u-7698b9d7ff-zzk8d"
+      ],
+      "all_replicas_replaced": true,
+      "status": "Passed"
+    },
+    "jobs": {
+      "job-cutover-test-init": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+          "state": "Succeeded",
+          "trigger": "Manual"
+        },
+        "executions": [
+          {
+            "end": "2026-10-16T14:03:13+00:00",
+            "name": "job-cutover-test-init-siaykij",
+            "start": "2026-10-16T14:02:18+00:00",
+            "status": "Succeeded"
+          }
+        ]
+      },
+      "job-cutover-test-verify": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-verify",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+          "state": "Succeeded",
+          "trigger": "Manual"
+        },
+        "executions": [
+          {
+            "end": "2026-10-16T14:22:48+00:00",
+            "name": "job-cutover-test-verify-8ycguks",
+            "start": "2026-10-16T14:22:20+00:00",
+            "status": "Succeeded"
+          },
+          {
+            "end": "2026-10-16T14:21:32+00:00",
+            "name": "job-cutover-test-verify-pwkpi12",
+            "start": "2026-10-16T14:20:57+00:00",
+            "status": "Succeeded"
+          },
+          {
+            "end": null,
+            "name": "job-cutover-test-verify-qlkf04p",
+            "start": "2026-10-16T14:19:19+00:00",
+            "status": "Failed"
+          },
+          {
+            "end": "2026-10-16T14:04:39+00:00",
+            "name": "job-cutover-test-verify-oerk856",
+            "start": "2026-10-16T14:04:02+00:00",
+            "status": "Succeeded"
+          }
+        ]
+      },
+      "job-cutover-test-smoke": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-smoke",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+          "state": "Succeeded",
+          "trigger": "Manual"
+        },
+        "executions": [
+          {
+            "end": "2026-10-16T14:19:50+00:00",
+            "name": "job-cutover-test-smoke-elvbjnq",
+            "start": "2026-10-16T14:19:20+00:00",
+            "status": "Succeeded"
+          },
+          {
+            "end": "2026-10-16T14:11:51+00:00",
+            "name": "job-cutover-test-smoke-pdil7sg",
+            "start": "2026-10-16T14:11:12+00:00",
+            "status": "Succeeded"
+          }
+        ]
+      },
+      "job-cutover-test-mi-http": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-mi-http",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+          "state": "Succeeded",
+          "trigger": "Manual"
+        },
+        "executions": [
+          {
+            "end": "2026-10-16T14:14:50+00:00",
+            "name": "job-cutover-test-mi-http-4d5qn9m",
+            "start": "2026-10-16T14:14:27+00:00",
+            "status": "Succeeded"
+          }
+        ]
+      },
+      "job-cutover-test-orchestrator": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-orchestrator",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+          "state": "Succeeded",
+          "trigger": "Schedule"
+        },
+        "executions": [
+          {
+            "end": "2026-10-16T14:20:36+00:00",
+            "name": "job-cutover-test-orchestrator-29869340",
+            "start": "2026-10-16T14:20:00+00:00",
+            "status": "Succeeded"
+          },
+          {
+            "end": "2026-10-16T14:20:11+00:00",
+            "name": "job-cutover-test-orchestrator-fquuldv",
+            "start": "2026-10-16T14:19:35+00:00",
+            "status": "Succeeded"
+          },
+          {
+            "end": "2026-10-16T14:15:26+00:00",
+            "name": "job-cutover-test-orchestrator-29869335",
+            "start": "2026-10-16T14:15:00+00:00",
+            "status": "Succeeded"
+          }
+        ]
+      },
+      "job-cutover-test-import": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-import",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-importer@sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f",
+          "state": "Succeeded",
+          "trigger": "Event"
+        },
+        "executions": [
+          {
+            "end": "2026-10-16T14:20:36+00:00",
+            "name": "job-cutover-test-import-tm1jmkt",
+            "start": "2026-10-16T14:20:01+00:00",
+            "status": "Succeeded"
+          }
+        ]
+      },
+      "job-cutover-test-ledger-verify": {
+        "configuration": {
+          "environment": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+          "id": "/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-ledger-verify",
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+          "state": "Succeeded",
+          "trigger": "Schedule"
+        },
+        "executions": []
+      }
+    },
+    "probe_output": {
+      "initialization": [
+        {
+          "check": "sql_private_dns",
+          "addresses": [
+            "10.40.4.25"
+          ],
+          "status": "Passed"
+        },
+        {
+          "check": "database_preflight",
+          "recognized_proof": false,
+          "status": "Passed"
+        },
+        {
+          "check": "contained_users",
+          "count": 2,
+          "status": "Passed"
+        },
+        {
+          "check": "application_sql_state",
+          "status": "Passed",
+          "cases": 1,
+          "staff": 0,
+          "marker": "ama-src-private-proof-2026-10-16",
+          "seed_available": true,
+          "identity": "initializer"
+        }
+      ],
+      "api_mi_before": [
+        {
+          "check": "sql_private_dns",
+          "addresses": [
+            "10.40.4.25"
+          ],
+          "status": "Passed"
+        },
+        {
+          "check": "database_preflight",
+          "recognized_proof": true,
+          "status": "Passed"
+        },
+        {
+          "check": "application_sql_state",
+          "status": "Passed",
+          "cases": 1,
+          "staff": 0,
+          "marker": "ama-src-private-proof-2026-10-16",
+          "seed_available": false,
+          "identity": "api"
+        }
+      ],
+      "http_before": [
+        {
+          "check": "api_private_dns",
+          "addresses": [
+            "10.40.0.184"
+          ],
+          "status": "Passed"
+        },
+        {
+          "check": "health",
+          "http_status": 200,
+          "expected": 200,
+          "status": "Passed"
+        },
+        {
+          "check": "anonymous_api_denial",
+          "http_status": 401,
+          "expected": 401,
+          "status": "Passed"
+        },
+        {
+          "check": "malformed_bearer_denial",
+          "http_status": 401,
+          "expected": 401,
+          "status": "Passed"
+        },
+        {
+          "check": "forged_principal_denial",
+          "http_status": 401,
+          "expected": 401,
+          "status": "Passed"
+        }
+      ],
+      "api_mi_after_instrument_failure": [
+        {
+          "check": "sql_private_dns",
+          "addresses": [
+            "10.40.4.25"
+          ],
+          "status": "Passed"
+        },
+        {
+          "check": "verify",
+          "status": "Failed",
+          "error_type": "RuntimeError",
+          "message": "Probe stopped; inspect private operator diagnostics, never publish credentials."
+        }
+      ],
+      "schema_metadata": [
+        {
+          "check": "schema_metadata",
+          "tables": [
+            "audit",
+            "audit_head",
+            "chat_thread",
+            "chat_message",
+            "chat_memory",
+            "chat_memory_control",
+            "assistant_tasks",
+            "assistant_allowance",
+            "assistant_attempts",
+            "assistant_events",
+            "assistant_releases",
+            "cutover_proof",
+            "meta",
+            "staff",
+            "cases",
+            "recommendations"
+          ]
+        }
+      ],
+      "api_mi_after_corrected": [
+        {
+          "check": "sql_private_dns",
+          "addresses": [
+            "10.40.4.25"
+          ],
+          "status": "Passed"
+        },
+        {
+          "check": "database_preflight",
+          "recognized_proof": true,
+          "status": "Passed"
+        },
+        {
+          "check": "application_sql_state",
+          "status": "Passed",
+          "cases": 1,
+          "staff": 0,
+          "marker": "ama-src-private-proof-2026-10-16",
+          "seed_available": false,
+          "identity": "api"
+        }
+      ],
+      "http_after": [
+        {
+          "check": "api_private_dns",
+          "addresses": [
+            "10.40.0.184"
+          ],
+          "status": "Passed"
+        },
+        {
+          "check": "health",
+          "http_status": 200,
+          "expected": 200,
+          "status": "Passed"
+        },
+        {
+          "check": "anonymous_api_denial",
+          "http_status": 401,
+          "expected": 401,
+          "status": "Passed"
+        },
+        {
+          "check": "malformed_bearer_denial",
+          "http_status": 401,
+          "expected": 401,
+          "status": "Passed"
+        },
+        {
+          "check": "forged_principal_denial",
+          "http_status": 401,
+          "expected": 401,
+          "status": "Passed"
+        }
+      ],
+      "managed_identity_http": [
+        {
+          "check": "managed_identity_http",
+          "status": "Blocked",
+          "phase": "token_acquisition",
+          "http_status": 400,
+          "entra_error_codes": []
+        }
+      ]
+    },
+    "corrected_verify_runner": {
+      "path": "infra/scripts/private-cutover-proof.py",
+      "sha256": "0560f367cf36fa7dd0e850040c55463b712b781a465d1ebd5f4e8de6406cd7e4",
+      "delivery": "Explicit job-template Python command containing tracked source; same immutable proof image and API MI, no post-isolation image rebuild",
+      "execution": "job-cutover-test-verify-8ycguks"
+    },
+    "workload_boundary": {
+      "api": "Healthy private API, SQL MI and bounded negative HTTP smoke demonstrated",
+      "agents": "Digest deployed and app provisioned; scale-to-zero skeleton, no queue-worker acceptance",
+      "orchestrator": "Digest deployed; CLI-only execution succeeded, not functional orchestration",
+      "import": "Digest deployed; --help execution succeeded, not queue/SQL import acceptance",
+      "ledger_verify": "Digest/command configured; scheduled publication not executed"
+    },
+    "final_budgets": [
+      "budget-forward-test",
+      "budget-cutover-test",
+      "budget-iot-cutover-test-rzsrg"
+    ],
+    "deletions": [],
+    "owner_checklist": "All unchecked"
   }
 }

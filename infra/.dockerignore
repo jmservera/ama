@@ -1,0 +1,4 @@
+**
+!cutover-proof.Dockerfile
+!scripts/
+!scripts/private-cutover-proof.py

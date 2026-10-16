@@ -49,6 +49,10 @@ param apiImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param enableApiAi bool = false
 @description('False bootstraps dependencies without exposing placeholder apps. Build/push the real image, provision the auth secret and seed SQL, then redeploy with true.')
 param deployApplications bool = true
+@description('Create the VNet-injected environment and DNS before SQL initialization, without starting workloads.')
+param deployEnvironmentOnly bool = false
+@description('Opt-in service smoke mode: validate bearer tokens without interactive login or a vault client secret. Requires entraClientId; incompatible with delegated token storage.')
+param entraBearerOnly bool = false
 param agentImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 @description('Empty means the bootstrap placeholder. Use infra/scripts/deploy.py to preserve an existing job image or resolve the newest registry tag before deploying.')
 param orchestratorImage string = ''
@@ -100,7 +104,7 @@ param tags object = {}
 param ownerTag string = 'Juan Manuel Servera'
 
 var isDev = deploymentProfile == 'development'
-var publicAccess = isDev || allowPublicNetworkAccess
+var publicAccess = isDev && allowPublicNetworkAccess
 var purgeProtection = !isDev && keyVaultPurgeProtection
 
 var prefix = '${workload}-${environmentName}'
@@ -129,6 +133,7 @@ module guard 'modules/guard.bicep' = {
     sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
     tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''
     entraRoleMapRequiresEntraClientId: empty(entraRoleMap) || !empty(entraClientId) ? 'ok' : ''
+    bearerOnlyRequiresAudience: !entraBearerOnly || (!empty(entraClientId) && !enableEntraTokenStore && !entraTokenStoreReady) ? 'ok' : ''
   }
 }
 
@@ -283,7 +288,7 @@ module iotHub 'modules/iothub.bicep' = {
   }
 }
 
-module apps 'modules/containerapps.bicep' = if (deployApplications) {
+module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvironmentOnly) {
   name: 'containerapps'
   dependsOn: [guard]
   params: {
@@ -307,6 +312,8 @@ module apps 'modules/containerapps.bicep' = if (deployApplications) {
     modelDeploymentNames: { standard: 'standard', capable: 'capable' }
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
+    deployWorkloads: deployApplications
+    entraBearerOnly: entraBearerOnly
     entraRoleMap: entraRoleMap
     tokenStoreReady: enableEntraTokenStore && entraTokenStoreReady
     tokenStoreAccountName: enableEntraTokenStore ? authTokenStore!.outputs.accountName : ''
@@ -484,7 +491,7 @@ resource ledgerDigestMismatch 'Microsoft.Insights/scheduledQueryRules@2023-03-15
     criteria: {
       allOf: [
         {
-          query: 'ContainerAppConsoleLogs_CL | where ContainerJobName_s startswith "job-${prefix}-ledger-verify" and Log_s has "LEDGER_DIGEST_ALERT"'
+          query: 'ContainerAppConsoleLogs | where JobName startswith "job-${prefix}-ledger-verify" and Log has "LEDGER_DIGEST_ALERT"'
           timeAggregation: 'Count'
           operator: 'GreaterThan'
           threshold: 0
@@ -511,7 +518,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
     criteria: {
       allOf: [
         {
-          query: 'ContainerAppConsoleLogs_CL | where ContainerJobName_s startswith "job-${prefix}-ledger-verify" and Log_s has "LEDGER_DIGEST_OK" | where TimeGenerated > ago(26h)'
+          query: 'ContainerAppConsoleLogs | where JobName startswith "job-${prefix}-ledger-verify" and Log has "LEDGER_DIGEST_OK" | where TimeGenerated > ago(26h)'
           timeAggregation: 'Count'
           operator: 'LessThan'
           threshold: 1

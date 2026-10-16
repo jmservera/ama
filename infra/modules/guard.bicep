@@ -21,6 +21,10 @@ param tokenStoreReadyRequiresTokenStore string
 param entraRoleMapRequiresEntraClientId string
 
 @minLength(1)
+@description('Must not be empty. Empty means bearer-only authentication lacks entraClientId or enables delegated token storage.')
+param bearerOnlyRequiresAudience string
+
+@minLength(1)
 @description('Must not be empty. Empty means enablePublicEdge=true in the development profile or with allowPublicNetworkAccess=true; the edge needs the internal production environment.')
 param publicEdgeRequiresProductionProfile string
 
@@ -41,4 +45,5 @@ output checked array = [
   sharePointEvidenceStoreRequiresSiteId
   tokenStoreReadyRequiresTokenStore
   entraRoleMapRequiresEntraClientId
+  bearerOnlyRequiresAudience
 ]
