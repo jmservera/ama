@@ -107,5 +107,28 @@ No divergent user decision, no second critique. Implementation ready.
 
 ## Follow-Up Items
 
+## Owner-Requested PR 355 Corrections
+
+The 2026-10-16 user explicitly advances this follow-up to implementation on the
+same task/branch. Preserve the historical one-pass critique/review; this is
+implementation of supplied independent review findings, not a repeated review.
+Source boundary remains src/ only, with documentation and RPI evidence updates.
+No legal approval or issue checkbox change is authorized.
+
+<!-- rpi:phase id=P04 -->
+### P04 Integrated regression correction and delivery
+
+* [ ] P04 complete
+<!-- rpi:task id=P04-T01 -->
+* [x] P04-T01 Merge origin/main first, retaining both append-only log histories.
+<!-- rpi:task id=P04-T02 -->
+* [x] P04-T02 Reproduce full API failures, correct retained-history assertions and resolve unavailable-store behavior honestly.
+<!-- rpi:task id=P04-T03 -->
+* [x] P04-T03 Run all three complete suites with absolute fixture paths, Ruff/format/mypy and local HTTP; reconcile README counts and acceptance audit, with final PR text prepared for publication.
+<!-- rpi:task id=P04-T04 -->
+* [ ] P04-T04 Record supplied review disposition, commit with trailer, push normally and update existing PR 355.
+
+## Remaining Acceptance Work
+
 Owner ratification and independent grading; actual staff paired trial and net
 effort/cost; continuing-stock integration and authorized platform verification.

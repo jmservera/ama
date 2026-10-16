@@ -98,3 +98,73 @@ Source/artifact commit 7056d8d was pushed on feat/regulatory-eval-gates-216.
 PR #355 opened against main, using Refs #216 only and the six-criterion audit.
 No merge or issue-checkbox update. Final delivery-artifact status update follows
 in a separate ordinary commit; no history rewrite.
+
+## P04 starting scope and integration
+
+User supplied independent CHANGES verdict at 7c87293 and explicitly requested
+implementation of the retained-history regression and full-suite investigation.
+P04 is the active full correction scope; first boundary P04-T01 merged
+origin/main as c311752, preserving both sides of the append-only reference log.
+Source changes confined to src/; documentation and existing RPI evidence may
+change. No new critique/review cycle, issue-checkbox update or Azure work.
+
+Initial API/agents discovery could not import uninstalled editable packages.
+Installed core/agents/API plus declared validation tools in an isolated session
+venv using pip after that missing-dependency failure. Core's requested absolute
+source/test paths ran 529 tests, 528 passed, one skipped. Next boundary is
+full API reproduction with packages installed, then surgical corrections.
+
+## P04-T02: Whole-suite reproduction and surgical correction
+
+Complete API reproduction: 558 tests, one failure, 110 skips. CI logs likewise
+show only the raw-storage-versus-decorated-history assertion failure.
+Unavailable-law-store tracebacks are expected logged diagnostics from
+post-commit safety handling, not uncaught suite errors. Runtime already returns
+unknown with the human safety route, preserving committed reports; no runtime
+exception suppression or invented fixture approval is appropriate.
+
+Strengthened the retained-version test: compare the entire decorated history
+before/after reopen, remove only the additive cadence field for exact equality
+with retained storage, assert unknown cadence and verify storage unchanged.
+Extended outage coverage to both alert/check HTTP 503/unknown, safe route and
+saved hazard. Added a loaded-but-empty LawStore HTTP regression covering draft
+collection/history, unknown cadence, role-visible unknown checks and no alerts.
+Initial new-test assertions corrected to the actual sources envelope and
+role-scoped hazard-only check projection; no production behavior was changed.
+
+Full agents reproduction also exposed main's new required decision reasons:
+the fixture's recorded human review lacked them. Added synthetic reasons,
+without relaxing the engine or changing expected states. Regenerated the report:
+only fixture_sha256 changed; 120,000 exact matches, 78,000 required flags and
+zero misses among 42,000 hazard flags remain. Agents lint/format/mypy and core
+lint/format/mypy passed. All three whole-suite final runs are now in progress.
+
+## P04-T03: Final integrated local evidence
+
+All whole suites ran from project roots with the exact requested absolute
+PYTHONPATH values in phase details, using installed editable packages:
+
+| Project | Run | Passed | Skipped | Outcome |
+| --- | ---: | ---: | ---: | --- |
+| core | 529 | 528 | 1 | OK |
+| agents | 93 | 93 | 0 | OK |
+| api | 559 | 449 | 110 | OK |
+
+Total: 1,181 discovered/run, 1,070 executed passes, 111 skips, zero failures or
+errors. Skips remain existing opt-in platform/browser or environment gates.
+API full run still logs expected unavailable-store diagnostics; assertions
+verify honest unknown states. No test removed or runtime error hidden.
+
+Ruff check, Ruff format check and mypy passed in each project (core 99,
+agents 22, API 45 checked source files). API's first mypy run lacked the declared
+Playwright dependency; installed playwright==1.64.0 via pip after that explicit
+missing-dependency result, then reran all API quality gates successfully.
+The browser test remains explicitly opt-in, not an executed browser claim.
+
+Final local HTTP run: 20 tests passed across RuleHttpTests, rule alerts and
+regulatory chat. Responsive ephemeral loopback servers exercised health/app,
+fixture authentication, complete retained lifecycle, cadence collection/history,
+cited turns, empty/unavailable stores, saved safety work and unchanged alerts.
+No outbound provider call or Azure/private data use. git diff --check passed.
+Component README, index/log and supplied-review routing updated; every unmet
+issue criterion remains unmet. P04-T04 commit/push/PR publication is pending.

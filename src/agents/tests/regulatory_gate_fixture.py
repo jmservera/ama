@@ -294,6 +294,7 @@ def seeded_facts(index: int) -> dict[str, Any]:
                 decision_owner="Juan Manuel Servera",
                 source="SYN-REC",
                 evidence="SYN-HUMAN-REVIEW",
+                reasons="Synthetic human review of the recommendation and supporting evidence.",
                 decided_at=NOW.isoformat(),
             )
         ]

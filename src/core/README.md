@@ -47,6 +47,10 @@ The [evaluation report and acceptance audit](../agents/README.md#regulatory-eval
 distinguish the generated 60,000-home stateless rule baseline from a small
 SQLite integration slice and the unexecuted continuing-stock/staff trials.
 No owner threshold agreement, legal approval or operational use is claimed.
+The [integrated full-suite record](../agents/README.md#integrated-full-suite-correction-evidence-2026-10-16)
+distinguishes executed passes from opt-in skips. Empty-source LawStore HTTP
+coverage verifies unknown cadence and unknown draft-rule checks without alerts;
+missing storage remains an explicit service-unavailable state with a human route.
 
 ## Derived role task queues (#76)
 

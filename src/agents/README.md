@@ -39,8 +39,12 @@ The legacy 13-case report also no longer exposes an overall pass.
 The frozen [development cases](./evals/regulatory_gates_cases.json) and independent
 oracles are implementer-authored. The 60,000 identities come from the existing
 seed-174 fictional home generator, joined to ten explicit hazard profiles and
-five automated-decision profiles at 2026-10-16T12:00:00Z. Expected-state coverage
-and denominators are reconciled in the report; missing output is a mismatch.
+five automated-decision profiles at 2026-10-16T12:00:00Z. Recorded human reviews
+include synthetic reasons, as required by the safeguard;
+an evidence ID alone cannot establish a completed human review. The fixture
+fingerprint is regenerated when this declared fixture evidence changes.
+Expected-state coverage and denominators are reconciled in the report; missing
+output is a mismatch.
 Wrong, unrelated or duplicate engine item identities cannot satisfy a required
 flag, even when their result string matches. SQL outputs must match the home
 and card as well. Invalid output case IDs are reported separately and never
@@ -71,6 +75,45 @@ For standalone agents discovery include absolute core-test and agents-test paths
 cd src/agents
 PYTHONPATH="$PWD/tests:$PWD/../core/tests" python3 -m unittest discover -s tests -q
 ```
+
+### Integrated full-suite correction evidence (2026-10-16)
+
+After merging main into PR #355, the complete project discoveries reported:
+
+| Project | Discovered/run | Passed | Skipped |
+| --- | ---: | ---: | ---: |
+| core | 529 | 528 | 1 |
+| agents | 93 | 93 | 0 |
+| api | 559 | 449 | 110 |
+
+Skipped checks are existing opt-in platform/browser or other environment-gated
+checks, not executed passes. No test was removed. Ruff check, Ruff format check
+and mypy run separately in each project; the local HTTP tests use responsive
+loopback servers and temporary synthetic stores, not Azure acceptance.
+
+With editable packages and declared development tools installed via pip, run
+each suite from its project root, followed there by the quality gates:
+
+```bash
+# From src/core:
+PYTHONPATH="$PWD/src:$PWD/tests" python3 -m unittest discover -s tests -q
+# From src/agents:
+PYTHONPATH="$PWD/../core/tests" python3 -m unittest discover -s tests -q
+# From src/api:
+PYTHONPATH="$PWD/../core/tests:$PWD/../agents/tests" \
+  python3 -m unittest discover -s tests -q
+# In each project:
+ruff check .
+ruff format --check .
+mypy
+```
+
+The retained-history regression now checks every stored field and the complete
+additive HTTP shape across reopen. Expected unavailable-law-store logs are
+explicit unknown-state diagnostics, not uncaught suite errors. Empty-store and
+unavailable-store HTTP behavior are exercised separately. The stricter merged
+human-decision reasons requirement is satisfied by declared synthetic fixture
+evidence, not disabled in the engine. All acceptance limitations below remain.
 
 ### Acceptance audit (2026-10-16)
 

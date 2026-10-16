@@ -16,6 +16,16 @@ bounded regulatory chat cards; the panel renders the card link, text label
 and historical as-of date without a colour-only signal. Older stored turns
 without the field explicitly show unknown cadence.
 
+Retained versions in storage do not acquire this read-only field. The lifecycle
+HTTP regression compares the complete decorated history before/after reopening
+and every retained storage field after removing only the additive decoration.
+A loaded law store with no sources returns draft cards with unknown cadence
+and role-visible unknown checks, without publishing alerts. An unavailable law
+store instead returns 503/unknown for check/alert requests. Post-commit safety
+intake logs the unavailable-store exception and returns
+`rule_checks.status: unknown` with the human safety route; saved work is not rolled back. That
+diagnostic is not an uncaught test error or evidence that a rule passed.
+
 Cadence is measured from a successful configured source-monitor observation,
 not a retrieval timestamp or inferred legal commencement. Missing evidence is
 unknown; known overdue evidence remains labelled even if another source is

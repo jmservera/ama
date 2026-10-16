@@ -56,3 +56,29 @@ Use provisional numeric citation/refusal targets labelled pending Juan Manuel
 Servera's agreement; leave recall threshold unset pending baseline review.
 Staff precision, acknowledgement time, comprehension and comparative benefit
 remain not evaluated. No further research cycle would resolve those human gaps.
+
+## PR 355 supplied-review investigation (2026-10-16)
+
+Research disposition: reused and extended for the owner-requested correction.
+Planning Readiness: Ready; no new threshold or authority decision is needed.
+
+* R1: Full API reproduction after c311752 ran 558 tests: one failure, 110 skips.
+  The sole failure is `RuleHttpTests.test_running_local_app_full_lifecycle_and_retained_versions`:
+  raw retained storage is compared to an HTTP projection that now adds cadence.
+  Preserve exact whole-history equality and separately compare the projection.
+* R2: Failed validation 38939656912 and source CI 38939656927 report the same
+  sole assertion failure, not an uncaught unavailable-law-store exception.
+  `App.rule_engine` deliberately raises when `law is None`; `App.check_case`
+  logs it and returns explicit unknown plus the independent human safety route
+  after committed work. Alert/check HTTP translates this to 503/unknown.
+  Do not suppress that diagnostic or turn missing storage into success.
+* R3: A loaded, empty LawStore is distinct from unavailable storage. Seed draft
+  cards have no provision evidence/approval; cadence is unknown, checks are
+  unknown and alerts cannot be published. Explicit loopback tests must exercise
+  both states rather than load invented source approvals into unrelated tests.
+* R4: Main's merged automated-decision safeguard now requires recorded reasons.
+  Full agents reproduction found two failures: 180/200 small-fixture state
+  matches and the canonical report mismatch. Add explicitly synthetic reasons
+  to the recorded-human-review fixture, retaining expected states and the
+  stricter runtime control. Regenerate the report's fixture fingerprint.
+  All measured positive counts remain unchanged; no owner agreement follows.

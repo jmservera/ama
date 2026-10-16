@@ -207,3 +207,25 @@ Full suite reruns were deliberately not attempted after the import failure: thei
 ## Next Steps
 
 Return this complete finding set to the active parent for P03-T02 disposition. Continue through rpi-implement for RV-001 through RV-003 and targeted validation without commissioning another RPI review. Keep RES-001 through RES-004 distinct and delivery/acceptance claims pending the applicable gates.
+
+## Supplied independent PR review and implementation routing (2026-10-16)
+
+Historical review above remains unchanged: execution Complete, outcome Not
+accepted at its original boundary. The user separately supplied independent
+PR #355 verdict CHANGES at head 7c87293. This section records that input and
+its implementation disposition, not a repeated independent assessment.
+
+| Supplied finding / direction | Implementation disposition |
+| --- | --- |
+| High: existing retained-version HTTP test fails after additive cadence field | Exact storage and full decorated-history assertions retained across reopen; unknown cadence asserted explicitly |
+| Investigate unloaded-law-store ValueError in full CI suites | CI and local full-suite evidence identify the history assertion as the sole API failure. ValueError is caught/logged and translated to unknown with saved safety intake; loaded-empty and unavailable-store HTTP regression coverage added |
+| Merge main and rerun whole suites and quality gates | Merge c311752 retains both log histories. Whole project evidence and exact counts are recorded in changes and component READMEs; no skips count as passes |
+| Keep issue acceptance honest and preserve human authority | Six-row acceptance audit retained; unmet owner agreement, independent grading, staff trial and continuing-stock/platform evidence remain unmet. No checkbox edits or approvals |
+
+Merged main also tightened human-decision reasons. Whole agents discovery
+detected missing fixture evidence; a synthetic reason was added rather than
+weakening that runtime control or the independent expected-state oracle.
+Canonical report was regenerated with unchanged positive counts.
+
+Implementation verification does not replace either historical independent
+verdict with a new approval or claim operational/legal acceptance.

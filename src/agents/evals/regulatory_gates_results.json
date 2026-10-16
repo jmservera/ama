@@ -481,7 +481,7 @@
   "evidence": {
     "as_of": "2026-10-16T12:00:00+00:00",
     "dataset": "regulatory_gates_cases.json",
-    "fixture_sha256": "62b4e411b3bc1c3e393cd3dd5d07f1d5ee6369146c4b9648b97de0a2ffd79944",
+    "fixture_sha256": "889b9441baa5240aef44dbb31cf15839326ed6c3ee4b3d0e16677fff5338085b",
     "homes": 60000,
     "provider": "offline-extractive; zero model calls",
     "rule_checks": 120000,

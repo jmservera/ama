@@ -17,6 +17,7 @@ from unittest.mock import patch
 import test_rule_engine as engine_fixture
 from dataset import DATA
 from zava_forward.core import rule_engine
+from zava_forward.core.lawstore import LawStore
 from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api import auth
@@ -172,7 +173,46 @@ class RuleAlertApi(unittest.TestCase):
         with self.assertLogs("zava_forward.api.server", level="ERROR"):
             code, detail = self.report(case_id="ZF-2")
         self.assertEqual((code, detail["rule_checks"]["status"]), (200, "unknown"))
-        self.assertEqual(self.call("owner", "/api/law/alerts")[0], 503)
+        self.assertIn("human emergency", detail["rule_checks"]["safe_route"])
+        for route, body in (
+            ("/api/law/alerts", None),
+            ("/api/law/checks/ZF-2", {}),
+        ):
+            code, data = self.call("owner", route, body)
+            self.assertEqual((code, data["status"]), (503, "unknown"))
+            self.assertIn("law store is not loaded", data["error"])
+            self.assertIn("human emergency", data["safe_route"])
+        self.assertTrue(self.store.detail("ZF-2")["hazards"])
+
+    def test_empty_law_store_returns_unknown_checks_and_freshness_without_alerts(self) -> None:
+        empty = LawStore(
+            str(Path(self.fixture.tmp.name) / "empty-law.sqlite"),
+            Path(self.fixture.tmp.name) / "empty-blobs",
+        )
+        self.addCleanup(empty.close)
+        self.app.law = empty
+        self.app.engine = None
+        self.assertEqual(empty.sources(), {"sources": [], "gaps": []})
+        code, cards = self.call("owner", "/api/law/cards")
+        self.assertEqual(code, 200, cards)
+        self.assertEqual(len(cards["cards"]), 2)
+        for card in cards["cards"]:
+            self.assertEqual(card["source_freshness"]["status"], "unknown")
+            self.assertEqual(card["state"], "draft")
+            self.assertIsNone(card["approved_by"])
+            code, history = self.call("owner", "/api/law/cards/" + card["card_id"])
+            self.assertEqual(code, 200, history)
+            self.assertEqual(history["versions"], [card])
+            self.assertIsNone(history["active_version"])
+        code, checkpoint = self.call("owner", "/api/law/checks/ZF-1", {})
+        self.assertEqual(code, 200, checkpoint)
+        self.assertEqual(
+            [check["card_id"] for check in checkpoint["checks"]], ["hazard-awareness-clock"]
+        )
+        self.assertTrue(all(check["result"] == "unknown" for check in checkpoint["checks"]))
+        self.assertEqual(empty.sql.all("SELECT * FROM reg_alert"), [])
+        code, alerts = self.call("owner", "/api/law/alerts")
+        self.assertEqual((code, alerts["homes"]), (200, []))
 
     def test_checkpoint_failure_keeps_safety_saved_and_schedule_recovers(self) -> None:
         engine: Any = self.app.rule_engine()

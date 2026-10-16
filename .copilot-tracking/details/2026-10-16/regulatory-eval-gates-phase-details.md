@@ -75,3 +75,20 @@ Resolve authenticated GitHub identity, configure
 repository-local privacy-safe email, commit with required coauthor trailer,
 push topic branch and create main-targeted PR using only Refs #216.
 Do not modify issue checkboxes or merge.
+
+## P04: Owner-requested integrated correction
+
+Full P04 scope, with supplied independent verdict CHANGES at 7c87293. Merge
+origin/main before edits, preserving both log sides. Compare every retained
+history field with storage and separately verify additive freshness before and
+after reopen. Reproduce the complete API suite; distinguish expected logged
+unknown-store safety handling from actual test errors before changing runtime.
+Test loaded-but-empty and unavailable law storage explicitly without inventing
+an approval, suppressing errors or blocking human safety intake.
+
+Run whole core, agents and API suites from their project roots, with absolute
+PYTHONPATH respectively `$PWD/src:$PWD/tests`, `$PWD/../core/tests`,
+`$PWD/../core/tests:$PWD/../agents/tests`. Run each project's Ruff check, format
+check and mypy. Record discovered/run/passed/skipped counts distinctly; use
+temporary synthetic SQLite and loopback HTTP only. Update the existing PR,
+not a duplicate, with only Refs #216 and unchanged unmet acceptance gates.

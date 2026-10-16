@@ -3,8 +3,8 @@
   "task_slug": "regulatory-eval-gates",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/regulatory-eval-gates-research.md",
@@ -19,10 +19,12 @@
     {"decision": "Research executed, planning ready; single critique executed Revise, PC-001 to PC-005 resolved directly", "status": "recorded", "evidence": "research, plan, details and critique artifacts"},
     {"decision": "ADR 0005 accepted for synthetic development only; thresholds provisional", "status": "confirmed", "evidence": "2026-10-16 owner direction"},
     {"decision": "One Review executed Complete, outcome Not accepted at reviewed snapshot; RV-001/RV-002/RV-003 corrected with targeted regression evidence, no second review", "status": "recorded", "evidence": "canonical review and changes implementation disposition"},
-    {"decision": "Bounded local implementation delivered in PR 355; issue acceptance remains partial", "status": "recorded", "evidence": "https://github.com/jmservera/ama/pull/355; source commit 7056d8d and acceptance audit"}
+    {"decision": "Bounded local implementation delivered in PR 355; issue acceptance remains partial", "status": "recorded", "evidence": "https://github.com/jmservera/ama/pull/355; source commit 7056d8d and acceptance audit"},
+    {"decision": "Owner explicitly requests implementation of supplied independent CHANGES verdict at 7c87293, main merge and complete local validation; preserve historical critique/review outcomes", "status": "confirmed", "evidence": "2026-10-16 user follow-up and P04 plan/details"},
+    {"decision": "Integrated correction verified: 528 core passes/1 skip, 93 agents passes, 449 API passes/110 skips; per-project Ruff/format/mypy and 20 local HTTP tests pass", "status": "recorded", "evidence": "P04-T02/P04-T03 changes evidence and component README; expected caught unavailable-store logs are not uncaught failures"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Owner/coordinator reviews PR 355; later owner threshold agreement, staff paired trial and continuing-stock proof remain separate work"},
+  "next_action": {"phase": "Implement", "action": "P04-T04: commit verified correction, push normally and update PR 355 with exact counts and unchanged unmet criteria"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Owner threshold review and independent grading", "rationale": "Required acceptance evidence absent", "evidence": "Issue 216 and ADR 0005 Evaluation"},
     {"rank": 2, "task": "Staff paired trial", "rationale": "No comparative value or comprehension measured", "evidence": "ADR 0005 ship gate"},

@@ -4061,3 +4061,22 @@ metadata when the knowledge base was created.
   Existing PR ready status requires all latest-head checks green. Hosted
   hardening and other unmet criteria remain Partial; owner review and all
   operational/legal/consent/safety/financial approvals remain separate.
+
+## [2026-10-16] implementation | PR 355 integrated regression corrections
+
+* Refs #216. Merged origin/main into the existing topic branch without rewriting
+  history; preserved both append-only log histories.
+* Strengthened the retained-card lifecycle regression to compare the entire
+  decorated HTTP history across reopen and every underlying stored field.
+  Added loaded-empty-store coverage for unknown cadence/checks without alerts,
+  and unavailable-store check/alert 503/unknown plus saved human safety intake.
+  The logged unavailable-store ValueError was caught handling, not the CI
+  failure; the full-suite failure was the additive HTTP-shape assertion.
+* Main's stricter automated-decision safeguard requires recorded human reasons.
+  Updated the declared synthetic fixture, not the runtime rule, and regenerated
+  the report fingerprint without changing its measured positive counts.
+* Updated component READMEs and the index with whole-suite commands and exact
+  run/pass/skip counts. Owner-agreed thresholds, independent grading, staff
+  comparative value and continuing-stock/Azure acceptance remain unmet.
+  No issue checkbox, legal approval, live activation, private dataset, Azure
+  resource or legacy application tree was changed.
