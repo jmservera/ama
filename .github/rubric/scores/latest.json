@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-15T15:58:33+00:00",
-  "commit": "fa730d63190c200e36b9a09c890445f17e8cb164",
+  "scored_at": "2026-10-16T14:44:56+00:00",
+  "commit": "6f313334902456aa08f083778a2197608bf2742b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38763347056",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/38917350630",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "3b6b9a783b413c3e44d57b81fd669f8c4d3adf3b5b623ac0d398d3f8c653192c",
-    "adr": "275f5ff093398a1170b0fd91d35bc80fe0a0d8016deac94ec47ccbfdc39974dd",
-    "solution-code": "0a295918240d8e97a81ac39568a67e7ed271cdedc71c09b1a67ad53314637bf3",
-    "infrastructure": "fab2d87f31ab28dd7d5f047f7f24e2ceaa06a89b0fcbfdf2b373b9b8e807bdb6",
+    "adr": "d5924c3033c45b516706214434257c24be01996d7ff84445af1b311d27d8ca90",
+    "solution-code": "bfdb8146ba717b013779dafac249ad66645bbe03b2caa3ad87b38f7a182585a6",
+    "infrastructure": "ab1f96fdd2b84516694a6799a2358fd920e6de54e2e9648d0053f65aa014b499",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 47,
@@ -44,7 +44,7 @@
         "mvp/zavaforward_mvp/assistant_release.py:1-124",
         "mvp/tests/test_assistant_release.py:32-45,127-150"
       ],
-      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch with zero provider calls when absent/expired/revoked, and quarantining plus suspend..."
+      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch with zero provider calls when absent/expired/revoked, and quarantining/suspending o..."
     },
     "A4": {
       "score": 5,
@@ -73,7 +73,7 @@
         "mvp/zavaforward_mvp/assistants.py:441-446",
         "mvp/zavaforward_mvp/assistants.py:767-785"
       ],
-      "rationale": "Adds a guardrail that blocks autonomous dispatch/claim/completion reliance without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. This strengthens guardrail enforcement around existing autonomous scan/dispatch but does not add n..."
+      "rationale": "Adds a guardrail that blocks autonomous dispatch/claim/completion reliance without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. Strengthens guardrail enforcement around existing autonomous scan/dispatch."
     },
     "B1": {
       "score": 3,
@@ -103,9 +103,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "mvp/README.md:866-880"
+        "docs/adrs/0005-regulatory-compliance-assistant.md"
       ],
-      "rationale": "README documents the new release-admission feature clearly with concrete API/behaviour detail, well-integrated into existing capstone documentation prose. Still capped at Good(4): capstone deck itself remains thin and this is solution-code documentation, not deck content."
+      "rationale": "Written documentation (ADRs, BRD/PRD, code docs) remains solid and current; this PR's diff (new coordinator agent doc, backlog-sync tool, log entry) does not touch any B6-scored artifact. Unchanged."
     },
     "B7": {
       "score": 3,
