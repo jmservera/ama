@@ -62,7 +62,7 @@ class GovernanceTests(unittest.TestCase):
         self.assertIn("pilotRequiresProductionProfile", (INFRA / "main.bicep").read_text())
         self.assertIn("pilotRequiresProductionProfile", (INFRA / "modules/guard.bicep").read_text())
 
-    def test_policy_is_audit_only_and_defender_free_by_default(self) -> None:
+    def test_policy_is_audit_only_and_defender_opt_in_by_default(self) -> None:
         text = (INFRA / "governance.bicep").read_text()
         self.assertIn("param enforcementMode string = 'DoNotEnforce'", text)
         self.assertIn("param enableDefenderPlans bool = false", text)

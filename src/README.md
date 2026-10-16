@@ -64,7 +64,32 @@ The build context is this `src/` folder, because a workload image also needs `co
 docker build -f src/agents/Dockerfile -t zava-forward-agents:local src
 ```
 
-Each image keeps the pinned base digest of the former `mvp/Dockerfile` (now `api/Dockerfile`), runs as user 10001, copies named packages only, contains no working data and runs with a read-only root file system. Working data is mounted at `/data` and state at `/state`; the location follows `ZF_DATA` and is never under `src/`. `src/.dockerignore` and the `/src/**/data/` entry in `.gitignore` keep data out of images and git.
+Each image keeps the pinned base digest of the former `mvp/Dockerfile` (now
+`api/Dockerfile`), runs as UID/GID 10001:10001, copies named packages only and
+contains no working data. The shared [entrypoint](./container-entrypoint.py)
+refuses application startup (exit 78 with a diagnostic) unless the root mount
+is read-only, all five Linux capability sets are zero and NoNewPrivs is enabled.
+It execs the requested command so the application receives signals directly.
+There is no opt-out environment setting. Dockerfile alone cannot configure
+kernel mount flags or capability bounding sets: supply them at launch.
+
+```bash
+docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
+  --tmpfs /tmp:rw,nosuid,nodev --tmpfs /state:rw,nosuid,nodev,uid=10001,gid=10001 \
+  zava-forward-agents:local
+# From repository root, after building each image:
+python src/check-container.py agents zava-forward-agents:local
+```
+
+Working data is mounted read-only at `/data` and writable state at `/state`;
+the location follows `ZF_DATA` and is never under `src/`. `src/.dockerignore`,
+the API's allow-list `Dockerfile.dockerignore` (including the guard), and the
+`/src/**/data/` gitignore entry keep data out of images and git.
+An explicit `--entrypoint` or hosting command override can bypass any image
+entrypoint; it is not an authorization boundary against control-plane operators.
+The [hosting limitation](../infra/README.md#hardened-source-image-rollout-118)
+blocks rollout of these new images to the current Container Apps definitions.
+Do not remove the guard to make a deployment healthy.
 
 ## CI
 
@@ -75,3 +100,26 @@ the issue #200 owner decision of 2026-10-15. The post-cut-over naming question m
 be resolved in one deliberate PR. `mvp/README.md` is retained pending #201/#202
 owner sign-off; this path update does not complete the Azure deployment or private
 data copy/encrypted-backup gates.
+
+### Hardened image CI (#118)
+
+Each of the four image matrix entries runs [check-container.py](./check-container.py)
+without overriding its entrypoint. It verifies root mount flags, an actual EROFS
+write failure, writable `/state`, UID/GID, all capability sets, NoNewPrivs, and no
+baked working data. Five negative launches per image independently omit
+read-only-root, capability dropping or NoNewPrivs, or change UID/GID.
+The API starts its real HTTP server on an empty constructed fixture and checks
+health and PNG delivery. The other images run their current default CLI, which
+still prints a version; this does not prove a queue worker.
+
+Trivy gates HIGH/CRITICAL OS and library findings, including unfixed findings.
+[trivy.yaml](./trivy.yaml) explicitly uses `/dev/null` as the ignore file: no
+ignore lists, baselines or repository-discovered config suppressions.
+Per-image JSON reports upload even on a scan failure. A runtime failure after a
+successful build does not skip its scan. Existing `mvp-ci` scans the same source
+API image with this policy; no workflow deploys as part of this change.
+On 2026-10-16 all four local contracts passed, but all four scans failed with
+61 HIGH and two CRITICAL package findings each (16 unique CVEs, all unfixed in
+the scanned Debian 12.15 packages). See the
+[acceptance audit](../docs/architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
+Green vulnerability acceptance is not claimed.

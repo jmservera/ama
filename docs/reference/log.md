@@ -3897,3 +3897,22 @@ metadata when the knowledge base was created.
   private roster/approved registration and Graph permissions unavailable to
   this principal. No fabricated human binding, private dataset read, inference,
   worker acceptance, owner sign-off, legacy deletion or workflow rename.
+
+## [2026-10-16] query | Hardened source deployment and honest criterion audit
+
+* Refs #118. Updated the reference index, source/infra READMEs and cut-over
+  evidence pack with all five original criteria and explicit unmet gates.
+* Four local Docker image contracts passed with fail-closed startup, real API
+  health/static delivery and five rejected unsafe launches per image.
+  Existing CI now runs the same harness and retains unsuppressed scan JSON.
+* All four Trivy 0.76.0 scans failed: 61 HIGH and two CRITICAL package findings
+  each, 16 unique CVEs, all without a reported fixed version. No ignore lists,
+  baselines or unfixed-finding exemption was introduced.
+* Compiled Bicep proves six image consumers and the gated Premium/WAF/private
+  origin. Disabled Defender opt-in no longer submits Free pricing resources
+  that could downgrade existing shared-subscription protection.
+* Hosted read-only-root/capability enforcement remains unmet with the current
+  Container Apps schema; new image rollout is blocked, not silently relaxed.
+  No Azure/public deployment, policy bypass, SQL access change, private data
+  read or human approval was performed or inferred. ADR 0005 remains only a
+  synthetic-development acceptance with real owners/sources still a gap.

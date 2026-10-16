@@ -27,9 +27,11 @@ RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
     && rm requirements.txt \
     && chmod -R a+rX /usr/local/lib/python3.12/site-packages/zava_forward/api/web
 COPY agents/evals/ai_priority_golden.json ./evals/ai_priority_golden.json
-USER 10001
+COPY container-entrypoint.py /usr/local/bin/container-entrypoint.py
+USER 10001:10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8088 ZF_BIND=0.0.0.0 ZF_DATA=/data/zavaforward.json ZF_STATE=/state ZF_AI_GOLDEN=/app/evals/ai_priority_golden.json
 EXPOSE 8088
 HEALTHCHECK --interval=30s --timeout=3s CMD ["python", "-c", "import os,urllib.request;urllib.request.urlopen('http://127.0.0.1:'+os.environ['PORT']+'/healthz',timeout=2)"]
+ENTRYPOINT ["python", "/usr/local/bin/container-entrypoint.py"]
 CMD ["python", "-m", "zava_forward.api"]

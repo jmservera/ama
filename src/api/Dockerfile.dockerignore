@@ -1,6 +1,7 @@
 # Build context is src/ (docker build -f src/api/Dockerfile src). Allow only what the image copies.
 *
 !build-requirements.txt
+!container-entrypoint.py
 !core/pyproject.toml
 !core/src
 !agents/pyproject.toml

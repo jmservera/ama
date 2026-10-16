@@ -304,7 +304,7 @@ previously lacked the positive minimum already used for digest retention; it
 now has `@minValue(1)`. All-file build exposed governance policy IDs incorrectly
 prefixed by the subscription ID; built-in definitions now use
 `tenantResourceId('Microsoft.Authorization/policyDefinitions', ...)`, with a
-compiled regression. Policy stays audit-only and Defender stays Free by default.
+compiled regression. Policy stays audit-only; Defender activation remains opt-in.
 Existing lint configuration and guards were reused, not newly invented.
 
 Limits and open items: immutability policies are intentionally created
@@ -337,7 +337,7 @@ Governance as code for issue #147 (ADR 0002 decision 6). Owner decisions (2026-1
 | Control | Where | Decision | Owner | Cost |
 | --- | --- | --- | --- | --- |
 | Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`): policy reports non-compliance but blocks nothing; a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
-| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | Decided; plans stay on Free (no protection added) until the owner accepts a cost and sets `enableDefenderPlans=true` | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
+| Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | No pricing resource is submitted until the owner accepts a cost and sets `enableDefenderPlans=true`; then the four plans request Standard. Existing paid or Free subscription plans are preserved when disabled | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
 | Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
 | Tagging standard | `allTags` in `main.bicep` | `workload`, `environment`, `dataClassification`, `purpose`, `owner` on every resource; the required-tag policy checks `workload`, `environment`, `dataClassification` and `owner` on resource groups | Juan Manuel Servera | None |
 | Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31 | Juan Manuel Servera | None |
@@ -348,6 +348,50 @@ az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
 Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
+
+The synthetic-development decision is to audit the selected public-access,
+purge-protection and tag controls without replacing or weakening existing
+platform policies. DoNotEnforce applies only to these new assignments, not to
+the subscription's existing enforcement. Paid Defender activation is deferred
+because an accepted cost and service-coverage appraisal are absent; the Free
+tier is not a replacement for image scanning or workload protection. Submitting
+Free would downgrade a shared subscription, so disabled opt-in now creates no
+pricing resources rather than changing any plan. This is a code decision, not
+evidence of deployed policy compliance, protection, or financial approval.
+The subscription-scoped governance template is outside a resource-group-only
+`ama` execution boundary and was compiled/tested only in this task.
+
+## Hardened source image rollout (#118)
+
+Refs #118. All six application containers are defined in
+[`modules/containerapps.bicep`](./modules/containerapps.bicep): API, agents,
+orchestrator, import, token renewal and ledger verification. Compiled tests
+verify each image parameter, API health probes and 2-4 replicas, plus the
+default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs explicitly
+invoke `/usr/local/bin/container-entrypoint.py` before their Python command,
+because a hosting `command` replaces the image ENTRYPOINT. They require the
+new guard-bearing orchestrator image; older images lack that path.
+Worker transport remains #144; a Bicep resource is not worker acceptance.
+
+Rollout of these new images is blocked: the
+[Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
+and 2026-07-01 schema were checked on 2026-10-16 and expose no
+`readOnlyRootFilesystem`, capability-drop or `securityContext` settings for
+these container definitions. No unsupported property is added and no deployed
+kernel enforcement is claimed. These images now fail closed if a host lacks
+the controls. Preserve the existing running images; do not roll forward until
+a supported host configuration and private runtime proof establish the contract.
+Changing hosting architecture needs a separate reviewed decision, not a hidden
+fallback or removal of the guard.
+
+Front Door Premium, WAF and origin Private Link remain infra-only gated
+definitions: `enablePublicEdge=false` by default, production/private profile
+required, no new edge deployed publicly. No Azure deployment or what-if, policy
+bypass, SQL public access change or new deploying CI is part of this work.
+See the [criterion audit](../docs/architecture/cutover-evidence-pack.md#deployment-hardening-audit-118-2026-10-16).
+ADR 0005 remains accepted only for synthetic development; Juan Manuel Servera
+is the exercise Legal, Compliance and DPO owner, not evidence of operational
+legal approval. Real owners and sources remain a gap before operational reliance.
 
 ## Identity and role assignments (issue 141)
 

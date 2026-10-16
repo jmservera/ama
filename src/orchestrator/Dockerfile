@@ -23,7 +23,9 @@ RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
     pip install --no-cache-dir --require-hashes -r requirements.txt \
     && pip install --no-cache-dir --no-index --no-deps /wheels/*.whl \
     && rm requirements.txt
-USER 10001
+COPY container-entrypoint.py /usr/local/bin/container-entrypoint.py
+USER 10001:10001
 # No working data is baked into the image. Mount the dataset at /data and a writable volume at /state.
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 ZF_DATA=/data/zavaforward.json ZF_STATE=/state
+ENTRYPOINT ["python", "/usr/local/bin/container-entrypoint.py"]
 CMD ["python", "-m", "zava_forward.orchestrator"]

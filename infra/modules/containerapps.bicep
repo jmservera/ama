@@ -240,7 +240,7 @@ resource tokenRenewal 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && !
       containers: [{
         name: 'auth-renewal'
         image: orchestratorImage
-        command: ['python', '-m', 'zava_forward.orchestrator.token_store']
+        command: ['python', '/usr/local/bin/container-entrypoint.py', 'python', '-m', 'zava_forward.orchestrator.token_store']
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
           { name: 'AZURE_CLIENT_ID', value: tokenMaintenanceClientId }
@@ -379,7 +379,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads) {
         {
           name: 'ledger-verify'
           image: orchestratorImage
-          command: ['python', '-m', 'zava_forward.orchestrator.digest_blob', '--publish']
+          command: ['python', '/usr/local/bin/container-entrypoint.py', 'python', '-m', 'zava_forward.orchestrator.digest_blob', '--publish']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.api }

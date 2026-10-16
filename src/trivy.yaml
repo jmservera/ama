@@ -1,0 +1,9 @@
+# Deliberately scan unfixed OS and library findings too. No repository ignore discovery.
+scan:
+  scanners:
+    - vuln
+severity:
+  - HIGH
+  - CRITICAL
+ignore-unfixed: false
+ignorefile: /dev/null
