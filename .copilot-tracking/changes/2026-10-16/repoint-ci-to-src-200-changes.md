@@ -4,7 +4,7 @@ ms.date: 2026-10-16
 ---
 
 Task #200 / `repoint-ci-to-src-200`. Full plan scope; implementation complete,
-review-ready. Publication remains after Review.
+reviewed and published in PR #321.
 Plan/details/research share the same dated slug. Source edits begin after the
 single final-candidate critique was dispositioned. No Azure or private-data action.
 
@@ -193,4 +193,27 @@ Authenticated account rechecked with `gh api user`: id 8036360/login jmservera.
 `git config --local user.email 8036360+jmservera@users.noreply.github.com`;
 `git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT` both confirm it.
 Publish only chore/repoint-ci-to-src-200 to main PR, never force-push.
-Review completion and exact PR link will be recorded after successful publication.
+
+* `git add -u` plus the exact eight new dated artifacts and core resolver:
+  staged 36 intended files; prohibited-path guard and cached whitespace check
+  passed. No .env/.vscode/github-issues/private data staged.
+* `git commit -F -`: bed0c6a, `build(src): finish CI and image path cut-over`,
+  `Refs #200` and required Copilot co-author trailer. Privacy-safe identity
+  confirmed for author and committer.
+* `git fetch origin main --quiet && git rev-list --left-right --count origin/main...HEAD`:
+  exit 0, `0 1` (not behind).
+* `bash .../skills/shared/pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --output <session-files>/issue-200-pr-reference.xml`:
+  exit 0, 1,757-line reference generated outside the repository; reviewed source
+  evidence already covered by the single Review.
+* `git push --set-upstream origin chore/repoint-ci-to-src-200`: exit 0, new topic
+  branch published, no main push or history rewrite.
+* `gh pr create --base main --head chore/repoint-ci-to-src-200 --title 'build(src): finish CI, image and tooling cut-over' --body-file <session-files>/issue-200-pr.md`:
+  exit 0, https://github.com/jmservera/ama/pull/321.
+* `gh pr view --json number,url,state,baseRefName,headRefName,commits,statusCheckRollup`:
+  PR #321 OPEN, main base, expected topic/commit/co-author; checks not yet reported
+  at creation. PR body includes commands/results, dated artifact links, remaining
+  criteria and Refs #200, not a closing keyword.
+
+Parent completion documentation records publication on the same PR in a further
+commit; no source modification, repeat critique or repeat Review. Hosted checks
+remain separate from measured local results. Merge remains the owner's decision.

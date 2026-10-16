@@ -77,5 +77,6 @@ P01, P02-T01 and P02-T02 complete. Four focused test methods added, none removed
 All five full suites and static checks passed; the final generator refinement
 passed all 14 generator tests and repeated core static checks. Bicep/infra,
 branding, namespace, link/syntax/data guards and four local image checks passed.
-P02-T03 awaits the single Review and publication only. No source blocker remains.
+P02-T03 complete: one Review, source/artifact commit bed0c6a pushed, PR #321 opened
+against main. No source blocker remains; no second Review or implementation loop.
 Azure rollout/private backup/owner sign-off remain external acceptance gates.

@@ -76,7 +76,7 @@ server authorization and historical evidence. Use synthetic fixtures only.
 ### P02: Evidence and delivery
 * [x] P02-T01: Run local validation, record exact commands/results.
 * [x] P02-T02: Update live docs/index/log and reconcile acceptance status.
-* [ ] P02-T03: One Review; commit, push and open main-targeted PR.
+* [x] P02-T03: One Review; commit, push and open main-targeted PR.
 
 ## Validation and Test Ownership Lock
 
@@ -112,6 +112,8 @@ No significant/divergent user decision remains. Planning readiness: Ready.
 
 Implementation changes record:
 `.copilot-tracking/changes/2026-10-16/repoint-ci-to-src-200-changes.md`.
-P01 and P02-T01/T02 complete; commands and limits are in the changes record.
-Source implementation review-ready. P02-T03 is pending one Review and publication,
-not unresolved implementation. Cloud/owner follow-ups remain outside local scope.
+P01 and P02 complete. One Review executed, outcome Residual work for full issue
+acceptance, with no in-scope defect. Source and dated RPI artifacts committed as
+bed0c6a and pushed; main-targeted PR #321 opened. Publication evidence is recorded
+in a follow-up documentation commit, without another Review or source change.
+Cloud/owner follow-ups remain outside local scope and #200 remains open.

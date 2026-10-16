@@ -18,10 +18,11 @@
     {"decision": "Execute full RPI loop in order and publish one PR; preserve mvp and existing check names", "status": "confirmed", "evidence": "User request 2026-10-16"},
     {"decision": "Research executed; Planning Readiness Ready", "status": "recorded", "evidence": "2026-10-16 research artifact"},
     {"decision": "One critique executed, Revise: PC-001 rejected per explicit caller /tmp tools; PC-002 applied", "status": "resolved", "evidence": "Plan Critique Disposition"},
-    {"decision": "One Review executed completely; outcome Residual work for whole issue, no local implementation defects", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/repoint-ci-to-src-200-review.md"}
+    {"decision": "One Review executed completely; outcome Residual work for whole issue, no local implementation defects", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-16/repoint-ci-to-src-200-review.md"},
+    {"decision": "Reviewed source and artifacts committed and pushed; main-targeted PR #321 opened with Refs #200 and unmet acceptance criteria", "status": "published", "evidence": "https://github.com/jmservera/ama/pull/321; bed0c6a"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Commit/push reviewed artifacts and open main PR; no child work selected"},
+  "next_action": {"phase": "Follow-up", "action": "PR #321 awaits hosted checks and owner merge decision; no child selected; ranked residual items require later direction"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinate post-cut-over workflow/check naming", "rationale": "Small isolated change after cut-over, preserves branch-protection matching; do not start before owner direction", "evidence": "RV-003; issue #200 owner retention decision"},
     {"rank": 2, "task": "Deploy and verify immutable src image tags on existing ama resources", "rationale": "Highest remaining technical acceptance value; requires reviewed what-if and live access", "evidence": "RV-001; #201/#203"},
