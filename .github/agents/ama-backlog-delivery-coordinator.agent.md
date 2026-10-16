@@ -238,7 +238,11 @@ treated as delivery failure.
    run `git fetch origin main` and re-run the gate after each merge because
    `main` moved. After a merge,
    confirm the issue state and keep an issue open when the PR records unmet
-   criteria. Set the board status to Done for a closed issue; for a reopened or
+   criteria. GitHub auto-closes an issue when the PR body contains any close,
+   fix or resolve keyword followed by `#{number}`, even negated ("does not close
+   #86" closed #86). Before merging, check `gh pr view {n} --json
+   closingIssuesReferences` and remove the keyword when acceptance is unmet; after
+   merging, reopen any issue that closed with unmet criteria and comment why. Set the board status to Done for a closed issue; for a reopened or
    kept-open issue, set it per the reopened row and comment why.
 8. **Rebase overlapping PRs.** After each merge, check every remaining open
    run-owned PR for conflicts or a stale base. Rebase the branch onto the new
