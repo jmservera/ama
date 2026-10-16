@@ -8,6 +8,10 @@ param workload string = 'forward'
 @allowed(['dev', 'test', 'pilot'])
 param environmentName string = 'dev'
 param location string = resourceGroup().location
+@description('Reference to a dated, reviewed region/service/zone capability check for the selected locations. Empty blocks deployment; never put subscription or tenant IDs here.')
+param regionCheckReference string = ''
+@description('Reference to a dated, reviewed quota check for Container Apps, SQL, IoT and the exact model versions/SKUs/capacities in the selected subscription. Empty blocks deployment; no IDs or secrets.')
+param quotaCheckReference string = ''
 @description('Mailbox for platform alerts.')
 param alertEmail string
 @description('Optional Teams Workflows webhook URL for operations alerts.')
@@ -66,15 +70,17 @@ param edgeWafMode string = 'Prevention'
 @description('Enable zone redundancy where the region supports it.')
 param zoneRedundant bool = false
 
-@description('Deployment profile. production (default) enforces network isolation, registry image quarantine and Key Vault purge protection. development relaxes all three so a throwaway stack is reachable and iterable.')
+@description('Production (default) enforces isolation, quarantine and purge protection. Development permits individual explicit opt-outs; choosing development alone relaxes nothing. SQL is always private.')
 @allowed(['production', 'development'])
 param deploymentProfile string = 'production'
 
-@description('Development only. When true, resources also accept connections from external networks (public endpoints, wide-open SQL firewall, external Container Apps environment). Keep false for anything but a throwaway dev stack.')
+@description('Development only. Explicit public opt-in for services other than SQL, which is always private. Keep false for shared stacks.')
 param allowPublicNetworkAccess bool = false
 
 @description('Development only. False sets a 7 day Key Vault soft delete without purge protection so the name can be purged and reused.')
 param keyVaultPurgeProtection bool = true
+@description('Development only. Explicit false permits immediate image pulls without quarantine. Production requires true.')
+param registryQuarantineEnabled bool = true
 @description('CanNotDelete locks on stateful resources.')
 param enableLocks bool = false
 @description('Model deployments. The standard tier is the default; the capable tier is used only where the PRD model evaluation shows the standard tier misses a task threshold.')
@@ -105,7 +111,7 @@ param ownerTag string = 'Juan Manuel Servera'
 
 var isDev = deploymentProfile == 'development'
 var publicAccess = isDev && allowPublicNetworkAccess
-var purgeProtection = !isDev && keyVaultPurgeProtection
+var purgeProtection = !isDev || keyVaultPurgeProtection
 
 var prefix = '${workload}-${environmentName}'
 var unique = take(uniqueString(resourceGroup().id, location, 'v2'), 5)
@@ -127,6 +133,10 @@ module guard 'modules/guard.bicep' = {
   params: {
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
+    productionProfileRequiresRegistryQuarantine: isDev || registryQuarantineEnabled ? 'ok' : ''
+    regionCheckMustBeRecorded: !empty(regionCheckReference) ? 'ok' : ''
+    quotaCheckMustBeRecorded: !empty(quotaCheckReference) ? 'ok' : ''
+    deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresProductionProfile: environmentName != 'pilot' || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     publicEdgeRequiresApplications: !enablePublicEdge || deployApplications ? 'ok' : ''
@@ -211,7 +221,7 @@ module registry 'modules/registry.bicep' = {
   dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
-    quarantine: !isDev
+    quarantine: registryQuarantineEnabled
     name: 'cr${compact}${unique}'
     location: location
     tags: allTags
@@ -232,7 +242,6 @@ module sql 'modules/sql.bicep' = {
   name: 'sql'
   dependsOn: [guard]
   params: {
-    allowPublicNetworkAccess: publicAccess
     name: 'sql-${prefix}-${unique}'
     databaseName: 'retrofit'
     location: sqlLocation

@@ -3897,3 +3897,23 @@ metadata when the knowledge base was created.
   private roster/approved registration and Graph permissions unavailable to
   this principal. No fabricated human binding, private dataset read, inference,
   worker acceptance, owner sign-off, legacy deletion or workflow rename.
+
+## [2026-10-16] query | Environment strategy and parameter checks (Refs #137, Refs #139)
+
+* Updated [infra environments](../../infra/README.md#environments), parameter
+  examples, deployment wrapper and compiled infrastructure tests. Preserved
+  file paths and naming lineage; consolidated environment differences into
+  one table and documented required tag propagation/component exceptions.
+* Current owner direction supersedes the 2026-10-15 pilot region/subscription
+  ownership assertion in the issue comment and README. Both stay open;
+  pilot locations and dated region/quota check references remain placeholders.
+  Historical deployment observations are not current subscription checks.
+* Production remains the default. Development alone disables no controls;
+  only dev explicitly relaxes purge protection and quarantine. Test/pilot
+  keep production protection, all examples keep public networking off, and
+  SQL has no public access switch or firewall in any profile.
+* Added named missing-check/location guards and ama-only wrapper scope.
+  Extended existing issue 139 offline semantic/mutation gates, without new
+  workflow/check names, live Azure operations or invented human approvals.
+  Juan Manuel Servera remains the synthetic exercise Legal/Compliance/DPO
+  owner; ADR 0005 acceptance is development-only, not operational reliance.
