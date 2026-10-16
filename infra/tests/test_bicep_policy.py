@@ -346,10 +346,95 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertTrue(
             evaluate(self.main["variables"]["purgeProtection"], production, self.main["variables"])
         )
-        development = {**production, "deploymentProfile": "development"}
+        development = {
+            **production,
+            "deploymentProfile": "development",
+            "allowPublicNetworkAccess": True,
+        }
         self.assertTrue(
             evaluate(self.main["variables"]["publicAccess"], development, self.main["variables"])
         )
+
+    def test_development_can_explicitly_keep_every_endpoint_private(self) -> None:
+        parameters = {
+            **self.defaults,
+            "deploymentProfile": "development",
+            "allowPublicNetworkAccess": False,
+        }
+        self.assertFalse(
+            evaluate(self.main["variables"]["publicAccess"], parameters, self.main["variables"])
+        )
+
+    def test_ledger_alerts_use_azure_monitor_resource_specific_console_schema(self) -> None:
+        alerts = [
+            item
+            for item in self.main["resources"]
+            if item["type"] == "Microsoft.Insights/scheduledQueryRules"
+            and "ledger-" in item["name"]
+        ]
+        self.assertEqual(len(alerts), 2)
+        for alert in alerts:
+            query = alert["properties"]["criteria"]["allOf"][0]["query"]
+            self.assertIn("ContainerAppConsoleLogs | where JobName", query)
+            self.assertIn(" and Log has ", query)
+            self.assertNotIn("_CL", query)
+            self.assertNotIn("Log_s", query)
+
+    def test_environment_only_does_not_start_workloads(self) -> None:
+        apps = module(self.main, "containerapps")
+        self.assertEqual(
+            apps["condition"],
+            "[or(parameters('deployApplications'), parameters('deployEnvironmentOnly'))]",
+        )
+        self.assertEqual(
+            apps["properties"]["parameters"]["deployWorkloads"]["value"],
+            "[parameters('deployApplications')]",
+        )
+        template = module_template(self.main, "containerapps")
+        for item in template["resources"]:
+            if item["type"] in ("Microsoft.App/containerApps", "Microsoft.App/jobs"):
+                self.assertIn("parameters('deployWorkloads')", item["condition"])
+
+    def test_bearer_only_keeps_validation_and_omits_browser_secret(self) -> None:
+        template = module_template(self.main, "containerapps")
+        auth = resource(template, "Microsoft.App/containerApps/authConfigs")
+        properties = auth["properties"]
+        self.assertEqual(
+            properties["globalValidation"]["unauthenticatedClientAction"],
+            "[if(parameters('entraBearerOnly'), 'Return401', 'RedirectToLoginPage')]",
+        )
+        aad = properties["identityProviders"]["azureActiveDirectory"]
+        self.assertIn("tenant().tenantId", aad["registration"]["openIdIssuer"])
+        self.assertEqual(
+            aad["registration"]["clientSecretSettingName"],
+            "[if(parameters('entraBearerOnly'), null(), 'entra-client-secret')]",
+        )
+        self.assertIn("parameters('entraClientId')", aad["validation"]["allowedAudiences"])
+        api = resource(template, "Microsoft.App/containerApps")
+        self.assertIn(
+            "not(parameters('entraBearerOnly'))", api["properties"]["configuration"]["secrets"]
+        )
+        guard = module(self.main, "parameter-guard")["properties"]["parameters"]
+        expression = guard["bearerOnlyRequiresAudience"]
+        for overrides, expected in (
+            ({"entraBearerOnly": True}, ""),
+            ({"entraBearerOnly": True, "entraClientId": "audience"}, "ok"),
+            (
+                {
+                    "entraBearerOnly": True,
+                    "entraClientId": "audience",
+                    "enableEntraTokenStore": True,
+                },
+                "",
+            ),
+            ({"entraBearerOnly": False}, "ok"),
+        ):
+            self.assertEqual(
+                evaluate(expression, {**self.defaults, **overrides}, self.main["variables"])[
+                    "value"
+                ],
+                expected,
+            )
 
     def test_no_keys_or_sql_logins(self) -> None:
         self.assert_key_controls(self.main)
@@ -607,7 +692,7 @@ class BicepPolicyTests(unittest.TestCase):
                         {**defaults, **overrides},
                         template["variables"],
                     ),
-                    profile == "development",
+                    profile == "development" and public,
                     str(overrides),
                 )
                 self.assertEqual(
