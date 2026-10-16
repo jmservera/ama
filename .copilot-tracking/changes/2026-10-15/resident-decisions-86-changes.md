@@ -5,8 +5,9 @@ ms.date: 2026-10-15
 ---
 
 Task: issue-86 / resident-decisions-86. Declared scope: full P01-P03 plan.
-Implementation and single Review complete; PR #319 published. Mergeability
-and hosted CI are blocked by newer-main conflicts, not reported as passed.
+Implementation and single Review complete; PR #319 published. Owner-authorized
+current-main integration is resolved and locally validated; hosted CI is not
+reported as passed.
 No deployment or private data access authorized.
 
 ## Intake and Research Commands
@@ -253,3 +254,68 @@ passed; no local image or release evidence is invented.
 Formal complaint integration, human accessibility/without-detriment testing,
 operational authority/retention ratification, authorized real inference and
 actual SQL Server/Azure execution are not evidenced by local fixtures.
+
+## Authorized Current-Main Integration
+
+The owner explicitly selected `git fetch && git merge origin/main`, preserving
+history on feat/src-resident-decisions-86 without rebasing or force pushing.
+Scope is src code/tests plus directly related guides, evidence and append-only
+reference log. No new RPI critique or Review is started.
+
+The initial clean-worktree merge reported eight conflicts: reference log,
+core/API README and pyproject files, core ai_tasks, sqlstore and store.
+Both documentation sections and all mypy module entries are retained.
+SQL transaction dependencies retain resident, safety and stock checks; staff
+cards/ranking retain tri-state support and scoped resident decision semantics.
+### Resumed Integration Results (2026-10-16)
+
+Continued the interrupted merge, without aborting or rebasing it. Fetch confirmed
+`MERGE_HEAD` and current `origin/main` both equal
+`06d8aeda66f1c4100e09c4291deb645841f638c7`. All eight unmerged files are resolved
+and staged; `git diff --name-only --diff-filter=U` and the conflict-marker scan
+are empty. The supplied `python3 /tmp/reslog.py docs/reference/log.md` completed.
+Both parent logs are preserved line-for-line in their original order, and both
+parent README sections and every mypy override module are retained.
+
+Preserved #84 stock query events, technical sign-offs and design versions,
+#85 hazard referral holds, #83 handoffs, #219 RAI release records, #152 role
+workbench and #168/#177 synthetic tools. Integration regressions cover resident
+acceptance/withdrawal without clearing technical or hazard state, independent
+sibling releases, stale stock/resident transaction refusal and dependency
+cleanup after save/rollback. Endpoint inventory and server-side role matrix
+cover resident, technical, stock-comparison and stock-query-event routes.
+The stock fixture explicitly removes supplied technical evidence where its
+test requires an unassessed home, rather than weakening production gates.
+
+Exact requested suites, from each project directory:
+
+| Project | Command | Result |
+| --- | --- | --- |
+| core | `PYTHONPATH=$PWD/src:$PWD/tests python3 -m unittest discover -s tests -q` | 392 passed, 92.077s |
+| api | `PYTHONPATH=$PWD/src:$PWD/tests:$PWD/../core/src:$PWD/../core/tests:$PWD/../agents/src:$PWD/../agents/tests python3 -m unittest discover -s tests -q` | 516 run, 99 skipped, passed, 178.721s |
+| agents | `PYTHONPATH=$PWD/src:$PWD/../core/tests:$PWD/../core/src python3 -m unittest discover -s tests -q` | 70 passed, 5.663s |
+
+In core, API and agents respectively, `/tmp/zf164/bin/mypy .`,
+`/tmp/zf164/bin/ruff check .` and `/tmp/zf164/bin/ruff format --check .`
+all pass (81/42/16 typed source files; 28/13/11 format-checked files).
+API mypy initially failed because this external environment lacked Playwright;
+`/tmp/zf164/bin/python -m pip install 'playwright>=1.58,<2' --quiet`
+installed the declared 1.64.0 development dependency and the repeat passed.
+No dependency manifest was changed to hide that failure. Core emitted existing
+unclosed-file ResourceWarnings in `test_sensor_backfill`; the suite passed.
+
+`node --check` passes for app.js, ops.js and panels.js. Both staged and
+unstaged `git diff --check` pass. New source diff contains no
+`INSERT OR REPLACE/IGNORE`, `AUTOINCREMENT`, `PRAGMA` or driver-specific
+`sqlite3.IntegrityError` handling; existing SQL Server adaptation is unchanged.
+No new SQL schema, driver exception path or live-platform acceptance is claimed.
+Protected `.env`, `.vscode`, `.copilot-tracking/github-issues` and `mvp/`
+have no changes relative to main; no properwarm.json was read. New executable
+changes remain in `src/`; unrelated paths in the merge are inherited from main.
+
+Authenticated GitHub account is 8036360 / jmservera. Publication uses the
+requested noreply identity for author and committer, the required Copilot
+trailer, Refs #86 and an ordinary topic push. Hosted checks were absent before
+publication; their later status is recorded in PR #319, not assumed passed.
+This follow-up does not repeat the completed RPI Review or close operational,
+human, actual model, SQL Server/Azure or container acceptance gaps.

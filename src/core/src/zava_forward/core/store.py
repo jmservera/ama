@@ -9,7 +9,7 @@ import threading
 import uuid
 from datetime import datetime
 
-from . import ai_tasks, buildings, insights, ledger, projection, ranking
+from . import ai_tasks, ai_prompts, buildings, insights, ledger, projection, ranking, stock
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -61,12 +61,35 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         self.docstore = open_document_store(self.docs_dir)
         self.scanner = open_scanner(self.docstore)
         self.ai = Ai()
-        self.ai.gate = lambda task, deployment=None: self.continuity_block(task)
+        self.ai.gate = lambda task, deployment=None: self.continuity_block(task) or self.release_block(task, deployment)
         self.version = 0
         self._briefings = {}
         self._ranks = None
         self.data.setdefault("recommendations", [])
         self.as_of = self.data.setdefault("as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat())
+
+    def release_block(self, task, deployment=None):
+        if not self.ai.configured:
+            return None
+        from . import assistant_release as rel
+        denied = rel.denial("durable SQL release records are required", ["SQL-owned release record"], task)
+        self.audit("system", "ai_release_denied", "-", denied["reason"])
+        return denied["reason"]
+
+    def release_context(self, task, deployment=None):
+        return None
+
+    def release_current(self, task, release, deployment=None):
+        """Exact per-invocation reference; a replacement never authorizes an old output."""
+        from .ai_registry import LEGACY, legacy_deployment
+        if task not in LEGACY or not isinstance(release, dict) or not all(
+                isinstance(release.get(key), str) and release[key].strip() for key in ("id", "version", "digest")):
+            return False
+        current = legacy_deployment(task, self.ai)
+        if deployment is not None and deployment != current:
+            return False
+        selected = self.release_context(task, current)
+        return bool(selected) and release == selected
 
     def _tail_hash(self):
         h = ledger.GENESIS
@@ -161,7 +184,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     last_contact=last, next_visit=nxt["date"] if nxt else None, area=c["home"]["area"],
                     wave=c["wave"], funding=c["funding"]["status"], owner_code=c["owner_code"],
                     hazard=any(not h["released"] for h in c["hazards"]),
-                    support=c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None",
+                    support=stock.support_status(c["resident"]) == "Yes",
+                    support_status=stock.support_status(c["resident"]),
+                    support_coverage=stock.support_coverage(c["resident"]),
                     closed=c["closed"])
 
     def _ranking(self):
@@ -271,7 +296,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         rs = c["resident"]
         if role == "Resident Liaison Officer":
             return [("Resident prefers", rs["preferred"]),
-                    ("Extra support", "Yes" if rs["priority_support"] else (rs["adjustment"] if rs["adjustment"] != "None" else "None recorded")),
+                    ("Extra support", stock.support_status(rs)),
                     ("Decision on works", resident_status(c)),
                     ("Next visit", nxt["date"] if nxt else "None booked")]
         if role == "Retrofit Coordinator":
@@ -302,6 +327,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
+            d["support_status"] = stock.support_status(c["resident"])
+            d["support_coverage"] = stock.support_coverage(c["resident"])
+            d["resident"].setdefault("priority_support", None)
+            if not d["resident"].get("adjustment"):
+                d["resident"]["adjustment"] = "Unknown"
+            d.setdefault("stock_reconciliation", [])
+            d.setdefault("stock_reconciliation_events", [])
+            for row in d["stock_reconciliation"]:
+                row["status"] = stock.query_status(c, row["id"])
             d["hazards"] = [hazard_view(h, case_id) for h in c["hazards"]]
             if c.get("handoff"):
                 d["handoff"] = handoff_view(c)
@@ -324,6 +358,64 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def building_view(self, user, building_id):
         with self.lock:
             return buildings.view(self.data, self.cases, building_id, user)
+
+    def _stock_actor(self, user):
+        from . import controls
+        controls.require_role(user, projection.STAFF_ROLES, "registered human staff")
+        actor = self.staff.get(user["email"].lower())
+        if not actor or not isinstance(actor.get("name"), str) or not actor["name"].strip() or any(
+                actor.get(key) != user.get(key) for key in ("code", "role", "name")):
+            raise PermissionError("Stock decisions require a registered named human staff identity.")
+        return actor
+
+    def stock_reconcile(self, user, case_id, body):
+        from . import controls
+        controls.refuse_bulk(body)
+        with self.lock:
+            actor = self._stock_actor(user)
+            c = self._case(case_id)
+            if actor["role"] not in MANAGER_ROLES and actor["code"] != c["owner_code"]:
+                raise PermissionError("Only the case owner or a programme manager can open a stock query.")
+            query = stock.comparison(body)
+            owner = self._staff_person(query["query_owner"])
+            rows = c.get("stock_reconciliation", [])
+            query.update(id=f"SQ-{len(rows) + 1}", version=len(rows) + 1,
+                         query_owner={key: owner[key] for key in ("email", "code", "name", "role")},
+                         recorded_by={key: actor[key] for key in ("email", "code", "name", "role")},
+                         at=controls.now())
+            c.setdefault("stock_reconciliation", []).append(query)
+            self.audit(actor["email"], "stock_comparison", case_id, f"{query['id']} {query['field']}; owner {owner['code']}; unresolved")
+            self.save()
+
+    def stock_query_event(self, user, case_id, body):
+        from . import controls
+        controls.refuse_bulk(body)
+        with self.lock:
+            actor = self._stock_actor(user)
+            event = stock.query_event(body)
+            c = self._case(case_id)
+            query = next((q for q in c.get("stock_reconciliation", []) if q["id"] == event["query_id"]), None)
+            if query is None:
+                raise ValueError("Choose a stock query on this case.")
+            manager = actor["role"] in MANAGER_ROLES
+            if event["action"] == "resolve" and not manager:
+                raise PermissionError("Only a named human programme manager can record reconciliation.")
+            if event["action"] == "withdraw" and not manager and actor["email"].lower() != query["recorded_by"]["email"].lower():
+                raise PermissionError("Only the query raiser or a programme manager can withdraw it.")
+            if stock.query_status(c, query["id"]) != "Unresolved":
+                raise ValueError("This stock query already has a terminal disposition. Open a new query if needed.")
+            events = c.get("stock_reconciliation_events", [])
+            event.update(id=f"SQE-{len(events) + 1}", at=controls.now(),
+                         recorded_by={key: actor[key] for key in ("email", "code", "name", "role")})
+            c.setdefault("stock_reconciliation_events", []).append(event)
+            self.audit(actor["email"], f"stock_query_{event['action']}", case_id,
+                       f"{event['id']} {query['id']}: {event['status']}; {event['reason']}; evidence {event.get('evidence', 'Not supplied')}")
+            self.save()
+
+    def require_stock_clear(self, c):
+        reasons = stock.blockers(c)
+        if reasons:
+            raise GateError(reasons)
 
     def require_building_clear(self, c, package_id=None):
         reasons = buildings.blockers(self.data, self.cases, c, package_id)
@@ -518,7 +610,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     # ---- AI drafting (always a draft for a person)
     def _facts(self, c, reason_ok=False):
         r = c["resident"]
-        adjust = r["adjustment"] if reason_ok else ("extra support needed" if projection.needs_notice(c) else "None")
+        adjust = (r.get("adjustment") or "Unknown") if reason_ok else (
+            "extra support needed" if projection.needs_notice(c) else
+            "Unknown" if stock.support_status(r) == "Unknown" else "None")
         return (f"Case {c['id']}. Resident: {r['name']}. Home: {c['home']['address']}, {c['home']['town']}. "
                 f"Stage: {c['stage']} for {c['days_in_stage']} days. Waiting on {c['waiting_on']} {c['reason']}. "
                 f"Resident adjustments: {adjust}. Resident prefers: {r['preferred']}. "
@@ -538,19 +632,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             case = c
             tcites = ai_tasks.cites_for(c, "Stage:", "Preferred contact:", "Unavailable:", reason_ok=projection.can_see_reason(user)) if task == "message" else \
                 ai_tasks.cites_for(c, "Stage:", "Waiting on:", "Open safety issues:")
-        sysmsg = ("You assist a UK housing association retrofit team. Use only the facts given. Never invent dates, amounts, "
-                  "names or promises. Never say anything has been sent. Plain English, short, warm, no jargon.")
-        prompts = {
-            "message": ("Draft a short letter or email from " + owner + " to the resident offering to arrange a visit or giving an "
-                        "update, respecting their adjustments and preferred contact. Sign off with the officer's name.", fallback, False),
-            "summary": ("Catch up a colleague taking over this case in at most 5 short bullets: where it is, what is stuck, "
-                        "what to do next, anything about the resident they must know.", summary, False),
-        }
-        if task not in prompts:
+        if task not in ("message", "summary"):
             raise ValueError("Unknown request.")
-        instr, tmpl, strong = prompts[task]
+        sysmsg, prompt = ai_prompts.render(task, owner=owner, facts=facts)
+        tmpl, strong = (fallback if task == "message" else summary), False
         self.audit(user["email"], "ai_run_start", case_id, task)
-        r = ai_tasks.run_text_task(self, user, task, [case], sysmsg, instr + "\n\nFacts:\n" + facts, tmpl, tcites, strong, mode=mode,
+        r = ai_tasks.run_text_task(self, user, task, [case], sysmsg, prompt, tmpl, tcites, strong, mode=mode,
                                    bullets=task == "summary")
         self.audit(user["email"], "ai_run_end", case_id, f"{task} source={r['source']} model={r['model']} validated={r['validated']} verified={r['verified']}")
         return dict(r, label=("AI suggestion, not approved" if r["source"] == "ai" else "Template draft, not approved")
@@ -560,7 +647,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         off = ai_tasks.workflow_only(mode)
         with self.lock:
             hit = self._briefings.get((user["code"], off))
-            if hit and hit[0] == self.version:
+            if hit and hit[0] == self.version and (
+                    (hit[1]["source"] != "ai" and (off or not self.ai.configured)) or self.release_current(
+                        "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
             ver = self.version
             mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]
@@ -569,8 +658,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             top = mine[:8]
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
             tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
-        r = ai_tasks.run_text_task(self, user, "briefing", top, "You write a friendly three-sentence morning briefing for a housing officer. "
-                                   "Use only the facts. Safety issues first, then longest waits. No invented facts.", facts, tmpl,
+        sysmsg, prompt = ai_prompts.render("briefing", facts=facts)
+        r = ai_tasks.run_text_task(self, user, "briefing", top, sysmsg, prompt, tmpl,
                                    [x for c in top[:3] for x in [f"{c['id']}: Stage: {c['stage']}", f"{c['id']}: Days in stage: {c['days_in_stage']}"]],
                                    mode=mode)
         self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']} verified={r['verified']}")
@@ -595,7 +684,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 r["reason"] = reason
                 r["cites"] = cites or []
             return r
-        return dict(rec, label=self.REC_LABEL,
+        denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
+        return dict(rec, label=self.REC_LABEL, actionable=not denied, release_denied=denied,
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
@@ -618,18 +708,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             tmpl_items = self._heuristic_priority(cand, n, ok)
             policy_version = ranking.CURRENT["version"]
         tmpl = json.dumps(tmpl_items)
-        sysmsg = ("You advise a UK housing association retrofit officer which of their cases to work on first today. You only "
-                  "recommend; a person decides. Use only the facts given and only the case ids listed. Never invent facts. "
-                  f"Reply with JSON only: a list of exactly {n} objects with keys case_id and reason (one short plain sentence "
-                  "citing a fact such as an open safety issue, extra support need, days waiting or a missing resident decision) and "
-                  "cites, a list of the facts it relies on copied exactly from that case's citable facts. Always include every case "
-                  "with an open safety issue.")
+        sysmsg, prompt = ai_prompts.render("priority", n=n, facts=facts)
 
         def valid(text):
             items, _, err = ai_tasks.priority_items(text, n, sources)
             return err is None and not ai_tasks.critical_misses([i["case_id"] for i in items], hazard_ids, n)
         self.audit(user["email"], "ai_run_start", "-", f"priority_recommendation n={n}")
-        r = self.ai.run("priority", sysmsg, f"Pick the top {n}.\n\nCases:\n{facts}", tmpl, True, check=valid,
+        r = self.ai.run("priority", sysmsg, prompt, tmpl, True, check=valid,
                         off=ai_tasks.workflow_only(mode))
         items, dropped = None, 0
         if r["source"] == "ai":
@@ -641,7 +726,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                        status="Proposed", source=r["source"], model=r["model"], validated=r["validated"], n=n,
                        items=items, deterministic=det, policy_version=policy_version, final_items=None,
                        resolved_by=None, resolved_at=None, reason="", workflow_items=tmpl_items, ai_output=r.get("ai_text") or (r["text"] if r["source"] == "ai" else None),
-                       fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_tasks.PROMPT_VERSION,
+                       fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_prompts.version("priority"),
+                       release=r.get("release"),
                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
                        case_ids=[c["id"] for c in cand], hazard_ids=hazard_ids,
                        overlap=len({i["case_id"] for i in items} & set(det)))
@@ -655,7 +741,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         def score(c):
             s = 0
             s += 100 if any(not h["released"] for h in c["hazards"]) else 0
-            s += 30 if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None" else 0
+            s += 30 if stock.support_status(c["resident"]) == "Yes" else 0
             s += 20 if resident_status(c) not in ("Accepted", "Declined") else 0
             return s + min(c["days_in_stage"], 120) / 4
         out = []
@@ -663,7 +749,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             why = []
             if any(not h["released"] for h in c["hazards"]):
                 why.append("an open safety issue")
-            if c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None":
+            if stock.support_status(c["resident"]) == "Yes":
                 why.append("the resident needs extra support")
             if resident_status(c) not in ("Accepted", "Declined"):
                 why.append("no resident decision yet")
@@ -691,6 +777,10 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 raise PermissionError("This suggestion was made for someone else.")
             if rec["status"] != "Proposed":
                 raise ValueError("This suggestion has already been answered.")
+            if action != "reject" and rec["source"] == "ai" and not self.release_current(
+                    "priority", rec.get("release"), rec.get("model")):
+                self.audit(user["email"], "ai_release_denied", "-", f"priority {rec_id}; use the manual route")
+                raise PermissionError("Release changed; use the ordinary case controls.")
             final = None
             if action == "accept":
                 final = rec["items"]
@@ -742,12 +832,10 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             tmpl = (f"Funding application draft for {c['home']['address']} ({route})\n\nProperty: {c['home']['type']}, built "
                     f"{c['home']['built']}, EPC {c['home']['epc']}.\nProposed measures: {c['measures']}.\n\n"
                     + "\n".join(f"Needs: {m} document" for m in missing) + "\nNeeds: costs from the contractor\nNeeds: eligibility check by the Grants Officer")
-        sysmsg = ("You draft the narrative part of a social housing retrofit funding application. Use only the facts given. Do not invent "
-                  "costs, eligibility results or evidence. Where something is missing write 'Needs: ...'. Headings: Property, Proposed work, "
-                  "Evidence held, Evidence still needed. Under 250 words.")
+        sysmsg, prompt = ai_prompts.render("funding_draft", route=route, facts=facts, missing=', '.join(missing) or 'none')
         self.audit(user["email"], "ai_run_start", case_id, "funding_draft")
         r = ai_tasks.run_text_task(self, user, "funding_draft", [case], sysmsg,
-                                   f"Route: {route}\n{facts}\nMissing documents: {', '.join(missing) or 'none'}", tmpl, tcites, True,
+                                   prompt, tmpl, tcites, True,
                                    check=lambda t: all(m.lower() in t.lower() for m in missing) or "needs" in t.lower(), mode=mode)
         with self.lock:
             c = self._case(case_id)

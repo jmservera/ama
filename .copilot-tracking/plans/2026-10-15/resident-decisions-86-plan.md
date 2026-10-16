@@ -5,7 +5,8 @@ ms.date: 2026-10-15
 ---
 
 Task: issue-86 / resident-decisions-86. Status: Implementation locally validated,
-single Review complete, PR #319 published; newer-main integration/CI blocked.
+single Review complete, PR #319 published; authorized current-main integration
+resolved and locally validated, with hosted CI pending.
 
 ## Executive Summary
 
@@ -88,10 +89,11 @@ change, rejected input must not mutate case/audit. Persist existing case bodies.
 * [x] P03-T01: Run project suites, ruff, mypy, synthetic local app and Docker probe.
 * [x] P03-T02: Update component guides, reference index/log; one review and PR.
 
-P03-T02 documentation, single Review and PR publication are complete. PR #319
-has four conflicts with newer main; no hosted checks have run and no merge/
-rebase is authorized. Owner-authorized base integration is a distinct delivery
-follow-up, not a second Review in this task. A1-A3 and A5 are bounded local
+P03-T02 documentation, single Review and PR publication are complete. The owner
+has now authorized `git fetch && git merge origin/main`, conflict resolution,
+core/API/agents suites, per-touched-project mypy/ruff checks, evidence/PR updates,
+commit and ordinary topic push. Integration is a distinct delivery follow-up,
+not a second Review in this task. A1-A3 and A5 are bounded local
 exercise evidence only. A4 and the full issue's operational/human acceptance
 remain open; the PR must use Refs #86.
 
@@ -141,8 +143,10 @@ No significant/divergent user decision required; no repeated critique.
 
 ## Follow-Up Items
 
-Owner-authorized integration of newer-main #315/#316 is required for PR #319:
-four files conflict and hosted CI has not run. No silent merge/rebase/force push.
+Owner-authorized integration of current main is resolved and locally validated
+for PR #319. Stock query events/sign-offs/design versions, hazard holds, handoffs,
+RAI release records and synthetic support are preserved; no rebase/force push
+or main write. Publication and hosted CI remain separate from local validation.
 Formal complaints integration, representative retention/role ratification,
 real user independent-review/without-detriment testing and authorized live
 Foundry/SQL Server/Azure evidence are not local implementation acceptance.

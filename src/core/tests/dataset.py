@@ -123,9 +123,8 @@ class ImproveTests(unittest.TestCase):
         self.assertEqual(ids, ["ZF-1"])
 
     def grant(self):
-        if hasattr(self.store, "assistant_connection"):
-            import release_support
-            release_support.install(self.store)
+        import release_support
+        release_support.install(self.store)
 
     def test_ai_falls_back_to_template_and_is_audited(self):
         r = self.store.ai_run(self.sam, "ZF-1", "message")

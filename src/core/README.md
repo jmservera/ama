@@ -85,6 +85,138 @@ calls are not live inference. Formal complaint routing, human accessibility/
 without-detriment acceptance, operational permissions/retention, actual model
 and SQL Server/Azure workflow evidence remain unmet.
 
+## Stock comparisons and human technical sign-offs (#84)
+
+`stock.py` validates staff-recorded conflicting assertions for `epc`, `type`
+or `built`. Each comparison preserves two different values and each source's
+identifier, ISO date, version and recorded validation state, plus a registered
+query owner and authenticated recorder. Comparisons append as `SQ-n` with a
+case-local version. The original home value is unchanged; authority,
+resolution and eligibility remain `Unknown`. A source assertion labelled
+`Validated` is not a decision that it is authoritative.
+
+Unresolved queries expose an owned blocker before a design exists and after
+sign-off. They prevent technical approval and installation progression, never
+remove a home from ranking or block independent hazard intake. There is no
+automatic resolver, eligibility-rule engine or stock overwrite. An approved
+source-authority/resolution workflow remains future work.
+
+Only the registered case owner or a programme/manager role may open a query.
+`stock_query_event` appends a separate `SQE-n` event referencing `SQ-n`; it
+never edits the original assertion or any previous event. A query's original
+raiser (not merely its assigned query owner), or a programme/manager role,
+may `withdraw` with a reason. Only a registered named human in the existing
+`Retrofit Programme Manager` or `Programme Support Officer` roles may `resolve`,
+with a reason and human review evidence reference. Agents and client-supplied
+actor identities cannot exercise these rights. Repeated terminal events fail.
+
+Effective `Withdrawn`/`Reconciled` status is derived from those events in
+views and blockers. Reconciliation records a human attestation only: no
+source wins, no home value changes, no professional sign-off is given, and
+authority, resolution policy and eligibility remain `Unknown`/
+owner-approval-needed. These are minimal exercise permissions, not ratified
+operational resolution rules or competence/delegation. A new query is needed
+to raise a later concern; closed history cannot be reopened or overwritten.
+Other unresolved queries and independent technical, building and hazard gates
+remain effective after disposition.
+
+JSON retains assertions/events and the hash-chained audit. SQL inherits this
+case-body contract and commits the new event and audit together using existing
+rowversion checks; concurrent terminal events fail closed. Technical approval
+also rechecks current stock holds inside the SQL writer transaction. No new
+schema or dialect-specific inserts/error classes are introduced. Local
+SQLite evidence does not establish SQL Server/Azure acceptance.
+
+The existing `signoffs.py` owns separate assessment, design, building and
+coordination decisions. They require registered staff identities in the
+existing exercise roles, distinct people and no self-approval of the recorded
+design. History records the actor email/role and design version. A design change
+returns only the selected design-dependent sign-offs; omitted selection returns
+all design-dependent sign-offs, but empty, duplicate or invalid selections are
+rejected before mutation. Unaffected decisions keep their original version.
+Human reapproval is explicit. Existing building blockers and home hazard holds
+are reused, with no transfer of sibling approvals or resident consent.
+These role mappings do not attest professional competence or actual delegation.
+
+Support is tri-state: `Yes` for an observed true flag or recorded adjustment;
+`No` only for an explicit false flag and `"None"` adjustment; otherwise
+`Unknown`. `support_coverage` separately reports `Unknown` if either input is
+missing, including mixed positive cases. Compatibility Boolean `support` and
+contractor `needs_notice` mean observed positive only, not known absence.
+Staff detail/list, counts, visits, filters and AI facts share this meaning.
+Unknown inputs remain in the existing nonpositive support ranking bucket;
+safety, waiting time, stage and case-ID factors remain independent. No new
+health inference or policy weight is introduced. SQL refreshes existing
+derived support/rank columns once using `meta.support_encoding=1`, preserving
+source assertions, workflow state and audit; no new SQL schema/dialect is added.
+
+`tests/test_stock_reconciliation.py` covers JSON/SQLite semantics and upgrade
+behavior. The [API guide](../api/README.md#stock-reconciliation-api-84) describes
+the staff endpoint, rendered synthetic check and remaining acceptance gates.
+Live SQL Server/Azure, real model use, source authority, competent human review
+and direct user acceptance are not established by these local tests.
+
+## Task-bound RAI release records (#219)
+
+`assistant_release.py` reuses the migrated `assistant_releases` and
+`assistant_events` tables. `rai_release.py` owns pure typed validation/selection;
+`ai_registry.py` owns the eleven registered tasks. No workload import, new
+schema, SQL dialect extension or SQL/blob dependency for agents is added.
+Existing records without the extended contract deny dispatch until a human
+records a replacement; startup never upgrades an old approval automatically.
+
+A record requires `release_version`, registry-matching `intended_use`,
+`prohibited_uses` and `affected_stakeholders`, a named `accountable_owner`,
+`impact_assessment`, `residual_risk_decision: Accept`, a residual-risk note,
+`evaluation_decision: Pass`, 1-20 approved evaluation references in `evidence`,
+and all seven `material_change_triggers`: `intended_use`, `model`, `prompt`,
+`policy`, `data`, `evidence`, `permissions`. A reference is a human-recorded
+assertion, not an automated finding that an evaluation passed. Evidence class
+distinguishes `constructed-fixture` from `actual`; constructed records cannot
+authorize the real `Ai` client.
+
+Bindings include the task use/impact contract hash and evaluation protocol
+version, model, registry/schema, prompt, policy, data/provenance and permission
+versions. `ai_prompts.py` supplies actual retained-task instructions and their
+hash for dispatch, release matching and stored output metadata. Routine case
+edits stale source-dependent proposals; changed use, model, instructions,
+policy, evidence or permissions invalidate the release or its dependent work.
+`AI_MODEL_VERSION` supplies the expected provider model identifier for the fast
+deployment; `AI_MODEL_VERSION_STRONG` supplies it for strong requests (defaults
+to the fast value). Unattested configured models deny actual dispatch. A
+returned model comparison is not independent serving-version attestation.
+
+Approval supersedes every active record for that task, including old routing
+configurations, while preserving events. One record approves one deployment;
+changing the task's fast/strong route requires renewed approval. A rollback
+cannot revive a superseded record. Activations retain release ID/version/body
+digest; renewal creates a distinct assistant activation without overwriting
+old work. Claim, dispatch, completion, detail/review and export reliance recheck
+that reference. Cached briefings, ordinary/document reviews and separate
+priority views/reviews also recheck the selected record. Changed releases
+during calls discard/quarantine results, even when a replacement has the same
+binding. Manual templates, human review, consent and safety controls remain.
+
+Historical AI output requires a nonempty exact release reference and a currently
+selected matching record even when inference is switched off. Reliance uses the
+task's registered current fast/strong deployment, not its stored historical
+alias. Configured briefing fallbacks without a current release are retried rather
+than reused from cache, so recording matching approval restores generation
+without an unrelated case edit. Workflow-only and unconfigured template caching
+and manual/template acceptance remain available.
+
+Configured JSON-store inference now denies because it has no SQL-owned release
+record; it remains usable for manual/workflow-only work. Synthetic output
+tests explicitly install test-only authorization rather than weakening this
+production boundary. No real resident data or model call is needed to exercise
+the release-control semantics.
+
+OQ-017 remains open: live release, residual-risk acceptance, suspension and
+restart holders and competent-review delegations are not evidenced. The
+project contact in a denial is not a grant of those authorities. Approved real
+evaluation, provider attestation, Azure SQL race evidence and direct human
+oversight remain separate gates. Local synthetic checks do not approve live use.
+
 ## Hazard referral and home retrofit holds (#85)
 
 The existing `workflows` module records an unverified observation and links an
@@ -265,6 +397,69 @@ python3 -m zava_forward.core.synthetic.coverage \
   docs/reference/research/retrofit-synthetic-data/needs-inventory.json
 ```
 
+### Stock fabric and case references (#168)
+
+Inventory row SN-01 remains partial. This iteration reuses PR 246's
+`stock-fabric-v1` draw algorithm and seed 4820260930, moved into
+`zava_forward.core.synthetic.stock_fabric`; it does not generate a second
+stock register. The retained builder and EPC generator now import installed
+core. Install with pip before invoking those support tools.
+
+```bash
+python3 -m zava_forward.core.synthetic.stock_fabric \
+  --register /private/path/private-north-east-stock-register.csv \
+  --cases /private/path/zavaforward.json \
+  --out /private/path/new-stock-fabric-snapshot
+```
+
+Without explicit paths, the register is `private-north-east-stock-register.csv`
+and the new snapshot is `stock-fabric/` under `ZF_DATA` (or
+`~/.zava-forward/data/`). `ZF_DATA` can be a directory or the runtime seed file;
+a file selects its parent. The CLI refuses repository destinations, symlinks
+to them and nonempty snapshots. It checks the resolved destination and its
+ancestors for `.git` files or directories, including when installed outside
+a checkout and when the snapshot directory does not exist yet. It validates
+inputs before creating output.
+Snapshots contain `stock-fabric.csv`, `summary.json` and, with `--cases`,
+`linked-cases.json`. No generated output belongs in git or an image.
+
+Every fabric row carries `fabric_is_synthetic=true` and `is_synthetic=true`.
+Build year/age band, dwelling type, construction and heating are modelling
+assumptions, not company facts, survey results or EPCs. Summary weights/counts,
+seed, v1 draw version, source revision and payload SHA-256 hashes are recorded.
+Core revisions use full SHA-256; retained support manifests retain their
+16-hex revision shape and now include the moved core dependency sources.
+
+`resolve_cases` and `link_report` account for every case. Valid identifiers are
+opaque nonblank strings without outer whitespace; no coercion or fuzzy repair.
+Missing/invalid/not-found/ambiguous anchors produce explicit unlinked reasons.
+Duplicate/invalid case IDs fail rather than collapse rows. Bulk fabric
+generation rejects duplicate/invalid stock IDs. Each `case.stock_link` gives
+`case_id`, nullable `stock_home_id`, status/reason, `shared_anchor`, synthetic
+label and non-unit scope. A unique register reference is not verified dwelling
+identity. Legacy `distinct_stock_homes` and `stock_homes_shared_by_cases` count
+source anchors, not dwellings. Shared anchors stay explicit and valid as source
+references; they never transfer consent, approvals or household identity.
+
+`attach_fabric` refreshes only derived stock linkage/fabric, discards prior
+derived `stock_epc` so it cannot outlive a changed link, and leaves operational
+home fields, histories, consent and approvals unchanged. The retained builder
+then rebuilds its synthetic EPC block for uniquely matched source rows; the
+standalone CLI does not rebuild EPCs. Original input files are never overwritten.
+Top-level reports remain seed metadata; per-case evidence survives existing
+JSON-body SQL persistence without schema changes. Existing populated stores
+are not reseeded or migrated automatically.
+
+`tests/test_stock_fabric.py` verifies a connected fictional 60,000-row register
+and retained 980-case builder, pre-move v1 golden values, diagnostics, CLI safety,
+byte-level reproducibility, revision sensitivity and closed SQLite restart.
+This is local engineering evidence only: actual private corpus reproduction,
+owner inventory approval, unit reconciliation and real AI/SQL Server/Azure/human
+application acceptance remain unverified. AI configuration and human
+approval/resident-consent gates are unchanged; this data tool grants no authority.
+
+### Coverage baseline results and limits
+
 The deterministic JSON report includes every need, coverage totals, child
 issues or justified deferrals, convention declarations and pending owner items.
 Covered needs require delivered closure, and delivered closure requires covered
@@ -308,7 +503,7 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   cases to `chat-fixture/` under the `ZF_DATA` folder. Case IDs come from the
   60,000-home stock. Retention is an illustrative 90 days, not a policy
   (BRD OD-45/OD-46 open); expectations are targets for #160 to #164.
-* Sensor backfill (#183): `python3 -m zava_forward.core.synthetic.sensor_backfill
+* Sensor backfill (#177/#183): `python3 -m zava_forward.core.synthetic.sensor_backfill
   --estimate-only` prints the volume and size estimate for two years of hourly
   temperature and humidity across all 60,000 homes (about 1.05 billion rows,
   about 118 GiB as CSV, measured on a 20-home sample); `--homes N` writes
@@ -322,6 +517,79 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   #110 consumer validation is mirrored by `validate_reading()` and must be
   reconciled when #110 lands, and a full-stock run needs a storage and cost
   decision.
+### Register-backed sensor history (#177)
+
+The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
+`stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
+attributes or treating the scale fixture as the private stock. Supply a wholly
+synthetic CSV with `synthetic_home_id`, `is_synthetic=true`,
+`building_form_osm`, `locality_theme` and `monitoring_consent`. Building form and
+locality use the same defaults as the fabric generator when absent. Monitoring
+choices are exactly `granted`, `declined`, or `unknown`; missing/blank is unknown.
+These are fictional fixture choices, never real resident consent or permission
+to activate devices. Other columns are discarded, not copied or fingerprinted.
+Do not supply private resident/device data.
+
+Both estimate and write require explicit positive `--homes N` no larger than
+the register. IDs are unique opaque strings, sorted before selecting the first
+N, then monitoring choices are applied. Excluded homes are not replaced by
+other opted-in homes. Declined and unknown homes have no sensor or readings;
+an all-excluded subset produces zero-count metadata and an empty sensor CSV.
+Coverage records register/selected/unselected/monitored counts, every selected
+ID and each exclusion reason. Register anchors are not verified stock-unit IDs.
+
+```bash
+python -m zava_forward.core.synthetic.sensor_backfill \
+  --register /private/synthetic-fixtures/stock.csv --homes 12 \
+  --days 730 --as-of 2026-10-15 --estimate-only
+python -m zava_forward.core.synthetic.sensor_backfill \
+  --register /private/synthetic-fixtures/stock.csv --homes 12 \
+  --days 730 --as-of 2026-10-15 \
+  --out /private/synthetic-fixtures/new-sensor-history
+```
+
+Outputs must be outside any repository and in a new/empty nonsymlink folder.
+`estimate.json` is written before reading shards, measured from up to 20 of the
+actual granted sensors. The estimate includes dropout; it is not a guaranteed
+upper bound or SQL storage quote. No full-stock write is an implied approval.
+Manifest metadata records normalized allowlisted register SHA-256, source
+fingerprints, fabric/adapter versions, window, coverage and all payload hashes.
+`stock-fabric.csv` preserves selected v1 fabric plus fictional monitoring choices.
+Changing only an ignored column or CSV row order does not change output.
+
+The projection reuses the existing equations: loss = dwelling factor * age
+factor * construction factor. Stock build year selects the existing age bucket.
+Construction factors are Solid brick 1.15, Stone 1.20, Cavity brick 1.0,
+precast concrete 1.10, Timber frame 0.90, partial-fill cavity 0.85 and full-fill
+cavity 0.75. Heating schedules are seeded equal-choice morning/evening, all-day
+or low; they are variation fixtures, not judgements of residents. All factors
+and bounds are exercise assumptions, not calibrated physics or climatic facts.
+The current equations and basic fault rates remain in `sensor_backfill.py`;
+construction factors and exact fabric mappings are in `sensor_stock.py`.
+No dated measure history is supplied: `retrofitted=False` is a modelling
+assumption, not evidence that no works occurred, and no before/after claim follows.
+
+Stock sensor IDs are `SENS-SYN-` plus full SHA-256 of the home ID; reading IDs
+append epoch seconds. Home IDs must fit 128 UTF-16 code units. For a fresh
+SQL Server database apply `STOCK_SQL_DDL` (`stock-reading-v1`, sensor
+VARCHAR(73), reading VARCHAR(96), home NVARCHAR(128)), then call
+`load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV payloads
+are unchanged; do not use the narrow legacy DDL for stock mode. The loader
+does not migrate databases. SQLite tests and portable conditional-insert checks
+do not prove live SQL Server execution.
+
+This is partial #177 delivery: #178-#183 remain open, not owner-deferred.
+Historical Met Office/Environment Agency records and licence confirmation,
+dated retrofit measures, full behaviour and configurable fault/truth classes,
+and #110's future consumer validation are still missing. Owner #178 permits
+clearly labelled synthetic climate as fallback; no CO2/energy is generated.
+No AI review, hazard diagnosis, ranking change, resident action or approval
+occurs in the generator. Existing AI release/human gates are unchanged.
+`tests/test_sensor_stock.py` covers bounded 730-day histories, fabric/ID/choice
+reconciliation, byte reproducibility, bounds, estimates, hashes and local loads.
+
+### Existing reproducibility and plausibility evidence
+
 * Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
   v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
   SHA-256 for every payload file. Both require a new or empty output folder;

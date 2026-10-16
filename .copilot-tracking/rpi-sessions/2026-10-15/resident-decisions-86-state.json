@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Owner selected current-main integration via git fetch && git merge origin/main; resolve conflicts, validate src, update evidence/PR, commit and ordinary topic push",
+      "status": "conflicts resolved; local validation passed; publication authorized",
+      "evidence": "Explicit resumed user request 2026-10-16 for PR #319; origin/main 06d8aeda; changes record contains core/API/agents suite and quality results"
+    },
+    {
       "decision": "Run full RPI loop automatically and publish a PR to main on the named branch",
       "status": "confirmed",
       "evidence": "Explicit user request 2026-10-15"
@@ -56,23 +61,17 @@
       "evidence": "https://github.com/jmservera/ama/pull/319"
     }
   ],
-  "blockers": [
-    {
-      "id": "PUB-001",
-      "summary": "PR #319 conflicts with newer-main #315/#316 in reference log, core/API READMEs and core ai_tasks; no hosted checks have run",
-      "resolution": "Owner authorizes base-integration strategy, resolves the four files and reruns affected validation/CI; no merge, rebase, force push or main write performed"
-    }
-  ],
+  "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "PR #319 published; owner-authorized current-main integration must clear PUB-001 before hosted CI/merge. Do not start a child task or silently merge/rebase"
+    "action": "Commit validated merge, ordinary topic push and refresh PR #319 with Refs #86; inspect hosted checks without claiming live or human acceptance"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Authorize and perform current-main integration for PR #319",
-      "rationale": "Immediate delivery blocker: four conflicts prevent hosted checks; no main merge/rebase strategy was authorized",
-      "evidence": "PUB-001 and publication evidence in .copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md"
+      "task": "Complete authorized current-main merge integration for PR #319",
+      "rationale": "All conflicts and local validation are complete; only authorized commit/push and PR refresh remain",
+      "evidence": "Resumed integration results in .copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md"
     },
     {
       "rank": 2,

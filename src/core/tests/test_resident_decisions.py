@@ -259,6 +259,57 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         self.assertTrue(self.store.verify_audit())
 
+    def test_resident_acceptance_never_clears_technical_or_hazard_gates(self) -> None:
+        for measure in MEASURES:
+            self.scope(measure)
+            self.answer(measure)
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c.update(stage="Final checks before ordering", funding_ok=True)
+            self.store.save()
+        self.assertFalse(resident_gate(self.store.cases["ZF-1"]))
+        self.assertIn("sign-off", " ".join(self.store.detail("ZF-1")["gate"]))
+        self.unchanged_failure(lambda: self.store.advance(self.pam, "ZF-1"))
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["technical"]["signoffs"] = {
+                key: dict(status="Signed off", history=[])
+                for key in ("assessment", "design", "building", "coordination")
+            }
+            c["documents"] = [
+                dict(id=f"SYN-{kind}", kind=kind, generated=False) for kind in self.store.EVIDENCE
+            ]
+            self.store.save()
+        self.assertEqual(self.store.detail("ZF-1")["gate"], [])
+        self.store.technical_action(
+            self.pam, "ZF-1", dict(action="signoff_return", type="coordination", reason="SYN")
+        )
+        technical = copy.deepcopy(self.store.cases["ZF-1"]["technical"])
+        self.answer(status="Withdrawn")
+        self.answer(review_ref="SYN-HUMAN-REVIEW")
+        self.assertEqual(self.store.cases["ZF-1"]["technical"], technical)
+        self.unchanged_failure(lambda: self.store.advance(self.pam, "ZF-1"))
+        self.store.raise_hazard(
+            self.sam,
+            "ZF-1",
+            "Electrical",
+            "Emergency",
+            metadata=dict(source="SYN", aware_at="2026-01-01T10:00:00Z"),
+        )
+        hazards = copy.deepcopy(self.store.cases["ZF-1"]["hazards"])
+        self.answer(status="Withdrawn")
+        self.answer(review_ref="SYN-HUMAN-REVIEW")
+        self.assertEqual(self.store.cases["ZF-1"]["hazards"], hazards)
+        self.assertEqual(self.store.cases["ZF-1"]["technical"], technical)
+        self.assertFalse(resident_gate(self.store.cases["ZF-1"]))
+        self.unchanged_failure(lambda: self.store.advance(self.pam, "ZF-1"))
+        pid = self.package()
+        self.unchanged_failure(
+            lambda: self.store.issue_work_order(
+                self.pam, pid, "ZF-1", resident_bindings=self.bind(MEASURES[1])
+            )
+        )
+
     def test_redress_independence_no_detriment_and_closed_case_access(self) -> None:
         self.scope()
         self.answer(status="Paused")
@@ -389,10 +440,58 @@ class SqlResidentDecisions(JsonResidentDecisions):
         self.answer()
         pid = self.package()
         with self.store.lock:
+            self.store.require_stock_clear(self.store.cases["ZF-1"])
             self.store.issue_work_order(
                 self.pam, pid, "ZF-1", resident_bindings=self.bind(MEASURES[0])
             )
             self.assertEqual(self.store.local.resident_clear, [])
+            self.assertEqual(self.store.local.safety_clear, set())
+            self.assertEqual(self.store.local.stock_clear, set())
+
+    def test_stock_race_rechecks_all_dependencies_and_clears_them_after_rollback(self) -> None:
+        assert isinstance(self.store, SqlStore)
+        self.scope()
+        self.answer()
+        other = self.open_store()
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        with self.store.lock:
+            self.store.require_safety_clear(self.store.cases["ZF-1"])
+            self.store.require_stock_clear(self.store.cases["ZF-1"])
+            self.store.require_resident_clear(self.store.cases["ZF-1"], self.bind(MEASURES[0]))
+            other.stock_reconcile(
+                self.sam,
+                "ZF-1",
+                dict(
+                    field="epc",
+                    query_owner=self.sam["email"],
+                    left=dict(
+                        value="D",
+                        source_id="SYN-REGISTER",
+                        date="2026-01-01",
+                        version="1",
+                        validation_state="Unvalidated",
+                    ),
+                    right=dict(
+                        value="E",
+                        source_id="SYN-SURVEY",
+                        date="2026-01-01",
+                        version="1",
+                        validation_state="Disputed",
+                    ),
+                ),
+            )
+            self.store._case("ZF-1")["reason"] = "Must not persist"
+            self.store.audit(self.pam["email"], "synthetic_refused", "ZF-1", "SYN")
+            with self.assertRaises(GateError):
+                self.store.save()
+            self.assertEqual(self.store.local.resident_clear, [])
+            self.assertEqual(self.store.local.safety_clear, set())
+            self.assertEqual(self.store.local.stock_clear, set())
+            self.store.log_call(self.sam, "ZF-2", "Spoke", "Independent home")
+        self.assertEqual(self.store.cases["ZF-1"]["reason"], before["reason"])
+        self.assertEqual(self.store.cases["ZF-1"]["measure_decisions"], before["measure_decisions"])
+        self.assertNotIn("synthetic_refused", [e["action"] for e in self.store.audit_entries()])
+        self.assertTrue(self.store.verify_audit())
 
     def test_competing_pause_and_authority_change_refuse_stale_release_commit(self) -> None:
         self.scope()

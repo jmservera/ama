@@ -9,7 +9,7 @@ const assistantNames = {
 };
 
 function assistantProposal(p, reload) {
-  const status = h("p", { role: "status" }, `${p.display_state}. ${p.reason || ""} ${p.manual}`);
+  const status = h("p", { role: "status" }, `${p.display_state}. ${p.release_denial ? p.release_denial.reason : (p.reason || "")} ${p.manual}`);
   const note = h("textarea", { "aria-label": "Source verification or review note", maxlength: "1000" });
   const verified = h("input", { type: "checkbox", id: `verified-${p.id}` });
   const editing = h("textarea", { "aria-label": "Edited evidence proposal JSON", maxlength: "16000" },
@@ -116,6 +116,7 @@ async function assistantQueueView(after = "", append = false) {
       ...cards, more,
       !queue.proposals.length && h("p", {}, "No proposals in your current role and case scope. Use the ordinary case controls."));
   } catch (e) {
+    if (e.name === "AbortError" || !me) return;
     show(h("h1", {}, "Assistant proposals"), h("p", { role: "alert" }, e.message),
       h("a", { href: "#/" }, "Continue manual case work"));
   }

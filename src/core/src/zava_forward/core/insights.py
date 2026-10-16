@@ -2,6 +2,8 @@
 from collections import Counter, defaultdict
 from .resident_decisions import resident_status
 
+from .stock import support_coverage, support_status
+
 STAGE_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused",
                "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress",
                "Design awaiting approval", "Design being corrected", "Waiting on other works",
@@ -52,7 +54,7 @@ def matches(c, f):
     flag = f.get("flag")
     if flag == "hazard" and not has_hazard(c):
         return False
-    if flag == "support" and not (c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None"):
+    if flag == "support" and support_status(c["resident"]) != "Yes":
         return False
     if flag == "long" and c["days_in_stage"] < LONG_WAIT:
         return False
@@ -110,7 +112,8 @@ def stats(cases, staff):
                   long=sum(c["days_in_stage"] >= LONG_WAIT for c in open_),
                   nodecision=sum(resident_status(c) not in ("Accepted", "Declined") for c in open_),
                   funding=sum(c["funding"]["status"] in ("To prepare", "Draft ready", "Approved", "Submitted") for c in open_),
-                  support=sum(c["resident"]["priority_support"] for c in open_)),
+                  support=sum(support_status(c["resident"]) == "Yes" for c in open_),
+                  support_unknown=sum(support_coverage(c["resident"]) == "Unknown" for c in open_)),
         stages=[dict(label=s, n=by_stage[s]) for s in sorted(by_stage, key=lambda s: STAGE_ORDER.index(s) if s in STAGE_ORDER else 99)],
         areas=[dict(label=k, n=v) for k, v in Counter(c["home"]["area"] for c in open_).most_common()],
         waves=[dict(label=k, n=v) for k, v in sorted(Counter(c["wave"] for c in open_).items())],
@@ -182,7 +185,8 @@ def visits(cases, owner=None):
             if a["outcome"] == "Booked":
                 out.append(dict(id=c["id"], date=a["date"], slot=a["slot"], type=a["type"], resident=c["resident"]["name"],
                                 address=f"{c['home']['address']}, {c['home']['town']} {c['home']['postcode']}",
-                                who=a["who"], person=a["person"], support=c["resident"]["adjustment"] != "None",
+                                who=a["who"], person=a["person"], support=support_status(c["resident"]) == "Yes",
+                                support_status=support_status(c["resident"]),
                                 phone=c["resident"]["phone"], owner=c["owner"]))
     return sorted(out, key=lambda v: (v["date"], v["slot"]))
 

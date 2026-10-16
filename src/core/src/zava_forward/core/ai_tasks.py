@@ -19,8 +19,9 @@ import time
 import uuid
 from datetime import datetime
 
-from . import projection
+from . import projection, ai_prompts
 from .resident_decisions import resident_status
+from .stock import support_status
 
 PROMPT_VERSION = "2026-10-09.1"
 CITE_RE = re.compile(r"\[\[(.+?)\]\]")
@@ -58,9 +59,11 @@ def source_labels(c, reason_ok=False):
     open_h = [x for x in c.get("hazards", []) if not x["released"]]
     out.append(f"Open safety issues: {len(open_h)}")
     out += [f"Safety issue: {x['category']}" for x in c.get("hazards", [])]
-    has_adjustment = bool(r.get("adjustment")) and r["adjustment"] != "None"
-    if r.get("priority_support") or has_adjustment:
+    has_adjustment = bool(r.get("adjustment")) and r["adjustment"] not in ("None", "Unknown")
+    if support_status(r) == "Yes":
         out.append("Extra support: needed")
+    elif support_status(r) == "Unknown":
+        out.append("Extra support: Unknown")
     if reason_ok and has_adjustment:  # the reason is only visible to roles that may see it
         out.append(f"Extra support: {r['adjustment']}")
     if reason_ok and r.get("unavailable"):
@@ -87,8 +90,8 @@ def cite_instruction(sources):
         lines.append(f"{cid}: " + "; ".join(labels[:14]))
     multi = len(sources) > 1
     return ("\n\nCitable facts (cite only these, copied exactly): \n" + "\n".join(lines)
-            + "\nAfter each claim add its source in double square brackets, "
-            + ("prefixed with the case id, for example [[CASE-ID: Stage: Survey booked]]." if multi else "for example [[Stage: Survey booked]]."))
+            + ai_prompts.CITATION_RULE[0]
+            + ai_prompts.CITATION_RULE[1 if multi else 2])
 
 
 def resolve(label, sources):
@@ -168,7 +171,7 @@ def _now():
 def add_record(store, user, **fields):
     with store.lock:
         rec = dict(id=uuid.uuid4().hex[:12], kind="ai_task", user=user["email"], created=_now(), status=NOT_REVIEWED,
-                   prompt_version=PROMPT_VERSION, reviewer_action=None, reviewer_reason="", override_text=None,
+                   prompt_version=ai_prompts.version(fields["task"]), reviewer_action=None, reviewer_reason="", override_text=None,
                    resolved_by=None, resolved_at=None, **fields)
         store.data["recommendations"].append(rec)
         store.audit(user["email"], "ai_record", (rec["case_ids"] or ["-"])[0] if len(rec["case_ids"]) == 1 else "-",
@@ -208,10 +211,10 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
     from . import ai_registry
     env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
                                                for cid, labels in sources.items()},
-                               dict(r, prompt_version=PROMPT_VERSION), store.version)
+                               dict(r, prompt_version=ai_prompts.version(task)), store.version)
     rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                      latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
-                     fallback_reason=reason, envelope=env, verified=verified,
+                     fallback_reason=reason, envelope=env, release=r.get("release"), verified=verified,
                      continuity_epoch=epoch0, quarantine=dict(reason=reason, at=_now()) if late else None,
                      provenance=dict(citation_resolved=verified, source_verified=False, human_reviewed=False,
                                      source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=cites, unresolved=bad, dropped_uncited=dropped)
@@ -222,7 +225,7 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
             store.save()
         r = dict(r, source="template", model=None)
     return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
-                approval=NOT_REVIEWED, envelope=env, record_id=rec["id"], mode=mode, prompt_version=PROMPT_VERSION)
+                approval=NOT_REVIEWED, envelope=env, record_id=rec["id"], mode=mode, prompt_version=ai_prompts.version(task))
 
 
 def require_registered(task):
@@ -275,6 +278,10 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise ValueError("This AI output has already been reviewed.")
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
+        if action != "reject" and rec["source"] == "ai" and not store.release_current(
+                rec["task"], rec.get("release"), rec.get("model")):
+            store.audit(user["email"], "ai_release_denied", "-", f"{rec['task']} {rec_id}; use the manual route")
+            raise PermissionError("Release changed; use the ordinary case controls.")
         prov = rec.setdefault("provenance", dict(citation_resolved=rec.get("verified", False), source_verified=False,
                                                  human_reviewed=False, source_hashes={}, hold=None))
         try:

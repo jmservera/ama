@@ -65,6 +65,25 @@ function grantPanel(c, id, refresh) {
     ] : null);
 }
 
+function stockPanel(c) {
+  const queries = c.stock_reconciliation || [];
+  const assertion = (label, value) => h("section", {},
+    h("h4", {}, label),
+    h("dl", {}, ["value", "source_id", "date", "version", "validation_state"].flatMap((key) =>
+      [h("dt", {}, key.replaceAll("_", " ")), h("dd", {}, String(value[key]))])));
+  return h("section", { class: "card", "aria-labelledby": "stock-heading" },
+    h("h2", { id: "stock-heading" }, "Stock source comparisons"),
+    h("p", {}, "Competing evidence stays visible. No source is selected automatically; a named person owns each query."),
+    queries.length ? queries.map((q) => h("section", {},
+      h("h3", {}, `${q.id}: ${q.field}. ${q.status}`),
+      h("p", {}, `Query owner: ${q.query_owner.name}, ${q.query_owner.role}.`),
+      h("div", { class: "grid" }, assertion("First source", q.left), assertion("Compared source", q.right)),
+      h("p", {}, `Authority: ${q.authority}. Resolution: ${q.resolution}. Eligibility: ${q.eligibility}.`),
+      ...(c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).map((e) =>
+        h("p", {}, `${e.id}: ${e.status}, recorded by ${e.recorded_by.name} (${e.recorded_by.role}) at ${e.at}. Reason: ${e.reason}. Evidence: ${e.evidence || "Not supplied"}.`)))) :
+      h("p", {}, "No comparison recorded. Source authority and eligibility are Unknown."));
+}
+
 function technicalPanel(c, id, refresh) {
   const t = c.technical;
   const go = (action, extra) => refresh(() => caseApi(id, "technical", Object.assign({ action }, extra)));
@@ -72,8 +91,9 @@ function technicalPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Assessment and technical sign-offs"),
     !t ? h("p", { class: "muted" }, "No design recorded yet.") : [
       h("p", {}, `Design version ${t.design_version}, recorded by ${t.design_name}. The person who recorded the design cannot sign it off.`),
-      h("table", {}, h("thead", {}, h("tr", {}, ["Sign-off", "State", "By", "Note"].map((x) => h("th", {}, x)))),
-        h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
+      h("p", {}, "Technical sign-off is a named human professional decision, never an AI approval. Role membership alone does not attest competence."),
+      h("table", {}, h("thead", {}, h("tr", {}, ["Sign-off", "State", "Design version", "By", "Note"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
       c.technical_missing.length ? [h("p", {}, "Still needed before this stage can pass:"), h("ul", {}, c.technical_missing.map((m) => h("li", {}, `${m.item}. For the ${m.assigned_to}.`)))] : h("p", {}, "Every sign-off and piece of evidence is in place."),
     ],
     !t ? actForm("Record the design", [["note", "What the design covers"]], (b) => go("design_submit", b), "Record design")
@@ -125,7 +145,7 @@ function residentPanel(c, id, refresh) {
 
 async function financeQueueView() {
   let rows;
-  try { rows = await api("/api/finance"); } catch (e) { return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
+  try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
   show(h("h1", {}, "Finance queue"),
     h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
     rows.length ? h("table", {}, h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", {}, x)))),

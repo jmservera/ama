@@ -6,6 +6,104 @@ ms.date: 2026-10-15
 ms.topic: reference
 ---
 
+## Stock reconciliation API (#84)
+
+`POST /api/cases/{id}/stock-reconciliation` records an unresolved staff query:
+
+```json
+{
+  "field": "epc",
+  "query_owner": "sam@example.test",
+  "left": {
+    "value": "D",
+    "source_id": "SYN-REGISTER-84",
+    "date": "2026-01-01",
+    "version": "1",
+    "validation_state": "Unvalidated"
+  },
+  "right": {
+    "value": "E",
+    "source_id": "SYN-SURVEY-84",
+    "date": "2026-02-01",
+    "version": "2",
+    "validation_state": "Disputed"
+  }
+}
+```
+
+The example is constructed, not a real home. Allowed fields are `epc`, `type`
+and `built`; the owner must be registered non-contractor staff. Each assertion
+needs exactly the shown fields; validation is `Unvalidated`, `Validated`,
+`Disputed` or `Unknown`. Dates cannot be future; EPC is A-G, build year an
+integer and home type bounded text. Equal values and identical source/version
+pairs are rejected. The authenticated session supplies recorder identity.
+Invalid inputs return 400, unauthenticated requests 401, denied roles/bulk
+requests 403. The response is the projected case detail; contractors receive
+neither comparisons nor technical decisions.
+
+Opening additionally requires the registered case owner or programme/manager
+role. Staff role membership alone does not grant responsibility for every case.
+
+`POST /api/cases/{id}/stock-query-event` appends a disposition:
+
+```json
+{
+  "query_id": "SQ-1",
+  "action": "withdraw",
+  "reason": "Duplicate of another recorded query"
+}
+```
+
+The original raiser or a programme/manager role may withdraw. For a human
+reconciliation attestation use `"action": "resolve"` and add a nonempty
+`"evidence": "SYN-HUMAN-REVIEW-84"` reference. Resolution is restricted to
+registered named humans with the existing Retrofit Programme Manager or
+Programme Support Officer role. The server binds identity from the session,
+not the body; agents cannot resolve or sign off. Every disposition needs a
+reason, refers to a query on this case and is terminal. Invalid/repeated
+dispositions return 400; unauthorized requests return 403.
+
+The response derives each query's current `Unresolved`, `Withdrawn` or
+`Reconciled` status and retains the separate `stock_reconciliation_events`
+history (event ID, query ID, status, action, reason, optional evidence,
+timestamp and recorder identity). The original comparison remains unchanged
+in storage. The read-only panel shows the status and human event provenance.
+Only unresolved queries block technical approval; disposition never releases
+other stock, safety, building or independent approval gates. No source or
+home field is automatically selected/updated. Source-authority, resolution
+rules and eligibility stay Unknown/owner-approval-needed, not an approved
+operational reconciliation policy.
+
+The case view displays both values, source metadata and query owner, with
+authority/resolution/eligibility explicitly `Unknown`. A different case shows
+its own comparisons, never a carried-over rationale. Existing technical forms
+record named human decisions, not AI approval; separate sign-offs show the
+design version each person reviewed. Conflict, building and hazard holds reuse
+the [core controls](../core/README.md#stock-comparisons-and-human-technical-sign-offs-84).
+No stock source wins automatically, no resident decision is inferred and no
+case is silently excluded or automatically reprioritised.
+
+Support status and input coverage are explicit in staff detail/list. Missing
+flags are `Unknown`, not `"None"`; compatibility Boolean notice indicators
+still represent observed support only. Existing governed AI proposal paths
+remain available, with release admission and human approval unchanged.
+
+Local synthetic HTTP tests run from `src/api`:
+
+```bash
+PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p 'test_stock_reconciliation_api.py' -v
+ZF_STOCK_BROWSER=1 PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p 'test_stock_reconciliation_api.py' -v
+```
+
+The second command requires the existing development Playwright dependency
+and Chromium. It runs the real loopback application with synthetic SQL state,
+checks rendered values, source metadata, owner, Unknown labels, heading/keyboard
+access and navigation to another case. The default unit suite skips that
+opt-in browser method. This is engineering evidence, not direct human
+accessibility/competence acceptance, live inference, SQL Server or Azure proof.
+Source-authority/resolution/eligibility rules, operational delegation and
+real-platform acceptance remain unmet; nomination/tenure routing is separate.
+
 A working case-management application for the Zava Forward retrofit programme.
 It follows the simplicity requirements SA-001 to SA-010 in the
 [PRD](../../docs/prds/zava-forward-retrofit-programme-demonstrator.md) and the
@@ -93,6 +191,46 @@ SQL Server/Azure and human acceptance remain unmet; no private data or new
 deployment is used. Docker build/run depends on CI when local daemon access is
 denied.
 
+## RAI task release API (#219)
+
+`GET /api/assistants` now includes role-filtered `registered_tasks` for the
+merged eleven-task registry: intended/prohibited use, stakeholders, current
+`binding`, selected `release` (ID/version/digest), structured `release_denial`
+and the explicit OQ-017 authority gap. Existing five-assistant fields remain.
+Configured JSON-store AI denies without durable SQL release evidence; use
+SQLite locally or Azure SQL for deployment, not a JSON bypass.
+
+`POST /api/assistants/releases` uses the existing authenticated Programme
+Manager plus `ZF_ASSIST_RELEASE_APPROVERS` allowlist. Copy the task's current
+binding and supply the [core contract](../core/README.md#task-bound-rai-release-records-219)
+fields, `task` (assistant ID or `legacy:<retained-task>`), `evidence_class`,
+`serving_model`, residual-risk note and future ISO expiry. The server records
+the authenticated approver, never a client-supplied approver identity. Posting
+a replacement revokes previous active records for that task across endpoints
+and deployments; it does not overwrite historical proposals. Suspend/revoke
+routes are unchanged; restart requires a newly recorded release.
+
+Denials expose missing evidence, the unappointed authority/project contact and
+manual route, and persist in assistant events or the legacy audit/comparison
+record. Web draft notes show the denial reason. Superseded priority proposals
+are visibly non-actionable; server-side accept/edit checks remain authoritative.
+Release does not grant sending, works consent, safety, financial or domain-write
+authority. It permits bounded proposals that still require human review.
+
+Local synthetic HTTP exercise (no real AI, Azure or private data):
+
+```bash
+cd src/api
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_assistants.ApiTests.test_release_record_local_http -v
+```
+
+This starts the real App on an ephemeral loopback port, checks health,
+authenticated registry/release/invoke/detail/revoke routes, zero calls while
+denied, one nonbillable scripted provider call when released, unapproved output
+and unchanged domain state. It shuts down the listener and removes its temporary
+synthetic files. Direct human, live model and Azure acceptance are not implied.
+
 ## Hazard referral and retrofit hold API (#85)
 
 Authenticated staff use the existing safety panel on open or closed retrofit
@@ -165,6 +303,67 @@ The source API CI job runs it with pinned Playwright as a development-only
 dependency; production requirements/images do not gain a browser dependency.
 Human/screen-reader acceptance, full Fluent component integration and live
 AI/SQL Server/Azure validation are not established by these local checks.
+
+## Shared workbench information architecture (#152)
+
+`/api/me` includes `navigation` entries with `href`, `label` and `scope`,
+computed by the API from existing endpoint/Finance/manager rules. The client
+renders these entries without a new role map. Metadata is not authorization:
+direct API calls retain all existing server checks. The default remains the
+signed-in person's assigned cases, or assigned contractor jobs; programme
+directories and overview are explicitly labelled broader scopes. There is no
+role simulator. No role-specific screen redesign or new permission is included.
+
+The shell has a keyboard skip link, named navigation, visible/semantic current
+destination and a persistent scope/result announcement. Each staff case row has
+one case-opening link, plain recorded status and a review prompt, not an
+AI-invented workflow decision. Cases open full screen. Back to the list keeps
+the last mine/all scope and filters, but deliberately reloads page one: it does
+not promise restored pagination, selected row, scroll position or row focus.
+Direct case entry falls back to the own queue.
+
+"Reset my queue" clears search, stage, authority area, wave, owner, flag, sort
+and all-cases override; it restores own cases in the existing safety-first
+policy order, focuses the reset control and announces refreshed results.
+Obsolete loads/debounce are cancelled on route replacement; failed loads show
+an explicit retry, and session expiry returns to sign-in. An empty own queue
+is distinguished from no filter matches. Reset does not modify records.
+Cancelling a pending briefing invalidates its cached panel so the next queue
+requests it again; a completed briefing remains cached. Briefing failures show
+an explicit retry. The browser check holds responses across My cases -> All
+cases -> My cases and verifies recovery without stale-response replacement.
+Safety reports and stopped-work details remain expanded ahead of routine case
+forms, with existing named owners, external timings and explicit unknowns.
+Contractors retain their minimum-necessary projection, not staff safety data.
+
+The versioned [shared-IA manifest](./checks/workbench-manifest.json) declares
+eight implemented auth roles, exact synthetic own queues/navigation and all
+eleven PRD perspectives/nine workflows with partial or deferred coverage.
+It is not full AC-034/043, accepted role mapping or validated user research.
+From `src/api`, using the installed src packages and `.[dev]`:
+
+```bash
+python -m checks.workbench_browser_check
+python -m checks.design_system_browser_check
+```
+
+The second command is the existing CI entry point and runs both browser suites.
+Each starts and stops its own healthy loopback API with constructed data in an
+automatically cleaned, ignored repository-root `.venv/` scratch subdirectory;
+no credentials, model endpoints or private data settings are inherited.
+The IA checks cover eight roles, mine/all/reset/back/history, delayed and failed
+requests, expiry, contractor projection, queue/case reflow at 320/390/768/1024/
+1280 CSS pixels and 200% root text enlargement. This is Chromium engineering
+evidence, not browser-zoom, screen-reader or human acceptance. The baseline
+also exercises return from a queue with more than 50 rows.
+
+Supported devices/browsers and field/mobile use still need the owner's
+decision. The full eleven-profile/nine-workflow journey manifest remains
+incomplete. AI routes, real-provider configuration and human review/release
+gates are unchanged; the isolated checks make no live model call and do not
+satisfy mandatory real-inference/SQL Server/Azure exercise acceptance.
+No SQL, deployment, resident consent or controlled approval behavior changed.
+Local Docker access was permission denied; image evidence must come from CI.
 
 ## Return and handoff API (#83)
 

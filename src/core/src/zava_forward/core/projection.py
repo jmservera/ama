@@ -17,6 +17,8 @@ need see a "held" marker in place of staff-written notes and contact outcomes.
 """
 import os
 
+from .stock import support_status
+
 CONTRACTOR = "Contractor"
 DEFAULT_REASON_ROLES = ("Resident Liaison Officer", "Building Safety Liaison", "Retrofit Programme Manager")
 REDACTED = "Extra support noted"
@@ -58,7 +60,7 @@ def allowed(user, kind, method="GET"):
 
 
 def needs_notice(c):
-    return bool(c["resident"]["priority_support"] or c["resident"]["adjustment"] != "None")
+    return support_status(c["resident"]) == "Yes"
 
 
 def own_case(user, c):
@@ -131,7 +133,10 @@ def redact_staff_detail(user, d):
             request.pop("representative_ref", None)
     if not can_see_reason(user):
         hold_notes(d)
-        d["resident"]["adjustment"] = REDACTED if d["resident"]["adjustment"] != "None" else "None"
+        adjustment = d["resident"].get("adjustment")
+        d["resident"]["adjustment"] = (
+            "Unknown" if adjustment in (None, "", "Unknown") else
+            REDACTED if adjustment != "None" else "None")
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)

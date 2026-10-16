@@ -83,6 +83,18 @@ write refusal. Check projected GETs cannot mutate saved case or history.
 <!-- P03 -->
 ## P03: Validation and delivery
 
+Authorized delivery follow-up: merge current origin/main using the owner's
+exact fetch/merge strategy. Preserve both feature sets, append-only log and all
+mypy override entries. Recheck hazard/technical/stock/resident gates together,
+portable SQL and authenticated endpoint inventory/role coverage. Run full
+core/API/agents suites with absolute source/test PYTHONPATH, then
+`/tmp/zf164/bin/mypy .`, Ruff check and format check in touched projects.
+Update evidence and PR #319 with Refs #86, commit and ordinary topic push.
+Resumed 2026-10-16: all eight conflicts resolved; core 392, API 516 run/99
+skipped and agents 70 suites pass. Requested mypy/Ruff/format checks pass
+in all three projects. See the changes record's resumed integration results;
+hosted CI and live/human acceptance are not inferred from these local results.
+
 <!-- P03-T01 -->
 ### P03-T01
 

@@ -15,7 +15,7 @@ GENERATOR = Path(__file__).resolve().parents[3] / "support/synthetic-data/retrof
 sys.path.insert(0, str(GENERATOR))
 builder = importlib.import_module("build_mvp_dataset")
 pack = importlib.import_module("generate_pack")
-fabric = importlib.import_module("zf_stock_fabric")
+fabric = importlib.import_module("zava_forward.core.synthetic.stock_fabric")
 epc = importlib.import_module("zf_stock_epc")
 
 builder_band = importlib.import_module("zf_model").band_from_sap
@@ -81,6 +81,30 @@ class GeneratedDatasetTests(unittest.TestCase):
         summary = fabric.summary(one, 1)
         self.assertIn("not a company fact", summary["label"])
         self.assertIn("age_band_weights_by_locality", summary["assumptions"])
+
+    def test_stock_fabric_v1_pinned_rows_preserve_draw_order(self):
+        # Literal v1 rows pin both paths: mapped forms must not consume a dwelling draw.
+        expected = [
+            ("A", "apartments", 1900, "pre-1919", "Flat", "Solid brick", "Mains gas boiler"),
+            ("A", "house", 1896, "pre-1919", "Terraced house", "Solid brick", "Electric storage"),
+            ("B", "apartments", 1928, "1919-1944", "Flat", "Cavity brick", "Mains gas boiler"),
+            ("B", "house", 1941, "1919-1944", "Terraced house", "Cavity brick", "Mains gas boiler"),
+            ("C", "apartments", 1961, "1945-1964", "Flat", "Cavity brick", "Air source heat pump"),
+            ("C", "house", 1961, "1945-1964", "Detached house", "Cavity brick", "Air source heat pump"),
+        ]
+        for locality, form, year, age, dwelling, construction, heating in expected:
+            with self.subTest(locality=locality, form=form):
+                self.assertEqual(
+                    fabric.fabric(
+                        dict(synthetic_home_id=f"GOLD-{locality}",
+                             locality_theme=f"Locality {locality}", building_form_osm=form),
+                        7,
+                    ),
+                    dict(synthetic_home_id=f"GOLD-{locality}", build_year=year, age_band=age,
+                         dwelling_type=dwelling, construction=construction, heating=heating,
+                         fabric_is_synthetic=True, fabric_version="stock-fabric-v1",
+                         is_synthetic=True),
+                )
 
     def test_epc_and_survey_fields_reconcile_to_fabric_and_conflicts_are_manifested(self):
         rows = register()
@@ -172,19 +196,19 @@ class GeneratedDatasetTests(unittest.TestCase):
         def run(name):
             root = Path(self.tmp.name) / name
             root.mkdir()
-            fabric.main(["--seed", "7", "--register", str(reg), "--out", str(root / "fab.csv"),
-                         "--summary", str(root / "fab.json")])
+            fabric.main(["--seed", "7", "--register", str(reg), "--out", str(root / "fabric")])
             epc.main(["--seed", "8", "--register", str(reg), "--out", str(root / "epc.csv"),
                       "--manifest", str(root / "conf.csv"), "--summary", str(root / "epc.json")])
             return root
         one, two = run("stock1"), run("stock2")
-        for name in sorted(p.name for p in one.iterdir()):
+        for name in sorted(str(p.relative_to(one)) for p in one.rglob("*") if p.is_file()):
             self.assertEqual((one / name).read_bytes(), (two / name).read_bytes(), name)
-        for name, seed in (("fab.json", 7), ("epc.json", 8)):
+        for name, seed in (("fabric/summary.json", 7), ("epc.json", 8)):
             summary = json.loads((one / name).read_text())
             self.assertEqual(summary["seed"], seed)
             self.assertIn("version", summary)
-            self.assertRegex(summary["generator_revision"], r"^sha256:[0-9a-f]{16}$")
+            size = 64 if seed == 7 else 16
+            self.assertRegex(summary["generator_revision"], rf"^sha256:[0-9a-f]{{{size}}}$")
 
     def test_visible_visit_cohort_owner_partition_and_history_contrasts(self):
         cases = self.data["cases"]

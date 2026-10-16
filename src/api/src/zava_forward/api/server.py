@@ -17,6 +17,7 @@ from zava_forward.core import projection, quality
 
 from zava_forward.core import lawstore
 from zava_forward.api import auth
+from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import ChatModel
 from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
@@ -266,6 +267,7 @@ def make_handler(app):
                 out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
                 out["account"] = app.provider.account(self.headers, u)
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
+                out["navigation"] = navigation(u)
                 return self._json(200, out)
             if url.path == "/api/account/photo":
                 try:
@@ -603,6 +605,10 @@ def make_handler(app):
                         QUALITY_ACTIONS[act](s, u, cid, body)
                     elif act == "advance":
                         s.advance(u, cid)
+                    elif act == "stock-reconciliation":
+                        s.stock_reconcile(u, cid, body)
+                    elif act == "stock-query-event":
+                        s.stock_query_event(u, cid, body)
                     elif act == "ai":
                         s._case(cid)
                         return self._json(200, s.ai_run(u, cid, body.get("task"), body.get("mode")))

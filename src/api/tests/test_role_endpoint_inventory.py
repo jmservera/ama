@@ -22,6 +22,10 @@ GET_ENDPOINTS = ["/api/me", "/api/account/photo", "/api/cases?view=all", "/api/c
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
+                  ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
+                  ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
+                  ("/api/cases/ZF-1/stock-reconciliation", {}),
+                  ("/api/cases/ZF-1/stock-query-event", {"query_id": "SQ-1", "action": "resolve"}),
                   ("/api/cases/ZF-1/hazard-raise", {"category": "Electrical", "priority": "Routine", "source": "Synthetic report", "aware_at": "2026-01-01T10:00:00Z"}),
                   ("/api/cases/ZF-1/hazard-refer", {"index": 0, "to": "u3@example.test", "job": "SYN", "evidence": "SYN"}),
                   ("/api/cases/ZF-1/hazard-receive", {"index": 0, "evidence": "SYN"}),
@@ -57,6 +61,11 @@ class RoleEndpointInventory(Matrix):
         tested = {u.split("?")[0].rstrip("/") for u in GET_ENDPOINTS} | {p for p, _ in POST_ENDPOINTS}
         missing = sorted(r for r in routes if not any(t == r or t.startswith(r + "/") for t in tested))
         self.assertEqual(missing, [], "add these routes to the role inventory")
+
+    def test_inventory_covers_dynamic_case_actions_added_by_integration(self):
+        tested = {path.rsplit("/", 1)[-1] for path, _ in POST_ENDPOINTS}
+        for action in ("resident", "technical", "stock-reconciliation", "stock-query-event"):
+            self.assertIn(action, tested)
 
     def test_every_role_against_every_endpoint(self):
         for role in ROLES + ["Mystery"]:

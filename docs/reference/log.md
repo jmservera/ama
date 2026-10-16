@@ -3281,6 +3281,123 @@ metadata when the knowledge base was created.
 * Updated the content-standard glossary to distinguish stopped retrofit work
   and its restart decision from external hazard-service closure.
 
+## [2026-10-15] query | Task-bound RAI release evidence (#219)
+
+* Extended the merged registry/release gate in `src/core`, following ADR 0006
+  and the parity matrix rather than adding a parallel service or `mvp` code.
+* Records now require versioned use, prohibited uses, stakeholders, accountable
+  owner, impact, residual-risk acceptance, evaluation references and material
+  change triggers. Activations retain the exact release ID/version/digest;
+  supersession invalidates old work and cannot revive historical routing approval.
+* Canonical retained prompts share their hashes with binding/output metadata.
+  Cached briefings, ordinary/document and priority review paths recheck release
+  validity. JSON configured inference denies without SQL-owned evidence.
+* Updated the [core contract](../../src/core/README.md#task-bound-rai-release-records-219),
+  [API guide](../../src/api/README.md#rai-task-release-api-219),
+  [agents guide](../../src/agents/README.md) and index. Synthetic local HTTP
+  checks demonstrate deny/record/propose/revoke without changing case state.
+* OQ-017 live holders/delegations, approved real evaluation, independent model
+  attestation, direct human oversight and Azure execution remain open. The
+  project contact is not a release/risk/suspension/restart authorization.
+
+## [2026-10-15] query | Stock comparisons and human technical decisions (#84)
+
+* Added owned, append-only competing stock assertions in `src/core` with both
+  values, source IDs/dates/versions and recorded validation states. Source
+  authority, resolution and eligibility remain Unknown; no automatic merge
+  or silent cohort exclusion was added.
+* Reused four separate human sign-offs, affected-only design reassessment,
+  building blockers and hazard holds. Strengthened registered-actor history
+  and pre-mutation validation without treating an agent as a professional.
+* Centralised observed support versus missing coverage for ranking, staff
+  views, filters, counts and AI facts. Existing SQL-derived support/rank keys
+  receive an idempotent encoding refresh; no new SQL dialect was introduced.
+* Added staff API/read-only evidence panel and JSON/SQLite plus loopback
+  HTTP/rendered-browser synthetic checks. Updated the
+  [core contract](../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84),
+  [API guide](../../src/api/README.md#stock-reconciliation-api-84) and index.
+* Nomination/challenge and tenure routing stay with #130/#131. Source-authority
+  policy, eligibility decisions, operational competence/delegation, real model,
+  SQL Server/Azure and direct human acceptance remain unmet. Local engineering
+  evidence is not permission for operational use or issue closure.
+
+## [2026-10-15] implementation | Stock fabric and exact case references (#168)
+
+* Moved PR 246's fabric generator into installed `src/core` synthetic tooling,
+  preserving v1 seeded attribute draws and adding per-record `is_synthetic`.
+  Retained builder/EPC consumers import core; legacy manifests fingerprint
+  the moved dependency. No second stock generator or code in `mvp/`.
+* Added explicit per-case linked/unlinked reasons, duplicate-ID diagnostics,
+  shared-anchor/non-unit scope and a fresh-snapshot CLI through `ZF_DATA`.
+  Unknown or ambiguous references are never guessed; home fields, histories,
+  resident decisions and human approvals remain independent.
+* Updated the synthesis, data dictionary, core guide and index. SN-01 remains
+  partial; the private stock generator is unavailable and the owner has not
+  approved its regeneration/deferral, inventory mapping or field/unit
+  reconciliation. Historical PR 246 private counts were not revalidated.
+* Local engineering evidence connects a wholly fictional 60,000-row register
+  and seeded fabric to the retained 980-case builder, then compares case
+  evidence after closed SQLite restart. It does not establish private-corpus,
+  actual-model, SQL Server/Azure or human application acceptance. Existing AI,
+  consent and release gates are unchanged.
+
+## [2026-10-15] query | Register-backed historical sensor backfill (#177)
+
+* Added a src/core register adapter to the existing sensor writer, reusing
+  merged stock-fabric-v1 with sorted declared subsets, synthetic monitoring
+  choices and no copied resident/address fields. Unknown/declined fixtures
+  produce no readings; coverage, sanitized fabric and hashes remain explicit.
+* Added stock-mode SQL column bounds without migrating legacy stores or
+  changing historical fixture payloads. Core guide, synthetic-data synthesis
+  and reference index distinguish bounded 730-day fictional tests from a
+  full-stock, historical-climate or real-device result.
+* Children #178-#183 remain open, not owner-deferred. Climate provenance and
+  licence, dated measures, full behaviour/fault truth, #110 integration,
+  full-stock storage approval and real AI/SQL Server/Azure/human evidence
+  remain unavailable. No new model authority, deployment or resident consent.
+
+## [2026-10-15] query | Shared role workbench IA and recovery (#152)
+
+* Reused the merged Fluent-derived design foundations and migrated API web
+  under accepted ADR 0006. No code was added to `mvp/`.
+* Added server-described navigation using existing access rules, labelled
+  own/programme scope, current destination, keyboard skip and persistent result
+  announcements. No client role simulator or new authorization policy.
+* Reset restores own cases, all filter defaults and safety-first order with
+  logical focus. Case return retains mine/all filters but deliberately reloads
+  page one; full previous selection/position/focus restoration remains open.
+* Kept safety details expanded before routine forms and retained contractor
+  minimum projection. Cancelled obsolete route loads, exposed retry/session
+  failures and preserved wide-table keyboard scrolling during narrow reflow.
+* Added a versioned bounded eleven-perspective/nine-workflow manifest and
+  real loopback synthetic checks for eight existing login roles, five CSS
+  widths and 200% root text. Updated the [API guide](../../src/api/README.md#shared-workbench-information-architecture-152),
+  [UX synthesis](./research/ux/zava-forward-prototype-profile-review.md#shared-workbench-ia-engineering-slice-2026-10-15)
+  and this index. Existing CI browser entry point runs both check suites.
+* Owner-supported devices/browsers, full AC-034/043 journey acceptance,
+  browser zoom, human/screen-reader and actual model/SQL Server/Azure evidence
+  remain unmet. Local Docker access was permission denied; no deployment or
+  AI release/approval/consent authority changed.
+
+## [2026-10-15] fix | Stock query lifecycle and case responsibility (#84)
+
+* Corrected PR #318's permanent stock-query hold: separate append-only
+  withdrawal or human reconciliation events derive current status without
+  editing the original comparison or prior events. Audit retains named
+  recorder, event/query references, reason and human evidence.
+* Opening requires case ownership or a programme/manager role. Withdrawal
+  requires the original raiser or manager; reconciliation is a registered
+  named human programme-role attestation, never an agent or sign-off.
+* JSON/SQL and authenticated HTTP regressions were observed failing before
+  the fix. The lifecycle preserves independent approvals, safety/building
+  holds and sibling case isolation; SQL uses existing rowversion/audit
+  transactions, with commit-time stock checks and no new SQL dialect.
+* Updated [core](../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84)
+  and [API](../../src/api/README.md#stock-reconciliation-api-84) contracts and
+  index. Source authority, resolution rules and eligibility remain
+  Unknown/owner-approval-needed. Local evidence is not professional,
+  operational, real-model or SQL Server/Azure acceptance; Refs #84 remains.
+
 ## [2026-10-15] query | Resident decisions, representative authority and scoped withdrawal (#86)
 
 * Extended existing `src/core` and `src/api` contracts, not `mvp/`, to record
@@ -3307,3 +3424,22 @@ metadata when the knowledge base was created.
   without detriment, operational field/retention policy and authorized live
   platform evidence remain open. Docker daemon access is permission denied;
   image checks remain for CI. Issue #86 returns no comments from GitHub.
+
+## [2026-10-16] fix | Resident decisions current-main integration (#86)
+
+* Continued PR #319's interrupted merge of origin/main without aborting,
+  rebasing or rewriting history. Preserved both append-only log histories,
+  component guide sections and every mypy override module from both parents.
+* Combined resident SQL dependencies with main's stock and hazard checks,
+  retaining technical sign-off/design-version, handoff, RAI release,
+  role-workbench and synthetic behavior. Scoped withdrawal cannot clear
+  independent technical or safety gates; sibling release remains isolated.
+* Extended endpoint inventory and authenticated role-matrix coverage and
+  retained regressions for commit-time dependency checks and cleanup. Local
+  core 392, API 516 run/99 skipped and agents 70 suites passed; mypy, Ruff and
+  format checks passed in all three projects. Full commands and honest
+  environment/skipped-test limits are in the existing
+  [changes record](../../.copilot-tracking/changes/2026-10-15/resident-decisions-86-changes.md#resumed-integration-results-2026-10-16).
+* Refs #86 remains open: formal complaints/human acceptance, operational
+  authority/retention and actual model/SQL Server/Azure evidence are not
+  established. Local checks do not claim hosted CI, deployment or approval.
