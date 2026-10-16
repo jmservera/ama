@@ -136,6 +136,14 @@ class Azure:
             )
             if result.returncode:
                 error = result.stderr.lower()
+                if args[0] == "afd" and "'afd' is misspelled or not recognized" in error:
+                    raise SetupError(
+                        "Front Door CLI commands are unavailable. Install the CDN extension in "
+                        "the isolated setup extension directory: "
+                        "AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init "
+                        "AZURE_EXTENSION_DIR=$HOME/.azure/zava-entra-init/cliextensions "
+                        "az extension add --name cdn --upgrade. "
+                        "For --tenant-profile, use that private directory instead.")
                 kind = ("not-found" if any(s in error for s in ("resourcenotfound", "request_resourcenotfound", "status code: 404"))
                         else "permission" if any(s in error for s in ("forbidden", "authorization_requestdenied", "403", "insufficient privileges"))
                         else "login" if any(s in error for s in ("az login", "aadsts", "401"))
@@ -191,11 +199,14 @@ class Azure:
 
 def device_login(cli: Azure, tenant: str | None) -> None:
     print("Sign in as an authorized application owner/admin in the isolated setup profile.")
-    args = ["az", "login", "--use-device-code", "--allow-no-subscriptions", "-o", "none", "--only-show-errors"]
+    args = ["az", "login", "--use-device-code", "--allow-no-subscriptions", "-o", "none"]
     if tenant:
         args += ["--tenant", tenant]
+    env = cli.environment()
+    # Older Azure CLI versions emit the device-code instructions as a warning.
+    env["AZURE_CORE_ONLY_SHOW_ERRORS"] = "false"
     try:
-        process = subprocess.Popen(args, env=cli.environment(), stdout=subprocess.PIPE,
+        process = subprocess.Popen(args, env=env, stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT, text=True)
     except OSError:
         raise SetupError("Cannot start Azure CLI device login; reinstall Azure CLI.") from None

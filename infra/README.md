@@ -1649,6 +1649,22 @@ device-login URL/code in a browser as an authorized human. Other login output,
 directory names, IDs and CLI stderr are suppressed. The sign-in has a
 five-minute limit; rerun if it expires.
 
+If login waits without displaying a device code, interrupt it with Ctrl+C and
+authenticate directly in the same isolated profile, with warnings enabled:
+
+```bash
+AZURE_CONFIG_DIR="$HOME/.azure/zava-entra-init" \
+AZURE_CORE_ONLY_SHOW_ERRORS=false \
+az login --use-device-code --allow-no-subscriptions --output none
+python3 infra/scripts/setup-entra.py
+```
+
+Choose the deployment's tenant. For `--tenant-profile`, use that directory
+instead. Rerun setup without `--login` to reuse this session. Interactive setup
+keeps Azure CLI warnings enabled internally because older CLI versions emit
+the device code as a warning; only the recognized device-code instructions
+are printed. Other setup commands retain warning suppression.
+
 Preflight checks Python >=3.10, az, the isolated `containerapp` extension,
 login, Graph token permission hints and authenticated management/Graph reads
 (also the network check). Nothing requires a Python framework or package.
@@ -1666,7 +1682,16 @@ python3 -m pip install azure-cli
 mkdir -p ~/.azure/zava-entra-init
 chmod 700 ~/.azure/zava-entra-init
 AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init az extension add --name containerapp --upgrade
+AZURE_CONFIG_DIR=$HOME/.azure/zava-entra-init \
+AZURE_EXTENSION_DIR=$HOME/.azure/zava-entra-init/cliextensions \
+az extension add --name cdn --upgrade
 ```
+
+The `cdn` extension supplies `az afd` discovery commands on CLI installations
+where they are not built in. Install it in the setup extension directory, not
+only the operator's default extension directory. Setup reports a missing `afd`
+command with these installation instructions rather than a generic request
+failure. For `--tenant-profile`, substitute that private directory.
 
 All CLI calls disable file logging, telemetry and automatic extension installs;
 use no shell tracing, CLI debug logging or external session recorder when
