@@ -568,6 +568,21 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(self.invoke("--public-url", f"https://{EDGE}"), 0)
         self.assertEqual(len(self.fake.writes), count)
 
+    def test_legacy_cli_delegates_public_url_without_reimplementing_setup(self):
+        path = Path(__file__).resolve().parents[1] / "scripts" / "initialize-api-auth.py"
+        spec = importlib.util.spec_from_file_location("legacy_api_auth", path)
+        assert spec and spec.loader
+        legacy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(legacy)
+        args = [str(path), "--public-url", f"https://{EDGE}", "--check"]
+        main = unittest.mock.Mock(return_value=2)
+        with (patch("sys.argv", args),
+              patch("runpy.run_path", return_value={"main": main}) as run):
+            self.assertEqual(legacy.main(), 2)
+            self.assertEqual(SETUP.sys.argv, args)
+        run.assert_called_once_with(str(path.with_name("setup-entra.py")))
+        main.assert_called_once_with()
+
     def test_unknown_creation_outcome_is_discovered_on_rerun_without_duplicate(self):
         original = self.fake.rest
         def lost_response(method, url, body):

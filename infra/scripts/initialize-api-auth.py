@@ -72,6 +72,7 @@ def photo_permissions(current: object) -> list[dict]:
 def initialize(
     group: str, app: str, *, tenant_profile: Path | None = None,
     login: bool = False, check: bool = False, account_photo: bool = False,
+    public_url: str | None = None,
 ) -> dict[str, str]:
     """Add/verify the current callback; optional login writes only an isolated CLI profile."""
     operator = Path(os.environ.get("AZURE_CONFIG_DIR", str(Path.home() / ".azure"))).resolve()
@@ -85,11 +86,30 @@ def initialize(
     ):
         raise ValueError("The deployed API has an invalid ingress FQDN.")
     auth = _json(["containerapp", "auth", "show", "-g", group, "-n", app, "--query",
-                  "{enabled:platform.enabled,clientId:identityProviders.azureActiveDirectory.registration.clientId}"],
+                  "{enabled:platform.enabled,clientId:identityProviders.azureActiveDirectory.registration.clientId,proxy:httpSettings.forwardProxy.convention,proxyHost:httpSettings.forwardProxy.customHostHeaderName,proxyProto:httpSettings.forwardProxy.customProtoHeaderName}"],
                  operator)
     if auth.get("enabled") is not True:
         raise ValueError("API ingress authentication is disabled; configure Entra in Bicep first.")
     client_id = str(uuid.UUID(_string(auth, "clientId")))
+    if public_url is not None:
+        from urllib.parse import urlsplit
+
+        parsed = urlsplit(public_url)
+        host = parsed.hostname or ""
+        if (
+            parsed.scheme != "https" or parsed.netloc != host or parsed.path not in ("", "/")
+            or parsed.query or parsed.fragment or len(host) > 253 or "." not in host
+            or any(not re.fullmatch(r"(?!-)[A-Za-z0-9-]{1,63}(?<!-)", label)
+                   for label in host.split("."))
+        ):
+            raise ValueError("Public URL must be an HTTPS origin with a valid DNS hostname and no credentials, port, path, query or fragment.")
+        if host != fqdn and (
+            auth.get("proxy") != "Custom"
+            or auth.get("proxyHost") != "X-Forwarded-Host"
+            or auth.get("proxyProto") != "X-Forwarded-Proto"
+        ):
+            raise ValueError("An edge callback requires Custom forwardProxy with Front Door's X-Forwarded-Host and X-Forwarded-Proto headers.")
+        fqdn = host
     callback = f"https://{fqdn}/.auth/login/aad/callback"
 
     if login:
@@ -126,7 +146,7 @@ def initialize(
     if permission_changed and check:
         raise RuntimeError("Delegated own-user Graph User.Read is missing; run --account-photo without --check.")
     if changed or permission_changed:
-        body = {}
+        body: dict[str, object] = {}
         if changed:
             body["web"] = {"redirectUris": list(dict.fromkeys([*original, callback]))}
         if permission_changed:
