@@ -82,7 +82,7 @@ Update the core README and reference index, then append the reference log.
 Depends on P01-T01.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and publish
+### [x] P02: Validate and publish
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Validate and record review
@@ -94,11 +94,16 @@ removals; maximum new executable files zero. Canonical target is the existing
 research plan; no generated target.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Commit, push and create PR
+#### [x] P02-T02: Commit, push and create PR
 
 Use verified GitHub privacy-safe identity, prescribed trailer, existing clean
 topic branch and Refs #178. Leave issue body and merge decision untouched.
 Depends on P02-T01.
+
+Publication evidence: commit 7e9b984 pushed to origin/docs/climate-source-178;
+draft PR https://github.com/jmservera/ama/pull/367 targets main and contains
+Refs #178, individual unmet criteria and local validation. No issue edits
+or merge. The bounded plan is complete; issue acceptance remains blocked.
 
 ## Critique Disposition
 

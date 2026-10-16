@@ -37,6 +37,13 @@ None. The bounded documentation plan does not redefine the issue criteria.
 ## Remaining work
 
 Single Review complete; outcome Not accepted for full issue delivery.
-P02-T01 complete. Commit and publish P02-T02 as a draft because the issue is blocked.
-External evidence
-and owner reuse confirmation remain separate blocked follow-up work.
+P02-T01 and P02-T02 complete. External evidence and owner reuse confirmation
+remain separate blocked follow-up work.
+
+## Publication P02-T02
+
+Commit 7e9b984 pushed to origin/docs/climate-source-178.
+Draft PR https://github.com/jmservera/ama/pull/367 opened against main with
+Refs #178, the three unmet criteria, evidence and validation. No issue body
+change or merge. This final artifact update records publication, not another
+Review or completion of the original issue.
