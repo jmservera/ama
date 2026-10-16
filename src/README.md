@@ -91,6 +91,17 @@ by local/CI Docker contracts, not claimed as available on Container Apps.
 
 ## CI
 
+The [deployment pipeline](../infra/README.md#github-deployment-pipeline-refs-138)
+adds a separate manual, protected-environment release from `main`: four fresh
+images, hardened startup, the same fixable/full Trivy policy, run-versioned
+registry tags and immutable deployment digests. Build/test jobs have no cloud
+credentials; publication and deployment use separate OIDC identities on private
+ephemeral runners. Source CI now filters image builds by project paths and
+transitive dependencies without renaming any existing checks. Application unit,
+lint and type checks still run for every project. No Azure workflow was run for
+this implementation; federation, approvals, quarantine release and live checks
+remain setup/acceptance gaps.
+
 The `src-api` browser step also runs the
 [regulatory alert/chat UX regression](./api/README.md#local-engineering-checks)
 with hash-verified axe 4.10.3. If its pinned script cannot be downloaded,

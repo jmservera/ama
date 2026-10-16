@@ -1,0 +1,5 @@
+self-hosted-runner:
+  labels:
+    - ama-private-plan
+    - ama-private-release
+    - ama-private-deploy

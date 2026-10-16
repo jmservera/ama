@@ -1,0 +1,196 @@
+name: Source image release and deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Protected target environment (existing ama infrastructure only)
+        required: true
+        type: choice
+        options: [dev, test, pilot]
+
+permissions:
+  contents: read
+
+# All environments share ama. Never cancel an apply or overlap two releases.
+concurrency:
+  group: ama-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [api, agents, orchestrator, importer]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build source image
+        id: build
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: docker build -f "src/$PROJECT/Dockerfile" -t "zava-forward-$PROJECT:release" src
+      - name: Hardened and plain non-root startup checks without cloud credentials
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: python3 src/check-container.py "$PROJECT" "zava-forward-$PROJECT:release"
+      - name: Gate fixable high and critical vulnerabilities
+        id: scan
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          version: v0.76.0
+          image-ref: zava-forward-${{ matrix.project }}:release
+          trivy-config: src/trivy.yaml
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          vuln-type: os,library
+          ignore-unfixed: true
+          format: json
+          output: trivy-${{ matrix.project }}.json
+      - name: Report high and critical vulnerabilities including unfixed
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:release
+          trivy-config: src/trivy.yaml
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+          vuln-type: os,library
+          ignore-unfixed: false
+          format: json
+          output: trivy-${{ matrix.project }}-all.json
+          skip-setup-trivy: true
+      - name: Retain scan evidence even on gate failure
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-scans-${{ matrix.project }}
+          path: trivy-${{ matrix.project }}*.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Export only the image which passed both gates
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: docker save --output "$RUNNER_TEMP/$PROJECT.tar" "zava-forward-$PROJECT:release"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-image-${{ matrix.project }}
+          path: ${{ runner.temp }}/${{ matrix.project }}.tar
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [api, agents, orchestrator, importer]
+    environment: ${{ inputs.environment }}-release
+    runs-on: [self-hosted, linux, x64, ama-private-release]
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      RELEASE_SHA: ${{ github.sha }}
+      AZURE_REGISTRY_NAME: ${{ vars.AZURE_REGISTRY_NAME }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require approval configuration before Azure login
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_ENVIRONMENT: ${{ inputs.environment }}-release
+        run: |
+          echo "AZURE_CONFIG_DIR=$RUNNER_TEMP/azure" >> "$GITHUB_ENV"
+          echo "DOCKER_CONFIG=$RUNNER_TEMP/docker" >> "$GITHUB_ENV"
+          python3 infra/scripts/pipeline.py verify-environment --github-environment "$TARGET_ENVIRONMENT"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-image-${{ matrix.project }}
+          path: ${{ runner.temp }}/images
+      - uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        env:
+          AZURE_CORE_OUTPUT: none
+        with:
+          client-id: ${{ vars.AZURE_PUBLISH_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: Push run-versioned image and capture immutable digest
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: python3 infra/scripts/pipeline.py publish --project "$PROJECT" --images "$RUNNER_TEMP/images"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-digest-${{ matrix.project }}
+          path: ${{ runner.temp }}/images/${{ matrix.project }}.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove local Azure credentials
+        if: always()
+        run: az logout --output none
+
+  deploy:
+    needs: publish
+    environment: ${{ inputs.environment }}
+    runs-on: [self-hosted, linux, x64, ama-private-deploy]
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      RELEASE_SHA: ${{ github.sha }}
+      AZURE_REGISTRY_NAME: ${{ vars.AZURE_REGISTRY_NAME }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      DEPLOY_PARAMETERS: ${{ vars.DEPLOY_PARAMETERS }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require approval configuration before Azure login
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          echo "AZURE_CONFIG_DIR=$RUNNER_TEMP/azure" >> "$GITHUB_ENV"
+          echo "DOCKER_CONFIG=$RUNNER_TEMP/docker" >> "$GITHUB_ENV"
+          python3 infra/scripts/pipeline.py verify-environment --github-environment "$TARGET_ENVIRONMENT"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: release-digest-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/digests
+      - uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        env:
+          AZURE_CORE_OUTPUT: none
+        with:
+          client-id: ${{ vars.AZURE_DEPLOY_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: Pull-only admission, fresh what-if, incremental deploy and HTTP/SQL checks
+        env:
+          TARGET_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          python3 infra/scripts/pipeline.py deploy --environment "$TARGET_ENVIRONMENT" \
+            --images "$RUNNER_TEMP/digests" --output "$RUNNER_TEMP/deploy-summary.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ !cancelled() }}
+        with:
+          name: deployment-summary-${{ inputs.environment }}
+          path: ${{ runner.temp }}/deploy-summary.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Remove local Azure credentials
+        if: always()
+        run: az logout --output none

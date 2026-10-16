@@ -4103,6 +4103,49 @@ metadata when the knowledge base was created.
   hardening and other unmet criteria remain Partial; owner review and all
   operational/legal/consent/safety/financial approvals remain separate.
 
+## [2026-10-16] query | Offline CI/CD deployment pipeline
+
+* Refs #138. Added trusted default-branch PR what-if and main-only manual
+  source-image release/deployment workflows, pinned actions, job-local OIDC
+  permissions, protected environment configuration checks and isolated private
+  runner requirements. No retired-layout or legacy CI workflow edits.
+* Reused the environment parameter sets, source Docker contexts, hardened/plain
+  startup contract and fixable/full Trivy policy. Four run-versioned images
+  are handed off as exact digests; no mutable cache reuse or mixed-source release.
+* Added ama-only incremental what-if/apply guards, sanitized artifacts,
+  quarantine-aware pull-only admission, private SQL checks and strict local
+  HTTP health/authentication-denial regressions. Source CI retains existing
+  check names and adds dependency-aware image path filtering.
+* Updated source/infra guides and reference routing. All live issue criteria
+  remain unchecked: no Azure pipeline execution, real federation, reviewer
+  approval, release, SQL/model identity proof or operational/legal acceptance
+  is claimed. Existing hosted-kernel hardening and pilot setup gaps remain.
+* Local evidence: 154 infra tests including the real installed API on an empty
+  constructed fixture, Ruff/format, strict helper mypy and actionlint pass.
+  All three actual Bicep parameter examples compiled through the new helper
+  offline with constructed override fixtures.
+  Docker daemon is unavailable locally; no image/Trivy rerun is claimed.
+
+## [2026-10-16] query | Infra CI test-only dependency correction
+
+* Refs #138. Reproduced PR 357 validate's missing `yaml` import in a clean
+  Python 3.12 venv with only editable core, agents and API installed:
+  infra discovery ran 131 tests with one import error.
+* Merged origin/main without rewriting history and retained both log histories.
+  The validate infra-test step now installs `PyYAML==6.0.3`, matching source
+  CI. No production package dependency was added. Updated the full infra
+  quality-gate recipe and reference routing.
+* Added assertions for both CI discovery consumers and six mutations covering
+  missing, unpinned and late installation. Existing removed-control workflow
+  mutations remain intact; no ImportError skip or weakened YAML parser.
+* Same-venv discovery passes all 156 tests after the explicit pinned test
+  prerequisite. The Bicep-required run with absolute source fixture paths also
+  passes; local real API health/authentication-denial probes, Ruff/format and
+  strict pipeline helper mypy pass.
+* All six live acceptance criteria remain unmet and unchecked. No Azure
+  deployment/OIDC execution, new human approval, private-data read or
+  operational/legal acceptance is claimed. ADR 0005 remains synthetic-only;
+  real owners and sources remain gaps.
 ## [2026-10-16] implementation | Regulatory UX review regression gates
 
 * Refs #215. Merged origin/main into the existing PR branch and retained both
