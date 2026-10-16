@@ -74,7 +74,7 @@ production files, then prove old revision lacks required pack/test contract.
 <!-- P03 -->
 ### P03: Review and hand off
 * [x] P03-T01 Reconcile evidence and run one RPI review.
-* [ ] P03-T02 Commit, push, open PR; owner checklist remains unchecked.
+* [x] P03-T02 Commit, push, open PR; owner checklist remains unchecked.
 
 ## Critique Disposition
 
@@ -126,3 +126,6 @@ No document-specific sign-off inference engine was added: source/reference
 oracles and baseline context mutation provide the requested substantive
 negative evidence; owner checklist integrity is directly reviewed in docs.
 All required human gates remain unchecked.
+
+Published evidence commit f5e5f65 on docs/cutover-evidence-pack-201 and PR #341
+against main. Publication does not certify deployed proof or accept cut-over.

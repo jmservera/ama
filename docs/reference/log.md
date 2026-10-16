@@ -3734,3 +3734,6 @@ metadata when the knowledge base was created.
   Private-data copy/open/encrypted-backup attestation and sign-off remain
   owner-only, with every checklist box unchecked. No legacy folder deletion
   or workflow rename occurs in this work.
+* Published PR #341 with Refs-only linkage. One RPI critique and one Review
+  executed; Review outcome Residual work, not accepted cut-over. Hosted checks
+  and the owner decision remain separate from this evidence preparation.

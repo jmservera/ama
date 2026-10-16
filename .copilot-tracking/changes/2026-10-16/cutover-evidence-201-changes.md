@@ -58,7 +58,9 @@ unchecked owner gates. Generated reports enumerate tracked text only.
 
 ## P03 handoff
 
-Ready for one Review; publication pending. Evidence pack explicitly not ready
-for cut-over. Current-task build blockers corrected; external subscription,
-SQL/network, tenant and owner gates remain unfulfilled. No owner approval
-or deletion authorized.
+One Review executed: Complete / Residual work, RV-001 through RV-003 routed.
+Published evidence commit f5e5f65 and PR #341:
+https://github.com/jmservera/ama/pull/341 . Branch pushed without rewriting
+history; PR body checked for Refs-only linkage. Evidence pack explicitly
+not ready for cut-over. External subscription, SQL/network, tenant and owner
+gates remain unfulfilled. No owner approval or deletion authorized.
