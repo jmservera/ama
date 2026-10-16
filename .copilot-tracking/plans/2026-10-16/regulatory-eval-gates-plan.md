@@ -118,15 +118,21 @@ No legal approval or issue checkbox change is authorized.
 <!-- rpi:phase id=P04 -->
 ### P04 Integrated regression correction and delivery
 
-* [ ] P04 complete
+* [x] P04 complete
 <!-- rpi:task id=P04-T01 -->
 * [x] P04-T01 Merge origin/main first, retaining both append-only log histories.
 <!-- rpi:task id=P04-T02 -->
 * [x] P04-T02 Reproduce full API failures, correct retained-history assertions and resolve unavailable-store behavior honestly.
 <!-- rpi:task id=P04-T03 -->
-* [x] P04-T03 Run all three complete suites with absolute fixture paths, Ruff/format/mypy and local HTTP; reconcile README counts and acceptance audit, with final PR text prepared for publication.
+* [x] P04-T03 Run all three complete suites with absolute fixture paths, Ruff/format/mypy and local HTTP; reconcile README/PR counts and acceptance audit.
 <!-- rpi:task id=P04-T04 -->
-* [ ] P04-T04 Record supplied review disposition, commit with trailer, push normally and update existing PR 355.
+* [x] P04-T04 Record supplied review disposition, commit with trailer, push normally and update existing PR 355.
+
+P04 delivered as main merge c311752 and correction 4d4525f, pushed normally.
+Existing PR #355 updated with the complete 529/93/559 run counts and distinct
+528/93/449 passes, 1/0/110 skips. No active implementation markers remain.
+Historical independent verdicts remain historical; CI and owner review remain
+separate from local verification and issue-level acceptance.
 
 ## Remaining Acceptance Work
 

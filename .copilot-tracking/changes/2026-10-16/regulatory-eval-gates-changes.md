@@ -168,3 +168,17 @@ cited turns, empty/unavailable stores, saved safety work and unchanged alerts.
 No outbound provider call or Azure/private data use. git diff --check passed.
 Component README, index/log and supplied-review routing updated; every unmet
 issue criterion remains unmet. P04-T04 commit/push/PR publication is pending.
+
+## P04-T04: Publication and completion
+
+Committed correction 4d4525f after main merge c311752 and pushed normally to
+feat/regulatory-eval-gates-216. Both commits use the authenticated owner's
+repository-local privacy-safe email and required Copilot coauthor trailer.
+Updated existing PR #355, not a duplicate, with only Refs #216, exact complete
+suite counts and unchanged unmet acceptance gates. Documentation relative file
+links, reference wording and git diff --check passed before commit.
+
+P04 fully complete; no active implementation tasks or local blockers remain.
+This final artifact-only closeout is committed separately without amending
+history. CI is allowed to run and owner review remains external; no PR merge,
+issue-checkbox edit, independent review rerun or approval claim is made.
