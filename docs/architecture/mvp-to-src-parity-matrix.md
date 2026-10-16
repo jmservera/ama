@@ -7,6 +7,13 @@ ms.topic: reference
 
 ## Purpose and Status
 
+Current check: the [2026-10-16 evidence pack](./cutover-evidence-pack.md) and
+[generated row reconciliation](./cutover-parity-audit.tsv) account for all
+130 per-file/pattern rows (578 historical tracked paths), including actual
+placements that differ from proposed targets below. Source images built;
+Azure bootstrap failed, so deployed health and owner sign-off remain unmet.
+This current audit supplements, rather than rewrites, the historical record.
+
 This is the evidence for the cut-over gate in issue
 [#201](https://github.com/jmservera/ama/issues/201), under the epic
 [#195](https://github.com/jmservera/ama/issues/195). It records one outcome for
@@ -28,7 +35,9 @@ commit `736b387` (578 tracked files: 128 real files plus 450 sandbox files, see
 comments of #195 to #203, the pull request bodies, file lists and linked issues
 of #235 to #287, and a run of the MVP unit suite on 2026-10-15.
 
-Limits: no Azure resource was used or created. Acceptance criteria are read from
+Limits: as of the 2026-10-15 baseline, no Azure resource had been used or
+created; a later partial deployment is recorded in
+[cutover-evidence-pack.md](cutover-evidence-pack.md). Acceptance criteria are read from
 the issue text; a criterion is "unmet" only where the pull request body, the
 code or the repository record shows it is not delivered.
 
