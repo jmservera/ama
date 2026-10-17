@@ -66,5 +66,17 @@
     }
   ],
   "next_action": null,
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [],
+  "integration": {
+    "authorization": "Coordinator explicitly permits rebase and exact-lease update only for this run-owned topic; keep draft/main, no merge or issue closure.",
+    "old_head": "95b7145af89ab751cd992423eb90cf8e0db47185",
+    "base": "bab4bf3a2ac9ec030d78d27063d1390f800c5c7c",
+    "rebased_candidate": "c0853c5",
+    "conflicts": ["docs/reference/log.md"],
+    "resolution": "Exact upstream log prefix retained then exact own entries; all unrelated index rows and infra publication limits retained; no source conflicts.",
+    "production_patch_sha256": "c825ab718b578701344b912a5344512061f46db92dcf23257c864e694d631264",
+    "source_parity": "Seven complete production/test files and complete binary patch byte-identical; original Review/disposition/verification unchanged.",
+    "validation": "Two early/persistent recovery and transactional refusal methods pass (eight subcases); 358 relative targets valid, JSON/whitespace/preservation pass. Broad suites not repeated without source changes.",
+    "publication": "Final documentation/state-only integration commit uses topic-only exact old-head lease; exact published head and remote result recorded in PR382 and delivery result."
+  }
 }

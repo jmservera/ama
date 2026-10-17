@@ -1,6 +1,73 @@
 <!-- markdownlint-disable-file -->
 # Changes: Assessment reconciliation controls #84
 
+## Authorized main integration (2026-10-17)
+
+Coordinator explicitly authorized rebase and topic-only `--force-with-lease`
+for this run-owned branch, superseding the earlier no-rebase boundary only
+for this integration. Initial clean local and REST PR #382 head:
+95b7145af89ab751cd992423eb90cf8e0db47185, open draft targeting main.
+`git fetch origin main` verified exact requested base
+bab4bf3a2ac9ec030d78d27063d1390f800c5c7c; old merge base
+adedf1f232e567d3a22a623d9c871513fa6b7cdc. Coordinator reports its independent
+review found no significant issues pending this evidence summary; this is
+supplied review context, not a newly executed independent review.
+
+### Operation and conflict resolution
+
+`git rebase --empty=drop --reapply-cherry-picks origin/main` replayed all four
+owned commits. Only conflict: docs/reference/log.md in the initial commit.
+Retained exact complete upstream prefix, including both #360 normal-Docker
+publication-blocker and #381 integration entries, then appended all original
+#84 entries. Removed only conflict markers and added the separating blank line.
+`git add docs/reference/log.md`, staged whitespace check and
+`GIT_EDITOR=true git rebase --continue` succeeded. No source conflict or source
+edit. Index auto-merged, preserving every unrelated upstream table row exactly,
+including infrastructure publication limits, alongside current #84 routing.
+
+Rebased source/evidence sequence:
+2e45b5e -> c089188, a15c7a2 -> 6440562, b6122fb -> 52f8481,
+95b7145 -> c0853c5. The final integration-record commit is documentation/state
+only; its exact pushed head is recorded on PR #382 and in the delivery result.
+No repeated full RPI, correction cycle or independent verification was needed.
+
+### Integration validation
+
+* Captured old `git diff --binary adedf1f..95b7145 --` all seven owned
+  production/test files before rebase; compared byte-for-byte to
+  `git diff --binary bab4bf3..HEAD --` the same paths after rebase. Equal,
+  SHA256 `c825ab718b578701344b912a5344512061f46db92dcf23257c864e694d631264`.
+  All seven complete file SHA256 values also match. Production patch and
+  fresh-staff/rollback/early-persistent fault test bytes are unchanged.
+* `git range-diff adedf1f..95b7145 bab4bf3..HEAD -- src/core/src
+  src/core/tests src/api/tests` marks both source commits equal. Upstream
+  infra/tools have no branch diff. Original RPI artifacts, original Review
+  plus correction disposition and correction verification are byte-identical
+  to the pre-integration head; existing independent source fingerprints apply.
+* Before this new append, log bytes equal exact bab4bf3 log plus exact old
+  branch-owned suffix; every unrelated upstream index table row retained.
+  358 relative documentation/artifact targets exist; lifecycle JSON parses.
+  `git diff --check origin/main...HEAD` passes. Rebase finished clean.
+* Minimal integration regression from repository root:
+  `PYTHONPATH=src/core/tests .venv/bin/python -m unittest
+  test_stock_reconciliation.StockReconciliation.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work
+  test_stock_reconciliation.StockReconciliation.test_sql_transaction_refusal_keeps_original_error_when_reload_fails -v`:
+  two methods pass in 0.610s, including six wrapper/fault and two transaction
+  refusal subcases. No skips.
+* No source change/conflict or changed dependencies, so broad core/API,
+  lint/type and actual SQL Server suites were not repeated. Prior correction
+  ONE evidence remains historical: 102 core, 69 shared-cleanup, 72 API
+  (one browser skip), ten actual local SQL Server and static checks pass;
+  independent bounded verification closes RV-001. No new live-platform,
+  browser/WCAG, private publication or human/source-policy acceptance claim.
+
+Privacy-safe authenticated author/committer and required Copilot trailer for
+the integration-record commit. Publication uses only the named topic branch
+and exact expected old remote SHA in `--force-with-lease`; no unconditional
+force or main push. Existing PR remains draft/main, no merge or issue closure.
+Remote operation failures must be reported, never counted as successful.
+Final source parity/clean state and remote head are verified at publication.
+
 ## Correction ONE: Explicitly Authorized RV-001 Continuation
 
 2026-10-17, same #84 / PR #382, clean requested topic at a15c7a2. Coordinator
