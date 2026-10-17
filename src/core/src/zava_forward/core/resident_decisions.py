@@ -8,18 +8,24 @@ Service and complaint requests have their own route, desired outcome and a
 named redress owner. Contact needs are held as short coded entries so only the
 minimum necessary is shown.
 """
+import json
+import logging
+import os
+from contextlib import contextmanager
 from copy import deepcopy
-from datetime import date
+from datetime import UTC, date, datetime
 
 from . import controls as k
 
 DECISION_STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
 ANSWERED_BY = ("The resident", "Their representative")
-ROUTES = ("Service request", "Complaint", "Independent review", "Repair", "Defect", "Hazard")
+ROUTES = ("Service request", "Complaint", "Independent review", "Repair", "Defect", "Hazard",
+          "Charge query", "Household dispute")
 REQUEST_STATUSES = ("Open", "In progress", "Resolved")
 ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language", "Interpreter", "Representative contact", "Safe route needed")
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
-                    "decision_record", "service_open", "service_update", "service_close")
+                    "decision_record", "service_open", "service_update", "service_close",
+                    "service_reopen", "update_record", "remedy_confirm", "remedy_update")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -27,6 +33,186 @@ RESIDENT_RETENTION_YEARS = 5
 RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews")
+MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
+FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen",
+                    "update_record", "remedy_confirm", "remedy_update")
+
+
+class ResidentCommittedError(RuntimeError):
+    """A resident write persisted, but its acknowledgement needs reconciliation."""
+
+
+def _time():
+    return datetime.now(UTC).isoformat()
+
+
+def _actor(store, user):
+    from .change_provenance import _actor as current_actor
+    return current_actor(store, user)
+
+
+def _identity(actor):
+    return {key: actor.get(key) for key in ("email", "code", "name", "role", "oid")}
+
+
+def _day(value):
+    try:
+        if not isinstance(value, str) or date.fromisoformat(value).isoformat() != value:
+            raise ValueError
+    except (TypeError, ValueError):
+        raise ValueError("Enter the next update date as a valid YYYY-MM-DD date.") from None
+    return value
+
+
+def _version(body, record):
+    from .store import ConflictError
+    value = body.get("expected_version")
+    if type(value) is not int or value < 0:
+        raise ValueError("Reload and supply the current record version.")
+    if value != (record or {}).get("version", 0):
+        raise ConflictError("The resident record changed. Reload before recording this step.")
+
+
+def _person(store, email):
+    if not isinstance(email, str) or not email.strip():
+        raise ValueError("Choose a named resident-workflow colleague from the staff list.")
+    if hasattr(store, "db"):
+        row = store.db.execute("SELECT body FROM staff WHERE email=?", (email.lower(),)).fetchone()
+        candidate = json.loads(row[0]) if row else {}
+    else:
+        candidate = store.staff.get(email.lower(), {})
+    if not candidate or candidate.get("role") not in k.RESIDENT_VIEW_ROLES:
+        raise ValueError("Choose a current named resident-workflow colleague from the staff list.")
+    actor = _actor(store, candidate)
+    k.require_role(actor, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+    if not actor.get("code") or actor["name"].strip().casefold() == actor["role"].casefold():
+        raise PermissionError("Choose a registered named person, not a role or unresolved identity.")
+    context = getattr(getattr(store, "local", store), "resident_validation", None)
+    if context is not None and not context["validating"]:
+        context["subjects"].append(deepcopy(actor))
+    return actor
+
+
+def _owner_rights(store, actor, identity, email=None):
+    if actor["role"] in MANAGERS:
+        return
+    # Legacy lookup authorizes the present action only, never reconstructs history.
+    owner = _actor(store, identity) if identity else _person(store, email)
+    if any(actor.get(key) != owner.get(key) for key in ("email", "code", "oid")):
+        raise PermissionError("Only the named current owner or a resident-workflow manager can record this step.")
+
+
+def followup_view(case):
+    """Expose missing legacy provenance without mutating or inventing it."""
+    for req in case.get("service_requests", []):
+        req.setdefault("status_owner", None)
+        req.setdefault("status_at", None)
+        req.setdefault("version", 0)
+        req.setdefault("remedy", dict(status="Unknown", owner=None, at=None,
+                                      opened_at=None, version=0, history=[]))
+    update = case.get("resident_update")
+    if update:
+        for key in ("purpose", "basis", "owner_identity", "at", "opened_at"):
+            update.setdefault(key, None)
+        update.setdefault("version", 0)
+        update.setdefault("status", "Unknown")
+        update.setdefault("safe_contact_ref", "Unknown")
+    return case
+
+
+def validate_sql(store):
+    context = getattr(store.local, "resident_validation", None)
+    if context is None:
+        return
+    context["validating"] = True
+    try:
+        actor = _actor(store, context["actor"])
+        for subject in context["subjects"]:
+            try:
+                current = _person(store, subject["email"])
+            except ValueError:
+                raise PermissionError("Resident-workflow responsibility changed. Reload before continuing.") from None
+            if current != subject:
+                raise PermissionError("Resident-workflow responsibility changed. Reload before continuing.")
+        row = store.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (context["case_id"],)).fetchone()
+        if not row or row[0] != context["rowversion"]:
+            from .store import ConflictError
+            raise ConflictError(context["case_id"])
+        # Replay validation on a detached current input, never on the persisted record.
+        getattr(store, "_res_" + context["body"]["action"])(actor, json.loads(row[1]), context["body"])
+    finally:
+        context["validating"] = False
+
+
+def mark_committed(store):
+    context = getattr(store.local, "resident_validation", None)
+    if context is not None:
+        context["persisted"] = True
+
+
+@contextmanager
+def _operation(store, user, case_id, body):
+    with store.lock:
+        sql = hasattr(store, "db")
+        holder = getattr(store, "local", store)
+        previous = getattr(holder, "resident_validation", None)
+        if sql:
+            store._touched()
+        pending = list(store.local.pending) if sql else []
+        audit_size = None if sql else (os.path.getsize(store.audit_path) if os.path.exists(store.audit_path) else 0)
+        audit_head = None if sql else store.last_hash
+        before = None
+        saving = False
+        context = dict(actor=deepcopy(user), body=deepcopy(body), case_id=case_id, subjects=[],
+                       validating=False, persisted=False)
+        holder.resident_validation = context
+        try:
+            actor = _actor(store, user)
+            k.require_role(actor, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+            if actor != _person(store, user.get("email")):
+                raise PermissionError("Reload your current staff identity before recording this step.")
+            c = store._case(case_id)
+            before = deepcopy(c)
+            if sql:
+                context["rowversion"] = store._rv[case_id]
+            detail = getattr(store, "_res_" + body["action"])(actor, c, context["body"])
+            store.audit(actor["email"], f"resident_{body['action']}", case_id, detail)
+            saving = True
+            store.save()
+            context["persisted"] = True
+            yield
+        except BaseException as error:
+            if sql:
+                try:
+                    with store.dblock:
+                        store._discard(() if context["persisted"] else pending)
+                except Exception:
+                    error.add_note("Resident record recovery failed; reload to establish the outcome.")
+                    logging.getLogger(__name__).exception("Resident record SQL recovery failed")
+            elif not context["persisted"] and before is not None:
+                c.clear()
+                c.update(before)
+                try:
+                    if os.path.exists(store.audit_path):
+                        with open(store.audit_path, "r+b") as audit:
+                            audit.truncate(audit_size)
+                    store.last_hash = audit_head
+                finally:
+                    if saving:
+                        from .store import Store
+                        try:
+                            Store.save(store)
+                        except Exception:
+                            error.add_note("Resident state restoration failed; durable outcome may be unknown. Reload before retrying.")
+                            logging.getLogger(__name__).exception("Resident record JSON recovery failed")
+            if context["persisted"]:
+                logging.getLogger(__name__).exception("Resident record committed; acknowledgement failed")
+                raise ResidentCommittedError(
+                    "The resident change was recorded, but confirmation failed. Reload and reconcile its history before another action."
+                ) from error
+            raise
+        finally:
+            holder.resident_validation = previous
 
 
 def first_contact(c, today=None):
@@ -212,6 +398,9 @@ class ResidentDecisionMixin:
         action = body.get("action")
         if action not in RESIDENT_ACTIONS:
             raise ValueError("Unknown step.")
+        if action in FOLLOWUP_ACTIONS:
+            with _operation(self, user, case_id, body):
+                return
         with self.lock:
             self.resident_recorder(user, service=action in ("service_open", "service_update", "service_close"))
             c = self._case(case_id)
@@ -311,11 +500,12 @@ class ResidentDecisionMixin:
         route = k.choice(body.get("route"), ROUTES, "the route")
         owners = []
         for key, label in (("service_owner", "who deals with it"), ("redress_owner", "who owns the redress")):
-            s = self.staff.get((body.get(key) or "").lower())
-            if not s or s["role"] == "Contractor":
-                raise ValueError(f"Choose {label} from the staff list.")
+            s = _person(self, body.get(key))
             owners.append(s)
-        if route in ("Complaint", "Independent review") and owners[0]["email"].lower() == owners[1]["email"].lower():
+        if route in ("Complaint", "Independent review") and any(
+            owners[0].get(key) and str(owners[0][key]).casefold() == str(owners[1].get(key, "")).casefold()
+            for key in ("email", "code", "oid")
+        ):
             raise ValueError("A complaint or independent review needs a different redress owner.")
         subject = None
         if route == "Independent review":
@@ -339,7 +529,12 @@ class ResidentDecisionMixin:
                    desired_outcome=k.text(body.get("desired_outcome"), "the outcome the resident wants", 300),
                    service_owner=owners[0]["name"], service_owner_email=owners[0]["email"], redress_owner=owners[1]["name"],
                    redress_owner_email=owners[1]["email"], accessibility=codes, representative_ref=k.text(body.get("representative_ref"), "", 80, False) or "Unknown",
-                   status="Open", next_update=k.text(body.get("next_update"), "the date of the next update", 10), opened_by=user["name"], opened_at=k.now(),
+                   status="Open", next_update=_day(body.get("next_update")), opened_by=user["name"], opened_at=_time(),
+                   service_identity=_identity(owners[0]), redress_identity=_identity(owners[1]),
+                   version=1, status_owner=_identity(owners[0]), status_at=_time(),
+                   remedy=dict(status="Open", owner=_identity(owners[1]), at=_time(),
+                               opened_at=_time(), version=1, basis="Supplied desired outcome",
+                               history=[]),
                    reviewed_actor=subject, review_reference=review_reference,
                    review_measure=body.get("review_measure") if route == "Independent review" else None,
                    review_decision_version=body.get("review_decision_version") if route == "Independent review" else None,
@@ -353,10 +548,12 @@ class ResidentDecisionMixin:
             raise ValueError("This request is closed.")
         if req["route"] == "Independent review" and user["email"].lower() != req["redress_owner_email"].lower():
             raise PermissionError("Only the named independent reviewer can update this review.")
+        identity_key = "redress" if req["route"] == "Independent review" or user["email"] == req["redress_owner_email"] else "service"
+        _owner_rights(self, user, req.get(identity_key + "_identity"), req.get(identity_key + "_owner_email"))
         status = k.choice(body.get("status"), REQUEST_STATUSES, "the status")
-        next_update = k.text(body.get("next_update"), "the date of the next update", 10)
+        next_update = _day(body.get("next_update"))
         req.update(status=status, next_update=next_update)
-        req["history"].append(dict(status=req["status"], by=user["name"], at=k.now(), note=k.text(body.get("note"), "a note", 300, False)))
+        self._response_event(req, user, k.text(body.get("note"), "a note", 300, False))
         return f"{req['id']} {req['status']}"
 
     def _res_service_close(self, user, c, body):
@@ -367,7 +564,108 @@ class ResidentDecisionMixin:
             if user["email"].lower() != req["redress_owner_email"].lower():
                 raise PermissionError("Only the redress owner can close a complaint.")
             k.different_person(user, req["service_owner_email"], "close a complaint")
+            _owner_rights(self, user, req.get("redress_identity"), req["redress_owner_email"])
+            other = req.get("service_identity") or _person(self, req["service_owner_email"])
+            if any(user.get(key) and user.get(key) == other.get(key) for key in ("email", "code", "oid")):
+                raise PermissionError("A different named person must close the complaint response.")
         elif user["email"].lower() not in (req["service_owner_email"].lower(), req["redress_owner_email"].lower()):
             raise PermissionError("Only the person dealing with it or the redress owner can close this.")
-        req.update(status="Closed", closed_by=user["name"], closed_at=k.now(), outcome=k.text(body.get("note"), "the outcome for the resident", 300))
+        else:
+            key = "service" if user["email"] == req["service_owner_email"] else "redress"
+            _owner_rights(self, user, req.get(key + "_identity"), req[key + "_owner_email"])
+        req.update(status="Closed", closed_by=user["name"], closed_at=_time(), outcome=k.text(body.get("note"), "the outcome for the resident", 300))
+        self._response_event(req, user, req["outcome"])
         return f"{req['id']} closed"
+
+    def _response_event(self, req, user, note):
+        key = "redress" if req["status"] == "Closed" or req["route"] == "Independent review" else "service"
+        owner = _person(self, req.get(key + "_owner_email"))
+        if req.get(key + "_identity"):
+            _actor(self, req[key + "_identity"])
+        req.update(version=req.get("version", 0) + 1, status_owner=_identity(owner), status_at=_time())
+        req.setdefault("history", []).append(dict(status=req["status"], actor=_identity(user),
+                                                 by=user["name"], at=req["status_at"], note=note))
+
+    def _res_service_reopen(self, user, c, body):
+        req = k.find(c.get("service_requests", []), body.get("id"), "request")
+        _version(body, req)
+        if req["status"] != "Closed":
+            raise ValueError("Only a closed response can be reopened.")
+        if req["route"] == "Independent review" and user["email"] != req["redress_owner_email"]:
+            raise PermissionError("Only the named independent reviewer can reopen this review.")
+        key = "redress" if user["email"] == req["redress_owner_email"] else "service"
+        _owner_rights(self, user, req.get(key + "_identity"), req.get(key + "_owner_email"))
+        note = k.text(body.get("note"), "why the response is reopened")
+        req["status"] = "Open"
+        self._response_event(req, user, note)
+        return f"{req['id']} response reopened; remedy unchanged"
+
+    def _res_update_record(self, user, c, body):
+        previous = c.get("resident_update")
+        _version(body, previous)
+        if previous and previous.get("version"):
+            _owner_rights(self, user, previous.get("owner_identity"))
+        elif previous and user["role"] not in MANAGERS and c["owner_code"] != user["code"]:
+            raise PermissionError("The case owner or a resident-workflow manager must confirm this legacy commitment.")
+        elif not previous and user["role"] not in MANAGERS and c["owner_code"] != user["code"]:
+            raise PermissionError("The case owner or a resident-workflow manager must create this commitment.")
+        owner = _person(self, body.get("owner"))
+        due = body.get("due_at")
+        try:
+            parsed = datetime.fromisoformat(due) if isinstance(due, str) else None
+            if parsed is None or parsed.tzinfo is None or parsed.utcoffset() is None:
+                raise ValueError
+        except (ValueError, TypeError):
+            raise ValueError("Enter the commitment due date with a time and timezone.") from None
+        rec = dict(
+            purpose=k.text(body.get("purpose"), "the update purpose or linked issue"),
+            owner=owner["name"], owner_identity=_identity(owner),
+            due_at=parsed.astimezone(UTC).isoformat(),
+            basis=k.text(body.get("basis"), "the human-selected due date basis"),
+            safe_contact_ref=k.text(body.get("safe_contact_ref"), "", 80, False) or "Unknown",
+            status=k.choice(body.get("status"), ("Outstanding", "Proposed"), "the commitment status"),
+            version=(previous or {}).get("version", 0) + 1,
+            at=_time(), opened_at=previous.get("opened_at") if previous else _time(),
+            history=deepcopy((previous or {}).get("history", [])),
+        )
+        old = deepcopy(previous)
+        if old:
+            old.pop("history", None)
+        rec["history"].append(dict(old=old, actor=_identity(user), at=rec["at"], version=rec["version"]))
+        c["resident_update"] = rec
+        return f"Resident-update commitment v{rec['version']} recorded; no message sent"
+
+    def _res_remedy_confirm(self, user, c, body):
+        req = k.find(c.get("service_requests", []), body.get("id"), "request")
+        _version(body, req.get("remedy"))
+        if req.get("remedy"):
+            raise ValueError("This remedy is already recorded. Use its current version.")
+        _owner_rights(self, user, req.get("redress_identity"), req.get("redress_owner_email"))
+        owner = _person(self, body.get("owner"))
+        req["remedy"] = dict(
+            status="Open", owner=_identity(owner), version=1, at=_time(), opened_at=None,
+            basis=k.text(body.get("basis"), "the supplied remedy responsibility basis"),
+            history=[dict(old=None, actor=_identity(user), at=_time(), status="Open", version=1)],
+        )
+        return f"{req['id']} legacy remedy responsibility confirmed; original provenance unknown"
+
+    def _res_remedy_update(self, user, c, body):
+        req = k.find(c.get("service_requests", []), body.get("id"), "request")
+        remedy = req.get("remedy")
+        if not remedy:
+            raise ValueError("Confirm the legacy remedy responsibility before recording progress.")
+        _version(body, remedy)
+        _owner_rights(self, user, remedy.get("owner"))
+        owner = _person(self, body["owner"]) if body.get("owner") else _actor(self, remedy["owner"])
+        k.require_role(owner, k.RESIDENT_VIEW_ROLES, "current resident-workflow staff")
+        status = k.choice(body.get("status"), ("Open", "In progress", "Resolved", "Closed"), "the remedy status")
+        allowed = {"Open": ("In progress", "Resolved"), "In progress": ("Open", "Resolved"),
+                   "Resolved": ("Open", "Closed"), "Closed": ("Open",)}
+        if status not in allowed.get(remedy["status"], ()):
+            raise ValueError("Resolve the remedy before closing it; reopen a closed remedy explicitly.")
+        note = k.text(body.get("note"), "the supplied remedy progress or reopening evidence")
+        old = {key: deepcopy(value) for key, value in remedy.items() if key != "history"}
+        remedy.update(status=status, owner=_identity(owner), version=remedy["version"] + 1, at=_time())
+        remedy["history"].append(dict(old=old, status=status, actor=_identity(user),
+                                       at=remedy["at"], note=note, version=remedy["version"]))
+        return f"{req['id']} remedy {status}; response unchanged"

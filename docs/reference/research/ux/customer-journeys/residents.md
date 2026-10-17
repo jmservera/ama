@@ -5,7 +5,7 @@ perspective: "Resident Engagement and Insight"
 status: "Research hypotheses; not resident validation or operational approval"
 scope: "Rented households; shared owners/leaseholders; representatives; support workers"
 evidence_boundary: "Local sources only; no new legal claims"
-ms.date: 2026-10-14
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -116,3 +116,30 @@ Three focused research questions, asked one at a time through accessible, volunt
 3. After installation, what would make you feel that a concern had been properly resolved?
 
 Recruit across all maps, including deferral, refusal and non-digital routes. Engagement owns research; Housing/Programme own changes with specialist approvals. No validation claimed.
+
+## Resident commitment and remedy criterion audit (2026-10-17, #88)
+
+The [core record contract](../../../../../src/core/README.md#resident-commitments-and-independent-remedy-clocks-88)
+and [existing API/panel](../../../../../src/api/README.md#resident-commitments-and-remedy-api-88)
+amend exact issue gaps against PRD FR-033/049 and BRD FR-047. They do not
+convert the maps above into observed resident testimony or operational authority.
+
+| Issue criterion | Implemented record boundary | Evidence and limitation |
+| --- | --- | --- |
+| Update purpose, owner, due date and basis | Full versioned resident_update; current named owner, supplied basis and safe reference/Unknown | Explicit create/reassign; handoffs cannot manufacture partial commitments. Outstanding/Proposed is not evidence of a message, receipt or understanding |
+| Response/package closure cannot close open remedy, defect or charge query | Existing response status plus separately versioned remedy per service request; independent Defect/Charge query routes | Mixed-state JSON/SQLite and actual isolated loopback SQL tests carry open issues through work-order completion, quality handover, financial note, return/reopen and restart |
+| Each status retains owner/date | Distinct response status_owner/status_at, remedy owner/at/opened_at/history, retained work-order/quality events and own finance-note owner/date/history | Legacy absent original dates/identities remain Unknown; explicit current confirmation never reconstructs an old event |
+
+Current registered identities and actionable role boundaries are rechecked inside
+the existing writer transaction. Negative concurrent writers and actual audit-
+insert/recovery-read/post-COMMIT faults prove refusal and no replay on local SQL.
+Authenticated HTTP distinguishes committed-but-unconfirmed outcomes from refusal.
+Actual local browser exercises the changed manual journey, native labels, retained
+errors, keyboard submission and small/large widths with reduced motion.
+
+Full PRD AC-063/BRD AC-089 also require approved lease positions, missing-evidence
+decision holds, scope-change re-review and configured Housing/Complaints age bands.
+Those are not established by issue #88's three criteria. Age bands remain Unknown;
+no Legal position, service clock, tenant contact, real approval, Azure or paid AI
+was invented. Independent final-head/coordinator acceptance and direct human/
+screen-reader/WCAG evaluation remain distinct gates.

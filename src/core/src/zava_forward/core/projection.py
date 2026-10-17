@@ -141,6 +141,11 @@ def redact_staff_detail(user, d):
     resident_data = {key: deepcopy(d[key]) for key in RESIDENT_FIELDS + ("decision",)
                      if key in d} if resident_view else {}
     if not resident_view:
+        d.pop("resident_update", None)
+        d.pop("service_requests", None)
+        for event in d.get("handoff_history", []):
+            if isinstance(event.get("changes"), dict):
+                event["changes"].pop("resident_update", None)
         for key in ("representative_authorities", "resident_safe_contact", "resident_contact_history", "resident_scopes"):
             d.pop(key, None)
         for measure in d.get("measure_decisions", []):

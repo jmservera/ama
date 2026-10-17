@@ -5,10 +5,13 @@ import json
 import os
 import tempfile
 import unittest
+import uuid
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import partial
 from pathlib import Path
+from threading import Barrier
 from typing import Any
 from unittest.mock import patch
 
@@ -700,6 +703,369 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
 
+    def commitment(self, **kw: Any) -> None:
+        body = dict(
+            expected_version=0,
+            purpose="SYN update about remedy",
+            owner=self.sam["email"],
+            due_at="2099-01-01T12:00:00Z",
+            basis="SYN human-selected fixture date",
+            safe_contact_ref="Unknown",
+            status="Outstanding",
+        )
+        body.update(kw)
+        self.action("update_record", **body)
+
+    def request(self, route: str = "Complaint") -> None:
+        self.action(
+            "service_open",
+            route=route,
+            summary="SYN issue",
+            desired_outcome="SYN remedy requested",
+            service_owner=self.sam["email"],
+            redress_owner=self.rae["email"],
+            next_update="2099-01-01",
+        )
+
+    def test_complete_update_and_explicit_reassignment_preserve_history(self) -> None:
+        self.commitment()
+        first = copy.deepcopy(self.store.cases["ZF-1"]["resident_update"])
+        self.commitment(expected_version=1, owner=self.rae["email"], status="Proposed")
+        update = self.open_store().detail("ZF-1")["resident_update"]
+        self.assertEqual(update["version"], 2)
+        self.assertEqual(update["owner_identity"]["email"], self.rae["email"])
+        first.pop("history")
+        self.assertEqual(update["history"][-1]["old"], first)
+        self.assertEqual(update["due_at"], "2099-01-01T12:00:00+00:00")
+        self.assertNotIn("sent_at", update)
+        self.assertNotIn("completed_at", update)
+        self.assertEqual(update["basis"], "SYN human-selected fixture date")
+        self.unchanged_failure(lambda: self.commitment(expected_version=1))
+        self.unchanged_failure(lambda: self.commitment(expected_version=2))
+        self.assertTrue(self.store.verify_audit())
+
+    def test_incomplete_commitments_dates_and_identity_fail_without_mutation(self) -> None:
+        for field, value in (
+            ("purpose", ""),
+            ("basis", ""),
+            ("owner", "missing@example.test"),
+            ("due_at", "2099-01-01"),
+            ("due_at", "2099-02-30T12:00:00Z"),
+            ("expected_version", True),
+            ("status", "Sent"),
+        ):
+            with self.subTest(field=field, value=value):
+                self.unchanged_failure(partial(self.commitment, **{field: value}))
+        self.unchanged_failure(
+            lambda: self.store.resident_action(
+                dict(self.sam, oid="SYN-forged"), "ZF-1", dict(action="update_record")
+            )
+        )
+        self.unchanged_failure(
+            lambda: self.action(
+                "service_open",
+                route="Complaint",
+                service_owner=self.sam["email"],
+                redress_owner=self.rae["email"],
+                summary="SYN",
+                desired_outcome="SYN",
+                next_update="2099-02-30",
+            )
+        )
+
+    def test_response_and_remedy_close_and_reopen_are_independent(self) -> None:
+        self.request()
+        original = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0]["remedy"])
+        self.action("service_update", id="SR-1", status="Resolved", next_update="2099-01-01")
+        self.store.resident_action(
+            self.rae, "ZF-1", dict(action="service_close", id="SR-1", note="SYN response")
+        )
+        req = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(req["status"], "Closed")
+        self.assertEqual(req["remedy"], original)
+        self.assertEqual(req["status_owner"]["email"], self.rae["email"])
+        self.assertTrue(req["status_at"])
+        self.unchanged_failure(
+            lambda: self.action(
+                "remedy_update", id="SR-1", expected_version=1, status="Resolved", note="SYN"
+            )
+        )
+        for version, status in ((1, "Resolved"), (2, "Closed"), (3, "Open")):
+            self.store.resident_action(
+                self.rae,
+                "ZF-1",
+                dict(
+                    action="remedy_update",
+                    id="SR-1",
+                    expected_version=version,
+                    status=status,
+                    note="SYN remedy",
+                ),
+            )
+            current = self.open_store().cases["ZF-1"]["service_requests"][0]
+            self.assertEqual(current["status"], "Closed")
+            self.assertEqual(current["remedy"]["opened_at"], original["opened_at"])
+            self.assertEqual(current["remedy"]["status"], status)
+        remedy = copy.deepcopy(current["remedy"])
+        self.action("service_reopen", id="SR-1", expected_version=3, note="SYN response only")
+        self.assertEqual(self.store.cases["ZF-1"]["service_requests"][0]["remedy"], remedy)
+        self.assertEqual(self.store.cases["ZF-1"]["service_requests"][0]["status"], "Open")
+
+    def test_legacy_confirmation_preserves_unknown_history_and_closed_response(self) -> None:
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident_update"] = dict(owner="Legacy unknown person", due_at=None)
+            c["service_requests"] = [
+                dict(
+                    id="SR-1",
+                    route="Complaint",
+                    status="Closed",
+                    service_owner="Old",
+                    service_owner_email="absent@example.test",
+                    redress_owner="Old",
+                    redress_owner_email="absent@example.test",
+                    history=[],
+                )
+            ]
+            self.store.save()
+        old = copy.deepcopy(self.store.cases["ZF-1"]["resident_update"])
+        projected = self.store.detail("ZF-1")
+        self.assertIsNone(projected["service_requests"][0]["remedy"]["opened_at"])
+        self.assertEqual(projected["service_requests"][0]["remedy"]["status"], "Unknown")
+        self.unchanged_failure(
+            lambda: self.action(
+                "remedy_update", id="SR-1", expected_version=0, status="Resolved", note="SYN"
+            )
+        )
+        self.commitment()
+        update = self.store.cases["ZF-1"]["resident_update"]
+        self.assertEqual(update["history"][0]["old"], old)
+        self.assertIsNone(update["opened_at"])
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="remedy_confirm",
+                id="SR-1",
+                expected_version=0,
+                owner=self.rae["email"],
+                basis="SYN new responsibility",
+            ),
+        )
+        req = self.open_store().detail("ZF-1")["service_requests"][0]
+        self.assertEqual(req["status"], "Closed")
+        self.assertIsNone(req["status_owner"])
+        self.assertIsNone(req["status_at"])
+        self.assertIsNone(req["remedy"]["opened_at"])
+        self.assertEqual(req["remedy"]["history"][0]["old"], None)
+        self.unchanged_failure(
+            lambda: self.store.resident_action(
+                self.pam,
+                "ZF-1",
+                dict(
+                    action="remedy_confirm",
+                    id="SR-1",
+                    expected_version=0,
+                    owner=self.rae["email"],
+                    basis="SYN",
+                ),
+            )
+        )
+
+    def test_actionable_owner_roles_projection_and_captured_identity(self) -> None:
+        self.unchanged_failure(lambda: self.commitment(owner=self.kim["email"]))
+        self.unchanged_failure(lambda: self.commitment(owner=self.rex["role"]))
+        self.commitment()
+        self.request()
+        for actor in (self.sam, self.pam, self.rae):
+            self.assertIn("resident_update", self.store.detail("ZF-1", actor))
+        self.assertNotIn("resident_update", self.store.detail("ZF-1", self.kim))
+        self.assertNotIn("service_requests", self.store.detail("ZF-1", self.kim))
+        self.assertNotIn("SYN update about remedy", self.store._facts(self.store.cases["ZF-1"]))
+        # A current manager may explicitly take responsibility, not impersonate the old owner.
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="remedy_update",
+                id="SR-1",
+                expected_version=1,
+                status="In progress",
+                owner=self.sam["email"],
+                note="SYN reassign",
+            ),
+        )
+        req = self.store.cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(req["remedy"]["owner"]["email"], self.sam["email"])
+        self.assertEqual(req["remedy"]["history"][-1]["old"]["owner"]["email"], self.rae["email"])
+        self.assertEqual(req["remedy"]["history"][-1]["actor"]["email"], self.pam["email"])
+
+    def test_mixed_closure_clocks_survive_unrelated_transitions_and_restart(self) -> None:
+        self.commitment()
+        for route in ("Complaint", "Defect", "Charge query"):
+            self.request(route)
+        self.action("service_update", id="SR-1", status="Resolved", next_update="2099-01-01")
+        self.store.resident_action(
+            self.rae, "ZF-1", dict(action="service_close", id="SR-1", note="SYN response only")
+        )
+        expected = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"])
+        commitment = copy.deepcopy(self.store.cases["ZF-1"]["resident_update"])
+
+        def retained() -> None:
+            case = self.open_store().detail("ZF-1")
+            self.assertEqual(case["service_requests"], expected)
+            self.assertEqual(case["resident_update"], commitment)
+            self.assertEqual(case["service_requests"][0]["status"], "Closed")
+            self.assertEqual(case["service_requests"][0]["remedy"]["status"], "Open")
+
+        for measure in MEASURES:
+            self.scope(measure)
+            self.answer(measure)
+        pid = self.package()
+        wid = self.store.issue_work_order(
+            self.pam, pid, "ZF-1", resident_bindings=self.bind(MEASURES[0])
+        )
+        self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
+        self.store.complete_work_order(self.pam, wid, "SYN physical completion only")
+        order = self.store._work_order(wid)
+        self.assertEqual(order["completed_by"], self.pam["name"])
+        self.assertTrue(order["completed_at"])
+        retained()
+        for index, measure in enumerate(MEASURES):
+            self.store.submit_quality(
+                self.sam,
+                "ZF-1",
+                measure,
+                "Synthetic installer",
+                "Installer",
+                {label: "SYN evidence" for label in checklist_for(measure)["items"]},
+                context_revision=1,
+            )
+            if index == 0:
+                self.store.accept_quality(self.pam, "ZF-1", index)
+                self.store.hand_over_quality(self.pam, "ZF-1", index, "SYN guarantees", True)
+                handed = self.store.cases["ZF-1"]["quality"][0]["handover"]
+                self.assertEqual(handed["by"], self.pam["name"])
+                self.assertTrue(handed["at"])
+            else:
+                self.store.return_quality(
+                    self.pam, "ZF-1", index, "SYN return", "SYN defect", self.rae["name"]
+                )
+                defect = copy.deepcopy(self.store.cases["ZF-1"]["quality"][index]["defect"])
+                self.assertEqual(defect["owner"], self.rae["name"])
+                self.assertTrue(defect["raised_at"])
+            retained()
+        self.store.finance_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="invoice_receive",
+                supplier="Test Ltd",
+                work_order=wid,
+                ref="SYN-INV",
+                kind="Invoice",
+                lines=[dict(measure=MEASURES[0], quantity=1, amount=10, milestone_ref="SYN")],
+            ),
+        )
+        self.store.finance_action(
+            self.pam, "ZF-1", dict(action="payment_status", id="INV-1", status="Not payable yet")
+        )
+        invoice = self.store.cases["ZF-1"]["finance"]["invoices"][0]
+        self.assertEqual(invoice["payment_status_owner"]["email"], self.pam["email"])
+        self.assertTrue(invoice["payment_status_at"])
+        retained()
+        with self.store.lock:
+            self.store._case("ZF-1").update(stage="Completed", closed=True)
+            self.store.save()
+        self.store.reopen_case(
+            self.pam,
+            "ZF-1",
+            "SYN reopening",
+            metadata=dict(source="SYN", next_action="SYN aftercare"),
+        )
+        retained()
+        self.store.return_case(
+            self.sam,
+            "ZF-1",
+            "Contacting resident",
+            "SYN return",
+            metadata=dict(source="SYN", next_action="SYN next action"),
+        )
+        retained()
+        self.assertEqual(self.open_store().cases["ZF-1"]["quality"][1]["defect"], defect)
+        self.store.resident_action(
+            self.rae,
+            "ZF-1",
+            dict(
+                action="remedy_update",
+                id="SR-3",
+                expected_version=1,
+                status="Resolved",
+                note="SYN charge query progress",
+            ),
+        )
+        current = self.open_store().cases["ZF-1"]["service_requests"]
+        self.assertEqual(current[:2], expected[:2])
+        self.assertEqual(current[2]["status"], "Open")
+        self.assertEqual(current[2]["remedy"]["status"], "Resolved")
+
+    def test_handoff_cannot_create_partial_commitment_or_clear_existing_one(self) -> None:
+        from dataset import change_metadata
+
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        with self.assertRaises(ValueError):
+            self.store.offer_handoff(
+                self.sam,
+                "ZF-1",
+                self.rae["email"],
+                metadata={
+                    **change_metadata(self.store, "ZF-1"),
+                    "resident_update_to": self.sam["email"],
+                },
+            )
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries())[-1]["action"], "handoff_offered_rejected")
+        self.commitment()
+        expected = copy.deepcopy(self.store.cases["ZF-1"]["resident_update"])
+        self.store.offer_handoff(
+            self.sam,
+            "ZF-1",
+            self.rae["email"],
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        self.store.receive_handoff(self.rae, "ZF-1")
+        self.store.decline_handoff(self.rae, "ZF-1", "SYN return to sender")
+        self.assertEqual(self.open_store().cases["ZF-1"]["resident_update"], expected)
+        denied = self.store.detail("ZF-1", dict(self.rex, role="Quality Inspector"))
+        self.assertNotIn("SYN human-selected fixture date", json.dumps(denied))
+
+    def test_json_followup_failure_restores_record_and_ledger(self) -> None:
+        if self.sql:
+            self.skipTest("JSON file rollback only")
+        self.commitment()
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        for target in ("save", "audit"):
+            with self.subTest(target=target):
+                original = getattr(self.store, target)
+
+                def failed(
+                    *args: Any,
+                    target: str = target,
+                    original: Callable[..., Any] = original,
+                    **kwargs: Any,
+                ) -> None:
+                    if target == "audit":
+                        original(*args, **kwargs)
+                    raise OSError("SYN persistence fault")
+
+                with patch.object(self.store, target, side_effect=failed):
+                    with self.assertRaises(OSError):
+                        self.commitment(expected_version=1)
+                self.assertEqual(self.open_store().cases["ZF-1"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+                self.assertTrue(self.store.verify_audit())
+
     def test_quality_dependencies_are_scoped_and_unknown_evidence_cannot_release(self) -> None:
         for measure in MEASURES:
             self.scope(measure)
@@ -914,6 +1280,205 @@ class AzureResidentDecisions(unittest.TestCase):
 
 class SqlResidentDecisions(JsonResidentDecisions):
     sql = True
+    store: SqlStore
+
+    def test_followup_writer_rechecks_current_actor_assignee_and_legacy_identity(self) -> None:
+        assert isinstance(self.store, SqlStore)
+        for subject in (self.sam, self.rae):
+            for key, value in (("oid", "SYN-rebound"), ("role", "Quality Inspector")):
+                with self.subTest(subject=subject["code"], field=key):
+                    save = self.store.save
+
+                    def changed(
+                        subject: dict[str, Any] = subject,
+                        key: str = key,
+                        value: str = value,
+                        save: Callable[[], None] = save,
+                    ) -> None:
+                        connection = self.store.assistant_connection()
+                        try:
+                            connection.execute(
+                                "UPDATE staff SET body=? WHERE email=?",
+                                (json.dumps(dict(subject, **{key: value})), subject["email"]),
+                            )
+                        finally:
+                            connection.close()
+                        save()
+
+                    with patch.object(self.store, "save", side_effect=changed):
+                        self.unchanged_failure(lambda: self.commitment(owner=self.rae["email"]))
+                    self.store.db.execute(
+                        "UPDATE staff SET body=? WHERE email=?",
+                        (json.dumps(subject), subject["email"]),
+                    )
+        self.request()
+        self.action("service_update", id="SR-1", status="Resolved", next_update="2099-01-01")
+        with self.store.lock:
+            self.store._case("ZF-1")["service_requests"][0].pop("service_identity")
+            self.store.save()
+        save = self.store.save
+
+        def rebound() -> None:
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(dict(self.sam, code=self.rae["code"])), self.sam["email"]),
+            )
+            save()
+
+        with patch.object(self.store, "save", side_effect=rebound):
+            self.unchanged_failure(
+                lambda: self.store.resident_action(
+                    self.rae, "ZF-1", dict(action="service_close", id="SR-1", note="SYN")
+                )
+            )
+        self.store.db.execute(
+            "UPDATE staff SET body=? WHERE email=?", (json.dumps(self.sam), self.sam["email"])
+        )
+        self.store.resident_action(
+            self.rae, "ZF-1", dict(action="service_close", id="SR-1", note="SYN response")
+        )
+
+    def test_concurrent_followup_writers_one_version_one_success_event(self) -> None:
+        self.commitment()
+        other = self.open_store()
+        barrier = Barrier(2)
+
+        def record(store: Store, owner: dict[str, Any]) -> str:
+            with store.lock:
+                barrier.wait(timeout=20)
+                try:
+                    store.resident_action(
+                        self.sam,
+                        "ZF-1",
+                        dict(
+                            action="update_record",
+                            expected_version=1,
+                            owner=owner["email"],
+                            purpose="SYN concurrent",
+                            due_at="2099-01-01T12:00:00Z",
+                            basis="SYN",
+                            status="Outstanding",
+                        ),
+                    )
+                    return "recorded"
+                except ConflictError:
+                    return "conflict"
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [
+                pool.submit(record, self.store, self.sam),
+                pool.submit(record, other, self.rae),
+            ]
+            self.assertCountEqual([f.result(timeout=40) for f in futures], ["recorded", "conflict"])
+        current = self.open_store()
+        self.assertEqual(current.cases["ZF-1"]["resident_update"]["version"], 2)
+        self.assertEqual(
+            sum(e["action"] == "resident_update_record" for e in current.audit_entries()), 2
+        )
+        self.assertTrue(current.verify_audit())
+
+    def test_followup_audit_insert_and_recovery_faults_never_replay_success(self) -> None:
+        assert isinstance(self.store, SqlStore)
+        self.commitment()
+        for persistent in (False, True):
+            with self.subTest(persistent=persistent):
+                before = copy.deepcopy(self.store.cases["ZF-1"])
+                audit = list(self.store.audit_entries())
+                db, append = self.store.db, self.store._append_audit
+                original = OSError("SYN after real audit insert")
+
+                class ReadFault:
+                    armed = False
+                    count = 0
+
+                    def __init__(self, db: Any, persistent: bool) -> None:
+                        self.db = db
+                        self.persistent = persistent
+
+                    def execute(self, sql: str, args: Any = ()) -> Any:
+                        if self.armed and sql.startswith("SELECT rowversion, body FROM cases"):
+                            if self.persistent or self.count == 0:
+                                self.count += 1
+                                raise OSError("SYN recovery read")
+                        return self.db.execute(sql, args)
+
+                    def __getattr__(self, name: str) -> Any:
+                        return getattr(self.db, name)
+
+                fault = ReadFault(db, persistent)
+
+                def audit_failure(
+                    entries: Any,
+                    append: Callable[..., Any] = append,
+                    fault: ReadFault = fault,
+                    original: OSError = original,
+                ) -> None:
+                    append(entries)
+                    fault.armed = True
+                    raise original
+
+                with self.store.lock:
+                    self.store.audit(self.sam["email"], "prior_event", "ZF-2", "SYN")
+                    prior = list(self.store.local.pending)
+                    with (
+                        patch.object(self.store, "_append_audit", side_effect=audit_failure),
+                        patch.object(self.store, "db", fault),
+                        self.assertLogs("zava_forward.core.resident_decisions", level="ERROR"),
+                    ):
+                        with self.assertRaises(OSError) as caught:
+                            self.commitment(expected_version=1)
+                    self.assertIs(caught.exception, original)
+                    self.assertEqual(self.store.local.pending, prior)
+                    self.assertEqual(self.store.local.touched, set())
+                    self.assertIsNone(self.store.local.resident_validation)
+                current = self.open_store()
+                self.assertEqual(current.cases["ZF-1"], before)
+                self.assertEqual(
+                    [e["action"] for e in current.audit_entries()],
+                    [e["action"] for e in audit] + ["prior_event"],
+                )
+                self.assertTrue(current.verify_audit())
+        self.commitment(expected_version=1)
+
+    def test_followup_postcommit_sync_fault_is_truthful_and_not_replayed(self) -> None:
+        from zava_forward.core.resident_decisions import ResidentCommittedError
+
+        assert isinstance(self.store, SqlStore)
+        self.commitment()
+        other = self.open_store()
+        save, sync = self.store.save, self.store._sync
+        fault = dict(armed=False)
+
+        def interleave() -> None:
+            other.log_call(self.sam, "ZF-2", "SYN", "SYN concurrent unrelated write")
+            fault["armed"] = True
+            save()
+
+        def failed_sync() -> None:
+            if fault["armed"]:
+                raise OSError("SYN persistent postcommit synchronization")
+            sync()
+
+        with self.store.lock:
+            self.store.audit(self.sam["email"], "prior_event", "ZF-2", "SYN")
+            with (
+                patch.object(self.store, "save", side_effect=interleave),
+                patch.object(self.store, "_sync", side_effect=failed_sync),
+                self.assertLogs("zava_forward.core.resident_decisions", level="ERROR"),
+                self.assertRaises(ResidentCommittedError) as caught,
+            ):
+                self.commitment(expected_version=1)
+            self.assertIn("recorded", str(caught.exception))
+            self.assertIsInstance(caught.exception.__cause__, OSError)
+            self.assertEqual(self.store.local.pending, [])
+        current = self.open_store()
+        self.assertEqual(current.cases["ZF-1"]["resident_update"]["version"], 2)
+        audit = list(current.audit_entries())
+        self.store.save()
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(sum(e["action"] == "resident_update_record" for e in audit), 2)
+        self.assertEqual(sum(e["action"] == "prior_event" for e in audit), 1)
+        self.assertTrue(current.verify_audit())
 
     def test_save_clears_scoped_dependencies_inside_outer_lock(self) -> None:
         assert isinstance(self.store, SqlStore)
@@ -1023,3 +1588,34 @@ class SqlResidentDecisions(JsonResidentDecisions):
                     self.pam, pid, "ZF-1", resident_bindings=self.bind(MEASURES[0])
                 )
         self.assertEqual(self.store.list_work_orders(self.pam), [])
+
+
+@unittest.skipUnless(os.environ.get("ZF_RESIDENT_MSSQL") == "1", "opt-in owned loopback SQL Server")
+class MssqlResidentControls(SqlResidentDecisions):
+    def setUp(self) -> None:
+        from zava_forward.core.mssqlstore import _Conn, connection_string
+
+        self.database = "zf_resident88_" + uuid.uuid4().hex
+        environment = patch.dict(os.environ, ZF_SQL_DATABASE="master")
+        environment.start()
+        self.addCleanup(environment.stop)
+        admin = _Conn(connection_string())
+        self.addCleanup(admin.close)
+        admin.execute(f"CREATE DATABASE [{self.database}]")
+
+        def drop_owned_database() -> None:
+            admin.execute(
+                f"ALTER DATABASE [{self.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE"
+            )
+            admin.execute(f"DROP DATABASE [{self.database}]")
+
+        self.addCleanup(drop_owned_database)
+        os.environ["ZF_SQL_DATABASE"] = self.database
+        super().setUp()
+
+    def open_store(self) -> Any:
+        from zava_forward.core.mssqlstore import MssqlStore
+
+        store = MssqlStore(str(self.path), state_dir=self.tmp.name)
+        self.addCleanup(store.db.close)
+        return store

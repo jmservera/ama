@@ -551,6 +551,8 @@ class SqlStore(Store):
                 validate_hazard(self)
                 from .finance import validate_sql as validate_finance
                 validate_finance(self)
+                from .resident_decisions import validate_sql as validate_resident
+                validate_resident(self)
                 from .procurement import validate_sql as validate_procurement
                 validate_procurement(self)
                 self._validate_safety_clear()
@@ -592,10 +594,13 @@ class SqlStore(Store):
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
                 mark_committed(self)
+                from .resident_decisions import mark_committed as resident_committed
+                resident_committed(self)
             except (ConflictError, GateError, PermissionError) as error:
                 self.db.execute("ROLLBACK")
                 if (getattr(self.local, "stock_decision", None) is None
                         and getattr(self.local, "hazard_decision", None) is None
+                        and getattr(self.local, "resident_validation", None) is None
                         and getattr(self.local, "procurement_validation", None) is None):
                     try:
                         self._discard()

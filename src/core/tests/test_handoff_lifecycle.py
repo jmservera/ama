@@ -51,6 +51,20 @@ class JsonHandoffLifecycle(unittest.TestCase):
         return Store(str(self.path))
 
     def offer(self) -> None:
+        if not self.store.cases["ZF-1"].get("resident_update"):
+            self.store.resident_action(
+                self.sam,
+                "ZF-1",
+                dict(
+                    action="update_record",
+                    expected_version=0,
+                    purpose="Synthetic handoff update",
+                    owner=self.sam["email"],
+                    due_at="2026-10-16T12:00:00Z",
+                    basis="Synthetic human-selected commitment",
+                    status="Outstanding",
+                ),
+            )
         self.store.offer_handoff(
             self.sam,
             "ZF-1",

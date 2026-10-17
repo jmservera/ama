@@ -301,6 +301,9 @@ class FinanceMixin:
         if status == "Paid outside this system":
             self._fin_independent(user, inv.get("disposition_email"), inv.get("disposition_identity"), "record the payment")
         inv["payment_status"] = status
+        event = dict(status=status, owner={key: user.get(key) for key in ("email", "code", "name", "role", "oid")}, at=k.now())
+        inv.update(payment_status_owner=event["owner"], payment_status_at=event["at"])
+        inv.setdefault("payment_status_history", []).append(event)
         return f"{inv['id']} payment noted as {status}"
 
     def finance_queue(self, user):

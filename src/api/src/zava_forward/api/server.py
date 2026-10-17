@@ -903,7 +903,23 @@ def make_handler(app):
                         s.approve_retention_deletion(u, cid, body.get("id"))
                     elif act == "read-doc":
                         return self._json(200, s.read_document(u, cid, body.get("id"), body.get("mode")))
-                    elif act in ("finance", "grant", "technical", "resident"):
+                    elif act == "resident":
+                        from zava_forward.core.resident_decisions import ResidentCommittedError
+                        try:
+                            s.resident_action(u, cid, body)
+                        except ResidentCommittedError as error:
+                            return self._json(409, {"error": str(error), "outcome": "committed"})
+                        try:
+                            detail = s.detail(cid, u)
+                            detail["rule_checks"] = app.check_case(cid, "data_change")
+                        except Exception:
+                            logging.getLogger(__name__).exception("Resident record persisted; response projection failed")
+                            return self._json(409, {
+                                "error": "The resident change was recorded, but confirmation failed. Reload and reconcile its history before another action.",
+                                "outcome": "committed",
+                            })
+                        return self._json(200, detail)
+                    elif act in ("finance", "grant", "technical"):
                         getattr(s, {"finance": "finance_action", "grant": "grant_action", "technical": "technical_action",
                                     "resident": "resident_action"}[act])(u, cid, body)
                     elif act == "funding-draft":

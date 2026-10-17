@@ -5677,3 +5677,27 @@ metadata when the knowledge base was created.
   prompt-only correction. Full core's earlier exit137 remains incomplete.
   No paid inference, web change, new deployment or operational/legal approval.
   Final-head independent acceptance remains coordinator-owned.
+## [2026-10-17] implementation | #88 resident commitments and separate remedy clocks
+
+* Reused resident_update, service_requests and existing resident endpoint/panel.
+  Full commitments have purpose, current named owner, timezone-aware due date
+  and supplied basis; handoffs preserve them rather than creating partial pairs.
+  Commitments are not messages or evidence of receipt/understanding.
+* Response and remedy have independent owner/date/version/history. Closing a
+  response, completing a work order, handover, financial note or case reopen/
+  return never closes another open remedy, defect or charge query. Legacy absent
+  provenance stays Unknown until explicit present-responsibility confirmation;
+  no historical owner/date or completion is fabricated.
+* Existing SQL transaction rechecks current registry, ownership, inputs/version
+  and record state. Actual owned loopback SQL negative-writer/audit/recovery
+  probes, JSON/SQLite, authenticated HTTP and real local browser support this
+  bounded criterion audit; committed acknowledgements never claim rollback.
+* Preserved all prior KB routes and exact upstream log prefix from main
+  1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c. Updated existing resident synthesis
+  and component guides, not memory, regulatory snapshots or original case.
+  Shared sqlstore/store/API overlap is declared for coordinator integration.
+  #92 held source and other worktrees were not read or imported.
+* No real resident/service/legal authority, communication, payment, paid model
+  call, new IAM/Azure/public access or private dataset use. Full PRD lease/
+  scope/age-band governance, direct human/WCAG acceptance and independent
+  final-head coordinator closure remain unestablished.
