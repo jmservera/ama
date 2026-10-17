@@ -1,11 +1,29 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-10-15
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
 ## Outcome and Evidence Boundary
+
+### Queue signal engineering continuation (2026-10-17, #77)
+
+The [src API queue completion](../../../../src/api/README.md#queue-signal-completion-77-2026-10-17)
+extends the existing staff queue, not this historical prototype. All six queue
+definitions and five Show only signals are discoverable in one native
+disclosure. Effective perspective, workflow stage, query and own/all scope are
+explicit; the stage filter narrows authenticated scope without simulating a role.
+Reset consumes versioned server scope/order/filters and retains focus and status.
+Selected-case rationale/reviewers are compared to that case's API record; absent
+proposed owner stays Unknown, never assigned by inference.
+
+Local Chromium checks use three constructed cases, exact differing surname
+order, expanded-definition reflow and reduced motion. No private dataset or live
+model/platform is used. This is engineering evidence, not staff comprehension,
+screen-reader/WCAG conformance, nine-workflow representation, operational signal
+ratification or actual AI/SQL Server/Azure acceptance. Historical findings below
+remain historical; no customer outcome or owner approval is invented.
 
 The source-inspected findings below describe the 2026-10-06 HTML artifact,
 not every subsequent prototype. The separate

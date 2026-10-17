@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import runpy
 from pathlib import Path
 from typing import Any
@@ -21,6 +22,8 @@ def synthetic_data() -> dict[str, Any]:
     )
     data["as_of"] = "2026-10-16"
     data["cases"] = [data["cases"][0], data["cases"][3], data["cases"][4]]
+    for case, surname in zip(data["cases"], ("Cedar", "Birch", "Alder"), strict=True):
+        case["resident"]["name"] = f"Pat {surname}"
     data["cases"][2]["contractor"]["name"] = "Other Ltd"
     data["staff"] = [
         {
@@ -47,9 +50,7 @@ def synthetic_data() -> dict[str, Any]:
         case["home"].update(lat=0, lon=0)
     data["cases"][1]["hazards"][0]["source"] = "Synthetic-source-" + "x" * 180
     data["cases"][0].update(stage_since="2026-10-15", reason="SYN-NEW-WORK")
-    data["cases"][0]["documents"] = [
-        dict(id="SYN-EPC-76", kind="EPC", at="2026-09-15", version=2)
-    ]
+    data["cases"][0]["documents"] = [dict(id="SYN-EPC-76", kind="EPC", at="2026-09-15", version=2)]
     data["cases"][1]["hazards"][0].update(
         aware_at="2026-10-15T12:00:00Z", response_due_at="2026-10-15T18:00:00Z"
     )
@@ -79,6 +80,119 @@ def reflow(page: Page, label: str) -> None:
         page.evaluate("() => document.documentElement.scrollWidth <= innerWidth")
         and page.locator("#nav").is_visible(),
     )
+
+
+def queue_signal_checks(page: Page, base: str) -> None:
+    failures: list[str] = []
+    page.get_by_text("Queue definitions", exact=True).click()
+    definitions = page.locator(".side details").inner_text()
+    for width in (320, 390, 1280):
+        page.set_viewport_size({"width": width, "height": 900})
+        reflow(page, f"issue 77 expanded definitions reflow {width}px")
+        explanation = page.locator(".side details dd").first.bounding_box()
+        check(
+            f"issue 77 definitions readable column {width}px",
+            explanation is not None and explanation["width"] >= 150,
+        )
+    page.emulate_media(reduced_motion="reduce")
+    check(
+        "issue 77 existing reduced-motion preference retained",
+        page.evaluate(
+            "() => getComputedStyle(document.documentElement).getPropertyValue('--motion').trim()"
+        )
+        == "0s",
+    )
+    page.emulate_media(reduced_motion="no-preference")
+    for signal in (
+        "Safety issue open",
+        "Needs extra support",
+        "Waiting 60+ days",
+        "No resident decision yet",
+        "Funding not confirmed",
+    ):
+        if signal not in definitions:
+            failures.append(f"visible definition: {signal}")
+    page.locator("#f-stage").select_option("Contacting resident")
+    page.locator("#f-q").fill("Cedar")
+    wait_cases(page, 1)
+    scope = page.locator("#workspace-status").inner_text()
+    for text in (
+        "Perspective: Resident Liaison Officer",
+        "Workflow stage: Contacting resident",
+        "Search: Cedar",
+        "All-cases scope: on",
+        "narrows",
+    ):
+        if text not in scope:
+            failures.append(f"explicit scope: {text}")
+
+    with page.expect_response(
+        lambda response: "/api/cases?" in response.url and "sort=name" in response.url
+    ) as reset:
+        page.locator("#reset-queue").click()
+    page.wait_for_function(
+        "() => document.querySelector('#workspace-status').textContent.includes('Search: none')"
+    )
+    request_url = reset.value.url
+    if not (
+        ids(page) == ["ZF-5", "ZF-4", "ZF-1"]
+        and page.url.endswith("#/all")
+        and "view=all" in request_url
+        and "offset=0" in request_url
+        and "after=" not in request_url
+        and page.locator("#f-stage").input_value() == ""
+        and page.locator("#f-q").input_value() == ""
+        and page.locator("#reset-queue").evaluate("el => el === document.activeElement")
+        and "synthetic-default-contract" in page.locator("#workspace-status").inner_text()
+    ):
+        failures.append("versioned all/name default exact IDs/order/scope/first-page/focus")
+    screenshots = os.environ.get("ZF_QUEUE_SCREENSHOTS")
+    if screenshots:
+        Path(screenshots).mkdir(parents=True, exist_ok=True)
+        page.get_by_text("Queue definitions", exact=True).click()
+        page.screenshot(path=str(Path(screenshots) / "queue-default.png"), full_page=True)
+
+    for case_id in ("ZF-4", "ZF-1"):
+        detail = page.request.get(base + f"/api/cases/{case_id}").json()
+        page.locator(f'.item[href="#/case/{case_id}"]').click()
+        page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
+        context = page.locator("[aria-label='Recorded task context']")
+        suggestion = page.locator("section").filter(
+            has=page.get_by_role("heading", name="Who could take this on", exact=True)
+        )
+        if detail["work"]["reason"] not in context.inner_text():
+            failures.append(f"{case_id} selected rationale from own API record")
+        expected = [f"{item['name']}, {item['role']}" for item in detail["suggestions"]]
+        if not expected or suggestion.locator("li strong").all_inner_texts() != expected:
+            failures.append(f"{case_id} exact proposed reviewers from own API record")
+        if case_id == "ZF-1" and "Bea Safe" in context.inner_text():
+            failures.append("previous safety-case rationale leaked")
+        if screenshots and case_id == "ZF-1":
+            page.screenshot(path=str(Path(screenshots) / "selected-case.png"), full_page=True)
+        page.get_by_role("link", name="Back to the list", exact=True).click()
+        page.locator(".item").first.wait_for()
+
+    def no_reviewers(route: Route) -> None:
+        response = route.fetch()
+        payload = response.json()
+        payload["suggestions"] = []
+        route.fulfill(response=response, json=payload)
+
+    page.route("**/api/cases/ZF-1", no_reviewers, times=1)
+    page.locator('.item[href="#/case/ZF-1"]').click()
+    page.get_by_role("heading", name="Who could take this on", exact=True).wait_for()
+    if (
+        page.get_by_text(
+            "Proposed owner: Unknown. No reviewer is supplied for this case. "
+            "The current owner keeps responsibility.",
+            exact=True,
+        ).count()
+        != 1
+    ):
+        failures.append("empty proposed-owner state is explicit, not an assignment")
+    page.get_by_role("link", name="Back to the list", exact=True).click()
+    page.locator(".item").first.wait_for()
+    check(f"issue 77 exact behavioral criteria; failures={failures}", not failures)
 
 
 def run_browser(base: str) -> None:
@@ -289,16 +403,21 @@ def run_browser(base: str) -> None:
                 page.get_by_text("Queue definitions", exact=True).click()
                 check(
                     "six visible engineering definitions and unapproved priority limitation",
-                    page.locator(".side details dt").count() == 6
-                    and "approval with a named owner is not recorded" in page.locator(".side details").inner_text(),
+                    page.locator(".side details dt").count() == 11
+                    and "approval with a named owner is not recorded"
+                    in page.locator(".side details").inner_text(),
                 )
                 for queue, expected in (
-                    ("new", ["ZF-1"]), ("stale", ["ZF-1"]),
-                    ("overdue", ["ZF-4"]), ("priority", []), ("unowned", []),
+                    ("new", ["ZF-1"]),
+                    ("stale", ["ZF-1"]),
+                    ("overdue", ["ZF-4"]),
+                    ("priority", []),
+                    ("unowned", []),
                 ):
                     with page.expect_response(
-                        lambda response: "/api/cases?" in response.url
-                        and f"queue={queue}" in response.url
+                        lambda response: (
+                            "/api/cases?" in response.url and f"queue={queue}" in response.url
+                        )
                     ):
                         page.locator("#f-queue").select_option(queue)
                     wait_cases(page, len(expected))
@@ -317,19 +436,24 @@ def run_browser(base: str) -> None:
                 check(
                     "queue case history and suggestion current context agree",
                     page.locator(".work-context").count() == 3
-                    and all(text == queue_context
-                            for text in page.locator(".work-context").all_inner_texts()),
+                    and all(
+                        text == queue_context
+                        for text in page.locator(".work-context").all_inner_texts()
+                    ),
                 )
                 page.get_by_text("Blocked steps and prerequisites", exact=True).click()
                 check(
                     "blocked step reason owner and next action are visible",
-                    "Safety review" in page.locator("[aria-label='Recorded task context']").inner_text()
-                    and "Named owner: Bea Safe" in page.locator("[aria-label='Recorded task context']").inner_text(),
+                    "Safety review"
+                    in page.locator("[aria-label='Recorded task context']").inner_text()
+                    and "Named owner: Bea Safe"
+                    in page.locator("[aria-label='Recorded task context']").inner_text(),
                 )
                 page.get_by_text("Task sources", exact=True).click()
                 check(
                     "source trace belongs to selected case",
-                    "Case ZF-4" in page.locator("[aria-label='Recorded task context']").inner_text(),
+                    "Case ZF-4"
+                    in page.locator("[aria-label='Recorded task context']").inner_text(),
                 )
                 page.get_by_role("link", name="Back to the list", exact=True).click()
                 wait_cases(page, 1)
@@ -348,8 +472,12 @@ def run_browser(base: str) -> None:
                 page.get_by_role("link", name="All cases", exact=True).click()
                 wait_cases(page, 3)
                 for key, value in (
-                    ("stage", "Contacting resident"), ("area", "Test"), ("wave", "Wave 1"),
-                    ("owner", "RLO-01"), ("flag", "hazard"), ("queue", "overdue"),
+                    ("stage", "Contacting resident"),
+                    ("area", "Test"),
+                    ("wave", "Wave 1"),
+                    ("owner", "RLO-01"),
+                    ("flag", "hazard"),
+                    ("queue", "overdue"),
                 ):
                     page.locator(f"#f-{key}").select_option(value)
                 page.locator("#f-q").fill("Pat")
@@ -358,8 +486,10 @@ def run_browser(base: str) -> None:
                 wait_cases(page, 2)
                 check(
                     "single reset clears every queue override and selection",
-                    all(page.locator(f"#f-{key}").input_value() == ""
-                        for key in ("q", "stage", "area", "wave", "flag", "queue"))
+                    all(
+                        page.locator(f"#f-{key}").input_value() == ""
+                        for key in ("q", "stage", "area", "wave", "flag", "queue")
+                    )
                     and page.locator("#f-owner").count() == 0
                     and page.locator("#f-sort").input_value() == "urgent"
                     and page.url.endswith("#/")
@@ -436,10 +566,12 @@ def run_browser(base: str) -> None:
                 check(
                     "navigation/filter/reset leave complete case record unchanged", before == after
                 )
+
                 def alternate_default(route: Route) -> None:
                     response = route.fetch()
                     payload = response.json()
                     payload["work_queues"]["default"]["sort"] = "name"
+                    payload["work_queues"]["default"]["view"] = "all"
                     payload["work_queues"]["version"] = "synthetic-default-contract"
                     route.fulfill(response=response, json=payload)
 
@@ -451,13 +583,17 @@ def run_browser(base: str) -> None:
                     lambda response: "/api/cases?" in response.url and "sort=name" in response.url
                 ):
                     page.locator("#reset-queue").click()
-                wait_cases(page, 2)
+                wait_cases(page, 3)
                 check(
                     "reset consumes server default rather than a hardcoded browser order",
                     page.locator("#f-sort").input_value() == "name"
-                    and "synthetic-default-contract" in page.locator("#workspace-status").inner_text()
-                    and page.locator("#reset-queue").evaluate("el => el === document.activeElement"),
+                    and "synthetic-default-contract"
+                    in page.locator("#workspace-status").inner_text()
+                    and page.locator("#reset-queue").evaluate(
+                        "el => el === document.activeElement"
+                    ),
                 )
+                queue_signal_checks(page, base)
                 page.route(
                     "**/api/cases?**",
                     lambda route: route.fulfill(status=401, json={"error": "Synthetic expiry"}),
