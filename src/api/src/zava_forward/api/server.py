@@ -810,7 +810,7 @@ def make_handler(app):
                     elif act == "decision":
                         s.set_decision(u, cid, body.get("status"), body.get("note", ""))
                     elif act == "handover":
-                        s.hand_over(u, cid, body.get("to"), body.get("note", ""))
+                        s.hand_over(u, cid, body.get("to"), body.get("note", ""), metadata=body)
                     elif act == "return":
                         s.return_case(u, cid, body.get("to_stage"), body.get("reason"), metadata=body)
                     elif act == "reopen":
@@ -824,7 +824,7 @@ def make_handler(app):
                     elif act == "complete-handoff":
                         s.complete_handoff(u, cid, body.get("note"))
                     elif act == "accept-handoff":
-                        s.accept_handoff(u, cid)
+                        s.accept_handoff(u, cid, metadata=body)
                     elif act == "decline-handoff":
                         s.decline_handoff(u, cid, body.get("reason"))
                     elif act == "withdraw-handoff":
@@ -859,7 +859,7 @@ def make_handler(app):
                             raw = base64.b64decode(body.get("data", ""), validate=True)
                         except (binascii.Error, ValueError):
                             raise ValueError("Could not read that file.")
-                        s.add_document(u, cid, body.get("name"), body.get("kind"), raw)
+                        s.add_document(u, cid, body.get("name"), body.get("kind"), raw, metadata=body)
                     elif act == "rescan-doc":
                         return self._json(200, s.rescan_document(u, cid, body.get("id")))
                     elif act == "legal-hold":

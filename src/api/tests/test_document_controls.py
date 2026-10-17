@@ -1,3 +1,5 @@
+
+from dataset import change_metadata
 import copy
 import json
 import os
@@ -63,7 +65,7 @@ class Base(unittest.TestCase):
 class ScanTests(Base):
     def test_clean_upload_is_available_and_scan_is_recorded(self):
         st = self.make()
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1.4 ok")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1.4 ok", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(doc["scan"]["status"], "clean")
         self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1.4 ok")
 
@@ -71,7 +73,7 @@ class ScanTests(Base):
         st = self.make()
         for name, data in (("a.pdf", b"%PDF-" + TEST_MARKER), ("b.pdf", b"not a pdf"), ("c.png", b"%PDF-1"), ("d.txt", b"a\x00b")):
             with self.assertRaises(ValueError):
-                st.add_document(SAM, "ZF-1", name, "EPC", data)
+                st.add_document(SAM, "ZF-1", name, "EPC", data, metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(st.detail("ZF-1")["documents"], [])
         self.assertEqual(st.docstore.list_ids("ZF-1"), [])
         self.assertEqual(self.actions(st).count("upload_document_rejected"), 4)
@@ -81,7 +83,7 @@ class ScanTests(Base):
         st = self.make()
         st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
         st.scanner = DefenderForStorageScanner(st.docstore)
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         del st._case("ZF-1")["documents"][0]["scan"]
         with self.assertRaises(DocumentUnavailable):
             st.get_document("ZF-1", doc["id"], SAM)
@@ -94,7 +96,7 @@ class ScanTests(Base):
         st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
         st.scanner = open_scanner(st.docstore, {"ZF_SCANNER": "defender"})
         self.assertIsInstance(st.scanner, DefenderForStorageScanner)
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(doc["scan"]["status"], "pending")
         with self.assertRaises(DocumentUnavailable):
             st.get_document("ZF-1", doc["id"], SAM)
@@ -107,18 +109,18 @@ class ScanTests(Base):
         st = self.make()
         st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
         st.scanner = DefenderForStorageScanner(st.docstore)
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(st.rescan_pending()["pending"], 1)
         blob.result = "No threats found"
         self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1")
         blob.result = None
-        st.add_document(SAM, "ZF-1", "b.pdf", "EPC", b"%PDF-1")
+        st.add_document(SAM, "ZF-1", "b.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         blob.result = "Malicious"
         self.assertEqual(st.rescan_pending()["removed"], 1)
 
     def test_document_without_scan_field_is_scanned_on_first_use(self):
         st = self.make()
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         for d in st._case("ZF-1")["documents"]:
             d.pop("scan", None)
         self.assertEqual(st.get_document("ZF-1", doc["id"], SAM)[2], b"%PDF-1")
@@ -129,7 +131,7 @@ class ScanTests(Base):
         st = self.make()
         st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
         st.scanner = DefenderForStorageScanner(st.docstore)
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         blob.result = "Malicious"
         def boom():
             raise OSError("save failed")
@@ -144,7 +146,7 @@ class ScanTests(Base):
         st = self.make()
         st.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
         st.scanner = DefenderForStorageScanner(st.docstore)
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         blob.result = "Malicious"
         with self.assertRaises(ValueError):
             st.rescan_document(SAM, "ZF-1", doc["id"])
@@ -166,10 +168,10 @@ class ScanTests(Base):
             for u in fx["uploads"]:
                 data = payload(u["kind"], u["scan_class"])
                 if u["scan_class"] == "clean":
-                    st.add_document(SAM, "ZF-1", u["name"], u["kind"], data)
+                    st.add_document(SAM, "ZF-1", u["name"], u["kind"], data, metadata=change_metadata(st, "ZF-1"))
                 else:
                     with self.assertRaises(ValueError):
-                        st.add_document(SAM, "ZF-1", u["name"], u["kind"], data)
+                        st.add_document(SAM, "ZF-1", u["name"], u["kind"], data, metadata=change_metadata(st, "ZF-1"))
                 seen.add(u["scan_class"])
         self.assertEqual(seen, {"clean", "test-marker", "type-mismatch"})
         self.assertTrue(all(d["scan"]["status"] == "clean" for d in st.detail("ZF-1")["documents"]))
@@ -187,7 +189,7 @@ class RetentionTests(Base):
         for fx in FIXTURES["cases"]:
             for u in fx["uploads"]:
                 if u["scan_class"] == "clean":
-                    st.add_document(SAM, fx["case_id"], u["name"], u["kind"], payload(u["kind"], "clean"))
+                    st.add_document(SAM, fx["case_id"], u["name"], u["kind"], payload(u["kind"], "clean"), metadata=change_metadata(st, fx["case_id"]))
             if fx["legal_hold"]:
                 st.place_legal_hold(PAM, fx["case_id"], f"HOLD-{fx['case_id']}")
         return st
@@ -228,7 +230,7 @@ class RetentionTests(Base):
 
     def test_not_due_documents_are_refused_and_not_listed(self):
         st = self.make()
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(st.retention_due(PAM, AS_OF)["records"], [])
         with self.assertRaises(ValueError):
             st.approve_retention_deletion(PAM, "ZF-1", doc["id"], AS_OF)

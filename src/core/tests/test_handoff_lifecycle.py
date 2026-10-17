@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from dataset import DATA
+from dataset import DATA, change_metadata
 from zava_forward.core import projection
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -56,13 +56,16 @@ class JsonHandoffLifecycle(unittest.TestCase):
             "ZF-1",
             self.rae["email"],
             "PRIVATE-NOTE",
-            metadata=dict(
-                urgency="Urgent",
-                due_at="2026-10-15T10:00:00+01:00",
-                next_action="PRIVATE-ACTION",
-                resident_update_to=self.sam["email"],
-                resident_update_due_at="2026-10-16T12:00:00Z",
-            ),
+            metadata={
+                **change_metadata(self.store, "ZF-1"),
+                **dict(
+                    urgency="Urgent",
+                    due_at="2026-10-15T10:00:00+01:00",
+                    next_action="PRIVATE-ACTION",
+                    resident_update_to=self.sam["email"],
+                    resident_update_due_at="2026-10-16T12:00:00Z",
+                ),
+            },
         )
 
     def test_receipt_escalation_acceptance_and_completion(self) -> None:
@@ -78,7 +81,7 @@ class JsonHandoffLifecycle(unittest.TestCase):
             self.assertIsNone(row["confirmed_receiver"])
             self.assertEqual(row["due_at"], "2026-10-15T09:00+00:00")
             self.assertEqual(row["resident_update_owner"], self.sam["name"])
-        self.store.accept_handoff(self.rae, "ZF-1")
+        self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
         self.store.complete_handoff(self.rae, "ZF-1", "Evidence reviewed")
         detail = self.open_store().detail("ZF-1")
         self.assertEqual(detail["owner_code"], self.rae["code"])
@@ -101,19 +104,30 @@ class JsonHandoffLifecycle(unittest.TestCase):
         audit = list(self.store.audit_entries())
         actions = [
             lambda: self.store.receive_handoff(self.sam, "ZF-1"),
-            lambda: self.store.accept_handoff(self.pam, "ZF-1"),
+            lambda: self.store.accept_handoff(
+                self.pam, "ZF-1", metadata=change_metadata(self.store, "ZF-1")
+            ),
             lambda: self.store.decline_handoff(self.sam, "ZF-1", "No"),
             lambda: self.store.withdraw_handoff(self.rae, "ZF-1"),
             lambda: self.store.escalate_handoff(self.rae, "ZF-1", self.pam["email"], "No"),
             lambda: self.store.escalate_handoff(self.sam, "ZF-1", self.rex["email"], "No"),
             lambda: self.store.complete_handoff(self.rae, "ZF-1", "Too soon"),
-            lambda: self.store.offer_handoff(self.sam, "ZF-1", self.pam["email"]),
+            lambda: self.store.offer_handoff(
+                self.sam, "ZF-1", self.pam["email"], metadata=change_metadata(self.store, "ZF-1")
+            ),
         ]
         for action in actions:
             with self.subTest(action=action), self.assertRaises((ValueError, PermissionError)):
                 action()
             self.assertEqual(self.store.detail("ZF-1"), before)
-            self.assertEqual(list(self.store.audit_entries()), audit)
+            current = list(self.store.audit_entries())
+            self.assertEqual([e for e in current if not e["action"].endswith("_rejected")], audit)
+            self.assertTrue(
+                all(
+                    e["action"] in ("handoff_accepted_rejected", "handoff_offered_rejected")
+                    for e in current[len(audit) :]
+                )
+            )
         self.store.receive_handoff(self.rae, "ZF-1")
         with self.assertRaises(ValueError):
             self.store.receive_handoff(self.rae, "ZF-1")
@@ -122,7 +136,7 @@ class JsonHandoffLifecycle(unittest.TestCase):
             self.store.escalate_handoff(self.sam, "ZF-1", self.pam["email"], "Duplicate")
         with self.assertRaises(ValueError):
             self.store.receive_handoff(self.rae, "ZF-1")
-        self.store.accept_handoff(self.rae, "ZF-1")
+        self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(PermissionError):
             self.store.complete_handoff(self.sam, "ZF-1", "Wrong owner")
         with self.assertRaises(ValueError):
@@ -151,7 +165,12 @@ class JsonHandoffLifecycle(unittest.TestCase):
                     )
                     self.assertEqual(detail["resident_update"]["owner"], self.sam["name"])
                     # Replacement offers cannot replace pending resident-update commitments.
-                    self.store.offer_handoff(self.sam, "ZF-1", self.rex["email"])
+                    self.store.offer_handoff(
+                        self.sam,
+                        "ZF-1",
+                        self.rex["email"],
+                        metadata=change_metadata(self.store, "ZF-1"),
+                    )
                     row = self.store.pending_handoffs(self.sam)[0]
                     self.assertEqual(row["resident_update_owner"], self.sam["name"])
                     self.store.withdraw_handoff(self.sam, "ZF-1")
@@ -160,7 +179,10 @@ class JsonHandoffLifecycle(unittest.TestCase):
                             self.sam,
                             "ZF-1",
                             self.rae["email"],
-                            metadata={"resident_update_to": self.rex["email"]},
+                            metadata={
+                                **change_metadata(self.store, "ZF-1"),
+                                **{"resident_update_to": self.rex["email"]},
+                            },
                         )
 
     def test_return_and_reopen_provenance_has_no_assignment_bypass(self) -> None:
@@ -183,9 +205,11 @@ class JsonHandoffLifecycle(unittest.TestCase):
                 rec["initiating_authority"]["email"],
                 self.sam["email"] if cid == "ZF-1" else self.pam["email"],
             )
-        self.store.hand_over(self.sam, "ZF-1", self.rae["email"])
+        self.store.hand_over(
+            self.sam, "ZF-1", self.rae["email"], metadata=change_metadata(self.store, "ZF-1")
+        )
         self.assertEqual(self.store.detail("ZF-1")["owner_code"], self.sam["code"])
-        self.store.accept_handoff(self.rae, "ZF-1")
+        self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
         self.assertEqual(self.store.detail("ZF-1")["owner_code"], self.rae["code"])
 
     def test_incomplete_metadata_is_refused_before_mutation(self) -> None:
@@ -202,16 +226,28 @@ class JsonHandoffLifecycle(unittest.TestCase):
         invalid_recipients: tuple[object, ...] = (None, 5, [], "missing")
         for recipient in invalid_recipients:
             with self.assertRaises(ValueError):
-                self.store.offer_handoff(self.sam, "ZF-1", recipient)
+                self.store.offer_handoff(
+                    self.sam, "ZF-1", recipient, metadata=change_metadata(self.store, "ZF-1")
+                )
         for value in ("2026-10-15", "2026-10-15T12:00", "invalid", 3):
             with self.assertRaises(ValueError):
                 self.store.offer_handoff(
-                    self.sam, "ZF-1", self.rae["email"], metadata={"due_at": value}
+                    self.sam,
+                    "ZF-1",
+                    self.rae["email"],
+                    metadata={**change_metadata(self.store, "ZF-1"), **{"due_at": value}},
                 )
         for metadata in ({"urgency": "Emergency"}, {"resident_update_to": "missing"}):
             with self.assertRaises(ValueError):
-                self.store.offer_handoff(self.sam, "ZF-1", self.rae["email"], metadata=metadata)
-        self.store.offer_handoff(self.sam, "ZF-1", self.rae["email"])
+                self.store.offer_handoff(
+                    self.sam,
+                    "ZF-1",
+                    self.rae["email"],
+                    metadata={**change_metadata(self.store, "ZF-1"), **metadata},
+                )
+        self.store.offer_handoff(
+            self.sam, "ZF-1", self.rae["email"], metadata=change_metadata(self.store, "ZF-1")
+        )
         h = self.store.detail("ZF-1")["handoff"]
         for field in ("urgency", "due_at", "next_action", "resident_update_owner"):
             self.assertIsNone(h[field])
@@ -228,7 +264,7 @@ class JsonHandoffLifecycle(unittest.TestCase):
             "ZF-1",
             self.rex["email"],
             "PRIVATE-NOTE",
-            metadata={"next_action": "PRIVATE-ACTION"},
+            metadata={**change_metadata(self.store, "ZF-1"), **{"next_action": "PRIVATE-ACTION"}},
         )
         held = json.dumps(self.store.pending_handoffs(self.rex))
         self.assertNotIn("PRIVATE", held)
@@ -245,9 +281,13 @@ class JsonHandoffLifecycle(unittest.TestCase):
             user = self.rae | {"role": role}
             for method in (
                 lambda user=user: self.store.receive_handoff(user, "ZF-1"),
-                lambda user=user: self.store.accept_handoff(user, "ZF-1"),
+                lambda user=user: self.store.accept_handoff(
+                    user, "ZF-1", metadata=change_metadata(self.store, "ZF-1")
+                ),
                 lambda user=user: self.store.pending_handoffs(user),
-                lambda user=user: self.store.hand_over(user, "ZF-1", self.rex["email"]),
+                lambda user=user: self.store.hand_over(
+                    user, "ZF-1", self.rex["email"], metadata=change_metadata(self.store, "ZF-1")
+                ),
                 lambda user=user: self.store.return_case(user, "ZF-1", "Funding check", "No"),
             ):
                 with self.assertRaises(PermissionError):

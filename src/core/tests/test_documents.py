@@ -1,3 +1,5 @@
+
+from dataset import change_metadata
 import json
 import os
 import tempfile
@@ -128,7 +130,7 @@ class StoreDocumentTests(unittest.TestCase):
 
     def run_all(self, sql):
         st = self.make(sql)
-        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1")
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(st.get_document("ZF-1", doc["id"], SAM), ("epc.pdf", "application/pdf", b"%PDF-1"))
         self.assertEqual(len(self.blob.blobs), 1)
         self.assertEqual(self.actions(st), ["upload_document", "download_document"])
@@ -136,13 +138,13 @@ class StoreDocumentTests(unittest.TestCase):
         with self.assertRaises(PermissionError):
             st.get_document("ZF-1", doc["id"], CONTRACTOR)
         with self.assertRaises(PermissionError):
-            st.add_document(CONTRACTOR, "ZF-1", "a.pdf", "EPC", b"x")
+            st.add_document(CONTRACTOR, "ZF-1", "a.pdf", "EPC", b"x", metadata=change_metadata(st, "ZF-1"))
         with self.assertRaises(ValueError):
-            st.add_document(SAM, "ZF-1", "a.exe", "EPC", b"x")
+            st.add_document(SAM, "ZF-1", "a.exe", "EPC", b"x", metadata=change_metadata(st, "ZF-1"))
         with self.assertRaises(ValueError):
-            st.add_document(SAM, "ZF-1", "a.pdf", "EPC", b"x" * (5 * 1024 * 1024 + 1))
+            st.add_document(SAM, "ZF-1", "a.pdf", "EPC", b"x" * (5 * 1024 * 1024 + 1), metadata=change_metadata(st, "ZF-1"))
         with self.assertRaises(ValueError):
-            st.add_document(SAM, "ZF-1", "a.pdf", "EPC", b"")
+            st.add_document(SAM, "ZF-1", "a.pdf", "EPC", b"", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(len(st.detail("ZF-1")["documents"]), 1)
 
     def test_json_store_with_blob(self):
@@ -155,9 +157,9 @@ class StoreDocumentTests(unittest.TestCase):
         st = self.make(False)
         self.blob.put_status = 500
         with self.assertRaises(DocumentStoreError):
-            st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF")
+            st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF", metadata=change_metadata(st, "ZF-1"))
         self.assertEqual(st.detail("ZF-1")["documents"], [])
-        self.assertEqual(self.actions(st), ["upload_document_failed"])
+        self.assertEqual(self.actions(st), ["upload_document_failed", "upload_document_rejected"])
 
 
 if __name__ == "__main__":

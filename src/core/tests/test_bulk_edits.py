@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from dataset import DATA
+from dataset import DATA, change_metadata
 from zava_forward.core import bulk_edits
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
@@ -142,7 +142,10 @@ class JsonBulkEdits(unittest.TestCase):
             self.sam,
             "ZF-1",
             self.pam["email"],
-            metadata={"due_at": "2026-10-19T10:00:00Z", "next_action": "Check reference"},
+            metadata={
+                **change_metadata(self.store, "ZF-1"),
+                **{"due_at": "2026-10-19T10:00:00Z", "next_action": "Check reference"},
+            },
         )
         before = self.cases()["ZF-1"]
         preview = self.preview(

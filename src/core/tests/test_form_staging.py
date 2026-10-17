@@ -11,6 +11,7 @@ from typing import Any
 from unittest.mock import patch
 
 import dataset
+from dataset import change_metadata
 from zava_forward.core import forms
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
@@ -95,7 +96,14 @@ class FormStaging(unittest.TestCase):
 
     def setup_source(self, store: Any, data: bytes = b"EPC D\nEPC E") -> dict[str, Any]:
         forms.register_schema(store, self.actor, schema())
-        doc: dict[str, Any] = store.add_document(self.actor, "ZF-1", "synthetic.txt", "EPC", data)
+        doc: dict[str, Any] = store.add_document(
+            self.actor,
+            "ZF-1",
+            "synthetic.txt",
+            "EPC",
+            data,
+            metadata=change_metadata(store, "ZF-1"),
+        )
         return doc
 
     def reopen(self, store: Any) -> Any:
@@ -208,7 +216,12 @@ class FormStaging(unittest.TestCase):
         for status in ("pending", "missing"):
             with self.subTest(scan=status):
                 doc = store.add_document(
-                    self.actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D\nEPC E"
+                    self.actor,
+                    "ZF-1",
+                    "synthetic.txt",
+                    "EPC",
+                    b"EPC D\nEPC E",
+                    metadata=change_metadata(store, "ZF-1"),
                 )
                 with store.lock:
                     source = next(
@@ -240,7 +253,14 @@ class FormStaging(unittest.TestCase):
         forms.register_schema(store, self.actor, schema())
         for failure in ("save", "conflict"):
             with self.subTest(failure=failure):
-                doc = store.add_document(self.actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D")
+                doc = store.add_document(
+                    self.actor,
+                    "ZF-1",
+                    "synthetic.txt",
+                    "EPC",
+                    b"EPC D",
+                    metadata=change_metadata(store, "ZF-1"),
+                )
                 with store.lock:
                     source = next(
                         d for d in store._case("ZF-1")["documents"] if d["id"] == doc["id"]
@@ -257,7 +277,14 @@ class FormStaging(unittest.TestCase):
                         if failure == "save":
                             raise OSError("synthetic post-scan save failure")
                         other = self.reopen(store)
-                        other.add_document(self.actor, "ZF-1", "other.txt", "EPC", b"other")
+                        other.add_document(
+                            self.actor,
+                            "ZF-1",
+                            "other.txt",
+                            "EPC",
+                            b"other",
+                            metadata=change_metadata(other, "ZF-1"),
+                        )
                     original()
 
                 with patch.object(store, "save", side_effect=save):
@@ -277,7 +304,12 @@ class FormStaging(unittest.TestCase):
             saved = forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"], start=6))
             self.assertEqual(saved["candidates"][0]["locator"], dict(start=6, end=7))
             csv_doc = store.add_document(
-                self.actor, "ZF-1", "synthetic.csv", "EPC", b'field,value\r\nepc,"D\nE"\r\n'
+                self.actor,
+                "ZF-1",
+                "synthetic.csv",
+                "EPC",
+                b'field,value\r\nepc,"D\nE"\r\n',
+                metadata=change_metadata(store, "ZF-1"),
             )
             request = batch(csv_doc["id"])
             request["processing"]["kind"] = "csv"
@@ -341,7 +373,14 @@ class FormStaging(unittest.TestCase):
             request = schema()
             request["fields"][0]["category"] = "declaration"
             forms.register_schema(store, self.actor, request)
-            doc = store.add_document(self.actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D")
+            doc = store.add_document(
+                self.actor,
+                "ZF-1",
+                "synthetic.txt",
+                "EPC",
+                b"EPC D",
+                metadata=change_metadata(store, "ZF-1"),
+            )
             with self.assertRaises(PermissionError):
                 forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"]))
             self.assertEqual(forms.list_candidates(store, self.actor, "ZF-1"), [])
@@ -350,7 +389,9 @@ class FormStaging(unittest.TestCase):
         for store in self.stores:
             self.setup_source(store)
             for name, raw in (("scan.pdf", b"%PDF-SYN-SCAN"), ("bad.txt", b"\xff")):
-                doc = store.add_document(self.actor, "ZF-1", name, "EPC", raw)
+                doc = store.add_document(
+                    self.actor, "ZF-1", name, "EPC", raw, metadata=change_metadata(store, "ZF-1")
+                )
                 result = forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"]))
                 self.assertEqual(result["status"], "Manual recovery required")
                 self.assertEqual(result["candidates"], [])
@@ -360,7 +401,14 @@ class FormStaging(unittest.TestCase):
     def test_ocr_lineage_is_import_assertion_not_route_approval_or_pixel_proof(self) -> None:
         for store in self.stores:
             self.setup_source(store)
-            doc = store.add_document(self.actor, "ZF-1", "scan.pdf", "EPC", b"%PDF-SYN-SCAN")
+            doc = store.add_document(
+                self.actor,
+                "ZF-1",
+                "scan.pdf",
+                "EPC",
+                b"%PDF-SYN-SCAN",
+                metadata=change_metadata(store, "ZF-1"),
+            )
             request = batch(doc["id"])
             request["processing"].update(
                 kind="ocr",
@@ -411,7 +459,14 @@ class FormStaging(unittest.TestCase):
                 with self.assertRaises(OSError):
                     forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"]))
             self.assertEqual(forms.list_candidates(store, self.actor, "ZF-1"), [])
-            store.add_document(self.actor, "ZF-1", "unrelated.txt", "EPC", b"unrelated")
+            store.add_document(
+                self.actor,
+                "ZF-1",
+                "unrelated.txt",
+                "EPC",
+                b"unrelated",
+                metadata=change_metadata(store, "ZF-1"),
+            )
             reopened = self.reopen(store)
             self.assertEqual(forms.list_candidates(reopened, self.actor, "ZF-1"), [])
             self.assertEqual(len(forms.list_schemas(reopened, self.actor)), 1)
@@ -476,12 +531,22 @@ class FormStaging(unittest.TestCase):
         for store in self.stores:
             self.setup_source(store)
             restricted = store.add_document(
-                self.actor, "ZF-1", "synthetic.txt", "Funding evidence", b"EPC D"
+                self.actor,
+                "ZF-1",
+                "synthetic.txt",
+                "Funding evidence",
+                b"EPC D",
+                metadata=change_metadata(store, "ZF-1"),
             )
             with self.assertRaises(PermissionError):
                 forms.stage_candidates(store, self.actor, "ZF-1", batch(restricted["id"]))
             malformed = store.add_document(
-                self.actor, "ZF-1", "bad.csv", "EPC", b'field,"unterminated'
+                self.actor,
+                "ZF-1",
+                "bad.csv",
+                "EPC",
+                b'field,"unterminated',
+                metadata=change_metadata(store, "ZF-1"),
             )
             request = batch(malformed["id"])
             request["processing"]["kind"] = "csv"

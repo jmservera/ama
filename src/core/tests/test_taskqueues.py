@@ -9,7 +9,7 @@ from typing import Any
 from unittest.mock import patch
 
 from building_fixture import fixture, hold, open_store
-from dataset import DATA
+from dataset import DATA, change_metadata
 from test_sqlreads import STAFF, dataset, queue_cases
 from zava_forward.core import ranking, taskqueues
 from zava_forward.core.sqlstore import SqlStore
@@ -365,7 +365,12 @@ class StoreQueueParity(unittest.TestCase):
                         writer.save()
                     self.assertEqual(ids("blocked"), set())
                     self.assertEqual(ids("unowned"), set())
-                    writer.offer_handoff(data["staff"][0], "ZF-2", data["staff"][1]["email"])
+                    writer.offer_handoff(
+                        data["staff"][0],
+                        "ZF-2",
+                        data["staff"][1]["email"],
+                        metadata=change_metadata(writer, "ZF-2"),
+                    )
                     self.assertEqual(ids("unowned"), {"ZF-2"})
                     writer.withdraw_handoff(data["staff"][0], "ZF-2")
                     self.assertEqual(ids("unowned"), set())

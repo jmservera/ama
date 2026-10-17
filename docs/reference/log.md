@@ -4778,3 +4778,26 @@ metadata when the knowledge base was created.
   human blocker. Original Not accepted Review preserved; active independent
   review requires exact final SHA/delta, no new review loop or Pass inferred.
   No merge, cloud/private/model use, memory or original-case change.
+
+## [2026-10-17] update | Implement existing upload and handoff provenance (#78 correction TWO)
+
+* Owner explicitly requires RV-002 implementation after independent Revise,
+  superseding residual-only treatment. Required user-supplied source,
+  source-version and reason now flow through existing upload/offer/accept
+  UI/API/store contracts; missing old payload metadata refuses actionably.
+  Handoff history version rejects stale actions; recipient-only acceptance
+  and the bulk closed allowlist remain unchanged.
+* Document/handoff histories and identical immutable audit events bind exact
+  old/new document references/ownership, registered actor, UTC time and
+  server change version. SQL commits together and rechecks current actor;
+  failures restore staged state. No filenames/hashes/defaults invent source
+  versions or reasons; old historical records stay unknown, not backfilled.
+* Updated existing synthesis/index and component guides. Local synthetic
+  tests and Chromium cover exact retention/reopen/audit, permissions, stale/
+  conflict/rollback, required-field focus and keyboard paths. Original
+  reviews remain historical; coordinator final-head independent reassessment
+  required. No full issue/PRD or human/WCAG/live acceptance inferred.
+* Forms pending/missing-rescan and bulk RV-001 remain independent and covered.
+  Actual approved schema authority is a separate human prerequisite, not
+  a provenance implementation blocker. No cloud/private/model calls,
+  unrelated workflow change, original-case or memory edit.

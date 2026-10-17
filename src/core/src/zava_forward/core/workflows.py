@@ -8,7 +8,7 @@ skip a state.
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import controls, insights, projection
+from . import change_provenance, controls, insights, projection
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
@@ -159,15 +159,17 @@ class WorkflowMixin:
     def offer_handoff(self, user, case_id, to_email, note="", metadata=None):
         controls.require_role(user, projection.STAFF_ROLES, "a staff owner or manager can offer a handoff")
         to = self._staff_person(to_email)
-        metadata = metadata or {}
+        metadata = metadata if isinstance(metadata, dict) else {}
         due_at = _due(metadata.get("due_at"))
         update_due = _due(metadata.get("resident_update_due_at"))
         urgency = metadata.get("urgency") or None
         if urgency not in (None, "Routine", "Urgent"):
             raise ValueError("Choose Routine or Urgent for handoff urgency.")
         update_owner = self._staff_person(metadata["resident_update_to"]) if metadata.get("resident_update_to") else None
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.operation(self, user, case_id, "handoff_offered", metadata, "handoff_history") as (c, event):
+            old_handoff = deepcopy(c.get("handoff"))
+            old_owner = change_provenance.ownership(c)
+            old_update = deepcopy(c.get("resident_update"))
             if c["closed"]:
                 raise ValueError("This case is closed.")
             if c["owner_code"] != user["code"] and user["role"] not in MANAGER_ROLES:
@@ -193,9 +195,11 @@ class WorkflowMixin:
                                 resident_update_due_at=resident_update.get("due_at"))
             if not previous_update and (update_owner or update_due):
                 c["resident_update"] = resident_update
-            self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_offered", case_id, f"to {to['name']} {note or ''}".strip())
-            self.save()
+            event.update(handoff_view(c), by=user["email"], authority=user["role"])
+            event["changes"] = dict(
+                handoff=dict(old=old_handoff, new=deepcopy(c["handoff"])),
+                ownership=dict(old=old_owner, new=change_provenance.ownership(c)),
+                resident_update=dict(old=old_update, new=deepcopy(c.get("resident_update"))))
 
     def _open_offer(self, c, user, who):
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff can act on handoffs")
@@ -224,16 +228,17 @@ class WorkflowMixin:
             self.audit(user["email"], "handoff_received", case_id, "Receipt recorded; ownership unchanged")
             self.save()
 
-    def accept_handoff(self, user, case_id):
-        with self.lock:
-            c = self._case(case_id)
+    def accept_handoff(self, user, case_id, metadata=None):
+        with change_provenance.operation(self, user, case_id, "handoff_accepted", metadata, "handoff_history") as (c, event):
             h = self._open_offer(c, user, "recipient")
+            old_handoff, old_owner = deepcopy(h), change_provenance.ownership(c)
             c.update(owner=user["name"], owner_code=user["code"], owner_role=user["role"], waiting_on=user["name"])
             h.update(state="Accepted", answered_at=_now())
             c.setdefault("handoff_log", []).append(dict(h))
-            self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_accepted", case_id, f"from {h['from_name']}")
-            self.save()
+            event.update(handoff_view(c), by=user["email"], authority=user["role"])
+            event["changes"] = dict(
+                handoff=dict(old=old_handoff, new=deepcopy(h)),
+                ownership=dict(old=old_owner, new=change_provenance.ownership(c)))
 
     def decline_handoff(self, user, case_id, reason):
         reason = controls.text(reason, "why you cannot take this on")

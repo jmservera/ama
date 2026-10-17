@@ -39,26 +39,44 @@ revalidated inside the SQL writer transaction. Synthetic cached/persisted
 status-reset regressions preserve cases/history and show refusal rather than
 success audit. The original RPI Review remains historical Not accepted.
 
-RV-002 is now a source-confirmed partial FR-005 criterion, not merely missing
-test evidence. Evidence upload accepts file/name/kind only; its hash/version,
+Correction ONE recorded RV-002 as a source-confirmed partial FR-005 criterion,
+not merely missing test evidence. At that point evidence upload accepted
+file/name/kind only; its hash/version,
 display name/date and separate email/time audit lack supplied source/version
 and change reason. Handoff history retains email/time/role and versioned
 sender/receiver snapshots, but offer/accept have no explicit source-version
 contract and acceptance has no reason input or complete old/new ownership
 provenance event. Current API/UI callers do not supply those missing inputs.
-Completing them needs a caller/validation/history and UI compatibility design,
-not made-up defaults or an expansion of bulk authority. The
-[core boundary](../../../../src/core/README.md#controlled-administrative-bulk-edits-78)
-records exact operations; full #78 acceptance remains unmet.
+Those missing inputs/events were an implementation gap, not an actual
+human-approval dependency. The explicit correction TWO instruction supersedes
+the residual-only disposition for the existing upload/offer/accept paths.
 
 Same-PR integration after #377 merged onto main92d4f89 retains separate form
 staging and bulk modules, both Store/projection/API protections and checked SQL
 documents. 110 joint synthetic focused tests pass, including upstream
 pending/missing-rescan durability, permissions, rollback and SQL reopen.
-All earlier findings remain historical; RV-001 correction survives unchanged
-and RV-002 still blocks full #78 acceptance. Integration does not confer real
-schema authority, full provenance, final-head independent acceptance or merge
-permission.
+All earlier findings remain historical; RV-001 correction survives unchanged.
+Integration alone did not satisfy RV-002 or confer real schema authority,
+final-head independent acceptance or merge permission.
+
+Correction TWO implements required user-supplied source reference, source
+version and change reason in existing upload and handoff offer/accept UI/API/
+store contracts. Handoffs carry the current history version for stale refusal.
+Complete immutable events retain exact document-reference and ownership
+old/new values, named actor, UTC time and change version; SQL commits them with
+case/history changes and rechecks current identity. Filename/hash/acceptance
+state never supply invented source or reason. Historical missing data stays
+Unknown (legacy); old clients missing metadata get actionable refusal.
+
+Native labeled forms preserve Fluent-token styling, recipient-only acceptance
+and existing permissions; errors remain inline with focus and entered values.
+Local synthetic Chromium covers required-field focus, Enter upload/offer/
+accept, stale refusal, recipient ownership, 390px/reduced-motion and SQL reopen/
+audit equality. This is no screen-reader/WCAG, human or live-platform approval.
+The original Review and review512a59c4 Revise remain historical; final-head
+coordinator independent reassessment is still required, not fabricated Pass.
+Actual form/schema authority remains an unrelated human prerequisite, not a
+blocker used to omit this implementation.
 
 ### Queue signal engineering continuation (2026-10-17, #77)
 

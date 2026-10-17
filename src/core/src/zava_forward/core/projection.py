@@ -104,6 +104,14 @@ def hold_notes(c):
         for item in c:
             hold_notes(item)
     elif isinstance(c, dict):
+        if "document_history" in c:
+            c["document_history"] = [dict(version=event["version"], at=event["at"],
+                                          actor=event["actor"], detail=NOTE_HELD)
+                                     for event in c["document_history"]]
+        if "source_version" in c and "reason" in c:
+            for key in ("source", "source_version", "reason", "changes"):
+                if c.get(key):
+                    c[key] = NOTE_HELD
         if "edit_history" in c:
             c["edit_history"] = [dict(version=event["version"], at=event["at"],
                                       actor=event["actor"], preview_id=event["preview_id"],

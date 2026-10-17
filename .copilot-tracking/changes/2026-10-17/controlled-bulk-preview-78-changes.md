@@ -1,7 +1,8 @@
 <!-- markdownlint-disable-file -->
 # RPI Changes: controlled-bulk-preview-78
 
-Task 78, 2026-10-17. Scope: full corrected plan P01/P02.
+Task 78, 2026-10-17. Scope: original P01/P02, authorized P03 correction ONE
+and P04 correction TWO on the same PR.
 Plan: .copilot-tracking/plans/2026-10-17/controlled-bulk-preview-78-plan.md.
 Details: .copilot-tracking/details/2026-10-17/controlled-bulk-preview-78-phase-details.md.
 Critique: one execution, Revise, six direct dispositions applied.
@@ -259,3 +260,125 @@ force or main write. Final evidence commit is artifact-only atop tested source
 `8602473a78930a72aa7fbb2d424a76d56dba5b53`; exact final head and old/base/source
 delta are supplied on PR #378 for the active independent reviewer. PR remains
 draft, no merge or closure. Stop at final push/readback.
+
+## Correction TWO: explicit RV-002 implementation authorization
+
+2026-10-17: owner reports independent review512a59c4 Revise on97cdc2a
+because full criterion 1 is unmet. Owner explicitly requires completing
+existing upload/offer/accept caller/API/UI metadata validation and immutable
+old/new events. Earlier residual-only disposition is superseded for these
+operations; it is not a human-approval blocker or permission to omit the fix.
+Rebase is already complete and clean at ae3adfb on main92d4f89.
+
+Bounded correction TWO, final allowed cycle: fail-before metadata/reopen/audit
+regressions, required explicit source/source-version/reason, handoff-version
+stale refusal, exact document-reference and ownership changes, fresh actor/
+transaction protection and rollback, directly dependent fixtures/callers,
+accessible native UI paths and local browser check. No new bulk fields or
+controlled approvals, defaults or invented historical provenance. Preserve
+forms/rescan and RV-001. Required web skills loaded and current guidelines
+fully fetched before edits; Fluent/native semantics/plain-language baseline
+prevails over unrelated visual suggestions. No redesign/framework switch.
+Original reviews remain historical, coordinator must independently reassess
+the final head. No cloud/private/paid model, merge or new RPI loop.
+
+### P04-T01: Failing-Before and Source Correction
+
+New `test_change_provenance` ran before production edits: seven tests yielded
+four failures (missing metadata accepted) and 34 errors (missing metadata
+keyword/signature contract), with actual original operations reached. No
+loader/dependency error. Raw session receipt `ama-78-correction2-fail-before.log`.
+
+`change_provenance.operation` now requires explicit source/source-version/
+reason and server-records named actor/UTC time/sequential event version. It
+refuses missing/blank/nonstring/oversized metadata and actor/time/version/
+old-new overrides. Offer/accept also require integer current `handoff_version`
+matching the existing history count; changed offer/receipt/escalation/answer
+requires fresh case detail. No fallback to filename/hash/current state or
+invented historical values.
+
+`Store.add_document` accepts metadata, retains source/version/reason on the
+document, and appends `document_history` with complete old/new document-reference
+lists (id/name/kind/content hash/document version). The exact same full event
+is immutable `upload_document` audit. Returning a deep copy prevents accidental
+caller mutation. Existing byte/size/type/scanning path retained.
+
+`offer_handoff` and recipient-only `accept_handoff` enrich existing
+`handoff_history` with explicit metadata and exact ownership/handoff changes;
+offers include resident-update changes. Audit `handoff_offered`/
+`handoff_accepted` holds the identical full event, not a name-only string.
+Legacy hand_over stays an offer alias, now forwarding required metadata.
+No wider recipients/owners, bulk fields, approval or control scope.
+
+SQL rechecks current registered actor after acquiring its existing writer
+transaction, and existing case rowversions reject competing writers. History/
+case/ledger commit together; failure discards touched state/staged success
+audit and records safe rejection. Uncommitted bytes are cleaned up; lost
+commit acknowledgement explicitly remains uncertain and committed bytes are
+retained. JSON restores operation-local state, retaining its existing
+separate-file crash-atomicity boundary. Notes/source-version/change trees
+are redacted for existing roles without note visibility. Scoped forms and
+bulk implementations are unchanged, including RV-001 and rescan correction.
+
+### P04-T02: Direct Callers, Native UI and Executed Validation
+
+API upload/offer/accept (and legacy offer alias) forwards caller metadata.
+No mandatory metadata is synthesized in production. A test-only fixture
+supplies explicit synthetic source/version/reason/current-history inputs to
+directly affected document/forms/stock/handoff/queue tests. Existing malformed
+metadata tests bypass that fixture and assert refusal.
+
+The existing document and handoff panels collect three labeled required inputs
+with current handoff version. Native forms support Enter/required-field focus;
+pending save disables only its submit, inline polite errors retain values and
+focus their message, and beforeunload warns on unsaved edits. Source details
+and unknown legacy values are visible under existing role projection. No
+CSS/framework/service changes or unrelated workflow redesign.
+
+| Executed check | Result / precise boundary |
+| --- | --- |
+| First dependent selection | 177 tests, three expected assertion updates needed for new visible rejection audits; corrected those exact directly affected expectations |
+| Core suite after caller contract change | 609 tests OK, one existing skip; no blanket second run |
+| API suite after caller contract change | 574 tests OK, 111 existing opt-in skips; no live SQL/platform test enabled |
+| Final focused selection after added race/redaction tests | 119 tests OK: provenance, bulk core/API, forms core/API, handoff core/API and role inventory |
+| Final exact-shape assertions | 13 provenance tests OK after strengthening complete reference lists, sequential event versions, full new ownership and defensive-copy assertions; core tooling rerun passes |
+| Existing core tooling | Ruff check, format55, mypy108 pass |
+| Existing API tooling / UI syntax | Ruff check, format19, mypy50, node --check pass |
+| Final local Chromium | Required-field focus, keyboard upload/offer/accept, stale inline error/input retention/focus, recipient transfer, 390px/reduced motion, SQL reopen/event-audit equality; no page errors or external requests |
+| Preserved modules/original Review | forms.py and bulk_edits.py plus historical original Review unchanged versus ae3adfb; forms/rescan tests only receive required synthetic upload metadata |
+
+Full suites were justified once by the mandatory shared core caller contract.
+New edge tests were added after those runs and covered by the final narrow
+119-test selection, not a false claim that full suites included later additions.
+Local receipts: `ama-78-correction2-core.log`, `ama-78-correction2-api.log`,
+`ama-78-correction2-final-focused.log`, `ama-78-correction2-browser.log`.
+Existing law-store diagnostics stay explicit unknowns; existing sensor-test
+ResourceWarnings are not corrected as unrelated work. Browser harness first
+used welcome entry `/`, then corrected to `/app`; final path passes. No new
+dependency install/cloud/private/paid inference or real template authority.
+
+### P04-T03: Source Finding Disposition and Final-Head Review Gate
+
+RV-002 requested existing upload/offer/accept gap is now implemented rather
+than treated as human-blocked or deferred. Missing legacy payloads refuse
+with actionable errors and updated UI collects actual inputs. Original
+Review and reported review512a59c4 Revise remain historical, not rewritten
+Pass. This is implementation evidence, not a fresh independent acceptance.
+Coordinator must rereview the final exact SHA before full criterion 1/#78
+acceptance or merge; no downgrade of that acceptance gate. Actual schema
+authority is separate #97 human work and did not block this correction.
+
+### Changed Web Region Review (fresh guidelines)
+
+Scope: changed `app.js` helper and upload/offer/accept controls/history only.
+Current complete upstream rules fetched before editing and refreshed before
+review. Existing Fluent tokens/focus/reduced-motion/native semantics and
+owner plain ASCII/sentence-case standard take precedence over generic
+typographic/title-case suggestions. No new motion/image/framework.
+
+`src/api/src/zava_forward/api/web/app.js:607` - pass for changed form regions:
+labeled/named/autocomplete controls, native keyboard submit/first-required
+focus, status/error focus, retained input, pending state, unsaved exit warning,
+source/legacy display, existing word wrapping/focus/motion and 390px check.
+No claim of whole-file audit, screen-reader or WCAG conformance. No blocking
+changed-region finding remains; unrelated preexisting page patterns excluded.

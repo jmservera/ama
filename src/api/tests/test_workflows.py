@@ -1,3 +1,5 @@
+
+from dataset import change_metadata
 import copy
 import json
 import os
@@ -78,36 +80,36 @@ class Flows:
 
     # handoff
     def test_handoff_offer_accept(self):
-        self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test", "On leave")
+        self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test", "On leave", metadata=change_metadata(self.store, "ZF-1"))
         self.assertEqual(self.store.detail("ZF-1")["owner"], "Sam Example")
         self.assertEqual(self.store.pending_handoffs(self.rae)[0]["case_id"], "ZF-1")
         with self.assertRaises(PermissionError):
-            self.store.accept_handoff(self.sam, "ZF-1")
+            self.store.accept_handoff(self.sam, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(ValueError):
-            self.store.offer_handoff(self.sam, "ZF-1", "pam@example.test")
-        self.store.accept_handoff(self.rae, "ZF-1")
+            self.store.offer_handoff(self.sam, "ZF-1", "pam@example.test", metadata=change_metadata(self.store, "ZF-1"))
+        self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
         d = self.store.detail("ZF-1")
         self.assertEqual((d["owner"], d["handoff"]["state"], d["owner_code"]), ("Rae Other", "Accepted", "RLO-02"))
         self.assertEqual(self.store.pending_handoffs(self.rae), [])
         with self.assertRaises(ValueError):
-            self.store.accept_handoff(self.rae, "ZF-1")
+            self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
 
     def test_handoff_decline_withdraw_and_rules(self):
         with self.assertRaises(PermissionError):
-            self.store.offer_handoff(self.rae, "ZF-1", "pam@example.test")
+            self.store.offer_handoff(self.rae, "ZF-1", "pam@example.test", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(ValueError):
-            self.store.offer_handoff(self.sam, "ZF-1", "kim@example.test")
+            self.store.offer_handoff(self.sam, "ZF-1", "kim@example.test", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(ValueError):
-            self.store.offer_handoff(self.sam, "ZF-1", "sam@example.test")
-        self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test")
+            self.store.offer_handoff(self.sam, "ZF-1", "sam@example.test", metadata=change_metadata(self.store, "ZF-1"))
+        self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(ValueError):
             self.store.decline_handoff(self.rae, "ZF-1", "")
         self.store.decline_handoff(self.rae, "ZF-1", "Full caseload")
         d = self.store.detail("ZF-1")
         self.assertEqual((d["owner"], d["handoff"]["state"]), ("Sam Example", "Declined"))
-        self.store.offer_handoff(self.pam, "ZF-1", "rae@example.test")
+        self.store.offer_handoff(self.pam, "ZF-1", "rae@example.test", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(ValueError):
-            self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test")
+            self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test", metadata=change_metadata(self.store, "ZF-1"))
         with self.assertRaises(PermissionError):
             self.store.withdraw_handoff(self.rae, "ZF-1")
         self.store.withdraw_handoff(self.sam, "ZF-1")
@@ -163,8 +165,8 @@ class Flows:
         self.assertTrue(self.store.ledger_head()[0] == 0 and self.store.verify_audit())
 
     def test_chain_intact_after_all_flows(self):
-        self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test")
-        self.store.accept_handoff(self.rae, "ZF-1")
+        self.store.offer_handoff(self.sam, "ZF-1", "rae@example.test", metadata=change_metadata(self.store, "ZF-1"))
+        self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
         self.store.return_case(self.rae, "ZF-6", "Funding check", "Evidence gap", PROVENANCE)
         self.assertTrue(self.store.verify_audit())
 
@@ -195,11 +197,14 @@ class RouteTests(unittest.TestCase):
             d["staff"] = STAFF
             p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(d))
-            httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(Store(str(p)), "zf-test")))
+            store = Store(str(p))
+            httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test")))
             threading.Thread(target=httpd.serve_forever, daemon=True).start()
             base = f"http://127.0.0.1:{httpd.server_address[1]}"
 
             def call(email, path, body=None):
+                if body is not None and path.rsplit("/", 1)[-1] in ("offer-handoff", "accept-handoff"):
+                    body = {**change_metadata(store), **body}
                 req = urllib.request.Request(base + "/api/login", json.dumps(dict(email=email, password="zf-test")).encode())
                 ck = urllib.request.urlopen(req).headers["Set-Cookie"].split(";")[0]
                 req = urllib.request.Request(base + path, json.dumps(body).encode() if body is not None else None, headers={"Cookie": ck})

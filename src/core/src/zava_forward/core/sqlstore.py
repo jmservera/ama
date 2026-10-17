@@ -528,6 +528,8 @@ class SqlStore(Store):
         with self.dblock:
             self.db.execute("BEGIN IMMEDIATE")
             try:
+                from .change_provenance import validate_sql as validate_change
+                validate_change(self)
                 from .bulk_edits import validate_sql
                 validate_sql(self)
                 self._validate_safety_clear()

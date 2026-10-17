@@ -8,6 +8,14 @@ from typing import Any
 from zava_forward.core.store import Store
 
 
+def change_metadata(store: Any, cid: str = "ZF-1") -> dict[str, Any]:
+    """Explicit test-only caller inputs, not production metadata defaults."""
+    with store.lock:
+        return dict(source="SYN fixture supplied register", source_version="fixture-1",
+                    reason="Synthetic test operation",
+                    handoff_version=len(store.cases[cid].get("handoff_history", [])))
+
+
 def case(cid, owner_code="RLO-01", stage="Contacting resident", decision="Waiting", funding=False, hazards=()):
     return dict(
         id=cid, wave="Wave 1", closed=False, stage=stage, stage_since="2026-01-01", days_in_stage=10,
@@ -83,8 +91,8 @@ class ImproveTests(unittest.TestCase):
 
     def test_upload_rejects_bad_type_and_lists_document(self):
         with self.assertRaises(ValueError):
-            self.store.add_document(self.sam, "ZF-1", "x.exe", "EPC", b"abc")
-        self.store.add_document(self.sam, "ZF-1", "epc.pdf", "EPC", b"%PDF")
+            self.store.add_document(self.sam, "ZF-1", "x.exe", "EPC", b"abc", metadata=change_metadata(self.store, "ZF-1"))
+        self.store.add_document(self.sam, "ZF-1", "epc.pdf", "EPC", b"%PDF", metadata=change_metadata(self.store, "ZF-1"))
         d = self.store.detail("ZF-1")
         self.assertTrue(next(x for x in d["checklist"] if x["kind"] == "EPC")["present"])
         self.assertEqual(self.store.get_document("ZF-1", d["documents"][0]["id"])[1], "application/pdf")
@@ -97,7 +105,7 @@ class ImproveTests(unittest.TestCase):
         with self.assertRaises(GateError):
             self.store.funding_step(self.pam, "ZF-1", "approve")
         for k in ("EPC", "Survey", "Design", "Consent"):
-            self.store.add_document(self.sam, "ZF-1", "a.pdf", k, b"%PDF-x")
+            self.store.add_document(self.sam, "ZF-1", "a.pdf", k, b"%PDF-x", metadata=change_metadata(self.store, "ZF-1"))
         self.store.funding_step(self.pam, "ZF-1", "approve")
         with self.assertRaises(ValueError):
             self.store.funding_step(self.pam, "ZF-1", "submit", "")

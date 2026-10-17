@@ -4,7 +4,7 @@
 ## Task Metadata
 
 * Task ID: 78; slug: controlled-bulk-preview-78; date: 2026-10-17
-* Status: Correction cycle ONE complete and source published; RV-002 remains partial
+* Status: Correction TWO implemented; publication and coordinator final-head independent reassessment pending
 * Details: .copilot-tracking/details/2026-10-17/controlled-bulk-preview-78-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/controlled-bulk-preview-78-plan-critique.md
 
@@ -23,8 +23,10 @@ transaction, with immutable per-case and batch audit.
 Existing handoff acceptance is the only ownership-transfer path; bulk reassignment
 would bypass that control. SQL staff is currently cached and must be read fresh
 under the transaction. The same-number BRD FRs differ from the PRD's numbering.
-JSON retains its existing single-process/multi-file limitation. No UI change is
-necessary for this additive API feature. No blockers; no unmerged dependency.
+JSON retains its existing single-process/multi-file limitation. The original
+additive bulk API needed no UI; authorized P04 now updates the directly affected
+existing upload/handoff forms. No unmerged implementation dependency. Independent
+final-head review remains required for acceptance.
 
 ## User Decisions and Requirements
 
@@ -276,3 +278,42 @@ exact SHAs and finding disposition. RV-002 remains unfulfilled/blocking full
 acceptance; actual form authority is unrelated human-blocked. Active external
 review512a59c4 must assess final exact head; no Pass inferred. Final evidence
 commit/publication then stop, no merge.
+
+## Correction TWO: Required Existing Caller Provenance
+
+Explicit owner direction after reviewer512a59c4 Revise97cdc2a supersedes the
+earlier residual-only RV-002 disposition. This is the final allowed same-issue
+correction, not a full RPI repeat or permission to omit implementation.
+
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Implement RV-002 existing upload and handoff contracts
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Fail-before, required metadata and immutable change events
+
+Required explicit source/source-version/reason for upload and offer/accept;
+server actor/time/version and exact old/new document refs/ownership; mandatory
+handoff history version and stale refusal. Missing legacy request inputs refuse;
+no invented defaults or backfill. Shared single-record commit/recovery with
+fresh SQL actor check, existing rowversions, no ghost history/success audit.
+Recipient-only acceptance and separate forms/bulk modules remain intact.
+
+<!-- rpi:task id=P04-T02 -->
+#### [x] P04-T02: Direct callers, native accessible UI and validation
+
+API forwards supplied inputs; existing upload/offer/accept forms collect them,
+retain error values, label controls, support Enter and focus/live status.
+Direct synthetic fixtures explicitly supply metadata; no production defaults.
+Core/API suites run because mandatory core caller signatures affect both
+components. Final narrow tests cover new races/rollback/redaction; existing
+forms pending/missing-rescan and RV-001 remain passing. Local Chromium path
+and existing component tooling pass; evidence in changes/details.
+
+<!-- rpi:task id=P04-T03 -->
+#### [ ] P04-T03: Finding disposition, exact final head and normal topic push
+
+Record original reviews unchanged, requested RV-002 source correction completed
+but full acceptance blocked pending coordinator independent final-head review.
+No new reviewer or fabricated Pass. Privacy-safe commit/trailer, normal same-
+branch push on main92d4f89, exact final-head handoff then stop; no merge.
+Actual schema authority is unrelated human work, not a blocker to this fix.

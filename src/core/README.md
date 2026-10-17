@@ -182,19 +182,60 @@ audit/commit boundaries, lost acknowledgement and reopen. SQLite establishes
 the local transactional evidence; no live Azure SQL, private stock, model or
 operational approval is claimed. JSON retains its existing separate-file
 case/audit limitation and is not cross-process transactional evidence.
-The new path meets provenance assertions for its own edits, not full PRD
-FR-005 provenance acceptance. Correction ONE traced the remaining operations:
-`Store.add_document` retains content hash, version 1, display-name actor and
-date plus a separate email/time upload audit, but accepts no source reference,
-source version or change reason. `offer_handoff`/`accept_handoff` retain
-versioned sender/receiver snapshots, email/time and role, but accept no explicit
-source/source-version contract; acceptance takes no reason and records no
-canonical old/new ownership change event with all required provenance.
-The API and current UI supply only file/name/kind or an empty acceptance body.
-Completing these gaps requires explicit caller inputs, validation, retained
-event/history design and related UI/API compatibility work; inventing provenance
-from filenames or acceptance itself would not meet the requirement. RV-002 and
-criterion 1 therefore remain partial, separately from the corrected RV-001.
+Correction TWO implements the earlier RV-002 upload/offer/accept provenance
+gap below. This supersedes the earlier residual-only disposition, not the
+historical Not accepted Review. Final-head independent reassessment is still
+required; engineering checks are not human, platform or full PRD acceptance.
+
+### Single-record upload and handoff change sources (correction TWO)
+
+`add_document(..., metadata=body)`, `offer_handoff(..., metadata=body)` and
+`accept_handoff(..., metadata=body)` require caller-supplied nonblank strings:
+`source` (maximum 200), `source_version` (100), `reason` (300). No filename,
+content hash, history count, acceptance state or default stands in for those
+inputs. Actor, UTC time, change version and exact old/new fields are server
+recorded; caller overrides are refused. Source metadata records a human
+assertion, not verified source authority or controlled approval.
+
+Offer/accept also require `handoff_version`, the nonnegative integer count of
+current `handoff_history` events from case detail (zero when absent). A changed
+offer/receipt/escalation/answer requires reload, even if the recipient is the
+same. Legacy `hand_over` is still an offer-only alias and requires the same
+metadata. Existing owner/manager offering and recipient-only acceptance remain
+mandatory; there is no immediate or bulk reassignment.
+
+Uploads retain supplied source/version/reason on the document and append
+`document_history` with the complete before/after document-reference lists
+(ID, name, kind, hash and document version). Handoff offer/accept enrich the
+existing sequential `handoff_history` with supplied metadata, registered actor,
+UTC time and exact old/new handoff and ownership (`owner`, `owner_code`,
+`owner_role`, `waiting_on`); an offer records resident-update changes too.
+The identical complete event is hash-chain audited as `upload_document`,
+`handoff_offered` or `handoff_accepted`. Source version and server history
+version are distinct. Returned documents and case detail are copies.
+
+`change_provenance` shares validation/commit/recovery only across these
+single-record operations, separate from forms and bulk permissions/contracts.
+SQL rechecks the registered actor under its writer transaction and uses the
+existing rowversion check to refuse concurrent target changes. Metadata,
+history and audit commit together. Failure discards staged changes/success
+audit and records a safe refusal; uncommitted uploaded bytes are removed.
+A lost commit acknowledgement remains explicitly uncertain: reload history
+before retry; a document that actually committed keeps its bytes. Blob and
+SQL do not become a distributed transaction. JSON keeps its separate-file
+crash-atomicity limitation, with operation-local restoration on failure.
+
+Legacy requests missing metadata now refuse with actionable errors; updated
+API/UI paths collect explicit details. Existing historical records remain
+unchanged/unknown, never backfilled. Normal note restrictions redact new
+source/version/reason/change details; form-staging bodies remain hidden.
+No controlled decision/approval is introduced.
+
+`test_change_provenance` covers missing/blank/typed/oversized and forged input,
+exact source retention/event-audit equality after SQL reopen, stale handoff,
+recipient-only ownership, actor revocation at commit, row conflicts, rollback,
+lost acknowledgement, byte retention and note redaction. Existing forms
+pending/missing-rescan and bulk RV-001 tests remain in the combined selection.
 
 ## Read-only source cadence labels (#216)
 

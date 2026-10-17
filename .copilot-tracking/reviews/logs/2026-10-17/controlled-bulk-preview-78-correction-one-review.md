@@ -91,3 +91,44 @@ the original published head; neither that active status nor this parent
 integration validation is a final-rebased-head independent Pass.
 Exact final commit is posted to PR #378 with old/base/source SHAs and this
 delta. No new reviewer or RPI loop is launched; no merge is authorized.
+
+## Correction TWO: RV-002 Source Disposition, Independent Reassessment Pending
+
+Owner reports independent reviewer512a59c4 returned Revise on97cdc2a:
+SQLite-reopened uploads lacked source/source_version/reason, audit was only
+kind/filename, accepted handoff history lacked those fields, audit only named
+prior owner and API callers supplied no provenance. Those are concrete
+implementation gaps. The explicit correction TWO instruction supersedes the
+earlier residual-only scope decision for these exact existing operations.
+It does not supersede/falsify either historical review result.
+
+| Finding / required evidence | Correction TWO source disposition |
+| --- | --- |
+| RV-001 immutable failed-preview eligibility | Unchanged scoped implementation; regression suite remains green |
+| RV-002 upload inputs/history/audit | Implemented explicit caller source/version/reason, server actor/UTC/event version, exact before/after document-reference lists, identical full event in document_history and immutable upload audit, SQL reopen tested |
+| RV-002 handoff inputs/history/audit | Implemented required source/version/reason/current handoff version in offer/accept API/UI/store, exact old/new handoff/ownership with registered actor/UTC/history version and identical audit; recipient-only acceptance preserved |
+| Legacy missing request metadata | Refused with actionable required-field errors; new native forms collect inputs, never fabricate defaults from hashes/filenames/state; older stored records untouched/unknown |
+| Permission/stale/atomicity | Fresh actor check at SQL commit, existing target rowversions and explicit handoff history version; denied recipients/revoked actor, conflicts, rollback/no ghost successes and lost-ack byte retention tested |
+| Directly dependent forms | Existing pending/missing-rescan behavior retained; scoped forms implementation unchanged, fixtures explicitly supply now-required upload metadata |
+| Full criterion 1 / #78 acceptance | Pending coordinator independent rereview of exact final pushed head; not self-certified or downgraded to an optional residual |
+| Actual form authority | Separate unrelated human prerequisite; not used to omit source implementation |
+
+Fail-before: seven new JSON/SQL tests, four accepted-missing-input assertion
+failures and 34 missing-keyword-contract errors, not harness-loader errors.
+After source/caller correction, full core609 (one skip), full API574 (111
+opt-in skips) pass. Additional final edge cases covered in focused119 pass.
+Existing core ruff/format55/mypy108 and API ruff/format19/mypy50 pass.
+Local Chromium verifies explicit required-field focus/keyboard upload/offer/
+accept, stale inline refusal with focused error/retained values, recipient
+transfer, 390px/reduced motion and SQL reopen/history-audit equality; no page
+errors or external requests. No cloud/private/model or live-platform claim.
+
+Fresh guidelines retrieved before UI edits and again before scoped changed
+UI review. `src/api/src/zava_forward/api/web/app.js:607` - pass for changed
+form regions; existing owner-selected Fluent/native/plain-language rules
+preserved, no whole-file WCAG/screen-reader or human acceptance claim.
+
+This appended section is the implementer's finding disposition/evidence,
+**not** an independent Review Pass. Original Not accepted file unchanged.
+Coordinator owns required independent final-head rereview after push. No new
+independent agent loop, issue closure, approval authority or merge.

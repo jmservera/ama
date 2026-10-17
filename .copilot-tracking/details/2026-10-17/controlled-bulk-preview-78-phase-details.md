@@ -11,7 +11,8 @@ Research: .copilot-tracking/research/2026-10-17/controlled-bulk-preview-78-resea
 | --- | --- | --- |
 | P01 | Complete | P01-T01 |
 | P02 | Complete | P02-T01, P02-T02 |
-| P03 | Complete, bounded correction ONE; RV-002 partial | P03-T01, P03-T02, P03-T03 |
+| P03 | Complete, historical bounded correction ONE | P03-T01, P03-T02, P03-T03 |
+| P04 | Source/callers/validation complete; publication pending, independent acceptance not claimed | P04-T01, P04-T02, P04-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Core preview and atomic application
@@ -154,6 +155,60 @@ criterion 1. Actual form authority is unrelated human-blocked. Active external
 review512a59c4 needs exact final SHA/delta, no inferred final-head acceptance.
 Final evidence commit on tested source, exact topic-only lease against97cdc2a,
 draft PR publication/readback then stop; no merge.
+
+<!-- rpi:phase id=P04 -->
+## P04: Correction TWO, Exact RV-002 Caller Gap
+
+Owner explicitly authorizes source/API/UI implementation after independent
+review512a59c4 Revise on97cdc2a; no new RPI or independent-review loop here.
+Starting head ae3adfb is clean and fully rebased on92d4f89.
+
+<!-- rpi:task id=P04-T01 -->
+### P04-T01: Implemented Required Inputs and Bound Events
+
+Fail-before receipt: seven new JSON/SQL tests, four assertions proving missing
+metadata still accepted plus 34 missing-contract keyword/signature errors,
+not loader/dependency failures. Source correction then adds shared
+`change_provenance` operation context for existing upload/offer/accept only.
+Explicit source/version/reason, integer current handoff-history version,
+registered actor and UTC/change-version with exact old/new refs/ownership.
+Existing metadata/permissions/recipient acceptance and workflows preserved.
+SQL final actor check under writer transaction, rowversion conflict and
+failure recovery; exact identical event in case history and immutable audit.
+Legacy missing request input refuses, old stored history unknown/not rewritten.
+
+<!-- rpi:task id=P04-T02 -->
+### P04-T02: Implemented Direct Callers and Verified UI/Contracts
+
+API caller wiring, legacy handover offer alias, explicit test-only synthetic
+metadata fixture; directly affected upload and offer/accept native forms.
+Web skills/current full guideline retrieval before edits and refresh before
+final changed-region review; no unrelated design overhaul. Existing Fluent
+tokens/plain ASCII/sentence-case precedence retained.
+
+Full core suite: 609 tests, one existing skip. Full API suite: 574 tests,
+111 existing opt-in skips. Suites run once after caller updates because
+mandatory metadata changes affect both components; not repeated wholesale.
+Final added race/redaction cases covered in 119-test focused pass after suites.
+Core ruff/format55/mypy108, API ruff/format19/mypy50, JavaScript syntax pass.
+Final strengthened full-reference-list/event-version/defensive-copy assertions
+pass in 13 provenance tests; core tooling rerun passes unchanged counts.
+Local Chromium final path passes missing-field focus, Enter upload/offer/accept,
+inline stale refusal/focus/value retention, recipient-only ownership, 390px/
+reduced-motion and SQL reopen/history-audit equality; no page errors/external
+requests. Browser entry fixture corrected from welcome `/` to actual `/app`.
+No private stock/cloud/paid inference/live SQL Server. Existing unavailable-law
+diagnostics are unknown rule checks, not successful law evidence.
+
+<!-- rpi:task id=P04-T03 -->
+### P04-T03: Pending Exact-Head Publication, Not Independent Acceptance
+
+Self finding disposition: requested RV-002 upload/offer/accept implementation
+gap corrected with explicit inputs/events; RV-001 unchanged and regressed.
+Original Review and review512a59c4 Revise remain historical. Coordinator must
+independently reassess final exact head; acceptance remains blocked until then.
+Actual form authority is an unrelated human prerequisite, not an excuse to omit
+this source correction. Final same-topic normal push then stop, no merge.
 
 ## Completion Evidence
 
