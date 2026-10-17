@@ -166,7 +166,7 @@ results and assessed source boundary; no overall live acceptance claim.
   and extend existing workflow prerequisite/mutation tests.
 * [x] P03-T02: Clean pip reproduction, full infra and existing lint/format/type
   checks; execute preserved image and timeout regressions plus mutations.
-* [ ] P03-T03: One cycle-specific Review, artifact reconciliation, privacy-safe
+* [x] P03-T03: One cycle-specific Review, artifact reconciliation, privacy-safe
   Conventional Commit, push same branch and update PR #370 with Refs #360.
 
 ### Correction test ownership
@@ -197,3 +197,12 @@ the failure there with pip (21 tests, 14 failures/four errors); the worker's
 reported environment restriction is not a parent restriction. Keep the required
 /tmp venv. No significant unresolved decision and no repeated critique.
 Planning execution: Complete. Readiness: Ready.
+
+### Correction completion receipt
+
+P03 complete. Research, Plan, Implement and Review explicitly complete.
+Correction source commit 6976ae9649de291409c771986b818b83e0ebc8ae pushed on
+feat/run-in-azure-360; PR #370 updated with Refs #360. Full infra suite rerun
+at that committed head: 307 passed, no skips. The following receipt commit
+changes tracking artifacts only, not the validated workflows/source/docs.
+No further RPI task/session starts. RV-001/RV-002/RV-003 remain unmet.

@@ -86,3 +86,9 @@ local noreply for author/committer. Commit with Refs #360 and Copilot trailer,
 push only feat/run-in-azure-360 and update existing PR #370. Never merge,
 force-push or claim local evidence establishes live acceptance. RV-001 through
 RV-003 remain separate authorized follow-ups. Stop after publication.
+
+P03 completion receipt: source head 6976ae9649de291409c771986b818b83e0ebc8ae
+was committed, pushed and reported in updated PR #370. Full infra discovery
+rerun there: 307 tests, no skips, 66.039 seconds. All P03 tasks complete;
+remaining receipt is tracking-only and does not alter assessed source.
+No live acceptance or continuing automatic session.

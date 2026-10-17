@@ -212,3 +212,14 @@ has not run yet and is not represented by these local results.
 Parent may reconcile publication receipts and push/update PR #370 with Refs
 #360, then stop as requested. This Review does not start a second Review,
 source correction or automatic follow-up task.
+
+### Parent publication evidence (not another Review)
+
+Reviewed correction source was committed and pushed as
+6976ae9649de291409c771986b818b83e0ebc8ae. PR #370 update/readback confirmed
+the same branch/head and open main-targeting PR. Full infra discovery was
+rerun at that committed head, using the same clean /tmp pip venv:
+`REQUIRE_AZ_BICEP=1 /tmp/ama-360-correction1-YRmaea/bin/python -m unittest discover -s infra/tests -q`;
+307 passed, no skips, 66.039 seconds. Final receipt publication changes only
+tracking artifacts; assessed executable/workflow/runbook tree remains identical.
+Review remains Complete / Residual work, with all original live blockers open.

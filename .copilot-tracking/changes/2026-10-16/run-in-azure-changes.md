@@ -216,3 +216,24 @@ The commit skill's supplemental instruction file is still unavailable and
 the advertised changed-files tool is not exposed; repository/user commit
 conventions and Git inspection apply. No extra PR-review agent or rewrite of
 the tracked PR scratch file is needed for updating the existing PR.
+
+### Correction publication receipt and final-head boundary
+
+Research **Complete**, Plan **Complete**, Implement **Complete**, Review
+**Complete**, outcome **Residual work**. Source correction
+`6976ae9649de291409c771986b818b83e0ebc8ae` was pushed normally to the same
+feat/run-in-azure-360 branch. Existing PR #370 was updated in place, Refs #360
+only. GitHub readback confirmed that exact source head, open state and main
+base. Local worktree was clean after the source publication.
+
+The complete infra command was rerun at committed source head 6976ae9:
+`REQUIRE_AZ_BICEP=1 /tmp/ama-360-correction1-YRmaea/bin/python -m unittest discover -s infra/tests -q`.
+Result: **307 passed, zero skips, 66.039 seconds**. The final publication
+receipt commit changes tracking artifacts only; its executable/workflow,
+dockerignore, test and runbook tree is identical to this validated source
+head. The PR's headRefOid is the authoritative final publication SHA; do not
+mistake baseline 296037b or original 37af66e for the corrected final source.
+Final report and PR identify the publication head after the receipt push.
+
+No merge, force-push or Azure operation. RV-001/RV-002/RV-003 remain unresolved;
+no operational acceptance, live CI result or authority is invented.

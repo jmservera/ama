@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/run-in-azure-research.md",
@@ -49,12 +49,33 @@
       "decision": "Correction cycle 1 Review executed once, Complete; outcome Residual work. No source-blocking defect identified; RV-001/RV-002/RV-003 remain open. Docker context mutation granularity is explicitly limited, not image-build proof.",
       "status": "recorded separately from critique",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+    },
+    {
+      "decision": "Correction source 6976ae9649de291409c771986b818b83e0ebc8ae committed/pushed normally on feat/run-in-azure-360; PR #370 updated with Refs #360 and read back at that head. Full infra rerun at committed source: 307 passed, zero skips. Final receipt is tracking-only; final publication SHA is reported in PR and final response.",
+      "status": "published; all four requested RPI phases complete",
+      "evidence": "https://github.com/jmservera/ama/pull/370"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Live acceptance blocked on authorized private image publication/digest and API-only role activation; no deployment performed.",
+      "resolution": "Separate owner-authorized deployment follow-up only."
+    },
+    {
+      "id": "RV-002",
+      "summary": "Actual tenant/mailbox authority, private job/log/SQL/cleanup/restart/fresh-replica and browser/human acceptance remain unproved.",
+      "resolution": "Separate authorized operator validation after RV-001."
+    },
+    {
+      "id": "RV-003",
+      "summary": "Cross-host serialization and hard-kill cleanup remain manual operational boundaries.",
+      "resolution": "Separate authorized serialized-window/recovery rehearsal; no new cloud action here."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Correction Research/Plan/Implement/Review complete; finish P03-T03 publication only: privacy-safe commit, push same branch, update PR #370 with Refs #360, record source-head receipt and stop."
+    "action": "Stopped after requested correction publication. No automatic follow-up. Owner/coordinator retains PR checks/merge and separately authorized RV-001/RV-002/RV-003 work; offline passes are not live acceptance."
   },
   "prioritized_follow_ups": [
     {
