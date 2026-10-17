@@ -6,7 +6,7 @@ ms.date: 2026-10-17
 ## Task Metadata
 
 Task ID: 94. Slug: finance-match-controls-94. Parent: 93, hierarchy only.
-Status: Correction TWO locally validated after external coordinator Revise on exact 852b342.
+Status: Correction TWO locally validated and pushed; external closure pending.
 Original Review and JSON correction ONE retained; High COORD-002 SQL audit
 cleanup/recovery has objective local resolving evidence; external closure pending.
 Source/evidence commit 6248521 pushed; main-targeted PR #383 open. Final
@@ -113,7 +113,7 @@ attach to all affected lines; reject ambiguous commitment instead of first wins.
 Revalidate match at acceptance, and roll back staged SQL success audit on errors.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Verify and publish criterion evidence
+### [x] P02: Verify and publish criterion evidence
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Focused persistence/API checks and documentation
@@ -124,7 +124,7 @@ available. No application/Azure acceptance claim. Update existing KB synthesis,
 index/log and core guide; record exact evidence and limitations.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Independent Review and delivery
+#### [x] P02-T02: Independent Review and delivery
 
 One canonical Review; correct actual blockers before delivery within caller's
 two coordinator-correction limit. Record execution/outcome separately. Commit
@@ -188,6 +188,10 @@ is claimed for TWO; external coordinator closure remains pending.
 
 Changes: .copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md.
 Both authorized corrections used, no further known local engineering gap.
-Normal same-branch commit/push and PR #383 update complete P02-T02; no
-merge/rebase/force push or new full Review. Hosted checks and external closure
-remain separate; stop after verified final push, no automatic child.
+Source/evidence commit 6e75380 pushed and verified at origin and PR #383.
+PR body updated with exact finding, resolving evidence and external-closure
+boundary. Authenticated noreply author/committer verified; conventional commit
+and Copilot trailer retained. This closeout commit publishes completed markers
+and stopped state. Hosted source checks were running/queued at inspection,
+not claimed passed. No merge/rebase/force push or new full Review; external
+closure remains separate. Stop after final push, no automatic child.

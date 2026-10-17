@@ -94,3 +94,10 @@ external closure. No new full Review/critique or nested delivery. Actual shared
 owns sequencing preserving the common helper and both callers. No foreign dirty
 worktree read, cherry-pick, merge, rebase or force push. Closeout is same-branch
 normal push and honest PR #383 update, then stop with no automatic follow-up.
+
+Correction TWO source/evidence commit 6e75380 pushed; remote and PR head verified
+exactly, main base retained. Actual PR body updated with COORD-002 evidence,
+Revise/pending external closure and common-helper overlap. Noreply author/
+committer and trailer verified. Source checks running/queued, not passed.
+Final evidence-only commit publishes completed plan/stopped state and is normally
+pushed on the same branch; stop at clean pushed head, no automatic follow-up.

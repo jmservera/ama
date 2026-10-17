@@ -210,3 +210,19 @@ noreply normal commit, same-branch push, honest PR #383 update and clean stop.
 Actual #84 / PR #382 overlap includes `_discard` and adjacent SQL recovery error
 handling; the coordinator must preserve the common helper and both callers
 when sequencing integration. No merge/rebase/force push/cherry-pick is performed.
+
+### Correction TWO delivery
+
+Committed and pushed source/evidence
+6e75380b7f72bc44b865276615c901045a8c9ce9 with authenticated account's noreply
+author/committer, conventional message and required Copilot trailer. Verified
+the exact source hash in origin and PR #383, base main. Updated actual PR body
+from the committed dated body, explicitly retaining Revise/external closure
+pending and actual common-helper overlap. Source checks running/queued at
+inspection, not represented as passed.
+
+Worktree was clean after the verified source push. Final evidence-only commit
+publishes completed P02 markers and explicit stopped state, followed by normal
+same-branch push and clean-head verification. Both authorized corrections used;
+no known unresolved local engineering defect, but no independent Pass or
+external closure is claimed. No new Review, merge, rebase, force push or child.

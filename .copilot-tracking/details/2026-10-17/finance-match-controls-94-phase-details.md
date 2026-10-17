@@ -123,3 +123,12 @@ PR #383 open and mergeable at inspection. Hosted checks running, no result
 invented. Authenticated author/committer email is the account's noreply address.
 Final evidence-only commit/push publishes closeout; session stops by caller
 direction with no child work or merge.
+
+Correction TWO closeout: source/evidence commit
+6e75380b7f72bc44b865276615c901045a8c9ce9 is pushed and verified at origin and
+PR #383, targeting main. PR body now records the exact-852b342 Revise,
+COORD-002 local resolving evidence, actual #84 / PR #382 overlap and pending
+external closure. Authenticated noreply author/committer and Copilot trailer
+verified. Hosted checks running/queued at source-head inspection, not passed.
+Final evidence-only commit publishes completed P02 markers/stopped state; no
+new full Review or independent Pass, merge, rebase, force push or child work.

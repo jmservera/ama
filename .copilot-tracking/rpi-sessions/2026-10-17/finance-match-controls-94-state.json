@@ -4,8 +4,8 @@
   "parent_task": {"task_id": "93", "task_slug": null},
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "status": "complete",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/finance-match-controls-94-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/finance-match-controls-94-plan.md",
@@ -24,10 +24,11 @@
     {"decision": "Correction ONE resolves RV-001 with persistent primitive failing-first regression, independent audit rollback, explicit uncertain restoration error and 55 passing focused cases. Original Review verdict retained, no independent reassessment claimed.", "status": "resolved", "evidence": ".copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md"},
     {"decision": "Source/evidence commit 6248521 pushed with authenticated noreply author and committer. Main-targeted PR #383 opened and verified; mergeable at inspection, hosted checks in progress. Final evidence-only commit/push publishes this explicit caller-requested stop. No merge/rebase/force push/child work.", "status": "completed", "evidence": "https://github.com/jmservera/ama/pull/383"},
     {"decision": "External exact-852b342 coordinator verdict Revise identifies COORD-002 SQL false audit after audit INSERT plus early discard read failure. Correction TWO explicitly authorized; canonical primitive actually overlaps #84 / PR #382; no cherry-pick, rebase or foreign dirty-worktree read.", "status": "confirmed", "evidence": "Latest user correction-TWO instruction"},
-    {"decision": "Correction TWO quarantines failed SQL audit/touched/validation state before recovery reads, restores snapshots and invalidates cache, preserves prior legitimate audit and original error with explicit recovery notes/logs. Three initial SQLite tests failed before fix; 158 combined local tests plus one added refusal test and 18 actual local SQL Server cases plus that added case passed. Original Review/correction ONE retained; external closure pending, no independent Pass.", "status": "locally validated", "evidence": ".copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md#coord-002-resolving-evidence"}
+    {"decision": "Correction TWO quarantines failed SQL audit/touched/validation state before recovery reads, restores snapshots and invalidates cache, preserves prior legitimate audit and original error with explicit recovery notes/logs. Three initial SQLite tests failed before fix; 158 combined local tests plus one added refusal test and 18 actual local SQL Server cases plus that added case passed. Original Review/correction ONE retained; external closure pending, no independent Pass.", "status": "locally validated", "evidence": ".copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md#coord-002-resolving-evidence"},
+    {"decision": "Correction TWO source/evidence commit 6e75380b7f72bc44b865276615c901045a8c9ce9 pushed and verified at origin and PR #383, base main. Actual PR body updated honestly. Authenticated noreply author/committer and Copilot trailer verified. Source checks running/queued at inspection. Final evidence-only commit publishes completed markers/stopped state before normal final push; no further automatic work.", "status": "completed", "evidence": "https://github.com/jmservera/ama/pull/383"}
   ],
   "coordinator_corrections": {"used": 2, "maximum": 2},
   "blockers": [{"id": "COORD-002", "severity": "High", "assessed_head": "852b3421c5b5a2dd09944fa39ee609cc2efcf811", "summary": "Failed SQL audit insert followed by early discard read failure can flush a false approval at lock exit.", "status": "locally corrected and validated; external independent closure pending"}],
-  "next_action": {"phase": "Implement", "action": "Authenticated noreply normal commit, same-branch push and honest PR #383 update; stop clean pushed head. No new full Review, independent Pass, merge, rebase or force push."},
+  "next_action": {"phase": "Review", "action": "External coordinator may close COORD-002 against the final pushed head and sequence #84 / PR #382 common-helper integration. This session stops at clean final push; no new full RPI Review, independent Pass, merge, rebase, force push or automatic child work."},
   "prioritized_follow_ups": []
 }
