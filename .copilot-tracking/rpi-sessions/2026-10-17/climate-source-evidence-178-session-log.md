@@ -57,3 +57,19 @@ final SHA is reported after push rather than self-referenced in its own commit.
 boundary. Task status completed; phase Follow-up; Review outcome Residual work.
 Owner reuse/access approval, paired T/RH records and remaining relevant exact
 terms/site metadata remain open. No automatic follow-up work is authorized.
+
+2026-10-17: Caller explicitly resumed this same task for a bounded rebase,
+validation, resolution Review and single lease-push/update of PR #371, then
+STOP. Clean branch/head f4ea7542874baf6045db2e33764b1348a976c238 verified;
+fetched main 4e4a389f53870137a0f0582861766be5983a8f96 includes #368/#370.
+GitHub id/login resolved again and privacy-safe repository-local email set.
+**Research verification complete (reused).** Existing source evidence is
+adequate; overlapping index/log/core README intentions are additive and clear.
+Retained public input hash verified. No retrieval, new feature or approval.
+
+2026-10-17: **Plan verification complete.** P04-T01 records the caller's
+rebase-only boundary, exact pinned main/lease heads, additive combination
+policy and source/log preservation checks. P01-P03 and their independent
+critique remain complete; no repeated critique. Focused tests, exact available
+lint/type checks and retained-input replay are required before resolution
+Review and one topic-only lease-push. Owner/RH blockers remain unchanged.

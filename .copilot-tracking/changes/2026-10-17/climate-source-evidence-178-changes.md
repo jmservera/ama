@@ -9,6 +9,11 @@ Details: .copilot-tracking/details/2026-10-17/climate-source-evidence-178-phase-
 
 ## Execution Status
 
+Current P04 rebase-only continuation: In progress. Original P01-P03 completion
+below is retained as historical evidence. Original review findings are not
+being implemented or re-accepted. Caller explicitly authorizes this topic's
+rebase and one lease-push after validation, not a main rewrite or feature work.
+
 Complete, full plan P01-P03 and P01-T01/P02-T01/P03-T01. No remaining active-plan
 markers. Canonical edits followed numerical evidence. Approved scope excludes runtime,
 stock/infra, downloads, copied provider pages/raw datasets and human approvals.

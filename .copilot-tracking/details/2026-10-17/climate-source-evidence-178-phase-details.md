@@ -14,6 +14,32 @@ Research: .copilot-tracking/research/2026-10-17/climate-source-evidence-178-rese
 | P01 | Bounded temperature evidence | Complete | P01-T01 |
 | P02 | Canonical integration | Complete | P02-T01 |
 | P03 | Validation/reconciliation | Complete | P03-T01 |
+| P04 | Rebase-only continuation | Ready | P04-T01 |
+
+<!-- rpi:phase id=P04 -->
+## P04: Rebase-only continuation
+
+<!-- rpi:task id=P04-T01 -->
+### P04-T01: Preserve and validate combined evidence
+
+Caller-authorized continuation from f4ea7542874baf6045db2e33764b1348a976c238
+onto main 4e4a389f53870137a0f0582861766be5983a8f96. Remote topic lease is
+the original full feature head. Initial worktree clean, PR #371 open/main.
+Only docs/reference/README.md, docs/reference/log.md and src/core/README.md
+overlap; combine clear additive intentions. Preserve main's entire source
+tree except the original narrow climate documentation delta; preserve feature
+helper/tests/JSON/synthesis byte-for-byte. Every main/feature log entry must
+survive, in its original stream order. Stop on ambiguous intent.
+No removals or new production targets. No downloads, private data, Azure,
+role/network changes, spending or approval. Replay only existing public input
+using P01-T01's exact command and cmp against the unchanged JSON.
+Focused unittest/compileall and exact existing available lint/type checks;
+report unavailable tooling honestly, never fabricate a pass.
+Check upstream blob retention, feature-only blob retention, original main
+log entry sequence, original feature log entry sequence, shared-file additions
+and git diff --check. One bounded resolution Review, not a second assessment
+of original full #178 acceptance. Update existing artifacts then one
+force-with-lease push to only the named topic and PR #371 update; STOP.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Bounded temperature evidence

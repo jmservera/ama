@@ -10,6 +10,11 @@
 
 ## Executive Summary
 
+Current continuation is rebase-only: preserve this narrow partial feature and
+all #368/#370 evidence while replaying onto fetched main
+4e4a389f53870137a0f0582861766be5983a8f96. No feature expansion, source
+adoption or owner approval. Original implementation below remains historical.
+
 Replace the current all-unknown position with a dated official-source comparison,
 an explicitly conditional HadUK-Grid recommendation, exact terms/access blockers,
 and reproducible Durham monthly temperature statistics. This is evidence delivery,
@@ -31,6 +36,10 @@ not this bounded comparison and temperature-only result.
 
 ## User Decisions and Requirements
 
+* 2026-10-17 continuation supersedes the earlier no-rewrite delivery direction
+  only for this run-owned topic: fetch/rebase, resolve clear combinations only,
+  validate, push with an explicit force-with-lease, update PR #371 with Refs
+  #178 and stop. Never rewrite main or claim full issue acceptance.
 * Execute Research, Plan, Implement, Review in order with dated committed artifacts
   and explicit completion entries in the session log.
 * Read #178/#367 and canonical docs; public official metadata/terms and bounded
@@ -114,6 +123,24 @@ changes, application acceptance, legal approval or operational rules.
 
 ## Phase Checklist
 
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Rebase-only integration continuation
+
+<!-- rpi:task id=P04-T01 -->
+#### [ ] P04-T01: Preserve upstream and feature evidence, validate resolution
+
+Rebase onto pinned fetched main; resolve only additive index/log/core README
+conflicts. Preserve all log entries and both source intentions. Check every
+upstream non-overlap file against main and every feature-only production file
+against f4ea754; verify all upstream added lines remain in shared files.
+Run focused climate tests, compileall, retained hash-guarded byte replay,
+exact available existing lint/type checks and git diff --check.
+Then one bounded resolution Review, update existing artifacts, one lease-push
+and PR update. No new critique: original one-pass gate is retained.
+Test ownership unchanged; exact removals none; maximum production additions
+zero. Only conflict combinations and existing tracking artifacts may change.
+Details: P04-T01. Existing human blockers do not prevent history integration.
+
 <!-- rpi:phase id=P01 -->
 ### [x] P01: Retain reproducible bounded temperature evidence
 
@@ -190,6 +217,10 @@ retained. One critique only.
   precedes cadence-specific bounds and generator adoption; outside this task.
 
 ## Handoff
+
+Current handoff: P04 only. Research reused with Ready disposition; plan and
+details verified against the caller's explicit bounded rebase authorization.
+Original critique remains complete; do not rerun it or reopen P01-P03.
 
 P01-P03 complete with tests/report/diff evidence in the changes record. Ready
 for one Review, preserving all human blockers. No new research, deployment,

@@ -2,6 +2,33 @@
 
 # Task Research: climate-source-evidence-178
 
+## Bounded Rebase Verification (2026-10-17)
+
+Research disposition: reused. Planning Readiness: Ready for rebase-only
+continuation, not new source research. Caller supplies independent Pass/MERGE
+for the narrow partial feature at f4ea7542874baf6045db2e33764b1348a976c238;
+this is not owner approval or complete #178 acceptance.
+
+* C2: clean status and exact requested branch verified before writes. PR #371
+  is open against main at the supplied head. Fetched origin/main is
+  4e4a389f53870137a0f0582861766be5983a8f96, including #368/#370.
+* C3: upstream diff overlaps only docs/reference/README.md,
+  docs/reference/log.md and src/core/README.md. #176 adds replay provenance,
+  deterministic-input caveats and an index route; #360 adds a current auth
+  route and append-only log evidence. No competing climate source intent.
+* C4: retained public input at the existing details locator is readable;
+  SHA-256 remains d2c9ff2a443b8502957ce88fe8bfdbbd0d5ac111208eab0842bc574d4d4306f9.
+  No redownload or private data inspection is needed.
+
+Prior official-source research remains adequate for this history-only change.
+No new three-wave source cycle executed or claimed. Exact resolutions must
+retain all upstream source blobs, every upstream log entry and every original
+feature log entry, plus the conditional climate route and no-RH/UNMET caveats.
+Any ambiguous source intent blocks the affected resolution. No new claims,
+downloads, feature work, Azure actions, spending, roles/networks or approvals.
+Ruff/mypy are absent from default Python/PATH; investigate only an existing
+recorded validation environment before reporting check availability.
+
 ## Research Brief
 
 * Date: 2026-10-17. Status: Complete. Researcher: RPI Agent.
