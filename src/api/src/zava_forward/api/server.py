@@ -95,6 +95,8 @@ class App:
 
 
 def get_kind(path):
+    if path == "/api/coordinator":
+        return "coordinator"
     if path == "/api/form-schemas":
         return "forms"
     if path.startswith("/api/buildings/"):
@@ -243,6 +245,17 @@ def make_handler(app):
             s = app.store
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path == "/api/coordinator":
+                from zava_forward.core import coordinator
+                try:
+                    values = parse_qs(url.query, keep_blank_values=True)
+                    if any(len(items) != 1 for items in values.values()):
+                        raise ValueError("Repeated coordinator parameters are not supported.")
+                    return self._json(200, coordinator.read(s, u, {k: v[0] for k, v in values.items()}))
+                except ValueError as error:
+                    return self._json(400, {"error": str(error)})
+                except PermissionError as error:
+                    return self._json(403, {"error": str(error)})
             progress_q = parse_qs(url.query, keep_blank_values=True) if url.path in ("/api/stats", "/api/cases.csv") else {}
             if "report" in progress_q:
                 from zava_forward.core import progress

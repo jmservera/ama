@@ -74,6 +74,15 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-4) var(--sp-5);margin-bottom:var(--sp-4)}
 .row{display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:center}
 .row.between{justify-content:space-between}
+.coordinator{min-width:0;overflow-wrap:anywhere}
+.coordinator table{font-variant-numeric:tabular-nums}
+.coordinator-filters .row>div{min-width:0;flex:1 1 14rem}
+.coordinator-filters input,.coordinator-filters select{width:100%}
+.coordinator .heat-count{font-weight:600}
+.coordinator .heat-present{background:var(--soft);color:var(--ink)}
+.coordinator table a{display:inline-block;min-height:1.5rem;padding:var(--sp-1)}
+.coordinator-summary a{padding-block:var(--sp-1)}
+.coordinator dt{text-transform:none}
 input,select,textarea{font:inherit;padding:var(--sp-2) var(--sp-3);border:1px solid var(--field-line);border-radius:var(--radius);max-width:100%}
 label{display:block;font-weight:600;margin:.6rem 0 .2rem}
 textarea{width:100%;min-height:5rem}

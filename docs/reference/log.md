@@ -5883,3 +5883,37 @@ metadata when the knowledge base was created.
   Owned SQL stopped. Original Review/critique/correction ONE unchanged.
   PR #394 remains independent-final-gate work, not a third defect cycle,
   self-Pass, approval, merge or issue closure.
+
+## 2026-10-17 Engineering - #101 coordinator heatmap and lifecycle funnel
+
+* Research actual checked-out list/map/filter/role/event contracts at base
+  ebc8dab8, which includes merged event102/PR394, resident88/PR392 and sensor112/
+  PR393. Parent100 is hierarchy only; the earlier indexed search missed existing
+  web surfaces and did not justify a new dashboard framework.
+* Add the scoped read-only [coordinator workbench/API](../../src/api/README.md#coordinator-heatmap-and-lifecycle-funnel-101)
+  and [shared current population contract](../../src/core/README.md#read-only-coordinator-populations-101).
+  Existing filters/own-all scope, current stop rules, policy draft status,
+  validated timestamped partial events and map cluster/field controls are reused.
+  Source stage and observed metric-stage selectors remain independent.
+* Update the [existing programme synthesis](./research/ux/customer-journeys/programme.md#coordinator-population-and-observed-funnel-boundary-2026-10-17-101)
+  and index. Missing groups/geocodes/history remain visible; list/map population
+  totals include unmapped records, while mapped viewport counts stay separate.
+  No fictional initial entry/final exit, lifecycle exclusion, conversion,
+  accepted handover, ranking authority or independent acceptance.
+* Preserve all Store/document/provenance writers and issue117's orchestrator/
+  doc_controls paths. KB index/log are declared overlap; retain both topics'
+  append-only entries on any later separately authorized integration.
+  No memory edit, other-worktree read, private stock, tile-provider/licence
+  change, Azure, paid AI, live communication or approval operation.
+
+## 2026-10-17 Review - #101 original adverse outcome and publication gate
+
+* Exactly one original Review completed with Defects found, retained in
+  [the dated Review](../../.copilot-tracking/reviews/logs/2026-10-17/coordinator-lifecycle-funnel-101-review.md).
+  RV-001 Medium: mixed-case registered staff email authenticates and reads cases,
+  but the new coordinator registry lookup falsely denies it on JSON/SQLite.
+  Passing synthetic browser/SQL/image receipts do not close this counterexample.
+* Publication/completed delivery is blocked under the accepted correctness gate.
+  Route the minimal identity lookup/regression correction to later selected
+  implementation, preserve the original verdict and do not repeat Review.
+  No issue closure, independent coordinator acceptance, push or PR is claimed.

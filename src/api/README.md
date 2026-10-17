@@ -6,6 +6,68 @@ ms.date: 2026-10-17
 ms.topic: reference
 ---
 
+## Coordinator heatmap and lifecycle funnel (#101)
+
+Known delivery blocker: original Review RV-001 exposes false403 for authenticated
+staff with a mixed-case stored email. No corrected delivery or acceptance is
+claimed; publication remains blocked pending the separate correction.
+
+From Overview, choose **Coordinator heatmap and lifecycle funnel**. The existing
+workbench/Leaflet map now has a scoped read-only coordinator mode, not a new
+framework. Manual case routes and the legacy overview remain available.
+
+```text
+GET /api/coordinator?view=all&as_of=2026-10-10T12:00:00Z&area=Test
+GET /api/coordinator?view=all&as_of=2026-10-10T12:00:00Z&metric=exits&metric_stage=Contact%20paused
+```
+
+Registered staff only; contractors and unknown/revoked actors are denied before
+aggregation. `view=mine` (default) means current owner-code assignment; `all`
+means the existing staff-wide permitted open cases, not additional case authority.
+The [core contract](../core/README.md#read-only-coordinator-populations-101)
+defines denominator, stopped work, draft priority, observed flow and unknowns.
+Existing source filters `stage/area/wave/owner/contractor/flag/queue` and `q`
+are shared by map, heatmap, funnel and record pages. `group_by` is `area`
+(default), `building` or `archetype` (recorded home type, not an approved technical
+classification). Missing groups remain explicitly Unknown.
+
+`as_of` is required and selects recorded events, not historical membership;
+optional `start` is inclusive UTC. The current `stage` source filter never
+changes meaning when `metric_stage` drills an observed entry/exit/return/reopen.
+For example, a current Contacting resident case can appear in exits from Contact
+paused. Metrics also include `current`, `stopped`, `missing_geocode`,
+`unknown_history`, `priority` and `filtered_out`. Unapproved priority refuses
+drillthrough. `filtered_out` means source filter/search exclusions, not lifecycle
+exclusion, and cannot select a group/stage cell. Unknown/empty/repeated parameters
+refuse with 400; `limit=1..100` and nonnegative `offset` page stable case IDs.
+
+Map `total` equals record selection total, including missing/invalid coordinates;
+`mapped`, `missing_geocode` and `in_view` are separate. Panning narrows only
+mapped viewport coverage, not the record denominator. Every count link retains
+source filters and event window. Tables and native keyboard links/buttons remain
+equivalents to heat colours and map gestures. **Show these as a list** focuses
+the complete selected record table, including cases without coordinates.
+No new map provider, licence, ranking, approval, history writer, AI or service.
+
+From `src/api`, after editable source installation:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests ../../.venv/bin/python -m unittest \
+  test_coordinator_api.CoordinatorApi test_coordinator_api.JsonCoordinatorApi -q
+ZF_COORDINATOR_BROWSER=1 PYTHONPATH=tests:../core/tests:../agents/tests \
+  ../../.venv/bin/python -m unittest \
+  test_coordinator_api.CoordinatorApi.test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials -v
+```
+
+`ZF_COORDINATOR_MSSQL=1` selects `test_coordinator_api.MssqlCoordinatorApi`
+against an explicitly task-owned loopback SQL Server only. Its UUID-named
+`zf_coordinator101_*` fixture databases are dropped after each test; no shared
+database is eligible. The browser uses the actual local application, synthetic
+SQLite, keyboard filter/exit/record/map-list/cluster navigation, coverage/unknown
+labels, count parity, denials and 320/390/1280px reduced-motion reflow. Local
+engineering evidence is not WCAG, human understanding, Azure or independent
+coordinator acceptance.
+
 ## Historical progress report and export (#102)
 
 Existing staff-only report paths support explicit `report=progress`:
