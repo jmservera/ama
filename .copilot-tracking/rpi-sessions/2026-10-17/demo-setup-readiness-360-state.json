@@ -3,8 +3,8 @@
   "task_slug": "demo-setup-readiness-360",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/demo-setup-readiness-360-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-17/demo-setup-readiness-360-phase-details.md",
     "critique": ".copilot-tracking/reviews/2026-10-17/demo-setup-readiness-360-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/demo-setup-readiness-360-review.md"
   },
   "confirmed_decisions": [
     {
@@ -44,6 +44,11 @@
       "decision": "Approved additive API/auth staging applied with deny-all; no exposure or retirement",
       "status": "complete",
       "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-resource-receipt.json; direct routes 403, six backing public-access flags Disabled"
+    },
+    {
+      "decision": "Review executed exactly once; execution Complete, outcome Residual work",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/demo-setup-readiness-360-review.md; candidate 6f43559; no material source defect identified, RV-001 through RV-004 are externally gated follow-ups"
     }
   ],
   "blockers": [
@@ -64,8 +69,33 @@
     }
   ],
   "next_action": {
-    "phase": "Review",
-    "action": "Commit completed Implement evidence, then execute exactly one canonical Review; no further live action."
+    "phase": "Follow-up",
+    "action": "Publish committed Review and Refs #360 PR, record publication completion and stop; no child task, merge or issue closure."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Explicit IAM authorization and exact resource-scoped activation",
+      "rationale": "Smallest bounded activation; unblocks tag relay and demo-API restart without broad privileges",
+      "evidence": "RV-002; successful four-Create demo-target what-if, not applied"
+    },
+    {
+      "rank": 2,
+      "task": "Authorized existing private proof-image publication",
+      "rationale": "Other mandatory worker prerequisite; no available approved publisher or permitted local Docker",
+      "evidence": "RV-001; private ACR bypass None/no tasks/pool, retained old proof digest"
+    },
+    {
+      "rank": 3,
+      "task": "Human tenant setup and genuine runtime/browser/SQL/AI acceptance",
+      "rationale": "High-value criterion d but depends on IAM/image and human directory authority",
+      "evidence": "RV-003; four restricted 403s, no real registration/credential/session; #349/#350"
+    },
+    {
+      "rank": 4,
+      "task": "Owner/coordinator reviewed old-path retirement",
+      "rationale": "Only eligible after d; preserving existing paths now is required, not unnecessary cleanup",
+      "evidence": "RV-004; retained source fingerprint and no retired resources; criterion e unmet"
+    }
+  ]
 }

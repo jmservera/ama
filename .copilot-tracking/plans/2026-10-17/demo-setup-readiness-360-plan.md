@@ -112,7 +112,7 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
 <!-- phase: P03 -->
 ### P03 - Review and publish
 
-* [ ] P03-T01 One post-implementation Review; route later findings, no review loop.
+* [x] P03-T01 One post-implementation Review; route later findings, no review loop.
 * [ ] P03-T02 Reconcile state, persistent completions, criterion audit; commit,
   push and create Refs #360 PR; record exact remote head in publication receipt.
 
