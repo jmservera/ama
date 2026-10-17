@@ -5276,3 +5276,67 @@ metadata when the knowledge base was created.
 * No Azure write during this continuation. Private-publisher authority decision,
   exact-image smoke/pin, real operator sign-in/roles/SQL/AI and later retirement
   remain open. External final-head gate/owner merge decision pending; no closure.
+## [2026-10-17] query | Grant lifecycle and scoped human exercise authority (#95)
+
+* Fresh issue/source audit verified existing grant states and second approver,
+  but tiny JSON/SQLite probes accepted unregistered role dictionaries and a
+  same-code alias. Current BRD grant rules are FR-023/024 and RULE-009/010;
+  the issue's BRD FR-019 reference now concerns capacity.
+* Updated the Finance journey synthesis, KB index and core/API guides. Reused
+  #94's operation recovery/SQL hook and independent email/code/OID helpers for
+  grant and application writes. Explicit trusted human exercise designation
+  matches exact target/action/case/scheme or route and fresh UTC validity;
+  role alone, request metadata and production exercise use cannot authorize.
+* Kept application, award, claimable, submission and cash evidence separate
+  from provider finance; per-event amounts do not inherit the GBP 40 million
+  opportunity. GBP-only refusal, retained actor/designation/source history and
+  legacy unknown-currency withdrawal/re-proposal avoid fabricated provenance.
+  Application confirmation wording now explicitly means neither award nor cash.
+* Focused local grant/finance/API/browser run passed 89 tests without skips.
+  Actual isolated loopback SQL Server passed 15 grant and 19 preserved finance
+  cases; both task-owned containers and their UUID databases were removed.
+  Full API discovery passed 588 tests with 121 explicit skips; core discovery
+  exposed two stale manifest hash checks, fixed with the actual test-source
+  SHA-256 and all eight manifest checks passing. DATA AST and journey coverage
+  remain unchanged; final broad rerun and independent gate are recorded in task
+  evidence, not inferred here. Existing Ruff/format/core/API types pass.
+* No private stock/roster, continuing dataset alteration, real authority,
+  financial execution, paid inference or Azure writes. Original case and owner
+  memory unchanged. Synthetic engineering and focused browser evidence are not
+  full PRD pack/export, WCAG, human or deployed-application acceptance.
+
+## [2026-10-17] correction | Grant legacy transaction identity (#95)
+
+* The single independent Review executed Complete / Not accepted. RV-001 found
+  a regression freezing legacy preparer identity before transaction validation.
+  Original verdict is retained; this is not a human permission blocker.
+* Authorized correction ONE restores original unresolved-versus-captured
+  identity provenance in #94's validation context. Legacy grants and finance
+  budgets reread current persisted preparer identity inside the SQL transaction;
+  captured historical identity and current actor/designation gates stay intact.
+  Four grant/finance x code/OID subtests failed before correction and now refuse
+  with unchanged case/audit, cleared validation context and valid audit chain.
+* Updated existing Finance synthesis, index and core contract. Current combined
+  grant/finance/API/actual Chromium/manifest checks pass 98 tests without skips;
+  actual isolated loopback SQL Server passes 16 grant and 19 preserved finance
+  tests. Owned container zf-grant95-74996418b02e and UUID databases removed.
+  Core/API Ruff, format and types pass. Earlier full discovery remains dated
+  pre-correction evidence; local closure is not an independent Pass.
+* Coordinator final independent gate remains pending. No second Review, real
+  delegation, payments, private data, cloud actions or continuing-data changes.
+
+## [2026-10-17] integration | Grant controls on latest main (#95)
+
+* After completed ordered RPI, correction ONE and PR #386 publication, explicit
+  coordinator authorization rebased only this topic onto fetched main
+  1fc7325b93ea845b9cb2e827efbea624f7d20d30 (#385 and #384).
+* Preserved upstream exact log prefix, all index routes and both shared-source
+  intents. Only manual conflicts were this append-only log and the manifest's
+  fixture digest, regenerated from combined public source. Entire own 12-file
+  src added/removed byte patch parity proved across bases; no authority,
+  coverage or approval metadata promotion. Original case/addendum unchanged.
+* Fresh 156 grant/finance/procurement/API/actual Chromium/manifest tests pass;
+  core/API Ruff/format/types pass. SQL 35/35 and prior full discovery remain
+  historical correction evidence, not new integration runs. Original adverse
+  Review retained; coordinator independent closure pending. No new full Review,
+  private data, financial/cloud action, main write, merge or issue closure.

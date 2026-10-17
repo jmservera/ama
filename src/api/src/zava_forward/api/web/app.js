@@ -881,10 +881,11 @@ function fundingPanel(c, id, refresh) {
   const ta = h("textarea", { "aria-label": "Funding application draft", rows: 10 });
   ta.value = f.draft || "";
   const fundNote = h("div", {}, fundingAi[id] ? [h("p", { class: "muted" }, fundingAi[id].label), aiNotes(fundingAi[id])] : null);
-  const ref = h("input", { "aria-label": "Reference from the funder", placeholder: "Reference from the funder" });
+  const ref = h("input", { "aria-label": "Application event evidence reference", name: "application-evidence", autocomplete: "off", spellcheck: "false" });
   const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }));
   if (f.status === "Confirmed") {
-    return h("section", { class: "card" }, h("h2", {}, "Funding"), h("p", {}, `Confirmed. Route: ${f.route}${f.reference ? `, reference ${f.reference}` : ""}.`));
+    return h("section", { class: "card" }, h("h2", {}, "Funding application"), h("p", {}, `Application confirmation recorded. Route: ${f.route}${f.reference ? `, reference ${f.reference}` : ""}.`),
+      h("p", { class: "muted" }, "Application status is not a grant award or cash receipt. See the separate grant evidence."));
   }
   const need = c.checklist.filter((x) => !x.present).map((x) => x.kind);
   return h("section", { class: "card" }, h("h2", {}, "Funding application"),
@@ -895,10 +896,11 @@ function fundingPanel(c, id, refresh) {
     ta,
     canAct ? h("div", { class: "row" },
       h("button", { class: "alt", onclick: () => step("save_draft", ta.value) }, "Save my changes"),
-      f.status === "Draft ready" && h("button", { onclick: () => step("approve") }, `Approve as ${me.user.name}`),
-      f.status === "Approved" && [ref, h("button", { onclick: () => step("submit", ref.value) }, "Record that I submitted it")],
-      f.status === "Submitted" && h("button", { onclick: () => step("confirm") }, "Funder confirmed the award"))
-      : h("p", { class: "muted" }, "The Grants and Evidence Officer or a manager approves and submits."),
+      ["Draft ready", "Approved", "Submitted"].includes(f.status) && h("label", {}, "Application event evidence reference", ref),
+      f.status === "Draft ready" && h("button", { onclick: () => step("approve", ref.value) }, `Approve as ${me.user.name}`),
+      f.status === "Approved" && h("button", { onclick: () => step("submit", ref.value) }, "Record that I submitted it"),
+      f.status === "Submitted" && h("button", { onclick: () => step("confirm", ref.value) }, "Record application confirmation"))
+      : h("p", { class: "muted" }, "Only a designated human financial authority can approve or record submission and confirmation."),
     f.approved_by && h("p", { class: "muted" }, `Approved by ${f.approved_by}.`));
 }
 

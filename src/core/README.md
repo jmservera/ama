@@ -16,6 +16,77 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Grant lifecycle and human exercise designation (#95)
+
+The existing `grants` state machine and separate `funding` application object
+remain separate from provider `finance` records. Opportunity, Award, Claimable,
+Submitted, Accepted/Rejected and Cash received have distinct retained grant
+events; application approval/submission/confirmation never creates a grant
+award, claim or receipt. This is not full PRD FR-019/042 pack/export acceptance.
+The original GBP 40 million is an unverified opportunity, not an evidenced
+award, approved budget, claimable amount or cash. There is no built-in promotion
+or monetary dashboard aggregate. Each new transition has its own supplied
+source and optional amount (required for cash); amounts never carry forward.
+Only GBP is supported; an explicit other/malformed currency is refused.
+
+Grant writes and application steps reuse the #94 operation boundary below.
+Every writer must match current registered email, staff code, name, role and
+optional OID. Grant approvals retain manager role and independent preparer
+email/code/OID checks. A role alone no longer permits approval or application
+approve/submit/confirm. These actions additionally require a trusted staff
+`financial_authority` dictionary containing exactly:
+
+* `kind`: `Synthetic exercise`; `status`: `Active`; `human`: boolean `true`.
+* `subject`: exact registered `email`, `code`, `oid` (null when absent).
+* `evidence_ref`: supplied nonempty designation reference, not proof of real delegation.
+* `effective_from`, `expires_at`: timezone-aware ISO timestamps; current UTC server
+  time must satisfy `effective_from <= now < expires_at`.
+* `permissions`: nonempty list of exact `{action, case_id, route}` records.
+  Actions are `grant:Opportunity`, `grant:Award`, `grant:Claimable`,
+  `grant:Submitted`, `grant:Accepted`, `grant:Rejected`, `grant:Cash received`,
+  or `application:approve`, `application:submit`, `application:confirm`.
+  Grant route matches the exact scheme; application route matches its recorded
+  route. Unknown routes and wildcards do not confer authority.
+
+Authority comes only from the existing staff registry, never request data.
+No app endpoint creates a designation, no existing staff is backfilled, and
+`ZF_ENV=production` refuses exercise authority. Proposed or real delegation
+labels are not supported substitutes. Actual delegation verification and
+operational use remain unimplemented, not inferred from an exercise role.
+SQL rechecks current registry, the full time predicate, exact designation
+snapshot and independence inside the existing writer transaction, even if
+case sequence has not changed.
+
+New grant history retains case/scheme/GBP/source, preparer/approver identities,
+server dates and the designation snapshot. Source status remains `Supplied,
+unverified`. Old completed history stays untouched. Old pending proposals
+without explicit GBP must be withdrawn and re-proposed; do not fabricate
+currency or verification. Legacy preparers use the #94 registered-email lookup,
+refusing unknown identity and repeating current lookup inside the SQL writer
+transaction; captured historical identities remain distinct. The #95 independent
+Review found a regression in that distinction (RV-001, original Not accepted).
+Correction ONE restores it with failing-first grant/finance code/OID rebinding
+regressions. Coordinator final independent closure remains pending; local tests
+do not replace that gate. Application approve/submit/confirm each requires
+its own evidence reference and appends action/time/case/route/identity/authority
+history while preserving compatible status/reference fields. Existing callers
+must now supply that evidence; confirmation is not award or receipt.
+
+From the repository root after pip editable source installation:
+
+```bash
+PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_grant_lifecycle_controls.JsonGrantChecks \
+  test_grant_lifecycle_controls.SqlGrantChecks test_grant_lifecycle_api -q
+```
+
+`ZF_GRANT_MSSQL=1` enables `MssqlGrantChecks` against an explicitly disposable
+local SQL Server configured through the existing `ZF_SQL_*` variables. Each test
+creates/drops only its UUID-named `zf_grant95_*` database. Do not point it at
+Azure or a shared dataset. JSON caught-error rollback is retained, not a promise
+of cross-file abrupt-crash atomicity. No grant submission, payment, banking or
+real commitment is executed.
+
 ## Record-only finance controls (#94)
 
 The existing finance workflow records approved budgets, commitments, invoice or

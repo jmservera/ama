@@ -98,5 +98,6 @@ disallow_untyped_calls = false
 module = ["zava_forward.core.bulk_edits", "zava_forward.core.change_provenance",
           "test_change_provenance", "tests.test_change_provenance",
           "test_bulk_edits", "tests.test_bulk_edits",
-          "test_finance_match_controls", "tests.test_finance_match_controls"]
+          "test_finance_match_controls", "tests.test_finance_match_controls",
+          "test_grant_lifecycle_controls", "tests.test_grant_lifecycle_controls"]
 disallow_untyped_calls = false

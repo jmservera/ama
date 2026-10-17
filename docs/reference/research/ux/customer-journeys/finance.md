@@ -213,6 +213,48 @@ combines their intent. External independent closure of #94 is pending.
 Local criterion evidence is not full PRD,
 browser/accessibility, funding/legal, live-platform or human adoption acceptance.
 
+## Grant lifecycle acceptance audit (2026-10-17, #95)
+
+Fresh issue #95 reports prior delivery with source and a second approver.
+Inspection confirms the existing source-linked grant history and separate
+application object; it does not justify replacing the ledger. However, tiny
+JSON/SQLite probes accepted an unregistered supplied manager and a registered
+same-code approver alias. Second-person email comparison was not designated
+human authority. The legacy application route had the same role-only weakness.
+
+The [core contract](../../../../../src/core/README.md#grant-lifecycle-and-human-exercise-designation-95)
+now reuses #94's current registry, independent email/code/OID and caught-error
+case/ledger recovery. Explicit synthetic human designation is matched to the
+exact transition, case and scheme/route, with current UTC validity and repeated
+SQL transaction checks. No request or role label creates authority. Existing
+staff are not backfilled; no actual company delegation is verified.
+
+| Exact criterion | Evidence boundary | Remaining limit |
+| --- | --- | --- |
+| No dashboard presents opportunity as award/cash | Existing dashboard projections contain counts, not grant-captured monetary sums. Each grant history event retains its own source/GBP amount without carry-forward. Mixed Opportunity/Confirmed-application regression protects separation; application wording no longer calls confirmation an award | Synthetic records/source references are not evidence of actual award or receipt; original GBP 40 million remains unverified |
+| Only designated human financial authority submits, certifies or records receipt | Grant approval and application approve/submit/confirm require current trusted, action/case/route-scoped human exercise designation, not a role label; server/transaction time, expiry/revocation and independent aliases are checked | Exercise mechanics only, no real delegation, external submission/certification, bank receipt or payment execution |
+
+Application events now retain separate evidence/identity/designation history.
+Grant and provider invoice/payment objects remain unchanged by these events.
+Non-GBP input is refused; old pending unknown-currency proposals need withdrawal
+and re-proposal instead of invented provenance. Old completed histories remain
+unchanged and source references are labelled supplied/unverified.
+
+Source numbering differs: current BRD FR-019 concerns capacity; grant intent is
+FR-023/024, RULE-009/010 and BG-007. PRD FR-019/AC-022/050 also describes broader
+pack/version/export workflows; this issue does not establish their acceptance.
+Read the [API guide](../../../../../src/api/README.md#grant-and-application-records-95)
+for focused local HTTP/browser coverage and honest engineering-only boundaries.
+The one independent Review executed with original verdict Not accepted: RV-001
+found legacy preparer identity frozen before SQL transaction validation. The
+authorized correction restores the current registered-email lookup inside the
+transaction, while preserving captured historical identity. All four
+grant/finance x code/OID regressions failed before correction and now refuse
+without state or success-audit leakage; 98 focused/browser/manifest checks pass.
+Original adverse verdict remains; coordinator final independent closure is
+pending, not inferred from local checks. No private roster/stock, continuing
+data, original case, live-model or Azure action was used for this audit.
+
 ## Local source keys
 
 * S1: [docs/case_study_48_original.md](../../../../case_study_48_original.md), 2026-09-10, Business Challenge,

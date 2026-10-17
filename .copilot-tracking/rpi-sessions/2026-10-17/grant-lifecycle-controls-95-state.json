@@ -1,0 +1,70 @@
+{
+  "task_id": "95",
+  "task_slug": "grant-lifecycle-controls-95",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/grant-lifecycle-controls-95-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/grant-lifecycle-controls-95-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/grant-lifecycle-controls-95-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/grant-lifecycle-controls-95-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/grant-lifecycle-controls-95-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/grant-lifecycle-controls-95-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full automatic ordered loop; stop after clean pushed PR or genuine blocker",
+      "status": "confirmed",
+      "evidence": "Explicit coordinator instruction, 2026-10-17; branch fix/grant-lifecycle-controls-95 starts at merged #383 d400eb8d1d0d6567445b0fc11803260eab897a65"
+    },
+    {
+      "decision": "Research executed and Ready; one final-candidate critique executed",
+      "status": "Revise verdict retained; PC-001 through PC-006 directly dispositioned",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/grant-lifecycle-controls-95-plan-critique.md; finalized plan Critique Disposition"
+    },
+    {
+      "decision": "Implementation and local gates complete",
+      "status": "original pre-Review validation retained",
+      "evidence": "89 focused; 34 actual local SQL Server; core 724/35 skips; API 588/121 skips; final changed-label browser 2; migration 25; core/API Ruff/format/mypy"
+    },
+    {
+      "decision": "One independent post-implementation Review executed",
+      "status": "Complete; original outcome Not accepted; RV-001 High",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/grant-lifecycle-controls-95-review.md; assessed original final implementation and four adverse transaction probes"
+    },
+    {
+      "decision": "Coordinator-selected correction ONE implements routed RV-001",
+      "status": "root fix and local closure complete; published; no repeated Review",
+      "evidence": "Explicit intake authorization; P02 plan/details and changes; four failing-first subtests; 98 current focused/browser/manifest tests; 35 actual SQL parity tests; core/API Ruff/format/mypy pass"
+    },
+    {
+      "decision": "Stop automatic session at explicitly requested clean pushed PR boundary",
+      "status": "completed engineering delivery; coordinator independent acceptance pending",
+      "evidence": "PR #386 https://github.com/jmservera/ama/pull/386 targets main; source commit a82da8d1d8f2e912330af76d47ad143f24309eca matched local/remote/PR with clean tree; final publication metadata committed separately; original resume ID 24912f4a-8570-4de8-ad93-fe62376fb3f1"
+    }
+  ],
+  "blockers": [],
+  "integration": {
+    "authorization": "Explicit coordinator post-publication latest-main rebase, 2026-10-17",
+    "old_base": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+    "old_head_and_expected_remote": "6692a97632ac2b4a2189c7a3c1c8bbf8b32918d9",
+    "new_base": "1fc7325b93ea845b9cb2e827efbea624f7d20d30",
+    "rebased_source_head": "ae81ea0651a39ab9e86b5d3955c57099a8c2a4a6",
+    "conflicts": "Preserved upstream exact KB log prefix plus own entries; regenerated only actual combined fixture hash",
+    "validation": "Entire 12-file src added/removed byte patch parity; 156 fresh integration tests; core/API Ruff/format/mypy; original case unchanged; all upstream index routes and authority metadata preserved",
+    "limits": "Earlier SQL/full-discovery evidence historical; no new full Review or independent Pass; final evidence commit head verified in PR",
+    "publication": "PR #386; only topic explicit expected-remote force-with-lease authorized; stop after clean matching local/remote/PR head"
+  },
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independently checks final PR #386 head and RV-001 closure, reviews CI and decides merge; automatic session stopped per explicit PR boundary"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator final independent closure and merge decision",
+      "rationale": "Highest priority: original adverse Review retained after local RV-001 correction; local tests cannot establish independent acceptance",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/grant-lifecycle-controls-95-review.md; matching changes record P02 closure evidence"
+    }
+  ]
+}
