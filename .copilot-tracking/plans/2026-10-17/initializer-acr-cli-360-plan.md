@@ -12,7 +12,8 @@ Actual local retained-base build failed manifest403. Actual hosted quick-build
 uploaded/downloaded source and queued ordinary cpu2 run dbc, then failed registry
 login403 before build. No image or pin. Actual installed-source localhost200/401
 smoke passes but is not image proof. Deliver honest evidence PR; full private
-job settings unchanged. Review and final publication remain lifecycle actions.
+job settings unchanged. Independent Review Complete/Residual work and open
+PR385 complete the bounded lifecycle, with image delivery explicitly blocked.
 
 ## User Decisions and Requirements
 
@@ -107,7 +108,9 @@ concrete source change; existing scoped lint if code changes.
 * [x] P02-T02: Independent Review Complete, outcome Residual work; no defects,
   PC-001 resolved. RV-001 image delivery, RV-002 live acceptance, RV-003 retirement
   routed later. No correction cycle or second Review.
-* [ ] P02-T03: Fresh privacy-safe identity, commit, push and main PR; exact head check.
+* [x] P02-T03: Fresh privacy-safe identity, evidence commit5504f87, ordinary push
+  and open main PR385 verified at matching head; terminal lifecycle commit follows.
+  Final remote/PR head is verified externally, not self-embedded in its own commit.
 
 ## Critique Disposition
 
@@ -129,6 +132,7 @@ These remain later work, not active implementation completion.
 
 Details: .copilot-tracking/details/2026-10-17/initializer-acr-cli-360-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-17/initializer-acr-cli-360-changes.md.
-Implementation evidence is review-ready; P02-T02/T03 are terminal Review and
-publication responsibilities, not unperformed source work. Actual image delivery
-remains Blocked and human acceptance remains UNMET.
+All bounded plan markers complete as evidence delivery, not image success.
+Independent Review Complete/Residual work; PR385 open, automatic session stopped
+at explicit owner boundary. Actual image delivery remains Blocked and human
+acceptance remains UNMET. No merge/rebase/force-push/closing reference.

@@ -8,7 +8,8 @@ Task 360 / initializer-acr-cli-360. Research C1-C5/W1-W4 reused.
 Ready after PC-001 direct resolution from the one final-candidate critique.
 Current execution: P01 complete as bounded attempted/blocked outcome, P02-T01
 complete. P02-T02 independent Review Complete/Residual work; P02-T03 publication
-pending. No source
+complete as open main PR385, initial evidence commit5504f87 remote/PR matched.
+Terminal lifecycle push verified externally. No source
 features or image pin delivered. Commands/results in changes and receipt.
 
 <!-- P01 -->
@@ -115,3 +116,9 @@ Fresh gh api user for repository-local noreply identity, matching author/committ
 Conventional Commit and Copilot trailer. Push this topic normally, open main PR
 Refs #360, verify remote/PR head. Do not merge/rebase/force-push or close issue.
 Owner explicitly requested stopping at clean pushed PR or genuine blocked result.
+Actual publication: https://github.com/jmservera/ama/pull/385, initial evidence
+commit5504f87ae9a82cc5562bd242b5694a02393b7957, main base and topic head
+verified. CI rollup empty at initial inspection, not Pass; no manual workflow
+dispatch or paid rubric dispatch. Task scratch and worktree .venv removed by
+exact owned paths. Terminal parent records stopped session and verifies final
+remote/PR head externally. No new cloud operation or Review.

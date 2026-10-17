@@ -124,3 +124,13 @@ or force-push. Commit/PR skills' referenced instruction files and changed-files
 tool are unavailable in this host; repository conventions and explicit owner
 gh/Conventional Commit instructions govern ordinary publication instead.
 Final remote/PR verification is recorded externally with exact final head.
+
+Publication actual: evidence commit5504f87ae9a82cc5562bd242b5694a02393b7957
+pushed ordinarily and PR385 opened against main:
+https://github.com/jmservera/ama/pull/385. Remote/PR initial head matched.
+No checks reported at initial inspection; not Pass and no workflow dispatch.
+Exact task-owned scratch directory and worktree .venv removed. All plan markers
+complete as bounded evidence delivery; image publication remains Blocked.
+Automatic session stopped at explicit owner boundary, no follow-up child work.
+Terminal lifecycle record is committed/pushed separately so no pre-publication
+state falsely claims a PR existed; final exact head checked externally.
