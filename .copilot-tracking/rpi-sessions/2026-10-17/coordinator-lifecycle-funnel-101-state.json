@@ -3,8 +3,8 @@
   "task_slug": "coordinator-lifecycle-funnel-101",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/coordinator-lifecycle-funnel-101-research.md",
@@ -47,7 +47,7 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "P03-C01 focused correction complete; reconcile KB/current evidence, fresh identity, commit/push normally and open main PR Refs #101. P03-T04 pending. Preserve original Review/critique, no independent acceptance."},
+  "next_action": {"phase": "Follow-up", "action": "Independent coordinator review of PR396 final remote head; P03-C01/P03-T04 complete, correction source5464f8da69bbc979171d8cffd23c4013843aeb96 plus final metadata published normally to same topic. Original Review Complete/Defects found and critique byte-exact; no merge/closure/second Review. CI status is reported live, not presumed green."},
   "prioritized_follow_ups": [
     {
       "rank": 1,

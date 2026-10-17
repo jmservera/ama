@@ -221,5 +221,28 @@ coordinator review remains pending. All three issue criteria retain their prior
 count/coverage/map/filter/drill semantics and tested engineering evidence;
 unsupported lifecycle exclusions remain explicitly Unknown, not new history.
 No117 writer/runtime/shared resource changes. No task-owned container remains.
+
+### Correction ONE: Publication (P03-T04)
+
+Fresh gh api user returned id8036360/loginjmservera. Configured repository-local
+privacy-safe noreply author/committer and committed with Copilot trailer:
+5464f8da69bbc979171d8cffd23c4013843aeb96. Normal push created the same topic
+remote without force/rebase. Main still ebc8dab87ae9bd6a33380b85e86f38be5ed9f213.
+Opened https://github.com/jmservera/ama/pull/396 to main with Refs #101, complete
+RPI/correction commands and honest historical/current validation limits.
+Initial PR head equals correction commit, clean worktree; initial statusCheckRollup
+empty (not CI pass). This final metadata receipt is persisted by an additional
+ordinary commit and normal push; final exact head/clean/PR check reported externally
+without a self-referential commit hash in its own content.
+First check observation: image-paths and src-no-working-data passed; remaining
+checks pending. This is not final-head CI evidence or permission to merge.
+
+P03-C01 and P03-T04 complete. No second Review/critique, no independent acceptance,
+merge or closure. Current task outcome is published engineering delivery with
+correction ONE evidence; original Review Complete/Defects found remains historical
+and byte-identical. Next action is independent coordinator review of PR396 final
+head. All three ACs have bounded tested engineering evidence; unsupported general
+lifecycle exclusions and full conversion remain Unknown, human/coordinator/WCAG
+acceptance unchecked, Low map-number formatting explicitly deferred.
 Actual MSSQL/image prior receipts remain historical pending evidence-based
 validation decision; no historical result will be relabelled as current.

@@ -164,3 +164,12 @@ This invocation owns the minimal lookup/regression correction and
 subsequent publication; no second Review. One critique original
 Revise retained; PC001-003 dispositions applied. No117 writer changes/dependency.
 Human/coordinator/WCAG acceptance remains open.
+
+P03-T04 publication completed: fresh authenticated id8036360/loginjmservera,
+local author/committer privacy-safe email and Copilot trailer; correction source
+commit5464f8da69bbc979171d8cffd23c4013843aeb96 pushed normally and main PR396
+opened with Refs #101. Fresh main remainedebc8dab8; no rebase/force/main write.
+Source and all original RPI artifacts are published; this metadata receipt is
+persisted in a final ordinary commit, followed by exact remote-head/clean check.
+PR initial check rollup empty, not a CI pass. Independent coordinator final-head
+review is pending; original Review remains Complete/Defects found byte-exact.

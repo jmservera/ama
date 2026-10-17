@@ -136,7 +136,7 @@ KB index/log overlap with117 is declared, not resolved by an unauthorized rebase
   Docker build/nonroot image/source checks; stop task resources.
 * [x] P03-T03 Reconcile changes/details/state, execute ONE original Review, retain
   its complete findings; route findings separately, not a second review.
-* [ ] P03-T04 Fresh authenticated privacy-safe author/committer, conventional
+* [x] P03-T04 Fresh authenticated privacy-safe author/committer, conventional
   commit with Copilot trailer; normal push/PR; clean and remote-head verification.
   Delivery is blocked by unresolved mandatory correctness/authorization findings.
   Non-blocking deferrals need rationale. Any permitted later correction must keep
@@ -190,8 +190,11 @@ P01/P02 implemented; P03-T01/T02 completed with actual local receipts. P03-T03
 original Review executed Complete, outcome Defects found, retained at
 .copilot-tracking/reviews/logs/2026-10-17/coordinator-lifecycle-funnel-101-review.md.
 RV-001 Medium originally exposed false403 for mixed-case legitimate registered
-emails; correction ONE now resolves that counterexample. P03-T04 normal
-commit/push/main PR with Refs #101 is next, pending coordinator review afterward.
+emails; correction ONE now resolves that counterexample. P03-T04 published
+source correction5464f8da69bbc979171d8cffd23c4013843aeb96 normally to the same
+topic and opened main PR396 with Refs #101; independent coordinator final-head
+review remains next. Final metadata persistence and remote-head verification
+accompany this receipt; no merge or issue closure.
 Critique ran once and remains unchanged. Closed scalar summaries reuse export_fields
 rather than building full private Store summaries. Changes record:
 .copilot-tracking/changes/2026-10-17/coordinator-lifecycle-funnel-101-changes.md.
