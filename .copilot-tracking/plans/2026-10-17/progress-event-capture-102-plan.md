@@ -104,12 +104,12 @@ Dependency: P01.
 #### [x] P02-T02: Component/KB documentation and image smoke
 
 <!-- rpi:phase id=P03 -->
-### [x] P03: One Review and publication
+### [ ] P03: One Review and publication
 Dependency: P02.
 <!-- rpi:task id=P03-T01 -->
-#### [x] P03-T01: One original Review, bounded concrete corrections
+#### [ ] P03-T01: One original Review, bounded concrete corrections
 <!-- rpi:task id=P03-T02 -->
-#### [x] P03-T02: Privacy-safe commit, push and main PR
+#### [ ] P03-T02: Privacy-safe commit, push and main PR
 
 ## Test Ownership and Locked Candidate
 
@@ -163,3 +163,10 @@ closed export/current-generator admission and event capture/recovery; combined
 runtime/static checks follow the additive Store import conflict resolution.
 Original Review and correction ONE remain unchanged. SQL evidence historical
 unless persistence behavior changes; no such change required by import union.
+
+22:42 independent final-gate Revise: one Medium document operational-failure
+audit regression. Correction TWO LAST authorized cycle resumes P03-T01/T02
+only for truthful post-rollback failure/rejection, original-error retention and
+exact pending-audit/committed diagnostics. Original Review/critique/correction
+ONE immutable. No new full Review. Actual MSSQL and full core checks required
+for this shared failure-path change; maintain all sensor/legacy boundaries.

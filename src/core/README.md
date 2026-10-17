@@ -139,6 +139,12 @@ Controlled writers save events with their successful case change. SQL also
 commits the existing audit in that transaction; failed writes quarantine
 pending success audit before recovery I/O. A failed post-COMMIT refresh is
 explicitly committed, not rejected; retry cannot repeat the same transition.
+Source-recorded operational failures are audited after rollback with a generic
+safe reason, not caller filenames, bytes or transport diagnostics. A document
+storage outage records `upload_document_failed` then `upload_document_rejected`
+without document metadata or success history. Prior audit prefixes survive;
+restoration, failure-audit or orphan cleanup errors retain the original error
+with explicit diagnostic notes. A committed outcome never becomes rejection.
 `QualityOutcomeError` remains the public alias of the shared committed-outcome
 error, preserving the existing API 503 `outcome=committed` response without
 changing its handler. JSON atomically replaces the case/event file and rolls

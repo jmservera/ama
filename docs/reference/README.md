@@ -366,3 +366,8 @@ Authorized integration of merged sensor #393 onto main943febc2 retains its
 closed exports/current-generator admission and prospective event recovery.
 Combined301 checks ran:274 pass,27 explicit skips; original Review/correction
 ONE unchanged. Independent PR #394 final-head gate remains outstanding.
+Correction TWO addresses the independent Medium failure-audit regression:
+truthful sanitized operational failure/rejection after rollback, original-error
+and prior-prefix retention, no false success or committed rejection.
+Original adverse Review/critique/correction ONE remain unchanged; final gate
+still separate from engineering evidence.

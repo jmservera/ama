@@ -164,3 +164,29 @@ Review/correction ONE artifacts exact. Combined301 run/274 pass/27 skips;
 core/API/agents configured statics pass118/55/23 typed files.
 No persistence change, SQL not restarted; SQL25 and image receipts historical.
 P03-T02 ready for exact-lease push and PR body refresh, no new Review.
+
+## Correction TWO: Independent Final-Gate Failure-Audit Finding
+
+Owner resumed exact7fda223a on unchanged main943febc2. Independent reviewer
+7ebc1f9d-17ae-4eb8-ac76-c66c89a0e10c verified original RV-001/RV-002 closed
+and critique dispositions, but returned Revise for one Medium: controlled
+rollback removes upload_document_failed and operation does not audit generic
+DocumentStoreError. This is the LAST authorized defect cycle, not a new Review.
+Original Review, critique and correction ONE will remain byte-identical.
+Scope: emit truthful sanitized failure/rejection evidence after rollback,
+preserve pending prior audit and original operational errors/recovery notes,
+never replay success or reject committed outcomes. Actual upload outages on
+JSON/SQLite/MSSQL and generic operational failure regressions precede the fix.
+Then full core if practical, relevant API/sensor checks and configured statics.
+Owned SQL only for targeted actual backend tests, immediately stopped.
+
+Correction TWO implemented and pre-integration validated; separate receipt
+progress-event-capture-102-correction-two.md preserves exact failing-first and
+actual full-core876/820 pass/56 skips, MSSQL29 pass, focused213/200 pass/13
+skips, configured static and corrected non-root image94/92 pass/two skips
+evidence. Generic operational rejection is restored AFTER rollback; document
+outage emits sanitized failure then rejection, never success or raw payload.
+Original error retained with explicit recovery/audit/cleanup notes.
+Main advanced during validation to merged resident #392 atbcb4871b. Owner
+authorization already permits own rebase with exact remote7fda223a lease;
+preserve all resident controls and revalidate combined shared persistence.

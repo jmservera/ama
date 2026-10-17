@@ -5865,3 +5865,12 @@ metadata when the knowledge base was created.
   skips and core/API/agents statics pass. No persistence change or SQL restart;
   prior SQL25 evidence historical. Original adverse Review/correction ONE
   unchanged; PR #394 independent final gate and issue #102 remain open.
+* Independent final-head review of PR #394 at7fda223a verified its original
+  findings closed but found one Medium operational failure-audit regression.
+  Correction TWO (last authorized cycle) restores sanitized failure/rejection
+  after rollback, retains original errors and prior audit, and never replays
+  success or rejects committed outcomes. Original Review/critique/correction
+  ONE unchanged. Before new resident-main integration: complete core876 run/
+  820 pass/56 skips, actual own MSSQL29 pass, focused213 run/200 pass/13 skips;
+  static and hardened installed-image94 run/92 pass/two skips checks pass.
+  No private payload in failure evidence, paid AI or approval implied.

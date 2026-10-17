@@ -21,7 +21,7 @@ from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
 from .doc_controls import DocControlsMixin, open_scanner
-from .documents import ACCEPTED, MAX_BYTES, DocumentStoreError, open_document_store
+from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin
 from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
@@ -622,12 +622,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         try:
             with change_provenance.operation(self, user, case_id, "upload_document", metadata, "document_history") as (c, event):
                 old = change_provenance.document_refs(c)
-                try:
-                    self.docstore.put(case_id, did, data, mime)
-                    uploaded = True
-                except DocumentStoreError as e:
-                    self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
-                    raise
+                self.docstore.put(case_id, did, data, mime)
+                uploaded = True
                 scan = self.scan_new_document(case_id, did, name, data, mime)
                 doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
                            generated=False, mime=mime, summary="", content_sha256=hashlib.sha256(data).hexdigest(), version=1, scan=scan)
@@ -636,9 +632,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 c["documents"].append(doc)
                 event["changes"] = dict(documents=dict(old=old, new=change_provenance.document_refs(c)))
             return deepcopy(doc)
-        except Exception:
+        except Exception as error:
             if uploaded and not any(d["id"] == did for d in self.cases[case_id]["documents"]):
-                self.docstore.delete(case_id, did)
+                try:
+                    self.docstore.delete(case_id, did)
+                except Exception:
+                    error.add_note("Uploaded object cleanup failed; check storage before retrying.")
+                    logging.getLogger(__name__).exception("Failed upload object cleanup failed")
             raise
 
     def read_document(self, user, case_id, doc_id, mode=None):

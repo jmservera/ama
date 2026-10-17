@@ -131,12 +131,9 @@ def controlled(store: Any, user: Record, case_id: str) -> Iterator[tuple[Record,
                     from .store import Store
 
                     Store.save(store)
-                except Exception as recovery_error:
+                except Exception:
                     error.add_note("Change restoration failed; the durable outcome may be unknown.")
                     logging.getLogger(__name__).exception("Controlled change JSON recovery failed")
-                    raise RuntimeError(
-                        "Change restoration failed; reload to establish the durable outcome."
-                    ) from recovery_error
             raise
         finally:
             if sql:
@@ -152,6 +149,7 @@ def operation(
     metadata: object,
     history: str,
 ) -> Iterator[tuple[Record, Record]]:
+    from .documents import DocumentStoreError
     from .store import ConflictError
 
     with store.lock:
@@ -206,11 +204,22 @@ def operation(
                     store.audit(actor["email"], action, case_id, detail)
         except CommittedOutcomeError:
             raise
-        except (ValueError, PermissionError, ConflictError) as error:
-            store.audit(
-                str(user.get("email", "unknown")),
-                action + "_rejected",
-                case_id,
-                json.dumps(dict(error=type(error).__name__, reason=str(error))),
+        except Exception as error:
+            reason = (
+                str(error)
+                if isinstance(error, (ValueError, PermissionError, ConflictError))
+                else "Change failed; the outcome may be unknown. Reload before retrying."
             )
+            detail = json.dumps(dict(error=type(error).__name__, reason=reason))
+            try:
+                if action == "upload_document" and isinstance(error, DocumentStoreError):
+                    store.audit(
+                        str(user.get("email", "unknown")), action + "_failed", case_id, detail
+                    )
+                store.audit(
+                    str(user.get("email", "unknown")), action + "_rejected", case_id, detail
+                )
+            except Exception:
+                error.add_note("Failure audit could not be recorded; reload and check the ledger.")
+                logging.getLogger(__name__).exception("Controlled change failure audit failed")
             raise

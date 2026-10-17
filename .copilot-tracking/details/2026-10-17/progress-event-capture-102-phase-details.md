@@ -122,3 +122,12 @@ sensor export/pre-dispatch/current-generator checks, both README sections and
 exact upstream KB prefixes. Prove unchanged deltas and execute combined event/
 sensor status/document/chat/map regressions. No new full Review or correction
 cycle. Existing SQL25 receipt remains historical for unchanged persistence.
+
+Correction TWO input: independent reviewer7ebc1f9d-17ae-4eb8-ac76-c66c89a0e10c,
+one Medium on exact7fda223a: DocumentStoreError audit lost during rollback.
+Restore truthful failure/rejection after rollback, not failed success entries;
+generic operational rejection uses safe reason, preserves original exception
+even if recovery/audit fails. Extend owned capture harness for actual upload
+outage/prior prefix/reload across JSON/SQLite/MSSQL plus generic exception
+contract. Existing document regression remains unchanged. No third cycle,
+new Review, operational approval or sensor boundary relaxation.

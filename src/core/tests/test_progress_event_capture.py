@@ -16,6 +16,7 @@ from unittest.mock import patch
 
 from dataset import DATA, RESIDENT_BINDINGS, change_metadata, supplied_contract_fixture
 from zava_forward.core import progress
+from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -90,6 +91,124 @@ class JsonCapture(unittest.TestCase):
             view="all",
         )
         return result
+
+    def test_upload_outage_preserves_prior_audit_and_truthful_failures_after_reload(self) -> None:
+        store = self.store
+        store.audit(self.sam["email"], "SYN_committed_prior", "ZF-1", "Synthetic prefix")
+        committed = list(store.audit_entries())
+        error = DocumentStoreError("SYN PRIVATE transport diagnostic")
+        with store.lock:
+            store.audit(self.sam["email"], "SYN_pending_prior", "ZF-1", "Synthetic pending")
+            with patch.object(store.docstore, "put", side_effect=error):
+                with self.assertRaises(DocumentStoreError) as caught:
+                    store.add_document(
+                        self.sam,
+                        "ZF-1",
+                        "SYN_PRIVATE_NAME.txt",
+                        "Other",
+                        b"SYN PRIVATE bytes",
+                        metadata=change_metadata(store, "ZF-1"),
+                    )
+            self.assertIs(caught.exception, error)
+        entries = list(self.open_store().audit_entries())
+        self.assertEqual(entries[: len(committed)], committed)
+        self.assertEqual(
+            [e["action"] for e in entries],
+            [
+                "SYN_committed_prior",
+                "SYN_pending_prior",
+                "upload_document_failed",
+                "upload_document_rejected",
+            ],
+        )
+        for target in (store, self.open_store()):
+            self.assertEqual(target.detail("ZF-1")["documents"], [])
+            self.assertFalse(target.detail("ZF-1").get("document_history"))
+            self.assertTrue(target.verify_audit())
+            self.assertEqual(list(target.audit_entries()), entries)
+        failures = json.dumps(entries[-2:])
+        for private in ("SYN PRIVATE", "SYN_PRIVATE_NAME", "SYN supplied"):
+            self.assertNotIn(private, failures)
+
+    def test_operational_rejection_preserves_original_error_and_no_success_on_recovery_failure(
+        self,
+    ) -> None:
+        store = self.store
+        original = OSError("SYN PRIVATE scanner outage")
+        for recovery_failure in (False, True):
+            with self.subTest(recovery_failure=recovery_failure):
+                before = len(list(store.audit_entries()))
+                with store.lock:
+                    store.audit(self.sam["email"], "SYN_prior", "ZF-1", "Synthetic prefix")
+                    if recovery_failure:
+                        if self.backend == "json":
+                            recovery = patch(
+                                "zava_forward.core.store.Store.save",
+                                side_effect=OSError("SYN restoration unavailable"),
+                            )
+                        else:
+                            discard = store._discard
+
+                            def failed_recovery(pending: Any, discard: Any = discard) -> None:
+                                discard(pending)
+                                raise OSError("SYN recovery unavailable")
+
+                            recovery = patch.object(store, "_discard", side_effect=failed_recovery)
+                    else:
+                        recovery = patch.object(store.docstore, "delete")
+                    with (
+                        recovery,
+                        patch.object(store, "scan_new_document", side_effect=original),
+                        patch.object(store.docstore, "put"),
+                        patch.object(
+                            store.docstore,
+                            "delete",
+                            side_effect=OSError("SYN cleanup unavailable")
+                            if recovery_failure
+                            else None,
+                        ),
+                    ):
+                        with self.assertRaises(OSError) as caught:
+                            store.add_document(
+                                self.sam,
+                                "ZF-1",
+                                "synthetic.txt",
+                                "Other",
+                                b"SYN source",
+                                metadata=change_metadata(store, "ZF-1"),
+                            )
+                        self.assertIs(caught.exception, original)
+                entries = list(self.open_store().audit_entries())
+                self.assertEqual(
+                    [e["action"] for e in entries[before:]],
+                    ["SYN_prior", "upload_document_rejected"],
+                )
+                self.assertNotIn("SYN PRIVATE", entries[-1]["detail"])
+                self.assertEqual(self.open_store().detail("ZF-1")["documents"], [])
+                self.assertTrue(self.open_store().verify_audit())
+                if recovery_failure:
+                    self.assertTrue(original.__notes__)
+
+    def test_rejection_audit_failure_never_replaces_operational_error(self) -> None:
+        original = DocumentStoreError("SYN PRIVATE outage")
+        with (
+            patch.object(self.store.docstore, "put", side_effect=original),
+            patch.object(self.store, "audit", side_effect=OSError("SYN ledger unavailable")),
+            self.assertLogs("zava_forward.core.change_provenance", level="ERROR"),
+        ):
+            with self.assertRaises(DocumentStoreError) as caught:
+                self.store.add_document(
+                    self.sam,
+                    "ZF-1",
+                    "synthetic.txt",
+                    "Other",
+                    b"SYN source",
+                    metadata=change_metadata(self.store, "ZF-1"),
+                )
+        self.assertIs(caught.exception, original)
+        self.assertIn("Failure audit could not be recorded", original.__notes__[0])
+        self.assertEqual(self.open_store().detail("ZF-1")["documents"], [])
+        self.assertTrue(self.open_store().verify_audit())
 
     def history(self, cid: str = "ZF-3", seconds: int = 600) -> Record:
         return next(h for h in self.report(seconds)["histories"] if h["case_id"] == cid)
@@ -516,6 +635,37 @@ class JsonCapture(unittest.TestCase):
 class SqliteCapture(JsonCapture):
     backend = "sqlite"
 
+    def test_document_committed_acknowledgement_is_not_rejected_or_cleaned_up(self) -> None:
+        from zava_forward.core.change_provenance import CommittedOutcomeError
+
+        save = self.store.save
+
+        def commit_then_fail() -> None:
+            save()
+            raise OSError("SYN acknowledgement unavailable")
+
+        with (
+            patch.object(self.store, "save", side_effect=commit_then_fail),
+            patch.object(self.store.docstore, "delete") as delete,
+            self.assertLogs("zava_forward.core.change_provenance", level="ERROR"),
+        ):
+            with self.assertRaises(CommittedOutcomeError) as caught:
+                self.store.add_document(
+                    self.sam,
+                    "ZF-1",
+                    "synthetic.txt",
+                    "Other",
+                    b"SYN source",
+                    metadata=change_metadata(self.store, "ZF-1"),
+                )
+            delete.assert_not_called()
+        self.assertIsInstance(caught.exception.__cause__, OSError)
+        restarted = self.open_store()
+        self.assertEqual(len(restarted.detail("ZF-1")["documents"]), 1)
+        self.assertEqual(len(restarted.detail("ZF-1")["document_history"]), 1)
+        self.assertEqual([e["action"] for e in restarted.audit_entries()], ["upload_document"])
+        self.assertTrue(restarted.verify_audit())
+
     def test_sql_rollback_and_failed_recovery_preserve_original_prefix_and_retry(self) -> None:
         with clock(0):
             self.offer()
@@ -567,7 +717,10 @@ class SqliteCapture(JsonCapture):
                             self.assertIs(caught.exception, original)
                             self.assertTrue(original.__notes__)
                             self.assertFalse(store.local.touched)
-                            self.assertEqual([e[1] for e in store.local.pending], ["SYN_prior"])
+                            self.assertEqual(
+                                [e[1] for e in store.local.pending],
+                                ["SYN_prior"] + ([action + "_rejected"] if metadata_path else []),
+                            )
                     self.assertEqual(self.success_count("SYN_prior"), prior + 1)
                     self.assertEqual(self.open_store().detail("ZF-1"), before)
                     self.assertEqual(self.success_count(action), 0)
