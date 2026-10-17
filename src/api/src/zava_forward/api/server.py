@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import profile
+from zava_forward.core import forms, profile
 
 from zava_forward.core import projection, quality, ranking, taskqueues
 
@@ -95,6 +95,8 @@ class App:
 
 
 def get_kind(path):
+    if path == "/api/form-schemas":
+        return "forms"
     if path.startswith("/api/buildings/"):
         return "building"
     if path.startswith("/api/chat"):
@@ -243,6 +245,11 @@ def make_handler(app):
                 return self._json(403, {"error": "Your role does not include this."})
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, None)
+            form_parts = url.path.strip("/").split("/")
+            if url.path == "/api/form-schemas" or (
+                    len(form_parts) == 4 and form_parts[:2] == ["api", "cases"]
+                    and form_parts[3] == "form-candidates"):
+                return self._forms(u, url.path, None)
             if url.path.startswith("/api/buildings/"):
                 try:
                     parts = url.path.strip("/").split("/")
@@ -649,6 +656,30 @@ def make_handler(app):
             if app.provider.name == "trusted-proxy" and "regulatory_chat" not in user.get("rule_roles", []):
                 raise ChatForbidden("A separately assigned RegulatoryChat capability is required.")
 
+        def _forms(self, user, path, body):
+            parts = path.strip("/").split("/")
+            try:
+                if path == "/api/form-schemas":
+                    if body is None:
+                        return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
+                    return self._json(201, forms.register_schema(app.store, user, body))
+                if body is None:
+                    return self._json(200, {"batches": forms.list_candidates(app.store, user, parts[2])})
+                return self._json(201, forms.stage_candidates(app.store, user, parts[2], body))
+            except DocumentStoreError:
+                return self._json(502, {"error": "The document store is unavailable; no candidates were staged."})
+            except ConflictError:
+                return self._json(409, {"error": "The form or source changed. Reload before retrying."})
+            except PermissionError as error:
+                return self._json(403, {"error": str(error)})
+            except KeyError:
+                return self._json(404, {"error": "Form source or case not found."})
+            except ValueError as error:
+                return self._json(400, {"error": str(error)})
+            except Exception as error:
+                logging.getLogger(__name__).error("Form operation failed (%s)", type(error).__name__)
+                return self._json(503, {"error": "Form storage failed. Reload before retrying; no approval or submission occurred."})
+
         def _procurement(self, s, u, parts, body):
             """Package, capacity and work-order writes. Returns the refreshed list the screen shows."""
             kind, rest = parts[1], parts[2:]
@@ -704,6 +735,10 @@ def make_handler(app):
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, body)
             parts = url.path.strip("/").split("/")
+            if url.path == "/api/form-schemas" or (
+                    len(parts) == 4 and parts[:2] == ["api", "cases"]
+                    and parts[3] == "form-candidates"):
+                return self._forms(u, url.path, body)
             try:
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))

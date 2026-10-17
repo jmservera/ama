@@ -1,0 +1,33 @@
+{
+  "task_id": "97",
+  "task_slug": "form-schema-staging-97",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/form-schema-staging-97-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/form-schema-staging-97-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/form-schema-staging-97-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/form-schema-staging-97-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/form-schema-staging-97-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/form-schema-staging-97-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "One ordered full RPI loop; stop after pushed PR and Review, no child loop", "status": "confirmed", "evidence": "Explicit caller direction 2026-10-17"},
+    {"decision": "Reuse clean feat/form-schema-staging-97 at latest origin/main", "status": "verified", "evidence": "HEAD and origin/main abaca7881e2a4a77eacf865fe235d4af9196643f; no open branch PR"},
+    {"decision": "Research executed; Ready for bounded collection; AI registry exists; actual approved form authority unavailable", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-17/form-schema-staging-97-research.md"},
+    {"decision": "Exactly one critique executed; verdict Revise; PC-001 through PC-005 applied directly", "status": "resolved", "evidence": ".copilot-tracking/reviews/plans/2026-10-17/form-schema-staging-97-plan-critique.md; plan Critique Disposition"},
+    {"decision": "Exactly one post-implementation Review executed; execution Complete; outcome Residual work", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/form-schema-staging-97-review.md; RV-001 actual approved-template acceptance unmet"}
+  ],
+  "blockers": [
+    {"id": "actual-template-authority", "summary": "Full approved-form acceptance remains unmet; no actual approved template/version or recorded authority supplied. Bounded engineering is complete.", "resolution": "Owner supplies exact authority evidence before separately planned approved-template binding; keep #97 open."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Commit and push reviewed bounded code/artifacts, open Refs-only main PR, then persist explicit caller stop. No child task."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Actual schema authority and exact-version binding", "rationale": "Direct blocker to honest approved-form acceptance; obtain evidence rather than fabricate approval", "evidence": "RV-001; FR-038/AC-046"},
+    {"rank": 2, "task": "Existing #98 field review, validation, packs and staleness", "rationale": "Named downstream story consumes the new immutable schema and candidate evidence", "evidence": "Issue #98; FR-040 through FR-043"},
+    {"rank": 3, "task": "Register and release a form-specific semantic selector only if adopted", "rationale": "Conditional future AI capability; existing registry is present but does not register a form selector", "evidence": "Research C3/W4; ai_registry tasks; no provider activation in this slice"}
+  ]
+}

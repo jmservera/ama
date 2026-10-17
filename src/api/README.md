@@ -6,6 +6,101 @@ ms.date: 2026-10-17
 ms.topic: reference
 ---
 
+## Form schema and candidate API (#97)
+
+This is unapproved schema registration and candidate-only collection, not a
+form approval, reviewed draft, field-review workflow or submission endpoint.
+Every request requires authentication and current registered staff rights:
+the intersection of existing Finance-view, resident-record-view and
+reason-view permissions. Normally only the Programme Manager has all three.
+Schema metadata never grants permission. Other roles cannot read retained
+raw values or source/locator metadata through these endpoints.
+
+| Method and path | Contract |
+| --- | --- |
+| `POST /api/form-schemas` | Register the next immutable schema version, 201; always `Unapproved` |
+| `GET /api/form-schemas` | `{"schemas":[...]}` with definition, digest, actor/time and null approval evidence |
+| `POST /api/cases/{case_id}/form-candidates` | Append one source-bound batch, 201; returns staged candidates or owned manual recovery |
+| `GET /api/cases/{case_id}/form-candidates` | `{"batches":[...]}`; current-rights and source-presence/clean-scan check on every read |
+
+Schema requests contain exactly `id`, `version`, `form_type`, `template`,
+`reviewer`, `funding`, `rule_refs` and `fields`. Version is a positive sequential
+integer starting at one per schema ID. Form type is `technical`,
+`work-package`, `invoice` or `funding`. `template`, calculation and rule
+references contain `id`, string `version` and `evidence_ref`.
+The reviewer is an existing staff email, not an inferred approval.
+
+`funding` contains `status`, `scheme_id`, `route`, `evidence_ref`.
+`Unknown` and `Not applicable` require null references; funding forms cannot
+be not applicable. `Evidenced` requires a scheme ID, supplied evidence
+reference and route `competitive`, `allocation`, `award-return` or `claim`.
+This records supplied metadata only, not actual approved scheme authority.
+
+Each field contains exactly `id`, `section_id`, `type`, `unit`, `options`,
+`required`, `required_when`, `source_authority`, `evidence_required`,
+`calculation_ref`, `category`. Types and units are described in the
+[core guide](../core/README.md#form-schema-registry-and-candidate-staging-97).
+Options are nonempty unique finite scalars for enum fields only. Conditions
+are `{field_id, equals}` references to another declared field, never executable
+expressions. Source policies are `{kind, rank, evidence_ref}` with unique
+existing document kinds/positive precedence ranks; evidence requirements are
+nonempty text references. `category` is `value` or a human-only
+`declaration`, `signature`, `attestation`, `consent` or `approval`.
+Only `value` fields can receive candidates. Bounds are 200 fields/candidates
+per request and 16,000 characters per raw value.
+
+For an already registered unapproved `SYN-TECH` version one and an actual
+uploaded text document containing `EPC D`, the staging request shape is:
+
+```json
+{
+  "schema_id": "SYN-TECH",
+  "schema_version": 1,
+  "document_id": "actual-upload-id",
+  "processing": {
+    "kind": "text",
+    "parser": "synthetic-importer",
+    "parser_version": "test-1",
+    "model_version": null,
+    "route_evidence": null,
+    "error_record": null
+  },
+  "candidates": [
+    {"field_id": "epc", "raw_value": "D", "locator": {"start": 4, "end": 5}}
+  ]
+}
+```
+
+This example is not an approved template. Hash/version/date are copied from
+the actual uploaded source, not accepted from the request. Text spans and
+CSV cells are verified against exact source bytes; parser/model identity is
+separately labelled `Supplied, unverified`. OCR imports use `kind: "ocr"`,
+`{page, region}` locator, and supplied `route_evidence`/`error_record`; they
+retain asserted lineage with `Unverified OCR import`, never claim pixel
+verification or approve/run an OCR route. Unsupported/unreadable sources
+record manual recovery with no invented candidates.
+
+Malformed/forged keys and source mismatch return 400, denied identity/rights,
+human-only fields or source-policy mismatch 403, missing/foreign case or
+source 404, concurrency conflict 409, source-store outage 502 and unexpected
+storage failure 503 with a metadata-only diagnostic. Reload after an uncertain
+failure before retrying. Unknown funding routes and all unapproved versions
+remain unusable for approved preparation; candidates never become accepted
+fields or change source, consent, grants, payment or submission state.
+
+The fixture exercise starts a responsive ephemeral loopback HTTP app over
+temporary synthetic SQLite, authenticates fixture staff, registers/stages/reads,
+checks forbidden paths and never calls inference:
+
+```bash
+PYTHONPATH="$PWD/src/api:$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python -m unittest discover -s src/api/tests -p test_form_staging_api.py -v
+```
+
+Run from the repository root with editable src packages installed. No UI
+change, actual human approval, live AI/Azure/SQL Server, approved template
+binding or #98 review/validation/pack/staleness acceptance is claimed.
+
 ## Regulatory evaluation and card cadence labels (#216)
 
 `GET /api/law/cards` and `GET /api/law/cards/{card_id}` add a read-only

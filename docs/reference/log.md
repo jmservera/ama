@@ -4708,3 +4708,22 @@ metadata when the knowledge base was created.
   reviewer4536f9cc's review of190391a is not presumed final-head acceptance.
   No cloud writes or merge; draft and human private-image, explicit narrow
   IAM authorization, tenant/live d/e prerequisites remain unchanged.
+
+## [2026-10-17] ingest | Form schema and candidate staging foundation
+
+* Refs #97. Added migrated core/API registry and candidate-only collection
+  using existing JSON/SQL stores, checked shared documents, case row versions,
+  document hashes/scans and audit. Updated component guides and index routing.
+* Schema versions retain field type/unit/options, required/conditional,
+  source-precedence/evidence policy and versioned template/rule references.
+  Every version remains Unapproved; no actual form authority was supplied.
+* Candidates retain raw spans/cells, source hash/version/date/locator and
+  supplied parser/model/OCR lineage, with separate deterministic location
+  verification. OCR route/pixel claims remain unverified; unreadable input
+  has owned manual recovery. No AI/OCR invocation, acceptance or submission.
+* #105's AI registry already exists; no parent hierarchy ordering gate or
+  duplicate AI registry was introduced. PRD v0.12.0 exercise-planning acceptance
+  is separate from actual form approval. Full AC-046/047/053, approved template
+  binding, live SQL Server/Azure and #98 review/pack/staleness remain unmet.
+  No private data, source snapshots, memory, original specification or
+  concurrent infrastructure/credential/sensor sources were changed.

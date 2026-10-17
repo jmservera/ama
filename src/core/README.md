@@ -16,6 +16,84 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Form schema registry and candidate staging (#97)
+
+`forms` adds an immutable, sequentially versioned registry in the existing
+`form_schemas` checked document and append-only `form_staging` batches in the
+existing case body. JSON and SQLite use the existing store interfaces;
+MssqlStore inherits the SQL checked-document and case-row-version machinery.
+No new service, table, dependency or AI task is introduced.
+
+Schemas contain type/template and rule versions, stable field/section IDs,
+types (`string`, `integer`, `number`, `boolean`, `date`, `enum`), explicit units
+or null, enum options, required/conditional metadata, source-kind precedence,
+evidence requirements, calculation references and a registered reviewer.
+Funding association is explicitly `Unknown`, `Not applicable` or `Evidenced`
+with scheme/route/evidence references. Funding forms cannot choose not
+applicable. These are supplied **unapproved policy references**, not verified
+scheme terms or actual authority. Conditions and calculation references are
+data only; this module does not run form validation or calculations.
+
+Every registered version is `Unapproved`, with null approval evidence and a
+server-recorded actor, time and `ai_registry.digest`. Registration cannot
+accept an approved flag, approval evidence or actor override. No actual
+approved form/template or delegated authority was supplied for this slice.
+It cannot prepare an approved form; real recorded version-specific authority
+and binding remain unmet. Synthetic fixtures demonstrate mechanics only.
+
+Candidate collection copies the existing case-owned document ID,
+`content_sha256`, version and upload date. Original bytes must match the stored
+hash; generated placeholders, foreign documents and unclean sources are not
+accepted. All alternatives remain separate candidates in input order, with
+`Not reviewed` state; no winner, normalized value, source correction,
+eligibility, financial commitment or submission is produced. Source authority
+stays `Not established`. Declarations, signatures, attestations, consent and
+approval categories cannot receive candidates.
+
+Supplied `processing` records parser/version, optional model version and
+route/error references as `Supplied, unverified`, never attested execution.
+The separate server verifier is `form-source-locator-1`:
+
+* Text: strict UTF-8, no newline normalization, zero-based Unicode-code-point
+  half-open `start`/`end` offsets, exact raw-span equality.
+* CSV: strict UTF-8 and the standard strict CSV reader; one-based `row` and
+  `column`, including the header. Quoted/multiline cells retain their decoded
+  cell text as raw value.
+* OCR import: asserted one-based page and region, supplied route evidence and
+  error record required. Pixel content and route authority are **unverified**;
+  no OCR/model is called or approved.
+
+Unsupported text/CSV source types, decoding failures and malformed CSV record
+`Manual recovery required`, the schema's registered reviewer as owner and a
+manual correction/transcription path, with zero candidates. A source-storage
+failure is an error, not successful manual recovery.
+
+Arbitrary source-derived content is conservatively restricted to current
+staff with the intersection of existing Finance-view, resident-record-view
+and reason-view rights (normally the Programme Manager). SQL rereads the
+registered actor on each operation; a schema can never grant access. Retained
+reads recheck these rights and source presence/clean scan. Generic case detail
+never includes the raw staging body. Audit stores IDs, source hash and candidate
+count, never raw values. SQL commits body/registry and audit transactionally,
+and restores failed/conflicting operations. JSON uses the existing separate
+snapshot/ledger files with operation-local failure restoration; it does not
+provide SQL's cross-file crash atomicity.
+
+The [API contract](../api/README.md#form-schema-and-candidate-api-97) lists
+payloads and HTTP behavior. From the repository root in an installed pip venv:
+
+```bash
+PYTHONPATH=src/core/tests python -m unittest discover \
+  -s src/core/tests -p test_form_staging.py -v
+```
+
+Offline synthetic tests cover JSON/SQLite restart, immutable versions,
+Unicode/CSV matching, alternatives, OCR assertion retention, wrong-source/hash
+denial, current rights/scan, human-only fields and failed-save/audit rollback.
+This is not full PRD AC-046/047/053 acceptance, approved-form preparation,
+actual extraction, live SQL Server/Azure proof or the downstream #98
+field-review/validation/pack/staleness workflow.
+
 ## Read-only source cadence labels (#216)
 
 `source_monitor.source_freshness`, `card_freshness` and `dated_card` read the
