@@ -16,6 +16,15 @@
   "correctionCyclesUsed": 0,
   "publication": "Published to existing OPEN/main PR385, title/body updated; final completion-only descendant retains reviewed source",
   "verifiedPublicationHead": "03d90083447fbbb71d48ecc0413235561c9b0ff5",
+  "coordinatorIntegrationRecheck": {
+    "date": "2026-10-17",
+    "fetchedMain": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+    "inputHeadAndExpectedRemote": "1fdcdd3de5a55fdda0a3b55831118741bfdf47a6",
+    "rebase": "Already up to date; no-op, no source conflict or rewrite",
+    "checks": "326 upstream src/infra files byte-identical excluding existing guide and 3 reviewed setup files; reviewed files unchanged; 8 ACR artifacts unchanged; upstream log prefix/routes and JSON/whitespace pass",
+    "publication": "Completion evidence only; ordinary descendant push, no force needed; final exact head from PR readback",
+    "externalGate": "Pending coordinator exact-head review/closure, no new independent Pass"
+  },
   "workflow": "Complete; all active P01/P02 tasks done, external final-head gate and unmet acceptance remain",
   "azureWritesThisContinuation": [],
   "limits": "No live setup, exact-image smoke/pin, SQL/Graph writes, browser/AI acceptance, restart or retirement; issue360 d/e remain unmet"

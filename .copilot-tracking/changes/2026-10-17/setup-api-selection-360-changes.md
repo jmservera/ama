@@ -126,3 +126,35 @@ Old API/edge and ama retained. Exact-image smoke/pin and genuine runtime
 browser/role/SQL/AI acceptance remain unperformed, issue360 d/e UNMET.
 No merge/close. External coordinator final-head gate and owner merge decision
 remain separate. Resume69875c40-cceb-4bdf-aece-bee3304c45b5.
+
+## Coordinator Integration Recheck (2026-10-17)
+
+New explicit coordinator instruction after completed publication: integrate only
+this run-owned #360 topic onto latest fetched main, preserve upstream finance/
+stock/procurement transaction protections and historical evidence. Clean
+`git status --short`, branch fix/initializer-acr-cli-360 and local/remote head
+1fdcdd3de5a55fdda0a3b55831118741bfdf47a6 verified before integration.
+`git fetch origin` returned main d400eb8d1d0d6567445b0fc11803260eab897a65,
+already an ancestor from the preceding authorized integration.
+`GIT_EDITOR=true git rebase origin/main` reported "Current branch
+fix/initializer-acr-cli-360 is up to date." Head unchanged; no replay/conflict.
+
+Bounded byte checks passed: all326 upstream src/infra files identical to main
+except the existing infra guide and three already independently reviewed setup
+files; those three match reviewed source f48cc9b exactly. This includes unchanged
+finance/stock SQL save hooks, staged-state/current-actor protections and
+procurement dependency/quota/source guards. Full upstream KB log remains exact
+prefix, upstream #84/#94 and own #360 routes retained. Eight original ACR phase
+artifacts, including command receipt and original Review, are byte-identical to
+d11c273; actual ACR sourcebab4bf3 is unchanged, not relabeled to main or new head.
+Task JSON parses and whitespace checks passed. No source change, so no broad
+suite or actual MSSQL repeat; prior164 offline tests remain historical reviewed
+source validation, not a new runtime/transaction or independent Pass.
+
+This integration recheck changes tracking/PR evidence only. Fresh gh api user
+8036360/jmservera and privacy-safe local author/committer/trailer required.
+Expected remote head1fdcdd3de5a55fdda0a3b55831118741bfdf47a6 recorded; no rewritten
+history occurred, so ordinary descendant push is sufficient (no force required).
+PR385 remains open/main; external coordinator final-head gate pending.
+No new RPI/Review/correction, merge/closure/cloud write. Image smoke/pin and
+real operator/runtime criteria d/e remain unmet.
