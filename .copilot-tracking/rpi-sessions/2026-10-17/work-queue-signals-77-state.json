@@ -22,7 +22,8 @@
     },
     {"decision": "Research executed; Planning Readiness Ready; single critique executed Revise, PC001/003 applied and PC002 completion gate applied, incompatible review re-entry rejected", "status": "resolved", "evidence": ".copilot-tracking/plans/2026-10-17/work-queue-signals-77-plan.md"},
     {"decision": "One Review executed Complete; outcome Residual work; four local criteria pass, full application/human acceptance unproved; publish without closing issue", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/work-queue-signals-77-review.md"},
-    {"decision": "PR #376 open against main; implementation 38f2f52 pushed; stop after final publication per caller, no merge or child loop", "status": "completed", "evidence": "https://github.com/jmservera/ama/pull/376"}
+    {"decision": "PR #376 open against main; implementation 38f2f52 pushed; stop after final publication per caller, no merge or child loop", "status": "completed", "evidence": "https://github.com/jmservera/ama/pull/376"},
+    {"decision": "Caller authorized same-topic rebase onto origin/main 51db4fa8 and explicit topic-only force-with-lease expecting 718c4d9; KB conflicts retain both entries, src/api byte-identical; rerun browser/21 tests and standard gates pass; independent review 5633101b still targets old published source", "status": "completed", "evidence": ".copilot-tracking/changes/2026-10-17/work-queue-signals-77-changes.md"}
   ],
   "blockers": [],
   "next_action": {"phase": "Follow-up", "action": "Owner review of PR #376 and hosted checks; no automatic continuation"},

@@ -26,3 +26,10 @@ ms.date: 2026-10-17
   Four exact criteria audited; Refs #77 only, no closure. Hosted checks had no
   result on initial query. Final handoff persisted; session stopped per caller,
   no child work, merge, rebase or force push.
+* 2026-10-17 Authorized continuation: caller explicitly permits same-topic
+  rebase and topic-only force-with-lease. Rebased onto 51db4fa8; preserved both
+  complete index rows and append-only entries. All src/api bytes equal published
+  718c4d9 (independent review 5633101b target). Browser and 21 focused tests,
+  lint/format/mypy/node and preservation checks pass; existing changes/review
+  record actual results and exact four-record evidence-only continuation.
+  One final continuation commit/push, no merge or receipt-only commit loop.

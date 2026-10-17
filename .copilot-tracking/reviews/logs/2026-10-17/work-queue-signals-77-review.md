@@ -157,3 +157,29 @@ No child task, second Review, merge, rebase, force push or automatic follow-up.
 | Material research gap | None blocking this scope |
 | Non-blocking residual UX | RV-001, later owner-selected state-persistence task |
 | Existing human/live acceptance | RV-002, existing owner-managed acceptance work |
+
+## Authorized rebase evidence supplement (2026-10-17)
+
+This appends validation provenance to the existing single review; it is not a
+second review or a claim that independent review 5633101b has finished.
+That reviewer targets published 718c4d9. Rebase onto origin/main 51db4fa8
+incorporates #374, while #373 was already present. Conflicts were limited to
+the reference index and append-only log. Exact main log prefix and unchanged
+complete #77 suffix were verified, and both routing rows were retained.
+
+`git diff --exit-code 718c4d9 HEAD -- src/api` passed after rebase: all API
+runtime, CSS, tests and guide bytes are unchanged from the independent-review
+target. Range-diff shows only index/log surrounding context differs in the
+replayed implementation patch; the replayed publication patch is identical.
+The 13 other changed paths relative to 718c4d9 are inherited #374 content,
+not new #77 edits. Final continuation edits are confined to four existing #77
+tracking records: changes, this review, phase log and state.
+
+Actual reruns on the reconciled tree: real loopback workbench Playwright suite
+Pass (Chromium 156.0.8078.4, #77 failures=[], eight-role checks, no uncaught
+JavaScript); 21 focused queue/API/accessibility/design/content tests Pass in
+3.023s; Ruff lint, explicit browser format, mypy 47 files, node syntax and diff
+checks Pass. Existing 563-test suite result is not presented as a new run.
+No infra execution, live Azure/private data/paid inference, changed behavior or
+new acceptance claim. Original Complete/Residual work result and RV-001/002 stand.
+Publication uses topic-only force-with-lease against 718c4d9; owner retains merge.

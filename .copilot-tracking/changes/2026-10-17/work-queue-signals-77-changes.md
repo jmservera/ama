@@ -88,6 +88,47 @@ This final evidence handoff is a separate documentation commit, not an amend
 or another implementation/review loop. No merge/rebase/force push or issue closure.
 Task's bounded RPI delivery is complete; automatic session stops as requested.
 
+## Authorized same-PR rebase continuation (2026-10-17)
+
+Caller authorized rebasing this run-owned topic onto origin/main 51db4fa8
+(#373 already in the old base, #374 newly incorporated). Published review target
+718c4d9 is retained as the comparison reference for independent review 5633101b.
+Rebase replayed the two original commits as 38f2423 and 11a83fd.
+Only conflict resolutions: docs/reference/README.md and docs/reference/log.md.
+Both complete routing rows and both complete dated entries retained; the whole
+main log remains an exact prefix, followed by the unchanged #77 entry.
+
+Exact post-rebase delta from published 718c4d9, before this evidence update:
+13 paths from upstream #374 (its seven tracking artifacts, cutover evidence
+pack, reference index/log, infra README, setup script and setup tests).
+No src/api, #77 runtime, CSS, fixture, browser assertion or prior screenshot
+change: `git diff --exit-code 718c4d9 HEAD -- src/api` passed.
+`git range-diff` confirms the implementation patch changes only its index/log
+context; the publication patch is identical. No infra source was manually edited.
+This continuation additionally updates only the existing #77 changes/review,
+phase log and state records; no receipt-only follow-up commit is planned.
+
+Actual post-rebase validation:
+
+* `python -m checks.workbench_browser_check`: Pass, Chromium 156.0.8078.4,
+  real healthy loopback server and existing tiny synthetic fixture. Exact #77
+  assertions failures=[], eight-role IA and no uncaught JavaScript errors.
+* Focused `unittest test_accessibility_baseline test_design_system
+  test_content_standard test_task_queue_api -q`: 21 tests in 3.023s, OK.
+* `ruff check .`, explicit owned browser format check, `mypy` (47 files),
+  `node --check` app.js and `git diff --check`: Pass.
+* Exact preservation assertions passed: main log prefix, unchanged complete
+  #77 log suffix, index equals main plus unchanged #77 row, src/api identical.
+* Earlier 563-test/110-skipped suite result remains historical; not rerun because
+  conflict resolution is KB-only and every API source/test byte is unchanged.
+  Upstream infra tests/live Azure were not rerun or exercised for this KB rebase.
+
+No fresh independent-review verdict inferred: 5633101b is reviewing 718c4d9.
+The source it reviews remains byte-identical; final evidence-only delta is
+reported here. Existing review residuals and all acceptance limits unchanged.
+Push uses an explicit lease expecting published topic 718c4d9; main is untouched.
+Refs #77 only; no merge, new scope, closing syntax or live/private/paid writes.
+
 ## Amendments and divergences
 
 Single critique PC-001/003 applied to test specification. PC-002 completion gate
