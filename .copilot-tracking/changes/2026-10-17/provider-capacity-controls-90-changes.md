@@ -70,13 +70,14 @@ instruction, award/payment, cloud/paid AI or production permission occurred.
 | Plan | Complete; Ready | Plan/details plus one Revise critique; PC-001..005 applied without divergent decisions |
 | Implement | Complete | Failing-first eight failures, implemented controls, final exact/preservation/SQL/browser/quality evidence above |
 | Review | Complete; Conformant | One independent read-only comparison, no substantive findings; canonical .copilot-tracking/reviews/logs/2026-10-17/provider-capacity-controls-90-review.md |
-| Publication | Pending | Privacy-safe identity, evidence commit, named topic push and main Refs #90 PR; no closing/merge/rebase/force push |
+| Publication | Delivered | Privacy-safe 19431ad with co-author trailer pushed; main PR https://github.com/jmservera/ama/pull/384 opened using Refs #90; no closing/merge/rebase/force push |
 
 ## Implementation Status
 
 P01/P02 complete and reconciled with plan/details; the one independent Review
-is Complete with Conformant outcome. Parent-owned P03 publication remains.
-No active engineering blocker. This evidence does not
+is Complete with Conformant outcome. P03 implementation/evidence publication
+is delivered in PR #384. Current-main integration is blocked as recorded
+below; no active local engineering defect was found. This evidence does not
 claim live company permission, contract approval or full PRD acceptance.
 
 ## Publication Preparation
@@ -98,3 +99,24 @@ the PR helper's extra review fan-out. The staged-change MCP tool is unavailable
 in this host, so native Git staged diff/hygiene supplied equivalent evidence.
 Existing unrelated generic PR notes are preserved; task-specific PR materials
 use issue-90 names. No source behavior changed after Review.
+
+## Publication Outcome and Stop
+
+Implementation/evidence commit 19431ad was pushed to the requested topic.
+Author and committer both use the resolved GitHub privacy-safe email; the
+required Copilot trailer is present. `gh pr create` failed on GraphQL quota;
+ordinary `gh api` REST creation succeeded: https://github.com/jmservera/ama/pull/384,
+base main, open, Refs #90, no closure.
+
+REST readback reports mergeable=false / mergeable_state=dirty against
+bab4bf3. This is a concrete owner/coordinator integration blocker, consistent
+with upstream shared-KB overlap. No hosted check runs were registered for
+19431ad at read time, so CI/rubric is Pending, not passed. The explicit
+no-merge/no-rebase/no-force-push direction is preserved.
+
+Task-specific PR body/reference log and terminal phase/state metadata are
+prepared for the final evidence commit/push. No source change followed the
+one Review. The automatic session stops after that final push as the user
+directed; no child delivery or new review is started. Owner/coordinator
+integration/hosted checks, real authority and human acceptance remain
+distinct follow-ups, not claimed completed.

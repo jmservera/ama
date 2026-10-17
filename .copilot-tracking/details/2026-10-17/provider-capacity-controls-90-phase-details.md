@@ -8,7 +8,7 @@ Research C1-C7 and manager lane supply sufficient evidence; no actual operationa
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02; eight red failures before fixes; final exact semantics pass |
 | P02 | Complete | P02-T01, P02-T02; 278 local/29 actual SQL Server tests; browser and quality gates |
-| P03 | Review Complete, Conformant; publication pending | P03-T01; no substantive findings or repeated Review |
+| P03 | Delivered; Review Complete/Conformant | P03-T01; 19431ad pushed and PR #384 open; upstream integration/hosted CI remain owner follow-up |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reproduce and enforce controls
@@ -85,5 +85,12 @@ journeys; changed-path lint/format, JS syntax and component mypy passed.
 Current web guidelines were retrieved before implementation and refreshed
 for changed-region review on 2026-10-17. Existing Fluent styles were reused.
 The one independent Review is Complete with Conformant outcome and no
-substantive findings. Remaining P03 work is parent-owned evidence commit and
-PR publication, not source edits or another Review.
+substantive findings. Implementation 19431ad and all dated phase evidence
+were committed/pushed with private author/committer and required trailer.
+PR #384 is open against main using Refs #90, without closure or merge.
+GraphQL quota failure was resolved through ordinary REST PR creation.
+GitHub reports mergeable=false/dirty versus concurrently advanced main
+bab4bf3; no hosted runs registered for 19431ad at readback. Owner/coordinator
+integration and hosted acceptance remain separate; no merge/rebase or second
+Review was performed. Final parent action publishes the terminal evidence
+snapshot and stops as explicitly requested.

@@ -6,7 +6,7 @@
 * Task ID: 90
 * Task slug: provider-capacity-controls-90
 * Date: 2026-10-17
-* Status: P01/P02 complete; one independent Review Complete/Conformant; P03 publication pending
+* Status: P01/P02/P03 delivered; Review Complete/Conformant; PR #384 open with upstream-integration merge blocker
 * Phase details: .copilot-tracking/details/2026-10-17/provider-capacity-controls-90-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/provider-capacity-controls-90-plan-critique.md
 
@@ -91,10 +91,10 @@ Depends on P01-T02. No redesign or permission grant. Fresh guidelines and local 
 Depends on P02-T01. Existing local SQL Server 2022 harness only. Record exact Pass/Fail/Not run; preserve #78 and #97 regression suites.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and publish
+### [x] P03: Review and publish
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: One independent Review and main-targeting Refs #90 PR
+#### [x] P03-T01: One independent Review and main-targeting Refs #90 PR
 
 Depends on P02-T02. Review findings route later, no review loop. Commit dated artifacts with phase execution, privacy-safe identity/trailer, push without merge/closing.
 
@@ -121,6 +121,7 @@ No significant/divergent decision remains. These define bounded fictional engine
 
 ## Follow-Up Items
 
+* PR #384 integration: owner/coordinator must reconcile current-main/shared-KB conflicts before hosted checks and merge. GitHub reports mergeable=false/dirty against bab4bf3; explicit no-merge/no-rebase direction prevented automatic integration here.
 * Actual contract evidence/delegations and operational approval: named human contract authority owner must provision and validate these before any live use. No live authority was supplied, and no test fixture grants it.
 * Hosted AI/Azure and human/screen-reader/WCAG acceptance: deployment and UX owners must commission separate approved validation. These are not required for the four local engineering criteria and were not exercised.
 
@@ -138,4 +139,4 @@ human approval or architecture divergence required a new decision/critique.
 
 ## Handoff
 
-Changes record: .copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md. P01/P02 complete; one independent Review Complete/Conformant with no substantive findings; parent publication remains. No additional implementation/review loop or routine approval prompt.
+Changes record: .copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md. P01/P02/P03 delivered; one independent Review Complete/Conformant with no substantive findings; implementation 19431ad pushed, main-targeting PR #384 open. Current-main integration is a concrete owner/coordinator blocker, not invented code acceptance or permission. Stop after final evidence push as requested; no further task/review loop.

@@ -5,7 +5,7 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
-  "session_status": "running",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/provider-capacity-controls-90-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/provider-capacity-controls-90-plan.md",
@@ -24,12 +24,17 @@
     {"decision": "Final candidate critique executed once, verdict Revise", "status": "resolved", "evidence": "PC-001 through PC-005 directly applied to plan/details; no divergent decision."},
     {"decision": "Implementation complete and reconciled before Review", "status": "complete", "evidence": "Eight failing-first root reproductions. Exact 63 pass; combined API 278 run/one existing skip; separate core 114 run/one existing skip; real local SQL Server 29 pass; browser and configured lint/format/types/JS pass. Plan P01/P02 and changes/details reconciled. No live delegation invented."},
     {"decision": "One post-implementation Review executed", "status": "Complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/provider-capacity-controls-90-review.md; independent read-only lifecycle/advance/SQL/source/authority/HTTP/changed-UI comparison, no source edits or repeat."},
-    {"decision": "Review outcome for exact four local engineering criteria", "status": "Conformant", "evidence": "Canonical review record: no substantive defects or unaccepted decisions; actual operational authority and hosted/human acceptance explicitly not inferred."}
+    {"decision": "Review outcome for exact four local engineering criteria", "status": "Conformant", "evidence": "Canonical review record: no substantive defects or unaccepted decisions; actual operational authority and hosted/human acceptance explicitly not inferred."},
+    {"decision": "Requested branch and main PR published", "status": "delivered", "evidence": "Implementation 19431ad pushed with verified privacy-safe author/committer and required trailer; https://github.com/jmservera/ama/pull/384 open, base main, Refs #90. GraphQL quota failure resolved with REST creation."},
+    {"decision": "Preserve explicit no-merge/no-rebase direction after concurrent main advance", "status": "confirmed", "evidence": "Reviewed baseline adedf1f; current main bab4bf3 (#381 initializer/shared KB). PR #384 REST mergeable=false/dirty; no check runs registered at readback. No integrated-main or hosted-CI pass claimed."}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Parent publishes completed task evidence: privacy-safe commit, named branch push and main Refs #90 PR, then final artifact publication push and stop. No child work or additional Review."},
+  "blockers": [
+    {"id": "pr-384-upstream-integration", "summary": "Published PR #384 cannot merge against concurrently advanced main bab4bf3: GitHub reports mergeable=false/dirty; hosted CI/rubric pending.", "resolution": "Owner/coordinator must authorize and perform current-main/shared-KB integration and obtain hosted checks. Explicit no-merge/no-rebase scope prevented automatic integration; no local code defect inferred."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Automatic RPI session stopped per owner direction; terminal evidence snapshot is the final publication payload. Owner/coordinator handles PR #384 upstream integration/hosted checks. No child work, merge/rebase/force push or additional Review."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},
-    {"rank": 2, "task": "Separately approved hosted and human accessibility acceptance", "rationale": "Local browser/SQL engineering checks do not establish Azure/AI or human/screen-reader/WCAG acceptance.", "evidence": "Changes Remaining Boundaries and canonical Review Validation Evidence; deployment/UX owners commission later."}
+    {"rank": 1, "task": "Owner/coordinator current-main integration and hosted PR checks", "rationale": "Concrete merge blocker must clear before acceptance/merge; explicit no-merge/no-rebase direction preserved.", "evidence": "PR #384 REST readback mergeable=false/dirty against bab4bf3 and no registered 19431ad check runs."},
+    {"rank": 2, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},
+    {"rank": 3, "task": "Separately approved hosted and human accessibility acceptance", "rationale": "Local browser/SQL engineering checks do not establish Azure/AI or human/screen-reader/WCAG acceptance.", "evidence": "Changes Remaining Boundaries and canonical Review Validation Evidence; deployment/UX owners commission later."}
   ]
 }
