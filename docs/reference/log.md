@@ -5378,3 +5378,18 @@ metadata when the knowledge base was created.
   explicit warnings. Parent correction evidence is not independent closure;
   original adverse Review and final-head acceptance limitation are retained.
   No new UI, service authority, regulatory change or operational approval.
+
+## [2026-10-17] integration | Hazard controls on latest main (#85)
+
+* After correction ONE and draft PR #388 publication, coordinator authorization
+  rebased the owned topic from base b5d4c840 onto fetched main
+  2b24456863c0a8f39d47a73e22daeff3875cc825, including merged PR #385/#386.
+* Only manual conflict was this append-only log. Upstream exact byte prefix and
+  all other index routes retained. Entire production/test binary patch remains
+  byte-identical across bases; component documentation auto-merges preserve
+  both intents. No duplicate grant fix or shared recovery redesign.
+* Upstream grant/finance/store, neutral UI, fixture and exact manifest remain
+  byte-unchanged, with no authority promotion. Fresh 25 SQLite/manifest tests
+  pass; six added documentation links/anchors and retained Review hash verified.
+  Original actual MSSQL/full/static evidence remains historical, not newly run
+  integration parity. Independent final-head closure remains coordinator work.

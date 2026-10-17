@@ -239,3 +239,42 @@ sqlstore.py change; preserve them intact, no duplicate grant fix.
 Planned before/after binary production/test patch equality; docs-only conflicts
 need minimal docs checks, substantive conflicts require combined backend probes.
 Shared #91 recovery overlap remains declared; no other worktree inspected.
+
+### P04-T01 Rebase and Preservation Evidence
+
+Rebase onto2b24456863c0a8f39d47a73e22daeff3875cc825 completed; resulting
+integration head e712d86aae8e26fbf525bf7e767cd944d715f762 before evidence commit.
+Only manual conflict: docs/reference/log.md appended entries. Removed markers
+and retained upstream exact prefix then both #85 entries; no ours/theirs source
+selection. KB index/component guides merged automatically with both intents.
+No production/test conflict or substantive integration edit.
+
+Initial `cmp` of whole src/infra/tools binary diff failed at byte58 because
+that selection also included component README blob IDs/context changed by
+upstream documentation. Refined comparison excludes only README.md: complete
+production/test patch is exactly byte-identical old-base/old-published-head
+versus new-base/integration-head. Both SHA256:
+`4cd4138a4efa3212b493d71feb29d823f3845b1ab40eddd4deffb80cfeda40f2`.
+Session before-code.patch/after-code.patch retain raw evidence. No filtered
+source hunks or weakened tests; docs separately reviewed with full base diff.
+
+Fresh integration checks:
+* Validation script: upstream log exact byte prefix; every other upstream
+  index route retained; six added relative documentation links/anchors valid;
+  original independent Review exact SHA256 unchanged.
+* Eight upstream paths byte-identical: store.py/grants.py/finance.py, dataset.py,
+  scenario-manifest.json, app.js and both case documents. Thus scoped
+  designation, current legacy preparer writer check, shared_finance_operation,
+  funding history and neutral UI remain upstream-owned and unchanged.
+* From src/core:
+  `PYTHONPATH=tests ../../.venv/bin/python -m unittest test_scenario_manifest test_hazard_referral.SqlHazardReferral.test_failed_writes_preserve_prior_pending_audit_and_original_error test_grant_lifecycle_controls.SqlGrantChecks -q`:
+  25 run, no skips, 11.164s, OK. Fresh SQLite/manifest integration smoke only,
+  including acknowledged-COMMIT fault subcases and upstream grant controls.
+* Actual MSSQL/core/API/static results above remain historical correction
+  evidence, not fresh integration parity. No substantive source conflict:
+  coordinator's explicit docs-only patch-parity validation allowance applies.
+  No new SQL container, browser or broad suite required/run.
+
+No duplicate #95 fix or authority promotion, fixture/manifest recomputation not
+needed because both exact upstream files are unchanged. No renewed Review.
+Pending authorized owned-topic expected-remote lease push and PR evidence update.

@@ -48,6 +48,12 @@ management: short pages that point to clusters of related material.
 
 ## Task Routing
 
+The #85 topic integrates merged #95 and #385 on main
+2b24456863c0a8f39d47a73e22daeff3875cc825. Its entire production/test patch
+is byte-identical across bases; fresh SQLite/manifest checks supplement
+historical actual SQL correction evidence. No duplicate grant fix, fixture
+change or authority promotion; independent final-head closure remains open.
+
 Merged PR #375 is retained at main e065ecd2. Its historical credential
 review/correction evidence is not re-adjudicated here. The #360 API and
 subsequently explicitly approved relay IAM follow-up changes only scoped

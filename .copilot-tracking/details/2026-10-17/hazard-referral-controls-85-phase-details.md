@@ -138,3 +138,11 @@ upstream dataset/manifest/source authority changes. If only docs conflicts,
 minimal link/diff/state checks plus patch-byte proof; historical tests remain
 historical. If source changes/conflicts, combined relevant SQLite/MSSQL probes.
 Fresh local noreply identity; expected remote lease is original published head.
+
+Rebase source head e712d86aae8e26fbf525bf7e767cd944d715f762 on exact above
+base. Only log append conflict, resolved upstream-prefix then own entries.
+Whole production/test binary patch SHA2564cd4138a4efa3212b493d71feb29d823f3845b1ab40eddd4deffb80cfeda40f2
+identical across bases; component README auto-merges reviewed separately.
+Fresh25 SQLite/manifest tests pass (11.164s, no skips), six links/anchors and
+upstream log/routes/source/fixture/UI byte checks pass. Original backend/full
+suite evidence historical; no fresh MSSQL or independent Pass claimed.
