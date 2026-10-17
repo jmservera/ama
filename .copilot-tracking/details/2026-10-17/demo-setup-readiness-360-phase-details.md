@@ -124,6 +124,14 @@ reports exact final completion head. No live resource writes in continuation.
 <!-- phase: P05 -->
 ## P05 - Independent-review selected reuse guard correction
 
+Same-session integration continuation authorized after #376 moves main to
+0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134. Preserve correction1 evidence and
+all upstream index/log content, credential source and tests. Rebase topic from
+observed remote190391aa66d34f78a5b7f56ea28861be204b1aef; run focused/full
+infra and existing lint/type gates. Exact force-with-lease topic push only,
+no cloud writes, merge or additional phase. Independent Pass must cover the
+final head; original finding is not closed by implementation claims.
+
 User supplied independent Revise against662c11b: Key Vault requested but an
 unreferenced/untagged generated future-valid app-backed credential is selected,
 then record_credential_store writes app. Apply the storage rule to the actual

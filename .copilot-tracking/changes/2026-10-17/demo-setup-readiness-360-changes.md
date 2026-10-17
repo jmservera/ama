@@ -405,3 +405,16 @@ reported in PR #375 and verified against its headRefOid/remote ref.
 Review gate remains independent Revise, not overridden by local success.
 Stop after final evidence push; no merge, issue closure, live resource action,
 new Research/Plan/Review, child task or waiting indefinitely for human login.
+
+### Same-session integration after queue PR #376 - opening
+
+Owner explicitly authorizes rebase onto latest main, currently
+0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134. Clean topic/remote both
+190391aa66d34f78a5b7f56ea28861be204b1aef, PR375 OPEN/draft. Scope is
+integration and validation only; no new phase/correction finding/research or
+Review. Preserve both KB histories/index and exact credential correction.
+Run focused/full infra and existing lint/format/type gates; exact-lease topic
+push only. Reviewer4536f9cc checking190391a is not independent Pass on the
+new head. Original finding remains open pending that Pass; human live gates
+unchanged, no cloud writes or merge. First execution boundary: commit this
+bounded scope then rebase, resolving only additive evidence/index conflicts.
