@@ -32,7 +32,7 @@
     "new_base": "0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134",
     "rebased_head_before_evidence": "81c99223e26c608223b423c00e34696783644311",
     "validation": "84 core and 80 API tests passed, zero skips; both Ruff/format/mypy gates and upstream JS parse passed",
-    "independent_review": "97fdbce9: c021a3f review and final exact-head delta follow-up remain outstanding; no approval inferred"
+    "independent_review": "97fdbce9 direct handoff returned No agent found; final exact-head delta review remains pending coordinator/PR routing, no approval inferred"
   },
   "next_action": {"phase": "Follow-up", "action": "Stop after authorized integration evidence commit and force-with-lease delivery to PR #377. Independent final-head delta review and actual template authority remain unresolved; no new loop, merge or automatic acceptance."},
   "prioritized_follow_ups": [

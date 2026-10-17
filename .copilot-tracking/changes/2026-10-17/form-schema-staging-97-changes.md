@@ -100,3 +100,10 @@ No live/private/cloud checks, browser run, infra test or approval was claimed.
 Reviewer `97fdbce9` is independently reviewing `c021a3f`; final exact-head
 delta follow-up remains required. Review outcome stays Residual work; real
 approved-template authority/binding remains unmet and #97 must stay open.
+
+After publishing integration head `a5a8018`, attempted direct same-task handoff
+to the caller-supplied reviewer ID `97fdbce9`. The agent tool returned
+`No agent found`; that reviewer is not addressable from this session. No
+replacement or new review loop was launched. Final exact-head follow-up must
+be routed through PR #377/coordinator; it remains a real unresolved review
+handoff, not a claimed reviewer approval.
