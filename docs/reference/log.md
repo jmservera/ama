@@ -5677,6 +5677,7 @@ metadata when the knowledge base was created.
   prompt-only correction. Full core's earlier exit137 remains incomplete.
   No paid inference, web change, new deployment or operational/legal approval.
   Final-head independent acceptance remains coordinator-owned.
+
 ## [2026-10-17] implementation | #88 resident commitments and separate remedy clocks
 
 * Reused resident_update, service_requests and existing resident endpoint/panel.
@@ -5801,3 +5802,21 @@ metadata when the knowledge base was created.
   critique and correction ONE evidence retained unchanged; final independent
   disposition remains with coordinator. No new full Review, third correction,
   authority, communications, private/cloud writes, merge or issue closure.
+
+### 2026-10-17: Issue88 authorized sensor-main integration
+
+* Own PR392 rebased onto committed main943febc2 (sensor PR393) with explicit
+  expected-topic-head authorization. Sole textual conflict was KB log append;
+  complete sensor prefix followed by all resident entries retained, with boundary
+  newline repaired after strict suffix proof. All index routes retained.
+* Exact resident production/test added/removed patch parity across fourteen src
+  paths; shared Store/core guide also retain exact sensor delta. Every nonoverlap
+  sensor src file and all prior resident RPI Review/critique/correction artifacts
+  unchanged. No third defect correction, new full Review or unmerged #394 source.
+* Fresh combined resident/sensor/status/document/chat/map selectors:240run237pass/
+  three existing skips; agents94pass; explicit API boundary selectors100pass.
+  Counts overlap, not unique totals. Core/agents/API Ruff/format/mypy pass.
+* No persistence/web semantics conflict, so no repeated SQL/browser/image run;
+  prior nine actual resident MSSQL and sensor SQL receipts remain historical.
+  No cloud/private/paid-model/contact/authority writes, merge, issue closure,
+  independent self-Pass or WCAG acceptance. Coordinator owns final disposition.
