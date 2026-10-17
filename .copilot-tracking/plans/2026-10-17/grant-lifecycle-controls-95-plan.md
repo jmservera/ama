@@ -164,7 +164,7 @@ lifecycle gate, not an already completed implementation task. Preserve any adver
 coordinator-authorized concrete correction cycle permitted.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Coordinator-selected RV-001 correction
+### [x] P02: Coordinator-selected RV-001 correction
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Restore legacy lookup provenance with failing-first regressions
@@ -175,7 +175,7 @@ while returning resolved entry identity only for event history. Captured
 historical identity semantics remain unchanged.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Validate correction and publish with original adverse verdict
+#### [x] P02-T02: Validate correction and publish with original adverse verdict
 
 Run current JSON/SQLite/API/finance suites, actual local SQL parity and existing
 quality gates. Preserve original Review artifact. Document resolving evidence
@@ -211,6 +211,10 @@ planning finalization.
 
 ## Handoff
 
-P01 implementation and the one Review executed. RV-001 routes to the explicitly
-selected P02 later implementation; original Not accepted retained. P02 is active
-and requires failing-first and local closure evidence, not another Review.
+P01 implementation and the one Review executed. Explicitly selected P02 later
+implementation is complete with failing-first and local closure evidence;
+original Not accepted retained, no second Review. Source and all task evidence
+published to main-targeted PR #386 with clean matching local/remote/PR source
+head. Publication state is committed separately. Automatic session stops at the
+explicitly requested PR boundary; coordinator owns independent closure/checks
+and merge. No child task, merge or issue closure.

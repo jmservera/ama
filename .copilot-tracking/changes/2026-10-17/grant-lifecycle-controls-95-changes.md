@@ -153,3 +153,23 @@ by coordinator, not a new architecture or acceptance decision. Plan markers,
 phase details, changes and state reconcile the original adverse outcome and
 authorized later implementation. P02-T02 publication remains active until
 normal push, main-targeted PR and clean remote-head verification.
+
+## Publication and explicit stop boundary
+
+P02-T02 complete. Fresh gh account resolution set repository-local privacy-safe
+author/committer identity. Source, documentation and all seven task artifacts
+committed as a82da8d1d8f2e912330af76d47ad143f24309eca with Conventional Commit
+and required Copilot trailer, pushed normally and published as open main-targeted
+PR #386: https://github.com/jmservera/ama/pull/386. Local, remote and PR source
+heads match and worktree was clean; final publication metadata is committed
+separately and final head reverified before return.
+
+Original Review SHA-256 remains
+e20213f915717975739159925319ce290d13180d8938e2e5e5c5fba76db2e22b.
+Original Complete / Not accepted retained; no second Review or independent Pass.
+Initial PR check rollup was empty, not a CI pass. Coordinator final independent
+closure, checks and merge decision remain. No merge, rebase, force push, issue
+closure or new child work. Explicit stop-at-clean-pushed-PR instruction ends the
+automatic session, not an invented follow-up selection.
+
+Original resume ID: 24912f4a-8570-4de8-ad93-fe62376fb3f1.

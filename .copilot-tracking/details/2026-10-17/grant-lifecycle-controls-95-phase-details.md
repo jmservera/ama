@@ -12,7 +12,7 @@ Evidence: matching research artifact, C4-C8 and fail-before probes.
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Evidence-led lifecycle hardening | Implementation and one Review executed; Not accepted | P01-T01/T02/T03 |
-| P02 | Coordinator-selected RV-001 correction | Active | P02-T01/T02 |
+| P02 | Coordinator-selected RV-001 correction | Complete; published PR #386, coordinator gate pending | P02-T01/T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Evidence-led lifecycle hardening
@@ -126,11 +126,14 @@ historical identity, current actor checks and authority checks stay intact.
 <!-- rpi:task id=P02-T02 -->
 ### P02-T02: Validate and publish without relabelling independent outcome
 
-Active. Current focused grant/finance/API/actual Chromium plus eight manifest
+Complete. Current focused grant/finance/API/actual Chromium plus eight manifest
 tests pass: 98 tests, no skips. Core/API Ruff, format and mypy pass (112/52
 source files). Actual task-owned loopback SQL parity passes 35 tests (16 grant,
 19 preserved finance), including all four new refusal subtests; owned container
 and UUID databases removed. Broad pre-correction discovery evidence stays
-distinct from correction coverage. Publication remains active until pushed PR
-and clean remote-head verification. No second Review: coordinator owns final
-independent acceptance and merge.
+distinct from correction coverage. Main-targeted PR #386 is open; source commit
+a82da8d1d8f2e912330af76d47ad143f24309eca was verified identical locally, remotely
+and in the PR, with a clean worktree. This final publication state is committed
+separately and the resulting head reverified. No second Review: coordinator
+owns final independent acceptance, checks and merge. Session stops at explicit
+PR boundary; no claim that an empty initial check rollup means passed CI.
