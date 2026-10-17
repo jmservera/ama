@@ -693,6 +693,11 @@ class SqlFlows(Flows, unittest.TestCase):
                     self.addCleanup(again.db.close)
                     self.assertEqual(again.detail("ZF-1")["quality"][0]["state"], "Accepted")
                     self.assertTrue(again.verify_audit())
+                    saved_audit = list(again.audit_entries())
+                    with store.lock:
+                        store.save()
+                    self.assertEqual(list(store.audit_entries()), saved_audit)
+                    self.assertEqual(store.detail("ZF-1"), again.detail("ZF-1"))
 
     def test_quality_sql_actor_and_stale(self):
         self.submit()

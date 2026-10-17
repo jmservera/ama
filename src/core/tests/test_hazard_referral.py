@@ -794,7 +794,11 @@ class SqlHazardReferral(JsonHazardReferral):
                         else:
                             c["quality"] = copy.deepcopy(fixture()["cases"][1]["quality"])
                             if transition == "accept":
-                                c["quality"][0]["state"] = "Submitted"
+                                c["quality"][0].update(
+                                    state="Submitted",
+                                    recorded_by=self.sam["name"],
+                                    recorded_by_code=self.sam["code"],
+                                )
                         a.save()
                 inspector = self.bo
                 operations: dict[str, Callable[[], object]] = {
