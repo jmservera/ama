@@ -5,7 +5,7 @@ author: Housing Retrofit Programme Manager
 status: complete-bounded-contribution
 mode: research-only
 
-ms.date: 2026-10-14
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -189,6 +189,43 @@ Evidence IDs resolve to repository-local paths, sections and dates:
 Also read: [.github/agents/company-retrofit-programme-manager.agent.md](../../../../../.github/agents/company-retrofit-programme-manager.agent.md),
 [docs/reference/README.md](../../../README.md) (2026-10-11) and [docs/reference/memory.md](../../../memory.md)
 (2026-09-30; context, not evidence).
+
+## Quality control engineering continuation (2026-10-17, #91)
+
+The exact issue91 audit found gaps behind the already stepwise quality flow:
+blank remediation could proceed to acceptance, stale registered-role data was
+trusted by direct quality methods, and replacing handed-over evidence left the
+old handover active. Both JSON and SQLite fail-before probes reproduced them.
+This is demonstrator source evidence, not a discovery about actual company work.
+
+The [core contract](../../../../../src/core/README.md#per-measure-quality-and-handover-controls-91)
+now binds writes to current registered staff, retains contributing identities
+through repeated corrections, and refuses self-acceptance across populated
+name/email/code/OID aliases. Remediation requires an explicit evidence note and
+independent reinspection. A seeded Quality role is not professional competence;
+real quality authorities and risk policy still require named human ownership.
+
+Replacement retires every prior active same-measure acceptance/handover,
+including reachable multiple legacy records, while preserving original evidence,
+history, defects and aftercare. A new independent acceptance and resident
+handover are required; other measures, resident choices and finance/grant records
+do not change. Contractors still have no write/approval/payment authority;
+staff-assisted evidence recording is the current manual route, not a new portal.
+
+Local tests cover current authority, aliases, legacy unknowns, missing evidence,
+scoped resident/safety gates, replacement/reopen and rollback. Additional
+legacy repeated-recorder resolution and committed-refresh failure tests
+confirm independent acceptance remains available and committed audit entries
+are not replayed. A failed refresh explicitly requires reload/history inspection,
+not repeated approval. The one independent Review originally returned
+Not accepted; its two concrete findings were corrected under the authorized
+continuation, retaining that verdict separately from implementation evidence.
+Actual isolated local SQL Server replay and the
+[existing quality screen](../../../../../src/api/README.md#per-measure-quality-api-91)
+browser journey ran on tiny fictional data. No Azure, competent-human,
+resident/screen-reader/WCAG or full PRD acceptance is claimed. The issue's
+current PRD FR-017 and BRD FR-017 numbering differ; BRD RULE-004/RULE-013 and
+the retained ADR 0002 replacement learning define the relevant boundaries.
 
 ## Next steps
 

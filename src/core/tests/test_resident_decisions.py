@@ -722,15 +722,16 @@ class JsonResidentDecisions(unittest.TestCase):
         self.unchanged_failure(lambda: self.store.accept_quality(self.pam, "ZF-1", ids[0]))
         self.store.accept_quality(self.pam, "ZF-1", ids[1])
         self.store.hand_over_quality(self.pam, "ZF-1", ids[1], "Synthetic handover", True)
-        self.store.submit_quality(
-            self.sam,
-            "ZF-1",
-            MEASURES[1],
-            "Synthetic installer",
-            "Installer",
-            {label: "Synthetic evidence" for label in checklist_for(MEASURES[1])["items"]},
+        self.unchanged_failure(
+            lambda: self.store.submit_quality(
+                self.sam,
+                "ZF-1",
+                MEASURES[1],
+                "Synthetic installer",
+                "Installer",
+                {label: "Synthetic evidence" for label in checklist_for(MEASURES[1])["items"]},
+            )
         )
-        self.unchanged_failure(lambda: self.store.accept_quality(self.pam, "ZF-1", 2))
 
     def test_detached_projection_persistence_audit_and_model_minimisation(self) -> None:
         self.scope()

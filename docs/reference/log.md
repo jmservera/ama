@@ -5393,3 +5393,46 @@ metadata when the knowledge base was created.
   pass; six added documentation links/anchors and retained Review hash verified.
   Original actual MSSQL/full/static evidence remains historical, not newly run
   integration parity. Independent final-head closure remains coordinator work.
+
+## [2026-10-17] delivery | Per-measure quality and handover controls #91
+
+* Executed all ordered RPI phases' preparation: fresh issue/requirements and
+  current actor/transaction audit, real fail-before probes, plan and one
+  independent critique. Existing stepwise flow was verified rather than
+  replaced. Critique's original Revise is retained; compatible legacy
+  multi-record retirement and exact regression ownership findings were applied.
+* Current registered staff now authorize quality writes under the existing SQL
+  decision scope. Retained contributor identities prevent original/earlier-fixer
+  or name/email/code/OID alias self-acceptance. Explicit remediation evidence
+  and independent reinspection are required. No new competence or risk policy.
+* Same-measure replacement invalidates every prior active acceptance/handover
+  and retains history/aftercare as superseded evidence. Independent new acceptance
+  and resident handover remain separate. Contractor writes stay denied and no
+  quality action changes finance/grants or executes payment.
+* Updated existing core/API guides, programme journey synthesis and index
+  without changing upstream routes/log prefix. No finance.py, dataset fixture,
+  app.js, server.py, shared manifest or SQL persistence helper edit was needed;
+  #84 stock, #94 finance and #90 capacity/scheduling checks remain.
+* Actual tiny-fictional local JSON/SQLite/HTTP, isolated local SQL Server and
+  real Chromium evidence are recorded separately from competent-human, Azure
+  SQL, screen-reader, resident and WCAG acceptance, which are not claimed.
+  No private data, cloud/paid AI, live order, financial commitment or merge.
+
+## [2026-10-17] delivery | #91 independent Review and authorized correction ONE
+
+* The one independent Review executed Complete, original outcome Not accepted.
+  RV-001 reproduced known earlier legacy FIXED recorder resolution failure;
+  RV-002 reproduced committed refresh failure replaying a legitimate audit prefix.
+  The original verdict is retained, not overwritten by a claimed second Pass.
+* Canonical fail-before tests reproduced both. Historical recorders now enter
+  conservative staff lookup; earlier aliases remain excluded. Confirmed own
+  committed snapshots are identified before shared recovery, preserving exactly
+  one committed decision/prefix and surfacing explicit committed/reload guidance.
+* The #95 shared overlap is only the sequenced two-line server.py quality-outcome
+  handler returning HTTP 503 with outcome=committed. No grants/finance dispatch,
+  finance.py, app.js, dataset, manifest or SQL persistence helper changes.
+* Latest local selection: 361 run, 312 passed, 49 existing opt-in skips.
+  Actual isolated SQL Server: 38 passed; exact owned container removed.
+  Actual Chromium exercised committed-refresh failure/reload as well as the
+  full quality/replacement journey; configured engineering gates passed.
+  Human, Azure, resident, screen-reader and full WCAG acceptance remain unclaimed.

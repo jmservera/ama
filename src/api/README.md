@@ -32,6 +32,50 @@ Playwright over the changed confirmation control, missing-evidence refusal and
 Opportunity-only/Confirmed-application mixed state. These are focused engineering
 checks, not full WCAG, human usability, real delegation or deployed acceptance.
 
+## Per-measure quality API (#91)
+
+The existing `POST /api/cases/{id}/quality-*` routes keep their request shapes.
+`quality-submit` records checklist evidence and accepts the current
+`context_revision`; when replacing Accepted/Handed over evidence it invalidates
+all former same-measure acceptance/handover, not other measures. The
+[core quality contract](../core/README.md#per-measure-quality-and-handover-controls-91)
+describes retained lineage, independence and transactional behavior.
+`quality-fix` now requires a nonempty `note` describing remediation and its
+photo/document/inspection reference. `quality-reinspect` requires Fixed state.
+No endpoint grants professional authority or pays anyone.
+
+The authenticated actor, never body-supplied name/role, authorizes every write.
+Contractors continue to receive 403 for all quality/finance writes; staff record
+provider evidence through the existing manual route. Foreign supplier cases
+remain inaccessible. Unknown/revoked staff and self-accepting identity aliases
+are denied. Malformed/negative indices, missing remediation and actions on a
+superseded record return 400. SQL optimistic conflicts return 409.
+A confirmed committed decision whose post-commit refresh fails returns 503
+with `outcome: "committed"` and explicit guidance to reload and inspect history
+before retrying. It is not reported as success or rolled back; the committed
+success audit and any legitimate audit prefix remain exactly once.
+
+The existing quality panel labels remediation evidence, retains input and
+focuses the missing-evidence field on failure. Replacement asks for confirmation
+and displays the prior acceptance/handover as historical, with no old action
+buttons. A fresh independent acceptance and resident handover remain necessary.
+The actual fictional loopback Chromium journey exercised those steps, keyboard
+fix submission, cancellation/confirmation, labelled controls and 320/390/1280px
+reflow with reduced motion and no page errors. It also exercised an actual
+post-COMMIT refresh failure, visible committed/reload guidance and reload
+confirming accepted state. This is engineering evidence, not a WCAG,
+screen-reader, resident-understanding or competent-human sign-off.
+Existing form/navigation accessibility gaps remain outside this narrow change.
+
+`test_role_matrix.QualityMatrix` exercises the actual authenticated SQLite HTTP
+routes, contractor/foreign-case denials, forged-body refusal, remediation,
+replacement, explicit committed-refresh outcome, and unchanged finance/grant
+records. The shared `server.py` change is only the quality-specific exception
+handler; its #95 overlap is declared. No `app.js`, `finance.py`, dataset fixture,
+scenario manifest or shared SQL helper change was required.
+The current BRD FR-017 describes handoff information; PRD FR-017 describes this
+quality lifecycle. They are not represented as identical requirement numbers.
+
 ## Record-only finance API (#94)
 
 `POST /api/cases/{case_id}/finance` retains its existing single-record action

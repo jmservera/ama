@@ -4,7 +4,8 @@ const QUALITY_ROLES = ["Quality Inspector", "Retrofit Programme Manager", "Progr
 const QUALITY_SOURCES = ["Installer", "Contractor", "Provider submission", "Our own inspection"];
 const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available", "No access", "Rebooking needed"];
 const QUALITY_WORDS = { "Submitted": "Waiting for an independent check", "Returned": "Returned: defect to put right", "Fixed, awaiting reinspection": "Fixed, waiting to be checked again",
-  "Accepted": "Accepted, ready to hand over to the resident", "Handed over": "Handed over to the resident" };
+  "Accepted": "Accepted, ready to hand over to the resident", "Handed over": "Handed over to the resident",
+  "Superseded": "Replaced evidence: previous acceptance and handover no longer apply" };
 
 function residentBindings(text) {
   if (!text.trim()) throw new Error("Enter each affected measure and current scope revision.");
@@ -22,16 +23,39 @@ function qualityPanel(c, id, refresh) {
   const canCheck = QUALITY_ROLES.includes(me.user.role);
   const measures = (Array.isArray(c.measures) ? c.measures : String(c.measures).split(",")).map((x) => x.trim()).filter(Boolean);
   const records = (c.quality || []).map((r, i) => {
-    const note = h("input", { type: "text", maxlength: 300, "aria-label": `Note for ${r.measure}` });
+    const noteLabel = r.state === "Returned" ? `Remediation evidence for ${r.measure}` : `Note for ${r.measure}`;
+    const note = h("input", { type: "text", name: `quality-note-${i}`, autocomplete: "off", maxlength: 300, "aria-label": noteLabel });
     const defect = h("input", { type: "text", maxlength: 300, "aria-label": `What is wrong with ${r.measure}` });
     const owner = h("input", { type: "text", maxlength: 80, "aria-label": `Who will put it right for ${r.measure}` });
-    const fixer = h("input", { type: "text", maxlength: 80, "aria-label": `Who fixed ${r.measure}` });
+    const fixer = h("input", { type: "text", name: `quality-fixer-${i}`, autocomplete: "off", maxlength: 80, "aria-label": `Who fixed ${r.measure}` });
     const told = h("input", { type: "checkbox", id: `told-${i}` });
-    const act = (name, body) => refresh(() => post(id, name, Object.assign({ index: i }, body)));
+    const message = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
+    const act = async (name, body) => {
+      const button = document.activeElement;
+      if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
+      try {
+        await refresh(async () => {
+          try { await post(id, name, Object.assign({ index: i }, body)); }
+          catch (error) {
+            message.textContent = error.message;
+            message.className = "err";
+            if (name === "quality-fix" && !note.value.trim()) { note.setAttribute("aria-invalid", "true"); note.focus(); }
+            else message.focus();
+            throw error;
+          }
+        });
+      } finally {
+        if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); }
+      }
+    };
     return h("li", {},
-      h("strong", {}, r.measure), ` ${QUALITY_WORDS[r.state] || r.state}. Checked against ${r.checklist_version}. Evidence from ${r.source}: ${r.submitted_by}.`,
+      h("strong", {}, r.measure), ` ${QUALITY_WORDS[r.state] || r.state}. Evidence version ${r.evidence_version || 1}. Checked against ${r.checklist_version}. Evidence from ${r.source}: ${r.submitted_by}.`,
       h("ul", {}, r.items.map((x) => h("li", {}, `${x.label}: ${x.evidence}`))),
-      r.defect && r.state !== "Accepted" && r.state !== "Handed over" && h("p", { class: "err" }, `Defect: ${r.defect.description}. Reason: ${r.defect.reason}. Owner: ${r.defect.owner}.`),
+      r.defect && !["Accepted", "Handed over", "Superseded"].includes(r.state) && h("p", { class: "err" }, `Defect: ${r.defect.description}. Reason: ${r.defect.reason}. Owner: ${r.defect.owner}.`),
+      r.defect?.remediation_evidence && h("p", {}, `Remediation evidence: ${r.defect.remediation_evidence}`),
+      r.state === "Superseded" && h("p", { class: "muted" }, `Historical record only. Use evidence record ${r.superseded_by + 1} for current decisions.`,
+        r.prior_acceptance?.accepted_by ? ` Previously accepted by ${r.prior_acceptance.accepted_by}.` : "",
+        r.prior_acceptance?.handover ? ` Previous handover: ${r.prior_acceptance.handover.note}` : ""),
       r.accepted_by && h("p", {}, `Accepted by ${r.accepted_by}.`),
       r.handover && h("p", {}, `Handed over by ${r.handover.by}: ${r.handover.note}`),
       r.aftercare.length > 0 && h("ul", {}, r.aftercare.map((a) => h("li", {}, `${fmtDate(a.at)} ${a.by}: ${a.note}`))),
@@ -43,17 +67,18 @@ function qualityPanel(c, id, refresh) {
           r.state === "Submitted" && h("div", { class: "row" }, defect, owner,
             h("button", { class: "alt", onclick: () => act("quality-return", { reason: note.value, defect: defect.value, owner: owner.value }) }, "Return with a defect (add the reason above)")))
         : h("p", { class: "muted" }, "A Quality Inspector or a manager checks this work.")),
-      r.state === "Returned" && h("div", { class: "row" }, fixer, note,
-        h("button", { class: "alt", onclick: () => act("quality-fix", { fixed_by: fixer.value, note: note.value }) }, "Record that it has been put right")),
+      r.state === "Returned" && h("div", {}, h("p", {}, "Record what was corrected and the photo, document or inspection reference. A different person must check it again."),
+        h("div", { class: "row" }, fixer, note,
+          h("button", { class: "alt", onclick: () => act("quality-fix", { fixed_by: fixer.value, note: note.value }) }, "Record that it has been put right"))),
       r.state === "Accepted" && h("div", { class: "row" }, note, told, h("label", { for: `told-${i}` }, "The resident has been told"),
         h("button", { onclick: () => act("quality-handover", { note: note.value, resident_told: told.checked }) }, "Record handover (guarantees, how to use it)")),
       r.state === "Handed over" && h("div", { class: "row" }, note,
-        h("button", { class: "alt", onclick: () => act("quality-aftercare", { note: note.value }) }, "Add an aftercare note")));
+        h("button", { class: "alt", onclick: () => act("quality-aftercare", { note: note.value }) }, "Add an aftercare note")), message);
   });
   box.append(records.length ? h("ul", { class: "list" }, records) : h("p", {}, "No quality checks recorded yet."));
   if (!c.closed) {
     const form = h("div", {}, h("h3", {}, "Record the evidence for a measure"),
-      h("p", { class: "muted" }, "Evidence from an installer or contractor is kept as evidence only. It is checked by someone else before it counts."));
+      h("p", { class: "muted" }, "Evidence from an installer or contractor is kept as evidence only. It is checked by someone else before it counts. Replacing accepted evidence cancels its previous acceptance and handover. A new independent check and resident handover are needed."));
     const measure = h("select", { id: "q-measure", "aria-label": "Measure" }, measures.map((m) => h("option", {}, m)));
     const by = h("input", { id: "q-by", type: "text", maxlength: 80 });
     const src = h("select", { id: "q-src" }, QUALITY_SOURCES.map((x) => h("option", {}, x)));
@@ -73,8 +98,12 @@ function qualityPanel(c, id, refresh) {
       h("label", { for: "q-revision" }, "Scope revision the evidence covers (see the resident decision panel)"), revision,
       h("label", { for: "q-by" }, "Who did the work or sent the evidence"), by,
       h("label", { for: "q-src" }, "Where the evidence came from"), src, checks,
-      h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
-        items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) })) }, "Save evidence")));
+      h("p", {}, h("button", { class: "alt", onclick: () => {
+        const replaces = (c.quality || []).some((r) => r.measure === measure.value && ["Accepted", "Handed over"].includes(r.state));
+        if (replaces && !window.confirm("Replace this measure's evidence? Its previous acceptance and resident handover will no longer apply. The history will be kept.")) return;
+        refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
+          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }));
+      } }, "Save evidence")));
     box.append(form);
   }
   return box;
