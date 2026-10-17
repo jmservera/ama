@@ -300,6 +300,43 @@ engineering, not a human blocker or license to reconstruct the past. Operational
 forecast resources remain unverified. Neither correction evidence nor local
 combined checks replace independent final-head acceptance.
 
+## Prospective progress capture continuation (2026-10-17, #102)
+
+This distinct engineering follow-up to merged #390 instruments the actual
+controlled writers, not its original Review or already-evidenced forecast and
+export criteria. The [current core contract](../../../../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102)
+now captures precise versioned forward/return/reopen, handoff and independent
+per-measure quality events with actor, receiving owner and source provenance.
+Forward means the existing final-checks-to-install-booked action only, after
+its real safety, resident, technical and capacity guards. Pause duration needs
+both actual recorded boundaries; absent resume/exit remains unknown.
+
+Quality history preserves separate submission, return, correction, independent
+acceptance, handover and supersession evidence versions. Historical acceptance
+and handover may be paired only within the same record/version, with explicit
+as-of/period bounds. Later supersession cannot rewrite an earlier answer.
+This is recorded work acceptance plus resident-told handover, not proof of
+resident acceptance, whole-home completion, finance closure, competence or
+professional approval. Current active-record staleness and remediation
+independence are unchanged. Raw identities, source text and resident/commercial
+detail remain withheld by the report.
+
+Successful SQL transitions commit case/event/audit together. Failed writes
+quarantine success audit before recovery readback; committed refresh failure
+uses the existing explicit API outcome instead of a false rejection. JSON
+atomically replaces case/event state, but its separate audit file does not
+provide cross-file crash atomicity. No past event or prior audit is backfilled
+or repaired. Legacy minute bounds, missing sources and contradictions remain
+unknown. Declared forecasts, current-authorized cohort selection, export
+provenance and operational evidence limits remain as in #390.
+
+Actual-domain checks use tiny fictional registered staff and explicitly
+constructed prerequisite evidence on JSON, SQLite and a task-owned loopback
+SQL Server. They do not establish human or coordinator acceptance. The
+quality.py event/history paths overlap parallel #88 and require coordinator
+integration; no other worktree, private dataset, real staff roster, paid model
+or Azure/IAM action is involved.
+
 ## Next steps
 
 No user action required. Return to cross-role synthesis; preserve unknowns.

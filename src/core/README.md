@@ -83,9 +83,17 @@ is current-source selection, not reconstructed historical membership.
 The versioned `progress/v1` report freezes case IDs, filters, baseline/
 selected/excluded denominators, inclusive UTC period and approval status.
 
-Only exact structured `returns` and `handoff_history` events supply clocks.
+Exact structured `returns`, `handoff_history` and `quality/*/history`
+events supply clocks. Prospective controlled `advance` now appends to the
+existing `returns` stream alongside explicit `return` and `reopen` events;
+the name of that legacy collection is retained. The only actual forward
+writer is final checks to install booked, with its real work-order version.
+Return/reopen and every handoff state record registered actor and receiving
+owner provenance; metadata-required offer/accept keep their explicit source
+version and expected handoff-version checks. Internal `controlled/*` sources
+name the writer contract version, not externally verified operational evidence.
 Versions, timezone-aware times, exact stages/states and chain consistency are
-checked. A consistent pair of return/reopen boundaries yields calendar elapsed
+checked. A consistent pair of advance/return/reopen boundaries yields calendar elapsed
 seconds clipped to the selected period. First entry and last exit remain
 unknown. Only `Contact paused` and `Resident paused works` classify observed
 paused stage intervals. Separate lifecycle decisions are never inferred from
@@ -105,10 +113,44 @@ If the as-of falls inside that minute, the event and dependent later versions
 are not asserted to have occurred yet; `unknown_event_as_of` is explicit.
 Start-boundary ambiguity is likewise unresolved. Exported `time_precision`
 and `latest_possible_at` describe bounds, not reconstructed observations.
-Events are returned as independent return and handoff streams in source order;
+The same minute bounds also apply to legacy return/reopen and quality clocks.
+Events are returned as independent stage, handoff and per-record quality streams in source order;
 no cross-stream chronology is invented. New handoff writes use precise UTC
-timestamps through the existing helper; other workflow clocks are unchanged.
-Persisted historical events are never rewritten.
+timestamps through the existing helper. Prospective stage and quality history
+boundaries also use microsecond UTC; existing business-date fields are not clocks.
+Persisted historical events are never rewritten. A contradictory handoff
+lifecycle observed by the as-of makes its waits unknown, including earlier
+pairs; an earlier as-of before that contradiction keeps its supported answer.
+
+Each new quality history dictionary records its append `version`, exact
+`event_type`, immutable `evidence_version`, checklist/source version, actor and
+owner. `accepted_handovers` pairs only actual quality acceptance followed by
+handover within the same record/evidence version. It reports historical
+acceptance-to-handover elapsed time and, when observed by the as-of, a later
+supersession timestamp. Later replacement does not rewrite an earlier answer
+or join two evidence versions. Resident-told evidence is not resident
+acceptance, whole-home completion or financial closure; the whole-home
+`accepted_handover_actuals` denominator remains unknown. Legacy unversioned
+quality prefixes, missing provenance and contradictions remain unresolved.
+All measured collections, including quality pairs, become null/Untrusted
+when audit integrity is false or unknown.
+
+Controlled writers save events with their successful case change. SQL also
+commits the existing audit in that transaction; failed writes quarantine
+pending success audit before recovery I/O. A failed post-COMMIT refresh is
+explicitly committed, not rejected; retry cannot repeat the same transition.
+Source-recorded operational failures are audited after rollback with a generic
+safe reason, not caller filenames, bytes or transport diagnostics. A document
+storage outage records `upload_document_failed` then `upload_document_rejected`
+without document metadata or success history. Prior audit prefixes survive;
+restoration, failure-audit or orphan cleanup errors retain the original error
+with explicit diagnostic notes. A committed outcome never becomes rejection.
+`QualityOutcomeError` remains the public alias of the shared committed-outcome
+error, preserving the existing API 503 `outcome=committed` response without
+changing its handler. JSON atomically replaces the case/event file and rolls
+back failed calls using the existing audit-prefix recovery pattern, but its
+separate audit file is not cross-file process-crash atomic. No stronger JSON
+or external-writer immutability guarantee is claimed.
 
 Narrative `history`, current `stage_since`/`days_in_stage`, closure flags and
 prose/naive-time audit entries never establish historical durations or accepted
@@ -140,10 +182,14 @@ Run the owned fictional tests from the repository root:
 
 ```bash
 PYTHONPATH=src/core/tests .venv/bin/python -m unittest test_progress_reports -q
+PYTHONPATH=src/core/tests .venv/bin/python -m unittest test_progress_event_capture -q
 ```
 
 See the [API/export contract](../api/README.md#historical-progress-report-and-export-102)
 for local HTTP, SQLite and opt-in actual loopback MSSQL consumers.
+`ZF_CAPTURE_MSSQL=1` additionally runs actual controlled domain writers against
+task-owned loopback SQL Server using `ZF_SQL_*`. The test creates unique
+`zf_capture102_*` databases and retains them. Never use a shared/live server.
 No private dataset, provider call, operational forecast validation, Azure or
 human acceptance follows from these checks.
 

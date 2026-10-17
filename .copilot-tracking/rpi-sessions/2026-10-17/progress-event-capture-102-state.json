@@ -1,0 +1,52 @@
+{
+  "task_id": "102",
+  "task_slug": "progress-event-capture-102",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Publication",
+  "status": "complete",
+  "session_status": "complete",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/progress-event-capture-102-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/progress-event-capture-102-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/progress-event-capture-102-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/progress-event-capture-102-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/progress-event-capture-102-review.md",
+    "correction_one": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-correction-one.md",
+    "sensor_integration": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-sensor-integration.md",
+    "correction_two": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-correction-two.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI and own-branch publication explicitly requested; distinct follow-up to merged PR390, criterion one only",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-17; clean feat/progress-event-capture-102 at supplied main2267027 verified"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready from C1-C7",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-17/progress-event-capture-102-research.md"
+    },
+    {
+      "decision": "One final-candidate critique executed; verdict Revise; PC-001/PC-002/PC-003 directly resolved in plan/details before source implementation",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/progress-event-capture-102-plan-critique.md"
+    }
+  ],
+  "blockers": [],
+  "publication": {
+    "pr": "https://github.com/jmservera/ama/pull/394",
+    "branch": "feat/progress-event-capture-102",
+    "base": "bcb4871b19c2abd56e1ff536a77c15e52b544321",
+    "source_commit": "b0e2d02f6d981e83fa0c11cb3b3c38491bd89bbe",
+    "prior_base_source_patch_sha256": "a2941c0396004da38ce7a21d9f65c155e42a5d735b1aacccab9f83eb5c077379",
+    "integration_equivalence": "All twelve owned src added/removed deltas exact, SHA256 264696a1d621868d06ecce3445fb0b0ee546d7a6226981a69b2c9f2ac18d5d1e",
+    "authorized_expected_old_remote": "7fda223a50fedfca16fcc2cb89dd01405862e829",
+    "original_review": "Complete / Defects found",
+    "correction_cycles": 2,
+    "coordinator_acceptance": "Not claimed"
+  },
+  "next_action": { "phase": "Handoff", "action": "Correction TWO LAST complete; final full core942, combined349, actualSQL35 and image94 evidence; independent coordinator exact-head gate on PR394, no merge/issue closure/new Review" },
+  "prioritized_follow_ups": ["Coordinate actual quality.py overlap with #88", "Operational/full-history evidence and JSON cross-file crash atomicity remain separate"]
+}

@@ -100,17 +100,19 @@ class WorkflowMixin:
         metadata = metadata if metadata is not None else {}
         source = controls.text(metadata.get("source"), "the source reference")
         next_action = controls.text(metadata.get("next_action"), "the next action")
-        return dict(version=len(c.get("returns", [])) + 1, at=_now(), by=user["name"],
+        return dict(version=len(c.get("returns", [])) + 1, at=_now("microseconds"), by=user["name"],
                     from_stage=was, to_stage=to, reason=reason, reopened=reopened,
                     source=source or None, next_action=next_action or None,
+                    source_version=controls.text(metadata.get("source_version"), "source version", required=False) or None,
+                    schema="controlled-event/v1", event_type="reopen" if reopened else "return",
+                    actor={k: user.get(k) for k in ("email", "code", "name", "role", "oid")},
                     initiating_authority=dict(email=user["email"], code=user["code"], role=user["role"]),
                     receiving_owner=dict(code=c["owner_code"], name=c["owner"], role=c["owner_role"]))
 
     def return_case(self, user, case_id, to_stage, reason, metadata=None):
         controls.require_role(user, projection.STAFF_ROLES, "an authorised staff reviewer can return a case")
         reason = controls.text(reason, "why the case is being returned")
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             self.guard_case_event(c)
             if c["closed"]:
                 raise ValueError("This case is closed. A manager can reopen it.")
@@ -126,15 +128,13 @@ class WorkflowMixin:
                 else dict(status="Waiting" if to_stage == "Waiting for resident decision" else "Not yet asked", by=user["name"], at=_today())
             c.update(stage=to_stage, stage_since=_today(), days_in_stage=0, reason="after being returned", waiting_on=c["owner"])
             c.setdefault("returns", []).append(rec)
-            self.audit(user["email"], "return_case", case_id, f"{was} -> {to_stage}: {reason}")
-            self.save()
+            self._save_workflow(user, "return_case", case_id, f"{was} -> {to_stage}: {reason}")
 
     def reopen_case(self, user, case_id, reason, metadata=None):
         if user["role"] not in MANAGER_ROLES:
             raise PermissionError("Only a manager can reopen a closed case.")
         reason = controls.text(reason, "why the case is being reopened")
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             if not c["closed"]:
                 raise ValueError("This case is already open.")
             was = c["stage"]
@@ -144,8 +144,7 @@ class WorkflowMixin:
                 c["decision"] = dict(status="Not yet asked", by=user["name"], at=_today())
             c.update(closed=False, stage=to, stage_since=_today(), days_in_stage=0, reason="after being reopened", waiting_on=c["owner"])
             c.setdefault("returns", []).append(rec)
-            self.audit(user["email"], "reopen_case", case_id, f"{was} -> {to}: {reason}")
-            self.save()
+            self._save_workflow(user, "reopen_case", case_id, f"{was} -> {to}: {reason}")
 
     # ---- receipt is not acceptance; only acceptance transfers case ownership
     def _staff_person(self, email):
@@ -213,20 +212,29 @@ class WorkflowMixin:
         return h
 
     def _handoff_event(self, c, user):
-        events = c.setdefault("handoff_history", [])
-        events.append(dict(handoff_view(c), version=len(events) + 1, at=_now("microseconds"),
-                           by=user["email"], authority=user["role"]))
+        field = {"Received": "received_at", "Escalated": "escalated_at",
+                 "Declined": "answered_at", "Withdrawn": "answered_at",
+                 "Completed": "completed_at"}[c["handoff"]["state"]]
+        change_provenance.append_event(c, "handoff_history", user,
+                                       "handoff_" + c["handoff"]["state"].lower(),
+                                       "controlled/handoff", **handoff_view(c),
+                                       at=c["handoff"][field], by=user["email"], authority=user["role"])
+
+    def _save_workflow(self, user, action, case_id, detail):
+        if not hasattr(self, "db"):
+            self.save()
+        self.audit(user["email"], action, case_id, detail)
+        if hasattr(self, "db"):
+            self.save()
 
     def receive_handoff(self, user, case_id):
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             h = self._open_offer(c, user, "recipient")
             if h["state"] != HANDOFF_OPEN:
                 raise ValueError("Only a sent handoff can be marked received.")
             h.update(state="Received", received_at=_now("microseconds"), received_by=user["email"])
             self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_received", case_id, "Receipt recorded; ownership unchanged")
-            self.save()
+            self._save_workflow(user, "handoff_received", case_id, "Receipt recorded; ownership unchanged")
 
     def accept_handoff(self, user, case_id, metadata=None):
         with change_provenance.operation(self, user, case_id, "handoff_accepted", metadata, "handoff_history") as (c, event):
@@ -242,45 +250,38 @@ class WorkflowMixin:
 
     def decline_handoff(self, user, case_id, reason):
         reason = controls.text(reason, "why you cannot take this on")
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             h = self._open_offer(c, user, "recipient")
             h.update(state="Declined", answered_at=_now("microseconds"), answer_note=reason)
             c.setdefault("handoff_log", []).append(dict(h))
             self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_declined", case_id, reason)
-            self.save()
+            self._save_workflow(user, "handoff_declined", case_id, reason)
 
     def withdraw_handoff(self, user, case_id):
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             h = self._open_offer(c, user, "offerer")
             h.update(state="Withdrawn", answered_at=_now("microseconds"))
             c.setdefault("handoff_log", []).append(dict(h))
             self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_withdrawn", case_id, f"offer to {h['to_name']}")
-            self.save()
+            self._save_workflow(user, "handoff_withdrawn", case_id, f"offer to {h['to_name']}")
 
     def escalate_handoff(self, user, case_id, to_email, reason):
         reason = controls.text(reason, "why this handoff needs escalation")
         to = self._staff_person(to_email)
         if to["role"] not in MANAGER_ROLES:
             raise ValueError("Choose a manager for the escalation.")
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             h = self._open_offer(c, user, "offerer")
             if h["state"] == "Escalated":
                 raise ValueError("This handoff has already been escalated.")
             h.update(state="Escalated", escalated_at=_now("microseconds"), escalation_owner=to["name"],
                      escalation_owner_code=to["code"], answer_note=reason)
             self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_escalated", case_id, f"to {to['code']}: {reason}")
-            self.save()
+            self._save_workflow(user, "handoff_escalated", case_id, f"to {to['code']}: {reason}")
 
     def complete_handoff(self, user, case_id, note):
         note = controls.text(note, "the completed action")
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             controls.require_role(user, projection.STAFF_ROLES, "the accepting case owner can complete a handoff")
             h = c.get("handoff")
             if not h or h["state"] != "Accepted":
@@ -289,8 +290,7 @@ class WorkflowMixin:
                 raise PermissionError("Only the accepting case owner can complete this handoff.")
             h.update(state="Completed", completed_at=_now("microseconds"), completion_note=note)
             self._handoff_event(c, user)
-            self.audit(user["email"], "handoff_completed", case_id, note)
-            self.save()
+            self._save_workflow(user, "handoff_completed", case_id, note)
 
     def pending_handoffs(self, user):
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")

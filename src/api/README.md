@@ -59,8 +59,13 @@ Server. SQLite and actual MSSQL exercise reload, external-writer refresh,
 report/CSV parity and unchanged audit. Image checks run the authenticated
 local report as UID/GID 10001 with read-only root and reduced capabilities.
 These are engineering checks, not browser, WCAG, human, operational, AI or
-Azure acceptance. Full forward-event coverage and verified capacity remain
-separate evidence prerequisites.
+Azure acceptance. Prospective capture now covers the actual controlled
+stage/handoff/quality writers described in the core contract; absent historical
+periods and nonexistent general forward/closure writers stay unknown.
+The same existing HTTP 503 `outcome=committed` contract handles a committed
+transition whose refresh/acknowledgement failed, without reporting rejection.
+Verified operational capacity and complete historical coverage remain separate
+evidence prerequisites.
 The one original Review found blank-query and UTC-range handling defects;
 correction ONE adds explicit refusals and failing-first regressions. Final
 focused checks ran 88 tests plus eight actual loopback MSSQL tests, and the

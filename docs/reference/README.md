@@ -344,3 +344,34 @@ Record the result as a `lint` entry in the log.
 | Owner notes and preferences | `memory.md`, only when the owner asks |
 | Problem specification, BRDs, ideas and presentations | Existing folders under `docs/` |
 | Private owner material, such as the cohort map | `support/`, outside the knowledge base |
+
+## Prospective Progress Capture Routing (2026-10-17, #102)
+
+This is the current continuation of the earlier merged-#390 route above.
+Start with the [core event/writer contract](../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102),
+then the [prospective programme evidence boundary](./research/ux/customer-journeys/programme.md#prospective-progress-capture-continuation-2026-10-17-102)
+and [unchanged report/export API](../../src/api/README.md#historical-progress-report-and-export-102).
+Existing controlled stage, handoff and per-measure quality writers now append
+precise versioned events. Actual-domain JSON/SQLite/task-owned local SQL Server
+evidence covers rollback, failed recovery and post-COMMIT exact-once behavior.
+Past gaps, legacy precision, nonexistent general forward/closure writers and
+whole-home accepted-handover actuals remain unknown. Forecast/export criteria
+and the original adverse #390 Review are unchanged. quality.py overlap with
+parallel #88 is declared; independent final-head acceptance remains separate.
+The single original Review completed with two Medium findings. Correction ONE
+retains that adverse verdict, fails closed on later contradictory handoff
+states, and explicitly proves event/audit counts after SQL committed refresh
+failure/retry/restart. Final-head coordinator judgment is not self-awarded.
+Authorized integration of merged sensor #393 onto main943febc2 retains its
+closed exports/current-generator admission and prospective event recovery.
+Combined301 checks ran:274 pass,27 explicit skips; original Review/correction
+ONE unchanged. Independent PR #394 final-head gate remains outstanding.
+Correction TWO addresses the independent Medium failure-audit regression:
+truthful sanitized operational failure/rejection after rollback, original-error
+and prior-prefix retention, no false success or committed rejection.
+Original adverse Review/critique/correction ONE remain unchanged; final gate
+still separate from engineering evidence.
+Final correction TWO integrates resident #392 on mainbcb4871b, retaining both
+SQL recovery scopes and sensor boundaries. Full core942 run/847 pass/95 skips,
+actual integrated MSSQL35 pass and combined/image/static checks provide
+engineering evidence; PR #394 independent exact-head gate remains outstanding.
