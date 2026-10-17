@@ -105,3 +105,50 @@ after Review; no source behavior changed and no second Review is performed.
 The PR helper's instruction/citation-policy resources were unavailable in
 the installed/repository paths. The body uses the exact issue criteria and
 already reviewed evidence; no extra parallel review or inferred approval.
+
+## Authorized Same-PR Rebase Continuation (2026-10-17)
+
+Caller explicitly authorized rebasing only the run-owned
+`feat/iteration-scenario-manifest-103` for PR #380 onto latest `origin/main`,
+then one final topic `--force-with-lease` push. Original remote head was
+`7c3c6a7b69001adb0568bdf35ff95d6c8f3cd64d`; fetched main is `b15f2f0`
+from merged #379. Worktree was clean. Both existing topic commits replayed,
+producing implementation `7e2be79` and handoff `e26f776` before this single
+continuation-evidence commit. No main rewrite or merge.
+
+Exactly one conflict occurred: `docs/reference/log.md` at the shared append
+point. Removed only conflict markers, retained the complete latest-main #360
+tail first, then the complete original #103 append unchanged. The reference
+index auto-merged: retained upstream's refined #375/#360 introduction and new
+scoped initializer routing row, plus unchanged #103 routing row. No source,
+manifest, inventory, fixture, test or unrelated upstream file was edited.
+
+Byte comparisons verified all pre-existing topic files except the two shared
+knowledge files unchanged from the old head, every upstream-only file unchanged,
+latest-main log as an exact prefix with the original topic append as exact
+suffix, and index exactly latest main plus the original #103 row once.
+An initial overly strict check expected superseded old index prose to remain
+verbatim; it failed because main deliberately refines that prose. Inspection
+confirmed the upstream update, then the correct latest-main-plus-topic-row
+assertion passed. No upstream wording was reverted.
+
+Reran the exact combined focused command recorded under P01-T03 once after
+rebase: 29 manifest/inventory/routing/public-provenance tests passed. Scoped
+Ruff passed; format checked two files unchanged; mypy passed two source files.
+`git diff --check origin/main` passed. No repeated full suite, generation,
+private reads, cloud/model calls or browser check: application source and
+fixture bytes are unchanged.
+
+Caller identifies independent reviewer `fa457455` as assessing old head
+`7c3c6a7`. That agent ID is not visible in this session; one direct read returned
+"No agent found". No GitHub review/comment or Source CI run was present at
+inspection. Do not transfer an old-head verdict or claim independent acceptance:
+final exact-head follow-up remains required. Preserve the original Review as
+historical; no new review loop or scope change.
+
+The final push uses an explicit lease against the recorded original remote
+head, topic ref only. Existing Source projects CI is ordinary unpaid engineering
+CI; relevant src/metadata paths match its PR filter. After push, inspect runs;
+if none exists for the exact final head, dispatch only existing `src-ci.yml`
+on this branch. Do not dispatch paid rubric. Caller stop boundary is final
+publication/CI handoff, with no extra receipt commit or head-chasing update.

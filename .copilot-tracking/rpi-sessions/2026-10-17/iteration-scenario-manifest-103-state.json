@@ -23,7 +23,7 @@
     {"decision": "Reviewed implementation and full evidence pushed; independent main PR opened", "status": "verified", "evidence": "commit 6560d488aa6891080b34fc99dd886c42f1215ade; https://github.com/jmservera/ama/pull/380"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Owner reviews PR #380 and its GitHub checks; no further automatic task, merge or delivery loop"},
+  "next_action": {"phase": "Follow-up", "action": "Authorized same-PR rebase onto main b15f2f0 complete; final explicit-lease topic push and ordinary Source CI handoff only, then stop without receipt commit. Independent fa457455 assessment targets old 7c3c6a7; exact-final-head follow-up remains required, no verdict inferred."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Owner-scoped full profile/workflow acceptance", "rationale": "Highest directly evidenced remaining product gap; separate from completed metadata criteria and not launched", "evidence": "PRD FR-035/AC-043; current manifest has twenty unavailable full journeys"}
   ]
