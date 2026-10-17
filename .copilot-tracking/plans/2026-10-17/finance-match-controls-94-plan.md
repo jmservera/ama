@@ -6,7 +6,7 @@ ms.date: 2026-10-17
 ## Task Metadata
 
 Task ID: 94. Slug: finance-match-controls-94. Parent: 93, hierarchy only.
-Status: Caller-authorized P03 source integration validated; publication active.
+Status: Caller-authorized P03 integration published; external closure pending.
 Original Review and JSON correction ONE retained; High COORD-002 SQL audit
 cleanup/recovery has objective local resolving evidence; external closure pending.
 Source/evidence commit 6248521 pushed; main-targeted PR #383 open. Final
@@ -140,10 +140,10 @@ failure proof, canonical cleanup-before-read and original-error preservation.
 External independent closure remains required; no independent Pass is implied.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Integrate merged assessment controls and republish
+### [x] P03: Integrate merged assessment controls and republish
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Reconcile run-owned branch on latest main
+#### [x] P03-T01: Reconcile run-owned branch on latest main
 
 Inspect committed upstream only. Rebase from clean published topic, preserving
 stock decision caller state, committed document snapshots, watermark reset,
@@ -222,7 +222,11 @@ passes plus one existing browser skip; 37 actual local SQL Server passes.
 Scoped lint/format/types passed after restoring a missing declared API dev
 dependency. Upstream log prefix and source/test parity checks pass.
 
-P03 publication remains active: integration evidence commit and topic-only
-explicit lease pinned to 54ed445, actual PR update, remote/head/clean verification.
+P03 published integration/evidence commit
+e7355bbdd7854dcd77e4cbd2789dabf49f75e506 using the exact authorized remote
+54ed445 lease; origin and PR #383 head verified, worktree clean. Actual PR body
+updated with integration choices/evidence. Hosted checks queued at inspection,
+not passed. Final evidence-only commit publishes completed P03/stopped state
+without further source/test change, followed by topic-only exact-lease push.
 External independent closure next; no new full Review/Pass, main write, merge or
 issue close. Stop after final publication, no automatic child.

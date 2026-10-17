@@ -339,3 +339,25 @@ passed without editing the critique or original Review. Exact owned container
 name is absent. Latest remote main remains bbbc924 and topic remains exact
 54ed445 before publication. Temporary session SQL runner removed; raw results
 retained, no credentials written to it.
+
+### P03-T01 publication and stop
+
+Integration/evidence commit e7355bbdd7854dcd77e4cbd2789dabf49f75e506 published
+with the caller-authorized command:
+
+```bash
+git push --force-with-lease=refs/heads/feat/finance-match-controls-94:54ed4451fc6ef38b6361ad5782e0da2e43d9227c \
+  origin HEAD:refs/heads/feat/finance-match-controls-94
+```
+
+Verified authenticated noreply author/committer and required Copilot trailer,
+remote exact hash, clean worktree, main bbbc924 ancestry and actual open PR #383
+head/base. Actual PR body updated from committed dated evidence. Hosted checks
+queued at inspection, not claimed green. No main write, merge or issue closure.
+
+Final evidence-only commit marks P03/P03-T01 complete and session stopped,
+with no source/test changes after the verified integration snapshot. It is
+published only to this topic with lease pinned to e7355bb, followed by final
+remote/PR/clean verification. External coordinator independent closure is the
+next gate. Both correction cycles and original Review retained; no new full
+Review, third correction or independent Pass. No automatic child work.

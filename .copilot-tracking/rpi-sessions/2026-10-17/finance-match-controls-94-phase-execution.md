@@ -133,3 +133,11 @@ This is integration, not a third correction, new full Review or independent
 Pass. Main-targeted PR #383 will carry exact integrated evidence. Publish only
 own branch with explicit expected-remote lease, verify head and clean tree, stop.
 No main push, merge, issue closure, paid/cloud/private action or automatic child.
+
+Published integration/evidence e7355bb via exact lease pinned to original
+published remote 54ed445. Verified noreply authorship/trailer, remote/PR head,
+main ancestry and clean worktree. PR body updated with honest combined evidence;
+hosted checks queued at inspection. Final evidence-only commit publishes
+completed P03 markers/stopped state with no source/test delta, then own-topic
+lease pinned to e7355bb and clean remote/PR verification. External closure next,
+no new independent Pass, merge or issue closure.

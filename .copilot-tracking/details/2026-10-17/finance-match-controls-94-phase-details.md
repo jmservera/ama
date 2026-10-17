@@ -169,3 +169,10 @@ No test source modifications for integration. Scoped Ruff/format/core/API types
 pass; missing declared API dev Playwright package restored only after mypy's
 missing-import failure. No browser download/run. Commands/results and exact
 conflict choices are recorded in changes. Owned container/database cleaned.
+
+Published integration/evidence e7355bbdd7854dcd77e4cbd2789dabf49f75e506 with
+explicit expected-remote lease 54ed445, verified origin/PR #383 head, main base
+and clean worktree. Actual PR body updated; hosted checks queued, not passed.
+Final evidence-only commit records completed P03/stopped state with no further
+source/test delta, then same-topic exact-lease publication and clean-head
+verification. External independent closure remains pending.
