@@ -226,3 +226,19 @@ publishes completed P02 markers and explicit stopped state, followed by normal
 same-branch push and clean-head verification. Both authorized corrections used;
 no known unresolved local engineering defect, but no independent Pass or
 external closure is claimed. No new Review, merge, rebase, force push or child.
+
+## P03-T01: Caller-authorized merged-assessment integration
+
+Subsequent explicit authorization reopens this run-owned topic for integration,
+not a third correction or full Review. Clean worktree/branch confirmed at
+54ed4451fc6ef38b6361ad5782e0da2e43d9227c; remote and open PR #383 match exactly.
+`git fetch origin main` resolves bbbc9243505b606550327c64bf5429243f457f2e,
+the merged PR #382 assessment correction. Expected remote lease is fixed to
+54ed4451fc6ef38b6361ad5782e0da2e43d9227c, not inferred after rewriting.
+
+Plan/details/state now authorize P03-T01: logically reconcile shared discard/
+save guards, all validator hooks and both callers' transient state; preserve
+upstream KB exact log prefix plus own entries, run combined local and actual
+SQL Server regressions, record conflicts and publish with explicit lease.
+Only committed origin/main was inspected; no other worktree read. No
+acceptance expansion, dependency invention or repeated critique/Review.

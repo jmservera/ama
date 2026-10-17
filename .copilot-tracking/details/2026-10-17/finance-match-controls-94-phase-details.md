@@ -132,3 +132,23 @@ external closure. Authenticated noreply author/committer and Copilot trailer
 verified. Hosted checks running/queued at source-head inspection, not passed.
 Final evidence-only commit publishes completed P02 markers/stopped state; no
 new full Review or independent Pass, merge, rebase, force push or child work.
+
+<!-- rpi:phase id=P03 -->
+## P03: Authorized integration of merged #84
+
+<!-- rpi:task id=P03-T01 -->
+### P03-T01: Rebase, reconcile and republish this topic only
+
+Explicit subsequent caller authorization permits rebase of clean published
+54ed4451fc6ef38b6361ad5782e0da2e43d9227c onto fetched origin/main
+bbbc9243505b606550327c64bf5429243f457f2e. Main includes merged PR #382;
+issue #84 closure is caller-provided context, not a new #94 acceptance verdict.
+No foreign dirty worktree, cherry-pick, main write, merge or issue close.
+Resolve shared recovery logically: upstream committed checked-document cache
+restoration and stock_decision-specific refusal cleanup must coexist with
+finance's prior pending prefix, original-error guards and explicit logging.
+Preserve every save validator and one canonical discard. Upstream KB log must
+be exact byte prefix followed by finance's own entries.
+Run bounded combined local regressions and actual isolated SQL Server parity.
+Publish with `--force-with-lease` pinned to exact expected remote 54ed445 only.
+External coordinator independent closure remains the next gate.

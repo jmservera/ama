@@ -6,7 +6,7 @@ ms.date: 2026-10-17
 ## Task Metadata
 
 Task ID: 94. Slug: finance-match-controls-94. Parent: 93, hierarchy only.
-Status: Correction TWO locally validated and pushed; external closure pending.
+Status: Caller-authorized P03 integration active; original corrections published.
 Original Review and JSON correction ONE retained; High COORD-002 SQL audit
 cleanup/recovery has objective local resolving evidence; external closure pending.
 Source/evidence commit 6248521 pushed; main-targeted PR #383 open. Final
@@ -39,6 +39,11 @@ No unresolved engineering decision; no human operational approval is claimed.
   audit before fallible SQL recovery, preserve prior legitimate audit and original
   error while reporting recovery error. Test early/persistent failure on SQLite
   and actual local MSSQL. No merge/rebase/cherry-pick or other dirty-worktree reads.
+* Subsequent explicit integration authorization supersedes the no-rebase stop
+  for this run-owned topic only: rebase clean published 54ed445 onto latest
+  origin/main bbbc924 (merged #84 / PR #382), reconcile canonical recovery and
+  all transaction hooks, retain upstream KB log as exact prefix, then publish
+  with force-with-lease pinned to remote 54ed445. No main write or merge.
 
 ## Goals
 
@@ -133,6 +138,23 @@ targeting main, leave checks/merge to owner and stop after final push.
 Correction TWO adds fail-before audit-insert plus early/persistent discard-read
 failure proof, canonical cleanup-before-read and original-error preservation.
 External independent closure remains required; no independent Pass is implied.
+
+<!-- rpi:phase id=P03 -->
+### [ ] P03: Integrate merged assessment controls and republish
+
+<!-- rpi:task id=P03-T01 -->
+#### [ ] P03-T01: Reconcile run-owned branch on latest main
+
+Inspect committed upstream only. Rebase from clean published topic, preserving
+stock decision caller state, committed document snapshots, watermark reset,
+cleanup before reads, finance pending prefix/original errors/logging and all
+stock/procurement/provenance/finance hooks. Keep one canonical helper and every
+existing test. Preserve exact upstream KB log bytes followed by own entries.
+Run combined finance, stock reconciliation, procurement/workflow/shared SQL
+regressions and actual local SQL Server parity on changed transaction paths.
+Record base/head/conflict decisions/commands/results; no new full Review.
+Commit integration evidence with privacy identity/trailer, publish only this
+topic using explicit expected-remote lease and stop clean. External closure next.
 
 ## Test Ownership and Change Budget
 
