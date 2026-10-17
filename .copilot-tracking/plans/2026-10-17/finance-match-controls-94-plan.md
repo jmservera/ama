@@ -6,9 +6,11 @@ ms.date: 2026-10-17
 ## Task Metadata
 
 Task ID: 94. Slug: finance-match-controls-94. Parent: 93, hierarchy only.
-Status: Independent Review Complete, original outcome Not accepted; sole RV-001
-resolved by coordinator correction ONE and 55 passing focused checks. Delivery
-pending. No repeated full Review or conformant reassessment claimed.
+Status: Completed. Independent Review Complete, original outcome Not accepted;
+sole RV-001 resolved by coordinator correction ONE and 55 passing focused checks.
+Source/evidence commit 6248521 pushed; main-targeted PR #383 open. Final
+evidence-only commit/push publishes closeout. No repeated full Review or
+conformant reassessment claimed.
 Details: .copilot-tracking/details/2026-10-17/finance-match-controls-94-phase-details.md.
 Critique: .copilot-tracking/reviews/plans/2026-10-17/finance-match-controls-94-plan-critique.md.
 
@@ -104,7 +106,7 @@ attach to all affected lines; reject ambiguous commitment instead of first wins.
 Revalidate match at acceptance, and roll back staged SQL success audit on errors.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Verify and publish criterion evidence
+### [x] P02: Verify and publish criterion evidence
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Focused persistence/API checks and documentation
@@ -115,7 +117,7 @@ available. No application/Azure acceptance claim. Update existing KB synthesis,
 index/log and core guide; record exact evidence and limitations.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Independent Review and delivery
+#### [x] P02-T02: Independent Review and delivery
 
 One canonical Review; correct actual blockers before delivery within caller's
 two coordinator-correction limit. Record execution/outcome separately. Commit
@@ -162,4 +164,8 @@ recovery and explicit uncertain outcome if state restoration fails; no unresolve
 finding remains. Original Review verdict retained with separate changes evidence.
 
 Changes: .copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md.
-Proceed P01 only after critique disposition; no unresolved engineering blocker.
+P01's critique gate was cleared before implementation; no engineering blocker
+remains after the documented coordinator correction.
+All planned work now completed; PR https://github.com/jmservera/ama/pull/383.
+Hosted checks in progress at delivery inspection, no merge. Caller-requested
+stop takes precedence over automatic child/follow-up selection.

@@ -55,6 +55,10 @@ converted to a new independent pass after coordinator correction.
 
 ## Delivery
 
-Pending privacy-safe conventional commit, topic push and main-targeted PR Refs
-#94. No merge, rebase, force push or child delivery authorized. Caller explicitly
-requests stopping after final push; no automatic follow-up child will begin.
+Source/evidence commit 6248521 pushed; authenticated noreply author and committer
+verified. Main-targeted PR https://github.com/jmservera/ama/pull/383 opened,
+Refs #94. Remote branch hash verified; PR mergeable and hosted checks running
+at inspection. No merge, rebase, force push, main write or child delivery.
+Final evidence-only commit/push publishes this closeout and explicit session
+stop. Caller requested stopping after final push, so no automatic follow-up
+child begins and hosted/owner merge decisions remain separate.
