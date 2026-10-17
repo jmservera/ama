@@ -19,6 +19,8 @@ import test_sqlqueues as queuetests
 import test_sqlstore as base
 import test_stock_reconciliation as stocktests
 import test_timecapture as timetests
+import test_quality_procurement as procurementtests
+import test_procurement_api as procurementapi
 from zava_forward.core.sqlstore import SqlStore
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
@@ -130,6 +132,27 @@ class MssqlStockDecisions(unittest.TestCase):
     test_sql_decision_scope_restored_on_every_exit = stocktests.StockReconciliation.test_sql_decision_scope_restored_on_every_exit
     test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work = stocktests.StockReconciliation.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work
     test_sql_transaction_refusal_keeps_original_error_when_reload_fails = stocktests.StockReconciliation.test_sql_transaction_refusal_keeps_original_error_when_reload_fails
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlProcurement(procurementtests.SqlFlows):
+    def make(self, data, tmp):
+        wipe()
+        self.path = Path(tmp) / "synthetic.json"
+        import json
+        self.path.write_text(json.dumps(data))
+        self.db = str(Path(tmp) / "unused.sqlite")
+        return factory(str(self.path), self.db)
+
+    def reopen(self):
+        return factory("nonexistent-seed-is-not-read", self.db)
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlProcurementApi(procurementapi.ProcurementApi):
+    def make_store(self, path):
+        wipe()
+        return factory(str(path), str(path.with_suffix(".sqlite")))
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

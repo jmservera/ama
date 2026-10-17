@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from dataset import DATA
+from dataset import DATA, supplied_contract_fixture
 from zava_forward.core import ai_tasks, controls, projection
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
@@ -560,7 +560,8 @@ class JsonResidentDecisions(unittest.TestCase):
         pid = self.store.create_package(
             self.pam, "SYN", "2026-01-01", "2099-01-01", "SYN-SCOPE", "SYN-CONTRACT"
         )
-        self.store.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+        details = supplied_contract_fixture(self.store, pid, self.pam)
+        self.store.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
         assert isinstance(pid, str)
         return pid
 

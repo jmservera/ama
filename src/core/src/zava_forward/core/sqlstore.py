@@ -516,6 +516,7 @@ class SqlStore(Store):
         self.local.safety_clear.clear()
         self.local.resident_clear.clear()
         self.local.stock_clear.clear()
+        self.local.procurement_validation = None
         pending = self.local.pending
         if touched:
             with self.dblock:
@@ -548,6 +549,8 @@ class SqlStore(Store):
                 stock.validate_sql(self)
                 from .finance import validate_sql as validate_finance
                 validate_finance(self)
+                from .procurement import validate_sql as validate_procurement
+                validate_procurement(self)
                 self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1
@@ -586,7 +589,7 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
-            except (ConflictError, GateError) as error:
+            except (ConflictError, GateError, PermissionError) as error:
                 self.db.execute("ROLLBACK")
                 if getattr(self.local, "stock_decision", None) is None:
                     try:
@@ -603,6 +606,8 @@ class SqlStore(Store):
                 raise
             except BaseException:
                 self.db.execute("ROLLBACK")
+                if getattr(self.local, "procurement_validation", None) is not None:
+                    self._discard()
                 raise
             self._proc_snap.update(proc_body)
             for cid, body in changed:
@@ -615,6 +620,7 @@ class SqlStore(Store):
             self.local.safety_clear.clear()
             self.local.resident_clear.clear()
             self.local.stock_clear.clear()
+            self.local.procurement_validation = None
             if cur == self._seq:
                 self._seq = new
                 self.version = new

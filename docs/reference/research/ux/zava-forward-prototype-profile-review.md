@@ -406,3 +406,32 @@ position restoration, complete AC-034/043 profile journeys, browser zoom,
 screen-reader/human task validation and owner device/browser decisions remain
 unmet. Local browser checks do not establish actual model inference,
 SQL Server/Azure durability, operational safety authority or customer outcomes.
+
+## Provider capacity engineering continuation (2026-10-17, #90)
+
+The migrated procurement/store/controller paths had delivered screens but
+still admitted numeric-only commitments, unversioned appointment changes and
+case advancement without a booked order. This bounded continuation enforces
+the four issue criteria rather than claiming that previous UI delivery proves
+them. Source requirements are PRD FR-016 and BRD RULE-007/008; BRD FR-016 is
+exception control, not an interchangeable identifier.
+
+The [core contract](../../../../src/core/README.md#evidenced-provider-capacity-and-controlled-orders-90)
+binds original clean uploaded bytes/hash/version, dated human review,
+covered homes, delivery interval and home-order units to the package scope
+and trusted named contract delegation. Larger offers and unknown/legacy
+commitments cannot authorize work. Each order mutation retains issuer and
+version; system drafts never become instructions; two fictional contractors
+see only their own orders and cannot write. Existing resident commitments,
+safety/building gates, #78 provenance and #97 forms remain independent.
+
+The [API/screen replay](../../../../src/api/README.md#provider-capacity-and-order-api-90)
+uses tiny temporary fictional stores. Executed local SQL Server 2022 checks
+exercise the same inherited domain/HTTP behavior and deterministic writer,
+authority and source races, not Azure or live supplier orders. The browser
+journey covers labelled evidence inputs, keyboard save/refusal focus,
+at-quota booking, own-order views and 320/390/1280 reflow/reduced motion.
+This narrows engineering gaps only: no real contract delegation, legal
+signature verification, staff comprehension, screen-reader acceptance,
+full WCAG conformance, financial commitment or actual company approval is
+established. The procurement-manager research instrument is not such approval.

@@ -1,0 +1,35 @@
+{
+  "task_id": "90",
+  "task_slug": "provider-capacity-controls-90",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/provider-capacity-controls-90-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/provider-capacity-controls-90-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/provider-capacity-controls-90-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/provider-capacity-controls-90-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/provider-capacity-controls-90-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute ordered full RPI and stop after final push",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-17; latest origin/main adedf1f; clean named topic; no existing PR. Parent #89 is hierarchy, not dependency."
+    },
+    {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C7 and independent manager review, all three waves."},
+    {"decision": "Final candidate critique executed once, verdict Revise", "status": "resolved", "evidence": "PC-001 through PC-005 directly applied to plan/details; no divergent decision."},
+    {"decision": "Implementation complete and reconciled before Review", "status": "complete", "evidence": "Eight failing-first root reproductions. Exact 63 pass; combined API 278 run/one existing skip; separate core 114 run/one existing skip; real local SQL Server 29 pass; browser and configured lint/format/types/JS pass. Plan P01/P02 and changes/details reconciled. No live delegation invented."},
+    {"decision": "One post-implementation Review executed", "status": "Complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/provider-capacity-controls-90-review.md; independent read-only lifecycle/advance/SQL/source/authority/HTTP/changed-UI comparison, no source edits or repeat."},
+    {"decision": "Review outcome for exact four local engineering criteria", "status": "Conformant", "evidence": "Canonical review record: no substantive defects or unaccepted decisions; actual operational authority and hosted/human acceptance explicitly not inferred."}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Parent publishes completed task evidence: privacy-safe commit, named branch push and main Refs #90 PR, then final artifact publication push and stop. No child work or additional Review."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},
+    {"rank": 2, "task": "Separately approved hosted and human accessibility acceptance", "rationale": "Local browser/SQL engineering checks do not establish Azure/AI or human/screen-reader/WCAG acceptance.", "evidence": "Changes Remaining Boundaries and canonical Review Validation Evidence; deployment/UX owners commission later."}
+  ]
+}

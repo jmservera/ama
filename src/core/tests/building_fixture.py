@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from dataset import DATA, supplied_resident_fixture
+from dataset import DATA, supplied_contract_fixture, supplied_resident_fixture
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
 
@@ -125,4 +125,10 @@ def open_store(folder: str, sql: bool, data: dict[str, Any] | None = None) -> An
     if data is not None:
         seed.write_text(json.dumps(data), encoding="utf-8")
     factory: Any = SqlStore if sql else Store
-    return factory(str(seed), str(Path(folder) / "state.db")) if sql else factory(str(seed))
+    store = factory(str(seed), str(Path(folder) / "state.db")) if sql else factory(str(seed))
+    if data is not None:
+        manager = data["staff"][1]
+        for package in data.get("procurement", {}).get("packages", []):
+            details = supplied_contract_fixture(store, package["id"], manager)
+            store.set_capacity(manager, package["id"], "Test Ltd", 5, 5, "SYN-CAPACITY", details)
+    return store

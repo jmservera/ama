@@ -45,6 +45,12 @@ class StoreTests(unittest.TestCase):
         with self.assertRaises(GateError) as ctx:
             self.store.advance(self.sam, "ZF-2")
         self.assertEqual(len(ctx.exception.reasons), 2)
+        from dataset import RESIDENT_BINDINGS, supplied_contract_fixture
+        pid = self.store.create_package(self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN")
+        details = supplied_contract_fixture(self.store, pid, self.pam)
+        self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN-CAPACITY", details)
+        wid = self.store.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.store.detail("ZF-3")["stage"], "Install booked")
 

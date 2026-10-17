@@ -5139,3 +5139,22 @@ metadata when the knowledge base was created.
   Topic publication uses explicit expected-remote lease only; no main write,
   merge, issue closure, private data/cloud/payment or automatic child work.
   External coordinator independent closure remains next.
+## [2026-10-17] implementation | #90 evidenced capacity and controlled orders
+
+* Audited actual migrated procurement/controller/JSON/SQL paths against the
+  exact four criteria, PRD FR-016 and BRD RULE-007/008. Parent #89 is hierarchy,
+  not an explicit dependency. A procurement-manager research instrument
+  reviewed scope without pretending to supply live company authority.
+* Reproduced eight failing JSON/SQLite cases before fixes. Bound positive
+  commitments to original bytes/hash/version, review/delivery dates, covered
+  homes, home-order units and explicit trusted named delegation; unknown and
+  offered capacity cannot authorize work or alternate case advancement.
+* Retained existing SQL locks/CAS and added commit-time dependency checks.
+  Versioned every successful order mutation, preserved immutable issuer
+  snapshots, explicit non-instruction drafts and own-only contractor reads.
+  No self-granting endpoint or production delegation seed was introduced.
+* Updated existing component guides, synthesis and index. Local fictional
+  JSON/SQLite/SQL Server and browser checks are engineering evidence only;
+  actual delegations, supplier commitments, Azure, human/screen-reader/WCAG
+  acceptance remain unestablished. No private data, cloud/paid AI, live order,
+  award, payment, merge or real financial commitment occurred.

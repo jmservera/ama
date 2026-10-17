@@ -94,26 +94,53 @@ async function contractorOrders() {
 
 async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
-  const msg = h("div", { role: "status" });
-  const go = async (fn) => { try { await fn(); await capacityView(); } catch (e) { msg.replaceChildren(h("p", { class: "err" }, e.message)); } };
+  const msg = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
+  const go = async (fn) => {
+    const button = document.activeElement;
+    if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
+    try { await fn(); await capacityView(); }
+    catch (e) { msg.replaceChildren(h("p", { class: "err" }, e.message)); msg.focus(); }
+    finally { if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); } }
+  };
   const [pkgs, orders] = await Promise.all([api("/api/packages"), api("/api/workorders")]);
-  const inp = (label, attrs) => [h("label", {}, label), h("input", Object.assign({ type: "text" }, attrs))];
-  const name = inp("Package name", { maxlength: 80 }), from = inp("Starts (2026-04-01)", {}), to = inp("Ends (2027-03-31)", {});
+  let field = 0;
+  const inp = (label, attrs) => {
+    const id = `capacity-field-${++field}`;
+    return [h("label", { for: id }, label), h("input", Object.assign({ id, name: label.toLowerCase().replace(/[^a-z0-9]+/g, "-"), autocomplete: "off", type: "text" }, attrs))];
+  };
+  const name = inp("Package name", { maxlength: 80 }), from = inp("Starts", { type: "date" }), to = inp("Ends", { type: "date" });
   const scope = inp("What it covers", { maxlength: 400 }), ref = inp("Contract or call-off reference", { maxlength: 60 });
+  const contractVersion = inp("Contract or call-off version", { maxlength: 80, spellcheck: false });
   const create = h("section", { class: "card" }, h("h2", {}, "New package"), ...[name, from, to, scope, ref].flat(),
-    h("p", {}, h("button", { onclick: () => go(() => api("/api/packages", { name: name[1].value, period_from: from[1].value, period_to: to[1].value, scope: scope[1].value, contract_ref: ref[1].value })) }, "Create package")));
+    ...contractVersion,
+    h("p", {}, "A package is a draft, not an instruction. Creating it grants no contract authority."),
+    h("p", {}, h("button", { onclick: () => go(() => api("/api/packages", { name: name[1].value, period_from: from[1].value, period_to: to[1].value, scope: scope[1].value, contract_ref: ref[1].value, contract_version: contractVersion[1].value })) }, "Create package")));
   const cards = pkgs.map((p) => {
-    const con = inp("Contractor", { maxlength: 80 }), off = inp("Offered (homes)", { inputmode: "numeric" }), com = inp("Committed with evidence (homes)", { inputmode: "numeric" });
+    const con = inp("Contractor", { maxlength: 80 }), off = inp("Offered (home orders)", { type: "number", min: 0, max: 100000, step: 1, inputmode: "numeric" }), com = inp("Committed with evidence (home orders)", { type: "number", min: 0, max: 100000, step: 1, inputmode: "numeric" });
     const evi = inp("Evidence for the commitment", { maxlength: 300 });
+    const sourceCase = inp("Case holding the commitment document", { maxlength: 64, spellcheck: false });
+    const document = inp("Commitment document ID", { maxlength: 64, spellcheck: false });
+    const sourceVersion = inp("Commitment document version", { maxlength: 80, spellcheck: false });
+    const sourceDate = inp("Commitment source date", { type: "date" }), reviewed = inp("Manager reviewed on", { type: "date" });
+    const validFrom = inp("Capacity delivery starts", { type: "date" }), validTo = inp("Capacity delivery ends", { type: "date" });
+    const covered = inp("Covered case references, separated by semicolons", { maxlength: 2000, spellcheck: false });
     const cid = inp("Case reference to issue a work order for", {}), wsc = inp("Work order wording (leave blank to use the package scope)", { maxlength: 400 });
     const bindings = inp("Affected measures and scope revisions: Measure|revision; Measure|revision", { maxlength: 1000 });
     return h("section", { class: "card" }, h("h2", {}, `${p.name} (${p.id})`),
-      h("p", {}, `${p.period_from} to ${p.period_to}. Reference ${p.contract_ref}. Scope version ${p.scope_version}: ${p.scope}`),
-      h("table", {}, h("caption", { class: "muted" }, "Offered is what a contractor says it can do. Only evidenced commitment can be used for work orders."),
-        h("thead", {}, h("tr", {}, ["Contractor", "Offered", "Committed with evidence", "In use", "Room left", "Evidence"].map((x) => h("th", {}, x)))),
-        h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("td", {}, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom), h("td", {}, k.evidence || "None"))))),
-      h("h3", {}, "Record capacity"), ...[con, off, com, evi].flat(),
-      h("p", {}, h("button", { class: "alt", onclick: () => go(() => api(`/api/packages/${p.id}/capacity`, { contractor: con[1].value, offered: off[1].value, committed: com[1].value, evidence: evi[1].value })) }, "Save capacity")),
+      h("p", {}, `${fmtDate(p.period_from)} to ${fmtDate(p.period_to)}. Reference ${p.contract_ref}, version ${p.contract_version || "Unknown"}. Scope version ${p.scope_version}: ${p.scope}`),
+      h("div", { class: "table-scroll", role: "region", "aria-label": `Capacity for ${p.id}`, tabindex: 0 },
+        h("table", {}, h("caption", { class: "muted" }, "One unit is one home work order for this package period, not a crew or weekly slot. Only evidenced commitment can confirm work."),
+          h("thead", {}, h("tr", {}, ["Contractor", "Offered", "Committed", "In use", "Room left", "Evidence"].map((x) => h("th", { scope: "col" }, x)))),
+          h("tbody", {}, p.capacity.map((k) => h("tr", {}, h("td", {}, k.contractor), h("td", {}, k.offered), h("td", {}, k.committed), h("td", {}, k.in_use), h("td", {}, k.headroom),
+            h("td", {}, `${k.evidence || "None"}. ${k.evidence_status}.`, k.details && h("div", {}, `Source ${k.details.document_id}, version ${k.details.source_version}. Reviewed ${fmtDate(k.details.reviewed_on)}. Capacity version ${k.version}.`))))))),
+      h("h3", {}, "Record capacity"), ...[con, off, com, evi, sourceCase, document, sourceVersion, sourceDate, reviewed, validFrom, validTo, covered].flat(),
+      h("p", { class: "muted" }, "Only a named manager with recorded contract authority can accept this commitment. Check the original document, current scope and covered homes. A review is current for 7 days. Record 0 if capacity is lost; existing orders will show a deficit."),
+      h("p", {}, h("button", { class: "alt", onclick: () => go(() => api(`/api/packages/${p.id}/capacity`, {
+        contractor: con[1].value, offered: off[1].value, committed: com[1].value, evidence: evi[1].value,
+        details: { source_case_id: sourceCase[1].value, document_id: document[1].value, source_version: sourceVersion[1].value,
+          source_date: sourceDate[1].value, reviewed_on: reviewed[1].value, valid_from: validFrom[1].value, valid_to: validTo[1].value,
+          unit: "home-work-order", status: "Committed", case_ids: covered[1].value.split(";").map((x) => x.trim()).filter(Boolean) }
+      })) }, "Save capacity")),
       h("h3", {}, "Issue a work order"), ...[cid, wsc, bindings].flat(),
       h("p", {}, h("button", { onclick: () => go(() => api("/api/workorders", { package: p.id, case_id: cid[1].value, scope: wsc[1].value, resident_bindings: residentBindings(bindings[1].value) })) }, "Issue work order")));
   });
