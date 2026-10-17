@@ -136,7 +136,7 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 * Integrate finding into existing setup route; append KB log, preserve memory/original.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: One Review and delivery
+### [x] P03: One Review and delivery
 
 * Dependencies: P02, reconciled changes/plan/details.
 
@@ -147,7 +147,7 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 * Any residual findings become later work, not a repeated Review.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit, push and open main PR
+#### [x] P03-T02: Commit, push and open main PR
 
 * Fresh gh api user, repo-local noreply author/committer, Conventional Commit plus required Copilot trailer.
 * PR includes actual offline results and partial acceptance/live-unmet boundaries.
@@ -165,14 +165,20 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 
 ## Follow-Up Items
 
+* Coordinator: authorize integration with concurrent main 3f544fb9 (#387).
+  PR #391 is CONFLICTING/DIRTY; no CI/rubric checks reported. No merge/rebase/
+  force push is authorized by the source-delivery request.
 * Owner/coordinator: live credential and initializer-publication 403 prerequisites, then genuine tenant/browser/SQL/AI acceptance; outside source-only work.
 
 ## Handoff
 
-* Ready: P03-T02; P01/P02 and single Review complete.
+* All plan tasks complete: source commit ac4b28590d8885b314f81be02c2371398270ccd4
+  pushed; main PR https://github.com/jmservera/ama/pull/391 opened.
 * Evidence: 200 combined setup/staff/auth/secret tests pass; four unsafe
   mutations killed; configured lint/format and changed-line lint pass.
 * Review: Complete / Residual work, no source defects found; live gates routed
   to distinct owner/coordinator follow-up, not coordinator acceptance.
-* Remaining: commit/push/main PR; live acceptance still excluded.
-* No routine approval needed under explicit full ordered execution.
+* Remaining follow-up: coordinator must authorize integration for concurrent
+  main conflict, then obtain checks; live acceptance still excluded.
+* Automatic session stops per owner's clean-pushed-head instruction. No
+  correction cycle, repeated Review or unauthorized history rewrite.

@@ -11,10 +11,10 @@
 
 ## Execution Status
 
-* Status: In progress
+* Status: Complete for source/RPI/PR delivery; integration follow-up blocked
 * Declared invocation scope: full plan; implementation starts P01-T01
-* Completed scope markers: P01, P01-T01, P01-T02, P02, P02-T01, P02-T02, P03-T01
-* Remaining: P03 delivery, P03-T02
+* Completed scope markers: P01/P02/P03 and all six tasks
+* Remaining active-plan tasks: none; concurrent main integration is separately authorized follow-up
 * Approved writes: setup classifier/tests, infra runbook, existing KB route/log and dated RPI artifacts.
 
 ## Execution Summary
@@ -108,12 +108,15 @@ setup/staff and directly related compatibility coverage.
 
 ## Blockers
 
-None for source work. Live credential and initializer publication 403 gates
-remain unmet; excluded from this task's acceptance claims.
+No source-delivery blocker. PR #391 CONFLICTING/DIRTY against concurrent main
+3f544fb9 after #387; coordinator must authorize integration before merge/check
+acceptance. No CI/rubric checks reported. Live credential and initializer
+publication 403 gates remain unmet, outside source acceptance.
 
 ## Remaining Work
 
-P03-T02 commit/push/main PR.
+No active-plan delivery task remains. Integration and live acceptance are
+follow-up work; no merge/rebase/force push attempted.
 
 ## One Review Result
 
@@ -124,11 +127,31 @@ P03-T02 commit/push/main PR.
 
 ## Follow-Up Items
 
+Coordinator authorization for concurrent-main integration of PR #391 and
+subsequent checks is the immediate delivery gate. It was discovered after the
+one Review; recorded as follow-up only, with original Review unchanged.
+
 Owner/coordinator live credentials/publication, then genuine tenant/browser/
 SQL/AI proof and separately authorized retirement. #360 d/e remain unmet.
 
+## Delivery Receipt
+
+* Source and dated artifact commit: ac4b28590d8885b314f81be02c2371398270ccd4.
+* Branch: fix/setup-profile-evidence-360; remote tracking head matched, clean
+  working tree verified after first push.
+* Main PR: https://github.com/jmservera/ama/pull/391, Refs #360, no closing keyword.
+* Original Review SHA-256:
+  65721ae7cec37255bcf0dbc37b9baebd0282d62e50e8646b0f43d261540476a6.
+* Zero correction cycles; no source changes after the original Review.
+* This receipt/state completion is a subsequent documentation-only commit,
+  not a repeated Review or claim of coordinator acceptance.
+* GitHub at delivery: CONFLICTING/DIRTY, empty statusCheckRollup, no workflow
+  runs for the branch. No CI/rubric Pass claimed.
+* Owner requested stop at clean pushed head/resume state; no automatic child.
+
 ## Return-to-Caller State
 
-Automatic parent owns authorized delivery; source implementation, validation and
-single Review complete, P03-T02 delivery still active. Stop at clean pushed head
-as owner requested; do not start another work item.
+Automatic mode; Follow-up; source/RPI/PR delivery completed; session stopped by
+owner instruction. Coordinator integration authorization remains a follow-up
+blocker. Resume state is the canonical dated setup-profile-evidence-360 JSON.
+Live credential/initializer-publication gates still unmet.
