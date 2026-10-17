@@ -11,7 +11,8 @@ Details: .copilot-tracking/details/2026-10-17/hazard-referral-controls-85-phase-
 
 Full plan declared. P01/P01-T01 and P02/P02-T01 complete.
 P03-T01 independent Review and P03-T02 correction ONE complete.
-P03-T03 publication remains. Original Review Not accepted preserved.
+P03-T03 draft main PR #388 published. Original Review Not accepted preserved;
+independent final-head acceptance remains external, not claimed complete.
 One independent critique executed (Revise); PC-001/002/003 directly applied
 to plan/details, no repeat critique or business-decision change.
 
@@ -192,3 +193,32 @@ Updated existing docs/synthesis/index and appended correction ONE log entry.
 Original Review untouched and remains Complete / Not accepted; RV-001
 implementation corrected and self-verified, independent final-head closure
 not claimed. No correction TWO or renewed critique/Review.
+
+## P03-T03 Publication and Terminal Handoff
+
+Fresh `gh api user` resolved id8036360/loginjmservera. Repository-local author
+and committer use8036360+jmservera@users.noreply.github.com, verified with
+`git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT`. Explicitly staged
+only eleven source/test/doc paths and seven dated RPI artifacts; Conventional
+Commit includes Refs #85 and required Copilot co-author trailer.
+
+Implementation/artifact commit35e37145716494db4446f4ba05cb435db3624d6d
+pushed normally to fix/hazard-referral-controls-85. `gh pr create --draft
+--base main` created https://github.com/jmservera/ama/pull/388.
+`gh pr view 388` verified OPEN/draft/main/expected topic and exact source head;
+clean worktree verified. Checks not yet reported at initial observation, not
+claimed green. Delivery metadata is committed separately and normally pushed;
+final PR head is that delivery commit, not a source reimplementation.
+
+`git diff --check` and state JSON parse pass. Own Docker container listing empty.
+Independent Review SHA256 unchanged:
+`d93129affee31cb045da70e270d50bf909cb0f0a93159dcf83e50274153b2dd7`.
+No amend/rebase/force-push/merge or issue mutation. Draft body explicitly names
+shared #91/#95 integration additions and retained #84/#94/#90 boundaries.
+
+Task delivery complete; automatic session stopped under user's explicit clean
+pushed PR terminal condition. This is not independent correction acceptance,
+operational approval or issue acceptance. Ranked external next actions remain
+in state. Resume session519fb014-71e3-4e42-ad94-c0cb8ac982bd.
+One delivery-metadata patch missed the exact plan heading after applying state;
+inspected heading and applied only remaining hunks, preserving state.

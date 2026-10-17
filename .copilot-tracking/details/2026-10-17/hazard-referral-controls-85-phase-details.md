@@ -11,7 +11,7 @@ Research: .copilot-tracking/research/2026-10-17/hazard-referral-controls-85-rese
 | --- | --- | --- |
 | P01 | Complete; current actor/identity/failure regressions pass | P01-T01 |
 | P02 | Complete; final targeted/static and actual SQL evidence recorded | P02-T01 |
-| P03 | Review/correction ONE complete; publication pending | P03-T01/P03-T02/P03-T03 |
+| P03 | Review/correction ONE and draft PR #388 publication complete; independent acceptance outstanding | P03-T01/P03-T02/P03-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct hazard evidence boundary

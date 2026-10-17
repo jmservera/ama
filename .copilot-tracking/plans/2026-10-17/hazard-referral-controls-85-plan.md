@@ -130,7 +130,7 @@ credentials and exact own-container cleanup. Update existing synthesis/index/
 append-only log. Dependencies: P01-T01.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independently assess and deliver
+### [x] P03: Independently assess and deliver
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: One independent Review
@@ -147,7 +147,7 @@ interleaved post-commit regression reused on actual SQL Server. Remain within
 12 semantic methods and preserve all existing hooks. Dependencies: P03-T01.
 
 <!-- rpi:task id=P03-T03 -->
-#### [ ] P03-T03: Reconcile and publish owned work
+#### [x] P03-T03: Reconcile and publish owned work
 
 Retain original independent finding and parent-only correction evidence.
 Normal commit/push/main PR Refs #85 with exact head; independent final-head
@@ -192,4 +192,7 @@ Research, Plan/critique, Implement and the one independent Review executed in
 order. Original Review Complete / Not accepted remains unchanged. Authorized
 correction ONE now has canonical fail-before/fix-after SQLite and actual
 loopback SQL Server evidence, not independent final-head closure.
-Only P03-T03 authorized publication remains; no second Review.
+P03-T03 published as draft main PR #388, with original adverse Review and
+independent final-head acceptance limitation prominent. All ordered phases and
+authorized correction/publication complete; automatic session stops at the
+user-selected clean pushed PR boundary. No second Review, merge or issue close.
