@@ -173,3 +173,50 @@ closure or new child work. Explicit stop-at-clean-pushed-PR instruction ends the
 automatic session, not an invented follow-up selection.
 
 Original resume ID: 24912f4a-8570-4de8-ad93-fe62376fb3f1.
+
+## Authorized latest-main integration after completed publication
+
+Coordinator explicitly authorized rebase only after the full loop, correction
+and publication. Started with clean topic at
+6692a97632ac2b4a2189c7a3c1c8bbf8b32918d9, also the expected remote lease.
+Fresh fetch verified latest origin/main
+1fc7325b93ea845b9cb2e827efbea624f7d20d30 and merged PR #385. This base also
+includes #384 provider-capacity controls, not just documentation/infra.
+Previous base was d400eb8d1d0d6567445b0fc11803260eab897a65.
+
+Rebased both run-owned commits onto that exact fetched main. Source, tests,
+component guides and index merged automatically; no blind side selection.
+Two manual conflicts:
+
+* KB log: retained entire upstream exact byte prefix, then original own entries.
+* Scenario manifest fixture digest: retained all upstream metadata and replaced
+  only digest with actual combined dataset.py SHA-256
+  cdc3beba9fb6ff5dac05ac5db3222ac5e8df243d74da72a1386b870cb41747c9.
+  Neither side's old digest could describe the combined public test source.
+
+Exact added/removed byte comparison of the entire own src patch, old base/head
+versus new base/head, passed for all 12 production/test/config/component-guide
+files, with identical changed file sets. Shared Store, app.js and dataset
+therefore retain both upstream intent and unchanged own edits; upstream
+SQL/procurement protections were not overwritten. Whole manifest structured
+comparison to upstream differs only by fixture digest: no authority, status,
+coverage or approval promotion. All upstream Inspect/Audit index routes remain.
+Original case/addendum/memory exactly match upstream; KB prefix and original own
+log suffix proved. Rebased source head before this evidence commit:
+ae81ea0651a39ab9e86b5d3955c57099a8c2a4a6.
+
+Fresh integration validation: 156 tests pass, no skips, 47.330 seconds, combining
+grant, preserved finance, procurement, API, actual Chromium and manifest checks.
+Core/API Ruff/format/mypy pass: 112/54 source files. Diff whitespace clean.
+No transaction implementation was changed by conflict resolution: actual SQL
+Server 35/35 remains the earlier correction evidence, not a fresh integration
+rerun. Earlier full discovery and all prior counts remain historical.
+Absent-law-store messages remain explicit unknowns. No new full Review or
+independent Pass; original adverse Review and its phase history remain intact.
+
+Final evidence/state commit follows privacy-safe fresh identity and required
+trailer. Publish only this topic with explicit expected-remote lease
+6692a97632ac2b4a2189c7a3c1c8bbf8b32918d9, update PR #386 integration receipt,
+verify clean local/remote/PR final head, then stop. Coordinator retains final
+independent closure/checks/merge. No main write, merge, issue closure, Azure
+action, authority change or other issue's finance implementation.

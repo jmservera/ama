@@ -47,6 +47,17 @@
     }
   ],
   "blockers": [],
+  "integration": {
+    "authorization": "Explicit coordinator post-publication latest-main rebase, 2026-10-17",
+    "old_base": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+    "old_head_and_expected_remote": "6692a97632ac2b4a2189c7a3c1c8bbf8b32918d9",
+    "new_base": "1fc7325b93ea845b9cb2e827efbea624f7d20d30",
+    "rebased_source_head": "ae81ea0651a39ab9e86b5d3955c57099a8c2a4a6",
+    "conflicts": "Preserved upstream exact KB log prefix plus own entries; regenerated only actual combined fixture hash",
+    "validation": "Entire 12-file src added/removed byte patch parity; 156 fresh integration tests; core/API Ruff/format/mypy; original case unchanged; all upstream index routes and authority metadata preserved",
+    "limits": "Earlier SQL/full-discovery evidence historical; no new full Review or independent Pass; final evidence commit head verified in PR",
+    "publication": "PR #386; only topic explicit expected-remote force-with-lease authorized; stop after clean matching local/remote/PR head"
+  },
   "next_action": {"phase": "Follow-up", "action": "Coordinator independently checks final PR #386 head and RV-001 closure, reviews CI and decides merge; automatic session stopped per explicit PR boundary"},
   "prioritized_follow_ups": [
     {

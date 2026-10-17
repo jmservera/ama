@@ -5324,3 +5324,19 @@ metadata when the knowledge base was created.
   pre-correction evidence; local closure is not an independent Pass.
 * Coordinator final independent gate remains pending. No second Review, real
   delegation, payments, private data, cloud actions or continuing-data changes.
+
+## [2026-10-17] integration | Grant controls on latest main (#95)
+
+* After completed ordered RPI, correction ONE and PR #386 publication, explicit
+  coordinator authorization rebased only this topic onto fetched main
+  1fc7325b93ea845b9cb2e827efbea624f7d20d30 (#385 and #384).
+* Preserved upstream exact log prefix, all index routes and both shared-source
+  intents. Only manual conflicts were this append-only log and the manifest's
+  fixture digest, regenerated from combined public source. Entire own 12-file
+  src added/removed byte patch parity proved across bases; no authority,
+  coverage or approval metadata promotion. Original case/addendum unchanged.
+* Fresh 156 grant/finance/procurement/API/actual Chromium/manifest tests pass;
+  core/API Ruff/format/types pass. SQL 35/35 and prior full discovery remain
+  historical correction evidence, not new integration runs. Original adverse
+  Review retained; coordinator independent closure pending. No new full Review,
+  private data, financial/cloud action, main write, merge or issue closure.

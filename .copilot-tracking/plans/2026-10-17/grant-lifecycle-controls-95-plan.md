@@ -218,3 +218,10 @@ published to main-targeted PR #386 with clean matching local/remote/PR source
 head. Publication state is committed separately. Automatic session stops at the
 explicitly requested PR boundary; coordinator owns independent closure/checks
 and merge. No child task, merge or issue closure.
+
+Subsequent explicit integration authorization is complete: rebased onto fresh
+main 1fc7325b93ea845b9cb2e827efbea624f7d20d30, preserving upstream log/index,
+actual combined fixture hash and entire own src patch byte parity. Fresh 156
+integration tests and existing core/API quality gates pass; earlier SQL/full
+suite evidence remains historical. Same original Review and verdict retained.
+Publish exact-lease topic update to PR #386 and stop at coordinator gate.

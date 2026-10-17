@@ -137,3 +137,11 @@ and in the PR, with a clean worktree. This final publication state is committed
 separately and the resulting head reverified. No second Review: coordinator
 owns final independent acceptance, checks and merge. Session stops at explicit
 PR boundary; no claim that an empty initial check rollup means passed CI.
+
+Authorized post-publication integration rebases onto freshly fetched main
+1fc7325b93ea845b9cb2e827efbea624f7d20d30 (#385 plus #384). Only manual
+conflicts were append-only KB log and combined fixture digest; whole own src
+added/removed byte parity across bases proved. Fresh 156 combined
+grant/finance/procurement/API/browser/manifest tests and core/API quality gates
+pass. SQL 35/35 and broad discovery remain earlier historical evidence.
+Original one Review unchanged; coordinator independent closure pending.
