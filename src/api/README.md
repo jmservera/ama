@@ -68,6 +68,17 @@ corrected non-root image exercised exact installed source hashes and HTTP
 report/export behavior. The original adverse Review is retained; these
 targeted checks are not a second full Review or independent coordinator Pass.
 
+Coordinator correction TWO addresses a reachable mixed-precision handoff:
+precise offer/accept events surround legacy minute-truncated receipt events.
+Reports preserve source versions and valid lifecycle sequence, expose precision
+and cutoff unknowns, and never manufacture a wait duration or assert a
+boundary-ambiguous event occurred before as-of. Precisely backward or otherwise
+invalid history remains contradictory. New handoff writes preserve UTC
+microseconds; old history is untouched. JSON/CSV retain identical definitions,
+event order, as-of and denominators. The independent exact-28227fa8
+Revise / Medium disposition and original adverse Review remain retained;
+targeted correction evidence does not self-award acceptance.
+
 ## Grant and application records (#95)
 
 Existing `POST /api/cases/{case_id}/grant` and `/funding` routes now use

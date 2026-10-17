@@ -6,6 +6,20 @@ ms.date: 2026-10-17
 
 Task 102 / historical-progress-controls-102. Initial direction: research C1-C11,
 read-only bounded reporting, no unrecorded clocks or new lifecycle writers.
+Current bounded scope: coordinator-authorized correction TWO under P03-T02/T03.
+Research actual append-version and timestamp writers, reproduce the reachable
+offer/receive/accept minute-loss case before source changes, preserve versions,
+surface interval ambiguity instead of false chain contradictions, and retain
+genuine version/date/identity errors. Test all known minute-event variants,
+precise backward times, as-of/start ambiguity and full export parity.
+Prospective handoff-only precision standardization reuses workflows._now
+with its default minute behavior unchanged for every unrelated caller;
+no retrospective source repair or unrelated clock/authority changes.
+Validation: focused and combined upstream quality/source/hazard/finance/grant/
+stock/procurement regression, configured core/API static gates, current actual
+task-owned MSSQL consumer and rebuilt non-root local API image. No second Review.
+Fetched/authorized base is 3f544fb9; only docs append conflicts occurred. Retain
+all upstream KB routes, exact upstream log prefix and both programme sections.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Report baseline
@@ -58,7 +72,8 @@ every metadata/list field round-trips without formula-leading user content.
 PC-102-001: staff roles in projection.STAFF_ROLES only, direct Store and HTTP,
 before cohort selection. Contractor/unknown roles denied. Manager-only closed
 view preserved. PC-102-003: schema progress/v1, fixed report top-level section
-order, ascending case IDs and UTC/version-ordered events; compact sorted-key
+order, ascending case IDs and source-append/version-ordered independent event
+streams (corrected in correction TWO); compact sorted-key
 JSON cells, UTF-8 CSV with LF newline. CSV rows reconstruct the exact semantic
 report and identical requests produce byte-identical exports.
 
@@ -111,6 +126,11 @@ plan/research/changes. Preserve exact original review artifact and outcome.
 If concrete defects are found, record correction ONE/TWO in changes/state,
 fix and run targeted checks. Do not relabel the original Review as passed,
 run another full Review or claim independent coordinator closure.
+Correction TWO now validates the mixed-precision finding on integrated main:
+76 focused passes, 547 combined run / 494 pass / 53 explicit skips, ten actual
+task-owned MSSQL passes, configured core/API static gates, final rebuilt
+non-root API image with exact installed-source hashes and authenticated
+legacy/prospective behavior. Original Review and correction ONE remain intact.
 
 <!-- rpi:task id=P03-T03 -->
 ### P03-T03
@@ -119,4 +139,6 @@ Resolve gh api user fresh, local privacy-safe email for author and committer;
 Conventional Commit with required Copilot trailer. Stage only owned paths.
 Normal topic push; main PR Refs #102, no closing keywords without full proof.
 Record exact head, PR, validation limitations and session resume ID.
-No merge/rebase/force push or other checkout changes.
+No merge or other checkout changes. Correction TWO specifically authorizes
+own-branch rebase onto 3f544fb9 and force-with-lease only against remote
+28227fa8af529cc40590deca9fd1819ef4155cc2; no broader history rewrite.

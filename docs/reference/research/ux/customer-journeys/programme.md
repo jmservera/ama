@@ -282,6 +282,24 @@ approved measurement protocol, attribution and real outcome acceptance remain
 separate. Shared API/Store and documentation integration with #91/#92 belongs
 to the coordinator; no other worktree or private dataset was read.
 
+Coordinator's exact-28227fa8 independent Revise / Medium probe found a real
+precision mismatch in those handoffs: offer/accept provenance uses precise
+UTC timestamps but receipt/escalation/decline/withdraw/complete previously
+used minute-truncated `_now()`. Correction TWO keeps authoritative append
+versions rather than falsely reordering receipt before offer. Known minute
+intervals yield explicit duration/as-of unknowns, not fabricated second-zero
+events or false lifecycle contradictions. Precise impossible dates and invalid
+versions/identities remain errors. Only prospective handoff timestamps change;
+stored history is not repaired. Integration onto main 3f544fb9 retains merged
+quality #387 active-record/source-staleness and post-COMMIT safeguards.
+
+This does not prove the first historical criterion end to end: ordinary forward
+stage entry/exit and accepted-handover outcome events are still not captured
+completely. Adding source-authorized prospective capture is buildable follow-up
+engineering, not a human blocker or license to reconstruct the past. Operational
+forecast resources remain unverified. Neither correction evidence nor local
+combined checks replace independent final-head acceptance.
+
 ## Next steps
 
 No user action required. Return to cross-role synthesis; preserve unknowns.

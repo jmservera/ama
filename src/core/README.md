@@ -36,6 +36,23 @@ these stages. Handoff receipt is not acceptance; an observed offer-to-terminal
 wait and a pending censored wait are distinguished. Repeated reopenings remain
 events, not completions.
 
+Handoff lifecycle order is the recorded append/version sequence, not a sort
+of timestamps. Legacy `_now()` handoff writers truncated to UTC minutes;
+their minute-shaped timestamps represent an interval, not second zero. A
+seconds-expanded minute is treated that way only when its matching legacy
+state timestamp corroborates the lost precision. Fractional precise timestamps,
+backward dates outside that minute, invalid versions, identities and lifecycle
+orders still produce contradictions. Affected waits remain null with
+`unknown_event_precision` / `unknown_handoff_duration`, not an invented duration.
+If the as-of falls inside that minute, the event and dependent later versions
+are not asserted to have occurred yet; `unknown_event_as_of` is explicit.
+Start-boundary ambiguity is likewise unresolved. Exported `time_precision`
+and `latest_possible_at` describe bounds, not reconstructed observations.
+Events are returned as independent return and handoff streams in source order;
+no cross-stream chronology is invented. New handoff writes use precise UTC
+timestamps through the existing helper; other workflow clocks are unchanged.
+Persisted historical events are never rewritten.
+
 Narrative `history`, current `stage_since`/`days_in_stage`, closure flags and
 prose/naive-time audit entries never establish historical durations or accepted
 handover. Missing, malformed, unmappable, contradictory and incomplete history

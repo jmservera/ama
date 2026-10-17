@@ -5539,3 +5539,32 @@ metadata when the knowledge base was created.
 * No second full Review, Correction TWO, independent coordinator Pass, merge
   or full historical/operational approval. Own local containers stopped and
   retained without deletion; complete event capture/resources remain open.
+
+## [2026-10-17] correction TWO | Mixed-precision handoff history (#102)
+
+* Coordinator's independent exact-28227fa8 Revise / Medium identified a reachable
+  precise offer/accept surrounding minute-truncated receipt. Failing-first
+  actual writer/SQLite and pure probes reproduced version reordering and false
+  chain/date contradictions. Original full RPI Review and correction ONE remain
+  intact; no second full Review or independent self-Pass.
+* Preserve append/version lifecycle sequence and exact source locators. Known
+  legacy minute spelling or corroborated second-zero expansion supplies time
+  bounds, never reconstructed seconds. Affected durations and ambiguous
+  as-of/start membership remain explicitly unresolved. Precise backward dates,
+  invalid versions, identities and lifecycle errors remain contradictions.
+  Only prospective handoff timestamps use precise UTC via the existing helper;
+  other clocks and all persisted history/audit remain unchanged.
+* Authorized own-topic integration onto main 3f544fb9 retains quality #387
+  active-record selection, current evidence-version staleness, post-COMMIT
+  guards and all finance/grant/stock/procurement hooks. All upstream routes and
+  the entire upstream log byte prefix are retained. No other worktree read.
+* Final focused 76 pass; combined 547 run / 494 pass / 53 explicit existing
+  opt-in or backend-specific skips; ten current actual loopback MSSQL cases
+  pass. Core/API configured lint/format/types and final rebuilt hardened
+  non-root API/source hashes/legacy-prospective HTTP/export checks pass.
+  These are targeted engineering results, not coordinator acceptance.
+* First/final forward-stage clocks and accepted-handover actual events remain
+  incomplete, so the first historical criterion is not fully proved.
+  Prospective complete capture is buildable separate engineering follow-up,
+  not a human blocker; forecasts still lack verified operational inputs.
+  No browser/WCAG, human, Azure, real AI or outcome acceptance is claimed.

@@ -3,7 +3,8 @@
 import csv
 import io
 import json
-from datetime import UTC, datetime
+import re
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from .insights import STAGE_ORDER
@@ -51,6 +52,36 @@ def _exception(out: list[Record], code: str, source: str) -> None:
     out.append(dict(code=code, source=source, status="Unresolved"))
 
 
+def _handoff_latest(raw: Record, at: datetime) -> datetime:
+    def minute(value: object) -> bool:
+        return (
+            isinstance(value, str)
+            and re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})", value)
+            is not None
+        )
+
+    state = raw.get("state")
+    if not isinstance(state, str) or state not in HANDOFF_STATES:
+        return at
+    truncated = minute(raw["at"])
+    # Only these legacy writers also recorded a minute-resolution state timestamp.
+    field = {
+        "Received": "received_at",
+        "Escalated": "escalated_at",
+        "Declined": "answered_at",
+        "Withdrawn": "answered_at",
+        "Completed": "completed_at",
+    }.get(state)
+    recorded = raw.get(field) if field else None
+    expanded_minute = (
+        re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:00(?:Z|[+-]\d{2}:\d{2})", raw["at"])
+        is not None
+    )
+    if expanded_minute and minute(recorded) and timestamp(recorded, "State time") == at:
+        truncated = True
+    return at + timedelta(seconds=59, microseconds=999999) if truncated else at
+
+
 def _events(
     case: Record, key: str, as_of: datetime, exceptions: list[Record]
 ) -> tuple[list[Record], bool]:
@@ -61,6 +92,7 @@ def _events(
     result: list[Record] = []
     valid = True
     previous: datetime | None = None
+    cutoff = False
     offer_identity: tuple[str, str, str] | None = None
     for index, raw in enumerate(rows):
         source = f"{key}/{index}"
@@ -70,19 +102,27 @@ def _events(
             continue
         try:
             at = timestamp(raw.get("at"), "Event time")
+            latest = _handoff_latest(raw, at) if key == "handoff_history" else at
         except ValueError:
             _exception(exceptions, "unknown_event_time", source)
             valid = False
             continue
-        if at > as_of:
-            continue
         if type(raw.get("version")) is not int or raw["version"] != index + 1:
             _exception(exceptions, "invalid_event_version", source)
             valid = False
-        if previous is not None and at < previous:
+        if previous is not None and latest < previous:
             _exception(exceptions, "contradictory_event_order", source)
             valid = False
-        previous = at
+        previous = max(previous, at) if previous else at
+        if at > as_of:
+            if key == "handoff_history":
+                cutoff = True
+            continue
+        if key == "handoff_history" and (latest > as_of or cutoff):
+            _exception(exceptions, "unknown_event_as_of", source)
+            valid = False
+            cutoff = True
+            continue
         has_source = isinstance(raw.get("source"), str) and bool(raw["source"].strip())
         actor = raw.get("actor")
         has_actor = (
@@ -98,6 +138,13 @@ def _events(
             _exception(exceptions, "unknown_event_actor", source)
         version = raw.get("version")
         event = dict(at=_iso(at), version=version if type(version) is int else None, source=source)
+        if key == "handoff_history":
+            event["time_precision"] = (
+                "Minute (legacy writer)" if latest != at else "Recorded instant"
+            )
+            event["latest_possible_at"] = _iso(latest)
+            if latest != at:
+                _exception(exceptions, "unknown_event_precision", source)
         # Raw actors, supplied references and free text are deliberately not exported.
         event["actor_status"] = "Recorded, withheld" if has_actor else "Unknown"
         event["source_status"] = "Supplied, unverified" if has_source else "Unknown"
@@ -152,7 +199,7 @@ def _events(
                     valid = False
             event.update(kind="handoff", state=state)
         result.append(event)
-    return sorted(result, key=lambda e: (e["at"], e["version"] or 0)), valid
+    return result, valid
 
 
 def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
@@ -195,6 +242,7 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
         )
     waits: list[Record] = []
     offered: Record | None = None
+    precise_wait = True
     state: str | None = None
     allowed = {
         None: {"Offered"},
@@ -213,11 +261,19 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
             handoff_valid = False
         if current == "Offered":
             offered = event
+            precise_wait = True
+        precise_wait = precise_wait and event["time_precision"] == "Recorded instant"
         if current in {"Accepted", "Declined", "Withdrawn"}:
             at = timestamp(event["at"], "Event time")
             began = timestamp(offered["at"], "Offer time") if offered else None
             wait_start = max(began, start) if began and start else began
-            if wait_start is None or wait_start <= at:
+            if not precise_wait:
+                _exception(exceptions, "unknown_handoff_duration", event["source"])
+            if (
+                start is None
+                or wait_start is None
+                or wait_start <= timestamp(event["latest_possible_at"], "Event time")
+            ):
                 waits.append(
                     dict(
                         outcome=current,
@@ -225,7 +281,7 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
                         offered_at=offered["at"] if offered else None,
                         ended_at=event["at"],
                         elapsed_seconds=(at - wait_start).total_seconds()
-                        if handoff_valid and wait_start is not None
+                        if handoff_valid and precise_wait and wait_start is not None
                         else None,
                     )
                 )
@@ -235,17 +291,31 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
         _exception(exceptions, "handoff_pending", offered["source"])
         began = timestamp(offered["at"], "Offer time")
         left = max(began, start) if start else began
-        waits.append(
-            dict(
-                outcome="Pending",
-                source=offered["source"],
-                offered_at=offered["at"],
-                ended_at=None,
-                elapsed_seconds=(as_of - left).total_seconds() if handoff_valid else None,
-                censored=True,
+        if not precise_wait:
+            _exception(exceptions, "unknown_handoff_duration", offered["source"])
+        if left <= as_of:
+            waits.append(
+                dict(
+                    outcome="Pending",
+                    source=offered["source"],
+                    offered_at=offered["at"],
+                    ended_at=None,
+                    elapsed_seconds=(as_of - left).total_seconds()
+                    if handoff_valid and precise_wait
+                    else None,
+                    censored=True,
+                )
             )
-        )
-    events = sorted(transitions + handoffs, key=lambda e: (e["at"], e["source"], e["version"] or 0))
+    # Independent source streams have no authoritative cross-stream sequence.
+    events = transitions + handoffs
+    if start is not None:
+        for event in handoffs:
+            if (
+                timestamp(event["at"], "Event time")
+                < start
+                <= timestamp(event["latest_possible_at"], "Event time")
+            ):
+                _exception(exceptions, "unknown_event_period", event["source"])
     return dict(
         case_id=case["id"],
         coverage="Partial" if events else "Unknown",
@@ -398,6 +468,14 @@ def report(
             unknown="Null means unrecorded, unmappable or contradictory; never zero",
             paused="Only Contact paused and Resident paused works observed stage intervals",
             handoff_wait="Offered to Accepted/Declined/Withdrawn; receipt is not acceptance",
+            handoff_precision=(
+                "Legacy minute timestamps bound a minute, not an exact instant; "
+                "affected waits are unknown"
+            ),
+            event_order=(
+                "Independent returns then handoff streams in recorded append/version sequence, "
+                "not cross-stream time order"
+            ),
             pending_wait="Censored elapsed since observed offer, not a completed handoff",
             stage_interval="Consistent recorded return/reopen boundaries; last exit unknown",
             event_period="Inclusive period; earlier boundaries may support clipped intervals",

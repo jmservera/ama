@@ -56,6 +56,20 @@ def events() -> Record:
     )
 
 
+def mixed_handoff() -> Record:
+    case = events()
+    case["returns"] = []
+    case["handoff_history"] = case["handoff_history"][:3]
+    for row, at in zip(
+        case["handoff_history"],
+        ("2026-10-01T12:00:45.123456Z", "2026-10-01T12:00+00:00", "2026-10-01T12:01:15.123456Z"),
+        strict=True,
+    ):
+        row.update(at=at, offered_at="2026-10-01T12:00+00:00", authority="Staff")
+    case["handoff_history"][1]["received_at"] = "2026-10-01T12:00+00:00"
+    return case
+
+
 class ProgressReports(unittest.TestCase):
     def history(self, case: Record, start: str | None = None) -> Record:
         return progress.history(
@@ -179,6 +193,156 @@ class ProgressReports(unittest.TestCase):
             result = self.history(case)
             self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
             self.assertNotIn("PRIVATE", json.dumps(result))
+
+    def test_mixed_precision_preserves_versions_without_fabricating_wait(self) -> None:
+        for recorded in ("2026-10-01T12:00+00:00", "2026-10-01T12:00:00Z"):
+            case = mixed_handoff()
+            case["handoff_history"][1]["at"] = recorded
+            before = copy.deepcopy(case)
+            result = self.history(case)
+            self.assertEqual([e["version"] for e in result["events"]], [1, 2, 3])
+            self.assertEqual(
+                [e["source"] for e in result["events"]],
+                ["handoff_history/0", "handoff_history/1", "handoff_history/2"],
+            )
+            codes = [e["code"] for e in result["exceptions"]]
+            self.assertNotIn("contradictory_event_order", codes)
+            self.assertNotIn("contradictory_handoff_chain", codes)
+            self.assertIn("unknown_handoff_duration", codes)
+            self.assertEqual(result["handoff_waits"][0]["outcome"], "Accepted")
+            self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+            self.assertEqual(result["events"][1]["time_precision"], "Minute (legacy writer)")
+            self.assertEqual(case, before)
+
+    def test_known_minute_writer_states_are_ambiguous_not_bad_lifecycle(self) -> None:
+        for state in ("Received", "Escalated", "Declined", "Withdrawn", "Completed"):
+            case = mixed_handoff()
+            if state == "Completed":
+                case["handoff_history"][1]["at"] = "2026-10-01T12:00:50.123456Z"
+                row = dict(
+                    case["handoff_history"][-1], version=4, state=state, at="2026-10-01T12:01+00:00"
+                )
+                case["handoff_history"].append(row)
+            else:
+                case["handoff_history"][1]["state"] = state
+                if state in ("Declined", "Withdrawn"):
+                    case["handoff_history"].pop()
+            result = self.history(case)
+            codes = [e["code"] for e in result["exceptions"]]
+            with self.subTest(state=state):
+                self.assertNotIn("contradictory_event_order", codes)
+                self.assertNotIn("contradictory_handoff_chain", codes)
+                if state != "Completed":
+                    self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+                else:
+                    self.assertEqual(result["handoff_waits"][0]["elapsed_seconds"], 30)
+
+    def test_precise_and_outside_minute_backwards_dates_remain_contradictions(self) -> None:
+        for at in (
+            "2026-10-01T12:00:00.000000Z",
+            "2026-10-01T12:00:00Z",
+            "2026-10-01T11:59+00:00",
+            "2026-09-30T12:00+00:00",
+        ):
+            case = mixed_handoff()
+            case["handoff_history"][1].pop("received_at")
+            case["handoff_history"][1]["at"] = at
+            result = self.history(case)
+            with self.subTest(at=at):
+                self.assertIn(
+                    "contradictory_event_order", [e["code"] for e in result["exceptions"]]
+                )
+                self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+
+    def test_invalid_versions_and_lifecycle_never_repaired_by_time_precision(self) -> None:
+        for key, value in (
+            ("version", 1),
+            ("version", 3),
+            ("version", True),
+            ("state", "Completed"),
+            ("to_code", "Other"),
+        ):
+            case = mixed_handoff()
+            case["handoff_history"][1][key] = value
+            result = self.history(case)
+            self.assertTrue(
+                any(
+                    e["code"].startswith(("invalid_", "contradictory_"))
+                    for e in result["exceptions"]
+                )
+            )
+            self.assertTrue(all(w["elapsed_seconds"] is None for w in result["handoff_waits"]))
+
+    def test_minute_as_of_boundary_never_claims_receipt_or_terminal(self) -> None:
+        for state in ("Received", "Declined", "Withdrawn"):
+            case = mixed_handoff()
+            case["handoff_history"][1]["state"] = state
+            case["handoff_history"].pop()
+            at = progress.timestamp("2026-10-01T12:00:46Z", "As-of")
+            result = progress.history(case, at, None)
+            self.assertEqual([e["state"] for e in result["events"]], ["Offered"])
+            self.assertIn("unknown_event_as_of", [e["code"] for e in result["exceptions"]])
+            self.assertEqual(result["handoff_waits"][0]["outcome"], "Pending")
+            self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+        case = mixed_handoff()
+        result = progress.history(case, progress.timestamp("2026-10-01T12:01Z", "As-of"), None)
+        self.assertEqual([e["state"] for e in result["events"]], ["Offered", "Received"])
+        self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+
+    def test_precise_wait_and_equal_instant_remain_exact(self) -> None:
+        for received in ("2026-10-01T12:00:45.123456Z", "2026-10-01T12:00:50.000000Z"):
+            case = mixed_handoff()
+            case["handoff_history"][1]["at"] = received
+            result = self.history(case)
+            self.assertEqual(result["handoff_waits"][0]["elapsed_seconds"], 30)
+            self.assertFalse(
+                any(e["code"].startswith("contradictory_") for e in result["exceptions"])
+            )
+
+    def test_minute_event_does_not_hide_precise_terminal_before_offer(self) -> None:
+        case = mixed_handoff()
+        case["handoff_history"][2]["at"] = "2026-10-01T12:00:30.123456Z"
+        result = self.history(case)
+        self.assertIn("contradictory_event_order", [e["code"] for e in result["exceptions"]])
+        self.assertEqual(result["handoff_waits"][0]["outcome"], "Accepted")
+        self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+        case = mixed_handoff()
+        case["handoff_history"][1]["at"] = "2026-10-01T12:00:00.000000Z"
+        result = self.history(case)
+        self.assertIn("contradictory_event_order", [e["code"] for e in result["exceptions"]])
+        self.assertEqual(result["events"][1]["time_precision"], "Recorded instant")
+
+    def test_legacy_minute_offer_never_creates_exact_or_premature_pending_wait(self) -> None:
+        case = mixed_handoff()
+        case["handoff_history"][0]["at"] = "2026-10-01T12:00+00:00"
+        case["handoff_history"][1]["at"] = "2026-10-01T12:01+00:00"
+        case["handoff_history"][1].pop("received_at")
+        result = self.history(case)
+        self.assertIsNone(result["handoff_waits"][0]["elapsed_seconds"])
+        self.assertNotIn("contradictory_event_order", [e["code"] for e in result["exceptions"]])
+        before = progress.history(case, progress.timestamp("2026-10-01T12:00:30Z", "As-of"), None)
+        self.assertEqual(before["events"], [])
+        self.assertEqual(before["handoff_waits"], [])
+        self.assertIn("unknown_event_as_of", [e["code"] for e in before["exceptions"]])
+
+    def test_mixed_precision_start_boundary_and_csv_preserve_unknowns(self) -> None:
+        case = mixed_handoff()
+        result = progress.report(
+            [case],
+            as_of=AS_OF,
+            start="2026-10-01T12:00:50Z",
+            cohort={},
+            scenario=None,
+            audit_intact=True,
+        )
+        item = result["histories"][0]
+        self.assertIn("unknown_event_period", [e["code"] for e in item["exceptions"]])
+        self.assertIsNone(item["handoff_waits"][0]["elapsed_seconds"])
+        decoded = {
+            row["section"]: json.loads(row["value"])
+            for row in csv.DictReader(io.StringIO(progress.export_csv(result)))
+        }
+        self.assertEqual(decoded, result)
 
     def test_missing_provenance_and_no_events_surface_exceptions(self) -> None:
         case: Record = dict(

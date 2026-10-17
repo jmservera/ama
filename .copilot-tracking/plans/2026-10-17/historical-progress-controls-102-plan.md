@@ -4,7 +4,7 @@ description: Bounded event-derived reporting and deterministic scenario forecast
 ms.date: 2026-10-17
 ---
 
-Task ID: 102. Slug: historical-progress-controls-102. Status: delivered in PR #390.
+Task ID: 102. Slug: historical-progress-controls-102. Status: correction TWO validated; publication pending.
 Original Review: Complete / Defects found; correction ONE targeted checks pass,
 independent coordinator acceptance pending.
 
@@ -16,7 +16,11 @@ timestamped return/reopen and handoff events. Unknown clocks, missing source,
 malformed records and contradictory transitions remain unresolved, not zero.
 Forecasts simulate independent installation and QA pools from declared
 synthetic assumptions; they are not capacity commitments or real outcomes.
-No web edits, domain writer changes, AI service, SQL schema or migration.
+Correction TWO preserves source-version handoff sequence and distinguishes
+known legacy minute precision from genuinely contradictory dates. Prospective
+handoff timestamps may reuse the existing precise shared helper; unrelated
+workflow clocks and authority remain unchanged. No web edits, AI service,
+SQL schema or migration.
 
 ## User Decisions and Requirements
 
@@ -28,6 +32,10 @@ No web edits, domain writer changes, AI service, SQL schema or migration.
 * Complete safe engineering even where missing domain evidence blocks complete
   historical or operational acceptance.
 * Commit dated artifacts and own changes, push supplied topic, open PR Refs #102.
+* Coordinator exact-28227fa8 Revise / Medium authorizes correction TWO only;
+  no second full Review or self-Pass. Preserve correction ONE and original Review.
+* Integrate fetched main 3f544fb9 containing quality #387 by own-branch rebase;
+  remote replacement only with explicit lease against 28227fa8af529cc40590deca9fd1819ef4155cc2.
 
 ## Sources
 
@@ -114,12 +122,13 @@ Status: Complete.
 <!-- rpi:phase id=P03 -->
 ### P03: Review and publication
 
-Status: Complete for bounded implementation/publication, not full operational acceptance.
+Status: Correction TWO engineering validated; publication pending, not full operational acceptance.
 
 * [x] P03-T01: Execute one full Review and retain original adverse findings.
-* [x] P03-T02: Correction ONE resolves concrete RV-001/RV-002 with failing-first
-  and targeted final evidence; no second full Review, no Correction TWO.
-* [x] P03-T03: Fresh GitHub identity, own-only commit, normal push and main PR #390.
+* [x] P03-T02: Preserve correction ONE; resolve mixed-precision handoff finding
+  in authorized correction TWO with failing-first source/HTTP/SQL checks.
+* [ ] P03-T03: Fresh identity, own-only correction commit and exact-old-head
+  leased push to existing main PR #390 after authorized rebase/integration.
 
 ## Validation Ownership and Change Budget
 
@@ -148,8 +157,9 @@ No second critique.
 
 ## Follow-Up Items
 
-Source-authorized complete forward-event capture and owner-approved operational
-capacity/forecast validation remain outside this read-only report task.
+Source-authorized complete forward-event capture is buildable follow-up
+engineering, not a human blocker or full-history acceptance. It and operational
+capacity/forecast validation remain outside this bounded report correction.
 Programme/Data owns prospective event dictionary/capture; Programme/Finance/QA
 owns verified resources/dependencies/calibration. Coordinator owns shared
 integration and independent final-head acceptance. These are not source

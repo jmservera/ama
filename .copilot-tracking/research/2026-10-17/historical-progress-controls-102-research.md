@@ -149,3 +149,41 @@ No operational, human, WCAG, Azure or paid AI acceptance is claimed.
 Ready for bounded safe engineering. Research disposition: executed.
 Self-check: three ordered inline waves, stable C IDs, alternatives, overlap,
 contradiction, limitations and readiness recorded. No workers implied.
+
+## Correction TWO targeted source investigation (2026-10-17)
+
+Coordinator exact-28227fa8 independent Revise / Medium is an additional concrete
+finding, not a second full RPI Review in this session. Actual source contracts:
+
+* `change_provenance.operation` compares caller handoff_version with the current
+  history length, refuses stale writes, captures precise aware UTC `at` before
+  yield and appends version `len(history)+1`. Offer/accept use this existing
+  operation and preserve its source/version/actor/change and audit semantics.
+* `WorkflowMixin._handoff_event` appends snapshot/version `len(events)+1`;
+  receipt/escalation/decline/withdraw/complete used `_now()` with
+  `isoformat(timespec="minutes")`. Their state timestamps used the same
+  minute-format helper. Neither source promises chronological sorting can
+  replace the authoritative append sequence. Completion is not acceptance.
+* A minute-format timestamp or a seconds-expanded zero corroborated by the
+  corresponding exact legacy state minute field supports a minute interval.
+  Zero seconds alone, fractional precision or arbitrary backward times do not.
+  Compare full possible minute intervals with the greatest predecessor lower
+  bound; a backward date outside that range is still contradictory.
+* The existing `_now` helper can take an optional timespec with its default
+  unchanged. Handoff-only calls use microseconds; offer/accept snapshot times
+  reuse their already-authoritative operation event time. `controls.now` is
+  naive/minute-resolution and is unsuitable; it is not changed or reused.
+* Fetched main 3f544fb9 contains quality #387. Read upstream quality,
+  assistants and API diffs: active_records excludes only Superseded; capture/
+  discrepancy/contributor review use current evidence and evidence_version
+  stales replacement proposals. Quality committed-refresh errors map to 503
+  with outcome committed. These and existing SQL/hazard/financial/stock hooks
+  are retained unchanged, not merely declared parity after logic changes.
+
+Observed failing-first execution used real Store offer/receive/accept writers
+with frozen fictional old timestamps. It reproduced `[2,1,3]` report ordering
+for a valid `[1,2,3]` source sequence. Dedicated fixtures cover exact precise
+backward times, all known minute writer states, export and as-of/start unknowns.
+Forward stage and accepted-handover event coverage remains incomplete.
+Prospective complete capture is buildable distinct follow-up, not a human
+blocker or full-history acceptance. No persisted event rewriting is justified.

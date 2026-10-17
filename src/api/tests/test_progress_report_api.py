@@ -11,12 +11,13 @@ import unittest
 import urllib.error
 import urllib.request
 import uuid
+from datetime import UTC, datetime
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from dataset import DATA
+from dataset import DATA, change_metadata
 from test_progress_reports import AS_OF, disposition, events
 from zava_forward.core import progress
 from zava_forward.core.sqlstore import SqlStore
@@ -255,6 +256,89 @@ class ProgressApi(unittest.TestCase):
             progress.export_csv(refreshed),
             progress.export_csv(actual.progress_report(self.pam, as_of=AS_OF, view="all")),
         )
+
+    def test_actual_legacy_mixed_precision_writer_reopen_as_of_and_export(self) -> None:
+        offer = datetime(2026, 10, 1, 12, 0, 45, 123456, tzinfo=UTC)
+        accepted = datetime(2026, 10, 1, 12, 1, 15, 123456, tzinfo=UTC)
+        with (
+            patch("zava_forward.core.change_provenance.datetime", wraps=datetime) as clock,
+            patch("zava_forward.core.workflows._now", return_value="2026-10-01T12:00+00:00"),
+        ):
+            clock.now.side_effect = [offer, accepted]
+            self.store.offer_handoff(
+                self.sam, "ZF-2", self.pam["email"], metadata=change_metadata(self.store, "ZF-2")
+            )
+            self.store.receive_handoff(self.pam, "ZF-2")
+            self.store.accept_handoff(
+                self.pam, "ZF-2", metadata=change_metadata(self.store, "ZF-2")
+            )
+        reopened = self.reopen()
+        before = copy.deepcopy(reopened.cases["ZF-2"]["handoff_history"])
+        audit = list(reopened.audit_entries())
+        result = reopened.progress_report(self.pam, as_of=AS_OF, view="all")
+        item = next(h for h in result["histories"] if h["case_id"] == "ZF-2")
+        self.assertEqual([e["version"] for e in item["events"]], [1, 2, 3])
+        self.assertNotIn("contradictory_event_order", [e["code"] for e in item["exceptions"]])
+        self.assertNotIn("contradictory_handoff_chain", [e["code"] for e in item["exceptions"]])
+        self.assertIn("unknown_handoff_duration", [e["code"] for e in item["exceptions"]])
+        self.assertEqual(item["handoff_waits"][0]["outcome"], "Accepted")
+        self.assertIsNone(item["handoff_waits"][0]["elapsed_seconds"])
+        for boundary in ("2026-10-01T12:00:46Z", AS_OF):
+            query = "?report=progress&view=all&as_of=" + boundary
+            status, raw = self.get("pam", "/api/stats" + query)
+            self.assertEqual(status, 200, raw)
+            status, exported = self.get("pam", "/api/cases.csv" + query)
+            self.assertEqual(status, 200, exported)
+            decoded = {
+                row["section"]: json.loads(row["value"])
+                for row in csv.DictReader(io.StringIO(exported.decode()))
+            }
+            self.assertEqual(decoded, json.loads(raw))
+            item = next(h for h in decoded["histories"] if h["case_id"] == "ZF-2")
+            if boundary != AS_OF:
+                self.assertEqual([e["state"] for e in item["events"]], ["Offered"])
+                self.assertIn("unknown_event_as_of", [e["code"] for e in item["exceptions"]])
+            self.assertIsNone(item["handoff_waits"][0]["elapsed_seconds"])
+        self.assertEqual(reopened.cases["ZF-2"]["handoff_history"], before)
+        self.assertEqual(list(reopened.audit_entries()), audit)
+        self.assertTrue(reopened.verify_audit())
+
+    def test_prospective_handoff_writers_retain_microseconds(self) -> None:
+        for outcome in ("decline", "withdraw", "accept"):
+            with self.subTest(outcome=outcome):
+                self.store.offer_handoff(
+                    self.sam,
+                    "ZF-2",
+                    self.pam["email"],
+                    metadata=change_metadata(self.store, "ZF-2"),
+                )
+                self.store.receive_handoff(self.pam, "ZF-2")
+                self.store.escalate_handoff(self.sam, "ZF-2", self.pam["email"], "Fictional chase")
+                if outcome == "accept":
+                    self.store.accept_handoff(
+                        self.pam, "ZF-2", metadata=change_metadata(self.store, "ZF-2")
+                    )
+                    self.store.complete_handoff(self.pam, "ZF-2", "Fictional complete")
+                elif outcome == "decline":
+                    self.store.decline_handoff(self.pam, "ZF-2", "Fictional decline")
+                else:
+                    self.store.withdraw_handoff(self.sam, "ZF-2")
+                rows = self.reopen().cases["ZF-2"]["handoff_history"]
+                for row in rows:
+                    self.assertRegex(row["at"], r"T\d{2}:\d{2}:\d{2}(?:\.\d{6})?\+00:00$")
+                    if row["state"] not in {"Offered", "Accepted"}:
+                        self.assertRegex(row["at"], r"\.\d{6}\+00:00$")
+                as_of = datetime.now(UTC).isoformat()
+                report = self.store.progress_report(self.pam, as_of=as_of, view="all")
+                item = next(h for h in report["histories"] if h["case_id"] == "ZF-2")
+                self.assertFalse(
+                    any(e["code"].startswith("contradictory_") for e in item["exceptions"])
+                )
+                self.assertTrue(
+                    all(w["elapsed_seconds"] is not None for w in item["handoff_waits"])
+                )
+                if outcome == "accept":
+                    self.sam, self.pam = self.pam, self.sam
 
 
 class JsonProgressApi(ProgressApi):
