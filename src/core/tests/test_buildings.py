@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from copy import deepcopy
 from typing import Any
+from unittest.mock import patch
 
 from building_fixture import fixture, hold, open_store
 from dataset import supplied_appointment_fixture
@@ -13,6 +14,13 @@ from zava_forward.core.store import ConflictError, GateError
 
 
 class BuildingTests(unittest.TestCase):
+    def setUp(self) -> None:
+        consultation = patch(
+            "zava_forward.core.procurement.ProcurementMixin.require_consultation_clear"
+        )
+        consultation.start()
+        self.addCleanup(consultation.stop)
+
     def test_shared_view_keeps_home_evidence_allocations_and_approvals_home(self) -> None:
         for sql in (False, True):
             with self.subTest(sql=sql), tempfile.TemporaryDirectory() as folder:

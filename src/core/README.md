@@ -444,6 +444,60 @@ PYTHONPATH=src/core/tests:src/api:src/api/tests:src/agents/tests \
 `ZF_RESIDENT_MSSQL=1` enables `MssqlResidentControls` against an explicitly
 task-owned loopback SQL Server configured through `ZF_SQL_*`. Each test creates/
 drops only its UUID-named `zf_resident88_*` database. Never use shared/live SQL.
+## Consultation records and confirmation holds (#92)
+
+The existing provider package is the contract/call-off reference record.
+New records default to `consultation_status: "unknown"`; legacy missing values
+are also unknown. `record_consultation` accepts supplied statuses `applies`,
+`complete`, `not_applicable` or `unknown`, but stores them in
+`consultation_history` as unverified claims, never as effective clearance.
+Every record requires a named supplied human decision maker, reason, exact
+source case/document/version and expected history version. Clean non-generated
+original bytes must match their stored hash. The server records the current
+registered manager recorder separately, UTC time, monotonic version, contract
+reference/version, scope version and source hash. It does not decide applicability,
+interpret leases, certify completion or verify that the supplied adviser has
+Legal authority. Stale expected versions return a conflict without a new record.
+
+The current registry has contract-manager delegations and rule-card owner roles,
+but no verified contract-consultation Legal capability. ADR 0005's named exercise
+Legal owner is scoped to fictional rule-card/source review, not contract approval.
+No new role/mapping/designation is added. Effective status therefore remains
+unknown for every supplied decision, including complete and not_applicable.
+Issuance, reissue, correction/reopening, positive work-order booking and case
+advancement through the booked-order gate refuse confirmation explicitly.
+There is deliberately no application path to release this hold. Draft package
+creation/rescope, capacity recording, negative appointment outcomes, withdrawal
+and factual historical completion remain subject to their existing controls.
+
+Consultation uses the existing procurement JSON document and SQL writer
+validation: current recorder, original procurement snapshot and source-case
+rowversion are rechecked in the transaction. No Store/schema changes or approved
+fixture backfills are made. Application history is not a legally signed record.
+This is **partial #92 acceptance**: supplied statuses and actual order holds are
+implemented, but a verified named Legal record and a dedicated contract/framework/
+call-off let/renew workflow are absent. Neither a draft nor a case advance is
+claimed as exact letting/renewal acceptance. Both issue criteria remain partial.
+
+After editable source installation, from the repository root:
+
+```bash
+PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests \
+  .venv/bin/python -m unittest test_consultation_controls test_procurement_api -q
+```
+
+The new semantic tests never bypass the consultation guard, including setup:
+explicit historical orders reach downstream seams without invented approvals.
+Legacy procurement, building, hazard, resident and role-matrix regression tests
+explicitly isolate only this guard to exercise their independent controls;
+their successful work flows are not available application clearance paths.
+For a disposable, task-owned local SQL Server only, set existing `ZF_SQL_*`
+connection settings and `ZF_TEST_MSSQL=1`, then run
+`test_consultation_controls.MssqlConsultation` with
+`PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests`.
+Its existing wipe/factory harness resets the configured test database.
+Never target shared, Azure or operational data. No legal-currentness claim,
+operational approval, real order, private dataset or UI acceptance is established.
 
 ## Grant lifecycle and human exercise designation (#95)
 

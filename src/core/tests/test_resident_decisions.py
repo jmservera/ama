@@ -29,6 +29,11 @@ class JsonResidentDecisions(unittest.TestCase):
     sql = False
 
     def setUp(self) -> None:
+        consultation = patch(
+            "zava_forward.core.procurement.ProcurementMixin.require_consultation_clear"
+        )
+        consultation.start()
+        self.addCleanup(consultation.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / "synthetic.json"

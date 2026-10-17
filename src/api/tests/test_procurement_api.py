@@ -10,6 +10,7 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from dataset import (
     DATA,
@@ -24,8 +25,9 @@ from zava_forward.core.store import Store
 from zava_forward.api import server
 
 
-class ProcurementApi(unittest.TestCase):
+class ProcurementApiFixture(unittest.TestCase):
     sql = True
+    isolate_consultation = False
 
     def make_store(self, path: Path) -> Any:
         factory: Any = SqlStore if self.sql else Store
@@ -34,6 +36,12 @@ class ProcurementApi(unittest.TestCase):
         )
 
     def setUp(self) -> None:
+        if self.isolate_consultation:
+            consultation = patch(
+                "zava_forward.core.procurement.ProcurementMixin.require_consultation_clear"
+            )
+            consultation.start()
+            self.addCleanup(consultation.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / "synthetic.json"
@@ -120,6 +128,10 @@ class ProcurementApi(unittest.TestCase):
 
     def issue(self, cid: str = "ZF-1") -> dict[str, Any]:
         return dict(package=self.pid, case_id=cid, resident_bindings=RESIDENT_BINDINGS)
+
+
+class ProcurementApi(ProcurementApiFixture):
+    isolate_consultation = True
 
     def test_package_creation_requires_contract_version(self) -> None:
         body = dict(
@@ -574,4 +586,60 @@ class ProcurementApi(unittest.TestCase):
 
 
 class JsonProcurementApi(ProcurementApi):
+    sql = False
+
+
+class ConsultationApi(ProcurementApiFixture):
+    def decision(self, status: str = "unknown", version: int = 0) -> dict[str, Any]:
+        return dict(
+            status=status,
+            expected_version=version,
+            decided_by="Fictional human adviser; Legal authority unverified",
+            reason="SYN supplied human decision, not approval",
+            **{
+                key: self.details[key]
+                for key in ("source_case_id", "document_id", "source_version")
+            },
+        )
+
+    def test_supplied_decisions_and_actual_order_hold(self) -> None:
+        route = f"/api/packages/{self.pid}/consultation"
+        self.assertEqual(self.call(f"/api/packages/{self.pid}/capacity", self.capacity())[0], 200)
+        for version, status in enumerate(("unknown", "applies", "complete", "not_applicable")):
+            code, result = self.call(route, self.decision(status, version))
+            self.assertEqual(code, 200)
+            row = result["packages"][0]
+            self.assertEqual(row["consultation_status"], "unknown")
+            self.assertEqual(row["consultation_history"][-1]["status"], status)
+            self.assertEqual(row["consultation_authority"], "Unverified")
+            code, result = self.call("/api/workorders", self.issue("ZF-3"))
+            self.assertEqual(code, 400)
+            self.assertIn("Consultation status is unknown", result["error"])
+        self.assertEqual(self.call("/api/workorders")[1], [])
+
+    def test_consultation_route_rejects_actor_and_claimed_authority(self) -> None:
+        route = f"/api/packages/{self.pid}/consultation"
+        for actor in ("sam", "kim"):
+            self.assertEqual(self.call(route, self.decision(), actor)[0], 403)
+        for extra in (
+            dict(authority_status="Approved"),
+            dict(recorded_by=self.manager),
+            dict(bulk=True),
+        ):
+            self.assertEqual(self.call(route, dict(self.decision(), **extra))[0], 400)
+        self.assertEqual(self.store.list_packages(self.manager)[0]["consultation_history"], [])
+
+    def test_consultation_version_conflict_and_source_failure(self) -> None:
+        route = f"/api/packages/{self.pid}/consultation"
+        self.assertEqual(self.call(route, dict(self.decision(), source_version="missing"))[0], 400)
+        self.assertEqual(self.call(route, self.decision())[0], 200)
+        self.assertEqual(self.call(route, self.decision("complete"))[0], 409)
+        row = self.store.list_packages(self.manager)[0]
+        self.assertEqual(len(row["consultation_history"]), 1)
+        self.assertEqual(
+            row["consultation_history"][0]["recorded_by"]["email"], self.manager["email"]
+        )
+
+
+class JsonConsultationApi(ConsultationApi):
     sql = False

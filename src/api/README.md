@@ -447,6 +447,41 @@ select `test_finance_match_controls.MssqlFinanceChecks` with
 `ZF_FINANCE_MSSQL=1` against the same disposable local server. That existing
 fixture creates and removes only its uniquely named test databases.
 
+## Consultation record API and unknown hold (#92)
+
+Authenticated managers may POST
+`/api/packages/{package-id}/consultation` with exactly:
+
+```json
+{
+  "status": "unknown",
+  "decided_by": "Fictional human adviser, authority unverified",
+  "reason": "Supplied human decision for review, not Legal approval",
+  "source_case_id": "SYN-HOME",
+  "document_id": "actual-upload-id",
+  "source_version": "1",
+  "expected_version": 0
+}
+```
+
+Status permits `applies`, `complete`, `not_applicable`, `unknown`; expected version
+is the current consultation-history length. The route returns refreshed packages/
+orders, HTTP 400 for invalid/source inputs, 403 for non-manager or unregistered
+identities, and 409 for a stale record version. Caller-supplied recorder/time/
+authority fields and bulk requests are refused. Package responses expose
+`consultation_status: "unknown"`, `consultation_authority: "Unverified"` and
+the supplied decision history with server provenance. The recorder is not
+presented as Legal and no supplied positive claim clears confirmation.
+
+The [core boundary](../core/README.md#consultation-records-and-confirmation-holds-92)
+explains the missing verified Legal capability and genuine let/renew seam.
+All actual order-issuing/confirming paths now hold, including the existing
+case-advance route. Earlier #90 successful booking/browser evidence above is
+historical, not current #92 acceptance. Its legacy regression class isolates
+only the new guard; separate `ConsultationApi`/`JsonConsultationApi` tests use
+the real unmodified guard. No browser/UI changes were made or newly validated.
+Exact #92 criteria remain partial; no issue closure or legal activation is claimed.
+
 ## Form schema and candidate API (#97)
 
 This is unapproved schema registration and candidate-only collection, not a

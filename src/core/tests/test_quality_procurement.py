@@ -28,6 +28,10 @@ class Flows:
         raise NotImplementedError
 
     def setUp(self):
+        # These legacy flows isolate #92; its unmocked suite proves consultation holds.
+        consultation = patch("zava_forward.core.procurement.ProcurementMixin.require_consultation_clear")
+        consultation.start()
+        self.addCleanup(consultation.stop)
         self.tmp = tempfile.TemporaryDirectory()
         d = copy.deepcopy(dataset.DATA)
         d["staff"] = STAFF

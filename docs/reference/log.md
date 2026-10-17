@@ -6165,3 +6165,20 @@ metadata when the knowledge base was created.
 * Universal core-flow/error coverage, actual user comprehension and named
   resident-facing wording review remain unmet. This partial slice does not
   close the issue, approve resident use or establish WCAG/legal conformance.
+## [2026-10-17] query | Consultation record and unknown confirmation hold (#92)
+
+* Audited the existing migrated procurement package and #90/#384 source;
+  the issue's old mvp note is stale. Added a supplied-human consultation record
+  with source/version/hash, reason, contract/scope, registered recorder, UTC time
+  and version conflict controls. No Legal authority or approval was invented.
+* Updated core/API READMEs, the existing prototype/profile synthesis and this
+  index's task route. Immutable regulatory sources, memory, original/addendum
+  and generated fixture/hash manifests remain unchanged.
+* No verified contract-consultation Legal capability or genuine let/renew seam
+  exists. All supplied statuses remain unverified, effective unknown holds
+  binding order confirmations, and both exact issue criteria remain partial.
+  Legacy domain regressions explicitly isolate that hold; unmocked consultation
+  semantics, individual seam mutations and actual loopback SQL Server recording/
+  conflict/reload checks supply separate engineering evidence.
+* No real contract/order/spend, resident communication, operational legal
+  activation, private data, Azure, paid AI, UI/WCAG acceptance or issue closure.

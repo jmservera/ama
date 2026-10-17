@@ -736,6 +736,8 @@ def make_handler(app):
                 s.rescope_package(u, rest[0], body.get("scope"), body.get("reason"))
             elif kind == "packages" and len(rest) == 2 and rest[1] == "capacity":
                 s.set_capacity(u, rest[0], body.get("contractor"), body.get("offered"), body.get("committed"), body.get("evidence", ""), body.get("details"))
+            elif kind == "packages" and len(rest) == 2 and rest[1] == "consultation":
+                s.record_consultation(u, rest[0], body)
             elif kind == "workorders" and not rest:
                 s.issue_work_order(u, body.get("package"), body.get("case_id"), body.get("scope", ""), body.get("resident_bindings"))
             elif kind == "workorders" and len(rest) == 2 and rest[1] in WO_ACTIONS:
