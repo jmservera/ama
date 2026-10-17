@@ -21,3 +21,8 @@ ms.date: 2026-10-17
   Four exact local criteria pass; RV-001 existing URL state and RV-002 human/live
   acceptance remain explicit. Final source subset 21/21 passed. No re-entry.
   Parent enters publication follow-up; no child loop. Session stops after PR.
+* 2026-10-17 Publication: 38f2f52 committed with verified noreply author/committer
+  and required Copilot trailer, topic pushed, main PR #376 opened and read back.
+  Four exact criteria audited; Refs #77 only, no closure. Hosted checks had no
+  result on initial query. Final handoff persisted; session stopped per caller,
+  no child work, merge, rebase or force push.

@@ -3,7 +3,7 @@
 
 ## Task Metadata
 
-Task ID: 77. Date: 2026-10-17. Status: Ready after single critique disposition.
+Task ID: 77. Date: 2026-10-17. Status: Complete bounded delivery; PR #376 open.
 Task slug: work-queue-signals-77.
 Details: .copilot-tracking/details/2026-10-17/work-queue-signals-77-phase-details.md
 
@@ -87,10 +87,10 @@ Run targeted fail-before and pass-after plus relevant whole API suite,
 Ruff/format/mypy and JS syntax check. Preserve test expectations for six queues.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Review and publish
+### [x] P02: Review and publish
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: One review and persistent delivery
+#### [x] P02-T01: One review and persistent delivery
 
 Fresh guidelines source and changed-file review; record exact criteria/gaps,
 phase log, privacy-safe identity, Conventional Commit/trailer and main PR.
@@ -121,4 +121,7 @@ maximum one helper/no files/no removals; runtime target app.js only.
 ## Handoff
 
 Changes: .copilot-tracking/changes/2026-10-17/work-queue-signals-77-changes.md.
-Proceed after critique disposition; no source implementation during Plan.
+All planned tasks have completion evidence. Single Review Complete, outcome
+Residual work; source/evidence commit 38f2f52 pushed and main PR #376 open.
+Owner retains review/merge and existing human/live acceptance. Automatic
+session stops per caller; no follow-up selected or started.

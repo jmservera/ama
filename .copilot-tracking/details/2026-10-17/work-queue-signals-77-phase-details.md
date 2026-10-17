@@ -47,6 +47,10 @@ mypy, node --check. No live model/real SQL/Azure or Docker escalation.
 <!-- rpi:phase id=P02 -->
 ## P02: Review and publish
 
+Status: Complete. One Review Complete/Residual work, commit 38f2f52 pushed,
+PR #376 open against main. No closing syntax or owner/merge approval claimed.
+No hosted check results were available on initial PR query; not counted as pass.
+
 <!-- rpi:task id=P02-T01 -->
 ### P02-T01: One review and persistent delivery
 

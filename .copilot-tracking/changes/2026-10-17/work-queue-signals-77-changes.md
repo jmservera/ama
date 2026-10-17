@@ -3,7 +3,7 @@
 
 Date: 2026-10-17. Task: 77. Scope: P01 implementation; P02 review/publication
 owned by parent after implementation. Status: P01 Complete; one Review Complete,
-outcome Residual work. Parent publication pending.
+outcome Residual work. Parent publication Complete: main PR #376 open.
 Plan/details and single critique are in their dated work-queue-signals-77 paths.
 
 ## P01-T01 fail-before behavior
@@ -76,6 +76,17 @@ local author/committer email set to its privacy-safe noreply form.
 Commit helper's optional instruction file and get_changed_files tool are not
 available in this host; repository Conventional Commit/trailer rules and explicit
 path staging/diff inspection govern delivery instead. No unsafe all-files staging.
+
+## Publication
+
+Implementation/evidence commit 38f2f52 pushed on feat/work-queue-signals-77.
+PR https://github.com/jmservera/ama/pull/376 is Open, base main, head verified.
+Both author and committer use the gh-resolved account's repository-local
+privacy-safe noreply identity. Conventional Commit and required Copilot trailer
+retained. Initial hosted statusCheckRollup empty: no CI pass claim.
+This final evidence handoff is a separate documentation commit, not an amend
+or another implementation/review loop. No merge/rebase/force push or issue closure.
+Task's bounded RPI delivery is complete; automatic session stops as requested.
 
 ## Amendments and divergences
 
