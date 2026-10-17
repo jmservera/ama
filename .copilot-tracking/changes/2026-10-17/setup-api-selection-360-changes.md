@@ -158,3 +158,43 @@ history occurred, so ordinary descendant push is sufficient (no force required).
 PR385 remains open/main; external coordinator final-head gate pending.
 No new RPI/Review/correction, merge/closure/cloud write. Image smoke/pin and
 real operator/runtime criteria d/e remain unmet.
+
+## Coordinator Integration After PR384 (2026-10-17)
+
+Explicit authorization scoped to run-owned fix/initializer-acr-cli-360/PR385,
+input reviewed/expected remote head25f3d0ff3abbfe2ba76864d397441291694ec732.
+Clean status and matching local/remote/PR head verified; `git fetch origin`
+confirmed latest main b5d4c8402692758bd929a7ff9bf1832770738346 (merged PR384).
+`GIT_EDITOR=true git rebase b5d4c8402692758bd929a7ff9bf1832770738346`
+replayed seven owned commits. Only conflict was docs/reference/log.md in oldest
+ACR evidence commit; retained entire upstream prefix then every owned append,
+no blind ours/theirs. `git add docs/reference/log.md` and
+`GIT_EDITOR=true git rebase --continue` completed. Integrated pre-receipt head
+27383faa4108b9b8c1bce0e76326e8f8544c5153, no production/test conflict or mutation.
+
+Exact binary/full-index source/test patch comparison:
+`git diff --binary --full-index d400eb8 25f3d0ff -- src infra :(exclude)infra/README.md`
+equals corresponding b5d4c840-to-integrated-head diff byte for byte: 12867bytes,
+SHA256 f46873f5e3263d7a3bec32aba8447c8d892d8c021318b5c8db084de7372dc155.
+All328 upstream src/infra files outside the existing guide and three reviewed
+setup files match new main exactly; three setup files match reviewed25f3d0ff.
+Thus upstream procurement dependency/quota/source and finance/stock SQL-save/
+current-actor/staged-state protections retained, no unrelated edits.
+
+All16 existing both-task RPI artifacts byte-identical at integration, including
+both original single Reviews and original ACR receipt/sourcebab4bf3. Only this
+new setup Changes/state append is subsequently updated for publication receipt;
+neither original Review nor ACR artifact changes. Main KB log exact prefix and
+entire own suffix exact; #84/#90/#94 and own #360 index routes preserved. JSON
+parse and whitespace checks passed. Minimal changed-document links checked
+at publication. No source change, so no full suite/MSSQL repeat; previous164
+offline passes are historical validation of identical reviewed source, not a
+new independent Pass or live acceptance. Coordinator review of25f3d0ff is
+running separately; byte parity supplied for its applicability, verdict not inferred.
+
+Fresh gh user8036360/jmservera, local privacy-safe author/committer and Copilot
+trailer. Exact expected-remote lease25f3d0ff3abbfe2ba76864d397441291694ec732
+authorized ONLY topic for this rebase. Integration receipt commit and PR body
+update follow; final exact pushed head obtained by remote/PR readback. No main
+rewrite, merge/close, Azure action/build/pin/start/SQL/Graph/secret/restart/
+IAM/network/public/bypass/infrastructure/teardown. d/e still unmet.

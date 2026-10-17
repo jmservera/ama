@@ -25,6 +25,20 @@
     "publication": "Completion evidence only; ordinary descendant push, no force needed; final exact head from PR readback",
     "externalGate": "Pending coordinator exact-head review/closure, no new independent Pass"
   },
+    "coordinatorPR384Integration": {
+      "date": "2026-10-17",
+      "base": "b5d4c8402692758bd929a7ff9bf1832770738346",
+      "reviewedInputAndExpectedRemote": "25f3d0ff3abbfe2ba76864d397441291694ec732",
+      "integratedPreReceiptHead": "27383faa4108b9b8c1bce0e76326e8f8544c5153",
+      "conflicts": "Only additive KB log; exact upstream prefix and entire own suffix retained",
+      "productionTestPatchBytes": 12867,
+      "productionTestPatchSHA256": "f46873f5e3263d7a3bec32aba8447c8d892d8c021318b5c8db084de7372dc155",
+      "patchParity": "Binary full-index diff identical against respective bases; 328 upstream src/infra files and 3 reviewed setup files preserved",
+      "evidenceParity": "16 both-task artifacts unchanged at integration; only new setup changes/state receipt subsequently appended",
+      "validation": "JSON/whitespace/log prefix/suffix/index rows and minimal changed links; no source changes, no broad suite or MSSQL repeat",
+      "externalGate": "Coordinator review of input head running; no verdict inferred",
+      "publication": "Exact-lease topic-only push authorized; final exact head from PR readback"
+    },
   "workflow": "Complete; all active P01/P02 tasks done, external final-head gate and unmet acceptance remain",
   "azureWritesThisContinuation": [],
   "limits": "No live setup, exact-image smoke/pin, SQL/Graph writes, browser/AI acceptance, restart or retirement; issue360 d/e remain unmet"
