@@ -1663,6 +1663,11 @@ missing deployment/data/model/photo/law prerequisites are tracked by #350.
   place or release a case legal hold (`legal-hold`, `legal-hold-release`); a
   hold blocks deletion. Periods are synthetic-demo placeholders, not an approved
   schedule, and the deletion log keeps no file name or content.
+  The [bounded SQL rescan job](../orchestrator/README.md#bounded-document-rescan-job-117)
+  now supplies an offline schedulable invocation, not a hosted timer or Defender
+  activation. Its worker retains unavailable infected/mismatched bytes and holds;
+  it cannot approve deletion or release a hold. Existing API/manual behavior
+  and owner approval boundaries are unchanged.
 * Funding: a person moves each application through draft, approved,
   submitted and confirmed. Approval needs complete evidence and the Grants
   and Evidence Officer or a manager. The system never submits anything.

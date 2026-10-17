@@ -139,6 +139,19 @@ class _SyncLock:
 
 class SqlStore(Store):
     def __init__(self, data_path, db_path, docs_dir=None, digest_dir=None):
+        try:
+            self._initialize(data_path, db_path, docs_dir, digest_dir)
+        except BaseException as error:
+            db = getattr(self, "db", None)
+            if db is not None:
+                try:
+                    db.close()
+                except Exception:
+                    error.add_note("SQL initialization cleanup failed; check connection ownership.")
+                    logging.getLogger(__name__).error("SQL initialization cleanup failed")
+            raise
+
+    def _initialize(self, data_path, db_path, docs_dir, digest_dir):
         self.db_path = db_path
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
         self.dblock = threading.RLock()
@@ -593,6 +606,8 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
+                from .document_rescan import mark_committed as rescan_committed
+                rescan_committed(self)
                 mark_committed(self)
                 from .resident_decisions import mark_committed as resident_committed
                 resident_committed(self)

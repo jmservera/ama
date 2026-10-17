@@ -157,11 +157,13 @@ class DocControlsMixin:
             raise
         self.docstore.delete(case_id, doc["id"])
 
-    def _scan_stored(self, case_id, doc, who):
+    def _scan_stored(self, case_id, doc, who, *, remove_bad=True):
         """Scan a stored document (caller holds the lock). A missing scan field counts as pending. Returns the scan record."""
         data = self.docstore.get(case_id, doc["id"])
         verdict, detail = self.scanner.scan(case_id, doc["id"], doc["name"], data, doc["mime"])
-        if verdict in ("infected", "mismatch"):
+        if verdict not in ("clean", "pending", "infected", "mismatch"):
+            raise RuntimeError("The scanner returned an unsupported verdict; the document remains unavailable.")
+        if remove_bad and verdict in ("infected", "mismatch"):
             self._remove_document(case_id, doc, "document_quarantined_deleted", who, f"{doc['id']}: {doc['kind']}: {verdict}")
             raise ValueError("That file failed the content check and was removed.")
         doc["scan"] = dict(status=verdict, scanner=self.scanner.name, at=datetime.now().isoformat(timespec="seconds"), detail=detail)

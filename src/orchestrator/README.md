@@ -2,7 +2,7 @@
 title: Zava Forward orchestrator
 description: Scheduled job documentation (ledger digest publish and verification) for the orchestrator project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -88,6 +88,83 @@ PYTHONPATH="$PWD/../core/tests" /tmp/zf164/bin/python -m unittest discover -s te
 
 Tests use local synthetic fixtures only, including nonzero CLI failures and
 persisted review items; they do not scrape or read private datasets.
+
+## Bounded document rescan job (#117)
+
+Original Review status (2026-10-17): Not accepted. Two Medium defects remain:
+nested SQL recovery can emit raw diagnostic tracebacks, and malformed scanner
+results can escape the controlled report/CLI boundary. The fixed-marker
+contract below is the intended behavior, not universal proved containment.
+Both route to separate correction work; no second Review or operational
+acceptance is claimed. Pending state remained unavailable in the reproductions.
+
+`python -m zava_forward.orchestrator.document_rescan` consumes one bounded
+SQL page through the existing scan service. It adds no daemon, Azure schedule
+resource, network adapter, retention action or human approval. Existing token/
+digest jobs and their identities/grants are unchanged.
+
+Configure `ZF_DATA` explicitly and select `ZF_STORE=sqlite|mssql` and
+`ZF_SCANNER=defender|local`. JSON and implicit scanner selection are refused.
+Defender requires the existing `ZF_DOC_STORE=azure-blob` configuration; its
+real account enablement and tag verification are still unmet. Local scanning
+requires `--synthetic-local` and is only a labelled type/signature fixture,
+not antivirus. No environment file or default private dataset is loaded.
+
+For an explicitly constructed local exercise fixture with matching stored
+document bytes, run from the repository root after pip installation:
+
+```bash
+ZF_DATA=/absolute/synthetic/seed.json \
+ZF_STORE=sqlite ZF_SQLITE=/absolute/synthetic/cases.sqlite \
+ZF_SCANNER=local ZF_DOC_STORE=local \
+  .venv/bin/python -m zava_forward.orchestrator.document_rescan \
+  --synthetic-local --limit 100
+```
+
+`--limit` is an integer from 1 to 100, default 100. Output includes `checked`,
+`clean`, `pending`, `blocked`, `skipped`, `failed`, `committed`, scanner label
+and `next_after`. If continuation is `["CASE", "DOC"]`, invoke the next page
+with `--after CASE DOC`, using the same configuration. The exclusive composite
+key advances even if a competing writer resolves a selected record. Continue
+through all pages, even when earlier documents remain pending. Start every
+new sweep without `--after`; pending or failed earlier pages need that next
+sweep. There is no internal infinite retry or elected scheduling owner.
+
+Exit precedence: 1 means failed attempts or committed-outcome reconciliation;
+otherwise 2 means pending results or more pages; otherwise 0 means this page
+settled. Terminal exit0 does not certify an earlier page or real malware
+protection. Inspect the entire sweep. `committed` means the write succeeded
+but acknowledgement/refresh failed: reload the persisted scan/audit before
+retrying. Diagnostics use fixed markers, not filenames, bytes or private
+scanner/transport exception text. Connections close on success and construction
+failure. Attempt count is bounded, not end-to-end service latency.
+
+The worker records infected/mismatched results as unavailable and retains
+bytes, case hold and owner decisions. It cannot approve retention deletion,
+release a hold or impersonate registered staff. Only exact clean becomes
+available. The existing manual scan behavior remains separate; the worker
+never calls its destructive bad-verdict path. Existing owner-approved deletion
+and hold override are not replaced by this job.
+
+From `src/orchestrator`, `PYTHONPATH=../core/tests ../../.venv/bin/python -m
+unittest discover -s tests -q` includes actual subprocess SQLite CLI tests.
+From the repository root, `PYTHONPATH=src/core/tests .venv/bin/python -m
+unittest test_document_rescan -q` covers fair pages, exact 100-attempt bound,
+pending/unavailable/unknown results, non-deleting quarantine, independent
+connections, CAS retry, prior audit preservation and committed refresh.
+`ZF_DOCUMENT_RESCAN_MSSQL=1` enables the same core tests on task-owned loopback
+SQL Server with existing `ZF_SQL_*`; they reject other hosts and create/drop
+only UUID-named `zf_rescan117_*` test databases. Never point them at live/shared
+SQL. Docker uses the existing build context and hardening commands above;
+actual image job checks must supplement ordinary version-only startup.
+
+On 2026-10-17, actual owned loopback SQL ran all 17 rescan tests, and real
+MSSQL CLI pages returned 2/0/0 with 1/2/0 clean results, three success events,
+intact ledger and retained legal hold. The owned SQL container was stopped and
+removed. The built UID10001 image also ran the offline job with read-only root,
+dropped capabilities, NoNewPrivs and no network, persisting the same outcomes.
+These are bounded engineering receipts, not real Defender, recurring hosted
+schedule, Legal/DPO or owner approval acceptance.
 
 ## Ledger digests
 

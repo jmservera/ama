@@ -431,6 +431,32 @@ are generator-owned; the PRD requires human engineering adjudication before
 held-out testing, which has not happened. Documents are plain-text fixtures, not
 rendered PDFs or images.
 
+### Pending-document rescan engineering boundary (2026-10-17, Refs #117)
+
+The single original Review executed Complete / outcome Not accepted. Two Medium
+defects remain for separately authorized implementation: raw nested SQL recovery
+diagnostics and malformed scanner results escaping controlled reporting. Both
+reproductions retained unavailable pending state. The receipts below remain
+accurate for their exercised paths, not an overall engineering acceptance.
+
+The [bounded orchestrator invocation](../../../../src/orchestrator/README.md#bounded-document-rescan-job-117)
+reuses the current scanner and SQL writer for pages of 1..100 missing/pending
+documents. Fresh temporary constructed bytes and the existing small test
+dataset, not private documents or the original stock register, supplied this
+engineering check. No generated public fixture or retained data was replaced.
+
+| Criterion | Current evidence | Residual authority or service gate |
+| --- | --- | --- |
+| Uploads scanned before availability | Existing document/API tests plus new pending/outage/unknown refusal and exact-clean SQL persistence checks | Actual Defender enablement and real Blob tag verification remain unmet; local scanner is not antivirus |
+| Bounded rescan scheduling mechanism | Existing-pattern one-shot module, fair composite pages, actual SQLite/MSSQL CLI and hardened installed-image execution | No recurring hosted timer, owner cadence or missing-run monitoring has been deployed |
+| Retention job lists due records and needs approval; hold blocks deletion | Existing synthetic document-control regressions passed; new worker retains held bytes and cannot invoke deletion/hold release | Real periods/triggers, delegations and owner approvals remain unapproved; rescan job does not schedule retention |
+| Durable retry/audit behavior | 17 actual loopback SQL tests: independent races, failed audit INSERT/recovery, own-COMMIT witness, prior prefix and success-once retry | Engineering result only; independent coordinator/owner acceptance and operational assurance are separate |
+
+The owned SQL container was stopped and removed after tests and actual command
+execution. No live Azure, paid scanner, real communication, private document,
+approved retention period or legal-currentness claim was introduced. Issue
+#117 remains broader than this bounded engineering delivery.
+
 ## Synthetic data needs inventory and phase gate (2026-10-15)
 
 Issue #166, parent #165. The machine-readable inventory is

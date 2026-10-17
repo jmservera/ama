@@ -1,0 +1,50 @@
+{
+  "task_id": "117",
+  "task_slug": "issue-117-document-rescan-scheduler",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/issue-117-document-rescan-scheduler-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/issue-117-document-rescan-scheduler-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/issue-117-document-rescan-scheduler-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/issue-117-document-rescan-scheduler-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop automatically; implement, commit, push and main PR authorized, not merge or issue closure.",
+      "status": "confirmed",
+      "evidence": "User instruction 2026-10-17; clean feat/document-rescan-scheduler-117 at authorized ebc8dab87ae9bd6a33380b85e86f38be5ed9f213; no existing PR."
+    },
+    {
+      "decision": "Research executed with wider/deeper/contrarian waves; Planning Readiness Ready for bounded SQL job.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/research/2026-10-17/issue-117-document-rescan-scheduler-research.md C1-C8,W1-W2"
+    },
+    {
+      "decision": "One original post-implementation Review executed against complete candidate and exact installed-source hashes; outcome Not accepted, two Medium implementation findings RV-001/RV-002.",
+      "status": "Review execution Complete; outcome Not accepted; routed separately, no source corrections or repeat Review",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md"
+    },
+    {
+      "decision": "One final-candidate critique executed; original verdict Revise. PC-001..003 directly applied: own-COMMIT witness, incomplete exit/cursor semantics, construction cleanup. No repeat critique.",
+      "status": "completed; dispositions resolved; plan ready",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md and plan Critique Disposition"
+    }
+  ],
+  "blockers": [
+    {"id": "RV-001", "summary": "Original Review Medium: nested SQL recovery can emit raw exception diagnostics.", "resolution": "Separate coordinator-authorized rpi-implement follow-up; preserve non-worker recovery and assert complete log redaction."},
+    {"id": "RV-002", "summary": "Original Review Medium: malformed scanner result can escape controlled report/CLI boundary.", "resolution": "Separate coordinator-authorized rpi-implement follow-up; safe result validation and contained error tests."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Preserve original Review Complete / Not accepted and route two Medium corrections separately; finish authorized branch publication without source corrections."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Contain nested worker SQL recovery diagnostics (RV-001)", "rationale": "Bounded existing-context correction with direct privacy value; preserves audit recovery and non-worker behavior.", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md RV-001"},
+    {"rank": 2, "task": "Normalize malformed scanner results and contain CLI errors (RV-002)", "rationale": "Small typed-boundary improvement restores per-document reporting and fair page consumption without new services.", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md RV-002"},
+    {"rank": 3, "task": "Authorize real Defender/Blob enablement and scheduled operation", "rationale": "High operational value but requires real service, minimum-permission, cadence and monitoring authorization outside offline engineering.", "evidence": "Issue117 comment; original Review Plan Follow-Up Assessment"},
+    {"rank": 4, "task": "Obtain owner/Legal/DPO retention and hold approvals", "rationale": "Human authority gate; cannot be solved by scanner identity or invented periods.", "evidence": "PRD DH-003/PR-003 and original Review Plan Follow-Up Assessment"}
+  ]
+}

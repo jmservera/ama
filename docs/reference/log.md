@@ -5935,3 +5935,40 @@ metadata when the knowledge base was created.
   not independent coordinator/WCAG acceptance or issue closure. No second Review.
   All denominator/hold/priority/coverage and same-filter map/list/funnel definitions
   remain unchanged; unsupported lifecycle exclusions stay explicitly Unknown.
+
+## 2026-10-17 - Bounded pending-document rescan invocation (Refs #117)
+
+* Research current src and merged PR270 evidence on the authorized merged102
+  base. Add a bounded SQL orchestrator invocation using the existing scanner,
+  factory and optimistic writer; no daemon, Azure timer or scanner activation.
+* Record stable pages and non-deleting unavailable bad verdicts, explicit
+  synthetic-local opt-in, safe incomplete/failure/committed outcomes and
+  actual owned loopback SQL race/retry/prior-audit/commit-boundary evidence in
+  the [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  [core contract](../../src/core/README.md#bounded-pending-document-rescans-117)
+  and [orchestrator guide](../../src/orchestrator/README.md#bounded-document-rescan-job-117).
+* All 17 actual SQL rescan tests passed; real SQLite/MSSQL and hardened
+  UID10001/read-only/drop-all/NoNewPrivs/no-network image commands persisted
+  bounded 1/2/0 clean pages and exactly three success events with intact ledger,
+  bytes and legal hold. Owned SQL stopped and removed. Existing document,
+  progress, resident and sensor regression selections passed with opt-in
+  skips reported separately.
+* Preserve the original one-critique Revise verdict and directly applied
+  findings. One original Review and external coordinator acceptance are
+  separate from these implementation receipts. Real Defender/Blob enablement,
+  recurring hosted schedule/cadence, approved retention triggers/periods,
+  deletion/hold delegations and human approvals remain unmet. No private
+  dataset, memory edit, web, paid service, real communication or live Azure.
+
+## 2026-10-17 - Original rescan Review outcome and separate routing (Refs #117)
+
+* The one original Review executed Complete / outcome Not accepted. Two
+  Medium findings reproduce raw nested SQL recovery diagnostics and malformed
+  scanner result report escape. Pending state remains unavailable in both
+  repros; prior successful SQL/image receipts are not overwritten or promoted
+  into overall acceptance.
+* Reconcile the [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  index and [job status](../../src/orchestrator/README.md#bounded-document-rescan-job-117).
+  Route corrections separately; no production/test patch, repeat Review or
+  independent coordinator Pass. Original critique Revise and original Review
+  are retained. Real-service, schedule and human-authority gates remain open.
