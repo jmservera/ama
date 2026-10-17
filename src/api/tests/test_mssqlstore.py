@@ -13,6 +13,7 @@ from pathlib import Path
 
 import test_chatthreads as chattests
 import test_handoff_api as handofftests
+import test_hazard_referral as hazardtests
 import test_mvp
 import test_sqlreads as reads
 import test_sqlqueues as queuetests
@@ -182,6 +183,26 @@ class MssqlHandoffApi(handofftests.HandoffApi):
 
     def reopen_store(self):
         return factory("nonexistent-seed-is-not-read", self.store.db_path)
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlHazardReferral(hazardtests.JsonHazardReferral):
+    """Canonical hazard semantics and authority/failure probes on the disposable server."""
+
+    sql = True
+
+    def setUp(self):
+        wipe()
+        super().setUp()
+
+    def open_store(self):
+        store = factory(str(self.path), str(self.path.with_suffix(".sqlite")))
+        self.addCleanup(store.db.close)
+        return store
+
+    test_authority_changes_rechecked_at_transaction_for_caller_and_destination = hazardtests.SqlHazardReferral.test_authority_changes_rechecked_at_transaction_for_caller_and_destination
+    test_failed_writes_preserve_prior_pending_audit_and_original_error = hazardtests.SqlHazardReferral.test_failed_writes_preserve_prior_pending_audit_and_original_error
+    test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit = hazardtests.SqlHazardReferral.test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

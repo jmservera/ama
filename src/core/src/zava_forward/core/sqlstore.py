@@ -547,6 +547,8 @@ class SqlStore(Store):
                 from .bulk_edits import validate_sql
                 validate_sql(self)
                 stock.validate_sql(self)
+                from .hazard import mark_committed, validate_sql as validate_hazard
+                validate_hazard(self)
                 from .finance import validate_sql as validate_finance
                 validate_finance(self)
                 from .procurement import validate_sql as validate_procurement
@@ -589,9 +591,11 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
+                mark_committed(self)
             except (ConflictError, GateError, PermissionError) as error:
                 self.db.execute("ROLLBACK")
                 if (getattr(self.local, "stock_decision", None) is None
+                        and getattr(self.local, "hazard_decision", None) is None
                         and getattr(self.local, "procurement_validation", None) is None):
                     try:
                         self._discard()

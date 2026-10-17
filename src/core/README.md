@@ -924,7 +924,8 @@ external times can still be recorded after retrofit work restarts; lifting that
 restriction does not end the external response or updates. Each transition
 has an immutable versioned snapshot and an audit-ledger entry, persisted using
 the existing case body on JSON, SQLite and SQL Server without a new schema.
-Local durability evidence covers JSON/SQLite, not actual SQL Server.
+Local durability evidence now includes the task-owned loopback SQL Server
+exercise below, not Azure or verified external service delivery.
 
 External repair evidence must follow receipt and acceptance. A different
 safety-role actor, neither reporter nor repair recorder, must record the
@@ -960,12 +961,54 @@ need and contractors see no hazard record; they are not added to AI prompts.
 including restart, legacy continuation, invalid actors/indexes/replays,
 closed-record intake, consent/building gates and model-source minimisation.
 Interleaved two-store SQLite regressions cover all guarded transitions,
-including the previously reproducible work-order completion race; these do
-not claim actual SQL Server durability or operational approval.
+including the previously reproducible work-order completion race. The original
+SQLite race/trace checks are not relabelled as SQL Server concurrency proof.
 Operational timing/escalation policy, real service integration, permitted real
-model inference, SQL Server/Azure workflow and human acceptance remain open.
+model inference, Azure workflow and human acceptance remain open.
 AI remains available through existing configuration/release/human-review
 gates; this slice grants it no safety authority and cannot certify those gates.
+
+### Current hazard actor and persistence evidence (2026-10-17)
+
+The hazard-owned `hazard.py` scope now requires current registered identity for
+each existing hazard event, reusing the canonical staff lookup. Referrals also
+check the destination separately; SQL repeats both checks under its existing
+writer transaction. Removed/demoted staff, changed OIDs and substituted receiver
+identities cannot acquire authority from a cached session or recycled code.
+No delegation or role policy is granted by this check.
+
+Reporter and repair-recorder snapshots retain code/email/OID. Independent
+retrofit restart rejects a match on any nonempty normalized identifier, with
+retained event/legacy identity fallbacks. The recorded decision is still an
+external human evidence assertion, not product assessment of release sufficiency
+or external hazard closure. Home scope, separate sent/receipt/acceptance,
+sender follow-up and unknown externally supplied timing remain unchanged.
+
+Failed SQL events quarantine staged state/success audit before recovery reads,
+retain prior pending audit and original errors, and clear their validation scope.
+Correction ONE also marks an acknowledged SQL COMMIT before post-commit
+synchronization. If that later read fails, recovery never replays the already
+committed audit baseline; it retains/logs the original error and explicitly
+reports that the transaction committed. Reload and reconcile before retrying.
+JSON persists before emitting success/emergency audit: known pre-replacement
+failure restores memory without a success entry. JSON state and its separate
+audit file are not one transaction; an audit failure after save explicitly logs
+and annotates a potentially persisted outcome. Reload and reconcile before
+retrying, rather than assume rollback or duplicate the referral.
+
+Canonical hazard tests run on JSON/SQLite (33 run, one JSON-only skip on SQLite)
+and the opt-in `test_mssqlstore.MssqlHazardReferral` adapter runs them on an
+actual disposable local SQL Server (16 run, one JSON-only skip). The latter
+includes separate-connection commit-time authority changes and failed
+release/audit/recovery-read probes, including one-shot/persistent post-commit
+synchronization failure with release and prior audit retained exactly once.
+The independent Review found that latter defect before correction; its original
+Not accepted result remains historical, and parent correction checks are not
+independent final-head acceptance. It does not run SQLite-specific transaction
+trace tests or establish Azure concurrency, verified transport, real approval
+or operational timing policy. Shared fixture recipe and exact manifest hashes
+remain unchanged; eleven profile/nine workflow full-journey acceptance is still
+unavailable and provisional.
 
 ## Return, reopen and handoff accountability (#83)
 

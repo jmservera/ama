@@ -237,3 +237,33 @@ class HazardApi(unittest.TestCase):
         self.assertIsNone(h["repaired"])
         self.assertEqual(h["legacy_record"]["job"], "OLD")
         self.assertEqual(len(h["history"]), 1)
+
+    def test_cached_session_cannot_record_after_staff_authority_changes(self) -> None:
+        self.report()
+        self.refer()
+        self.call("bea", "/api/cases/ZF-1")
+        before = self.store.detail("ZF-1")["hazards"]
+        audit = list(self.store.audit_entries())
+        row = self.store.db.execute(
+            "SELECT body FROM staff WHERE email=?", ("bea@example.test",)
+        ).fetchone()
+        original = json.loads(row[0])
+        for field, value in (("role", "Contractor"), ("oid", "SYN-REPLACED")):
+            changed = dict(original, **{field: value})
+            with self.store.dblock:
+                self.store.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(changed), "bea@example.test"),
+                )
+            code, _ = self.post("bea", "hazard-receive", dict(index=0, evidence="SYN-RECEIPT"))
+            self.assertEqual(code, 403)
+            self.assertEqual(self.store.detail("ZF-1")["hazards"], before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+        with self.store.dblock:
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(original), "bea@example.test"),
+            )
+        self.assertEqual(
+            self.post("bea", "hazard-receive", dict(index=0, evidence="SYN-RECEIPT"))[0], 200
+        )

@@ -8,7 +8,7 @@ skip a state.
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import change_provenance, controls, insights, projection
+from . import change_provenance, controls, hazard, insights, projection
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
@@ -321,15 +321,16 @@ class WorkflowMixin:
 
     @staticmethod
     def _hazard_actor(user):
-        return dict(code=user["code"], email=user["email"], name=user["name"], role=user["role"])
+        return hazard.identity(user)
 
     def _hazard_event(self, c, h, user, action, evidence):
         events = h.setdefault("history", [])
         snapshot = deepcopy({k: v for k, v in h.items() if k != "history"})
         events.append(dict(version=len(events) + 1, action=action, at=_now(),
                            actor=self._hazard_actor(user), evidence=evidence, snapshot=snapshot))
-        self.audit(user["email"], action, c["id"], f"Home retrofit hold; {h.get('job', '')}; {evidence}")
-        self.save()
+        hazard.persist_event(self, user, c["id"], action,
+                             f"Home retrofit hold; {h.get('job', '')}; {evidence}",
+                             emergency=action == "safety_raised" and h["priority"] == "Emergency")
 
     def raise_hazard(self, user, case_id, category, priority, note="", metadata=None):
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
@@ -338,19 +339,16 @@ class WorkflowMixin:
         metadata = metadata or {}
         source = controls.text(metadata.get("source"), "the report source")
         aware = _hazard_time(metadata.get("aware_at"), "the awareness time", actual=True)
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
             h = dict(category=category, priority=priority, noticed=aware[:10], aware_at=aware,
                      source=source, recorded_at=_now(), referred=None, repaired=None, released=False,
                      job="", owner=user["name"], sender=self._hazard_actor(user),
                      raised_by=user["name"], raised_by_email=user["email"],
+                     raised_identity=self._hazard_actor(user),
                      note=controls.text(note, "", required=False),
                      hold=dict(scope="Home", case_id=case_id, status="Active",
                                accountable_role="Building Safety Liaison", decision=None))
             c["hazards"].append(h)
-            if priority == "Emergency":
-                self.audit(user["email"], "safety_emergency", case_id,
-                           "Reported emergency: use the existing hazard service immediately; retrofit and AI gates must not delay referral")
             self._hazard_event(c, h, user, "safety_raised", source)
             return len(c["hazards"]) - 1
 
@@ -358,11 +356,10 @@ class WorkflowMixin:
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff")
         job = controls.text(job, "the external hazard or repair case reference", 40)
         evidence = controls.text((metadata or {}).get("evidence"), "evidence of sending the referral")
-        to = self._staff_person(to_email)
-        if to["role"] not in SAFETY_ROLES:
-            raise ValueError("Refer a safety issue to the Building Safety Liaison or a manager.")
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
+            to = hazard.subject(self, self._staff_person(to_email))
+            if to["role"] not in SAFETY_ROLES:
+                raise ValueError("Refer a safety issue to the Building Safety Liaison or a manager.")
             h = self._hazard(c, idx)
             if h["released"] or h.get("referral_version"):
                 raise ValueError("This safety issue has already been referred.")
@@ -381,14 +378,13 @@ class WorkflowMixin:
         h = self._hazard(c, idx)
         if (h["released"] and not allow_released) or not h.get("referral_version"):
             raise ValueError("Record a prospective evidenced referral before continuing.")
-        if h["destination"]["code"] != user["code"]:
+        if hazard.identity(h["destination"]) != self._hazard_actor(user):
             raise PermissionError("Only the designated safety receiver can record this event.")
         return h
 
     def receive_hazard(self, user, case_id, idx, evidence):
         evidence = controls.text(evidence, "the external receipt evidence")
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
             if h.get("received_at"):
                 raise ValueError("Receipt has already been recorded.")
@@ -397,8 +393,7 @@ class WorkflowMixin:
 
     def accept_hazard(self, user, case_id, idx, evidence):
         evidence = controls.text(evidence, "the external acceptance evidence")
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
             if not h.get("received_at") or h.get("accepted_at"):
                 raise ValueError("Record receipt first; acceptance can only be recorded once.")
@@ -413,8 +408,7 @@ class WorkflowMixin:
                  for k in fields if metadata.get(k) not in (None, "")}
         if not times:
             raise ValueError("Add at least one externally recorded response or resident-update time.")
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user, allow_released=True)
             if not h.get("accepted_at"):
                 raise ValueError("Record acceptance before observing service times.")
@@ -427,14 +421,14 @@ class WorkflowMixin:
 
     def record_repair(self, user, case_id, idx, evidence=None):
         evidence = controls.text(evidence, "the external repair evidence")
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard_receiver(c, idx, user)
             if h["released"] or h.get("repaired"):
                 raise ValueError("This repair is already recorded.")
             if not h.get("accepted_at"):
                 raise ValueError("Record acceptance before observing repair evidence.")
             h.update(repaired=_today(), repaired_by=user["name"], repaired_by_email=user["email"],
+                     repaired_identity=self._hazard_actor(user),
                      repair_evidence=evidence)
             self._hazard_event(c, h, user, "safety_repaired", evidence)
 
@@ -443,17 +437,13 @@ class WorkflowMixin:
             raise PermissionError("Only the Building Safety Liaison or a manager can release a retrofit hold.")
         note = controls.text(note, "the retrofit hold release reason")
         evidence = controls.text(evidence, "the external evidence supporting hold release")
-        with self.lock:
-            c = self._case(case_id)
+        with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard(c, idx)
             if h["released"]:
                 raise ValueError("This retrofit hold is already released.")
             if not h.get("repair_evidence") or not h.get("accepted_at"):
                 raise ValueError("Record receipt, acceptance and external repair evidence before hold release.")
-            if user["email"] in (h.get("raised_by_email"), h.get("repaired_by_email")) or (
-                not h.get("raised_by_email") and user["name"] == h.get("raised_by")
-            ):
-                raise PermissionError("Someone other than the reporter and repair recorder must release the retrofit hold.")
+            hazard.require_independent(user, h)
             h.update(released=True, released_by=user["name"], released_at=_now(), release_note=note)
             h["hold"].update(status="Released", decision=dict(at=_now(), actor=self._hazard_actor(user),
                                                             reason=note, evidence=evidence))

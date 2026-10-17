@@ -7,6 +7,48 @@ ms.topic: reference
 
 ## Outcome and Evidence Boundary
 
+### Hazard referral evidence engineering continuation (2026-10-17, #85)
+
+The [existing referral/home-hold contract](../../../../src/core/README.md#hazard-referral-and-home-retrofit-holds-85)
+already records source/awareness, separate sent/receipt/acceptance, owned
+follow-up, fixed affected-home scope, independent restart evidence and external
+response/resident-update times. The workbench does not classify hazards,
+calculate statutory clocks, close the external case or send resident messages.
+This audit corrects evidence integrity, not those service responsibilities.
+
+Fresh fictional probes found an unregistered actor accepted, a repair recorder
+self-releasing by email casing and a failed save leaving a success audit without
+the hazard. The hazard-owned correction reuses current registered staff lookup,
+checks caller and destination again under the SQL writer transaction, binds the
+receiver's persisted identity and compares historical email/code/OID for
+independence. Existing provisional role/delegation boundaries are not new
+authority. BRD hazard intent is FR-003/RULE-003; the issue's older BRD FR-015
+pointer now describes tenure. PRD FR-015/AC-018/038 remain the hazard reference.
+
+Canonical JSON/SQLite evidence: 33 run, one JSON-only skip on SQLite.
+Actual task-owned loopback SQL Server: 16 run, one JSON-only skip, including
+separate-connection authority revocation/substitution and failed release/audit/
+recovery-read cases. Failed SQL events cannot leave a staged success audit;
+earlier pending audit remains exactly once. JSON saves precede success audit,
+but its separate files are not transactional: post-save audit failure explicitly
+requires reload/reconciliation rather than claiming rollback.
+
+The one independent Review returned Complete / Not accepted for a reproduced
+post-commit synchronization defect: recovery replayed already-committed prior
+audit. Authorized correction ONE marks the acknowledged COMMIT and distinguishes
+its recovery from uncommitted rollback. Canonical one-shot/persistent fault
+checks pass on SQLite and actual task-owned SQL Server, retaining committed
+release and both audit entries exactly once with explicit outcome warnings.
+The original adverse Review remains; parent checks do not establish independent
+final-head closure or operational acceptance.
+
+No web source changed, and no new browser, human or WCAG acceptance is claimed.
+The [existing API and manual screen](../../../../src/api/README.md#hazard-referral-and-retrofit-hold-api-85)
+preserve Fluent 2/native semantics and unknown timing signals. Verified service
+delivery/receipt, operational responsibility/timing/escalation ratification,
+real professional approval and Azure/model/human acceptance remain open.
+No regulatory snapshot was edited and no legal currentness claim is made.
+
 ### Assessment reconciliation engineering continuation (2026-10-17, #84)
 
 Original post-implementation Review: **Not accepted, blocking recovery defect**. An
