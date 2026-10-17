@@ -113,3 +113,12 @@ overlap. Owner recovery explicitly authorizes one own-branch rebase after
 committing retained work onto main74617981; preserve source/test patch parity
 and exact upstream KB prefix. Normal initial push if remote branch absent.
 Never merge, close issue or force-push. Record exact head/PR.
+
+Current owner exception 2026-10-17 22:28: rebase own topic onto fresh
+main943febc23e99e397724cb81d2580f781b91e13f7 after merged sensor #393.
+Allow only own-topic force-with-lease exact remote
+92c3bae39c09d68dd72f2fe82c5ed40f0fdcfb2a. Preserve both Store imports and all
+sensor export/pre-dispatch/current-generator checks, both README sections and
+exact upstream KB prefixes. Prove unchanged deltas and execute combined event/
+sensor status/document/chat/map regressions. No new full Review or correction
+cycle. Existing SQL25 receipt remains historical for unchanged persistence.

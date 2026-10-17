@@ -13,7 +13,8 @@
     "critique": ".copilot-tracking/reviews/plans/2026-10-17/progress-event-capture-102-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-changes.md",
     "review": ".copilot-tracking/reviews/logs/2026-10-17/progress-event-capture-102-review.md",
-    "correction_one": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-correction-one.md"
+    "correction_one": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-correction-one.md",
+    "sensor_integration": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-sensor-integration.md"
   },
   "confirmed_decisions": [
     {
@@ -36,13 +37,15 @@
   "publication": {
     "pr": "https://github.com/jmservera/ama/pull/394",
     "branch": "feat/progress-event-capture-102",
-    "base": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
-    "source_commit": "67cd199ec05879c01fe489eb44b901fe6615a7e7",
-    "source_patch_sha256": "a2941c0396004da38ce7a21d9f65c155e42a5d735b1aacccab9f83eb5c077379",
+    "base": "943febc23e99e397724cb81d2580f781b91e13f7",
+    "source_commit": "628f144a",
+    "prior_base_source_patch_sha256": "a2941c0396004da38ce7a21d9f65c155e42a5d735b1aacccab9f83eb5c077379",
+    "integration_equivalence": "Exact nonshared files and shared added/removed deltas; Store additive import normalized, receipt details hashes",
+    "authorized_expected_old_remote": "92c3bae39c09d68dd72f2fe82c5ed40f0fdcfb2a",
     "original_review": "Complete / Defects found",
     "correction_cycles": 1,
     "coordinator_acceptance": "Not claimed"
   },
-  "next_action": { "phase": "Handoff", "action": "Independent coordinator final-head judgment on PR394; no second RPI Review, automatic merge or issue closure" },
+  "next_action": { "phase": "Handoff", "action": "Independent coordinator final-head gate for integrated PR394; original adverse Review/correction ONE unchanged, no automatic merge or issue closure" },
   "prioritized_follow_ups": ["Coordinate actual quality.py overlap with #88", "Operational/full-history evidence and JSON cross-file crash atomicity remain separate"]
 }

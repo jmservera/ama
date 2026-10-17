@@ -141,3 +141,26 @@ parallel full diff review; PR body used existing completed original Review and
 actual correction receipts. Content-policy/public-output guidance applied.
 No coordinator Pass, merge, issue closure, paid rubric dispatch or CI watch.
 This final tracking receipt does not change source/test/runtime fingerprints.
+
+## P03-T02 Resumed Sensor Integration
+
+Owner 22:28 authorized own-topic rebase after independently reviewed #393
+merged as943febc23e99e397724cb81d2580f781b91e13f7. Before writes verified clean
+branch at92c3bae39c09d68dd72f2fe82c5ed40f0fdcfb2a and matching remote/PR head.
+Fetched main, saved pre-integration complete src patch in private session.
+Rebase conflicts: Store import line (union change_provenance + export_fields),
+append-only KB log (all upstream sensor entries before all own entries).
+README/index auto-merged. No runtime logic conflict or persistence edit.
+Fresh GitHub identity and privacy committer used. Original Review/correction
+ONE unchanged; no new Review. Combined runtime/static validation active before
+exact-lease publication; source/test parity evidence to follow.
+
+Sensor integration receipt now records actual dispositions and validation:
+.copilot-tracking/changes/2026-10-17/progress-event-capture-102-sensor-integration.md.
+Ten nonshared owned src files byte-identical; shared Store delta exact with
+additive import normalization, core README/pyproject deltas exact; all other
+sensor src equal new main. Full upstream KB prefixes and original adverse
+Review/correction ONE artifacts exact. Combined301 run/274 pass/27 skips;
+core/API/agents configured statics pass118/55/23 typed files.
+No persistence change, SQL not restarted; SQL25 and image receipts historical.
+P03-T02 ready for exact-lease push and PR body refresh, no new Review.

@@ -5857,3 +5857,11 @@ metadata when the knowledge base was created.
   prefixes. Post-integration26 JSON/SQLite checks passed. Published main
   PR #394, Refs #102; independent final-head acceptance, merge and the remaining
   issue checkbox stay coordinator/owner-owned. No other branch was rewritten.
+* At22:28 owner authorized own-topic integration onto merged sensor #393,
+  main943febc2, with exact old-remote92c3bae3 lease. Union Store imports retain
+  sensor pre-dispatch validations and progress event/recovery writers; both
+  core README sections, full upstream index/log prefixes and own entries stay.
+  Nonshared files/shared deltas verified, combined301 run/274 pass/27 explicit
+  skips and core/API/agents statics pass. No persistence change or SQL restart;
+  prior SQL25 evidence historical. Original adverse Review/correction ONE
+  unchanged; PR #394 independent final gate and issue #102 remain open.

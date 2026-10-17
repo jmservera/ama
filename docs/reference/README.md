@@ -362,3 +362,7 @@ The single original Review completed with two Medium findings. Correction ONE
 retains that adverse verdict, fails closed on later contradictory handoff
 states, and explicitly proves event/audit counts after SQL committed refresh
 failure/retry/restart. Final-head coordinator judgment is not self-awarded.
+Authorized integration of merged sensor #393 onto main943febc2 retains its
+closed exports/current-generator admission and prospective event recovery.
+Combined301 checks ran:274 pass,27 explicit skips; original Review/correction
+ONE unchanged. Independent PR #394 final-head gate remains outstanding.
