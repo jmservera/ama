@@ -23,10 +23,11 @@ remain unmet. Failing-first evidence and correction disposition follow.
 ## Execution Status
 
 * Original source/RPI/PR delivery: Complete. Authorized correction ONE:
-  implemented and validated, publication pending.
+  implemented, validated and source published normally at ed29c364.
 * Declared invocation scope: full plan; implementation starts P01-T01
-* Completed scope markers: P01/P02/P03 and all six original tasks, P04-T01
-* Remaining active-plan task: P04-T02 correction publication; no further rebase authorized
+* Completed scope markers: P01/P02/P03/P04 and all eight tasks
+* Remaining active-plan tasks: none; independent corrected-head acceptance and
+  conflicting main integration remain coordinator-owned, no further rebase authorized
 * Approved writes: setup classifier/tests, infra runbook, existing KB route/log and dated RPI artifacts.
 
 ## Execution Summary
@@ -298,3 +299,29 @@ sys.exit(not result.wasSuccessful())
 * No cloud/live setup, private inputs, Graph, SQL, tags/IAM/network changes,
   paid rubric, merge or issue closure. ACR403/private publisher and real
   tenant/browser/SQL/AI gates remain unmet.
+
+## Correction ONE Publication Receipt
+
+* Source commit: ed29c364f4656e9c091b907c8fced30dba266f03,
+  fix(infra): validate setup ARM identities and template envelopes.
+* Actual commands: fresh `gh api user --jq '[.id,.login] | @tsv'`,
+  repository-local privacy-safe name/email, explicit author/committer environment,
+  `git commit` with Refs #360 and required Copilot coauthor trailer, then
+  `git push origin HEAD:refs/heads/fix/setup-profile-evidence-360`.
+  Normal fast-forward 9561938a -> ed29c364 succeeded. No rewrite/rebase.
+* `git ls-remote --heads origin fix/setup-profile-evidence-360` and
+  `gh pr view 391 --json headRefOid,baseRefName,state,mergeable,statusCheckRollup`
+  verified matching source head, OPEN, base main, CONFLICTING, empty checks.
+* Fresh main advanced to 22670277; no unauthorized integration attempted.
+  Source correction complete but merge is blocked and independent acceptance
+  still belongs to coordinator.
+* Inspected .github/workflows/src-ci.yml and mvp-validation.yml: both ordinary
+  validation workflows allow workflow_dispatch on own branch. Infra paths
+  qualify for PR validation but conflicting PR has no checks. Inspected
+  infra-plan.yml: cloud what-if requires workflow_run.event pull_request, so
+  a dispatch is excluded. src-deploy.yml is explicit dispatch/main-only and
+  is not invoked. No paid rubric dispatch.
+* This receipt is a normal documentation fast-forward. Dispatch only ordinary
+  Source projects CI and MVP validation on its final pushed head, then record
+  exact run IDs/status on PR #391. Until observed, no corrected-head CI success
+  claimed. Original adverse assessment remains unchanged.

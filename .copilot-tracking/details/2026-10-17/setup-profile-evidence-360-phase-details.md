@@ -17,7 +17,7 @@
 | P01 | Reproduce and implement | Complete | P01-T01, P01-T02 |
 | P02 | Validate and document | Complete | P02-T01, P02-T02 |
 | P03 | Review and deliver | Complete; authorized integration published | P03-T01, P03-T02 |
-| P04 | Authorized correction ONE | In progress | P04-T01, P04-T02 |
+| P04 | Authorized correction ONE | Complete; independent acceptance pending | P04-T01, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reproduce and implement
@@ -157,8 +157,15 @@ explicitly. Six new correction methods, original adverse disposition retained.
 
 Final combined 206 tests pass in 4.500 seconds; configured lint/format, correction
 line lint, syntax and whitespace pass. Original critique/Review hashes match;
-append-only log prefix and unchanged src verified. Normal commit/push pending.
+append-only log prefix and unchanged src verified. Normal source commit/push
+ed29c364f4656e9c091b907c8fced30dba266f03 verified on remote and PR #391.
+Fresh gh api user supplied repository-local noreply author and committer;
+required coauthor trailer retained. Final receipt is a normal fast-forward.
 Original critique/Review must remain byte-identical. Separate disposition:
 .copilot-tracking/changes/2026-10-17/setup-profile-evidence-360-correction-one.md.
 No new full Review, self-Pass, merge, issue closure or live setup. Fresh main
 22670277 recorded read-only; no additional rebase authorized.
+PR #391 now CONFLICTING; no exact corrected-head checks appeared automatically.
+Read ordinary src-ci/mvp-validation triggers and downstream infra-plan/
+src-deploy gates: dispatch validation only, no rubric/deployment. Final-head
+dispatch/result belongs in PR handoff; absence/pending never treated as green.

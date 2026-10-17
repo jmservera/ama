@@ -154,7 +154,7 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 * PR includes actual offline results and partial acceptance/live-unmet boundaries.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Authorized coordinator correction ONE
+### [x] P04: Authorized coordinator correction ONE
 
 * Scope: exact-9561938a independent Revise, two Medium defects only; no new
   full Review or critique. No additional rebase authorized.
@@ -167,10 +167,14 @@ None for offline source work. Critique gate passed; live acceptance excluded.
   envelope guards now implemented; six new correction methods.
 
 <!-- rpi:task id=P04-T02 -->
-#### [ ] P04-T02: Validate, retain adverse disposition and publish normally
+#### [x] P04-T02: Validate, retain adverse disposition and publish normally
 
 * Complete expanded named suites, configured statics, exact artifact integrity,
   separate correction disposition, fresh identity and normal same-PR push.
+* Source correction ed29c364 published normally to #391; receipt follows
+  normally. Current PR conflicts with advanced main; no further rebase
+  authorized. Ordinary validation dispatch on final receipt head only;
+  coordinator owns corrected-head acceptance.
 
 ## Dependencies
 

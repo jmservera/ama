@@ -5,11 +5,15 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
-  "session_status": "running",
+  "session_status": "stopped",
   "correction_one": {
     "authority": "Coordinator exact-9561938a independent Revise, two Medium defects, 2026-10-17",
     "scope": "Case-insensitive structurally validated ARM binding; supported template envelope/resources; failing-first tests",
-    "status": "implemented_validated_publication_pending",
+    "status": "implemented_validated_source_published",
+    "source_commit": "ed29c364f4656e9c091b907c8fced30dba266f03",
+    "publication": "Normal push verified on remote and PR #391; final documentation receipt follows normally",
+    "ci": "No corrected-head automatic checks; ordinary-only validation inspected for final-receipt dispatch; exact run receipt on PR #391, not green until observed",
+    "mergeability": "CONFLICTING after main advanced; no new rebase authorized",
     "independent_verdict": "Exact-9561938a Revise retained; corrected-head acceptance not established",
     "disposition": ".copilot-tracking/changes/2026-10-17/setup-profile-evidence-360-correction-one.md",
     "failing_first": "2 methods, 4 failures invalid envelopes accepted, 1 error valid mixed-case binding refused",
@@ -47,10 +51,10 @@
     "ci": "Automatic ordinary Source projects CI 39067847373 and MVP validation 39067847374 queued for 9c0ffe22; final receipt push triggers current-head checks, whose actual outcome is recorded on PR #391; no manual or paid rubric dispatch",
     "new_review": false
   },
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Normal own-branch commit/push correction ONE with separate disposition; preserve original artifacts; no rebase or new full Review"},
+  "blockers": ["PR #391 conflicts with advanced main; further integration requires coordinator authorization", "Independent corrected-head acceptance and live ACR403/tenant/browser/SQL/AI gates remain unmet"],
+  "next_action": {"phase": "Follow-up", "action": "Publish final normal receipt and dispatch only inspected ordinary validation; stop clean/pushed with exact-head run receipt on PR #391. Coordinator owns corrected-head assessment and conflicting-main disposition; no new full Review or rebase"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Assess exact-head ordinary CI and independent coordinator final-head acceptance", "rationale": "Integration published and MERGEABLE; queued/pending checks are not green; merge remains owner-controlled", "evidence": "PR #391 at 9c0ffe22; Source projects CI and MVP validation triggered automatically; no rubric dispatch"},
+    {"rank": 1, "task": "Assess corrected-head ordinary CI, independent acceptance and conflicting-main integration", "rationale": "Correction source published; current PR CONFLICTING; no further rebase authorized; absence/pending checks not green", "evidence": "PR #391 at ed29c364; ordinary validation inspected for final-receipt dispatch; no rubric or cloud workflow dispatch"},
     {"rank": 2, "task": "Establish authorized live credential/export and initializer-publication prerequisites", "rationale": "Prerequisite to genuine setup acceptance; no safe source-only bypass", "evidence": "Review RV-001; owner-reported live credential and initializer publication 403 gates"},
     {"rank": 3, "task": "Verify actual tenant/browser/role/SQL/AI acceptance before separately approved retirement", "rationale": "High value but depends on live prerequisites and separate authorization", "evidence": "Review RV-001; issue #360 criteria d/e"}
   ]
