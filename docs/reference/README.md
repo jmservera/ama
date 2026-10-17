@@ -105,6 +105,12 @@ report/resident/handoff/negative-writer checks preserve precise UTC source-order
 reporting and independent remedy clocks. Prior real SQL/browser/image receipts
 remain historical, not newly run. No full event capture or independent Pass.
 
+The subsequent #88 rebase onto setup-fix PR #391/main74617981 retains
+the entire src tree unchanged and exact upstream setup classifier/guard tests.
+Only the log append conflicted; all routes/history retained. Fresh focused
+resident core/API checks:65run,63pass,two existing skips; no repeated SQL/image
+or infra acceptance claimed.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect sensor privacy admission and external exports (#112) | [Core replay and closed-field contract](../../src/core/README.md#sensor-admission-and-external-context-112) | [Dated actual-source synthesis](./research/iot-sensor-analytics-research-plan.md#sensor-privacy-engineering-boundary-2026-10-17-refs-112): exact generated observations only, explicit stock Selection, closed chat context and malformed AI/map refusal. Original Review Not accepted retained; correction ONE closes raw-status and document pre-dispatch ordering with failing-first tests, not a second independent Pass. No sensor-analysis runtime or registered sensor AI purpose; manual detail/static tiles unchanged. OD-43 and #175 source origins remain unverified; no real-use or legal approval |

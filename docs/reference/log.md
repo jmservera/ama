@@ -5752,3 +5752,19 @@ metadata when the knowledge base was created.
   data, other worktree, Azure/paid AI, authority, independent Pass, merge,
   issue closure or WCAG acceptance. Full capture stays with issue102events;
   wider governance retains its separate named routing owner/next action.
+
+## [2026-10-17] integration | #88 onto setup391 main
+
+* Coordinator authorized own-topic rebase from clean exact remote
+  cfeb18598ba8ae84cb8b80c0c7623e375ae886fe onto fetched main
+  74617981b71bc3f10bd21d0b78691bc3cf36c473. Only KB log append
+  conflict; exact upstream prefix plus all own entries and all routes retained.
+* Entire src tree byte-identical to prior tested topic; exact fourteen-file
+  own added/removed patch parity. Setup391 classifier, negative tests and guide
+  byte-identical to upstream. Original Review/critique and previous issue88
+  RPI/integration evidence unchanged, no new full Review or source correction.
+* Fresh focused resident core/API:65run,63pass,two existing skips (JSON-only
+  rollback in SQLite, opt-in browser). No full SQL/Docker/browser or infra
+  replay for doc-only base conflict plus source fingerprints; prior evidence
+  remains historical. No independent Pass, cloud/private writes, authority,
+  full event capture, merge, issue closure or WCAG acceptance.
