@@ -243,6 +243,36 @@ def make_handler(app):
             s = app.store
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            progress_q = parse_qs(url.query, keep_blank_values=True) if url.path in ("/api/stats", "/api/cases.csv") else {}
+            if "report" in progress_q:
+                from zava_forward.core import progress
+                try:
+                    q = progress_q
+                    if q["report"] != ["progress"]:
+                        raise ValueError("Choose the progress report.")
+                    accepted = {"report", "as_of", "start", "view", "ready", "capacity", "duration", "weeks",
+                                "stage", "area", "wave", "owner", "contractor", "flag", "queue"}
+                    if set(q) - accepted or any(len(values) != 1 or not values[0].strip() for values in q.values()):
+                        raise ValueError("Unknown, empty or repeated progress report parameter.")
+                    scenario = {}
+                    for key in ("ready", "capacity", "duration", "weeks"):
+                        if key in q:
+                            try:
+                                scenario[key] = int(q[key][0])
+                            except ValueError:
+                                raise ValueError(f"{key} must be a whole number.") from None
+                    result = s.progress_report(u, as_of=q.get("as_of", [None])[0],
+                                               start=q.get("start", [None])[0],
+                                               view=q.get("view", ["mine"])[0], filters=filt(q),
+                                               scenario=scenario or None)
+                    if url.path.endswith(".csv"):
+                        return self._send(200, progress.export_csv(result), "text/csv; charset=utf-8",
+                                          {"Content-Disposition": 'attachment; filename="progress.csv"'})
+                    return self._json(200, result)
+                except ValueError as error:
+                    return self._json(400, {"error": str(error)})
+                except PermissionError as error:
+                    return self._json(403, {"error": str(error)})
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, None)
             form_parts = url.path.strip("/").split("/")

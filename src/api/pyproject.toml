@@ -65,6 +65,14 @@ follow_imports = "skip"
 [tool.setuptools.package-data]
 "zava_forward.api" = ["web/*", "web/vendor/*", "web/vendor/images/*"]
 
+[[tool.mypy.overrides]]
+module = ["test_progress_report_api", "tests.test_progress_report_api"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["test_progress_reports"]
+ignore_missing_imports = true
+
 # Keep the new HTTP harness typed while calling the migrated Store/server boundary.
 [[tool.mypy.overrides]]
 module = ["test_stock_reconciliation_api", "tests.test_stock_reconciliation_api",

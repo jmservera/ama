@@ -5503,3 +5503,39 @@ metadata when the knowledge base was created.
   passed. Configured Ruff/format/mypy pass. No new MSSQL/browser replay for
   consumer-only change; prior actual SQL/browser evidence remains historical.
   External final-head/artifact gate remains pending, no self-regraded Pass.
+
+## [2026-10-17] engineering | Historical progress controls (#102)
+
+* Added a read-only progress mode to existing stats and CSV paths, reusing
+  authorized current-record cohort filters and preserving default responses.
+  Exact structured return/reopen/handoff events supply only observed clocks;
+  missing, legacy, malformed and contradictory history remains unresolved.
+  No narrative/snapshot reconstruction or audit/event rewriting.
+* Declared EXA-009 scenarios show independent pools, assumptions, sensitivity
+  uncertainty and data limits. Forecast is not a target, approved plan,
+  professional decision, promise, accepted outcome or validated resource plan.
+  No new AI/provider or inference of AI absence; approvals/consent unchanged.
+* Shared report/export contract retains UTC as-of/period, definitions, sources,
+  current cohort/filter impact, denominators and exceptions without raw private
+  actor/source/note/commercial fields. Updated component guides, programme
+  synthesis and index; all upstream routing and log entries retained.
+* Local fictional JSON/SQLite and actual uniquely named loopback Docker MSSQL
+  checks plus non-root API image behavior provide bounded engineering evidence.
+  Complete forward-event capture, ledger anchoring, verified operational
+  capacity, human/WCAG/Azure/AI acceptance and coordinator closure remain open.
+  PRD/BRD FR-022/023/024 numbering contradiction is disclosed, not silently
+  resolved. No #91/#92 domain edits or other-worktree/private-data reads.
+
+## [2026-10-17] correction ONE | Historical progress malformed inputs (#102)
+
+* Retained the original Complete / Defects found Review unchanged. Failing-first
+  tests reproduced blank query fallback and UTC conversion overflow. One
+  bounded correction now rejects empty/repeated report fields without changing
+  default stats/CSV and surfaces unrepresentable event times as unknown.
+* Final focused 88 and actual task-owned loopback MSSQL eight tests passed;
+  core/API lint/format/mypy passed. Corrected non-root image checked exact
+  installed source hashes, hardening, authenticated report/export parity,
+  clocks/scenario and both defects' HTTP 400 paths.
+* No second full Review, Correction TWO, independent coordinator Pass, merge
+  or full historical/operational approval. Own local containers stopped and
+  retained without deletion; complete event capture/resources remain open.

@@ -16,6 +16,63 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Historical progress evidence and declared forecasts (#102)
+
+`Store.progress_report(user, as_of=..., start=None, view="mine",
+filters=None, scenario=None)` is read-only and staff-only, including direct
+calls. It reuses the existing current-record cohort filter under the Store
+lock, including SQL refresh and manager-only closed views. Cohort membership
+is current-source selection, not reconstructed historical membership.
+The versioned `progress/v1` report freezes case IDs, filters, baseline/
+selected/excluded denominators, inclusive UTC period and approval status.
+
+Only exact structured `returns` and `handoff_history` events supply clocks.
+Versions, timezone-aware times, exact stages/states and chain consistency are
+checked. A consistent pair of return/reopen boundaries yields calendar elapsed
+seconds clipped to the selected period. First entry and last exit remain
+unknown. Only `Contact paused` and `Resident paused works` classify observed
+paused stage intervals. Separate lifecycle decisions are never inferred from
+these stages. Handoff receipt is not acceptance; an observed offer-to-terminal
+wait and a pending censored wait are distinguished. Repeated reopenings remain
+events, not completions.
+
+Narrative `history`, current `stage_since`/`days_in_stage`, closure flags and
+prose/naive-time audit entries never establish historical durations or accepted
+handover. Missing, malformed, unmappable, contradictory and incomplete history
+produces null clocks and unresolved exceptions, not a fabricated zero.
+Structured history is reported as partial coverage, not a proof that each event
+is ledger-anchored or that no intervening events were omitted. Ledger integrity
+is checked separately without rewriting it. Raw actor identities, source
+references, reasons, notes, resident data and commercial values are withheld;
+safe source locators, metadata status and event versions remain inspectable.
+
+Without a declared scenario the Forecast is unavailable, not a zero projection.
+`scenario={"ready": 12}` on a selected denominator of 16 uses the
+[addendum's EXA-009](../../docs/case_study_48_addendum.md#numerical-targets-and-attribution):
+two independent installation and QA/handover resource pools, capacity two at
+each stage, one-week stage duration, four weeks. Central cumulative hypothetical
+handovers are `[0, 2, 4, 6]`; capacity one/three and two-week duration
+sensitivities are `[0, 1, 2, 3]`, `[0, 3, 6, 9]`, `[0, 0, 0, 2]`.
+Optional `capacity`, `duration` and `weeks` are bounded positive integers;
+`ready` must be a whole number within the selected denominator.
+The declared ready subset is hypothetical, not derived installation readiness.
+Held cases never silently enter the scenario. Sensitivity ranges are not
+statistical confidence intervals, targets, approved plans, promises or actuals.
+Committed resources, dependency releases, source freshness and calibration
+remain unverified; no professional approval, consent or finance authority is
+created. This baseline does not validate AI or imply no AI elsewhere.
+
+Run the owned fictional tests from the repository root:
+
+```bash
+PYTHONPATH=src/core/tests .venv/bin/python -m unittest test_progress_reports -q
+```
+
+See the [API/export contract](../api/README.md#historical-progress-report-and-export-102)
+for local HTTP, SQLite and opt-in actual loopback MSSQL consumers.
+No private dataset, provider call, operational forecast validation, Azure or
+human acceptance follows from these checks.
+
 ## Grant lifecycle and human exercise designation (#95)
 
 The existing `grants` state machine and separate `funding` application object
