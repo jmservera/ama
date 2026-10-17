@@ -4836,3 +4836,10 @@ metadata when the knowledge base was created.
   wider-delivery residuals for relay approval, publisher and human acceptance.
   Parent retains overall Residual work/d/e UNMET; publication follows without
   another Review, runtime execution, child delivery loop or merge.
+
+* Published main [PR #379](https://github.com/jmservera/ama/pull/379) on
+  chore/activate-scoped-initializer-360; implementation/phase evidence
+  4bf12775ca4025a15cd2c196547fc047375fd6e1 matched local/origin/PR head.
+  Privacy-safe author/committer and required trailer verified. Session stops
+  at exact documented outcome per owner; evidence-only completion follows.
+  No merge/forcepush/issue closure or remote CI acceptance claim.

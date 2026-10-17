@@ -15,7 +15,7 @@
 * Declared scope: full plan.
 * First execution boundary: P01-T01; no live apply before P01-T02 source review.
 * Completed markers: P01/P01-T01/P01-T02, P02/P02-T01, P03/P03-T01/P03-T02.
-* Remaining active implementation markers: none. Independent Review complete; parent publication pending.
+* Remaining active implementation markers: none. Independent Review complete; main PR #379 published and implementation head verified.
 * Approved writes: conditional relay exclusion, existing focused tests,
   dated evidence and directly related runbook/KB documentation; API-only
   RBAC deployment after review/exact what-if.
@@ -147,6 +147,24 @@ hashes and links/log history, and assessed parent's 59-test evidence and
 disclosed baseline lint. Only canonical Review record changed during Review.
 No second Review, live reexecution, closure fix or child task was started.
 The parent now publishes the reviewed exact outcome and stops as requested.
+
+## Publication and Stop
+
+Implementation/phase evidence committed as
+4bf12775ca4025a15cd2c196547fc047375fd6e1 and pushed normally to
+chore/activate-scoped-initializer-360. Main PR #379 OPEN:
+https://github.com/jmservera/ama/pull/379 .
+Local HEAD, origin branch and PR head matched that SHA; both author and
+committer use the authenticated privacy-safe address and required trailer.
+No issue closing syntax, merge, forcepush or unrelated source work.
+
+Publication receipt:
+.copilot-tracking/changes/2026-10-17/activate-scoped-initializer-360-publication-receipt.json.
+Initial PR check rollup was empty; no remote CI/rubric success is claimed.
+An evidence-only completion commit records the stopped session; final head
+is verified against origin/PR outside its self-referential receipt.
+Owner explicitly requested this stop: no follow-up child, extra Review,
+runtime execution or further Azure mutation. #360 d/e remain UNMET.
 
 ## Implementation-Time Plan and Detail Updates
 
