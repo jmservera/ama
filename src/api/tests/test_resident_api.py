@@ -234,6 +234,78 @@ class ResidentApi(unittest.TestCase):
         self.assertEqual(list(self.store.audit_entries()), audit)
         self.assertTrue(again.verify_audit())
 
+    def test_manager_response_owner_recovery_and_truthful_http_outcome(self) -> None:
+        self.assertEqual(
+            self.action(
+                "service_open",
+                route="Complaint",
+                summary="SYN recovery",
+                desired_outcome="SYN remedy",
+                service_owner="sam@example.test",
+                redress_owner="rae@example.test",
+                next_update="2099-01-01",
+            )[0],
+            200,
+        )
+        before = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
+        row = self.store.db.execute(
+            "SELECT body FROM staff WHERE email=?", ("sam@example.test",)
+        ).fetchone()
+        departed = dict(json.loads(row[0]), role="Contractor")
+        self.store.db.execute(
+            "UPDATE staff SET body=? WHERE email=?", (json.dumps(departed), "sam@example.test")
+        )
+        self.assertEqual(
+            self.action(
+                "service_update",
+                actor="pam",
+                id="SR-1",
+                status="Resolved",
+                next_update="2099-01-01",
+            )[0],
+            400,
+        )
+        body = dict(
+            id="SR-1",
+            expected_version=1,
+            responsibility="service",
+            owner="rex@example.test",
+            note="SYN departed officer",
+        )
+        self.assertEqual(self.action("service_reassign", actor="rae", **body)[0], 403)
+        self.assertEqual(
+            self.action("service_reassign", actor="pam", **dict(body, expected_version=0))[0], 409
+        )
+        audit_count = len(list(self.store.audit_entries()))
+        with patch.object(self.store, "detail", side_effect=OSError("SYN postwrite view")):
+            with self.assertLogs("zava_forward.api.server", level="ERROR"):
+                code, outcome = self.action("service_reassign", actor="pam", **body)
+        self.assertEqual(code, 409)
+        self.assertEqual(outcome["outcome"], "committed")
+        self.assertIn("recorded", outcome["error"])
+        recovered = self.store.cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(recovered["status_owner"]["email"], "rex@example.test")
+        self.assertEqual(recovered["history"][-1]["changes"]["old"], before["service_identity"])
+        self.assertEqual(recovered["remedy"], before["remedy"])
+        self.assertEqual(len(list(self.store.audit_entries())), audit_count + 1)
+        self.assertEqual(
+            self.action(
+                "service_update",
+                actor="rex",
+                id="SR-1",
+                status="Resolved",
+                next_update="2099-01-01",
+            )[0],
+            200,
+        )
+        self.assertEqual(
+            self.action("service_close", actor="rae", id="SR-1", note="SYN response only")[0], 200
+        )
+        self.assertEqual(
+            self.store.cases["ZF-1"]["service_requests"][0]["remedy"], before["remedy"]
+        )
+        self.assertEqual(self.action("service_reassign", actor="pam", **body)[0], 409)
+
     @unittest.skipUnless(os.environ.get("ZF_RESIDENT_BROWSER") == "1", "opt-in local browser")
     def test_browser_commitment_reassignment_response_closure_and_remedy_reopen(self) -> None:
         from playwright.sync_api import sync_playwright
@@ -327,6 +399,40 @@ class ResidentApi(unittest.TestCase):
             page.locator("#response-SR-1-note").fill("SYN response reopening")
             page.locator("#response-SR-1-note").press("Enter")
             page.get_by_text("Response: Open.", exact=False).wait_for()
+            sam = self.store.staff["sam@example.test"]
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(dict(sam, role="Contractor")), sam["email"]),
+            )
+            login("pam")
+            page.get_by_text("Reassign response responsibility for SR-1", exact=True).first.click()
+            page.locator("#response-owner-SR-1-owner").select_option("rex@example.test")
+            page.locator("#response-owner-SR-1-note").press("Enter")
+            feedback = page.locator("#response-owner-SR-1-feedback")
+            feedback.get_by_text("reason", exact=False).wait_for()
+            self.assertTrue(feedback.evaluate("(element) => element === document.activeElement"))
+            self.assertEqual(
+                page.locator("#response-owner-SR-1-owner").input_value(), "rex@example.test"
+            )
+            page.locator("#response-owner-SR-1-note").fill("SYN officer departure")
+            page.locator("#response-owner-SR-1-note").press("Enter")
+            page.get_by_text("Response: Open. Owner: Rex Coordinator.", exact=False).wait_for()
+            login("rex")
+            self.assertEqual(
+                page.get_by_text("Reassign response responsibility for SR-1", exact=True).count(), 0
+            )
+            page.get_by_text("Update a request", exact=True).click()
+            page.locator("#request-update-status").select_option("Resolved")
+            page.locator("#request-update-next_update").fill("2099-01-01")
+            page.locator("#request-update-note").fill("SYN recovered response")
+            page.locator("#request-update-note").press("Enter")
+            page.get_by_text("Response: Resolved.", exact=False).wait_for()
+            login("rae")
+            page.get_by_text("Close a request response", exact=True).click()
+            page.locator("#request-close-note").fill("SYN recovered response closure")
+            page.locator("#request-close-note").press("Enter")
+            page.get_by_text("Response: Closed.", exact=False).wait_for()
+            page.get_by_text("Remedy: Open.", exact=False).wait_for()
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 self.assertTrue(

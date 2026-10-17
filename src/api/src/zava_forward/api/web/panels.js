@@ -204,6 +204,15 @@ function residentPanel(c, id, refresh) {
     reqs.length ? reqs.map((r) => h("div", {}, h("strong", {}, `${r.id}: ${r.route}. ${r.status}.`),
       h("div", { class: "muted" }, `${r.summary || "Unknown"}. They want: ${r.desired_outcome || "Unknown"}. Dealt with by ${r.service_owner}. Redress owner: ${r.redress_owner}. Contact needs: ${(r.accessibility || ["Unknown"]).join(", ")}. Representative: ${r.representative_ref || "Unknown"}. Next update ${r.next_update || "Unknown"}.`),
       h("p", {}, `Response: ${r.status}. Owner: ${named(r.status_owner)}. Status date: ${stamp(r.status_at)}. Original date: ${stamp(r.opened_at)}.`),
+      (r.history || []).filter((event) => event.kind === "Response owner reassigned").map((event) =>
+        h("p", {}, `Response ${event.responsibility} owner changed from ${named(event.changes?.old)} to ${named(event.changes?.new)} by ${named(event.actor)} on ${stamp(event.at)}. Reason: ${event.note || "Unknown"}.`)),
+      ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role)
+        ? residentForm(`response-owner-${r.id}`, `Reassign response responsibility for ${r.id}`, [
+          ["responsibility", "Response responsibility", ["service", "redress"]],
+          ["owner", "New named response owner", ["", ...who]],
+          ["note", "Reason for response-owner reassignment"]
+        ], "service_reassign", (body) => ({ ...body, id: r.id, expected_version: r.version || 0 }))
+        : null,
       h("p", {}, `Remedy: ${r.remedy?.status || "Unknown"}. Owner: ${named(r.remedy?.owner)}. Status date: ${stamp(r.remedy?.at)}. Original date: ${stamp(r.remedy?.opened_at)}. Age band: Unknown (Housing/Complaints have not configured bands).`),
       r.remedy?.version ? residentForm(`remedy-${r.id}`, `Record remedy progress for ${r.id}`, [
         ["status", "Remedy status", ["Open", "In progress", "Resolved", "Closed"]],

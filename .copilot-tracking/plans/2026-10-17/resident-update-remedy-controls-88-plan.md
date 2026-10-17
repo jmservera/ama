@@ -6,7 +6,7 @@
 * Task ID: 88
 * Slug: resident-update-remedy-controls-88
 * Date: 2026-10-17
-* Planning status: Ready; single critique completed and all findings directly resolved
+* Planning status: authorized correction ONE implemented/validated; external disposition pending
 * Details: .copilot-tracking/details/2026-10-17/resident-update-remedy-controls-88-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/resident-update-remedy-controls-88-plan-critique.md
 
@@ -15,6 +15,11 @@
 Complete the existing resident-update record and add an independently owned remedy
 status to existing service requests. Closing the response cannot close the remedy.
 Keep delivery, handover and finance in their existing domain records.
+
+Completed coordinator-authorized scope is the departed response-owner correction
+under P01/P02. Add explicit manager-only versioned service/redress reassignment,
+preserving captured owner history and all independent clocks. Original Review/
+critique stay unchanged; no new full Review, base change or new policy authority.
 
 ### What You May Not Know
 
@@ -62,6 +67,10 @@ finance domain redesign, general permission service or automatic controlled muta
   explicit confirmation required before mutation.
 * Restrict new reference/text fields to existing resident-view roles; contractor allowlist
   unchanged. No prompt payload changes.
+* An existing resident-workflow manager can explicitly recover service or redress
+  responsibility with current request version, eligible new named owner and reason.
+  Capture old/new identities and actor/time without requiring a historical departed
+  owner to remain eligible. Preserve complaint/review independence and remedy owner.
 
 ## Non-Functional Requirements
 
@@ -112,6 +121,9 @@ OK (two opt-in skips), including adverse writer/recovery and mixed closure tests
 Wire existing resident forms and remove implicit handoff creation inputs; preserve routes.
 Completed: actual authenticated Chromium create/reassign, response-only closure,
 remedy close/reopen and response reopen; scoped controls retain inputs/live errors.
+Correction ONE: core recovery/HTTP negatives and actual manager-only browser
+recovery pass. Fresh guidelines and full changed-file read recorded in separate
+correction evidence; existing unrelated web findings are not conformance claims.
 
 <!-- rpi:phase id=P02 -->
 ### [x] P02: Validate and document
@@ -132,6 +144,13 @@ Update component guides, existing residents synthesis, KB route and append-only 
 reconcile plan/details/changes/state before one Review.
 Completed: existing guides/resident synthesis, additive index route, exact upstream
 log byte prefix plus append. Broader PRD/human acceptance explicitly not claimed.
+
+Correction ONE completion: 145 resident/browser/handoff/report tests, 134 pass/
+11 existing skips; 24 workflow/quality/hazard guards pass; eight targeted actual
+MSSQL tests pass/no skips, final configured statics and JS syntax pass. Interrupted
+broader replay is not a completed run. Original Review/critique unchanged;
+separate correction receipt maps all three exact criteria to source/test proof.
+Independent final-head disposition and normal publication remain external gates.
 
 ## Dependencies
 

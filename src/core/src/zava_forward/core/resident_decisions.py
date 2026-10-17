@@ -25,7 +25,7 @@ REQUEST_STATUSES = ("Open", "In progress", "Resolved")
 ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language", "Interpreter", "Representative contact", "Safe route needed")
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
-                    "service_reopen", "update_record", "remedy_confirm", "remedy_update")
+                    "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -34,7 +34,7 @@ RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews")
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
-FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen",
+FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
                     "update_record", "remedy_confirm", "remedy_update")
 
 
@@ -585,6 +585,44 @@ class ResidentDecisionMixin:
         req.update(version=req.get("version", 0) + 1, status_owner=_identity(owner), status_at=_time())
         req.setdefault("history", []).append(dict(status=req["status"], actor=_identity(user),
                                                  by=user["name"], at=req["status_at"], note=note))
+
+    def _res_service_reassign(self, user, c, body):
+        k.require_role(user, MANAGERS, "a resident-workflow manager")
+        req = k.find(c.get("service_requests", []), body.get("id"), "request")
+        _version(body, req)
+        key = k.choice(body.get("responsibility"), ("service", "redress"), "the response responsibility")
+        owner = _person(self, body.get("owner"))
+        identity = _identity(owner)
+        old = deepcopy(req.get(key + "_identity"))
+        if old == identity:
+            raise ValueError("Choose a different named owner for this responsibility.")
+        if req["route"] in ("Complaint", "Independent review"):
+            other_key = "redress" if key == "service" else "service"
+            other = req.get(other_key + "_identity") or _person(self, req.get(other_key + "_owner_email"))
+            if any(owner.get(field) and str(owner[field]).casefold() == str(other.get(field) or "").casefold()
+                   for field in ("email", "code", "oid")):
+                raise PermissionError("A complaint or independent review needs different service and redress owners.")
+        if key == "redress" and req["route"] == "Independent review":
+            if not req.get("reviewed_actor") or owner["email"].casefold() == req["reviewed_actor"].casefold():
+                raise PermissionError("Choose a reviewer who did not make the contested decision.")
+        note = k.text(body.get("note"), "the reason for reassigning response responsibility")
+        at = _time()
+        status_owner = req.get("status_owner")
+        status_key = "redress" if req["status"] == "Closed" or req["route"] == "Independent review" else "service"
+        owns_status = (str(status_owner.get("email") or "").casefold() ==
+                       str(req.get(key + "_owner_email") or "").casefold()) if status_owner else key == status_key
+        event = dict(kind="Response owner reassigned", responsibility=key,
+                     changes=dict(old=old, new=identity), old_owner_email=req.get(key + "_owner_email"),
+                     old_owner_name=req.get(key + "_owner"), old_status_owner=deepcopy(req.get("status_owner")),
+                     old_status_at=req.get("status_at"), status=req["status"],
+                     actor=_identity(user), by=user["name"], note=note, at=at,
+                     version=req.get("version", 0) + 1)
+        req.update({key + "_identity": identity, key + "_owner": owner["name"],
+                    key + "_owner_email": owner["email"], "version": event["version"]})
+        if owns_status:
+            req.update(status_owner=identity, status_at=at)
+        req.setdefault("history", []).append(event)
+        return f"{req['id']} {key} response responsibility reassigned; remedy unchanged"
 
     def _res_service_reopen(self, user, c, body):
         req = k.find(c.get("service_requests", []), body.get("id"), "request")

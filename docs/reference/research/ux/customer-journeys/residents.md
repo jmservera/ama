@@ -128,7 +128,7 @@ convert the maps above into observed resident testimony or operational authority
 | --- | --- | --- |
 | Update purpose, owner, due date and basis | Full versioned resident_update; current named owner, supplied basis and safe reference/Unknown | Explicit create/reassign; handoffs cannot manufacture partial commitments. Outstanding/Proposed is not evidence of a message, receipt or understanding |
 | Response/package closure cannot close open remedy, defect or charge query | Existing response status plus separately versioned remedy per service request; independent Defect/Charge query routes | Mixed-state JSON/SQLite and actual isolated loopback SQL tests carry open issues through work-order completion, quality handover, financial note, return/reopen and restart |
-| Each status retains owner/date | Distinct response status_owner/status_at, remedy owner/at/opened_at/history, retained work-order/quality events and own finance-note owner/date/history | Legacy absent original dates/identities remain Unknown; explicit current confirmation never reconstructs an old event |
+| Each status retains owner/date | Distinct response status_owner/status_at, remedy owner/at/opened_at/history, retained work-order/quality events and own finance-note owner/date/history | Explicit manager-only versioned service/redress recovery prevents departed owners stranding responses; history keeps old/new owner and actor/reason/time. Legacy absent original dates/identities remain Unknown; explicit current confirmation never reconstructs an old event |
 
 Current registered identities and actionable role boundaries are rechecked inside
 the existing writer transaction. Negative concurrent writers and actual audit-
@@ -143,6 +143,30 @@ Those are not established by issue #88's three criteria. Age bands remain Unknow
 no Legal position, service clock, tenant contact, real approval, Azure or paid AI
 was invented. Independent final-head/coordinator acceptance and direct human/
 screen-reader/WCAG evaluation remain distinct gates.
+
+### Departed response-owner recovery correction (2026-10-17)
+
+Coordinator review identified that a departed response owner stranded ordinary
+updates with no explicit reassignment route. The bounded correction adds
+`service_reassign` in existing records/API/panel, restricted to the two existing
+resident-workflow manager roles, with current request version, explicit service/
+redress responsibility, new eligible named owner and reason. Writer-time registry
+and rowversion checks prevent stale authority or concurrent reassignment.
+Complaint/review independence and contested-recorder exclusion still apply.
+Captured departed identities remain historical evidence, not present authority;
+missing legacy provenance stays unknown. Remedy responsibility is never reassigned
+as a side effect. Updating the response after recovery, independent closure and
+reopening preserve original histories and the separate remedy clock.
+
+Fresh correction selectors ran 145 tests: 134 passed and 11 existing skips
+(ten opt-in report SQL tests and JSON-only rollback in SQLite); actual browser
+ran within that command. Eight separate targeted actual loopback MSSQL tests
+passed without skips, including new response recovery/current-identity races/
+precommit rollback/postcommit exactly-once outcomes and retained quality,
+hazard, finance and grant guards. Full configured core/API Ruff/format/mypy
+and changed JavaScript syntax checks passed. The interrupted broader suite is
+not a pass; prior full SQL/image evidence remains historical. No new full RPI
+Review or independent acceptance is inferred. The coordinator owns final review.
 
 ### Authorized merged-quality integration (2026-10-17)
 

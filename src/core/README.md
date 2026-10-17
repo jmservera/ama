@@ -171,6 +171,20 @@ and reason. Neither action changes resident choices, work orders, quality,
 grant or finance records. Their original clocks stay separate; payment-status
 notes additionally retain their own named owner/date/history without paying.
 
+If a response assignee leaves eligible staff, an existing resident-workflow
+manager can explicitly use `service_reassign`: request `id`, current integer
+`expected_version`, `responsibility` (`service` or `redress`), new named `owner`
+email and reason `note`. This changes only that responsibility, not the remedy
+owner or status. The response status owner/date changes only when that
+responsibility owned the current status. History retains old/new captured
+identities, prior status owner/date, named acting manager, reason and event time.
+Missing legacy identity/date remains null in that history; it is not reconstructed
+from today's registry. A captured departed owner need not remain eligible to
+preserve their historical event. New owner and acting manager must be current
+inside the writer transaction. Complaint/review assignees remain distinct;
+the contested decision recorder cannot become its independent reviewer.
+Ordinary update, close and reopen retain their existing authority checks.
+
 Writers/assignees use the existing Resident Liaison Officer, Retrofit Coordinator,
 Retrofit Programme Manager and Programme Support Officer roles. Only the current
 captured owner or either existing manager may revise/reassign a commitment/remedy.

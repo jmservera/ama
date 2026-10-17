@@ -727,6 +727,192 @@ class JsonResidentDecisions(unittest.TestCase):
             next_update="2099-01-01",
         )
 
+    def register_followup_actor(self, actor: dict[str, Any]) -> None:
+        if self.sql:
+            assert isinstance(self.store, SqlStore)
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), actor["email"])
+            )
+        else:
+            self.store.staff[actor["email"]] = copy.deepcopy(actor)
+
+    def test_departed_response_owners_explicit_recovery_keeps_other_clocks(self) -> None:
+        self.request()
+        original = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
+        self.register_followup_actor(dict(self.sam, role="Contractor"))
+        for actor in (self.pam, self.rae):
+            self.unchanged_failure(
+                partial(
+                    self.store.resident_action,
+                    actor,
+                    "ZF-1",
+                    dict(
+                        action="service_update",
+                        id="SR-1",
+                        status="Resolved",
+                        next_update="2099-01-01",
+                    ),
+                )
+            )
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-1",
+                expected_version=1,
+                responsibility="service",
+                owner=self.rex["email"],
+                note="SYN officer departure",
+            ),
+        )
+        recovered = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(recovered["service_identity"]["email"], self.rex["email"])
+        self.assertEqual(recovered["status_owner"]["email"], self.rex["email"])
+        self.assertNotEqual(recovered["status_at"], original["status_at"])
+        self.assertEqual(recovered["remedy"], original["remedy"])
+        event = recovered["history"][-1]
+        self.assertEqual(event["changes"]["old"], original["service_identity"])
+        self.assertEqual(event["changes"]["new"], recovered["service_identity"])
+        self.assertEqual(event["actor"]["email"], self.pam["email"])
+        self.assertEqual(event["note"], "SYN officer departure")
+        self.assertEqual(event["old_status_at"], original["status_at"])
+        self.store.resident_action(
+            self.rex,
+            "ZF-1",
+            dict(action="service_update", id="SR-1", status="Resolved", next_update="2099-01-01"),
+        )
+        self.store.resident_action(
+            self.rae, "ZF-1", dict(action="service_close", id="SR-1", note="SYN response")
+        )
+        closed = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
+        self.register_followup_actor(dict(self.rae, role="Quality Inspector"))
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-1",
+                expected_version=closed["version"],
+                responsibility="redress",
+                owner=self.pam["email"],
+                note="SYN reviewer departure",
+            ),
+        )
+        current = self.store.cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(current["status"], "Closed")
+        self.assertEqual(current["history"][-1]["changes"]["old"], original["redress_identity"])
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reopen",
+                id="SR-1",
+                expected_version=current["version"],
+                note="SYN reopen",
+            ),
+        )
+        self.store.resident_action(
+            self.rex,
+            "ZF-1",
+            dict(action="service_update", id="SR-1", status="Resolved", next_update="2099-01-01"),
+        )
+        self.store.resident_action(
+            self.pam, "ZF-1", dict(action="service_close", id="SR-1", note="SYN second response")
+        )
+        final = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(final["status_owner"]["email"], self.pam["email"])
+        self.assertEqual(final["remedy"], original["remedy"])
+        self.assertEqual(final["opened_at"], original["opened_at"])
+        self.assertEqual(final["history"][: len(closed["history"])], closed["history"])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_response_reassignment_requires_current_manager_version_and_independence(self) -> None:
+        self.request()
+        body = dict(
+            action="service_reassign",
+            id="SR-1",
+            expected_version=1,
+            responsibility="service",
+            owner=self.rex["email"],
+            note="SYN recovery",
+        )
+        for actor, changes in (
+            (self.sam, {}),
+            (self.kim, {}),
+            (self.pam, {"expected_version": 0}),
+            (self.pam, {"expected_version": True}),
+            (self.pam, {"owner": ""}),
+            (self.pam, {"owner": "unknown@example.test"}),
+            (self.pam, {"owner": self.kim["email"]}),
+            (self.pam, {"owner": self.rae["email"]}),
+            (self.pam, {"note": ""}),
+            (self.pam, {"responsibility": "remedy"}),
+        ):
+            with self.subTest(actor=actor["code"], changes=changes):
+                self.unchanged_failure(
+                    partial(self.store.resident_action, actor, "ZF-1", dict(body, **changes))
+                )
+        self.register_followup_actor(dict(self.pam, role="Contractor"))
+        self.unchanged_failure(lambda: self.store.resident_action(self.pam, "ZF-1", body))
+        self.register_followup_actor(self.pam)
+        self.scope()
+        self.answer()
+        self.action(
+            "service_open",
+            route="Independent review",
+            summary="SYN review",
+            desired_outcome="SYN independent response",
+            service_owner=self.rex["email"],
+            redress_owner=self.rae["email"],
+            next_update="2099-01-01",
+            review_measure=MEASURES[0],
+            review_decision_version=1,
+            review_reference="SYN decision",
+        )
+        review_body = dict(body, id="SR-2", responsibility="redress")
+        for owner in (self.sam["email"], self.rex["email"]):
+            self.unchanged_failure(
+                partial(
+                    self.store.resident_action, self.pam, "ZF-1", dict(review_body, owner=owner)
+                )
+            )
+        self.register_followup_actor(dict(self.rae, role="Contractor"))
+        self.store.resident_action(self.pam, "ZF-1", dict(review_body, owner=self.pam["email"]))
+        review = self.store.cases["ZF-1"]["service_requests"][1]
+        self.assertEqual(review["status_owner"]["email"], self.rex["email"])
+        self.unchanged_failure(
+            lambda: self.store.resident_action(
+                self.rex,
+                "ZF-1",
+                dict(
+                    action="service_update", id="SR-2", status="Resolved", next_update="2099-01-01"
+                ),
+            )
+        )
+        for action, changes in (
+            ("service_update", dict(status="Resolved", next_update="2099-01-01")),
+            ("service_close", dict(note="SYN independent outcome")),
+            ("service_reopen", dict(expected_version=4, note="SYN independent reopen")),
+        ):
+            self.store.resident_action(self.pam, "ZF-1", dict(action=action, id="SR-2", **changes))
+        self.assertEqual(
+            self.store.cases["ZF-1"]["service_requests"][1]["status_owner"]["email"],
+            self.pam["email"],
+        )
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req.pop("service_identity")
+            req.pop("status_owner")
+            req.pop("status_at")
+            self.store.save()
+        self.store.resident_action(self.pam, "ZF-1", body)
+        event = self.open_store().cases["ZF-1"]["service_requests"][0]["history"][-1]
+        self.assertIsNone(event["changes"]["old"])
+        self.assertEqual(event["old_owner_email"], self.sam["email"])
+        self.assertIsNone(event["old_status_at"])
+        self.assertEqual(event["changes"]["new"]["email"], self.rex["email"])
+
     def test_complete_update_and_explicit_reassignment_preserve_history(self) -> None:
         self.commitment()
         first = copy.deepcopy(self.store.cases["ZF-1"]["resident_update"])
@@ -1281,6 +1467,164 @@ class AzureResidentDecisions(unittest.TestCase):
 class SqlResidentDecisions(JsonResidentDecisions):
     sql = True
     store: SqlStore
+
+    def test_response_reassignment_rechecks_writer_actor_assignee_and_version(self) -> None:
+        self.request()
+        body = dict(
+            action="service_reassign",
+            id="SR-1",
+            expected_version=1,
+            responsibility="service",
+            owner=self.rex["email"],
+            note="SYN recovery",
+        )
+        for subject in (self.pam, self.rex):
+            for field, value in (("role", "Contractor"), ("oid", "SYN rebound identity")):
+                with self.subTest(subject=subject["code"], field=field):
+                    save = self.store.save
+
+                    def change_registry(
+                        subject: dict[str, Any] = subject,
+                        field: str = field,
+                        value: str = value,
+                        save: Callable[[], None] = save,
+                    ) -> None:
+                        other = self.store.assistant_connection()
+                        try:
+                            other.execute(
+                                "UPDATE staff SET body=? WHERE email=?",
+                                (json.dumps(dict(subject, **{field: value})), subject["email"]),
+                            )
+                        finally:
+                            other.close()
+                        save()
+
+                    with patch.object(self.store, "save", side_effect=change_registry):
+                        self.unchanged_failure(
+                            lambda: self.store.resident_action(self.pam, "ZF-1", body)
+                        )
+                    self.register_followup_actor(subject)
+        other = self.open_store()
+        save = self.store.save
+
+        def competing_owner() -> None:
+            other.resident_action(self.pam, "ZF-1", dict(body, owner=self.pam["email"]))
+            save()
+
+        with patch.object(self.store, "save", side_effect=competing_owner):
+            with self.assertRaises(ConflictError):
+                self.store.resident_action(self.pam, "ZF-1", body)
+        current = self.open_store()
+        self.assertEqual(
+            current.cases["ZF-1"]["service_requests"][0]["service_identity"]["email"],
+            self.pam["email"],
+        )
+        self.assertEqual(
+            sum(e["action"] == "resident_service_reassign" for e in current.audit_entries()), 1
+        )
+        self.unchanged_failure(lambda: self.store.resident_action(self.pam, "ZF-1", body))
+
+    def test_response_reassignment_faults_preserve_history_and_exactly_once_outcome(self) -> None:
+        from zava_forward.core.resident_decisions import ResidentCommittedError
+
+        self.request()
+        body = dict(
+            action="service_reassign",
+            id="SR-1",
+            expected_version=1,
+            responsibility="service",
+            owner=self.rex["email"],
+            note="SYN recovery",
+        )
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        for persistent in (False, True):
+            audit = list(self.store.audit_entries())
+            append = self.store._append_audit
+            original = OSError("SYN response assignment audit failure")
+
+            class RecoveryFault:
+                armed = False
+                failures = 0
+
+                def __init__(self, db: Any, persistent: bool) -> None:
+                    self.db = db
+                    self.persistent = persistent
+
+                def execute(self, sql: str, args: Any = ()) -> Any:
+                    if self.armed and sql.startswith("SELECT rowversion, body FROM cases"):
+                        if self.persistent or self.failures == 0:
+                            self.failures += 1
+                            raise OSError("SYN response assignment recovery read")
+                    return self.db.execute(sql, args)
+
+                def __getattr__(self, name: str) -> Any:
+                    return getattr(self.db, name)
+
+            fault = RecoveryFault(self.store.db, persistent)
+
+            def failed_audit(
+                entries: Any,
+                append: Callable[..., Any] = append,
+                fault: RecoveryFault = fault,
+                original: OSError = original,
+            ) -> None:
+                append(entries)
+                fault.armed = True
+                raise original
+
+            with self.store.lock:
+                self.store.audit(self.pam["email"], "prior_assignment_event", "ZF-2", "SYN")
+                prior = list(self.store.local.pending)
+                with (
+                    patch.object(self.store, "db", fault),
+                    patch.object(self.store, "_append_audit", side_effect=failed_audit),
+                    self.assertLogs("zava_forward.core.resident_decisions", level="ERROR"),
+                    self.assertRaises(OSError) as caught,
+                ):
+                    self.store.resident_action(self.pam, "ZF-1", body)
+                self.assertIs(caught.exception, original)
+                self.assertEqual(self.store.local.pending, prior)
+                self.assertFalse(self.store.local.touched)
+            current = self.open_store()
+            self.assertEqual(current.cases["ZF-1"], before)
+            self.assertEqual(
+                [e["action"] for e in current.audit_entries()],
+                [e["action"] for e in audit] + ["prior_assignment_event"],
+            )
+        other = self.open_store()
+        save, sync = self.store.save, self.store._sync
+        armed = False
+
+        def committed_save() -> None:
+            nonlocal armed
+            other.log_call(self.sam, "ZF-2", "SYN", "SYN different writer")
+            armed = True
+            save()
+
+        def unavailable_sync() -> None:
+            if armed:
+                raise OSError("SYN response assignment committed sync")
+            sync()
+
+        with self.store.lock:
+            self.store.audit(self.pam["email"], "committed_assignment_prefix", "ZF-2", "SYN")
+            with (
+                patch.object(self.store, "save", side_effect=committed_save),
+                patch.object(self.store, "_sync", side_effect=unavailable_sync),
+                self.assertLogs("zava_forward.core.resident_decisions", level="ERROR"),
+                self.assertRaises(ResidentCommittedError) as caught_committed,
+            ):
+                self.store.resident_action(self.pam, "ZF-1", body)
+            self.assertIsInstance(caught_committed.exception.__cause__, OSError)
+            self.assertFalse(self.store.local.pending)
+        current = self.open_store()
+        self.assertEqual(current.cases["ZF-1"]["service_requests"][0]["version"], 2)
+        audit = list(current.audit_entries())
+        self.store.save()
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(sum(e["action"] == "resident_service_reassign" for e in audit), 1)
+        self.assertEqual(sum(e["action"] == "committed_assignment_prefix" for e in audit), 1)
+        self.assertTrue(current.verify_audit())
 
     def test_followup_writer_rechecks_current_actor_assignee_and_legacy_identity(self) -> None:
         assert isinstance(self.store, SqlStore)

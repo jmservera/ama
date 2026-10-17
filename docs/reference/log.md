@@ -5768,3 +5768,19 @@ metadata when the knowledge base was created.
   replay for doc-only base conflict plus source fingerprints; prior evidence
   remains historical. No independent Pass, cloud/private writes, authority,
   full event capture, merge, issue closure or WCAG acceptance.
+
+### 2026-10-17: Issue88 authorized response-owner recovery correction ONE
+
+* Coordinator's Medium finding exposed departed response owners stranding update,
+  close and reopen. Existing resident records/API/panel now support explicit
+  manager-only versioned service/redress reassignment with current named assignee,
+  reason and old/new identity/actor/time history. Remedy responsibility and all
+  independent clocks remain separate; legacy absent provenance stays unknown.
+* Updated existing core/API guides, resident criterion audit and retained index
+  route. Fresh resident/browser/handoff/report selectors: 145 run, 134 pass,
+  11 existing skips; targeted actual owned loopback MSSQL: eight pass, no skips.
+  Configured core/API Ruff/format/mypy and JavaScript syntax passed.
+* Interrupted broader replay has no completed result and is not reported green.
+  Original Review/critique retained unchanged; no second full Review, operational
+  authority, messaging, cloud/private writes or WCAG acceptance. Coordinator owns
+  independent final-head acceptance; broader governance remains separately routed.

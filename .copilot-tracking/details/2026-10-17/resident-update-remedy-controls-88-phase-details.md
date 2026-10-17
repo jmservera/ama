@@ -12,8 +12,8 @@
 
 | Phase | Name | Status |
 | --- | --- | --- |
-| P01 | Bounded resident controls | complete, including actual changed browser journey |
-| P02 | Validation/documentation | complete; evidence reconciled before original Review |
+| P01 | Bounded resident controls | correction ONE domain/HTTP and actual browser complete |
+| P02 | Validation/documentation | correction ONE regression/SQL/static/documentation complete; publication/external acceptance separate |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Bounded resident controls
@@ -30,6 +30,16 @@ Keep existing status compatibility on requests: status still means response/serv
 record, never remedy. Separate remedy lifecycle/history with explicit state transitions.
 Explicit expected versions for new update/remedy/reopen actions; legacy response
 actions retain API shape but use current record and owner checks at transaction.
+
+Authorized correction ONE adds service_reassign with responsibility=service/redress,
+owner, expected_version and note. Only the two existing manager roles may act.
+Current actor/new assignee and request version are checked again in the writer
+transaction. Capture original old identity (or null for unknown legacy), old
+email/name/status owner/date and new identity, reason, named actor/time. Reassign
+only the selected responsibility; change current status owner/date only when it
+was that responsibility, otherwise keep its clock. No automatic remedy reassignment.
+Complaint/review service-redress alias independence and contested-recorder exclusion
+remain. Departed historical owner is not reauthorized as a current actor.
 
 Use registered email lookup, compare name/code/role/OID, and retain captured identities
 separately from current lookup. For legacy absent identity, bind from recorded email
@@ -67,6 +77,13 @@ Enter submit, live inline errors/focus and retained input on error. Do not globa
 rewrite actForm or unrelated forms. Fresh web guideline review before final review.
 Completion: authenticated loopback HTTP, actual browser create/reassign/close-response/
 remedy-still-open/reopen/refusal journey and no page errors.
+
+Correction ONE: existing request panel gets a manager-only native labelled recovery
+form and named old/new/actor/reason/time history. Use scoped error preservation,
+expected request version and no new endpoint. Browser exercises actual registry
+departure, invalid recovery input/focus/live status/retained selection, keyboard
+reassignment then recovered owner update and independent redress close. Fresh
+guidelines fetched again for changed panels.js review; no WCAG acceptance claim.
 
 PC-003: include server.py resident-only outcome handling. Trusted domain
 ResidentCommittedError and successful-write marker distinguish post-COMMIT sync/
@@ -124,6 +141,15 @@ Reconcile phase checkmarks/details/changes/state before one original Review.
 Retain adverse Review unchanged; at most two authorized corrections, no second Review.
 
 ## Implementation Completion Evidence
+
+Authorized correction ONE adds explicit response-owner recovery with failing-first
+JSON/SQLite reproduction, final 145 resident/browser/handoff/report selectors
+(134 pass/11 existing skips), 24 workflow/quality/hazard guard tests and eight
+targeted actual MSSQL tests (all pass/no skips). Core/API configured Ruff/format/
+mypy and changed JS syntax pass. Separate correction receipt records commands,
+precommit/postcommit/current-identity races, initial failures, interruptions,
+source fingerprints and cleanup. No new full Review or self-declared acceptance.
+The following original completion evidence remains historical.
 
 P01-T01/T02 and P02-T01/T02 complete. Final dependent run: 378 tests, five
 documented opt-in skips. Focused run enables actual local browser: 81 tests, one

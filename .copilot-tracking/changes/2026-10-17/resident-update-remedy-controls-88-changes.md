@@ -9,8 +9,15 @@
 
 ## Execution Status
 
-Complete implementation of P01-T01/T02 and P02-T01/T02. Evidence reconciled before
-the single original Review. No implementation/validation blockers.
+Original implementation of P01-T01/T02 and P02-T01/T02 completed and evidence
+reconciled before the single original Review. Coordinator-authorized correction
+ONE implemented/validated for the departed-response-owner Medium finding, separately evidenced
+in resident-update-remedy-controls-88-correction-one.md in this directory.
+P01/P02 implementation evidence complete: 145 tests (134 pass/11 existing skips)
+including actual browser, 24 shared guard tests and eight actual MSSQL tests pass;
+configured core/API statics/JS pass. Normal publication and independent external
+correction disposition pending; the interrupted broader replay is not a pass.
+Original Review/critique unchanged; no new full Review or current blocker.
 
 ## Execution Summary
 
