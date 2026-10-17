@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+from dataset import change_metadata
 from test_form_staging import batch, schema
 from tests.test_mvp import DATA
 from zava_forward.core import forms
@@ -80,7 +81,14 @@ class FormApi(unittest.TestCase):
             self.assertEqual(code, 201, registered)
             self.assertEqual(registered["approval"], "Unapproved")
             actor = self.store.staff["pam@example.test"]
-            doc = self.store.add_document(actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D\nEPC E")
+            doc = self.store.add_document(
+                actor,
+                "ZF-1",
+                "synthetic.txt",
+                "EPC",
+                b"EPC D\nEPC E",
+                metadata=change_metadata(self.store, "ZF-1"),
+            )
             before = self.call("pam", "/api/cases/ZF-1")[1]
             code, result = self.call("pam", "/api/cases/ZF-1/form-candidates", batch(doc["id"]))
             self.assertEqual(code, 201, result)
@@ -100,7 +108,14 @@ class FormApi(unittest.TestCase):
         path = "/api/cases/ZF-1/form-candidates"
         for status in ("pending", "missing"):
             with self.subTest(scan=status):
-                doc = self.store.add_document(actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D")
+                doc = self.store.add_document(
+                    actor,
+                    "ZF-1",
+                    "synthetic.txt",
+                    "EPC",
+                    b"EPC D",
+                    metadata=change_metadata(self.store, "ZF-1"),
+                )
                 with self.store.lock:
                     source = next(
                         d for d in self.store._case("ZF-1")["documents"] if d["id"] == doc["id"]
@@ -138,7 +153,14 @@ class FormApi(unittest.TestCase):
         )
         self.assertEqual(self.call("pam", "/api/form-schemas", schema())[0], 201)
         actor = self.store.staff["pam@example.test"]
-        doc = self.store.add_document(actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D")
+        doc = self.store.add_document(
+            actor,
+            "ZF-1",
+            "synthetic.txt",
+            "EPC",
+            b"EPC D",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
         path = "/api/cases/ZF-1/form-candidates"
         self.assertEqual(self.call("sam", path, batch(doc["id"]))[0], 403)
         self.assertEqual(

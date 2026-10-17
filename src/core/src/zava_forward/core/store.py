@@ -7,6 +7,7 @@ import os
 import re
 import threading
 import uuid
+from copy import deepcopy
 from datetime import datetime
 
 from . import ai_tasks, ai_prompts, buildings, controls, insights, ledger, projection, ranking, stock, taskqueues
@@ -409,6 +410,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             raise PermissionError("Stock decisions require a registered named human staff identity.")
         return actor
 
+    def bulk_edit_preview(self, user, body):
+        from . import bulk_edits
+        return bulk_edits.preview(self, user, body)
+
+    def bulk_edit_apply(self, user, body):
+        from . import bulk_edits
+        return bulk_edits.apply(self, user, body)
+
     def stock_reconcile(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)
@@ -498,9 +507,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.audit(user["email"], "resident_decision", case_id, status)
             self.save()
 
-    def hand_over(self, user, case_id, to_email, note=""):
+    def hand_over(self, user, case_id, to_email, note="", metadata=None):
         """Legacy entry point: offer responsibility, never bypass receiver acceptance."""
-        return self.offer_handoff(user, case_id, to_email, note)
+        return self.offer_handoff(user, case_id, to_email, note, metadata=metadata)
 
     def advance(self, user, case_id):
         with self.lock:
@@ -573,7 +582,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if user is not None and user.get("role") not in projection.STAFF_ROLES:
             raise PermissionError(f"Your role cannot {what} documents.")
 
-    def add_document(self, user, case_id, name, kind, data):
+    def add_document(self, user, case_id, name, kind, data, metadata=None):
+        from . import change_provenance
         self._doc_role(user, "add")
         name = os.path.basename((name or "").strip())[:120]
         ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
@@ -583,32 +593,28 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             raise ValueError("Files must be between 1 byte and 5 MB.")
         kind = kind if kind in self.KINDS else "Other"
         mime = self.EXT[ext]
-        with self.lock:
-            c = self._case(case_id)
-            did = uuid.uuid4().hex[:12]
-            try:
-                self.docstore.put(case_id, did, data, mime)
-            except DocumentStoreError as e:
-                self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
-                raise
-            try:
-                scan = self.scan_new_document(case_id, did, name, data, mime)
-            except ValueError as e:
-                self.audit(user["email"], "upload_document_rejected", case_id, f"{did}: {kind}: {e}")
-                raise
-            doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
-                       generated=False, mime=mime, summary="", content_sha256=hashlib.sha256(data).hexdigest(), version=1, scan=scan)
-            c["documents"].append(doc)
-            self.audit(user["email"], "upload_document", case_id, f"{kind}: {name}")
-            try:
-                self.save()
-            except BaseException:
+        did, uploaded = uuid.uuid4().hex[:12], False
+        try:
+            with change_provenance.operation(self, user, case_id, "upload_document", metadata, "document_history") as (c, event):
+                old = change_provenance.document_refs(c)
                 try:
-                    self.docstore.delete(case_id, did)
-                except DocumentStoreError:
-                    pass
-                raise
-        return doc
+                    self.docstore.put(case_id, did, data, mime)
+                    uploaded = True
+                except DocumentStoreError as e:
+                    self.audit(user["email"], "upload_document_failed", case_id, f"{kind}: {name}: {e}")
+                    raise
+                scan = self.scan_new_document(case_id, did, name, data, mime)
+                doc = dict(id=did, name=name, kind=kind, at=datetime.now().date().isoformat(), by=user["name"],
+                           generated=False, mime=mime, summary="", content_sha256=hashlib.sha256(data).hexdigest(), version=1, scan=scan)
+                doc.update({key: event[key] for key in ("source", "source_version", "reason")})
+                c = self._case(case_id)
+                c["documents"].append(doc)
+                event["changes"] = dict(documents=dict(old=old, new=change_provenance.document_refs(c)))
+            return deepcopy(doc)
+        except Exception:
+            if uploaded and not any(d["id"] == did for d in self.cases[case_id]["documents"]):
+                self.docstore.delete(case_id, did)
+            raise
 
     def read_document(self, user, case_id, doc_id, mode=None):
         self._doc_role(user, "read")

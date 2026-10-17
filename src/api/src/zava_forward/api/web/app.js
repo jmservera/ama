@@ -604,6 +604,51 @@ function returnPanel(c, id, refresh) {
     h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { ...metadata(), to_stage: to.value })) }, "Send back")), history);
 }
 
+function recordedChangeForm(prefix, label, fields, submit) {
+  const status = h("div", { role: "status", "aria-live": "polite", id: `${prefix}-status` });
+  const inputs = [
+    ["source", "Source reference", 200],
+    ["source_version", "Source version", 100],
+    ["reason", "Reason for this change", 300]
+  ].map(([name, title, limit]) => {
+    const input = h("input", { id: `${prefix}-${name}`, name, type: "text", required: true,
+      maxlength: limit, autocomplete: "off", "aria-describedby": `${prefix}-help ${prefix}-status` });
+    return { name, input, node: h("div", {}, h("label", { for: input.id }, title), input) };
+  });
+  const button = h("button", { type: "submit" }, label);
+  const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; },
+    onsubmit: async (e) => {
+      e.preventDefault();
+      for (const { input } of inputs) {
+        input.setCustomValidity(input.value.trim() ? "" : "Enter this change detail.");
+        if (!input.reportValidity()) { input.focus(); return; }
+      }
+      button.disabled = true;
+      button.textContent = "Saving...";
+      status.textContent = "Saving the recorded change...";
+      try {
+        await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])));
+        delete form.dataset.unsaved;
+      } catch (error) {
+        status.replaceChildren(h("p", { class: "err" }, error.message));
+        status.setAttribute("tabindex", "-1");
+        status.focus();
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
+    } },
+  ...fields,
+  h("p", { id: `${prefix}-help`, class: "muted" }, "Enter the source you checked, its version and why you are making this change. These details are kept with your name and the change. They do not approve any work."),
+  ...inputs.map(({ node }) => node), button, status);
+  inputs.forEach(({ input }) => input.addEventListener("input", () => input.setCustomValidity("")));
+  return form;
+}
+
+window.addEventListener("beforeunload", (event) => {
+  if (document.querySelector('form[data-unsaved="true"]')) { event.preventDefault(); event.returnValue = ""; }
+});
+
 function handoffPanel(c, id, refresh) {
   const hd = c.handoff;
   const open = hd && ["Offered", "Received", "Escalated"].includes(hd.state);
@@ -619,7 +664,10 @@ function handoffPanel(c, id, refresh) {
     const why = h("input", { id: "ho-why", type: "text", maxlength: 300 });
     if (hd.to_code === me.user.code) {
       if (hd.state === "Offered") kids.push(h("button", { class: "alt", onclick: () => refresh(() => post(id, "receive-handoff", {})) }, "Record receipt (not acceptance)"));
-      kids.push(h("div", { class: "row" }, h("button", { onclick: () => refresh(() => post(id, "accept-handoff", {})) }, "Accept this case")),
+      kids.push(recordedChangeForm("ho-accept", "Accept this case", [], async (metadata) => {
+        await post(id, "accept-handoff", { ...metadata, handoff_version: (c.handoff_history || []).length });
+        await refresh(async () => {});
+      }),
         h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
           h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value })) }, "Decline")));
     }
@@ -641,30 +689,37 @@ function handoffPanel(c, id, refresh) {
         h("button", { onclick: () => refresh(() => post(id, "complete-handoff", { note: done.value })) }, "Complete handoff"));
     }
     if (!c.closed && (!hd || hd.state !== "Accepted") && (c.owner_code === me.user.code || isManager())) {
-      const to = h("select", { id: "ho-to" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
-      const note = h("input", { id: "ho-note", type: "text", maxlength: 300 });
-      const next = h("input", { id: "ho-next", maxlength: 300 });
-      const urgency = h("select", { id: "ho-urgency" }, ["", "Routine", "Urgent"].map((x) => h("option", { value: x }, x || "Unknown")));
-      const due = h("input", { id: "ho-due", type: "datetime-local" });
-      const updateTo = h("select", { id: "ho-update-to" }, h("option", { value: "" }, "Unassigned"), me.staff.filter((s) => s.role !== "Contractor").map((s) => h("option", { value: s.email }, s.name)));
-      const updateDue = h("input", { id: "ho-update-due", type: "datetime-local" });
+      const to = h("select", { id: "ho-to", name: "to", autocomplete: "off" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
+      const note = h("input", { id: "ho-note", name: "note", autocomplete: "off", type: "text", maxlength: 300 });
+      const next = h("input", { id: "ho-next", name: "next_action", autocomplete: "off", maxlength: 300 });
+      const urgency = h("select", { id: "ho-urgency", name: "urgency", autocomplete: "off" }, ["", "Routine", "Urgent"].map((x) => h("option", { value: x }, x || "Unknown")));
+      const due = h("input", { id: "ho-due", name: "due_at", autocomplete: "off", type: "datetime-local" });
+      const updateTo = h("select", { id: "ho-update-to", name: "resident_update_to", autocomplete: "off" }, h("option", { value: "" }, "Unassigned"), me.staff.filter((s) => s.role !== "Contractor").map((s) => h("option", { value: s.email }, s.name)));
+      const updateDue = h("input", { id: "ho-update-due", name: "resident_update_due_at", autocomplete: "off", type: "datetime-local" });
       const iso = (value) => value ? new Date(value).toISOString() : null;
-      kids.push(h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
+      kids.push(recordedChangeForm("ho-offer", "Offer the case", [
+        h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
         h("label", { for: "ho-to" }, "Offer to"), to, h("label", { for: "ho-note" }, "Note for them (optional)"), note,
         h("label", { for: "ho-next" }, "Next action"), next, h("label", { for: "ho-urgency" }, "Urgency"), urgency,
         h("label", { for: "ho-due" }, "Human-selected due date (not an approved SLA)"), due,
         c.resident_update ? h("p", {}, "The existing resident-update commitment is preserved.") : h("div", {},
           h("label", { for: "ho-update-to" }, "Resident-update owner"), updateTo,
-          h("label", { for: "ho-update-due" }, "Resident-update commitment"), updateDue),
-        h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "offer-handoff", {
+          h("label", { for: "ho-update-due" }, "Resident-update commitment"), updateDue)
+        ], async (metadata) => {
+          await post(id, "offer-handoff", {
+          ...metadata, handoff_version: (c.handoff_history || []).length,
           to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value),
           resident_update_to: updateTo.value, resident_update_due_at: iso(updateDue.value)
-        })) }, "Offer the case")));
+          });
+          await refresh(async () => {});
+        }));
     }
   }
   const history = c.handoff_history || c.handoff_log;
   if (history && history.length) {
-    kids.push(h("ul", { class: "tl" }, history.slice(-8).reverse().map((x) => h("li", {}, `${fmtDate(x.at || x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.status || x.state}; current owner at event: ${x.accountable_owner || "Unknown"}; chase: ${x.chase_owner || "Unknown"}`))));
+    kids.push(h("ul", { class: "tl" }, history.slice(-8).reverse().map((x) => h("li", {},
+      `${fmtDate(x.at || x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.status || x.state}; current owner at event: ${x.accountable_owner || "Unknown"}; chase: ${x.chase_owner || "Unknown"}`,
+      h("p", { class: "muted" }, `Source: ${x.source || "Unknown (legacy)"}; source version: ${x.source_version || "Unknown (legacy)"}; reason: ${x.reason || "Unknown (legacy)"}. Change version: ${x.version || "Unknown"}; recorded by: ${x.actor?.name || x.by || "Unknown"}.`)))));
   }
   return h("section", { class: "card" }, ...kids);
 }
@@ -788,15 +843,20 @@ async function contractorCaseView(id) {
 
 function documentsPanel(c, id, refresh) {
   const kinds = ["EPC", "Survey", "Design", "Consent", "Funding evidence", "Photo", "Other"];
-  const kind = h("select", { "aria-label": "Type of document" }, kinds.map((k) => h("option", {}, k)));
-  const file = h("input", { type: "file", "aria-label": "Choose a file", accept: ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.csv,.txt" });
+  const kind = h("select", { name: "kind", "aria-label": "Type of document" }, kinds.map((k) => h("option", {}, k)));
+  const file = h("input", { name: "document", type: "file", required: true, "aria-label": "Choose a file", accept: ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.csv,.txt" });
   const out = h("div", { role: "status" });
-  const upload = () => {
+  const upload = async (metadata) => {
     const f = file.files[0];
-    if (!f) { out.replaceChildren(h("p", { class: "err" }, "Choose a file first.")); return; }
-    const rd = new FileReader();
-    rd.onload = () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/upload`, { name: f.name, kind: kind.value, data: String(rd.result).split(",")[1] }));
-    rd.readAsDataURL(f);
+    if (!f) throw new Error("Choose a file first.");
+    const data = await new Promise((resolve, reject) => {
+      const rd = new FileReader();
+      rd.onload = () => resolve(String(rd.result).split(",")[1]);
+      rd.onerror = () => reject(new Error("The file could not be read. Choose the file again."));
+      rd.readAsDataURL(f);
+    });
+    await api(`/api/cases/${encodeURIComponent(id)}/upload`, { ...metadata, name: f.name, kind: kind.value, data });
+    await refresh(async () => {});
   };
   const read = async (d) => {
     out.replaceChildren(h("p", { class: "muted" }, "Reading..."));
@@ -808,9 +868,10 @@ function documentsPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Documents"),
     h("p", {}, c.checklist.map((x) => h("span", { class: `flag${x.present ? "" : " danger"}` }, `${x.present ? "Have" : "Need"}: ${x.kind}`))),
     c.documents.length ? h("ul", { class: "list" }, c.documents.map((d) => h("li", { class: "row between" },
-      h("span", {}, h("a", { href: `/api/docs/${encodeURIComponent(id)}/${d.id}` }, d.name), ` ${d.kind}, ${fmtDate(d.at)}, ${d.by}`),
+      h("span", {}, h("a", { href: `/api/docs/${encodeURIComponent(id)}/${d.id}` }, d.name), ` ${d.kind}, ${fmtDate(d.at)}, ${d.by}`,
+        h("span", { class: "muted" }, ` Source: ${d.source || "Unknown (legacy)"}; source version: ${d.source_version || "Unknown (legacy)"}; reason: ${d.reason || "Unknown (legacy)"}.`)),
       !d.generated && h("button", { class: "alt", onclick: () => read(d) }, "Read with AI")))) : h("p", {}, "No documents yet."),
-    h("div", { class: "row" }, kind, file, h("button", { onclick: upload }, "Add document")), out);
+    recordedChangeForm("doc-upload", "Add document", [h("div", { class: "row" }, kind, file)], upload), out);
 }
 
 const fundingAi = {};

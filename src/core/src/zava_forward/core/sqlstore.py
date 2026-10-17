@@ -528,6 +528,10 @@ class SqlStore(Store):
         with self.dblock:
             self.db.execute("BEGIN IMMEDIATE")
             try:
+                from .change_provenance import validate_sql as validate_change
+                validate_change(self)
+                from .bulk_edits import validate_sql
+                validate_sql(self)
                 self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1
@@ -610,7 +614,7 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance", "continuity", "buildings", "form_schemas")
+    DOCS = ("procurement", "governance", "continuity", "buildings", "form_schemas", "bulk_edits")
 
     def _proc_sync(self):
         self._proc_snap = {}

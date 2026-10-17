@@ -101,6 +101,174 @@ Run from the repository root with editable src packages installed. No UI
 change, actual human approval, live AI/Azure/SQL Server, approved template
 binding or #98 review/validation/pack/staleness acceptance is claimed.
 
+## Controlled bulk preview API (#78)
+
+Two additive authenticated POST routes expose the
+[core administrative contract](../core/README.md#controlled-administrative-bulk-edits-78).
+No web assets, role screen or existing case action changes. Trusted-proxy
+requests still need the existing `X-ZF-CSRF: 1` header. Contractors and unknown
+roles are denied; a role-visible screen cannot grant editing authority.
+
+`POST /api/bulk-edits/preview` accepts exactly:
+
+```json
+{
+  "case_ids": ["ZF-1", "ZF-2"],
+  "changes": {
+    "case_reason": "to check the supplied administrative reference"
+  },
+  "source": "SYN-REGISTER",
+  "source_version": "v3",
+  "reason": "Correct the constructed case explanation"
+}
+```
+
+Select 1-100 distinct IDs. Allowed fields are `case_reason`,
+`handoff_due_at` and `handoff_next_action`; handoff fields require an existing
+active handoff. No null/empty values, inferred source/version, silent
+truncation, extra keys, role/actor override or arbitrary nested JSON is accepted.
+This route is also the preview path for a single permitted administrative edit.
+It does not replace existing evidence, ownership or controlled workflows.
+
+The 200 response contains `preview_id`, `status`, actor, source/version/reason
+and ordered `records`. Each record has `case_id`, `changes` with field
+`old`/`new`, `failures` and an outcome. Examples of a successful preview record:
+
+```json
+{
+  "case_id": "ZF-1",
+  "changes": {
+    "case_reason": {
+      "old": "to agree a visit",
+      "new": "to check the supplied administrative reference"
+    }
+  },
+  "failures": [],
+  "outcome": "would_apply"
+}
+```
+
+| Situation | Preview / apply behavior |
+| --- | --- |
+| All targets valid | `pending`, per-case `would_apply` or `no_change`; no case mutation |
+| Any missing/noneditable/invalid target | `blocked`, failures for that ID, no inaccessible values; valid changed peers `batch_blocked` |
+| All unchanged | `pending`, all `no_change`; apply records a batch result but no fabricated field history |
+| Unknown keys/controlled fields/malformed request | 400 with explicit error and metadata-only refusal audit |
+| Foreign creator or current authority/OID revoked | 403, no target content or edits |
+| Stale, corrupted, blocked or consumed preview | 409, fresh preview required; no partial batch |
+| Unexpected storage failure | 503 with explicitly uncertain outcome; inspect case history and request a fresh preview before retry |
+
+After inspecting every record, `POST /api/bulk-edits/apply` accepts only:
+
+```json
+{"preview_id": "the-server-returned-preview-id"}
+```
+
+No new target/change is accepted at apply. Only the same current creator can
+apply it, and all permission/freshness checks repeat under the SQL writer lock.
+Success returns `status: applied` with each result `applied` or `no_change`.
+The retained source/version/actor/time/reason and old/new fields are visible
+in existing case detail `edit_history`, with normal note-visibility redaction.
+Batch result and history survive SQLite reopening. Replaying a consumed
+preview is denied, including after an uncertain commit acknowledgement.
+Immutable issued outcomes, empty failures, exact ordered target/record coverage
+and complete snapshots are required both before staging and at SQL commit.
+Mutable status alone cannot enable blocked records; cached and persisted
+status-only resets are refused with no case/history/success-audit changes.
+No-op targets are also permission/freshness checked inside the transaction.
+
+Technical, consent, safety, procurement, budget, invoice, payment, claim,
+quality, defect/complaint closure and contractor-instruction fields are absent
+from the allowlist and are rejected server-side, including mixed allowed plus
+forbidden requests. Ownership transfer still requires receiver acceptance.
+Resident-update commitments, independent hazard clocks and approvals are never
+changed by an administrative due-date or next-action edit.
+
+| Issue #78 criterion | Bounded evidence |
+| --- | --- |
+| Edits retain source/version/actor/time/reason | `test_exact_preview_before_apply_and_provenance_reopens`, exact history/audit equality and monotonic version tests |
+| Targets, changes, failures, per-case outcomes before apply | Core and real loopback HTTP exact-shape tests, mixed missing/foreign/valid and no-op targets; zero pre-apply mutation |
+| No controlled bulk approvals | Closed allowlist tests across all controlled categories, actual HTTP denials, creator/role/OID and transactional stale/guardrail races |
+
+Correction TWO implements the earlier RV-002 evidence-upload and handoff
+caller/API/UI gap using required explicit inputs and complete immutable
+per-change events, not fabricated defaults or wider bulk fields; see the
+[single-record core contract](../core/README.md#single-record-upload-and-handoff-change-sources-correction-two).
+Original Review and review512a59c4 Revise remain historical evidence;
+coordinator independent reassessment of the final head is required.
+FR-005/006/007 here use PRD numbering;
+the same-number BRD entries concern lifecycle and technical release. This is
+not full PRD, human usability, WCAG, live SQL Server or operational acceptance.
+The bulk UI is unchanged. The directly dependent upload/offer/accept forms
+were changed and exercised in local Chromium as described below; no general
+UI/WCAG or user-acceptance claim is implied.
+
+### Upload and handoff explicit change metadata (correction TWO)
+
+`POST /api/cases/{id}/upload` now requires `source`, `source_version`, `reason`
+in addition to existing `name`, `kind` and base64 `data`. For example:
+
+```json
+{
+  "name": "survey.txt",
+  "kind": "Survey",
+  "data": "U3ludGhldGljIGV2aWRlbmNl",
+  "source": "SYN supplied survey register",
+  "source_version": "register revision 7",
+  "reason": "Add the supplied survey evidence"
+}
+```
+
+`offer-handoff`, legacy `handover`, and `accept-handoff` require the same
+three source strings plus `handoff_version`, the current number of
+`handoff_history` events in case detail (zero if absent). Acceptance example:
+
+```json
+{
+  "source": "SYN handoff request register",
+  "source_version": "request revision 2",
+  "reason": "Take responsibility for the documented next action",
+  "handoff_version": 1
+}
+```
+
+Use the actual current history count, not the example value. Source/version/
+reason must be nonblank strings at most 200/100/300 characters. Missing old
+payload metadata now returns 400 with the field and fix; stale handoff returns
+409/reload; wrong recipient or revoked actor returns 403. Requests cannot
+override server actor/time/change-version/old-new fields. These inputs assert
+what the person checked, not source authority or an approval. The file hash
+and server change version never substitute for supplied source version.
+
+Upload returns ordinary case detail with document source fields and
+`document_history`. Offer/accept return enriched `handoff_history`. Each
+complete event binds exact old/new references/ownership and registered
+actor/UTC time/version and is identically retained in append-only audit,
+transactionally with case changes in SQL. No accepted field, finance/safety/
+consent/quality approval, contractor instruction or bulk owner change is added.
+Older history is not rewritten; absent metadata displays Unknown (legacy).
+Roles without note visibility do not gain source/reason/change access.
+
+Existing native/Fluent-token upload/offer/accept UI now collects these fields,
+supports Enter submission and browser required-field validation, retains input
+on errors with a focusable polite inline message, and disables only during a
+save. Named recipient must still accept. Do not retry blindly after a storage
+failure: reload history to check an uncertain commit first.
+
+Local synthetic browser reproduction, using the already-installed Playwright:
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/agents/tests \
+  .venv/bin/python src/api/checks/provenance_browser_check.py
+```
+
+The check creates responsive loopback HTTP and temporary SQLite fixtures,
+blocks external requests, exercises missing-field focus and keyboard upload/
+offer/accept, stale inline refusal/input retention, recipient ownership,
+390px reflow/reduced motion and event/audit equality after reopen. No private
+stock, inference, live platform, actual template authority or WCAG/screen-reader
+conformance is claimed.
+
 ## Regulatory evaluation and card cadence labels (#216)
 
 `GET /api/law/cards` and `GET /api/law/cards/{card_id}` add a read-only
@@ -927,14 +1095,14 @@ not automatically verified evidence.
 | --- | --- |
 | `return` | `to_stage`, `reason`, `source`, `next_action`; authorised staff, earlier stage only |
 | `reopen` | `reason`, `source`, `next_action`; manager, closed case only |
-| `offer-handoff` | `to`, optional `note`, `urgency` (Routine/Urgent), timezone-aware `due_at`, `next_action`, `resident_update_to`, `resident_update_due_at`; owner or manager |
+| `offer-handoff` | `to`, required `source`, `source_version`, `reason`, current `handoff_version`; optional `note`, `urgency` (Routine/Urgent), timezone-aware `due_at`, `next_action`, `resident_update_to`, `resident_update_due_at`; owner or manager |
 | `receive-handoff` | Empty object; named receiver, Sent only; not acceptance |
-| `accept-handoff` | Empty object; named receiver, Sent/Received/Escalated |
+| `accept-handoff` | Required `source`, `source_version`, `reason`, current `handoff_version`; named receiver only, Sent/Received/Escalated |
 | `decline-handoff` | `reason`; named receiver, Sent/Received/Escalated |
 | `withdraw-handoff` | Empty object; sender or manager, Sent/Received/Escalated |
 | `escalate-handoff` | `to` (manager email), `reason`; sender or manager, Sent/Received |
 | `complete-handoff` | `note`; accepting current owner, Accepted only |
-| `handover` | Legacy alias for an offer; never immediate reassignment |
+| `handover` | Legacy alias for an offer with the same required source/version/reason/handoff-version metadata; never immediate reassignment |
 
 `GET /api/handoffs` returns unaccepted work visible to the sender, receiver and
 managers, including canonical `status` and separately labelled responsibility
@@ -1374,7 +1542,8 @@ records the tested/deployed image and identity initialization.
   PAS 2035 roles, matching is simple exact comparison, amounts are not tied to a
   real ledger, there is no supplier or contract master, and the screens were
   syntax-checked but not run in a browser or with a screen reader. The product
-  has no bulk edit yet, so the bulk refusal is tested on the API only.
+  now has the closed administrative bulk contract described above; controlled
+  finance/sign-off approval refusal remains independent of that allowlist.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
 ## Container hardening checks in CI

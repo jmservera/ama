@@ -1,5 +1,6 @@
 """Loopback HTTP exercise for the issue 83 staff workflow, using synthetic data only."""
 
+import base64
 import copy
 import json
 import tempfile
@@ -11,6 +12,7 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
+from dataset import change_metadata
 from tests.test_mvp import DATA
 from zava_forward.core.sqlstore import SqlStore
 
@@ -62,6 +64,9 @@ class HandoffApi(unittest.TestCase):
     def make_store(self, path: Path) -> SqlStore:
         return SqlStore(str(path), str(path.with_suffix(".sqlite")))
 
+    def reopen_store(self) -> SqlStore:
+        return SqlStore("nonexistent-seed-is-not-read", self.store.db_path)
+
     def shutdown(self) -> None:
         self.httpd.shutdown()
         self.httpd.server_close()
@@ -95,7 +100,42 @@ class HandoffApi(unittest.TestCase):
             return error.code, json.loads(error.read())
 
     def post(self, actor: str, action: str, body: object = None) -> tuple[int, Any]:
+        if action in ("offer-handoff", "accept-handoff", "handover"):
+            body = {**change_metadata(self.store), **(body if isinstance(body, dict) else {})}
         return self.call(actor, f"/api/cases/ZF-1/{action}", {} if body is None else body)
+
+    def test_explicit_change_sources_are_required_and_reopen_from_http(self) -> None:
+        upload = dict(
+            name="supplied.txt", kind="Other", data=base64.b64encode(b"SYN text").decode()
+        )
+        for action, body in (("upload", upload), ("offer-handoff", dict(to="rae@example.test"))):
+            code, result = self.call("sam", f"/api/cases/ZF-1/{action}", body)
+            self.assertEqual(code, 400, result)
+            self.assertIn("source", result["error"])
+        code, result = self.call(
+            "sam", "/api/cases/ZF-1/upload", {**upload, **change_metadata(self.store)}
+        )
+        self.assertEqual(code, 200, result)
+        self.assertEqual(self.post("sam", "offer-handoff", dict(to="rae@example.test"))[0], 200)
+        self.assertEqual(self.call("rae", "/api/cases/ZF-1/accept-handoff", {})[0], 400)
+        stale = {**change_metadata(self.store), "handoff_version": 0}
+        self.assertEqual(self.call("rae", "/api/cases/ZF-1/accept-handoff", stale)[0], 409)
+        self.assertEqual(self.post("sam", "accept-handoff")[0], 403)
+        code, detail = self.post("rae", "accept-handoff")
+        self.assertEqual(code, 200, detail)
+        reopened = self.reopen_store()
+        self.addCleanup(reopened.db.close)
+        case = reopened.cases["ZF-1"]
+        for history, action in (
+            ("document_history", "upload_document"),
+            ("handoff_history", "handoff_accepted"),
+        ):
+            event = case[history][-1]
+            self.assertEqual(event["source_version"], "fixture-1")
+            audit = next(e for e in reopened.audit_entries() if e["action"] == action)
+            self.assertEqual(json.loads(audit["detail"]), event)
+        self.assertEqual(case["owner_code"], "RLO-02")
+        self.assertTrue(reopened.verify_audit())
 
     def test_synthetic_app_states_sender_receiver_manager_views(self) -> None:
         with urllib.request.urlopen(self.base + "/") as response:

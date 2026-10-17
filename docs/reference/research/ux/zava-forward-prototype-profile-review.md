@@ -7,6 +7,77 @@ ms.topic: reference
 
 ## Outcome and Evidence Boundary
 
+### Controlled bulk edit engineering continuation (2026-10-17, #78)
+
+The [migrated API bulk contract](../../../../src/api/README.md#controlled-bulk-preview-api-78)
+adds a server-owned preview and all-or-nothing application for administrative
+case explanations and existing handoff due/next-action fields. Every selected
+ID has an inspectable old/new change, validation failure and predicted outcome
+before apply. Foreign/missing records disclose no field values. No-op targets
+remain unchanged without invented edit versions.
+
+The [core implementation boundary](../../../../src/core/README.md#controlled-administrative-bulk-edits-78)
+retains source/version, named actor, timestamp, reason and field changes in
+case history and immutable audit. SQL rechecks current identity/OID, field/
+owner rights, case rowversions and guardrails under the existing writer lock.
+Issuer-bound preview hashes, durable consumption and failure recovery prevent
+changed instructions, stale targets and concurrent replay from bypassing
+authority. Ownership still requires receiver acceptance; controlled approvals,
+resident commitments and hazard clocks are outside the closed field contract.
+
+This is local synthetic core/API engineering evidence, not a new UI, direct
+staff/resident research, WCAG conformance or live SQL Server acceptance.
+JSON retains its separate-file audit/state limitation. Existing evidence-upload
+and handoff-transfer provenance have not been established as complete FR-005
+acceptance; the bounded delivery must not be read as full PRD acceptance.
+Historical prototype findings below remain historical.
+
+Correction cycle ONE on PR #378 fixes RV-001: immutable issued outcomes and
+failures, exact ordered records/IDs and complete snapshots now determine
+eligibility regardless of mutable status. Every target, including no-ops, is
+revalidated inside the SQL writer transaction. Synthetic cached/persisted
+status-reset regressions preserve cases/history and show refusal rather than
+success audit. The original RPI Review remains historical Not accepted.
+
+Correction ONE recorded RV-002 as a source-confirmed partial FR-005 criterion,
+not merely missing test evidence. At that point evidence upload accepted
+file/name/kind only; its hash/version,
+display name/date and separate email/time audit lack supplied source/version
+and change reason. Handoff history retains email/time/role and versioned
+sender/receiver snapshots, but offer/accept have no explicit source-version
+contract and acceptance has no reason input or complete old/new ownership
+provenance event. Current API/UI callers do not supply those missing inputs.
+Those missing inputs/events were an implementation gap, not an actual
+human-approval dependency. The explicit correction TWO instruction supersedes
+the residual-only disposition for the existing upload/offer/accept paths.
+
+Same-PR integration after #377 merged onto main92d4f89 retains separate form
+staging and bulk modules, both Store/projection/API protections and checked SQL
+documents. 110 joint synthetic focused tests pass, including upstream
+pending/missing-rescan durability, permissions, rollback and SQL reopen.
+All earlier findings remain historical; RV-001 correction survives unchanged.
+Integration alone did not satisfy RV-002 or confer real schema authority,
+final-head independent acceptance or merge permission.
+
+Correction TWO implements required user-supplied source reference, source
+version and change reason in existing upload and handoff offer/accept UI/API/
+store contracts. Handoffs carry the current history version for stale refusal.
+Complete immutable events retain exact document-reference and ownership
+old/new values, named actor, UTC time and change version; SQL commits them with
+case/history changes and rechecks current identity. Filename/hash/acceptance
+state never supply invented source or reason. Historical missing data stays
+Unknown (legacy); old clients missing metadata get actionable refusal.
+
+Native labeled forms preserve Fluent-token styling, recipient-only acceptance
+and existing permissions; errors remain inline with focus and entered values.
+Local synthetic Chromium covers required-field focus, Enter upload/offer/
+accept, stale refusal, recipient ownership, 390px/reduced-motion and SQL reopen/
+audit equality. This is no screen-reader/WCAG, human or live-platform approval.
+The original Review and review512a59c4 Revise remain historical; final-head
+coordinator independent reassessment is still required, not fabricated Pass.
+Actual form/schema authority remains an unrelated human prerequisite, not a
+blocker used to omit this implementation.
+
 ### Queue signal engineering continuation (2026-10-17, #77)
 
 The [src API queue completion](../../../../src/api/README.md#queue-signal-completion-77-2026-10-17)

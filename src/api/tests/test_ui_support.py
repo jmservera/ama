@@ -14,6 +14,7 @@ import test_mvp
 from zava_forward.api import auth
 from zava_forward.api.server import WEB, App, make_handler
 from zava_forward.core.store import Store
+from dataset import change_metadata
 
 REASON = "SEEDED-REASON-hearing-loss"
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
@@ -65,6 +66,8 @@ class Base(unittest.TestCase):
         return urllib.request.urlopen(req).headers["Set-Cookie"].split(";")[0]
 
     def call(self, ck, path, body=None):
+        if body is not None and path.rsplit("/", 1)[-1] in ("upload", "offer-handoff", "accept-handoff", "handover"):
+            body = {**change_metadata(self.store, path.split("/")[3]), **body}
         req = urllib.request.Request(self.base + path, json.dumps(body).encode() if body is not None else None, headers={"Cookie": ck})
         try:
             with urllib.request.urlopen(req) as r:

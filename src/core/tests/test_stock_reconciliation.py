@@ -9,6 +9,7 @@ from typing import Any
 from unittest.mock import patch
 
 import dataset
+from dataset import change_metadata
 from zava_forward.core import ai_tasks, insights, ranking, stock
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError, Store
@@ -77,7 +78,14 @@ class StockReconciliation(unittest.TestCase):
     def signed(self, store: Any) -> None:
         self.tech(store, "rc1", "design_submit", note="Synthetic loft design")
         for kind in store.EVIDENCE:
-            store.add_document(self.users["sam"], "ZF-3", f"{kind}.pdf", kind, b"%PDF-SYN")
+            store.add_document(
+                self.users["sam"],
+                "ZF-3",
+                f"{kind}.pdf",
+                kind,
+                b"%PDF-SYN",
+                metadata=change_metadata(store, "ZF-3"),
+            )
         for actor, kind in (
             ("qi", "assessment"),
             ("rc2", "design"),
@@ -189,7 +197,14 @@ class StockReconciliation(unittest.TestCase):
         for store in self.stores():
             self.tech(store, "rc1", "design_submit", note="Synthetic design")
             for kind in store.EVIDENCE:
-                store.add_document(self.users["sam"], "ZF-3", f"{kind}.pdf", kind, b"%PDF-SYN")
+                store.add_document(
+                    self.users["sam"],
+                    "ZF-3",
+                    f"{kind}.pdf",
+                    kind,
+                    b"%PDF-SYN",
+                    metadata=change_metadata(store, "ZF-3"),
+                )
             store.stock_reconcile(self.users["sam"], "ZF-3", query())
             original = copy.deepcopy(store.cases["ZF-3"]["stock_reconciliation"])
             for actor, kind in (

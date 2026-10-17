@@ -4727,3 +4727,77 @@ metadata when the knowledge base was created.
   binding, live SQL Server/Azure and #98 review/pack/staleness remain unmet.
   No private data, source snapshots, memory, original specification or
   concurrent infrastructure/credential/sensor sources were changed.
+
+## [2026-10-17] query | Controlled administrative bulk preview (#78)
+
+* Added the existing-workstream engineering continuation in
+  `research/ux/zava-forward-prototype-profile-review.md` and its index route.
+  Component API/core guides define the closed case-reason and existing
+  handoff due/next-action contract, exact preview/outcome shapes and denials.
+* Named owner/manager and existing note visibility remain mandatory. Fresh
+  SQL staff/OID, target rowversion and guardrail checks occur under the writer
+  lock; durable issuance/consumption and immutable provenance audit accompany
+  local synthetic stale/replay/rollback/reopen tests. No controlled approval,
+  ownership acceptance, resident commitment or hazard clock is changed.
+* PRD FR-005/006/007 and same-number BRD entries have different meanings.
+  Broader preexisting evidence-upload/handoff provenance is not certified by
+  this bounded delivery. No new UI, human usability/WCAG, live Azure SQL,
+  private-data, real-model or operational acceptance claim. Memory and the
+  original case study remain unchanged.
+
+## [2026-10-17] update | Bulk-preview correction ONE and exact provenance residual (#78)
+
+* Updated the existing UX synthesis, index and component guides for PR #378
+  correction ONE. RV-001 now refuses cached/persisted status-reset blocked
+  issuance using immutable outcomes/failures and exact records/snapshot
+  coverage; every issued target, including no-ops, is rechecked at SQL commit.
+* Captured four real failing-before subtests; 71 focused synthetic bulk,
+  loopback HTTP, handoff and document tests pass after correction. Core
+  lint/format/type checks pass. Original RPI Review remains Not accepted,
+  not rewritten as a Pass; independent correction assessment is separate.
+* RV-002 is source-confirmed partial FR-005: upload and handoff offer/accept
+  callers lack explicit source/version/reason contracts and complete
+  per-change evidence/ownership provenance. Completing that input/history
+  work affects existing UI/API behavior; no fake metadata or widened bulk
+  authority is substituted. #78 is not fully accepted or closed.
+* No UI source change, human/WCAG/browser acceptance, live SQL Server/cloud,
+  private stock or real model. Original case and memory remain unchanged.
+
+## [2026-10-17] update | Same-PR #78 integration after merged forms #97
+
+* Owner-authorized rebase onto main92d4f89 retains both core/API guides,
+  Store/projection/handler/inventory behavior, checked SQL documents and
+  validators. Both complete KB histories and all index rows remain intact.
+  Separate form/bulk modules and tests retain their respective upstream/
+  old-publication content, including pending/missing-rescan durability fix.
+* 110 joint focused forms/bulk core/API, role inventory, handoff/document
+  tests pass; core ruff/format53/mypy106 and API ruff/format19/mypy49 pass.
+  Synthetic rollback/reopen is not live SQL Server or human approval.
+* RV-001 correction retained unchanged; RV-002 remains unfulfilled/blocking
+  full criterion 1 / #78 acceptance. Actual schema authority is an unrelated
+  human blocker. Original Not accepted Review preserved; active independent
+  review requires exact final SHA/delta, no new review loop or Pass inferred.
+  No merge, cloud/private/model use, memory or original-case change.
+
+## [2026-10-17] update | Implement existing upload and handoff provenance (#78 correction TWO)
+
+* Owner explicitly requires RV-002 implementation after independent Revise,
+  superseding residual-only treatment. Required user-supplied source,
+  source-version and reason now flow through existing upload/offer/accept
+  UI/API/store contracts; missing old payload metadata refuses actionably.
+  Handoff history version rejects stale actions; recipient-only acceptance
+  and the bulk closed allowlist remain unchanged.
+* Document/handoff histories and identical immutable audit events bind exact
+  old/new document references/ownership, registered actor, UTC time and
+  server change version. SQL commits together and rechecks current actor;
+  failures restore staged state. No filenames/hashes/defaults invent source
+  versions or reasons; old historical records stay unknown, not backfilled.
+* Updated existing synthesis/index and component guides. Local synthetic
+  tests and Chromium cover exact retention/reopen/audit, permissions, stale/
+  conflict/rollback, required-field focus and keyboard paths. Original
+  reviews remain historical; coordinator final-head independent reassessment
+  required. No full issue/PRD or human/WCAG/live acceptance inferred.
+* Forms pending/missing-rescan and bulk RV-001 remain independent and covered.
+  Actual approved schema authority is a separate human prerequisite, not
+  a provenance implementation blocker. No cloud/private/model calls,
+  unrelated workflow change, original-case or memory edit.

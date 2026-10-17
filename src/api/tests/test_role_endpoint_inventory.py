@@ -23,7 +23,8 @@ GET_ENDPOINTS = ["/api/me", "/api/account/photo", "/api/cases?view=all", "/api/c
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
                  "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
                  "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/nothing"]
-POST_ENDPOINTS = [("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
+POST_ENDPOINTS = [("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
+                  ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
                   ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
