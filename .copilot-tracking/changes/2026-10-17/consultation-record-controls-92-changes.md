@@ -87,6 +87,15 @@ were removed exactly; no shared resource was touched.
 Continue normal commit/push/main PR with Refs #92; keep issue open and stop
 per the explicit caller condition. Exact final head and PR receipt follow in state.
 
+Publication: https://github.com/jmservera/ama/pull/389, target main, branch
+feat/consultation-record-controls-92. Source/review commit:
+`b86f930cbfa4b710a3445829332e3c44e50f2729`. Fresh authenticated GitHub identity
+was resolved immediately before commit; repository-local noreply address used
+for author and committer, with required Copilot trailer. Resume session:
+`027d5c68-828d-47c9-8522-659504917170`. State records the explicit stop condition
+and ranked residuals. A final tracking-only receipt commit records publication;
+no source correction, review replacement, merge or issue closure occurred.
+
 ## Remaining Work and Acceptance Boundary
 
 No active implementation markers remain. Actual named Legal consultation
