@@ -165,9 +165,11 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 
 ## Follow-Up Items
 
-* Coordinator: authorize integration with concurrent main 3f544fb9 (#387).
-  PR #391 is CONFLICTING/DIRTY; no CI/rubric checks reported. No merge/rebase/
-  force push is authorized by the source-delivery request.
+* Coordinator authorized own-branch integration onto main 3f544fb9 (#387) and
+  exact old-head force-with-lease on 2026-10-17. Rebase completed with only
+  append-only log conflict; exact source/test patch and critique/Review parity,
+  all upstream src preserved, 200 tests and static checks passed. Publication
+  and ordinary check receipt pending; no new full Review.
 * Owner/coordinator: live credential and initializer-publication 403 prerequisites, then genuine tenant/browser/SQL/AI acceptance; outside source-only work.
 
 ## Handoff
@@ -178,7 +180,7 @@ None for offline source work. Critique gate passed; live acceptance excluded.
   mutations killed; configured lint/format and changed-line lint pass.
 * Review: Complete / Residual work, no source defects found; live gates routed
   to distinct owner/coordinator follow-up, not coordinator acceptance.
-* Remaining follow-up: coordinator must authorize integration for concurrent
-  main conflict, then obtain checks; live acceptance still excluded.
+* Remaining follow-up: publish authorized integration and obtain actual ordinary
+  check status; live acceptance still excluded. See changes integration evidence.
 * Automatic session stops per owner's clean-pushed-head instruction. No
   correction cycle, repeated Review or unauthorized history rewrite.

@@ -16,7 +16,7 @@
 | --- | --- | --- | --- |
 | P01 | Reproduce and implement | Complete | P01-T01, P01-T02 |
 | P02 | Validate and document | Complete | P02-T01, P02-T02 |
-| P03 | Review and deliver | Complete; integration follow-up blocked | P03-T01, P03-T02 |
+| P03 | Review and deliver | Complete; authorized integration publication active | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reproduce and implement
@@ -127,3 +127,10 @@ Concurrent main #387 advanced to 3f544fb9; GitHub reports CONFLICTING/DIRTY and
 no check runs. Coordinator integration authorization is a follow-up blocker;
 no merge/rebase/force push attempted. Delivery receipt commit follows without
 source changes or alteration of the original Review.
+
+Integration continuation 2026-10-17: coordinator authorized own topic rebase
+and exact expected-old-remote lease. Rebased onto 3f544fb9; only log conflict,
+complete upstream prefix and own entry preserved. Source/test binary patch and
+original critique/Review byte parity verified; all src equal new base. Fresh
+200 tests and existing static checks pass. No new Review, source correction,
+main write or live operations. Publication/check receipt is recorded in changes.

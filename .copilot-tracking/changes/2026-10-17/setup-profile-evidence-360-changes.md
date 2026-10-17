@@ -155,3 +155,54 @@ Automatic mode; Follow-up; source/RPI/PR delivery completed; session stopped by
 owner instruction. Coordinator integration authorization remains a follow-up
 blocker. Resume state is the canonical dated setup-profile-evidence-360 JSON.
 Live credential/initializer-publication gates still unmet.
+
+## Authorized Integration Continuation (2026-10-17)
+
+* Coordinator explicitly authorized only this branch's rebase and an exact
+  expected-old-remote force-with-lease from
+  cea89c43a9979daabe1eb09032c85d451b137584. No main or other-worktree write,
+  cloud mutation, Graph, SQL, live setup or paid rubric dispatch authorized.
+* Actual command: `git fetch origin main fix/setup-profile-evidence-360`, then
+  `git rebase origin/main`, onto
+  3f544fb9cda2c51b219db2cc8368c7525bbe0c86 (#387).
+* Only actual conflict: docs/reference/log.md. Removed conflict markers,
+  retained exact complete upstream byte prefix and appended the original own
+  entry byte-for-byte. README auto-merged; every other upstream routing line
+  verified retained. Resolved with `git add docs/reference/log.md` and
+  `GIT_EDITOR=true git rebase --continue`.
+* Rebased candidate: bffba7475dfbc551a0836601ba67c3af62f809c1, with source
+  commit 154e59c7. No correction to source or tests was needed.
+* Exact added/removed binary infra source/test patch SHA-256 on both old/new
+  bases: d1de2f05de59c2460cb793daf751d3fa8bbeb22c2a073eda281677c181f64f37.
+* File SHA-256 fingerprints unchanged across rebase:
+
+| File | SHA-256 |
+| --- | --- |
+| infra/scripts/setup-entra.py | a89954e9971f6a8aa1d99c43bb99278625f63d0e053679135af8de59dcb0274a |
+| infra/tests/test_setup_entra.py | ef8ee58cf10843609e7f34cff9a9a0d1c2b4139c0d683cdc3801bdf94c83970f |
+| Original plan critique | 48931b8edc0be01fc925293721d305a60446e61e3e7f663ba509d8d674883ed9 |
+| Original single Review | 65721ae7cec37255bcf0dbc37b9baebd0282d62e50e8646b0f43d261540476a6 |
+
+* `git diff 3f544fb9 HEAD -- src` is empty: all merged quality,
+  assistant/current-version evidence and shared recovery changes are untouched.
+* Installed editable core/agents/api/orchestrator distributions point to this
+  worktree. Fresh combined complete setup/staff/auth/secret suite: 200 passed
+  in 4.589 seconds. Invocation used the installed session venv Python with
+  unittest loading test_setup_entra, test_staff_azure,
+  test_initialize_workbench_staff, test_initialize_api_auth and
+  test_secret_lifecycle from infra/tests.
+* README configured three-file ruff lint and format checks passed; changed-line
+  ruff against origin/main reports zero introduced diagnostics and 225 untouched
+  legacy diagnostics. compileall and `git diff --check origin/main...HEAD`
+  passed. No dependency installation or manifest change required.
+* No new full Review or critique; original artifacts byte-unchanged. No source
+  correction cycle. This section is explicit integration evidence, not a
+  replacement verdict or claimed independent coordinator Pass.
+* Ordinary CI inspected: src-ci.yml and mvp-validation.yml both include infra
+  pull-request paths and workflow_dispatch. No checks existed before push.
+  If automatic checks remain absent, only ordinary validation on this branch
+  will be dispatched. No paid rubric workflow is requested.
+* Source CI's infrastructure workflow_run is gated to successful pull_request
+  events; manual workflow_dispatch cannot activate its Azure what-if jobs.
+* Publication/check receipt follows below. Live ACR403/private publisher and
+  actual tenant/browser/SQL/AI gates remain unmet.

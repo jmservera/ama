@@ -5588,3 +5588,21 @@ metadata when the knowledge base was created.
 * Live credential and initializer-publication 403 gates and #360 d/e remain
   unmet. Source parsing acceptance is not tenant/browser/SQL/AI acceptance or
   permission to retire Front Door or delete resource group ama.
+
+## [2026-10-17] query | Authorized profile-evidence integration (#360)
+
+* Coordinator authorized own PR391 topic rebase from cea89c43 onto freshly
+  fetched main 3f544fb9 (#387), with exact expected-old-remote lease only.
+  Only log insertion conflicted; complete upstream byte prefix plus original
+  own entry retained, all upstream routes preserved.
+* Infra source/test added-and-removed binary patch is byte-identical across
+  bases. Original critique and single Review unchanged; all merged src,
+  including quality assistant and recovery, exactly equal the new main base.
+  No source correction, new full Review or self-declared coordinator Pass.
+* Fresh installed-distribution complete setup/staff/auth/secret suite: 200
+  passed. Configured lint/format, changed-line lint, syntax and diff checks
+  pass. Ordinary CI publication/status recorded separately; absent checks
+  are not green and no paid rubric scoring is dispatched.
+* No main/other-worktree write, cloud mutation, Graph, SQL or live setup.
+  ACR403/private publisher and actual tenant/browser/SQL/AI remain unmet;
+  no merge, issue closure, service exposure change or full-setup-ready claim.

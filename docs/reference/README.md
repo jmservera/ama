@@ -48,6 +48,13 @@ management: short pages that point to clusters of related material.
 
 ## Task Routing
 
+The #360 profile-evidence continuation integrates merged quality #387 on main
+3f544fb9 with the exact original infra source/test patch and original critique/
+Review retained. Only the append-only log conflicted; upstream routes and all
+quality/assistant/recovery sources remain unchanged. Fresh 200 setup/staff/auth
+tests pass; live credential/private-publisher 403 and tenant/browser/SQL/AI gates
+remain unmet. Ordinary hosted checks are reported separately, not presumed green.
+
 The #85 topic integrates merged #95 and #385 on main
 2b24456863c0a8f39d47a73e22daeff3875cc825. Its entire production/test patch
 is byte-identical across bases; fresh SQLite/manifest checks supplement
