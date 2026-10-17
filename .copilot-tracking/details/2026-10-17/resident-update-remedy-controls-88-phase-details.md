@@ -12,14 +12,22 @@
 
 | Phase | Name | Status |
 | --- | --- | --- |
-| P01 | Bounded resident controls | correction ONE domain/HTTP and actual browser complete |
-| P02 | Validation/documentation | correction ONE regression/SQL/static/documentation complete; publication/external acceptance separate |
+| P01 | Bounded resident controls | correction TWO responsibility-based status clock complete; no new UI scope |
+| P02 | Validation/documentation | correction TWO fresh selectors/SQL/statics/evidence complete; publication/external disposition pending |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Bounded resident controls
 
 Intent: reuse resident_action/service_requests/resident_update and existing SQL store.
 Excluded: provider portal, Legal decision authority, sending and unrelated workflow architecture.
+
+Authorized final correction TWO: choose the current status responsibility from
+route/state (redress for Closed/Independent review, service otherwise), never
+from owner email equality. Reassigning another responsibility must preserve
+captured status owner/date exactly even when the same person holds both roles.
+Legacy absent status owner/date remains absent for non-owning reassignment;
+owning reassignment explicitly records new current assignment/time and null old
+provenance. Preserve all existing manager/version/identity/concurrency boundaries.
 
 <!-- rpi:task id=P01-T01 -->
 ### P01-T01: Domain and persistence
@@ -141,6 +149,15 @@ Reconcile phase checkmarks/details/changes/state before one original Review.
 Retain adverse Review unchanged; at most two authorized corrections, no second Review.
 
 ## Implementation Completion Evidence
+
+Final authorized correction TWO: failing-first eight subcases proved shared-email
+and Independent review ambiguity; corrected 24-subcase matrix passes JSON/SQLite/
+actual MSSQL. Fresh resident core/API:74run72pass2existing skips; nine actual
+MSSQL tests pass/no skips; full configured core/API Ruff/format/mypy pass.
+No web/JS/browser or image changes/claimed reruns. Old status provenance preserved
+for non-owning responsibility regardless shared email; new current owning
+assignment records its own date without reconstructing absent historical dates.
+Original Review/critique and correction ONE receipt remain unchanged.
 
 Authorized correction ONE adds explicit response-owner recovery with failing-first
 JSON/SQLite reproduction, final 145 resident/browser/handoff/report selectors

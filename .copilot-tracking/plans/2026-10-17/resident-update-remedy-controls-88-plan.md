@@ -6,7 +6,7 @@
 * Task ID: 88
 * Slug: resident-update-remedy-controls-88
 * Date: 2026-10-17
-* Planning status: authorized correction ONE implemented/validated; external disposition pending
+* Planning status: authorized correction TWO implemented/validated; external disposition pending
 * Details: .copilot-tracking/details/2026-10-17/resident-update-remedy-controls-88-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/resident-update-remedy-controls-88-plan-critique.md
 
@@ -16,10 +16,12 @@ Complete the existing resident-update record and add an independently owned reme
 status to existing service requests. Closing the response cannot close the remedy.
 Keep delivery, handover and finance in their existing domain records.
 
-Completed coordinator-authorized scope is the departed response-owner correction
-under P01/P02. Add explicit manager-only versioned service/redress reassignment,
-preserving captured owner history and all independent clocks. Original Review/
-critique stay unchanged; no new full Review, base change or new policy authority.
+Completed coordinator-authorized scope includes departed response-owner recovery
+and final correction TWO under P01-T01/P02: route/state responsibility, not shared
+owner email, selects the status clock. Explicit manager-only versioned service/
+redress reassignment preserves captured owner history and independent clocks.
+Original Review/critique stay unchanged; no new full Review, base change or policy
+authority. Final source/evidence publication and external disposition remain.
 
 ### What You May Not Know
 
@@ -114,6 +116,10 @@ Owner-selected Fluent/content/WCAG-baseline documents read; fresh web guidelines
 Complete commitment/remedy actions, writer checks, rollback and unknown projections.
 Completion evidence: actual failing-first failures, then 65 JSON/SQLite/HTTP tests
 OK (two opt-in skips), including adverse writer/recovery and mixed closure tests.
+Correction TWO complete: status clock follows route/state responsibility, not
+shared owner email. Actual failing-first matrix had eight failing subcases; all
+24 subcases now pass on JSON/SQLite/actual MSSQL, preserving owning-key,
+independent-review, distinct-owner and legacy unknown contracts.
 
 <!-- rpi:task id=P01-T02 -->
 #### [x] P01-T02: Existing web and HTTP journey
@@ -153,6 +159,13 @@ separate correction receipt maps all three exact criteria to source/test proof.
 Source/evidence published normally as5cfa8e53 on same PR392; final metadata
 receipt follows without source changes. Independent final-head disposition remains
 external and pending. No merge/issue closure.
+
+Correction TWO completion: 74 fresh resident JSON/SQLite/API tests (72 pass/two
+existing skips), nine actual MSSQL tests pass/no skips and configured core/API
+Ruff/format/mypy pass. No changed web bytes; prior browser/JS receipts historical.
+Core/API guides and resident synthesis/index/log updated; original Review/critique
+and correction ONE evidence unchanged. Separate correction TWO receipt records
+exact commands/matrix/proof. No third cycle or independent self-Pass.
 
 ## Dependencies
 

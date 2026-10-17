@@ -9,6 +9,14 @@
 
 ## Execution Status
 
+Correction TWO implemented/validated after coordinator f786737f Revise Medium:
+status ownership follows responsibility, not colliding owner emails. Bounded backend work
+and fresh evidence tracked separately in resident-update-remedy-controls-88-correction-two.md.
+Original Review/critique and correction ONE evidence retained unchanged.
+Fresh 74 resident core/API tests:72pass/two existing skips; nine actual MSSQL
+tests pass/no skips; configured core/API Ruff/format/mypy pass. No web edits,
+new full Review or self-declared disposition. Normal publication pending.
+
 Original implementation of P01-T01/T02 and P02-T01/T02 completed and evidence
 reconciled before the single original Review. Coordinator-authorized correction
 ONE implemented/validated for the departed-response-owner Medium finding, separately evidenced
@@ -16,8 +24,9 @@ in resident-update-remedy-controls-88-correction-one.md in this directory.
 P01/P02 implementation evidence complete: 145 tests (134 pass/11 existing skips)
 including actual browser, 24 shared guard tests and eight actual MSSQL tests pass;
 configured core/API statics/JS pass. Source/evidence published normally as
-5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3 on PR392. Independent external
-correction disposition pending; the interrupted broader replay is not a pass.
+5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3 on PR392. Coordinator f786737f
+closed the original departed-owner finding; subsequent collision finding is
+tracked in correction TWO. The interrupted broader replay is not a pass.
 Original Review/critique unchanged; no new full Review or current blocker.
 
 ## Execution Summary

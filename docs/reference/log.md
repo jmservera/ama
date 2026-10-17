@@ -5784,3 +5784,20 @@ metadata when the knowledge base was created.
   Original Review/critique retained unchanged; no second full Review, operational
   authority, messaging, cloud/private writes or WCAG acceptance. Coordinator owns
   independent final-head acceptance; broader governance remains separately routed.
+
+### 2026-10-17: Issue88 final authorized responsibility-clock correction TWO
+
+* Coordinator f786737f identified email-collision status ownership after departed-
+  owner recovery. Status clock now follows responsibility: redress for Closed/
+  Independent review, otherwise service. Reassigning the non-owning responsibility
+  preserves status owner/date even when one person holds both roles; missing legacy
+  provenance is not fabricated. Remedy and captured history remain independent.
+* Existing core/API guides and resident synthesis/index updated. Actual failing-
+  first matrix produced eight failed subcases on JSON/SQLite; corrected matrix
+  covers 24 route/state/responsibility/legacy subcases on each backend including
+  actual MSSQL. Fresh resident core/API:74run,72pass,two existing skips; targeted
+  actual loopback MSSQL:nine pass/no skips; configured core/API Ruff/format/mypy pass.
+* No web bytes changed or fresh browser/JS execution claimed. Original Review/
+  critique and correction ONE evidence retained unchanged; final independent
+  disposition remains with coordinator. No new full Review, third correction,
+  authority, communications, private/cloud writes, merge or issue closure.

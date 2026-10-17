@@ -21,6 +21,11 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #88, the [resident criterion audit](./research/ux/customer-journeys/residents.md#responsibility-owned-response-clock-correction-2026-10-17)
+also records the final authorized responsibility-clock correction: shared service/
+redress identity never lets a non-owning reassignment alter status owner/date.
+Existing resident routing below remains unchanged.
+
 1. Read this index first and pick the rows in
    [Task Routing](#task-routing) that match the task.
 2. Read the [Project Memory](./memory.md) for owner context and preferences.

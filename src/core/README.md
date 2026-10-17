@@ -175,8 +175,14 @@ If a response assignee leaves eligible staff, an existing resident-workflow
 manager can explicitly use `service_reassign`: request `id`, current integer
 `expected_version`, `responsibility` (`service` or `redress`), new named `owner`
 email and reason `note`. This changes only that responsibility, not the remedy
-owner or status. The response status owner/date changes only when that
-responsibility owned the current status. History retains old/new captured
+owner or status. The response status owner/date changes only for its owning
+responsibility: redress when Closed or on the Independent review route, service
+otherwise. The same person may hold both responsibilities on a Service request;
+matching their email does not make the other responsibility own the status.
+Reassigning the non-owning responsibility preserves the captured status owner/date
+exactly, including absent legacy provenance. An explicit owning reassignment
+records its new owner/date but keeps absent old provenance null in history.
+History retains old/new captured
 identities, prior status owner/date, named acting manager, reason and event time.
 Missing legacy identity/date remains null in that history; it is not reconstructed
 from today's registry. A captured departed owner need not remain eligible to

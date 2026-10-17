@@ -106,6 +106,9 @@ shows this form only to those roles, and shows old/new owner, actor, reason and
 time in request history. No manager becomes owner implicitly. Server-side writer
 validation also rejects stale versions, changed identities and non-independent
 complaint/review assignments. Remedy ownership and other clocks remain unchanged.
+Response status owner/date follows responsibility, not shared-person email:
+redress for Closed or Independent review, otherwise service. Reassigning the
+other responsibility preserves that status clock, including legacy Unknowns.
 
 Invalid input returns 400, stale version/writer 409 and missing/current-owner
 authority 403. Post-COMMIT synchronization or subsequent detail failure returns

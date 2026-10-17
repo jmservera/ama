@@ -736,6 +736,112 @@ class JsonResidentDecisions(unittest.TestCase):
         else:
             self.store.staff[actor["email"]] = copy.deepcopy(actor)
 
+    def test_response_reassignment_status_clock_follows_responsibility_not_shared_person(
+        self,
+    ) -> None:
+        self.scope()
+        self.answer()
+        for route in ("Service request", "Complaint", "Independent review"):
+            service_owner = self.rae if route == "Service request" else self.sam
+            for status in ("Open", "Closed"):
+                for responsibility in ("service", "redress"):
+                    for legacy in (False, True):
+                        with self.subTest(
+                            route=route, status=status, responsibility=responsibility, legacy=legacy
+                        ):
+                            self.store.resident_action(
+                                self.pam,
+                                "ZF-1",
+                                dict(
+                                    action="service_open",
+                                    route=route,
+                                    summary="SYN responsibility clock",
+                                    desired_outcome="SYN separate remedy",
+                                    service_owner=service_owner["email"],
+                                    redress_owner=self.rae["email"],
+                                    next_update="2099-01-01",
+                                    review_measure=MEASURES[0],
+                                    review_decision_version=1,
+                                    review_reference="SYN recorded decision",
+                                ),
+                            )
+                            req = self.store.cases["ZF-1"]["service_requests"][-1]
+                            request_id = req["id"]
+                            if status == "Closed":
+                                self.store.resident_action(
+                                    self.rae,
+                                    "ZF-1",
+                                    dict(
+                                        action="service_update",
+                                        id=request_id,
+                                        status="Resolved",
+                                        next_update="2099-01-01",
+                                    ),
+                                )
+                                self.store.resident_action(
+                                    self.rae,
+                                    "ZF-1",
+                                    dict(
+                                        action="service_close",
+                                        id=request_id,
+                                        note="SYN response only",
+                                    ),
+                                )
+                            if legacy:
+                                with self.store.lock:
+                                    req = self.store._case("ZF-1")["service_requests"][-1]
+                                    req.pop("status_owner")
+                                    req.pop("status_at")
+                                    self.store.save()
+                            before = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][-1])
+                            self.store.resident_action(
+                                self.pam,
+                                "ZF-1",
+                                dict(
+                                    action="service_reassign",
+                                    id=request_id,
+                                    expected_version=before["version"],
+                                    responsibility=responsibility,
+                                    owner=self.rex["email"],
+                                    note="SYN explicit responsibility",
+                                ),
+                            )
+                            current = self.open_store().cases["ZF-1"]["service_requests"][-1]
+                            status_key = (
+                                "redress"
+                                if status == "Closed" or route == "Independent review"
+                                else "service"
+                            )
+                            if responsibility == status_key:
+                                self.assertEqual(
+                                    current["status_owner"]["email"], self.rex["email"]
+                                )
+                                self.assertNotEqual(current["status_at"], before.get("status_at"))
+                                self.assertEqual(current["status_at"], current["history"][-1]["at"])
+                            else:
+                                for field in ("status_owner", "status_at"):
+                                    self.assertEqual(current.get(field), before.get(field))
+                                    self.assertEqual(field in current, field in before)
+                            other = "redress" if responsibility == "service" else "service"
+                            for suffix in ("_owner", "_owner_email", "_identity"):
+                                self.assertEqual(current[other + suffix], before[other + suffix])
+                            self.assertEqual(
+                                current[responsibility + "_identity"]["email"], self.rex["email"]
+                            )
+                            self.assertEqual(current["remedy"], before["remedy"])
+                            self.assertEqual(current["opened_at"], before["opened_at"])
+                            self.assertEqual(current["status"], before["status"])
+                            self.assertEqual(current["version"], before["version"] + 1)
+                            self.assertEqual(current["history"][:-1], before["history"])
+                            self.assertEqual(
+                                current["history"][-1]["old_status_owner"],
+                                before.get("status_owner"),
+                            )
+                            self.assertEqual(
+                                current["history"][-1]["old_status_at"], before.get("status_at")
+                            )
+                            self.assertTrue(self.store.verify_audit())
+
     def test_departed_response_owners_explicit_recovery_keeps_other_clocks(self) -> None:
         self.request()
         original = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
@@ -880,7 +986,7 @@ class JsonResidentDecisions(unittest.TestCase):
         self.register_followup_actor(dict(self.rae, role="Contractor"))
         self.store.resident_action(self.pam, "ZF-1", dict(review_body, owner=self.pam["email"]))
         review = self.store.cases["ZF-1"]["service_requests"][1]
-        self.assertEqual(review["status_owner"]["email"], self.rex["email"])
+        self.assertEqual(review["status_owner"]["email"], self.pam["email"])
         self.unchanged_failure(
             lambda: self.store.resident_action(
                 self.rex,

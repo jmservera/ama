@@ -168,6 +168,28 @@ and changed JavaScript syntax checks passed. The interrupted broader suite is
 not a pass; prior full SQL/image evidence remains historical. No new full RPI
 Review or independent acceptance is inferred. The coordinator owns final review.
 
+### Responsibility-owned response clock correction (2026-10-17)
+
+Coordinator review of correction ONE found an ambiguity on ordinary Service
+requests, where the same person may hold service and redress responsibility.
+Email equality incorrectly let a non-owning reassignment change the status clock.
+Correction TWO uses route/state responsibility instead: redress for Closed or
+Independent review, service otherwise. Only reassignment of that responsibility
+changes current status owner/date. The other responsibility preserves captured
+status owner/date exactly, including missing legacy provenance; explicit current
+assignment never fabricates an old event. Remedy and other clocks stay unchanged.
+
+Failing-first JSON/SQLite tests reproduced eight failing subcases across shared-
+person and Independent review controls. The corrected 24-subcase matrix passes
+on JSON, SQLite and actual isolated loopback MSSQL. Fresh resident core/API run:
+74 tests, 72 pass/two existing skips; nine actual MSSQL tests pass/no skips,
+including current actor/assignee rebinding, competing writers, rollback and
+truthful committed exactly-once recovery, plus quality/hazard/finance/grant guards.
+Configured core/API Ruff/format/mypy pass. No web bytes changed, so prior browser
+and fresh-guidelines receipts remain historical, not new execution claims.
+Original Review/critique unchanged; final external correction disposition remains
+the coordinator's. No third correction, full Review or self-declared acceptance.
+
 ### Authorized merged-quality integration (2026-10-17)
 
 Issue #88 / PR #392 was rebased onto main

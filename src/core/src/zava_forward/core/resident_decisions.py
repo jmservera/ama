@@ -607,10 +607,7 @@ class ResidentDecisionMixin:
                 raise PermissionError("Choose a reviewer who did not make the contested decision.")
         note = k.text(body.get("note"), "the reason for reassigning response responsibility")
         at = _time()
-        status_owner = req.get("status_owner")
         status_key = "redress" if req["status"] == "Closed" or req["route"] == "Independent review" else "service"
-        owns_status = (str(status_owner.get("email") or "").casefold() ==
-                       str(req.get(key + "_owner_email") or "").casefold()) if status_owner else key == status_key
         event = dict(kind="Response owner reassigned", responsibility=key,
                      changes=dict(old=old, new=identity), old_owner_email=req.get(key + "_owner_email"),
                      old_owner_name=req.get(key + "_owner"), old_status_owner=deepcopy(req.get("status_owner")),
@@ -619,7 +616,7 @@ class ResidentDecisionMixin:
                      version=req.get("version", 0) + 1)
         req.update({key + "_identity": identity, key + "_owner": owner["name"],
                     key + "_owner_email": owner["email"], "version": event["version"]})
-        if owns_status:
+        if key == status_key:
             req.update(status_owner=identity, status_at=at)
         req.setdefault("history", []).append(event)
         return f"{req['id']} {key} response responsibility reassigned; remedy unchanged"
