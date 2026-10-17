@@ -123,3 +123,18 @@ API39/no skips and actual SQL16/oneJSON-onlyskip pass; configured gates pass.
 Reconcile completed plan/details/changes/state while retaining Review's
 Complete / Not accepted result and independent final-head closure limitation.
 Commit owned paths, normal push, main PR Refs #85; no merge or closing action.
+
+<!-- rpi:phase id=P04 -->
+### P04: Coordinator-authorized latest-main integration
+
+Starting clean published head7d3b6bea644f263c592cb35631cd30c4961d92c1,
+old baseb5d4c8402692758bd929a7ff9bf1832770738346. Fresh fetch confirmed
+main2b24456863c0a8f39d47a73e22daeff3875cc825 containing merged PR385/386.
+Correction ONE already proved; do not repeat implementation or original Review.
+Save binary production/test patch before rebase and compare afterward. Resolve
+only explicit conflicts preserving both intents, never blanket ours/theirs.
+Keep upstream log exact prefix, own appended entries and every route. No
+upstream dataset/manifest/source authority changes. If only docs conflicts,
+minimal link/diff/state checks plus patch-byte proof; historical tests remain
+historical. If source changes/conflicts, combined relevant SQLite/MSSQL probes.
+Fresh local noreply identity; expected remote lease is original published head.

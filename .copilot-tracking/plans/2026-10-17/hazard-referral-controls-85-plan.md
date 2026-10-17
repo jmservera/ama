@@ -155,6 +155,24 @@ closure not fabricated. Dependencies: P03-T02.
 
 ## Test Ownership and Budget
 
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Authorized latest-main integration
+
+<!-- rpi:task id=P04-T01 -->
+#### [ ] P04-T01: Rebase owned topic and verify preserved intents
+
+After completed correction/publication, rebase the clean owned topic onto
+fresh origin/main2b24456863c0a8f39d47a73e22daeff3875cc825. Preserve merged
+#95 grant/finance scoped authority, preparer revalidation, shared operation,
+history and neutral UI without duplicating its fix. Preserve upstream KB log
+as exact prefix followed by own entries and all index routes.
+For documentation-only conflicts prove byte-identical whole production/test
+patch against old/new bases and minimal documentation checks. Substantive
+source conflicts require focused combined SQLite/actual MSSQL validation.
+No dataset changes planned; retain upstream exact manifest hash and provisional
+authority. Republish only this topic using explicit expected-remote lease,
+update PR with exact base/head and evidence limits. No new Review or merge.
+
 Owner: this task. Canonical targets: test_hazard_referral.py,
 test_hazard_api.py and hazard-specific SQL harness; no generated suite copies.
 Removals: none. Maximum new semantic test methods: 12; at most 3 harness adapter

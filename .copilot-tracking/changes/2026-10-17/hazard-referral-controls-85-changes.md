@@ -9,6 +9,9 @@ Details: .copilot-tracking/details/2026-10-17/hazard-referral-controls-85-phase-
 
 ## Execution Status
 
+Coordinator-authorized P04 latest-main integration active after full original
+delivery. P01-P03 remain complete, original single adverse Review unchanged.
+
 Full plan declared. P01/P01-T01 and P02/P02-T01 complete.
 P03-T01 independent Review and P03-T02 correction ONE complete.
 P03-T03 draft main PR #388 published. Original Review Not accepted preserved;
@@ -222,3 +225,17 @@ operational approval or issue acceptance. Ranked external next actions remain
 in state. Resume session519fb014-71e3-4e42-ad94-c0cb8ac982bd.
 One delivery-metadata patch missed the exact plan heading after applying state;
 inspected heading and applied only remaining hunks, preserving state.
+
+## P04-T01 Integration Opening
+
+User explicitly authorizes rebase after publication, including expected-remote
+lease only on owned topic. Intake clean head7d3b6bea644f263c592cb35631cd30c4961d92c1,
+PR388 OPEN/draft/main. `git fetch origin` verified latest main
+2b24456863c0a8f39d47a73e22daeff3875cc825 (merged PR386/#95) over
+1fc7325b93ea845b9cb2e827efbea624f7d20d30 (PR385).
+Old baseb5d4c8402692758bd929a7ff9bf1832770738346.
+Upstream source changes include store/grants/finance/dataset/UI but no
+sqlstore.py change; preserve them intact, no duplicate grant fix.
+Planned before/after binary production/test patch equality; docs-only conflicts
+need minimal docs checks, substantive conflicts require combined backend probes.
+Shared #91 recovery overlap remains declared; no other worktree inspected.
