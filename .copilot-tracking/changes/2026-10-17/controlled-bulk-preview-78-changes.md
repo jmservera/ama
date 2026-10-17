@@ -93,3 +93,84 @@ six direct dispositions complete, no implementation blockers. Perform exactly
 one post-implementation Review. Route any findings forward; do not repeat
 implementation/Review in this task. Then privacy-safe commit, push and main PR
 with Refs #78, exact criterion evidence and explicit outstanding boundaries.
+
+## Correction Cycle ONE: owner-authorized continuation
+
+2026-10-17: same issue #78, PR #378 and requested branch. Clean status and
+draft/open PR head 9eba0b9 verified. Original Review remains Not accepted;
+the prior source-fix stop is superseded by explicit user authorization.
+P03-T01 in progress: fail-before status-corruption regressions, immutable
+eligibility and complete target revalidation. P03-T02 investigates actual
+older provenance gaps without inventing human inputs. P03-T03 requires one
+independent correction assessment, verified commit/push and stop.
+
+### P03-T01: RV-001 correction and fail-before evidence
+
+The status-only regression was added before source edits and run against the
+original implementation. All four cached/persisted SQL x changed/no-op
+subtests failed with `AssertionError: ConflictError not raised`, reproducing
+the real defect rather than a loader/dependency error. Raw local receipt:
+`ama-78-correction1-fail-before.log` in the session files directory. The cached
+store is refreshed between persisted subtests to avoid a stale meta-snapshot
+fixture conflict, discovered on the first post-fix run.
+
+`bulk_edits._applicable_request` now derives applicability from the anchored
+issued envelope, requiring exact ordered unique target/record agreement,
+complete snapshots, empty failures, exact requested old/new field shape and
+new values, and consistent `would_apply` or `no_change` outcomes only.
+`blocked`, `batch_blocked`, any failure and malformed/incomplete coverage are
+never made eligible by mutable status. Existing issuance hash and durable
+consumption anchors are retained and repeated in the SQL writer transaction.
+
+Shared `_changes` generates preview fields and validates the exact proposed
+old/new changes. Both staging and SQL commit iterate canonical request IDs,
+revalidate every target's permission/rules/freshness and compare issued changes.
+No-op targets are checked but receive no invented edit/history; active handoff
+Offered/Received/Escalated/Accepted semantics are preserved. No allowed field,
+permission, route, schema or controlled approval was added.
+
+New tests cover all four original corruption cases with exact unchanged
+cached/reopened cases/history and success-audit list, visible refusal and
+verified hash chain; inherited contract-shape/outcome cases on both stores;
+all active states/no-ops; actual transaction-bound every-target checks including
+no-op; and an independent direct SQL commit-hook refusal of genuine blocked
+issuance. Existing request/issuer hash tampering, stale/ABA/role/OID/guardrail
+races, atomic rollback/reopen, lost acknowledgement and replay remain covered.
+
+### P03-T02: RV-002 exact residual and validation
+
+PRD FR-005 at `docs/prds/zava-forward-retrofit-programme-demonstrator.md:840`
+requires source/version/actor/timestamp/reason for each change. Inspection:
+
+| Operation / caller | Already retained | Exact unfulfilled scope |
+| --- | --- | --- |
+| `Store.add_document`, `store.py:583-610`; upload route `server.py:822-827`; UI `app.js:794-798` | Content SHA-256, version 1, display-name/date metadata, separate email/time upload audit | No supplied source reference/version or change reason in API/store signature; no complete immutable per-change provenance event binding them |
+| `offer_handoff`, `workflows.py:159-210`; `_handoff_event:211-225`; API `server.py:783-790`; UI `app.js:659-662` | Versioned sender/receiver snapshots, actor email/role/time, note and permitted handoff metadata | No explicit source/source-version contract; offer note is not a required general provenance reason |
+| `accept_handoff`, `workflows.py:227-239`; API `server.py:791-792`; UI `app.js:622` | Recipient-only owner transfer; versioned from/to history, actor/time/role and acceptance audit | Empty-body acceptance has no reason or source/version input and no canonical old/new owner event containing the full provenance contract |
+
+This cannot be completed by simply retaining currently supplied inputs.
+Requiring new inputs affects existing UI and API clients and needs a deliberate
+validation/history/compatibility decision. Do not fabricate sources from names,
+relabel history versions as supplied source versions or invent an acceptance
+reason. RV-002 remains unfulfilled; #78 criterion 1 remains partial. Coordinator
+must route the exact existing upload/offer/accept caller contract and immutable
+provenance work before claiming full acceptance. No unrelated partial source
+patch or broader bulk fields are substituted for that requirement.
+
+Validation: 71 focused tests pass using only temporary synthetic fixtures:
+39 core bulk + six real local HTTP + 26 existing handoff/document tests.
+Existing core ruff checks pass; format checks pass on 51 files; mypy passes
+104 source files. Diff whitespace checked. No full suite repeat, live SQL
+Server, cloud, private stock, Docker or model. No web code change; UI caller
+inspection is evidence for scope only, not a design review/browser acceptance.
+
+### P03-T03: Independent correction review
+
+Independent read-only reviewer `issue78-correction-one-review` found no
+substantive defects and accepted the bounded correction only. It inspected
+core source/tests, SQL transaction/recovery and documented RV-002 residual,
+and independently probed two valid and ten invalid synthetic issuance
+envelopes. Parent's 71-test/tooling receipt is distinguished from reviewer
+execution. The separate dated correction review records complete disposition;
+the historical original Review file and Not accepted verdict are unchanged.
+RV-001 is corrected; RV-002 and issue criterion 1 remain explicitly partial.

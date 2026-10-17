@@ -4,7 +4,7 @@
 ## Task Metadata
 
 * Task ID: 78; slug: controlled-bulk-preview-78; date: 2026-10-17
-* Status: Implemented; ready for one post-implementation Review
+* Status: Correction cycle ONE authorized on the same issue/PR
 * Details: .copilot-tracking/details/2026-10-17/controlled-bulk-preview-78-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/controlled-bulk-preview-78-plan-critique.md
 
@@ -216,4 +216,47 @@ Implementation changes path:
 .copilot-tracking/changes/2026-10-17/controlled-bulk-preview-78-changes.md.
 P01-T01/P02-T01/P02-T02 complete, with changes-record evidence. Next: one
 post-implementation Review, then normal privacy-safe commit/push/main PR.
-No source changes after Review in this task; any routed findings are later work.
+Original one-Review outcome remains historical Not accepted. The owner's
+2026-10-17 continuation explicitly authorizes correction cycle ONE on the same
+branch/PR; the previous publication stop is superseded for this invocation.
+
+## Correction Cycle ONE
+
+No Research/Plan/critique/full RPI repeat. Original Review is immutable evidence,
+not permission to leave an actionable source defect unfixed. Current base remains
+e065ecd; do not merge/rebase/force-push or integrate #377 yet.
+
+<!-- rpi:phase id=P03 -->
+### [ ] P03: Correct RV-001 and disposition RV-002
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Immutable eligibility and complete transactional target coverage
+
+Add fail-before cached/persisted status-only corruption tests, including no
+case/history/success-audit mutation. Derive eligibility from anchored issued
+outcomes, exact ordered IDs/records and complete snapshots. Reject every failure,
+blocked/batch_blocked record irrespective of mutable status. Revalidate each
+issued target after BEGIN IMMEDIATE; preserve no-op and permitted states/fields.
+
+<!-- rpi:task id=P03-T02 -->
+#### [x] P03-T02: Investigate older provenance and validate correction
+
+Trace exact existing add_document and offer/accept_handoff plus API inputs.
+Fix only a small tightly coupled data-retention gap without fabricating source
+or reason. If genuine caller input/approval or behavior choice is required,
+retain criterion partial and state exact outstanding scope for coordinator.
+Run focused new/bulk/SQL tests and existing component tooling; update current
+plan/details/changes and KB. Preserve original Review verdict.
+
+<!-- rpi:task id=P03-T03 -->
+#### [ ] P03-T03: Independent correction review and final push
+
+Obtain one independent bounded correction assessment, separate from the
+historical RPI Review. Record finding disposition and its actual verdict,
+commit with verified noreply identity/trailer, update PR #378, push and stop.
+Do not label original Review Pass or close #78 while criterion remains partial.
+
+Independent correction assessment completed: accepted for the bounded fix,
+no substantive findings; RV-002 remains partial. Publication pending. Separate
+[correction review](../../reviews/logs/2026-10-17/controlled-bulk-preview-78-correction-one-review.md)
+preserves original Not accepted verdict and exact finding disposition.

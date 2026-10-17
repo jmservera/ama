@@ -134,6 +134,14 @@ authority changes require a fresh preview; permission denial is not repaired
 by switching screens. This is not protection against rewriting both trusted
 storage and its ledger.
 
+Application eligibility is derived from the anchored issued records, never
+from mutable `status` alone. Ordered request IDs and records must match exactly,
+snapshots must cover every target, failures must be empty, and only consistent
+`would_apply`/`no_change` outcomes with the exact proposed fields are eligible.
+Changing `blocked` to `pending` in cached or persisted SQL state cannot enable
+a failed batch. The SQL commit repeats this contract and revalidates every
+issued target, including no-ops, against its exact proposed old/new changes.
+
 SQL repeats identity, case and governance-snapshot validation after
 `BEGIN IMMEDIATE`, inside the existing cross-process writer transaction.
 Case writes, per-case `edit_history`, batch consumption/result, queue maintenance
@@ -174,9 +182,19 @@ audit/commit boundaries, lost acknowledgement and reopen. SQLite establishes
 the local transactional evidence; no live Azure SQL, private stock, model or
 operational approval is claimed. JSON retains its existing separate-file
 case/audit limitation and is not cross-process transactional evidence.
-The new path meets provenance assertions for its own edits; existing evidence
-upload and handoff-acceptance paths are not retroactively certified as full
-PRD FR-005 provenance acceptance.
+The new path meets provenance assertions for its own edits, not full PRD
+FR-005 provenance acceptance. Correction ONE traced the remaining operations:
+`Store.add_document` retains content hash, version 1, display-name actor and
+date plus a separate email/time upload audit, but accepts no source reference,
+source version or change reason. `offer_handoff`/`accept_handoff` retain
+versioned sender/receiver snapshots, email/time and role, but accept no explicit
+source/source-version contract; acceptance takes no reason and records no
+canonical old/new ownership change event with all required provenance.
+The API and current UI supply only file/name/kind or an empty acceptance body.
+Completing these gaps requires explicit caller inputs, validation, retained
+event/history design and related UI/API compatibility work; inventing provenance
+from filenames or acceptance itself would not meet the requirement. RV-002 and
+criterion 1 therefore remain partial, separately from the corrected RV-001.
 
 ## Read-only source cadence labels (#216)
 

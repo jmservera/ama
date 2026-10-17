@@ -9,6 +9,7 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import DATA
+from zava_forward.core import bulk_edits
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
 
@@ -251,9 +252,175 @@ class JsonBulkEdits(unittest.TestCase):
         self.assertNotIn("SYN-REGISTER", json.dumps(detail["edit_history"]))
         self.assertNotIn("supplied reference", json.dumps(detail["edit_history"]))
 
+    def test_issued_eligibility_requires_exact_records_snapshots_and_outcomes(self) -> None:
+        preview = self.preview()
+        original = copy.deepcopy(self.store.data["bulk_edits"][preview["preview_id"]]["issued"])
+        invalid = []
+        for failure in (["A retained rule failure"], None):
+            issued = copy.deepcopy(original)
+            issued["records"][0]["failures"] = failure
+            invalid.append(issued)
+        for outcome in ("blocked", "batch_blocked", "applied", "no_change"):
+            issued = copy.deepcopy(original)
+            issued["records"][0]["outcome"] = outcome
+            invalid.append(issued)
+        for records in (
+            original["records"][:1],
+            list(reversed(original["records"])),
+            [original["records"][0]] * 2,
+            original["records"] + [original["records"][0]],
+        ):
+            issued = copy.deepcopy(original)
+            issued["records"] = records
+            invalid.append(issued)
+        for snapshots in (
+            {},
+            {"ZF-1": original["snapshots"]["ZF-1"]},
+            dict(original["snapshots"], **{"FOREIGN": original["snapshots"]["ZF-1"]}),
+        ):
+            issued = copy.deepcopy(original)
+            issued["snapshots"] = snapshots
+            invalid.append(issued)
+        for changes in (
+            {},
+            {"case_reason": {"old": "x", "new": "A different allowed change"}},
+            {"case_reason": {"new": original["request"]["changes"]["case_reason"]}},
+        ):
+            issued = copy.deepcopy(original)
+            issued["records"][0]["changes"] = changes
+            invalid.append(issued)
+        for index, issued in enumerate(invalid):
+            with self.subTest(index=index), self.assertRaises(ConflictError):
+                bulk_edits._applicable_request(issued)
+        self.assertEqual(bulk_edits._applicable_request(original), original["request"])
+
+    def test_all_active_handoff_states_and_noops_remain_permitted(self) -> None:
+        for state in ("Offered", "Received", "Escalated", "Accepted"):
+            with self.subTest(state=state):
+                with self.store.lock:
+                    case = self.store._case("ZF-1")
+                    case["handoff"] = {"state": state, "next_action": "Existing chase"}
+                    self.store.save()
+                preview = self.preview(
+                    case_ids=["ZF-1"], changes={"handoff_next_action": "An administrative chase"}
+                )
+                self.assertEqual(preview["status"], "pending")
+                self.apply(preview)
+                noop = self.preview(
+                    case_ids=["ZF-1"], changes={"handoff_next_action": "An administrative chase"}
+                )
+                self.assertEqual(self.apply(noop)["records"][0]["outcome"], "no_change")
+                self.assertEqual(self.store.cases["ZF-1"]["handoff"]["state"], state)
+
 
 class SqlBulkEdits(JsonBulkEdits):
     sql = True
+
+    def test_blocked_issuance_cannot_be_enabled_by_cached_or_persisted_status(self) -> None:
+        for persisted in (False, True):
+            for changes in (
+                {"case_reason": "A blocked change"},
+                {"case_reason": self.store.cases["ZF-1"]["reason"]},
+            ):
+                with self.subTest(persisted=persisted, changes=changes):
+                    preview = self.preview(case_ids=["ZF-1", "ZF-5"], changes=changes)
+                    self.assertEqual(preview["status"], "blocked")
+                    before = self.cases()
+                    successes = [
+                        e
+                        for e in self.store.audit_entries()
+                        if e["action"] in ("bulk_case_edited", "bulk_edit_applied")
+                    ]
+                    if persisted:
+                        rows = copy.deepcopy(self.store.data["bulk_edits"])
+                        rows[preview["preview_id"]]["status"] = "pending"
+                        self.store.db.execute(
+                            "UPDATE meta SET value=? WHERE key='bulk_edits'", (json.dumps(rows),)
+                        )
+                        target = self.open_store()
+                        with self.assertRaises(ConflictError):
+                            target.bulk_edit_apply(self.sam, {"preview_id": preview["preview_id"]})
+                    else:
+                        with self.store.lock:
+                            self.store.data["bulk_edits"][preview["preview_id"]]["status"] = (
+                                "pending"
+                            )
+                            with self.assertRaises(ConflictError):
+                                self.apply(preview)
+                    reopened = self.open_store()
+                    self.assertEqual(self.cases(), before)
+                    self.assertEqual(reopened.cases, before)
+                    self.assertEqual(
+                        [
+                            e
+                            for e in reopened.audit_entries()
+                            if e["action"] in ("bulk_case_edited", "bulk_edit_applied")
+                        ],
+                        successes,
+                    )
+                    self.assertEqual(
+                        list(reopened.audit_entries())[-1]["action"], "bulk_edit_rejected"
+                    )
+                    self.assertTrue(reopened.verify_audit())
+                    self.store = reopened
+
+    def test_every_issued_target_including_noop_is_revalidated_inside_commit(self) -> None:
+        with self.store.lock:
+            self.store._case("ZF-2")["reason"] = "Already correct"
+            self.store.save()
+        preview = self.preview(changes={"case_reason": "Already correct"})
+        eligibility_calls = []
+        original = bulk_edits._eligible
+
+        def observe(store: Any, user: Any, case: Any, changes: Any) -> None:
+            eligibility_calls.append((case["id"], store.db.in_transaction))
+            original(store, user, case, changes)
+
+        with (
+            patch.object(bulk_edits, "_eligible", side_effect=observe),
+            patch.object(
+                bulk_edits, "_applicable_request", wraps=bulk_edits._applicable_request
+            ) as contract,
+        ):
+            result = self.apply(preview)
+        self.assertEqual([r["outcome"] for r in result["records"]], ["applied", "no_change"])
+        self.assertEqual(
+            eligibility_calls,
+            [("ZF-1", False), ("ZF-2", False), ("ZF-1", True), ("ZF-2", True)],
+        )
+        self.assertEqual(contract.call_count, 2)
+        self.assertNotIn("edit_history", self.store.cases["ZF-2"])
+
+    def test_commit_validator_independently_refuses_genuine_blocked_issuance(self) -> None:
+        preview = self.preview(case_ids=["ZF-1", "ZF-5"])
+        before = self.cases()
+        issued = self.store.data["bulk_edits"][preview["preview_id"]]["issued"]
+        with self.store.lock:
+            self.store.data["bulk_edits"][preview["preview_id"]]["status"] = "pending"
+            context = dict(
+                user=self.sam,
+                staff=issued["staff"],
+                snapshots=issued["snapshots"],
+                changes=issued["request"]["changes"],
+                preview_id=preview["preview_id"],
+                issued=issued,
+            )
+            with patch.object(
+                bulk_edits, "_applicable_request", wraps=bulk_edits._applicable_request
+            ) as contract:
+                with self.assertRaises(ConflictError):
+                    bulk_edits._save(self.store, context)
+            self.assertEqual(contract.call_count, 1)
+            self.assertIsNone(self.store.local.bulk_validation)
+        reopened = self.open_store()
+        self.assertEqual(reopened.cases, before)
+        self.assertFalse(
+            any(
+                e["action"] in ("bulk_case_edited", "bulk_edit_applied")
+                for e in reopened.audit_entries()
+            )
+        )
+        self.assertTrue(reopened.verify_audit())
 
     def test_sql_preview_and_apply_recheck_revoked_deleted_and_oid_bound_actor(self) -> None:
         for mutation in ("role", "delete", "oid"):

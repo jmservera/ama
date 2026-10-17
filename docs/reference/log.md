@@ -4744,3 +4744,21 @@ metadata when the knowledge base was created.
   this bounded delivery. No new UI, human usability/WCAG, live Azure SQL,
   private-data, real-model or operational acceptance claim. Memory and the
   original case study remain unchanged.
+
+## [2026-10-17] update | Bulk-preview correction ONE and exact provenance residual (#78)
+
+* Updated the existing UX synthesis, index and component guides for PR #378
+  correction ONE. RV-001 now refuses cached/persisted status-reset blocked
+  issuance using immutable outcomes/failures and exact records/snapshot
+  coverage; every issued target, including no-ops, is rechecked at SQL commit.
+* Captured four real failing-before subtests; 71 focused synthetic bulk,
+  loopback HTTP, handoff and document tests pass after correction. Core
+  lint/format/type checks pass. Original RPI Review remains Not accepted,
+  not rewritten as a Pass; independent correction assessment is separate.
+* RV-002 is source-confirmed partial FR-005: upload and handoff offer/accept
+  callers lack explicit source/version/reason contracts and complete
+  per-change evidence/ownership provenance. Completing that input/history
+  work affects existing UI/API behavior; no fake metadata or widened bulk
+  authority is substituted. #78 is not fully accepted or closed.
+* No UI source change, human/WCAG/browser acceptance, live SQL Server/cloud,
+  private stock or real model. Original case and memory remain unchanged.

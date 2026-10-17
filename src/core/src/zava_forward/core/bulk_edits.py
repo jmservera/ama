@@ -125,6 +125,51 @@ def _unused(store: Any, preview_id: str) -> None:
         raise ConflictError("Preview already applied. Request a fresh preview.")
 
 
+def _applicable_request(issued: Record) -> Record:
+    request = _request(issued["request"])
+    ids, records, snapshots = request["case_ids"], issued["records"], issued["snapshots"]
+    if (
+        not isinstance(records, list)
+        or not all(isinstance(record, dict) for record in records)
+        or [record.get("case_id") for record in records] != ids
+        or not isinstance(snapshots, dict)
+        or set(snapshots) != set(ids)
+    ):
+        raise ConflictError("Preview target coverage is incomplete. Request a fresh preview.")
+    for record in records:
+        changes = record.get("changes")
+        if (
+            record.get("failures") != []
+            or record.get("outcome") not in ("would_apply", "no_change")
+            or not isinstance(changes, dict)
+            or set(changes) != set(request["changes"])
+            or any(
+                not isinstance(values, dict)
+                or set(values) != {"old", "new"}
+                or values["new"] != request["changes"][field]
+                for field, values in changes.items()
+            )
+        ):
+            raise ConflictError("Issued preview is not applicable. Request a fresh preview.")
+        outcome = (
+            "would_apply"
+            if any(values["old"] != values["new"] for values in changes.values())
+            else "no_change"
+        )
+        if record["outcome"] != outcome:
+            raise ConflictError("Issued preview outcomes disagree. Request a fresh preview.")
+    return request
+
+
+def _changes(case: Record, proposed: Record) -> Record:
+    changes = {}
+    for field, value in proposed.items():
+        parent, key = FIELDS[field]
+        old = (case[parent] if parent else case).get(key)
+        changes[field] = dict(old=deepcopy(old), new=value)
+    return changes
+
+
 def validate_sql(store: Any) -> None:
     """Called after BEGIN IMMEDIATE, before any writes in the existing save transaction."""
     context = getattr(store.local, "bulk_validation", None)
@@ -136,7 +181,15 @@ def validate_sql(store: Any) -> None:
     guard = store.db.execute("SELECT value FROM meta WHERE key='governance'").fetchone()
     if (guard[0] if guard else None) != context["guard_snapshot"]:
         raise ConflictError("Case guardrails changed. Request a fresh preview.")
-    for cid, snapshot in context["snapshots"].items():
+    issued = context.get("issued")
+    request = None
+    if issued is not None:
+        _anchor(store, context["preview_id"], issued)
+        _unused(store, context["preview_id"])
+        request = _applicable_request(issued)
+    ids = request["case_ids"] if request else list(context["snapshots"])
+    for index, cid in enumerate(ids):
+        snapshot = context["snapshots"][cid]
         row = store.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
         if (
             row is None
@@ -144,10 +197,15 @@ def validate_sql(store: Any) -> None:
             or _digest(json.loads(row[1])) != snapshot["digest"]
         ):
             raise ConflictError("A target changed. Request a fresh preview.")
-        _eligible(store, context["user"], json.loads(row[1]), context["changes"])
-    if context.get("preview_id"):
-        _anchor(store, context["preview_id"], context["issued"])
-        _unused(store, context["preview_id"])
+        case = json.loads(row[1])
+        _eligible(store, context["user"], case, context["changes"])
+        if (
+            issued is not None
+            and _changes(case, context["changes"]) != issued["records"][index]["changes"]
+        ):
+            raise ConflictError(
+                "Preview changes disagree with the target. Request a fresh preview."
+            )
 
 
 def _save(store: Any, context: Record) -> None:
@@ -235,10 +293,7 @@ def _preview(store: Any, user: Record, actor: Record, body: object) -> Record:
                 digest=_digest(case),
                 rowversion=store._rv[cid] if hasattr(store, "_rv") else None,
             )
-            for field, value in request["changes"].items():
-                parent, key = FIELDS[field]
-                old = (case[parent] if parent else case).get(key)
-                record["changes"][field] = dict(old=deepcopy(old), new=value)
+            record["changes"] = _changes(case, request["changes"])
             record["outcome"] = (
                 "would_apply"
                 if any(item["old"] != item["new"] for item in record["changes"].values())
@@ -303,10 +358,11 @@ def _apply(store: Any, user: Record, actor: Record, body: object, before: Record
         raise PermissionError("Only the preview's current creator can apply it.")
     if entry["status"] != "pending":
         raise ConflictError("Preview blocked or already applied. Request a fresh preview.")
-    request = _request(issued["request"])
+    request = _applicable_request(issued)
     if actor != issued["staff"]:
         raise PermissionError("Staff authority changed. Request a fresh preview.")
-    for cid, snapshot in issued["snapshots"].items():
+    for index, cid in enumerate(request["case_ids"]):
+        snapshot = issued["snapshots"][cid]
         case = store.cases.get(cid)
         if (
             case is None
@@ -315,6 +371,10 @@ def _apply(store: Any, user: Record, actor: Record, body: object, before: Record
         ):
             raise ConflictError("A target changed. Request a fresh preview.")
         _eligible(store, user, case, request["changes"])
+        if _changes(case, request["changes"]) != issued["records"][index]["changes"]:
+            raise ConflictError(
+                "Preview changes disagree with the target. Request a fresh preview."
+            )
     records = deepcopy(issued["records"])
     for record in records:
         if record["outcome"] == "no_change":

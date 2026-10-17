@@ -11,6 +11,7 @@ Research: .copilot-tracking/research/2026-10-17/controlled-bulk-preview-78-resea
 | --- | --- | --- |
 | P01 | Complete | P01-T01 |
 | P02 | Complete | P02-T01, P02-T02 |
+| P03 | In progress, owner-authorized correction ONE | P03-T01, P03-T02, P03-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Core preview and atomic application
@@ -75,6 +76,61 @@ owns field/category matrix, exact outcomes, issuance hash binding, fresh
 identity/OID disclosure and commit checks, full exception recovery/fault tests,
 and final reviewed/pushed main PR gate. Full preexisting FR-005 provenance
 acceptance remains partial and must not be claimed closed.
+
+<!-- rpi:phase id=P03 -->
+## P03: Correction Cycle ONE (same #78 / PR #378)
+
+Explicit continuation supersedes original stopped/no-fixes handoff, not the
+historical Not accepted outcome. Use existing files, no full RPI repeat.
+
+<!-- rpi:task id=P03-T01 -->
+### P03-T01: Immutable eligibility
+
+Before production edits capture failing tests for cached/persisted SQL blocked
+status reset. Include exact unchanged cases/history and no success audit, only
+visible refusal. Validate issued request ID ordering, unique record coverage,
+complete snapshots, each failure/outcome, and exact proposed allowed changes.
+Recheck anchored issued eligibility and every target inside existing commit,
+not just eligible snapshot subset. Preserve pending/no-op/handoff semantics.
+
+<!-- rpi:task id=P03-T02 -->
+### P03-T02: Provenance trace and validation
+
+Inspect existing evidence-upload and handoff offer/transfer records plus caller
+payloads. Do not invent missing owner-supplied reason/source/version. Retain
+partial acceptance for significant changes requiring new inputs and UI/API
+decisions; document precise fields and existing retained evidence. Focused
+unit/HTTP/store regressions and existing lint/format/type tooling only.
+
+<!-- rpi:task id=P03-T03 -->
+### P03-T03: Independent assessment and publication
+
+One fresh independent agent checks the correction diff and tests after source
+changes finish; persist separate assessment, not rewrite the original Review.
+Commit/push same branch/PR using privacy-safe identity and trailer. Final push
+then stop, no rebase/merge/force-push, cloud/private data or nested delivery.
+
+P03-T01/T02 completion evidence: 71 focused tests pass (39 core bulk, six
+loopback HTTP bulk, 26 existing handoff/document tests). Core ruff and format
+checks pass (51 files), mypy passes (104 source files).
+
+RV-002 inspection uses `store.py:583-610`, `workflows.py:159-239`,
+`server.py:783-827` and UI caller evidence `app.js:622,659-662,794-798`.
+Evidence upload has content hash/version/display actor/date and a separate
+email/time audit, not supplied source/version/reason. Handoff snapshots have
+versions/email/time/role/from-to, not explicit source/source-version; acceptance
+has no reason argument or canonical old/new owner provenance event. Empty
+acceptance and file-only upload are existing API/UI contracts, also exercised
+by existing tests. Requiring the missing inputs is behavior/UX compatibility
+work, not a safe backfill. No fabricated defaults, new bulk fields or approval
+authority; criterion 1 and RV-002 remain partial for coordinator.
+
+P03-T03 independent assessment completed by read-only
+`issue78-correction-one-review`: no substantive findings, accepted for bounded
+correction only. Reviewer source-inspected transaction/recovery checks and ran
+an independent synthetic probe (two valid accepted / ten invalid rejected);
+did not claim to rerun the parent's suites. Separate dated review retained.
+Commit/publication remains the last action; full #78 acceptance is unmet.
 
 ## Completion Evidence
 

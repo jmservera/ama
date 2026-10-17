@@ -32,6 +32,25 @@ and handoff-transfer provenance have not been established as complete FR-005
 acceptance; the bounded delivery must not be read as full PRD acceptance.
 Historical prototype findings below remain historical.
 
+Correction cycle ONE on PR #378 fixes RV-001: immutable issued outcomes and
+failures, exact ordered records/IDs and complete snapshots now determine
+eligibility regardless of mutable status. Every target, including no-ops, is
+revalidated inside the SQL writer transaction. Synthetic cached/persisted
+status-reset regressions preserve cases/history and show refusal rather than
+success audit. The original RPI Review remains historical Not accepted.
+
+RV-002 is now a source-confirmed partial FR-005 criterion, not merely missing
+test evidence. Evidence upload accepts file/name/kind only; its hash/version,
+display name/date and separate email/time audit lack supplied source/version
+and change reason. Handoff history retains email/time/role and versioned
+sender/receiver snapshots, but offer/accept have no explicit source-version
+contract and acceptance has no reason input or complete old/new ownership
+provenance event. Current API/UI callers do not supply those missing inputs.
+Completing them needs a caller/validation/history and UI compatibility design,
+not made-up defaults or an expansion of bulk authority. The
+[core boundary](../../../../src/core/README.md#controlled-administrative-bulk-edits-78)
+records exact operations; full #78 acceptance remains unmet.
+
 ### Queue signal engineering continuation (2026-10-17, #77)
 
 The [src API queue completion](../../../../src/api/README.md#queue-signal-completion-77-2026-10-17)

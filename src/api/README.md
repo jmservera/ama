@@ -171,6 +171,11 @@ The retained source/version/actor/time/reason and old/new fields are visible
 in existing case detail `edit_history`, with normal note-visibility redaction.
 Batch result and history survive SQLite reopening. Replaying a consumed
 preview is denied, including after an uncertain commit acknowledgement.
+Immutable issued outcomes, empty failures, exact ordered target/record coverage
+and complete snapshots are required both before staging and at SQL commit.
+Mutable status alone cannot enable blocked records; cached and persisted
+status-only resets are refused with no case/history/success-audit changes.
+No-op targets are also permission/freshness checked inside the transaction.
 
 Technical, consent, safety, procurement, budget, invoice, payment, claim,
 quality, defect/complaint closure and contractor-instruction fields are absent
@@ -185,8 +190,14 @@ changed by an administrative due-date or next-action edit.
 | Targets, changes, failures, per-case outcomes before apply | Core and real loopback HTTP exact-shape tests, mixed missing/foreign/valid and no-op targets; zero pre-apply mutation |
 | No controlled bulk approvals | Closed allowlist tests across all controlled categories, actual HTTP denials, creator/role/OID and transactional stale/guardrail races |
 
-Existing broader PRD FR-005 evidence-upload and handoff-transfer provenance is
-not fully established by this slice. FR-005/006/007 here use PRD numbering;
+Existing broader PRD FR-005 evidence-upload and handoff-transfer provenance
+remains partial (RV-002): `/upload` forwards only name/kind/file bytes, and
+`/accept-handoff` supplies no source/version/reason to the ownership transfer.
+The current UI sends those same inputs. Existing hash/version/audit and handoff
+history do not substitute for absent change provenance. Completing it needs
+caller input and UI/API contract work, not fabricated defaults or wider bulk
+fields; see the [exact core gaps](../core/README.md#controlled-administrative-bulk-edits-78).
+FR-005/006/007 here use PRD numbering;
 the same-number BRD entries concern lifecycle and technical release. This is
 not full PRD, human usability, WCAG, live SQL Server or operational acceptance.
 No browser check is claimed because no UI code/behavior was changed.
@@ -1464,7 +1475,8 @@ records the tested/deployed image and identity initialization.
   PAS 2035 roles, matching is simple exact comparison, amounts are not tied to a
   real ledger, there is no supplier or contract master, and the screens were
   syntax-checked but not run in a browser or with a screen reader. The product
-  has no bulk edit yet, so the bulk refusal is tested on the API only.
+  now has the closed administrative bulk contract described above; controlled
+  finance/sign-off approval refusal remains independent of that allowlist.
 * Retention periods and legal bases remain proposals for the DPO and Legal.
 
 ## Container hardening checks in CI
