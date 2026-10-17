@@ -11,7 +11,7 @@ Research: .copilot-tracking/research/2026-10-17/controlled-bulk-preview-78-resea
 | --- | --- | --- |
 | P01 | Complete | P01-T01 |
 | P02 | Complete | P02-T01, P02-T02 |
-| P03 | In progress, owner-authorized correction ONE | P03-T01, P03-T02, P03-T03 |
+| P03 | Complete, bounded correction ONE; RV-002 partial | P03-T01, P03-T02, P03-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Core preview and atomic application
@@ -130,7 +130,11 @@ P03-T03 independent assessment completed by read-only
 correction only. Reviewer source-inspected transaction/recovery checks and ran
 an independent synthetic probe (two valid accepted / ten invalid rejected);
 did not claim to rerun the parent's suites. Separate dated review retained.
-Commit/publication remains the last action; full #78 acceptance is unmet.
+Correction commit dd52ae3a9ab0aee2ff96cda7e7496c3de29a58ec was pushed
+normally and read back as PR #378 draft/open main-targeted head. PR body now
+links original unchanged Review, independent correction assessment and exact
+remaining caller-provenance scope. Final artifact-only receipt is the last
+push, then stop. Full #78 acceptance remains unmet.
 
 ## Completion Evidence
 

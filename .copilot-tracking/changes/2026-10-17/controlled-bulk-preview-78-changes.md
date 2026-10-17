@@ -174,3 +174,19 @@ envelopes. Parent's 71-test/tooling receipt is distinguished from reviewer
 execution. The separate dated correction review records complete disposition;
 the historical original Review file and Not accepted verdict are unchanged.
 RV-001 is corrected; RV-002 and issue criterion 1 remain explicitly partial.
+
+### Correction ONE publication receipt and stop
+
+Source commit `dd52ae3a9ab0aee2ff96cda7e7496c3de29a58ec` pushed normally
+to the same requested branch and verified via PR #378 `headRefOid`; clean
+worktree after publication. PR remains draft/open, main-targeted, Refs #78,
+no closure or merge authorization. Body now records exact criterion evidence,
+corrected RV-001, independent bounded acceptance and unfulfilled RV-002 caller/
+provenance work. Original Review and failing contract evidence remain intact.
+
+Authenticated GitHub account was re-resolved as id 8036360 / jmservera;
+repository-local noreply identity used for author and committer, with required
+Copilot trailer. Final receipt changes only current lifecycle/publication
+records. No source changes after independent assessment, integration with
+#377, merge, rebase, history rewrite or force-push. Stop after final receipt
+push; coordinator owns remaining provenance scope and eventual integration.

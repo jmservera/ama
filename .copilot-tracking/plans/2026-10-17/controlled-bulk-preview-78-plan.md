@@ -4,7 +4,7 @@
 ## Task Metadata
 
 * Task ID: 78; slug: controlled-bulk-preview-78; date: 2026-10-17
-* Status: Correction cycle ONE authorized on the same issue/PR
+* Status: Correction cycle ONE complete and source published; RV-002 remains partial
 * Details: .copilot-tracking/details/2026-10-17/controlled-bulk-preview-78-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/controlled-bulk-preview-78-plan-critique.md
 
@@ -227,7 +227,7 @@ not permission to leave an actionable source defect unfixed. Current base remain
 e065ecd; do not merge/rebase/force-push or integrate #377 yet.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Correct RV-001 and disposition RV-002
+### [x] P03: Correct RV-001 and disposition RV-002
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Immutable eligibility and complete transactional target coverage
@@ -249,7 +249,7 @@ Run focused new/bulk/SQL tests and existing component tooling; update current
 plan/details/changes and KB. Preserve original Review verdict.
 
 <!-- rpi:task id=P03-T03 -->
-#### [ ] P03-T03: Independent correction review and final push
+#### [x] P03-T03: Independent correction review and final push
 
 Obtain one independent bounded correction assessment, separate from the
 historical RPI Review. Record finding disposition and its actual verdict,
@@ -257,6 +257,9 @@ commit with verified noreply identity/trailer, update PR #378, push and stop.
 Do not label original Review Pass or close #78 while criterion remains partial.
 
 Independent correction assessment completed: accepted for the bounded fix,
-no substantive findings; RV-002 remains partial. Publication pending. Separate
+no substantive findings; RV-002 remains partial. Source commit dd52ae3 was
+pushed and read back as draft/open PR #378 head on main. Separate
 [correction review](../../reviews/logs/2026-10-17/controlled-bulk-preview-78-correction-one-review.md)
 preserves original Not accepted verdict and exact finding disposition.
+Final artifact-only receipt records publication and the stop boundary; no
+merge, rebase or force-push. Full issue acceptance is not claimed.
