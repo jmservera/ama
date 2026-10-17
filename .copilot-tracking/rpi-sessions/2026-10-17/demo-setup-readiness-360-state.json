@@ -5,7 +5,7 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
-  "session_status": "running",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/demo-setup-readiness-360-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/demo-setup-readiness-360-plan.md",
@@ -49,6 +49,11 @@
       "decision": "Review executed exactly once; execution Complete, outcome Residual work",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-17/demo-setup-readiness-360-review.md; candidate 6f43559; no material source defect identified, RV-001 through RV-004 are externally gated follow-ups"
+    },
+    {
+      "decision": "Published Refs #360 PR #375; explicit bounded-session stop, no child task/merge/closure",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-publication-receipt.json; PR OPEN, base main, initial head 4b50561cff0a0f1b6598bad3451e962f66e4f890; final receipt-only commit resolved through PR head"
     }
   ],
   "blockers": [
@@ -70,7 +75,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish committed Review and Refs #360 PR, record publication completion and stop; no child task, merge or issue closure."
+    "action": "Owner explicitly authorizes scoped IAM activation and supplies an approved existing private publisher; then human tenant setup/actual criterion d before any retirement. No automatic child task."
   },
   "prioritized_follow_ups": [
     {

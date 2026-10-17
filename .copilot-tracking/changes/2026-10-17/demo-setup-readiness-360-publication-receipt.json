@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-17",
+  "task_id": "issue-360",
+  "task_slug": "demo-setup-readiness-360",
+  "branch": "fix/demo-setup-readiness-360",
+  "pull_request": 375,
+  "url": "https://github.com/jmservera/ama/pull/375",
+  "base": "main",
+  "observed_state": "OPEN",
+  "initial_published_head": "4b50561cff0a0f1b6598bad3451e962f66e4f890",
+  "reviewed_source_candidate": "6f435599d8803ce4c6be7b6712a9754b067c9693",
+  "final_head_resolution": "Receipt-only completion commit follows the observed initial head; git rev-parse HEAD must match gh pr view --json headRefOid after push. A commit cannot contain its own hash.",
+  "phase_completion": {"Research": "Complete", "Plan": "Complete", "Implement": "Complete", "Review": "Complete"},
+  "review_outcome": "Residual work",
+  "session_status": "stopped",
+  "stop_basis": "Explicit caller direction: stop after pushed PR; no child task",
+  "live_criterion_d": "UNMET",
+  "retirement_criterion_e": "UNMET",
+  "issue_closed": false,
+  "merged": false,
+  "remaining_owners": ["Explicitly authorized IAM operator", "Authorized existing private image publisher", "Human tenant/runtime acceptance owners", "Coordinator/owner retirement after d"]
+}

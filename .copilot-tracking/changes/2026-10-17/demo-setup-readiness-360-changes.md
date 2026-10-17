@@ -6,7 +6,8 @@ ms.date: 2026-10-17
 
 Task: issue-360 / demo-setup-readiness-360. Scope: full approved plan P01-P03.
 Implementation started after one critique; PC-001/002/003 directly applied.
-Research and Plan complete, independently committed. Implementation in progress.
+Research, Plan, Implement and the single Review complete, independently
+committed. Refs #360 PR #375 published; session stopped per caller.
 
 ## P01 - Laptop-safe transports
 
@@ -130,6 +131,11 @@ done; d/e **UNMET**. Readiness remains blocked, issue closure stays coordinator-
 
 Canonical Review:
 `.copilot-tracking/reviews/logs/2026-10-17/demo-setup-readiness-360-review.md`.
-Reviewed implementation commit 6f43559. Source changes accepted as bounded
-delivery, not live readiness. Parent-only publication is next; Refs #360, no
-Closes, no merge or issue tick. Session stops after publication per caller.
+Reviewed implementation commit 6f43559. Source changes accepted as bounded delivery, not live readiness.
+Published Refs #360 PR #375, no Closes, merge or issue tick. Initial remote
+head 4b50561cff0a0f1b6598bad3451e962f66e4f890 was read back from the open PR.
+The final receipt-only commit records publication and stopped state, with no
+source or live change; its exact final head is resolved/read back at closeout.
+Publication receipt:
+`.copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-publication-receipt.json`.
+All four phases have persistent completion; no child work is started.

@@ -4599,3 +4599,18 @@ metadata when the knowledge base was created.
   Review, source correction loop or further Azure action.
 * Refs #360 publication follows; issue d/e and human approval remain unmet.
   No coordinator-owned issue closure, merge or child task is performed.
+
+## [2026-10-17] delivery | Demo readiness PR published and session stopped (Refs #360)
+
+* Published [PR #375](https://github.com/jmservera/ama/pull/375), base main,
+  branch fix/demo-setup-readiness-360, Refs #360 only. Observed initial remote
+  head 4b50561cff0a0f1b6598bad3451e962f66e4f890; final receipt-only completion
+  commit records this publication and stopped state, without source/live changes.
+* All four RPI phases complete with dated committed evidence. One critique,
+  one Review (Complete / Residual work); current source candidate 6f43559.
+  Exact final PR head is read back after the receipt commit push, not embedded
+  circularly in its own committed content.
+* Automatic session stopped under the caller's explicit publication boundary.
+  No issue closed, merge, force-push or child task. d/e remain UNMET; exact
+  owner actions and actual resource/validation evidence are in the PR/current
+  audit. No human approval or operational readiness is inferred.
