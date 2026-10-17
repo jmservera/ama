@@ -382,3 +382,23 @@ focus, status/error focus, retained input, pending state, unsaved exit warning,
 source/legacy display, existing word wrapping/focus/motion and 390px check.
 No claim of whole-file audit, screen-reader or WCAG conformance. No blocking
 changed-region finding remains; unrelated preexisting page patterns excluded.
+
+### Correction TWO Publication Receipt
+
+Source `2e63cdf74a2f28d17e2cf3cbc993171755424fbb`, parent integrated
+`ae3adfb3f214ea3c30b073b2b71c074df4ec06ed`, base
+`92d4f89dd718befbde8bef00dd5cd6db2d99af39`. Privacy-safe author/committer
+resolved from gh user8036360/jmservera with repository-local noreply email;
+Conventional Commit and required Copilot trailer. Source normal-pushed to
+the same topic and verified by remote branch plus PR API draft/open/main.
+Immediate PR view initially lagged; direct subsequent API confirmed exact
+source, not assumed successful from the stale response.
+
+Final receipt is artifact-only atop tested/published2e63cdf; exact final SHA
+posted to PR378 for coordinator independent rereview. Delta from original
+published97cdc2a consists of the already documented main92d4f89 rebase/
+additive integration through ae3adfb, then this exact RV-002 source correction
+and final evidence-only receipt. RV-001/forms implementations and original
+Not accepted Review unchanged from ae3adfb. KB prior histories/all index
+link targets retained. No further source change, merge or new review loop.
+Stop after final ordinary push/readback; full acceptance still pending.

@@ -4,7 +4,7 @@
 ## Task Metadata
 
 * Task ID: 78; slug: controlled-bulk-preview-78; date: 2026-10-17
-* Status: Correction TWO implemented; publication and coordinator final-head independent reassessment pending
+* Status: Correction TWO implemented and source published; final receipt publication then stop, coordinator independent acceptance pending
 * Details: .copilot-tracking/details/2026-10-17/controlled-bulk-preview-78-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/controlled-bulk-preview-78-plan-critique.md
 
@@ -286,7 +286,7 @@ earlier residual-only RV-002 disposition. This is the final allowed same-issue
 correction, not a full RPI repeat or permission to omit implementation.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Implement RV-002 existing upload and handoff contracts
+### [x] P04: Implement RV-002 existing upload and handoff contracts
 
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Fail-before, required metadata and immutable change events
@@ -310,10 +310,15 @@ forms pending/missing-rescan and RV-001 remain passing. Local Chromium path
 and existing component tooling pass; evidence in changes/details.
 
 <!-- rpi:task id=P04-T03 -->
-#### [ ] P04-T03: Finding disposition, exact final head and normal topic push
+#### [x] P04-T03: Finding disposition, exact final head and normal topic push
 
 Record original reviews unchanged, requested RV-002 source correction completed
 but full acceptance blocked pending coordinator independent final-head review.
 No new reviewer or fabricated Pass. Privacy-safe commit/trailer, normal same-
 branch push on main92d4f89, exact final-head handoff then stop; no merge.
 Actual schema authority is unrelated human work, not a blocker to this fix.
+
+Published source `2e63cdf74a2f28d17e2cf3cbc993171755424fbb` via ordinary
+same-topic push, verified in remote branch and PR378 API (draft/open, base main).
+Final artifact-only receipt follows this source; PR supplies its exact SHA.
+P04 implementation/publication is complete, not independent acceptance.

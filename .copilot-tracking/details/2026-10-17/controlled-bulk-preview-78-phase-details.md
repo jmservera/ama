@@ -12,7 +12,7 @@ Research: .copilot-tracking/research/2026-10-17/controlled-bulk-preview-78-resea
 | P01 | Complete | P01-T01 |
 | P02 | Complete | P02-T01, P02-T02 |
 | P03 | Complete, historical bounded correction ONE | P03-T01, P03-T02, P03-T03 |
-| P04 | Source/callers/validation complete; publication pending, independent acceptance not claimed | P04-T01, P04-T02, P04-T03 |
+| P04 | Complete and source published; independent acceptance not claimed | P04-T01, P04-T02, P04-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Core preview and atomic application
@@ -201,7 +201,7 @@ No private stock/cloud/paid inference/live SQL Server. Existing unavailable-law
 diagnostics are unknown rule checks, not successful law evidence.
 
 <!-- rpi:task id=P04-T03 -->
-### P04-T03: Pending Exact-Head Publication, Not Independent Acceptance
+### P04-T03: Exact Source Publication, Not Independent Acceptance
 
 Self finding disposition: requested RV-002 upload/offer/accept implementation
 gap corrected with explicit inputs/events; RV-001 unchanged and regressed.
@@ -209,6 +209,12 @@ Original Review and review512a59c4 Revise remain historical. Coordinator must
 independently reassess final exact head; acceptance remains blocked until then.
 Actual form authority is an unrelated human prerequisite, not an excuse to omit
 this source correction. Final same-topic normal push then stop, no merge.
+
+Source `2e63cdf74a2f28d17e2cf3cbc993171755424fbb` ordinary-pushed and
+verified by ls-remote and PR API, draft/open/base main. One immediate PR read
+was eventually consistent and still showed ae3adfb; direct subsequent endpoint
+and remote both confirm exact new source. Artifact-only receipt follows;
+PR records exact final SHA/delta, no further source change or test claim.
 
 ## Completion Evidence
 
