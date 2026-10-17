@@ -1,0 +1,54 @@
+{
+  "task_id": "95",
+  "task_slug": "grant-lifecycle-controls-95",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/grant-lifecycle-controls-95-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/grant-lifecycle-controls-95-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/grant-lifecycle-controls-95-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/grant-lifecycle-controls-95-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/grant-lifecycle-controls-95-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/grant-lifecycle-controls-95-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full automatic ordered loop; stop after clean pushed PR or genuine blocker",
+      "status": "confirmed",
+      "evidence": "Explicit coordinator instruction, 2026-10-17; branch fix/grant-lifecycle-controls-95 starts at merged #383 d400eb8d1d0d6567445b0fc11803260eab897a65"
+    },
+    {
+      "decision": "Research executed and Ready; one final-candidate critique executed",
+      "status": "Revise verdict retained; PC-001 through PC-006 directly dispositioned",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/grant-lifecycle-controls-95-plan-critique.md; finalized plan Critique Disposition"
+    },
+    {
+      "decision": "Implementation and local gates complete",
+      "status": "original pre-Review validation retained",
+      "evidence": "89 focused; 34 actual local SQL Server; core 724/35 skips; API 588/121 skips; final changed-label browser 2; migration 25; core/API Ruff/format/mypy"
+    },
+    {
+      "decision": "One independent post-implementation Review executed",
+      "status": "Complete; original outcome Not accepted; RV-001 High",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/grant-lifecycle-controls-95-review.md; assessed original final implementation and four adverse transaction probes"
+    },
+    {
+      "decision": "Coordinator-selected correction ONE implements routed RV-001",
+      "status": "root fix and local closure complete; publication active; no repeated Review",
+      "evidence": "Explicit intake authorization; P02 plan/details and changes; four failing-first subtests; 98 current focused/browser/manifest tests; 35 actual SQL parity tests; core/API Ruff/format/mypy pass"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Publish normal commit/push and main-targeted PR, verify clean remote head, then stop at coordinator final independent gate"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator final independent closure and merge decision",
+      "rationale": "Highest priority: original adverse Review retained after local RV-001 correction; local tests cannot establish independent acceptance",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/grant-lifecycle-controls-95-review.md; matching changes record P02 closure evidence"
+    }
+  ]
+}

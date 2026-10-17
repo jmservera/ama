@@ -35,7 +35,12 @@ class Flows:
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         d = copy.deepcopy(dataset.DATA)
-        d["staff"] = STAFF
+        d["staff"] = copy.deepcopy(STAFF)
+        from test_grant_lifecycle_controls import designate
+        for i in (1, 2):
+            d["staff"][i] = designate(d["staff"][i])
+            for permission in d["staff"][i]["financial_authority"]["permissions"]:
+                permission["route"] = "Warm Homes"
         d["cases"][0]["measures"] = "Loft insulation, Cavity wall"
         self.store = self.make(d, self.tmp.name)
         self.geo, self.pm1, self.pm2 = U["GEO-1"], U["PM-1"], U["PM-2"]

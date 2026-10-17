@@ -912,11 +912,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         return ai_tasks.live_report(self)
 
     def funding_step(self, user, case_id, action, text=""):
-        if user["role"] not in self.FUND_ROLES:
-            raise PermissionError("Only the Grants and Evidence Officer or a manager can do this.")
-        with self.lock:
-            c = self._case(case_id)
+        from .finance import _identity
+        with self._finance_operation(user, case_id) as (user, c):
             f = c["funding"]
+            authority = None
+            if action in ("approve", "submit", "confirm"):
+                authority = self._financial_authority(user, "application:" + action, case_id, f["route"])
+                if not isinstance(text, str) or not text.strip() or len(text) > 200:
+                    raise ValueError("Enter the evidence reference for this application event, from 1 to 200 characters.")
             if action == "save_draft":
                 f["draft"] = (text or "")[:6000]
             elif action == "approve":
@@ -929,7 +932,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             elif action == "submit":
                 if f["status"] != "Approved":
                     raise ValueError("Approve the draft first.")
-                ref = (text or "").strip()[:60]
+                ref = text.strip()
                 if not ref:
                     raise ValueError("Enter the reference the funder gave you.")
                 f.update(status="Submitted", reference=ref)
@@ -940,8 +943,11 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 c["funding_ok"] = True
             else:
                 raise ValueError("Unknown step.")
+            if authority is not None:
+                f.setdefault("history", []).append(dict(action=action, at=datetime.now().isoformat(),
+                    case_id=case_id, route=f["route"], source=text.strip(), actor=_identity(user),
+                    authority=authority, source_status="Supplied, unverified"))
             self.audit(user["email"], f"funding_{action}", case_id, f["status"])
-            self.save()
 
     def _case(self, case_id):
         c = self.cases.get(case_id)

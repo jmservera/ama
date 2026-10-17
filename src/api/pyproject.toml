@@ -93,7 +93,8 @@ follow_imports = "skip"
 ignore_missing_imports = true
 # Runtime PYTHONPATH supplies the shared fixture, strictly checked by the core project.
 [[tool.mypy.overrides]]
-module = ["building_fixture", "dataset", "regulatory_fixture", "test_finance_signoffs"]
+module = ["building_fixture", "dataset", "regulatory_fixture", "test_finance_signoffs",
+          "test_grant_lifecycle_controls"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

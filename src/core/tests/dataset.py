@@ -128,19 +128,28 @@ class ImproveTests(unittest.TestCase):
         self.assertEqual(self.store.get_document("ZF-1", d["documents"][0]["id"])[1], "application/pdf")
 
     def test_funding_needs_evidence_and_role(self):
+        from test_grant_lifecycle_controls import designate
+        pam = designate(self.pam)
+        with self.store.lock:
+            if hasattr(self.store, "db"):
+                self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(pam), pam["email"]))
+            else:
+                self.store.staff[pam["email"]] = pam
+            self.store._case("ZF-1")["funding"]["route"] = "SYN-95"
+            self.store.save()
         self.store.funding_draft(self.sam, "ZF-1")
         with self.assertRaises(PermissionError):
             self.store.funding_step(self.sam, "ZF-1", "approve")
         from zava_forward.core.store import GateError
         with self.assertRaises(GateError):
-            self.store.funding_step(self.pam, "ZF-1", "approve")
+            self.store.funding_step(self.pam, "ZF-1", "approve", "SYN review")
         for k in ("EPC", "Survey", "Design", "Consent"):
             self.store.add_document(self.sam, "ZF-1", "a.pdf", k, b"%PDF-x", metadata=change_metadata(self.store, "ZF-1"))
-        self.store.funding_step(self.pam, "ZF-1", "approve")
+        self.store.funding_step(self.pam, "ZF-1", "approve", "SYN review")
         with self.assertRaises(ValueError):
             self.store.funding_step(self.pam, "ZF-1", "submit", "")
         self.store.funding_step(self.pam, "ZF-1", "submit", "REF-1")
-        self.store.funding_step(self.pam, "ZF-1", "confirm")
+        self.store.funding_step(self.pam, "ZF-1", "confirm", "SYN confirmation")
         self.assertTrue(self.store.detail("ZF-1")["funding_ok"])
 
     def test_briefing_cached_until_data_changes(self):

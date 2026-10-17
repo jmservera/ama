@@ -9,6 +9,7 @@ import json
 import logging
 import os
 from copy import deepcopy
+from contextlib import contextmanager
 
 from . import controls as k
 from .change_provenance import _actor
@@ -51,6 +52,7 @@ def _independent(store, user, other, identity, what):
     if any(_norm(user.get(key)) and _norm(user.get(key)) == _norm(identity.get(key))
            for key in ("email", "code", "oid")):
         raise PermissionError(f"A different person must {what}. You prepared this one.")
+    return identity
 
 
 def validate_sql(store):
@@ -61,6 +63,10 @@ def validate_sql(store):
         k.require_role(actor, k.FINANCE_ROLES, "current Finance staff")
         for other, identity, what in context["independent"]:
             _independent(store, actor, other, identity, what)
+        for action, case_id, route, authority in context["authorities"]:
+            from .grants import require_authority
+            if require_authority(store, actor, action, case_id, route) != authority:
+                raise PermissionError("Financial designation changed. Reload before recording this change.")
 
 
 def match_invoice(c, inv):
@@ -110,6 +116,12 @@ class FinanceMixin:
         action = body.get("action")
         if action not in FINANCE_ACTIONS:
             raise ValueError("Unknown step.")
+        with self._finance_operation(user, case_id) as (actor, c):
+            detail = getattr(self, "_fin_" + action)(actor, c, _fin(c), body)
+            self.audit(actor["email"], f"finance_{action}", case_id, detail)
+
+    @contextmanager
+    def _finance_operation(self, user, case_id):
         with self.lock:
             actor = _actor(self, user)
             k.require_role(actor, k.FINANCE_ROLES, "the Grants and Evidence Officer or a manager")
@@ -120,14 +132,12 @@ class FinanceMixin:
             audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
             audit_head = None if sql else self.last_hash
             saving = False
-            context = dict(actor=actor, independent=[])
+            context = dict(actor=actor, independent=[], authorities=[])
             self._finance_context = context
             if sql:
                 self.local.finance_validation = context
             try:
-                f = _fin(c)
-                detail = getattr(self, "_fin_" + action)(actor, c, f, body)
-                self.audit(actor["email"], f"finance_{action}", case_id, detail)
+                yield actor, c
                 saving = True
                 self.save()
             except Exception as error:
@@ -167,8 +177,16 @@ class FinanceMixin:
                     self.local.finance_validation = None
 
     def _fin_independent(self, user, other, identity, what):
-        _independent(self, user, other, identity, what)
+        resolved = _independent(self, user, other, identity, what)
+        # Preserve missing legacy identity so SQL repeats its current registry lookup.
         self._finance_context["independent"].append((other, deepcopy(identity), what))
+        return resolved
+
+    def _financial_authority(self, user, action, case_id, route):
+        from .grants import require_authority
+        authority = require_authority(self, user, action, case_id, route)
+        self._finance_context["authorities"].append((action, case_id, route, authority))
+        return authority
 
     # ---- budget and commitments
     def _fin_budget_propose(self, user, c, f, body):

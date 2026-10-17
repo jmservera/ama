@@ -6,6 +6,32 @@ ms.date: 2026-10-17
 ms.topic: reference
 ---
 
+## Grant and application records (#95)
+
+Existing `POST /api/cases/{case_id}/grant` and `/funding` routes now use
+the [core current-human designation and evidence contract](../core/README.md#grant-lifecycle-and-human-exercise-designation-95).
+Missing/stale staff or missing, revoked, expired, wrong-state/case/route
+designation returns 403; missing event evidence, legacy unknown-currency
+proposal or unsupported currency returns 400; stale SQL writers return 409.
+Request-supplied roles/designations cannot confer authority. No endpoint submits
+to a funder, executes payment or grants real financial authority.
+
+Funding `approve`, `submit` and `confirm` requests keep `{action, text}`:
+`text` must now contain the event-specific evidence reference (1-200 characters).
+Application confirmation is explicitly labelled as application status, not a
+grant award or cash receipt, and requires its own reference in the existing
+panel. Application events leave the separate grant history/provider finance
+unchanged. Opportunity GBP 40 million is never inherited as award/cash.
+The Finance role still exposes the panel, but visibility is not designation.
+No existing staff is automatically granted authority; real delegation remains
+unverified and exercise authority is refused in production.
+
+`tests/test_grant_lifecycle_api.py` uses authenticated loopback HTTP with tiny
+temporary synthetic SQLite. `ZF_GRANT_BROWSER=1` additionally runs actual local
+Playwright over the changed confirmation control, missing-evidence refusal and
+Opportunity-only/Confirmed-application mixed state. These are focused engineering
+checks, not full WCAG, human usability, real delegation or deployed acceptance.
+
 ## Record-only finance API (#94)
 
 `POST /api/cases/{case_id}/finance` retains its existing single-record action
