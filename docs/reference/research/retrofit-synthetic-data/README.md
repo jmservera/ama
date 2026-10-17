@@ -203,13 +203,34 @@ Open items for the owner (not decided here).
   choices. It emits coverage/exclusion accounting and sanitized fabric, excludes
   unknown/declined homes and retains legacy fixture bytes. Its 730-day tests use
   fictional homes, not private stock or historical climate observations.
-  #178-#183 stay open: no owner deferral, climate licence approval, dated measure
-  validation, full fault truth or #110 consumer acceptance follows. Approve full-stock
+  The [opt-in #182 fault packets](../../../../src/core/README.md#opt-in-sensor-fault-packets-182)
+  now add configurable seeded exclusive rates and separate evaluator truth
+  without changing historical CSV bytes. They reuse the same stock/fabric
+  adapter and exclude declined/unknown homes. Rates select two-observation
+  packets, not independent overlapping faults; all magnitudes remain exercise
+  values. Only the analysis/ sibling is an analysis input; truth/ contains clean
+  counterfactuals and labels and must remain evaluator-only. No owner deferral,
+  climate licence approval, dated measure validation, scientific-method approval
+  or #110 consumer acceptance follows. Approve full-stock
   storage/cost and resolve external climate/device evidence separately (see
   [IoT sensor analytics research plan](../iot-sensor-analytics-research-plan.md));
   a small deterministic sample is not a verified full-stock sensor run.
 * Decide whether to regenerate the committed pack manifest with the new
   fields.
+
+The local #182 acceptance evidence (2026-10-17) forces all ten fault classes
+individually and retains valid controls: duplicate, actual reversed delivery,
+unmapped sensor, Fahrenheit-declared wrong unit, +24-hour clock skew,
+uncalibrated, outlier, stuck, progressive drift and absent gaps. Ground truth
+retains clean nominal packets and every emitted shard position; analysis
+omits embedded answers and fault configuration. Fifteen targeted broken
+variants fail focused tests. A tiny five-home fictional CLI selection
+(three granted, one declined, one unknown) reproduces 292 delivered rows and
+144 truth packets covering all 11 classes byte-for-byte. The legacy loader
+refuses the opt-in schema before database changes; this does not deliver the
+future #183/#110 consumer or live AC-066 acceptance. No private stock was
+read or replaced, and no real monitoring, ranking, approval or resident choice
+was changed.
 
 ### Offline acceptance audit (2026-10-16, Refs #176)
 

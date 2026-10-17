@@ -4506,3 +4506,24 @@ metadata when the knowledge base was created.
   No private datasets, stock generation, live database, Azure or spending.
   Issue remains open for exact remaining terms/access/paired-record evidence
   and human approval; generator parameters and operational controls unchanged.
+
+## [2026-10-17] implementation | Opt-in sensor fault packets and separate truth
+
+* Refs #182, continuing merged #320/#177 in src/core, not another stock or
+  audit-only delivery. Added explicit seeded configurable exclusive two-reading
+  packet rates for outlier, stuck, drift, gap, duplicate, out-of-order,
+  unmapped, wrong-unit, clock-skewed and uncalibrated, plus valid remainder.
+* Retained nominal clean packets, labels and emitted shard positions in
+  evaluator-only truth/; analysis/ contains no injected labels, fault profiles,
+  rate config or truth links. Synthetic stock/fabric identities and monitoring
+  exclusions are reused. New schema is refused by the legacy database loader.
+* Preserved default historical CSV hashes. Focused semantic tests detect 15
+  broken variants; the tiny fictional five-home CLI selection has three granted,
+  one declined and one unknown, 292 delivered rows and 144 truth packets covering
+  all 11 classes, byte-identical across reruns.
+* Updated the core README, existing synthetic synthesis and this index.
+  All rates/magnitudes are exercise values, not scientific bounds or operational
+  rules. No private data, private 60,000-home output, live IoT/SQL/AI/Azure,
+  spending, infra/authentication, ranking, approval or resident-choice changes.
+  #183/#110 consumer integration and AC-066 live-platform acceptance remain
+  separate; no analytics-method or real-monitoring approval is inferred.

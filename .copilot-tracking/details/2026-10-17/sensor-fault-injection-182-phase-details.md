@@ -16,8 +16,8 @@ No implementation blocker. Source/data outputs are distinct from tracking artifa
 
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
-| P01 | Opt-in contract | Ready | P01-T01, P01-T02 |
-| P02 | Validate and document | Ready after P01 | P02-T01, P02-T02 |
+| P01 | Opt-in contract | Complete | P01-T01, P01-T02 |
+| P02 | Validate and document | Complete | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement opt-in contract
@@ -84,3 +84,13 @@ records commands and actual failures/corrections. Reconcile plan markers and
 details with completed work before a single post-implementation Review.
 Publication follows Review with criterion-by-criterion PR audit and verified
 noreply author/committer, requested trailer, ordinary topic push only.
+
+## Completion Reconciliation
+
+P01-T01/T02 and P02-T01/T02 complete. Changes record owns actual commands,
+fail-before import failure, initial Ruff/mypy corrections, 37 sensor and seven
+determinism passes, 546-test core run (one live opt-in skipped), 15 assertion-
+killed mutants and 292-row/144-packet CLI receipts. PC-001/PC-002 expectations
+met within ten new test methods. No test removals or golden-hash changes.
+Documentation/index/log updated; no source/approval/private-data expansion.
+Ready for one Review; no unresolved implementation blockers.

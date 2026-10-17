@@ -92,17 +92,17 @@ monitoring or acceptance of AC-066 live IoT/SQL/AI requirements.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Implement opt-in contract
+### [x] P01: Implement opt-in contract
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Add failing tests and typed packet injector
+#### [x] P01-T01: Add failing tests and typed packet injector
 
 Own tests/test_sensor_faults.py, maximum 16 focused test methods, no removals.
 Semantic assertions cover each corruption, rates, deterministic random choice
 and clean truth. New source target synthetic/sensor_faults.py.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Wire writer, estimate, CLI, metadata and loader guard
+#### [x] P01-T02: Wire writer, estimate, CLI, metadata and loader guard
 
 Canonical target synthetic/sensor_backfill.py. Generated targets only ephemeral
 fictional analysis/truth outputs outside the repository. Regression owner:
@@ -110,10 +110,10 @@ test_synthetic_determinism.py retains exact historical bytes and source tracking
 update dependency list only if required. No other test removals or weakening.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and document
+### [x] P02: Validate and document
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Run focused fail-before, mutations, CLI and core tooling
+#### [x] P02-T01: Run focused fail-before, mutations, CLI and core tooling
 
 Run new tests before implementation; inject targeted mutations without committing
 mutants and require failures; run sensor/determinism and core suite, Ruff
@@ -121,7 +121,7 @@ check/format and mypy. Tiny stock CLI includes granted/declined/unknown, rerun
 byte comparison and truth reconciliation. Record actual outcomes/failures.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Update documentation and changes evidence
+#### [x] P02-T02: Update documentation and changes evidence
 
 Core README, existing synthetic synthesis, index and append-only reference log;
 no unrelated docs. Changes record owns commands, results and deviations.
@@ -150,5 +150,7 @@ by strengthening existing completion criteria, without a new design decision.
 
 Implementation changes path:
 .copilot-tracking/changes/2026-10-17/sensor-fault-injection-182-changes.md.
-Proceed automatically after compatible critique disposition. Review exactly once;
+Full plan implemented; evidence in changes record. Core 546 run/one authorized
+live gate skipped, focused 37+7 pass, 15 mutants detected, tooling and CLI pass.
+Review exactly once;
 publish then stop as explicitly requested, without child delivery loops.
