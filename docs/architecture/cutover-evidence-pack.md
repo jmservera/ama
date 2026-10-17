@@ -136,6 +136,23 @@ human approval is simulated. Only after auth/runtime verification and fresh
 exact exposure review can real browser/SQL/AI acceptance and retirement proceed.
 Issue closure remains with the coordinator; this delivery uses Refs #360.
 
+PR #375 same-session integration continuation (2026-10-17): rebased onto
+`51db4fa80a29528f5a3d19420b1c7e1597d27213`, preserving merged #373 sensor
+changes and #374 expiry/inventory/digest/readback/legacy contracts and all their
+evidence. Added combined ARM/preservation regressions, not changed upstream
+tests. The original Review is historical, not an independent assessment of the
+new head; reviewer `4536f9cc` remains independent and prior findings are not
+discarded by rebase.
+
+The [concrete publisher/IAM evidence](../../infra/README.md#private-publication-blocker-evidence-2026-10-17-pr-375-continuation)
+distinguishes actual Docker socket permission denial, anonymous registry403
+and GitHub package-read403 from **unattempted** default Tasks/import (unsupported
+under unchanged private networking) and IAM activation (explicit approval
+boundary). Existing CI retains reports, not publishable proof images; no private
+pool/task/self-hosted runner or ama builder VM/ACI was discovered. No claim that
+a build/import/IAM mutation failed when it was not sent. Current continuation
+made no Azure resource/credential/role/data changes; d/e remain UNMET.
+
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 
 Refs #360. This offline change supersedes only the earlier absence of private

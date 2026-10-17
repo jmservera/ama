@@ -119,17 +119,17 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
 * [x] P03-T02 Reconcile state, persistent completions, criterion audit; commit,
   push and create Refs #360 PR; record exact remote head in publication receipt.
 
-## Test Ownership and Locked Validation
+## Continuation Phase
 
 <!-- phase: P04 -->
 ### P04 - Owner-authorized upstream integration and blocker evidence
 
-* [ ] P04-T01 Rebase run-owned topic onto latest origin/main, preserving upstream
+* [x] P04-T01 Rebase run-owned topic onto latest origin/main, preserving upstream
   #373/#374 source/tests and both index/log histories; integrate ARM transport
   without changing #358 expiry/inventory/pending-handoff/legacy CLI contracts.
-* [ ] P04-T02 Add focused combined secret-path regressions, run full relevant
+* [x] P04-T02 Add focused combined secret-path regressions, run full relevant
   infra/legacy and existing lint/format/type gates; report any material finding.
-* [ ] P04-T03 Research existing private build/import/CI reuse options, distinguish
+* [x] P04-T03 Research existing private build/import/CI reuse options, distinguish
   actual failed tools/permissions from unattempted authority-limited actions.
   Execute only already authorized existing-resource/no-new-spend paths.
 * [ ] P04-T04 Commit and authorized force-with-lease topic push to PR #375,

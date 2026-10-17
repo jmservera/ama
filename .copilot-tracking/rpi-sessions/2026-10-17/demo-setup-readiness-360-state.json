@@ -59,13 +59,13 @@
   "blockers": [
     {
       "id": "private-publisher",
-      "summary": "No available approved private proof-image publication path; local Docker denied, ACR private with no tasks/pool",
-      "resolution": "Authorized existing private publisher supplies and pins updated proof digest; no new paid service or network bypass"
+      "summary": "Actual Docker socket permission denial; private ACR task/pool inventory empty and anonymous /v2/403. Tasks/import NOT attempted: documented private-network prerequisites prohibited. CI retains reports, not image archives; package inventory unknown after read:packages403.",
+      "resolution": "Owner identifies an already existing private-connected builder/operator with existing registry push rights, builds infra proof layer from retained API digest and supplies pinned result. No new pool/spend/network/credential/tool-permission workaround."
     },
     {
       "id": "scoped-iam",
-      "summary": "Initializer source-job tag and demo-API restart grants absent; role creation/assignment authorization not inferred",
-      "resolution": "IAM owner explicitly authorizes and applies exact reviewed four-Create role deployment scoped to demo API and existing initializer"
+      "summary": "Initializer AcrPull exists; no source-job tag or demo-API restart assignment. No role write attempted: explicit approval required, not observed Azure permission denial.",
+      "resolution": "IAM owner explicitly authorizes only staff-initializer-rbac for apiName=ca-cutover-test-demo-api / initializerIdentityName=id-cutover-test-init; fresh exact four-Create what-if before apply."
     },
     {
       "id": "human-live-acceptance",
@@ -75,7 +75,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Owner resumes same session P04: authorized rebase/lease push onto latest main, preserve #374 exactly, integration/full regression gates and concrete private publication/IAM evidence; report new SHA to reviewer 4536f9cc and stop."
+    "action": "P04-T01/T02/T03 complete on main51db4fa8: exact upstream preservation plus37 focused/101 setup/329 infra, full legacy component suites and quality gates. Commit and authorized lease push, notify PR375 of exact SHA/reviewer4536f9cc boundary, persist stopped state."
   },
   "prioritized_follow_ups": [
     {

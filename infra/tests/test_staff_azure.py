@@ -14,6 +14,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -571,6 +572,8 @@ class SetupAzureTests(unittest.TestCase):
     invoke = setup_fixture.SetupTests.invoke
     demo_roster = setup_fixture.SetupTests.demo_roster
     demo_person = staticmethod(setup_fixture.SetupTests.demo_person)
+    mixed_secret_inventory = setup_fixture.SetupTests.mixed_secret_inventory
+    secret_response = setup_fixture.SetupTests.secret_response
 
     def setUp(self):
         setup_fixture.SetupTests.setUp(self)
@@ -692,6 +695,192 @@ class SetupAzureTests(unittest.TestCase):
         with patch.object(CREDENTIAL, "store", side_effect=AssertionError("unexpected rotation")):
             self.assertEqual(self.invoke("--run-in-azure", "--secret-store", "keyvault"), 0)
         self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+
+    def test_arm_handoff_preserves_mixed_inventory_across_provider_response_shapes(self):
+        for shape in ("full", "names-only", "resolved-values", "omitted-kv", "config-names-only"):
+            with self.subTest(shape=shape):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                references, listed = self.mixed_secret_inventory()
+                if shape == "names-only":
+                    listed[:2] = [{"name": row["name"]} for row in references]
+                elif shape == "resolved-values":
+                    listed[:2] = [
+                        {"name": row["name"], "value": "FICTIONAL-RESOLVED-KV"}
+                        for row in references
+                    ]
+                elif shape == "omitted-kv":
+                    del listed[:2]
+                elif shape == "config-names-only":
+                    self.fake.app["properties"]["configuration"]["secrets"][:2] = [
+                        {"name": row["name"]} for row in references
+                    ]
+                token_store = copy.deepcopy(self.fake.auth["login"]["tokenStore"])
+
+                def metadata_only(app):
+                    for secret in app["properties"]["configuration"]["secrets"]:
+                        secret.pop("value", None)
+                    return app
+
+                with self.secret_response({"value": listed}, project=metadata_only):
+                    self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                    count = len(self.fake.reg["passwordCredentials"])
+                    with patch.object(CREDENTIAL, "store", side_effect=AssertionError("rotation")):
+                        self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                    self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+                patches = [
+                    body
+                    for method, url, body in self.fake.writes
+                    if method == "PATCH"
+                    and url == setup_fixture.ARM_APP
+                    and "configuration" in body.get("properties", {})
+                ]
+                self.assertEqual(len(patches), 1)
+                payload = patches[0]["properties"]["configuration"]["secrets"]
+                for reference in references:
+                    self.assertIn(reference, payload)
+                self.assertIn({"name": "preserved", "value": "preserved-private-value"}, payload)
+                self.assertIn({"name": "empty", "value": ""}, payload)
+                self.assertEqual(len(payload), 5)
+                self.assertEqual(
+                    patches[0]["tags"][SETUP.HANDOFF_TAG], SETUP.secret_reference_digest(payload)
+                )
+                self.assertNotIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+                self.assertEqual(self.fake.auth["login"]["tokenStore"], token_store)
+                self.assertFalse(
+                    any(
+                        command[:3] == ["az", "keyvault", "secret"]
+                        for command, _ in self.fake.calls
+                    )
+                )
+                for private in (
+                    "FICTIONAL-RESOLVED-KV",
+                    "preserved-private-value",
+                    setup_fixture.SECRET,
+                ):
+                    self.assertNotIn(private, self.output.getvalue())
+
+    def test_arm_handoff_corruption_blocks_auth_and_rerun_without_another_credential(self):
+        for corruption in ("missing-name", "keyVaultUrl", "identity", "transport"):
+            with self.subTest(corruption=corruption):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                _, listed = self.mixed_secret_inventory()
+                original = self.fake.rest
+                transport_failed = []
+
+                def corrupt(
+                    method,
+                    url,
+                    body,
+                    *,
+                    listed=listed,
+                    original=original,
+                    corruption=corruption,
+                    transport_failed=transport_failed,
+                ):
+                    if "/listSecrets?" in url:
+                        return copy.deepcopy({"value": listed})
+                    result = original(method, url, body)
+                    if (
+                        url == setup_fixture.ARM_APP
+                        and method == "PATCH"
+                        and "configuration" in body.get("properties", {})
+                    ):
+                        secrets = self.fake.app["properties"]["configuration"]["secrets"]
+                        if corruption == "missing-name":
+                            del secrets[0]
+                        elif corruption != "transport":
+                            secrets[0][corruption] = "FICTIONAL-WRONG-REFERENCE"
+                    if (
+                        url == setup_fixture.ARM_APP
+                        and method == "GET"
+                        and corruption == "transport"
+                        and not transport_failed
+                        and len(self.fake.app["properties"]["configuration"]["secrets"]) == 5
+                    ):
+                        transport_failed.append(True)
+                        raise SETUP.AzureError("network")
+                    return result
+
+                auth_before = copy.deepcopy(self.fake.auth)
+                with patch.object(self.fake, "rest", side_effect=corrupt):
+                    self.assertEqual(self.invoke("--run-in-azure"), 1)
+                self.assertEqual(self.fake.auth, auth_before)
+                self.assertIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+                with patch.object(CREDENTIAL, "store", side_effect=AssertionError("rotation")):
+                    if corruption == "transport":
+                        self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                        self.assertNotIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+                    else:
+                        self.assertEqual(self.invoke("--run-in-azure", "--check"), 1)
+                        self.assertEqual(self.invoke("--run-in-azure"), 1)
+                        self.assertEqual(self.fake.auth, auth_before)
+                        self.assertFalse(
+                            any(url == setup_fixture.AUTH_URL for _, url, _ in self.fake.writes)
+                        )
+                self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+
+    def test_arm_inventory_rejection_precedes_password_and_vault_deployment(self):
+        for shape in ("missing-app", "conflicting-kv", "duplicate"):
+            with self.subTest(shape=shape):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                _, listed = self.mixed_secret_inventory()
+                if shape == "missing-app":
+                    del listed[2]
+                elif shape == "conflicting-kv":
+                    listed[0]["identity"] = "different-identity"
+                else:
+                    listed.append(copy.deepcopy(listed[-1]))
+                auth_before = copy.deepcopy(self.fake.auth)
+                with (
+                    self.secret_response({"value": listed}),
+                    patch.object(CREDENTIAL, "store", side_effect=AssertionError("unsafe write")),
+                ):
+                    self.assertEqual(self.invoke("--run-in-azure"), 1)
+                self.assertFalse(self.fake.reg["passwordCredentials"])
+                self.assertEqual(self.fake.auth, auth_before)
+                self.assertIsNone(self.fake.credential_template)
+
+    def test_arm_generated_and_legacy_kv_reuse_retains_upstream_expiry_boundaries(self):
+        now = datetime(2030, 1, 1, tzinfo=UTC)
+        for legacy in (False, True):
+            for expiry in (
+                None,
+                "2029-12-31T23:59:59Z",
+                "2030-01-01T00:00:00Z",
+                "2030-01-01T00:00:01+00:00",
+            ):
+                with self.subTest(legacy=legacy, expiry=expiry):
+                    self.fake = FakeJobs()
+                    SETUP.subprocess.run.side_effect = self.fake.run
+                    self.assertEqual(self.invoke("--run-in-azure"), 0)
+                    old = self.fake.reg["passwordCredentials"][0]
+                    if legacy:
+                        old["displayName"] = "legacy-browser-secret"
+                        self.fake.app["properties"]["configuration"]["secrets"][-1]["name"] = old[
+                            "displayName"
+                        ]
+                        SETUP.aad_registration(self.fake.auth)["clientSecretSettingName"] = old[
+                            "displayName"
+                        ]
+                        self.fake.app["tags"]["zava-forward-credential-name"] = old["displayName"]
+                    old["endDateTime"] = expiry
+                    before = copy.deepcopy(old)
+                    reusable = expiry == "2030-01-01T00:00:01+00:00"
+                    with patch.object(SETUP, "datetime", wraps=datetime) as clock:
+                        clock.now.return_value = now
+                        for flag in ("--check", "--dry-run"):
+                            expected = 0 if reusable and flag == "--check" else 2
+                            self.assertEqual(self.invoke("--run-in-azure", flag), expected)
+                            self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+                        self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                    self.assertEqual(self.fake.reg["passwordCredentials"][0], before)
+                    self.assertEqual(
+                        len(self.fake.reg["passwordCredentials"]), 1 if reusable else 2
+                    )
+                    self.assertNotIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
 
 
 class CredentialArmTests(unittest.TestCase):

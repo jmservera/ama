@@ -1762,6 +1762,53 @@ settings or bypass policy. Offline fake-az/worker tests exercise the path;
 actual image availability, permission activation, VNet/SQL/log access, live
 binding/restart and real browser sign-in remain **Not run** in this change.
 
+### Private publication blocker evidence (2026-10-17, PR #375 continuation)
+
+The owner authorized safe image publication in the existing private registry;
+the limitation is the available execution route, not a blanket absence of image
+approval. Actual `docker version` fails with permission denied at
+`unix:///var/run/docker.sock`; no elevation/group change is permitted.
+No alternate builder is installed. Anonymous registry `/v2/` returns HTTP403,
+which is **not** an authenticated push/AcrPush permission test.
+
+ARM reads succeed: registry public access Disabled/bypass None, task and agent
+pool lists empty. Historical default quick runs succeeded on 2026-10-16, but
+have no private agent pool. Microsoft's
+[private build guidance](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-endpoints#use-az-acr-build-with-private-endpoint-and-private-registry)
+states default `az acr build` fails with public access disabled; alternatives
+need a dedicated pool or public task-IP firewall access.
+[Agent pools](https://learn.microsoft.com/en-us/azure/container-registry/tasks-agent-pools)
+allocate billable compute, so neither alternative is authorized here.
+[ARM image import](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-import-images)
+requires trusted-service bypass on restricted registries, incompatible with
+current bypass None. Build/import were therefore **not attempted**, not claimed
+to have returned a live task/import permission error.
+
+The successful inspected source CI run `39028596880` retains UX/Trivy reports,
+not an image archive; current CI neither exports nor pushes the locally built
+API images and does not build the infra proof layer. Repository self-hosted
+runner inventory is empty. Container-package discovery is **unknown**: the
+correct user packages API returned HTTP403 requiring `read:packages`; do not
+expand token rights or call that proof of absent packages. No private builder
+VM/ACI exists in the permitted ama inventory. Existing proof jobs retain the
+old digest; the initializer has AcrPull, not a publisher role.
+
+The smallest publisher action is to identify an **already existing**
+private-connected builder/operator with existing push authority on
+`crcutovertestrzsrg`, build `infra/cutover-proof.Dockerfile` with the retained
+immutable API base, push a new proof tag and supply its immutable digest.
+This is not authorization to install a new framework, add infrastructure,
+change this host's Docker rights, open ACR or create credentials. If no such
+builder exists, a separate infrastructure/spend decision is necessary.
+
+IAM is a separate **unattempted approval boundary**, not an observed Azure
+AuthorizationFailed: source-job tags and demo-API restart assignments are absent.
+Explicitly authorize only the reviewed `staff-initializer-rbac.bicep` deployment
+with `apiName=ca-cutover-test-demo-api` and
+`initializerIdentityName=id-cutover-test-init`. An authorized operator then
+rechecks the exact four-Create what-if before applying it. No broad role or
+Graph grant is needed or authorized.
+
 ### Restricted demo staging receipt (2026-10-17, #360)
 
 The already approved additive migration created only

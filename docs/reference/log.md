@@ -4614,3 +4614,43 @@ metadata when the knowledge base was created.
   No issue closed, merge, force-push or child task. d/e remain UNMET; exact
   owner actions and actual resource/validation evidence are in the PR/current
   audit. No human approval or operational readiness is inferred.
+
+## [2026-10-17] integration | Same-session PR #375 upstream and blocker continuation
+
+* Owner explicitly resumed #360/PR #375, authorized latest-main rebase and
+  topic-only force-with-lease. Integrated main 51db4fa8 (#373 sensor faults,
+  #374 credential preservation), retaining exact #358 helper source, expiry/
+  selection/readback/handoff behavior, upstream tests and legacy CLI delegate.
+  Both index/evidence sections and entire upstream append-only log prefix
+  retained; no sensor or upstream evidence changes.
+* Four additive combined ARM/KV inventory, digest/recovery, failure and generated/
+  legacy expiry tests; focused37, unchanged setup/legacy/mutation101 and
+  full infra329/no skips passed. Existing eleven-file Ruff/format, strict/scoped
+  mypy, all22 Bicep build/lint and pip check passed. Broader retained workflow
+  results are recorded in the same changes artifact, not a new delivery loop.
+* [Concrete publisher/IAM evidence](../../infra/README.md#private-publication-blocker-evidence-2026-10-17-pr-375-continuation):
+  actual Docker socket permission denial, anonymous registry403 and GitHub
+  packages403 (missing read:packages, inventory unknown). Registry task/pool
+  lists and self-hosted runner list empty; permitted ama inventory has no
+  builder VM/ACI. Current CI retains reports, not images; historical default
+  quick-run success does not provide a private-connected publisher now.
+* Official ACR guidance requires a dedicated pool/public task-IP rules for
+  private builds, or trusted-service bypass for restricted import. No pool,
+  new spend/network change prohibited: neither build nor import attempted or
+  claimed as an actual denied write. IAM activation also not attempted:
+  explicit approval still required, not an observed AuthorizationFailed.
+  Smallest actions: identify existing private-connected builder/operator with
+  existing push rights, and separately authorize exact demo-API/source-job
+  role deployment. No credentials, role/network/resource/data changes or
+  live sign-in; #360 d/e remain UNMET and issue open.
+* Original one-pass Review remains historical. Reviewer4536f9cc unavailable
+  through agent messaging; new exact candidate SHA and retained finding boundary
+  are supplied in PR #375, not falsely described as already reviewed.
+
+* Completed broader retained workflow checks: API563 tests/OK with110 explicit
+  skips (109 disposable SQL Server, one opt-in rendered browser); core546/OK
+  with one isolated Azure SQL skip; orchestrator22/OK; branding migration25/OK
+  after restoring its missing pinned dependencies. API initial wrong-cwd import
+  errors resolved by using existing src/api workflow cwd, not source workarounds.
+  JS syntax and pip check passed. These are local synthetic checks, not live
+  staff/SQL/browser acceptance.

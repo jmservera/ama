@@ -155,3 +155,151 @@ retain all knowledge histories, test combined paths and full relevant suites,
 research concrete existing-resource private publisher alternatives, then push.
 No new credentials/roles/network services, no private data or live sign-in,
 no nested loop/merge/issue closure. Existing one-pass Review remains historical.
+
+### P04-T01 - Upstream preservation and rebase
+
+Rebased onto 51db4fa80a29528f5a3d19420b1c7e1597d27213 using caller's
+explicit history-rewrite authorization. Rebase conflicts resolved additively:
+retained #358 credential evidence section and index row, #373 sensor index
+changes, entire upstream append-only log prefix and this branch's later entries.
+setup-entra retains exact upstream source for secret_inventory,
+preserve_app_secrets, secret_reference_digest and verify_secret_handoff.
+The secret selection/expiry logic and new expected-digest PATCH/readback/
+pending-handoff recovery are unchanged. Existing infra/tests/test_setup_entra.py
+and infra/scripts/initialize-api-auth.py are byte-identical to upstream.
+No #373 source/test changes relative to main.
+
+Local AST/source equality, git diff and prefix/index assertions passed.
+Rebased original source commit is 439cc57 (previously 6f43559); completed
+original Review still applies only to its recorded historical candidate and
+does not assert independent review of this newly integrated head.
+Reviewer 4536f9cc could not be messaged: tool returned "No agent found".
+No public PR review/comment findings were available at inspection. Final PR
+comment will provide exact new SHA and request retention of any prior findings;
+absence of visible findings is not an approval.
+
+### P04-T02 - Combined secret paths
+
+Added four test methods in infra/tests/test_staff_azure.py, none removed;
+original focused 21 + prior 12 + new 4 = 37, within max25 branch additions.
+Uses upstream synthetic inventory fixtures without modifying upstream tests.
+Five provider response shapes exercise ARM-created credentials plus complete
+KV URL/identity and app/empty-value preservation, digest readback/marker removal,
+unchanged token-store references and valid KV reuse without rotation.
+Corrupted/missing references block auth and rerun; interrupted readback reuses
+the same credential only after pending digest verifies. Invalid inventories
+fail before addPassword/ARM deployment. Generated/legacy Key Vault references
+retain missing/expired/equal/future expiry semantics in Azure apply/check/dry-run.
+Azure dry-run intentionally returns incomplete where no private SQL job is
+created; no test rewrites that existing evidence boundary.
+
+Initial new-test assertions incorrectly rejected management-only "az keyvault
+list" discovery and assumed Azure dry-run could claim private SQL success;
+corrected assertions to forbid only secret data-plane calls and retain expected
+dry-run incompleteness. Initial Ruff caught loop-closure binding and UTC alias
+in added tests; corrected the tests only. No production fix hidden by weakening
+upstream tests or changing expiry/handoff source.
+
+Passed: focused 37, upstream setup/legacy/mutation suite 101; full infra 329,
+zero skips with REQUIRE_AZ_BICEP=1 (64.873s). All eleven CI Ruff/format files,
+strict check-container/pipeline and scoped three-module mypy passed; all22
+Bicep build/lint and pip check passed. Broader retained workflow suites follow.
+
+### P04-T03 - Concrete publication and IAM blocker investigation
+
+Actual read-only operations and their limits (2026-10-17):
+
+* docker version fails with permission denied connecting to
+  unix:///var/run/docker.sock. No sudo/group/daemon change attempted.
+  buildah/podman/buildctl/skopeo/crane are not installed; not permission failures
+  and not installed as a new speculative publication framework.
+* Existing registry read succeeds: Premium, publicNetworkAccess Disabled,
+  networkRuleBypassOptions None; agentpool list and task list both return [].
+  Five most recent historical quick runs Succeeded, newest dbb on 2026-10-16,
+  all agentPool null. This proves past default quick-run use, not a currently
+  private-connected agent or authorization for new spend.
+* Anonymous HTTPS /v2/ on the target returns HTTP403 from this host.
+  It is not an authenticated push attempt or evidence of missing AcrPush.
+  No registry login token/secret is requested. Current networking is preserved.
+* Official ACR private-endpoints documentation explicitly says default
+  az acr build fails when public access is disabled; supported alternatives
+  are dedicated agent pool or public task IP firewall access. No existing pool;
+  new paid pool/network opening is prohibited. Therefore no quick build or
+  source upload attempted, and no fabricated scheduleRun authorization error.
+* Official import documentation requires trusted-service network bypass for
+  restricted source/target registries. Bypass here is None; import is not a
+  supported no-network-change substitute. No import attempted, even by digest.
+* GitHub's latest inspected successful src CI run 39028596880 retained only
+  regulatory UX and four Trivy JSON report artifacts; workflow builds local
+  zava-forward-*:ci images but neither saves/exports nor pushes images.
+  Paginated artifact metadata showed no OCI/docker/proof image archive (names
+  containing image were Trivy reports). SBOMs/reports are not reusable images.
+  Source API CI also does not construct the infra proof layer.
+* GitHub user container-package inventory GET actually returned HTTP403:
+  "You need at least read:packages scope to list packages." Therefore external
+  package inventory is unknown, not claimed empty. No token scope expansion.
+  The initial incorrect repository-package endpoint returned404 and was replaced
+  with the correct user endpoint; not treated as image-absence evidence.
+* Repository self-hosted runner inventory succeeds and is empty. Resource list
+  in ama has existing application jobs, no VM/ACI private builder. All retained
+  proof jobs use the old digest; none is a ready new-worker publisher. No
+  outside-group host search or new build job/image/framework created.
+* Initializer exact-scope assignment reads: AcrPull on registry; [] at source
+  initializer job and demo API, including inherited assignments. SQL admin is
+  separate existing authority. Pull cannot be repurposed into registry push.
+  IAM activation not attempted: caller reserves explicit approval for role
+  creation/assignment; this is an authorization boundary, NOT an observed
+  Azure AuthorizationFailed. Prior four-Create what-if remains the scope basis.
+
+Official sources retrieved 2026-10-17:
+https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-endpoints
+(Use az acr build with private endpoint and private registry);
+https://learn.microsoft.com/en-us/azure/container-registry/container-registry-import-images
+(Important restricted-network/trusted-services prerequisite);
+https://learn.microsoft.com/en-us/azure/container-registry/tasks-agent-pools
+(VNet support and billing based on pool allocation). The guessed
+container-registry-tasks-virtual-network URL returned404; replaced by these
+retrieved official sources, no claim it supplied evidence.
+
+Conclusion: no discovered already-authorized existing-resource/no-new-spend
+private build/import route is executable here. No build/push/import or IAM
+activation was attempted or represented as a failed service operation.
+Minimum publisher action: owner identifies an already existing private-connected
+builder/operator with existing target-registry push authority; that operator
+builds infra/cutover-proof.Dockerfile with the retained immutable API base,
+pushes a new proof tag and returns the digest. Do not grant daemon access here,
+provision a pool, open ACR or mint credentials as a workaround. If no such
+builder exists, proceeding needs a separate explicit infrastructure/spend
+decision outside this task.
+
+Minimum separate IAM approval: explicitly authorize only the reviewed
+staff-initializer-rbac deployment for apiName=ca-cutover-test-demo-api and
+initializerIdentityName=id-cutover-test-init (two definitions/two assignments).
+Until approval, no role PUT; after approval, fresh exact what-if then apply.
+These two actions unblock worker publication/relay/restart, not tenant consent
+or criterion d. Human login remains subsequent, and d/e stay UNMET.
+
+### Broader retained workflow validation completion
+
+Full source API from workflow-defined src/api cwd: 563 tests, OK with110 skips,
+180.974s. Skip inspection:109 require disposable SQL Server (ZF_TEST_MSSQL=1);
+one rendered check requires opt-in local Playwright browser. Neither disposable
+server nor browser acceptance is inferred. Initial root-directory invocation
+failed six test/checks namespace imports (498 tests/errors6/skips61); reran
+the exact existing component working directory, not a source PYTHONPATH hack,
+and it passed. No source changed to hide that invocation failure.
+
+Full core (including upstream #373 sensor faults):546 tests, OK with1 skip,
+293.397s; skip is explicitly isolated synthetic Azure SQL resident test.
+Orchestrator:22 tests, OK. Legacy branding migration:25 tests, OK after
+observed missing PIL/pptx; installed the existing pinned
+tools/rename-zava-requirements.txt with pip only. Expected broken-PPTX fixture
+diagnostic is not a failure. Browser app/assistants JS syntax passed; pip check
+still clean. No private data, live SQL or Docker-based SQL acceptance.
+
+P04-T01/T02/T03 complete. P04-T04 next: commit/push the rebased/integrated
+candidate using exact lease on remote662c11bdb60e19879c0bf2d905e39dfab82727e6.
+No visible independent-review findings removed; none were exposed through PR
+comments/reviews at inspection. Reviewer-agent messaging unavailable, so PR
+comment is the durable exact-SHA notification channel. Existing Review is not
+rerun or relabelled as review of this head.
