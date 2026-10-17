@@ -150,6 +150,39 @@ reference log; original/addendum/memory/immutable snapshots untouched.
 P01/P02 complete, plan/details aligned; no remaining implementation blocker.
 Ready for exactly one post-implementation Review.
 
+## Review and Publication Receipts
+
+One post-implementation Review completed: execution Complete, outcome Residual
+work for RV-001 (separate consumer/live acceptance) and RV-002 (separate source/
+method/owner approval). No bounded implementation defect identified; no repeat
+Review or child delivery loop. Review and phase log committed eda570d.
+
+| Publication command | Actual result |
+| --- | --- |
+| gh api user; repository-local git identity configuration | Verified privacy-safe noreply author and committer on all commits |
+| git commit: research / plan / implementation / Review | 5088a42 / 2d967aa / 7562515 / eda570d; Conventional Commits and requested Copilot trailer |
+| pr-reference/scripts/generate.sh --base-branch origin/main --merge-base --output SESSION/files/sensor-182-pr-reference.xml | Passed; 1,994-line XML outside repository |
+| git push --set-upstream origin feat/sensor-fault-injection-182 | Passed; remote topic created at eda570d625b2fc0120ffb7e2a43ebe36c793edf8 |
+| gh pr create --repo jmservera/ama --base main --head feat/sensor-fault-injection-182 --title 'feat(core): add seeded sensor fault injection and separate truth (Refs #182)' --body-file SESSION/files/sensor-182-pr-body.md | Passed: https://github.com/jmservera/ama/pull/373 |
+| gh pr view --json number,url,state,baseRefName,headRefName,headRefOid,statusCheckRollup | #373 OPEN, main base, exact requested topic head; no checks reported at initial observation |
+
+The optional pull-request helper referenced instruction and citation-policy
+files unavailable in the checkout/installed plugin. Searched for both and
+attempted the declared path; no unavailable host tool or policy was invented.
+Used generated native-git PR reference and gh CLI instead. No extra review
+fan-out or nested loop was started after the single completed RPI Review.
+
+The PR body contains the exact three-criterion audit, actual validation,
+source/prior-art boundaries, artifact paths, restrictions and residual work.
+No issue-state edits, completion keyword, merge, rebase, force push or main push.
+No remote CI success is inferred from an initially empty check list.
+
+This receipt/state update is a normal final commit, not an amendment. Publish
+it to the same topic and verify local HEAD, remote branch and PR head agree,
+with a clean worktree. The final head is the commit containing this receipt;
+its own hash is intentionally not self-embedded. After verification, stop as
+explicitly requested. CI and merge remain owner-controlled; no follow-up starts.
+
 ## Amendments, Divergences and Follow-Ups
 
 No material divergence. Packet rates and even >=2 nominal slot restriction are
