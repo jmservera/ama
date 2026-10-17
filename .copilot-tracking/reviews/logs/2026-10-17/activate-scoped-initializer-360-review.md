@@ -286,3 +286,48 @@ to run again.
 * Review blockers: None. Wider acceptance remains explicitly UNMET.
 * This is the task's one complete post-implementation RPI Review. Return to
   the active parent; do not invoke another review, implementation or live step.
+
+## Subsequent P04 Targeted Final-State Review (2026-10-17)
+
+This is the explicitly requested targeted scope-delta review, performed inline
+by the primary assistant after the new owner approval. It is **not** another
+independent full-task RPI Review, nor retroactive evidence that the original
+review accepted the later relay deployment. The preceding review is preserved.
+Independent readback here means separately retrieved actual ARM facts after
+apply, not a new human approver or claim of independent-agent review.
+
+Execution: Complete. Bounded outcome: Conformant for the approved relay
+permission configuration; wider outcome: Residual work.
+Reviewed boundary: diff from published38e6abf, P04 plan/details/changes,
+new explicit owner boolean, actual relay preview/apply/readback JSON and
+current runbook/evidence/index/append log. No new code or permission actions.
+
+| Targeted check | Evidence and disposition |
+| --- | --- |
+| Exact new approval | Owner boolean true explicitly names encrypted result tags on existing initializer job only; prior ambiguity is not silently reinterpreted |
+| Prior publication | Clean local/origin/OPEN main PR #379 matched38e6abf before continuation |
+| Reviewed toggle/source | includeResultRelay=true is actual parameter; Bicep/guard SHA256s match reviewed original source, no source diff |
+| Fresh raw preview | Two exact relay Creates, 95 same-group Ignore/NoChange; API assignment raw Modify explicitly retained |
+| Proven unchanged API | Entire before/after equal after only exact MI reference/canonical role URI resolution; principalType NoEffect; separate actual API role/assignment exactly match prior receipt |
+| Narrow apply/readback | Succeeded; separate ARM fetch proves tags/read+tags/write only, empty exclusions/dataActions, ama-only assignableScopes and existing-job-only assignment to exact initializer principal |
+| No broader/new grant | After assignment list equals before plus one exact relay; API/AcrPull unchanged; ARM Create operation labels on idempotent existing API/guard PUTs disclosed |
+| Preserved workload metadata | Job identity/environment and observed old/demo API environment/revisions/ingress unchanged; deny-all retained |
+| Evidence hygiene | Source hashes/JSON and new links/anchors checked; append-only KB prefix preserved; diff whitespace clean |
+| Usage limitations | No tag value read/write, test payload, secret/Graph/SQL access, job creation/config/run, restart, build/network/spend/deletion/browser acceptance; RBAC is not a ciphertext filter |
+
+No substantive defect or unresolved permission-scope discrepancy found within
+this P04 boundary. No arbitrary Modify, additional resource or source amendment
+was accepted. No new full test suite required for unchanged reviewed source;
+existing full59 remains historical, not falsely rerun. Bicep lint and targeted
+receipt assertions passed in this continuation.
+
+Original RV-001 is now resolved for exact owner authority and permission
+configuration only. RV-002 private publisher and RV-003 human tenant/runtime
+acceptance remain distinct unproven follow-ups. No MI token propagation,
+encryption/runtime acceptance or #360 d/e completion is inferred.
+
+Publication boundary: one normal final topic commit/push to existing #379,
+privacy-safe author/committer/trailer and external final-head verification,
+without a later receipt-only commit, merge, forcepush or child work. Final
+commit cannot contain its own hash; verification is terminal output, not a
+claim made before publication.

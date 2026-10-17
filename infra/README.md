@@ -1831,9 +1831,13 @@ Graph grant is needed or authorized.
 
 The later [scoped activation](#scoped-initializer-iam-activation-2026-10-17-360)
 supersedes only that API-grant status: API permissions were authorized and
-applied; existing-job relay tags are still outside the exact approval.
+applied. The [later explicit relay approval and activation](#approved-existing-job-relay-delta-2026-10-17-360)
+supersedes the remaining tag-grant approval boundary without widening scope.
 
 ### Scoped initializer IAM activation (2026-10-17, #360)
+
+The API-only receipt below is historical. Its unapproved/absent relay status
+is superseded only by the [subsequent explicit relay delta](#approved-existing-job-relay-delta-2026-10-17-360).
 
 The owner explicitly approved only reviewed API read/restart and temporary
 staff-job lifecycle permissions in `ama` on 2026-10-17 (boolean true).
@@ -1896,6 +1900,73 @@ are still required; #360 d/e remain **UNMET**. No Graph/SQL/Key Vault secret
 read, restart, job execution, image build, network change, new infrastructure,
 spend or deletion occurred. Resource group `ama` and old stack are retained.
 
+### Approved existing-job relay delta (2026-10-17, #360)
+
+After the original full RPI and PR #379 publication, the owner supplied a new
+explicit boolean true: "allow the initializer identity to read/write encrypted
+result tags on the existing initializer job only. No plaintext secrets, job
+configuration rights, new resources or broader scope. May I activate that
+reviewed grant too?" This resolves the relay approval boundary only.
+
+The reviewed source was unchanged. Its actual parameter name is
+`includeResultRelay`, not `includeResultTagRelay`. Both preview and apply used:
+
+```bash
+az deployment group what-if -g ama --name staff-iam-360-relay-20261017 \
+  --template-file infra/staff-initializer-rbac.bicep --mode Incremental \
+  --parameters apiName=ca-cutover-test-demo-api \
+  initializerIdentityName=id-cutover-test-init includeResultRelay=true
+az deployment group create -g ama --name staff-iam-360-relay-20261017 \
+  --template-file infra/staff-initializer-rbac.bicep --mode Incremental \
+  --parameters apiName=ca-cutover-test-demo-api \
+  initializerIdentityName=id-cutover-test-init includeResultRelay=true -o none
+```
+
+These record the authorized performed operation, not renewed execution
+approval. Fresh what-if Succeeded with only two new-resource Creates: the
+reviewed relay role definition and existing-job assignment, plus 95
+same-group Ignore/NoChange rows. Raw what-if also labeled the existing API
+assignment Modify. Its entire delta was the known MI reference vs resolved
+principal, RG-addressed vs canonical role URI for the same GUID and
+principalType NoEffect. Exact before/after equality after resolving only
+those two references, plus independent actual API role/assignment reads
+matching the original receipt, proved the permitted API-unchanged case.
+No arbitrary Modify or extra resource was accepted; raw Modify was retained,
+not misreported as NoChange. The scope guard still contains no resources.
+
+Deployment `staff-iam-360-relay-20261017` **Succeeded**; correlation
+`53c578e1-bea0-4655-a9ff-ce574b995d6b`. Separate post-apply ARM reads verified:
+
+| Readback | Exact value |
+| --- | --- |
+| Role name / GUID | Staff initializer result tags (ama) / `64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c` |
+| Sole assignable scope | `/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama` |
+| Assignment GUID | `8e9a497e-3b90-50e2-a783-93e58755165b` |
+| Actual assignment scope | `/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init` |
+| Principal / type | `3830883a-f4af-44f8-bff8-8859b78fc2f8` / ServicePrincipal, existing `id-cutover-test-init` |
+| Actions | `Microsoft.Resources/tags/read`, `Microsoft.Resources/tags/write` only |
+| Exclusions / data permissions | `notActions`, `dataActions`, `notDataActions` all empty |
+
+The canonical subscription-addressed role URI does not widen the ama-only
+assignable scope or job-only assignment. The sole new initializer assignment
+is that relay; existing AcrPull and API role/assignment are unchanged.
+ARM deployment operation logs call idempotent PUTs "Create", including the
+existing API role/assignment and empty guard metadata. Those are not new
+effective grants: exact before/after API readbacks match. No workload resource
+was deployed. Existing job identity/environment and both APIs' observed
+environment/revision/ingress metadata match the pre-apply inventory; demo
+deny-all remains.
+
+No tag value was read or written, including test payloads. RBAC grants actions
+at a resource scope, not a ciphertext-content filter: encrypted-only use and
+no plaintext remain explicit owner/application constraints. Readback proves
+the role configuration, not MI token propagation, worker execution or
+end-to-end encryption acceptance. No secret/Graph/SQL operation, temporary
+job, job configuration write/run, restart, image build, network change,
+new workload/infrastructure/spend or deletion occurred. No permission denial
+was observed. Private publisher and genuine tenant/browser/staff/SQL/AI
+acceptance remain unproven; #360 d/e are **UNMET**.
+
 ### Restricted demo staging receipt (2026-10-17, #360)
 
 The already approved additive migration created only
@@ -1918,8 +1989,8 @@ The staged configuration still has the invalid managed-identity client sentinel
 and no browser credential, so do not remove the restriction yet.
 
 The prerequisite wording below records the original staging point; the API
-grant is now applied as documented above, while source-job relay approval
-and the other prerequisites remain outstanding.
+and separately approved relay grants are now applied as documented above.
+The private publisher and human/runtime prerequisites remain outstanding.
 After an authorized private publisher supplies the worker digest and an
 authorized IAM operator activates the two exact scopes (API restart on
 `ca-cutover-test-demo-api`, tag relay on `job-cutover-test-init`), the tenant

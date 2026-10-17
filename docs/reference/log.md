@@ -4843,3 +4843,37 @@ metadata when the knowledge base was created.
   Privacy-safe author/committer and required trailer verified. Session stops
   at exact documented outcome per owner; evidence-only completion follows.
   No merge/forcepush/issue closure or remote CI acceptance claim.
+
+## [2026-10-17] delivery | #360 explicitly approved existing-job relay delta
+
+* Prior publication verified complete: clean local/origin/OPEN main PR #379
+  at38e6abf. New owner boolean true permits only initializer MI encrypted-result
+  tags/read and tags/write on existing job-cutover-test-init. No plaintext,
+  job-config/new-workload/broader-scope approval. Updated scoped plan/details
+  as P04; original full RPI/Review remain historical, no new full loop.
+* Reviewed source unchanged; actual toggle includeResultRelay=true (caller
+  named includeResultTagRelay, not an existing parameter). Fresh preview
+  Succeeded with two exact relay Creates and95 same-group Ignore/NoChange.
+  Raw API assignment Modify retained: exact principal reference/canonical
+  role URI only, principalType NoEffect. Whole before/after normalization and
+  independent actual prior-role/assignment match prove API unchanged, not
+  an arbitrary Modify allowance or falsely clean raw two-row preview.
+* staff-iam-360-relay-20261017 Succeeded, correlation
+  53c578e1-bea0-4655-a9ff-ce574b995d6b. Separate ARM readback verified role
+  64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c, assignment
+  8e9a497e-3b90-50e2-a783-93e58755165b, principal
+  3830883a-f4af-44f8-bff8-8859b78fc2f8, two tag actions only, ama-only
+  assignableScopes and exact existing-job assignment scope. Only new MI
+  assignment is relay; existing API role/assignment and AcrPull exact.
+* ARM labels idempotent API/empty-guard PUT operations Create; no new effective
+  API grant or workload resource. Existing job identity/environment and both
+  APIs' observed environment/revision/ingress metadata unchanged; deny-all retained.
+  Prior RV-001 resolved for permission configuration only; RBAC is not an
+  encrypted-content filter. No tag payload read/write/test or runtime proof.
+* No secret/Graph/SQL reads/writes, temporary job/config/run, restart, image
+  build, network/new infrastructure/spend/deletion or browser acceptance.
+  Private publisher and genuine tenant/runtime acceptance remain unproven;
+  #360 d/e UNMET. Targeted final-state review completed inline with no defects,
+  explicitly labelled after the original independent full Review. One normal
+  final topic commit/push is the terminal publication action, verified
+  externally without an extra receipt commit; no merge or unrelated work.

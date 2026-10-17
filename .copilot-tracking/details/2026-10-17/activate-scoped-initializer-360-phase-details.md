@@ -16,6 +16,7 @@
 | P01 | Reviewed API-only slice | Complete | P01-T01, P01-T02 |
 | P02 | Exact activation | Complete | P02-T01 |
 | P03 | Evidence/publication preparation | Complete; parent Review/publication next | P03-T01, P03-T02 |
+| P04 | Explicitly approved relay scope delta | Apply/readback/evidence/targeted review complete; final publication handoff ready | P04-T01, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reviewed API-only source slice
@@ -131,3 +132,63 @@ changes/readback. Live operation Succeeded; canonical URI/expected identity
 Read verifier amendments are documented in changes. Runbook/KB/log updated;
 append-only prefix and new receipt link anchors verified. One independent
 full-task RPI Review and publication remain parent lifecycle work.
+
+<!-- rpi:phase id=P04 -->
+## P04: Explicitly approved relay delta (2026-10-17)
+
+Prior Review and publication at 38e6abf verified complete on the continuing
+clean topic/main PR #379 before this work. New owner true approves exactly
+existing-job encrypted-tag read/write definition+assignment, resolving RV-001.
+No Bicep source edit or new full RPI/repeated plan critique.
+The caller's includeResultTagRelay wording maps to the reviewed template's
+actual `includeResultRelay=true`, not a new parameter.
+
+<!-- rpi:task id=P04-T01 -->
+### P04-T01: Preview, apply, independent readback
+
+MI id-cutover-test-init:
+principal 3830883a-f4af-44f8-bff8-8859b78fc2f8,
+client 8fd2cb23-cc1c-4ee5-ab8d-4b6fdff4564e.
+Job job-cutover-test-init in existing cae-cutover-test, ama.
+Role 64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c; assignment
+8e9a497e-3b90-50e2-a783-93e58755165b scoped only to that job.
+Fresh what-if must contain only those Creates, same-root Ignore/NoChange and
+proven unchanged API/benign guard. No arbitrary Modify/Delete or unrelated creation.
+Actual preview's API Modify is limited to known exact MI reference/canonical
+role URI and principalType NoEffect. Normalize only those two values, require
+whole before/after equality, then compare independent actual API role and
+assignment to original receipt. Preserve raw Modify in evidence. Any other
+delta blocks apply; this gate implements caller's proven-API-unchanged case.
+Explicitly verify role actions exactly tags/read and tags/write, no
+dataActions/exclusions, assignableScopes ama only and exact MI reference.
+Check prior API definition/assignment matches existing receipt before/after.
+Same reviewed source hash and inputs required; no secret reads, tag values,
+test writes, temporary jobs/configuration/execution or runtime checks.
+A separate read-only verifier must check actual post-apply facts/operations,
+not simply trust deployment success.
+
+Completed: exact approved relay apply Succeeded and separate post-apply
+verifier passed. Receipt includes two actions, existing-job scope/principal,
+canonical role URI, unchanged prior API/AcrPull, preserved observed job/API
+metadata and sanitized operations. Existing API/empty-guard idempotent PUTs
+are labeled Create by ARM; two effective grants only are new.
+No source change, test tag, job execution or permission denial.
+
+<!-- rpi:task id=P04-T02 -->
+### P04-T02: Evidence and targeted final-state review/publication
+
+Preserve original first-approval receipts and original full Review. Add
+explicit dated delta, actual sanitized receipts and a labelled targeted review
+of only this continuation. No new source expected; if source changes become
+necessary, pause apply until standard independent source review.
+Update factual runbook/evidence/index and append-only log. Commit once at end
+with authenticated privacy-safe email/trailer, push same branch/PR and verify
+final head outside commit. No extra publication receipt commit after final
+head. Publisher/tenant/browser/SQL/AI and d/e remain unproven.
+
+Completed evidence/review/handoff: primary assistant inline targeted final-state
+review appended to the existing canonical Review without changing the original
+independent review. No defects found in exact approved relay delta.
+All P04 implementation markers complete; one normal final commit/push and
+external remote/PR-head verification remain the terminal parent action.
+No already-pushed-final-head claim is made inside this self-referential record.

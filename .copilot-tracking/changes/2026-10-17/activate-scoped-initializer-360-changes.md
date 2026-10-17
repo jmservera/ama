@@ -11,11 +11,11 @@
 
 ## Execution Status
 
-* Status: Complete for full-plan implementation and handoff preparation.
-* Declared scope: full plan.
+* Status: Original full RPI/publication complete; P04 approved relay apply/readback/evidence/targeted review complete; terminal normal commit/push handoff ready.
+* Declared scope: original full plan followed by explicitly approved P04 only.
 * First execution boundary: P01-T01; no live apply before P01-T02 source review.
 * Completed markers: P01/P01-T01/P01-T02, P02/P02-T01, P03/P03-T01/P03-T02.
-* Remaining active implementation markers: none. Independent Review complete; main PR #379 published and implementation head verified.
+* Remaining active implementation markers: none. Original independent Review/publication complete at 38e6abf; new approval is not retroactive first-review evidence. Terminal P04 publication is verified externally after the final commit, without an extra receipt commit.
 * Approved writes: conditional relay exclusion, existing focused tests,
   dated evidence and directly related runbook/KB documentation; API-only
   RBAC deployment after review/exact what-if.
@@ -33,9 +33,116 @@
 
 API-only permission deployment Succeeded after independent source review and
 exact two-Create what-if. Role/principal/actions/scope readback passed.
-Existing-job tag relay remains unapproved/absent; no temporary lifecycle role
+Existing-job tag relay was unapproved/absent at that point; new explicit owner
+approval now authorizes only its existing reviewed definition/assignment in P04. No temporary lifecycle role
 or job was created. Existing private publisher remains blocked; no new
 image/infrastructure attempted. #360 d/e remain UNMET.
+
+## Approved Relay Scope Delta (2026-10-17, P04)
+
+Before continuation, local/origin/PR #379 all matched
+38e6abf5246a231b871d00d5e7bb1a3402094be8; worktree clean, PR OPEN to main.
+No prior publication outstanding.
+
+New owner boolean true: "allow the initializer identity to read/write encrypted
+result tags on the existing initializer job only. No plaintext secrets, job
+configuration rights, new resources or broader scope. May I activate that
+reviewed grant too?" Exact approval resolves only prior RV-001 authority;
+actual activation must still pass fresh preview and independent readback.
+Plan/details/current summary updated before apply; prior critique/full Review
+remain historical, no first-review claim fabricated.
+
+Caller requested includeResultTagRelay=true; actual existing reviewed
+parameter is includeResultRelay=true. Use it explicitly without source changes.
+Scope: P04 only; fresh exact relay two-Create preview, retained API grants,
+apply/readback, targeted final-state review and one normal final commit/push.
+No temporary job/network/workload/image/secret/Graph/SQL/restart/spend/delete
+or tag-payload test. Original tests remain valid for unchanged source;
+no broad suite required for evidence-only edits.
+
+Read-only identity/job inventory confirms exact existing principal/client/job
+IDs, expected environment and identity binding; no tag/secret values retrieved.
+
+### P04 fresh preview and proven API no-op
+
+Fresh preview `staff-iam-360-relay-20261017` Succeeded. Two exact relay Creates
+and 95 same-group Ignore/NoChange rows. Raw preview also reports the API
+assignment as Modify, **not silently relabeled NoChange**: exact delta is the
+existing MI principal reference vs its resolved principal, RG-addressed role
+URI vs Azure's canonical subscription URI for the same GUID, plus
+principalType NoEffect.
+
+Programmatic gate resolves only those exact two values, requires whole
+before/after equality and no other delta, and independently fetches actual
+API role/assignment and matches them exactly against original live receipt.
+Identity principal/client, existing job ID/environment/binding, old/demo API
+metadata and prior initializer assignments independently match original
+receipt. This proves the caller-permitted API-unchanged case; no arbitrary
+Modify accepted. Plan/details clarified before apply, no authority/source change.
+
+The role/Create checks require exactly tags/read and tags/write,
+ama-only assignable scope, exact existing-job child assignment and exact MI
+reference. Reviewed Bicep/guard source hashes match prior review/deployment.
+Compiled guard has no resources. Gate PASS; new receipt stores raw RBAC
+changes/deltas and unchanged resource IDs, no workload/secret/tag payloads:
+.copilot-tracking/changes/2026-10-17/activate-scoped-initializer-360-relay-receipt.json.
+No deployment sent yet; same inputs/source must be rechecked immediately
+before the authorized incremental apply.
+
+### P04-T01 actual approved relay apply and independent readback
+
+Deployment staff-iam-360-relay-20261017 Succeeded, correlation
+53c578e1-bea0-4655-a9ff-ce574b995d6b. Same unchanged reviewed source hashes
+and explicit includeResultRelay=true inputs; identity/job/API snapshot
+rechecked immediately before apply. No source amendment or broad fallback.
+
+A separate verifier fetched actual ARM role/assignment and inventories after
+deployment. Exact two actions tags/read and tags/write, no exclusions/
+dataActions; sole assignable scope ama; existing-job-only assignment
+8e9a497e-3b90-50e2-a783-93e58755165b to principal
+3830883a-f4af-44f8-bff8-8859b78fc2f8 verified. Canonical role URI uses
+subscription prefix for GUID64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c,
+without widening assignment or assignableScopes.
+
+Initializer assignment inventory differs only by that relay assignment.
+Existing API role/assignment and AcrPull match exact prior state; existing job
+identity/environment and both APIs' observed environment/revision/ingress
+metadata unchanged. Demo deny-all retained. ARM operation rows label
+idempotent PUTs Create for existing API role/assignment and empty guard too;
+not new grants/resources. Only new effective authorization objects are the
+two reviewed relay resources. No tag payloads, job configuration, secrets or
+runtime execution involved. Readback proves configuration, not content
+enforcement, MI token propagation or actual worker encryption.
+
+P04 evidence hygiene passed: receipt source hashes unchanged from independent
+review/previous deployment, no source diff, Bicep lint pass, append-only log
+prefix intact and new relay links/anchors resolve. No source edit means no
+new unit suite or standard source-review rerun needed. Targeted final-state
+review of this delta remains next, with original full Review left historical.
+
+### P04-T02 targeted final-state review and terminal publication handoff
+
+Inline targeted review complete, no substantive defects. It is recorded as a
+subsequent P04 addendum in the existing canonical Review; original independent
+full RPI Review preserved byte-for-byte. It is not misrepresented as another
+independent full-task review or new first-review approval. Separate post-apply
+ARM reads and exact receipt assertions supplied independent actual facts.
+Prior RV-001 resolved for approval/configuration only; RV-002/RV-003 remain
+unproven, d/e UNMET.
+
+Updated runbook/evidence/index and appended KB log accurately distinguish
+original unapproved API-only snapshot from new explicitly approved relay.
+No source/guard/test change; previous59-test result remains historical,
+Bicep lint and focused evidence assertions passed now. No broad suite claimed.
+
+GitHub account re-resolved as8036360/jmservera; terminal publication will use
+repository-local8036360+jmservera@users.noreply.github.com for both author and
+committer plus required Copilot trailer. Existing main PR #379 is reused.
+One normal final commit/push publishes all P04 evidence together. Final
+local/origin/PR head equality and clean worktree are verified after that
+command; the commit cannot contain its own hash, and **no extra receipt
+commit follows**. Publication is not asserted successful before that command.
+Stop then; no merge, forcepush, closing syntax or follow-up execution.
 
 ## Validation Record
 

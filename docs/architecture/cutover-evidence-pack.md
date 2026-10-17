@@ -77,7 +77,8 @@ that broader loop; this audit grants no deployment or merge approval.
 This is the original #375 readiness receipt. For the later API-only IAM
 activation, see [Scoped Initializer IAM Activation](#scoped-initializer-iam-activation-2026-10-17).
 Its API-grant status supersedes the historical absent/unattempted statements
-below; source-job relay and all live d/e gates remain unmet.
+below. The [subsequent relay delta](#approved-existing-job-relay-delta-2026-10-17)
+supersedes only the relay authorization/grant status; all live d/e gates remain unmet.
 
 Refs #360; coordinated with #349/#350 and #358. This section supersedes only
 the console/credential transport limitations and migration status in the dated
@@ -160,6 +161,9 @@ made no Azure resource/credential/role/data changes; d/e remain UNMET.
 
 ## Scoped Initializer IAM Activation (2026-10-17)
 
+This API-only receipt predates the [subsequent explicit relay approval](#approved-existing-job-relay-delta-2026-10-17).
+Its absent/unapproved relay statements remain historical, not current blockers.
+
 Refs #360. Starting main: `e065ecd2c5b09b0f4bc22bfbfdb343e41910189b`,
 including merged #375. This follow-up follows ordered Research, Plan,
 Implement and independent Review; the source review before live apply is
@@ -213,6 +217,51 @@ acceptance, image build, network change, spend or deletion occurred.
 MI propagation/exercised rights remain untested by design. #360 d/e are
 **UNMET**; resource group `ama`, old stack and all human approval boundaries
 remain intact.
+
+### Approved Existing-Job Relay Delta (2026-10-17)
+
+Refs #360, continuing PR #379 after publication completed at
+`38e6abf5246a231b871d00d5e7bb1a3402094be8`. Original full RPI and independent
+Review are preserved; this is an approved P04 scope delta with targeted
+final-state review, not a fabricated first or repeated full Review.
+
+New owner boolean true explicitly permits only the existing initializer MI
+to read/write encrypted result tags on the existing initializer job, with no
+plaintext secrets, job configuration rights, new workload resources or broader
+scope. No Bicep source change was needed; the actual reviewed parameter
+`includeResultRelay=true` enables the previously omitted grant.
+The [exact relay runbook](../../infra/README.md#approved-existing-job-relay-delta-2026-10-17-360)
+records commands and full principal/resource scope.
+
+| Scope delta proof | Observed outcome |
+| --- | --- |
+| New grants | Role `64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c`, job assignment `8e9a497e-3b90-50e2-a783-93e58755165b` |
+| Exact actions / principal | Microsoft.Resources/tags/read and tags/write only; existing initializer principal `3830883a-f4af-44f8-bff8-8859b78fc2f8`, ServicePrincipal |
+| Scope | Sole assignable scope ama; assignment only at existing job-cutover-test-init |
+| Fresh preview | Two exact relay Creates, 95 same-group Ignore/NoChange, one proven API assignment no-op reported raw as Modify |
+| API no-op proof | Whole before/after equality after resolving exact MI reference/canonical role URI; principalType NoEffect; independent actual API role/assignment match against original receipt |
+| Apply | staff-iam-360-relay-20261017 Succeeded, correlation `53c578e1-bea0-4655-a9ff-ce574b995d6b` |
+| Independent readback | Separate ARM reads verify role/action/scope/principal; only new MI assignment is relay; previous API grant/AcrPull exact |
+| Preservation | Existing job identity/environment and observed old/demo API environment/revision/ingress metadata unchanged; demo deny-all retained |
+| Source | Reviewed Bicep/guard source hashes unchanged; no new standard source review needed |
+
+Deployment logs label idempotent existing API/empty guard PUTs Create too;
+this is not a new API grant. Raw what-if Modify and actual before/after
+proofs are retained, not converted into a claimed two-row raw preview.
+Only two effective grants were new; no arbitrary Modify or unrelated resource
+creation was accepted. The guard contains no workload resources.
+
+No tag payload read/write or secret-bearing test, MI token/propagation test,
+temporary job, job configuration write/run, secret/Graph/SQL access, restart,
+image build, network/new infrastructure/spend/deletion or human browser
+acceptance occurred. The action-based RBAC role cannot enforce ciphertext
+content; encrypted-only use remains an owner/application boundary, not a
+claim of content-filtered permission enforcement. Actual encryption/runtime
+acceptance remains untested.
+
+Prior RV-001 is resolved only for exact permission authorization/configuration.
+Private image publisher RV-002 and genuine tenant/runtime acceptance RV-003
+remain unproven; #360 d/e remain **UNMET**. Old stack and ama retained.
 
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 

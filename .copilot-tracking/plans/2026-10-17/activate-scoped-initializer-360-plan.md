@@ -17,23 +17,27 @@ Preserve the reviewed roles and default behavior while adding an explicit
 resources when false. Independently review this source amendment before
 deploying only the API read/restart role and its demo-API-scoped assignment.
 Exact preview and principal/scope/actions readback are complete; deployment
-Succeeded, with no permission denial observed. Runbook/KB updates are prepared
-for final independent RPI Review and main PR publication.
+Succeeded, with no permission denial observed. The full independent Review
+and PR #379 publication completed at 38e6abf before this continuation.
+The newly explicit relay approval below authorized the reviewed existing-job
+tag grant, with no Bicep source change. P04-T01 apply/readback Succeeded;
+targeted final-state review is complete with no defects. One normal final
+commit/push remains the terminal parent action, not a new RPI cycle.
 
 ### What You May Not Know
 
 The merged template has no temporary-job lifecycle role. Those operations
 belong to the setup operator, whose existing permission metadata already
 reports ["*"]. That capability is not approval for runtime execution. Existing
-initializer-job tag writes are a different scope/operation and remain
-unapproved. API-only activation cannot unblock the private publisher or prove
+initializer-job tag writes are a different scope/operation, now separately
+approved on 2026-10-17. Permission activation cannot unblock the private publisher or prove
 staff/browser/SQL/AI acceptance; #360 d/e remain UNMET.
 
 ### Unresolved Decisions or Blockers
 
-Relay activation requires separate exact approval; it does not block the API
-subset if the amendment passes independent source review and exact what-if.
-No source review means no live deployment of amended source.
+New exact approval is recorded; P04-T01 completed with two relay Creates,
+independently proven API no-op and successful separate readback. Private publication
+and genuine tenant/browser acceptance remain unproven.
 
 ## User Decisions and Requirements
 
@@ -43,8 +47,19 @@ No source review means no live deployment of amended source.
   lifecycle permissions in ama; no broader roles, tenant roles, spending,
   networking or deletion.
 * Flag existing initializer-job relay tag permission ambiguity; it is not
-  implicitly approved. API subset may use a small proper safely reviewed
+  implicitly approved by the first approval. API subset may use a small proper safely reviewed
   amendment, not improvised extension scope.
+* Subsequent owner boolean true, 2026-10-17: "allow the initializer identity
+  to read/write encrypted result tags on the existing initializer job only.
+  No plaintext secrets, job configuration rights, new resources or broader
+  scope. May I activate that reviewed grant too?" This applies only to the
+  reviewed relay definition and existing-job assignment, not any other grant.
+* Continue same branch/PR after verifying prior publication is complete; no
+  new full RPI cycle or fabricated first Review. Document a targeted final-state
+  review, one normal final commit/push, no gratuitous receipt-only commit.
+* Caller called the toggle includeResultTagRelay; the reviewed template's
+  actual parameter is `includeResultRelay`. Use its existing true value
+  explicitly, without renaming it or adding an unsupported parameter.
 * Target actual ca-cutover-test-demo-api and existing id-cutover-test-init.
 * No Graph/SQL/Key Vault secrets, payload inventory, restarts, browser
   acceptance, build, new infrastructure or old-stack modification.
@@ -54,7 +69,7 @@ No source review means no live deployment of amended source.
 
 ## Goals
 
-* Activate only the authorized API permission slice or document concrete
+* Activate only the authorized API and subsequently approved existing-job relay slices or document concrete
   authorization/permission failure, preserving all unrelated resources.
 * Make approval distinction and remaining live gates durable and auditable.
 
@@ -62,6 +77,7 @@ No source review means no live deployment of amended source.
 
 * In scope: conditional omission of relay resources, focused offline guards,
   independent source review, exact RBAC-only preview/apply/readback, evidence.
+  P04 additionally enables the existing reviewed relay with true; no source edit.
 * Non-goals: new actions/role designs, operator lifecycle provisioning,
   whole-repository cleanup, runtime execution, release or #360 acceptance.
 
@@ -72,6 +88,9 @@ No source review means no live deployment of amended source.
 * API restart role stays four exact actions, no wildcard, dataActions or
   settings/secrets access, assigned only at the selected demo API.
 * Deployed assignment must bind exact existing initializer principal and role.
+* Relay permits only Microsoft.Resources/tags/read and tags/write; assignment
+  only at existing job-cutover-test-init, same initializer principal.
+  No payload writes/tests, temporary jobs or workload execution.
 
 ## Non-Functional Requirements
 
@@ -91,9 +110,17 @@ No source review means no live deployment of amended source.
 * Existing Bicep lint/build, focused identity/compiled guard tests pass.
 * Fresh independent source review before any amended-template live deployment.
 * Exact API-only what-if and approved names/scope recorded before create.
+  For P04 require only the two exact relay Creates, independently proven API
+  role/assignment unchanged and empty guard benign; stop on any arbitrary
+  Modify, Delete, unexpected Create or out-of-scope row. Raw API assignment
+  Modify is allowed only when the entire before/after equals after resolving
+  the exact existing MI principal reference and canonical role URI for the
+  same GUID; principalType must be NoEffect and actual ServicePrincipal.
+  Separate actual API role/assignment reads must match original receipt.
 * Successful create requires exact definition/assignment readback; a genuine
   failure is recorded as failure without payload or a fabricated denial.
-* No tag role/assignment activated, old API untouched, no workload/network writes.
+* Original API-only slice activated no tag grant. P04 may activate only the
+  separately approved relay grant, with API/old stack unchanged and no workload/network writes.
 * Durable ordered phase evidence and factual KB/runbook updates; independent
   one post-implementation RPI Review and main PR publication; d/e still UNMET.
 
@@ -169,6 +196,54 @@ Completed: plan/details/changes reconciled; exact preview/live receipts and
 source-review evidence prepared, final combined 59 tests passed; parent owns
 one independent RPI Review and subsequent privacy-safe publication.
 
+<!-- rpi:phase id=P04 -->
+### [x] P04: Approved existing-job encrypted-tag relay delta
+
+Dependencies: original RPI/review/publication complete and new owner boolean true.
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Fresh exact preview, relay apply and independent readback
+
+Verify identity/job exact IDs, principal and metadata, and existing API grants.
+Use unchanged reviewed source with includeResultRelay=true, actual demo API.
+Preview must Create only relay definition 64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c
+and job child assignment 8e9a497e-3b90-50e2-a783-93e58755165b.
+Prove API state unchanged by separate exact reads, no arbitrary Modify accepted.
+The fresh preview reports one API assignment Modify with only the already
+known symbolic-principal/canonical-role-URI differences and principalType
+NoEffect; exact normalized before/after equality and independently fetched
+API role/assignment match against original receipt prove it unchanged.
+This is the explicitly permitted proven-API-unchanged case, not a general
+Modify bypass. Raw changes/delta retained, not mislabeled as NoChange.
+Recheck source/input hashes before same-template incremental create; read back
+two actions, ama-only assignableScopes, exact job scope/principal, retained API
+grant. No secret-bearing test tag or any job configuration write/run.
+
+Completed: staff-iam-360-relay-20261017 Succeeded, correlation
+53c578e1-bea0-4655-a9ff-ce574b995d6b. Separate ARM readback verifies exact
+tags/read + tags/write, sole ama assignableScope, existing-job assignment
+and initializer principal. Only new MI assignment is relay; original API
+role/assignment, AcrPull and observed API/job metadata unchanged.
+ARM logs label existing API/guard idempotent PUTs Create; not new grants.
+No payload/secret/runtime test or permission denial. Receipt source hashes
+match reviewed source; no source change or new standard source review needed.
+
+<!-- rpi:task id=P04-T02 -->
+#### [x] P04-T02: Durable delta evidence, targeted review and final publication handoff
+
+Update existing changes/runbook/evidence/index and append-only log; retain
+historical first approval/Review accurately. Targeted final-state review does
+not replace or falsely repeat original full RPI Review. Publish one normal
+privacy-safe commit on same PR; verify final remote/PR head without another
+receipt commit. Stop; no image publisher, human setup or child work.
+
+Evidence and inline targeted final-state review complete, no defects. Original
+independent full Review remains unchanged above the labelled P04 addendum.
+One final normal commit/push is the terminal parent publication action;
+head verification occurs outside the self-referential commit, no later
+receipt-only commit. This marker completes evidence/review/handoff, not an
+advance claim that the pending terminal command succeeded.
+
 ## Test Ownership and Change Budget
 
 * Canonical: infra/staff-initializer-rbac.bicep; existing test_identity_rbac.py
@@ -197,8 +272,9 @@ needed. Source-review and exact-preview gates remain mandatory.
 
 ## Follow-Up Items
 
-* Exact existing-job tags/read + tags/write approval: owner; outside current
-  approval. No deployment of that role/assignment.
+* Historical relay residual RV-001: resolved for permission authorization and
+  configuration by new explicit owner boolean true and verified P04-T01;
+  no claim of MI propagation, encrypted-content filtering or runtime acceptance.
 * Existing private publisher supplies immutable worker digest: publisher owner;
   no infrastructure, build, networking or spend in current task.
 * Genuine tenant/browser/role/SQL/AI acceptance, then later explicit retirement:
@@ -207,7 +283,8 @@ needed. Source-review and exact-preview gates remain mandatory.
 ## Handoff
 
 Implementation evidence: .copilot-tracking/changes/2026-10-17/activate-scoped-initializer-360-changes.md.
-All implementation tasks complete. Source-review/exact-preview/live readback
-gates passed. Parent next activates one independent full-task RPI Review,
-then publishes exact outcome/blocker and stops as requested. Required human
-tenant/runtime acceptance remains unperformed, not approved by these markers.
+Original P01-P03, full Review and publication complete. Current handoff:
+P04 exact preview/apply/readback, durable evidence and targeted review complete;
+publish one final commit/push then verify outside the receipt and stop.
+Original critique and Review
+remain historical, no new full loop. Human acceptance remains unperformed.
