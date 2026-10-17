@@ -101,3 +101,103 @@ no source correction, review replacement, merge or issue closure occurred.
 No active implementation markers remain. Actual named Legal consultation
 authority and dedicated let/renew workflow are external gaps. Both exact issue
 criteria remain partial; keep issue open.
+
+## Coordinator-Authorized Main Integration (2026-10-17)
+
+The coordinator explicitly authorized rebasing only this topic and publishing
+with an explicit expected-old-SHA lease. Before the operation the worktree was
+clean, on feat/consultation-record-controls-92, and both local/remote old head
+were `5411f0d41fc4425a5ab3cc9592f175a2f293bd82`. Freshly fetched main was
+`1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c`, containing hazard PR #388.
+Replayed source commit `b86f930c` as `0282b7ff` and receipt commit `5411f0d4`
+as `2e5732cf`; no main/other-worktree/PR #387 write or extra Review.
+
+### Conflict intent and source-boundary evidence
+
+Only manual conflict: docs/reference/log.md. Retained all upstream hazard
+correction/adverse-Review/integration entries, then appended the complete own
+consultation entry. Verified upstream log bytes are the exact prefix, with own
+old suffix intact. Component READMEs, KB index/synthesis and hazard test setup
+auto-merged; inspected their actual combined intent, not blind side selection.
+All upstream inspection routes and own #92 route remain present.
+
+Entire own src runtime/test/README added/removed bytes match before/after the
+rebase. SHA-256 of the ordered path plus added/removed line stream:
+`246a5f1a055c53bdf042ae188aa9db83b38144bfc40346f18071f7171cc0a128`.
+`git range-diff` shows only the KB log context changed in the source commit;
+the receipt commit is patch-identical. Original Review bytes retained:
+`e4a7543ac73f1e0fdaee61ca8c093acdb1cc4f6b9b2c433b69fcb7384391a59f`;
+original critique bytes retained:
+`dc6c9bca23f55e9f80cfc9ed231547ae668b0e72cee5b538ab5b6f25ec24ce17`.
+
+Own procurement/controller/new-test bytes are exact old-head matches.
+Upstream hazard, workflows, shared SQL, Store, finance, grants, signoffs, MSSQL
+harness, dataset/building fixture and scenario manifest bytes are exact new-base
+matches. Thus current-actor/scoped-hold/recovery hooks and prior-pending versus
+committed-audit semantics were not rewritten. The sole own hazard test delta
+remains the explicitly disclosed consultation-only legacy setup isolation.
+
+### Actual integration validation
+
+Existing local venv still imports editable src/core and src/api in this worktree.
+No dependency install or PYTHONPATH=mvp workaround was used.
+
+The first combined command omitted `src/api` from test-package search, so the
+new upstream test_hazard_api import failed (`tests.test_mvp` unavailable).
+Corrected command, not source:
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests \
+  .venv/bin/python -m unittest test_consultation_controls test_quality_procurement \
+  test_procurement_api test_buildings test_hazard_referral test_hazard_api \
+  test_resident_decisions test_stock_reconciliation test_finance_match_controls \
+  test_grant_lifecycle_controls test_finance_signoffs test_role_matrix \
+  test_scenario_manifest -q
+```
+
+Actual result: 348 executions, 300 passed, 48 explicit skips, no errors/failures.
+This includes actual SQLite and JSON consultation/hazard authority, rollback,
+recovery, shared stock/finance/grant/provider and HTTP checks. Missing-law-store
+warnings remain unknown, not successful legal validation. Opt-in backend/browser
+skips were not promoted to passes.
+
+Configured full core and API Ruff check/format/mypy passed: core 61 formatted
+files and 114 typed files, API 22 formatted files and 54 typed files.
+Six added relative documentation links/anchors and diff whitespace checked.
+Scenario manifest validated against the actual unchanged combined fixture hash;
+no provisional/proposed authority was promoted.
+
+No source/shared-persistence conflict or source adjustment occurred. For this
+documentation-only manual resolution, exact source parity plus combined
+SQLite/JSON/API smoke and static checks satisfy the coordinator's stated
+integration requirement. No new MSSQL container/run was required or claimed.
+The earlier 70 actual local SQL Server passes remain original-phase historical
+evidence, not new integration parity. No cloud, paid AI, browser or operational
+legal validation was performed.
+
+### Exact criteria and bounded coordinator follow-up
+
+Criterion 1 remains partial: a source/version-bound supplied-human decision
+recording seam exists and works fail-closed, but its registered manager recorder
+is not a verified authorized Legal decision-maker. No actual authorized Legal
+decision, contract-consultation capability or delegation is fabricated.
+
+Criterion 2 remains partial for an independent engineering reason: there is no
+genuine contract/framework/call-off let/renew transition or authoritative
+integration seam in this module. Ordinary work-order confirmation is not letting
+or renewal. Absence of a human approval is not the reason that software seam is
+absent and does not prohibit building isolated fail-closed mechanics.
+
+Bounded follow-up for the coordinator: separately plan a real package-linked
+contract let/renew transition or integration with the authoritative procurement
+operation, bind its explicit consultation guard to the exact contract/scope/source
+and current authorized human decision, and prove unknown/stale/unauthorized
+denials on fictional stores before any operational activation. Keep default deny
+while authority is unavailable; no new financial purchase API, real contract or
+portal. This is proposed remaining engineering, not secretly added current scope.
+
+Original full RPI phase artifacts and independent outcome remain intact.
+Coordinator final-head independent review is pending. PR #389 remains Refs #92
+with empty closingIssuesReferences; checks may be absent and are not declared
+green. Publish only this branch using expected old remote SHA
+`5411f0d41fc4425a5ab3cc9592f175a2f293bd82`; no merge or issue closure.

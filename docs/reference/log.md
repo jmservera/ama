@@ -6182,3 +6182,27 @@ metadata when the knowledge base was created.
   conflict/reload checks supply separate engineering evidence.
 * No real contract/order/spend, resident communication, operational legal
   activation, private data, Azure, paid AI, UI/WCAG acceptance or issue closure.
+
+## [2026-10-17] integration | Consultation controls on hazard main (#92)
+
+* Coordinator authorized own-topic rebase from PR #389 head
+  5411f0d41fc4425a5ab3cc9592f175a2f293bd82 onto freshly fetched main
+  1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c, including merged hazard #388.
+  Only manual conflict was this log: upstream exact prefix retained, followed
+  by all own entries. Both consultation/hazard KB routes and syntheses remain.
+* Entire own src added/removed bytes match across bases; original Review and
+  critique unchanged. Upstream hazard/workflows/shared SQL/Store/finance/grants/
+  signoffs, fixture/hash manifest and MSSQL harness are byte-unchanged. No
+  current-actor, scoped hold, recovery or pending/committed audit redesign.
+* Fresh combined JSON/SQLite/API/manifest validation: 348 executions, 300 passes,
+  48 explicit skips. Full component lint/format/types pass (114 core/54 API
+  typed files); six added relative links/anchors verified. Original 70 actual
+  SQL Server passes remain historical; no new MSSQL run for docs-only conflict.
+* Both exact criteria remain partial: no actual verified authorized Legal
+  decision and, separately, no genuine let/renew software seam. Isolated
+  fail-closed decision recording already exists. Proposed bounded genuine
+  workflow integration is coordinator follow-up, not secretly expanded scope.
+* Original independent verdict retained, no repeat full Review. Coordinator
+  final-head review/check gate remains pending, issue open. No main/other
+  worktree/PR #387 write, operational legal activation, real contracts/spend,
+  portal, Azure/paid AI, merge or issue closure.

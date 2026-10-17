@@ -44,12 +44,17 @@
       "decision": "Published main-targeted PR #389 with Refs #92",
       "status": "published",
       "evidence": "https://github.com/jmservera/ama/pull/389; source/review commit b86f930cbfa4b710a3445829332e3c44e50f2729; resume session 027d5c68-828d-47c9-8522-659504917170"
+    },
+    {
+      "decision": "Coordinator authorized own-topic rebase onto freshly fetched main and explicit expected-old-head lease push",
+      "status": "integration validated",
+      "evidence": "Old remote 5411f0d41fc4425a5ab3cc9592f175a2f293bd82; base 1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c; only manual log conflict; entire own src added/removed parity; fresh 348 executions/300 passes/48 skips and full core/API lint/format/types"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator/owner reviews main-targeted PR #389; issue #92 remains open pending named Legal authority and genuine let/renew seam. No child work started."
+    "action": "Coordinator independently reviews final integrated PR #389 head after the authorized explicit-old-SHA lease publication; checks/independent closure remain pending. No repeated full Review, merge, child work or issue closure."
   },
   "prioritized_follow_ups": [
     {
@@ -60,8 +65,8 @@
     },
     {
       "rank": 2,
-      "task": "Identify and integrate the genuine authoritative let/renew seam",
-      "rationale": "Required for exact workflow acceptance after authority contract; no invented purchase or contract API",
+      "task": "Separately plan a package-linked genuine let/renew transition or authoritative integration with exact consultation guard",
+      "rationale": "Missing workflow engineering is distinct from missing actual authorized Legal decision; isolated fail-closed fictional mechanics can be built without granting approval. Coordinator must bound follow-up; no purchase API, real contracts or portal.",
       "evidence": "RV-002; research C3-C8; actual work-order holds are not proxy acceptance"
     }
   ]

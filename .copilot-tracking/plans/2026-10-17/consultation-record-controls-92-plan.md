@@ -133,6 +133,13 @@ Original independent verdict: Revise. One critique, no repeat.
 
 * Named owner must approve the future exact Legal consultation authority contract.
 * Procurement integration must expose a genuine letting/renewal seam before exact acceptance.
+* Coordinator-bounded engineering proposal: separately plan the existing
+  package-linked genuine let/renew transition or authoritative integration,
+  bind it to exact contract/scope/source and current authorized human consultation
+  evidence, and test unknown/stale/unauthorized denials with fictional stores.
+  Missing human approval does not prohibit isolated fail-closed mechanics;
+  actual authorized Legal decision and missing workflow software are distinct
+  prerequisites. No financial purchase API, operational activation or portal.
 
 ## Handoff
 
@@ -141,3 +148,10 @@ Full P01/P02 implemented and reconciled. 321 targeted executions, 47 explicit sk
 70 actual SQL Server passes, 25 migration passes, configured core/API static checks
 and five individually killed guard mutations. Independent Review is next.
 No full issue closure claim.
+
+Coordinator continuation: authorized own-topic rebase onto main 1a05dfb8,
+docs-only manual log conflict, exact own src added/removed byte parity and
+upstream hazard/shared persistence unchanged. Fresh combined 348 executions:
+300 passes/48 explicit skips; configured core/API lint/format/types pass.
+Original Review retained, not repeated; coordinator final-head review pending.
+Original 70 MSSQL passes remain historical, not new integration validation.

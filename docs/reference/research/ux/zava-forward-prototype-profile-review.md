@@ -993,3 +993,20 @@ available and no dedicated contract/framework/call-off let/renew path exists.
 Actual order holds do not prove a nonexistent letting/renewal workflow.
 The next authority contract needs named human approval and scoped integration,
 not a role-agent endorsement or automatic interpretation of applicability.
+
+Coordinator-authorized PR #389 integration onto main 1a05dfb8, including
+merged hazard #388, had only an append-only-log manual conflict. Own src
+added/removed bytes and original independent Review are retained; upstream
+hazard/shared SQL recovery is byte-unchanged. Fresh combined JSON/SQLite/API/
+manifest validation ran 348 executions (300 passes, 48 explicit skips);
+configured core/API lint/format/types passed. Earlier 70 actual MSSQL passes
+remain historical, not a new integration run. Coordinator final-head review
+is still pending.
+
+The missing genuine contract let/renew seam is unfinished workflow engineering,
+distinct from the missing actual authorized human Legal decision. The supplied
+decision-recording seam is already implemented fail-closed; missing approval
+does not prohibit that mechanic. A bounded coordinator follow-up can separately
+plan the package-linked authoritative let/renew transition and exact consultation
+guard, with fictional unknown/stale/unauthorized tests and no live contracts,
+financial purchase API or portal. It is not current plan completion or acceptance.

@@ -83,3 +83,20 @@ unpatched HTTP methods and existing provider/stock/finance integration.
 Migration tests: 25 passes after restoring missing python-pptx/Pillow/PyYAML
 in the local venv. Five individual guard-removal mutants killed in memory.
 No real Legal approval, let/renew acceptance or browser/UI conformance claim.
+
+## Authorized Integration Evidence (2026-10-17)
+
+Original P01/P02 execution and one independent Review are not repeated.
+Coordinator-authorized rebase from original PR head 5411f0d4 onto main
+1a05dfb8 incorporates merged hazard #388. Only manual conflict was append-only
+KB log; upstream exact prefix and all own entries/routes retained.
+All own src added/removed bytes match across bases; upstream hazard/workflow/
+Store/SQL recovery hooks remain byte-unchanged.
+Fresh combined JSON/SQLite/API/domain/manifest run: 348 executions, 300 passes,
+48 explicit skips. Configured full core/API lint/format/types pass (114/54
+typed files). Six added documentation links/anchors verified.
+No new MSSQL run for docs-only conflict; original 70 SQL passes are historical.
+Exact Legal-record criterion remains partial without current verified authority;
+exact let/renew criterion separately remains missing genuine workflow engineering.
+Bounded proposed coordinator follow-up is in changes and plan, not active work.
+Coordinator independent final-head review remains pending.
