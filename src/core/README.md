@@ -853,6 +853,45 @@ recorded pre-build gate, not owner approval or full scenario acceptance;
 partial/missing needs still require an owner volume/scope decision before
 data-consuming build work starts.
 
+### Constructed-scenario manifest (#103)
+
+The same [manifest](../../docs/reference/research/retrofit-synthetic-data/scenario-manifest.json)
+v0.2.1 records the offline iteration's exact eleven profiles, nine workflows,
+required paths, safe endpoints/unknowns and partial IA provenance. All twenty
+full journeys are explicitly unavailable for this slice; existing API or
+navigation checks do not imply represented journeys or approved deferrals.
+The existing three-case `152-ia-v1` recipe is retained, with SHA-256 source
+bindings, exact role/profile defaults, ordered IDs/counts and null selection.
+No new resident/home fixture, registry or scale regeneration is introduced.
+
+`synthetic.scenario_manifest.validate_manifest(manifest, repository_root)`
+reads only the fixed public recipe/IA/test files and inventory metadata.
+It raises actionable `ValueError` on omissions, duplicates, substitutions,
+malformed metadata, stale hashes/defaults/inventory or unsupported status
+promotions. It never reads runtime `ZF_DATA` or private stock. This contract
+deliberately refuses represented/deferred against the current partial IA
+evidence; future evidence needs a reviewed manifest and validator update.
+Hashes detect reviewed-source drift, not arbitrary identifying content.
+The source inventory describes provisional product roles and PRD-proposed
+constructed journeys, not approved company roles or customer/owner decisions.
+The `inventory_authority` contract records that distinction and absent approval
+separately from coverage; missing, promoted or substituted authority metadata
+fails validation. This corrects v0.2.0's approval overclaim without establishing
+independent acceptance; final-head review remains required.
+
+From `src/core`, run the smallest combined contract suite:
+
+```bash
+PYTHONPATH=tests python3 -m unittest test_scenario_manifest test_needs_inventory -q
+```
+
+Core CI discovery runs these tests automatically. Coverage includes destructive
+metadata mutations and exact PRD/chat-perspective inventory cross-checks.
+The [criterion audit](../../docs/reference/research/retrofit-synthetic-data/README.md#constructed-scenario-manifest-acceptance-audit-2026-10-17-103)
+separates completed metadata acceptance from unknown operational owners,
+pending owner ratification, full journey execution and CON-007 application
+acceptance. No production workflow, API, browser or authority behavior changes.
+
 ### Generator coverage baseline (#167)
 
 From the repository root, inspect the public routing metadata without reading
@@ -965,7 +1004,7 @@ it replaces the overbroad `routing_validated` field. Issue existence is explicit
 accepted without proving it exists. No GitHub lookup or complete issue registry
 is used, and exit 0 is not evidence that child issues exist or are delivered.
 
-Inventory v1.2.0 has two covered and eleven partial needs, with no missing
+Inventory v1.3.0 has two covered and eleven partial needs, with no missing
 rows. A well-shaped route is not proof that the child exists or is delivered,
 that generated records meet every convention, or that the owner approved scope. In particular,
 the scale fixture's homes/events use a synthetic manifest label rather than

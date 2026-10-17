@@ -88,7 +88,7 @@
     },
     {
       "id": "DS-SCENARIO-MANIFEST",
-      "name": "Constructed-scenario inventory integration manifest (full #103 evidence deferred)",
+      "name": "Constructed-scenario iteration manifest v0.2.1 (#103 offline coverage; proposed full journeys unavailable)",
       "visibility": "public",
       "location": "docs/reference/research/retrofit-synthetic-data/scenario-manifest.json",
       "sources": [],

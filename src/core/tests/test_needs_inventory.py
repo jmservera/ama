@@ -7,6 +7,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from zava_forward.core.synthetic.scenario_manifest import validate_manifest
+
 ROOT = Path(__file__).resolve().parents[3]
 PACK = ROOT / "docs/reference/research/retrofit-synthetic-data"
 INVENTORY = json.loads((PACK / "needs-inventory.json").read_text())
@@ -126,13 +128,8 @@ class NeedsInventoryTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.assert_review_binding(manifest, INVENTORY)
 
-    def test_scenario_scope_keeps_full_application_evidence_deferred(self) -> None:
-        self.assertEqual(MANIFEST["status"], "partial-inventory-integration")
-        for key, count in (("profiles", 11), ("workflows", 9)):
-            entries = MANIFEST[key]
-            self.assertEqual(len(entries), count)
-            self.assertEqual(len({entry["id"] for entry in entries}), count)
-            self.assertTrue(all(entry["status"] == "deferred" for entry in entries))
+    def test_scenario_scope_keeps_full_application_evidence_unavailable(self) -> None:
+        validate_manifest(MANIFEST, ROOT)
         for path in MANIFEST["fixture_references"]:
             self.assertTrue((ROOT / path).is_file(), path)
 

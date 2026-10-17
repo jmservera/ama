@@ -1,7 +1,7 @@
 {
   "warning": "SYNTHETIC DATA. This inventory describes fictional data needs. It contains no personal data.",
-  "version": "1.2.0",
-  "review_date": "2026-10-15",
+  "version": "1.3.0",
+  "review_date": "2026-10-17",
   "status": "draft-awaiting-owner-review",
   "issue": "#166",
   "parent": "#165",
@@ -260,7 +260,7 @@
         "DS-OPS-MANIFEST",
         "DS-SCENARIO-MANIFEST"
       ],
-      "note": "scenario-manifest.json binds this iteration's inventory review. All eleven profile scripts and nine workflow execution checks remain explicitly deferred to #103; this integration seed is not full FR-035 acceptance.",
+      "note": "scenario-manifest.json v0.2.1 binds the public metadata review and existing tiny shared-IA fixture recipe. All eleven full profile paths and nine workflow journeys are unavailable in this offline iteration, not approved deferrals. The inventory uses provisional product roles and PRD-proposed constructed journeys, not customer/owner approval. #103 completes versioned coverage accountability and integrity enforcement, not full FR-035/application/human acceptance. No new data volume or consuming application build is authorized.",
       "gap_closure": {
         "kind": "child",
         "issues": [
