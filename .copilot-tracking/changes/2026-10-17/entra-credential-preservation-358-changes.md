@@ -133,3 +133,64 @@ coordination second. All phase artifacts are dated and committed.
 * 2026-10-17 P02 complete: seven killed mutations, final 313 infra tests pass, existing offline gates pass, docs and current plan reconciled.
 * 2026-10-17 Implement handoff: Ready for one Review; live acceptance remains UNMET.
 * 2026-10-17 P03/full loop complete: one Review Complete / Residual work; PR #374 published; final evidence reconciliation, then stop per owner.
+
+## Same-Task Integration Continuation (2026-10-17)
+
+Owner/coordinator explicitly authorized rebasing this run-owned topic onto
+latest origin/main, with topic-only force-with-lease publication. This is
+integration of the existing delivery, not a new Research/Plan/Implement/Review
+cycle. Owner supplied independent Pass for the reviewed original head
+09eaa4debb138e421f1abcc487c4198525696782; that is supplied evidence, not a new
+review performed here.
+
+Preflight: clean worktree, requested topic, open PR #374 at the expected head.
+Fetched origin/main at 8bdef3400f3d30349ffbd39238f32c8eb1617f02, containing
+merged #373 / Refs #182. Ran `git rebase origin/main` with explicit coordinator
+authorization. One conflict: docs/reference/log.md, the two additive end-of-file
+entries. Kept upstream's complete sensor fault/truth entry first, then appended
+the complete credential-preservation entry, deleting only conflict markers.
+docs/reference/README.md auto-merged both the upstream sensor routing update
+and this topic's credential routing row. All other files replayed cleanly.
+
+`git range-diff abaca788..09eaa4d 8bdef340..8198a88` showed three identical
+patches and only changed log context in the implementation patch. Rebased IDs:
+c64d925 -> 6b7cd2d, 40e6835 -> 0c8d075, 544f0ce -> bd9bfe8,
+09eaa4d -> 8198a88. Diff from the original head to rebased head is empty for
+infra/scripts, infra/tests, infra/README.md and cutover-evidence-pack.md.
+No implementation or guard changed during resolution. The upstream log is
+preserved byte-for-byte as the prefix; relative to origin/main the only KB
+changes are this topic's additive routing row and appended log entry.
+
+### Exact Rebased Validation
+
+Used the existing own venv at session files/venv-358, Python 3.12, with no
+dependency installation or global environment changes. Commands below use that
+venv's Python/Ruff/mypy. No Azure resource endpoint, secret or dataset was read.
+
+| Command / scope | Exact result |
+| --- | --- |
+| python -m unittest discover -s infra/tests -p test_setup_entra.py -q | 101 tests passed; includes seven behavioral mutation kills |
+| python -m unittest discover -s infra/tests -p test_initialize_api_auth.py -q | 17 tests passed |
+| REQUIRE_AZ_BICEP=1 python -m unittest discover -s infra/tests -q | 313 tests passed, no failures/errors/skips |
+| ruff check --isolated --select E9,F63,F7,F82,F401 infra/scripts/setup-entra.py infra/tests/test_setup_entra.py infra/scripts/initialize-api-auth.py | All checks passed |
+| mypy --follow-imports=silent --ignore-missing-imports infra/scripts/setup-entra.py infra/scripts/initialize-api-auth.py | Success: no issues found in 2 source files |
+| ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100, on the eight existing CI files listed below | All checks passed |
+| ruff format --isolated --line-length 100 --check, on the same eight files | 8 files already formatted |
+| python -m py_compile infra/scripts/setup-entra.py infra/tests/test_setup_entra.py infra/scripts/initialize-api-auth.py | Passed |
+| git diff --check; git diff --check origin/main...HEAD | Both passed |
+
+Eight existing CI lint/format targets: infra/tests/test_bicep_policy.py,
+infra/tests/test_deploy.py, infra/scripts/deploy.py, infra/scripts/pipeline.py,
+infra/tests/test_pipeline.py, infra/scripts/staff_azure.py,
+infra/scripts/staff-azure-worker.py, infra/tests/test_staff_azure.py.
+No whole-file setup reformat; its inherited style and exact reviewed code remain.
+Standalone Bicep build/lint was not rerun in this docs-only conflict resolution;
+the full required-Bicep regression suite ran, and earlier standalone results
+remain historical evidence rather than claimed fresh execution.
+
+PR body retains Refs #358, uses no issue auto-closing keyword, and states the
+authorized topic-only lease-protected rebase. Live non-production Key Vault
+preservation remains UNMET / Not run. No Azure/Graph/SQL writes, secret/private
+dataset reads, role/network changes, image builds/spending, main rewrite or merge.
+Same-task integration evidence is appended to the existing Review record; no
+new phase or independent Review is claimed. Stop after final topic publication.

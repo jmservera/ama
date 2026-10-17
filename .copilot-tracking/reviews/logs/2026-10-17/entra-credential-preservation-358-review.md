@@ -179,3 +179,40 @@ not select or start a child follow-up automatically.
 
 * 2026-10-17 Review opened once after committed P01/P02 and pre-Review reconciliation.
 * 2026-10-17 Review completed once: execution Complete, outcome Residual work; RV-001/RV-002 routed to owner/#360 coordinator, not another review loop.
+
+## Same-Task Integration Evidence (2026-10-17)
+
+Appended integration evidence, not a restarted Review or altered original
+verdict. Owner supplied independent Pass for original head 09eaa4d and explicitly
+authorized rebasing this run-owned topic onto latest origin/main. Fetched base:
+8bdef3400f3d30349ffbd39238f32c8eb1617f02, merged #373 / Refs #182.
+
+Rebase completed at 8198a88 before this evidence-only continuation commit.
+One conflict, docs/reference/log.md: retained both complete additive entries,
+upstream sensor fault/truth first, then credential preservation. KB index
+auto-merged the upstream sensor routing update and topic credential row.
+Range-diff shows only changed append context; setup source, tests, legacy CLI,
+infra runbook and cutover evidence are identical to the previously reviewed
+topic. No crypto/identity/network/job/CI guard changes.
+
+Fresh integration validation in the existing own venv:
+
+* Setup suite: 101 passed, including all seven behavioral mutation kills.
+* Legacy callback suite: 17 passed.
+* REQUIRE_AZ_BICEP=1 full infra suite: 313 passed, zero failures/errors/skips.
+* Scoped setup/test/legacy Ruff: all checks passed; setup/legacy mypy: no issues
+  in two source files; Python compilation passed.
+* Existing eight-file CI infra Ruff and format gates: all checks passed,
+  eight files already formatted.
+* Working/branch diff whitespace checks passed; exact commands and targets
+  recorded in this task's changes record.
+
+No new standalone Bicep build/lint or hosted-check pass is claimed. No live
+Azure/Graph/SQL command, secret/private-data read, role/network change,
+image build/spend or deployment. Actual existing-resource non-production
+Key Vault preservation remains UNMET. Original outcome Residual work and
+RV-001/RV-002 follow-up routing remain unchanged.
+
+Owner authorized topic-only --force-with-lease publication, not main rewrite,
+plain force or merge. PR body retains Refs #358 and avoids auto-closing keyword
+syntax. Stop after final pushed head as requested; no additional RPI loop.
