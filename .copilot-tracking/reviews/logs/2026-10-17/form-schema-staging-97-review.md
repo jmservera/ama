@@ -115,3 +115,29 @@ JSON cross-file crash atomicity remains an explicitly documented inherited bound
 * Rationale: The declared P01-P03 engineering slice is complete and supported by passing tests/checks; full approved-form/PRD acceptance remains unmet. A broad Conformant or issue-complete result would be inaccurate while RV-001 is open.
 * Severity summary: one Medium acceptance-evidence gap; no additional implementation defect recorded.
 * Closeout route: return this single record to the parent for authorized commit/push/Refs-only PR delivery, then stop per caller. No repeat Review or child task.
+
+## Integration evidence addendum 2026-10-17
+
+This is an evidence addendum to the existing Review, not another RPI Review or
+an independent-review result. Caller authorized rebasing the run-owned topic
+from `c021a3f` onto `origin/main` `0bdcb2f0` (#374 credentials, #376 queue;
+also includes #373 sensor faults). Rebase completed as `1e59021` / `81c9922`.
+Only additive KB index/log conflicts required resolution. All upstream log
+bytes and index rows were verified retained, with the #97 additions preserved.
+Topic runtime, staging tests and permission inventory remain identical to
+`c021a3f`; upstream credential/sensor/web behavior was not rewritten.
+
+Fresh integration evidence: core staging/document/store/SQL/queue selection
+**84 passed, zero skips (106.460s)**; API staging/role-inventory/role-matrix/auth/
+document-controls/task-queue selection **80 passed, zero skips (32.391s)**.
+These include all 17 focused form tests. Core Ruff/format/mypy passed
+(51 format targets / 104 mypy files); API equivalents passed (18 / 48);
+unchanged upstream app.js parsed successfully; whitespace and KB preservation
+checks passed. Exact commands and scope limits are in the existing changes
+record. Prior full-suite results are historical, not rerun claims.
+
+Independent reviewer `97fdbce9` was assigned the earlier `c021a3f` head; its
+result and final exact-head delta follow-up are not asserted here. That
+follow-up remains outstanding after the authorized force-with-lease push.
+RV-001 remains open: no actual approved template authority or version binding,
+no invented approval, no issue closure. Outcome remains **Residual work**.

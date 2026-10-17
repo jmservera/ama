@@ -59,3 +59,44 @@ Review must distinguish bounded code conformity from unmet approved-schema/full-
 ## Acceptance and remaining boundaries
 
 No actual approved template or form authority supplied. No fixture is approval. Unapproved collection does not satisfy approved preparation or full AC-046/047/053. No live extraction/model, SQL Server/Azure, human review, #98 workflow or submission.
+
+## Authorized integration continuation 2026-10-17
+
+Continued the same #97 / PR #377 loop at the caller's explicit request, not a
+new research/plan/implementation/review cycle. Starting topic was clean at
+`c021a3fd84636d255450959eef2089749f712d44`. Fetched and rebased the two run-owned
+commits onto `origin/main` at
+`0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134`, including #373, #374 and #376.
+The resulting source/handoff commits are `1e59021` / `81c9922`.
+
+Only conflicts were additive `docs/reference/README.md` and `log.md`. Kept
+all upstream credential and queue index rows and log entries, the upstream
+sensor entry, and the topic's form entry. Verified the current log begins
+with the entire upstream log byte-for-byte and every upstream index table
+row remains. No credential, sensor or web implementation was edited.
+
+`git range-diff abaca788..c021a3f origin/main..HEAD` showed only conflict-context
+changes, the already-upstream API README date and the preserved sensor-test
+typing override context; the handoff patch was identical. All five topic
+runtime files (forms, server, store, sqlstore, projection), both staging tests
+and the endpoint inventory remain byte-identical to the independently reviewed
+`c021a3f` content. Queue/store/permission tests were selected because upstream
+queue assets consume the existing server/store boundary; no browser behavior
+was rewritten. Existing editable pip environment was reused; no install needed.
+
+| Integration gate | Exact command (existing venv Python; component directory) | Actual result |
+| --- | --- | --- |
+| Core staging/permissions/store/queue | `PYTHONPATH=tests python -m unittest test_form_staging test_documents test_sqlstore test_sqlreads test_taskqueues test_sqlqueues test_queue_benchmark -q` | 84 tests passed, zero skips, 106.460s; includes all 15 form tests and synthetic 60,000-case queue checks |
+| API staging/permissions/auth/documents/queue | `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_form_staging_api test_role_endpoint_inventory test_role_matrix test_auth test_document_controls test_task_queue_api -q` | 80 tests passed, zero skips, 32.391s; includes both loopback form tests |
+| Core gates | `python -m ruff check . && python -m ruff format --check . && python -m mypy` | Passed; 51 format targets, 104 mypy files |
+| API gates | `python -m ruff check . && python -m ruff format --check . && python -m mypy` | Passed; 18 format targets, 48 mypy files |
+| Upstream JS parse | `node --check src/zava_forward/api/web/app.js` | Passed; no web edits |
+| Whitespace and preservation | `git diff --check`; upstream prefix/row and original runtime-byte comparisons | Passed |
+
+API tests emitted expected unavailable-law-store and explicit authentication
+denial diagnostics; no failed test or skipped check. Previous complete-suite
+counts above belong to the pre-integration source, not fresh full-suite runs.
+No live/private/cloud checks, browser run, infra test or approval was claimed.
+Reviewer `97fdbce9` is independently reviewing `c021a3f`; final exact-head
+delta follow-up remains required. Review outcome stays Residual work; real
+approved-template authority/binding remains unmet and #97 must stay open.
