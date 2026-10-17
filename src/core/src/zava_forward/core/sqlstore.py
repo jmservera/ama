@@ -610,7 +610,7 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance", "continuity", "buildings")
+    DOCS = ("procurement", "governance", "continuity", "buildings", "form_schemas")
 
     def _proc_sync(self):
         self._proc_snap = {}
@@ -619,6 +619,8 @@ class SqlStore(Store):
             self._proc_snap[key] = row[0] if row else None
             if row:
                 self.data[key] = json.loads(row[0])
+            else:
+                self.data.pop(key, None)
 
     def _proc_write(self):
         """Inside the save transaction: write changed documents, refusing if someone else changed one first."""
