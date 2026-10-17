@@ -5,10 +5,10 @@ ms.date: 2026-10-17
 ---
 
 Task: issue-360 / demo-setup-readiness-360. Mode: automatic.
-Status: Same-session independent-review correction active for PR #375.
+Status: Same-session independent-review correction published for PR #375.
 Reviewer verdict Revise on published662c11b is authoritative: unreferenced,
 untagged app-backed eligible credential bypasses Azure Key Vault guard.
-Preserve main51db4fa8 and #374; reproduce then fix/test/push normally.
+Main51db4fa8/#374 preserved; red/fix/test/normal-push complete at23db069.
 No new Research/Plan/Review loop; independent verification required before merge.
 
 ## Executive Summary
@@ -146,7 +146,7 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
 * [x] P05-T02 Guard the actual selected reuse candidate and reuse the same
   selection path in pre-reconciliation read-only preflight. Reject without
   rotation/migration; preserve unrelated secrets and #374 safeguards.
-* [ ] P05-T03 Run unchanged setup/legacy, focused/full infra and existing
+* [x] P05-T03 Run unchanged setup/legacy, focused/full infra and existing
   lint/format/type gates; record external Revise and pending verification,
   precise IAM approval boundary, then normal same-branch commit/push and stop.
 

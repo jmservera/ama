@@ -142,3 +142,7 @@ Final focused41/setup101/full infra333/no skips and existing lint/format/type/
 pip gates passed. Upstream inventory/digest/readback/legacy helpers and tests
 remain exact. No independent acceptance inferred: external Revise requires
 reviewer verification after the normal same-topic publication.
+
+P05-T01/T02/T03 complete: source23db069a32618678a04bd8a0fa58d3d9ed723e99
+normally pushed and remote-verified; subsequent completion-only head reported
+exactly in PR #375. Stopped pending independent verification, not merge-ready.

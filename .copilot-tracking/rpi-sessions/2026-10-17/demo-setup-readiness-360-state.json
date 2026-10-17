@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/demo-setup-readiness-360-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/demo-setup-readiness-360-plan.md",
@@ -62,15 +62,15 @@
     },
     {
       "decision": "P05 independent finding reproduced and correction validated; independent Revise not overridden",
-      "status": "validated-awaiting-publication",
-      "evidence": "11 red subcases before fix; selected-candidate guard and exact read-only reuse preflight. Focused41/setup101/full infra333 zero skips, lint/format/type/static/pip passed. Protected upstream helpers/tests/legacy/sensor unchanged. Existing Review appended with missed-finding disposition, no second Review."
+      "status": "complete-pending-independent-verification",
+      "evidence": "11 red subcases before fix; selected-candidate guard and exact read-only reuse preflight. Focused41/setup101/full infra333 zero skips, lint/format/type/static/pip passed. Protected upstream helpers/tests/legacy/sensor unchanged. Source correction23db069a32618678a04bd8a0fa58d3d9ed723e99 ordinary-pushed and verified against remote; final record-only head reported in PR375. Existing Review appended with missed-finding disposition, no second Review."
     }
   ],
   "blockers": [
     {
       "id": "independent-review-revise",
       "summary": "Independent review of662c11b reproduces untagged/unreferenced eligible app-backed reuse bypassing Azure Key Vault rule. Blocking defect; prior internal no-defect conclusion incomplete.",
-      "resolution": "P05 correction implemented and validated; same-topic publication then independent reviewer must verify before merge. External Revise remains authoritative until independent verification."
+      "resolution": "P05 correction implemented, validated and normally published at23db069a32618678a04bd8a0fa58d3d9ed723e99; independent reviewer must verify before merge. External Revise remains authoritative until independent verification."
     },
     {
       "id": "private-publisher",
@@ -90,7 +90,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P05 source correction and final gates complete; commit/push same branch normally, record exact published head and stop pending independent verification. No merge or live resource action."
+    "action": "Stopped after P05 correction/test/ordinary publication; independent reviewer verifies23db069 source correction at exact final PR375 head before any merge. Caller-bounded P05-T01/T02/T03 complete; no new loop. #360 d/e remain open, no merge or live resource action."
   },
   "prioritized_follow_ups": [
     {

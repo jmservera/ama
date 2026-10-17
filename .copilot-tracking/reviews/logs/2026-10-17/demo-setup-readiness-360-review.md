@@ -225,6 +225,13 @@ Actual Docker socket denied; no observed ACR Tasks/import IAM denial. Existing
 deny-all403 responses are neither ready welcome/health nor live login. #360 d/e
 remain UNMET and open.
 
+Correction source/evidence head
+23db069a32618678a04bd8a0fa58d3d9ed723e99 was normally pushed and verified.
+The subsequent completion-only artifact head is reported exactly in PR #375;
+it does not change tested source. Both this finding disposition and that
+final head require independent verification before merge, not a repeated
+internal Review or self-issued acceptance.
+
 ## Routed Findings
 
 | Finding | Destination | Owner/next action | Reason |

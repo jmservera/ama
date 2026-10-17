@@ -8,6 +8,21 @@
   "base": "main",
   "observed_state": "OPEN",
   "initial_published_head": "4b50561cff0a0f1b6598bad3451e962f66e4f890",
+  "independent_review_correction": {
+    "reviewed_defective_head": "662c11bdb60e19879c0bf2d905e39dfab82727e6",
+    "parent_head": "b847509fc9fe47284de30b3575e8e2e604cf07f6",
+    "verified_pushed_correction_head": "23db069a32618678a04bd8a0fa58d3d9ed723e99",
+    "pre_fix_failing_subcases": 11,
+    "focused_tests": 41,
+    "unchanged_upstream_setup_tests": 101,
+    "infra_tests": {"run": 333, "skipped": 0},
+    "quality": "Existing11-file Ruff/format, setup F-only/compile, strict check-container/pipeline, scoped three-module mypy, pip/diff passed",
+    "review_gate": "Independent Revise remains pending independent correction verification before merge; no second Review",
+    "publication": "Ordinary topic push verified by git ls-remote; following evidence-only head resolved in PR375 final comment",
+    "live_resource_writes": "None",
+    "iam": "Actions [*] without exclusions; explicit narrow-grant authorization outstanding, not demonstrated IAM inability",
+    "session_status": "stopped"
+  },
   "same_session_continuation": {
     "base": "51db4fa80a29528f5a3d19420b1c7e1597d27213",
     "authorized_old_lease": "662c11bdb60e19879c0bf2d905e39dfab82727e6",

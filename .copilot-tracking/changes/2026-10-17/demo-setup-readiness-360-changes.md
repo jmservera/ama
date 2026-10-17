@@ -394,3 +394,14 @@ authorization-outstanding, not permission-blocked; image actual Docker socket
 denied, Tasks/import unattempted, no demonstrated IAM denial. Existing four403s
 are deny-all evidence only; #360 stays open with d/e UNMET. Publication next:
 privacy-safe conventional commit, ordinary topic push, exact final SHA in PR.
+
+### P05 completion and verified publication
+
+P05-T01/T02/T03 complete. Privacy-safe source/evidence commit
+23db069a32618678a04bd8a0fa58d3d9ed723e99 normally pushed; git ls-remote
+confirmed exact topic head. Base remains51db4fa8, no rebase/force push.
+Following commit changes only completion artifacts; exact final head is
+reported in PR #375 and verified against its headRefOid/remote ref.
+Review gate remains independent Revise, not overridden by local success.
+Stop after final evidence push; no merge, issue closure, live resource action,
+new Research/Plan/Review, child task or waiting indefinitely for human login.

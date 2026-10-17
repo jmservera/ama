@@ -4688,3 +4688,8 @@ metadata when the knowledge base was created.
   unattempted pending explicit narrow-grant authorization. Docker socket
   denial actual, ACR Tasks/import not attempted or proven IAM-denied.
   No live writes or ready/login claim; restricted403 only, #360 d/e remain open.
+
+* P05-T01/T02/T03 completion persisted after ordinary topic push of
+  23db069a32618678a04bd8a0fa58d3d9ed723e99 and exact remote-ref readback.
+  Final completion-only head reported in PR #375; stopped pending independent
+  verification, no self-acceptance, extra loop, merge or issue closure.
