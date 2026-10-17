@@ -145,3 +145,28 @@ no invented approval, no issue closure. Outcome remains **Residual work**.
 Direct delivery to reviewer ID `97fdbce9` after push returned `No agent found`
 in this session. Final exact-head follow-up is therefore pending coordinator/
 PR routing; no independent approval or follow-up completion is claimed.
+
+## Independent REVISE and correction cycle ONE, 2026-10-17
+
+Caller subsequently relayed reviewer `97fdbce9` **REVISE** on `c021a3f`.
+The independent finding invalidates the earlier durable-lineage assessment
+for pending/unscanned sources: scan saves clear SQL touched-case tracking,
+allowing success audit without a persisted candidate batch. Integration did
+not alter the defective source.
+
+Implemented the requested bounded correction: reacquire/touch the current
+case after scanning finishes and before append, using the existing `_case`
+contract. New real SQLite and authenticated HTTP tests failed before this
+change for both pending and absent scan metadata. Whole-batch equality now
+holds through repeated candidate/detail reads and SQL reopen. Final-save
+failure and actual cross-process row-version conflict tests also verify
+rollback/no durable success audit. Exact commands and fail-before output
+summary are recorded in the existing changes artifact.
+
+Fresh correction gates: **85 core / 81 API passed, zero skips**, including
+17 core form tests and 3 real HTTP form methods; both component
+Ruff/format/mypy checks passed (core 51/104 targets, API 18/48).
+No new full RPI Review was invoked. This author evidence does **not** overturn
+independent **REVISE** or establish closure: final exact-head independent
+reverification is still required. RV-001 actual approved-template authority
+remains unmet; #98 workflow was not delivered; no approval was fabricated.

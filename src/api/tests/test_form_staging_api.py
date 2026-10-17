@@ -14,6 +14,7 @@ from unittest.mock import patch
 
 from test_form_staging import batch, schema
 from tests.test_mvp import DATA
+from zava_forward.core import forms
 from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api.server import App, make_handler
@@ -92,6 +93,39 @@ class FormApi(unittest.TestCase):
             self.assertEqual(before, after)
             self.assertNotIn("form_staging", after)
             self.assertTrue(self.store.verify_audit())
+
+    def test_rescanned_sql_sources_persist_after_repeated_http_reads_and_reopen(self) -> None:
+        self.assertEqual(self.call("pam", "/api/form-schemas", schema())[0], 201)
+        actor = self.store.staff["pam@example.test"]
+        path = "/api/cases/ZF-1/form-candidates"
+        for status in ("pending", "missing"):
+            with self.subTest(scan=status):
+                doc = self.store.add_document(actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D")
+                with self.store.lock:
+                    source = next(
+                        d for d in self.store._case("ZF-1")["documents"] if d["id"] == doc["id"]
+                    )
+                    if status == "missing":
+                        source.pop("scan")
+                    else:
+                        source["scan"]["status"] = status
+                    self.store.save()
+                code, result = self.call("pam", path, batch(doc["id"]))
+                self.assertEqual(code, 201, result)
+                self.assertEqual(result["candidates"][0]["raw_value"], "D")
+                self.assertEqual(result["processing"]["parser_version"], "test-1")
+                for _ in range(2):
+                    code, rows = self.call("pam", path)
+                    self.assertEqual(code, 200, rows)
+                    self.assertEqual(
+                        next(r for r in rows["batches"] if r["id"] == result["id"]), result
+                    )
+                    self.assertNotIn("form_staging", self.call("pam", "/api/cases/ZF-1")[1])
+                reopened = SqlStore("nonexistent-seed-is-not-read", self.store.db_path)
+                self.addCleanup(reopened.db.close)
+                rows = forms.list_candidates(reopened, actor, "ZF-1")
+                self.assertEqual(next(r for r in rows if r["id"] == result["id"]), result)
+                self.assertTrue(reopened.verify_audit())
 
     def test_auth_source_scope_strict_keys_and_safe_service_errors(self) -> None:
         with self.assertRaises(urllib.error.HTTPError) as caught:

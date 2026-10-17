@@ -5,6 +5,7 @@ import hashlib
 import json
 import tempfile
 import unittest
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -200,6 +201,75 @@ class FormStaging(unittest.TestCase):
             audit = json.dumps(list(store.audit_entries()))
             self.assertNotIn("raw_value", audit)
             self.assertTrue(store.verify_audit())
+
+    def test_rescanned_sources_retain_full_batch_after_reads_and_sql_reopen(self) -> None:
+        store = self.stores[1]
+        forms.register_schema(store, self.actor, schema())
+        for status in ("pending", "missing"):
+            with self.subTest(scan=status):
+                doc = store.add_document(
+                    self.actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D\nEPC E"
+                )
+                with store.lock:
+                    source = next(
+                        d for d in store._case("ZF-1")["documents"] if d["id"] == doc["id"]
+                    )
+                    if status == "missing":
+                        source.pop("scan")
+                    else:
+                        source["scan"]["status"] = status
+                    store.save()
+                result = forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"]))
+                self.assertEqual(result["candidates"][0]["raw_value"], "D")
+                self.assertEqual(result["candidates"][0]["locator"], dict(start=4, end=5))
+                self.assertEqual(
+                    result["processing"],
+                    dict(batch(doc["id"])["processing"], assertion_status="Supplied, unverified"),
+                )
+                for current in (store, self.reopen(store)):
+                    for _ in range(2):
+                        rows = forms.list_candidates(current, self.actor, "ZF-1")
+                        self.assertEqual(next(r for r in rows if r["id"] == result["id"]), result)
+                        self.assertNotIn("form_staging", current.detail("ZF-1", self.actor))
+                    self.assertTrue(current.verify_audit())
+
+    def test_rescan_final_save_failure_and_conflict_do_not_commit_batch_or_success_audit(
+        self,
+    ) -> None:
+        store = self.stores[1]
+        forms.register_schema(store, self.actor, schema())
+        for failure in ("save", "conflict"):
+            with self.subTest(failure=failure):
+                doc = store.add_document(self.actor, "ZF-1", "synthetic.txt", "EPC", b"EPC D")
+                with store.lock:
+                    source = next(
+                        d for d in store._case("ZF-1")["documents"] if d["id"] == doc["id"]
+                    )
+                    source["scan"]["status"] = "pending"
+                    store.save()
+                original = store.save
+                calls = 0
+
+                def save(failure: str = failure, original: Callable[[], None] = original) -> None:
+                    nonlocal calls
+                    calls += 1
+                    if calls == 2:
+                        if failure == "save":
+                            raise OSError("synthetic post-scan save failure")
+                        other = self.reopen(store)
+                        other.add_document(self.actor, "ZF-1", "other.txt", "EPC", b"other")
+                    original()
+
+                with patch.object(store, "save", side_effect=save):
+                    with self.assertRaises(OSError if failure == "save" else ConflictError):
+                        forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"]))
+                self.assertEqual(calls, 2)
+                for current in (store, self.reopen(store)):
+                    self.assertEqual(forms.list_candidates(current, self.actor, "ZF-1"), [])
+                    self.assertNotIn(
+                        "form_candidates_staged", json.dumps(list(current.audit_entries()))
+                    )
+                    self.assertTrue(current.verify_audit())
 
     def test_unicode_spans_and_quoted_multiline_csv_are_reproducible(self) -> None:
         for store in self.stores:

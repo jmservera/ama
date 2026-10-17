@@ -107,3 +107,49 @@ to the caller-supplied reviewer ID `97fdbce9`. The agent tool returned
 replacement or new review loop was launched. Final exact-head follow-up must
 be routed through PR #377/coordinator; it remains a real unresolved review
 handoff, not a claimed reviewer approval.
+
+## Correction cycle ONE: first-use scan persistence, 2026-10-17
+
+Caller relayed independent reviewer `97fdbce9` verdict **REVISE** on `c021a3f`:
+first-use scanning of pending/missing scan metadata saves the SQL case, clearing
+its touched set before staging appends the batch. The success audit could
+persist without the candidate body. Rebase was already complete at correction
+baseline `387747a`; the defective runtime was unchanged by integration.
+
+Added regressions before touching production. Actual fail-before commands
+(existing venv, component directory):
+
+* Core: `PYTHONPATH=tests python -m unittest test_form_staging.FormStaging.test_rescanned_sources_retain_full_batch_after_reads_and_sql_reopen test_form_staging.FormStaging.test_rescan_final_save_failure_and_conflict_do_not_commit_batch_or_success_audit -v`.
+  Exit 1: two missing-batch errors (pending and absent scan), failed rollback
+  assertion and missing expected cross-process ConflictError; 2 methods, 0.817s.
+* API: `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_form_staging_api.FormApi.test_rescanned_sql_sources_persist_after_repeated_http_reads_and_reopen -v`.
+  Exit 1: both pending/absent scan returned authenticated POST 201, then failed
+  full-batch lookup during repeated actual GET/detail reads; 1 method, 1.106s.
+
+Root correction: immediately before append, reacquire the current case via
+existing `store._case(case_id)` after scanning/validation have finished. This
+reenlists the current case in SQL optimistic save/discard tracking, with no
+new transaction helper, permission bypass or source authority change.
+Regression assertions compare the entire saved batch (raw value, locator,
+source/hash/version and supplied processing lineage) across repeated reads,
+generic detail and a new SQLite store. Fault regression fails the final save
+after successful scan; cross-process mutation tests the current case version.
+Both verify no retained candidate or success audit on refusal. The independently
+durable scan is not falsely rolled back or counted as staging success.
+
+| Correction validation | Exact command (component directory, owned venv Python) | Actual result |
+| --- | --- | --- |
+| Focused core | `PYTHONPATH=tests python -m unittest test_form_staging -q` | 17 passed, zero skips, 5.466s |
+| Core relevant suite | `PYTHONPATH=tests python -m unittest test_form_staging test_documents test_sqlstore test_sqlreads test_taskqueues test_sqlqueues -q` | 85 passed, zero skips, 55.996s |
+| API relevant suite | `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_form_staging_api test_role_endpoint_inventory test_role_matrix test_auth test_document_controls test_task_queue_api -q` | 81 passed, zero skips, 27.996s; includes 3 real HTTP form methods |
+| Core static | `python -m ruff check . && python -m ruff format --check . && python -m mypy` | Passed, 51 format targets / 104 mypy files |
+| API static | `python -m ruff check . && python -m ruff format --check . && python -m mypy` | Passed, 18 format targets / 48 mypy files |
+
+Initial correction lint found two test closure loop bindings; explicitly bound
+the callback defaults and reran core suite/gates successfully. Existing expected
+law-store/auth refusal diagnostics remain in API tests. No full-suite rerun,
+live SQL Server/cloud/private/paid inference or actual approval claimed.
+Independent **REVISE** is not superseded: reviewer must reverify correction on
+the final pushed head. Actual approved-template authority remains RV-001
+unmet; registry prerequisite exists, #98 remains undelivered. Same loop, one
+correction cycle, no scope expansion or issue closure.

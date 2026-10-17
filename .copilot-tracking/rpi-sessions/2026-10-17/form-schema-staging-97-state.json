@@ -34,7 +34,16 @@
     "validation": "84 core and 80 API tests passed, zero skips; both Ruff/format/mypy gates and upstream JS parse passed",
     "independent_review": "97fdbce9 direct handoff returned No agent found; final exact-head delta review remains pending coordinator/PR routing, no approval inferred"
   },
-  "next_action": {"phase": "Follow-up", "action": "Stop after authorized integration evidence commit and force-with-lease delivery to PR #377. Independent final-head delta review and actual template authority remain unresolved; no new loop, merge or automatic acceptance."},
+  "correction_cycle_one": {
+    "baseline": "387747a24e12cd7c49ebb684fcd54ec470398cb3",
+    "independent_verdict": "97fdbce9 REVISE at c021a3f, relayed by caller",
+    "finding": "Pending/missing scan save clears SQL touched cases; staging audit could persist without batch",
+    "fix": "Reacquire current case via existing _case immediately before append",
+    "fail_before": "Core pending/missing durability and rollback/conflict regressions failed; authenticated HTTP pending/missing POST201 then GET durability failed",
+    "validation": "85 core / 81 API passed, zero skips; both component Ruff/format/mypy passed",
+    "closure": "Independent final-head reverification required; REVISE not superseded by author"
+  },
+  "next_action": {"phase": "Follow-up", "action": "Push correction cycle ONE and evidence to PR #377, route exact-head independent reverification, then stop. Actual template authority remains unmet; no new loop, merge or automatic acceptance."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Actual schema authority and exact-version binding", "rationale": "Direct blocker to honest approved-form acceptance; obtain evidence rather than fabricate approval", "evidence": "RV-001; FR-038/AC-046"},
     {"rank": 2, "task": "Existing #98 field review, validation, packs and staleness", "rationale": "Named downstream story consumes the new immutable schema and candidate evidence", "evidence": "Issue #98; research scope assessment"},

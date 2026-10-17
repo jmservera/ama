@@ -454,6 +454,8 @@ def stage_candidates(store: FormStore, user: Record, case_id: str, body: object)
             recorded_by=actor["email"],
             recorded_at=datetime.now(UTC).isoformat(),
         )
+        # A first-use scan may save and clear the SQL transaction's touched cases.
+        case = store._case(case_id)
         existed = "form_staging" in case
         previous = case.get("form_staging", [])
 
