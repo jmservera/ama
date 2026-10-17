@@ -5701,3 +5701,29 @@ metadata when the knowledge base was created.
   call, new IAM/Azure/public access or private dataset use. Full PRD lease/
   scope/age-band governance, direct human/WCAG acceptance and independent
   final-head coordinator closure remain unestablished.
+
+## [2026-10-17] integration | #88 onto merged quality PR387
+
+* Coordinator authorized own-topic rebase from exact remote
+  a9a5f554151336f6e617fbcee35033234813c6e5 onto fetched main
+  3f544fb9cda2c51b219db2cc8368c7525bbe0c86. Sole textual conflict
+  was this log's append insertion: complete upstream byte prefix and all own
+  entries retained; all index routes and both component contracts survive.
+* Exact issue88 added/removed src patch lines across fourteen files are
+  unchanged. Auto-merged server preserves separate resident committed 409 and
+  quality committed 503 handling; resident tests retain upstream replacement
+  refusal. Quality/assistant current-active selector and evidence-version
+  staleness, hazard/stock and finance/grant hooks remain intact.
+* All seven original RPI artifacts, including original Review/critique/state,
+  are byte-identical. No new full Review or source correction. Original Review
+  Complete / Residual work remains; RV-001 wider governance routing belongs
+  to planning parent/repository owner at next #81 backlog triage, not an
+  unproven remedy criterion or fabricated Legal/Housing/Complaints approval.
+* Fresh combined installed-src tests: 499 run, 445 pass, 54 existing opt-in/
+  JSON-only skips. Actual isolated loopback MSSQL: 38 run, 37 pass, one
+  SQLite-only trace skip; original assertions retained. Actual integrated
+  resident browser journey and configured core/API Ruff/format/mypy pass.
+  First SQL transport-harness errors and their correction are recorded honestly
+  in separate integration evidence, not hidden as application source fixes.
+* No other worktree/private data, Azure writes, paid AI, resident messages,
+  independent coordinator Pass, merge, issue closure or full PRD/WCAG acceptance.

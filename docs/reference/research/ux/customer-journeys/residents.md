@@ -143,3 +143,28 @@ Those are not established by issue #88's three criteria. Age bands remain Unknow
 no Legal position, service clock, tenant contact, real approval, Azure or paid AI
 was invented. Independent final-head/coordinator acceptance and direct human/
 screen-reader/WCAG evaluation remain distinct gates.
+
+### Authorized merged-quality integration (2026-10-17)
+
+Issue #88 / PR #392 was rebased onto main
+3f544fb9cda2c51b219db2cc8368c7525bbe0c86 including quality PR #387.
+Only the append-only KB log conflicted; all upstream and resident history/routes
+remain. Source added/removed-line parity is exact across fourteen src files;
+resident web bytes and original RPI artifacts/Review/critique are unchanged.
+Shared server retains resident committed 409 and quality committed 503 outcomes;
+quality active-record selection and evidence-version staleness remain upstream.
+
+Fresh integrated tests: 499 run, 445 pass, 54 existing opt-in/JSON-only skips;
+actual owned loopback MSSQL: 38 run, 37 pass, one SQLite trace-only skip.
+This includes resident mixed closure/restart, quality replacement/identity,
+hazard-at-commit, finance/grant current actor/stale approval and pre-/post-COMMIT
+recovery/no-replay. Actual integrated resident Chromium journey also passed.
+Configured core/API Ruff/format/mypy passed. Initial external SQL transport
+harness errors were corrected without application changes; they are not
+represented as a successful first attempt.
+
+All three bounded criteria retain source/test proof, not merely completed plan
+markers. Wider lease/scope/age-band governance remains separately routed to the
+planning parent/repository owner for the next #81 backlog triage with
+Legal/Housing/Complaints approval. No independent final-head Pass, full PRD,
+human, operational, screen-reader or WCAG acceptance is claimed.
