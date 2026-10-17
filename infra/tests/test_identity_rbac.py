@@ -109,6 +109,9 @@ class RoleMatrixTests(unittest.TestCase):
         self.assertIn("scope: relay", relay_assignment)
         self.assertIn("roleDefinitionId: relayRole.id", relay_assignment)
         self.assertNotIn("Microsoft.App/jobs/write", relay_block)
+        self.assertIn("param includeResultRelay bool = true", text)
+        self.assertIn("= if (includeResultRelay) {", relay_block)
+        self.assertIn("= if (includeResultRelay) {", relay_assignment)
 
     def test_iot_hub_grants_receiver_only_to_api(self) -> None:
         self.assertEqual([(r["identity"], r["roleId"]) for r in self.rows("iotHub")],

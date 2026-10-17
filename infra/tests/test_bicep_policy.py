@@ -179,6 +179,91 @@ class BicepPolicyTests(unittest.TestCase):
         if os.environ.get("REQUIRE_AZ_BICEP") == "1":
             self.assertIsNotNone(shutil.which("az"), "az is required (REQUIRE_AZ_BICEP=1)")
 
+    def assert_staff_initializer_relay_selection(self, template: dict) -> None:
+        self.assertEqual(template["parameters"]["includeResultRelay"]["defaultValue"], True)
+        items = list(resources(template))
+        self.assertEqual(len(items), 4)
+        self.assertEqual(
+            {item["type"] for item in items},
+            {"Microsoft.Authorization/roleDefinitions", "Microsoft.Authorization/roleAssignments"},
+        )
+        matrix = json.loads((INFRA / "role-assignments.json").read_text())["customRoles"]
+        for role in matrix:
+            definition = next(
+                item
+                for item in items
+                if item["type"] == "Microsoft.Authorization/roleDefinitions"
+                and role["name"] in item["name"]
+            )
+            assignment = next(
+                item
+                for item in items
+                if item["type"] == "Microsoft.Authorization/roleAssignments"
+                and role["name"] in item["properties"]["roleDefinitionId"]
+            )
+            self.assertEqual(
+                definition["properties"]["permissions"],
+                [
+                    {
+                        "actions": role["actions"],
+                        "notActions": [],
+                        "dataActions": [],
+                        "notDataActions": [],
+                    }
+                ],
+            )
+            self.assertEqual(definition["properties"]["assignableScopes"], ["[resourceGroup().id]"])
+            self.assertEqual(
+                assignment["properties"]["principalId"],
+                "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', "
+                "parameters('initializerIdentityName')), '2023-01-31').principalId]",
+            )
+            self.assertEqual(assignment["properties"]["principalType"], "ServicePrincipal")
+            if role["name"] == "staff-initializer-result-tags":
+                self.assertEqual(definition.get("condition"), "[parameters('includeResultRelay')]")
+                self.assertEqual(assignment.get("condition"), "[parameters('includeResultRelay')]")
+                self.assertEqual(
+                    assignment["scope"],
+                    "[resourceId('Microsoft.App/jobs', format('job-{0}', "
+                    "substring(parameters('initializerIdentityName'), 3)))]",
+                )
+            else:
+                self.assertNotIn("condition", definition)
+                self.assertNotIn("condition", assignment)
+                self.assertEqual(
+                    assignment["scope"],
+                    "[resourceId('Microsoft.App/containerApps', parameters('apiName'))]",
+                )
+        for enabled, count in ((True, 4), (False, 2)):
+            active = [
+                item
+                for item in items
+                if evaluate(item.get("condition", True), {"includeResultRelay": enabled}, {})
+            ]
+            self.assertEqual(len(active), count)
+            if not enabled:
+                self.assertTrue(
+                    all("staff-initializer-api-restart" in item["name"] for item in active)
+                )
+
+    def test_staff_initializer_compiled_relay_selection(self) -> None:
+        self.assert_staff_initializer_relay_selection(compile_bicep("staff-initializer-rbac.bicep"))
+
+    def test_staff_initializer_relay_condition_mutations_are_rejected(self) -> None:
+        template = compile_bicep("staff-initializer-rbac.bicep")
+        for index, item in enumerate(template["resources"]):
+            if "condition" not in item:
+                continue
+            with self.subTest(resource=item["type"]):
+                mutated = deepcopy(template)
+                del mutated["resources"][index]["condition"]
+                self.assert_mutation_rejected(
+                    self.assert_staff_initializer_relay_selection, mutated
+                )
+        mutated = deepcopy(template)
+        mutated["parameters"]["includeResultRelay"]["defaultValue"] = False
+        self.assert_mutation_rejected(self.assert_staff_initializer_relay_selection, mutated)
+
     def test_every_deployed_resource_waits_for_the_guard(self) -> None:
         guard_id = "[resourceId('Microsoft.Resources/deployments', 'parameter-guard')]"
         items = self.main["resources"]

@@ -4801,3 +4801,98 @@ metadata when the knowledge base was created.
   Actual approved schema authority is a separate human prerequisite, not
   a provenance implementation blocker. No cloud/private/model calls,
   unrelated workflow change, original-case or memory edit.
+
+## [2026-10-17] delivery | #360 scoped initializer API-only IAM activation
+
+* Started clean requested topic/worktree at latest main e065ecd2 after merged
+  #375. Activated ordered RPI Research, Plan and Implement; one independent
+  plan critique Pass and separate independent predeployment source review Pass.
+  Final full-task Review is recorded separately with publication evidence.
+* Exact owner boolean approval covers reviewed API read/restart and temporary
+  staff-job lifecycle in ama, not tags/read + tags/write on the existing
+  initializer job. Added includeResultRelay boolean default true, conditioning
+  both relay resources; explicit false safely omits that unapproved grant.
+  No new permission action, role design or operator lifecycle role created.
+* Exact API-only preview: two Creates/94 same-group Ignore; deployment
+  staff-iam-360-api-20261017 Succeeded. Existing init principal
+  3830883a-f4af-44f8-bff8-8859b78fc2f8 receives only four reviewed API actions
+  at ca-cutover-test-demo-api. Role/assignment/actions/scope read back; AcrPull
+  preserved; existing-job tag role/assignment absent, no old-API assignment.
+* Azure canonicalized the role definition URI to subscription-level while
+  retaining ama-only assignableScopes and exact API assignment. Initial
+  verification assertions were corrected for that URI and expected identity
+  Read, without redeployment, broad fallback or fabricated permission denial.
+* Existing identity11 and compiled guard48 tests passed, plus Bicep build/lint
+  and scoped Ruff/format. Restored declared dependencies only after missing
+  import/tool failures. Updated runbook/evidence/index; historical #375 and
+  prior log entries retained.
+* No Graph/SQL/vault secret read, restart/job execution/browser acceptance,
+  image build, network change/new infrastructure/spend/deletion. Demo deny-all
+  and both APIs' observed metadata unchanged; ama/old stack preserved.
+  Private publisher and exact relay approval remain blocked; #360 d/e UNMET.
+
+* Subsequent independent full-task RPI Review completed once: no implementation
+  defects; bounded verdict Conformant with justified divergence, three Medium
+  wider-delivery residuals for relay approval, publisher and human acceptance.
+  Parent retains overall Residual work/d/e UNMET; publication follows without
+  another Review, runtime execution, child delivery loop or merge.
+
+* Published main [PR #379](https://github.com/jmservera/ama/pull/379) on
+  chore/activate-scoped-initializer-360; implementation/phase evidence
+  4bf12775ca4025a15cd2c196547fc047375fd6e1 matched local/origin/PR head.
+  Privacy-safe author/committer and required trailer verified. Session stops
+  at exact documented outcome per owner; evidence-only completion follows.
+  No merge/forcepush/issue closure or remote CI acceptance claim.
+
+## [2026-10-17] delivery | #360 explicitly approved existing-job relay delta
+
+* Prior publication verified complete: clean local/origin/OPEN main PR #379
+  at38e6abf. New owner boolean true permits only initializer MI encrypted-result
+  tags/read and tags/write on existing job-cutover-test-init. No plaintext,
+  job-config/new-workload/broader-scope approval. Updated scoped plan/details
+  as P04; original full RPI/Review remain historical, no new full loop.
+* Reviewed source unchanged; actual toggle includeResultRelay=true (caller
+  named includeResultTagRelay, not an existing parameter). Fresh preview
+  Succeeded with two exact relay Creates and95 same-group Ignore/NoChange.
+  Raw API assignment Modify retained: exact principal reference/canonical
+  role URI only, principalType NoEffect. Whole before/after normalization and
+  independent actual prior-role/assignment match prove API unchanged, not
+  an arbitrary Modify allowance or falsely clean raw two-row preview.
+* staff-iam-360-relay-20261017 Succeeded, correlation
+  53c578e1-bea0-4655-a9ff-ce574b995d6b. Separate ARM readback verified role
+  64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c, assignment
+  8e9a497e-3b90-50e2-a783-93e58755165b, principal
+  3830883a-f4af-44f8-bff8-8859b78fc2f8, two tag actions only, ama-only
+  assignableScopes and exact existing-job assignment scope. Only new MI
+  assignment is relay; existing API role/assignment and AcrPull exact.
+* ARM labels idempotent API/empty-guard PUT operations Create; no new effective
+  API grant or workload resource. Existing job identity/environment and both
+  APIs' observed environment/revision/ingress metadata unchanged; deny-all retained.
+  Prior RV-001 resolved for permission configuration only; RBAC is not an
+  encrypted-content filter. No tag payload read/write/test or runtime proof.
+* No secret/Graph/SQL reads/writes, temporary job/config/run, restart, image
+  build, network/new infrastructure/spend/deletion or browser acceptance.
+  Private publisher and genuine tenant/runtime acceptance remain unproven;
+  #360 d/e UNMET. Targeted final-state review completed inline with no defects,
+  explicitly labelled after the original independent full Review. One normal
+  final topic commit/push is the terminal publication action, verified
+  externally without an extra receipt commit; no merge or unrelated work.
+
+## [2026-10-17] delivery | #360 authorized integration after merged #97/#78
+
+* Rebased existing PR #379 topic onto latest main
+  bf98977ed6b30176b1f2d0a0a1e91a80d273a742 by explicit owner direction.
+  Both complete append-only KB histories and every upstream/topic index row
+  retained. Core/API trees exactly main; scoped Bicep option, guard,
+  runbook/evidence pack and actual approved API/relay receipts exacta51fef2.
+* Owner reports independent Pass on bounded a51fef2, not the new final head.
+  Rebased candidate00cafd0 passed59 scoped identity/compiled-Bicep tests,
+  scoped template/guard build+lint and preservation/link/diff checks.
+  No unrelated suite or live Azure operation/new grant; no acceptance inferred.
+* One integration-receipt commit and authorized exact-lease topic-only push;
+  final head/run reported externally, no follow-up receipt commits. Ordinary
+  existing Source projects CI may be dispatched on topic if automatic checks
+  are absent. Missing CI is not Pass; paid rubric not dispatched.
+* Final exact-head independent review still required. Private publisher and
+  genuine tenant/browser/runtime evidence remain unproven, #360 d/e UNMET;
+  owner live approvals, ama/old-stack retention unchanged. No merge/autoclose.

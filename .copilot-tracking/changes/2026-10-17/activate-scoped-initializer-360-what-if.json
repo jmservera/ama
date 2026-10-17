@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-17",
+  "issue": 360,
+  "deployment": "staff-iam-360-api-20261017",
+  "resource_group": "ama",
+  "mode": "Incremental",
+  "parameters": {
+    "apiName": "ca-cutover-test-demo-api",
+    "initializerIdentityName": "id-cutover-test-init",
+    "includeResultRelay": false
+  },
+  "source_sha256": {
+    "infra/staff-initializer-rbac.bicep": "bf2a63b667d238bb4ec54bf6a36dea6bf4c9e64d90ae6996a718cdfba1f7caf8",
+    "infra/modules/staff-initializer-guard.bicep": "f3293e29f7fd28816060545fd0f5725c8527c110ea0f114fdf392dd0110945a0"
+  },
+  "identity": {
+    "clientId": "8fd2cb23-cc1c-4ee5-ab8d-4b6fdff4564e",
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init",
+    "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8"
+  },
+  "what_if": {
+    "status": "Succeeded",
+    "changes": [
+      {
+        "after": {
+          "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/providers/Microsoft.Authorization/roleAssignments/3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+          "name": "3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+          "properties": {
+            "principalId": "[reference('/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init', '2023-01-31').principalId]",
+            "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755"
+          },
+          "type": "Microsoft.Authorization/roleAssignments"
+        },
+        "changeType": "Create",
+        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/providers/Microsoft.Authorization/roleAssignments/3a7e0803-3997-5cbe-af9c-c9776b37f3a7"
+      },
+      {
+        "after": {
+          "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+          "name": "0d8c4586-d46e-514c-9c19-680d9f068755",
+          "properties": {
+            "assignableScopes": [
+              "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama"
+            ],
+            "description": "Read serving revisions/replicas and restart the scoped API; no settings, secrets or Graph access.",
+            "permissions": [
+              {
+                "actions": [
+                  "Microsoft.App/containerApps/read",
+                  "Microsoft.App/containerApps/revisions/read",
+                  "Microsoft.App/containerApps/revisions/replicas/read",
+                  "Microsoft.App/containerApps/revisions/restart/action"
+                ]
+              }
+            ],
+            "roleName": "Staff initializer API restart (ama)",
+            "type": "CustomRole"
+          },
+          "type": "Microsoft.Authorization/roleDefinitions"
+        },
+        "changeType": "Create",
+        "resourceId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755"
+      }
+    ],
+    "same_root_ignore_count": 94
+  },
+  "gate": "PASS: exactly the reviewed API role definition and API-scoped assignment Creates",
+  "unapproved_relay_excluded": true,
+  "applied": false
+}
