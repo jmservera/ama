@@ -1,0 +1,147 @@
+{
+  "task": "initializer-acr-cli-360",
+  "started_utc": "2026-10-17T17:57:20.568602+00:00",
+  "source_commit": "bab4bf3a2ac9ec030d78d27063d1390f800c5c7c",
+  "retained_base": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+  "tag": "staff-360-bab4bf3a2ac9-20261017T175718Z",
+  "source_files_unchanged_from_commit": true,
+  "initial_cli_path_attempt": {
+    "command": [
+      "az",
+      "acr",
+      "build",
+      "-g",
+      "ama",
+      "-r",
+      "crcutovertestrzsrg",
+      "-f",
+      "cutover-proof.Dockerfile",
+      "--build-arg",
+      "API_IMAGE=crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+      "-t",
+      "zava-forward-cutover-proof:staff-360-bab4bf3a2ac9-20261017T175653Z",
+      "--timeout",
+      "600",
+      "--no-logs",
+      "infra",
+      "-o",
+      "json"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "ERROR: Unable to find 'cutover-proof.Dockerfile'.\n",
+    "ended_utc": "2026-10-17T17:56:57.817857+00:00"
+  },
+  "context": "infra/",
+  "context_files_sha256": {
+    "entra/app-registration.json": "89ec73e1c61fb2be755143b99903e684177a990f0430e4600fba9c0f28b22d4a",
+    "cutover-proof.Dockerfile": "354921ce8c052b117a3293907e68691aa5af3a6eb5a38b46c957237ca5631aaa",
+    "scripts/staff_roster.py": "3fab826f794e84f12742f0fa6a8ff5dbe74f179b4906eb5fbd1d4d014fb7b231",
+    "scripts/private-cutover-proof.py": "caf77de7f2e1bc191703910d39f025aa812abeb6a26d3f043f56b8e401bf70d9",
+    "scripts/staff-azure-worker.py": "7b6883feb1f7f038e5e6fcaf5ceb5404d5868f5d44592ad129b4ab512ab0ee97",
+    "scripts/staff_azure.py": "5bd9abfc157ef843ea402a85aae76fd341d3ad060e3e28fd4fe91961128ff0b1",
+    "scripts/initialize-workbench-staff.py": "b7ee124fe0691492c99f0afa3ce9cfc2d744e49e9035f07ffba403aa4d0ffaa9"
+  },
+  "context_manifest_sha256": "0ed4d8a56a0c69d85fc7bd8e4d6c52c4fc0d0891cbef8bdcf2821ae78dfe27f4",
+  "archive_occurrences": {
+    "entra/app-registration.json": 1,
+    "cutover-proof.Dockerfile": 2,
+    "scripts/staff_roster.py": 1,
+    "scripts/private-cutover-proof.py": 1,
+    "scripts/staff-azure-worker.py": 1,
+    "scripts/staff_azure.py": 1,
+    "scripts/initialize-workbench-staff.py": 1
+  },
+  "archive_note": "CLI packager appends Dockerfile a second time with identical bytes; seven unique regular file paths",
+  "dockerignore_sha256": "0e969d2f509efa1d679a3b9c90636cc067d5062072ba6f1e3ac724e074c3ab2c",
+  "hosted_attempt": {
+    "command": [
+      "az",
+      "acr",
+      "build",
+      "-g",
+      "ama",
+      "-r",
+      "crcutovertestrzsrg",
+      "-f",
+      "infra/cutover-proof.Dockerfile",
+      "--build-arg",
+      "API_IMAGE=crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+      "-t",
+      "zava-forward-cutover-proof:staff-360-bab4bf3a2ac9-20261017T175718Z",
+      "--timeout",
+      "600",
+      "--no-logs",
+      "infra",
+      "-o",
+      "json"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "WARNING: Packing source code into tar to upload...\nWARNING: Uploading archived source code from '/tmp/build_archive_8160ecc1b5414961a7f385f92578e03e.tar.gz'...\nWARNING: Sending context (20.157 KiB) to registry: crcutovertestrzsrg...\nWARNING: Queued a build with ID: dbc\nWARNING: Waiting for an agent...\nERROR: The run with ID 'dbc' finished with unsuccessful status 'RunStatus.FAILED'. Show run details by 'az acr task show-run -r crcutovertestrzsrg --run-id dbc'. Show run logs by 'az acr task logs -r crcutovertestrzsrg --run-id dbc'.\n",
+    "ended_utc": "2026-10-17T17:57:53.738883+00:00"
+  },
+  "job": {
+    "name": "job-cutover-test-init",
+    "before_sha256": "fbc548ae52b49563b3e6c3c8d0c0cd2ecec8b1d04f8f4c109d9fff77b1c5908e",
+    "after_sha256": "fbc548ae52b49563b3e6c3c8d0c0cd2ecec8b1d04f8f4c109d9fff77b1c5908e",
+    "read_visible_equal": true,
+    "projection": "identity, tags, location and all properties except provisioningState/eventStreamEndpoint; no values retained",
+    "image_before": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+    "image_after": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+    "updated": false,
+    "started": false
+  },
+  "registry": {
+    "publicNetworkAccess_before": "Disabled",
+    "publicNetworkAccess_after": "Disabled",
+    "bypass_before": "None",
+    "bypass_after": "None"
+  },
+  "finished_utc": "2026-10-17T17:57:56.298255+00:00",
+  "hosted_run": {
+    "agentConfiguration": {
+      "cpu": 2
+    },
+    "finishTime": "2026-10-17T17:57:29.852767+00:00",
+    "outputImages": null,
+    "runErrorMessage": "failed during run, err: exit status 1",
+    "runId": "dbc",
+    "runType": "QuickRun",
+    "startTime": "2026-10-17T17:57:22.946003+00:00",
+    "status": "Failed"
+  },
+  "hosted_run_logs": "2026/10/17 17:57:23 Downloading source code...\n2026/10/17 17:57:23 Finished downloading source code\n2026/10/17 17:57:24 Using acb_vol_e9df3baf-07bc-4e49-a070-864789f0bac7 as the home volume\n2026/10/17 17:57:24 Setting up Docker configuration...\n2026/10/17 17:57:24 Successfully set up Docker configuration\n2026/10/17 17:57:24 Logging in to registry: crcutovertestrzsrg.azurecr.io\nfailed to login, ran out of retries: failed to set docker credentials: Error response from daemon: login attempt to https://crcutovertestrzsrg.azurecr.io/v2/ failed with status: 403 Forbidden\n: exit status 1\nRun ID: dbc failed after 6s. Error: failed during run, err: exit status 1\n",
+  "failure_stage": "Hosted agent registry login HTTP403 after successful source upload/download; build not reached, no output image",
+  "local_build": {
+    "exit_code": 1,
+    "timeout_seconds": 180,
+    "stage": "Retained base manifest HEAD",
+    "error": "403 Forbidden; denied: client with IP '4.225.218.160' is not allowed access",
+    "image_created": false,
+    "image_smoke": "Unavailable"
+  },
+  "azure_modifications": [
+    "Authorized source upload and failed existing-service QuickRun dbc only; no workload/resource configuration changes"
+  ],
+  "localhost_source_smoke": {
+    "result": "Passed",
+    "results": {
+      "healthz": 200,
+      "/": 200,
+      "/api/me": 401,
+      "/api/stats": 401
+    },
+    "fixture_cases": 1,
+    "fixture_staff": 0,
+    "AI": "off",
+    "sql": "not configured",
+    "tenant": "fictional local-only UUID",
+    "image_smoke": false,
+    "boundary": "Installed current source, not retained-base or hosted image; no sign-in or Azure runtime proof"
+  },
+  "live_acceptance": {
+    "d": "UNMET",
+    "e": "UNMET"
+  }
+}

@@ -5184,3 +5184,30 @@ metadata when the knowledge base was created.
   local SQL Server procurement domain/API 31 pass and local browser validation
   pass. Counts overlap. Configured lint/format/types, strict browser harness,
   JS/compilation/diff checks pass. No test/validator weakened or skip added.
+
+## [2026-10-17] delivery | #360 renewed actual az acr initializer publication
+
+* Corrected the prior private-publisher-only inference with an actual hosted
+  CLI experiment on retained source bab4bf3 (#381). Read-only run dbb proves
+  historical ordinary cpu2 success on 2026-10-16, not current publication.
+* Normal Docker retained-base build failed on manifest HEAD firewall403.
+  The actual corrected hosted command uploaded 20.157 KiB, queued ordinary
+  cpu2 QuickRun dbc and downloaded source; agent registry login then failed
+  `/v2/`403. Failed run, no output image/build/push/digest/pin. Initial
+  Dockerfile-path error was local, corrected and preserved separately.
+* Exact native CLI archive contains seven unique intended regular paths, all
+  hashes equal committed source, plus identical duplicate Dockerfile member.
+  Retained base, upstream pinned/security-upgrade source and #375/#379/#381
+  implementation unchanged. Full read-visible job projection matches before/
+  after; registry public Disabled/bypass None preserved.
+* Actual current-source localhost fixture smoke: welcome/health200, anonymous
+  protected endpoints401, one fictional case/zero staff, AI off/no SQL. This
+  is NOT actual image, tenant sign-in or deployed-runtime proof. Focused
+  infra suite83passed/0skips after worktree-local pip dependency recovery.
+* Updated [current runbook](../../infra/README.md#renewed-initializer-acr-cli-attempt-2026-10-17-360),
+  [evidence pack](../architecture/cutover-evidence-pack.md#renewed-initializer-acr-cli-attempt-2026-10-17)
+  and index without rewriting earlier observations/logs. Dated ordered RPI
+  research/plan/details/critique/changes/receipt/review records accompany PR.
+  Only authorized source upload/failed QuickRun, no workload/network/IAM/
+  infrastructure/secret/private-data/Graph/SQL/restart/jobstart/retirement.
+  Exact hosted-digest image validation remains blocked; #360 d/e UNMET.

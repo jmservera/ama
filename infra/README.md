@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: how-to
 ---
 
@@ -1838,6 +1838,12 @@ supersedes the remaining tag-grant approval boundary without widening scope.
 
 ### Normal-Docker Private Publication Follow-Up (2026-10-17, #360)
 
+This section records the earlier #381 attempt, not the current CLI result.
+Its private-publisher-only prerequisite is superseded by the
+[renewed hosted CLI attempt](#renewed-initializer-acr-cli-attempt-2026-10-17-360)
+below. The private-IP timeout observations remain historical facts; they do
+not establish that hosted ACR Tasks cannot be scheduled.
+
 Following merged #375 and #379, the owner authorized publication to the
 existing private registry and an image-only pin of the existing initializer,
 conditional on validation. Normal Docker now works: Server 29.9.0 and docker
@@ -1928,6 +1934,68 @@ restart, new roles/networking/spend or retirement occurred. #360 d/e remain
 **UNMET**; the image blocker does not revoke the already activated #379 grants
 or authorize weakening privacy. Full RPI evidence records this blocked outcome,
 not successful image delivery.
+
+### Renewed Initializer ACR CLI Attempt (2026-10-17, #360)
+
+Refs #360, retained source `bab4bf3a2ac9ec030d78d27063d1390f800c5c7c`
+(merged #381). **An actual hosted build was attempted. Publication remains
+blocked at hosted-agent registry login, not source upload.** No new image or
+initializer pin was produced.
+
+Read-only `az acr task show-run --run-id dbb` confirms the earlier
+2026-10-16T13:53 successful ordinary cpu2 build published
+`zava-forward-cutover-proof:proof-20261016` at digest
+`sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72`.
+The five preceding/latest historical runs succeeded and no pools exist.
+That retrospective success is distinct from the current failed run below;
+neither absent pools nor VM private-endpoint failure alone proves Tasks
+unavailable.
+
+| Current command or gate | Actual result on 2026-10-17 |
+| --- | --- |
+| Local retained-base Docker build, 180-second bound | Exit 1 at retained API manifest HEAD: `403 Forbidden`, client IP not allowed; no image, so actual image smoke unavailable |
+| Native CLI archive preflight | Seven unique allowed regular paths, all bytes equal committed source; manifest SHA256 `0ed4d8a56a0c69d85fc7bd8e4d6c52c4fc0d0891cbef8bdcf2821ae78dfe27f4`. CLI appends an identical second Dockerfile entry, not an eighth unique file |
+| Corrected `az acr build`, service timeout 600 seconds/client bound 720 | Uploaded 20.157 KiB, queued QuickRun `dbc`, ordinary cpu2 |
+| Hosted logs | Source download and Docker configuration succeeded; registry login failed with `login attempt to https://crcutovertestrzsrg.azurecr.io/v2/ failed with status: 403 Forbidden` |
+| Run metadata | Failed, 17:57:22.946003 to 17:57:29.852767 UTC; `outputImages: null`; build/base pull/push not reached |
+| Actual localhost current-source smoke | One fictional case, no staff, AI off, no SQL; `/` and `/healthz` 200, anonymous `/api/me` and `/api/stats` 401. This is installed-source proof, NOT retained-base/hosted-image or genuine sign-in proof |
+| Existing job readback | Full read-visible before/after projection equal; old proof digest, Manual initialize args, identity, environment, resources, settings and registry preserved; no update/start |
+| Registry readback | Public access Disabled and bypass None before/after; no networking or IAM change |
+
+The corrected current command, run from the repository root, was:
+
+```bash
+timeout 720 az acr build -g ama -r crcutovertestrzsrg \
+  -f infra/cutover-proof.Dockerfile \
+  --build-arg API_IMAGE=crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d \
+  -t zava-forward-cutover-proof:staff-360-bab4bf3a2ac9-20261017T175718Z \
+  --timeout 600 --no-logs infra -o json
+az acr task show-run -r crcutovertestrzsrg --run-id dbc
+az acr task logs -r crcutovertestrzsrg --run-id dbc
+```
+
+The first `-f cutover-proof.Dockerfile infra` invocation failed locally with
+`Unable to find 'cutover-proof.Dockerfile'`, before upload. CLI 2.91.0 requires
+the root-relative file path in this invocation despite its context-relative
+help wording. It was corrected and retried, not counted as a service denial.
+Do not retry the recorded unique tag as though it were a successful image.
+
+The failure establishes current hosted-agent registry login403, not its exact
+network-policy versus identity cause. It does not establish an RBAC denial,
+require a paid pool, or authorize opening the registry. Source upload succeeded;
+no secret-bearing build arguments, debug output or SAS URLs were retained.
+Only the authorized source upload/failed QuickRun occurred. No workload,
+backing-resource, IAM, network, job run, API restart, tenant, SQL, Graph or
+retirement operation was performed; existing #379 grants remain unchanged.
+
+Before any future pin, join the submitted seven-file hash manifest, source
+commit, retained base, run ID and exact output digest. Pull that digest and
+verify local RepoDigest, all six copied payload hashes, UID/import/help and
+localhost smoke on that same image. A separate local build or source-only
+smoke cannot satisfy this gate. Preserve the entire existing job and prove
+non-image settings unchanged; never start its historical initialize command.
+Current image gates remain blocked. Genuine operator/browser/roles/SQL/AI
+acceptance and #360 d/e remain **UNMET**; old API/edge and group `ama` stay.
 
 ### Scoped initializer IAM activation (2026-10-17, #360)
 
