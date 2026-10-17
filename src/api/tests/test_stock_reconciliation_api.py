@@ -226,6 +226,30 @@ class StockApi(unittest.TestCase):
         )
         self.assertEqual(self.call("sam", "/api/cases/ZF-2")[1]["stock_reconciliation"], [])
 
+    def test_revoked_sql_identity_cannot_use_an_existing_http_session(self) -> None:
+        path = "/api/cases/ZF-1"
+        self.assertEqual(
+            self.call(
+                "rex2", path + "/technical", dict(action="design_submit", note="Constructed design")
+            )[0],
+            200,
+        )
+        self.assertEqual(self.call("rex", path)[0], 200)
+        before = self.store.detail("ZF-1")["technical"]
+        original = self.store.staff["rex@example.test"]
+        self.store.db.execute(
+            "UPDATE staff SET body=? WHERE email=?",
+            (json.dumps(dict(original, role="Contractor")), original["email"]),
+        )
+        self.assertEqual(
+            self.call("rex", path + "/technical", dict(action="signoff_give", type="design"))[0],
+            403,
+        )
+        self.assertEqual(self.store.detail("ZF-1")["technical"], before)
+        self.assertFalse(
+            any(e["action"] == "technical_signoff_give" for e in self.store.audit_entries())
+        )
+
     @unittest.skipUnless(
         os.environ.get("ZF_STOCK_BROWSER") == "1",
         "Opt-in rendered check requires local Playwright browser.",

@@ -532,6 +532,7 @@ class SqlStore(Store):
                 validate_change(self)
                 from .bulk_edits import validate_sql
                 validate_sql(self)
+                stock.validate_sql(self)
                 self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1

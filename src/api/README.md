@@ -651,6 +651,18 @@ home field is automatically selected/updated. Source-authority, resolution
 rules and eligibility stay Unknown/owner-approval-needed, not an approved
 operational reconciliation policy.
 
+Stock and technical writes also recheck the current SQL staff identity/role/OID,
+even for an existing authenticated session whose cached staff record is stale.
+Changed or removed identities receive 403; their old session cannot retain
+approval authority. The writer transaction revalidates before commit. A known
+precommit SQL failure leaves neither a new case version nor its success audit;
+the original error propagates, with recovery uncertainty explicitly reported.
+No new endpoint, role grant or sign-off competence attestation is introduced.
+Review status, 2026-10-17: that failed-decision guarantee remains **Not accepted**.
+Early/persistent recovery-read failures can still leak a failed success audit
+or replace the original error during outer cleanup. Passing normal-recovery
+tests below do not resolve this blocking defect; this continuation is incomplete.
+
 The case view displays both values, source metadata and query owner, with
 authority/resolution/eligibility explicitly `Unknown`. A different case shows
 its own comparisons, never a carried-over rationale. Existing technical forms
@@ -678,6 +690,21 @@ checks rendered values, source metadata, owner, Unknown labels, heading/keyboard
 access and navigation to another case. The default unit suite skips that
 opt-in browser method. This is engineering evidence, not direct human
 accessibility/competence acceptance, live inference, SQL Server or Azure proof.
+
+The selected changed-path local SQL Server parity suite is separate from
+browser evidence. In a throwaway local SQL Server database only, using the
+existing `ZF_TEST_MSSQL=1` and localhost `ZF_SQL_*` settings:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_mssqlstore.MssqlStockDecisions -v
+```
+
+Eight tests passed on 2026-10-17, reusing canonical constructed core cases for
+comparison/disposition and four sign-off success, current actor denial,
+second-connection authority change, transactional case/audit failures,
+reopen/no delayed audit and context cleanup. This is local SQL Server adapter
+evidence, not Azure/Entra acceptance or approved professional/source authority.
 Source-authority/resolution/eligibility rules, operational delegation and
 real-platform acceptance remain unmet; nomination/tenure routing is separate.
 

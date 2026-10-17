@@ -7,6 +7,38 @@ ms.topic: reference
 
 ## Outcome and Evidence Boundary
 
+### Assessment reconciliation engineering continuation (2026-10-17, #84)
+
+Post-implementation Review: **Not accepted, blocking recovery defect**. An
+independent early/persistent discard-read failure probe found that outer lock
+cleanup can still commit a failed success audit or replace the original
+operation error. The normal-recovery evidence below remains valid but is not
+sufficient acceptance. No correction or repeated Review occurred in this task;
+any visibility PR is incomplete and #84 remains open.
+
+Current constructed checks independently preserve both stock assertions and
+query owner, four separate versioned technical sign-offs, affected-only
+reassessment, and explicit Unknown support alongside non-flag ranking factors.
+These mechanisms were already delivered; the continuation does not redesign
+their UI or change the deterministic ranking policy.
+
+The [core decision boundary](../../../../src/core/README.md#stock-comparisons-and-human-technical-sign-offs-84)
+now prevents cached revoked/removed/changed-OID identities from making stock
+or technical decisions. SQL rechecks inside its existing writer transaction
+and discards failed staged decisions/audits, preventing a later success-shaped
+audit for an unchanged design. The
+[API contract](../../../../src/api/README.md#stock-reconciliation-api-84)
+retains human-only decisions even for stale authenticated sessions.
+
+Eight selected canonical tests passed on an isolated local SQL Server 2022
+container on 2026-10-17, including second-connection authority change and
+case/audit failure with reopen. No private stock or real map dataset was used.
+This is engineering evidence, not new professional competence/delegation,
+stock-source authority, health inference, direct-human/WCAG acceptance,
+live/Azure/model acceptance or full BRD AC-065 cohort/referral completion.
+JSON retains its separate-file crash-atomicity limitation; nomination,
+self-referral and challenge remain #130 by owner direction.
+
 ### Controlled bulk edit engineering continuation (2026-10-17, #78)
 
 The [migrated API bulk contract](../../../../src/api/README.md#controlled-bulk-preview-api-78)

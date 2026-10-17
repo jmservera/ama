@@ -515,6 +515,14 @@ were erased or that any real resident accepted the service.
 
 ## Stock comparisons and human technical sign-offs (#84)
 
+Review status, 2026-10-17: **Not accepted; blocking recovery defect remains.**
+The checks below pass for normal recovery, but an early `_discard` read failure
+can leave a failed decision's success audit for outer lock cleanup; a persistent
+failure can replace the original exception. The recovery guarantee is therefore
+incomplete, not production/operational acceptance. Current-authority checks and
+the four existing issue mechanisms remain separately evidenced. This branch is
+an incomplete reviewable continuation, not an accepted release.
+
 `stock.py` validates staff-recorded conflicting assertions for `epc`, `type`
 or `built`. Each comparison preserves two different values and each source's
 identifier, ISO date, version and recorded validation state, plus a registered
@@ -555,6 +563,16 @@ also rechecks current stock holds inside the SQL writer transaction. No new
 schema or dialect-specific inserts/error classes are introduced. Local
 SQLite evidence does not establish SQL Server/Azure acceptance.
 
+The 2026-10-17 continuation binds stock comparison, terminal disposition and
+technical actions to the current registered staff row, including identity/OID,
+rather than a process-cached role. SQL repeats that check inside its existing
+writer transaction. A failed decision discards its pending case edits and
+success audit before lock cleanup, so a later save cannot flush a failed
+design change, sign-off or query disposition. Recovery failures are explicitly
+logged and annotate the original exception; reload to establish an uncertain
+outcome. This is not a new authority grant or a guarantee against arbitrary
+external staff writes outside the store's writer-lock protocol.
+
 The existing `signoffs.py` owns separate assessment, design, building and
 coordination decisions. They require registered staff identities in the
 existing exercise roles, distinct people and no self-approval of the recorded
@@ -579,9 +597,17 @@ derived support/rank columns once using `meta.support_encoding=1`, preserving
 source assertions, workflow state and audit; no new SQL schema/dialect is added.
 
 `tests/test_stock_reconciliation.py` covers JSON/SQLite semantics and upgrade
-behavior. The [API guide](../api/README.md#stock-reconciliation-api-84) describes
+behavior, current/deleted/changed-OID actors, an independent-connection
+pre-save role change, case/audit rollback and reopen, no delayed success audit,
+and decision-context cleanup. The selected canonical cases also passed against
+an isolated, local SQL Server 2022 container via
+`test_mssqlstore.MssqlStockDecisions` on 2026-10-17: eight tests, no skips.
+That fixture used no private stock, cloud service or real source authority.
+JSON still uses separate snapshot/ledger files and does not gain SQL-style
+cross-file crash atomicity from this change.
+The [API guide](../api/README.md#stock-reconciliation-api-84) describes
 the staff endpoint, rendered synthetic check and remaining acceptance gates.
-Live SQL Server/Azure, real model use, source authority, competent human review
+Deployed SQL Server/Azure, real model use, source authority, competent human review
 and direct user acceptance are not established by these local tests.
 
 ## Task-bound RAI release records (#219)

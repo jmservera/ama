@@ -401,15 +401,6 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             return buildings.view(self.data, self.cases, building_id, user)
 
-    def _stock_actor(self, user):
-        from . import controls
-        controls.require_role(user, projection.STAFF_ROLES, "registered human staff")
-        actor = self.staff.get(user["email"].lower())
-        if not actor or not isinstance(actor.get("name"), str) or not actor["name"].strip() or any(
-                actor.get(key) != user.get(key) for key in ("code", "role", "name")):
-            raise PermissionError("Stock decisions require a registered named human staff identity.")
-        return actor
-
     def bulk_edit_preview(self, user, body):
         from . import bulk_edits
         return bulk_edits.preview(self, user, body)
@@ -421,9 +412,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def stock_reconcile(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)
-        with self.lock:
-            actor = self._stock_actor(user)
-            c = self._case(case_id)
+        with stock.decision_scope(self, user, case_id) as (c, actor):
             if actor["role"] not in MANAGER_ROLES and actor["code"] != c["owner_code"]:
                 raise PermissionError("Only the case owner or a programme manager can open a stock query.")
             query = stock.comparison(body)
@@ -440,10 +429,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def stock_query_event(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)
-        with self.lock:
-            actor = self._stock_actor(user)
+        with stock.decision_scope(self, user, case_id) as (c, actor):
             event = stock.query_event(body)
-            c = self._case(case_id)
             query = next((q for q in c.get("stock_reconciliation", []) if q["id"] == event["query_id"]), None)
             if query is None:
                 raise ValueError("Choose a stock query on this case.")
