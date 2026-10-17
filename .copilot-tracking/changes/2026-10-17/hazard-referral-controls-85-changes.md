@@ -9,7 +9,7 @@ Details: .copilot-tracking/details/2026-10-17/hazard-referral-controls-85-phase-
 
 ## Execution Status
 
-Coordinator-authorized P04 latest-main integration active after full original
+Coordinator-authorized P04 latest-main integration complete after full original
 delivery. P01-P03 remain complete, original single adverse Review unchanged.
 
 Full plan declared. P01/P01-T01 and P02/P02-T01 complete.
@@ -278,3 +278,19 @@ Fresh integration checks:
 No duplicate #95 fix or authority promotion, fixture/manifest recomputation not
 needed because both exact upstream files are unchanged. No renewed Review.
 Pending authorized owned-topic expected-remote lease push and PR evidence update.
+
+### P04-T01 Publication Result and Stop
+
+Fresh fetch immediately before push still main2b244568; exact remote topic
+matched7d3b6bea. Fresh gh account set repo-local noreply. Evidence commit
+1169a1b4d935d13188f168e5a67aa25081cec8ae pushed successfully with
+`git push --force-with-lease=refs/heads/fix/hazard-referral-controls-85:7d3b6bea644f263c592cb35631cd30c4961d92c1 origin HEAD:refs/heads/fix/hazard-referral-controls-85`.
+No unconditional force or main write. Worktree clean after push. Immediate PR
+API still showed old head (GitHub propagation), so final exact-head verification
+follows delivery-metadata normal push, not an assertion from stale API output.
+
+P04 plan/details/state reconciled; no source change after the25 fresh checks.
+Original Review adverse and hash retained, correction ONE not repeated and
+independent acceptance not fabricated. Final metadata is a separate normal
+commit/push. PR body updated with exact latest integration base/head and limits.
+Stop at clean remote-matched PR, resume519fb014-71e3-4e42-ad94-c0cb8ac982bd.

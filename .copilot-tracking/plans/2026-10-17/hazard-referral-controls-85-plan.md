@@ -156,10 +156,10 @@ closure not fabricated. Dependencies: P03-T02.
 ## Test Ownership and Budget
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Authorized latest-main integration
+### [x] P04: Authorized latest-main integration
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Rebase owned topic and verify preserved intents
+#### [x] P04-T01: Rebase owned topic and verify preserved intents
 
 After completed correction/publication, rebase the clean owned topic onto
 fresh origin/main2b24456863c0a8f39d47a73e22daeff3875cc825. Preserve merged
@@ -213,4 +213,8 @@ loopback SQL Server evidence, not independent final-head closure.
 P03-T03 published as draft main PR #388, with original adverse Review and
 independent final-head acceptance limitation prominent. All ordered phases and
 authorized correction/publication complete; automatic session stops at the
-user-selected clean pushed PR boundary. No second Review, merge or issue close.
+user-selected clean pushed PR boundary. Coordinator-authorized P04 then rebased
+onto main2b244568 with documentation-only conflict, byte-identical complete
+production/test patch and fresh25 SQLite/manifest checks. Expected-remote lease
+republished only this topic; original adverse Review remains. No second Review,
+merge, issue close or independent Pass. All active plan markers complete.
