@@ -53,6 +53,11 @@ correction1 and both knowledge histories retained. Independent Pass on the
 final published head is still required; implementation evidence does not close
 the finding or satisfy human live prerequisites.
 
+The #78 topic integrates merged #97 on main92d4f89 with both task routes and
+knowledge histories retained. Joint synthetic forms/bulk validation does not
+resolve RV-002 provenance or the separate actual schema-authority blocker;
+final-head independent acceptance is not inferred from integration checks.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect controlled administrative edits and bulk previews (#78) | [API contract and criterion evidence](../../src/api/README.md#controlled-bulk-preview-api-78) | [Core freshness, provenance and atomicity](../../src/core/README.md#controlled-administrative-bulk-edits-78) and [dated synthesis](./research/ux/zava-forward-prototype-profile-review.md#controlled-bulk-edit-engineering-continuation-2026-10-17-78): correction ONE rejects status-reset failed issuance with exact records/snapshot coverage and all-target transaction checks. No approval/ownership bypass; RV-002 upload/handoff caller provenance remains partial, live SQL Server and human/UI acceptance unproved |

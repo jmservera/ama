@@ -263,3 +263,16 @@ pushed and read back as draft/open PR #378 head on main. Separate
 preserves original Not accepted verdict and exact finding disposition.
 Final artifact-only receipt records publication and the stop boundary; no
 merge, rebase or force-push. Full issue acceptance is not claimed.
+
+## Authorized Same-PR Main Integration
+
+The subsequent owner instruction authorizes rebase onto main92d4f89 (merged
+#377) and topic-only force-with-lease against published97cdc2a, superseding
+the prior no-rebase stop for this bounded integration only. No new RPI or
+correction cycle. Tested source8602473 retains both features and all KB
+histories; 110 focused tests and existing core/API tooling pass. Current
+changes/details and the correction review's separate integration delta record
+exact SHAs and finding disposition. RV-002 remains unfulfilled/blocking full
+acceptance; actual form authority is unrelated human-blocked. Active external
+review512a59c4 must assess final exact head; no Pass inferred. Final evidence
+commit/publication then stop, no merge.

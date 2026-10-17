@@ -24,12 +24,14 @@
     {"decision": "Publish draft main PR with Refs 78, no closure or acceptance claim; no source fixes or repeated Review in current task", "status": "executed", "evidence": "https://github.com/jmservera/ama/pull/378; main base, requested topic, draft/open; source head 1bd60e38e8bff9e07adfed4a70d06bb2e299fb4c"},
     {"decision": "Stop automatic session after final pushed PR as explicitly requested", "status": "confirmed", "evidence": "User stop boundary; publication source head and PR 378 read back from GitHub"}
   ],
-  "blockers": [],
+  "blockers": ["RV-002 remains unfulfilled and blocks full criterion1 / issue78 acceptance", "Actual approved schema authority remains an unrelated human blocker, not supplied by integration"],
   "correction_cycle": 1,
   "correction_authority": "Explicit 2026-10-17 owner continuation: fix RV-001, investigate RV-002, independent review, final push then stop; original Review remains historical",
   "correction_result": {"RV-001": "Corrected; independently accepted bounded fix", "RV-002": "Unfulfilled; criterion1 remains partial", "validation": "71 focused tests; core ruff/format51/mypy104 pass", "independent_review": "No substantive findings; two valid and ten invalid probe cases"},
   "correction_publication": {"source_commit": "dd52ae3a9ab0aee2ff96cda7e7496c3de29a58ec", "pr": 378, "verified": "Remote PR source head matches; draft/open, base main, same requested topic", "final_receipt": "Artifact-only lifecycle/publication record; no source changes after independent assessment"},
-  "next_action": {"phase": "Follow-up", "action": "Stop after final receipt push; coordinator owns unfulfilled RV-002 and later integration after377; no new delivery or acceptance claim"},
+  "integration": {"authority": "Owner-authorized same-PR rebase onto latest main after377, topic-only exact force-with-lease; no new loop", "old_publication": "97cdc2a311b29d3ea65ac5fe2643a523302041d0", "base": "92d4f89dd718befbde8bef00dd5cd6db2d99af39", "rebased_source": "8602473a78930a72aa7fbb2d424a76d56dba5b53", "external_review": "Owner reports independent review512a59c4 active on old publication; final delta must identify exact new SHA"},
+  "integration_validation": {"tests": "110 joint focused forms/bulk core/API, inventory, handoff and documents pass", "tooling": "Core ruff/format53/mypy106; API ruff/format19/mypy49 pass", "preservation": "Both KB histories/all rows intact; forms module/tests equal main, bulk module/tests equal97cdc2a", "publication": "Final evidence-only commit atop tested8602473; exact final SHA/delta posted to PR378, not assumed independently accepted"},
+  "next_action": {"phase": "Follow-up", "action": "Stop at final topic-only lease push/readback; active reviewer512a59c4 receives exact final SHA/delta; coordinator owns RV-002; no merge/new loop/Pass inference"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "RV-002: complete existing upload/offer/accept caller provenance", "rationale": "Explicit source/version/reason inputs, validation and complete immutable per-change events need API/UI compatibility design; no fabricated defaults or bulk expansion", "evidence": "Correction ONE changes/details and independent review; criterion1 remains partial"}
   ]

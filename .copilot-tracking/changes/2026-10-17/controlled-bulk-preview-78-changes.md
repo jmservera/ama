@@ -190,3 +190,72 @@ Copilot trailer. Final receipt changes only current lifecycle/publication
 records. No source changes after independent assessment, integration with
 #377, merge, rebase, history rewrite or force-push. Stop after final receipt
 push; coordinator owns remaining provenance scope and eventual integration.
+
+## Authorized integration onto merged #97 (same PR #378)
+
+2026-10-17 owner explicitly authorized rebasing the topic from published
+`97cdc2a311b29d3ea65ac5fe2643a523302041d0` onto latest origin/main
+`92d4f89dd718befbde8bef00dd5cd6db2d99af39`, which includes merged PR #377.
+This is same-delivery integration, not a new RPI/correction loop.
+
+Rebase source head is `8602473a78930a72aa7fbb2d424a76d56dba5b53`.
+Five conflicts resolved additively: both component guide sections, both
+append-only KB log entries, complete forms/bulk endpoint inventory and SQL
+DOCS containing both `form_schemas` and `bulk_edits`. Auto-merges inspected
+for both Store entrypoints, projection protections, API routing, component
+type overrides and SQL validation hooks. Separate `forms` and `bulk_edits`
+modules retained. Upstream forms module and both form test modules compare
+byte-for-byte unchanged to main, including durable pending/missing-rescan fix.
+
+`git range-diff e065ecd..97cdc2a 92d4f89..8602473` maps original commits:
+1bd60e3 -> f1831a8 (additive conflict resolutions), 9eba0b9 -> 0b236c4
+(identical patch), dd52ae3 -> d6c4295 (identical RV-001 correction patch),
+97cdc2a -> 8602473 (identical receipt patch). Independent external review
+`512a59c4` is reported active by owner on the original publication; it is not
+claimed to have accepted this rebased SHA. Final delta/SHAs will be published
+for that review, not replaced by a new review loop.
+
+Joint focused forms/bulk core/API, endpoint permissions, handoff/document
+rollback/reopen regressions and existing core/API tooling pending.
+RV-001 correction evidence remains intact; RV-002 is still unfulfilled and
+criterion 1 partial, not downgraded. Actual approved schema authority remains
+an unrelated human blocker; neither integration nor synthetic tests supply it.
+
+### Integration validation and finding disposition
+
+One joint invocation passed 110 tests:
+`test_form_staging test_form_staging_api test_bulk_edits test_bulk_edit_api
+test_role_endpoint_inventory test_handoff_lifecycle test_documents`.
+This covers durable pending/missing-rescan forms across repeated reads and SQL
+reopen; schema registry/body/audit fault and cross-process rollback; current
+permissions and route inventory for both features; blocked-status cached/
+persisted RV-001 corruption, no-ops and all-target transaction checks; bulk
+stale/ABA/role/OID/guardrail races, concurrency, rollback and lost-ack reopen.
+Existing law-store-unavailable fixture diagnostics remain explicitly unknown
+rule checks, not a failed suite or a rule-pass claim. Local raw receipt:
+session files `ama-78-integration-focused.log`.
+
+Existing component checks pass without dependency changes/install:
+core ruff, format 53 files, mypy 106 source files;
+API ruff, format 19 files, mypy 49 source files. Diff whitespace passes.
+Automated preservation check confirms complete old/main KB log lines are
+ordered subsequences and all table rows from both indexes remain present.
+`forms.py` and both forms tests are byte-identical to main; `bulk_edits.py`
+and both bulk tests are byte-identical to old publication. SQL retains existing
+safety validators/checked-document concurrency plus bulk commit validation;
+no unrelated validator or form registry is replaced.
+
+RV-001 corrected implementation and its fail-before/independent bounded
+assessment survive integration unchanged. RV-002 remains **unfulfilled and
+blocking full criterion 1 / #78 acceptance**, not downgraded to optional work.
+The actual approved-schema authority blocker belongs to #97 and is neither
+caused nor satisfied by this integration. Original Not accepted Review remains
+unchanged; no final-head independent Pass is inferred from prior assessments
+or active review512a59c4. No new review or RPI loop invoked.
+
+Publication uses a single explicit topic-only force-with-lease, expected remote
+old head `97cdc2a311b29d3ea65ac5fe2643a523302041d0`, never an unrestricted
+force or main write. Final evidence commit is artifact-only atop tested source
+`8602473a78930a72aa7fbb2d424a76d56dba5b53`; exact final head and old/base/source
+delta are supplied on PR #378 for the active independent reviewer. PR remains
+draft, no merge or closure. Stop at final push/readback.

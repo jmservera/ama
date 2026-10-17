@@ -136,6 +136,25 @@ links original unchanged Review, independent correction assessment and exact
 remaining caller-provenance scope. Final artifact-only receipt is the last
 push, then stop. Full #78 acceptance remains unmet.
 
+## Same-PR Integration After PR #377 Merged
+
+Owner authorized rebase, not a new delivery/review cycle. Old publication
+97cdc2a; new main 92d4f89; tested rebased source
+8602473a78930a72aa7fbb2d424a76d56dba5b53. Preserve both scoped modules,
+Store/projection protections, API routes/inventory, SQL checked documents/
+validators and complete guides/KB histories. Five conflicts resolved by
+retaining both features, no field/authority expansion. Forms/bulk modules and
+their tests equal their respective main/old-published versions byte-for-byte.
+
+110 joint focused tests passed, including pending/missing rescan durability,
+permissions, rollback/concurrency and SQL reopen. Existing core
+ruff/format53/mypy106 and API ruff/format19/mypy49 passed. Full original Review
+unchanged, correction finding disposition preserved, RV-002 still blocks full
+criterion 1. Actual form authority is unrelated human-blocked. Active external
+review512a59c4 needs exact final SHA/delta, no inferred final-head acceptance.
+Final evidence commit on tested source, exact topic-only lease against97cdc2a,
+draft PR publication/readback then stop; no merge.
+
 ## Completion Evidence
 
 P01-T01: new core module plus 32 synthetic JSON/SQLite tests pass, with

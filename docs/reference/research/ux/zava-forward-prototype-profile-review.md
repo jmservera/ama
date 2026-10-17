@@ -51,6 +51,15 @@ not made-up defaults or an expansion of bulk authority. The
 [core boundary](../../../../src/core/README.md#controlled-administrative-bulk-edits-78)
 records exact operations; full #78 acceptance remains unmet.
 
+Same-PR integration after #377 merged onto main92d4f89 retains separate form
+staging and bulk modules, both Store/projection/API protections and checked SQL
+documents. 110 joint synthetic focused tests pass, including upstream
+pending/missing-rescan durability, permissions, rollback and SQL reopen.
+All earlier findings remain historical; RV-001 correction survives unchanged
+and RV-002 still blocks full #78 acceptance. Integration does not confer real
+schema authority, full provenance, final-head independent acceptance or merge
+permission.
+
 ### Queue signal engineering continuation (2026-10-17, #77)
 
 The [src API queue completion](../../../../src/api/README.md#queue-signal-completion-77-2026-10-17)

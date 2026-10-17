@@ -4762,3 +4762,19 @@ metadata when the knowledge base was created.
   authority is substituted. #78 is not fully accepted or closed.
 * No UI source change, human/WCAG/browser acceptance, live SQL Server/cloud,
   private stock or real model. Original case and memory remain unchanged.
+
+## [2026-10-17] update | Same-PR #78 integration after merged forms #97
+
+* Owner-authorized rebase onto main92d4f89 retains both core/API guides,
+  Store/projection/handler/inventory behavior, checked SQL documents and
+  validators. Both complete KB histories and all index rows remain intact.
+  Separate form/bulk modules and tests retain their respective upstream/
+  old-publication content, including pending/missing-rescan durability fix.
+* 110 joint focused forms/bulk core/API, role inventory, handoff/document
+  tests pass; core ruff/format53/mypy106 and API ruff/format19/mypy49 pass.
+  Synthetic rollback/reopen is not live SQL Server or human approval.
+* RV-001 correction retained unchanged; RV-002 remains unfulfilled/blocking
+  full criterion 1 / #78 acceptance. Actual schema authority is an unrelated
+  human blocker. Original Not accepted Review preserved; active independent
+  review requires exact final SHA/delta, no new review loop or Pass inferred.
+  No merge, cloud/private/model use, memory or original-case change.

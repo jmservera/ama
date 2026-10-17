@@ -59,3 +59,35 @@ Parent validation receipt: 71 focused synthetic tests passed: 39 core bulk,
 six real local HTTP and 26 existing handoff/document tests. Full core existing
 ruff check and format check (51 files), mypy (104 source files) passed. Those
 are parent's executed checks, not reviewer-run checks.
+
+## Authorized Main Integration Delta (not a new independent assessment)
+
+2026-10-17 owner authorized rebase from published
+`97cdc2a311b29d3ea65ac5fe2643a523302041d0` onto main
+`92d4f89dd718befbde8bef00dd5cd6db2d99af39` after PR #377 merged.
+Tested source head: `8602473a78930a72aa7fbb2d424a76d56dba5b53`.
+Final integration commit adds only evidence/docs/lifecycle to that source.
+No source change to either scoped module or its tests: bulk files are
+byte-identical to the old publication, forms files to the new main.
+
+Rebase resolutions retain both guides and KB histories, both endpoint
+inventories and SQL `form_schemas` plus `bulk_edits` checked documents.
+Store form-staging hiding and bulk wrappers, projection form rights and bulk
+history redaction, API form routes/error handling and bulk routes/error
+handling, all existing SQL safety/concurrency checks and bulk commit hook are
+present together. Upstream durable pending/missing-rescan behavior is retained.
+
+Parent integration validation: 110 joint focused forms/bulk core/API,
+permission inventory, handoff and document tests pass. Core ruff/format53/
+mypy106 and API ruff/format19/mypy49 pass. Both KB histories retain all ordered
+lines and both indexes all table rows. No whole-suite repeat, browser,
+cloud/private/model/live SQL evidence or actual schema authority inferred.
+
+RV-001 remains corrected without a changed correction patch; RV-002 remains
+unfulfilled and blocks full criterion 1 / issue acceptance. Actual approved
+schema authority remains an unrelated human blocker. The original RPI Review
+is unchanged. Owner reports external independent review `512a59c4` active on
+the original published head; neither that active status nor this parent
+integration validation is a final-rebased-head independent Pass.
+Exact final commit is posted to PR #378 with old/base/source SHAs and this
+delta. No new reviewer or RPI loop is launched; no merge is authorized.
