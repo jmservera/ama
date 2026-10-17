@@ -12,7 +12,8 @@ preserved, PC-001/002 resolved directly. Full-plan implementation P01-P03
 complete; all markers reconciled. Independent Review executed Complete with
 original outcome Not accepted; RV-001/RV-002 Medium. Caller-authorized correction
 ONE completed with separate closure evidence, original Review preserved and no
-repeated Review. Delivery commit/push/PR remains.
+repeated Review. Implementation pushed normally and main PR #387 created.
+Automatic session stops at the user's explicit PR terminal.
 No implementation delegation. No blocker.
 
 ## P01: Controls and Regression Evidence
@@ -215,3 +216,21 @@ All people/data fictional; no private datasets/rosters, Azure, paid AI, new
 infrastructure, live orders, financial commitments or actual professional
 approval. Seeded role does not establish competence. Local SQL is not Azure
 acceptance; browser is not human/WCAG acceptance.
+
+## Delivery
+
+PR https://github.com/jmservera/ama/pull/387 targets main from
+fix/quality-handover-controls-91. Source commit ca8b950d was committed with
+fresh authenticated id/login-derived local noreply author/committer identity
+and required Copilot trailer, then pushed normally. Final delivery metadata
+uses a separate normal commit on the same branch, not an amendment.
+
+The PR includes Refs #91, actual ordered phase/artifact evidence, original
+Review Not accepted and distinct correction closure, exact tests/skips and
+the minimal shared #95 handler boundary. Owner/coordinator checks/rubric and
+integration decision remain separate. No merge, rebase, force-push or issue
+closure performed. User explicitly directed stopping at clean pushed PR;
+no unrelated follow-up is started. Full current head is available from git/PR
+without a self-referential commit hash in this artifact.
+
+Resume session: 723ca656-7a1a-411a-a9dd-f55919a9a289.
