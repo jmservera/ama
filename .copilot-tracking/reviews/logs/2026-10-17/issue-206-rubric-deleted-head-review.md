@@ -146,3 +146,42 @@ have targeted passing evidence, not an overall green full-suite claim.
 * Next owner: parent publishes the reviewed candidate with Refs #206, records
   delivery evidence and stops. No merge, force push, issue closure, live scorer
   dispatch or repeated Review authorized.
+
+## Caller-Requested Integration Assessment (2026-10-17)
+
+Opening state: P03-T01/T02 are complete locally; plan, details and changes
+record agree on conflict-free integration, unchanged reviewed bytes, exact
+baseline failures and pending parent publication. The caller explicitly
+requested this new base/replay assessment after main advanced. This does not
+repeat the original repair Review, reopen its findings or run another critique.
+Boundary: integration onto d890e3d and local evidence only; no hosted final-head
+CI, human merge approval, live scorer or broader application acceptance.
+
+Execution: Complete. Outcome: Conformant for P03 integration and local evidence.
+Assessment was performed directly, once, against the supplied new boundary.
+No substantive integration findings, unresolved decision gaps or source changes.
+Original repair Review and PC-001..004 dispositions remain unchanged.
+
+| Integration requirement | Assessment |
+| --- | --- |
+| Latest fetched main and conflict intent | d890e3d contains #368/#370/#371; replay had no conflicts |
+| Reviewed changes preserved | Original two commits equal in range-diff; canonical source, test, lock and README byte-identical to febd357 |
+| Inherited base context preserved | All other tracked main paths unchanged; no unrelated work added |
+| Lifecycle/exact-SHA integration | Source/lock parity and 159 extracted-step/local-remote cases pass; immutable checkout, obsolete/error distinction and advertised-OID boundary preserved |
+| Score/permission boundaries | Parsed base comparison preserves non-recording jobs, inputs, prompt, permissions, action refs and top-level settings; whole rubric directory unchanged from reviewed head |
+| Compiler evidence | No-emit and two normal compilations pass; exact original lock hash retained |
+| Broadened validation | 21 failed, 276 passed, 7 skipped; exact 21 failing node IDs equal recorded baseline, not just equal counts |
+| Whitespace and scope | git diff --check passes; no executable or base-context amendment |
+| Remote/CI evidence | Prior Source projects CI success targets febd357 only; final-head hosted evidence unavailable before push |
+| Publication boundary | One explicit expected-febd357 lease on assigned topic only; final remote/PR verification is a parent action |
+
+The corrected ad hoc audit key was an evidence-tool typo, not an implementation
+defect or a relaxed invariant. Existing fixture failures and runtime skips stay
+separate residual work; no new follow-up or child task is started. No required
+human merge approval is inferred. Prior independent Pass/MERGE was supplied for
+febd357 and is not represented as a fresh independent verdict on a new SHA.
+
+Routing: no repair, planning or research correction. Parent commits the final
+dated evidence, publishes once with the authorized lease, verifies the head
+and stops. Final-head hosted checks and the owner's merge decision remain the
+external merge gate; this local assessment is not a merge or overall green CI.

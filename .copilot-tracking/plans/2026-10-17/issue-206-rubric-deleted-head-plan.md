@@ -8,7 +8,7 @@ ms.date: 2026-10-17
 
 * Task ID: 206
 * Task slug: issue-206-rubric-deleted-head
-* Status: Implemented; ready for one post-implementation Review
+* Status: Repair delivered in PR #372; P03 integration and integration Review complete locally; parent publication next
 * Details: .copilot-tracking/details/2026-10-17/issue-206-rubric-deleted-head-phase-details.md
 
 ## Executive Summary
@@ -157,8 +157,9 @@ No divergent decision or second critique required.
 
 ## Handoff
 
-All P01/P02 tasks complete with focused validation and baseline comparison.
-One post-implementation Review is next. Implementation evidence:
+All P01/P02 tasks completed and the original post-implementation Review passed.
+P03 local integration evidence and integration Review are complete.
+Implementation evidence:
 .copilot-tracking/changes/2026-10-17/issue-206-rubric-deleted-head-changes.md.
 No required human operational approval is inferred from this local repair.
 
@@ -172,22 +173,31 @@ This bounded plan verification reuses the completed critique and its applied
 PC-001..004 dispositions; it is not a second repair or critique cycle.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Integrate reviewed candidate with current main
+### [x] P03: Integrate reviewed candidate with current main
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Rebase and verify invariants
+#### [x] P03-T01: Rebase and verify invariants
 
 Record preflight on the clean topic, rebase onto d890e3d, compare source, focused
 test, generated lock and rubric README bytes against febd357, and inspect the
 rebased range against the original range. No executable edits are planned.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Validate, review integration and publish once
+#### [x] P03-T02: Validate and prepare integration Review
 
 Run all 159 focused cases, compiler no-emit and two normal compilations with
 byte stability, and git diff --check. If full rubric tests run, compare exact
 failure IDs to the existing inventory rather than accepting equal counts.
-Update existing dated artifacts with integration-only Review evidence, commit
+Update existing dated artifacts for integration Review. Parent then commits
 with authenticated noreply identity and the required trailer, then push only
 this branch with an explicit expected-old-OID lease. Verify final PR/remote
 head and stop without a further evidence-only push or merge.
+
+P03-T01/T02 local completion evidence: conflict-free rebase; original two
+commits equal in range-diff; all reviewed feature bytes unchanged; 159 focused
+passes; no-emit validation and two stable compilations; full suite 21 failed,
+276 passed, 7 skipped with identical 21 failure IDs; parsed invariants and
+git diff --check passed. Publication is a subsequent parent action, not an
+already-completed P03 implementation or hosted-CI claim. Integration Review
+execution is Complete, outcome Conformant for the new base/replay boundary;
+no substantive findings. Parent publishes once and reports the final head.

@@ -16,6 +16,7 @@ Evidence: research C1-C5/W1-W3. No unresolved research blocker.
 | --- | --- | --- |
 | P01 | Complete: 159 focused cases passed | P01-T01, P01-T02 |
 | P02 | Complete: compiler/invariant audit passed; exact 21 baseline failures unchanged | P02-T01, P02-T02 |
+| P03 | Complete locally: conflict-free integration, validation and integration Review | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Repair recording boundary
@@ -136,3 +137,17 @@ no-emit validation, two repeat compilations, exact baseline IDs if broadened
 tests run, whitespace validation and a bounded integration Review. Previous
 repair Review and critique remain historical completed assessments, not new
 claims about the rebased head. Only one final lease-protected push is planned.
+
+P03-T01 complete: rebase applied three commits without conflicts; range-diff
+marks both original commits equal, plus the new preflight checkpoint only.
+Rebased integration candidate a8fc10f descends from d890e3d. Git byte comparison
+against febd357 is empty across the entire rubric directory and source/lock.
+
+P03-T02 complete locally: 159 passed in 15.26s; full suite 21 failed,
+276 passed, 7 skipped in 18.28s; exact failure-ID set equals the existing
+21-entry inventory. Compiler no-emit and two normal compilations passed with
+unchanged lock hash. Parsed invariants, unchanged inherited base paths and
+git diff --check passed. One audit probe initially used the compiled underscore
+job key for canonical YAML; correcting the probe to canonical
+record-rubric-score passed without any source/test/lock change.
+No remaining implementation item; parent publication follows integration Review.

@@ -129,3 +129,48 @@ then publish once using an explicit old-head lease. Research/Plan verification
 reuses prior repair evidence and critique; no executable changes are planned.
 Initial worktree was clean. A local preflight checkpoint preserves phase state
 without stashing or moving uncommitted work across rebase.
+
+## P03 Integration Results (2026-10-17)
+
+Rebased cleanly onto d890e3de29e24cb26c2eff35af9a6e125a3b541e.
+No conflicts or conflict resolution. Original repair 4fe3b31 became c29c118;
+delivery record febd357 became 1dda6cc. Range-diff marks both equal, with only
+the new preflight checkpoint a8fc10f added. No executable changes were needed.
+All inherited main files remain byte-identical to d890e3d; the integrated diff
+is restricted to the original four feature paths and this task's tracking.
+
+Canonical bytes are exactly identical to reviewed febd357, including the entire
+.github/rubric directory. Recorded SHA-256 values:
+
+| Path | SHA-256 |
+| --- | --- |
+| .github/workflows/rubric-score.md | a3f4cf3f41c0feb196dbac6013d8dbcf8ce33baa54e3b60d9549584fda7524f3 |
+| .github/workflows/rubric-score.lock.yml | f71a65912be7d5fb949b86d7a23701b50ecae820c8172ef89bdc31d8ffb8658b |
+| .github/rubric/scripts/test_record_workflow.py | 4150668f6423119a600b07f15f29c13d299b6a84b717fe88263be73fb433a63a |
+| .github/rubric/README.md | e2280262bca358b230f8fcb47d4e8ca432b5cda40f4b5b3a945c6541a9cc259a |
+
+| Integration validation | Result |
+| --- | --- |
+| Focused test_record_workflow | 159 passed in 15.26s |
+| Full rubric suite | 21 failed, 276 passed, 7 skipped in 18.28s |
+| Exact baseline failing-node comparison | Identical set of all 21 IDs listed above; no new or removed failures |
+| gh aw compile rubric-score --no-check-update --no-emit | Passed |
+| Two gh aw compile rubric-score --no-check-update executions | Passed; lock hash above unchanged after each |
+| Parsed source/lock comparison against d890e3d | Names, permissions, action refs, inputs, prompt, other jobs and top-level settings preserved |
+| git diff --check | Passed |
+| Hosted final-head CI / live scoring dispatch | Not run; prior successful run 39017650712 targets old febd357 only |
+
+Compiler retained existing newer-action notices; no pins were upgraded.
+The first ad hoc invariant probe incorrectly used the compiled underscore job
+key in canonical YAML and asserted; the corrected probe used canonical
+record-rubric-score and passed. No product change or weakened assertion.
+No fixture failure was fixed or suppressed. External-runtime skips remain
+limitations, not passes. Score semantics, permissions and safety boundaries
+are unchanged. No live inference, Azure, credentials/private-data access or
+external source upload was used for validation; gh identity lookup was the
+explicitly authorized authenticated-account metadata check.
+
+P03-T01/T02 and all local implementation markers are reconciled. No remaining
+implementation item or blocker. Integration Review assesses only the new
+base/replay boundary; the original repair Review and critique remain historical.
+Parent publication and final remote/PR verification follow that assessment.
