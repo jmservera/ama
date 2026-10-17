@@ -162,6 +162,22 @@ state, not pretend the broader governance work or independent acceptance is done
 
 ## Return-to-Caller State
 
-Automatic RPI parent owns authorized publication. Task phases complete, session
-remains running until clean pushed PR and owned cleanup; explicit user endpoint
-then stops it. No second critique/Review, merge or issue closure.
+Task phases complete. Published https://github.com/jmservera/ama/pull/392 against
+main, implementation head 2672dcbb968524b734e34666c3114439e0472c14. Normal push,
+fresh authenticated GitHub noreply author/committer and required Copilot trailer.
+Original Review retained unchanged, SHA256
+204aab7fa36e86feae5b5f76a2107e8e7a2655a6b11a6d2113a3c231ea008e99.
+Final publication/state bookkeeping is a separate normal commit, not an amend.
+
+Verified exact owned SQL container ID, then removed issue88-sql-3a36c179, own
+API image tag and generated external credential/named logs. Only task resources
+were removed. No other worktree or private data touched.
+Automatic session stopped at the explicit user-selected PR endpoint; no child
+task, second critique/Review, merge, rebase, force push or issue closure.
+Resume ID: 3a36c179-e1e3-4332-9c33-fa947262fd79.
+
+GitHub reported no check results at initial PR publication; no remote CI or
+independent final-head coordinator acceptance is claimed. Local evidence above
+is complete for the bounded criteria. Owner/coordinator retains integration,
+checks and merge decision; planning parent/repository owner retains RV-001's
+next #81 backlog routing action.
