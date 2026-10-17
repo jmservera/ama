@@ -8,8 +8,9 @@ ms.date: 2026-10-17
 
 Task ID: 358. Slug: entra-credential-preservation-358.
 Declared scope: full plan, with P01/P02 implementation followed by parent-owned
-P03 Review/publication. Status: P01/P02 complete, ready for one Review.
-Remaining active marker: P03-T01 (Review/publication); full plan not yet complete.
+P03 Review/publication. Status: full plan complete, issue acceptance partial.
+Completed markers: P01/P01-T01/P01-T02, P02/P02-T01/P02-T02, P03/P03-T01.
+No remaining active marker. Live preservation remains UNMET as recorded below.
 Plan: .copilot-tracking/plans/2026-10-17/entra-credential-preservation-358-plan.md.
 Details: .copilot-tracking/details/2026-10-17/entra-credential-preservation-358-phase-details.md.
 Approved source boundary: setup-entra.py preservation/reuse, existing setup tests,
@@ -106,6 +107,23 @@ Actual authorized non-production preservation round-trip: UNMET. This task's
 no-write/no-secret-read constraints prohibit setup/check live execution. #360
 owns broader setup/job readiness. No cloud permission discovery is necessary.
 
+## Review and Publication (P03-T01)
+
+One Review executed: Complete / Residual work, no in-scope implementation defect
+found; RV-001 live preservation and RV-002 #360 sequencing routed to distinct
+owner/coordinator follow-ups. Review artifact:
+.copilot-tracking/reviews/logs/2026-10-17/entra-credential-preservation-358-review.md.
+Implementation 40e6835be682e1aeffab8ca78a10184889e5e3b4; Review commit 544f0ce.
+Topic pushed; PR https://github.com/jmservera/ama/pull/374 opened against main,
+explicitly Refs #358, not closing the issue or ticking live criteria.
+No source/test/docs changes after Review; final plan/details/state/changes
+publication reconciliation only. Hosted checks are not claimed passed.
+
+Owner explicitly requested stop after push/PR. Automatic session stopped; no
+follow-up selection, child loop, merge, force push, Azure operation or new spend.
+Ranked next-owner work remains actual authorized live proof first, #360
+coordination second. All phase artifacts are dated and committed.
+
 ## Explicit Phase Log
 
 * 2026-10-17 Implement opened after Plan Ready and one critique disposition.
@@ -114,3 +132,4 @@ owns broader setup/job readiness. No cloud permission discovery is necessary.
 * 2026-10-17 P01-T02/P01 complete: 100 setup tests pass; P02 validation started.
 * 2026-10-17 P02 complete: seven killed mutations, final 313 infra tests pass, existing offline gates pass, docs and current plan reconciled.
 * 2026-10-17 Implement handoff: Ready for one Review; live acceptance remains UNMET.
+* 2026-10-17 P03/full loop complete: one Review Complete / Residual work; PR #374 published; final evidence reconciliation, then stop per owner.

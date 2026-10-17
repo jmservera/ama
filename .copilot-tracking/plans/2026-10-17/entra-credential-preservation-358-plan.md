@@ -8,7 +8,7 @@ ms.date: 2026-10-17
 
 * Task ID: 358
 * Task slug: entra-credential-preservation-358
-* Planning status: Ready after direct disposition of the single critique
+* Planning status: Executed; full RPI loop and publication complete, issue acceptance partial
 * Plan date: 2026-10-17
 * Phase details: .copilot-tracking/details/2026-10-17/entra-credential-preservation-358-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/entra-credential-preservation-358-plan-critique.md
@@ -136,10 +136,10 @@ Depends on P01-T02.
 Depends on P02-T01. Preserve historical entries and owner memory.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review once and publish
+### [x] P03: Review once and publish
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Execute one bounded postimplementation review and publish PR
+#### [x] P03-T01: Execute one bounded postimplementation review and publish PR
 
 Depends on P02-T02. Route review findings to later work, no repeat review loop.
 Only nonblocking/out-of-scope residuals may support ready-for-offline-review
@@ -174,9 +174,13 @@ No user decision required; no second critique.
 
 ## Handoff
 
-Ready for implementation after one critique and direct corrections. Changes record:
+Full plan executed after one critique and one Review. Changes record:
 .copilot-tracking/changes/2026-10-17/entra-credential-preservation-358-changes.md.
-Critique dispositions complete. Parent continues automatically.
+Review execution Complete, outcome Residual work. Published PR #374 targets main;
+source commit 40e6835be682e1aeffab8ca78a10184889e5e3b4, Review commit 544f0ce.
+Only final publication/lifecycle evidence changes after Review; source unchanged.
+Actual non-production preservation remains UNMET. The owner explicitly requested
+stop after publication; automatic session stopped, no child work or merge.
 
 ## Explicit Phase Log
 
@@ -184,3 +188,4 @@ Critique dispositions complete. Parent continues automatically.
 * 2026-10-17 Final candidate ready for its single independent critique.
 * 2026-10-17 Critique executed once; PC-001-PC-003 directly resolved; Plan Ready.
 * 2026-10-17 Implement P01/P02 complete: regression/mutation/full infra evidence and docs reconciled; P03 Review/publication remains.
+* 2026-10-17 P03 complete: Review Complete / Residual work, PR #374 opened; full loop complete, issue acceptance partial; stopped per owner.
