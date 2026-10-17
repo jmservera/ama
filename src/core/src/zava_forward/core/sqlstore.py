@@ -601,6 +601,7 @@ class SqlStore(Store):
                 if (getattr(self.local, "stock_decision", None) is None
                         and getattr(self.local, "hazard_decision", None) is None
                         and getattr(self.local, "resident_validation", None) is None
+                        and getattr(self.local, "change_validation", None) is None
                         and getattr(self.local, "procurement_validation", None) is None):
                     try:
                         self._discard()

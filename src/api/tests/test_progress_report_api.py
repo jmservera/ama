@@ -257,6 +257,36 @@ class ProgressApi(unittest.TestCase):
             progress.export_csv(actual.progress_report(self.pam, as_of=AS_OF, view="all")),
         )
 
+    def test_committed_handoff_failure_returns_existing_explicit_outcome_contract(self) -> None:
+        if self.backend == "json":
+            self.skipTest("JSON does not have a SQL COMMIT acknowledgement boundary.")
+        self.get("sam", "/api/stats")
+        save = self.store.save
+
+        def committed_without_ack() -> None:
+            save()
+            raise OSError("Synthetic lost post-COMMIT acknowledgement")
+
+        request = urllib.request.Request(
+            self.base + "/api/cases/ZF-2/offer-handoff",
+            json.dumps(dict(change_metadata(self.store, "ZF-2"), to=self.pam["email"])).encode(),
+            headers={"Cookie": self.cookies["sam"]},
+        )
+        with patch.object(self.store, "save", side_effect=committed_without_ack):
+            with self.assertLogs("zava_forward.core.change_provenance", level="ERROR"):
+                with self.assertRaises(urllib.error.HTTPError) as caught:
+                    urllib.request.urlopen(request)
+        self.assertEqual(caught.exception.code, 503)
+        body = json.loads(caught.exception.read())
+        self.assertEqual(body["outcome"], "committed")
+        self.assertIn("Reload", body["error"])
+        reopened = self.reopen()
+        self.assertEqual(len(reopened.cases["ZF-2"]["handoff_history"]), 1)
+        self.assertEqual(sum(e["action"] == "handoff_offered" for e in reopened.audit_entries()), 1)
+        self.assertFalse(
+            any(e["action"] == "handoff_offered_rejected" for e in reopened.audit_entries())
+        )
+
     def test_actual_legacy_mixed_precision_writer_reopen_as_of_and_export(self) -> None:
         offer = datetime(2026, 10, 1, 12, 0, 45, 123456, tzinfo=UTC)
         accepted = datetime(2026, 10, 1, 12, 1, 15, 123456, tzinfo=UTC)

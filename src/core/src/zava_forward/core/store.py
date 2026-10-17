@@ -11,7 +11,7 @@ import uuid
 from copy import deepcopy
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, controls, export_fields, insights, ledger, projection, ranking, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -502,8 +502,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         return self.offer_handoff(user, case_id, to_email, note, metadata=metadata)
 
     def advance(self, user, case_id):
-        with self.lock:
-            c = self._case(case_id)
+        with change_provenance.controlled(self, user, case_id) as (c, user):
             self.guard_case_event(c)
             if c["stage"] != READY_STAGE:
                 raise ValueError("This case is not at the final checks.")
@@ -514,30 +513,18 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.require_safety_clear(c)
             self.require_resident_clear(c)
             self.require_booked_capacity(c)
-            before, saved = deepcopy(c), False
-            try:
-                c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
-                if hasattr(self, "db"):
-                    self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
-                    self.save()
-                else:
-                    self.save()
-                    saved = True
-                    self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
-            except BaseException as error:
-                if hasattr(self, "db"):
-                    try:
-                        with self.dblock:
-                            self._discard()
-                    except Exception:
-                        error.add_note("Booking recovery failed; reload to establish the outcome.")
-                        logging.getLogger(__name__).exception("Booking SQL recovery failed")
-                else:
-                    c.clear()
-                    c.update(before)
-                    if saved:
-                        self.save()
-                raise
+            was = c["stage"]
+            c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
+            orders = [w for w in self._proc()["work_orders"] if w["case_id"] == case_id and w["state"] == "Appointed"]
+            change_provenance.append_event(c, "returns", user, "advance", "controlled/advance",
+                                           from_stage=was, to_stage=BOOKED_STAGE, reopened=False,
+                                           work_order_versions=[dict(id=w["id"], version=w["versions"][-1]["version"]) for w in orders])
+            if hasattr(self, "db"):
+                self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
+                self.save()
+            else:
+                self.save()
+                self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
 
     def draft(self, case_id, kind):
         with self.lock:

@@ -1,0 +1,38 @@
+{
+  "task_id": "102",
+  "task_slug": "progress-event-capture-102",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Publication",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/progress-event-capture-102-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/progress-event-capture-102-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/progress-event-capture-102-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/progress-event-capture-102-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/progress-event-capture-102-review.md",
+    "correction_one": ".copilot-tracking/changes/2026-10-17/progress-event-capture-102-correction-one.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI and own-branch publication explicitly requested; distinct follow-up to merged PR390, criterion one only",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-17; clean feat/progress-event-capture-102 at supplied main2267027 verified"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready from C1-C7",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-17/progress-event-capture-102-research.md"
+    },
+    {
+      "decision": "One final-candidate critique executed; verdict Revise; PC-001/PC-002/PC-003 directly resolved in plan/details before source implementation",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/progress-event-capture-102-plan-critique.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": { "phase": "Publication", "action": "Correction ONE evidence complete for RV-001/RV-002; privacy-safe commit, one authorized rebase onto main74617981, normal push and main PR Refs102" },
+  "prioritized_follow_ups": []
+}

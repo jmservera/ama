@@ -843,7 +843,7 @@ class SqlFlows(Flows, unittest.TestCase):
                             raise original
 
                         target = "save" if failure == "pre-save" else "_validate_safety_clear"
-                        logger = "zava_forward.core.procurement" if operation == "withdraw" else "zava_forward.core.store"
+                        logger = "zava_forward.core.procurement" if operation == "withdraw" else "zava_forward.core.change_provenance"
                         with patch.object(store, "db", fault), patch.object(store, target, side_effect=fail):
                             with self.assertLogs(logger, level="ERROR"), self.assertRaises(type(original)) as caught:
                                 if operation == "withdraw":

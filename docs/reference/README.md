@@ -344,3 +344,21 @@ Record the result as a `lint` entry in the log.
 | Owner notes and preferences | `memory.md`, only when the owner asks |
 | Problem specification, BRDs, ideas and presentations | Existing folders under `docs/` |
 | Private owner material, such as the cohort map | `support/`, outside the knowledge base |
+
+## Prospective Progress Capture Routing (2026-10-17, #102)
+
+This is the current continuation of the earlier merged-#390 route above.
+Start with the [core event/writer contract](../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102),
+then the [prospective programme evidence boundary](./research/ux/customer-journeys/programme.md#prospective-progress-capture-continuation-2026-10-17-102)
+and [unchanged report/export API](../../src/api/README.md#historical-progress-report-and-export-102).
+Existing controlled stage, handoff and per-measure quality writers now append
+precise versioned events. Actual-domain JSON/SQLite/task-owned local SQL Server
+evidence covers rollback, failed recovery and post-COMMIT exact-once behavior.
+Past gaps, legacy precision, nonexistent general forward/closure writers and
+whole-home accepted-handover actuals remain unknown. Forecast/export criteria
+and the original adverse #390 Review are unchanged. quality.py overlap with
+parallel #88 is declared; independent final-head acceptance remains separate.
+The single original Review completed with two Medium findings. Correction ONE
+retains that adverse verdict, fails closed on later contradictory handoff
+states, and explicitly proves event/audit counts after SQL committed refresh
+failure/retry/restart. Final-head coordinator judgment is not self-awarded.

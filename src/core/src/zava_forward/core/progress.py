@@ -8,6 +8,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from .insights import STAGE_ORDER
+from .quality import EVENT_TYPES, TRANSITIONS
 
 Record = dict[str, Any]
 PAUSED = {"Contact paused", "Resident paused works"}
@@ -22,7 +23,7 @@ HANDOFF_STATES = {
 }
 STAGES = frozenset(STAGE_ORDER) | {"Completed"}
 LIMITS = [
-    "Partial coverage: forward progression is not fully recorded as structured UTC events.",
+    "Partial coverage: only controlled writers capture prospective events; past gaps remain.",
     "Current records, stage_since, days_in_stage, narrative and prose audit are not clocks.",
     "Cohort filters use current authorized records, not reconstructed as-of membership.",
     "Independent safety, resident, technical, quality and finance states are not reconstructed.",
@@ -82,6 +83,39 @@ def _handoff_latest(raw: Record, at: datetime) -> datetime:
     return at + timedelta(seconds=59, microseconds=999999) if truncated else at
 
 
+def _latest(raw: Record, key: str, at: datetime) -> datetime:
+    if key == "handoff_history":
+        return _handoff_latest(raw, at)
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})", raw["at"]):
+        return at + timedelta(seconds=59, microseconds=999999)
+    return at
+
+
+def _provenance(raw: Record) -> Record:
+    actor = raw.get("actor")
+    owner = raw.get("receiving_owner")
+    has_owner = isinstance(owner, dict) and any(
+        all(isinstance(owner.get(k), str) and owner[k].strip() for k in fields)
+        for fields in (("owner", "owner_code", "owner_role"), ("name", "code", "role"))
+    )
+    return dict(
+        owner_status="Recorded, withheld" if has_owner else "Unknown",
+        source_version_status="Recorded, withheld"
+        if isinstance(raw.get("source_version"), str) and raw["source_version"].strip()
+        else "Unknown",
+        actor_status="Recorded, withheld"
+        if isinstance(actor, dict)
+        and all(
+            isinstance(actor.get(k), str) and actor[k].strip()
+            for k in ("email", "code", "name", "role")
+        )
+        else "Unknown",
+        source_status="Supplied, unverified"
+        if isinstance(raw.get("source"), str) and raw["source"].strip()
+        else "Unknown",
+    )
+
+
 def _events(
     case: Record, key: str, as_of: datetime, exceptions: list[Record]
 ) -> tuple[list[Record], bool]:
@@ -102,7 +136,7 @@ def _events(
             continue
         try:
             at = timestamp(raw.get("at"), "Event time")
-            latest = _handoff_latest(raw, at) if key == "handoff_history" else at
+            latest = _latest(raw, key, at)
         except ValueError:
             _exception(exceptions, "unknown_event_time", source)
             valid = False
@@ -115,10 +149,9 @@ def _events(
             valid = False
         previous = max(previous, at) if previous else at
         if at > as_of:
-            if key == "handoff_history":
-                cutoff = True
+            cutoff = True
             continue
-        if key == "handoff_history" and (latest > as_of or cutoff):
+        if latest > as_of or cutoff:
             _exception(exceptions, "unknown_event_as_of", source)
             valid = False
             cutoff = True
@@ -138,18 +171,17 @@ def _events(
             _exception(exceptions, "unknown_event_actor", source)
         version = raw.get("version")
         event = dict(at=_iso(at), version=version if type(version) is int else None, source=source)
-        if key == "handoff_history":
-            event["time_precision"] = (
-                "Minute (legacy writer)" if latest != at else "Recorded instant"
-            )
-            event["latest_possible_at"] = _iso(latest)
-            if latest != at:
-                _exception(exceptions, "unknown_event_precision", source)
+        event.update(_provenance(raw))
+        event["time_precision"] = "Minute (legacy writer)" if latest != at else "Recorded instant"
+        event["latest_possible_at"] = _iso(latest)
+        if latest != at:
+            _exception(exceptions, "unknown_event_precision", source)
         # Raw actors, supplied references and free text are deliberately not exported.
         event["actor_status"] = "Recorded, withheld" if has_actor else "Unknown"
         event["source_status"] = "Supplied, unverified" if has_source else "Unknown"
         if key == "returns":
             old, new = raw.get("from_stage"), raw.get("to_stage")
+            advance = raw.get("event_type") == "advance"
             if (
                 not isinstance(old, str)
                 or old not in STAGES
@@ -158,11 +190,26 @@ def _events(
                 or type(raw.get("reopened")) is not bool
                 or old == new
                 or (
+                    raw.get("event_type") is not None
+                    and (
+                        not isinstance(raw["event_type"], str)
+                        or raw["event_type"] not in {"advance", "return", "reopen"}
+                    )
+                )
+                or (
+                    advance
+                    and (old, new, raw["reopened"])
+                    != ("Final checks before ordering", "Install booked", False)
+                )
+                or (raw.get("event_type") == "reopen" and raw["reopened"] is not True)
+                or (raw.get("event_type") == "return" and raw["reopened"] is not False)
+                or (
                     raw.get("reopened") is True
                     and new != ("Aftercare issue" if old == "Completed" else "Contacting resident")
                 )
                 or (
                     raw.get("reopened") is False
+                    and not advance
                     and (
                         old == "Completed"
                         or new == "Completed"
@@ -174,7 +221,7 @@ def _events(
                 valid = False
                 continue
             event.update(
-                kind="reopen" if raw["reopened"] else "return",
+                kind="advance" if advance else "reopen" if raw["reopened"] else "return",
                 from_stage=old,
                 to_stage=new,
             )
@@ -184,6 +231,11 @@ def _events(
                 _exception(exceptions, "unmappable_handoff_event", source)
                 valid = False
                 continue
+            event_type = "handoff_" + state.lower()
+            if raw.get("event_type") is not None and raw["event_type"] != event_type:
+                _exception(exceptions, "unmappable_handoff_event", source)
+                valid = False
+            event["event_type"] = event_type
             if not all(
                 isinstance(raw.get(k), str) and raw[k].strip()
                 for k in ("from_code", "to_code", "offered_at")
@@ -202,10 +254,136 @@ def _events(
     return result, valid
 
 
+def _quality_history(
+    case: Record, as_of: datetime, start: datetime | None, exceptions: list[Record]
+) -> tuple[list[Record], list[Record]]:
+    records = case.get("quality", [])
+    events: list[Record] = []
+    pairs: list[Record] = []
+    if not isinstance(records, list):
+        _exception(exceptions, "malformed_quality_history", "quality")
+        return events, pairs
+    for record_index, rec in enumerate(records):
+        root = f"quality/{record_index}"
+        if not isinstance(rec, dict) or not isinstance(rec.get("history"), list):
+            _exception(exceptions, "malformed_quality_history", root)
+            continue
+        if not rec["history"]:
+            _exception(exceptions, "unknown_quality_history", root)
+        valid = True
+        previous: datetime | None = None
+        state: str | None = None
+        accepted: Record | None = None
+        observed: list[Record] = []
+        superseded_at = None
+        for index, raw in enumerate(rec["history"]):
+            source = f"{root}/history/{index}"
+            if not isinstance(raw, dict):
+                _exception(exceptions, "malformed_quality_event", source)
+                valid = False
+                continue
+            try:
+                at = timestamp(raw.get("at"), "Quality time")
+                latest = _latest(raw, "quality", at)
+            except ValueError:
+                _exception(exceptions, "unknown_event_time", source)
+                valid = False
+                continue
+            if at > as_of:
+                break
+            if latest > as_of:
+                _exception(exceptions, "unknown_event_as_of", source)
+                valid = False
+                break
+            version = raw.get("evidence_version")
+            to = raw.get("to_state")
+            mapped = isinstance(to, str) and to in EVENT_TYPES
+            kind = EVENT_TYPES.get(to) if isinstance(to, str) else None
+            if (
+                type(raw.get("version")) is not int
+                or raw["version"] != index + 1
+                or type(version) is not int
+                or version < 1
+                or type(rec.get("evidence_version")) is not int
+                or version != rec.get("evidence_version")
+                or not mapped
+                or raw.get("event_type") != kind
+                or raw.get("source") != f"{root}/evidence/{version}"
+                or raw.get("source_version") != str(version)
+                or not isinstance(raw.get("checklist_version"), str)
+                or not raw["checklist_version"].strip()
+                or raw["checklist_version"] != rec.get("checklist_version")
+            ):
+                _exception(exceptions, "unknown_quality_event_contract", source)
+                valid = False
+            if (
+                raw.get("from_state") != state
+                or (state is None and to != "Submitted")
+                or (state is not None and to not in (*TRANSITIONS.get(state, ()), "Superseded"))
+                or (previous is not None and latest < previous)
+            ):
+                _exception(exceptions, "contradictory_quality_chain", source)
+                valid = False
+            previous = max(previous, at) if previous else at
+            state = to if mapped else None
+            provenance = _provenance(raw)
+            if any(value == "Unknown" for value in provenance.values()):
+                _exception(exceptions, "unknown_quality_provenance", source)
+                valid = False
+            if latest != at:
+                _exception(exceptions, "unknown_event_precision", source)
+            event = dict(
+                at=_iso(at),
+                latest_possible_at=_iso(latest),
+                time_precision="Recorded instant" if latest == at else "Minute (legacy writer)",
+                version=raw.get("version") if type(raw.get("version")) is int else None,
+                evidence_version=version if type(version) is int else None,
+                source=source,
+                kind=kind or "unknown",
+                **provenance,
+            )
+            if start is None or at >= start:
+                events.append(event)
+            if to == "Accepted":
+                accepted = event
+            elif to == "Handed over":
+                began = timestamp(accepted["at"], "Acceptance") if accepted else None
+                left = max(began, start) if began and start else began
+                precise = (
+                    latest == at and accepted and accepted["time_precision"] == "Recorded instant"
+                )
+                if start is None or latest >= start:
+                    observed.append(
+                        dict(
+                            source=accepted["source"] if accepted else None,
+                            end_source=source,
+                            evidence_version=version if type(version) is int else None,
+                            accepted_at=accepted["at"] if accepted else None,
+                            handed_over_at=_iso(at),
+                            elapsed_seconds=(at - left).total_seconds()
+                            if valid and precise and left is not None and left <= at
+                            else None,
+                            status="Observed historical handover"
+                            if valid and precise
+                            else "Unknown",
+                            superseded_at=None,
+                        )
+                    )
+            elif to == "Superseded":
+                superseded_at = _iso(at)
+        for pair in observed:
+            pair["superseded_at"] = superseded_at
+            if not valid:
+                pair.update(elapsed_seconds=None, status="Unknown")
+        pairs.extend(observed)
+    return events, pairs
+
+
 def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
     exceptions: list[Record] = []
     transitions, valid = _events(case, "returns", as_of, exceptions)
     handoffs, handoff_valid = _events(case, "handoff_history", as_of, exceptions)
+    quality_events, accepted_handovers = _quality_history(case, as_of, start, exceptions)
     intervals: list[Record] = []
     if not transitions:
         _exception(exceptions, "unknown_stage_history", "returns")
@@ -215,7 +393,9 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
         following = transitions[index + 1] if index + 1 < len(transitions) else None
         entered = timestamp(event["at"], "Event time")
         ended = timestamp(following["at"], "Event time") if following else as_of
-        consistent = valid
+        consistent = valid and event["time_precision"] == "Recorded instant"
+        if following:
+            consistent = consistent and following["time_precision"] == "Recorded instant"
         if following and (event["to_stage"] != following["from_stage"] or entered == ended):
             _exception(exceptions, "contradictory_stage_chain", following["source"])
             consistent = False
@@ -306,10 +486,13 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
                     censored=True,
                 )
             )
+    if not handoff_valid:
+        for wait in waits:
+            wait.update(elapsed_seconds=None, status="Unknown")
     # Independent source streams have no authoritative cross-stream sequence.
-    events = transitions + handoffs
+    events = transitions + handoffs + quality_events
     if start is not None:
-        for event in handoffs:
+        for event in transitions + handoffs + quality_events:
             if (
                 timestamp(event["at"], "Event time")
                 < start
@@ -322,6 +505,7 @@ def history(case: Record, as_of: datetime, start: datetime | None) -> Record:
         events=[e for e in events if start is None or timestamp(e["at"], "Event time") >= start],
         stage_intervals=intervals,
         handoff_waits=waits,
+        accepted_handovers=accepted_handovers,
         exceptions=exceptions,
     )
 
@@ -443,7 +627,8 @@ def report(
             "audit",
         )
         for item in histories:
-            for interval in item["stage_intervals"] + item["handoff_waits"]:
+            intervals = item["stage_intervals"] + item["handoff_waits"] + item["accepted_handovers"]
+            for interval in intervals:
                 interval["elapsed_seconds"] = None
                 interval["status"] = "Untrusted"
             item["coverage"] = "Untrusted"
@@ -473,17 +658,25 @@ def report(
                 "affected waits are unknown"
             ),
             event_order=(
-                "Independent returns then handoff streams in recorded append/version sequence, "
+                "Independent stage, handoff and per-record quality streams "
+                "in append/version sequence, "
                 "not cross-stream time order"
             ),
             pending_wait="Censored elapsed since observed offer, not a completed handoff",
-            stage_interval="Consistent recorded return/reopen boundaries; last exit unknown",
+            stage_interval=(
+                "Consistent recorded advance/return/reopen boundaries; last exit unknown"
+            ),
+            accepted_handovers=(
+                "Historical same-evidence-version quality acceptance to handover; "
+                "not whole-home completion"
+            ),
             event_period="Inclusive period; earlier boundaries may support clipped intervals",
             cohort="Current authorized membership in this response, not historical membership",
         ),
         sources=[
             "returns",
             "handoff_history",
+            "quality/*/history",
             "Current authorized case filters",
             "Existing ledger integrity check; narrative/prose is not parsed",
         ],

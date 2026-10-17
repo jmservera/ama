@@ -14,6 +14,7 @@ import re
 from contextlib import contextmanager
 from copy import deepcopy
 
+from . import change_provenance
 from .stock import decision_scope
 from .workflows import MANAGER_ROLES, _now
 from .resident_decisions import require_context
@@ -24,6 +25,9 @@ SUBMITTED, ACCEPTED, RETURNED = "Submitted", "Accepted", "Returned"
 FIXED, HANDED = "Fixed, awaiting reinspection", "Handed over"
 SUPERSEDED = "Superseded"
 TRANSITIONS = {SUBMITTED: (ACCEPTED, RETURNED), RETURNED: (FIXED,), FIXED: (ACCEPTED, RETURNED), ACCEPTED: (HANDED,), HANDED: ()}
+EVENT_TYPES = {SUBMITTED: "quality_submitted", ACCEPTED: "quality_accepted",
+               RETURNED: "quality_returned", FIXED: "quality_fixed",
+               HANDED: "quality_handover", SUPERSEDED: "quality_superseded"}
 
 CHECKLISTS = {
     "Loft insulation": dict(version="QC-LOFT v1", items=["Depth measured and photo taken", "Ventilation at the eaves kept clear",
@@ -65,8 +69,7 @@ def _norm(value):
     return (value or "").strip().lower()
 
 
-class QualityOutcomeError(RuntimeError):
-    """A quality decision committed, but the refreshed view is unavailable."""
+QualityOutcomeError = change_provenance.CommittedOutcomeError
 
 
 class QualityMixin:
@@ -141,10 +144,21 @@ class QualityMixin:
         if user["role"] not in QUALITY_ROLES:
             raise PermissionError(f"Only a Quality Inspector or a manager can {what}.")
 
-    def _qmove(self, rec, to, user, note):
+    def _quality_event(self, c, rec, user, old, to, note):
+        idx = next(i for i, row in enumerate(c["quality"]) if row is rec)
+        event = change_provenance.append_event(
+            rec, "history", user, EVENT_TYPES[to],
+            f"quality/{idx}/evidence/{rec.get('evidence_version', 'unknown')}",
+            by=user["name"], from_state=old, to_state=to, note=note,
+            evidence_version=rec.get("evidence_version"), checklist_version=rec["checklist_version"])
+        event.update(receiving_owner=change_provenance.ownership(c),
+                     source_version=str(rec["evidence_version"]) if rec.get("evidence_version") else None)
+        return event
+
+    def _qmove(self, c, rec, to, user, note):
         if to not in TRANSITIONS.get(rec["state"], ()):
             raise ValueError(f"This work is '{rec['state']}'. It cannot go to '{to}' from there.")
-        rec.setdefault("history", []).append(dict(at=_now(), by=user["name"], from_state=rec["state"], to_state=to, note=note))
+        self._quality_event(c, rec, user, rec["state"], to, note)
         rec["state"] = to
 
     def _independent(self, rec, user, what):
@@ -212,7 +226,7 @@ class QualityMixin:
                        resident_binding=binding,
                        items=[dict(label=lab, evidence=_clean(items[lab], 200)) for lab in cl["items"]],
                        submitted_by=submitted_by, source=source, recorded_by=user["name"], recorded_by_code=user["code"], recorded_at=_now(),
-                       history=[dict(at=_now(), by=user["name"], from_state=None, to_state=SUBMITTED, note=f"{source}: {submitted_by}")],
+                       history=[],
                        defect=None, defects=[], handover=None, aftercare=[])
             self._quality_participants(rec, user, submitted_by)
             for old_idx in supersedes:
@@ -220,12 +234,13 @@ class QualityMixin:
                 old["prior_acceptance"] = {k: deepcopy(old.get(k)) for k in
                                            ("accepted_by", "accepted_at", "accepted_identity", "handover")}
                 old.update(superseded_by=idx, superseded_at=_now(), handover=None)
-                old.setdefault("history", []).append(dict(at=_now(), by=user["name"], from_state=old["state"],
-                                                          to_state=SUPERSEDED, note=f"Replaced by evidence record {idx}"))
+                # Legacy evidence retains its original history; the new event names its actual version.
+                self._quality_event(c, old, user, old["state"], SUPERSEDED, f"Replaced by evidence record {idx}")
                 old["state"] = SUPERSEDED
                 for key in ("accepted_by", "accepted_at", "accepted_identity"):
                     old.pop(key, None)
             self._quality(c).append(rec)
+            self._quality_event(c, rec, user, None, SUBMITTED, f"{source}: {submitted_by}")
             self.audit(user["email"], "quality_submitted", case_id, f"{measure} {cl['version']} from {source} ({submitted_by})")
             self.save()
             return len(c["quality"]) - 1
@@ -241,7 +256,7 @@ class QualityMixin:
             self._independent(rec, user, "accept this work")
             if rec["state"] == FIXED and not _clean((rec.get("defect") or {}).get("remediation_evidence")):
                 raise ValueError("Remediation evidence is missing. Record the correction evidence before independent reinspection.")
-            self._qmove(rec, ACCEPTED, user, _clean(note))
+            self._qmove(c, rec, ACCEPTED, user, _clean(note))
             rec.update(accepted_by=user["name"], accepted_at=_now(), accepted_identity=_identity(user))
             self.audit(user["email"], "quality_accepted", case_id, f"{rec['measure']} {rec['checklist_version']} {_clean(note)}".strip())
             self.save()
@@ -253,7 +268,7 @@ class QualityMixin:
         with self._quality_operation(user, case_id) as (c, user):
             self._need_quality_role(user, "return work")
             rec = self._qrec(c, idx)
-            self._qmove(rec, RETURNED, user, reason)
+            self._qmove(c, rec, RETURNED, user, reason)
             rec["defect"] = dict(reason=reason, description=defect, owner=owner, raised_by=user["name"], raised_at=_now())
             rec["defects"].append(dict(rec["defect"]))
             self.audit(user["email"], "quality_returned", case_id, f"{rec['measure']}: {reason}. Defect owner {owner}")
@@ -268,7 +283,7 @@ class QualityMixin:
             if not note:
                 raise ValueError("Record the remediation evidence: what was corrected and the photo, document or inspection reference.")
             rec = self._qrec(c, idx)
-            self._qmove(rec, FIXED, user, _clean(note))
+            self._qmove(c, rec, FIXED, user, _clean(note))
             rec.update(fixed_by=fixed_by, fixed_recorded_by=user["name"], fixed_by_code=user["code"], fixed_at=_now())
             self._quality_participants(rec, user, fixed_by)
             rec["defect"].update(fixed_by=fixed_by, fixed_at=rec["fixed_at"], remediation_evidence=note)
@@ -298,8 +313,8 @@ class QualityMixin:
             self.require_safety_clear(c)
             rec = self._qrec(c, idx)
             self.require_resident_clear(c, [rec["resident_binding"]] if rec.get("resident_binding") else [])
-            self._qmove(rec, HANDED, user, note)
-            rec["handover"] = dict(by=user["name"], at=_now(), note=note, resident_told=True)
+            self._qmove(c, rec, HANDED, user, note)
+            rec["handover"] = dict(by=user["name"], at=rec["history"][-1]["at"], note=note, resident_told=True)
             self.audit(user["email"], "quality_handover", case_id, f"{rec['measure']} handed over to resident. {note}")
             self.save()
 

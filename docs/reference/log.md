@@ -5820,3 +5820,35 @@ metadata when the knowledge base was created.
   prior nine actual resident MSSQL and sensor SQL receipts remain historical.
   No cloud/private/paid-model/contact/authority writes, merge, issue closure,
   independent self-Pass or WCAG acceptance. Coordinator owns final disposition.
+
+## 2026-10-17 Engineering - #102 prospective controlled event capture
+
+* Distinct follow-up to merged #390 at main2267027 for the remaining timestamped
+  history criterion. Preserve the entire upstream index/log byte prefix and
+  original Review; forecasts and export-provenance criteria stay unchanged.
+* Extend existing stage/return/reopen, handoff and quality history dictionaries
+  at their actual controlled writers. Registered actor, owner, source/version,
+  precise UTC and authoritative append versions supply prospective evidence;
+  no past record or prior audit is reconstructed or edited.
+* Update [core](../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102),
+  [API](../../src/api/README.md#historical-progress-report-and-export-102),
+  [programme journey](./research/ux/customer-journeys/programme.md#prospective-progress-capture-continuation-2026-10-17-102)
+  and the appended current routing section. Quality acceptance/handover pairs
+  stay per evidence version and historical as-of; whole-home actuals remain
+  unknown. Independent controls, legacy minute bounds and forecast limits stay.
+* Actual-domain fictional JSON/SQLite/task-owned loopback SQL Server checks
+  cover successful capture, rollback/retry, failed recovery with preserved prior
+  audit, second-connection/restart and committed-refresh exact-once semantics.
+  JSON case/event replacement is atomic, not its separate audit across crashes.
+* quality.py history/acceptance/handover paths overlap parallel #88 and require
+  coordinator integration. No server/web/finance/infra or other-worktree edits,
+  operational approval, real authority, private data, Azure or paid AI.
+  One original Review and independent final-head acceptance remain separate.
+* Resumed the interrupted single Review after the VM upgrade; retained its two
+  Medium findings and adverse outcome. Concrete correction ONE makes earlier
+  waits unknown when a contradictory later handoff state is observed and
+  verifies exact event/audit counts for committed refresh failure/retry/restart,
+  including actual return/pause exit/reopen. Fresh targeted457 run/394 pass/
+  63 explicit skips; actual own MSSQL25 pass; corrected non-root image48 run/
+  47 pass/one skip plus source hashes/startup/negative probes; configured static
+  checks pass. These are engineering receipts, not coordinator acceptance.
