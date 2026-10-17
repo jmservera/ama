@@ -126,3 +126,26 @@ Research disposition: executed, Complete. Planning Readiness: Ready.
 Self-check: all three waves completed inline; questions map to evidence;
 no source changes or live scoring were performed. No unresolved research blocker.
 Next action: parent executes Plan with the selected bounded repair.
+
+## Integration Continuation (2026-10-17)
+
+Research disposition: reused, with bounded verification; Planning Readiness:
+Ready. The caller explicitly resumes the same task for rebase/integration only,
+superseding the earlier no-rewrite restriction for this run-owned topic branch.
+No new repair, critique loop, scorer dispatch or unrelated fixture work.
+
+Wider verification: clean branch and open PR #372 both identify reviewed head
+febd357dbe419260916c463b5663927ce8bb7117. Fetched origin/main is
+d890e3de29e24cb26c2eff35af9a6e125a3b541e, containing #368/#370/#371.
+Deeper verification: Git's three-dot base-change inventory has no overlap with
+.github/rubric/ or rubric-score source/lock; replay should preserve their bytes.
+Contrarian verification: a successful old-head CI run is not integrated-head
+evidence. Source projects CI run 39017650712 completed successfully but targets
+febd357, not the forthcoming rebased head. No final-head CI claim is justified.
+
+Accepted: rebase the two existing topic commits and this preflight checkpoint,
+compare canonical bytes and rerun local validation. Rejected: infer integration
+from disjoint filenames alone or reuse old-head hosted evidence as final CI.
+No new research uncertainty requires another cycle or specialist delegation.
+Git inventories and the read-only PR/run snapshots were checked on 2026-10-17.
+Run evidence: https://github.com/jmservera/ama/actions/runs/39017650712.

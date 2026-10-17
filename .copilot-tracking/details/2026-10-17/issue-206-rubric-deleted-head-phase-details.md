@@ -119,3 +119,20 @@ Source/lock audit preserved all other jobs, permissions, action/container
 manifest, scorer prompt/model, inputs, trusted loading and deterministic gate.
 P02-T02: plan markers, details, changes and phase log reconciled before Review.
 No remaining implementation task or human operational approval claim.
+
+## P03: Caller-Authorized Integration Continuation
+
+P03-T01 depends on reused research/readiness and bounded plan verification.
+Original reviewed head febd357 and remote branch both resolve to
+febd357dbe419260916c463b5663927ce8bb7117. New base is fetched origin/main
+d890e3de29e24cb26c2eff35af9a6e125a3b541e. Base changes are disjoint from the
+rubric feature paths. Stop for ambiguous conflicts; no automatic conflict
+resolution or executable change is authorized.
+
+P03-T02 depends on P03-T01. Test ownership remains the existing focused module;
+exact removals/additions: none. Canonical source/test/README and compiler-owned
+lock must be byte-identical to febd357. Required evidence is 159 focused cases,
+no-emit validation, two repeat compilations, exact baseline IDs if broadened
+tests run, whitespace validation and a bounded integration Review. Previous
+repair Review and critique remain historical completed assessments, not new
+claims about the rebased head. Only one final lease-protected push is planned.

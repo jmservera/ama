@@ -161,3 +161,33 @@ All P01/P02 tasks complete with focused validation and baseline comparison.
 One post-implementation Review is next. Implementation evidence:
 .copilot-tracking/changes/2026-10-17/issue-206-rubric-deleted-head-changes.md.
 No required human operational approval is inferred from this local repair.
+
+## Integration Continuation Plan (2026-10-17)
+
+The caller authorizes rebase of this run-owned branch onto fetched origin/main
+d890e3d and one explicit lease-protected push after validation. Stop on ambiguous
+conflicts; never push main, use bare force, change scoring/permissions, fix the
+21 existing failures or dispatch live scoring. Preserve Refs #206 in PR #372.
+This bounded plan verification reuses the completed critique and its applied
+PC-001..004 dispositions; it is not a second repair or critique cycle.
+
+<!-- rpi:phase id=P03 -->
+### [ ] P03: Integrate reviewed candidate with current main
+
+<!-- rpi:task id=P03-T01 -->
+#### [ ] P03-T01: Rebase and verify invariants
+
+Record preflight on the clean topic, rebase onto d890e3d, compare source, focused
+test, generated lock and rubric README bytes against febd357, and inspect the
+rebased range against the original range. No executable edits are planned.
+
+<!-- rpi:task id=P03-T02 -->
+#### [ ] P03-T02: Validate, review integration and publish once
+
+Run all 159 focused cases, compiler no-emit and two normal compilations with
+byte stability, and git diff --check. If full rubric tests run, compare exact
+failure IDs to the existing inventory rather than accepting equal counts.
+Update existing dated artifacts with integration-only Review evidence, commit
+with authenticated noreply identity and the required trailer, then push only
+this branch with an explicit expected-old-OID lease. Verify final PR/remote
+head and stop without a further evidence-only push or merge.

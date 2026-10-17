@@ -120,3 +120,12 @@ fixture failures remain a separate follow-up, not an overall green suite.
 Residual boundary: PR closure/head movement after the last API read is not
 atomic with a Git write or publication; exact ref compare-and-update and exact
 status/review SHAs are tested. No live-run success or human approval claimed.
+
+## P03 Integration Opening (2026-10-17)
+
+Bounded caller-authorized continuation: preserve reviewed febd357 feature bytes,
+rebase the run-owned branch onto fetched d890e3d, validate and inspect integration,
+then publish once using an explicit old-head lease. Research/Plan verification
+reuses prior repair evidence and critique; no executable changes are planned.
+Initial worktree was clean. A local preflight checkpoint preserves phase state
+without stashing or moving uncommitted work across rebase.
