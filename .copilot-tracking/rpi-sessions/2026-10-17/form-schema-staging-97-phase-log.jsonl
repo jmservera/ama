@@ -7,3 +7,5 @@
 {"date":"2026-10-17","phase":"Review","event":"started","scope":"one post-implementation comparison; full planned slice and separate actual acceptance limits"}
 {"date":"2026-10-17","phase":"Review","event":"completed","execution":"Complete","outcome":"Residual work","finding":"RV-001 actual approved-template authority and binding unmet","next":"Follow-up: authorized PR delivery then explicit stop"}
 {"date":"2026-10-17","phase":"Follow-up","event":"started","task_status":"completed bounded engineering loop; full issue acceptance unmet","session_status":"running until authorized PR delivery and explicit caller stop"}
+{"date":"2026-10-17","phase":"Follow-up","event":"delivered","source_commit":"ecae3eb","pull_request":"https://github.com/jmservera/ama/pull/377","base":"main","issue_reference":"Refs #97; acceptance unmet; leave open","next":"explicit caller stop; persist final handoff without child loop"}
+{"date":"2026-10-17","phase":"Follow-up","event":"session_stopped","mode":"automatic","task_status":"completed","outcome":"Residual work","direction":"Explicit caller stop after pushed PR and one Review; no child work or follow-up selection"}
