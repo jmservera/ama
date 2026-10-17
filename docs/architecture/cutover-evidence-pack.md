@@ -131,7 +131,7 @@ must never be deleted.
 | e: old stack/Front Door retirement after d | Nothing retired; source resources preserved | **UNMET**, correctly blocked by d and exact destructive-scope review |
 | f: runbook, ADR and evidence | Current runbook/ADR, this audit and reference routing updated; historical observations retained | Documentation delivered; no claim all live criteria pass |
 
-Image publication is blocked: private ACR has bypass None and no private task
+At the PR #375 evidence point, image publication was blocked: private ACR had bypass None and no private task
 pool/task, while local Docker is permission-denied. An authorized existing
 private publisher must supply/pin the proof digest without a new paid service
 or public-access workaround. An IAM owner must separately authorize/apply the
@@ -141,6 +141,10 @@ private roster/authorized mailbox-purpose decisions. No SP Graph mutation or
 human approval is simulated. Only after auth/runtime verification and fresh
 exact exposure review can real browser/SQL/AI acceptance and retirement proceed.
 Issue closure remains with the coordinator; this delivery uses Refs #360.
+
+The [later normal-Docker follow-up](#normal-docker-private-publication-follow-up-2026-10-17)
+supersedes the socket-denial observation, not the unmet publication outcome.
+The #379 receipts below supersede the historical IAM approval blockers.
 
 PR #375 same-session integration continuation (2026-10-17): rebased onto
 `51db4fa80a29528f5a3d19420b1c7e1597d27213`, preserving merged #373 sensor
@@ -262,6 +266,43 @@ acceptance remains untested.
 Prior RV-001 is resolved only for exact permission authorization/configuration.
 Private image publisher RV-002 and genuine tenant/runtime acceptance RV-003
 remain unproven; #360 d/e remain **UNMET**. Old stack and ama retained.
+
+## Normal-Docker Private Publication Follow-Up (2026-10-17)
+
+Refs #360, source baseline `b15f2f00e48300c4cf74815d7586ba84f61ee1d4`
+after merged #375/#379. Owner authorization covers normal private publication
+and conditional image-only pin, not route repair or workload execution.
+The [exact runbook and conditional commands](../../infra/README.md#normal-docker-private-publication-follow-up-2026-10-17-360)
+record the safe boundary and actual immutable references.
+
+| Evidence | Actual outcome |
+| --- | --- |
+| Normal Docker | Server 29.9.0; docker group verified, no privilege escalation; old socket blocker resolved |
+| Private ACR restrictions | Public Disabled, bypass None, admin false before/after |
+| Existing DNS/NIC | Login `10.40.4.21`, UK South data `10.40.4.20`; ordinary host DNS resolves publicly |
+| Reachability | Public login HTTPS403; both exact private-IP HTTPS connections time out at 10 seconds, no TLS established |
+| Authorization | Normal authenticated ACR login/push not attempted; no IAM denial claimed |
+| Packaging correction | Remove two directory-wide ignore exceptions; native local scratch/COPY audit now includes exactly seven intended files, no unrelated scripts/pyc |
+| Source checks | 83 focused tests pass, zero skips; five no-network source imports and two isolated source-help checks pass |
+| Real image delivery | Retained-base proof build/import/help/nonroot smoke, push, new tag/digest and pin Not run |
+| Preservation | Two read-visible job fingerprints match; old image, Manual initialize args, identity, complete template/configuration/environment preserved within no-write window |
+| Demo API | Existing `setup-pending-deny-all`, Deny `0.0.0.0/0` retained; auth unverified |
+
+The only Docker builds were local, network-disabled `FROM scratch` / COPY
+context audits, with no RUN/entrypoint execution, cloud upload or container
+start. Both exact named audit containers/images and test scratch were removed.
+These audits and source checks do not establish behavior of the unavailable
+real proof image, secret-payload equality, image-pin idempotency or staff setup.
+No SQL/private dataset, secret payload, Graph, job start, API restart, role,
+resource/network change, new spend or deletion of the old stack occurred.
+
+Ordered Research, Plan, Implement and one post-implementation Review retain
+the concrete private-route blocker. An already existing authorized private
+publisher must supply working private connectivity, a source-SHA-tagged
+validated image and immutable digest before the existing Manual job can be
+considered for image-only pin. The job's historical `initialize` args must
+never run implicitly. #360 d/e and genuine browser/role/SQL/AI acceptance remain
+**UNMET**; nothing here authorizes exposure or retirement.
 
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 

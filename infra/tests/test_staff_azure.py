@@ -1279,6 +1279,14 @@ class BuildContextTests(unittest.TestCase):
             self.assertTrue((infra / source).is_file(), source)
             self.assertFalse(ignored(source), source)
         self.assertTrue(re.search(r"entra/app-registration.json", " ".join(sources)))
+        for excluded in (
+            "scripts/setup-entra.py",
+            "scripts/.env",
+            "scripts/__pycache__/staff_roster.cpython-312.pyc",
+            "entra/private-profile.json",
+            "private-data.json",
+        ):
+            self.assertTrue(ignored(excluded), excluded)
 
 
 if __name__ == "__main__":

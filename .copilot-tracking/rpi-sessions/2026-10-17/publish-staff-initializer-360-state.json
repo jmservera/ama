@@ -1,0 +1,91 @@
+{
+  "task_id": "360",
+  "task_slug": "publish-staff-initializer-360",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/publish-staff-initializer-360-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/publish-staff-initializer-360-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/publish-staff-initializer-360-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/publish-staff-initializer-360-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/publish-staff-initializer-360-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/publish-staff-initializer-360-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI and conditional private image publication / image-only existing manual job pin",
+      "status": "owner-approved",
+      "evidence": "2026-10-17 caller request; normal Docker 29.9.0 verified; no workload execution, extra roles, spend or network changes"
+    },
+    {
+      "decision": "Research executed; all three ordered waves complete; Ready for bounded validation/evidence plan, live image route blocked",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-17/publish-staff-initializer-360-research.md"
+    },
+    {
+      "decision": "One final-candidate critique executed, verdict Revise; PC-001 explicit test scratch preflight/cleanup applied directly; no second critique",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/publish-staff-initializer-360-plan-critique.md; plan/details P01-T01"
+    },
+    {
+      "decision": "Bounded implementation complete; native context discovery corrected two directory exceptions, existing test expanded; 83 final tests pass; private image delivery remains blocked",
+      "status": "review-ready",
+      "evidence": ".copilot-tracking/changes/2026-10-17/publish-staff-initializer-360-changes.md; sanitized live receipt"
+    },
+    {
+      "decision": "One post-implementation full-task Review executed; Complete execution, Residual work outcome; no source defects; RV-001 High image delivery blocker and RV-002 Medium human gates",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/publish-staff-initializer-360-review.md"
+    },
+    {
+      "decision": "Stop automatic session after exact blocked outcome and terminal parent git/PR publication; no automatic follow-up selection",
+      "status": "owner-directed",
+      "evidence": "Caller explicit stop-final-push-or-precise-blocker requirement; final remote/PR head verification occurs outside self-referential committed state"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "private-acr-route",
+      "summary": "Normal DNS is public/HTTP403; existing private ACR login 10.40.4.21 and data 10.40.4.20 both time out on HTTPS",
+      "resolution": "Use an already existing private-connected authorized publisher; no network changes, new roles, Tasks or pools"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "No child work. Existing authorized private publisher must demonstrate private login/data route before live image delivery. Terminal parent publication is verified externally without a receipt-only follow-up commit."
+  },
+  "authorized_integration": {
+    "date": "2026-10-17",
+    "pull_request": 381,
+    "old_exact_lease": "a606258bdc3b01664fb67c874f19dc0455453c0d",
+    "new_main_base": "adedf1f232e567d3a22a623d9c871513fa6b7cdc",
+    "rebased_candidate": "e31a1ae5705287f92729b031fedbc280324afce7",
+    "conflicts": ["docs/reference/README.md", "docs/reference/log.md"],
+    "preservation": "Both complete KB index/log histories retained; all other #380 files exact main; Docker ignore/test/recipe exact a606258",
+    "minimal_validation": "One unchanged existing context test and native network-none exact-seven-file context check passed; diff/preservation checks passed",
+    "validation_limitation": "First native assertion counted Docker runtime files outside context; harness scoped correctly and rerun passed; no real image build or full suites",
+    "prior_venv": "Already removed before continuation; not restored or deleted mid-review",
+    "independent_reviewer": "463ad179",
+    "independent_review_boundary": "Assessing a606258; final exact-head follow-up required, not independently passed",
+    "terminal_publication": "One privacy-safe integration-record commit and authorized topic-only force-with-lease; final remote/PR/check verification and reviewer notice external, no receipt-only follow-up commit",
+    "cloud_writes_or_private_probes": "None",
+    "image_publication_and_pin": "UNMET"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Existing private publisher builds, validates, pushes and supplies digest for image-only pin",
+      "rationale": "Direct critical-path prerequisite; Docker works but no reachable existing private route here; cannot weaken privacy",
+      "evidence": "Review RV-001; actual live receipt with private endpoint timeouts"
+    },
+    {
+      "rank": 2,
+      "task": "Human-authorized tenant/browser/roles/SQL/AI acceptance, then separately approved retirement",
+      "rationale": "Existing d/e gates remain unmet; image or offline checks do not replace real approval/acceptance",
+      "evidence": "Review RV-002; issue #360; demo deny-all readback"
+    }
+  ]
+}
