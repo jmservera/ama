@@ -1,7 +1,7 @@
 ---
 title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -434,8 +434,8 @@ rendered PDFs or images.
 ## Synthetic data needs inventory and phase gate (2026-10-15)
 
 Issue #166, parent #165. The machine-readable inventory is
-[needs-inventory.json](./needs-inventory.json) (version 1.2.0, draft awaiting
-owner review). It lists 13 needs with source reference, consuming issues,
+[needs-inventory.json](./needs-inventory.json) (version 1.3.0, reviewed
+2026-10-17 and still draft awaiting owner review). It lists 13 needs with source reference, consuming issues,
 volume, proposed owner and generator coverage (covered, partial or missing).
 
 Gate rule: a build epic that consumes synthetic data cites its inventory row
@@ -448,9 +448,11 @@ citations, not blanket approval of every row in a numeric range.
 The versioned [constructed-scenario manifest](./scenario-manifest.json)
 links the exact inventory version, review date and all thirteen reviewed rows.
 This iteration records an automated engineering review of public repository
-evidence, not owner ratification. Its eleven profile paths and nine workflow
-checks remain explicitly deferred to #103; no defaults, safe endpoints,
-connected lifecycle or full FR-035 acceptance are claimed.
+evidence, not owner ratification. The initial v0.1.0 blanket deferrals are
+superseded by the bounded #103 audit below: full journeys are unavailable,
+not approved deferrals. Existing tiny-fixture defaults and safe/unknown
+endpoints are now explicit; no connected lifecycle or full FR-035 acceptance
+is claimed.
 
 Before each iteration starts, review every row; bump the inventory version
 and review date, update the manifest binding, version and iteration, and
@@ -471,6 +473,57 @@ do not resolve the open owner volume/scope decisions.
 Open items: owner approval of the inventory and row owners, volumes for
 SN-03, SN-08 and SN-09, and reconciliation with the 2026-10-14 backlog
 handoff matrix, which is not in the repository.
+
+### Constructed-scenario manifest acceptance audit (2026-10-17, #103)
+
+The existing [scenario manifest](./scenario-manifest.json) is now version
+0.2.0, iteration `2026-10-17-offline-manifest-103`. It accounts for all
+eleven profile and nine workflow identifiers from the
+[PRD FR-035 and journey contract](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype).
+No new people, home records, registry or 60,000-home dataset were generated.
+SN-11 remains partial: metadata accountability is complete, full journeys are
+not. The caller's tiny-fixture/offline scope does not grant the inventory's
+pending owner volume/scope approvals or authorize a consuming application build.
+
+| Exact #103 criterion | Bounded result | Evidence |
+| --- | --- | --- |
+| Manifest is versioned and lists every profile and workflow as represented, unavailable or deferred | Met for this offline iteration: 11 profile and 9 workflow entries, 0 represented full journeys, 20 unavailable, 0 approved deferrals | Version/iteration, exact canonical IDs, required paths, safe endpoints/owned unknowns and reasons in the manifest; core contract tests reject omissions, duplicates, substitutions and unsupported status promotions |
+| Data stays constructed and non-identifying | Met for this metadata change and existing tiny public fixture recipe, not a universal PII/private-data attestation | No new person/home payload; SHA-256 bindings to existing public constructed `dataset.py`, three-case recipe, IA manifest and navigation test source; no private stock, real map anchors, runtime data or external services consumed |
+
+The current fixture is the existing `152-ia-v1` shared-IA recipe: ordered
+all-case IDs `ZF-4`, `ZF-1`, `ZF-5`, eight synthetic roles, urgent default
+sort and no implicitly selected case. Exact ordered per-role and per-profile
+own-queue IDs/counts/selection are recorded. A null profile default means no
+corresponding login/default was supplied, not an empty validated journey.
+Building Safety's empty own queue is distinguished from the related `ZF-4`
+safety example. Historical PRD EX-HOME defaults are not relabelled as this
+fixture, and these small tests do not replace continuing stock/programme lineage.
+
+Each entry's `evidence_index` resolves to the same-index row in the hash-bound
+[IA source](../../../../src/api/checks/workbench-manifest.json).
+Its checks, fixture IDs and endpoints are partial engineering definitions,
+not full execution evidence. The source's historical `partial`/`deferred`
+labels do not supply an owner deferral or promote a workflow because its API
+exists. The current manifest therefore uses `unavailable` for every full
+journey in this slice; it does not claim every related application feature
+is absent. Historical Slice B/C sequencing supports only the named
+non-applicable connected-exception/building/lifecycle checks.
+
+The shared [core validator](../../../../src/core/README.md#constructed-scenario-manifest-103)
+enforces canonical identity/order, allowed public sources/hashes, exact
+defaults and inventory binding, and rejects unsupported represented/deferred
+edits against this evidence contract. A future represented journey or actual
+deferral requires newly reviewed, versioned evidence and a corresponding
+contract update, not a label-only change. Existing
+[#174's evaluation registry](../../../../src/agents/evals/registry.json) is
+reused unchanged; Git retains iteration history, with no parallel registry.
+
+The one Programme Manager scope refinement was a role-informed research
+recommendation, not company approval. Complete FR-035/AC-043, independent
+human review, professional/resident decisions and actual application acceptance
+under [BRD CON-007](../../../brds/agentic-retrofit-programme-brd.md#imposed-constraints)
+remain unproved by this offline change. No browser rerun, legal currentness,
+human usability or real AI/Azure/SQL result is claimed.
 
 ### Generator gap closure (2026-10-15)
 

@@ -4896,3 +4896,25 @@ metadata when the knowledge base was created.
 * Final exact-head independent review still required. Private publisher and
   genuine tenant/browser/runtime evidence remain unproven, #360 d/e UNMET;
   owner live approvals, ama/old-stack retention unchanged. No merge/autoclose.
+
+## [2026-10-17] query | Constructed iteration manifest and criterion audit (#103)
+
+* Audited exact #103 criteria, current PRD v0.17.0 FR-035/AC-043,
+  BRD v0.18.0 CON-007, prior scenario/IA manifests and closed #174 registry
+  at main bf98977. Dependencies none; #100 is hierarchy, not a dependency.
+* Versioned existing scenario metadata to v0.2.0: all eleven profiles/nine
+  workflows accounted for, with explicit required paths, safe endpoints or
+  owned unknowns. Full journeys are unavailable in this offline iteration;
+  removed unsupported blanket deferral claims without claiming APIs absent.
+* Retained existing tiny three-case recipe and partial IA check provenance,
+  with source hashes and exact ordered role/profile defaults. Shared core
+  validation and destructive mutations enforce identity, status, binding,
+  defaults and source restrictions through existing core CI discovery.
+* Reviewed all thirteen public metadata inventory rows, bumped inventory to
+  v1.3.0/date and clarified SN-11; owner review stays pending and coverage
+  partial. Updated existing synthesis, provenance display label, core guide
+  and index. Reused #174 evaluation registry unchanged; Git is iteration history.
+* One Programme Manager research scope refinement is not owner ratification.
+  No new people/home dataset, private/support/stock read, regeneration,
+  runtime/UI behavior, billable AI, SQL/cloud service, operational approval
+  or human/browser acceptance is claimed.
