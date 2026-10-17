@@ -7,3 +7,5 @@
 {"date":"2026-10-17","phase":"Review","event":"started","scope":"complete supplied P01/P02 and issue criteria","execution":"one read-only post-implementation review"}
 {"date":"2026-10-17","phase":"Review","event":"completed","execution":"Complete","outcome":"Not accepted","findings":"RV-001 status-corruption defect; RV-002 older provenance residual","next":"Follow-up publication only; no nested delivery"}
 {"date":"2026-10-17","phase":"Follow-up","event":"started","task_status":"completed","session_status":"running","next":"privacy-safe commit and draft main PR, then requested stop"}
+{"date":"2026-10-17","phase":"Follow-up","event":"published","pr":378,"url":"https://github.com/jmservera/ama/pull/378","base":"main","draft":true,"source_commit":"1bd60e38e8bff9e07adfed4a70d06bb2e299fb4c","review_outcome":"Not accepted","next":"explicit user-requested session stop"}
+{"date":"2026-10-17","phase":"Follow-up","event":"stopped","task_status":"completed","session_status":"stopped","reason":"Explicit stop boundary reached at final pushed draft PR","remaining":"RV-001 implementation defect and RV-002 broader provenance residual; no acceptance/merge/closure"}
