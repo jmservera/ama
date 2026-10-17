@@ -1,6 +1,32 @@
 <!-- markdownlint-disable-file -->
 # RPI Review: iteration-scenario-manifest-103
 
+## Current Acceptance and Correction ONE Disposition
+
+The original implementer Review below is retained as a historical result,
+not current independent acceptance. Caller relays independent reviewer
+`fa457455` verdict Revise against `7c3c6a7` for the approval overclaim.
+
+### RV-001: Unsupported approval attribution
+
+* Evidence: scenario-manifest.json v0.2.0 called the inventory "approved PRD
+  journey" and "full approved journeys". PRD Users and Personas identifies
+  provisional product roles; Profile Journey Contract identifies proposed
+  constructed walkthroughs. No customer/owner approval is established.
+* Impact: misstates source authority despite honest unavailable coverage.
+* Destination: rpi-implement, caller-authorized correction cycle ONE.
+* Disposition: correction ONE implemented, pending independent verification.
+  Manifest v0.2.1 and owned active attribution retain provisional/proposed
+  source status; structured authority fields reject missing authority or
+  unsupported customer/owner approval/source promotions. Nineteen focused
+  scenario/inventory tests and scoped lint/format/types pass. Original
+  independent Revise remains the last supplied independent verdict; final
+  exact-head review required, not fabricated Pass.
+* Severity: no severity supplied in the caller's relayed finding; none invented.
+
+The following original outcome/findings are not rewritten or transferred
+to the corrected head.
+
 ## Review Metadata
 
 Task #103; 2026-10-17. Exactly one post-implementation Review.

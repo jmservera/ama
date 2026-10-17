@@ -22,7 +22,7 @@ class ScenarioManifestTests(unittest.TestCase):
         before = copy.deepcopy(self.manifest)
         validate_manifest(self.manifest, ROOT)
         self.assertEqual(self.manifest, before)
-        self.assertEqual(self.manifest["version"], "0.2.0")
+        self.assertEqual(self.manifest["version"], "0.2.1")
         self.assertTrue(
             all(
                 entry["status"] == "unavailable"
@@ -164,3 +164,21 @@ class ScenarioManifestTests(unittest.TestCase):
                 manifest = copy.deepcopy(self.manifest)
                 manifest["inventory"][field] = value
                 self.reject(manifest)
+
+    def test_journey_coverage_cannot_grant_source_authority(self) -> None:
+        manifest = copy.deepcopy(self.manifest)
+        manifest.pop("inventory_authority")
+        with self.assertRaisesRegex(ValueError, "authority"):
+            validate_manifest(manifest, ROOT)
+        for field, value in (
+            ("roles", "confirmed-company-roles"),
+            ("journeys", "approved-operational-journeys"),
+            ("customer_approval", "approved"),
+            ("owner_approval", "approved"),
+            ("source", "unrecorded-approval"),
+        ):
+            with self.subTest(field=field):
+                manifest = copy.deepcopy(self.manifest)
+                manifest["inventory_authority"][field] = value
+                with self.assertRaisesRegex(ValueError, "authority"):
+                    validate_manifest(manifest, ROOT)

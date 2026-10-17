@@ -74,13 +74,27 @@ def validate_manifest(manifest: dict[str, Any], root: Path) -> None:
     _require(manifest.get("is_synthetic") is True, "is_synthetic must be true")
     _require(manifest.get("contains_real_data") is False, "contains_real_data must be false")
     _require(manifest.get("status") == "offline-coverage-audit", "unknown slice evidence contract")
+    _require(
+        manifest.get("inventory_authority")
+        == {
+            "source": (
+                "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+                "#profile-journey-contract-for-the-next-prototype"
+            ),
+            "roles": "provisional-product-roles",
+            "journeys": "proposed-constructed-walkthroughs",
+            "customer_approval": "not-established",
+            "owner_approval": "not-established",
+        },
+        "inventory authority must retain PRD proposal status; coverage cannot grant approval",
+    )
 
     sources = _rows(manifest.get("sources"), {"id", "path", "sha256"}, "sources")
     _require(
         len(sources) == len(SOURCES)
         and all(SOURCES.get(source["id"]) == source["path"] for source in sources)
         and len({source["id"] for source in sources}) == len(SOURCES),
-        "source set must match the approved public fixture recipe",
+        "source set must match the reviewed public fixture recipe",
     )
     for source in sources:
         digest = hashlib.sha256(_public_file(root, source["path"]).read_bytes()).hexdigest()
@@ -121,7 +135,7 @@ def validate_manifest(manifest: dict[str, Any], root: Path) -> None:
         )
         _require(
             [entry["id"] for entry in entries] == list(expected_ids),
-            f"{key} must list each approved ID once in canonical order",
+            f"{key} must list each PRD-proposed inventory ID once in canonical order",
         )
         for index, entry in enumerate(entries):
             name = entry["id"]

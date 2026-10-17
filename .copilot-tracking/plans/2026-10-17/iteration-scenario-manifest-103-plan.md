@@ -3,7 +3,9 @@
 
 ## Task Metadata
 
-Task #103; date 2026-10-17; implementation complete, Review Complete/Conformant.
+Task #103; date 2026-10-17; initial implementation and Review complete.
+Independent reviewer fa457455 subsequently returned Revise on 7c3c6a7;
+authorized correction cycle ONE implemented, final independent verdict pending.
 Details: .copilot-tracking/details/2026-10-17/iteration-scenario-manifest-103-phase-details.md.
 Critique: .copilot-tracking/reviews/plans/2026-10-17/iteration-scenario-manifest-103-plan-critique.md.
 
@@ -21,6 +23,8 @@ No data generation or invented approval is necessary.
 * Reuse inventory, #174 registry and existing tiny constructed test recipe.
 * No private reads, stock regeneration, services, paid calls or UI changes.
 * Commit all dated evidence, push requested branch, main PR Refs #103; no merge.
+* Correction ONE: PRD roles/journeys are provisional/proposed, not customer- or
+  owner-approved; fix owned attribution and guard authority metadata.
 
 ## Goals
 
@@ -45,6 +49,8 @@ or human acceptance.
   evidence. Current twenty entries unavailable; no false approvals.
 * Preserve reciprocal inventory binding and pending owner status; existing
   #174 registry remains the evaluation registry.
+* Keep source status separate from coverage: provisional roles and proposed
+  constructed journeys cannot confer customer or owner approval.
 
 ## Non-Functional Requirements
 
@@ -94,6 +100,16 @@ Existing CI core discovery runs enforcement automatically.
 
 None. #100 hierarchy and closed #174 prior art are not dependencies.
 
+<!-- rpi:phase id=P02 -->
+### [x] P02: Correct authority attribution
+
+<!-- rpi:task id=P02-T01 -->
+#### [x] P02-T01: Correct owned claims and enforce proposal authority
+
+Preserve original verdict history, add authority mutation coverage before
+guard implementation, run focused scenario/inventory tests and scoped static
+checks, publish on same PR; independent exact-head review remains required.
+
 ## Critique Disposition
 
 One final-candidate critique executed: Complete/Pass, zero PC findings.
@@ -109,5 +125,9 @@ No revisions or further critique required.
 Changes record: .copilot-tracking/changes/2026-10-17/iteration-scenario-manifest-103-changes.md.
 P01-T01/T02/T03 complete. 29 focused tests, scoped Ruff/format/mypy,
 12 new relative links/anchors and whitespace checks pass. One
-post-implementation Review Complete/Conformant. No blocker; parent publishes
-the committed artifacts and main PR, then stops as requested.
+post-implementation Review originally Complete/Conformant, superseded for
+acceptance by independent Revise. Correction ONE P02 is implemented; no new Pass
+or independent acceptance inferred.
+P02 implementation now complete: 19 focused tests and scoped lint/format/types
+pass, four production links/anchors checked. Publish to same PR and request
+exact-final-head independent follow-up; no further delivery loop.

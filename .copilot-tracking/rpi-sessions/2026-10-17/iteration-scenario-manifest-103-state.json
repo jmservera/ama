@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "100", "task_slug": null},
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "completed",
+  "status": "implementation-complete-independent-review-pending",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/iteration-scenario-manifest-103-research.md",
@@ -23,7 +23,7 @@
     {"decision": "Reviewed implementation and full evidence pushed; independent main PR opened", "status": "verified", "evidence": "commit 6560d488aa6891080b34fc99dd886c42f1215ade; https://github.com/jmservera/ama/pull/380"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Authorized same-PR rebase onto main b15f2f0 complete; final explicit-lease topic push and ordinary Source CI handoff only, then stop without receipt commit. Independent fa457455 assessment targets old 7c3c6a7; exact-final-head follow-up remains required, no verdict inferred."},
+  "next_action": {"phase": "Follow-up", "action": "Correction ONE implemented with 19 focused tests and scoped lint/types passing; publish correction on same PR. Last independent fa457455 verdict remains Revise on 7c3c6a7; exact-final-head independent follow-up required, no Pass inferred."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Owner-scoped full profile/workflow acceptance", "rationale": "Highest directly evidenced remaining product gap; separate from completed metadata criteria and not launched", "evidence": "PRD FR-035/AC-043; current manifest has twenty unavailable full journeys"}
   ]

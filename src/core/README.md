@@ -856,7 +856,7 @@ data-consuming build work starts.
 ### Constructed-scenario manifest (#103)
 
 The same [manifest](../../docs/reference/research/retrofit-synthetic-data/scenario-manifest.json)
-v0.2.0 records the offline iteration's exact eleven profiles, nine workflows,
+v0.2.1 records the offline iteration's exact eleven profiles, nine workflows,
 required paths, safe endpoints/unknowns and partial IA provenance. All twenty
 full journeys are explicitly unavailable for this slice; existing API or
 navigation checks do not imply represented journeys or approved deferrals.
@@ -872,6 +872,12 @@ promotions. It never reads runtime `ZF_DATA` or private stock. This contract
 deliberately refuses represented/deferred against the current partial IA
 evidence; future evidence needs a reviewed manifest and validator update.
 Hashes detect reviewed-source drift, not arbitrary identifying content.
+The source inventory describes provisional product roles and PRD-proposed
+constructed journeys, not approved company roles or customer/owner decisions.
+The `inventory_authority` contract records that distinction and absent approval
+separately from coverage; missing, promoted or substituted authority metadata
+fails validation. This corrects v0.2.0's approval overclaim without establishing
+independent acceptance; final-head review remains required.
 
 From `src/core`, run the smallest combined contract suite:
 

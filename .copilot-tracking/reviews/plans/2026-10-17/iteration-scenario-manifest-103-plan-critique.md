@@ -1,6 +1,17 @@
 <!-- markdownlint-disable-file -->
 # RPI Plan Critique: iteration-scenario-manifest-103
 
+## Historical Record and Correction ONE Notice
+
+The assessment below is preserved as originally returned, including its
+incorrect "approved" inventory attribution; it is not current authority
+evidence. Caller subsequently relayed independent reviewer fa457455's Revise
+against 7c3c6a7. PRD Users and Personas describes provisional product roles;
+the Profile Journey Contract describes proposed constructed walkthroughs,
+not customer/owner-approved journeys. Correction ONE fixes active claims and
+adds authority enforcement; it does not rerun or retroactively change this
+critique's historical verdict. Independent exact-final-head review is pending.
+
 ## Metadata
 
 * Task ID: #103

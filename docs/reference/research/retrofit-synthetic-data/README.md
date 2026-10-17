@@ -477,7 +477,7 @@ handoff matrix, which is not in the repository.
 ### Constructed-scenario manifest acceptance audit (2026-10-17, #103)
 
 The existing [scenario manifest](./scenario-manifest.json) is now version
-0.2.0, iteration `2026-10-17-offline-manifest-103`. It accounts for all
+0.2.1, iteration `2026-10-17-offline-manifest-103-correction-one`. It accounts for all
 eleven profile and nine workflow identifiers from the
 [PRD FR-035 and journey contract](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype).
 No new people, home records, registry or 60,000-home dataset were generated.
@@ -524,6 +524,19 @@ human review, professional/resident decisions and actual application acceptance
 under [BRD CON-007](../../../brds/agentic-retrofit-programme-brd.md#imposed-constraints)
 remain unproved by this offline change. No browser rerun, legal currentness,
 human usability or real AI/Azure/SQL result is claimed.
+
+Correction ONE responds to independent reviewer `fa457455`'s Revise against
+`7c3c6a7`: v0.2.0 incorrectly called these "approved" journeys. The PRD
+[Users and Personas](../../../prds/zava-forward-retrofit-programme-demonstrator.md#users-and-personas)
+identifies provisional product roles, and its journey contract explicitly
+describes proposed constructed walkthroughs. The manifest's
+`inventory_authority` now records those source classifications separately
+from coverage and records customer/owner approval as not established.
+The validator rejects missing authority metadata, unsupported approval
+promotions or substituted authority sources. All eleven/nine entries and
+twenty unavailable full journeys remain unchanged; no actual deferrals or
+approvals are invented. Engineering correction is not an independent Pass;
+exact-final-head review remains required.
 
 ### Generator gap closure (2026-10-15)
 

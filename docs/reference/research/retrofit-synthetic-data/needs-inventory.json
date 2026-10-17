@@ -260,7 +260,7 @@
         "DS-OPS-MANIFEST",
         "DS-SCENARIO-MANIFEST"
       ],
-      "note": "scenario-manifest.json v0.2.0 binds the public metadata review and existing tiny shared-IA fixture recipe. All eleven full profile paths and nine workflow journeys are unavailable in this offline iteration, not approved deferrals. #103 completes versioned coverage accountability and integrity enforcement, not full FR-035/application/human acceptance. No new data volume or consuming application build is authorized.",
+      "note": "scenario-manifest.json v0.2.1 binds the public metadata review and existing tiny shared-IA fixture recipe. All eleven full profile paths and nine workflow journeys are unavailable in this offline iteration, not approved deferrals. The inventory uses provisional product roles and PRD-proposed constructed journeys, not customer/owner approval. #103 completes versioned coverage accountability and integrity enforcement, not full FR-035/application/human acceptance. No new data volume or consuming application build is authorized.",
       "gap_closure": {
         "kind": "child",
         "issues": [

@@ -4918,3 +4918,23 @@ metadata when the knowledge base was created.
   No new people/home dataset, private/support/stock read, regeneration,
   runtime/UI behavior, billable AI, SQL/cloud service, operational approval
   or human/browser acceptance is claimed.
+
+## [2026-10-17] query | #103 correction ONE retains proposed journey authority
+
+* Independent reviewer fa457455 returned Revise against 7c3c6a7, relayed by
+  the caller: manifest v0.2.0 incorrectly called PRD-proposed journeys
+  approved. PRD Users and Personas describes provisional roles; the Profile
+  Journey Contract describes proposed constructed walkthroughs, not confirmed
+  company staffing, delegated authority or customer/owner approval.
+* Corrected owned active attribution in manifest v0.2.1, validator messages,
+  research and phase details; updated existing synthesis/index/core guide and
+  manifest display references. Retained original critique/Review verdicts as
+  history with explicit correction notices and a pending finding disposition.
+* Added structured inventory-authority metadata separate from coverage.
+  One mutation test first failed for five unsupported authority promotions;
+  the guard now rejects promotions, missing metadata and substituted sources.
+  Nineteen focused scenario/inventory tests and scoped lint/format/types pass.
+* Exactly eleven profile/nine workflow entries remain; all twenty full journeys
+  unavailable, no approved deferrals invented. No new data, private read,
+  cloud/model use, merge or scope expansion. Implementation correction does not
+  establish independent Pass; final exact-head independent review is required.

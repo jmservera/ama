@@ -12,7 +12,7 @@
 
 Audit #103's existing delivery before completing actual engineering gaps.
 Prepare planning for exactly two criteria: a versioned iteration manifest
-listing every approved profile/workflow as represented, unavailable or
+listing every PRD-proposed profile/workflow as represented, unavailable or
 deferred; constructed non-identifying data.
 
 ## Research Parameters
@@ -40,7 +40,7 @@ no existing PR. #174 is closed prior art, not a dependency.
 
 ## Direction Controls
 
-Reuse approved inventory and registry. Do not infer represented from API
+Reuse the existing PRD-proposed inventory and registry. Do not infer represented from API
 existence or invent deferral approval. Unknown operational/owner acceptance
 remains unknown. Small wholly fictional fixtures only.
 
@@ -63,7 +63,7 @@ memory. Existing delivery is a claim to verify, not acceptance.
 
 #### Wave 1: Wider
 
-Locate approved inventory, source version, iteration registry and scenario
+Locate the existing inventory, source version, iteration registry and scenario
 prior art before choosing any implementation.
 
 Found existing scenario v0.1.0, shared IA v152-ia-v1, #174 evaluation
@@ -76,7 +76,7 @@ Reflection: all twenty entries exist, but blanket deferred is not supported.
 Inspected inventory enforcement, IA navigation tests and the browser fixture
 recipe: three constructed cases ZF-1/4/5, eight synthetic roles, no selected
 case. Existing core regression hardcodes every entry deferred; no shared
-manifest validator enforces exact approved identities, evidence or status
+manifest validator enforces exact PRD-proposed identities, evidence or status
 truthfulness. Reflection: preserve the IA recipe, not historical EX-HOME
 defaults; exact source hashes can prevent an unversioned provenance drift.
 
@@ -104,7 +104,7 @@ be established by more offline research.
 | --- | --- | --- |
 | W1 | https://github.com/jmservera/ama/issues/103 (2026-10-17) | Exactly two acceptance criteria; no dependencies, parent #100 |
 | W2 | https://github.com/jmservera/ama/issues/174 (2026-10-17) | Closed dataset registry prior art must be reused |
-| C1 | docs/prds/zava-forward-retrofit-programme-demonstrator.md:870,1778,1905 | FR-035, approved eleven/nine inventory and journey contract; historical defaults are not current IA |
+| C1 | docs/prds/zava-forward-retrofit-programme-demonstrator.md:308,870,1778,1905 | FR-035 and proposed eleven/nine inventory/constructed walkthroughs; product roles provisional, no customer/owner approval established; historical defaults are not current IA |
 | C2 | docs/brds/agentic-retrofit-programme-brd.md:1368 | CON-007 application-only real-service boundary |
 | C3 | docs/reference/research/retrofit-synthetic-data/scenario-manifest.json:1 | v0.1.0 partial inventory, unsupported blanket deferrals |
 | C4 | src/api/checks/workbench_browser_check.py:19; src/api/checks/workbench-manifest.json:1 | Existing three-case recipe, exact roles/paths/defaults; partial IA only |
@@ -138,3 +138,13 @@ Code references identify actual repository evidence. No external legal claims.
 
 Ready. Research disposition executed; audit explicitly prepares planning.
 Scope refined once: complete manifest accountability, not full MVP acceptance.
+
+## Correction ONE Evidence Attribution
+
+2026-10-17: independent reviewer fa457455 returned Revise against 7c3c6a7,
+relayed by caller. Earlier "approved" attribution in this research was
+incorrect: PRD Users and Personas identifies provisional product roles and
+Profile Journey Contract identifies proposed constructed walkthroughs.
+Current wording corrected above; no source requirement, approval history or
+research wave is retroactively claimed to have changed. This correction is
+implementation follow-up, not a new research cycle or independent Pass.

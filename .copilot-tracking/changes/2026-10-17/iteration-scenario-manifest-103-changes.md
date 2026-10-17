@@ -152,3 +152,52 @@ CI; relevant src/metadata paths match its PR filter. After push, inspect runs;
 if none exists for the exact final head, dispatch only existing `src-ci.yml`
 on this branch. Do not dispatch paid rubric. Caller stop boundary is final
 publication/CI handoff, with no extra receipt commit or head-chasing update.
+
+## Correction Cycle ONE: PRD Authority Overclaim (2026-10-17)
+
+Caller relays independent reviewer `fa457455` verdict Revise against
+`7c3c6a7`: manifest prose incorrectly calls proposed journeys approved.
+Rebase is already complete, clean topic head `908ff8b` on main `b15f2f0`.
+Scope is only owned changes: correct proposal/approval attribution, add a
+meaningful authority-metadata guard if needed, preserve all twenty unavailable
+journeys and both exact criteria. No new research, critique or Review loop.
+Historical verdicts remain historical; final exact-head independent review
+is required, not supplied by implementation.
+
+PRD Users and Personas explicitly says roles are provisional; Profile Journey
+Contract explicitly says proposed constructed walkthroughs. Neither provides
+customer/owner approval. Correction implementation and focused validation
+completed:
+
+* Manifest v0.2.1 identifies provisional product roles and PRD-proposed
+  constructed walkthroughs, with customer/owner approval not established.
+  Structured `inventory_authority` separates source authority from coverage.
+  All twenty entries, unavailable statuses, fixture hashes/defaults and
+  actual deferral boundaries are unchanged.
+* Searched only owned delta against origin/main for equivalent attribution.
+  Corrected active research/details and validator messages. Original critique
+  wording/verdict and implementer Review remain historical with explicit
+  correction notices; no returned verdict or source document was rewritten.
+  Source PRD, original/addendum and memory are unchanged. Existing canonical
+  synthesis/index/provenance display/SN-11 reference updated; appended log only.
+* Before guard implementation, the new authority mutation test failed in all
+  five subcases: confirmed roles, approved journeys, customer approval, owner
+  approval and substituted source were all incorrectly accepted. After the
+  guard, those cases plus missing authority metadata reject with actionable
+  ValueError. This exercises semantic authority fields, not a prose substring.
+* From src/core: `PYTHONPATH=tests ../../.venv/bin/python -m unittest
+  test_scenario_manifest test_needs_inventory -q` passes 19 tests (previous
+  eighteen plus the new authority mutation test). Scoped Ruff/format/mypy
+  on `src/zava_forward/core/synthetic/scenario_manifest.py` and
+  `tests/test_scenario_manifest.py` pass: two files formatted, two source
+  files type-checked. No full suite, data generation, private or cloud checks.
+* Four changed production Markdown links/anchors verified; historical knowledge
+  log retained as exact prefix; `git diff --check` passes. Final diff limited
+  to owned authority claims, metadata guard/test and corresponding evidence.
+
+Actual phase log: authorized ordinary implementation follow-up P02-T01
+completed once, no new research/critique/review loop. No independent Pass
+claimed. The caller-relayed independent Revise remains the last supplied
+verdict; RV-001 is implemented pending exact-final-head independent verification.
+Publish one correction commit on the same PR with resolved privacy-safe
+identity/trailer, let ordinary Source CI run, then stop.

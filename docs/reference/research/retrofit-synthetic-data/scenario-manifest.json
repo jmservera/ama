@@ -2,12 +2,19 @@
   "warning": "CONSTRUCTED OFFLINE SCENARIO METADATA. No personal data, approval or observed business outcomes. Required journey paths below are not executed paths.",
   "is_synthetic": true,
   "contains_real_data": false,
-  "version": "0.2.0",
-  "iteration": "2026-10-17-offline-manifest-103",
+  "version": "0.2.1",
+  "iteration": "2026-10-17-offline-manifest-103-correction-one",
   "issue": "#103",
   "status": "offline-coverage-audit",
   "active_slice": "Offline manifest integrity over the existing three-case shared-IA fixture; not complete historical Slice A/B/C, an application build or full FR-035/AC-043 acceptance.",
   "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035, AC-043 and Profile Journey Contract; docs/brds/agentic-retrofit-programme-brd.md CON-007",
+  "inventory_authority": {
+    "source": "docs/prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype",
+    "roles": "provisional-product-roles",
+    "journeys": "proposed-constructed-walkthroughs",
+    "customer_approval": "not-established",
+    "owner_approval": "not-established"
+  },
   "inventory": {
     "path": "needs-inventory.json",
     "version": "1.3.0",
@@ -71,7 +78,7 @@
     "digital-auditor": null
   },
   "fixture_provenance": "Use only synthetic_data() in the hashed public recipe: deep-copy public dataset.py, select ZF-1/4/5, replace resident labels with constructed labels, keep coordinates zero and create fictional example.test staff. No private stock, real map anchors, external inputs or runtime ZF_DATA. This is an existing isolated test cohort, not a replacement programme dataset. profile_defaults describes exact ordered full IDs in the urgent own-queue baseline supplied by the workbench source, not full-journey representation; null means no profile login/default supplied. Related evidence fixture IDs can differ from own-queue IDs, notably Building Safety's empty own queue versus its ZF-4 example.",
-  "evidence_semantics": "Each evidence_index points to the same-index profiles/workflows row in the hashed workbench source. Its fixture/endpoint/check fields are partial IA definitions, not executed full-journey results. Existing test source is provenance, not a fresh browser run. No deferred profile/workflow is claimed without an actual decision. Required path steps describe the approved PRD journey, not demonstrated navigation.",
+  "evidence_semantics": "Each evidence_index points to the same-index profiles/workflows row in the hashed workbench source. Its fixture/endpoint/check fields are partial IA definitions, not executed full-journey results. Existing test source is provenance, not a fresh browser run. No deferred profile/workflow is claimed without an actual decision. Required path steps describe PRD-proposed constructed walkthroughs, not demonstrated navigation. Product roles are provisional, not confirmed company staffing or delegated authorities. Customer and owner approval of this journey inventory is not established.",
   "profiles": [
     {"id": "asset-investment", "perspective": "Asset and investment", "status": "unavailable", "reason": "No investment login/script in the IA slice; historical default EX-HOME-317/646/752 is not this fixture.", "path": ["Asset queue", "Stock conflict and source age", "Missing investment inputs -> resolution owner"], "safe_endpoint": "Unknown eligibility and accountable investment reviewer; no investment approval demonstrated.", "evidence_index": 0},
     {"id": "programme-coordinator", "perspective": "Programme coordinator", "status": "unavailable", "reason": "PM queue/navigation is partial IA, not an executed returned-work and acceptance journey.", "path": ["Shared queue", "Return evidence and sender/receiver", "Retained chase/update owners", "Reset to own queue"], "safe_endpoint": "Unaccepted work remains with current chase/update owners; full path not demonstrated.", "evidence_index": 1},
@@ -96,7 +103,7 @@
     {"id": "programme-handoffs", "name": "Programme handoffs and case orchestration", "status": "unavailable", "reason": "No connected handoff journey script in this slice.", "path": ["Queue", "Sender/receiver evidence", "Explicit acceptance or return", "Retained chase/update owners"], "safe_endpoint": "Receipt is not ownership acceptance; no silent loss of responsibility.", "evidence_index": 7},
     {"id": "portfolio-decisions", "name": "Portfolio investment, performance and scale decisions", "status": "unavailable", "reason": "Overview regression is not an investment scenario or source-cohort reconciliation.", "path": ["Portfolio scope", "Investment inputs", "Versioned denominators and unknowns", "Accountable decision owner"], "safe_endpoint": "Investment, budgets and forecasts unknown without evidence.", "evidence_index": 8}
   ],
-  "coverage_note": "Unavailable refers to full approved journeys in this bounded offline iteration, not absence of every related application capability. All 20 inventory entries are accounted for; 0 full journeys represented, 20 unavailable, 0 approved deferrals. Metadata acceptance is not full FR-035/MVP acceptance.",
+  "coverage_note": "Unavailable refers to full PRD-proposed journeys in this bounded offline iteration, not absence of every related application capability. All 20 inventory entries are accounted for; 0 full journeys represented, 20 unavailable, 0 approved deferrals. Metadata acceptance is not customer/owner approval of the inventory or full FR-035/MVP acceptance.",
   "evaluation_registry": "src/agents/evals/registry.json",
   "fixture_references": [
     "src/api/checks/workbench-manifest.json",
