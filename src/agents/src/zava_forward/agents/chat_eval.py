@@ -25,7 +25,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core import chat_isolation, chat_panel
+from zava_forward.core import chat_isolation, chat_panel, export_fields
 from zava_forward.core.ai_registry import digest
 from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import ChatPanel, ModelUnavailable
@@ -334,7 +334,13 @@ def bindings(raw: bytes) -> dict[str, str]:
             ]
         )[:16],
         source_version=digest(
-            [chat_isolation.CASE_KEYS, chat_panel.MAX_SOURCES, chat_panel.MAX_VALUE]
+            [
+                export_fields.CASE,
+                export_fields.HOME,
+                "closed-chat-fields-v1",
+                chat_panel.MAX_SOURCES,
+                chat_panel.MAX_VALUE,
+            ]
         )[:16],
         memory_version=digest(list(MEMORY_CLASSES))[:16],
     )

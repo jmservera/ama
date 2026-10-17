@@ -3,6 +3,7 @@ from collections import Counter, defaultdict
 from .resident_decisions import resident_status
 
 from .stock import support_coverage, support_status
+from .export_fields import map_case
 
 STAGE_ORDER = ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused",
                "Survey being booked", "Survey booked", "Survey write-up", "Design starting", "Design in progress",
@@ -129,6 +130,7 @@ def map_points(cases, f):
     for c in cases:
         if c["closed"] or not matches(c, f):
             continue
+        map_case(c)
         out.append(dict(id=c["id"], lat=c["home"]["lat"], lon=c["home"]["lon"], name=c["resident"]["name"],
                         address=f"{c['home']['address']}, {c['home']['postcode']}", stage=c["stage"],
                         kind="hazard" if has_hazard(c) else "long" if c["days_in_stage"] >= LONG_WAIT else "normal"))
@@ -144,6 +146,7 @@ def map_view(cases, f, bbox=None, zoom=None, cap=MAP_CAP):
     for c in cases:
         if c["closed"] or not matches(c, f):
             continue
+        map_case(c)
         lat, lon = c["home"]["lat"], c["home"]["lon"]
         if bbox and not (bbox[0] <= lat <= bbox[2] and bbox[1] <= lon <= bbox[3]):
             continue

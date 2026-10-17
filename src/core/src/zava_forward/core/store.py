@@ -11,7 +11,7 @@ import uuid
 from copy import deepcopy
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, controls, insights, ledger, projection, ranking, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, controls, export_fields, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -659,6 +659,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
+            export_fields.scalars(doc, ("name", "mime"))
             self.ensure_scanned(case_id, doc, user["email"] if user else "system")
             self.require_clean(doc)
             data = self.docstore.get(case_id, doc_id)
@@ -692,6 +693,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
 
     # ---- AI drafting (always a draft for a person)
     def _facts(self, c, reason_ok=False):
+        export_fields.prompt_case(c)
         r = c["resident"]
         adjust = (r.get("adjustment") or "Unknown") if reason_ok else (
             "extra support needed" if projection.needs_notice(c) else
@@ -739,6 +741,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             ranks = self._ranking()
             mine.sort(key=lambda c: ranks[c["id"]]["rank"])
             top = mine[:8]
+            for c in top:
+                export_fields.prompt_case(c)
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
             tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
         sysmsg, prompt = ai_prompts.render("briefing", facts=facts)

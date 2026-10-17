@@ -19,7 +19,7 @@ import time
 import uuid
 from datetime import datetime
 
-from . import projection, ai_prompts
+from . import projection, ai_prompts, export_fields
 from .resident_decisions import resident_status
 from .stock import support_status
 
@@ -46,6 +46,7 @@ def norm(s):
 
 def source_labels(c, reason_ok=False):
     """Every citable fact of a case, as display labels."""
+    export_fields.prompt_case(c)
     r, h = c["resident"], c["home"]
     out = [f"Stage: {c['stage']}", f"Days in stage: {c['days_in_stage']}", f"Waiting on: {c['waiting_on']}",
            f"Owner: {c['owner']}", f"Resident decision: {resident_status(c)}", f"Preferred contact: {r['preferred']}",
@@ -247,6 +248,9 @@ def run_text_task(store, user, task, cases, sysmsg, prompt, template, template_c
 
 def run_document(store, user, case_id, doc, data, mode=None):
     require_registered("read_document")
+    export_fields.scalars(doc, ("name", "mime"))
+    with store.lock:
+        sources = {case_id: source_labels(store._case(case_id), projection.can_see_reason(user))}
     off = workflow_only(mode)
     epoch0 = store.continuity_epoch()
     t0 = time.perf_counter()
@@ -254,8 +258,6 @@ def run_document(store, user, case_id, doc, data, mode=None):
     r.setdefault("reason", None if r["source"] == "ai" else "file type is stored but not read")
     r["latency_ms"] = round((time.perf_counter() - t0) * 1000, 1)
     label = f"Document: {doc['name']}"
-    with store.lock:
-        sources = {case_id: source_labels(store._case(case_id), projection.can_see_reason(user))}
     return finish(store, user, "read_document", [case_id], r, "The file is stored. Add a short note about what it is.",
                   sources, record_cites=[label], epoch0=epoch0)
 

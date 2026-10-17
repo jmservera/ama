@@ -28,6 +28,47 @@ Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runti
 (capture and review-signal design), BRD FR-048/AC-090 and RULE-014, and PRD
 FR-050 with AC-066 to AC-068.
 
+## Sensor privacy engineering boundary (2026-10-17, Refs #112)
+
+The source audit at upstream `74617981b71bc3f10bd21d0b78691bc3cf36c473`
+found an offline synthetic generator/SQL loader, not an implemented IoT consumer,
+`sensor_analysis` read model or registered sensor AI purpose. The ADR's proposed
+deterministic analysis is not current executable delivery. No new health
+indicator, threshold or sensor-model permission is introduced by this change.
+
+The [core admission/export contract](../../../src/core/README.md#sensor-admission-and-external-context-112)
+now requires exact current-generator manifest and payload replay before schema
+or register writes. Source labels, pseudonymized identifiers, filenames,
+recalculated hashes and human-approval-looking strings alone confer no admission.
+Stock mode needs the independently supplied original synthetic Selection; it
+does not reconstruct authorization from candidate snapshot files. Replay proves
+generated observations, not stock-anchor truth, genuine consent or lawful use.
+The unresolved historic external origins recorded under #175 remain unverified.
+
+Chat uses a closed home-field projection instead of recursively exposing the
+whole home. Malformed structured values in selected chat, legacy AI/citation and
+map fields explicitly refuse; unknown diagnostic fields are not authorized
+context. Stored/manual case detail is unchanged. Points and clusters still have
+no sensor fields; third-party tile URLs remain static deployment configuration,
+not observation-bearing URLs. Existing map licensing and manual routes remain.
+Loader receipts contain counts, not observations or device identifiers.
+
+The one original Review found two structured-data escapes through already
+stringified status and late document-name validation (Not accepted). Correction
+ONE validates raw status contributors before external export and document
+metadata/citation inputs before dispatch and reading-route audit interpolation.
+Actual chat/briefing and document provider/transport/audit refusal regressions
+failed first and pass after correction. The adverse original Review is retained;
+these correction checks do not constitute a second independent acceptance.
+
+This is a bounded structured-data control, not semantic DLP for arbitrary
+human-entered prose, a universal PII guarantee, legal approval or complete FR-048
+delivery. No new retention authority, DPO grant, resident consent or deployment
+is inferred. OD-43 inventory/mapping/calibration, lawful basis/DPIA, resident
+choice, retention, freshness/gaps, analysis windows/thresholds and operational
+review ownership remain prerequisites for real use. The named authorized human
+approval evidence remains unverified, so no real-data activation is implemented.
+
 ## Questions
 
 * Which derived measures are meaningful from air temperature and relative

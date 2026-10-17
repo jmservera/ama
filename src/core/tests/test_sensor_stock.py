@@ -205,7 +205,9 @@ class SensorStockTests(unittest.TestCase):
             self.assertEqual(list(root.glob("readings-*.csv")), [])
             self.assertEqual(manifest["coverage"], stock.coverage())
             with sqlite3.connect(":memory:") as conn:
-                self.assertEqual(sb.load_into(conn, root), dict(inserted=0, rejected={}))
+                self.assertEqual(
+                    sb.load_into(conn, root, stock=stock), dict(inserted=0, rejected={})
+                )
 
     def test_estimate_is_actual_sample_and_precedes_output(self) -> None:
         stock = ss.select(register(), 3)
@@ -285,13 +287,13 @@ class SensorStockTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             manifest = sb.write(root, stock=stock, days=1, cadence=360)
-            sb.load_into(Connection(), root, create_schema=None)
+            sb.load_into(Connection(), root, create_schema=None, stock=stock)
             with sqlite3.connect(":memory:") as conn:
-                first = sb.load_into(conn, root)
+                first = sb.load_into(conn, root, stock=stock)
                 self.assertEqual(
                     first["inserted"] + sum(first["rejected"].values()), manifest["rows"]
                 )
-                self.assertEqual(sb.load_into(conn, root)["inserted"], 0)
+                self.assertEqual(sb.load_into(conn, root, stock=stock)["inserted"], 0)
             for sql, params in seen:
                 self.assertTrue(sql.startswith("INSERT INTO"))
                 self.assertIn("WHERE NOT EXISTS", sql)
