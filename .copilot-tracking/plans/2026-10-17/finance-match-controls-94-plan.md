@@ -6,7 +6,7 @@ ms.date: 2026-10-17
 ## Task Metadata
 
 Task ID: 94. Slug: finance-match-controls-94. Parent: 93, hierarchy only.
-Status: Caller-authorized P03 integration active; original corrections published.
+Status: Caller-authorized P03 source integration validated; publication active.
 Original Review and JSON correction ONE retained; High COORD-002 SQL audit
 cleanup/recovery has objective local resolving evidence; external closure pending.
 Source/evidence commit 6248521 pushed; main-targeted PR #383 open. Final
@@ -175,10 +175,11 @@ ignore_errors, dependency or broad strictness change.
 ## Dependencies
 
 None declared. #93 parent only. Actual shared SqlStore.save hook may overlap #90;
-Store/server remain untouched. Actual new overlap: #84 / PR #382 corrects the
-same SqlStore._discard primitive. Branch not based on #84; no cherry-pick/rebase,
-dirty-worktree inspection or inferred dependency. Coordinator owns later merge
-sequencing preserving canonical root helper plus both callers.
+no unmerged #90 work imported. Caller-authorized P03 now integrates merged #84 /
+PR #382 via latest main bbbc924, reconciling the shared primitive and both
+callers. Store/server/stock/signoffs match upstream main; procurement/workflows/
+provenance/bulk match both original and main. No foreign dirty-worktree read or
+cherry-pick, no new issue dependency. Only own-topic explicit-lease push allowed.
 
 ## Critique Disposition
 
@@ -213,7 +214,15 @@ Both authorized corrections used, no further known local engineering gap.
 Source/evidence commit 6e75380 pushed and verified at origin and PR #383.
 PR body updated with exact finding, resolving evidence and external-closure
 boundary. Authenticated noreply author/committer verified; conventional commit
-and Copilot trailer retained. This closeout commit publishes completed markers
-and stopped state. Hosted source checks were running/queued at inspection,
-not claimed passed. No merge/rebase/force push or new full Review; external
-closure remains separate. Stop after final push, no automatic child.
+and Copilot trailer retained. The prior closeout published completed P02 markers/stopped state; that historical
+delivery is preserved. Subsequent caller authorization starts P03, not another
+correction. Source conflict reconciliation is complete at rebased 389defb on
+bbbc924; all hooks and both caller protections remain. Validation: 232 local
+passes plus one existing browser skip; 37 actual local SQL Server passes.
+Scoped lint/format/types passed after restoring a missing declared API dev
+dependency. Upstream log prefix and source/test parity checks pass.
+
+P03 publication remains active: integration evidence commit and topic-only
+explicit lease pinned to 54ed445, actual PR update, remote/head/clean verification.
+External independent closure next; no new full Review/Pass, main write, merge or
+issue close. Stop after final publication, no automatic child.

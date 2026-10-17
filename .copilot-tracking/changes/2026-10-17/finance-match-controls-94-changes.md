@@ -242,3 +242,100 @@ upstream KB exact log prefix plus own entries, run combined local and actual
 SQL Server regressions, record conflicts and publish with explicit lease.
 Only committed origin/main was inspected; no other worktree read. No
 acceptance expansion, dependency invention or repeated critique/Review.
+
+### Rebase and conflict decisions
+
+`GIT_SEQUENCE_EDITOR=true git rebase origin/main` replayed five own commits.
+First source conflict combined `stock.validate_sql(self)` with finance's
+validator, retaining provenance, bulk and safety/resident/stock validation.
+Second source conflict preserved upstream `stock_decision` refusal ownership:
+SQL save does not pre-discard an active stock decision, whose scoped caller
+owns cleanup, original error and context restoration. For other callers the
+finance original-error/logging guard wraps discard. One `_discard(pending=())`
+retains upstream cleanup-before-read, committed case/recommendation/document
+snapshots and `_seq = -1`; finance adds only optional prior-audit retention.
+Upstream `_proc_snap` restoration is kept verbatim, not discarded as duplicate.
+Finance's lock-exit original-error guard remains. No helper duplication or
+source/test removal. Committed stock/signoffs/Store and their tests match
+origin/main; procurement/workflows/provenance/bulk source matches both heads.
+
+KB log conflict was resolved upstream-first, then all finance entries.
+Byte-prefix assertion against `git show origin/main:docs/reference/log.md`
+passed. Other KB/index/component additions auto-merged and were inspected.
+Rebased intermediate head: 389defb; base bbbc924. Publication is still pending
+and original expected remote lease 54ed445 remains unchanged.
+
+Initial combined invocation ran 180 with one import error: the upstream
+stock API test imports `tests.test_mvp` and needs src/api on the module path.
+The other 179 cases passed. Corrected invocation added src/api and ran remaining
+stock API/workflows/role/endpoint tests: 54 ran, OK with one existing opt-in
+browser skip (53 passed). No dependency install or source workaround; no
+unnecessary rerun of the 179 passing cases. Law-store-unavailable fixture
+diagnostics remain explicit and do not establish regulatory acceptance.
+
+### Integrated validation and command evidence
+
+Initial combined command (179 passed plus one stock API import error):
+
+```bash
+PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_finance_match_controls.JsonFinanceChecks test_finance_match_controls.SqlFinanceChecks \
+  test_finance_signoffs test_finance_match_api test_stock_reconciliation \
+  test_stock_reconciliation_api test_quality_procurement test_sqlstore \
+  test_change_provenance test_bulk_edits -q
+```
+
+Corrected remaining command: 54 ran in 17.111s, 53 passed and one existing
+opt-in rendered stock-browser test skipped. Combined passing total 232, not
+counting the initial import error as a test pass.
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_stock_reconciliation_api test_workflows test_role_matrix test_role_endpoint_inventory -q
+```
+
+Actual isolated local SQL Server: all 19 inherited finance tests passed
+(90.599s), then 18 combined cases passed (19.284s): canonical existing
+MssqlStockDecisions' 10 cases and eight selected existing procurement/workflow
+cases using only a session-owned MssqlStore adapter. Procurement: package
+validation, evidenced committed capacity/headroom, work-order lifecycle and
+audit, reopen, two-store synchronization. Workflows: handoff, independent
+safety release, chain across handoff/return. No production/test file modified
+for that adapter; no stripped or weakened assertions. The harness used existing
+`ZF_FINANCE_MSSQL=1` and `ZF_TEST_MSSQL=1`/local `ZF_SQL_*` configuration.
+The owned container answered `SELECT 1`, finance tests each owned a UUID database,
+and stock/procurement/workflows used one additional created UUID database.
+Both database harnesses cleaned only owned databases; exact container
+fc75ea2acc75864fa6a4f4edc4a4857eeefd4dbb72d44d8b86e81e96a15a3e29 removed.
+Random credentials were process-only and never printed or committed.
+
+Scoped Ruff passed for both integrated paths, and four typed harness format
+checks passed. Configured mypy passed for finance/sqlstore/stock and both core
+harnesses (5 files). Combined API mypy initially failed only on missing
+playwright.sync_api; the existing API manifest already pins the dev dependency.
+After that concrete missing-dependency failure,
+`.venv/bin/python -m pip install --quiet 'playwright==1.64.0'` restored it;
+configured mypy then passed for both API harnesses (2 files). No manifest edit,
+browser download or new browser/WCAG claim.
+
+`git range-diff bab4bf3..54ed445 bbbc924..HEAD -- <sqlstore path>` confirms
+the source replay differs only to retain stock validation/refusal ownership
+and upstream canonical snapshots. Finance source/tests exactly match 54ed445.
+Upstream stock/signoffs/Store, stock core/API tests, MSSQL harness and upstream
+prototype synthesis exactly match bbbc924. Procurement/workflows/provenance/
+bulk source is unchanged from both heads. No unmerged #90 branch imported.
+
+Raw output is in session files/finance-integration-combined.txt,
+finance-integration-api-workflows.txt and finance-integration-mssql.txt.
+Final integration evidence commit and explicit-lease publication remain;
+external coordinator independent closure is next, not a new full RPI Review.
+
+Final `git diff --check`, valid state JSON, all exact source/test parity and
+upstream log-prefix/original-finance-tail assertions passed. Link review covered
+520 local targets, retaining the repository-root-relative tracking-path
+convention in the unchanged original critique. An initial relative-only checker
+misread those historical tracking links; corrected convention-aware check
+passed without editing the critique or original Review. Exact owned container
+name is absent. Latest remote main remains bbbc924 and topic remains exact
+54ed445 before publication. Temporary session SQL runner removed; raw results
+retained, no credentials written to it.

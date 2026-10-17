@@ -152,3 +152,20 @@ be exact byte prefix followed by finance's own entries.
 Run bounded combined local regressions and actual isolated SQL Server parity.
 Publish with `--force-with-lease` pinned to exact expected remote 54ed445 only.
 External coordinator independent closure remains the next gate.
+
+Source integration completed at rebased intermediate 389defb on bbbc924.
+Conflicts: combine stock and finance validators; retain active stock_decision
+save-refusal ownership while wrapping other callers' discard with original-error
+logging; keep optional prior-audit prefix and upstream committed document
+snapshot restoration in the same helper. Upstream log kept as exact prefix.
+Finance source/tests and upstream stock/signoffs/Store/tests retain exact
+content; procurement/workflows/provenance/bulk unchanged, no #90 import.
+
+Validation: first combined invocation had 179 passes plus one module-path
+import error; corrected remaining API/workflow/role command ran 54, with 53
+passes and one existing opt-in browser skip. Total 232 local passes. Actual
+local SQL Server passed 19 finance plus 18 stock/procurement/workflow cases.
+No test source modifications for integration. Scoped Ruff/format/core/API types
+pass; missing declared API dev Playwright package restored only after mypy's
+missing-import failure. No browser download/run. Commands/results and exact
+conflict choices are recorded in changes. Owned container/database cleaned.

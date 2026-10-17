@@ -56,8 +56,11 @@ cannot persist, an explicit error marks the durable outcome as potentially
 unknown: reload persisted records before retrying, never infer approval.
 Shared SQL edits are the finance validation hook, canonical `SqlStore._discard`
 cleanup and original-error preservation at save-refusal/lock-exit recovery.
-The `_discard` primitive is an actual overlap with #84 / PR #382; the coordinator
-must sequence integration preserving the common helper and both callers.
+The `_discard` primitive integrates merged #84 / PR #382 from main `bbbc924`:
+committed checked-document snapshots restore before recovery reads, and an
+active stock/technical decision retains caller-owned refusal cleanup and actor
+context. The same save transaction retains provenance, bulk, stock, finance and
+safety/resident/stock checks; no second discard helper was introduced.
 Procurement #90 and signoffs #84 remain separate scopes, not inferred dependencies.
 
 From the repository root with editable src packages installed:
@@ -86,6 +89,14 @@ prior legitimate audit retention, failed lock-exit retry, original-error
 identity, reopened Proposed state, lock release and subsequent healthy approval.
 The exact-852b342 coordinator verdict remains Revise until external closure;
 local resolving evidence is not an independent Pass.
+
+After the authorized main integration, 232 local tests passed across finance,
+stock, procurement/workflows and shared callers, with one existing opt-in
+browser test skipped. Actual isolated local SQL Server passed all 19 finance
+tests and 18 canonical stock/selected procurement/workflow tests. The combined
+checks cover rollback/reopen, early/persistent recovery failure, original
+errors/logging, current authority, independent sign-offs, capacity and work-order
+history. External coordinator closure of the integrated #94 head remains pending.
 
 ## Form schema registry and candidate staging (#97)
 

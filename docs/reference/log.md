@@ -5115,3 +5115,27 @@ metadata when the knowledge base was created.
   correction ONE retained; no repeated full Review or independent Pass claimed.
   External coordinator closure remains pending. Fictional local fixtures only,
   no private data/cloud/payment activity; original and memory unchanged.
+
+## [2026-10-17] integration | #94 on merged assessment main bbbc924
+
+* Explicit coordinator authorization rebased only the clean run-owned finance
+  topic from published 54ed445 onto main bbbc924, which contains merged #84 /
+  PR #382. Reconciled canonical discard/save conflicts, retaining cleanup before
+  reads, committed case/recommendation/document snapshots, watermark reset,
+  stock-scoped actor/refusal ownership and finance pending-prefix/original-error
+  logging. Provenance/bulk/stock/finance/safety transaction checks all remain;
+  no duplicate helper, test removal or procurement/workflow source change.
+* Upstream log is exact byte prefix followed by finance's entries; both task
+  routes, guides and upstream synthesis retained. Original/memory and original
+  adverse Review unchanged. One combined test invocation needed src/api on the
+  path for upstream tests.test_mvp; corrected remaining invocation passed.
+  Total 232 local passes and one existing opt-in browser skip. Actual isolated
+  local SQL Server passed 19 finance and 18 stock/procurement/workflow cases;
+  exact owned container/database cleanup only. Scoped lint/format/types pass
+  after restoring the missing declared API dev Playwright package, no browser
+  download or browser acceptance claim.
+* Existing RPI evidence records base/head, conflict choices and commands. Both
+  original corrections retained; no new full RPI Review or independent Pass.
+  Topic publication uses explicit expected-remote lease only; no main write,
+  merge, issue closure, private data/cloud/payment or automatic child work.
+  External coordinator independent closure remains next.

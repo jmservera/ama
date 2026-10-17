@@ -34,6 +34,10 @@ Core correction TWO also covers SQL recovery failure after an executed audit
 INSERT: no failed approval event can be flushed at lock exit. Original errors
 retain explicit recovery diagnostics. The endpoint contract and web assets
 are unchanged; independent coordinator closure of PR #383 remains pending.
+Authorized integration onto main `bbbc924` also retains merged stock/technical
+actor validation, refusal ownership and checked-document recovery. Combined
+stock API/workflow/role checks ran with the required `src/api` module path;
+the existing opt-in stock browser check was skipped, not newly certified.
 
 ## Form schema and candidate API (#97)
 

@@ -198,10 +198,19 @@ closure remains pending, not Pass. See the
 #93 is hierarchy, not a dependency. #90 procurement/capacity and #84 technical
 signoffs remain separate. Shared SQL touchpoints now include the finance
 validator, canonical `_discard` and save-refusal/lock-exit error preservation.
-The same `_discard` primitive is being corrected in #84 / PR #382; the coordinator
-owns integration sequencing preserving the root helper and both callers. This
-branch did not cherry-pick, rebase or inspect another dirty worktree.
-Store/server and signoff production code are unchanged. Local criterion evidence is not full PRD,
+The shared primitive now integrates merged #84 / PR #382 on main `bbbc924`,
+following explicit coordinator authorization to rebase only this run-owned
+topic. Upstream committed checked-document snapshots and stock-scoped refusal
+cleanup/actor restoration coexist with finance's prior-audit prefix and
+original-error diagnostics. All provenance/bulk/stock/finance/safety transaction
+hooks remain. The upstream KB log is an exact byte prefix followed by finance's
+entries. No cherry-pick or foreign dirty-worktree inspection occurred.
+Post-integration, 232 local tests passed with one existing opt-in browser skip;
+actual local SQL Server passed 19 finance plus 18 stock/procurement/workflow
+cases. Finance's production module/tests and upstream stock/signoff modules/tests
+retain exact content across the rebase; only shared SQL conflict resolution
+combines their intent. External independent closure of #94 is pending.
+Local criterion evidence is not full PRD,
 browser/accessibility, funding/legal, live-platform or human adoption acceptance.
 
 ## Local source keys

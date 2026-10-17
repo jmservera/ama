@@ -24,6 +24,7 @@ paid AI or Azure action.
 | 4 | Review / rpi-review | One independent Review, Complete | Not accepted; one High RV-001, reviews/logs/2026-10-17/finance-match-controls-94-review.md |
 | 5 | Caller-authorized coordinator correction ONE / rpi-implement | One of maximum two corrections | RV-001 primitive regression failed before fix, then 55 focused checks passed; changes record owns resolution, no repeated full Review |
 | 6 | Caller-authorized coordinator correction TWO / rpi-implement | Final authorized correction; external exact-852b342 Revise | COORD-002: 3 initial SQLite failures, canonical cleanup before I/O, original errors/prior audit preserved; 158 + 1 local and 18 + 1 actual SQL Server tests passed; external closure pending |
+| 7 | Subsequent caller-authorized integration / rpi-implement P03-T01 | Clean published 54ed445 rebased onto merged assessment main bbbc924 | Shared conflicts logically reconciled, all hooks/both caller protections and upstream log prefix retained; 232 local passes/one existing browser skip and 37 actual SQL Server passes; external closure next |
 
 Paths above are under .copilot-tracking/ unless already stated in full.
 State: .copilot-tracking/rpi-sessions/2026-10-17/finance-match-controls-94-state.json.
@@ -101,3 +102,34 @@ Revise/pending external closure and common-helper overlap. Noreply author/
 committer and trailer verified. Source checks running/queued, not passed.
 Final evidence-only commit publishes completed plan/stopped state and is normally
 pushed on the same branch; stop at clean pushed head, no automatic follow-up.
+
+## Authorized integration after completed correction publication
+
+User's later direction explicitly supersedes prior no-rebase/no-force stop only
+for own-topic integration. Clean published 54ed445 and exact remote confirmed;
+fetch resolved origin/main bbbc924 containing merged #84 / PR #382. Authorization
+scope recorded and committed before rebase. Expected remote lease remains
+54ed4451fc6ef38b6361ad5782e0da2e43d9227c regardless of rewritten hashes.
+
+Rebase replay conflicts occurred in KB log and SqlStore.save/_discard.
+Keep upstream log byte prefix then finance entries. Keep stock validator,
+stock-scoped refusal cleanup, committed document snapshots and watermark reset;
+retain finance validator, optional prior audit prefix and original-error/
+logging guards. One canonical helper, no test removal or blind side selection.
+Rebased intermediate 389defb, base bbbc924. Finance modules/tests match previous
+publication; upstream stock/signoffs/Store/tests match main. Procurement/
+workflows/provenance/bulk source unchanged; unmerged #90 not imported.
+
+Combined local: 179 passing cases plus an initial stock API module-path error;
+corrected remaining invocation (add src/api) ran 54, 53 passed/one existing
+opt-in browser skip. Total 232 local passes. Actual isolated SQL Server: 19
+finance plus 10 stock plus 8 procurement/workflow cases passed. One explicitly
+owned loopback container responsive, then removed; only owned UUID databases.
+Ruff/format/configured mypy passed; restored missing pinned API dev Playwright
+package only after concrete missing-import failure. No browser download/run.
+Full commands/results/conflict decisions are in the existing changes record.
+
+This is integration, not a third correction, new full Review or independent
+Pass. Main-targeted PR #383 will carry exact integrated evidence. Publish only
+own branch with explicit expected-remote lease, verify head and clean tree, stop.
+No main push, merge, issue closure, paid/cloud/private action or automatic child.
