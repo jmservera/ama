@@ -1291,7 +1291,7 @@ def verify_secret_handoff(cli: Azure, app: dict[str, Any], readonly: bool) -> No
 
 
 def azure_credential_guard(app: dict[str, Any], auth: dict[str, Any],
-                           args: argparse.Namespace) -> None:
+                           args: argparse.Namespace, selected: dict[str, Any] | None = None) -> None:
     if not args.run_in_azure or args.bearer_only:
         return
     tagged_store = app.get("tags", {}).get(STORE_TAG)
@@ -1299,6 +1299,7 @@ def azure_credential_guard(app: dict[str, Any], auth: dict[str, Any],
     secrets = app.get("properties", {}).get("configuration", {}).get("secrets") or []
     current_name = aad_registration(auth).get("clientSecretSettingName")
     if (args.secret_store == "app" or tagged_store == "app"
+            or (selected is not None and not selected.get("keyVaultUrl"))
             or any(s.get("name") in (recorded_name, current_name) and not s.get("keyVaultUrl")
                    for s in secrets)):
         raise SetupError(
@@ -1308,7 +1309,10 @@ def azure_credential_guard(app: dict[str, Any], auth: dict[str, Any],
 
 
 def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration: dict[str, Any],
-                     auth: dict[str, Any], args: argparse.Namespace, readonly: bool) -> tuple[str | None, bool]:
+                     auth: dict[str, Any], args: argparse.Namespace, readonly: bool, *,
+                     reuse_only: bool = False) -> tuple[str | None, bool]:
+    if reuse_only and not readonly:
+        raise SetupError("Credential reuse preflight must be read-only.")
     azure_credential_guard(app, auth, args)
     client = object_id(registration["appId"])
     current = aad_registration(auth)
@@ -1326,13 +1330,17 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
                 and s["name"].startswith(secret_name)]
     if matching:
         selected = next((s for s in matching if s["name"] == existing_ref), matching[-1])
+        azure_credential_guard(app, auth, args, selected)
         return selected["name"], record_credential_store(cli, app, selected, readonly)
     if (identifier(current.get("clientId")) == client and existing_ref
             and not existing_ref.startswith(secret_name)
             and any(c.get("displayName") == existing_ref for c in valid)
             and any(s["name"] == existing_ref for s in secrets)):
         selected = next(s for s in secrets if s["name"] == existing_ref)
+        azure_credential_guard(app, auth, args, selected)
         return existing_ref, record_credential_store(cli, app, selected, readonly)
+    if reuse_only:
+        return None, False
     action = (auth.get("globalValidation") or {}).get("unauthenticatedClientAction")
     if action == "Return401" and not args.create_secret and not args.enable_browser:
         return None, False
@@ -1588,6 +1596,12 @@ def setup(args: argparse.Namespace) -> int:
                     raise
                 auth = {}
             azure_credential_guard(app, auth, args)
+            candidate_registration = registration(
+                graph, args.client_id or aad_registration(auth).get("clientId"),
+                args.registration_name)
+            if candidate_registration:
+                secret_reference(
+                    cli, graph, app, candidate_registration, auth, args, True, reuse_only=True)
         resolved_roster = resolve_roster(graph, roster, verify_people=generate or generated)
         coordination_problem = None
         try:

@@ -1410,9 +1410,13 @@ No vault data-plane connection from the laptop is needed. This is the supported
 [ARM template control plane](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints#usage-scenarios),
 not a firewall/trusted-service bypass or an activation of new vault permissions.
 
-Azure mode rejects explicit/recorded app storage and currently referenced
-app-backed credentials; it never silently converts them or falls back on a
-vault failure. Existing non-Azure private-host behavior retains its historical
+Azure mode rejects explicit/recorded app storage, currently referenced
+app-backed credentials and the actual eligible app-backed reuse candidate,
+even when untagged and unreferenced. A read-only preflight uses the same
+expiry/selection rules before directory reconciliation. Unselected unrelated
+app secrets remain preserved; no migration, rotation or fallback occurs on
+incompatible reuse or vault failure. Existing non-Azure private-host behavior
+retains its historical
 direct-demo fallback; that is **not authorized for this owner-selected path**.
 An explicit `--secret-store keyvault` disables that legacy fallback too.
 No path opens vault networking, enables SQL public access, changes policy,
@@ -1803,6 +1807,9 @@ builder exists, a separate infrastructure/spend decision is necessary.
 
 IAM is a separate **unattempted approval boundary**, not an observed Azure
 AuthorizationFailed: source-job tags and demo-API restart assignments are absent.
+Independent permissions readback reports actions `["*"]` with no exclusions;
+there is no demonstrated IAM inability. Missing explicit authorization, not
+an attempted permission failure, prevents activation here.
 Explicitly authorize only the reviewed `staff-initializer-rbac.bicep` deployment
 with `apiName=ca-cutover-test-demo-api` and
 `initializerIdentityName=id-cutover-test-init`. An authorized operator then

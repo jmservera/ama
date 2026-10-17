@@ -318,3 +318,79 @@ inside the commit. No force push of main, merge, credentials or live resource
 write; no new critique/Review/child task. Automatic session stopped under the
 caller's bounded continuation direction. Original Review is historical, not
 an approval of the integrated head or resolution of unseen reviewer findings.
+
+## P05 - Independent-review correction, same session
+
+2026-10-17 owner provides independent reviewer4536f9cc's concrete Revise on
+published662c11b: untagged/unreferenced generated future-valid app-backed
+candidate bypasses both Azure guards, gets reused and tags storage app despite
+requested keyvault. Accept as blocking source defect, not residual IAM/image
+work. Historical internal no-defect/PC-001-complete assertions were incomplete.
+Starting clean integrated headb847509fc9fe47284de30b3575e8e2e604cf07f6,
+main51db4fa8 unchanged. Scope P05-T01/T02/T03 only: failing regression, actual
+selected-candidate guard plus equivalent early pre-reconciliation check,
+existing relevant gates, disposition and normal topic push. No rerun full
+Research/Plan/Review, no merge or live writes. Independent verification remains
+mandatory; implementation cannot self-clear Revise.
+
+Reviewer clarification adopted: management permission readback actions ["*"]
+with no exclusions is not demonstrated IAM inability. Activation was never
+attempted; only explicit narrow-grant authorization is outstanding. Docker
+socket denial is observed; ACR private/bypassNone/zero tasks/pools and route403
+remain networking/execution evidence, not IAM denial or welcome/login readiness.
+
+### P05-T01 - Failing independent reproduction
+
+Before production edits, two new regression methods failed in11 subcases.
+Direct secret_reference readonly/apply did not raise for the actual unreferenced
+app-backed candidate. Full setup apply reconciled registration callbacks before
+rejecting/finishing, and check/dry-run returned incomplete2 rather than blocked1.
+Cases cover configured-client, managed-identity sentinel/name discovery and
+explicit client selection, with no recorded storage/name or auth reference.
+The fixture deliberately adds supported callback drift to expose early writes;
+an initial invalid signInAudience fixture instead triggered unrelated rejection
+and was replaced, not accepted as sufficient reproduction.
+
+### P05-T02 - Selected-candidate rule and equivalent early preflight
+
+azure_credential_guard accepts the actual selected candidate and rejects it
+when Azure/browser mode requires Key Vault but that candidate is app-backed.
+Both generated and legacy reuse returns call it before record_credential_store.
+No fallback to another candidate, migration or credential rotation is allowed.
+
+Pre-reconciliation discovers the existing registration read-only and runs
+secret_reference with readonly=True/reuse_only=True before authentication lock
+and directory reconciliation. This reuses the SAME existing expiry/matching/
+current-reference priority as actual reuse, not a separate name-prefix guess.
+No eligible candidate means preflight returns without storage discovery or
+creation. Guard forbids write-mode reuse_only; pending-handoff verification
+remains read-only at preflight. Actual write path still independently guards
+its selected candidate; automatic late Azure-mode switching remains covered.
+
+No #374 expiry comparator, legacy predicate, secret inventory/digest/readback
+helper or pending-handoff algorithm changed. New tests preserve unrelated
+app/KV values, expired/missing-expiry and nonmatching app secrets, preferred
+valid KV versus last eligible app candidate. Four additive methods overall
+(41 focused vs original21, within max25 additions); upstream tests untouched.
+Focused40 and unchanged setup101 passed immediately after the source fix;
+final41 and full infra/quality gates follow.
+
+### P05-T03 - Final validation and independent verification gate
+
+Final focused41 passed; full REQUIRE_AZ_BICEP=1 infra333 passed, zero skips,
+including unchanged setup/legacy/mutation101 and existing Bicep gates. Existing
+11-file Ruff E/F/I/B/UP and format passed; changed legacy setup F-only check
+and py_compile passed without reformatting it. Strict check-container/pipeline,
+scoped three-module mypy, pip check and diff whitespace passed. Exact upstream
+secret_inventory/preserve_app_secrets/secret_reference_digest/verify_secret_handoff
+source, test_setup_entra.py, legacy initialize-api-auth.py and sensor core retained.
+Upstream persistent-log prefix preserved.
+
+External finding implemented, not independently accepted. Existing Review now
+records its original missed PC-001 assessment and current independent Revise
+gate. No second Review, no source-test alteration to evade mutation protections,
+no Azure/Graph/role/credential/network/data writes. IAM explicitly
+authorization-outstanding, not permission-blocked; image actual Docker socket
+denied, Tasks/import unattempted, no demonstrated IAM denial. Existing four403s
+are deny-all evidence only; #360 stays open with d/e UNMET. Publication next:
+privacy-safe conventional commit, ordinary topic push, exact final SHA in PR.

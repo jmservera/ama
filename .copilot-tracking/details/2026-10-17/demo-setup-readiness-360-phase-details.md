@@ -120,3 +120,25 @@ lease on prior662c11b. All upstream contracts/tests/evidence preserved; focused
 orchestrator22, rename25 and relevant quality gates recorded in changes.
 No extra Review; reviewer-agent delivery unavailable, so durable PR comment
 reports exact final completion head. No live resource writes in continuation.
+
+<!-- phase: P05 -->
+## P05 - Independent-review selected reuse guard correction
+
+User supplied independent Revise against662c11b: Key Vault requested but an
+unreferenced/untagged generated future-valid app-backed credential is selected,
+then record_credential_store writes app. Apply the storage rule to the actual
+selected candidate, not merely named/tagged references. Pre-reconciliation must
+use equivalent selection before any directory writes. No silent conversion,
+rotation or loss of unrelated app/KV secrets. Preserve #374 expiry conditions,
+inventory/digest/handoff helpers/tests and legacy CLI, plus sensor/evidence work.
+Prove regression fails first, then focused variants and full relevant gates.
+Append correction disposition to existing Review, retaining historical text;
+external Revise remains pending independent verification. Normal topic push,
+no merge, no Azure write or extra delivery/Review loop.
+
+Correction evidence:11 failing-before-fix subcases; selected-candidate guard
+and read-only reuse-only preflight now share exact existing expiry/selection.
+Final focused41/setup101/full infra333/no skips and existing lint/format/type/
+pip gates passed. Upstream inventory/digest/readback/legacy helpers and tests
+remain exact. No independent acceptance inferred: external Revise requires
+reviewer verification after the normal same-topic publication.

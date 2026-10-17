@@ -6,6 +6,11 @@ ms.date: 2026-10-17
 
 ## Scope and Evidence
 
+Current status: the historical internal Review below missed the independently
+reproduced credential-reuse defect. Its PC-001/no-defect conclusion is not the
+current acceptance verdict. See the appended P05 disposition; independent
+**Revise** remains authoritative pending independent correction verification.
+
 * Task ID: issue-360 / demo-setup-readiness-360.
 * Review date: 2026-10-17.
 * Scope: full bounded task, candidate 6f43559 against abaca78; P01/P02
@@ -183,6 +188,42 @@ added active P01/P02 work. No follow-up begins in this bounded task.
 No material implementation defect identified in the supplied boundary. This is
 not independent certification or proof of behavior through the undeployed image.
 All RV entries are known externally gated residual work, not deferred source fixes.
+
+### Independent Review Correction Disposition - 2026-10-17 (P05)
+
+This is the caller-requested correction record, not another internal Review.
+Independent review of published662c11b showed that a future-valid generated
+app-backed credential, absent store/name tags and current auth reference, was
+reused despite requested keyvault; record_credential_store then wrote app.
+The finding is accepted. Original PC-001 and no-material-defect assessments
+missed this concrete bypass and cannot support acceptance of that candidate.
+
+Selected-candidate storage checks now run before either generated/legacy reuse
+return. The early Azure pre-reconciliation guard looks up the registration
+read-only and executes the same secret_reference expiry/selection path in
+read-only reuse-only mode before locking or directory writes. No alternate
+candidate, migration or rotation silently resolves incompatible reuse.
+
+Two failing-before-fix regression methods yielded11 failing subcases, including
+real fixture callback reconciliation before rejection. Four final additions
+cover direct readonly/apply, configured/sentinel/explicit registration lookup,
+check/dry-run, valid KV priority versus app candidates, unrelated/expired/
+missing-expiry preservation, and read-only pending handoff/no-storage.
+Final focused41, unchanged setup101 and full infra333 passed with zero skips.
+Existing11-file Ruff/format, setup F checks/compile, strict check-container/
+pipeline and scoped three-module mypy, pip and whitespace checks passed.
+Exact upstream preservation helpers, setup/mutation tests, legacy delegate
+and sensor source retained. No live resource, role, credential or directory
+write occurred. The final publication SHA is recorded at the PR boundary.
+
+Disposition: implementation correction delivered for independent verification;
+**not independently accepted**. Do not merge until the independent reviewer
+verifies the correction. Historical RV-001 through RV-004 remain unresolved.
+IAM management readback actions ["*"] without exclusions shows no demonstrated
+IAM inability; no activation attempted, narrow-grant authorization outstanding.
+Actual Docker socket denied; no observed ACR Tasks/import IAM denial. Existing
+deny-all403 responses are neither ready welcome/health nor live login. #360 d/e
+remain UNMET and open.
 
 ## Routed Findings
 

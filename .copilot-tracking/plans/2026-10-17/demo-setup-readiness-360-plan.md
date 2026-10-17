@@ -5,11 +5,11 @@ ms.date: 2026-10-17
 ---
 
 Task: issue-360 / demo-setup-readiness-360. Mode: automatic.
-Status: Same-session continuation complete for PR #375: rebased onto main
-51db4fa8, preserved merged #358 contracts, validated integrations and recorded
-concrete private publication/IAM blockers. Candidate63aea64 pushed with exact
-authorized lease. Historical Review unchanged; d/e unmet. Session stopped after
-publication record, no new delivery loop or merge.
+Status: Same-session independent-review correction active for PR #375.
+Reviewer verdict Revise on published662c11b is authoritative: unreferenced,
+untagged app-backed eligible credential bypasses Azure Key Vault guard.
+Preserve main51db4fa8 and #374; reproduce then fix/test/push normally.
+No new Research/Plan/Review loop; independent verification required before merge.
 
 ## Executive Summary
 
@@ -137,6 +137,29 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
   report exact new SHA to independent reviewer 4536f9cc; keep #360 open and stop.
 
 ## Continuation Test Boundary
+
+<!-- phase: P05 -->
+### P05 - Independent-review credential reuse correction
+
+* [x] P05-T01 Reproduce untagged/unreferenced eligible app-backed reuse with
+  failing focused regression, including before-directory-write variants.
+* [x] P05-T02 Guard the actual selected reuse candidate and reuse the same
+  selection path in pre-reconciliation read-only preflight. Reject without
+  rotation/migration; preserve unrelated secrets and #374 safeguards.
+* [ ] P05-T03 Run unchanged setup/legacy, focused/full infra and existing
+  lint/format/type gates; record external Revise and pending verification,
+  precise IAM approval boundary, then normal same-branch commit/push and stop.
+
+## Independent Review Authority
+
+Independent reviewer4536f9cc found the missed app-backed generated credential
+reuse on published662c11b. Internal historical no-defect Review is insufficient
+and its PC-001 closure was incomplete. Correction evidence does not override
+Revise; only independent verification may clear the merge blocker. No merge.
+Management permissions readback actions ["*"] without exclusions does not show
+IAM inability; narrow-grant activation remains explicit authorization outstanding.
+
+## Continuation Test Boundary (Preserved)
 
 Preserve all upstream #358 tests exactly, with additive integration tests owned
 by test_staff_azure.py within the original 25-addition budget. Full infra and

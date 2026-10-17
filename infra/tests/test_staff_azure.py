@@ -671,6 +671,131 @@ class SetupAzureTests(unittest.TestCase):
                 self.assertFalse(self.fake.writes)
                 self.assertIsNone(self.fake.reg)
 
+    def unreferenced_reuse_candidate(self, *, keyvault=False):
+        self.assertEqual(self.invoke("--run-in-azure", "--secret-store", "keyvault"), 0)
+        secrets = self.fake.app["properties"]["configuration"]["secrets"]
+        candidate = secrets[-1]
+        if not keyvault:
+            candidate.pop("keyVaultUrl")
+            candidate.pop("identity")
+            candidate["value"] = setup_fixture.SECRET
+        for name in (SETUP.STORE_TAG, "zava-forward-credential-name"):
+            self.fake.app["tags"].pop(name, None)
+        SETUP.aad_registration(self.fake.auth).pop("clientSecretSettingName", None)
+        self.fake.writes.clear()
+        self.fake.tag_writes.clear()
+        return candidate
+
+    def test_unreferenced_app_candidate_is_rejected_at_actual_azure_reuse_boundary(self):
+        for readonly in (False, True):
+            with self.subTest(readonly=readonly):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                self.unreferenced_reuse_candidate()
+                before_app, before_reg = copy.deepcopy(self.fake.app), copy.deepcopy(self.fake.reg)
+                args = SETUP.parser().parse_args(["--run-in-azure", "--secret-store", "keyvault"])
+                cli = SETUP.Azure(self.profile, body_directory=self.profile)
+                with self.assertRaisesRegex(SETUP.SetupError, "requires Key Vault"):
+                    SETUP.secret_reference(
+                        cli, cli, self.fake.app, self.fake.reg, self.fake.auth, args, readonly
+                    )
+                self.assertEqual(self.fake.app, before_app)
+                self.assertEqual(self.fake.reg, before_reg)
+                self.assertFalse(self.fake.writes)
+                self.assertFalse(self.fake.tag_writes)
+
+    def test_unreferenced_app_candidate_blocks_before_directory_reconciliation(self):
+        for lookup in ("configured", "sentinel", "explicit"):
+            for mode in ((), ("--check",), ("--dry-run",)):
+                with self.subTest(lookup=lookup, mode=mode):
+                    self.fake = FakeJobs()
+                    SETUP.subprocess.run.side_effect = self.fake.run
+                    self.unreferenced_reuse_candidate()
+                    self.fake.reg["web"]["redirectUris"] = []
+                    if lookup == "sentinel":
+                        SETUP.aad_registration(self.fake.auth)["clientId"] = (
+                            "systemAssignedIdentity"
+                        )
+                    flags = ["--client-id", setup_fixture.CLIENT] if lookup == "explicit" else []
+                    before_app = copy.deepcopy(self.fake.app)
+                    before_reg, before_auth = (
+                        copy.deepcopy(self.fake.reg),
+                        copy.deepcopy(self.fake.auth),
+                    )
+                    self.assertEqual(
+                        self.invoke("--run-in-azure", "--secret-store", "keyvault", *flags, *mode),
+                        1,
+                        self.output.getvalue(),
+                    )
+                    self.assertEqual(self.fake.reg, before_reg)
+                    self.assertEqual(self.fake.app, before_app)
+                    self.assertEqual(self.fake.auth, before_auth)
+                    self.assertFalse(self.fake.writes)
+                    self.assertFalse(self.fake.tag_writes)
+
+    def test_azure_reuse_guard_respects_actual_candidate_precedence_and_expiry(self):
+        for case in ("unrelated", "expired", "missing-expiry", "preferred-kv", "last-app"):
+            with self.subTest(case=case):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                candidate = self.unreferenced_reuse_candidate(keyvault=True)
+                other = {"name": candidate["name"] + "-other", "value": setup_fixture.SECRET}
+                self.fake.app["properties"]["configuration"]["secrets"].append(other)
+                credential = copy.deepcopy(self.fake.reg["passwordCredentials"][0])
+                credential["displayName"] = other["name"]
+                if case == "unrelated":
+                    credential["displayName"] = "unrelated-password"
+                elif case == "expired":
+                    credential["endDateTime"] = "2000-01-01T00:00:00Z"
+                elif case == "missing-expiry":
+                    credential.pop("endDateTime")
+                elif case == "preferred-kv":
+                    SETUP.aad_registration(self.fake.auth)["clientSecretSettingName"] = candidate[
+                        "name"
+                    ]
+                self.fake.reg["passwordCredentials"].append(credential)
+                before = copy.deepcopy(self.fake.app["properties"]["configuration"]["secrets"])
+                self.fake.reg["web"]["redirectUris"] = []
+                count = len(self.fake.reg["passwordCredentials"])
+                expected = 1 if case == "last-app" else 0
+                self.assertEqual(self.invoke("--run-in-azure"), expected, self.output.getvalue())
+                self.assertEqual(self.fake.app["properties"]["configuration"]["secrets"], before)
+                self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+                if case == "last-app":
+                    self.assertFalse(self.fake.writes)
+                    self.assertFalse(self.fake.tag_writes)
+                else:
+                    self.assertEqual(self.fake.app["tags"][SETUP.STORE_TAG], "keyvault")
+
+    def test_reuse_preflight_verifies_pending_handoff_without_writes_or_storage(self):
+        candidate = self.unreferenced_reuse_candidate(keyvault=True)
+        self.fake.app["tags"][SETUP.HANDOFF_TAG] = SETUP.secret_reference_digest(
+            self.fake.app["properties"]["configuration"]["secrets"]
+        )
+        before = copy.deepcopy(self.fake.app)
+        args = SETUP.parser().parse_args(["--run-in-azure", "--secret-store", "keyvault"])
+        cli = SETUP.Azure(self.profile, body_directory=self.profile)
+        with patch.object(CREDENTIAL, "store", side_effect=AssertionError("unexpected storage")):
+            result = SETUP.secret_reference(
+                cli, cli, self.fake.app, self.fake.reg, self.fake.auth, args, True, reuse_only=True
+            )
+            self.assertEqual(result[0], candidate["name"])
+            self.assertEqual(self.fake.app, before)
+            self.assertFalse(self.fake.writes)
+            self.assertFalse(self.fake.tag_writes)
+            with self.assertRaisesRegex(SETUP.SetupError, "must be read-only"):
+                SETUP.secret_reference(
+                    cli,
+                    cli,
+                    self.fake.app,
+                    self.fake.reg,
+                    self.fake.auth,
+                    args,
+                    False,
+                    reuse_only=True,
+                )
+        self.assertEqual(self.fake.app, before)
+
     def test_azure_vault_preflight_failure_never_creates_password_or_falls_back(self):
         self.fake.app["tags"]["zava-forward-ingress"] = "direct"
         self.fake.app["properties"]["configuration"]["ingress"]["external"] = True

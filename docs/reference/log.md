@@ -4667,3 +4667,24 @@ metadata when the knowledge base was created.
   network/data writes. #360 d/e remain UNMET and open. Concrete blocker actions
   remain existing private-connected builder/operator and explicit exact IAM
   authorization, not generic image denial or a fabricated permission failure.
+
+## [2026-10-17] delivery | PR #375 independent reuse-guard correction
+
+* Independent Revise accepted: eligible untagged/unreferenced app-backed
+  credential bypassed the requested Key Vault mode. Two new regression
+  methods failed in11 subcases before source changes, including directory
+  callback reconciliation before rejection. Original internal PC-001/no-defect
+  assessment missed it; historical evidence retained with explicit correction.
+* Actual selected generated/legacy candidate now checked before recording
+  its store. Read-only pre-reconciliation uses the same expiry/selection
+  implementation, before locks/directory writes; no incompatible reuse,
+  rotation, migration or unrelated-secret loss. #374 helpers/tests/legacy
+  and #373 source remain intact; pending digest verification stays read-only.
+* Focused41, unchanged setup101 and full infra333/no skips passed. Existing
+  lint/format/type, setup static/compile, pip and whitespace gates passed.
+  Same-loop correction only; exact pushed head supplied in PR #375.
+  Independent reviewer must verify before merge; Revise not self-overridden.
+* IAM actions ["*"]/no exclusions is not demonstrated inability; activation
+  unattempted pending explicit narrow-grant authorization. Docker socket
+  denial actual, ACR Tasks/import not attempted or proven IAM-denied.
+  No live writes or ready/login claim; restricted403 only, #360 d/e remain open.
