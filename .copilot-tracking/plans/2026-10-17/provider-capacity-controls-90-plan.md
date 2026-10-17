@@ -170,3 +170,33 @@ Original Review is untouched; coordinator Revise is separate and external
 correction closure remains pending. Publication is the remaining authorized
 action for this terminal evidence payload, not a reason to claim a new
 Conformant verdict.
+
+## Authorized Post-#382 Integration
+
+Coordinator explicitly authorizes a topic-only exact-lease rebase of the
+completed correction onto fresh bbbc924. Preserve canonical shared discard,
+all stock/procurement/finance behavior and original stock signoffs; add
+bounded coverage for original-exception preservation on procurement reload
+failure if logical integration reveals the gap. No duplicate cleanup
+primitive or unmerged finance branch import. Run combined affected regressions
+and actual local SQL parity, record decisions/base/head/commands, then
+privacy-safe integration commit and exact-lease topic push, stop clean.
+Original Review remains historical; external closure still pending.
+
+Integration execution complete at source head e2314a7 on bbbc924.
+Both validation hooks and canonical upstream discard retained; twelve
+one-shot/persistent refusal/cancellation recovery combinations exercise both
+caller scopes and valid retry. Final combined core194, API73/one existing
+skip, actual local SQL74/no skips, portability3 and configured quality gates
+pass. Exact upstream/own KB routing/history, stock/finance/signoffs and
+unchanged UI/fixture assertions pass. Final evidence-only payload and
+explicit-lease topic push follow; exact final publication head is in PR384.
+No further phase/Review is requested; independent external closure remains.
+
+Before publication, latest-main verification detected merged finance #94 at
+d400eb8. Continue the same authorized topic-only latest-main integration:
+clean own evidence commit, rebase, preserve finance pending parameter/
+protected recovery logging/validation plus stock/procurement hooks and
+canonical snapshots, then targeted combined finance-match/stock/procurement
+and actual local SQL replay. The preceding bbbc source/tests are historical,
+not the final base. Same exact remote lease5244f99; no new full RPI/Review.

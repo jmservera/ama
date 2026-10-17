@@ -174,3 +174,59 @@ Normal commit/push on the same issue-90 topic only; no rebase, force push,
 merge or issue closure in this cycle. No real authority, human, AI or Azure
 acceptance is claimed. **Coordinator independent external closure remains
 required; no new Pass is asserted.** Refs #90.
+
+## Authorized Integration After #382 (2026-10-17)
+
+This section supersedes the earlier correction-only no-rebase direction:
+the coordinator explicitly authorized rebase of only this owned topic after
+correction publication. Fresh main/base is
+`bbbc9243505b606550327c64bf5429243f457f2e`; old expected remote is
+`5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1`. Rebase completed at
+`7cf8df7b5ed67055dc6d40a95c554598b448c28e`; final integrated source is
+`e2314a7c2ea0d6588b696030d153f29f74208dd7`, followed by the evidence-only
+publication commit. The exact final PR head is appended on REST publication.
+
+Shared SQL conflicts retained **both** stock and procurement commit hooks
+and **all** stock/procurement SQL test classes. Canonical upstream discard is
+unchanged: pending cleanup and committed cache/watermark protection precede
+fallible reads. Procurement/advance now own their recovery alongside stock,
+preserve the original exception (including cancellation), and log/add explicit
+uncertainty on failed reload. Checked-document reload stages complete
+reads/decodes before publishing snapshots. No duplicate discard helper,
+stock signoff removal or unmerged finance branch import.
+
+Failing-first recovery tests reproduced masked errors and lost committed
+snapshots; cancellation extension also failed before correction. Final
+twelve combinations check operation/advance, pre-save/transaction/cancellation,
+one-shot/persistent SELECT failures, exact original exception identity,
+logs/notes, empty pending/touched state, retained committed data, fail-closed
+reads, no later audit/mutation flush and a legitimate versioned retry.
+
+| Final affected-path validation | Result |
+| --- | --- |
+| Core finance signoffs/matching, stock, procurement, SQL store, provenance, bulk/forms | 194 passed, no skips |
+| API stock/procurement/workflows/roles/MVP/bulk/forms | 73 run, 72 passed, one existing opt-in skip |
+| Actual disposable local SQL Server 2022: MssqlStockDecisions, MssqlFinanceSignoffs, MssqlProcurement, MssqlProcurementApi, MssqlStoreTests, MssqlImproveTests | 74 passed, no skips |
+| Shared SQL portability | 3 passed |
+| Full configured core/API Ruff/format/mypy and diff hygiene | Passed |
+
+Counts overlap. Existing finance budget/matching/independent approval and
+technical signoff tests were replayed using the standard SQL adapter, not
+invented #94 controls absent from this main. Task-owned SQL responsiveness
+verified before tests; exact container and ephemeral credential removed.
+No full component suite was duplicated; the combined SQL replay was
+repeated only after the final cancellation ownership change.
+
+Exact preservation assertions passed: upstream KB prefix plus unchanged own
+entries; both routing intents including upstream initializer/stock rows and
+own capacity row; twelve non-overlapping upstream files; canonical discard;
+upstream stock/signoffs/finance and tests; original Review/critique;
+corrected fixture/hash and UI bytes. No web changes in this integration,
+so no redundant browser run or new visual/accessibility claim.
+
+Changes/plan/details/state preserve the full integration decisions and
+commands. Publication uses only the explicit expected-remote lease on
+`feat/provider-capacity-controls-90`, never unconditional force or main.
+**Original independent Review remains historical; external coordinator
+exact-head closure and hosted checks remain pending.** No merge or issue
+closure. Refs #90.

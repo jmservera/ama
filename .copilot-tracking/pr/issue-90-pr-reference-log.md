@@ -70,3 +70,26 @@ bab4bf3; no check runs were registered for 19431ad at read time.
 The explicit no-merge/no-rebase direction remains intact. Owner/coordinator
 must reconcile current-main/shared-KB integration before merge/hosted
 acceptance; this does not rewrite the completed local engineering Review.
+
+## Subsequent Authorized Integration and Correction History
+
+Original readback above is historical. First authorized integration onto
+bab4bf3 published527a537; correction ONE published5244f99 with the required
+version/UI validation, exact manifest hash and honest booked safety fixture.
+Original Review remained byte-identical; coordinator closure still pending.
+
+After #382 merged, coordinator authorized topic-only rebase onto fresh
+bbbc9243505b606550327c64bf5429243f457f2e with expected remote
+5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1. Conflicts logically retained
+canonical stock cleanup/commit checks, procurement checks and all test classes,
+plus exact upstream KB prefix and own entries. Bounded source integration
+commit e2314a7 preserves original exceptions, pending cleanup and committed
+document snapshots on failed reloads, including cancellation.
+
+Final targeted core194 pass; affected API73/one existing skip; actual local
+SQL Server stock/finance/procurement/shared-store74 pass/no skips;
+portability3 and configured quality/preservation checks pass. No private
+data/live authority/cloud/paid AI; disposable container/credential removed.
+The source head and exact selectors are in changes; final evidence-only
+publication head is recorded on PR384 with base/head REST readback. Explicit
+lease only, no main rewrite, merge, closure or invented new Review Pass.

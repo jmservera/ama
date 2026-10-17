@@ -300,3 +300,119 @@ and required Copilot trailer. Use ordinary `git push origin
 feat/provider-capacity-controls-90`, never rebase/force/merge/closure.
 Stop clean after success; any new hosted/independent result belongs to the
 external coordinator gate, not an invented local Review verdict.
+
+## Authorized Integration After #382 (2026-10-17)
+
+Coordinator authorizes topic-only rebase after correction ONE, onto freshly
+fetched main bbbc9243505b606550327c64bf5429243f457f2e. Clean owned topic and
+expected remote lease were both 5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1.
+`git rebase origin/main` conflicts were the append-only KB log, additive
+SQL Server harness classes, and shared SQL validation hooks. Both stock and
+procurement validation and test classes retained; upstream canonical discard
+cleanup-before-reads, committed-cache restoration and watermark invalidation
+retained verbatim. README routing auto-merge preserves both intents.
+`GIT_EDITOR=true git rebase --continue` completed at
+7cf8df7b5ed67055dc6d40a95c554598b448c28e before integration evidence/fixes.
+
+Shared save's refusal branch retains stock decision-scope cleanup ownership.
+The combined source revealed the analogous procurement/advance cleanup still
+could mask the original exception if canonical reload fails. A bounded
+integration regression will reproduce persistent/one-shot reload failures;
+apply stock's existing exception-note/logging pattern to those existing
+caller scopes, retaining one canonical discard primitive, not a duplicate.
+No unmerged finance-94 branch is imported; all existing finance controls/
+callbacks are preserved and tested along with merged stock/procurement.
+
+Validation scope: combined finance-match/signoff, stock reconciliation/API,
+procurement/API/workflows and shared store/provenance gates; real local SQL
+Server stock+procurement parity after shared transaction reconciliation.
+No full RPI or Review; original historical Review untouched, external
+coordinator exact-head closure remains required. No professional authority
+or hosted acceptance invented.
+
+### Integration Validation and Publication Payload
+
+Final integrated source head:
+e2314a7c2ea0d6588b696030d153f29f74208dd7.
+Final base: bbbc9243505b606550327c64bf5429243f457f2e.
+The subsequent evidence-only commit is the terminal publication payload;
+its exact final head is recorded by the PR REST head/readback after push.
+Source commit author and committer are the authenticated account's
+privacy-safe noreply identity, with the required Copilot trailer.
+
+Scope-owned cleanup also handles BaseException cancellation, matching stock's
+existing pattern. Cancellation extension failed first (one failure/three
+errors), then passed after both scopes assumed the full cleanup ownership.
+Final regression covers twelve operation/failure/persistence combinations,
+including transaction cancellation, exact original exception identity,
+explicit logs/notes, canonical disarm/cache restoration, unavailable-read
+refusal, no later mutation/audit flush and a valid three-version retry.
+No cleanup helper is duplicated. Canonical `_discard` remains AST-identical
+to upstream; `_proc_sync` now stages complete reads/decodes without erasing
+known committed document snapshots on partial failure.
+
+Executed commands/results (installed own venv; fictional fixtures only):
+
+* Core cwd, `PYTHONPATH=tests ../../.venv/bin/python -m unittest
+  test_finance_signoffs test_stock_reconciliation test_quality_procurement
+  test_sqlstore test_change_provenance test_bulk_edits test_form_staging -q`:
+  194 passed on the final source, no skips.
+* API cwd, `PYTHONPATH=tests:../core/tests:../agents/tests
+  ../../.venv/bin/python -m unittest test_stock_reconciliation_api
+  test_procurement_api test_workflows test_role_matrix test_mvp
+  test_form_staging_api test_bulk_edit_api -q`:
+  73 run, 72 passed, one existing opt-in skip. Explicit fixture law-store
+  unknown warnings remain; no success-shaped regulatory fallback introduced.
+* Actual task-local SQL Server 2022, existing opt-in harness and disposable
+  loopback/master only, `python -m unittest
+  test_mssqlstore.MssqlStockDecisions test_mssqlstore.MssqlFinanceSignoffs
+  test_mssqlstore.MssqlProcurement test_mssqlstore.MssqlProcurementApi
+  test_mssqlstore.MssqlStoreTests test_mssqlstore.MssqlImproveTests -v`:
+  final 74 passed, no skips. SELECT 1 established responsiveness first.
+  Added finance class reuses existing SqlFlows via existing factory/fixture
+  reset; current-main matching, limits, independent approvals and human
+  technical signoffs are retained, not fabricated unmerged #94 controls.
+  Combined SQL replay was repeated only after final cancellation ownership
+  changed; not a duplicate full component suite. Container
+  `zf-issue90-i84-12428a68` and mode-0600 ephemeral credential removed in
+  finally; no other container, image or database touched.
+* Shared portability selectors: 3 passed. Full configured core/API
+  `ruff check .`, `ruff format --check .`, `mypy` and `git diff --check`
+  passed after final source edits; existing exclusions unchanged.
+
+Preservation assertions passed: exact upstream KB bytes as prefix plus the
+unchanged own suffix; original Review/critique byte-identical; canonical
+discard unchanged; upstream stock/signoffs/finance and their tests exact;
+all upstream index rows and own added routes retained; twelve
+non-overlapping upstream files exact; corrected dataset/manifest and both
+changed web files byte-identical to published correction ONE; main ancestor.
+An initial over-strict index check expected an obsolete pre-#382 stock row.
+The correct intent check retains #382's updated stock row and all own added
+rows; no routing was removed. Browser rerun is not warranted for this
+backend-only integration with byte-identical UI.
+
+Terminal commands: privacy-safe source/evidence commits, then
+`git push --force-with-lease=refs/heads/feat/provider-capacity-controls-90:5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1 origin HEAD:refs/heads/feat/provider-capacity-controls-90`.
+Expected remote is explicit; no unconditional force, main rewrite, merge,
+issue closure, extra full RPI or Review. REST updates PR #384 with the exact
+final head/base and this evidence, then verifies remote/clean status once.
+External coordinator closure and hosted exact-head checks remain pending;
+original independent Review is historical, not a new Pass.
+
+### Latest-Main Advance Detected Before Publication
+
+Final remote lease verification found main advanced to
+d400eb8d1d0d6567445b0fc11803260eab897a65 (#383, finance #94).
+`git fetch origin main` confirms that head. Nothing has been force-pushed:
+owned remote remains the explicit old lease5244f99. The preceding bbbc924
+integration/validation is historical, not the terminal latest-main outcome.
+Its run-owned evidence is committed to make the worktree clean before
+continuing the same authorized latest-main rebase. No stash/discard or
+unrelated branch import; finance is now merged upstream.
+
+New main preserves canonical pending-before-read cleanup but extends
+`_discard(pending=())`, original-exception logging and protected lock exit,
+and adds finance commit-time actor/independence validation. Retain all of
+these plus stock/procurement scope ownership and staged document reload;
+replay combined actual finance-match/stock/procurement suites and local
+SQL after resolving source conflicts. External acceptance still pending.

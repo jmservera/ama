@@ -140,3 +140,43 @@ No new RPI/Review cycle; original Review bytes unchanged and not promoted to
 new source acceptance. External coordinator closure and hosted rerun remain
 pending. Normal privacy-safe commit/push only, same branch, stop clean;
 no rebase/force/merge/closure or actual professional authority.
+
+## Authorized Post-#382 Integration Execution
+
+The subsequent coordinator authorization supersedes the correction-only
+no-rebase restriction solely for this owned topic. Fresh main
+bbbc9243505b606550327c64bf5429243f457f2e; clean topic and exact remote
+lease 5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1. Rebase completed at
+7cf8df7b5ed67055dc6d40a95c554598b448c28e before integration edits.
+Conflicts retained exact upstream KB prefix plus own entries, both SQL
+validation hooks and both stock/procurement test classes.
+
+Canonical upstream discard remains unchanged: disarm pending/transient
+state, invalidate watermark and restore committed caches BEFORE reads.
+Logical integration required procurement/advance recovery ownership alongside
+stock, with original-exception identity and explicit uncertainty logging.
+Eight recovery-fault subcases failed first (four failures/four errors).
+Fixing ownership exposed committed checked-document snapshots lost on failed
+reload (four errors); stage all document reads/decodes before publication.
+Regression now checks both operations, pre-save and transaction refusals,
+one-shot/persistent real SELECT failures, no leaked state/audit, fail-closed
+reads, durable reopen and legitimate retry. The same test is inherited on
+real SQL Server. No duplicate discard helper or finance topic imported.
+
+Combined current-main finance budget/matching/approval/signoff, stock and
+procurement tests plus affected API/workflows are the integration scope.
+Original independent Review remains unchanged historical evidence, not
+acceptance of this changed source; external exact-head closure still needed.
+
+Final scope ownership includes BaseException cancellation, with a second
+failing-first extension before the correction. Final twelve combinations
+and legitimate withdrawal retry pass on SQLite and actual local SQL Server.
+Source commit e2314a7c2ea0d6588b696030d153f29f74208dd7 on base bbbc924.
+Final core combined194/no skips, affected API73/one existing skip, actual
+combined SQL74/no skips, portability3, configured core/API lint/format/types
+and preservation assertions pass. Logs retained session-locally; named
+disposable SQL container/credential removed. Web and corrected fixture/hash
+unchanged, so no redundant browser/full component suite. Changes records
+full selectors/decisions and explicit expected-remote push command.
+Terminal evidence commit is followed by authorized exact-lease publication;
+final head goes in PR384 REST body/readback. No new Review verdict.

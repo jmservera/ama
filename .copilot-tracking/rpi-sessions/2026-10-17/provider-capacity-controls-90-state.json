@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": "stopped",
+  "status": "continuing authorized latest-main integration after merged finance advance",
+  "session_status": "active",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/provider-capacity-controls-90-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/provider-capacity-controls-90-plan.md",
@@ -38,7 +38,23 @@
     "validation": "Focused107 pass, existing manifest8/inventory11 pass; full core651 run/650 pass/one existing Azure SQL skip; full API613 run/471 pass/142 existing opt-in skips. Separate actual local SQL Server31 pass and local browser corrected creation/input focus/preservation pass. Full configured core/API lint/format/types, strict browser lint/format, JS/compileall/diff pass. No skip added, assertion deleted or validator weakened.",
     "dispositions": "All three coordinator/CI gaps addressed in implementation; external independent correction closure still pending. Original Review byte-identical. No new professional authority or hosted Pass."
   },
-  "next_action": {"phase": "Follow-up", "action": "Terminal correction ONE payload: normal privacy-safe commit/push same branch then stop clean. Source changed since original Review, so external coordinator correction closure and hosted rerun remain pending. No rebase/force/merge/issue closure."},
+  "post_382_integration": {
+    "authorization": "Coordinator topic-only rebase after completed correction ONE; explicit expected remote lease, never main, no merge/closure.",
+    "base": "bbbc9243505b606550327c64bf5429243f457f2e",
+    "expected_remote": "5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1",
+    "rebased_pre_evidence_head": "7cf8df7b5ed67055dc6d40a95c554598b448c28e",
+    "status": "Rebase/source integration and validation complete; terminal evidence publication payload",
+    "source_head": "e2314a7c2ea0d6588b696030d153f29f74208dd7",
+    "decisions": "Both stock/procurement validation hooks and harness classes retained; canonical upstream discard unchanged. Procurement/advance scope owns recovery and preserves original exception with explicit log/note. Checked-document reload stages reads/decoding before publishing snapshots. No unmerged finance94 code imported.",
+    "validation": "Eight initial failing-first recovery subcases; cancellation extension also failed first. Final twelve refusal/cancellation/reload combinations plus legitimate retry pass. Core194 pass; API73 run/72 pass/one existing opt-in skip; real local combined stock/finance/procurement/shared SQL Server74 pass/no skips; portability3 pass. Full configured core/API lint/format/types and exact upstream/own intent/historical Review/UI/fixture preservation pass. Task-owned container/credential removed.",
+    "publication": "Terminal evidence-only commit follows source_head; exact final commit is recorded in PR384 REST body/readback after authorized explicit-lease topic push. Expected remote5244f99 only; no main rewrite/merge/closure. External exact-head independent coordinator gate remains pending."
+  },
+  "latest_main_advance": {
+    "base": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+    "status": "Detected by final remote verification before push; clean own evidence commit then continue same topic-only latest-main authorization",
+    "scope": "Merged #94 finance validation/pending restoration/protected lock exit plus existing #84 stock and #90 procurement scopes; original exception identity, explicit logging, single canonical discard and complete checked-document snapshots retained."
+  },
+  "next_action": {"phase": "Follow-up", "action": "Commit own bbbc integration evidence for clean worktree, rebase only owned topic onto freshly fetched d400eb8, reconcile all three validation/recovery intents and run combined finance-match/stock/procurement local+SQL tests. Then evidence commit and explicit-lease push expecting5244f99. No main rewrite/merge/issue closure; external exact-head independent closure remains."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator external correction ONE closure and hosted checks", "rationale": "Coordinator Review Revise of527a537 and hosted gaps addressed; changed production now requires independent external closure, no invented Pass.", "evidence": "Changes Correction ONE Final Validation and Dispositions; full relevant CI discovery/actual local SQL/browser evidence, original Review preserved verbatim."},
     {"rank": 2, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},
