@@ -4483,3 +4483,26 @@ metadata when the knowledge base was created.
   tenant writes, issue ticks or approvals. Image/role activation, actual log
   access, private SQL binding/restart, real browser sign-in and human cut-over
   acceptance remain Not run or unmet.
+
+## [2026-10-17] ingest | Online official climate-source evidence
+
+* Refs #178, continuing merged #367's explicitly offline audit. Retrieved
+  official metadata/terms for HadUK-Grid, MIDAS Open, historic stations, ERA5,
+  CIBSE, UKCP18 and the EA flood-monitoring lead. Integrated comparison and
+  dataset-specific source register into the existing sensor research synthesis.
+* Recommended exact regional HadUK-Grid v1.3.2.ceda for monthly historical
+  context only, with OGL v3 and catalogue citation. Actual RH file request
+  returned CEDA login HTML, not data; no registration/login/terms acceptance.
+  Met Office website automation restriction recorded; no further retrieval
+  after discovering it. Owner licence/reuse approval remains UNMET.
+* Retrieved public Durham monthly file, hash-pinned the local input and used
+  the focused offline standard-library helper to derive 1991-2020 statistics:
+  360 calendar months, 351 accepted pairs, nine estimated exclusions per field.
+  Retained derived JSON with extrema/months/lines/counts, not a raw data bundle.
+  No humidity, instantaneous or regional replay bounds inferred.
+* Added tiny wholly synthetic helper regressions and updated the index and
+  core README's directly coupled climate status. Earlier
+  offline findings remain dated history; original/snapshots/memory untouched.
+  No private datasets, stock generation, live database, Azure or spending.
+  Issue remains open for exact remaining terms/access/paired-record evidence
+  and human approval; generator parameters and operational controls unchanged.

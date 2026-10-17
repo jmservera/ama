@@ -1,0 +1,105 @@
+{
+  "task_id": "178",
+  "task_slug": "climate-source-evidence-178",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/climate-source-evidence-178-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/climate-source-evidence-178-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/climate-source-evidence-178-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/climate-source-evidence-178-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/climate-source-evidence-178-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/climate-source-evidence-178-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI loop; public official retrieval; commit, push and PR, then stop",
+      "status": "confirmed",
+      "evidence": "2026-10-17 explicit caller request"
+    },
+    {
+      "decision": "Owner licence/reuse approval",
+      "status": "UNMET",
+      "evidence": "Caller and issue #178 retain explicit human approval"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for bounded partial evidence delivery",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-17/climate-source-evidence-178-research.md; C1/W1-W14"
+    },
+    {
+      "decision": "One final-candidate critique executed; verdict Revise; PC-001/002/003 directly resolved",
+      "status": "complete; ready",
+      "evidence": ".copilot-tracking/plans/2026-10-17/climate-source-evidence-178-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Implementation full bounded plan P01-P03 complete",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/climate-source-evidence-178-changes.md"
+    },
+    {
+      "decision": "One post-implementation Review executed; bounded evidence delivery assessed; original #178 not fully accepted",
+      "status": "execution Complete; outcome Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/climate-source-evidence-178-review.md"
+    },
+    {
+      "decision": "Initial delivery committed and pushed; Refs #178 PR opened against main without merge or rewrite",
+      "status": "delivered",
+      "evidence": "f1b08f8d6b472821cf3e682512c93b5b7e79e1ed; https://github.com/jmservera/ama/pull/371"
+    },
+    {
+      "decision": "Caller-authorized bounded rebase continuation, not feature expansion or approval",
+      "status": "confirmed",
+      "evidence": "2026-10-17 caller: rebase f4ea7542874baf6045db2e33764b1348a976c238 onto origin/main; preserve both workstreams, validate, force-with-lease only run-owned branch, update PR #371 then STOP"
+    },
+    {
+      "decision": "Rebase-only Research reused/Ready, Plan verified, P04 implementation complete",
+      "status": "complete",
+      "evidence": "Existing research/plan/details/changes rebase sections; main 4e4a389; eight tests, retained-input cmp and exact core lint/format/type checks pass; all source/log preservation assertions pass"
+    },
+    {
+      "decision": "Caller-requested P04 resolution Review executed once",
+      "status": "execution Complete; outcome Conformant for rebase resolution only",
+      "evidence": "Existing review artifact: Caller-Requested Rebase Resolution Assessment; original full-issue outcome Residual work and RV-001/002/003 retained"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "owner-reuse",
+      "summary": "Owner licence/reuse approval UNMET",
+      "resolution": "Named owner must explicitly confirm dataset-specific reuse"
+    },
+    {
+      "id": "paired-records",
+      "summary": "CEDA humidity records require login; no paired replay bounds available",
+      "resolution": "Authorized retained record packet and competent geography/cadence review; no account or download authority inferred"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "RPI work stopped; parent delivery bookkeeping only: final evidence commit, one explicit lease-push to docs/climate-source-evidence-178 and PR #371 update; actual SHA/delivery evidence captured in PR/coordinator, then STOP. Human approval and paired-record gates remain UNMET; no child task selected."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner dataset-specific reuse and automated-access decision",
+      "rationale": "Human authority prerequisite; avoids unauthorized retrieval/adoption",
+      "evidence": "RV-002; canonical C178-HUK/C178-DUR/C178-TERMS"
+    },
+    {
+      "rank": 2,
+      "task": "Authorized paired T/RH packet and cadence/geography/QC assessment",
+      "rationale": "Largest remaining numerical acceptance gap; no invented or replacement data",
+      "evidence": "RV-001; W4/C178-HUK-ACCESS and derived JSON humidity unavailable"
+    },
+    {
+      "rank": 3,
+      "task": "Remaining relevant candidate terms and site coverage",
+      "rationale": "Complete decision evidence only for retained alternatives, without broader new implementation",
+      "evidence": "RV-003; C178-MIDAS/C178-CIBSE"
+    }
+  ]
+}
