@@ -179,3 +179,48 @@ edit, professional authority promotion or production change. Candidate
 two existing skips, and 99 actual MSSQL tests with one existing JSON-only skip.
 Changes record has precise counts, first failure, source fingerprints, resources
 and commands; no new Review/independent Pass.
+
+## P05-T01: Coordinator-authorized correction TWO
+
+Post388 integration publication completed at
+4c9597b1991b9ed521c951f0d9f7a8487ebba96f on
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c. Coordinator reports exact-210b89df
+external Review Revise / Medium for assistants.py capture/eligible counting
+retained Superseded history. Original RPI Review/closure remains untouched.
+
+Scope: quality active-record selector reused by assistant capture and proposal
+review, defensive active filtering in predicate, exact current state and evidence
+version in source signature. Preserve existing scalar allowlists, missing/unknown
+handling, duplicate-active discrepancy, citations and independent human review;
+no quality approval authority. Tests must use actual replacement contract and
+prove no historical evidence reliance, pending/defect discrepancies, unknown/
+missing measure, duplicate active and staleness on current version change.
+
+Run full core CI command from src/core:
+../../.venv/bin/python -m unittest discover -s tests -v.
+Also targeted existing API assistant/dispatch, quality/hazard recovery and
+configured checks. Hosted oldhead hazard race fixture error is already corrected
+by prior integration test-only change; prove exact target plus full core, not
+relax contributor guard. No changed persistence means actual prior MSSQL evidence
+remains historical; new consumer fix needs no new SQL schema/hook parity claim.
+
+P05-T01 complete. Fail-before: two new canonical assistant methods failed with
+ten assertions/subcases (old captured evidence, duplicate false alarm and missing
+current evidence incorrectly satisfied by history). Fixed helper filters only
+explicit SUPERSEDED, retaining all active duplicates; same helper used by capture,
+predicate and current-contributor proposal review. Snapshot includes scalar
+evidence_version; rule text/hash changes only quality-evidence dependency.
+Valid accepted/handed current evidence is not a gap; pending/returned/fixed/
+unknown/missing and malformed duplicate-active remain gaps. No arbitrary latest
+selection, silent acceptance or authority change.
+
+Final focused 206 run/156 pass/50 skips; full exact core CI command 788 run/
+751 pass/37 existing skips. Source identical to tested consumer production at
+full core execution; final additional assertions live in API test only and
+focused selection was repeated after them. Exact target including all hazard
+race subcases passed. Existing sqlstore/hazard/workflows/stock/finance/grants/
+procurement/store/fixture/manifest/original Review unchanged byte-for-byte.
+No actual new MSSQL replay, since no persistence/transaction implementation
+changed; prior 99-case actual SQL receipt remains historical. Original Review/
+external Revise/Medium disposition retained, independent external final gate
+pending; no new Review or self-regraded Pass.

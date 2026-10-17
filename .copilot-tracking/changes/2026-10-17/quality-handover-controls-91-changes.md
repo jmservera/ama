@@ -469,3 +469,127 @@ state metadata only after tested candidate; final full head is reported by PR/gi
 Authorized publication uses ONLY own topic with exact expected-remote lease
 210b89df0d287675cb8ac5148dd9d198d37dd9c1. No main write, merge, issue closure,
 cloud action or independent Review rerun. Original adverse Reviews unchanged.
+
+## Authorized correction TWO: downstream quality assistant
+
+Coordinator reports exact-210b89df external Review Revise / Medium: assistant
+capture and len(records)!=1 predicate count Superseded history as current, and
+proposal review also traverses historical contributors. Correction TWO explicitly
+authorized after completed post388 publication at 4c9597b1. Original single RPI
+Review and correction ONE unchanged; no new full Review/self-Pass.
+
+P05-T01 activated before edits. Prior-art search found no shared current-record
+selector; quality.py defines explicit SUPERSEDED, one active record per measure
+and evidence_version with legacy default 1. Reuse a small state-based selector,
+not maximum-version picking that could hide malformed active duplicates.
+Keep every active candidate for discrepancy detection; only accepted/handed
+current evidence can avoid state discrepancy. Include evidence_version in closed
+snapshot allowlist so same-content replacement still invalidates proposals.
+No persistence, hazard marker, finance/grant/stock/provider hook or UI edit.
+
+### P05-T01 fail-before and implementation
+
+Two new existing-file canonical ContractTests methods executed before source
+changes: test_quality_replacement_uses_only_current_evidence_and_version and
+test_quality_current_discrepancies_do_not_rely_on_retired_acceptance.
+Result: two run, ten failing assertions/subcases. Actual domain replacement
+retained Superseded+Accepted but snapshot included both; old evidence leaked into
+captured source and historical-only evidence could satisfy missing current work.
+Session-only receipt quality91-correction2-before.log.
+
+Added quality.active_records as the shared state-contract selector, excluding
+only explicit Superseded records, never arbitrarily choosing highest version.
+Assistant capture, per-measure predicate and current contributor checks use it.
+Snapshot's existing scalar allowlist additionally captures evidence_version;
+legacy absent version remains null/unknown, not invented authority. Current
+state must be Accepted/Handed over to avoid a state discrepancy. Missing/unknown
+measures, missing current work, extra unknown-measure records, duplicate-active
+records and missing/conflicting current checklist evidence remain discrepant.
+Rule description updated; existing rule_hash/source_signature mechanism
+invalidates prior proposals without a global registry/service change.
+
+Tests execute actual PM submission/QA acceptance then replacement by QA with
+independent PM acceptance. Only current version 2 appears in captured sources; no
+false discrepancy, old ready proposal becomes stale and cannot verify, new
+proposal has a different source signature/id. Original recorder can independently
+review the new proposal; current recorder cannot. Historical evidence changes
+do not change current signature, current version changes do. Proposal-only review
+does not mutate any domain/quality state. Direct predicate tests also filter
+historical snapshots defensively, preserve accepted/handed success, all pending/
+defect/unknown states, duplicates, wrong/missing measures, empty sources and
+current evidence gaps. Existing valid-case fixture now actually uses Accepted
+with explicit version 1, not Submitted posing as already accepted evidence.
+No private data or billable AI used; existing deterministic provider double only.
+
+Final test-strengthening uses an otherwise authorized current QA recorder and
+requires the explicit Someone independent refusal, not a role-based denial.
+Its first rerun correctly hit optimistic ConflictError because the test reused
+the proposal revision from before PM verification; retaining the returned
+verification revision fixed that harness mistake without any production change.
+This intermediate result is preserved in quality91-correction2-review-cas.log;
+the subsequent complete focused rerun passed as recorded below.
+
+### P05-T01 final actual validation
+
+| Execution | Actual result |
+| --- | --- |
+| Five exact assistant/current-version/scanner and hosted hazard regression selectors | Five pass |
+| Final assistant/dispatch + quality + hazard + QualityMatrix HTTP selection | 206 run, 156 pass, 50 skips |
+| Exact full src/core CI discovery | 788 run, 751 pass, 37 existing skips |
+| Core/API configured Ruff, format, mypy | Pass; 60/22 format-managed files and 113/54 mypy source files |
+| Diff whitespace and retained shared-source/fixture/Review byte checks | Pass |
+
+Final focused command:
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_assistants test_assistants_dispatch test_quality_procurement \
+  test_hazard_referral test_role_matrix.QualityMatrix -q
+```
+
+Exact full core command taken from .github/workflows/src-ci.yml:
+
+```bash
+cd src/core
+../../.venv/bin/python -m unittest discover -s tests -v
+```
+
+The full discovery includes the exact prior hosted failure
+test_hazard_referral.SqlHazardReferral.test_interleaved_emergency_hold_blocks_every_guarded_commit,
+all nine interleaved transitions, now passes with the prior test-only registered
+recorder precondition. No permission guard relaxed; original assertions intact.
+It also includes both post-COMMIT/recovery families and all core quality/
+resident/stock/provider/grant/finance tests. No CI rerun shortcut or fabricated
+pass. Full-core 60,000-case scale checks use generated synthetic data only.
+
+Focused skips: 49 opt-in assistant MSSQL variants (includes two inherited new
+canonical methods), plus one inherited JSON-only hazard audit-order case on SQL.
+Full-core skips: 19 opt-in isolated finance MSSQL, 16 opt-in grant MSSQL, one
+JSON-only audit-order test inherited by SQL, one explicit isolated Azure SQL
+acceptance. Existing opt-in decorators/skip conditions unchanged; no new skip
+or validation exemption. No new real MSSQL replay for this consumer-only fix:
+no SQL/schema/transaction/recovery implementation changed. Prior actual 99-case
+integration replay remains historical, not new assistant SQL parity.
+No new browser/UI, cloud/paid AI, real-human/WCAG or independent acceptance.
+
+Session-only receipts: quality91-correction2-before.log,
+quality91-correction2-targeted.log, quality91-correction2-focused-final.log,
+quality91-correction2-core-ci.log. Counts overlap; do not sum.
+
+Final correction source SHA-256:
+
+| Path | SHA-256 |
+| --- | --- |
+| src/core/src/zava_forward/core/assistants.py | fefb93c5b63149c8d2dda0723d8822e7533913f9d2f666a2bab71df265f0add9 |
+| src/core/src/zava_forward/core/quality.py | 3f4982ebd09ce122670acd9738c970c9c051b47e11a8bc5fb31c134d082ffc89 |
+| src/api/tests/test_assistants.py | 55d96da83e9b50d5af2644f2f2eb6a6141328b9c19eef10dadc8d8544fb9606b |
+
+P05-T01 completed with no local unresolved correction finding. Original single
+RPI Review, its original adverse verdict and correction ONE are byte-unchanged.
+Coordinator exact-210b89df external Review Revise/Medium is retained as reported;
+this is separate implementation-owner correction TWO closure, not a new Review
+or independent Pass. External final artifact/head gate remains coordinator-owned.
+Base stays 1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c, starting published head
+4c9597b1991b9ed521c951f0d9f7a8487ebba96f; normal correction commit/push only.
+No recovery hooks, sqlstore/hazard/workflows, finance/grants/stock/procurement,
+MSSQL harness, dataset/manifest or original case change. No merge/issue closure.

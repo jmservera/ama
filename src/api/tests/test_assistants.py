@@ -310,7 +310,7 @@ class ContractTests(Base):
                  finance=dict(budget=dict(amount=100, status="Approved")),
                  documents=[dict(id=k, kind=k, version=1, content_sha256="abc") for k in ("Survey", "Design")])
         cl = quality.checklist_for("Loft insulation")
-        c["quality"] = [dict(measure="Loft insulation", state="Submitted", checklist_version=cl["version"],
+        c["quality"] = [dict(measure="Loft insulation", state="Accepted", evidence_version=1, checklist_version=cl["version"],
                              items=[dict(label=lab, evidence="Observed") for lab in cl["items"]])]
         return c
 
@@ -352,6 +352,82 @@ class ContractTests(Base):
         c["finance"]["invoices"] = [dict(id="INV-1", ref="Invoice 1", lines=[
             dict(measure="Loft insulation", quantity=1, amount=50, milestone_ref=None)])]
         self.assertTrue(eligible("funding-evidence", capture("funding-evidence", c), "2026-10-13"))
+
+    def test_quality_replacement_uses_only_current_evidence_and_version(self):
+        from dataset import supplied_resident_fixture
+
+        cl = quality.checklist_for("Loft insulation")
+        items = {label: "SYN current photo" for label in cl["items"]}
+        qa = self.people["Quality Inspector"]
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            supplied_resident_fixture(c)
+            self.store.save()
+        self.store.submit_quality(self.pm, "ZF-1", "Loft insulation", "SYN installer", "Installer", items, context_revision=1)
+        self.store.accept_quality(qa, "ZF-1", 0)
+        prior = self.run_ready("quality-evidence")
+        self.store.submit_quality(qa, "ZF-1", "Loft insulation", "SYN installer", "Installer", items, context_revision=1)
+        self.store.accept_quality(self.pm, "ZF-1", 1)
+        before = self.domain()
+        snapshot = capture("quality-evidence", self.store.detail("ZF-1"))
+        self.assertEqual([r["state"] for r in snapshot["sources"]["quality"]], ["Accepted"])
+        self.assertEqual(snapshot["sources"]["quality"][0]["evidence_version"], 2)
+        self.assertFalse(eligible("quality-evidence", snapshot, "2026-10-17"))
+        self.assertTrue(self.service.detail(self.pm, prior["id"])["stale"])
+        with self.assertRaises(ValueError):
+            self.verify(prior, qa)
+        current = self.run_ready("quality-evidence")
+        self.assertNotEqual(current["source_signature"], prior["source_signature"])
+        self.assertNotEqual(current["id"], prior["id"])
+        # The original recorder is independent of the replacement, not of its retired history.
+        current = self.verify(current, self.pm)
+        with self.assertRaisesRegex(PermissionError, "Someone independent"):
+            self.verify(current, qa)
+        changed = copy.deepcopy(self.store.detail("ZF-1"))
+        changed["quality"][0]["items"][0]["evidence"] = "SYN retired photo change"
+        self.assertEqual(digest(snapshot), digest(capture("quality-evidence", changed)))
+        changed["quality"][1]["evidence_version"] += 1
+        self.assertNotEqual(digest(snapshot), digest(capture("quality-evidence", changed)))
+        self.assertEqual(before, self.domain())
+        self.assertEqual([r["state"] for r in self.store.detail("ZF-1")["quality"]], ["Superseded", "Accepted"])
+
+    def test_quality_current_discrepancies_do_not_rely_on_retired_acceptance(self):
+        c = self.valid_case()
+        c["quality"][0].update(state="Accepted", evidence_version=2)
+        old = copy.deepcopy(c["quality"][0])
+        old.update(state="Superseded", evidence_version=1)
+        old["items"][0]["evidence"] = "SYN old evidence must not leak"
+        c["quality"].insert(0, old)
+        current = capture("quality-evidence", c)
+        self.assertFalse(eligible("quality-evidence", current, "2026-10-17"))
+        current["sources"]["quality"].append(copy.deepcopy(old))
+        self.assertFalse(eligible("quality-evidence", current, "2026-10-17"))
+        handed = copy.deepcopy(c)
+        handed["quality"][1]["state"] = "Handed over"
+        self.assertFalse(eligible("quality-evidence", capture("quality-evidence", handed), "2026-10-17"))
+        for state in ("Submitted", "Returned", "Fixed, awaiting reinspection", "Unknown", None):
+            with self.subTest(state=state):
+                changed = copy.deepcopy(c)
+                changed["quality"][1]["state"] = state
+                s = capture("quality-evidence", changed)
+                self.assertNotIn("SYN old evidence", canonical(s))
+                self.assertTrue(eligible("quality-evidence", s, "2026-10-17"))
+        for mutate in (
+            lambda x: x["quality"].pop(),
+            lambda x: x["quality"].append(copy.deepcopy(x["quality"][1])),
+            lambda x: x["quality"][1].update(measure="Nonexistent measure"),
+            lambda x: x["quality"][1].update(measure=None),
+            lambda x: x["quality"].append(dict(x["quality"][1], measure="Nonexistent measure")),
+            lambda x: x.update(measures=[]),
+            lambda x: x["quality"][1]["items"][0].update(evidence=""),
+        ):
+            with self.subTest(mutate=mutate):
+                changed = copy.deepcopy(c)
+                mutate(changed)
+                self.assertTrue(eligible("quality-evidence", capture("quality-evidence", changed), "2026-10-17"))
+        missing = copy.deepcopy(c)
+        missing["quality"].pop()
+        self.assertIn("source.quality", capture("quality-evidence", missing)["unknowns"])
 
     def test_scan_valid_cases_does_not_enqueue_and_changes_enqueue_material_versions(self):
         valid = self.valid_case()

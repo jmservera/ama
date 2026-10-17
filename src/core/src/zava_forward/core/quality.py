@@ -46,6 +46,11 @@ def checklist_for(measure):
     return dict(CHECKLISTS[key], name=key)
 
 
+def active_records(records):
+    """Exclude retired versions without hiding conflicting active records."""
+    return [record for record in records if record.get("state") != SUPERSEDED]
+
+
 def _clean(text, n=300):
     if text is not None and not isinstance(text, str):
         raise ValueError("Enter text for this quality field.")

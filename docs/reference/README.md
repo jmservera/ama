@@ -75,6 +75,15 @@ SQL Server 99 run/98 pass/one JSON-only skip. Original #91 Review Not accepted
 and correction evidence remain distinct; coordinator final-head judgment and
 external review 42ce6748 remain separate from this integration evidence.
 
+Subsequent coordinator correction TWO fixes the downstream quality assistant's
+current-version selection without changing persistence: Superseded history is
+excluded, current evidence version binds proposal staleness, duplicate active/
+pending/unknown evidence remains a gap. Exact full core CI discovery passed
+751 of 788 (37 existing skips), focused assistant/recovery selection passed
+156 of 206 (50 opt-in/JSON-only skips). See the
+[correction log](./log.md#2026-10-17-correction--91-current-version-quality-assistant-evidence);
+external final-head judgment remains separate, original adverse Reviews retained.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect grant lifecycle and designated human controls (#95) | [Core scoped exercise-authority contract](../../src/core/README.md#grant-lifecycle-and-human-exercise-designation-95) and [API/application distinction](../../src/api/README.md#grant-and-application-records-95) | [Finance journey criterion audit](./research/ux/customer-journeys/finance.md#grant-lifecycle-acceptance-audit-2026-10-17-95): existing states retained; current registry, exact state/case/route designation, fresh UTC transaction checks, independent identity and GBP evidence. Application confirmation is not award/cash; original GBP 40 million remains unverified. Original Review Not accepted retained; correction ONE restores current legacy preparer lookup with failing-first regressions; coordinator independent closure pending. No real delegation, payments or full PRD pack/export acceptance |

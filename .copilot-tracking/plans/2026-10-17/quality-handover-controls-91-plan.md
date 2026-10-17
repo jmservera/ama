@@ -253,3 +253,27 @@ change or unknown-identity weakening. Tested candidate
 48b90f42fe8170f3f17956e3a194a0c93b33eee2: 243 local run/241 pass/two existing
 skips; actual MSSQL 99 run/98 pass/one JSON-only skip. Original adverse Reviews
 remain; final-head source fingerprints and full receipts in changes record.
+
+<!-- rpi:phase id=P05 -->
+### [x] P05: Authorized correction TWO, downstream quality assistant
+
+<!-- rpi:task id=P05-T01 -->
+#### [x] P05-T01: Select only active evidence in snapshots, predicates and review
+
+Coordinator exact-210b89df external Review returned Revise / Medium: historical
+Superseded versions are counted and exposed as current by quality-evidence.
+Reuse the quality state contract and retain duplicate-active conflict detection;
+do not select arbitrary latest or infer acceptance from missing measures.
+Capture active evidence version in permitted source signatures, keep pending/
+returned/fixed/unknown current state discrepant, and exclude superseded records
+from contributor checks for proposal-only review. Add deterministic fail-before
+assistant regressions, preserve stale/dependency checks, then execute focused
+assistant/quality/recovery plus exact full core CI discovery, configured gates.
+No persistence/hazard hook change, billable inference, new service or Review.
+Completed: fail-before two canonical methods produced ten failing assertions/
+subcases; final focused selection 206 run/156 pass/50 opt-in or JSON-only skips;
+exact full core CI discovery 788 run/751 pass/37 existing skips. All five exact
+targeted selectors, including old hosted hazard regression, passed. Configured
+Ruff/format/mypy pass. Shared persistence/hooks/fixtures and original Review
+byte-preserved; original external Revise/Medium remains with separate local
+closure evidence. No independent Pass or new full Review.

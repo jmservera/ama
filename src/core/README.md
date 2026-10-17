@@ -125,6 +125,17 @@ measures and financial history are unchanged. In-progress duplicate evidence
 remains refused. This implements the retained
 [ADR 0002 replacement learning](../../docs/adrs/0002-pilot-readiness-architecture.md).
 
+The proposal-only quality assistant uses the same active-record selector:
+Superseded evidence is excluded from captured sources, per-measure checks and
+current-contributor review. It does not pick an arbitrary newest record;
+multiple active versions remain a discrepancy. Missing/unknown measures,
+pending/returned/fixed work and incomplete/conflicting current checklist evidence
+remain gaps. Current `evidence_version` is included in the scalar allowlist and
+source signature, so same-content replacement invalidates old proposals.
+Historical-only edits cannot make retired evidence current. Assistant proposal
+verification/acceptance is still separate from quality acceptance, handover or
+professional approval; no assistant gains domain-write authority.
+
 Failed SQL writes use the existing decision-scope quarantine/rowversion
 mechanisms; failed success audit cannot flush later, while a caller's legitimate
 pending audit prefix survives a pre-commit refusal. After confirmed COMMIT, a refresh failure

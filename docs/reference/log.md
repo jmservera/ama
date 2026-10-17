@@ -5480,3 +5480,26 @@ metadata when the knowledge base was created.
   Exact owned container removed; source fingerprints recorded for coordinator
   external review 42ce6748. Original adverse Reviews unchanged; no independent
   Pass, Azure, human/WCAG acceptance, merge or issue closure claimed.
+
+## [2026-10-17] correction | #91 current-version quality assistant evidence
+
+* Coordinator exact-210b89df external Review returned Revise / Medium for
+  downstream assistant counting/exposing Superseded evidence as current.
+  Authorized correction TWO followed completed post388 publication; original
+  single RPI Review/correction ONE and external adverse disposition retained.
+* Two fail-before canonical assistant tests reproduced false discrepancy and
+  stale historical-source reliance. Shared quality selector now excludes only
+  explicit Superseded, never hiding duplicate active candidates. Capture,
+  discrepancy and proposal contributor review use current evidence only;
+  scalar evidence_version participates in source signatures. Same-content
+  replacement stales prior proposals, historical-only changes do not.
+* Pending/defective/unknown/missing evidence and malformed active duplicates
+  remain gaps. No proposal review writes quality acceptance or grants new AI
+  authority. No shared persistence/hazard/finance/grant/stock/provider hook,
+  dataset/manifest or original case change.
+* Exact full core CI discovery: 788 run, 751 pass, 37 existing skips. Focused
+  assistant/dispatch/quality/hazard/HTTP: 206 run, 156 pass, 50 opt-in or
+  JSON-only skips; five exact targets including prior hosted hazard failure
+  passed. Configured Ruff/format/mypy pass. No new MSSQL/browser replay for
+  consumer-only change; prior actual SQL/browser evidence remains historical.
+  External final-head/artifact gate remains pending, no self-regraded Pass.

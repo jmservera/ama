@@ -48,7 +48,7 @@ RULES = {
     "assessment-preparation": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
     "funding-evidence": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
     "works-resident-coordination": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
-    "quality-evidence": "Missing measures; not exactly one quality record per measure; missing/conflicting checklist item evidence or checklist version mismatch; relevant permitted signature changes.",
+    "quality-evidence": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes.",
 }
 OUTPUT_SCHEMA = dict(required=("summary", "findings", "unknowns"), summary_chars=1200,
                      findings_count=12, finding_chars=800, citations_per_finding=8,
@@ -144,9 +144,9 @@ def capture(capability, c, procurement=None):
                                                period_to=p.get("period_to"), contractor=name,
                                                **pick(cap, ("committed", "evidence"))))
     if capability == "quality-evidence":
-        source["quality"] = [dict(pick(q, ("measure", "state", "checklist_version")),
+        source["quality"] = [dict(pick(q, ("measure", "state", "checklist_version", "evidence_version")),
                                  items=[pick(i, ("label", "evidence")) for i in q.get("items", [])])
-                             for q in c.get("quality", [])]
+                             for q in quality.active_records(c.get("quality", []))]
         source["checklists"] = {m: quality.checklist_for(m) for m in measures(c)}
     unknowns = []
 
@@ -200,11 +200,16 @@ def eligible(capability, snapshot, now_date, changed=False):
             for r in s["requests"])
     if not s["measures"]:
         return True
+    active = quality.active_records(s["quality"])
+    if any(q["measure"] not in s["measures"] for q in active):
+        return True
     for m in s["measures"]:
-        records = [q for q in s["quality"] if q["measure"] == m]
+        records = [q for q in active if q["measure"] == m]
         if len(records) != 1:
             return True
         q = records[0]
+        if q["state"] not in (quality.ACCEPTED, quality.HANDED):
+            return True
         labels = s["checklists"][m]["items"]
         if q["checklist_version"] != s["checklists"][m]["version"]:
             return True
@@ -980,7 +985,7 @@ class Assistants:
                 c = self.authorize(db, user, task["capability"], task["case_id"])
                 if task["capability"] == "quality-evidence":
                     current_actor = self.authorize(db, user, task["capability"])
-                    for rec in c.get("quality", []):
+                    for rec in quality.active_records(c.get("quality", [])):
                         self.store._independent(rec, current_actor, "review quality evidence")
                 if action == "verify":
                     if source_verified is not True:

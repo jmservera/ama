@@ -227,6 +227,16 @@ resident/screen-reader/WCAG or full PRD acceptance is claimed. The issue's
 current PRD FR-017 and BRD FR-017 numbering differ; BRD RULE-004/RULE-013 and
 the retained ADR 0002 replacement learning define the relevant boundaries.
 
+Coordinator correction TWO also covers the downstream proposal-only quality
+assistant: superseded evidence is absent from current captured sources and
+contributor review, while duplicate active versions and pending/defective/missing
+current evidence remain discrepancies. Current evidence version is part of
+proposal staleness, including same-content replacement. Deterministic fictional
+regressions exercise actual quality replacement and proposal-only verification;
+no model call, quality approval authority or human competence is inferred.
+The coordinator's original external Revise / Medium disposition is retained
+separately from implementation closure; no new full Review or self-Pass.
+
 ## Next steps
 
 No user action required. Return to cross-role synthesis; preserve unknowns.
