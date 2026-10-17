@@ -1,0 +1,26 @@
+{
+  "task_id": "182",
+  "task_slug": "sensor-fault-injection-182",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Research",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/sensor-fault-injection-182-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered loop through Review, publication, then stop",
+      "status": "confirmed",
+      "evidence": "Explicit caller request 2026-10-17"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Plan", "action": "Research complete and Ready; commit evidence then activate rpi-plan"}
+}
