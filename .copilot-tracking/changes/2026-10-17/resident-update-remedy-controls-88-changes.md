@@ -15,7 +15,10 @@ and fresh evidence tracked separately in resident-update-remedy-controls-88-corr
 Original Review/critique and correction ONE evidence retained unchanged.
 Fresh 74 resident core/API tests:72pass/two existing skips; nine actual MSSQL
 tests pass/no skips; configured core/API Ruff/format/mypy pass. No web edits,
-new full Review or self-declared disposition. Normal publication pending.
+new full Review or self-declared disposition. Source/tests/evidence normally
+published as75a12e9541e2996d77fcb416f27d8174f0b047bb on PR392;
+external final disposition pending. Base remains74617981; main's newer sensor
+PR393 observed read-only, no unauthorized integration.
 
 Original implementation of P01-T01/T02 and P02-T01/T02 completed and evidence
 reconciled before the single original Review. Coordinator-authorized correction

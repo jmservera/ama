@@ -21,7 +21,8 @@ and final correction TWO under P01-T01/P02: route/state responsibility, not shar
 owner email, selects the status clock. Explicit manager-only versioned service/
 redress reassignment preserves captured owner history and independent clocks.
 Original Review/critique stay unchanged; no new full Review, base change or policy
-authority. Final source/evidence publication and external disposition remain.
+authority. Source/evidence published normally as75a12e95; external disposition
+remains. Newer main943febc2 observed read-only, not integrated without authorization.
 
 ### What You May Not Know
 

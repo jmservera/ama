@@ -28,9 +28,9 @@ assigning current responsibility. Remedy and original history remain independent
 * [x] Minimal responsibility-based source fix and existing control expectation.
 * [x] Fresh core/API selectors, current-actor/concurrency/recovery and actual MSSQL.
 * [x] Configured statics and docs/evidence/state.
-* [ ] Normal same-PR publication; external disposition belongs to coordinator.
+* [x] Normal same-PR source publication; external disposition belongs to coordinator.
 
-No blocker; implementation and local evidence complete, normal publication pending.
+No blocker; implementation, local evidence and normal source publication complete.
 External correction TWO disposition remains Revise Medium until coordinator
 acceptance. No third correction/full Review or self-declared independent Pass.
 
@@ -188,3 +188,12 @@ Fresh account identity resolved via gh api user for repository-local noreply
 author/committer; normal same-topic push with required Copilot trailer only.
 Exact final published head belongs in PR body/final handoff, not self-referencing
 this commit. CI and independent disposition remain pending; do not idle-watch.
+
+Source/tests/docs/evidence published normally as
+75a12e9541e2996d77fcb416f27d8174f0b047bb to same PR392. PR/local head
+verified, worktree clean after source push. Fresh noreply author/committer and
+Copilot trailer present; no force/lease/rebase or main write. Final metadata-only
+receipt/state commit follows normally; source bytes remain exactly validated.
+Stop for coordinator independent final-head correction TWO disposition. Original
+Review/critique/correction ONE receipt unchanged. Resume ID
+3a36c179-e1e3-4332-9c33-fa947262fd79. No merge/issue closure or third correction.

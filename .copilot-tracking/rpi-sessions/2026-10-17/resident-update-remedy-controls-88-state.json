@@ -3,9 +3,9 @@
   "task_slug": "resident-update-remedy-controls-88",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Publication",
-  "status": "implementation_complete",
-  "session_status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "authorized_correction_two": {
     "number": 2,
     "last_authorized_cycle": true,
@@ -16,7 +16,9 @@
     "input": "Coordinator f786737f Revise Medium: same-person service/redress email collision changes wrong status clock",
     "scope": "P01-T01 plus P02-T01/T02; backend only, no new full Review",
     "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-correction-two.md",
-    "remaining": "Normal publication and independent coordinator final-head disposition",
+    "remaining": "Independent coordinator final-head disposition",
+    "published_source_head": "75a12e9541e2996d77fcb416f27d8174f0b047bb",
+    "publication": "Normal source push to same PR verified; final metadata-only receipt follows without source changes",
     "validation": "Failing-first8subcasefailures;74freshresidentcoreAPI72pass2skip;9actualMSSQLpass0skip;configuredcoreAPIstaticsPass;nowebchanges",
     "external_disposition": "Revise Medium pending coordinator acceptance"
   },
@@ -84,8 +86,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Publication",
-    "action": "Normally publish final authorized correction TWO to same PR #392 and stop clean for external coordinator disposition; no new full Review/third cycle, rebase, merge or issue closure."
+    "phase": "Follow-up",
+    "action": "Stop at clean normally published PR #392 for independent coordinator final-head correction TWO disposition; no idle CI watch, new full Review/third cycle, rebase, merge or issue closure."
   },
   "prioritized_follow_ups": [
     {

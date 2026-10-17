@@ -13,7 +13,7 @@
 | Phase | Name | Status |
 | --- | --- | --- |
 | P01 | Bounded resident controls | correction TWO responsibility-based status clock complete; no new UI scope |
-| P02 | Validation/documentation | correction TWO fresh selectors/SQL/statics/evidence complete; publication/external disposition pending |
+| P02 | Validation/documentation | correction TWO fresh selectors/SQL/statics/evidence complete; source publication75a12e95, external disposition pending |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Bounded resident controls
