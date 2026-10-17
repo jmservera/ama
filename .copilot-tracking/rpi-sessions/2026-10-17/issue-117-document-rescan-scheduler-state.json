@@ -34,13 +34,18 @@
       "decision": "One final-candidate critique executed; original verdict Revise. PC-001..003 directly applied: own-COMMIT witness, incomplete exit/cursor semantics, construction cleanup. No repeat critique.",
       "status": "completed; dispositions resolved; plan ready",
       "evidence": ".copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md and plan Critique Disposition"
+    },
+    {
+      "decision": "Published draft main PR395 from authorized branch; original Review Not accepted and both Medium corrections remain separate. Source commit 4763c0e6337d06846d9a9c46f7d9e0cf7470079f matches remote/PR. Main remained ebc8dab87ae9bd6a33380b85e86f38be5ed9f213. Issue117 remains Open.",
+      "status": "publication executed; draft acceptance blocked; no merge or issue action",
+      "evidence": "https://github.com/jmservera/ama/pull/395; gh PR/issue/remote verification 2026-10-17; owned SQL stopped/removed"
     }
   ],
   "blockers": [
     {"id": "RV-001", "summary": "Original Review Medium: nested SQL recovery can emit raw exception diagnostics.", "resolution": "Separate coordinator-authorized rpi-implement follow-up; preserve non-worker recovery and assert complete log redaction."},
     {"id": "RV-002", "summary": "Original Review Medium: malformed scanner result can escape controlled report/CLI boundary.", "resolution": "Separate coordinator-authorized rpi-implement follow-up; safe result validation and contained error tests."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Preserve original Review Complete / Not accepted and route two Medium corrections separately; finish authorized branch publication without source corrections."},
+  "next_action": {"phase": "Follow-up", "action": "Await coordinator selection and separate correction authorization: ranked RV-001 then RV-002; PR395 remains draft / Not accepted. No child work started. Stop automatic session or switch to manual mode remain available."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Contain nested worker SQL recovery diagnostics (RV-001)", "rationale": "Bounded existing-context correction with direct privacy value; preserves audit recovery and non-worker behavior.", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md RV-001"},
     {"rank": 2, "task": "Normalize malformed scanner results and contain CLI errors (RV-002)", "rationale": "Small typed-boundary improvement restores per-document reporting and fair page consumption without new services.", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md RV-002"},

@@ -150,3 +150,29 @@ research conclusion, original critique or original Review was rewritten.
 Current plan/details/changes/state distinguish completed execution from blocked
 acceptance. Documentation status is reconciled, not presented as defect repair.
 Publication remains authorized, with adverse verdict plainly in the PR.
+
+## Publication Receipt
+
+Source/artifact commit `4763c0e6337d06846d9a9c46f7d9e0cf7470079f` created
+with Conventional Commit, Refs #117 and required Copilot trailer. Fresh
+`gh api user` supplied the privacy-safe repository-local author/committer
+email; both commit identities were verified. Only the19 issue-owned files
+were staged. No private credential or unrelated tracking was included.
+
+Fresh `git ls-remote origin refs/heads/main` remained the authorized
+`ebc8dab87ae9bd6a33380b85e86f38be5ed9f213` before publication.
+`git push --set-upstream origin HEAD:refs/heads/feat/document-rescan-scheduler-117`
+succeeded normally. `gh pr create --base main --head
+feat/document-rescan-scheduler-117 --draft ... --body-file <session>/files/issue117-pr.md`
+created https://github.com/jmservera/ama/pull/395. Draft deliberately preserves
+Not accepted and the two separate corrections, not readiness to merge.
+
+Actual `gh pr view395` verified Open/draft/main, expected branch and exact source
+commit as head. `gh issue view117` verified Open. Local worktree was clean;
+remote main unchanged; no running containers. Hosted checks had started and
+were still running at this receipt, not declared passed. No merge, force-push,
+rebase, issue action, additional Review or correction implementation.
+
+This receipt/state/append-only-log follow-up commit changes evidence metadata
+only; the reviewed production/test patch and installed source hashes are
+unchanged. Final remote/head verification follows its normal push.

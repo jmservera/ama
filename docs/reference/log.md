@@ -5972,3 +5972,14 @@ metadata when the knowledge base was created.
   Route corrections separately; no production/test patch, repeat Review or
   independent coordinator Pass. Original critique Revise and original Review
   are retained. Real-service, schedule and human-authority gates remain open.
+
+## 2026-10-17 - Draft rescan publication receipt (Refs #117)
+
+* Publish [PR #395](https://github.com/jmservera/ama/pull/395) to main from the
+  authorized branch, preserving the original Not accepted Review and both
+  Medium correction routes. No source/test correction, second Review,
+  independent coordinator Pass, merge or issue action.
+* Fresh main stays `ebc8dab87ae9bd6a33380b85e86f38be5ed9f213`; source commit
+  `4763c0e6337d06846d9a9c46f7d9e0cf7470079f` matches the published head.
+  Owned SQL remains stopped/removed. Hosted checks are running, not presumed
+  successful; Defender/scheduling and human approval gates remain unmet.
