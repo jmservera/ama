@@ -93,3 +93,18 @@ data/live authority/cloud/paid AI; disposable container/credential removed.
 The source head and exact selectors are in changes; final evidence-only
 publication head is recorded on PR384 with base/head REST readback. Explicit
 lease only, no main rewrite, merge, closure or invented new Review Pass.
+
+## Final Latest-Main Publication Payload
+
+Before publication main advanced again to merged finance #94 d400eb8.
+Same authorization was continued from a clean own-evidence commit; final
+source7c8965cf9ebc64cd235669444c443bc33a000302 on
+d400eb8d1d0d6567445b0fc11803260eab897a65 retains all three validation
+hooks, canonical discard(pending), finance prior-audit/error logging,
+protected lock exit and stock/procurement scope recovery. Final core224
+pass, API77/one existing skip (includes portability3), actual local SQL93
+pass/no skips including merged finance-match19, quality/preservation pass.
+Original Review unchanged; upstream KB exact prefix plus own entries.
+Only final docs/evidence commit follows source; exact published head is in
+PR384 REST body/readback. Explicit expected-remote lease5244f99 only, no
+main rewrite, merge, closure or invented Pass. External exact-head gate next.

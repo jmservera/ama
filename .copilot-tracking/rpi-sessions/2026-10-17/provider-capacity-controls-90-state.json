@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "continuing authorized latest-main integration after merged finance advance",
-  "session_status": "active",
+  "status": "latest-main integration and validation complete; terminal documentation publication payload",
+  "session_status": "stopping after authorized topic publication",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/provider-capacity-controls-90-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/provider-capacity-controls-90-plan.md",
@@ -51,10 +51,14 @@
   },
   "latest_main_advance": {
     "base": "d400eb8d1d0d6567445b0fc11803260eab897a65",
-    "status": "Detected by final remote verification before push; clean own evidence commit then continue same topic-only latest-main authorization",
-    "scope": "Merged #94 finance validation/pending restoration/protected lock exit plus existing #84 stock and #90 procurement scopes; original exception identity, explicit logging, single canonical discard and complete checked-document snapshots retained."
+    "status": "Integrated and validated after clean own evidence commit and topic-only rebase",
+    "source_head": "7c8965cf9ebc64cd235669444c443bc33a000302",
+    "rebased_pre_final_reconciliation_head": "1463242bc05b2668f61e76a0041ae80432b83e27",
+    "scope": "All stock/finance/procurement validators retained; canonical discard(pending) and protected lock exit exact latest main; finance internal known-refusal logging and caller prior-pending restoration preserved; stock/procurement caller scopes and complete checked-document snapshots retained.",
+    "validation": "Final combined core224 pass/no skips; API77 run/76 pass/one existing opt-in skip including portability3; actual disposable local SQL Server93 pass/no skips including existing19 merged finance-match/recovery tests. Full configured core/API lint/format/types and exact latest-main/own intent preservation pass. Task-owned container/credential removed. No redundant full component suite or unchanged browser rerun.",
+    "publication": "Documentation-only terminal evidence commit follows source_head. Exact final publication head/base is recorded in PR384 REST body/readback after explicit expected-remote lease push only owned topic5244f99. Independent coordinator exact-head gate remains pending; no main rewrite/merge/closure or invented Pass."
   },
-  "next_action": {"phase": "Follow-up", "action": "Commit own bbbc integration evidence for clean worktree, rebase only owned topic onto freshly fetched d400eb8, reconcile all three validation/recovery intents and run combined finance-match/stock/procurement local+SQL tests. Then evidence commit and explicit-lease push expecting5244f99. No main rewrite/merge/issue closure; external exact-head independent closure remains."},
+  "next_action": {"phase": "Follow-up", "action": "Terminal privacy-safe docs/evidence commit, explicit expected-remote lease push only owned topic5244f99, REST update/readbackPR384 exact final head/base and clean remote verification, then stop. Source integration and combined local/SQL validation complete on d400eb8. External coordinator independent exact-head closure and hosted checks remain; no main rewrite/merge/issue closure."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator external correction ONE closure and hosted checks", "rationale": "Coordinator Review Revise of527a537 and hosted gaps addressed; changed production now requires independent external closure, no invented Pass.", "evidence": "Changes Correction ONE Final Validation and Dispositions; full relevant CI discovery/actual local SQL/browser evidence, original Review preserved verbatim."},
     {"rank": 2, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},

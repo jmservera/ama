@@ -230,3 +230,45 @@ commands. Publication uses only the explicit expected-remote lease on
 **Original independent Review remains historical; external coordinator
 exact-head closure and hosted checks remain pending.** No merge or issue
 closure. Refs #90.
+
+## Final Latest-Main Integration: Merged #84 and #94
+
+**This supersedes the preceding bbbc-only final-base/results.** Before any
+push, main advanced to merged finance #94. From a clean run-owned evidence
+commit, the same authorized topic-only latest-main rebase continued.
+Final base is `d400eb8d1d0d6567445b0fc11803260eab897a65`;
+validated source head is `7c8965cf9ebc64cd235669444c443bc33a000302`,
+followed only by final docs/evidence. Exact publication head is appended
+below by REST update. Explicit expected old remote remains `5244f99`.
+
+All **stock, finance and procurement** commit validators are retained.
+Canonical `_discard(pending=())` and protected lock exit are unchanged from
+latest main. Finance's internal known-refusal error logging and caller's
+prior-pending audit restoration are preserved, alongside stock/procurement
+scope recovery and staged checked-document snapshot publication. Additive
+KB/index/component-doc conflicts preserve both intents; all original stock
+signoffs, procurement capacity/source/provenance and human approval guards
+remain. No duplicate helper, test deletion or professional authority invented.
+
+| Final latest-main affected-path validation | Result |
+| --- | --- |
+| Core merged finance-match JSON/SQL classes, finance signoffs, stock, procurement, store/provenance/bulk/forms | 224 passed, no skips |
+| API finance-match/stock/procurement/workflows/roles/MVP/bulk/forms and portable SQL | 77 run, 76 passed, one existing opt-in skip; includes portability3 |
+| Actual disposable local SQL Server: prior six suites plus existing `test_finance_match_controls.MssqlFinanceChecks` with `ZF_FINANCE_MSSQL=1` | 93 passed, no skips, including all 19 merged finance matching/recovery cases |
+| Configured core/API lint, format, mypy, diff and exact preservation | Passed |
+
+Counts overlap; no redundant full component suites. Latest-main source
+changed, so targeted combined SQL was necessarily rerun. Task-owned local
+SQL responsiveness was verified; container and ephemeral credential removed.
+Exact assertions preserve upstream KB prefix plus own entries, all upstream
+and own routing rows, 28 non-overlapping upstream files, canonical discard/
+lock exit, stock/finance/signoff sources and tests/config, original
+Review/critique, corrected dataset/manifest and unchanged UI. No new
+browser/human/WCAG/Azure acceptance is claimed.
+
+Source and evidence commit identities are privacy-safe with required
+attribution. Only the owned topic is published using the explicit expected
+remote lease; no unconditional force/main rewrite, merge or issue closure.
+**Independent coordinator exact-head closure and hosted checks remain
+pending; original Conformant Review is historical, not a new Pass.**
+Refs #90.

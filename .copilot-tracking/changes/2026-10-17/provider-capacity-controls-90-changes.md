@@ -416,3 +416,88 @@ and adds finance commit-time actor/independence validation. Retain all of
 these plus stock/procurement scope ownership and staged document reload;
 replay combined actual finance-match/stock/procurement suites and local
 SQL after resolving source conflicts. External acceptance still pending.
+
+Latest-main rebase completed at1463242bc05b2668f61e76a0041ae80432b83e27.
+Additive conflicts in KB routing/log and component README retained both
+sections; commit-time validation retains stock, finance and procurement.
+Canonical `_discard(pending=())` and `_SyncLock` recovery logging are exact
+upstream. Finance tests explicitly require shared-save refusal logging;
+retain that existing recovery path and finance's subsequent prior-pending
+restoration rather than moving its ownership. Only stock/procurement scopes
+defer shared-save discard as already designed. Finance source/tests stay
+unchanged; select its existing MssqlFinanceChecks opt-in, not a new duplicate
+finance-match harness. Targeted combined replay is now against merged #94.
+
+### Final Latest-Main Integration Evidence (Merged #84 and #94)
+
+This section supersedes the preceding bbbc-only final-base/readiness
+paragraphs; those remain execution history. Final base is
+d400eb8d1d0d6567445b0fc11803260eab897a65. Rebase head before the final
+shared-save reconciliation/evidence was
+1463242bc05b2668f61e76a0041ae80432b83e27.
+Final validated source head:
+7c8965cf9ebc64cd235669444c443bc33a000302.
+Only a docs/evidence commit follows; exact final publication head/base go in
+the PR REST body/readback. Expected old remote lease is still
+5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1.
+
+Commands: clean own-source/evidence commits, `git fetch origin main`,
+`git rebase origin/main`, logical additive/source resolutions, then
+`GIT_EDITOR=true git rebase --continue` as required. No ours/theirs shortcut.
+Both README sections and index rows were retained; KB conflict boundary
+newline restored so the complete upstream bytes are an exact prefix.
+All three transaction validators remain (stock, finance, procurement).
+Upstream `_discard(pending=())`, pending quarantine/cache/watermark reset,
+`_SyncLock.__exit__` original-error protection and finance source/tests are
+unchanged. Shared-save known refusal keeps finance's original internal
+discard/log path plus its caller's explicit prior-audit restoration;
+only existing stock/procurement scopes defer cleanup to their own handlers.
+Procurement staged document reload and original-error/cancellation recovery
+remain. No guard/provenance/resident authority or original human signoff
+was dropped; no new professional authority, duplicate helper or test removal.
+
+Final executed validation on this latest-main source:
+
+* Core cwd, `PYTHONPATH=tests ../../.venv/bin/python -m unittest
+  test_finance_match_controls.JsonFinanceChecks
+  test_finance_match_controls.SqlFinanceChecks test_finance_signoffs
+  test_stock_reconciliation test_quality_procurement test_sqlstore
+  test_change_provenance test_bulk_edits test_form_staging -q`:
+  224 passed, no skips. Includes actual merged #94 match/alias/concurrency,
+  prior-audit restoration, failed reload and protected lock-exit assertions.
+  Expected injected failure logs are explicit, not test failures.
+* API cwd, `PYTHONPATH=tests:../core/tests:../agents/tests
+  ../../.venv/bin/python -m unittest test_finance_match_api
+  test_stock_reconciliation_api test_procurement_api test_workflows
+  test_role_matrix test_mvp test_form_staging_api test_bulk_edit_api
+  test_mssqlstore.SharedSqlIsPortableTests -q`:
+  77 run, 76 passed, one existing opt-in skip. Includes 3 portable SQL checks;
+  counts overlap previous runs and must not be summed.
+* Actual disposable local SQL Server 2022, `ZF_TEST_MSSQL=1` and
+  `ZF_FINANCE_MSSQL=1`, same six MssqlStockDecisions/FinanceSignoffs/
+  Procurement/ProcurementApi/StoreTests/ImproveTests selectors plus existing
+  `test_finance_match_controls.MssqlFinanceChecks`:
+  93 passed, no skips, 168.548s. Exact module-qualified command is the
+  preceding six-suite command with the finance selector appended.
+  SELECT1 readiness was verified first. Existing finance fixture creates
+  uniquely named disposable databases and drops them; all reside solely in
+  the task-owned loopback container, removed along with its credential in
+  finally. No actual Azure SQL or shared database involved.
+* Final full configured core/API Ruff, formatting, mypy and diff hygiene
+  passed. Latest upstream config retained exactly, not exemptions weakened.
+  No full component-suite duplication after integration.
+
+Exact assertions passed: latest-main KB prefix plus unchanged own suffix;
+historical Review and critique byte-identical; corrected fixture/manifest/
+UI unchanged; canonical discard and lock exit AST-identical to latest main;
+stock/signoffs/finance and their tests/config exact main; all upstream/own
+index rows; 28 non-overlapping upstream paths exact; latest main ancestor.
+Only backend source and related docs changed, so prior corrected browser
+evidence is preserved without claiming a new browser/human/WCAG review.
+
+Source/evidence commits use authenticated account's repository-local
+privacy-safe author/committer and required co-author trailer. Terminal
+explicit expected-remote push remains the command recorded above, only the
+owned topic. PR384 will record final publication head/base and external gate
+pending. No merge, issue closure, unconditional force, main rewrite or
+invented new Review Pass. Original Complete/Conformant is historical.

@@ -116,6 +116,10 @@ Shared-transaction integration coverage also selects
 `test_mssqlstore.MssqlImproveTests` against that disposable local server.
 The finance suite replays existing budget, matching, approval-separation and
 signoff controls; it does not incorporate another unmerged finance topic.
+For merged #94's exact finance-match and recovery controls, additionally
+select `test_finance_match_controls.MssqlFinanceChecks` with
+`ZF_FINANCE_MSSQL=1` against the same disposable local server. That existing
+fixture creates and removes only its uniquely named test databases.
 
 ## Form schema and candidate API (#97)
 

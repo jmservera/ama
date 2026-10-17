@@ -200,3 +200,14 @@ protected recovery logging/validation plus stock/procurement hooks and
 canonical snapshots, then targeted combined finance-match/stock/procurement
 and actual local SQL replay. The preceding bbbc source/tests are historical,
 not the final base. Same exact remote lease5244f99; no new full RPI/Review.
+
+Latest-main integration execution complete: final base d400eb8, validated
+source7c8965cf9ebc64cd235669444c443bc33a000302. All three validators,
+canonical discard(pending), lock-exit protection, finance's internal refusal
+logging and prior-audit restoration, stock/procurement caller recovery
+retained. Final combined core224/no skips, API77/one existing skip (includes
+portability3), real local SQL93/no skips, configured quality and exact
+preservation checks pass. Details/changes hold selectors and decisions.
+Terminal documentation-only evidence commit and explicit expected-remote
+topic push follow; exact final PR head in REST body/readback. Original
+Review unchanged; external coordinator exact-head closure remains required.

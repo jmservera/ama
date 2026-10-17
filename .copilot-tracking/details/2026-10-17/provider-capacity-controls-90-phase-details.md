@@ -180,3 +180,23 @@ unchanged, so no redundant browser/full component suite. Changes records
 full selectors/decisions and explicit expected-remote push command.
 Terminal evidence commit is followed by authorized exact-lease publication;
 final head goes in PR384 REST body/readback. No new Review verdict.
+
+## Latest-Main Finance Advance and Final Combined Execution
+
+Before publication main advanced to merged #94 d400eb8. Own evidence was
+committed for a clean worktree, then the authorized topic-only latest-main
+rebase continued. Additive docs/index/log conflicts retained both intents;
+shared source retained all three validation hooks. Final source7c8965cf on
+d400eb8 preserves canonical discard(pending), protected lock exit and
+finance caller prior-audit recovery/logging exactly, plus stock/procurement
+scope handling and staged checked-document snapshot publication.
+
+Final combined core224 passed, API77 run/76 passed/one existing opt-in skip
+including portability3, actual local SQL93 passed/no skips including merged
+#94's existing19 finance checks, full configured core/API quality gates and
+exact preservation assertions passed. Task-owned local SQL/credential
+removed. No test deletion/skip to mask failure, weakened guard/validator or
+professional authority invented. Original Review unchanged; no repeated
+full RPI/Review. Changes records exact commands/base/source/head lineage.
+Final evidence commit is documentation-only; exact publication head in PR384.
+Same explicit expected-remote lease5244f99, only owned topic, stop clean.
