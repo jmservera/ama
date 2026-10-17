@@ -144,6 +144,45 @@ command; the commit cannot contain its own hash, and **no extra receipt
 commit follows**. Publication is not asserted successful before that command.
 Stop then; no merge, forcepush, closing syntax or follow-up execution.
 
+## Authorized Main Integration (2026-10-17)
+
+* Owner authorized rebase of the existing topic/PR #379 onto latest main
+  bf98977ed6b30176b1f2d0a0a1e91a80d273a742, including merged #97/#78.
+  Exact pre-rebase remote lease:
+  a51fef2ca8c599a1039a0e5a65112426b2b07815.
+* Owner reports independent Pass for that exact bounded a51fef2 source and
+  receipts. This is not independent acceptance of the rebased/final head;
+  exact final-head independent review remains required later.
+* Replayed three topic commits. Conflicts only in KB index and append-only
+  log, resolved retaining all upstream forms/bulk content and all scoped IAM
+  content. Original main log is a byte-for-byte prefix; original topic-only
+  complete log suffix is retained verbatim. Every index table row from main
+  and a51fef2 is retained, including #97/#78 and current API/relay route.
+* Core/API trees exactly match main. Existing scoped Bicep option, guard,
+  runbook/evidence pack and actual API/relay/what-if receipts exactly match
+  independently reviewed a51fef2. No source reimplementation, changed grant,
+  live Azure operation, new permission or acceptance claim.
+* Rebased candidate before this integration-receipt commit:
+  00cafd0. Scoped identity+compiled Bicep suite59 passed/no skips.
+  Staff RBAC and scope-guard Bicep build/lint passed. Documentation links,
+  both histories/index rows, receipt/source preservation and diff reviewed.
+  No unrelated application suite rerun.
+* One final integration-receipt commit uses authenticated privacy-safe author/
+  committer and required trailer. Push only topic with exact
+  --force-with-lease=refs/heads/chore/activate-scoped-initializer-360:a51fef2ca8c599a1039a0e5a65112426b2b07815.
+  No merge/main rewrite/autoclose. Final SHA verified externally after push,
+  not via another receipt commit.
+* Ordinary CI: Source projects CI/src-ci.yml is active and supports
+  workflow_dispatch on the topic ref; no prior topic run was present.
+  After final push inspect exact-head runs/checks. If none exists, dispatch
+  that existing workflow on the topic only; never dispatch paid rubric.
+  Report actual run/head externally without chasing it with receipt commits.
+  Missing/path-filtered/conflict-blocked CI is not Pass. CI outcome is not
+  claimed before execution. Final exact-head independent review remains later.
+* Private publisher and real tenant/browser/runtime acceptance remain unproven;
+  #360 d/e UNMET and all owner live-approval obligations unchanged. Stop
+  after final push/ordinary CI dispatch if needed; no new delivery loop.
+
 ## Validation Record
 
 | Check | Scope | Status | Evidence |

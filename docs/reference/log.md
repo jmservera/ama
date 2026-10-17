@@ -4877,3 +4877,22 @@ metadata when the knowledge base was created.
   explicitly labelled after the original independent full Review. One normal
   final topic commit/push is the terminal publication action, verified
   externally without an extra receipt commit; no merge or unrelated work.
+
+## [2026-10-17] delivery | #360 authorized integration after merged #97/#78
+
+* Rebased existing PR #379 topic onto latest main
+  bf98977ed6b30176b1f2d0a0a1e91a80d273a742 by explicit owner direction.
+  Both complete append-only KB histories and every upstream/topic index row
+  retained. Core/API trees exactly main; scoped Bicep option, guard,
+  runbook/evidence pack and actual approved API/relay receipts exacta51fef2.
+* Owner reports independent Pass on bounded a51fef2, not the new final head.
+  Rebased candidate00cafd0 passed59 scoped identity/compiled-Bicep tests,
+  scoped template/guard build+lint and preservation/link/diff checks.
+  No unrelated suite or live Azure operation/new grant; no acceptance inferred.
+* One integration-receipt commit and authorized exact-lease topic-only push;
+  final head/run reported externally, no follow-up receipt commits. Ordinary
+  existing Source projects CI may be dispatched on topic if automatic checks
+  are absent. Missing CI is not Pass; paid rubric not dispatched.
+* Final exact-head independent review still required. Private publisher and
+  genuine tenant/browser/runtime evidence remain unproven, #360 d/e UNMET;
+  owner live approvals, ama/old-stack retention unchanged. No merge/autoclose.
