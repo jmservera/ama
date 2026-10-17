@@ -4,7 +4,7 @@ description: Bounded event-derived reporting and deterministic scenario forecast
 ms.date: 2026-10-17
 ---
 
-Task ID: 102. Slug: historical-progress-controls-102. Status: correction TWO validated; publication pending.
+Task ID: 102. Slug: historical-progress-controls-102. Status: correction TWO delivered in PR #390.
 Original Review: Complete / Defects found; correction ONE targeted checks pass,
 independent coordinator acceptance pending.
 
@@ -54,6 +54,8 @@ Existing Store report paths, additive API routing, new dedicated tests and
 directly related README/KB synthesis. Do not edit assistants.py, sqlstore.py,
 shared fixtures, quality/procurement domain logic or web files.
 Shared Store/API/docs overlap with #91/#92 is declared; coordinator integrates.
+Correction TWO additionally changes only prospective handoff timestamp calls
+and optional precision on the existing workflows._now helper, not other domains.
 
 ## Functional Requirements
 
@@ -122,12 +124,12 @@ Status: Complete.
 <!-- rpi:phase id=P03 -->
 ### P03: Review and publication
 
-Status: Correction TWO engineering validated; publication pending, not full operational acceptance.
+Status: Correction TWO engineering delivered; independent coordinator acceptance pending.
 
 * [x] P03-T01: Execute one full Review and retain original adverse findings.
 * [x] P03-T02: Preserve correction ONE; resolve mixed-precision handoff finding
   in authorized correction TWO with failing-first source/HTTP/SQL checks.
-* [ ] P03-T03: Fresh identity, own-only correction commit and exact-old-head
+* [x] P03-T03: Fresh identity, own-only correction commit and exact-old-head
   leased push to existing main PR #390 after authorized rebase/integration.
 
 ## Validation Ownership and Change Budget
@@ -169,4 +171,6 @@ approval or full historical completeness claims.
 
 Details: .copilot-tracking/details/2026-10-17/historical-progress-controls-102-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-17/historical-progress-controls-102-changes.md.
-Ready after critique dispositions are resolved.
+Correction TWO delivered; no additional full Review or critique in this session.
+Coordinator owns exact final-head acceptance; first historical criterion remains
+partial until source-authorized prospective forward/outcome capture exists.

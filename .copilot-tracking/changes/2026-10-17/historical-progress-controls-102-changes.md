@@ -301,3 +301,31 @@ prospective capture is buildable separate engineering follow-up, not a human
 blocker or an all-criteria Pass. Forecast operational inputs/calibration and
 independent coordinator final-head acceptance remain open. No web files,
 browser/WCAG, Azure, paid AI, private data or new authority.
+
+### P03-T03: Correction TWO publication and stop boundary
+
+Fresh `gh api user` again resolved public id 8036360 / login jmservera.
+Repository-local author/committer identity uses the constructed privacy-safe
+8036360+jmservera@users.noreply.github.com. Only the 14 owned correction paths
+were staged. Commit 99197b7298791cbeffe2cd32a208f572b3bad861 is Conventional
+Commit with Refs #102 and the required Copilot co-author trailer.
+
+The explicitly authorized rebase changed only this topic's ancestry to main
+3f544fb9cda2c51b219db2cc8368c7525bbe0c86. Publication succeeded with:
+
+```bash
+git push --force-with-lease=refs/heads/feat/historical-progress-controls-102:28227fa8af529cc40590deca9fd1819ef4155cc2 \
+  origin HEAD:refs/heads/feat/historical-progress-controls-102
+```
+
+No unleased force, other worktree, merge, issue close or main rewrite.
+PR #390 remains main-targeted; REST metadata/body are used instead of
+GraphQL. Final publication metadata is a separate normal commit/push.
+The final PR/remote head is read back after that push, not embedded
+self-referentially in its own committed state. Final-head remote CI and
+independent coordinator acceptance are not claimed passed.
+Session 047eef1a-9e80-4725-946a-20da710900a6 stops at the requested clean
+published-head boundary. Correction TWO engineering is complete; no third
+cycle or follow-up implementation starts. No unresolved concrete source defect
+or human blocker remains identified; incomplete event coverage remains explicit,
+not promoted to all-criteria acceptance.
