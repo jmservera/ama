@@ -4,7 +4,8 @@
 ## Task Metadata
 
 * Task ID: 178; slug: climate-source-evidence-178; date: 2026-10-17.
-* Status: Ready; one critique completed, direct findings resolved.
+* Status: P01-P04 implementation complete; bounded resolution Review Complete,
+  Conformant for rebase only; parent delivery next, then explicit STOP.
 * Details: .copilot-tracking/details/2026-10-17/climate-source-evidence-178-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/climate-source-evidence-178-plan-critique.md
 
@@ -124,10 +125,10 @@ changes, application acceptance, legal approval or operational rules.
 ## Phase Checklist
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Rebase-only integration continuation
+### [x] P04: Rebase-only integration continuation
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Preserve upstream and feature evidence, validate resolution
+#### [x] P04-T01: Preserve upstream and feature evidence, validate resolution
 
 Rebase onto pinned fetched main; resolve only additive index/log/core README
 conflicts. Preserve all log entries and both source intentions. Check every
@@ -218,10 +219,10 @@ retained. One critique only.
 
 ## Handoff
 
-Current handoff: P04 only. Research reused with Ready disposition; plan and
-details verified against the caller's explicit bounded rebase authorization.
+Current handoff: P04 implementation and bounded resolution Review complete.
+Research reused with Ready disposition; plan/details/changes reconciled.
 Original critique remains complete; do not rerun it or reopen P01-P03.
+Delivery commit, one lease-push and PR update remain parent-owned; then STOP.
 
-P01-P03 complete with tests/report/diff evidence in the changes record. Ready
-for one Review, preserving all human blockers. No new research, deployment,
-issue ticks or follow-up child task.
+Original P01-P03 completed their Review with Residual work; that historical
+outcome remains unchanged. No new research, deployment, issue ticks or child task.

@@ -1,6 +1,68 @@
 <!-- markdownlint-disable-file -->
 # Review: climate-source-evidence-178
 
+## Caller-Requested Rebase Resolution Assessment (2026-10-17)
+
+Current review boundary: P04 only, combining existing narrow partial feature
+f4ea7542874baf6045db2e33764b1348a976c238 with main
+4e4a389f53870137a0f0582861766be5983a8f96. Original feature Review below remains
+historical with execution Complete/outcome Residual work. Caller-supplied
+independent Pass/MERGE applies only to its narrow partial feature, not owner
+approval, #178 acceptance or a new reviewer sign-off for rewritten commits.
+
+Opening state: P04 implementation complete, source combinations and validation
+available, plan/details/changes reconciled. Review read-only except this record;
+no defect fixes, new source investigations, repeated critique or child work.
+Compare only resolution intent/preservation, relevant acceptance boundaries and
+validation. A small directly readable combination diff needs no subagent.
+Execution/outcome will be recorded after the assessment, independently of the
+original feature verdict and human approval gates.
+
+### Resolution Review Result
+
+Execution: Complete. Outcome: Conformant for P04 rebase resolution only.
+No resolution defects, ambiguous source intent or new routed findings.
+This does not change original #178 outcome Residual work/Not accepted as fully
+complete; RV-001/002/003 remain open with their original owners/destinations.
+
+Compared the complete main-to-topic shared-file diff and original-to-replayed
+feature range-diff. Index keeps #176's replay route and both existing #360
+auth routes, #175 privacy route and the exact #178 online/caveated route.
+Complete upstream log is a byte-prefix; original climate entry is appended
+after it without modifying any historic entry. Core README's only delta from
+main is the original climate paragraph/date; upstream deterministic-input
+provenance, replay limits, fixture/OSM limitations and approval caveats survive.
+
+All 2,129 main non-feature files and all four feature-only production files
+are byte-identical to their respective inputs; every upstream added line in
+shared files remains. Each of main's 267 entries and feature's 266 entries
+occurs exactly once in original stream order. These assertions include
+privacy/determinism/auth source and evidence, not just a diff-stat proxy.
+
+Validation reviewed: eight focused tests pass; compileall passes; exact
+retained public input hash and byte replay pass with unchanged report hash
+f75566fc1bf62608a78cf7f12647779dab12f0d0cddf86f6f1a7083df6f95615.
+Exact existing core CI Ruff/format/mypy pass (47 formatted/100 typed files)
+using already installed tools; no climate-wide type coverage is inferred.
+Four changed local link references, pinned main ancestry, no conflict markers
+and both working-tree/branch whitespace checks pass. No new downloads, private
+data, Azure/live checks, approval or full application acceptance claimed.
+Remote main/topic still match pinned base and explicit lease expectation.
+
+P04 implementation-time environment refinement is compatible with the user's
+no-download boundary and does not expand the plan. Original critique and
+PC-001/002/003 dispositions remain unchanged; not repeated. Current plan,
+details, changes and follow-up boundaries agree. Caller explicitly requested
+this history-integration assessment, not another original-feature Review.
+
+Return to parent: final evidence commit, one force-with-lease push restricted
+to docs/climate-source-evidence-178, PR #371 update with Refs #178 and STOP.
+No merge, new feature, follow-up selection, successive tracking-only push or
+owner/full-issue acceptance. Final delivery SHA belongs in PR/coordinator
+evidence after commit, not a self-reference requiring another commit.
+
+## Original Feature Review (Historical)
+
 ## Scope and Evidence
 
 * Task ID 178; date 2026-10-17; one post-implementation Review.

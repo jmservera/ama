@@ -14,7 +14,7 @@ Research: .copilot-tracking/research/2026-10-17/climate-source-evidence-178-rese
 | P01 | Bounded temperature evidence | Complete | P01-T01 |
 | P02 | Canonical integration | Complete | P02-T01 |
 | P03 | Validation/reconciliation | Complete | P03-T01 |
-| P04 | Rebase-only continuation | Ready | P04-T01 |
+| P04 | Rebase-only continuation | Complete | P04-T01 |
 
 <!-- rpi:phase id=P04 -->
 ## P04: Rebase-only continuation
@@ -40,6 +40,19 @@ log entry sequence, original feature log entry sequence, shared-file additions
 and git diff --check. One bounded resolution Review, not a second assessment
 of original full #178 acceptance. Update existing artifacts then one
 force-with-lease push to only the named topic and PR #371 update; STOP.
+
+Completion: rebase finished at implementation head e2c0a19. Only index and log
+needed manual additive resolution; core README auto-combined cleanly.
+All 2,129 upstream non-feature files byte-identical, all four feature-only
+production files byte-identical; all upstream shared-file added lines retained.
+Main's 267 and feature's 266 log entries each occur once in original stream
+order; main's complete log remains a byte-prefix. Eight climate tests,
+compileall, exact retained-input cmp, four changed local link references and
+git diff --check passed. Existing core CI Ruff/format/mypy all passed using
+already installed Ruff 0.17.1/mypy 2.4.0 in the recorded #370 rebase environment.
+No install/download. Exact commands/results are in the changes record.
+Resolution Review completed once: execution Complete, outcome Conformant for
+P04 only. Parent delivery remains next, not owner/full-feature acceptance.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Bounded temperature evidence

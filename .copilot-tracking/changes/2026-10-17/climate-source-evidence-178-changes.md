@@ -9,10 +9,71 @@ Details: .copilot-tracking/details/2026-10-17/climate-source-evidence-178-phase-
 
 ## Execution Status
 
-Current P04 rebase-only continuation: In progress. Original P01-P03 completion
+Current P04 rebase-only continuation: implementation Complete; resolution
+Review Complete, Conformant for rebase only; parent delivery next, then STOP.
+Original P01-P03 completion
 below is retained as historical evidence. Original review findings are not
 being implemented or re-accepted. Caller explicitly authorizes this topic's
 rebase and one lease-push after validation, not a main rewrite or feature work.
+
+## P04-T01: Rebase Resolution and Validation (2026-10-17)
+
+Before implementation: clean status on caller's exact topic/head f4ea754;
+PR #371 open/main; fetched main pinned to
+4e4a389f53870137a0f0582861766be5983a8f96. gh api user returned id 8036360,
+login jmservera; privacy-safe repo-local author/committer email resolved.
+Original remote topic head is the exact lease expectation, never bare force.
+Owned research/plan/state evidence checkpointed before rebase to keep its
+working tree clean.
+
+Executed git rebase 4e4a389f53870137a0f0582861766be5983a8f96.
+Index conflict combined #176 replay route with #178 online climate route,
+leaving #360 current/historical auth routes and #175 privacy route unchanged.
+Log conflict retained complete upstream log then appended original climate
+entry. Core README auto-combined #176 provenance/CLI with the existing climate
+status paragraph; reviewed without further source edits.
+Replayed feature/ledger commits db5d23e/6435ffb; planning checkpoint e2c0a19.
+No ambiguous source intent, new feature, production additions or deletions.
+
+| Exact command / check | Observed result |
+| --- | --- |
+| python3 -m unittest discover -s tools -p 'test_climate_station_bounds.py' -v | PASS, eight methods |
+| python3 -m compileall -q tools/climate_station_bounds.py tools/test_climate_station_bounds.py | PASS |
+| Exact P01-T01 retained-input invocation, output piped to session replay JSON then cmp against committed JSON | PASS; input d2c9ff2a443b8502957ce88fe8bfdbbd0d5ac111208eab0842bc574d4d4306f9; output f75566fc1bf62608a78cf7f12647779dab12f0d0cddf86f6f1a7083df6f95615 |
+| From src/core: /tmp/ama-360-rebase-ZSRcWK/bin/python -m ruff check . | PASS, All checks passed |
+| From src/core: /tmp/ama-360-rebase-ZSRcWK/bin/python -m ruff format --check . | PASS, 47 files already formatted |
+| From src/core: /tmp/ama-360-rebase-ZSRcWK/bin/python -m mypy | PASS, no issues in 100 source files |
+| Tool availability | Default Python has no Ruff/mypy; recorded #176 recovery venv absent. Existing #370 rebase environment has Ruff 0.17.1/mypy 2.4.0; reused read-only, no downloads/installs |
+| Complete main tree outside original feature paths compared byte-for-byte | PASS, 2,129 files; includes all privacy/determinism/infra/auth source and evidence |
+| Feature-only production blobs versus f4ea754 | PASS, helper, tests, derived JSON and full sensor synthesis byte-identical |
+| Every main-added nonblank line in the three shared files | PASS; no upstream source/evidence addition lost |
+| Complete log-entry identity/order checks against main and f4ea754 | PASS, 267 upstream entries and 266 feature entries exactly once in original stream order; complete main log byte-prefix retained |
+| git range-diff 4ca6c73..f4ea754 4e4a389..HEAD | PASS, original feature difference only changed README/log surrounding context; ledger equivalent; tracking checkpoint added |
+| Added local links/anchors in the three combination files | PASS, four references |
+| git diff --check and git diff --check origin/main...HEAD | PASS |
+
+Validation-command refinement is an immediately relevant environment update,
+not a new requirement: run exact existing core CI commands using recorded
+available tooling. No tools-wide lint/type target exists; core CI passes do
+not claim newly configured climate-tool typing or application acceptance.
+Independent numerical derivation is not rerun: output and parser are unchanged,
+and exact byte replay verifies retention of the previously reviewed result.
+No full app, infra execution, Azure, private/live datasets or deployment checks
+needed or run. Original approval/access/RH and candidate-specific gaps remain.
+
+Pre-Review reconciliation: P04 markers checked, details/changes agree; original
+P01-P03/critique/review preserved as historical evidence. One bounded resolution
+Review next, then parent-owned final evidence commit, one topic-only
+force-with-lease push and PR #371 update with Refs #178. No tracking-only
+successive pushes or inferred owner/full-issue acceptance.
+
+Parent handoff after resolution Review: execution Complete/outcome Conformant
+for P04 only, no new findings; original RV-001/002/003 and human gates retained.
+No additional source changes or test rerun is required for tracking-only
+closeout. Final commit/remote SHA and PR delivery outcomes will be recorded
+externally in PR/coordinator evidence, avoiding a self-referential ledger and
+successive tracking-only pushes. This record does not claim a push or PR update
+before those actions occur.
 
 Complete, full plan P01-P03 and P01-T01/P02-T01/P03-T01. No remaining active-plan
 markers. Canonical edits followed numerical evidence. Approved scope excludes runtime,

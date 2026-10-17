@@ -73,3 +73,27 @@ policy and source/log preservation checks. P01-P03 and their independent
 critique remain complete; no repeated critique. Focused tests, exact available
 lint/type checks and retained-input replay are required before resolution
 Review and one topic-only lease-push. Owner/RH blockers remain unchanged.
+
+2026-10-17: **Rebase Implement phase complete.** Rebased onto pinned main
+4e4a389; index/log conflicts combined both streams, core README auto-merge
+reviewed. Eight climate tests, compileall and hash-guarded retained-input replay
+passed, output byte-identical. Exact existing core Ruff/format/mypy passed
+using existing recorded #370 environment, no install/download. All 2,129
+upstream non-feature files and four feature-only production files remain
+byte-identical; all main shared-file additions retained. All 267 main and 266
+feature log entries survive once/in order; main log byte-prefix intact.
+Four changed local link references and both diff whitespace checks passed.
+P04/details/changes reconciled; bounded resolution Review is next.
+
+2026-10-17: **Rebase resolution Review phase complete.** Execution Complete;
+outcome Conformant for P04 combinations only. No new defects or ambiguous
+source intent. Original issue acceptance still incomplete; owner approval
+UNMET, RV-001/002/003 unchanged. No second original-feature review, repeated
+critique, feature work or child task. Caller-requested bounded task is complete.
+
+The automatic RPI work now stops at the caller's explicit boundary. Parent
+delivery bookkeeping remains: final evidence commit, one force-with-lease
+push only to the run-owned topic, PR #371 update with Refs #178 and final head
+report. Actual final commit/remote SHA and PR update will be captured by the
+PR/coordinator after execution; this committed record does not preclaim those
+external outcomes or require successive tracking-only pushes.
