@@ -6,6 +6,25 @@ ms.date: 2026-10-16
 
 ## Brief and controls
 
+### Rebase verification intake (2026-10-17)
+
+Same task 360-run-in-azure and PR #370; no new implementation scope.
+Research disposition: reused, with focused verification of current Git evidence.
+Initial worktree is clean on feat/run-in-azure-360 at
+d0500035863a596812a018c1e755a393b9c31e21. Fetched origin/main is
+c9ba95f, containing merged #368/#176 and existing #369/#175 privacy delivery.
+Wider verification: upstream adds #176 recovery artifacts, synthetic source,
+tests and documentation; branch-only work remains the existing #360 delivery.
+Deeper verification: shared index and log need combined intent; #176 source
+does not overlap the #360 infra source. Prior merge 296037b already includes
+#175. Contrarian verification: dropping that merge during ordinary rebase
+must not drop its content, since its upstream ancestry is already in main.
+Preserve upstream blobs and both documentation sequences; never use wholesale
+ours/theirs resolution. Source ambiguity is a stop condition.
+Planning Readiness: Ready. Prior research/critique remains adequate for this
+no-new-scope verification. No external research or worker was required.
+No Azure commands, image builds, Docker access, private data or secrets allowed.
+
 Implement the requested SQL-only Azure job continuation; directory writes remain
 under the operator's authorized login. Focused, internal convergence research.
 No Azure commands, image builds, private datasets, network changes or issue edits.

@@ -3,8 +3,8 @@
   "task_slug": "run-in-azure",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/run-in-azure-research.md",
@@ -74,8 +74,8 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Stopped after requested correction publication. No automatic follow-up. Owner/coordinator retains PR checks/merge and separately authorized RV-001/RV-002/RV-003 work; offline passes are not live acceptance."
+    "phase": "Implement",
+    "action": "Explicit owner rebase-only continuation: Research reused/Ready and Plan verification Complete/Ready. Commit preparation evidence to keep rebase clean, then noninteractive rebase onto origin/main c9ba95f; preserve #176/#175 and #360, stop on source ambiguity. No automatic follow-up."
   },
   "prioritized_follow_ups": [
     {

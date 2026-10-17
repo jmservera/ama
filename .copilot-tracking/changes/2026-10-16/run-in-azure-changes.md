@@ -6,6 +6,18 @@ ms.date: 2026-10-16
 
 ## Scope
 
+### P04 rebase-only opening (2026-10-17)
+
+Research reused/Ready and Plan verification Complete/Ready. Caller explicitly
+requests the remaining rebase/validation/Review/publication phases, then stop.
+Baseline clean HEAD d0500035863a596812a018c1e755a393b9c31e21;
+origin/main c9ba95f and remote topic lease d0500035863a596812a018c1e755a393b9c31e21.
+Authenticated GitHub account resolved using gh api user; repository-local
+privacy-safe email configured before new commits. Preparation evidence is
+committed locally before rebase so no stash, dirty-tree bypass or work loss is
+needed. No implementation scope beyond preserving both merged intents.
+All previous log/result claims below remain historical, not rerun evidence.
+
 Full plan 360-run-in-azure. P01 complete; P02 validation/delivery active. One critique executed,
 PC-001 through PC-008 accepted. No Azure execution or image build authorized.
 

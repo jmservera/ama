@@ -8,6 +8,31 @@ Task: 360-run-in-azure. Research: .copilot-tracking/research/2026-10-16/run-in-a
 
 ## Executive Summary
 
+2026-10-17 rebase-only continuation: verify the existing plan, rebase the
+run-owned branch onto fetched origin/main c9ba95f with GIT_EDITOR=true,
+preserve both workstreams and stop on ambiguous source intent. Existing
+critique is reused, not rerun: no new behavior, test additions/removals,
+generated targets or implementation decisions. The caller explicitly
+authorizes rebase and this branch's force-with-lease push only.
+
+<!-- P04 -->
+### P04: Rebase verification and publication
+
+* [ ] P04-T01: Rebase onto origin/main; combine index/log conflicts without
+  dropping #176 recovery/source evidence or existing #175 delivery.
+* [ ] P04-T02: Fresh isolated pip venv; targeted staff/pipeline and full infra
+  tests, exact recorded Ruff/format/mypy commands and git diff --check.
+* [ ] P04-T03: One bounded rpi-review of resolutions and preservation; record
+  evidence, commit, push with explicit lease, update PR #370 as Refs #360,
+  report final SHA and stop. No follow-up or tracking-only repush.
+
+Test ownership and removals: unchanged, none. Maximum additions: zero.
+Canonical targets: conflict resolutions and existing dated artifacts only.
+Docker is denied on this VM; no bypass or image-build claim. Local compiler
+checks are allowed offline, but no Azure service calls/writes are authorized.
+Planning verification: Complete/Ready; existing final-candidate critique and
+dispositions remain applicable, with no new critique execution claimed.
+
 Add a SQL-only worker to the existing proof image and a private management-plane
 transport which clones the existing initializer job into an ephemeral manual job.
 Secrets carry the roster and a fresh encryption key; only encrypted results go

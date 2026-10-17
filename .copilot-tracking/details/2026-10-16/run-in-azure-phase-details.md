@@ -6,6 +6,22 @@ ms.date: 2026-10-16
 
 Task: 360-run-in-azure.
 
+## P04: Rebase-only continuation (2026-10-17)
+
+P04-T01 preserves the complete origin/main tree for #176 and #175 while
+retaining #360 source, image/dockerignore/timeout corrections and both hashed
+requirements workflow installs. Use GIT_EDITOR=true and resolve only clear
+combined intent. Record every conflicted file and actual disposition.
+P04-T02 uses a new pip-only venv with no system site packages and the existing
+source/hashed runtime/PyYAML dependencies. Execute targeted test_staff_azure
+and test_pipeline, full infra with REQUIRE_AZ_BICEP=1, and the exact ten-file
+Ruff/format plus three mypy commands recorded in changes. No uv, Docker
+bypass, image builds, Azure service calls or private input.
+P04-T03 reviews resolutions read-only once, leaves original live blockers
+open, then records evidence before the single force-with-lease publication.
+Authenticated id/login was resolved and local privacy-safe email configured
+before commits. No amending outside rebase; no issue closure or merge.
+
 ## P01
 
 ### P01-T01
