@@ -5,7 +5,12 @@ lines and lists exceptions, but it never pays anything: "payment status" is a
 note of what Finance did elsewhere. Each approval needs a different person from
 the one who prepared it, and none of these can be done in bulk (FR-007).
 """
+import json
+import os
+from copy import deepcopy
+
 from . import controls as k
+from .change_provenance import _actor
 
 INVOICE_KINDS = ("Invoice", "Valuation")
 DISPOSITIONS = ("Accept for payment", "Reject and return to provider", "Keep on hold")
@@ -27,6 +32,36 @@ def _norm(s):
     return (s or "").strip().lower()
 
 
+def _identity(user):
+    return {key: user.get(key) for key in ("email", "code", "oid")}
+
+
+def _independent(store, user, other, identity, what):
+    if not identity:
+        if hasattr(store, "db"):
+            with store.dblock:
+                row = store.db.execute("SELECT body FROM staff WHERE email=?", (_norm(other),)).fetchone()
+            identity = _identity(json.loads(row[0])) if row else None
+        else:
+            person = store.staff.get(_norm(other))
+            identity = _identity(person) if person else None
+    if not identity or not identity.get("email") or not identity.get("code"):
+        raise PermissionError("The preparer's identity is unknown. Resolve it before approval.")
+    if any(_norm(user.get(key)) and _norm(user.get(key)) == _norm(identity.get(key))
+           for key in ("email", "code", "oid")):
+        raise PermissionError(f"A different person must {what}. You prepared this one.")
+
+
+def validate_sql(store):
+    """Repeat staff and independence checks inside the existing writer transaction."""
+    context = getattr(store.local, "finance_validation", None)
+    if context is not None:
+        actor = _actor(store, context["actor"])
+        k.require_role(actor, k.FINANCE_ROLES, "current Finance staff")
+        for other, identity, what in context["independent"]:
+            _independent(store, actor, other, identity, what)
+
+
 def match_invoice(c, inv):
     """Compare each line with the approved commitment, the budget, milestone evidence and earlier invoices."""
     f = _fin(c)
@@ -34,9 +69,11 @@ def match_invoice(c, inv):
     budget = f["budget"] if f["budget"] and f["budget"]["status"] == "Approved" else None
     coms = [x for x in f["commitments"] if x["status"] == "Approved" and _norm(x["supplier"]) == _norm(inv["supplier"])
             and _norm(x["work_order"]) == _norm(inv["work_order"])]
-    com = coms[0] if coms else None
+    com = coms[0] if len(coms) == 1 else None
     inv["commitment"] = com["id"] if com else None
-    if not com:
+    if len(coms) > 1:
+        ex.append(dict(line=None, code="ambiguous_commitment", message="More than one approved commitment matches. Finance must resolve the reference."))
+    elif not com:
         ex.append(dict(line=None, code="no_commitment", message="No approved commitment for this supplier and work order."))
     others = [o for o in f["invoices"] if o["id"] != inv["id"]]
     for o in others:
@@ -62,7 +99,8 @@ def match_invoice(c, inv):
             ex.append(dict(line=i, code="quantity", message=f"Quantity {ln['quantity']:g} is above the {com['quantity']:g} authorised."))
         if not ln["milestone_ref"]:
             ex.append(dict(line=i, code="no_milestone", message="Accepted milestone evidence is unknown for this line."))
-    return ex
+    return [dict(error, line=i) for error in ex
+            for i in (range(len(inv["lines"])) if error["line"] is None else [error["line"]])]
 
 
 class FinanceMixin:
@@ -71,13 +109,54 @@ class FinanceMixin:
         action = body.get("action")
         if action not in FINANCE_ACTIONS:
             raise ValueError("Unknown step.")
-        k.require_role(user, k.FINANCE_ROLES, "the Grants and Evidence Officer or a manager")
         with self.lock:
+            actor = _actor(self, user)
+            k.require_role(actor, k.FINANCE_ROLES, "the Grants and Evidence Officer or a manager")
             c = self._case(case_id)
-            f = _fin(c)
-            detail = getattr(self, "_fin_" + action)(user, c, f, body)
-            self.audit(user["email"], f"finance_{action}", case_id, detail)
-            self.save()
+            before = deepcopy(c)
+            sql = hasattr(self, "db")
+            audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
+            audit_head = None if sql else self.last_hash
+            saving = False
+            context = dict(actor=actor, independent=[])
+            self._finance_context = context
+            if sql:
+                self.local.finance_validation = context
+            try:
+                f = _fin(c)
+                detail = getattr(self, "_fin_" + action)(actor, c, f, body)
+                self.audit(actor["email"], f"finance_{action}", case_id, detail)
+                saving = True
+                self.save()
+            except Exception:
+                if sql:
+                    with self.dblock:
+                        self._discard()
+                else:
+                    c.clear()
+                    c.update(before)
+                    # Ledger rollback must not depend on a second successful state write.
+                    try:
+                        if os.path.exists(self.audit_path):
+                            with open(self.audit_path, "r+b") as audit:
+                                audit.truncate(audit_size)
+                        self.last_hash = audit_head
+                    finally:
+                        if saving:
+                            from .store import Store
+                            try:
+                                Store.save(self)
+                            except Exception as error:
+                                raise RuntimeError("Finance state restoration failed; the durable outcome may be unknown. Reload persisted records before retrying.") from error
+                raise
+            finally:
+                self._finance_context = None
+                if sql:
+                    self.local.finance_validation = None
+
+    def _fin_independent(self, user, other, identity, what):
+        _independent(self, user, other, identity, what)
+        self._finance_context["independent"].append((other, deepcopy(identity), what))
 
     # ---- budget and commitments
     def _fin_budget_propose(self, user, c, f, body):
@@ -85,7 +164,7 @@ class FinanceMixin:
             raise ValueError("The budget is already approved. Ask a manager to change it.")
         amount = k.money(body.get("amount"), "the budget")
         f["budget"] = dict(amount=amount, status="Proposed", proposed_by=user["email"], proposed_name=user["name"], at=k.now(),
-                           note=k.text(body.get("note"), "a note", 200, False), approved_by=None)
+                           note=k.text(body.get("note"), "a note", 200, False), approved_by=None, proposed_identity=_identity(user))
         return f"budget {amount:.2f} proposed"
 
     def _fin_budget_approve(self, user, c, f, body):
@@ -93,7 +172,7 @@ class FinanceMixin:
         b = f["budget"]
         if not b or b["status"] != "Proposed":
             raise ValueError("There is no proposed budget to approve.")
-        k.different_person(user, b["proposed_by"], "approve the budget")
+        self._fin_independent(user, b["proposed_by"], b.get("proposed_identity"), "approve the budget")
         b.update(status="Approved", approved_by=user["name"], approved_email=user["email"], approved_at=k.now())
         return f"budget {b['amount']:.2f} approved"
 
@@ -108,7 +187,7 @@ class FinanceMixin:
                    contract=k.text(body.get("contract"), "the contract reference", 60),
                    work_order=k.text(body.get("work_order"), "the work order", 60),
                    measure=k.text(body.get("measure"), "the measure", 80), amount=amount, quantity=k.quantity(body.get("quantity")),
-                   status="Raised", raised_by=user["email"], raised_name=user["name"], at=k.now(), approved_by=None)
+                   status="Raised", raised_by=user["email"], raised_name=user["name"], at=k.now(), approved_by=None, raised_identity=_identity(user))
         f["commitments"].append(com)
         return f"{com['id']} {amount:.2f} raised"
 
@@ -117,7 +196,7 @@ class FinanceMixin:
         com = k.find(f["commitments"], body.get("id"), "commitment")
         if com["status"] != "Raised":
             raise ValueError("Only a raised commitment can be approved.")
-        k.different_person(user, com["raised_by"], "approve the commitment")
+        self._fin_independent(user, com["raised_by"], com.get("raised_identity"), "approve the commitment")
         com.update(status="Approved", approved_by=user["name"], approved_at=k.now())
         return f"{com['id']} approved"
 
@@ -133,7 +212,7 @@ class FinanceMixin:
                    supplier=k.text(body.get("supplier"), "the supplier", 80), work_order=k.text(body.get("work_order"), "the work order", 60),
                    ref=k.text(body.get("ref"), "the provider's invoice reference", 60), lines=clean, status="Received", exceptions=[],
                    commitment=None, hold=None, disposition=None, disposition_by=None, payment_status="Not payable yet",
-                   payment_note=PAYMENT_NOTE, received_by=user["email"], received_name=user["name"], received_at=k.now())
+                   payment_note=PAYMENT_NOTE, received_by=user["email"], received_name=user["name"], received_at=k.now(), received_identity=_identity(user))
         f["invoices"].append(inv)
         return f"{inv['id']} {inv['kind'].lower()} received"
 
@@ -150,14 +229,14 @@ class FinanceMixin:
         inv = k.find(f["invoices"], body.get("id"), "invoice")
         if inv["hold"]:
             raise ValueError("This is already on hold.")
-        inv["hold"] = dict(by=user["email"], name=user["name"], at=k.now(), reason=k.text(body.get("reason"), "why it is on hold"))
+        inv["hold"] = dict(by=user["email"], name=user["name"], at=k.now(), reason=k.text(body.get("reason"), "why it is on hold"), identity=_identity(user))
         return f"{inv['id']} hold placed"
 
     def _fin_hold_release(self, user, c, f, body):
         inv = k.find(f["invoices"], body.get("id"), "invoice")
         if not inv["hold"]:
             raise ValueError("This is not on hold.")
-        k.different_person(user, inv["hold"]["by"], "release the hold")
+        self._fin_independent(user, inv["hold"]["by"], inv["hold"].get("identity"), "release the hold")
         k.text(body.get("note"), "a note on why the hold is released", 200)
         inv["hold"] = None
         return f"{inv['id']} hold released"
@@ -166,7 +245,7 @@ class FinanceMixin:
         k.require_role(user, k.FINANCE_APPROVERS, "a manager")
         inv = k.find(f["invoices"], body.get("id"), "invoice")
         decision = k.choice(body.get("decision"), DISPOSITIONS, "the decision")
-        k.different_person(user, inv["received_by"], "decide on this invoice")
+        self._fin_independent(user, inv["received_by"], inv.get("received_identity"), "decide on this invoice")
         if inv["disposition"] and inv["disposition"] != "Keep on hold":
             raise ValueError("Finance has already decided on this one.")
         note = k.text(body.get("note"), "a note for the decision", 300)
@@ -175,8 +254,10 @@ class FinanceMixin:
                 raise ValueError("Run the match first. It can only be accepted when every line matches.")
             if inv["hold"]:
                 raise ValueError("Release the hold first.")
+            if match_invoice(c, inv):
+                raise ValueError("The match inputs changed or are unknown. Run the match again and resolve every line exception.")
         inv.update(disposition=decision, disposition_by=user["name"], disposition_email=user["email"], disposition_note=note,
-                   disposition_at=k.now(), payment_status="Not payable yet")
+                   disposition_at=k.now(), payment_status="Not payable yet", disposition_identity=_identity(user))
         return f"{inv['id']} {decision}"
 
     def _fin_payment_status(self, user, c, f, body):
@@ -188,7 +269,7 @@ class FinanceMixin:
             if inv["hold"]:
                 raise ValueError("Release the hold first.")
         if status == "Paid outside this system":
-            k.different_person(user, inv.get("disposition_email"), "record the payment")
+            self._fin_independent(user, inv.get("disposition_email"), inv.get("disposition_identity"), "record the payment")
         inv["payment_status"] = status
         return f"{inv['id']} payment noted as {status}"
 

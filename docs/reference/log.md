@@ -5055,3 +5055,40 @@ metadata when the knowledge base was created.
   fingerprinted source/test content: 91 focused tests and two constructed
   persistent-recovery snapshot probes pass. Original adverse Review retained,
   no repeated full RPI. No merge, issue closure or human/operational approval.
+
+## [2026-10-17] engineering | #94 exact record-only finance controls
+
+* Audited exact issue, PRD FR-018 and current BRD references against finance
+  helpers, API/screens and SQL transaction prior art. BRD FR-018/RULE-003 now
+  describe handoff/hazard controls; stale finance numbering is explicitly
+  preserved as a conflict, not silently corrected in source requirements.
+* Finance emits actual line indices for all match exceptions, refuses ambiguous
+  commitments, rechecks current matching at acceptance and uses current named
+  staff with email/code/OID independence. Caught JSON failure recovery and SQL
+  staged-audit rollback preserve prior state; no payment adapter or authority
+  model added. Status notes leave budget/commitment/grant cash unchanged.
+* Updated the existing [Finance journey synthesis](./research/ux/customer-journeys/finance.md#exact-finance-control-audit-2026-10-17-94),
+  core/API guides and index. Focused fixture/API and isolated local SQL Server
+  checks cover unknowns, holds, independent people, reopen, rollback, fresh rights
+  and concurrent writers. Initial MSSQL cleanup failed on pooled connections;
+  corrected exact owned-database cleanup, then 14 cases passed.
+* #93 is parent hierarchy only; no explicit dependencies. One actual shared
+  SqlStore.save validation hook may overlap #90; no shared Store/server or #84
+  signoff change. No private data, real provider/financial commitment, payment,
+  paid AI or Azure activity. No browser/WCAG, real delegation, full PRD or
+  operational acceptance claim. Original and memory unchanged.
+
+## [2026-10-17] correction | #94 persistent JSON recovery audit
+
+* The one independent Review found a blocking persistent os.replace case:
+  recovery save could fail before success-audit rollback. Coordinator correction
+  ONE added failing-first primitive-level proof, then decoupled ledger rollback
+  from the second state write. A failed restoration now explicitly reports an
+  uncertain durable outcome and requires persisted readback, never success.
+* Fifty-five focused JSON/SQLite/existing-finance/authenticated-HTTP cases and
+  scoped Ruff/format/mypy passed afterward. Prior fourteen local SQL Server
+  cases retain their original boundary; SQL is unchanged by the JSON correction.
+  Updated the existing Finance synthesis and core guide. Original Review remains
+  Complete / Not accepted for the assessed pre-correction candidate, with
+  separate objective resolving evidence; no repeated full Review or invented
+  independent pass. One of two authorized coordinator corrections used.

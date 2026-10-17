@@ -4,7 +4,7 @@ date: "2026-10-14"
 role: "Housing Finance and Grants Lead"
 status: "Bounded desk research; hypotheses for validation"
 scope: "Preparer, independent approver, payment officer, external funder proxy"
-ms.date: 2026-10-14
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -143,6 +143,47 @@ Ask sequentially, starting with question 1:
    submission, payment authorization and execution?
 3. Which approved cash baseline and pack support paired effort/error testing,
    including review and corrections?
+
+## Exact finance control audit (2026-10-17, #94)
+
+This is executable local engineering evidence, not a new interview, delegated
+authority or live payment result. The issue's three criteria are narrower than
+full PRD FR-018/AC-021/042. Current BRD FR-018 describes accepted human handoff
+and RULE-003 describes hazard-service ownership; the issue's BRD finance
+numbering is stale and is not silently relabelled here.
+
+| Exact issue criterion | Current engineering evidence | Boundary |
+| --- | --- | --- |
+| Nothing paid by the product | Existing closed finance action set has no payment adapter; authenticated external-status notes preserve approved budgets, commitments and grant/cash records through reopen | Human-entered external status is not settlement evidence or product execution |
+| Match exceptions are line-level | All exceptions identify affected invoice lines, including aggregate/duplicate blockers; missing budget/commitment/milestone and ambiguous commitment prevent a clean match | Supplied milestone reference is not verification of actual acceptance authority |
+| Preparer cannot approve | Current registered identity plus captured email/code/OID prevents self-approval through aliases; distinct staff in the same permitted role can approve | Synthetic identity mechanics do not establish real company delegations |
+
+The [core contract and repeatable checks](../../../../../src/core/README.md#record-only-finance-controls-94)
+and [authenticated API contract](../../../../../src/api/README.md#record-only-finance-api-94)
+preserve holds, independent disposition and record-only payment notes.
+Acceptance rechecks current match inputs instead of trusting a previous
+`Matched` label. A new unresolved duplicate blocks acceptance of the original
+until explicitly resolved. JSON caught write failures restore prior finance and
+ledger; SQLite/SQL Server use existing transactions, current staff checks and
+rowversion conflicts. Fourteen cases passed against isolated local SQL Server
+on 2026-10-17, including fresh role/OID, rollback, reopen and concurrent writers.
+Separate JSON files do not promise abrupt-crash atomicity. No private dataset,
+real provider/financial commitment, inference or Azure action was used.
+
+Independent review identified a persistent file-replacement failure that could
+retain a false approval audit when the recovery save also failed. The
+coordinator correction now rolls the ledger back independently of that retry,
+with a failing-first primitive-level regression and 55 passing focused
+JSON/SQLite/HTTP/finance cases afterward. If state restoration itself cannot
+persist, the error explicitly marks the durable outcome potentially unknown
+and requires rereading persisted records before retry. The original review
+verdict is not relabelled as a fresh independent pass.
+
+#93 is hierarchy, not a dependency. #90 procurement/capacity and #84 technical
+signoffs remain separate. The only actual shared production touchpoint is the
+small `SqlStore.save` finance validator hook; Store/server and signoffs are
+unchanged. Engineering acceptance of these exact criteria is not full PRD,
+browser/accessibility, funding/legal, live-platform or human adoption acceptance.
 
 ## Local source keys
 

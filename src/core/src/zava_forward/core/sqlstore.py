@@ -533,6 +533,8 @@ class SqlStore(Store):
                 from .bulk_edits import validate_sql
                 validate_sql(self)
                 stock.validate_sql(self)
+                from .finance import validate_sql as validate_finance
+                validate_finance(self)
                 self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1

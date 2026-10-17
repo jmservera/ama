@@ -6,6 +6,31 @@ ms.date: 2026-10-17
 ms.topic: reference
 ---
 
+## Record-only finance API (#94)
+
+`POST /api/cases/{case_id}/finance` retains its existing single-record action
+contract; `GET /api/finance` retains the human exception/hold queue.
+The [core finance guide](../core/README.md#record-only-finance-controls-94)
+describes current identity, line matching and persistence controls.
+No endpoint pays, submits banking instructions or grants authority.
+External-payment statuses are notes only. Budget/commitment and grant/cash
+records are unchanged by those notes.
+
+Current registered Finance staff are rechecked for every write, including
+transaction-time SQL validation. A preparer with an alias sharing email, staff
+code or OID receives 403 when attempting their own approval/disposition or
+hold release; distinct permitted staff with the same role are supported.
+Unknown match inputs and held/stale acceptance return 400 with the existing
+plain-language error. Optimistic SQL writer conflicts return 409.
+Existing screens already render the returned zero-based exception `line` as a
+human one-based line number; no web assets or browser behavior were changed.
+
+`tests/test_finance_match_api.py` exercises authenticated loopback HTTP over
+temporary fictional SQLite, including actual same-role identity refusals,
+unknown line exceptions/queue, held disposition, external status notes and
+reopened ledger invariance. Backend-only checks do not claim browser/WCAG,
+company delegation, Azure or real payment acceptance.
+
 ## Form schema and candidate API (#97)
 
 This is unapproved schema registration and candidate-only collection, not a
