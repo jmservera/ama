@@ -3,6 +3,7 @@
 import copy
 import json
 import os
+import sqlite3
 import tempfile
 import threading
 import unittest
@@ -264,6 +265,142 @@ class JsonFinanceChecks(FinanceChecks, unittest.TestCase):
 
 class SqlFinanceChecks(FinanceChecks, unittest.TestCase):
     sql = True
+
+    def _failed_save_and_recovery(
+        self,
+        persistent: bool,
+        prior_audit: bool,
+        finish_failure: bool = False,
+        save_refusal: bool = False,
+    ) -> None:
+        self.fin(self.a, "budget_propose", amount=100)
+        before = self.finance()
+        entries = list(self.store.audit_entries())
+        connection = self.store.db
+        original_error = (
+            ConflictError("ZF-1")
+            if save_refusal
+            else sqlite3.OperationalError("Synthetic audit INSERT failure")
+        )
+        recovery_reads = []
+        recovery_state = []
+        audit_failed = False
+
+        class FailingConnection:
+            def execute(inner, statement: str, args: Any = ()) -> Any:
+                nonlocal audit_failed
+                if statement.startswith("INSERT INTO audit "):
+                    result = connection.execute(statement, args)
+                    if args[2] == "finance_budget_approve" and not audit_failed:
+                        audit_failed = True
+                        raise original_error
+                    return result
+                if audit_failed and statement.startswith("SELECT rowversion, body FROM cases"):
+                    recovery_reads.append(statement)
+                    recovery_state.append(
+                        (
+                            [entry[1] for entry in self.store.local.pending],
+                            set(self.store.local.touched),
+                            copy.deepcopy(self.store.cases["ZF-1"]["finance"]),
+                        )
+                    )
+                    if persistent or len(recovery_reads) == 1:
+                        raise sqlite3.OperationalError("Synthetic early recovery SELECT failure")
+                if audit_failed and finish_failure and statement == "BEGIN IMMEDIATE":
+                    raise sqlite3.OperationalError("Synthetic persistent lock-exit failure")
+                return connection.execute(statement, args)
+
+            def __getattr__(inner, name: str) -> Any:
+                return getattr(connection, name)
+
+        caught: BaseException | None = None
+        with (
+            self.assertLogs("zava_forward.core", level="ERROR") as diagnostics,
+            patch.object(self.store, "db", FailingConnection()),
+        ):
+            try:
+                with self.store.lock:
+                    if prior_audit:
+                        self.store.audit("synthetic", "prior_legitimate_note", "ZF-1", "Retain me")
+                    self.fin(self.b, "budget_approve")
+            except Exception as error:
+                caught = error
+        self.assertIs(caught, original_error, "Recovery must not mask the original INSERT error.")
+        self.assertTrue(recovery_reads, "The failure must hit the first discard case read.")
+        for actions, touched, finance in recovery_state:
+            self.assertNotIn("finance_budget_approve", actions)
+            self.assertEqual(actions, ["prior_legitimate_note"] if prior_audit else [])
+            self.assertFalse(touched, "Failed writes must be quarantined before recovery I/O.")
+            self.assertEqual(finance, before)
+        self.assertTrue(
+            any("recovery" in note.lower() for note in getattr(caught, "__notes__", [])),
+            "The original exception must expose the recovery failure.",
+        )
+        message = "SQL write recovery failed" if save_refusal else "Finance SQL recovery failed"
+        self.assertTrue(any(message in entry for entry in diagnostics.output))
+        if finish_failure:
+            self.assertTrue(
+                any("SQL lock-exit recovery failed" in entry for entry in diagnostics.output)
+            )
+            self.assertTrue(
+                any(
+                    "SQL lock-exit recovery failed" in note
+                    for note in getattr(caught, "__notes__", [])
+                )
+            )
+        if not save_refusal:
+            self.assertEqual(
+                self.store._seq, -1, "The next healthy entry must reload persisted state."
+            )
+        self.assertEqual(self.store.cases["ZF-1"]["finance"], before)
+        self.assertFalse(self.store.local.touched)
+        self.assertEqual(
+            [entry[1] for entry in self.store.local.pending],
+            ["prior_legitimate_note"] if finish_failure else [],
+        )
+        self.assertEqual(self.finance(self.open()), before)
+        durable = list(self.store.audit_entries())
+        expected = [e["action"] for e in entries]
+        if prior_audit and not finish_failure:
+            expected.append("prior_legitimate_note")
+        self.assertEqual([e["action"] for e in durable], expected)
+        self.assertTrue(self.open().verify_audit())
+        acquired = threading.Event()
+
+        def next_operation() -> None:
+            with self.store.lock:
+                acquired.set()
+
+        thread = threading.Thread(target=next_operation)
+        thread.start()
+        thread.join(timeout=5)
+        self.assertFalse(thread.is_alive(), "Failed recovery must release the process lock.")
+        self.assertTrue(acquired.is_set())
+        self.fin(self.b, "budget_approve")
+        self.assertEqual(self.finance(self.open())["budget"]["status"], "Approved")
+        self.assertEqual(
+            sum(e["action"] == "finance_budget_approve" for e in self.store.audit_entries()), 1
+        )
+        self.assertTrue(self.open().verify_audit())
+        if prior_audit:
+            self.assertEqual(
+                sum(e["action"] == "prior_legitimate_note" for e in self.store.audit_entries()), 1
+            )
+
+    def test_audit_insert_then_early_discard_read_failure_never_flushes_success(self) -> None:
+        self._failed_save_and_recovery(persistent=False, prior_audit=False)
+
+    def test_persistent_discard_read_failure_never_flushes_success(self) -> None:
+        self._failed_save_and_recovery(persistent=True, prior_audit=False)
+
+    def test_failed_operation_preserves_prior_legitimate_pending_audit(self) -> None:
+        self._failed_save_and_recovery(persistent=True, prior_audit=True)
+
+    def test_failed_lock_exit_keeps_original_error_and_prior_audit_for_retry(self) -> None:
+        self._failed_save_and_recovery(persistent=True, prior_audit=True, finish_failure=True)
+
+    def test_save_refusal_keeps_original_error_when_internal_discard_read_fails(self) -> None:
+        self._failed_save_and_recovery(persistent=True, prior_audit=False, save_refusal=True)
 
     def test_fresh_permission_without_case_sequence_change_and_inside_save(self) -> None:
         self.fin(self.a, "budget_propose", amount=100)

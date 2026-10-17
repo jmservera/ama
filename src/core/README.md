@@ -43,14 +43,22 @@ This establishes synthetic identity mechanics, not real delegated authority.
 
 SQLite and inherited SQL Server save repeat actor/independence checks inside the
 existing writer transaction; rowversions reject stale concurrent writes.
-Failure recovery drops staged success audit and reloads persisted case state.
+Failure recovery drops failed-operation success audit and touched/validation
+state before any fallible recovery read, restores cached snapshots and forces
+the next healthy entry to refresh persisted records. A caller's prior legitimate
+audit prefix is retained. Recovery and lock-exit failures are logged and attached
+as exception notes without masking the original operation error. A retained
+audit prefix that cannot flush remains pending for the next healthy write.
 JSON caught save/audit failures restore the prior case and ledger tail;
 separate JSON/ledger files still do not promise cross-file abrupt-crash atomicity.
 Ledger rollback runs independently of the state retry. If that retry also
 cannot persist, an explicit error marks the durable outcome as potentially
 unknown: reload persisted records before retrying, never infer approval.
-The only shared SQL edit is the finance validation hook in `SqlStore.save`;
-procurement #90 and signoffs #84 remain separate scopes without inferred dependencies.
+Shared SQL edits are the finance validation hook, canonical `SqlStore._discard`
+cleanup and original-error preservation at save-refusal/lock-exit recovery.
+The `_discard` primitive is an actual overlap with #84 / PR #382; the coordinator
+must sequence integration preserving the common helper and both callers.
+Procurement #90 and signoffs #84 remain separate scopes, not inferred dependencies.
 
 From the repository root with editable src packages installed:
 
@@ -67,11 +75,17 @@ With `ZF_SQL_*` pointing at an explicitly disposable local server and credential
 supplied privately, set `ZF_FINANCE_MSSQL=1` and run
 `test_finance_match_controls.MssqlFinanceChecks`. Each test creates and removes
 only its own UUID-named database, never wipes an existing database. On 2026-10-17,
-14 local SQL Server cases passed, including reopen, audit rollback, fresh
+the original 14 local SQL Server cases passed, including reopen, audit rollback, fresh
 role/OID refusal and concurrent writers. The initial run's 14 cleanup errors
 were driver-pooled connections; the harness now disconnects only its created
 database before dropping it. This is local engineering evidence, not Azure,
-tenant, real-payment or full PRD AC-021/042 acceptance.
+tenant, real-payment or full PRD AC-021/042 acceptance. Correction TWO then
+passed 18 SQL Server cases plus one added internal-save-refusal case, covering
+actual audit INSERT followed by first/persistent recovery SELECT failure,
+prior legitimate audit retention, failed lock-exit retry, original-error
+identity, reopened Proposed state, lock release and subsequent healthy approval.
+The exact-852b342 coordinator verdict remains Revise until external closure;
+local resolving evidence is not an independent Pass.
 
 ## Form schema registry and candidate staging (#97)
 

@@ -5092,3 +5092,26 @@ metadata when the knowledge base was created.
   Complete / Not accepted for the assessed pre-correction candidate, with
   separate objective resolving evidence; no repeated full Review or invented
   independent pass. One of two authorized coordinator corrections used.
+
+## [2026-10-17] correction | #94 SQL recovery audit, coordinator cycle TWO
+
+* External exact-852b342 coordinator verdict Revise identified false success
+  audit after SQL audit INSERT failure plus first discard SELECT failure.
+  Three SQLite regressions reproduced original-error masking before the fix.
+  Canonical cleanup now quarantines failed audit/touched/validation state before
+  fallible I/O, restores snapshots and invalidates sync state for healthy reload.
+  Finance retains its prior legitimate audit prefix. Save-refusal/lock-exit
+  recovery preserves original exceptions with explicit notes and error logs.
+* Passed 158 combined finance/HTTP/shared-SQL/role/provenance/bulk regressions
+  plus one added internal-save-refusal test. Actual isolated local SQL Server
+  passed 18 finance cases plus that added case. New checks prove early/persistent
+  recovery failure, rollback/reopen, no false approval, prior audit retention,
+  lock release and healthy subsequent approval/chain. Scoped Ruff/format/mypy
+  and documentation checks recorded in the dated execution artifacts.
+* Updated existing Finance synthesis, index and component guides. Actual
+  `_discard` overlap with #84 / PR #382 requires coordinator integration
+  sequencing; no foreign dirty-worktree read, cherry-pick, rebase or merge.
+  Both authorized corrections are used. Original single RPI Review and JSON
+  correction ONE retained; no repeated full Review or independent Pass claimed.
+  External coordinator closure remains pending. Fictional local fixtures only,
+  no private data/cloud/payment activity; original and memory unchanged.

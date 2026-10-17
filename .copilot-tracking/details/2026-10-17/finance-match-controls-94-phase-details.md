@@ -49,6 +49,32 @@ before accepting the original, instead of trusting its earlier Matched label.
 <!-- rpi:phase id=P02 -->
 ## P02: Verify and publish criterion evidence
 
+Current correction TWO: COORD-002 external coordinator Revise on 852b342.
+Canonical SqlStore._discard must quarantine failed audit/touched state before
+DB reads, preserving snapshot state and prior legitimate audit. Finance guard
+must retain original failure and explicitly attach/log recovery failure.
+Inject actual audit INSERT failure plus early one-shot/persistent discard SELECT
+failure; prove durable Proposed budget, no false success, lock release, next
+healthy operation and intact audit chain on SQLite and isolated local MSSQL.
+Actual overlap with #84 / PR #382 is this same recovery primitive; no foreign
+worktree read, cherry-pick, rebase or merge. Coordinator sequences integration.
+Implemented: `_discard(pending=())` preserves an explicitly supplied pre-operation
+audit prefix and clears failed audit/touched/validation state before snapshot
+restore and recovery I/O. `_seq = -1` forces healthy refresh. Finance,
+save-refusal and outer lock-exit attach/log secondary recovery errors while
+preserving the original failure; a failed legitimate-audit flush retains its
+prefix for retry. These are canonical recovery changes, not duplicate backend
+logic. Exact shared `_discard` and adjacent recovery overlap remains disclosed.
+
+Correction TWO evidence: first three new SQLite tests failed before fix.
+Combined local 158 passed plus added internal-save-refusal case passed; actual
+SQL Server 18 passed plus added refusal case passed. Five new inherited tests
+cover early/persistent SELECT failure after actual INSERT, prior audit, lock-exit
+failure and original save refusal. At the first recovery read, failed approval
+and touched state are already absent and cached budget is Proposed. Reopened
+state/ledger, original error notes/logs, cross-thread lock release and healthy
+subsequent approval/chain are asserted. No independent closure/Pass claimed.
+
 <!-- rpi:task id=P02-T01 -->
 ### P02-T01: Focused persistence/API checks and documentation
 

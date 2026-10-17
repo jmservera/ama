@@ -179,10 +179,29 @@ persist, the error explicitly marks the durable outcome potentially unknown
 and requires rereading persisted records before retry. The original review
 verdict is not relabelled as a fresh independent pass.
 
+An external coordinator review of PR #383 at exact `852b342` returned Revise:
+SQL recovery could fail on its first case read before removing pending approval
+audit, allowing a later lock exit to record false success. Correction TWO
+clears failed audit/touched/validation state before recovery I/O, restores local
+snapshots and forces a healthy persisted refresh. Finance retains only its
+pre-operation legitimate audit prefix; a failed flush leaves that prefix for
+retry. Original operation errors survive both recovery and lock-exit failures,
+with explicit exception notes and error logs. Three initial SQLite regressions
+failed before the fix. Afterward 158 combined finance/shared-caller regressions
+and one added internal-save-refusal test passed. Actual isolated local SQL Server
+passed 18 finance cases plus that added case, including early/persistent recovery
+failure, reopen/rollback, no false success, lock release, subsequent healthy
+approval and ledger validity. No new full Review ran; external independent
+closure remains pending, not Pass. See the
+[separate coordinator disposition](../../../../../.copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md#coord-002-resolving-evidence).
+
 #93 is hierarchy, not a dependency. #90 procurement/capacity and #84 technical
-signoffs remain separate. The only actual shared production touchpoint is the
-small `SqlStore.save` finance validator hook; Store/server and signoffs are
-unchanged. Engineering acceptance of these exact criteria is not full PRD,
+signoffs remain separate. Shared SQL touchpoints now include the finance
+validator, canonical `_discard` and save-refusal/lock-exit error preservation.
+The same `_discard` primitive is being corrected in #84 / PR #382; the coordinator
+owns integration sequencing preserving the root helper and both callers. This
+branch did not cherry-pick, rebase or inspect another dirty worktree.
+Store/server and signoff production code are unchanged. Local criterion evidence is not full PRD,
 browser/accessibility, funding/legal, live-platform or human adoption acceptance.
 
 ## Local source keys

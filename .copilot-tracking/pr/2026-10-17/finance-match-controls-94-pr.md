@@ -36,8 +36,8 @@ Evidence: `src/core/tests/test_finance_match_controls.py`,
 
 Baseline 29 passed; failing-first controls ran 22 with 18 failures/5 errors
 (subtest cascades included). Post-correction focused finance/JSON/SQLite/HTTP:
-55 passed. Existing SQL/role/endpoint regression: 47 passed. Actual isolated
-local SQL Server: 14 passed, including reopen, rollback, fresh role/OID and
+55 passed for JSON correction ONE. Existing SQL/role/endpoint regression: 47
+passed at that stage. Original isolated local SQL Server: 14 passed, including reopen, rollback, fresh role/OID and
 simultaneous writers. Initial cleanup-only pooled-connection errors were fixed
 for each uniquely created test database.
 
@@ -49,15 +49,52 @@ Exactly one critique and one independent Review ran. Review execution:
 Complete; original outcome: Not accepted, High RV-001. Coordinator correction
 ONE reproduced persistent primitive save failure, decoupled ledger rollback
 from state restoration and passed focused checks. Original verdict retained,
-no second full Review or invented independent pass; sole blocker resolved by
-objective coordinator evidence.
+no second full Review or invented independent pass. RV-001 has objective
+coordinator resolving evidence, distinct from subsequent SQL finding COORD-002.
+
+## Coordinator correction TWO: COORD-002
+
+External independent review of exact `852b3421c5b5a2dd09944fa39ee609cc2efcf811`
+returned **Revise**: failed SQL audit INSERT followed by early `_discard` SELECT
+failure allowed outer lock exit to flush a false approval although the budget
+remained Proposed. This is a blocking finding, not a deferred future item.
+
+* Fixed canonical `_discard(pending=())`: failed audit/touched/validation state
+  is quarantined before fallible recovery I/O, snapshots restore and sync cache
+  invalidates for the next healthy persisted refresh. Finance retains only its
+  pre-operation legitimate audit prefix.
+* Preserved original operation errors through finance, save-refusal and lock-exit
+  recovery, with explicit exception notes and error logging. A legitimate prefix
+  that cannot flush remains for healthy retry, never replaced with failed success.
+* Added five finance-owned inherited regressions for first/persistent recovery
+  read failure, prior audit preservation, failed lock-exit retry and internal
+  save-refusal recovery. They assert state at first recovery I/O, original error
+  identity/diagnostics, rollback/reopen, no false approval, cross-thread lock
+  release and healthy subsequent approval/chain.
+
+First three SQLite tests failed before production edits. After correction,
+158 combined local finance/HTTP/SQL/role/provenance/bulk tests passed plus the
+added refusal test separately. Actual isolated local SQL Server passed 18
+finance cases plus the added refusal test. Both owned loopback containers
+responded before testing and were removed by exact ID; no shared cleanup.
+Scoped Ruff/format/configured mypy and documentation preservation checks passed.
+
+Both authorized coordinator corrections are used. COORD-002 has local resolving
+evidence; **external independent closure remains pending**. The original single
+RPI Review remains Complete / Not accepted and exact-852b342 coordinator verdict
+remains Revise until external closure. No new full Review or independent Pass.
+Separate evidence: `.copilot-tracking/changes/2026-10-17/finance-match-controls-94-changes.md#coord-002-resolving-evidence`.
 
 ## Related Issues
 
 Refs #94. #93 is parent hierarchy; declared dependencies: none. Concurrent
 #90 procurement/capacity and #84 signoffs are not inferred dependencies.
-Only shared production edit: two-line `SqlStore.save` finance validator hook.
-Shared Store/server and signoff production code remained unchanged.
+Shared SQL edits: finance validator, canonical `_discard` and minimal
+save-refusal/lock-exit error preservation. Actual overlap: #84 / PR #382 corrects
+the SAME `_discard` primitive. This branch is not based on #84; no cherry-pick,
+foreign dirty-worktree read, merge, rebase or force push. Coordinator must
+sequence integration preserving the common root helper and both callers.
+Store/server and signoff production code remain unchanged.
 
 ## Limits
 

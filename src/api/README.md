@@ -30,6 +30,10 @@ temporary fictional SQLite, including actual same-role identity refusals,
 unknown line exceptions/queue, held disposition, external status notes and
 reopened ledger invariance. Backend-only checks do not claim browser/WCAG,
 company delegation, Azure or real payment acceptance.
+Core correction TWO also covers SQL recovery failure after an executed audit
+INSERT: no failed approval event can be flushed at lock exit. Original errors
+retain explicit recovery diagnostics. The endpoint contract and web assets
+are unchanged; independent coordinator closure of PR #383 remains pending.
 
 ## Form schema and candidate API (#97)
 

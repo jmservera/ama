@@ -6,6 +6,7 @@ note of what Finance did elsewhere. Each approval needs a different person from
 the one who prepared it, and none of these can be done in bulk (FR-007).
 """
 import json
+import logging
 import os
 from copy import deepcopy
 
@@ -115,6 +116,7 @@ class FinanceMixin:
             c = self._case(case_id)
             before = deepcopy(c)
             sql = hasattr(self, "db")
+            prior_pending = list(self.local.pending) if sql else None
             audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
             audit_head = None if sql else self.last_hash
             saving = False
@@ -128,10 +130,20 @@ class FinanceMixin:
                 self.audit(actor["email"], f"finance_{action}", case_id, detail)
                 saving = True
                 self.save()
-            except Exception:
+            except Exception as error:
                 if sql:
                     with self.dblock:
-                        self._discard()
+                        try:
+                            self._discard(pending=prior_pending)
+                        except Exception as recovery_error:
+                            error.add_note(
+                                f"Finance SQL recovery failed ({type(recovery_error).__name__}); "
+                                "original operation failure retained. "
+                                "Reload persisted records before retrying."
+                            )
+                            logging.getLogger(__name__).exception(
+                                "Finance SQL recovery failed; original operation failure retained"
+                            )
                 else:
                     c.clear()
                     c.update(before)

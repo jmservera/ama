@@ -7,8 +7,10 @@ ms.date: 2026-10-17
 
 Task 94 / finance-match-controls-94. Branch feat/finance-match-controls-94.
 Initial clean latest-main base bab4bf3. Parent 93 is hierarchy only; dependency
-endpoint empty. Concurrent 90/84 are not inferred dependencies. Only shared
-production edit: two-line SqlStore.save finance validator hook. No Store/server,
+endpoint empty. Concurrent 90/84 are not inferred dependencies. Initially shared
+production edit: two-line SqlStore.save finance validator hook. Correction TWO
+also changes canonical discard and save-refusal/lock-exit recovery; this actually
+overlaps #84 / PR #382 and needs coordinator sequencing. No Store/server,
 web/signoff edits, private data, real providers/financial commitments, payment,
 paid AI or Azure action.
 
@@ -21,6 +23,7 @@ paid AI or Azure action.
 | 3 | Implement / rpi-implement | Executed after planning gates | Initial baseline 29 passed; failing-first 22 with 18 failures/5 errors; implementation and bounded tools/persistence/API proof |
 | 4 | Review / rpi-review | One independent Review, Complete | Not accepted; one High RV-001, reviews/logs/2026-10-17/finance-match-controls-94-review.md |
 | 5 | Caller-authorized coordinator correction ONE / rpi-implement | One of maximum two corrections | RV-001 primitive regression failed before fix, then 55 focused checks passed; changes record owns resolution, no repeated full Review |
+| 6 | Caller-authorized coordinator correction TWO / rpi-implement | Final authorized correction; external exact-852b342 Revise | COORD-002: 3 initial SQLite failures, canonical cleanup before I/O, original errors/prior audit preserved; 158 + 1 local and 18 + 1 actual SQL Server tests passed; external closure pending |
 
 Paths above are under .copilot-tracking/ unless already stated in full.
 State: .copilot-tracking/rpi-sessions/2026-10-17/finance-match-controls-94-state.json.
@@ -62,3 +65,32 @@ at inspection. No merge, rebase, force push, main write or child delivery.
 Final evidence-only commit/push publishes this closeout and explicit session
 stop. Caller requested stopping after final push, so no automatic follow-up
 child begins and hosted/owner merge decisions remain separate.
+
+## Separate coordinator finding/disposition: COORD-002
+
+The caller's exact-852b342 independent review returned Revise. Audit INSERT
+failure followed by first `_discard` case-read failure could leave a false
+approval for outer lock exit, although the budget rolled back to Proposed.
+Correction TWO restores snapshots and quarantines failed audit/touched/validation
+state before any recovery DB read, invalidates cache for healthy refresh, and
+retains only the caller's prior legitimate audit prefix. Finance, SQL
+save-refusal and outer lock exit retain original exceptions with explicit
+secondary notes/error logs. A prior audit that cannot flush remains for retry.
+
+Three initial regressions failed before edits. Combined 158 local cases passed,
+then the added internal-save-refusal case passed separately. Actual local SQL
+Server passed 18 finance cases plus that added case, after `SELECT 1` readiness;
+only exact owned containers/UUID databases were removed. Five inherited recovery
+tests prove first/persistent failure, rollback/reopen, no false approval, prior
+audit preservation, original error identity/diagnostics, cross-thread lock
+release and next healthy approval/chain. Scoped tooling and documentation checks
+are recorded in changes. Existing JSON correction ONE is unchanged.
+
+Both correction batches used. The one original RPI Review remains Complete /
+Not accepted for its original candidate; external exact-852b342 Revise is not
+relabeled Pass by coordinator tests. Local resolving evidence is ready for
+external closure. No new full Review/critique or nested delivery. Actual shared
+`_discard`/adjacent recovery overlap with #84 / PR #382 is explicit; coordinator
+owns sequencing preserving the common helper and both callers. No foreign dirty
+worktree read, cherry-pick, merge, rebase or force push. Closeout is same-branch
+normal push and honest PR #383 update, then stop with no automatic follow-up.

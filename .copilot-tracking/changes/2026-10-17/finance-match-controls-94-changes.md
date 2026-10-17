@@ -132,3 +132,81 @@ force push or main write.
 PR body reused already reviewed/corrected artifacts rather than creating another
 nested PR-review workflow. Existing unrelated tracked .copilot-tracking/pr/pr.md
 was preserved; this task's body is dated and task-specific.
+
+## Coordinator finding COORD-002 and correction TWO
+
+Caller supplied external independent coordinator verdict Revise on exact
+852b342: failed SQL save leaves success audit pending; _discard reads cases
+before clearing it. Early recovery read failure permits outer _finish to
+reload/flush false finance_budget_approve although budget remains Proposed.
+Valid hash chain is not truthful transaction evidence. This is separate from
+the original single RPI Review and correct JSON correction ONE, both retained.
+
+Correction TWO is explicitly authorized; no new full Review/critique. Fix the
+canonical primitive before fallible I/O, retain prior legitimate audit, preserve
+original error and expose recovery failure by exception notes and repository
+logging. Prove fail-before/after on SQLite and actual isolated local SQL Server.
+Actual overlap: #84 PR #382 is correcting SAME _discard primitive. No inspection
+of another dirty worktree, cherry-pick, merge/rebase/force push; coordinator owns
+sequencing common helper and both callers later. No blocker waived because
+another PR exists. Original 852b342 completion is not an independent Pass.
+
+### COORD-002 resolving evidence
+
+Correction TWO is implemented and locally validated, not independently closed.
+Three new SQLite tests failed before production edits: each surfaced the
+recovery OperationalError instead of the original audit-insert error. The
+actual INSERT ran before injection, so transaction rollback is exercised rather
+than bypassed. Raw output: session files/finance-cycle2-before.txt.
+
+Canonical `_discard(pending=())` now snapshots touched IDs and unconditionally
+replaces pending audit with only an explicitly supplied prior prefix, clears
+touched/validation state and invalidates `_seq` before recovery I/O. Cached case
+and recommendation snapshots restore before database reads. Even a persistent
+first SELECT failure therefore leaves no failed approval or dirty case for
+outer `_finish` to flush. A healthy future entry must reload persisted state.
+Finance supplies a copy of its pre-operation pending audit only. Minimal
+save-refusal and lock-exit guards preserve the original exception when recovery
+also fails, attaching explicit notes and logging full recovery diagnostics.
+There is no success-shaped fallback or duplicate backend implementation.
+
+Five finance-owned regressions now cover first-read failure, persistent read
+failure, prior legitimate pending audit, persistent lock-exit failure and
+internal save-refusal recovery. They check staged state at the first recovery
+I/O, original exception identity plus notes/logging, durable/cached Proposed
+budget, no false approval, released lock from another thread, preserved prior
+audit and a subsequent healthy approval with a valid ledger chain. During
+test development, the lock-exit variant initially checked deferred prior audit
+before retry; the assertion now runs after the healthy retry, when it must
+persist exactly once.
+
+| Correction TWO check | Result | Boundary |
+| --- | --- | --- |
+| First three SQLite tests before fix | 3 expected failures | Recovery error masked original INSERT error |
+| Combined local regression | 158 passed, 34.197s | JSON/SQLite finance, existing finance/signoffs, authenticated HTTP, SQL store, role/endpoint, provenance and bulk callers |
+| Added internal-save-refusal SQLite check | 1 passed, 1.159s | Shared save-refusal error precedence after recovery SELECT failure |
+| Actual isolated local SQL Server finance | 18 passed, 87.675s | Includes first four new recovery tests and existing role/OID, rollback, reopen and concurrency |
+| Added actual SQL Server save-refusal check | 1 passed, 5.121s | Fifth new recovery path; no second full class rerun |
+| Final five SQLite recovery targets | 5 passed, 1.333s | Final helper/error-diagnostic assertions after test formatting |
+| Scoped Ruff/format/configured mypy | Passed at closeout | Migrated-source exemptions remain; no universal strict typing |
+| Diff/local links/append log/original-memory and original Review preservation | Passed at closeout | No web changes or browser/WCAG acceptance |
+
+Local SQL Server responded to `SELECT 1` before tests. Both loopback containers
+were removed by their exact owned IDs, and each harness removed only its own
+UUID database. Random credentials stayed process-only, never printed/committed.
+Logs remain in session files/finance-cycle2-regression.txt,
+finance-cycle2-mssql.txt and finance-cycle2-mssql-refusal.txt.
+No private data, real financial commitment, cloud or payment action occurred.
+Final documentation check covered 515 existing/changed local link targets,
+append-only log, valid state JSON and unchanged original/memory/original Review/
+unrelated PR body. The owned local SQL Server container name is absent.
+
+Both authorized coordinator corrections are now used. COORD-002 has local
+resolving evidence; the external exact-852b342 verdict remains Revise until
+external coordinator closure. Original RPI Review Complete / Not accepted,
+JSON correction ONE and their evidence are unchanged. No second full Review,
+new critique or independent Pass is claimed. Required closeout: authenticated
+noreply normal commit, same-branch push, honest PR #383 update and clean stop.
+Actual #84 / PR #382 overlap includes `_discard` and adjacent SQL recovery error
+handling; the coordinator must preserve the common helper and both callers
+when sequencing integration. No merge/rebase/force push/cherry-pick is performed.
