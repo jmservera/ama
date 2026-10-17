@@ -48,6 +48,11 @@ management: short pages that point to clusters of related material.
 
 ## Task Routing
 
+PR #375's #360 continuation integrates queue main0bdcb2f0 with credential
+correction1 and both knowledge histories retained. Independent Pass on the
+final published head is still required; implementation evidence does not close
+the finding or satisfy human live prerequisites.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Audit credential expiry and KV-reference preservation (Refs #358) | [Offline preservation acceptance audit](../architecture/cutover-evidence-pack.md#credential-preservation-offline-follow-up-2026-10-17) | [Setup runbook](../../infra/README.md#post-deployment-api-authentication-initialization): generated/legacy expiry, reconciled KV URL/identity and app values, pending-reference recovery and seven killed mutations; 313 offline infra tests, unchanged legacy delegate. Actual non-production round-trip remains UNMET; #360 owns broader setup/job readiness |

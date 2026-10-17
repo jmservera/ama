@@ -232,6 +232,18 @@ it does not change tested source. Both this finding disposition and that
 final head require independent verification before merge, not a repeated
 internal Review or self-issued acceptance.
 
+### Same-session integration after #376 - 2026-10-17
+
+Owner authorized rebase onto0bdcb2f0, not another Review. Correction1 evidence
+and historical hashes above retained exactly. Credential scripts/tests/runbook
+remain byte-identical to190391a; both knowledge histories/index and queue
+source retained. Fresh focused41/setup101/full infra333/no skips and existing
+quality gates passed on integrationc18790917ea558bcfda8d09aa3fb1d3af51a00d1.
+Rebased correction source85c2713. Exact final evidence-only head is reported
+in PR375. Reviewer4536f9cc checking190391a has NOT been treated as Pass on
+this final head. Original finding remains open until independent final-head
+Pass; draft/no-merge/live-prerequisite gates remain.
+
 ## Routed Findings
 
 | Finding | Destination | Owner/next action | Reason |

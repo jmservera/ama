@@ -7,9 +7,10 @@ ms.date: 2026-10-17
 Task: issue-360 / demo-setup-readiness-360. Mode: automatic.
 Status: Same-session independent-review correction published for PR #375.
 Current continuation: owner-authorized integration onto origin/main0bdcb2f0
-after #376. Rebase this run-owned topic only, retain both knowledge histories
-and credential source, run relevant infra/lint/type gates, exact-lease topic
-push. No new phase or research/plan/review cycle. Independent Pass on the final
+after #376. Rebase and integration validation complete: both knowledge
+histories and credential source retained; focused41/setup101/full infra333,
+lint/format/types passed. Exact-lease topic publication follows this record.
+No new phase or research/plan/review cycle. Independent Pass on the final
 head is required; reviewer4536f9cc's check of190391a is not final-head approval.
 Reviewer verdict Revise on published662c11b is authoritative: unreferenced,
 untagged app-backed eligible credential bypasses Azure Key Vault guard.

@@ -418,3 +418,28 @@ push only. Reviewer4536f9cc checking190391a is not independent Pass on the
 new head. Original finding remains open pending that Pass; human live gates
 unchanged, no cloud writes or merge. First execution boundary: commit this
 bounded scope then rebase, resolving only additive evidence/index conflicts.
+
+### Queue-main integration validation and publication boundary
+
+Rebase onto0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134 completed. Resolved
+only docs/reference/README.md and log.md conflicts additively: retained
+upstream queue route and current correction route, main log as exact prefix,
+and every prior topic-added log byte. All other #376 files byte-identical to
+main; infra/scripts, infra/tests and infra/README.md byte-identical to190391a.
+Correction1 original hashes/red evidence remain historical, not rewritten
+as if first executed after rebase. Rebased correction source is85c2713;
+tested integration candidatec18790917ea558bcfda8d09aa3fb1d3af51a00d1.
+
+Fresh validation: focused41, unchanged setup/legacy/mutation101 and full
+REQUIRE_AZ_BICEP=1 infra333, zero skips, passed. Existing11-file Ruff E/F/I/B/UP
+and format, setup F-only/compile, strict check-container/pipeline, scoped
+three-module mypy, pip/diff checks passed. No need for new cases: source
+unchanged and existing candidate/pre-reconciliation integration tests rerun.
+
+Final commit only records integration evidence/state; exact final hash will
+be verified against remote and PR head then posted in PR375. Owner-authorized
+force-with-lease limited to topic, expected old remote190391aa66d34f78a5b7f56ea28861be204b1aef.
+No new phase/Research/Plan/Review, cloud write, merge or issue closure.
+Original finding remains pending independent Pass on final head; reviewer
+checking190391a is not presumed to accept rebased source. Human private-image,
+explicit narrow-grant authorization and tenant/live d/e gates unchanged.

@@ -90,7 +90,19 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Stopped after P05 correction/test/ordinary publication; independent reviewer verifies23db069 source correction at exact final PR375 head before any merge. Caller-bounded P05-T01/T02/T03 complete; no new loop. #360 d/e remain open, no merge or live resource action."
+    "action": "Same-session integration onto0bdcb2f0 validated; publish final artifact-only head with exact lease on old remote190391a, record final SHA in PR375 then stop. Independent reviewer must Pass on final head before original finding can close or merge; no Pass assumed from review of190391a. No new phase or cloud write; human live prerequisites and #360 d/e remain."
+  },
+  "queue_main_integration": {
+    "base": "0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134",
+    "authorized_old_lease": "190391aa66d34f78a5b7f56ea28861be204b1aef",
+    "tested_candidate": "c18790917ea558bcfda8d09aa3fb1d3af51a00d1",
+    "rebased_correction_source": "85c2713",
+    "validation": "Focused41/setup101/full infra333 zero skips; existing lint/format/static/compile/types/pip passed",
+    "preservation": "Credential scripts/tests/runbook exact190391a; both log histories and index routes retained; other #376 files exact main",
+    "review_gate": "Original finding remains pending independent Pass on final head;4536f9cc checking190391a is not final-head Pass",
+    "publication": "Owner-authorized exact-lease topic only; final head resolved in PR375 comment",
+    "cloud_writes": "None",
+    "new_phase": false
   },
   "prioritized_follow_ups": [
     {

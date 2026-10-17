@@ -4693,3 +4693,18 @@ metadata when the knowledge base was created.
   23db069a32618678a04bd8a0fa58d3d9ed723e99 and exact remote-ref readback.
   Final completion-only head reported in PR #375; stopped pending independent
   verification, no self-acceptance, extra loop, merge or issue closure.
+
+## [2026-10-17] delivery | PR #375 integration after queue PR #376
+
+* Owner-authorized topic rebase onto0bdcb2f0, no new phase or RPI/review loop.
+  Both append-only KB histories retained byte-for-byte, both index routes
+  retained; credential scripts/tests/runbook exact190391a and every other
+  #376 file exact main. Correction1 evidence/hashes remain historical.
+* Fresh focused41/setup101/full infra333/no skips and existing lint/format/
+  static/compile/type/pip gates passed on integrationc187909. Exact final
+  artifact-only head verified at topic/PR publication and posted in PR375.
+  Authorized force-with-lease only on topic, expected prior190391a.
+* Original finding remains open pending independent Pass on final head;
+  reviewer4536f9cc's review of190391a is not presumed final-head acceptance.
+  No cloud writes or merge; draft and human private-image, explicit narrow
+  IAM authorization, tenant/live d/e prerequisites remain unchanged.

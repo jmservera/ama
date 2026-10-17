@@ -8,6 +8,20 @@
   "base": "main",
   "observed_state": "OPEN",
   "initial_published_head": "4b50561cff0a0f1b6598bad3451e962f66e4f890",
+  "queue_main_integration": {
+    "base": "0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134",
+    "authorized_old_lease": "190391aa66d34f78a5b7f56ea28861be204b1aef",
+    "tested_candidate": "c18790917ea558bcfda8d09aa3fb1d3af51a00d1",
+    "rebased_correction_source": "85c2713",
+    "focused_tests": 41,
+    "setup_tests": 101,
+    "infra_tests": {"run": 333, "skipped": 0},
+    "quality": "Existing lint/format/static/compile/types/pip gates passed",
+    "preservation": "Both KB histories/index and all credential code retained; all other #376 files exact main",
+    "review_gate": "Independent Pass on final head required; original finding not closed",
+    "publication": "Exact-lease topic push only; final head verified and reported in PR375",
+    "cloud_writes": "None"
+  },
   "independent_review_correction": {
     "reviewed_defective_head": "662c11bdb60e19879c0bf2d905e39dfab82727e6",
     "parent_head": "b847509fc9fe47284de30b3575e8e2e604cf07f6",

@@ -132,6 +132,14 @@ infra and existing lint/type gates. Exact force-with-lease topic push only,
 no cloud writes, merge or additional phase. Independent Pass must cover the
 final head; original finding is not closed by implementation claims.
 
+Integration completion: rebased onto0bdcb2f0, tested candidate
+c18790917ea558bcfda8d09aa3fb1d3af51a00d1. Only additive KB index/log
+conflicts; both log histories exactly preserved and both index routes retained.
+Every other #376 file byte-identical to main; credential scripts/tests/runbook
+byte-identical to190391a. Focused41/setup101/full infra333/no skips, existing
+Ruff/format/type/static/compile/pip gates passed. No new phase or independent
+review run. Final artifact-only publication head supplied in PR375 comment.
+
 User supplied independent Revise against662c11b: Key Vault requested but an
 unreferenced/untagged generated future-valid app-backed credential is selected,
 then record_credential_store writes app. Apply the storage rule to the actual
