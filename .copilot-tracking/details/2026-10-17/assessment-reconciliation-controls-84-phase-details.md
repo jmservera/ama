@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | P01 | Fail-before evidence and narrow root fix | Complete: red/green and scoped root fix |
 | P02 | Focused validation and current documentation | Complete: core/API, browser, SQL Server, static/docs |
-| P03 | One Review, commit/push/PR | Review Complete / Not accepted, RV-001 blocker; incomplete visibility publication pending |
+| P03 | One Review, commit/push/PR | Execution complete; Not accepted RV-001; incomplete draft PR #382 published |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Focused regression and implementation
@@ -135,3 +135,9 @@ intended code/docs. Push requested branch normally; open independent main PR
 Refs #84. Do not close #84, merge, rebase, force push or run nested delivery.
 Record publication state and stop at final publication under explicit user
 direction; CI may continue and owner retains merge/human acceptance.
+Actual publication: commit 2e45b5e normally pushed, draft main PR #382
+(https://github.com/jmservera/ama/pull/382), explicitly incomplete/Do not merge.
+Account resolved with gh api user and privacy-safe local author/committer email
+verified on commit, required trailer present. All dated phase artifacts
+committed. Session stopped with task status blocked; no follow-up selected,
+source correction, second Review, closure or merge.

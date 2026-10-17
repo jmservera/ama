@@ -122,7 +122,7 @@ Update core/API guides, existing relevant synthesis/index and append log only
 as needed. Reconcile task markers, changes ledger and execution evidence.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: One Review and publication
+### [x] P03: One Review and incomplete visibility publication (execution only)
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: One post-implementation RPI Review
@@ -135,11 +135,15 @@ incomplete and label any visibility PR incomplete rather than acceptance-ready.
 No second Review or automatic backlog selection.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Privacy-safe commit, push and main PR
+#### [x] P03-T02: Privacy-safe commit, push and incomplete draft main PR
 
 Resolve gh api user, local privacy-safe author/committer email and required
 Co-authored-by trailer. Refs #84 with criterion evidence, overlap and limitations.
 Stop at final publication as explicitly requested; no invented follow-up selection.
+Actual evidence: source/evidence commit 2e45b5e normally pushed; draft main
+PR #382, https://github.com/jmservera/ama/pull/382, explicitly Not accepted
+and Do not merge. Authenticated gh account 8036360/jmservera supplied local
+privacy-safe author/committer email; required Copilot trailer retained.
 
 ## Test Ownership and Locked Budget
 
@@ -197,7 +201,9 @@ Research complete; plan Ready after one critique and direct dispositions.
 P01/P02 complete: 631 core tests (one existing opt-in skip), 72 targeted API tests
 (one browser skip), separate actual Chromium comparison test, eight actual
 isolated SQL Server tests, core/API static checks and documentation links.
-One Review complete, outcome Not accepted due to RV-001. Only an explicitly
-incomplete draft visibility PR may be published; no successful completion claim.
+One Review complete, outcome Not accepted due to RV-001. Incomplete draft
+visibility PR #382 published; no successful delivery/acceptance claim.
 No production edits occurred during Research or Plan. Full plan is not yet
-complete: P03 publication remains parent-owned, engineering acceptance blocked.
+acceptance-ready: all phase execution/publication markers complete, engineering
+delivery remains blocked. Automatic session stopped at the caller's explicit
+concrete-blocker/final-publication boundary. No follow-up work selected.

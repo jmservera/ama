@@ -5,7 +5,7 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "blocked",
-  "session_status": "running",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/assessment-reconciliation-controls-84-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/assessment-reconciliation-controls-84-plan.md",
@@ -34,6 +34,11 @@
       "decision": "Exactly one independent Review executed. Outcome Not accepted: RV-001 High blocks failed-recovery integrity. No source correction or repeated Review in current task.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-review.md"
+    },
+    {
+      "decision": "Normal source/evidence push 2e45b5e published as incomplete draft main PR #382. Stop automatic session at concrete RV-001 blocker as explicitly requested; no correction, repeat Review, closure or merge.",
+      "status": "confirmed",
+      "evidence": "https://github.com/jmservera/ama/pull/382; caller stop-at-final-push/concrete-blocker boundary"
     }
   ],
   "blockers": [
@@ -43,7 +48,7 @@
       "resolution": "Later explicitly authorized bounded implementation must contain failed pending events and original error across outer cleanup; current task stops incomplete."
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "Commit current Not accepted evidence with privacy-safe identity, push requested branch and open incomplete draft main PR Refs #84; then persist publication/stop at RV-001."},
+  "next_action": {"phase": "Implement", "action": "Current session stopped, task blocked. Only a later explicitly authorized /rpi-implement may address RV-001 early/persistent recovery faults; draft PR #382 is not accepted or merge-ready."},
   "prioritized_follow_ups": [
     {
       "rank": 1,

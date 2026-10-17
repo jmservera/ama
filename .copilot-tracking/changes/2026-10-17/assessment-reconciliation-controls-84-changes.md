@@ -161,7 +161,7 @@ is directly coupled to this implementation, not unrelated cleanup.
 
 One Review executed, outcome Not accepted. P01/P02 markers/details/commands/
 limitations reconciled; their execution does not establish successful delivery.
-P03 visibility publication pending; no full-plan/engineering completion claim.
+P03 incomplete visibility publication executed; no engineering completion claim.
 No human competence/delegation, source authority, rank-policy
 approval, live/Azure/model or full BRD AC-065 acceptance inferred.
 
@@ -181,3 +181,25 @@ so normal-recovery results cannot masquerade as acceptance. Under the caller's
 publication direction, commit evidence and publish only a clearly incomplete
 draft Refs #84 PR, then stop. RV-001 requires a later explicitly authorized
 implementation, not silent deferral as an accepted residual.
+
+## Publication and Stopped Session
+
+Source/evidence commit `2e45b5e` created with both author/committer email
+`8036360+jmservera@users.noreply.github.com`, derived from actual gh api user
+id/login and repository-local configuration. Required Copilot co-author trailer
+present. Normal push of feat/assessment-reconciliation-controls-84 succeeded;
+independent main-targeted **draft** PR #382 created:
+https://github.com/jmservera/ama/pull/382.
+
+PR title/body explicitly mark WIP, Not accepted, RV-001 High blocker and Do not
+merge, with exact four-criterion evidence, tests/limits, complete dated artifact
+pointers and shared Store/SqlStore overlap warning. No closing keyword, actual
+issue closure or merge. The dated Research/Plan/details/critique/changes/Review/
+state artifacts are committed with implementation, not left only in chat.
+
+Final bookkeeping records session stopped, active phase Follow-up, task blocked
+and later authorization required for RV-001; no nested correction or repeated
+Review. Phase execution/publication complete is not successful engineering
+delivery. Final bookkeeping commit/push carries this factual state; no source
+changes after the Review, only explicit acceptance-status documentation and
+lifecycle/publication evidence.
