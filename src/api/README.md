@@ -79,6 +79,54 @@ event order, as-of and denominators. The independent exact-28227fa8
 Revise / Medium disposition and original adverse Review remain retained;
 targeted correction evidence does not self-award acceptance.
 
+## Resident commitments and remedy API (#88)
+
+Existing `POST /api/cases/{case_id}/resident` and case detail remain the only
+routes. The [core contract](../core/README.md#resident-commitments-and-independent-remedy-clocks-88)
+defines named owners, independent clocks, legacy confirmation and SQL validation.
+The existing resident panel records full commitments and shows response/remedy
+status, owner and date separately, including open items after response closure.
+Nothing sends messages, proves receipt, determines lease responsibility or
+changes an approval. Existing non-digital service/complaint routes stay available.
+
+Additional actions: `update_record`, `remedy_confirm`, `remedy_update` and
+`service_reopen`. Remedy actions include request `id`; all four include integer
+`expected_version`. Version zero means absent/unversioned, not permission to
+overwrite a known record. `remedy_confirm` supplies owner/basis; remedy progress
+supplies status/note and optional reassigned owner; response reopen supplies note.
+Service intake additionally offers Charge query and Household dispute.
+Existing service update/close request shapes remain compatible; `status` means
+response, never remedy. Handoff inputs no longer create partial commitments.
+
+`service_reassign` recovers a departed response assignee through the same endpoint.
+Only an existing Retrofit Programme Manager or Programme Support Officer may
+submit request `id`, integer `expected_version`, `responsibility` service/redress,
+new current eligible named `owner` email and reason `note`. The existing panel
+shows this form only to those roles, and shows old/new owner, actor, reason and
+time in request history. No manager becomes owner implicitly. Server-side writer
+validation also rejects stale versions, changed identities and non-independent
+complaint/review assignments. Remedy ownership and other clocks remain unchanged.
+Response status owner/date follows responsibility, not shared-person email:
+redress for Closed or Independent review, otherwise service. Reassigning the
+other responsibility preserves that status clock, including legacy Unknowns.
+
+Invalid input returns 400, stale version/writer 409 and missing/current-owner
+authority 403. Post-COMMIT synchronization or subsequent detail failure returns
+409 with `outcome: "committed"` and explicit reload/reconcile instructions, not
+a claim that nothing was recorded. Scoped resident forms retain input and inline
+live errors; uncertain/committed results disable ordinary resubmit until reload.
+Registered roles are server-enforced; neither a request role nor owner label
+grants authority. New references and nested handoff commitment snapshots are
+hidden from non-resident-view roles; contractor allowlists remain unchanged.
+
+`test_resident_api` runs authenticated loopback HTTP with small fictional SQLite.
+`ZF_RESIDENT_BROWSER=1` enables its actual Chromium journey: invalid commitment,
+keyboard create/reassign, close response with remedy still open, remedy close/
+reopen, response-only reopen, departed-owner manager recovery with retained
+invalid input/error focus, recovered-owner update, independent response closure
+and 320/390/1280 widths with reduced motion.
+This is engineering evidence, not screen-reader, human usability or WCAG acceptance.
+
 ## Grant and application records (#95)
 
 Existing `POST /api/cases/{case_id}/grant` and `/funding` routes now use

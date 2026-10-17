@@ -1,0 +1,33 @@
+{
+  "task_id": "88",
+  "task_slug": "resident-update-remedy-controls-88",
+  "resume_id": "3a36c179-e1e3-4332-9c33-fa947262fd79",
+  "activity": "Coordinator-authorized main integration, not a new RPI cycle or full Review",
+  "branch": "fix/resident-update-remedy-controls-88",
+  "pull_request": "https://github.com/jmservera/ama/pull/392",
+  "base": "3f544fb9cda2c51b219db2cc8368c7525bbe0c86",
+  "expected_remote_lease": "a9a5f554151336f6e617fbcee35033234813c6e5",
+  "tested_rebased_implementation": "583ab213",
+  "tested_rebased_bookkeeping": "89ce541f",
+  "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-integration.md",
+  "original_rpi_artifacts": "All seven byte-identical to expected original remote; original Review Complete / Residual work retained, no second full Review or critique",
+  "source_parity": "Exact old added/removed patch lines in all fourteen src paths; upstream quality/assistant/ops exact bytes; both truthful committed handlers preserved",
+  "validation": {
+    "combined": "499 run, 445 pass, 54 existing opt-in/JSON-only skips",
+    "actual_mssql": "38 run, 37 pass, one SQLite trace-only skip; initial external harness failure corrected and retained in evidence",
+    "actual_browser": "One integrated Chromium journey passes, no WCAG claim",
+    "configured": "Full core/API Ruff, format and mypy pass",
+    "image": "Integrated local API non-root/hardening/compatible startup controls pass"
+  },
+  "exact_criteria": "All three have explicit source and executed JSON/SQLite/MSSQL/HTTP/browser evidence mapping in integration record; no independent final-head acceptance asserted",
+  "correction_cycles_used": 0,
+  "cleanup": "Exact owned integration container/image tag and generated external SQL credential removed after test database readback confirmed empty",
+  "publication": "Commit checked evidence with fresh privacy-safe author/committer and Copilot trailer; force-with-lease limited to exact authorized expected_remote_lease; verify local/remote/PR equality. No widening a changed lease.",
+  "published_rebased_head": "07f988c78daf1fa8107b541a13f1679cdbb4d83f",
+  "moving_main_ref": "Shared origin/main advanced during validation to 226702779e57e490cb10dc06ab014760c7d8a761 (#390/#102). A final mutable-ref prefix assertion failed; explicit immutable authorized-base verification passed. No further rebase or newly arrived main source imported. Exact receipts cover pinned base3f544fb9, not #390.",
+  "remaining": "Owner/coordinator retains independent final-head checks/integration acceptance and wider governance routing; no next child task starts at the user-selected published PR stop boundary",
+  "governance_follow_up": "RV-001: planning parent/repository owner at next #81 triage identifies existing separate governance item or assigns one; Legal/Housing/Complaints retain approval",
+  "status": "completed",
+  "session_status": "stopped",
+  "no_authority": "No merge, issue closure, independent Pass, private data, other worktree or Azure writes"
+}

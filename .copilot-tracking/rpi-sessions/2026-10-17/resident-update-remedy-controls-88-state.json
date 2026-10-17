@@ -1,0 +1,121 @@
+{
+  "task_id": "88",
+  "task_slug": "resident-update-remedy-controls-88",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "current_publication": {
+    "base": "943febc23e99e397724cb81d2580f781b91e13f7",
+    "rebased_resident_source_revision": "f2e848e2a65642e33039b9980192d7b3b7cdd772",
+    "last_verified_published_head": "2ce01058ba22bbaba7ac478cd2c4e7988c47addc",
+    "source_tree": "b0c8286dec175178b19de2fdfc8520ecef8c4d8e",
+    "integration_receipt": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-sensor-integration.md",
+    "integration": "Authorized sensor PR393 rebase and exact-topic lease publication completed; subsequent metadata-only reconciliation does not change reviewed source",
+    "source_disposition": "Coordinator supplied reviewer f786737f SOURCE PASS for all three issue88 acceptance criteria at 2ce01058; not a new full RPI Review or self-Pass",
+    "acceptance": "Coordinator final acceptance and CI pending",
+    "validation_provenance": "Delivery integration receipt supplied 240 run/237 pass/3 skips, agents94pass and API100pass with overlap; reviewer independently executed120run3skip. Nine actual MSSQL passes are historical correction TWO evidence, not a fresh integrated or metadata-head run",
+    "metadata_only": "Current records reconciled after reviewed publication; final metadata commit hash is reported in PR body and handoff, not self-referenced here"
+  },
+  "authorized_correction_two": {
+    "number": 2,
+    "last_authorized_cycle": true,
+    "validated_base": "943febc23e99e397724cb81d2580f781b91e13f7",
+    "historical_correction_validation_base": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
+    "observed_latest_main": "943febc23e99e397724cb81d2580f781b91e13f7",
+    "integration": "Subsequently authorized sensor PR393 integration completed onto943febc2; receipt linked in current_publication, exact resident patch parity verified",
+    "start_head": "36b5dcfaba9b502887e1f727db86b5b83976dc53",
+    "input": "Coordinator f786737f Revise Medium: same-person service/redress email collision changes wrong status clock",
+    "scope": "P01-T01 plus P02-T01/T02; backend only, no new full Review",
+    "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-correction-two.md",
+    "remaining": "Coordinator final acceptance and CI; source PASS supplied by independent reviewer",
+    "published_source_head": "f2e848e2a65642e33039b9980192d7b3b7cdd772",
+    "historical_preintegration_source_head": "75a12e9541e2996d77fcb416f27d8174f0b047bb",
+    "publication": "Correction source rebased as f2e848e2; completed sensor integration published at2ce01058, followed only by metadata reconciliation",
+    "validation": "Historical correction TWO: failing-first8subcasefailures;74residentcoreAPI72pass2skip;9actualMSSQLpass0skip;configuredcoreAPIstaticsPass;nowebchanges. Integrated supplied and independent executed counts are separated in current_publication",
+    "external_disposition": "Reviewer f786737f SOURCE PASS all three criteria at2ce01058; mutable metadata gate reconciliation only, coordinator acceptance pending"
+  },
+  "authorized_correction": {
+    "number": 1,
+    "input": "Coordinator Revise Medium: departed response owner strands request",
+    "base": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
+    "start_head": "3938fb7f9ad6ec413768037f53ea7c9b9b96e608",
+    "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-correction-one.md",
+    "remaining": "None for original departed-owner finding; separate correction TWO covers introduced status responsibility ambiguity",
+    "published_source_head": "a4e31b62c2932861a9688430997185208ac906da",
+    "historical_preintegration_source_head": "5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3",
+    "publication": "Historical normal correction ONE source push subsequently rebased as a4e31b62 during completed authorized sensor integration",
+    "validation": "145 resident/browser/handoff/report tests:134pass11skip;24sharedguardspass;8actualMSSQLpass0skip;configuredcoreAPIstaticsandJSsyntaxpass",
+    "external_disposition": "Original departed-owner Medium closed by coordinator f786737f evidence; no new full Review"
+  },
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/resident-update-remedy-controls-88-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/resident-update-remedy-controls-88-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/resident-update-remedy-controls-88-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/resident-update-remedy-controls-88-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/resident-update-remedy-controls-88-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full ordered Research, Plan/critique, Implement and one Review, then commit/push/open main PR",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-17; branch fix/resident-update-remedy-controls-88 at supplied base 1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": "Research C1-C11/W1; actual Wider, Deeper, Contrarian cycle and 59-test baseline (one skip)"
+    },
+    {
+      "decision": "Single final-candidate critique executed; verdict Revise; PC-001 through PC-004 directly resolved",
+      "status": "complete; implementation Ready",
+      "evidence": "Original critique retained; plan Final Contract Amendments and synchronized phase details; no user decision or second critique"
+    },
+    {
+      "decision": "Exactly one original full-task Review executed",
+      "status": "Complete; outcome Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/resident-update-remedy-controls-88-review.md; RV-001 Low distinct governance handoff; no implementation defect established; original verdict retained"
+    },
+    {
+      "decision": "Stop automatic session at clean pushed main-targeted PR; no child follow-up, merge or issue closure",
+      "status": "confirmed",
+      "evidence": "Explicit user instruction to stop clean pushed PR with exact head/resume ID"
+    },
+    {
+      "decision": "Publish own implementation and all dated RPI artifacts",
+      "status": "complete; main PR open",
+      "evidence": "https://github.com/jmservera/ama/pull/392; original historical implementation2672dcbb subsequently integrated/rebased; current base/source/publication recorded in current_publication"
+    },
+    {
+      "decision": "Retain original Review unchanged after routing RV-001",
+      "status": "complete; no second Review",
+      "evidence": "Original Review SHA256 204aab7fa36e86feae5b5f76a2107e8e7a2655a6b11a6d2113a3c231ea008e99; only next governance routing action added to plan/details/changes/state"
+    },
+    {
+      "decision": "Clean up only owned local resources and stop at user-selected endpoint",
+      "status": "complete",
+      "evidence": "Verified exact task-owned SQL container ID before removal; removed issue88-sql-3a36c179, own API image tag, generated external SQL secret and named task logs. No other resources touched. Session resume ID 3a36c179-e1e3-4332-9c33-fa947262fd79."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Stop at clean published PR #392 after metadata-only reconciliation for coordinator acceptance and CI. Authorized sensor rebase onto943febc2 is already complete; no further rebase/integration, source correction, full Review, merge or issue closure authorized. No idle CI watch."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Route broader lease, scope-review and Housing/Complaints age-band governance at the next parent #81 backlog triage",
+      "rationale": "RV-001 requests an actionable owner/next step, not issue88 implementation. Planning parent/repository owner must identify an existing separately owned item or assign one; Legal/Housing/Complaints retain professional approval. Do not start work or invent authority/thresholds here.",
+      "evidence": "Original Review RV-001; plan Follow-Up Items; full PRD AC-063 and BRD FR-047/AC-089 exceed the three issue88 criteria"
+    },
+    {
+      "rank": 2,
+      "task": "Retain reviewer Low pre-existing independent-review intake observation as separately scoped residual",
+      "rationale": "No intake source change is authorized by this metadata gate. Coordinator/repository owner decides whether to route it separately; human/WCAG acceptance remains unperformed.",
+      "evidence": "Coordinator-supplied reviewer f786737f Low residual; not an issue88 source correction or third cycle"
+    }
+  ]
+}

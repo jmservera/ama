@@ -21,6 +21,11 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #88, the [resident criterion audit](./research/ux/customer-journeys/residents.md#responsibility-owned-response-clock-correction-2026-10-17)
+also records the final authorized responsibility-clock correction: shared service/
+redress identity never lets a non-owning reassignment alter status owner/date.
+Existing resident routing below remains unchanged.
+
 1. Read this index first and pick the rows in
    [Task Routing](#task-routing) that match the task.
 2. Read the [Project Memory](./memory.md) for owner context and preferences.
@@ -98,10 +103,24 @@ pending/unknown evidence remains a gap. Exact full core CI discovery passed
 [correction log](./log.md#2026-10-17-correction--91-current-version-quality-assistant-evidence);
 external final-head judgment remains separate, original adverse Reviews retained.
 
+The #88 topic now integrates partial progress PR #390 on pinned main
+226702779e57e490cb10dc06ab014760c7d8a761. Documentation-only conflicts
+retain both routes/contracts; exact own src patch parity and fresh140-test
+report/resident/handoff/negative-writer checks preserve precise UTC source-order
+reporting and independent remedy clocks. Prior real SQL/browser/image receipts
+remain historical, not newly run. No full event capture or independent Pass.
+
+The subsequent #88 rebase onto setup-fix PR #391/main74617981 retains
+the entire src tree unchanged and exact upstream setup classifier/guard tests.
+Only the log append conflicted; all routes/history retained. Fresh focused
+resident core/API checks:65run,63pass,two existing skips; no repeated SQL/image
+or infra acceptance claimed.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect sensor privacy admission and external exports (#112) | [Core replay and closed-field contract](../../src/core/README.md#sensor-admission-and-external-context-112) | [Dated actual-source synthesis](./research/iot-sensor-analytics-research-plan.md#sensor-privacy-engineering-boundary-2026-10-17-refs-112): exact generated observations only, explicit stock Selection, closed chat context and malformed AI/map refusal. Original Review Not accepted retained; correction ONE closes raw-status and document pre-dispatch ordering with failing-first tests, not a second independent Pass. No sensor-analysis runtime or registered sensor AI purpose; manual detail/static tiles unchanged. OD-43 and #175 source origins remain unverified; no real-use or legal approval |
 | Inspect historical progression, declared forecasts and progress exports (#102) | [Core event/unknown contract](../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102) and [existing report/export mode](../../src/api/README.md#historical-progress-report-and-export-102) | [Dated programme evidence boundary](./research/ux/customer-journeys/programme.md#historical-progress-engineering-boundary-2026-10-17-102): structured return/reopen/handoff clocks, partial coverage, current authorized cohorts, explicit UTC denominators and declared scenario sensitivities. Correction TWO preserves handoff source-version order, legacy precision/as-of unknowns and prospective precise timestamps; integrated quality #387 is retained. No snapshot reconstruction, new AI, accepted-handover actuals or operational validation; independent acceptance remains coordinator-owned |
+| Inspect resident-update commitments and separate remedy closure (#88) | [Core record and writer contract](../../src/core/README.md#resident-commitments-and-independent-remedy-clocks-88) and [existing API/panel](../../src/api/README.md#resident-commitments-and-remedy-api-88) | [Dated resident criterion audit](./research/ux/customer-journeys/residents.md#resident-commitment-and-remedy-criterion-audit-2026-10-17-88): complete purpose/current named owner/due/basis, independent response/remedy/defect/charge-query clocks and retained delivery/handover/finance events; explicit legacy Unknown/confirmation, writer-time identity/version checks and truthful committed outcomes. Explicit manager-only versioned service/redress reassignment recovers departed response owners with old/new identity, reason and actor/time history; no remedy cascade. Authorized integration onto merged quality PR387/main 3f544fb9 preserves source patch parity, current-evidence selectors and both committed-outcome handlers; fresh combined SQL/browser receipts are distinguished from original evidence. Local fictional evidence is not messaging, authority, Legal/age-band governance or full PRD/WCAG acceptance. Coordinator final-head acceptance remains separate |
 | Inspect grant lifecycle and designated human controls (#95) | [Core scoped exercise-authority contract](../../src/core/README.md#grant-lifecycle-and-human-exercise-designation-95) and [API/application distinction](../../src/api/README.md#grant-and-application-records-95) | [Finance journey criterion audit](./research/ux/customer-journeys/finance.md#grant-lifecycle-acceptance-audit-2026-10-17-95): existing states retained; current registry, exact state/case/route designation, fresh UTC transaction checks, independent identity and GBP evidence. Application confirmation is not award/cash; original GBP 40 million remains unverified. Original Review Not accepted retained; correction ONE restores current legacy preparer lookup with failing-first regressions; coordinator independent closure pending. No real delegation, payments or full PRD pack/export acceptance |
 | Inspect per-measure quality, defects and replacement (#91) | [Core quality and handover contract](../../src/core/README.md#per-measure-quality-and-handover-controls-91) | [Existing API/screen](../../src/api/README.md#per-measure-quality-api-91) and [dated programme journey continuation](./research/ux/customer-journeys/programme.md#quality-control-engineering-continuation-2026-10-17-91): current staff, retained contributor independence, remediation, all-prior same-measure acceptance/handover invalidation and rollback on fictional JSON/SQLite/local SQL Server. Original Review Not accepted retained; authorized correction ONE resolves known legacy historical recorders and committed-refresh exactly-once audit/reload handling. No new contractor writes, risk policy, payment, professional authority or human/Azure/WCAG acceptance |
 | Inspect record-only finance matching and independent approval (#94) | [Core finance contract](../../src/core/README.md#record-only-finance-controls-94) and [authenticated API](../../src/api/README.md#record-only-finance-api-94) | [Dated Finance journey audit](./research/ux/customer-journeys/finance.md#exact-finance-control-audit-2026-10-17-94): actual line indices, unknown/ambiguous input refusal, email/code/OID independence and record-only status. Correction TWO quarantines failed SQL audit before recovery reads and preserves original errors/prior audit. Authorized integration of merged #84 / PR #382 on main bbbc924 retains committed document snapshots, stock caller scope and all transaction hooks; 232 local passes/one browser skip and 37 actual local SQL Server passes. External independent closure pending. #93 hierarchy only, no invented #90 dependency. Stale BRD numbering disclosed; no real authority/payment, browser, Azure or full PRD acceptance |

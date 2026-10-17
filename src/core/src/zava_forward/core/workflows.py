@@ -180,9 +180,11 @@ class WorkflowMixin:
             if cur and cur["state"] in HANDOFF_ACTIVE:
                 raise ValueError("A handoff is already waiting for an answer.")
             previous_update = c.get("resident_update") or {}
+            if not previous_update and (update_owner or update_due):
+                raise ValueError("Record a complete resident-update commitment in the resident panel before referencing it in a handoff.")
             if previous_update and (
                 (update_owner and update_owner["name"] != previous_update.get("owner"))
-                or (update_due and update_due != previous_update.get("due_at"))
+                or (update_due and update_due != _due(previous_update.get("due_at")))
             ):
                 raise ValueError("A resident-update commitment already exists. Preserve it during handoff.")
             resident_update = previous_update or dict(owner=update_owner["name"] if update_owner else None,
@@ -193,8 +195,6 @@ class WorkflowMixin:
                                 next_action=controls.text(metadata.get("next_action"), "", required=False) or None,
                                 resident_update_owner=resident_update.get("owner"),
                                 resident_update_due_at=resident_update.get("due_at"))
-            if not previous_update and (update_owner or update_due):
-                c["resident_update"] = resident_update
             event.update(handoff_view(c), by=user["email"], authority=user["role"])
             event["changes"] = dict(
                 handoff=dict(old=old_handoff, new=deepcopy(c["handoff"])),

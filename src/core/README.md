@@ -147,6 +147,89 @@ for local HTTP, SQLite and opt-in actual loopback MSSQL consumers.
 No private dataset, provider call, operational forecast validation, Azure or
 human acceptance follows from these checks.
 
+## Resident commitments and independent remedy clocks (#88)
+
+The existing resident action boundary records staff-mediated fictional commitments,
+not messages. `update_record` requires `expected_version` (zero for absent or
+unversioned legacy), purpose/linked issue, named `owner` email, timezone-aware
+`due_at`, human-selected `basis`, and `status` Outstanding or Proposed.
+`safe_contact_ref` is a minimum-necessary reference or Unknown; no contact reasons
+or new resident channel are needed. Explicit revisions/reassignments retain old
+snapshots and original open date. Handoffs preserve the commitment and can no
+longer create an incomplete owner/due pair; create it through the resident route.
+
+Existing service requests retain `status` as response/service-record status,
+`status_owner`, `status_at` and `version`. A separate `remedy` retains its own
+status, owner identity, status date, original open date, version and history.
+Complaint response closure never resolves/closes this remedy or another Defect,
+Charge query or Household dispute request. `remedy_update` requires its expected
+version, supplied progress/reopening evidence and an explicit next status.
+Only Resolved may become Closed; Closed may explicitly reopen to Open.
+Optional `owner` explicitly reassigns responsibility and preserves its history.
+`service_reopen` affects only a Closed response and requires its current version
+and reason. Neither action changes resident choices, work orders, quality,
+grant or finance records. Their original clocks stay separate; payment-status
+notes additionally retain their own named owner/date/history without paying.
+
+If a response assignee leaves eligible staff, an existing resident-workflow
+manager can explicitly use `service_reassign`: request `id`, current integer
+`expected_version`, `responsibility` (`service` or `redress`), new named `owner`
+email and reason `note`. This changes only that responsibility, not the remedy
+owner or status. The response status owner/date changes only for its owning
+responsibility: redress when Closed or on the Independent review route, service
+otherwise. The same person may hold both responsibilities on a Service request;
+matching their email does not make the other responsibility own the status.
+Reassigning the non-owning responsibility preserves the captured status owner/date
+exactly, including absent legacy provenance. An explicit owning reassignment
+records its new owner/date but keeps absent old provenance null in history.
+History retains old/new captured
+identities, prior status owner/date, named acting manager, reason and event time.
+Missing legacy identity/date remains null in that history; it is not reconstructed
+from today's registry. A captured departed owner need not remain eligible to
+preserve their historical event. New owner and acting manager must be current
+inside the writer transaction. Complaint/review assignees remain distinct;
+the contested decision recorder cannot become its independent reviewer.
+Ordinary update, close and reopen retain their existing authority checks.
+
+Writers/assignees use the existing Resident Liaison Officer, Retrofit Coordinator,
+Retrofit Programme Manager and Programme Support Officer roles. Only the current
+captured owner or either existing manager may revise/reassign a commitment/remedy.
+Creation is by case owner or either manager. Service/redress assignees must be
+eligible for this same workflow; independent review remains with its named reviewer.
+Registered email/name/code/role/OID, current inputs/state/version and assigned
+identities are rechecked in the existing SQL writer transaction, without relying
+on a case-sequence change. New event identities retain only these identity fields.
+Legacy missing identities are looked up by their recorded email for current
+authorization only; captured history is never rebound to a replacement person.
+
+Absent legacy response/remedy provenance projects as Unknown/null, not today's
+actor/date. `remedy_confirm` explicitly records current eligible responsibility
+and supplied `basis` at expected version zero, leaving even a Closed response
+unchanged and original remedy open time unknown. Complete `update_record`
+similarly confirms old owner/due pairs while preserving their original snapshot.
+No migration fabricates historical completion or evidence.
+
+Resident writes reuse canonical SQL discard and commit markers: failed state/
+success audit is quarantined before recovery reads, prior legitimate audit and
+original diagnostics survive, and post-COMMIT synchronization reports committed
+outcome without audit replay. JSON caught-error restoration covers record and
+ledger tail; separate files do not promise abrupt-crash atomicity.
+Full PRD AC-063 lease evidence/Legal positions, scope-review policy and age-band
+configuration remain outside this bounded issue; no operational authority,
+resident communication or full PRD acceptance is inferred.
+
+From the root with pip-installed source packages:
+
+```bash
+PYTHONPATH=src/core/tests:src/api:src/api/tests:src/agents/tests \
+  .venv/bin/python -m unittest test_resident_decisions.JsonResidentDecisions \
+  test_resident_decisions.SqlResidentDecisions test_resident_api -q
+```
+
+`ZF_RESIDENT_MSSQL=1` enables `MssqlResidentControls` against an explicitly
+task-owned loopback SQL Server configured through `ZF_SQL_*`. Each test creates/
+drops only its UUID-named `zf_resident88_*` database. Never use shared/live SQL.
+
 ## Grant lifecycle and human exercise designation (#95)
 
 The existing `grants` state machine and separate `funding` application object

@@ -694,22 +694,17 @@ function handoffPanel(c, id, refresh) {
       const next = h("input", { id: "ho-next", name: "next_action", autocomplete: "off", maxlength: 300 });
       const urgency = h("select", { id: "ho-urgency", name: "urgency", autocomplete: "off" }, ["", "Routine", "Urgent"].map((x) => h("option", { value: x }, x || "Unknown")));
       const due = h("input", { id: "ho-due", name: "due_at", autocomplete: "off", type: "datetime-local" });
-      const updateTo = h("select", { id: "ho-update-to", name: "resident_update_to", autocomplete: "off" }, h("option", { value: "" }, "Unassigned"), me.staff.filter((s) => s.role !== "Contractor").map((s) => h("option", { value: s.email }, s.name)));
-      const updateDue = h("input", { id: "ho-update-due", name: "resident_update_due_at", autocomplete: "off", type: "datetime-local" });
       const iso = (value) => value ? new Date(value).toISOString() : null;
       kids.push(recordedChangeForm("ho-offer", "Offer the case", [
         h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
         h("label", { for: "ho-to" }, "Offer to"), to, h("label", { for: "ho-note" }, "Note for them (optional)"), note,
         h("label", { for: "ho-next" }, "Next action"), next, h("label", { for: "ho-urgency" }, "Urgency"), urgency,
         h("label", { for: "ho-due" }, "Human-selected due date (not an approved SLA)"), due,
-        c.resident_update ? h("p", {}, "The existing resident-update commitment is preserved.") : h("div", {},
-          h("label", { for: "ho-update-to" }, "Resident-update owner"), updateTo,
-          h("label", { for: "ho-update-due" }, "Resident-update commitment"), updateDue)
+        h("p", {}, c.resident_update ? "The existing resident-update commitment is preserved." : "Record a complete resident-update commitment in the resident panel. A handoff never creates or clears it.")
         ], async (metadata) => {
           await post(id, "offer-handoff", {
           ...metadata, handoff_version: (c.handoff_history || []).length,
-          to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value),
-          resident_update_to: updateTo.value, resident_update_due_at: iso(updateDue.value)
+          to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value)
           });
           await refresh(async () => {});
         }));

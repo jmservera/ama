@@ -5,7 +5,7 @@ perspective: "Resident Engagement and Insight"
 status: "Research hypotheses; not resident validation or operational approval"
 scope: "Rented households; shared owners/leaseholders; representatives; support workers"
 evidence_boundary: "Local sources only; no new legal claims"
-ms.date: 2026-10-14
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -116,3 +116,118 @@ Three focused research questions, asked one at a time through accessible, volunt
 3. After installation, what would make you feel that a concern had been properly resolved?
 
 Recruit across all maps, including deferral, refusal and non-digital routes. Engagement owns research; Housing/Programme own changes with specialist approvals. No validation claimed.
+
+## Resident commitment and remedy criterion audit (2026-10-17, #88)
+
+The [core record contract](../../../../../src/core/README.md#resident-commitments-and-independent-remedy-clocks-88)
+and [existing API/panel](../../../../../src/api/README.md#resident-commitments-and-remedy-api-88)
+amend exact issue gaps against PRD FR-033/049 and BRD FR-047. They do not
+convert the maps above into observed resident testimony or operational authority.
+
+| Issue criterion | Implemented record boundary | Evidence and limitation |
+| --- | --- | --- |
+| Update purpose, owner, due date and basis | Full versioned resident_update; current named owner, supplied basis and safe reference/Unknown | Explicit create/reassign; handoffs cannot manufacture partial commitments. Outstanding/Proposed is not evidence of a message, receipt or understanding |
+| Response/package closure cannot close open remedy, defect or charge query | Existing response status plus separately versioned remedy per service request; independent Defect/Charge query routes | Mixed-state JSON/SQLite and actual isolated loopback SQL tests carry open issues through work-order completion, quality handover, financial note, return/reopen and restart |
+| Each status retains owner/date | Distinct response status_owner/status_at, remedy owner/at/opened_at/history, retained work-order/quality events and own finance-note owner/date/history | Explicit manager-only versioned service/redress recovery prevents departed owners stranding responses; history keeps old/new owner and actor/reason/time. Legacy absent original dates/identities remain Unknown; explicit current confirmation never reconstructs an old event |
+
+Current registered identities and actionable role boundaries are rechecked inside
+the existing writer transaction. Negative concurrent writers and actual audit-
+insert/recovery-read/post-COMMIT faults prove refusal and no replay on local SQL.
+Authenticated HTTP distinguishes committed-but-unconfirmed outcomes from refusal.
+Actual local browser exercises the changed manual journey, native labels, retained
+errors, keyboard submission and small/large widths with reduced motion.
+
+Full PRD AC-063/BRD AC-089 also require approved lease positions, missing-evidence
+decision holds, scope-change re-review and configured Housing/Complaints age bands.
+Those are not established by issue #88's three criteria. Age bands remain Unknown;
+no Legal position, service clock, tenant contact, real approval, Azure or paid AI
+was invented. Independent final-head/coordinator acceptance and direct human/
+screen-reader/WCAG evaluation remain distinct gates.
+
+### Departed response-owner recovery correction (2026-10-17)
+
+Coordinator review identified that a departed response owner stranded ordinary
+updates with no explicit reassignment route. The bounded correction adds
+`service_reassign` in existing records/API/panel, restricted to the two existing
+resident-workflow manager roles, with current request version, explicit service/
+redress responsibility, new eligible named owner and reason. Writer-time registry
+and rowversion checks prevent stale authority or concurrent reassignment.
+Complaint/review independence and contested-recorder exclusion still apply.
+Captured departed identities remain historical evidence, not present authority;
+missing legacy provenance stays unknown. Remedy responsibility is never reassigned
+as a side effect. Updating the response after recovery, independent closure and
+reopening preserve original histories and the separate remedy clock.
+
+Fresh correction selectors ran 145 tests: 134 passed and 11 existing skips
+(ten opt-in report SQL tests and JSON-only rollback in SQLite); actual browser
+ran within that command. Eight separate targeted actual loopback MSSQL tests
+passed without skips, including new response recovery/current-identity races/
+precommit rollback/postcommit exactly-once outcomes and retained quality,
+hazard, finance and grant guards. Full configured core/API Ruff/format/mypy
+and changed JavaScript syntax checks passed. The interrupted broader suite is
+not a pass; prior full SQL/image evidence remains historical. No new full RPI
+Review or independent acceptance is inferred. The coordinator owns final review.
+
+### Responsibility-owned response clock correction (2026-10-17)
+
+Coordinator review of correction ONE found an ambiguity on ordinary Service
+requests, where the same person may hold service and redress responsibility.
+Email equality incorrectly let a non-owning reassignment change the status clock.
+Correction TWO uses route/state responsibility instead: redress for Closed or
+Independent review, service otherwise. Only reassignment of that responsibility
+changes current status owner/date. The other responsibility preserves captured
+status owner/date exactly, including missing legacy provenance; explicit current
+assignment never fabricates an old event. Remedy and other clocks stay unchanged.
+
+Failing-first JSON/SQLite tests reproduced eight failing subcases across shared-
+person and Independent review controls. The corrected 24-subcase matrix passes
+on JSON, SQLite and actual isolated loopback MSSQL. Fresh resident core/API run:
+74 tests, 72 pass/two existing skips; nine actual MSSQL tests pass/no skips,
+including current actor/assignee rebinding, competing writers, rollback and
+truthful committed exactly-once recovery, plus quality/hazard/finance/grant guards.
+Configured core/API Ruff/format/mypy pass. No web bytes changed, so prior browser
+and fresh-guidelines receipts remain historical, not new execution claims.
+Original Review/critique unchanged; final external correction disposition remains
+the coordinator's. No third correction, full Review or self-declared acceptance.
+
+### Authorized merged-quality integration (2026-10-17)
+
+Issue #88 / PR #392 was rebased onto main
+3f544fb9cda2c51b219db2cc8368c7525bbe0c86 including quality PR #387.
+Only the append-only KB log conflicted; all upstream and resident history/routes
+remain. Source added/removed-line parity is exact across fourteen src files;
+resident web bytes and original RPI artifacts/Review/critique are unchanged.
+Shared server retains resident committed 409 and quality committed 503 outcomes;
+quality active-record selection and evidence-version staleness remain upstream.
+
+Fresh integrated tests: 499 run, 445 pass, 54 existing opt-in/JSON-only skips;
+actual owned loopback MSSQL: 38 run, 37 pass, one SQLite trace-only skip.
+This includes resident mixed closure/restart, quality replacement/identity,
+hazard-at-commit, finance/grant current actor/stale approval and pre-/post-COMMIT
+recovery/no-replay. Actual integrated resident Chromium journey also passed.
+Configured core/API Ruff/format/mypy passed. Initial external SQL transport
+harness errors were corrected without application changes; they are not
+represented as a successful first attempt.
+
+All three bounded criteria retain source/test proof, not merely completed plan
+markers. Wider lease/scope/age-band governance remains separately routed to the
+planning parent/repository owner for the next #81 backlog triage with
+Legal/Housing/Complaints approval. No independent final-head Pass, full PRD,
+human, operational, screen-reader or WCAG acceptance is claimed.
+
+### Authorized partial-progress integration (2026-10-17)
+
+PR #392 now integrates partial progress PR #390 on pinned main
+226702779e57e490cb10dc06ab014760c7d8a761. Only documentation insertions
+conflicted; exact issue88 production/test added/removed patch lines remain
+unchanged. Both report/export and resident routes survive, handoff writers retain
+upstream precise UTC events and authoritative source sequence, and response/
+remedy/quality/finance clocks remain separate. Original Review/critique and
+prior integration evidence are byte-identical, not re-reviewed.
+
+Fresh relevant combined tests:140run,138pass,two existing skips (JSON rollback
+inapplicable in SQLite, opt-in browser); full core/API Ruff/format/mypy pass. No persistence or web
+bytes changed, so prior actual SQL/browser/container evidence remains historical
+rather than repeated. Full historical/forward event capture stays with the
+separate issue102events workstream; no snapshot reconstruction, authority,
+WCAG, operational or independent final-head acceptance is inferred.

@@ -5677,3 +5677,146 @@ metadata when the knowledge base was created.
   prompt-only correction. Full core's earlier exit137 remains incomplete.
   No paid inference, web change, new deployment or operational/legal approval.
   Final-head independent acceptance remains coordinator-owned.
+
+## [2026-10-17] implementation | #88 resident commitments and separate remedy clocks
+
+* Reused resident_update, service_requests and existing resident endpoint/panel.
+  Full commitments have purpose, current named owner, timezone-aware due date
+  and supplied basis; handoffs preserve them rather than creating partial pairs.
+  Commitments are not messages or evidence of receipt/understanding.
+* Response and remedy have independent owner/date/version/history. Closing a
+  response, completing a work order, handover, financial note or case reopen/
+  return never closes another open remedy, defect or charge query. Legacy absent
+  provenance stays Unknown until explicit present-responsibility confirmation;
+  no historical owner/date or completion is fabricated.
+* Existing SQL transaction rechecks current registry, ownership, inputs/version
+  and record state. Actual owned loopback SQL negative-writer/audit/recovery
+  probes, JSON/SQLite, authenticated HTTP and real local browser support this
+  bounded criterion audit; committed acknowledgements never claim rollback.
+* Preserved all prior KB routes and exact upstream log prefix from main
+  1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c. Updated existing resident synthesis
+  and component guides, not memory, regulatory snapshots or original case.
+  Shared sqlstore/store/API overlap is declared for coordinator integration.
+  #92 held source and other worktrees were not read or imported.
+* No real resident/service/legal authority, communication, payment, paid model
+  call, new IAM/Azure/public access or private dataset use. Full PRD lease/
+  scope/age-band governance, direct human/WCAG acceptance and independent
+  final-head coordinator closure remain unestablished.
+
+## [2026-10-17] integration | #88 onto merged quality PR387
+
+* Coordinator authorized own-topic rebase from exact remote
+  a9a5f554151336f6e617fbcee35033234813c6e5 onto fetched main
+  3f544fb9cda2c51b219db2cc8368c7525bbe0c86. Sole textual conflict
+  was this log's append insertion: complete upstream byte prefix and all own
+  entries retained; all index routes and both component contracts survive.
+* Exact issue88 added/removed src patch lines across fourteen files are
+  unchanged. Auto-merged server preserves separate resident committed 409 and
+  quality committed 503 handling; resident tests retain upstream replacement
+  refusal. Quality/assistant current-active selector and evidence-version
+  staleness, hazard/stock and finance/grant hooks remain intact.
+* All seven original RPI artifacts, including original Review/critique/state,
+  are byte-identical. No new full Review or source correction. Original Review
+  Complete / Residual work remains; RV-001 wider governance routing belongs
+  to planning parent/repository owner at next #81 backlog triage, not an
+  unproven remedy criterion or fabricated Legal/Housing/Complaints approval.
+* Fresh combined installed-src tests: 499 run, 445 pass, 54 existing opt-in/
+  JSON-only skips. Actual isolated loopback MSSQL: 38 run, 37 pass, one
+  SQLite-only trace skip; original assertions retained. Actual integrated
+  resident browser journey and configured core/API Ruff/format/mypy pass.
+  First SQL transport-harness errors and their correction are recorded honestly
+  in separate integration evidence, not hidden as application source fixes.
+* No other worktree/private data, Azure writes, paid AI, resident messages,
+  independent coordinator Pass, merge, issue closure or full PRD/WCAG acceptance.
+
+## [2026-10-17] integration | #88 onto partial progress PR390
+
+* Coordinator authorized own-topic rebase from clean verified remote
+  a91f1737d036141169b5ba5381429cf3e49054cf onto freshly fetched
+  main226702779e57e490cb10dc06ab014760c7d8a761. Documentation-only
+  insertion conflicts retain complete upstream byte prefix plus all own log
+  entries, both component contracts and all index routes.
+* Exact own added/removed production/test/guide lines across fourteen src paths
+  are unchanged. Progress implementation/tests/API configuration are exact main;
+  resident/safety/quality/financial persistence guards and web bytes unchanged.
+  Auto-merged Store/server/workflows preserve report/export role/source checks,
+  precise UTC handoff writer timestamps and authoritative event sequence,
+  alongside separate resident commitments/remedies and truthful commit outcomes.
+* Fresh focused combined report/resident/handoff/quality/hazard/finance/grant
+  checks:140run,138pass,two existing skips (JSON rollback inapplicable
+  in SQLite, opt-in browser). Actual MSSQL classes were not selected.
+  Full configured core/API Ruff/format/mypy pass. No new SQL/Docker/browser
+  replay for documentation-only conflict plus exact source parity; previous
+  receipts remain historical, not promoted to fresh validation.
+* Original Review/critique and prior issue88 RPI/integration artifacts unchanged.
+  No new full Review, application correction, complete event capture, private
+  data, other worktree, Azure/paid AI, authority, independent Pass, merge,
+  issue closure or WCAG acceptance. Full capture stays with issue102events;
+  wider governance retains its separate named routing owner/next action.
+
+## [2026-10-17] integration | #88 onto setup391 main
+
+* Coordinator authorized own-topic rebase from clean exact remote
+  cfeb18598ba8ae84cb8b80c0c7623e375ae886fe onto fetched main
+  74617981b71bc3f10bd21d0b78691bc3cf36c473. Only KB log append
+  conflict; exact upstream prefix plus all own entries and all routes retained.
+* Entire src tree byte-identical to prior tested topic; exact fourteen-file
+  own added/removed patch parity. Setup391 classifier, negative tests and guide
+  byte-identical to upstream. Original Review/critique and previous issue88
+  RPI/integration evidence unchanged, no new full Review or source correction.
+* Fresh focused resident core/API:65run,63pass,two existing skips (JSON-only
+  rollback in SQLite, opt-in browser). No full SQL/Docker/browser or infra
+  replay for doc-only base conflict plus source fingerprints; prior evidence
+  remains historical. No independent Pass, cloud/private writes, authority,
+  full event capture, merge, issue closure or WCAG acceptance.
+
+### 2026-10-17: Issue88 authorized response-owner recovery correction ONE
+
+* Coordinator's Medium finding exposed departed response owners stranding update,
+  close and reopen. Existing resident records/API/panel now support explicit
+  manager-only versioned service/redress reassignment with current named assignee,
+  reason and old/new identity/actor/time history. Remedy responsibility and all
+  independent clocks remain separate; legacy absent provenance stays unknown.
+* Updated existing core/API guides, resident criterion audit and retained index
+  route. Fresh resident/browser/handoff/report selectors: 145 run, 134 pass,
+  11 existing skips; targeted actual owned loopback MSSQL: eight pass, no skips.
+  Configured core/API Ruff/format/mypy and JavaScript syntax passed.
+* Interrupted broader replay has no completed result and is not reported green.
+  Original Review/critique retained unchanged; no second full Review, operational
+  authority, messaging, cloud/private writes or WCAG acceptance. Coordinator owns
+  independent final-head acceptance; broader governance remains separately routed.
+
+### 2026-10-17: Issue88 final authorized responsibility-clock correction TWO
+
+* Coordinator f786737f identified email-collision status ownership after departed-
+  owner recovery. Status clock now follows responsibility: redress for Closed/
+  Independent review, otherwise service. Reassigning the non-owning responsibility
+  preserves status owner/date even when one person holds both roles; missing legacy
+  provenance is not fabricated. Remedy and captured history remain independent.
+* Existing core/API guides and resident synthesis/index updated. Actual failing-
+  first matrix produced eight failed subcases on JSON/SQLite; corrected matrix
+  covers 24 route/state/responsibility/legacy subcases on each backend including
+  actual MSSQL. Fresh resident core/API:74run,72pass,two existing skips; targeted
+  actual loopback MSSQL:nine pass/no skips; configured core/API Ruff/format/mypy pass.
+* No web bytes changed or fresh browser/JS execution claimed. Original Review/
+  critique and correction ONE evidence retained unchanged; final independent
+  disposition remains with coordinator. No new full Review, third correction,
+  authority, communications, private/cloud writes, merge or issue closure.
+
+### 2026-10-17: Issue88 authorized sensor-main integration
+
+* Own PR392 rebased onto committed main943febc2 (sensor PR393) with explicit
+  expected-topic-head authorization. Sole textual conflict was KB log append;
+  complete sensor prefix followed by all resident entries retained, with boundary
+  newline repaired after strict suffix proof. All index routes retained.
+* Exact resident production/test added/removed patch parity across fourteen src
+  paths; shared Store/core guide also retain exact sensor delta. Every nonoverlap
+  sensor src file and all prior resident RPI Review/critique/correction artifacts
+  unchanged. No third defect correction, new full Review or unmerged #394 source.
+* Fresh combined resident/sensor/status/document/chat/map selectors:240run237pass/
+  three existing skips; agents94pass; explicit API boundary selectors100pass.
+  Counts overlap, not unique totals. Core/agents/API Ruff/format/mypy pass.
+* No persistence/web semantics conflict, so no repeated SQL/browser/image run;
+  prior nine actual resident MSSQL and sensor SQL receipts remain historical.
+  No cloud/private/paid-model/contact/authority writes, merge, issue closure,
+  independent self-Pass or WCAG acceptance. Coordinator owns final disposition.
