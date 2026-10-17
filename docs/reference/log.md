@@ -5503,3 +5503,68 @@ metadata when the knowledge base was created.
   passed. Configured Ruff/format/mypy pass. No new MSSQL/browser replay for
   consumer-only change; prior actual SQL/browser evidence remains historical.
   External final-head/artifact gate remains pending, no self-regraded Pass.
+
+## [2026-10-17] engineering | Historical progress controls (#102)
+
+* Added a read-only progress mode to existing stats and CSV paths, reusing
+  authorized current-record cohort filters and preserving default responses.
+  Exact structured return/reopen/handoff events supply only observed clocks;
+  missing, legacy, malformed and contradictory history remains unresolved.
+  No narrative/snapshot reconstruction or audit/event rewriting.
+* Declared EXA-009 scenarios show independent pools, assumptions, sensitivity
+  uncertainty and data limits. Forecast is not a target, approved plan,
+  professional decision, promise, accepted outcome or validated resource plan.
+  No new AI/provider or inference of AI absence; approvals/consent unchanged.
+* Shared report/export contract retains UTC as-of/period, definitions, sources,
+  current cohort/filter impact, denominators and exceptions without raw private
+  actor/source/note/commercial fields. Updated component guides, programme
+  synthesis and index; all upstream routing and log entries retained.
+* Local fictional JSON/SQLite and actual uniquely named loopback Docker MSSQL
+  checks plus non-root API image behavior provide bounded engineering evidence.
+  Complete forward-event capture, ledger anchoring, verified operational
+  capacity, human/WCAG/Azure/AI acceptance and coordinator closure remain open.
+  PRD/BRD FR-022/023/024 numbering contradiction is disclosed, not silently
+  resolved. No #91/#92 domain edits or other-worktree/private-data reads.
+
+## [2026-10-17] correction ONE | Historical progress malformed inputs (#102)
+
+* Retained the original Complete / Defects found Review unchanged. Failing-first
+  tests reproduced blank query fallback and UTC conversion overflow. One
+  bounded correction now rejects empty/repeated report fields without changing
+  default stats/CSV and surfaces unrepresentable event times as unknown.
+* Final focused 88 and actual task-owned loopback MSSQL eight tests passed;
+  core/API lint/format/mypy passed. Corrected non-root image checked exact
+  installed source hashes, hardening, authenticated report/export parity,
+  clocks/scenario and both defects' HTTP 400 paths.
+* No second full Review, Correction TWO, independent coordinator Pass, merge
+  or full historical/operational approval. Own local containers stopped and
+  retained without deletion; complete event capture/resources remain open.
+
+## [2026-10-17] correction TWO | Mixed-precision handoff history (#102)
+
+* Coordinator's independent exact-28227fa8 Revise / Medium identified a reachable
+  precise offer/accept surrounding minute-truncated receipt. Failing-first
+  actual writer/SQLite and pure probes reproduced version reordering and false
+  chain/date contradictions. Original full RPI Review and correction ONE remain
+  intact; no second full Review or independent self-Pass.
+* Preserve append/version lifecycle sequence and exact source locators. Known
+  legacy minute spelling or corroborated second-zero expansion supplies time
+  bounds, never reconstructed seconds. Affected durations and ambiguous
+  as-of/start membership remain explicitly unresolved. Precise backward dates,
+  invalid versions, identities and lifecycle errors remain contradictions.
+  Only prospective handoff timestamps use precise UTC via the existing helper;
+  other clocks and all persisted history/audit remain unchanged.
+* Authorized own-topic integration onto main 3f544fb9 retains quality #387
+  active-record selection, current evidence-version staleness, post-COMMIT
+  guards and all finance/grant/stock/procurement hooks. All upstream routes and
+  the entire upstream log byte prefix are retained. No other worktree read.
+* Final focused 76 pass; combined 547 run / 494 pass / 53 explicit existing
+  opt-in or backend-specific skips; ten current actual loopback MSSQL cases
+  pass. Core/API configured lint/format/types and final rebuilt hardened
+  non-root API/source hashes/legacy-prospective HTTP/export checks pass.
+  These are targeted engineering results, not coordinator acceptance.
+* First/final forward-stage clocks and accepted-handover actual events remain
+  incomplete, so the first historical criterion is not fully proved.
+  Prospective complete capture is buildable separate engineering follow-up,
+  not a human blocker; forecasts still lack verified operational inputs.
+  No browser/WCAG, human, Azure, real AI or outcome acceptance is claimed.

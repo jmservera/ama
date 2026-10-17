@@ -24,8 +24,8 @@ def _today():
     return date.today().isoformat()
 
 
-def _now():
-    return datetime.now(UTC).isoformat(timespec="minutes")
+def _now(timespec="minutes"):
+    return datetime.now(UTC).isoformat(timespec=timespec)
 
 
 def _due(value):
@@ -188,7 +188,7 @@ class WorkflowMixin:
             resident_update = previous_update or dict(owner=update_owner["name"] if update_owner else None,
                                                       due_at=update_due)
             c["handoff"] = dict(state=HANDOFF_OPEN, from_code=c["owner_code"], from_name=c["owner"], to_code=to["code"], to_name=to["name"],
-                                to_role=to["role"], offered_by=user["name"], offered_at=_now(), note=(note or "")[:300],
+                                to_role=to["role"], offered_by=user["name"], offered_at=event["at"], note=(note or "")[:300],
                                 answered_at=None, answer_note="", due_at=due_at, urgency=urgency,
                                 next_action=controls.text(metadata.get("next_action"), "", required=False) or None,
                                 resident_update_owner=resident_update.get("owner"),
@@ -214,7 +214,7 @@ class WorkflowMixin:
 
     def _handoff_event(self, c, user):
         events = c.setdefault("handoff_history", [])
-        events.append(dict(handoff_view(c), version=len(events) + 1, at=_now(),
+        events.append(dict(handoff_view(c), version=len(events) + 1, at=_now("microseconds"),
                            by=user["email"], authority=user["role"]))
 
     def receive_handoff(self, user, case_id):
@@ -223,7 +223,7 @@ class WorkflowMixin:
             h = self._open_offer(c, user, "recipient")
             if h["state"] != HANDOFF_OPEN:
                 raise ValueError("Only a sent handoff can be marked received.")
-            h.update(state="Received", received_at=_now(), received_by=user["email"])
+            h.update(state="Received", received_at=_now("microseconds"), received_by=user["email"])
             self._handoff_event(c, user)
             self.audit(user["email"], "handoff_received", case_id, "Receipt recorded; ownership unchanged")
             self.save()
@@ -233,7 +233,7 @@ class WorkflowMixin:
             h = self._open_offer(c, user, "recipient")
             old_handoff, old_owner = deepcopy(h), change_provenance.ownership(c)
             c.update(owner=user["name"], owner_code=user["code"], owner_role=user["role"], waiting_on=user["name"])
-            h.update(state="Accepted", answered_at=_now())
+            h.update(state="Accepted", answered_at=event["at"])
             c.setdefault("handoff_log", []).append(dict(h))
             event.update(handoff_view(c), by=user["email"], authority=user["role"])
             event["changes"] = dict(
@@ -245,7 +245,7 @@ class WorkflowMixin:
         with self.lock:
             c = self._case(case_id)
             h = self._open_offer(c, user, "recipient")
-            h.update(state="Declined", answered_at=_now(), answer_note=reason)
+            h.update(state="Declined", answered_at=_now("microseconds"), answer_note=reason)
             c.setdefault("handoff_log", []).append(dict(h))
             self._handoff_event(c, user)
             self.audit(user["email"], "handoff_declined", case_id, reason)
@@ -255,7 +255,7 @@ class WorkflowMixin:
         with self.lock:
             c = self._case(case_id)
             h = self._open_offer(c, user, "offerer")
-            h.update(state="Withdrawn", answered_at=_now())
+            h.update(state="Withdrawn", answered_at=_now("microseconds"))
             c.setdefault("handoff_log", []).append(dict(h))
             self._handoff_event(c, user)
             self.audit(user["email"], "handoff_withdrawn", case_id, f"offer to {h['to_name']}")
@@ -271,7 +271,7 @@ class WorkflowMixin:
             h = self._open_offer(c, user, "offerer")
             if h["state"] == "Escalated":
                 raise ValueError("This handoff has already been escalated.")
-            h.update(state="Escalated", escalated_at=_now(), escalation_owner=to["name"],
+            h.update(state="Escalated", escalated_at=_now("microseconds"), escalation_owner=to["name"],
                      escalation_owner_code=to["code"], answer_note=reason)
             self._handoff_event(c, user)
             self.audit(user["email"], "handoff_escalated", case_id, f"to {to['code']}: {reason}")
@@ -287,7 +287,7 @@ class WorkflowMixin:
                 raise ValueError("Accept the handoff before completing it.")
             if h["to_code"] != user["code"] or c["owner_code"] != user["code"]:
                 raise PermissionError("Only the accepting case owner can complete this handoff.")
-            h.update(state="Completed", completed_at=_now(), completion_note=note)
+            h.update(state="Completed", completed_at=_now("microseconds"), completion_note=note)
             self._handoff_event(c, user)
             self.audit(user["email"], "handoff_completed", case_id, note)
             self.save()

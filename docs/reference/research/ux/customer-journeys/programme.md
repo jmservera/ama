@@ -237,6 +237,69 @@ no model call, quality approval authority or human competence is inferred.
 The coordinator's original external Revise / Medium disposition is retained
 separately from implementation closure; no new full Review or self-Pass.
 
+## Historical progress engineering boundary (2026-10-17, #102)
+
+The existing [stats/CSV report mode](../../../../../src/api/README.md#historical-progress-report-and-export-102)
+now exposes a shared versioned progress evidence pack without changing existing
+screens or default current-state charts. The
+[core contract](../../../../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102)
+derives observed intervals only from exact structured return/reopen and
+handoff events with aware timestamps and versions. Receipt is not acceptance;
+reopening is not completion. Paused stage intervals do not merge independent
+resident, safety, technical, quality or financial states.
+
+This is a bounded engineering continuation, not fieldwork or operational audit
+acceptance. Historical forward progression is incomplete; unknown entry/exit,
+unmappable records and contradictions remain null/unresolved. Narrative,
+today's stage/closure and old naive-time prose audit never supply missing
+clocks. Source locators are inspectable while identities/free text and
+commercial evidence remain withheld. Audit integrity is checked separately;
+structured history alone does not prove ledger anchoring or complete capture.
+Current authorized filters select the cohort now; they do not retrospectively
+establish membership. JSON and export retain the same UTC as-of, period,
+selected/baseline/excluded denominators, definitions and unresolved exceptions.
+
+Forecast is a deterministic declared scenario, not a promise, approved plan,
+professional judgement or real accepted handover. The
+[EXA-009 assumption](../../../../case_study_48_addendum.md#numerical-targets-and-attribution)
+supplies independent installation/QA pools and the capacity/duration
+sensitivities. Readiness, actual committed capacity, dependency releases,
+source freshness and predictive calibration remain unverified. No AI/provider
+call is added; this neither validates AI nor claims its programme-wide absence.
+Human approval, resident choice, safety, legal and Finance rights are unchanged.
+
+The original single Review found two malformed-input defects, retained as an
+adverse outcome. Correction ONE reproduced and fixed blank query fallback and
+UTC-range overflow; 88 final focused regressions and eight actual local MSSQL
+checks passed, as did the corrected non-root image's source-hash and HTTP
+behavior checks. Parent correction evidence does not establish independent
+coordinator closure or convert the original Review to a Pass.
+
+PRD FR-022/023/024 govern these history/forecast/export behaviors. The current
+BRD FR-022/023/024 instead describe procurement/grants; that numbering mismatch
+is retained explicitly rather than changing those domains. BG-011 comparisons,
+approved measurement protocol, attribution and real outcome acceptance remain
+separate. Shared API/Store and documentation integration with #91/#92 belongs
+to the coordinator; no other worktree or private dataset was read.
+
+Coordinator's exact-28227fa8 independent Revise / Medium probe found a real
+precision mismatch in those handoffs: offer/accept provenance uses precise
+UTC timestamps but receipt/escalation/decline/withdraw/complete previously
+used minute-truncated `_now()`. Correction TWO keeps authoritative append
+versions rather than falsely reordering receipt before offer. Known minute
+intervals yield explicit duration/as-of unknowns, not fabricated second-zero
+events or false lifecycle contradictions. Precise impossible dates and invalid
+versions/identities remain errors. Only prospective handoff timestamps change;
+stored history is not repaired. Integration onto main 3f544fb9 retains merged
+quality #387 active-record/source-staleness and post-COMMIT safeguards.
+
+This does not prove the first historical criterion end to end: ordinary forward
+stage entry/exit and accepted-handover outcome events are still not captured
+completely. Adding source-authorized prospective capture is buildable follow-up
+engineering, not a human blocker or license to reconstruct the past. Operational
+forecast resources remain unverified. Neither correction evidence nor local
+combined checks replace independent final-head acceptance.
+
 ## Next steps
 
 No user action required. Return to cross-role synthesis; preserve unknowns.

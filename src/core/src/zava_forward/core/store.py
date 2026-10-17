@@ -564,6 +564,32 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             return insights.stats(list(self.cases.values()), self.data["staff"])
 
+    def progress_report(self, user, *, as_of, start=None, view="mine", filters=None, scenario=None):
+        from . import progress
+        if user.get("role") not in projection.STAFF_ROLES:
+            raise PermissionError("Only authorised staff can read progress evidence.")
+        if view not in ("mine", "all", "closed"):
+            raise ValueError("Choose mine, all or closed for the cohort.")
+        filters = filters or {}
+        if set(filters) - {"stage", "area", "wave", "owner", "contractor", "flag", "queue"}:
+            raise ValueError("Unknown cohort filter.")
+        if filters.get("flag") not in (None, "", "hazard", "support", "long", "nodecision", "fundingprog", "funding"):
+            raise ValueError("Unknown cohort flag.")
+        with self.lock:
+            baseline = self._filtered(user, view, "", {})
+            selected = self._filtered(user, view, "", filters)
+            try:
+                audit_intact = self.verify_ledger()["intact"]
+            except (OSError, ValueError, TypeError, KeyError, AttributeError):
+                logging.getLogger(__name__).exception("Progress report audit verification unavailable")
+                audit_intact = None
+            cohort = dict(view=view, filters=dict(filters), selection_basis="Current authorized records",
+                          baseline_cases=len(baseline), selected_cases=len(selected),
+                          excluded_by_filters=len(baseline) - len(selected),
+                          case_ids=sorted(c["id"] for c in selected))
+            return progress.report(selected, as_of=as_of, start=start, cohort=cohort,
+                                   scenario=scenario, audit_intact=audit_intact)
+
     def map_points(self, f):
         with self.lock:
             return insights.map_points(list(self.cases.values()), f)

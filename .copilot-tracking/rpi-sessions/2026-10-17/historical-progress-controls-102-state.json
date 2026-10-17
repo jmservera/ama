@@ -1,0 +1,86 @@
+{
+  "task_id": "102",
+  "task_slug": "historical-progress-controls-102",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "completion_scope": "P03-T02/T03 correction TWO engineering and publication only; no all-criteria or independent coordinator acceptance",
+  "acceptance_status": "First historical criterion remains partial: missing forward-stage/accepted-handover event coverage; forecasts lack verified operational inputs; final-head acceptance pending",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/historical-progress-controls-102-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/historical-progress-controls-102-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/historical-progress-controls-102-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/historical-progress-controls-102-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/historical-progress-controls-102-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/historical-progress-controls-102-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full ordered RPI loop and publish a topic PR",
+      "status": "confirmed",
+      "evidence": "Explicit user request in this session; exact branch/base supplied"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "Research C1-C11, ordered Wider/Deeper/Contrarian cycle; source numbering contradiction and shared API/README overlap explicit"
+    },
+    {
+      "decision": "Single final-candidate critique executed; correction-required verdict; PC-102-001/002/003 applied directly",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/historical-progress-controls-102-plan-critique.md; plan and details implementation-ready"
+    },
+    {
+      "decision": "P01/P02 implemented; focused 24 and actual MSSQL 6 pass; static gates pass",
+      "status": "recorded",
+      "evidence": "Changes P01/P02; existing handoff cwd import failure corrected with 6 passing tests; image smoke requires final rebuild"
+    },
+    {
+      "decision": "Original full Review executed once; outcome Defects found; RV-001/RV-002 routed to user-authorized same-session correction ONE",
+      "status": "original adverse outcome retained",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/historical-progress-controls-102-review.md sha256 0b33722d868a9e3165210b0720e5c467cbe8baa2066e637276dc66f45e75050e"
+    },
+    {
+      "decision": "Correction ONE for RV-001/RV-002 completed with failing-first evidence; no second Review or coordinator Pass",
+      "status": "parent targeted checks passed",
+      "evidence": "88 final focused tests, 8 actual loopback MSSQL tests, configured core/API ruff/format/mypy, corrected image e035732d04afafa38063af41df54916443ab8809873a09f0fad72011404859dc with source hashes and actual HTTP refusals"
+    },
+    {
+      "decision": "Published own-only implementation and dated RPI evidence in main-targeted PR #390; stop at user's clean-pushed-PR boundary",
+      "status": "delivered; independent coordinator acceptance pending",
+      "evidence": "https://github.com/jmservera/ama/pull/390; implementation bfdcd2289d1f430653e94ae6dde1394b50895880; final PR head is authoritative after publication-metadata push; session resume 047eef1a-9e80-4725-946a-20da710900a6"
+    },
+    {
+      "decision": "Coordinator exact-28227fa8 Revise / Medium authorizes correction TWO and own-branch rebase onto fetched main3f544fb9; explicit old-head lease only",
+      "status": "correction TWO delivered; independent exact-final-head acceptance pending; no second Review or self-Pass",
+      "evidence": "Failing-first actual writer sequence inversion reproduced; final 76 focused passes, 547 combined run/494 pass/53 skips, ten current actual loopback MSSQL passes; configured core/API static gates; final hardened image cf70fe7f source hashes and HTTP; correction commit 99197b7298791cbeffe2cd32a208f572b3bad861 published with explicit old-head lease; PR #390 final head is authoritative after normal metadata push"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Stop at requested clean published PR #390 head; coordinator owns final-head acceptance. No third correction, second full Review or self-Pass; prospective capture is distinct engineering follow-up, not human blocker"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator integration and independent final-head acceptance",
+      "rationale": "Immediate delivery gate; shared API/Store/docs overlap with #91/#92, original adverse Review retained",
+      "evidence": "Research C8 and correction TWO source investigation; original Review and both targeted corrections; coordinator exact-28227fa8 Revise / Medium"
+    },
+    {
+      "rank": 2,
+      "task": "Implement source-authorized prospective complete forward-event capture",
+      "rationale": "Buildable separate engineering follow-up with Programme/Data source-backed event dictionary; missing existing clocks are unknown, not a human blocker or fabricated past times",
+      "evidence": "Research C1-C4; partial history data limits and unknown entry/exit clocks"
+    },
+    {
+      "rank": 3,
+      "task": "Validate operational forecast resources, dependencies and calibration",
+      "rationale": "Useful only with approved Programme/Finance/QA evidence; declared scenario cannot establish readiness or commitments",
+      "evidence": "Research C7; Forecast data limits, EXA-009 declared assumptions"
+    }
+  ]
+}

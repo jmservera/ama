@@ -6,6 +6,79 @@ ms.date: 2026-10-17
 ms.topic: reference
 ---
 
+## Historical progress report and export (#102)
+
+Existing staff-only report paths support explicit `report=progress`:
+
+```text
+GET /api/stats?report=progress&as_of=2026-10-10T12:00:00Z&view=all&ready=2
+GET /api/cases.csv?report=progress&as_of=2026-10-10T12:00:00Z&view=all&ready=2
+```
+
+Use URL encoding for offset timestamps (`+` becomes `%2B`). `as_of` is required,
+timezone-aware and not future. Optional `start` must be timezone-aware and no
+later than `as_of`. Both boundaries are inclusive for events; observed interval
+clocks are clipped to the requested period. Supported `view` values are
+`mine` (default), `all`, and manager-only `closed`. Existing stage/area/wave/
+owner/contractor/flag/queue source filters are reused; their membership is
+explicitly current-record selection, not historical reconstruction.
+Unknown/empty/repeated parameters or invalid assumptions return 400. Contractor/
+unknown roles are denied; direct Store calls enforce the same staff boundary.
+
+The [core report contract](../core/README.md#historical-progress-evidence-and-declared-forecasts-102)
+defines source mapping, partial/unknown history, independent handoff clocks
+and forecast limitations. Optional `ready` declares a hypothetical ready count,
+not actual consent or technical readiness. Optional positive `capacity`,
+`duration`, `weeks` default to 2/1/4. Without declared `ready`, a requested
+scenario is refused; with no scenario parameters Forecast is unavailable.
+No model/provider is called. Forecasts cannot release work or approve outcomes.
+
+JSON and the `progress.csv` attachment serialize the same `progress/v1` report,
+including definitions, source locators, exact as-of/cohort/denominators,
+unresolved exceptions, assumptions, sensitivities and Not reviewed approval.
+CSV uses UTF-8, LF, standard quoting and fixed `section,value` rows; each value
+is a compact sorted-key JSON cell. Parsing those cells reconstructs the exact
+JSON report. Case IDs and events have stable ordering; repeat inputs produce
+identical CSV. Raw identities, notes, resident fields and supplied source/
+commercial evidence are not included. Empty cohorts/history remain visibly
+unresolved. Default `/api/stats` and `/api/cases.csv` responses are unchanged.
+No existing screen was redesigned or wired to this optional mode.
+
+After pip editable core/agents/API installation, run from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests ../../.venv/bin/python -m unittest \
+  test_progress_report_api.ProgressApi test_progress_report_api.JsonProgressApi -q
+```
+
+`ZF_PROGRESS_MSSQL=1` selects `test_progress_report_api.MssqlProgressApi`.
+It refuses non-loopback SQL servers, creates UUID-named `zf_progress102_*`
+databases and deliberately retains them: do not target shared/live systems.
+Configure existing `ZF_SQL_*` privately for a uniquely named local Docker SQL
+Server. SQLite and actual MSSQL exercise reload, external-writer refresh,
+report/CSV parity and unchanged audit. Image checks run the authenticated
+local report as UID/GID 10001 with read-only root and reduced capabilities.
+These are engineering checks, not browser, WCAG, human, operational, AI or
+Azure acceptance. Full forward-event coverage and verified capacity remain
+separate evidence prerequisites.
+The one original Review found blank-query and UTC-range handling defects;
+correction ONE adds explicit refusals and failing-first regressions. Final
+focused checks ran 88 tests plus eight actual loopback MSSQL tests, and the
+corrected non-root image exercised exact installed source hashes and HTTP
+report/export behavior. The original adverse Review is retained; these
+targeted checks are not a second full Review or independent coordinator Pass.
+
+Coordinator correction TWO addresses a reachable mixed-precision handoff:
+precise offer/accept events surround legacy minute-truncated receipt events.
+Reports preserve source versions and valid lifecycle sequence, expose precision
+and cutoff unknowns, and never manufacture a wait duration or assert a
+boundary-ambiguous event occurred before as-of. Precisely backward or otherwise
+invalid history remains contradictory. New handoff writes preserve UTC
+microseconds; old history is untouched. JSON/CSV retain identical definitions,
+event order, as-of and denominators. The independent exact-28227fa8
+Revise / Medium disposition and original adverse Review remain retained;
+targeted correction evidence does not self-award acceptance.
+
 ## Grant and application records (#95)
 
 Existing `POST /api/cases/{case_id}/grant` and `/funding` routes now use
