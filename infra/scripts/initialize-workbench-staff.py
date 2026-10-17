@@ -7,6 +7,7 @@ import stat
 import subprocess
 import time
 import uuid
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -141,6 +142,13 @@ def reconcile_roles(directory: Directory, resource: str, roles: list[dict],
 
 def prepare_roster(db: Any, wanted: list[dict], directory: Directory) -> list[dict]:
     """Resolve live people while preserving every existing position and bound identity."""
+    return prepare_sql_roster(db, wanted, lambda uid: directory.request(
+        f"users/{uid}?$select=id,displayName,userPrincipalName,accountEnabled,userType"))
+
+
+def prepare_sql_roster(db: Any, wanted: list[dict],
+                       resolve_person: Callable[[str], dict]) -> list[dict]:
+    """Prepare protected SQL positions from operator-resolved people without Graph access."""
     current = {json.loads(body)["code"]: json.loads(body) for _, body in
                db.execute("SELECT email, body FROM staff").fetchall()}
     if not set(current).issubset({r["code"] for r in wanted}):
@@ -159,8 +167,7 @@ def prepare_roster(db: Any, wanted: list[dict], directory: Directory) -> list[di
         requested_role = spec.get("role")
         if requested_role is not None and labels.get(requested_role, requested_role) != old["role"]:
             raise ValueError("Roster role must match the existing approved workbench position.")
-        identity = person(directory.request(
-            f"users/{spec['userId']}?$select=id,displayName,userPrincipalName,accountEnabled,userType"))
+        identity = person(resolve_person(spec["userId"]))
         if identity["oid"] != spec["userId"]:
             raise ValueError("Graph returned a different requested person.")
         if old.get("oid") and old["oid"].lower() != identity["oid"]:
@@ -227,12 +234,13 @@ def install_roster(db: Any, roster: list[dict], *, apply: bool) -> dict[str, int
         raise
 
 
-def restart_api(group: str, app: str) -> None:
+def restart_api(group: str, app: str, *, call: Any = None) -> None:
     """Converge startup-cached staff on every serving revision, even after SQL no-op."""
-    revisions = azure(["containerapp", "revision", "list", "-g", group, "-n", app])
-    traffic = azure(["containerapp", "show", "-g", group, "-n", app,
+    call = call or azure
+    revisions = call(["containerapp", "revision", "list", "-g", group, "-n", app])
+    traffic = call(["containerapp", "show", "-g", group, "-n", app,
                      "--query", "properties.configuration.ingress.traffic"])
-    latest = azure(["containerapp", "show", "-g", group, "-n", app,
+    latest = call(["containerapp", "show", "-g", group, "-n", app,
                     "--query", "properties.latestReadyRevisionName"])
     serving = {t.get("revisionName") or latest for t in traffic if t.get("weight", 0) > 0}
     if not serving or not serving.issubset({r["name"] for r in revisions}):
@@ -241,10 +249,10 @@ def restart_api(group: str, app: str) -> None:
         name = revision["name"]
         if name not in serving:
             continue
-        before = {r["name"] for r in azure(["containerapp", "replica", "list", "-g", group, "-n", app, "--revision", name])}
-        azure(["containerapp", "revision", "restart", "-g", group, "-n", app, "--revision", name])
+        before = {r["name"] for r in call(["containerapp", "replica", "list", "-g", group, "-n", app, "--revision", name])}
+        call(["containerapp", "revision", "restart", "-g", group, "-n", app, "--revision", name])
         for attempt in range(60):
-            replicas = azure(["containerapp", "replica", "list", "-g", group, "-n", app, "--revision", name])
+            replicas = call(["containerapp", "replica", "list", "-g", group, "-n", app, "--revision", name])
             if replicas and all(r["name"] not in before and all(c.get("ready") is True for c in r["properties"]["containers"])
                                 for r in replicas):
                 break

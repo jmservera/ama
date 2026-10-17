@@ -190,12 +190,15 @@ jobs:
           REQUIRE_AZ_BICEP: "1"
         run: |
           pip install 'PyYAML==6.0.3'
+          pip install --require-hashes -r src/api/requirements.txt
           python -m unittest discover -s infra/tests -v
           pip install 'ruff==0.17.1'
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
           ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/scripts/pipeline.py infra/tests/test_pipeline.py
           ruff format --isolated --line-length 100 --check infra/scripts/pipeline.py infra/tests/test_pipeline.py
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/tests/test_staff_azure.py
+          ruff format --isolated --line-length 100 --check infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/tests/test_staff_azure.py
       - name: Check container tooling
         run: |
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 src/check-container.py infra/tests/test_container_contract.py
@@ -203,6 +206,7 @@ jobs:
           pip install 'mypy==2.4.0'
           mypy --strict src/check-container.py
           mypy --strict infra/scripts/pipeline.py
+          mypy --follow-imports=silent --ignore-missing-imports infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py
 
   no-working-data:
     name: src-no-working-data

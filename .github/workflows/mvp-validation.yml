@@ -42,6 +42,7 @@ jobs:
           REQUIRE_AZ_BICEP: "1"
         run: |
           pip install 'PyYAML==6.0.3'
+          pip install --require-hashes -r src/api/requirements.txt
           python -m unittest discover -s infra/tests -v
       - name: Build and lint infrastructure
         run: |

@@ -1,0 +1,110 @@
+{
+  "task_id": "360-run-in-azure",
+  "task_slug": "run-in-azure",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/run-in-azure-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/run-in-azure-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/run-in-azure-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-16/run-in-azure-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/run-in-azure-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "2026-10-17 P04: Research reused/Ready; Plan verification Complete/Ready, existing critique reused without new scope; rebase onto c9ba95f complete. Only index/log conflicts; upstream #176 recovery/#175 and branch #360 preservation verified byte-for-byte. Fresh isolated pip validation: staff 21, pipeline 28, full infra 307 zero skips; exact Ruff/format/mypy and local Bicep passed.",
+      "status": "local work complete; publication prepared",
+      "evidence": ".copilot-tracking/changes/2026-10-16/run-in-azure-changes.md"
+    },
+    {
+      "decision": "P04 Review executed once, Complete; outcome Residual work solely for unchanged RV-001/RV-002/RV-003. No new resolution defect. Stop after single explicit-lease branch push and PR update; no automatic session or follow-up, no tracking-only repush. Final publication receipt is PR #370/final response, not a future commit claim.",
+      "status": "review complete; remote publication pending at evidence commit",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. User explicitly requests all four phase deliverables and implementation in this task.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-16/run-in-azure-research.md"
+    },
+    {
+      "decision": "One critique executed, verdict Revise; PC-001 through PC-008 incorporated directly. Final local validation: 304 infra and 32 loopback auth tests, Ruff, scoped mypy and offline Bicep passed.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-16/run-in-azure-changes.md"
+    },
+    {
+      "decision": "One Review executed directly. Execution Complete; outcome Residual work. No known source-blocking defect; live deployment/acceptance and operational constraints remain explicit.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+    },
+    {
+      "decision": "Implementation commit 37af66e pushed; PR #370 opened against main. No Azure execution, merge or issue checkbox edits.",
+      "status": "published",
+      "evidence": "https://github.com/jmservera/ama/pull/370"
+    },
+    {
+      "decision": "Correction cycle 1 Research executed Complete/Ready; Plan Complete/Ready; one correction critique executed with PC-009 rejected because /tmp works in parent and is explicitly required.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-16/run-in-azure-plan.md"
+    },
+    {
+      "decision": "Correction P03-T01/T02 implemented: both infra workflows install existing hashed runtime lock before discovery. Fresh /tmp pip venv reproduces 14 failures/four errors, then passes 307 infra tests without skips, existing Ruff/format/mypy/Bicep and seven context/timeout negative controls plus six workflow mutation subcases.",
+      "status": "validated offline",
+      "evidence": ".copilot-tracking/changes/2026-10-16/run-in-azure-changes.md"
+    },
+    {
+      "decision": "Correction cycle 1 Review executed once, Complete; outcome Residual work. No source-blocking defect identified; RV-001/RV-002/RV-003 remain open. Docker context mutation granularity is explicitly limited, not image-build proof.",
+      "status": "recorded separately from critique",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+    },
+    {
+      "decision": "Correction source 6976ae9649de291409c771986b818b83e0ebc8ae committed/pushed normally on feat/run-in-azure-360; PR #370 updated with Refs #360 and read back at that head. Full infra rerun at committed source: 307 passed, zero skips. Final receipt is tracking-only; final publication SHA is reported in PR and final response.",
+      "status": "published; all four requested RPI phases complete",
+      "evidence": "https://github.com/jmservera/ama/pull/370"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Live acceptance blocked on authorized private image publication/digest and API-only role activation; no deployment performed.",
+      "resolution": "Separate owner-authorized deployment follow-up only."
+    },
+    {
+      "id": "RV-002",
+      "summary": "Actual tenant/mailbox authority, private job/log/SQL/cleanup/restart/fresh-replica and browser/human acceptance remain unproved.",
+      "resolution": "Separate authorized operator validation after RV-001."
+    },
+    {
+      "id": "RV-003",
+      "summary": "Cross-host serialization and hard-kill cleanup remain manual operational boundaries.",
+      "resolution": "Separate authorized serialized-window/recovery rehearsal; no new cloud action here."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Rebase Review Complete, outcome Residual work; no source defect or ambiguity. Complete local evidence closeout, publish this branch once with explicit d050003 lease and update PR #370 as Refs #360; final SHA/publication receipts belong in PR and final response. Stop without tracking-only repush or automatic follow-up."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Authorized private image build and API-only restart-role deployment in ama",
+      "rationale": "Required before the offline implementation can run; removes the immediate image/authority prerequisites without network changes.",
+      "evidence": "RV-001; infra/README.md"
+    },
+    {
+      "rank": 2,
+      "task": "Authorized private-job, cleanup, SQL/restart and browser acceptance",
+      "rationale": "Depends on deployed assets and supplies the live evidence that local fakes cannot prove.",
+      "evidence": "RV-002; docs/architecture/cutover-evidence-pack.md"
+    },
+    {
+      "rank": 3,
+      "task": "Rehearse serialized operator window and hard-interruption recovery",
+      "rationale": "Operational hardening after the functional path; avoids inventing an enforced cross-host mutex or guaranteed finally execution.",
+      "evidence": "RV-003; infra/README.md"
+    }
+  ]
+}

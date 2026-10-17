@@ -286,9 +286,9 @@ build the proof runner from the narrow `infra/` context:
 
 ```bash
 az acr run -g ama -r <registry> -f acr-cutover.yaml --timeout 1800 src
-az acr build -g ama -r <registry> -f infra/cutover-proof.Dockerfile \
+(cd infra && az acr build -g ama -r <registry> -f cutover-proof.Dockerfile \
   --build-arg API_IMAGE=<registry-server>/zava-forward-api@sha256:<digest> \
-  -t zava-forward-cutover-proof:<unique-tag> infra
+  -t zava-forward-cutover-proof:<unique-tag> .)
 ```
 
 The proof image inherits the installed packages and non-root user of the API
@@ -879,14 +879,18 @@ packages first, preferably in a disposable virtual environment (pip only).
 Source CI runs the gates within the existing `namespace` / `src-namespace` job
 in `.github/workflows/src-ci.yml`, including on `infra/**` changes. The legacy
 `.github/workflows/mvp-validation.yml` also runs full infra discovery. Both
-infra-test steps install the test-only `PyYAML==6.0.3` pin before discovery;
-it is not a production package dependency. All existing job/check names remain
+infra-test steps install the test-only `PyYAML==6.0.3` pin and the hashed
+operator/runtime dependencies from `src/api/requirements.txt` before discovery.
+The latter supplies real cryptography for encrypted staff-job transport tests;
+do not rely on incidental transitive dependencies. PyYAML is not a production
+package dependency. All existing job/check names remain
 unchanged, following the #321 cut-over decision. The workflow regression tests
 reject missing, unpinned or late installation without skipping pipeline controls.
 
 ```bash
 python3 -m pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
 python3 -m pip install 'PyYAML==6.0.3'
+python3 -m pip install --require-hashes -r src/api/requirements.txt
 az bicep version
 for file in infra/*.bicep infra/modules/*.bicep; do
   az bicep build --file "$file" --stdout > /dev/null || exit 1
@@ -899,12 +903,15 @@ ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.p
 ```
 
 To reproduce the test dependency boundary in a fresh venv, install only
-`pip install -e src/core -e src/agents -e src/api`, then run
+`pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`,
+then install `PyYAML==6.0.3` and run
 `python -m unittest discover -s infra/tests -q`. Without the explicit test
-prerequisite, discovery fails with `ModuleNotFoundError: No module named 'yaml'`.
-Install `python -m pip install 'PyYAML==6.0.3'` in that same venv and rerun
-the identical discovery command. This is intentional test setup, not a reason
-to add PyYAML to the application packages.
+prerequisites, missing PyYAML prevents pipeline test imports and missing
+cryptography blocks staff-job tests before lifecycle/cleanup assertions.
+Install `python -m pip install --require-hashes -r src/api/requirements.txt`
+in that same venv and rerun the identical discovery command. These are
+explicit test/operator prerequisites, not a reason to add PyYAML to the
+application packages, skip tests or replace real encryption.
 
 Image-selection tests alone need only Python, with no Azure CLI or login:
 `python3 -m unittest discover -s infra/tests -p test_deploy.py -v`.
@@ -1399,9 +1406,11 @@ The final summary separately reports SQL binding and restart, not just Entra.
 
 Exit codes: `0` means the requested configuration converged, not successful
 human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
-`1` means blocked/error; `130` means interrupted. `--check` and `--dry-run`
-make no remote mutations, do not log in or create a missing private profile,
-and cannot be combined with `--login`. They need existing authorized sessions.
+`1` means blocked/error; `130` means interrupted. `--dry-run` makes no remote
+mutations. `--check` never changes Entra, SQL bindings or API replicas, but
+the Azure SQL path creates/removes a temporary job and secret. Neither mode
+logs in or creates a missing private profile; both require existing authorized
+sessions and cannot be combined with `--login`.
 A final fresh Container App read must report provisioning `Succeeded`.
 Failed, in-progress, canceled or missing provisioning state blocks mutation
 (exit `1`); read-only modes report it as incomplete (exit `2`), even when
@@ -1506,12 +1515,12 @@ run with a missing roster or the exact original placeholder template now:
 5. Sorts remaining eligible people before a seeded random shuffle and assigns a
    distinct person to each remaining code, preserving each SQL role and supplier.
    It prints the seed (`--seed N` reproduces the mapping for unchanged inputs),
-   counts, codes and administrator role, never personal names, UPNs, object IDs
+   counts and administrator role, never personal names, UPNs, object IDs
    or supplier names. Too few people reports the exact deficit and stops without
    writing. This implementation chooses the permitted **stop** alternative:
    there is no reuse override because the initializer requires distinct people.
 6. Shows one-screen counts per role and asks once to write the private roster.
-   `--yes` accepts; `--check` and `--dry-run` preview without any writes or
+   `--yes` accepts; `--check` and `--dry-run` preview without roster/SQL writes or
    confirmation and exit incomplete (2), since no roster/bindings were installed.
    Admin ambiguity in read-only modes requires `--admin-upn`, not a prompt.
    The generated file is atomically saved with mode 0600 in a mode-0700 directory.
@@ -1543,17 +1552,146 @@ This is a separate confirmation after the roster-write confirmation;
 `--yes` accepts both displayed plans. A current roster/revision with recorded restart
 evidence needs no further restart. `--check` and `--dry-run` inspect Entra and
 SQL without applying or restarting. Unknown/missing restart evidence remains
-incomplete. When this host cannot reach private SQL or lacks its drivers or
-authority, setup exits incomplete and prints an exact, already discovered
-`initialize-workbench-staff.py ... --apply --restart` command for an authorized
-host holding the same private roster/profile. SQL binding and restart are
-explicitly **not confirmed**. The existing in-VNet proof initializer has no
-approved staff-roster/Graph-profile transport, so this flow does not invent
-one or upload personal mappings to a job. When even candidate discovery is
-unreachable, it instead prints one exact `setup-entra.py` command for that host,
-preserving app/profile/roster/mode/seed but never an administrator UPN. Provide
-private admin input there if requested. No roster or template is written on
-this failure path.
+incomplete. A blocked local candidate lookup or SQL preflight automatically
+tries the [in-VNet job path](#in-vnet-sql-staff-step-refs-360).
+Explicit roster/control validation failures do not trigger fallback, and an
+uncertain local apply is never retried in another execution. If the Azure path
+cannot run, setup prints the exact discovered private-host command and reports
+SQL/restart **not confirmed**. Candidate failure instead prints the exact
+`setup-entra.py` command, retaining mode/seed but not the administrator UPN.
+No missing roster is invented or written on that failure path.
+
+### In-VNet SQL staff step (Refs #360)
+
+After the separately authorized prerequisites below, the single operator command is:
+
+```bash
+python3 infra/scripts/setup-entra.py --run-in-azure --yes
+```
+
+The command still performs directory registration, app roles and assignments
+with the operator's authorized isolated Graph login. Missing-roster generation
+remains the same as PR #363: the first ProgrammeManager code gets the eligible
+`admin@` person, remaining positions are seeded random, and the private persisted
+mapping is reused. No Graph profile/token is uploaded. Only candidate listing,
+SQL check, SQL apply/verification and API restart execute in the job.
+`--check --run-in-azure` and `--list-staff --run-in-azure` create temporary
+management-plane jobs/secrets but perform read-only SQL and never restart.
+Azure listing prints a count, not codes or roles. `--dry-run` never creates
+a job; it reports the missing private SQL evidence rather than claiming success.
+
+Prerequisites (not executed or deployed by setup):
+
+* An existing `job-<API-prefix>-init` in the API's actual VNet-injected
+  environment in `ama`, using exactly `id-<prefix>-init`, the existing SQL Entra
+  Application administrator, and an identity-authenticated registry reference.
+  Direct-demo APIs may reuse their parent proof initializer with
+  `--azure-init-job job-cutover-test-init`, but only when its actual environment
+  matches. There is no automatic cross-environment or cross-subscription search.
+* An immutable `zava-forward-cutover-proof@sha256:<digest>` initializer image
+  built from the source API image. The source API already installs core,
+  agents, API, cryptography and mssql-python/ODBC; the former proof image
+  contained only its proof runner. The Dockerfile now also copies the staff
+  initializer, SQL-only worker, private transport/roster helpers and manifest
+  into `/app/scripts/` and `/app/entra/`. Its original proof ENTRYPOINT stays
+  unchanged; the transient job overrides it with
+  `python /app/scripts/staff-azure-worker.py`. No Azure CLI is needed in the image.
+* Operator management permissions to read the API/environment, SQL
+  server/database/admin and identity, create/start/read/stop/delete temporary
+  jobs, list replicas and obtain job console-log tokens. Console streaming
+  uses the environment's authenticated logstream endpoint, **not ARM alone**:
+  operator access to that endpoint is an explicit prerequisite. Failed
+  endpoint access fails closed; no network changes or Log Analytics grant is
+  attempted. The operator also needs local cryptography, available from
+  `python3 -m pip install -r src/api/requirements.txt`.
+* The existing initializer identity needs its existing SQL-admin and AcrPull
+  permissions plus the narrowly scoped API restart role below. No new identity,
+  Graph permission or general Contributor role is introduced. SQL remains
+  Entra-only with public access Disabled; private DNS/subnet and the actual
+  SQL administrator principal are verified before a roster is transferred.
+
+Required later, authorized image build (shown only; not run for this change):
+
+```bash
+(cd infra && az acr build -g ama -r <registry> -f cutover-proof.Dockerfile \
+  --build-arg API_IMAGE=<registry-server>/zava-forward-api@sha256:<api-digest> \
+  -t zava-forward-cutover-proof:<unique-tag> .)
+az containerapp job update -g ama -n <existing-init-job> \
+  --image <registry-server>/zava-forward-cutover-proof@sha256:<proof-digest> -o none
+az deployment group what-if -g ama --template-file infra/staff-initializer-rbac.bicep \
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name>
+# Only after the authorized operator reviews scope and the what-if:
+az deployment group create -g ama --template-file infra/staff-initializer-rbac.bicep \
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> -o none
+```
+
+Build context is only `infra/`; API image context remains `src/`. A private
+registry may require an approved private ACR Task path; never open the registry
+or private services to repair a build. The standalone Bicep template refuses
+non-ama scope and assigns only app/revision/replica reads and revision restart
+to the existing initializer identity, scoped to the selected API. It changes
+neither SQL admin nor network configuration. No secret value or identity ID
+belongs in committed parameter examples.
+
+Each operation clones only the verified source image/registry/identity into a
+unique `job-staff-<random>` manual job, with one replica, no retries and a
+600-second execution deadline. The operator uploads the bounded request
+(maximum 12 KiB of payload) and a fresh result-encryption key as a Container Apps
+secret, via a private mode-0600 ARM body file outside Git. CLI logging and
+telemetry are disabled; body files are removed even on failure. No identities
+or secret values occur in CLI arguments. No blob/Key Vault data-plane path
+is required. The job never receives an operator access token.
+
+The job reads the existing SQL positions, uses the canonical protected-profile
+and atomic installation rules, rereads to verify zero remaining drift, then
+uses its own MI to restart every traffic-serving API revision and verify fresh
+ready replicas. Historical actor fields are preserved. A SQL no-op still
+requires restart unless setup has matching roster/revision restart evidence.
+After SQL success but restart failure, the result remains incomplete.
+
+Job logs contain counts-free generic failure messages or authenticated
+AES-GCM ciphertext, never plaintext candidates, people, codes, roster or SQL
+exceptions. Ciphertext is bound to this run/operation/input, framed in bounded
+chunks, captured by explicit execution/replica/container and decrypted only in
+operator memory. The worker holds the result for 60 seconds while its replica
+is alive; setup requires both authenticated output and terminal Succeeded.
+Console-log endpoint, truncation, missing result or deadline failure cannot
+be mistaken for success. These mechanics do not establish live log reachability.
+
+Setup stops uncertain/failed executions and deletes only its owned temporary
+job, including the roster secret; it polls for confirmed absence. It never
+deletes or edits the source initializer job. A cleanup failure blocks success
+and prints only the owned temporary job name. Hard termination/power loss
+cannot guarantee cleanup: in a serialized operator window, inspect the
+`zava-forward-staff-run` tag and execution of that exact named leftover, then:
+
+```bash
+az containerapp job stop -g ama -n <owned-job-staff-name> -o none
+az containerapp job delete -g ama -n <owned-job-staff-name> --yes -o none
+```
+
+Confirm the exact job is absent before retrying. Never delete `ama`, the
+initializer job or an unowned job. SQL may already have committed; first use
+`--check --run-in-azure` with the same persisted private roster, never regenerate
+or blindly retry an uncertain apply. Cross-host simultaneous setup still needs
+the serialized operator window described above.
+
+If the image/job/permission/log path is unavailable, use the exact command
+printed by setup on an authorized private-connected host with the same private
+roster and isolated Graph login. Its SQL manual fallback has this form:
+
+```bash
+python3 infra/scripts/initialize-workbench-staff.py --resource-group ama \
+  --container-app <discovered-api-name> --roster <private-roster-path> \
+  --tenant-profile <private-profile-path> --apply --restart
+```
+
+For unavailable candidates, the printed fallback is `setup-entra.py` without
+`--run-in-azure`; supply any private admin input there if requested. Never
+enable SQL public access, add firewall rules, change Key Vault/storage network
+settings or bypass policy. Offline fake-az/worker tests exercise the path;
+actual image availability, permission activation, VNet/SQL/log access, live
+binding/restart and real browser sign-in remain **Not run** in this change.
 
 SQL prerequisites: `python3 -m pip install -e src/core -e src/agents -e src/api
 pyodbc` and Microsoft ODBC Driver 18 for SQL Server on an authorized host

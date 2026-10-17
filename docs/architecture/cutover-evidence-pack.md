@@ -33,6 +33,44 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
 | Owner task direction, 2026-10-16 | Providers registered, ama costs acceptable, RG ownership available; SQL public access stays Disabled, no policy/tag/firewall bypass or peering; all private data-plane probes run inside the ama VNet |
 
+## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
+
+Refs #360. This offline change supersedes only the earlier absence of private
+staff-job transport. No live Azure command, image build, tenant change, SQL
+binding, restart or permission activation was performed. The
+[runbook](../../infra/README.md#in-vnet-sql-staff-step-refs-360) documents the
+single command and exact prerequisites/fallback.
+
+| Requested criterion | Offline evidence | Unmet or unverified boundary |
+| --- | --- | --- |
+| Explicit mode and automatic blocked-local continuation | `--run-in-azure` bypasses local SQL; failed read-only local candidate/check attempts may switch to a job. Validation failures stop; uncertain local apply never switches/retries | Actual laptop/private-job execution Not run |
+| Reuse API environment, init job/image and SQL-admin identity in ama | Fake az verifies exact resource IDs, matching VNet/subnet, one expected init MI, SQL administrator principal/tenant, Entra-only SQL, Disabled public access, database and pinned proof image | Actual deployed asset/version/admin/image availability Not run; cross-environment reuse refused |
+| Candidate listing, existing seeded roster and operator-only Entra work | Candidates returned privately; Azure listing prints count only. Existing admin/seed/persisted-roster regressions retained. Operator resolves people and reconciles all directory grants; worker has no Graph client/profile/token | Actual mailbox classifications, directory authority and real users Not run |
+| Private roster transfer without identity CLI/log disclosure | Mode-0600 body files, Container Apps secretRef input, fresh AES-GCM key, authenticated/chunked encrypted results and codes-free output tested with canaries | Console logs use an authenticated environment endpoint, not ARM alone. Actual operator reachability and completed-run log/retention behavior Not run |
+| Bind, independently verify and restart API in job | Worker tests use canonical protected SQL preparation/atomic install, post-commit reread, no-op restart and failure-before-success. Existing restart tests verify serving replicas. API-only MI restart role compiles offline and is recorded in the role matrix | Real Azure SQL transactions, provider action authorization and fresh live replicas Not run. Required role/image deployment is not performed |
+| Failure, timeout and roster cleanup | Fake az exercises job failure, lost create/start response, log failure, timeout, handled interruption, collision, stop failure and delete denial. Success requires confirmed deletion of owned job/secret; source job untouched | Hard kill/power loss cannot guarantee cleanup; serialized manual stop/delete and check-first recovery documented. Live deletion/retention Not run |
+| No SQL/Key Vault networking changes | All transport writes in fake az target only owned temporary jobs; Bicep adds only narrow role definition/API assignment and scope guard | No live configuration inspection; existing network assertions are not a fresh deployed compliance check |
+| Required local quality gates | Targeted and full infra suites, responsive loopback auth tests, scoped Ruff/mypy and standalone offline Bicep build/lint are recorded with the delivered changes | Passing fakes are not deployment, real browser acceptance, security certification or human sign-off |
+
+`--check` remains read-only for Entra/SQL/API replicas, but its Azure path
+necessarily creates/removes temporary jobs/secrets. `--dry-run` never creates
+jobs and cannot claim private SQL evidence it could not obtain. Historical
+claims below that both modes make no cloud mutations predate this distinction.
+
+The initial proof image inherits installed zava_forward packages and the SQL
+driver, but did not contain the staff scripts/manifest. The Dockerfile now
+adds those assets while preserving its proof entrypoint. No live image build,
+registry opening or source-job image update was attempted. The existing SQL
+administrator receives no Graph permission or broad Contributor grant; the
+optional standalone Bicep assigns only reads/restart on the selected API.
+Deployment remains an authorized operator prerequisite, not an inferred approval.
+
+All live and owner-sign-off criteria stay unchecked. This change activates
+no legal rule, resident consent, safety decision or financial commitment.
+ADR 0005 remains accepted for synthetic development only; Juan Manuel Servera
+is the exercise Legal, Compliance and DPO owner, with real owners/sources still
+a gap before operational reliance.
+
 ## Direct Demo Ingress Offline Scope (2026-10-16)
 
 Refs #360. Owner decision: the demo entry point is direct Container Apps HTTPS

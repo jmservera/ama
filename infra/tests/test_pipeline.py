@@ -116,8 +116,11 @@ def infra_test_dependency_errors(document):
     if not scripts:
         errors.append("missing infra discovery")
     for script in scripts:
-        if "pip install 'PyYAML==6.0.3'" not in script.partition(discovery)[0]:
+        prerequisites = script.partition(discovery)[0]
+        if "pip install 'PyYAML==6.0.3'" not in prerequisites:
             errors.append("missing pinned PyYAML before infra discovery")
+        if "pip install --require-hashes -r src/api/requirements.txt" not in prerequisites:
+            errors.append("missing hashed operator dependencies before infra discovery")
     return errors
 
 
@@ -145,6 +148,25 @@ class WorkflowTests(unittest.TestCase):
                         if "unittest discover -s infra/tests" in step.get("run", ""):
                             step["run"] = step["run"].replace(install, "") + f"\n{install}\n"
                 self.assertTrue(infra_test_dependency_errors(document))
+
+    def test_reject_missing_unhashed_or_late_operator_dependencies(self):
+        install = "pip install --require-hashes -r src/api/requirements.txt"
+        for name in ("src-ci.yml", "mvp-validation.yml"):
+            for replacement, suffix in (
+                ("", ""),
+                ("pip install -r src/api/requirements.txt", ""),
+                ("", f"\n{install}\n"),
+            ):
+                with self.subTest(name=name, replacement=replacement, suffix=suffix):
+                    document = deepcopy(workflow(name))
+                    for job in document["jobs"].values():
+                        for step in job["steps"]:
+                            if "unittest discover -s infra/tests" in step.get("run", ""):
+                                step["run"] = step["run"].replace(install, replacement) + suffix
+                    self.assertIn(
+                        "missing hashed operator dependencies before infra discovery",
+                        infra_test_dependency_errors(document),
+                    )
 
     def test_structure_permissions_pinning_and_no_secret_echo(self):
         for name in ("src-deploy.yml", "infra-plan.yml"):
