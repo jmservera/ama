@@ -1552,9 +1552,37 @@ run with a missing roster or the exact original placeholder template now:
    Bicep. Existing deployments may supply `deploymentProfile` parameters only
    when `outputResources` includes the selected app/environment's exact resource
    ID; nested modules may supply the same profile/environment in their `tags`
-   parameter. Omitting both forms means production. Production, absent,
-   conflicting or unsuccessful evidence refuses generation, even with direct
-   ingress or a test name. Merely renaming resources is not an override.
+   parameter. Setup reads each bound deployment's actual template with
+   `az deployment group export` (metadata only, scoped to `ama` and the selected
+   subscription). Explicit parameter values take precedence; omitted parameters
+   use that template's literal defaults. Thus an omitted `deploymentProfile`
+   on the full main template still means production, but a profile-neutral
+   app patch/staging template contributes no profile, not invented production.
+   Both profile forms and both environment forms are checked independently,
+   including defaults: development module tags cannot hide a production
+   default. Neutral history alone never proves development.
+   Production, unknown, conflicting or unsuccessful bound evidence refuses
+   generation, even with direct ingress, purpose tags or a test name. Missing
+   development/safe-environment evidence also refuses. Null/malformed relevant
+   values, unresolved default expressions, missing required parameters,
+   unavailable/denied template export and mismatched environment readback stop
+   before roster generation. Setup needs permission to export the existing
+   deployment templates; it does not create deployments or follow template-link
+   URLs for this check. Merely renaming resources is not an override.
+   App/environment IDs are structurally checked as exact subscription/`ama`/
+   Microsoft.App resource IDs and compared case-insensitively, including the
+   `/providers/` segment; wrong group, provider, type or scope still refuses.
+   Exported templates must identify a supported resource-group ARM schema
+   (2019-04-01 or 2015-01-01), content version and resource envelope. Omitted or
+   `1.0` language uses an array; supported `2.0` uses symbolic-name resource
+   objects. Every resource needs a name, type and dated API version.
+   Unknown schemas/language versions, malformed resource entries, API-profile/
+   import extensions and nested deployment contracts explicitly refuse.
+   Nested templates/links and their parameter/default evaluation are not
+   interpreted or silently treated as neutral. This bounded check is not a
+   complete ARM/provider-schema validator, and schema validity never establishes
+   a development profile. A valid nested deployment still needs a separately
+   supported evidence path rather than a safety bypass.
 2. Reads existing SQL staff codes, approved roles, existing Contractor supplier
    scopes and a binding-present flag through the same `--list-staff` path.
    It never invents an extra code or Contractor. Existing immutable SQL
@@ -1600,6 +1628,23 @@ rosters remain supported. Reruns reuse the persisted mapping even when a new
 `--seed` is supplied; they do not reshuffle. Generated-roster reruns revalidate
 the demo profile and individual-mailbox eligibility. An existing populated or
 partly edited invalid roster is never replaced automatically.
+
+Profile-classification follow-up, 2026-10-17 (Refs #360): the coordinator-reported
+API-without-profile, development/test bound environment, neutral app-stage and
+module/main deployment-history shape is covered by a failing-before/passing-after
+offline regression. The ARM [deployment metadata](https://learn.microsoft.com/en-us/rest/api/resources/deployments/get?view=rest-resources-2025-04-01),
+[template export](https://learn.microsoft.com/en-us/rest/api/resources/deployments/export-template?view=rest-resources-2025-04-01)
+and [parameter default contract](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/parameters)
+were checked on 2026-10-17. This fixes source classification, not live setup:
+credential access, initializer publication's 403 and genuine tenant/browser/
+SQL/AI acceptance remain unmet; no Azure changes or temporary jobs were run.
+Coordinator correction ONE (2026-10-17) retains the original adverse external
+assessment: mixed-case ID and malformed-envelope reproductions failed before
+correction, and the expanded offline suites pass afterward. The supported
+envelope boundary follows the official [template structure](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/syntax)
+and [resource-group template schema](https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json),
+retrieved 2026-10-17. This is correction evidence, not independent final-head
+acceptance or full setup readiness.
 
 Setup still rejects placeholders, non-GUID/zero IDs, duplicates, unknown roles,
 group-only entries, symlinks and unsafe modes before directory changes. SQL

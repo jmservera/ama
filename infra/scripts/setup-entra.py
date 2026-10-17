@@ -565,40 +565,181 @@ def roster_input(path: Path) -> tuple[bytes | None, bool]:
         raise SetupError("Private roster is unreadable or invalid JSON.") from None
 
 
+def demo_resource_id(value: Any, resource_type: str) -> tuple[str, str]:
+    """Validate a group-scoped app/environment ID before normalizing its binding."""
+    match = re.fullmatch(
+        r"/subscriptions/([^/]+)/resourceGroups/(ama)/providers/Microsoft[.]App/"
+        + re.escape(resource_type) + r"/([A-Za-z0-9_-]+)",
+        value if isinstance(value, str) else "", re.IGNORECASE)
+    if not match or identifier(match[1]) != match[1].lower():
+        raise SetupError("Demo resource identity has an unsupported subscription/group/type scope.")
+    return match[1].lower(), value.lower()
+
+
+def demo_template_contract(template: Any) -> dict[str, Any]:
+    """Check the supported ARM envelope, not provider-specific deployment validity."""
+    error = ("Demo deployment template contract is malformed or unsupported; "
+             "no roster generated. Nested deployments require separate verified evidence.")
+    schemas = {
+        "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json",
+        "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    }
+    if not isinstance(template, dict):
+        raise SetupError(error)
+    supported = {"$schema", "languageVersion", "contentVersion", "parameters", "variables",
+                 "outputs", "metadata", "definitions", "functions", "resources"}
+    if template.keys() - supported:
+        raise SetupError(error)
+    schema = template.get("$schema")
+    language = template.get("languageVersion", "1.0")
+    if (not isinstance(schema, str) or schema.removesuffix("#") not in schemas
+            or not isinstance(language, str) or language not in ("1.0", "2.0")
+            or not isinstance(template.get("contentVersion"), str)
+            or not re.fullmatch(r"[0-9]+(?:\.[0-9]+){3}", template["contentVersion"])):
+        raise SetupError(error)
+    for key in ("parameters", "variables", "outputs", "metadata", "definitions"):
+        if key in template and not isinstance(template[key], dict):
+            raise SetupError(error)
+    if ("definitions" in template and language != "2.0"
+            or "functions" in template and not isinstance(template["functions"], list)):
+        raise SetupError(error)
+    resources = template.get("resources")
+    if language == "2.0":
+        if (not isinstance(resources, dict) or any(
+                not isinstance(key, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key)
+                for key in resources)):
+            raise SetupError(error)
+        pending = [(resource, False) for resource in resources.values()]
+    else:
+        if not isinstance(resources, list):
+            raise SetupError(error)
+        pending = [(resource, False) for resource in resources]
+    while pending:
+        resource, child = pending.pop()
+        if (not isinstance(resource, dict) or any(
+                not isinstance(resource.get(key), str) or not resource[key].strip()
+                for key in ("name", "type", "apiVersion"))):
+            raise SetupError(error)
+        kind = resource["type"]
+        if (not re.fullmatch(r"[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*", kind)
+                or not child and "/" not in kind
+                or not re.fullmatch(r"\d{4}-\d{2}-\d{2}(?:-[A-Za-z0-9.-]+)?",
+                                    resource["apiVersion"])
+                or kind.lower() == "microsoft.resources/deployments"
+                or "properties" in resource and not isinstance(resource["properties"], dict)):
+            raise SetupError(error)
+        if "resources" in resource:
+            children = resource["resources"]
+            if not isinstance(children, list) or language == "2.0":
+                raise SetupError(error)
+            pending.extend((nested, True) for nested in children)
+    return template.get("parameters", {})
+
+
+def demo_deployment_parameters(cli: Azure, deployment: dict[str, Any]) -> dict[str, Any]:
+    """Resolve only literal demo evidence against this deployment's actual contract."""
+    error = ("Demo deployment template/parameters are unknown or malformed; "
+             "verify readable deployment history before generating a roster.")
+    name = deployment.get("name")
+    supplied = deployment["properties"].get("parameters", {})
+    if (not isinstance(name, str) or not re.fullmatch(r"[-\w.()]{1,64}", name)
+            or name.startswith("-")
+            or not isinstance(supplied, dict)):
+        raise SetupError(error)
+    template = cli.call(["deployment", "group", "export", "-g", "ama", "-n", name])
+    declarations = demo_template_contract(template)
+    resolved = {}
+    for key, expected in (("deploymentProfile", str), ("environmentName", str), ("tags", dict)):
+        if key not in declarations:
+            if key in supplied:
+                raise SetupError(error)
+            continue
+        declaration = declarations[key]
+        kind = "object" if key == "tags" else "string"
+        if (not isinstance(declaration, dict) or not isinstance(declaration.get("type"), str)
+                or declaration["type"].lower() != kind):
+            raise SetupError(error)
+        if key in supplied:
+            entry = supplied[key]
+            if not isinstance(entry, dict) or "value" not in entry or "reference" in entry:
+                raise SetupError(error)
+            value = entry["value"]
+        elif "defaultValue" in declaration:
+            value = declaration["defaultValue"]
+        else:
+            raise SetupError(error)
+        if not isinstance(value, expected):
+            raise SetupError(error)
+        resolved[key] = value
+    return resolved
+
+
 def require_demo(cli: Azure, app: dict[str, Any]) -> None:
     """Require resource-bound development evidence; production always wins."""
     resources = [app]
+    subscription, app_id = demo_resource_id(app.get("id"), "containerApps")
+    if cli.subscription and subscription != cli.subscription.lower():
+        raise SetupError("Demo app identity is outside the selected subscription.")
     properties = app.get("properties", {})
+    if not isinstance(properties, dict):
+        raise SetupError("Demo app properties are unknown or malformed; no roster generated.")
     environment_id = properties.get("environmentId") or properties.get("managedEnvironmentId")
     if environment_id:
-        resources.append(cli.rest(ARM + environment_id + f"?api-version={API_VERSION}"))
-    profiles = [r.get("tags", {}).get(PROFILE_TAG) for r in resources
-                if PROFILE_TAG in r.get("tags", {})]
-    environments = [r.get("tags", {}).get("environment") for r in resources
-                    if "environment" in r.get("tags", {})]
-    ids = {app["id"].lower()}
+        environment_subscription, normalized_environment = demo_resource_id(
+            environment_id, "managedEnvironments")
+        if environment_subscription != subscription:
+            raise SetupError("Demo environment is not bound to the selected app in ama.")
+        environment = cli.rest(ARM + environment_id + f"?api-version={API_VERSION}")
+        if (not isinstance(environment, dict)
+                or not isinstance(environment.get("id"), str)
+                or demo_resource_id(environment["id"], "managedEnvironments")[1]
+                != normalized_environment):
+            raise SetupError("Demo environment readback does not match the selected app binding.")
+        resources.append(environment)
+    profiles, environments = [], []
+    for resource in resources:
+        tags = resource.get("tags", {})
+        if not isinstance(tags, dict):
+            raise SetupError("Demo resource tags are unknown or malformed; no roster generated.")
+        if PROFILE_TAG in tags:
+            profiles.append(tags[PROFILE_TAG])
+        if "environment" in tags:
+            environments.append(tags["environment"])
+    ids = {app_id}
     if isinstance(environment_id, str):
         ids.add(environment_id.lower())
     deployments = cli.call(["deployment", "group", "list", "-g", "ama"])
+    if not isinstance(deployments, list):
+        raise SetupError("Demo deployment history is unknown or malformed; no roster generated.")
     for deployment in deployments:
-        deployed = deployment.get("properties") or {}
-        if not any(str(r.get("id", "")).lower() in ids
-                   for r in deployed.get("outputResources") or []):
+        if not isinstance(deployment, dict):
+            raise SetupError(
+                "Demo deployment history is unknown or malformed; no roster generated.")
+        deployed = deployment.get("properties")
+        if deployed is None:
+            continue
+        if not isinstance(deployed, dict):
+            raise SetupError(
+                "Demo deployment history is unknown or malformed; no roster generated.")
+        outputs = deployed.get("outputResources")
+        if outputs is None:
+            outputs = []
+        if (not isinstance(outputs, list) or any(
+                not isinstance(r, dict) or not isinstance(r.get("id"), str) for r in outputs)):
+            raise SetupError("Demo deployment resource binding is malformed; no roster generated.")
+        if not any(r["id"].lower() in ids for r in outputs):
             continue
         if deployed.get("provisioningState") != "Succeeded":
             raise SetupError(
                 "Demo profile evidence is not a successful deployment; no roster generated.")
-        parameters = deployed.get("parameters") or {}
-        parameter_tags = (parameters.get("tags") or {}).get("value") or {}
-        module_profile = parameter_tags.get(PROFILE_TAG)
-        if module_profile is not None:
-            profiles.append(module_profile)
+        parameters = demo_deployment_parameters(cli, deployment)
+        parameter_tags = parameters.get("tags", {})
+        if PROFILE_TAG in parameter_tags:
+            profiles.append(parameter_tags[PROFILE_TAG])
         if "deploymentProfile" in parameters:
-            profiles.append(parameters["deploymentProfile"].get("value"))
-        elif module_profile is None:
-            profiles.append("production")
+            profiles.append(parameters["deploymentProfile"])
         if "environmentName" in parameters:
-            environments.append(parameters["environmentName"].get("value"))
+            environments.append(parameters["environmentName"])
         if "environment" in parameter_tags:
             environments.append(parameter_tags["environment"])
     if (not profiles or any(p != "development" for p in profiles) or not environments

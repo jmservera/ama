@@ -86,6 +86,7 @@ class FakeAzure:
         self.memberships = []
         self.consent = []
         self.environment: dict[str, Any] = {
+            "id": ENV_ID,
             "properties": {"vnetConfiguration": {"internal": False}}}
         self.tag_writes = []
         self.sql_calls = []
@@ -97,6 +98,7 @@ class FakeAzure:
         self.candidate_code = 0
         self.revisions = []
         self.deployments = []
+        self.deployment_templates = {}
         self.vaults = [{"name": "fictional-vault"}]
         self.identities = []
 
@@ -145,6 +147,9 @@ class FakeAzure:
             value = self.revisions
         elif args[:3] == ["deployment", "group", "list"]:
             value = self.deployments
+        elif args[:3] == ["deployment", "group", "export"]:
+            name = args[args.index("-n") + 1]
+            value = self.deployment_templates[name]
         elif args[:3] == ["afd", "profile", "list"]:
             value = self.profiles
         elif args[:3] == ["afd", "origin-group", "list"]:
@@ -847,11 +852,365 @@ class SetupTests(unittest.TestCase):
             self.assertFalse(self.fake.sql_calls)
         for params in ({}, {"deploymentProfile": {"value": "production"}}):
             self.demo_roster()
-            self.fake.deployments = [{"properties": {"provisioningState": "Succeeded",
-                                      "outputResources": [{"id": APP_ID}], "parameters": params}}]
+            self.fake.deployments = []
+            self.bound_deployment("main-default", params, declarations={
+                "deploymentProfile": {"type": "string", "defaultValue": "production"}})
             self.assertEqual(self.invoke(), 1)
             self.assert_no_generation_writes()
             self.assertFalse(self.fake.sql_calls)
+
+    def bound_deployment(self, name, parameters, *, resource=APP_ID, declarations=None):
+        self.fake.deployments.append({"name": name, "properties": {
+            "provisioningState": "Succeeded", "outputResources": [{"id": resource}],
+            "parameters": parameters}})
+        self.fake.deployment_templates[name] = {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": declarations if declarations is not None else {
+                key: {"type": "object" if key == "tags" else "string"}
+                for key in parameters},
+            "resources": [{
+                "type": ("Microsoft.App/managedEnvironments" if resource.lower() == ENV_ID.lower()
+                         else "Microsoft.App/containerApps"),
+                "apiVersion": "2025-07-01", "name": resource.rsplit("/", 1)[-1],
+                "location": "uksouth", "properties": {},
+            }],
+        }
+
+    def reported_profile_deployments(self):
+        self.demo_roster()
+        self.direct()
+        self.fake.app["tags"] = {
+            "environment": "test", "purpose": "non-production-demonstrator",
+            "workload": "api", "zava-forward-ingress": "direct",
+            SETUP.STORE_TAG: "keyvault"}
+        self.fake.environment["tags"] = {SETUP.PROFILE_TAG: "development", "environment": "test"}
+        self.bound_deployment("demo-stage-360-20261017", {
+            "apiImage": {"value": "registry.example.invalid/api:fixture"}})
+        self.bound_deployment("containerapps", {
+            "tags": {"value": {SETUP.PROFILE_TAG: "development", "environment": "test"}}},
+            resource=ENV_ID)
+        self.bound_deployment("demo-env-360", {
+            "deploymentProfile": {"value": "development"},
+            "environmentName": {"value": "test"}}, resource=ENV_ID)
+
+    def test_reported_neutral_stage_with_bound_development_environment_is_accepted(self):
+        self.reported_profile_deployments()
+        SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+        self.assert_no_generation_writes()
+        self.assertFalse(self.fake.sql_calls)
+        for command, _env in self.fake.calls:
+            self.assertTrue(command[1:4] in (
+                ["deployment", "group", "list"], ["deployment", "group", "export"])
+                or command[1:4] == ["rest", "--method", "GET"])
+        self.assertEqual(self.invoke("--seed", "178", "--dry-run"), 2, self.output.getvalue())
+        self.assert_no_generation_writes()
+        self.assertIn("ProgrammeManager: 2", self.output.getvalue())
+        self.assert_no_edge_calls()
+
+    def assert_demo_refused(self):
+        with self.assertRaises(SETUP.SetupError):
+            SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+        self.assert_no_generation_writes()
+        self.assertFalse(self.fake.sql_calls)
+
+    def test_correction_mixed_case_arm_binding_preserves_exact_resource_identity(self):
+        self.reported_profile_deployments()
+        self.fake.deployments = []
+        self.fake.app["id"] = APP_ID.replace("/providers/", "/Providers/")
+        SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+        for app_id, env_id in ((APP_ID.upper(), ENV_ID.upper()),
+                               (APP_ID, ENV_ID.replace("/providers/", "/Providers/"))):
+            with self.subTest(app_id=app_id, env_id=env_id):
+                self.fake.app["id"] = app_id
+                self.fake.app["properties"]["managedEnvironmentId"] = env_id
+                self.fake.environment["id"] = ENV_ID.upper()
+                with patch.object(SETUP.Azure, "rest", return_value=self.fake.environment):
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+
+    def test_correction_invalid_export_envelope_is_not_neutral(self):
+        for schema in (None, 7, "https://example.invalid/deploymentTemplate.json"):
+            with self.subTest(schema=schema):
+                self.fake.deployments = []
+                self.reported_profile_deployments()
+                template = self.fake.deployment_templates["demo-stage-360-20261017"]
+                if schema is None:
+                    template.pop("$schema")
+                else:
+                    template["$schema"] = schema
+                self.assert_demo_refused()
+        self.fake.deployments = []
+        self.reported_profile_deployments()
+        self.fake.deployment_templates["demo-stage-360-20261017"][
+            "resources"] = {"not-a-resource": 42}
+        self.assert_demo_refused()
+
+    def test_correction_wrong_arm_scope_provider_and_type_are_refused(self):
+        invalid = (
+            APP_ID.replace("/ama/", "/other/"),
+            APP_ID.replace("Microsoft.App", "Microsoft.Other"),
+            APP_ID.replace("containerApps", "managedEnvironments"),
+            APP_ID + "/children/extra", APP_ID + "/", APP_ID.replace(SUB, "not-a-guid"),
+            APP_ID.replace(SUB, SUB.replace("-", "")),
+            APP_ID.replace("/resourceGroups/ama", ""),
+            APP_ID.replace("/providers/", "//providers/"),
+        )
+        for value in invalid:
+            with self.subTest(app_id=value):
+                self.reported_profile_deployments()
+                self.fake.deployments = []
+                self.fake.app["id"] = value
+                self.assert_demo_refused()
+                self.fake.app["id"] = APP_ID
+        for value in (
+                ENV_ID.replace("/ama/", "/other/"),
+                ENV_ID.replace("Microsoft.App", "Microsoft.Other"),
+                ENV_ID.replace("managedEnvironments", "containerApps"),
+                ENV_ID.replace(SUB, uid("other-subscription")),
+                ENV_ID + "/children/extra", ENV_ID + "/",
+                ENV_ID.replace("/resourceGroups/ama", "")):
+            with self.subTest(environment_id=value):
+                self.fake.app["properties"]["managedEnvironmentId"] = value
+                self.assert_demo_refused()
+        self.fake.app["properties"]["managedEnvironmentId"] = ENV_ID
+        cli = SETUP.Azure(self.profile)
+        cli.subscription = uid("other-subscription")
+        with self.assertRaises(SETUP.SetupError):
+            SETUP.require_demo(cli, self.fake.app)
+
+    def test_correction_supported_arm_array_and_symbolic_templates_remain_bound(self):
+        for schema in (
+                "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"):
+            for language in (None, "1.0", "2.0"):
+                with self.subTest(schema=schema, language=language):
+                    self.fake.deployments = []
+                    self.reported_profile_deployments()
+                    for template in self.fake.deployment_templates.values():
+                        template["$schema"] = schema
+                        if language:
+                            template["languageVersion"] = language
+                        if language == "2.0":
+                            template["resources"] = {"api": template["resources"][0]}
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+                    self.fake.environment["tags"][SETUP.PROFILE_TAG] = "production"
+                    self.assert_demo_refused()
+
+    def test_correction_malformed_resource_and_language_forms_fail_closed(self):
+        self.reported_profile_deployments()
+        valid = copy.deepcopy(self.fake.deployment_templates["demo-stage-360-20261017"])
+        resource = valid["resources"][0]
+        forms = [
+            {**valid, "languageVersion": language}
+            for language in (None, 2, "", "2.1", "2.0-experimental", "3.0")]
+        forms += [{**valid, "resources": resources} for resources in (
+            [42], [None], [{}], {"api": resource}, [{"name": "api", "type": "Anything"}],
+            [{**resource, "apiVersion": None}], [{**resource, "apiVersion": "unknown"}],
+            [{**resource, "name": ""}], [{**resource, "type": ""}],
+            [{**resource, "properties": []}], [{**resource, "resources": {}}],
+        )]
+        forms += [{**valid, "languageVersion": "2.0", "resources": resources}
+                  for resources in ([resource], {"api": 42}, {"bad/name": resource}, {7: resource})]
+        forms += [{**valid, key: value} for key, value in (
+            ("variables", []), ("functions", {}), ("outputs", []), ("definitions", {}),
+            ("imports", {}), ("apiProfile", "2019-03-01-hybrid"))]
+        for template in forms:
+            with self.subTest(template=template):
+                self.fake.deployment_templates["demo-stage-360-20261017"] = template
+                self.assert_demo_refused()
+
+    def test_correction_nested_deployments_are_explicitly_unsupported(self):
+        self.reported_profile_deployments()
+        template = self.fake.deployment_templates["demo-stage-360-20261017"]
+        nested = copy.deepcopy(template)
+        nested["parameters"]["deploymentProfile"] = {
+            "type": "string", "defaultValue": "production"}
+        for properties in (
+                {"template": nested, "parameters": {}},
+                {"templateLink": {"uri": "https://example.invalid/unknown.json"}},
+                {"template": nested,
+                 "parameters": {"deploymentProfile": {"value": "development"}}}):
+            with self.subTest(properties=properties):
+                template["resources"] = [{
+                    "type": "Microsoft.Resources/deployments", "apiVersion": "2022-09-01",
+                    "name": "nested", "properties": properties}]
+                with self.assertRaisesRegex(SETUP.SetupError, "Nested deployments"):
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+                self.assert_no_generation_writes()
+                self.assertFalse(self.fake.sql_calls)
+
+    def test_neutral_template_never_authorizes_development_by_itself(self):
+        self.reported_profile_deployments()
+        self.fake.environment["tags"].pop(SETUP.PROFILE_TAG)
+        self.fake.deployments = self.fake.deployments[:1]
+        self.assert_demo_refused()
+        self.fake.app["tags"][SETUP.PROFILE_TAG] = "development"
+        SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+
+    def test_main_literal_defaults_and_explicit_override_follow_actual_contract(self):
+        self.demo_roster()
+        for profile, supplied, accepted in (
+                ("production", {}, False), ("development", {}, True),
+                ("production", {"deploymentProfile": {"value": "development"}}, True),
+                ("development", {"deploymentProfile": {"value": "production"}}, False)):
+            with self.subTest(default=profile, supplied=supplied):
+                self.fake.deployments = []
+                self.bound_deployment("full-main", supplied, declarations={
+                    "deploymentProfile": {"type": "string", "defaultValue": profile},
+                    "environmentName": {"type": "string", "defaultValue": "test"}})
+                if accepted:
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+                else:
+                    self.assert_demo_refused()
+
+    def test_production_defaults_cannot_hide_behind_development_tags(self):
+        self.demo_roster()
+        for key in ("deploymentProfile", "environmentName"):
+            with self.subTest(key=key):
+                self.fake.deployments = []
+                self.bound_deployment("main-with-module-tags", {
+                    "tags": {"value": {SETUP.PROFILE_TAG: "development", "environment": "test"}}},
+                    declarations={"tags": {"type": "object"},
+                                  key: {"type": "string", "defaultValue": "production"}})
+                self.assert_demo_refused()
+
+    def test_module_tag_defaults_are_evidence_and_all_conflicts_veto(self):
+        self.demo_roster()
+        self.fake.app["tags"] = {}
+        self.bound_deployment("module-default", {}, declarations={
+            "tags": {"type": "object", "defaultValue": {
+                SETUP.PROFILE_TAG: "development", "environment": "test"}}})
+        SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+        self.fake.app["tags"]["environment"] = "pilot"
+        self.assert_demo_refused()
+        self.fake.app["tags"] = {}
+        self.fake.deployment_templates["module-default"]["parameters"]["tags"][
+            "defaultValue"][SETUP.PROFILE_TAG] = None
+        self.assert_demo_refused()
+
+    def test_reported_shape_rejects_explicit_production_failed_and_env_conflicts(self):
+        for conflict in ("explicit-production", "failed", "canceled", "running", "env-profile",
+                         "env-environment", "unrelated-binding", "prefix-binding"):
+            with self.subTest(conflict=conflict):
+                self.fake.deployments = []
+                self.reported_profile_deployments()
+                if conflict == "explicit-production":
+                    self.bound_deployment("real-production", {
+                        "deploymentProfile": {"value": "production"}}, resource=ENV_ID)
+                elif conflict in ("failed", "canceled", "running"):
+                    self.fake.deployments[0]["properties"]["provisioningState"] = conflict.title()
+                elif conflict == "env-profile":
+                    self.fake.environment["tags"][SETUP.PROFILE_TAG] = "production"
+                elif conflict == "env-environment":
+                    self.fake.environment["tags"]["environment"] = "pilot"
+                else:
+                    self.fake.environment["tags"] = {}
+                    wrong_id = ("/unrelated" if conflict == "unrelated-binding"
+                                else ENV_ID + "-other")
+                    for deployed in self.fake.deployments[1:]:
+                        deployed["properties"]["outputResources"] = [{"id": wrong_id}]
+                self.assert_demo_refused()
+
+    def test_unrelated_history_is_not_exported_and_exact_binding_is_case_insensitive(self):
+        self.reported_profile_deployments()
+        self.fake.deployments.append({"properties": {
+            "provisioningState": "Failed", "outputResources": [{"id": APP_ID + "-other"}]}})
+        self.fake.deployments[0]["properties"]["outputResources"][0]["id"] = APP_ID.upper()
+        SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+        exported = [command[command.index("-n") + 1] for command, _env in self.fake.calls
+                    if command[1:4] == ["deployment", "group", "export"]]
+        self.assertEqual(exported, ["demo-stage-360-20261017", "containerapps", "demo-env-360"])
+
+    def test_missing_or_wrong_environment_identity_is_not_profile_evidence(self):
+        for identity in (None, "", 123, ENV_ID + "-other"):
+            with self.subTest(identity=identity):
+                self.fake.deployments = []
+                self.reported_profile_deployments()
+                self.fake.environment["id"] = identity
+                self.assert_demo_refused()
+
+    def test_malformed_relevant_values_and_defaults_fail_closed(self):
+        for key in ("deploymentProfile", "environmentName", "tags"):
+            for value in (None, "", 0, False, [], "[parameters('unresolved')]", "unknown",
+                          {"unexpected": "shape"}):
+                if key == "tags" and isinstance(value, dict):
+                    continue
+                for default in (False, True):
+                    with self.subTest(key=key, value=value, default=default):
+                        self.demo_roster()
+                        self.fake.deployments = []
+                        declaration = {"type": "object" if key == "tags" else "string"}
+                        if default:
+                            declaration["defaultValue"] = value
+                        self.bound_deployment("invalid", {} if default else {key: {"value": value}},
+                                              declarations={key: declaration})
+                        self.assert_demo_refused()
+
+    def test_missing_required_malformed_declarations_and_entries_fail_closed(self):
+        for declaration in (None, [], {}, {"type": None}, {"type": 7},
+                            {"type": "secureString"}, {"type": "string"}):
+            with self.subTest(declaration=declaration):
+                self.demo_roster()
+                self.fake.deployments = []
+                self.bound_deployment("invalid", {},
+                                      declarations={"deploymentProfile": declaration})
+                self.assert_demo_refused()
+        for entry in (None, [], "development", {}, {"reference": {}},
+                      {"value": "development", "reference": {}}):
+            with self.subTest(entry=entry):
+                self.fake.deployments = []
+                self.bound_deployment("invalid", {"deploymentProfile": entry})
+                self.assert_demo_refused()
+
+    def test_unknown_contract_export_failure_and_malformed_containers_fail_closed(self):
+        self.demo_roster()
+        self.bound_deployment("invalid", {})
+        valid = copy.deepcopy(self.fake.deployment_templates["invalid"])
+        for template in (None, [], {}, {"template": valid},
+                         {**valid, "parameters": None}, {**valid, "parameters": []},
+                         {**valid, "resources": None}, {**valid, "contentVersion": None},
+                         {**valid, "contentVersion": ""}, {**valid, "contentVersion": "unknown"}):
+            with self.subTest(template=template):
+                self.fake.deployment_templates["invalid"] = template
+                self.assert_demo_refused()
+        self.fake.deployment_templates["invalid"] = valid
+        self.fake.fail = lambda args: args[:3] == ["deployment", "group", "export"]
+        self.assert_demo_refused()
+
+    def test_malformed_bound_history_and_resource_tags_fail_closed(self):
+        for parameters in (None, [], "invalid"):
+            with self.subTest(parameters=parameters):
+                self.demo_roster()
+                self.fake.deployments = []
+                self.bound_deployment("invalid", {})
+                self.fake.deployments[0]["properties"]["parameters"] = parameters
+                self.assert_demo_refused()
+        for tags in (None, [], "development"):
+            self.fake.deployments = []
+            self.fake.app["tags"] = {}
+            self.demo_roster()
+            self.fake.app["tags"] = tags
+            self.assert_demo_refused()
+        self.fake.app["tags"] = {}
+        self.demo_roster()
+        for history in (None, {}, [None], [{"properties": []}],
+                        [{"properties": {"outputResources": {}}}],
+                        [{"properties": {"outputResources": [None]}}],
+                        [{"properties": {"outputResources": [{"id": None}]}}]):
+            with self.subTest(history=history):
+                self.fake.deployments = history
+                self.assert_demo_refused()
+
+    def test_undeclared_supplied_parameter_and_missing_deployment_name_fail_closed(self):
+        self.demo_roster()
+        self.bound_deployment("invalid", {"deploymentProfile": {"value": "development"}},
+                              declarations={})
+        self.assert_demo_refused()
+        self.fake.deployments[0]["properties"]["parameters"] = {}
+        for name in (None, "", 7, "../other", "--other"):
+            with self.subTest(name=name):
+                self.fake.deployments[0]["name"] = name
+                self.assert_demo_refused()
 
     def test_deployments_with_null_properties_are_ignored(self):
         self.demo_roster()
@@ -859,20 +1218,22 @@ class SetupTests(unittest.TestCase):
             {"properties": None},
             {"properties": {"provisioningState": "Succeeded", "outputResources": None,
                             "parameters": None}},
-            {"properties": {"provisioningState": "Failed", "outputResources": [{"id": APP_ID}],
-                            "parameters": {"tags": None, "deploymentProfile": {"value": "development"},
-                                           "environmentName": {"value": "test"}}}},
         ]
+        self.bound_deployment("bound-success", {
+            "deploymentProfile": {"value": "development"},
+            "environmentName": {"value": "test"}})
+        self.fake.deployments[2]["properties"]["provisioningState"] = "Failed"
+        self.assertEqual(self.invoke(), 1)
+        self.assert_no_generation_writes()
         self.fake.deployments[2]["properties"]["provisioningState"] = "Succeeded"
         self.assertEqual(self.invoke(), 0, self.output.getvalue())
 
     def test_bound_deployment_can_prove_profile_but_production_environment_overrides(self):
         self.demo_roster()
         self.fake.app["tags"].pop(SETUP.PROFILE_TAG)
-        self.fake.deployments = [{"properties": {
-            "provisioningState": "Succeeded", "outputResources": [{"id": APP_ID}],
-            "parameters": {"deploymentProfile": {"value": "development"},
-                           "environmentName": {"value": "test"}}}}]
+        self.bound_deployment("bound-explicit", {
+            "deploymentProfile": {"value": "development"},
+            "environmentName": {"value": "test"}})
         self.assertEqual(self.invoke(), 0, self.output.getvalue())
         self.demo_roster()
         self.direct()
@@ -885,14 +1246,14 @@ class SetupTests(unittest.TestCase):
     def test_nested_module_profile_tags_are_bound_to_actual_output_resources(self):
         self.demo_roster()
         self.fake.app["tags"].pop(SETUP.PROFILE_TAG)
-        self.fake.deployments = [{"properties": {
-            "provisioningState": "Succeeded", "outputResources": [{"id": APP_ID}],
-            "parameters": {"tags": {"value": {SETUP.PROFILE_TAG: "development",
-                                             "environment": "test"}}}}}]
+        self.bound_deployment("bound-module", {
+            "tags": {"value": {SETUP.PROFILE_TAG: "development", "environment": "test"}}})
         self.assertEqual(self.invoke(), 0, self.output.getvalue())
         self.demo_roster()
         parameters = self.fake.deployments[0]["properties"]["parameters"]
         parameters["deploymentProfile"] = {"value": "production"}
+        self.fake.deployment_templates["bound-module"]["parameters"][
+            "deploymentProfile"] = {"type": "string"}
         self.fake.writes.clear()
         self.fake.tag_writes.clear()
         self.assertEqual(self.invoke(), 1)

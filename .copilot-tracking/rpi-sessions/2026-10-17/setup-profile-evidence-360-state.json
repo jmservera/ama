@@ -1,0 +1,74 @@
+{
+  "task_id": "issue-360-followup",
+  "task_slug": "setup-profile-evidence-360",
+  "parent_task": {"task_id": "360", "task_slug": null},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "correction_one": {
+    "authority": "Coordinator exact-9561938a independent Revise, two Medium defects, 2026-10-17",
+    "scope": "Case-insensitive structurally validated ARM binding; supported template envelope/resources; failing-first tests",
+    "status": "implemented_validated_source_published",
+    "source_commit": "ed29c364f4656e9c091b907c8fced30dba266f03",
+    "publication": "Normal push verified on remote and PR #391; final documentation receipt follows normally",
+    "ci": "No corrected-head automatic checks; ordinary-only validation inspected for final-receipt dispatch; exact run receipt on PR #391, not green until observed",
+    "mergeability": "CONFLICTING after main advanced; no new rebase authorized",
+    "independent_verdict": "Exact-9561938a Revise retained; corrected-head acceptance not established",
+    "disposition": ".copilot-tracking/changes/2026-10-17/setup-profile-evidence-360-correction-one.md",
+    "failing_first": "2 methods, 4 failures invalid envelopes accepted, 1 error valid mixed-case binding refused",
+    "validation": "206 passed in 4.500s; configured and correction-line static checks passed",
+    "fresh_main": "226702779e57e490cb10dc06ab014760c7d8a761",
+    "rebase_authorized": false,
+    "new_review": false
+  },
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/setup-profile-evidence-360-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/setup-profile-evidence-360-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/setup-profile-evidence-360-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/setup-profile-evidence-360-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/setup-profile-evidence-360-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/setup-profile-evidence-360-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute full ordered RPI automatically with committed dated artifacts, push and main PR", "status": "confirmed", "evidence": "Owner request 2026-10-17"},
+    {"decision": "Source-only profile classification; no Azure mutation or full setup success claim", "status": "confirmed", "evidence": "Owner request 2026-10-17"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "completed", "evidence": ".copilot-tracking/research/2026-10-17/setup-profile-evidence-360-research.md; C1-C6, W1-W4"},
+    {"decision": "One independent final-candidate critique executed, verdict Pass, no findings", "status": "completed", "evidence": ".copilot-tracking/reviews/plans/2026-10-17/setup-profile-evidence-360-plan-critique.md"},
+    {"decision": "One Review executed Complete; outcome Residual work; no source defects found; not coordinator acceptance", "status": "completed", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/setup-profile-evidence-360-review.md; RV-001 live gates and pending delivery"},
+    {"decision": "Source and all dated artifacts committed/pushed, main PR #391 opened; clean source head verified", "status": "completed", "evidence": "ac4b28590d8885b314f81be02c2371398270ccd4; https://github.com/jmservera/ama/pull/391"},
+    {"decision": "Stop at clean pushed head/resume ID; no unauthorized integration or automatic child", "status": "confirmed", "evidence": "Owner request; PR #391 now CONFLICTING after concurrent main #387; no merge/rebase/force push authorized"}
+  ],
+  "integration": {
+    "authorization": "Coordinator request 2026-10-17: own topic rebase and explicit expected-old-remote force-with-lease only",
+    "expected_old_remote": "cea89c43a9979daabe1eb09032c85d451b137584",
+    "base": "3f544fb9cda2c51b219db2cc8368c7525bbe0c86",
+    "rebased_candidate": "bffba7475dfbc551a0836601ba67c3af62f809c1",
+    "conflicts": ["docs/reference/log.md"],
+    "infra_patch_parity": "d1de2f05de59c2460cb793daf751d3fa8bbeb22c2a073eda281677c181f64f37",
+    "validation": "200 passed; configured static checks passed; source/tests and original critique/Review byte-unchanged; all src identical to new base",
+    "publication": "Authorized exact-lease push succeeded at 9c0ffe22202ecf241e5c5d4f03d0b03553ab28bf; PR #391 MERGEABLE against 3f544fb9; final documentation receipt is a normal fast-forward",
+    "ci": "Automatic ordinary Source projects CI 39067847373 and MVP validation 39067847374 queued for 9c0ffe22; final receipt push triggers current-head checks, whose actual outcome is recorded on PR #391; no manual or paid rubric dispatch",
+    "new_review": false
+  },
+  "latest_main_integration": {
+    "authorization": "Coordinator 2026-10-17 after clean correction session exit; own-topic rebase plus exact expected-old lease",
+    "expected_old_remote": "bcefa42d536096082227e1d59e80c6e605831eaa",
+    "base": "226702779e57e490cb10dc06ab014760c7d8a761",
+    "rebased_candidate": "952f92c3",
+    "conflicts": ["docs/reference/log.md"],
+    "proof": "Exact upstream log byte prefix plus all own appended bytes; all routes retained; all src/workflows identical to main",
+    "infra_patch_sha256": "489207739cb04e225ee54ebc162f66372dc41cddb08a7ef328b5d21db55934db",
+    "corrections_and_review": "Both correction source/test fingerprints and original critique/Review unchanged",
+    "validation": "123 setup tests passed in 2.677s; configured lint/format, compileall and diff checks passed",
+    "publication": "Exact expected-old lease authorized; final published head/check receipt on PR #391",
+    "new_review": false
+  },
+  "blockers": ["Independent final-head acceptance and live ACR403/tenant/browser/SQL/AI gates remain unmet"],
+  "next_action": {"phase": "Follow-up", "action": "Publish latest-main integration with authorized exact lease, record exact final-head ordinary checks on PR #391 and stop clean. No merge, issue closure, new full Review or live setup"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Assess latest-main integrated exact-head ordinary CI and independent acceptance", "rationale": "Authorized integration preserves both corrections and all upstream runtime bytes; absence/pending checks not green", "evidence": "Separate correction ONE integration disposition; final exact-head checks on PR #391; no rubric/cloud dispatch"},
+    {"rank": 2, "task": "Establish authorized live credential/export and initializer-publication prerequisites", "rationale": "Prerequisite to genuine setup acceptance; no safe source-only bypass", "evidence": "Review RV-001; owner-reported live credential and initializer publication 403 gates"},
+    {"rank": 3, "task": "Verify actual tenant/browser/role/SQL/AI acceptance before separately approved retirement", "rationale": "High value but depends on live prerequisites and separate authorization", "evidence": "Review RV-001; issue #360 criteria d/e"}
+  ]
+}

@@ -5568,3 +5568,65 @@ metadata when the knowledge base was created.
   Prospective complete capture is buildable separate engineering follow-up,
   not a human blocker; forecasts still lack verified operational inputs.
   No browser/WCAG, human, Azure, real AI or outcome acceptance is claimed.
+
+## [2026-10-17] query | Resource-bound setup profile contracts (Refs #360)
+
+* Corrected the automatic setup runbook and existing index route: a bound
+  profile-neutral app patch cannot imply production merely because the
+  deployment parameters omit profile fields. The actual exported ARM template
+  contract controls literal defaults; full main's production default still
+  vetoes development, even alongside development module tags.
+* Official ARM deployment metadata, template export and parameter-default
+  documentation checked 2026-10-17 and linked in infra/README.md. Unknown,
+  malformed/null, contradictory, failed or unreadable bound evidence remains
+  fail-closed; development plus dev/test/demo evidence is still mandatory.
+* Reproduced coordinator-reported three-deployment shape before the source fix
+  and passed it afterward, including a fake read-only roster preview. Fresh
+  baseline was 104 setup plus 43 staff_azure tests; expanded setup suite passes
+  117 tests, preserving admin selection, seeded distinct users, Key Vault and
+  private/read-only restrictions. No live setup, Graph write, SQL, temporary
+  cloud job, tag spoofing, public-service change or Azure deployment occurred.
+* Live credential and initializer-publication 403 gates and #360 d/e remain
+  unmet. Source parsing acceptance is not tenant/browser/SQL/AI acceptance or
+  permission to retire Front Door or delete resource group ama.
+
+## [2026-10-17] query | Authorized profile-evidence integration (#360)
+
+* Coordinator authorized own PR391 topic rebase from cea89c43 onto freshly
+  fetched main 3f544fb9 (#387), with exact expected-old-remote lease only.
+  Only log insertion conflicted; complete upstream byte prefix plus original
+  own entry retained, all upstream routes preserved.
+* Infra source/test added-and-removed binary patch is byte-identical across
+  bases. Original critique and single Review unchanged; all merged src,
+  including quality assistant and recovery, exactly equal the new main base.
+  No source correction, new full Review or self-declared coordinator Pass.
+* Fresh installed-distribution complete setup/staff/auth/secret suite: 200
+  passed. Configured lint/format, changed-line lint, syntax and diff checks
+  pass. Ordinary CI publication/status recorded separately; absent checks
+  are not green and no paid rubric scoring is dispatched.
+* No main/other-worktree write, cloud mutation, Graph, SQL or live setup.
+  ACR403/private publisher and actual tenant/browser/SQL/AI remain unmet;
+  no merge, issue closure, service exposure change or full-setup-ready claim.
+
+## [2026-10-17] query | Coordinator profile correction ONE (#360)
+
+* Independent coordinator exact-9561938a assessment returned Revise for two
+  Medium defects: mixed-case /Providers/ rejected valid bound ARM identity,
+  and malformed schema/resource envelopes could be classified neutral.
+* Both independent reproductions failed on unchanged source (four invalid
+  envelope acceptances and one valid-ID rejection). Correction structurally
+  validates exact subscription/ama/provider/type/name paths case-insensitively
+  and validates the supported resource-group ARM envelope before classification.
+* Supported resource arrays and languageVersion 2.0 symbolic resources require
+  typed resource entries. Unknown schemas/languages, malformed entries and
+  unsupported nested deployment parameter/default contracts explicitly refuse;
+  schema validity does not prove development. Official syntax/schema sources
+  checked 2026-10-17 and linked in the setup runbook.
+* Expanded installed-distribution setup/staff/auth/secret suites: 206 pass,
+  including six added correction methods with table cases. Original critique
+  and Review unchanged; separate correction disposition retains Revise and
+  does not claim coordinator Pass. Fresh main advanced to 22670277; no new
+  rebase authorized or attempted.
+* No live setup, private inputs, Graph, SQL, Azure/IAM/network/tag changes,
+  paid rubric dispatch, merge or issue closure. Private publisher ACR403 and
+  actual tenant/browser/SQL/AI acceptance remain unmet.
