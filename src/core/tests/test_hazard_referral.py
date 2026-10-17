@@ -94,6 +94,161 @@ class JsonHazardReferral(unittest.TestCase):
         self.assertEqual(list(self.store.audit_entries()), audit)
         self.assertEqual(self.store.data.get("procurement"), procurement)
 
+    def register(self, actor: dict[str, Any]) -> None:
+        if self.sql:
+            assert isinstance(self.store, SqlStore)
+            with self.store.dblock:
+                self.store.db.execute("DELETE FROM staff WHERE email=?", (actor["email"].lower(),))
+                self.store.db.execute(
+                    "INSERT INTO staff (email, body) VALUES (?, ?)",
+                    (actor["email"].lower(), json.dumps(actor)),
+                )
+        else:
+            self.store.staff[actor["email"].lower()] = copy.deepcopy(actor)
+
+    def ready_for_release(self) -> None:
+        self.raise_report()
+        self.refer()
+        self.accept()
+        self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")
+
+    def test_current_registered_actors_and_destinations_are_required(self) -> None:
+        for actor in (
+            dict(self.sam, email="absent@example.test"),
+            dict(self.sam, code="FORGED"),
+            dict(self.sam, oid="SYN-CHANGED-OID"),
+        ):
+            with self.subTest(actor=actor):
+                self.unchanged_failure(
+                    partial(
+                        self.store.raise_hazard,
+                        actor,
+                        "ZF-3",
+                        "Electrical",
+                        "Routine",
+                        metadata=SOURCE,
+                    )
+                )
+        self.raise_report()
+        if self.sql:
+            assert isinstance(self.store, SqlStore)
+            self.store.db.execute("DELETE FROM staff WHERE email=?", (self.bea["email"],))
+        else:
+            self.store.staff.pop(self.bea["email"])
+        self.unchanged_failure(self.refer)
+        self.register(self.bea)
+        for role in ("Contractor", "Resident Liaison Officer"):
+            with self.subTest(destination_role=role):
+                self.register(dict(self.bea, role=role))
+                self.unchanged_failure(self.refer)
+        self.register(self.bea)
+        self.refer()
+        self.store.receive_hazard(self.bea, "ZF-3", 0, "SYN-RECEIPT")
+        self.store.accept_hazard(self.bea, "ZF-3", 0, "SYN-ACCEPT")
+
+    def test_stale_actor_is_refused_for_every_hazard_event(self) -> None:
+        steps: tuple[tuple[dict[str, Any], Callable[[], object]], ...] = (
+            (self.sam, self.raise_report),
+            (self.sam, self.refer),
+            (self.bea, lambda: self.store.receive_hazard(self.bea, "ZF-3", 0, "SYN-RECEIPT")),
+            (self.bea, lambda: self.store.accept_hazard(self.bea, "ZF-3", 0, "SYN-ACCEPT")),
+            (
+                self.bea,
+                lambda: self.store.observe_hazard_times(
+                    self.bea,
+                    "ZF-3",
+                    0,
+                    dict(evidence="SYN-TIMES", response_due_at="2026-01-02T00:00:00Z"),
+                ),
+            ),
+            (self.bea, lambda: self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")),
+            (
+                self.bo,
+                lambda: self.store.release_hazard(self.bo, "ZF-3", 0, "SYN-REASON", "SYN-DECISION"),
+            ),
+        )
+        for actor, operation in steps:
+            with self.subTest(actor=actor["code"], operation=operation):
+                self.register(dict(actor, oid="SYN-REVOKED-SESSION"))
+                self.unchanged_failure(operation)
+                self.register(actor)
+                operation()
+
+    def test_receiver_binding_rejects_recycled_code(self) -> None:
+        self.raise_report()
+        self.refer()
+        replacement = dict(self.bea, email="replacement@example.test", oid="SYN-REPLACEMENT")
+        self.register(replacement)
+        self.unchanged_failure(
+            lambda: self.store.receive_hazard(replacement, "ZF-3", 0, "SYN-RECEIPT")
+        )
+        self.accept()
+
+    def test_release_independence_uses_recorded_email_code_and_oid(self) -> None:
+        self.register(dict(self.bea, oid="SYN-REPAIRER"))
+        self.bea = dict(self.bea, oid="SYN-REPAIRER")
+        self.store.staff[self.bea["email"]] = copy.deepcopy(self.bea)
+        self.ready_for_release()
+        aliases = (
+            dict(self.bea, email=self.bea["email"].upper()),
+            dict(self.bea, email="renamed@example.test", oid="SYN-DIFFERENT"),
+            dict(self.bo, oid="SYN-REPAIRER"),
+        )
+        for actor in aliases:
+            with self.subTest(actor=actor):
+                self.register(actor)
+                self.unchanged_failure(
+                    partial(
+                        self.store.release_hazard, actor, "ZF-3", 0, "SYN-REASON", "SYN-DECISION"
+                    )
+                )
+        self.register(self.bo)
+        self.store.release_hazard(self.bo, "ZF-3", 0, "SYN-REASON", "SYN-DECISION")
+        h = self.open_store().detail("ZF-3")["hazards"][0]
+        self.assertEqual(h["hold"]["case_id"], "ZF-3")
+        self.assertEqual(h["hold"]["decision"]["actor"]["code"], self.bo["code"])
+
+    def test_failed_save_has_no_success_audit_or_ghost_hazard(self) -> None:
+        before = self.store.detail("ZF-3")
+        audit = list(self.store.audit_entries())
+        original = OSError("Synthetic precommit failure")
+        targets: list[tuple[Any, str]] = [(self.store, "save")]
+        if not self.sql:
+            import os
+
+            targets.append((os, "replace"))
+        for owner, target in targets:
+            with self.subTest(target=target):
+                with patch.object(owner, target, side_effect=original):
+                    with self.assertRaises(OSError) as caught:
+                        self.raise_report()
+                self.assertIs(caught.exception, original)
+                self.assertEqual(self.store.detail("ZF-3"), before)
+                self.assertEqual(self.open_store().detail("ZF-3"), before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertIsNone(getattr(getattr(self.store, "local", None), "hazard_decision", None))
+        self.store.log_call(self.sam, "ZF-2", "Contacted", "SYN-AFTER-FAILURE")
+        self.assertEqual(list(self.store.audit_entries())[-1]["action"], "log_contact")
+        self.assertTrue(self.store.verify_audit())
+
+    def test_json_postsave_audit_failure_reports_persisted_uncertainty(self) -> None:
+        if self.sql:
+            self.skipTest("JSON-only separate-file audit ordering")
+        original = OSError("Synthetic audit failure after JSON save")
+        with (
+            patch.object(self.store, "audit", side_effect=original),
+            self.assertLogs("zava_forward.core.hazard", level="ERROR"),
+            self.assertRaises(OSError) as caught,
+        ):
+            self.raise_report()
+        self.assertIs(caught.exception, original)
+        self.assertIn("audit may be incomplete", " ".join(original.__notes__))
+        self.assertEqual(len(self.open_store().detail("ZF-3")["hazards"]), 1)
+        self.assertEqual(
+            self.store.detail("ZF-3")["hazards"], self.open_store().detail("ZF-3")["hazards"]
+        )
+        self.assertEqual(list(self.store.audit_entries()), [])
+
     def test_distinct_events_times_hold_and_restart_without_case_transfer(self) -> None:
         before = self.store.detail("ZF-3")
         self.raise_report()
@@ -384,11 +539,216 @@ class JsonHazardReferral(unittest.TestCase):
 
 class SqlHazardReferral(JsonHazardReferral):
     sql = True
+    store: SqlStore
 
     def sql_store(self, name: str) -> SqlStore:
         store = SqlStore(str(self.path), str(self.path.parent / f"{name}.sqlite"))
         self.addCleanup(store.db.close)
         return store
+
+    def test_authority_changes_rechecked_at_transaction_for_caller_and_destination(self) -> None:
+        self.raise_report()
+        for who in ("caller", "destination"):
+            expected = self.sam if who == "caller" else self.bea
+            for change in ("removed", "role", "oid", "email"):
+                with self.subTest(who=who, change=change):
+                    self.register(expected)
+                    before = copy.deepcopy(self.store.cases["ZF-3"])
+                    audit = list(self.store.audit_entries())
+                    save = self.store.save
+
+                    def changed_save(
+                        expected: dict[str, Any] = expected,
+                        change: str = change,
+                        save: Callable[[], None] = save,
+                    ) -> None:
+                        other = self.store.assistant_connection()
+                        try:
+                            other.execute(
+                                "DELETE FROM staff WHERE email=?", (expected["email"].lower(),)
+                            )
+                            if change != "removed":
+                                replaced = dict(expected)
+                                replaced[change] = {
+                                    "role": "Contractor",
+                                    "oid": "SYN-REPLACED",
+                                    "email": "substitute@example.test",
+                                }[change]
+                                other.execute(
+                                    "INSERT INTO staff (email, body) VALUES (?, ?)",
+                                    (expected["email"].lower(), json.dumps(replaced)),
+                                )
+                        finally:
+                            other.close()
+                        save()
+
+                    with patch.object(self.store, "save", side_effect=changed_save):
+                        with self.assertRaises(PermissionError):
+                            self.refer()
+                    reopened = self.open_store()
+                    self.assertEqual(reopened.cases["ZF-3"], before)
+                    self.assertEqual(list(self.store.audit_entries()), audit)
+                    self.assertIsNone(self.store.local.hazard_decision)
+                    self.register(expected)
+        self.refer()
+        self.accept()
+
+    def test_failed_writes_preserve_prior_pending_audit_and_original_error(self) -> None:
+        self.ready_for_release()
+        for target, original in (
+            ("save", OSError("Synthetic precommit save failure")),
+            ("_append_audit", OSError("Synthetic transaction audit failure")),
+            ("_validate_safety_clear", PermissionError("Synthetic commit refusal")),
+            ("_validate_safety_clear", ConflictError("ZF-3")),
+        ):
+            with self.subTest(target=target, error=type(original).__name__):
+                before = self.store.detail("ZF-3")
+                audit = list(self.store.audit_entries())
+                with self.store.lock:
+                    self.store.audit(self.sam["email"], "prior_event", "ZF-2", "SYN-PRIOR")
+                    prior = copy.deepcopy(self.store.local.pending)
+                    with patch.object(self.store, target, side_effect=original):
+                        with self.assertRaises(type(original)) as caught:
+                            self.store.release_hazard(
+                                self.bo, "ZF-3", 0, "SYN-REASON", "SYN-DECISION"
+                            )
+                    self.assertIs(caught.exception, original)
+                    self.assertEqual(self.store.local.pending, prior)
+                    self.assertIsNone(self.store.local.hazard_decision)
+                reopened = self.open_store()
+                self.assertEqual(reopened.detail("ZF-3"), before)
+                self.assertEqual(
+                    [event["action"] for event in reopened.audit_entries()],
+                    [event["action"] for event in audit] + ["prior_event"],
+                )
+                self.assertTrue(reopened.verify_audit())
+        self.store.release_hazard(self.bo, "ZF-3", 0, "SYN-REASON", "SYN-DECISION")
+
+        for persistent in (False, True):
+            with self.subTest(postcommit_sync_failure=True, persistent=persistent):
+                idx = self.raise_report()
+                self.refer(idx)
+                self.accept(idx)
+                self.store.record_repair(self.bea, "ZF-3", idx, "SYN-REPAIR")
+                other = self.open_store()
+                audit = list(self.store.audit_entries())
+                original = OSError("Synthetic postcommit synchronization failure")
+                save, sync = self.store.save, self.store._sync
+                fault_state = dict(armed=0, failures=0)
+
+                def interleaved_save(
+                    other: Store = other,
+                    save: Callable[[], None] = save,
+                    state: dict[str, int] = fault_state,
+                ) -> None:
+                    other.log_call(self.sam, "ZF-2", "Contacted", "SYN-OTHER-WRITER")
+                    state["armed"] = 1
+                    save()
+
+                def failed_sync(
+                    original: OSError = original,
+                    sync: Callable[[], None] = sync,
+                    persistent: bool = persistent,
+                    state: dict[str, int] = fault_state,
+                ) -> None:
+                    if state["armed"] and (persistent or state["failures"] == 0):
+                        state["failures"] += 1
+                        raise original
+                    sync()
+
+                with self.store.lock:
+                    self.store.audit(self.sam["email"], "prior_event", "ZF-2", "SYN-PRIOR")
+                    with (
+                        patch.object(self.store, "save", side_effect=interleaved_save),
+                        patch.object(self.store, "_sync", side_effect=failed_sync),
+                        patch("zava_forward.core.hazard.logging.getLogger") as logger,
+                        self.assertRaises(OSError) as postcommit_error,
+                    ):
+                        self.store.release_hazard(
+                            self.bo, "ZF-3", idx, "SYN-REASON", "SYN-DECISION"
+                        )
+                    self.assertIs(postcommit_error.exception, original)
+                    self.assertIsNone(self.store.local.hazard_decision)
+                reopened = self.open_store()
+                self.assertTrue(reopened.detail("ZF-3")["hazards"][idx]["released"])
+                prior = [event["action"] for event in audit]
+                after = [event["action"] for event in reopened.audit_entries()]
+                self.assertEqual(after.count("prior_event"), prior.count("prior_event") + 1)
+                self.assertEqual(after.count("safety_released"), prior.count("safety_released") + 1)
+                self.assertEqual(len(after), len(prior) + 3)
+                self.assertIn("committed", " ".join(original.__notes__))
+                logger.return_value.exception.assert_called()
+                self.assertTrue(reopened.verify_audit())
+                self.store.save()
+                self.assertEqual(list(self.store.audit_entries()), list(reopened.audit_entries()))
+
+    def test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit(self) -> None:
+        self.ready_for_release()
+        for persistent, target in (
+            (False, "save"),
+            (True, "save"),
+            (False, "_validate_safety_clear"),
+            (True, "_validate_safety_clear"),
+        ):
+            with self.subTest(persistent=persistent, target=target):
+                before = self.store.detail("ZF-3")
+                audit = list(self.store.audit_entries())
+                original = (
+                    OSError("Synthetic original save failure")
+                    if target == "save"
+                    else PermissionError("Synthetic commit refusal")
+                )
+                db = self.store.db
+
+                class ReadFault:
+                    armed = False
+                    failures = 0
+
+                    def __init__(self, db: Any, persistent: bool) -> None:
+                        self.db = db
+                        self.persistent = persistent
+
+                    def execute(self, sql: str, args: Any = ()) -> Any:
+                        if (
+                            self.armed
+                            and sql.startswith("SELECT rowversion, body FROM cases")
+                            and (self.persistent or self.failures == 0)
+                        ):
+                            self.failures += 1
+                            raise OSError("Synthetic recovery read failure")
+                        return self.db.execute(sql, args)
+
+                    def __getattr__(self, name: str) -> Any:
+                        return getattr(self.db, name)
+
+                fault = ReadFault(db, persistent)
+
+                def failed_save(fault: ReadFault = fault, original: Exception = original) -> None:
+                    fault.armed = True
+                    raise original
+
+                with self.store.lock:
+                    self.store.audit(self.sam["email"], "prior_event", "ZF-2", "SYN-PRIOR")
+                    with (
+                        patch.object(self.store, "db", fault),
+                        patch.object(self.store, target, side_effect=failed_save),
+                        self.assertLogs("zava_forward.core.hazard", level="ERROR"),
+                        self.assertRaises(type(original)) as caught,
+                    ):
+                        self.store.release_hazard(self.bo, "ZF-3", 0, "SYN-REASON", "SYN-DECISION")
+                    self.assertIs(caught.exception, original)
+                    self.assertTrue(original.__notes__)
+                    self.assertEqual(self.store.local.touched, set())
+                    self.assertIsNone(self.store.local.hazard_decision)
+                reopened = self.open_store()
+                self.assertEqual(reopened.detail("ZF-3"), before)
+                self.assertEqual(
+                    [event["action"] for event in reopened.audit_entries()],
+                    [event["action"] for event in audit] + ["prior_event"],
+                )
+                self.store.save()
+                self.assertEqual(self.store.detail("ZF-3"), before)
+                self.assertTrue(reopened.verify_audit())
 
     def test_interleaved_emergency_hold_blocks_every_guarded_commit(self) -> None:
         def intake_before_commit(

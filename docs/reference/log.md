@@ -5340,3 +5340,56 @@ metadata when the knowledge base was created.
   historical correction evidence, not new integration runs. Original adverse
   Review retained; coordinator independent closure pending. No new full Review,
   private data, financial/cloud action, main write, merge or issue closure.
+
+## [2026-10-17] correction | #85 current hazard evidence and persistence
+
+* Audited existing source/awareness, separate sent/receipt/acceptance, sender
+  follow-up, home hold/restart evidence and visible external response/update
+  times. Preserved authoritative hazard-service categorisation, clocks,
+  resident updates and closure; no communications or automatic release added.
+* Reproduced and corrected unregistered/stale actor recording, case-only
+  self-release and failed-save success audit. Current caller/destination checks
+  repeat inside existing SQL writer transaction; retained email/code/OID
+  identities enforce independent retrofit-only decisions. Failed staged SQL
+  state/audit is quarantined before recovery, preserving prior audit and errors.
+* Canonical JSON/SQLite tests and actual task-owned loopback SQL Server exercise
+  cover authority changes, release/audit rollback and recovery-read faults.
+  JSON separate-file post-save audit failure explicitly reports uncertainty,
+  not fictional rollback. No quality/finance source, shared fixture recipe,
+  scenario manifest, regulatory snapshot or UI edits were needed.
+* Updated existing component guides, hazard synthesis and index. BRD hazard
+  anchors are FR-003/RULE-003; older FR-015 issue pointer now refers to tenure.
+  Actual operational delegation, release/timing/escalation policy, verified
+  service receipt, Azure/model/human/WCAG acceptance remain unestablished.
+  No private stock/rosters, live instruction, legal activation, paid AI,
+  external resident communication or cloud change occurred.
+
+## [2026-10-17] correction ONE | #85 retained adverse Review and post-commit audit
+
+* One independent Review returned Complete / Not accepted for RV-001 High:
+  post-commit synchronization failure replayed an already-committed prior audit.
+  Both one-shot and persistent failures reproduced before correction.
+* Authorized correction ONE records acknowledged SQL COMMIT in the hazard
+  scope. Later synchronization failure reloads without replay, retains the
+  original error and explicitly warns that evidence committed. Existing
+  uncommitted rollback/quarantine and all shared validators remain.
+* Canonical SQLite and actual task-owned loopback SQL Server assertions cover
+  a second writer, committed release, exactly-once prior/release audit and
+  explicit warnings. Parent correction evidence is not independent closure;
+  original adverse Review and final-head acceptance limitation are retained.
+  No new UI, service authority, regulatory change or operational approval.
+
+## [2026-10-17] integration | Hazard controls on latest main (#85)
+
+* After correction ONE and draft PR #388 publication, coordinator authorization
+  rebased the owned topic from base b5d4c840 onto fetched main
+  2b24456863c0a8f39d47a73e22daeff3875cc825, including merged PR #385/#386.
+* Only manual conflict was this append-only log. Upstream exact byte prefix and
+  all other index routes retained. Entire production/test binary patch remains
+  byte-identical across bases; component documentation auto-merges preserve
+  both intents. No duplicate grant fix or shared recovery redesign.
+* Upstream grant/finance/store, neutral UI, fixture and exact manifest remain
+  byte-unchanged, with no authority promotion. Fresh 25 SQLite/manifest tests
+  pass; six added documentation links/anchors and retained Review hash verified.
+  Original actual MSSQL/full/static evidence remains historical, not newly run
+  integration parity. Independent final-head closure remains coordinator work.

@@ -1042,14 +1042,36 @@ service timetable. These acceptance criteria remain unchecked.
 `tests/test_hazard_api.py` runs a real HTTP application on loopback with
 fictional staff/home data and SQLite state. It exercises health/static serving,
 authenticated closed-record intake, receipt/acceptance/timing/repair/release,
-role isolation, legacy binding and restart durability. This is local synthetic
+role isolation, legacy binding, restart durability and refusal of cached sessions
+after current staff role/OID changes. This is local synthetic
 application evidence, not real model inference, verified service transport,
-SQL Server durability, Azure deployment or human/browser acceptance.
+Azure deployment or human/browser acceptance. The canonical
+`test_mssqlstore.MssqlHazardReferral` adapter separately exercised actual local
+SQL Server durability and transaction-time current caller/destination checks
+on 2026-10-17 (16 run, one JSON-only skip), using a task-owned disposable
+loopback container and tiny fictional cases. That does not prove Azure or
+verified external receipt.
 The existing AI release and human-review gates are unchanged; no fallback or
 model output can waive a hold. Full #85 acceptance and the mandatory
 real-platform application exercise remain unmet without the outstanding
 owner/live evidence. Docker image checks are delegated to CI if the local
 daemon is inaccessible.
+
+The existing endpoints and screen require no new fields or UI changes for the
+current-actor correction. They still record human assertions, not service
+commands: no resident message, hazard classification, calculated statutory
+clock or external closure occurs. Independent restart identity now compares
+recorded normalized email/code/OID, not case-sensitive email alone. SQL refuses
+and discards a failed event and its success audit while preserving earlier audit.
+If synchronization fails after an acknowledged SQL commit, it reports the
+committed outcome and never replays already-committed audit. The one independent
+Review's original Not accepted finding is retained; correction ONE has local
+regression/actual SQL evidence, not independent final-head closure.
+For JSON, a post-save audit failure is explicitly a potentially persisted outcome
+requiring reload/reconciliation, not an invitation to retry blindly. See the
+[backend evidence boundary](../core/README.md#current-hazard-actor-and-persistence-evidence-2026-10-17).
+No new browser run or accessibility acceptance is claimed for this backend-only
+change; the Fluent 2/native screen and manual paths are unchanged.
 
 ## Design-system foundations (#150)
 
