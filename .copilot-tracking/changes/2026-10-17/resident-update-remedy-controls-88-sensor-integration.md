@@ -128,11 +128,14 @@ triage to Legal/Housing/Complaints, not a substitute for bounded criterion proof
 
 ## Publication State
 
-Implementation integration and local checks complete; publication pending.
+Implementation integration and local checks complete; exact authorized lease
+publication succeeded as096d7c57fc15ce8a9e17dc94eba00f94deb914b2.
+This final metadata-only publication receipt follows normally without source
+changes. PR body/final handoff identify final exact head after that receipt.
 Only authorized exact topic lease:
 refs/heads/fix/resident-update-remedy-controls-88:
 d27782a77aaaa2d3571e1869f9464365c48e419c.
-Fresh gh api user privacy-safe local author/committer plus Copilot trailer required
+Fresh gh api user privacy-safe local author/committer plus Copilot trailer used
 for evidence commit. No main write/merge/issue closure. Final exact published head
 will be in PR body and final handoff; CI unreported checks pending, not green.
 Resume ID3a36c179-e1e3-4332-9c33-fa947262fd79.
