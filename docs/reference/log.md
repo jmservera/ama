@@ -5393,3 +5393,113 @@ metadata when the knowledge base was created.
   pass; six added documentation links/anchors and retained Review hash verified.
   Original actual MSSQL/full/static evidence remains historical, not newly run
   integration parity. Independent final-head closure remains coordinator work.
+
+## [2026-10-17] delivery | Per-measure quality and handover controls #91
+
+* Executed all ordered RPI phases' preparation: fresh issue/requirements and
+  current actor/transaction audit, real fail-before probes, plan and one
+  independent critique. Existing stepwise flow was verified rather than
+  replaced. Critique's original Revise is retained; compatible legacy
+  multi-record retirement and exact regression ownership findings were applied.
+* Current registered staff now authorize quality writes under the existing SQL
+  decision scope. Retained contributor identities prevent original/earlier-fixer
+  or name/email/code/OID alias self-acceptance. Explicit remediation evidence
+  and independent reinspection are required. No new competence or risk policy.
+* Same-measure replacement invalidates every prior active acceptance/handover
+  and retains history/aftercare as superseded evidence. Independent new acceptance
+  and resident handover remain separate. Contractor writes stay denied and no
+  quality action changes finance/grants or executes payment.
+* Updated existing core/API guides, programme journey synthesis and index
+  without changing upstream routes/log prefix. No finance.py, dataset fixture,
+  app.js, server.py, shared manifest or SQL persistence helper edit was needed;
+  #84 stock, #94 finance and #90 capacity/scheduling checks remain.
+* Actual tiny-fictional local JSON/SQLite/HTTP, isolated local SQL Server and
+  real Chromium evidence are recorded separately from competent-human, Azure
+  SQL, screen-reader, resident and WCAG acceptance, which are not claimed.
+  No private data, cloud/paid AI, live order, financial commitment or merge.
+
+## [2026-10-17] delivery | #91 independent Review and authorized correction ONE
+
+* The one independent Review executed Complete, original outcome Not accepted.
+  RV-001 reproduced known earlier legacy FIXED recorder resolution failure;
+  RV-002 reproduced committed refresh failure replaying a legitimate audit prefix.
+  The original verdict is retained, not overwritten by a claimed second Pass.
+* Canonical fail-before tests reproduced both. Historical recorders now enter
+  conservative staff lookup; earlier aliases remain excluded. Confirmed own
+  committed snapshots are identified before shared recovery, preserving exactly
+  one committed decision/prefix and surfacing explicit committed/reload guidance.
+* The #95 shared overlap is only the sequenced two-line server.py quality-outcome
+  handler returning HTTP 503 with outcome=committed. No grants/finance dispatch,
+  finance.py, app.js, dataset, manifest or SQL persistence helper changes.
+* Latest local selection: 361 run, 312 passed, 49 existing opt-in skips.
+  Actual isolated SQL Server: 38 passed; exact owned container removed.
+  Actual Chromium exercised committed-refresh failure/reload as well as the
+  full quality/replacement journey; configured engineering gates passed.
+  Human, Azure, resident, screen-reader and full WCAG acceptance remain unclaimed.
+
+## [2026-10-17] integration | #91 onto merged grant controls and initializer base
+
+* Coordinator authorized latest-main topic rebase after correction publication.
+  Exact base 2b24456863c0a8f39d47a73e22daeff3875cc825 includes PR386/#95
+  and PR385. Prior head d322235641487ff2c4dea1e4339c99f973b7f75d rebased
+  to tested candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5.
+* Four documentation insertion conflicts retain all upstream routes and exact
+  complete log prefix, with #91 entries appended; both component sections kept.
+  Whole own production/test patch byte parity proven. No new grant/finance
+  correction, shared recovery redesign, fixture/manifest or authority change.
+* Preserved merged #95 current legacy-preparer transaction revalidation on grant
+  AND finance, scoped synthetic designation, shared finance operation, funding
+  history and neutral UI. Original #91 single Review and correction evidence
+  retained verbatim. Original case unchanged.
+* Fresh combined local tests: 206 run, 205 pass, one existing grant-browser skip.
+  Actual unique loopback SQL Server replay: 83 pass, zero skip; exact owned
+  container removed. Configured checks and document links passed. Earlier
+  broader/browser receipts are historical; no new independent Pass, Azure,
+  human-authority, screen-reader or WCAG claim, main write, merge or issue closure.
+
+## [2026-10-17] integration | #91 preserves merged hazard commit-boundary controls
+
+* Coordinator authorized own-topic rebase onto verified latest main
+  1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c (PR388/#85), from reviewed
+  topic 210b89df0d287675cb8ac5148dd9d198d37dd9c1. Exact upstream log byte
+  prefix and all routes/quality histories retained; only log insertion conflicted.
+* Hazard writer validation and per-operation marker immediately after COMMIT
+  remain alongside stock/finance/procurement validation. Quality retains its own
+  committed snapshot/outcome and no-prefix-replay behavior. No production change,
+  shared recovery redesign, duplicate hazard/grant correction or authority change.
+* Combined run exposed a copied test record with unknown Synthetic recorder;
+  quality correctly refused before the intended hazard race. The test-only
+  precondition now names existing fictional Sam with independent Pam, preserving
+  all hazard-at-commit refusal/no-false-audit assertions. Quality regression also
+  asserts next healthy save leaves audit/state unchanged after committed failure.
+  Dataset/manifest/original case unchanged; no identity guard weakened.
+* Tested candidate 48b90f42fe8170f3f17956e3a194a0c93b33eee2: fresh local
+  243 run/241 pass/two existing skips; actual task-owned local MSSQL 99 run/
+  98 pass/one existing JSON-only skip. Both one-shot/persistent post-COMMIT
+  prior-prefix paths exercised; configured gates and integrity checks passed.
+  Exact owned container removed; source fingerprints recorded for coordinator
+  external review 42ce6748. Original adverse Reviews unchanged; no independent
+  Pass, Azure, human/WCAG acceptance, merge or issue closure claimed.
+
+## [2026-10-17] correction | #91 current-version quality assistant evidence
+
+* Coordinator exact-210b89df external Review returned Revise / Medium for
+  downstream assistant counting/exposing Superseded evidence as current.
+  Authorized correction TWO followed completed post388 publication; original
+  single RPI Review/correction ONE and external adverse disposition retained.
+* Two fail-before canonical assistant tests reproduced false discrepancy and
+  stale historical-source reliance. Shared quality selector now excludes only
+  explicit Superseded, never hiding duplicate active candidates. Capture,
+  discrepancy and proposal contributor review use current evidence only;
+  scalar evidence_version participates in source signatures. Same-content
+  replacement stales prior proposals, historical-only changes do not.
+* Pending/defective/unknown/missing evidence and malformed active duplicates
+  remain gaps. No proposal review writes quality acceptance or grants new AI
+  authority. No shared persistence/hazard/finance/grant/stock/provider hook,
+  dataset/manifest or original case change.
+* Exact full core CI discovery: 788 run, 751 pass, 37 existing skips. Focused
+  assistant/dispatch/quality/hazard/HTTP: 206 run, 156 pass, 50 opt-in or
+  JSON-only skips; five exact targets including prior hosted hazard failure
+  passed. Configured Ruff/format/mypy pass. No new MSSQL/browser replay for
+  consumer-only change; prior actual SQL/browser evidence remains historical.
+  External final-head/artifact gate remains pending, no self-regraded Pass.

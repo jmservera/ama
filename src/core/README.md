@@ -87,6 +87,83 @@ Azure or a shared dataset. JSON caught-error rollback is retained, not a promise
 of cross-file abrupt-crash atomicity. No grant submission, payment, banking or
 real commitment is executed.
 
+## Per-measure quality and handover controls (#91)
+
+The existing quality workflow remains Submitted -> Accepted or Returned ->
+Fixed, awaiting reinspection -> independent acceptance -> resident handover.
+Staff record provider submissions as evidence only. Contractors still have
+no quality, defect-closure or finance write capability; no quality step
+executes payment or changes finance, grant or funding records.
+
+Every quality write resolves current registered named staff. SQLite and the
+inherited SQL Server path repeat that identity check inside the existing writer
+transaction. Accepting staff need the existing Quality Inspector/manager role,
+but a fixture role is not evidence of professional competence or delegation.
+Independence excludes the original recorder/submitter and every retained fixer,
+including aliases sharing a populated name, email, staff code or OID.
+Legacy recorder identities are resolved from retained names/codes, including
+every earlier FIXED-history recorder; unresolved contributors block acceptance
+for quality-owner review. Known independent staff can still accept legacy
+repeated-remediation records; earlier recorders and their aliases cannot.
+
+A correction needs a nonempty description of remediation and its photo,
+document or inspection reference. It remains evidence, not acceptance.
+Reinspection only applies to Fixed records; legacy Fixed records without that
+evidence cannot pass. The existing workflow requires independent acceptance
+for all returned work; this change invents no risk classifications or policy.
+Existing safety and explicit measure/resident-scope checks remain in force.
+
+Submitting replacement evidence through the existing method retires every
+Accepted/Handed over record for that same measure, including multiple legacy
+handovers. The old records become `Superseded`, link to the replacement index,
+retain original checklist evidence, history, defects and aftercare, and move
+their former acceptance/handover into `prior_acceptance`. They are no longer
+actionable. Replacement has an incrementing `evidence_version`, lists its
+`supersedes` indices, requires an explicit current resident scope revision,
+and needs fresh independent acceptance and fresh resident handover. Other
+measures and financial history are unchanged. In-progress duplicate evidence
+remains refused. This implements the retained
+[ADR 0002 replacement learning](../../docs/adrs/0002-pilot-readiness-architecture.md).
+
+The proposal-only quality assistant uses the same active-record selector:
+Superseded evidence is excluded from captured sources, per-measure checks and
+current-contributor review. It does not pick an arbitrary newest record;
+multiple active versions remain a discrepancy. Missing/unknown measures,
+pending/returned/fixed work and incomplete/conflicting current checklist evidence
+remain gaps. Current `evidence_version` is included in the scalar allowlist and
+source signature, so same-content replacement invalidates old proposals.
+Historical-only edits cannot make retired evidence current. Assistant proposal
+verification/acceptance is still separate from quality acceptance, handover or
+professional approval; no assistant gains domain-write authority.
+
+Failed SQL writes use the existing decision-scope quarantine/rowversion
+mechanisms; failed success audit cannot flush later, while a caller's legitimate
+pending audit prefix survives a pre-commit refusal. After confirmed COMMIT, a refresh failure
+instead raises `QualityOutcomeError` with explicit committed/reload guidance;
+an already committed prefix is never requeued. The original read failure remains
+the exception cause and is logged. Tests cover actual case/audit writes followed
+by pre-commit failure, early/persistent recovery-read failure, committed refresh
+failure, exactly-once audit, original errors, reopen and stale writers.
+JSON restores caught state/audit failures, including failures
+after an actual file write. Failed restoration explicitly reports an unknown
+durable outcome; separate JSON/ledger files are not abrupt-crash atomic.
+
+With editable src packages installed, from the repository root:
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests \
+  .venv/bin/python -m unittest test_quality_procurement \
+  test_role_matrix.QualityMatrix test_resident_decisions -q
+```
+
+The existing `test_mssqlstore.MssqlProcurement` inherits the canonical SQL
+quality/provider tests once. With `ZF_TEST_MSSQL=1` and `ZF_SQL_*` pointing only
+at an explicitly disposable local SQL Server/database, it replays those tests.
+It wipes test tables: never point it at a private or existing application
+database. The final 2026-10-17 run passed 38 actual local SQL Server tests in a unique
+loopback-only disposable container, removed afterwards. Local evidence does not
+establish Azure SQL acceptance, real professional approval or full PRD adoption.
+
 ## Record-only finance controls (#94)
 
 The existing finance workflow records approved budgets, commitments, invoice or

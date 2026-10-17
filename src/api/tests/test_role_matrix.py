@@ -7,6 +7,7 @@ import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 import test_mvp
 from zava_forward.core import projection
@@ -17,6 +18,133 @@ REASON = "SEEDED-REASON-dementia-and-hearing-loss"
 PHONE = "01999 888777"
 RESIDENT = "Quentin Residentname"
 ROLES = list(projection.STAFF_ROLES) + [projection.CONTRACTOR]
+
+
+class QualityMatrix(unittest.TestCase):
+    """Actual authenticated routes, separate fictional SQLite state per scenario."""
+
+    def setUp(self):
+        import dataset
+        from test_quality_procurement import STAFF
+        from zava_forward.core.sqlstore import SqlStore
+
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        data = copy.deepcopy(dataset.DATA)
+        data["staff"] = copy.deepcopy(STAFF)
+        data["cases"][1]["contractor"]["name"] = "Other Ltd"
+        dataset.supplied_resident_fixture(data["cases"][0])
+        path = Path(self.tmp.name) / "synthetic.json"
+        path.write_text(json.dumps(data))
+        self.store = SqlStore(str(path), str(path.with_suffix(".sqlite")))
+        self.addCleanup(self.store.db.close)
+        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(self.store, "SYN-quality-test")))
+        self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+        self.thread.start()
+        self.addCleanup(self.shutdown)
+        self.base = f"http://127.0.0.1:{self.httpd.server_port}"
+        self.cookies = {}
+        with urllib.request.urlopen(self.base + "/healthz") as response:
+            self.assertEqual(response.status, 200)
+
+    def shutdown(self):
+        self.httpd.shutdown()
+        self.httpd.server_close()
+        self.thread.join(timeout=5)
+
+    def call(self, actor, action, body=None):
+        if actor not in self.cookies:
+            request = urllib.request.Request(self.base + "/api/login", json.dumps(
+                dict(email=f"{actor}@example.test", password="SYN-quality-test")).encode())
+            with urllib.request.urlopen(request) as response:
+                self.cookies[actor] = response.headers["Set-Cookie"].split(";")[0]
+        path = action if action.startswith("/") else f"/api/cases/ZF-1/quality-{action}"
+        request = urllib.request.Request(self.base + path, None if body is None else json.dumps(body).encode(),
+                                         headers={"Cookie": self.cookies[actor]})
+        try:
+            with urllib.request.urlopen(request) as response:
+                return response.status, json.loads(response.read())
+        except urllib.error.HTTPError as error:
+            return error.code, json.loads(error.read())
+
+    def evidence(self):
+        from test_quality_procurement import EVIDENCE
+        return dict(measure="Loft insulation", submitted_by="SYN installer", source="Installer",
+                    items=EVIDENCE, context_revision=1)
+
+    def test_quality_http_controls(self):
+        self.assertEqual(self.call("sam", "submit", self.evidence())[0], 200)
+        before, audit = copy.deepcopy(self.store.cases["ZF-1"]), list(self.store.audit_entries())
+        for action in ("submit", "accept", "return", "fix", "reinspect", "handover", "aftercare"):
+            self.assertEqual(self.call("kim", action, dict(self.evidence(), index=0, role="Quality Inspector"))[0], 403)
+        self.assertEqual(self.call("kim", "/api/cases/ZF-2")[0], 404)
+        self.assertEqual(self.call("kim", "/api/cases/ZF-1/finance", dict(action="payment_status", id="INV-1", status="Paid outside this system"))[0], 403)
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(self.call("sam", "accept", dict(index=0, role="Quality Inspector", email="quil@example.test"))[0], 403)
+        self.assertEqual(self.call("quin", "return", dict(index=0, reason="SYN", defect="SYN gap", owner="SYN team"))[0], 200)
+        self.assertEqual(self.call("sam", "fix", dict(index=0, fixed_by="SYN fitter"))[0], 400)
+        self.assertEqual(self.call("sam", "fix", dict(index=0, fixed_by="SYN fitter", note="SYN photo v2"))[0], 200)
+        self.assertEqual(self.call("sam", "reinspect", dict(index=0, result="pass"))[0], 403)
+        self.assertEqual(self.call("quil", "reinspect", dict(index=0, result="pass", note="SYN independent visit"))[0], 200)
+        self.assertEqual(self.store.cases["ZF-1"]["quality"][0]["state"], "Accepted")
+        for key in ("finance", "grants", "funding"):
+            self.assertEqual(self.store.cases["ZF-1"].get(key), before.get(key))
+
+    def test_quality_http_replacement(self):
+        self.assertEqual(self.call("sam", "submit", self.evidence())[0], 200)
+        self.assertEqual(self.call("quil", "accept", dict(index=0))[0], 200)
+        self.assertEqual(self.call("sam", "handover", dict(index=0, note="SYN guide", resident_told=True))[0], 200)
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        self.assertEqual(self.call("sam", "submit", dict(self.evidence(), context_revision=99))[0], 400)
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(self.call("sam", "submit", self.evidence())[0], 200)
+        records = self.store.cases["ZF-1"]["quality"]
+        self.assertEqual([r["state"] for r in records], ["Superseded", "Submitted"])
+        self.assertEqual(records[0]["prior_acceptance"]["handover"]["note"], "SYN guide")
+        self.assertEqual(self.call("sam", "aftercare", dict(index=0, note="SYN obsolete"))[0], 400)
+        self.assertEqual(self.call("sam", "handover", dict(index=1, note="SYN", resident_told=True))[0], 400)
+        self.assertEqual(self.call("quil", "accept", dict(index=1))[0], 200)
+        self.assertEqual(self.call("sam", "handover", dict(index=1, note="SYN fresh guide", resident_told=True))[0], 200)
+        for key in ("finance", "grants", "funding"):
+            self.assertEqual(self.store.cases["ZF-1"].get(key), before.get(key))
+        self.assertTrue(self.store.verify_audit())
+
+    def test_quality_http_committed_outcome(self):
+        self.assertEqual(self.call("sam", "submit", self.evidence())[0], 200)
+        self.assertEqual(self.call("quil", "/api/me")[0], 200)
+        save = self.store.save
+        db = self.store.db
+
+        class RefreshFault:
+            committed = False
+            failed = False
+
+            def execute(self, sql, args=()):
+                if self.committed and not self.failed and sql.startswith("SELECT value FROM meta"):
+                    self.failed = True
+                    raise OSError("SYN committed refresh read")
+                result = db.execute(sql, args)
+                if sql == "COMMIT":
+                    self.committed = True
+                return result
+
+            def __getattr__(self, name):
+                return getattr(db, name)
+
+        def fail_refresh():
+            db.execute("UPDATE meta SET value=value+1 WHERE key='seq'")
+            save()
+
+        with patch.object(self.store, "db", RefreshFault()), patch.object(self.store, "save", side_effect=fail_refresh):
+            with self.assertLogs("zava_forward.core.quality", level="ERROR"):
+                status, result = self.call("quil", "accept", dict(index=0))
+        self.assertEqual(status, 503)
+        self.assertEqual(result["outcome"], "committed")
+        self.assertIn("Reload", result["error"])
+        self.assertEqual(self.call("quil", "/api/cases/ZF-1")[1]["quality"][0]["state"], "Accepted")
+        self.assertEqual([e["action"] for e in self.store.audit_entries()].count("quality_accepted"), 1)
+        self.assertTrue(self.store.verify_audit())
 
 
 def build():

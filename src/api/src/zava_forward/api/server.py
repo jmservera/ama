@@ -889,6 +889,8 @@ def make_handler(app):
                     detail["rule_checks"] = app.check_case(
                         cid, "step_transition" if detail["stage"] != prior_stage else "data_change")
                     return self._json(200, detail)
+            except quality.QualityOutcomeError as e:
+                return self._json(503, {"error": str(e), "outcome": "committed"})
             except DocumentStoreError:
                 return self._json(502, {"error": "The document store is not available. Try again shortly."})
             except ConflictError:

@@ -65,9 +65,29 @@ upload/offer/accept source/version/reason and exact change events; final-head
 independent reassessment remains required. Actual schema authority is a
 separate human prerequisite, not a reason to leave provenance unimplemented.
 
+Issue #91 now integrates merged #85/PR388 on main
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c, retaining merged #95 and PR385.
+All task routes/full knowledge histories and both post-COMMIT caller controls
+are preserved. No production patch change; two test-only integration assertions
+are explained in the [latest integration log](./log.md#2026-10-17-integration--91-preserves-merged-hazard-commit-boundary-controls).
+Fresh combined checks: 243 local run/241 pass/two existing skips, actual local
+SQL Server 99 run/98 pass/one JSON-only skip. Original #91 Review Not accepted
+and correction evidence remain distinct; coordinator final-head judgment and
+external review 42ce6748 remain separate from this integration evidence.
+
+Subsequent coordinator correction TWO fixes the downstream quality assistant's
+current-version selection without changing persistence: Superseded history is
+excluded, current evidence version binds proposal staleness, duplicate active/
+pending/unknown evidence remains a gap. Exact full core CI discovery passed
+751 of 788 (37 existing skips), focused assistant/recovery selection passed
+156 of 206 (50 opt-in/JSON-only skips). See the
+[correction log](./log.md#2026-10-17-correction--91-current-version-quality-assistant-evidence);
+external final-head judgment remains separate, original adverse Reviews retained.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect grant lifecycle and designated human controls (#95) | [Core scoped exercise-authority contract](../../src/core/README.md#grant-lifecycle-and-human-exercise-designation-95) and [API/application distinction](../../src/api/README.md#grant-and-application-records-95) | [Finance journey criterion audit](./research/ux/customer-journeys/finance.md#grant-lifecycle-acceptance-audit-2026-10-17-95): existing states retained; current registry, exact state/case/route designation, fresh UTC transaction checks, independent identity and GBP evidence. Application confirmation is not award/cash; original GBP 40 million remains unverified. Original Review Not accepted retained; correction ONE restores current legacy preparer lookup with failing-first regressions; coordinator independent closure pending. No real delegation, payments or full PRD pack/export acceptance |
+| Inspect per-measure quality, defects and replacement (#91) | [Core quality and handover contract](../../src/core/README.md#per-measure-quality-and-handover-controls-91) | [Existing API/screen](../../src/api/README.md#per-measure-quality-api-91) and [dated programme journey continuation](./research/ux/customer-journeys/programme.md#quality-control-engineering-continuation-2026-10-17-91): current staff, retained contributor independence, remediation, all-prior same-measure acceptance/handover invalidation and rollback on fictional JSON/SQLite/local SQL Server. Original Review Not accepted retained; authorized correction ONE resolves known legacy historical recorders and committed-refresh exactly-once audit/reload handling. No new contractor writes, risk policy, payment, professional authority or human/Azure/WCAG acceptance |
 | Inspect record-only finance matching and independent approval (#94) | [Core finance contract](../../src/core/README.md#record-only-finance-controls-94) and [authenticated API](../../src/api/README.md#record-only-finance-api-94) | [Dated Finance journey audit](./research/ux/customer-journeys/finance.md#exact-finance-control-audit-2026-10-17-94): actual line indices, unknown/ambiguous input refusal, email/code/OID independence and record-only status. Correction TWO quarantines failed SQL audit before recovery reads and preserves original errors/prior audit. Authorized integration of merged #84 / PR #382 on main bbbc924 retains committed document snapshots, stock caller scope and all transaction hooks; 232 local passes/one browser skip and 37 actual local SQL Server passes. External independent closure pending. #93 hierarchy only, no invented #90 dependency. Stale BRD numbering disclosed; no real authority/payment, browser, Azure or full PRD acceptance |
 | Inspect evidenced capacity and controlled orders (#90) | [Core authority, source and quota contract](../../src/core/README.md#evidenced-provider-capacity-and-controlled-orders-90) | [Existing API/screen and local replay](../../src/api/README.md#provider-capacity-and-order-api-90) and [dated engineering synthesis](./research/ux/zava-forward-prototype-profile-review.md#provider-capacity-engineering-continuation-2026-10-17-90): exact four controls exercised on fictional JSON/SQLite/local SQL Server; correction ONE requires version at creation, refreshes exact fixture hash and preserves independent safety-booking prerequisites. Coordinator external closure pending; no actual delegation, live supplier order, operational approval or WCAG acceptance |
 | Inspect constructed iteration coverage (#103) | [Exact two-criterion audit](./research/retrofit-synthetic-data/README.md#constructed-scenario-manifest-acceptance-audit-2026-10-17-103) | [Existing scenario manifest v0.2.1](./research/retrofit-synthetic-data/scenario-manifest.json) and [core enforcement](../../src/core/README.md#constructed-scenario-manifest-103): all eleven/nine PRD-proposed full journeys explicitly unavailable, partial IA source hashes and exact tiny-fixture defaults retained. Correction ONE enforces provisional/proposed source authority with customer/owner approval not established; independent final-head review required. No approved blanket deferrals, new registry/data population, private-stock reads or full FR-035/human/application acceptance |

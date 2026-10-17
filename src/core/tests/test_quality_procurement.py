@@ -3,6 +3,7 @@ import json
 import os
 import tempfile
 import unittest
+from contextlib import nullcontext
 from datetime import date, timedelta
 from pathlib import Path
 from unittest.mock import patch
@@ -96,11 +97,11 @@ class Flows:
                     lambda: self.store.reinspect_quality(QUIN, "ZF-1", 0, "pass")):
             with self.assertRaises(ValueError):
                 bad()
-        self.store.record_fix(SAM, "ZF-1", 0, "Test Ltd fitter")
+        self.store.record_fix(SAM, "ZF-1", 0, "Test Ltd fitter", "SYN eaves photo 1")
         self.assertEqual(self.rec()["state"], "Fixed, awaiting reinspection")
         self.store.reinspect_quality(QUIN, "ZF-1", 0, "fail", "Still blocked")
         self.assertEqual((self.rec()["state"], len(self.rec()["defects"])), ("Returned", 2))
-        self.store.record_fix(SAM, "ZF-1", 0, "Test Ltd fitter")
+        self.store.record_fix(SAM, "ZF-1", 0, "Test Ltd fitter", "SYN eaves photo 2")
         with self.assertRaises(PermissionError):
             self.store.reinspect_quality(SAM, "ZF-1", 0, "pass")
         self.store.reinspect_quality(QUIL, "ZF-1", 0, "pass")
@@ -126,6 +127,208 @@ class Flows:
         self.store.accept_quality(QUIL, "ZF-1", 0)
         with self.assertRaises(ValueError):
             self.store.return_quality(QUIN, "ZF-1", 0, "r", "d", "o")
+
+    def quality_calls(self, actor):
+        return [
+            lambda: self.submit(actor),
+            lambda: self.store.accept_quality(actor, "ZF-1", 0),
+            lambda: self.store.return_quality(actor, "ZF-1", 0, "SYN", "SYN", "SYN"),
+            lambda: self.store.record_fix(actor, "ZF-1", 0, "SYN", "SYN photo"),
+            lambda: self.store.reinspect_quality(actor, "ZF-1", 0, "pass", "SYN inspection"),
+            lambda: self.store.hand_over_quality(actor, "ZF-1", 0, "SYN guide", True),
+            lambda: self.store.add_aftercare(actor, "ZF-1", 0, "SYN call"),
+        ]
+
+    def test_quality_current_actor_all_writes(self):
+        self.submit()
+        before, audit = copy.deepcopy(self.store.cases["ZF-1"]), list(self.store.audit_entries())
+        for actor in (dict(QUIN, email="unknown@example.test"), dict(QUIN, code="forged"),
+                      dict(QUIN, role="Retrofit Programme Manager"), STAFF[4]):
+            for call in self.quality_calls(actor):
+                with self.assertRaises(PermissionError):
+                    call()
+                self.assertEqual(self.store.cases["ZF-1"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+        if hasattr(self.store, "db"):
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?",
+                                 (json.dumps(dict(QUIN, role="Contractor")), QUIN["email"]))
+        else:
+            self.store.staff[QUIN["email"]] = dict(QUIN, role="Contractor")
+        for call in self.quality_calls(QUIN):
+            with self.assertRaises(PermissionError):
+                call()
+        self.assertEqual(self.store.cases["ZF-1"], before)
+
+    def register(self, actor):
+        if hasattr(self.store, "db"):
+            self.store.db.execute("INSERT INTO staff (email, body) VALUES (?,?)", (actor["email"], json.dumps(actor)))
+        self.store.staff[actor["email"]] = actor
+
+    def test_quality_identity_history(self):
+        submitter = dict(QUIN, oid="SYN-original")
+        if hasattr(self.store, "db"):
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(submitter), QUIN["email"]))
+        self.store.staff[QUIN["email"]] = submitter
+        self.submit(submitter)
+        for key in ("name", "code", "oid"):
+            alias = dict(QUIL, email=f"syn-{key}@example.test", **{key: submitter[key]})
+            self.register(alias)
+            with self.assertRaises(PermissionError):
+                self.store.accept_quality(alias, "ZF-1", 0)
+        email_alias = dict(submitter, name="SYN renamed", code="SYN recoded", oid="SYN changed")
+        if hasattr(self.store, "db"):
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(email_alias), submitter["email"]))
+        self.store.staff[submitter["email"]] = email_alias
+        with self.assertRaises(PermissionError):
+            self.store.accept_quality(email_alias, "ZF-1", 0)
+        if hasattr(self.store, "db"):
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(submitter), submitter["email"]))
+        self.store.staff[submitter["email"]] = submitter
+        self.store.return_quality(QUIL, "ZF-1", 0, "SYN", "SYN gap", "SYN team")
+        self.store.record_fix(QUIL, "ZF-1", 0, "SYN first fitter", "SYN photo 1")
+        self.store.reinspect_quality(PAM, "ZF-1", 0, "fail", "SYN still open")
+        self.store.record_fix(SAM, "ZF-1", 0, "SYN second fitter", "SYN photo 2")
+        with self.assertRaises(PermissionError):
+            self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.store.reinspect_quality(PAM, "ZF-1", 0, "pass", "SYN independent inspection")
+        self.assertEqual(self.rec()["state"], "Accepted")
+        # Legacy records still resolve their recorded contributor, without trusting caller labels.
+        self.submit(cid="ZF-2", user=submitter)
+        with self.store.lock:
+            self.store._case("ZF-2")["quality"][0].pop("participants", None)
+            self.store.save()
+        alias = dict(QUIL, email="syn-legacy@example.test", code=QUIN["code"])
+        self.register(alias)
+        with self.assertRaises(PermissionError):
+            self.store.accept_quality(alias, "ZF-2", 0)
+        with self.store.lock:
+            rec = self.store._case("ZF-2")["quality"][0]
+            rec.update(recorded_by="SYN unknown recorder", recorded_by_code="SYN unknown code")
+            self.store.save()
+        with self.assertRaisesRegex(PermissionError, "identity is unknown"):
+            self.store.accept_quality(PAM, "ZF-2", 0)
+
+    def test_quality_remediation_and_reinspection(self):
+        self.submit()
+        for result in ("pass", "fail"):
+            with self.assertRaises(ValueError):
+                self.store.reinspect_quality(QUIL, "ZF-1", 0, result, "SYN")
+        self.store.return_quality(QUIN, "ZF-1", 0, "SYN", "SYN gap", "SYN team")
+        before, audit = copy.deepcopy(self.rec()), list(self.store.audit_entries())
+        for note in ("", " \t "):
+            with self.assertRaises(ValueError):
+                self.store.record_fix(SAM, "ZF-1", 0, "SYN fitter", note)
+            self.assertEqual(self.rec(), before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+        self.store.record_fix(SAM, "ZF-1", 0, "SYN fitter", "SYN corrected vent/photo v2")
+        self.assertEqual(self.rec()["defect"]["remediation_evidence"], "SYN corrected vent/photo v2")
+        with self.store.lock:
+            self.store._case("ZF-1")["quality"][0]["defect"].pop("remediation_evidence")
+            self.store.save()
+        with self.assertRaises(ValueError):
+            self.store.accept_quality(QUIL, "ZF-1", 0)
+
+    def test_quality_legacy_repeated_recorders(self):
+        self.submit()
+        self.store.return_quality(QUIL, "ZF-1", 0, "SYN gap", "SYN defect", "SYN team")
+        self.store.record_fix(QUIN, "ZF-1", 0, "SYN fitter 1", "SYN photo 1")
+        self.store.reinspect_quality(PAM, "ZF-1", 0, "fail", "SYN still open")
+        self.store.record_fix(SAM, "ZF-1", 0, "SYN fitter 2", "SYN photo 2")
+        with self.store.lock:
+            self.store._case("ZF-1")["quality"][0].pop("participants", None)
+            self.store.save()
+        alias = dict(QUIL, name="SYN earlier recorder alias", email="syn-earlier@example.test", code=QUIN["code"])
+        self.register(alias)
+        with self.assertRaisesRegex(PermissionError, "Someone independent"):
+            self.store.accept_quality(alias, "ZF-1", 0)
+        with self.assertRaisesRegex(PermissionError, "Someone independent"):
+            self.store.accept_quality(QUIN, "ZF-1", 0)
+        self.store.reinspect_quality(PAM, "ZF-1", 0, "pass", "SYN independent review")
+        self.assertEqual(self.rec()["state"], "Accepted")
+
+    def test_quality_indices(self):
+        self.submit()
+        before, audit = copy.deepcopy(self.rec()), list(self.store.audit_entries())
+        for idx in (-1, "-1", 0.5, True, None, "0.0", 99):
+            with self.assertRaises(ValueError):
+                self.store.accept_quality(QUIL, "ZF-1", idx)
+            self.assertEqual(self.rec(), before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_quality_replacement_dependencies(self):
+        self.submit()
+        self.store.accept_quality(QUIL, "ZF-1", 0)
+        baseline = copy.deepcopy(self.store.cases["ZF-1"])
+        for handed, legacy in ((False, False), (True, False), (True, True), (False, True)):
+            with self.subTest(handed=handed, legacy=legacy):
+                with self.store.lock:
+                    c = self.store._case("ZF-1")
+                    c.clear()
+                    c.update(copy.deepcopy(baseline))
+                    self.store.save()
+                if handed:
+                    self.store.hand_over_quality(SAM, "ZF-1", 0, "SYN guide 1", True)
+                    self.store.add_aftercare(SAM, "ZF-1", 0, "SYN prior call")
+                with self.store.lock:
+                    c = self.store._case("ZF-1")
+                    if legacy:
+                        c["quality"].append(copy.deepcopy(c["quality"][0]))
+                        if not handed:
+                            c["quality"][0]["state"] = "Handed over"
+                            c["quality"][0]["handover"] = dict(by="SYN", note="SYN legacy guide", resident_told=True)
+                    sibling = copy.deepcopy(c["quality"][0])
+                    sibling["measure"] = "Wall insulation"
+                    c["quality"].append(sibling)
+                    self.store.save()
+                before = copy.deepcopy(self.store.cases["ZF-1"])
+                old_count = len(before["quality"]) - 1
+                idx = self.submit()
+                records = self.store.cases["ZF-1"]["quality"]
+                for old in range(old_count):
+                    self.assertEqual(records[old]["state"], "Superseded")
+                    self.assertIsNone(records[old]["handover"])
+                    self.assertNotIn("accepted_by", records[old])
+                    self.assertEqual(records[old]["items"], before["quality"][old]["items"])
+                    self.assertEqual(records[old]["aftercare"], before["quality"][old]["aftercare"])
+                    self.assertEqual(records[old]["history"][:-1], before["quality"][old]["history"])
+                    self.assertEqual(records[old]["superseded_by"], idx)
+                    for call in (
+                        lambda: self.store.accept_quality(QUIL, "ZF-1", old),
+                        lambda: self.store.hand_over_quality(SAM, "ZF-1", old, "SYN", True),
+                        lambda: self.store.add_aftercare(SAM, "ZF-1", old, "SYN"),
+                    ):
+                        with self.assertRaises(ValueError):
+                            call()
+                self.assertEqual(records[old_count], before["quality"][old_count])
+                for key in ("finance", "grants", "funding"):
+                    self.assertEqual(self.store.cases["ZF-1"].get(key), before.get(key))
+                with self.assertRaises(ValueError):
+                    self.store.hand_over_quality(SAM, "ZF-1", idx, "SYN", True)
+                self.store.accept_quality(QUIL, "ZF-1", idx)
+                self.store.hand_over_quality(SAM, "ZF-1", idx, "SYN new guide", True)
+                again = self.reopen()
+                if hasattr(again, "db"):
+                    self.addCleanup(again.db.close)
+                self.assertEqual(again.detail("ZF-1")["quality"][-1]["state"], "Handed over")
+                self.assertTrue(again.verify_audit())
+
+    def test_quality_resident_and_safety(self):
+        self.store.submit_quality(SAM, "ZF-1", "Loft insulation", "SYN", "Installer", EVIDENCE)
+        with self.assertRaises(GateError):
+            self.store.accept_quality(QUIL, "ZF-1", 0)
+        with self.store.lock:
+            rec = self.store._case("ZF-1")["quality"][0]
+            rec["resident_binding"] = dict(measure="Loft insulation", context_revision=99)
+            self.store.save()
+        with self.assertRaises(GateError):
+            self.store.accept_quality(QUIL, "ZF-1", 0)
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["quality"][0]["resident_binding"]["context_revision"] = 1
+            c["hazards"].append(dict(released=False, owner="SYN Safety"))
+            self.store.save()
+        with self.assertRaises(GateError):
+            self.store.accept_quality(QUIL, "ZF-1", 0)
 
     # ---- procurement and capacity
     def test_package_requires_contract_version_before_creation(self):
@@ -393,6 +596,31 @@ class JsonFlows(Flows, unittest.TestCase):
     def reopen(self):
         return Store(str(self.path))
 
+    def test_quality_json_failures(self):
+        self.submit()
+        before, audit = copy.deepcopy(self.rec()), list(self.store.audit_entries())
+        for target in ("save", "audit"):
+            for after_write in (False, True):
+                original = getattr(self.store, target)
+
+                def fail(*args):
+                    if after_write:
+                        original(*args)
+                    raise OSError("SYN failure")
+
+                with patch.object(self.store, target, side_effect=fail):
+                    with self.assertRaises(OSError):
+                        self.store.accept_quality(QUIL, "ZF-1", 0)
+                self.assertEqual(self.rec(), before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+                self.assertEqual(self.reopen().detail("ZF-1")["quality"][0], before)
+        with patch.object(Store, "save", side_effect=OSError("SYN persistent disk failure")):
+            with self.assertLogs("zava_forward.core.quality", level="ERROR"):
+                with self.assertRaisesRegex(RuntimeError, "durable outcome may be unknown"):
+                    self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.assertEqual(self.rec(), before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+
 
 class SqlFlows(Flows, unittest.TestCase):
     def make(self, data, tmp):
@@ -403,6 +631,178 @@ class SqlFlows(Flows, unittest.TestCase):
 
     def reopen(self):
         return SqlStore(str(self.path), self.db)
+
+    def test_quality_sql_postcommit_refresh(self):
+        self.submit()
+        store = self.store
+        before = copy.deepcopy(store.cases["ZF-1"])
+        other = self.reopen()
+        self.addCleanup(other.db.close)
+        for prefix in (False, True):
+            for persistent in (False, True):
+                with self.subTest(prefix=prefix, persistent=persistent):
+                    with store.lock:
+                        c = store._case("ZF-1")
+                        c.clear()
+                        c.update(copy.deepcopy(before))
+                        store.save()
+                    audit = list(store.audit_entries())
+                    save = store.save
+
+                    class RefreshFault:
+                        committed = False
+                        failed = False
+
+                        def __init__(self, db):
+                            self.db = db
+
+                        def execute(self, sql, args=()):
+                            if self.committed and sql.startswith("SELECT value FROM meta") and (persistent or not self.failed):
+                                self.failed = True
+                                raise OSError("SYN post-commit refresh read")
+                            result = self.db.execute(sql, args)
+                            if sql == "COMMIT":
+                                self.committed = True
+                            return result
+
+                        def __getattr__(self, name):
+                            return getattr(self.db, name)
+
+                    fault = RefreshFault(store.db)
+
+                    def concurrent_save():
+                        with other.lock:
+                            other._case("ZF-2")["reason"] = "SYN unrelated completed writer"
+                            other.save()
+                        save()
+
+                    with store.lock:
+                        if prefix:
+                            store.audit(SAM["email"], "SYN_committed_prefix", "ZF-1", "SYN once")
+                        with patch.object(store, "db", fault), patch.object(store, "save", side_effect=concurrent_save):
+                            with self.assertLogs("zava_forward.core.quality", level="ERROR"):
+                                with self.assertRaisesRegex(RuntimeError, "committed") as caught:
+                                    store.accept_quality(QUIL, "ZF-1", 0)
+                            self.assertIsInstance(caught.exception.__cause__, OSError)
+                            self.assertFalse(store.local.pending)
+                            self.assertFalse(store.local.touched)
+                    events = list(store.audit_entries())[len(audit):]
+                    self.assertEqual([e["action"] for e in events],
+                                     (["SYN_committed_prefix"] if prefix else []) + ["quality_accepted"])
+                    again = self.reopen()
+                    self.addCleanup(again.db.close)
+                    self.assertEqual(again.detail("ZF-1")["quality"][0]["state"], "Accepted")
+                    self.assertTrue(again.verify_audit())
+                    saved_audit = list(again.audit_entries())
+                    with store.lock:
+                        store.save()
+                    self.assertEqual(list(store.audit_entries()), saved_audit)
+                    self.assertEqual(store.detail("ZF-1"), again.detail("ZF-1"))
+
+    def test_quality_sql_actor_and_stale(self):
+        self.submit()
+        other = self.reopen()
+        self.addCleanup(other.db.close)
+        save = self.store.save
+        before, audit = copy.deepcopy(self.rec()), list(self.store.audit_entries())
+        validate = self.store._validate_safety_clear
+
+        def revoke_in_transaction():
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?",
+                                 (json.dumps(dict(QUIL, role="Contractor")), QUIL["email"]))
+            from zava_forward.core import stock
+            stock.validate_sql(self.store)
+            validate()
+
+        with patch.object(self.store, "_validate_safety_clear", side_effect=revoke_in_transaction):
+            with self.assertRaises(PermissionError):
+                self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.assertEqual(self.rec(), before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.store.hand_over_quality(SAM, "ZF-1", 0, "SYN guide", True)
+        expected = {}
+
+        def replace_first():
+            other.submit_quality(SAM, "ZF-1", "Loft insulation", "SYN", "Installer", EVIDENCE, 1)
+            expected["case"] = copy.deepcopy(other.detail("ZF-1")["quality"])
+            expected["audit"] = list(other.audit_entries())
+            save()
+
+        with patch.object(self.store, "save", side_effect=replace_first):
+            with self.assertRaises(ConflictError):
+                self.store.add_aftercare(SAM, "ZF-1", 0, "SYN stale writer")
+        self.assertEqual(self.store.detail("ZF-1")["quality"], expected["case"])
+        self.assertEqual(list(self.store.audit_entries()), expected["audit"])
+        again = self.reopen()
+        self.addCleanup(again.db.close)
+        self.assertEqual(again.detail("ZF-1")["quality"], expected["case"])
+
+    def test_quality_sql_failures(self):
+        self.submit()
+        store = self.store
+        original_audit = store._append_audit
+        for failure in ("pre-save", "case-write", "audit-insert"):
+            for recovery in ("healthy", "early", "persistent"):
+                with self.subTest(failure=failure, recovery=recovery):
+                    before, audit = copy.deepcopy(self.rec()), list(store.audit_entries())
+                    original = OSError("SYN original quality failure")
+
+                    class DbFault:
+                        armed = False
+                        reads = 0
+
+                        def __init__(self, db):
+                            self.db = db
+
+                        def execute(self, sql, args=()):
+                            if self.armed and sql.startswith(("SELECT rowversion, body FROM cases", "SELECT value FROM meta")):
+                                if recovery == "persistent" or recovery == "early" and self.reads == 0:
+                                    self.reads += 1
+                                    raise OSError("SYN recovery read")
+                            result = self.db.execute(sql, args)
+                            if failure == "case-write" and sql.startswith("UPDATE cases SET rowversion"):
+                                self.armed = True
+                                raise original
+                            return result
+
+                        def __getattr__(self, name):
+                            return getattr(self.db, name)
+
+                    fault = DbFault(store.db)
+
+                    def fail_save():
+                        fault.armed = True
+                        raise original
+
+                    def fail_audit(entries):
+                        original_audit(entries)
+                        if any(e[1] == "quality_accepted" for e in entries):
+                            fault.armed = True
+                            raise original
+
+                    with store.lock:
+                        store.audit(SAM["email"], "SYN_legitimate_prefix", "ZF-1", "SYN keep")
+                        with patch.object(store, "db", fault), \
+                                patch.object(store, "save", side_effect=fail_save) if failure == "pre-save" else patch.object(store, "_append_audit", side_effect=fail_audit):
+                            with self.assertLogs("zava_forward.core.stock", level="ERROR") if recovery != "healthy" else nullcontext():
+                                with self.assertRaises(OSError) as caught:
+                                    store.accept_quality(QUIL, "ZF-1", 0)
+                            self.assertIs(caught.exception, original)
+                            self.assertEqual(store.cases["ZF-1"]["quality"][0], before)
+                            self.assertFalse(store.local.touched)
+                            self.assertEqual([e[1] for e in store.local.pending], ["SYN_legitimate_prefix"])
+                            if recovery != "healthy":
+                                self.assertTrue(fault.reads)
+                                self.assertTrue(getattr(original, "__notes__", []))
+                    self.assertEqual([e["action"] for e in store.audit_entries()],
+                                     [e["action"] for e in audit] + ["SYN_legitimate_prefix"])
+                    self.assertEqual(self.rec(), before)
+                    self.assertEqual(store.lock.depth, 0)
+                    self.assertTrue(store.verify_audit())
+                    again = self.reopen()
+                    self.addCleanup(again.db.close)
+                    self.assertEqual(again.detail("ZF-1")["quality"][0], before)
 
     def test_recovery_read_failure_keeps_original_error_and_disarms_failed_work(self):
         pid = self.package()
