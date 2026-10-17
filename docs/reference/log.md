@@ -5568,3 +5568,23 @@ metadata when the knowledge base was created.
   Prospective complete capture is buildable separate engineering follow-up,
   not a human blocker; forecasts still lack verified operational inputs.
   No browser/WCAG, human, Azure, real AI or outcome acceptance is claimed.
+## [2026-10-17] query | Resource-bound setup profile contracts (Refs #360)
+
+* Corrected the automatic setup runbook and existing index route: a bound
+  profile-neutral app patch cannot imply production merely because the
+  deployment parameters omit profile fields. The actual exported ARM template
+  contract controls literal defaults; full main's production default still
+  vetoes development, even alongside development module tags.
+* Official ARM deployment metadata, template export and parameter-default
+  documentation checked 2026-10-17 and linked in infra/README.md. Unknown,
+  malformed/null, contradictory, failed or unreadable bound evidence remains
+  fail-closed; development plus dev/test/demo evidence is still mandatory.
+* Reproduced coordinator-reported three-deployment shape before the source fix
+  and passed it afterward, including a fake read-only roster preview. Fresh
+  baseline was 104 setup plus 43 staff_azure tests; expanded setup suite passes
+  117 tests, preserving admin selection, seeded distinct users, Key Vault and
+  private/read-only restrictions. No live setup, Graph write, SQL, temporary
+  cloud job, tag spoofing, public-service change or Azure deployment occurred.
+* Live credential and initializer-publication 403 gates and #360 d/e remain
+  unmet. Source parsing acceptance is not tenant/browser/SQL/AI acceptance or
+  permission to retire Front Door or delete resource group ama.
