@@ -5874,3 +5874,12 @@ metadata when the knowledge base was created.
   820 pass/56 skips, actual own MSSQL29 pass, focused213 run/200 pass/13 skips;
   static and hardened installed-image94 run/92 pass/two skips checks pass.
   No private payload in failure evidence, paid AI or approval implied.
+* During correction validation main advanced to merged resident #392 atbcb4871b.
+  Authorized own rebase retained resident and change-provenance SQL recovery
+  guards and exact twelve-file own delta, complete upstream KB prefixes and
+  both resident/sensor intents. FINAL full core942 run/847 pass/95 skips,
+  combined349 run/294 pass/55 skips, actual integrated MSSQL35 pass, final
+  hardened image94 run/92 pass/two skips and core/API statics pass.
+  Owned SQL stopped. Original Review/critique/correction ONE unchanged.
+  PR #394 remains independent-final-gate work, not a third defect cycle,
+  self-Pass, approval, merge or issue closure.

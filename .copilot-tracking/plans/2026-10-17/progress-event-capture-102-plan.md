@@ -104,12 +104,12 @@ Dependency: P01.
 #### [x] P02-T02: Component/KB documentation and image smoke
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: One Review and publication
+### [x] P03: One Review and publication
 Dependency: P02.
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: One original Review, bounded concrete corrections
+#### [x] P03-T01: One original Review, bounded concrete corrections
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Privacy-safe commit, push and main PR
+#### [x] P03-T02: Privacy-safe commit, push and main PR
 
 ## Test Ownership and Locked Candidate
 
@@ -170,3 +170,12 @@ only for truthful post-rollback failure/rejection, original-error retention and
 exact pending-audit/committed diagnostics. Original Review/critique/correction
 ONE immutable. No new full Review. Actual MSSQL and full core checks required
 for this shared failure-path change; maintain all sensor/legacy boundaries.
+
+Current final state: correction TWO complete and integrated onto merged
+resident mainbcb4871b under owner's moved-main authorization. Both SQL recovery
+guards retained; exact own deltas and upstream KB prefixes proved.
+Full core942/847 pass/95 skips, combined349/294 pass/55 skips, actual MSSQL35
+pass, final non-root image94/92 pass/two skips and configured statics pass.
+P03 evidence complete; publish existing PR #394 with exact7fda223a remote lease
+for own rebase only. Independent coordinator final gate outstanding.
+No third defect cycle, new Review, merge or issue closure.

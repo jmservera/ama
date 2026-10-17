@@ -190,3 +190,12 @@ Original error retained with explicit recovery/audit/cleanup notes.
 Main advanced during validation to merged resident #392 atbcb4871b. Owner
 authorization already permits own rebase with exact remote7fda223a lease;
 preserve all resident controls and revalidate combined shared persistence.
+
+Correction TWO final integrated evidence complete on mainbcb4871b:
+full core942 run/847 pass/95 skips; combined349 run/294 pass/55 skips;
+actual own MSSQL35 pass including resident writer/recovery guards; configured
+core/API statics pass; final hardened image94 run/92 pass/two skips and startup/
+negative probes pass. Own SQL stopped. Exact12-file added/removed patch parity
+and complete upstream KB prefixes proved. Original Review/critique/correction
+ONE byte-identical; LAST defect cycle complete, no new Review or self-Pass.
+Publication receipt and details reference final correction-two artifact.

@@ -131,3 +131,12 @@ even if recovery/audit fails. Extend owned capture harness for actual upload
 outage/prior prefix/reload across JSON/SQLite/MSSQL plus generic exception
 contract. Existing document regression remains unchanged. No third cycle,
 new Review, operational approval or sensor boundary relaxation.
+
+Correction TWO now complete; main moved during validation to resident #392,
+bcb4871b19c2abd56e1ff536a77c15e52b544321. Authorized own rebase retains
+resident_validation AND change_validation guard plus resident COMMIT markers,
+all existing domain controls and exact owned12-file patch delta. Full final
+core942 run/847 pass/95 skips and actual integrated SQL35 pass; final combined/
+image/static receipts in correction-two artifact. Publish own-topic only with
+exact remote lease7fda223a50fedfca16fcc2cb89dd01405862e829. Original Review,
+critique and correction ONE immutable. Independent final gate, not self-Pass.

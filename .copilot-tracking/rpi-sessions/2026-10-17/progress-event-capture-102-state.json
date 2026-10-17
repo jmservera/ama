@@ -3,9 +3,9 @@
   "task_slug": "progress-event-capture-102",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Publication",
+  "status": "complete",
+  "session_status": "complete",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/progress-event-capture-102-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/progress-event-capture-102-plan.md",
@@ -38,15 +38,15 @@
   "publication": {
     "pr": "https://github.com/jmservera/ama/pull/394",
     "branch": "feat/progress-event-capture-102",
-    "base": "943febc23e99e397724cb81d2580f781b91e13f7",
-    "source_commit": "628f144a",
+    "base": "bcb4871b19c2abd56e1ff536a77c15e52b544321",
+    "source_commit": "b0e2d02f6d981e83fa0c11cb3b3c38491bd89bbe",
     "prior_base_source_patch_sha256": "a2941c0396004da38ce7a21d9f65c155e42a5d735b1aacccab9f83eb5c077379",
-    "integration_equivalence": "Exact nonshared files and shared added/removed deltas; Store additive import normalized, receipt details hashes",
-    "authorized_expected_old_remote": "92c3bae39c09d68dd72f2fe82c5ed40f0fdcfb2a",
+    "integration_equivalence": "All twelve owned src added/removed deltas exact, SHA256 264696a1d621868d06ecce3445fb0b0ee546d7a6226981a69b2c9f2ac18d5d1e",
+    "authorized_expected_old_remote": "7fda223a50fedfca16fcc2cb89dd01405862e829",
     "original_review": "Complete / Defects found",
     "correction_cycles": 2,
     "coordinator_acceptance": "Not claimed"
   },
-  "next_action": { "phase": "Publication", "action": "Correction TWO passes full core876/focused213/actualSQL29; main moved to resident bcb4871b, authorized own rebase exact lease7fda223a and combined validation before publish" },
+  "next_action": { "phase": "Handoff", "action": "Correction TWO LAST complete; final full core942, combined349, actualSQL35 and image94 evidence; independent coordinator exact-head gate on PR394, no merge/issue closure/new Review" },
   "prioritized_follow_ups": ["Coordinate actual quality.py overlap with #88", "Operational/full-history evidence and JSON cross-file crash atomicity remain separate"]
 }

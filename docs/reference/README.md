@@ -371,3 +371,7 @@ truthful sanitized operational failure/rejection after rollback, original-error
 and prior-prefix retention, no false success or committed rejection.
 Original adverse Review/critique/correction ONE remain unchanged; final gate
 still separate from engineering evidence.
+Final correction TWO integrates resident #392 on mainbcb4871b, retaining both
+SQL recovery scopes and sensor boundaries. Full core942 run/847 pass/95 skips,
+actual integrated MSSQL35 pass and combined/image/static checks provide
+engineering evidence; PR #394 independent exact-head gate remains outstanding.
