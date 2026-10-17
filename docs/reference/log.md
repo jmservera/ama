@@ -4972,3 +4972,28 @@ metadata when the knowledge base was created.
   boundaries. Full ordered RPI artifacts/phase evidence retained; publication
   remains Blocked pending an existing authorized private-connected publisher.
   Genuine browser/roles/SQL/AI and #360 d/e remain UNMET; no inferred approval.
+
+## [2026-10-17] delivery | #360 authorized PR #381 main integration
+
+* Owner authorized rebase from a606258 onto main
+  adedf1f232e567d3a22a623d9c871513fa6b7cdc after #380. Rebased candidate
+  e31a1ae5705287f92729b031fedbc280324afce7 retains both complete KB index row
+  sets and append histories. All fifteen other upstream files, including
+  constructed manifests/source/tests, exactly main. Docker ignore/test/recipe
+  exactly prior a606258; only additive index/log conflicts resolved.
+* Minimal existing context test passed through stdlib-only class extraction;
+  native network-none scratch/COPY Docker audit confirms exact seven context
+  files, no container start/base pull/registry request. Initial audit assertion
+  counted generated runtime files outside /context; corrected harness scope and
+  reran successfully, no source fix. Exact owned audit objects cleaned.
+  Diff/preservation checks passed; no full suite, dependency install or venv
+  restoration. Prior venv was already removed, not deleted during this review.
+* Independent reviewer463ad179 assesses olda606258, not this final integration
+  head. Final exact-head follow-up required and notified externally on PR #381;
+  no fabricated Pass/new full review. One privacy-safe integration-record commit,
+  topic-only exact-lease push and external head/CI verification; ordinary Source
+  CI only if checks absent, no paid rubric dispatch or receipt-only commit.
+* No repeated private ACR probe, public-access workaround, cloud/network/IAM
+  writes or workload/private-data access. Existing10.40.4.20/.21 timeouts remain
+  concrete evidence; image publication/pin and #360 d/e UNMET. Stop final push,
+  no merge or automatic child work.

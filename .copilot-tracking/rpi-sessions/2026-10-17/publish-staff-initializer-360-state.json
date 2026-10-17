@@ -57,6 +57,23 @@
     "phase": "Follow-up",
     "action": "No child work. Existing authorized private publisher must demonstrate private login/data route before live image delivery. Terminal parent publication is verified externally without a receipt-only follow-up commit."
   },
+  "authorized_integration": {
+    "date": "2026-10-17",
+    "pull_request": 381,
+    "old_exact_lease": "a606258bdc3b01664fb67c874f19dc0455453c0d",
+    "new_main_base": "adedf1f232e567d3a22a623d9c871513fa6b7cdc",
+    "rebased_candidate": "e31a1ae5705287f92729b031fedbc280324afce7",
+    "conflicts": ["docs/reference/README.md", "docs/reference/log.md"],
+    "preservation": "Both complete KB index/log histories retained; all other #380 files exact main; Docker ignore/test/recipe exact a606258",
+    "minimal_validation": "One unchanged existing context test and native network-none exact-seven-file context check passed; diff/preservation checks passed",
+    "validation_limitation": "First native assertion counted Docker runtime files outside context; harness scoped correctly and rerun passed; no real image build or full suites",
+    "prior_venv": "Already removed before continuation; not restored or deleted mid-review",
+    "independent_reviewer": "463ad179",
+    "independent_review_boundary": "Assessing a606258; final exact-head follow-up required, not independently passed",
+    "terminal_publication": "One privacy-safe integration-record commit and authorized topic-only force-with-lease; final remote/PR/check verification and reviewer notice external, no receipt-only follow-up commit",
+    "cloud_writes_or_private_probes": "None",
+    "image_publication_and_pin": "UNMET"
+  },
   "prioritized_follow_ups": [
     {
       "rank": 1,

@@ -141,3 +141,46 @@ No remaining active P01/P02 markers. Later owner/publisher: working existing pri
 real retained-base build/push/digest/package smoke and reviewed image-only pin.
 Human tenant/browser/roles/SQL/AI and separately authorized retirement remain;
 #360 d/e UNMET. No child work selected; stop after final PR publication.
+
+## Owner-Authorized Main Integration (2026-10-17, PR #381)
+
+Owner explicitly authorized rebase onto latest origin/main after #380 merged.
+Old local/origin/PR head and exact push lease:
+a606258bdc3b01664fb67c874f19dc0455453c0d.
+New base: adedf1f232e567d3a22a623d9c871513fa6b7cdc.
+Rebased implementation candidate:
+e31a1ae5705287f92729b031fedbc280324afce7.
+Only docs/reference/README.md and log.md conflicted. Resolved additively:
+both complete index row sets retained; current log begins with the exact
+upstream log and retains the entire prior topic append. All 15 other #380
+files, including manifests/source/tests/research, are byte-for-byte main.
+infra/.dockerignore, test_staff_azure.py and cutover-proof.Dockerfile are exact
+a606258; no runtime/source/recipe changes during integration.
+
+Minimal validation only: extracted and executed the unchanged existing
+BuildContextTests class using stdlib AST/unittest, one test passed without
+importing unrelated dependency-heavy test modules. Native normal-Docker
+FROM scratch/COPY-only --network=none --pull=false context audit confirms exact
+seven intended files; no container start, private base pull or registry request.
+The first audit assertion incorrectly counted Docker-generated runtime files
+outside /context; narrowed the harness assertion to copied /context files and
+reran successfully. No source fix was needed. Exact named audit container/image
+cleaned after each attempt; no task/reviewer environment deleted.
+The prior task venv had already been removed before this continuation; disclosed
+to final reviewer, not restored or needed for these minimal checks. No full
+suite rerun, dependency install or reuse of historical test results as fresh.
+Diff checks and exact preservation verification pass.
+
+Independent reviewer 463ad179 is assessing old a606258; that result does not
+cover this final integration head. Final exact-head follow-up is required and
+will be sent on PR #381 after one privacy-safe integration-record commit and
+authorized topic-only --force-with-lease push. No new full RPI/critique/Review
+loop or fabricated independent Pass. Ordinary Source projects CI may be
+dispatched if final-head checks are absent; paid rubric is not dispatched.
+Final head/run verification and reviewer notice occur externally without another
+receipt-only commit. Stop after terminal push/handoff, no merge.
+
+No private ACR probe repeated, Azure/resource/role/network change, public-registry
+attempt, secret/private-data read or workload execution. Existing private
+10.40.4.20/.21 timeout evidence remains the blocker, not an authorization failure.
+Image publication/digest/pin and #360 d/e remain unmet.
