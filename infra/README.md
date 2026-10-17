@@ -1357,6 +1357,37 @@ are not mistaken for recoverable values; authorized owners should review and
 retire unused/expired credentials separately. Metadata matching is not proof
 of a successful live token exchange or real browser login.
 
+Credential-preservation follow-up (2026-10-17, Refs #358): before creating a
+replacement credential, setup reconciles the app's read-visible secret names
+and Key Vault `keyVaultUrl`/`identity` pairs with `listSecrets` values. Full,
+metadata-sparse and omitted KV entries retain their known references; a resolved
+KV value never replaces a reference. Ordinary app values, including empty
+strings, are retained without printing them. Duplicate/malformed inventories,
+conflicting or incomplete KV metadata, and missing ordinary values stop before
+password creation rather than rebuilding a partial array.
+
+The rebuild atomically records `zava-forward-secret-handoff`, a SHA-256 of the
+sorted secret names and KV reference metadata, never secret values. Readback
+must match those references before auth switches; ordinary values are write-only
+and are not expected in a configuration GET. Setup clears the tag only after
+verification. A failed or uncertain readback leaves it pending: reruns cannot
+reuse the new credential until the reference inventory matches. A transient
+read failure can recover without another credential. For a persistent mismatch,
+an authorized operator must reconcile against the original approved reference
+inventory using the owning secret-management path, then rerun; do not remove
+the tag to bypass the check, delete real secrets, or print/export values.
+This tag is a recovery guard, not an Azure-enforced concurrency lock or proof
+of a successful secret/token exchange.
+
+The #358 evidence is **offline only**: 313 infra tests pass (including 101 setup
+tests and seven killed expiry/preservation/recovery mutations). The legacy
+delegating CLI remains unchanged. **Actual non-production preservation is
+UNMET / Not run**: no existing resources were exercised, no Azure/Graph writes
+or secret/private-data reads were permitted, and schema discovery is not live
+proof. Even `--check` may create a temporary Azure job, so it was not run live.
+The [acceptance audit](../docs/architecture/cutover-evidence-pack.md#credential-preservation-offline-follow-up-2026-10-17)
+records the exact remaining criterion and #360 sequencing.
+
 Discovery prefers the API's Key Vault secret references and their attached
 identity, then its configured vault URI/attached identities, deployment-tagged
 resources in `ama`, and available Bicep outputs. A unique resource is selected

@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -32,6 +32,45 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | [#322 comment](https://github.com/jmservera/ama/issues/322), 2026-10-16 | Deploy-script resolution: existing job image, else newest registry tag, else visibly reported placeholder. Implemented by #337 and integrated here; explicit digest used for this evidence run |
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
 | Owner task direction, 2026-10-16 | Providers registered, ama costs acceptable, RG ownership available; SQL public access stays Disabled, no policy/tag/firewall bypass or peering; all private data-plane probes run inside the ama VNet |
+
+## Credential Preservation Offline Follow-Up (2026-10-17)
+
+Refs #358. This is a focused continuation of merged #356/#352, based on
+`abaca7881e2a4a77eacf865fe235d4af9196643f`, preserving merged #370 staff-job/CI
+behavior. **Partial issue delivery: actual non-production preservation remains
+UNMET.** No live Azure/Graph/SQL command, secret/private dataset read, role or
+network change, build, new spend or resource mutation was performed.
+
+| Requested criterion | Evidence and status | Unmet boundary |
+| --- | --- | --- |
+| Stored-but-expired guard | Offline fixed-clock generated and legacy selected-name cases cover past, exact expiry, absent expiry and strictly future credentials across check/dry-run/apply; old credentials retained. Both expiry bypass mutations fail assertions | No real credential/token exchange tested |
+| Preserve KV references during rebuild | Actual source reconciles known app KV URL/identity with full, sparse name/value and omitted-KV list responses; captured PATCH and backing store retain exact pairs, ordinary values (including empty), env secretRef and auth token-store refs | Actual service round-trip Not run; public schema only describes allowed fields, not deployed preservation |
+| Fail safely | Malformed/duplicate/incomplete/conflicting inventories stop before addPassword. List denial and PATCH failure retain old configuration/auth. Missing/altered readback refs prevent auth switch, including reruns; one-shot read failure can recover without another password | Cloud failure/propagation behavior and operator recovery Not run |
+| Verify without reading write-only values | Positive fake GET projection omits all ordinary values; exact name/KV verification succeeds and clears the reference-only handoff digest | Not proof of app-local secret value usability |
+| Preserve legacy CLI/conflict resolution | Existing delegation/options/return-code regression plus 17 callback-helper tests pass; initialize-api-auth.py unchanged | Merged #352 already resolved the historic conflict; no duplicate CLI implemented |
+| Required local gates | 15 assertion failures before the source fix, zero runner errors; 101 setup and 313 total infra tests pass with Bicep required; seven safeguard mutations killed by behavioral assertions; scoped lint/types/CLI and existing Bicep build/lint pass | Offline evidence only, not browser/tenant/SQL acceptance or human sign-off |
+
+The public [2025-07-01 Container Apps schema](https://github.com/Azure/azure-rest-api-specs/blob/main/specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2025-07-01/ContainerApps.json)
+(retrieved 2026-10-17) defines `SecretsCollection.value` and optional per-entry
+`name`, `value`, `keyVaultUrl` and `identity`. No Azure management endpoint or
+`listSecrets` was called live, and no values were output. Earlier failed Learn
+URLs were not treated as evidence.
+
+Exact remaining criterion: on an **already authorized existing non-production
+target**, demonstrate that a real rebuild preserves every prior KV
+`keyVaultUrl`/`identity` pair and app secret reference/value usability, retaining
+only sanitized reference-level before/after evidence. The safe scope and
+permission to perform such a round-trip were not available under this task's
+explicit no-Azure-write/no-secret-read limits. Do not alter/delete real secrets,
+open private services, provision a test resource or infer approval from an
+offline pass. Owner/coordinator must arrange a separately permitted safe scope;
+a read-only schema/configuration inspection cannot meet this criterion.
+
+Coordinator sequencing: #360 owns broader setup/job readiness and its live
+acceptance. This change touches only setup's credential preservation/recovery
+helpers and their existing suite, not job transport, crypto, roster, identity or
+network policy. Reconcile the narrow shared setup/test changes before advancing
+that broader loop; this audit grants no deployment or merge approval.
 
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 

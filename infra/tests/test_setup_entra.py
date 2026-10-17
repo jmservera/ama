@@ -2,6 +2,7 @@
 import base64
 import copy
 import importlib.util
+import inspect
 import io
 import json
 import os
@@ -11,6 +12,7 @@ import tempfile
 import unittest
 import uuid
 from contextlib import redirect_stderr, redirect_stdout
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -994,6 +996,227 @@ class SetupTests(unittest.TestCase):
         self.assertNotEqual(self.fake.reg["passwordCredentials"][-1]["displayName"], old["displayName"])
         self.assertEqual(len(self.fake.app["properties"]["configuration"]["secrets"]), 3)
 
+    def test_stored_credential_expiry_guards_generated_and_legacy_reuse(self):
+        now = datetime(2030, 1, 1, tzinfo=timezone.utc)
+        for legacy in (False, True):
+            for expiry in ("2029-12-31T23:59:59Z", "2030-01-01T00:00:00Z",
+                           None, "2030-01-01T00:00:01+00:00"):
+                with self.subTest(legacy=legacy, expiry=expiry):
+                    self.fake = FakeAzure()
+                    SETUP.subprocess.run.side_effect = self.fake.run
+                    self.bootstrap()
+                    old = self.fake.reg["passwordCredentials"][0]
+                    if legacy:
+                        old["displayName"] = "legacy-browser-secret"
+                        self.fake.app["properties"]["configuration"]["secrets"][-1]["name"] = old["displayName"]
+                        SETUP.aad_registration(self.fake.auth)["clientSecretSettingName"] = old["displayName"]
+                        self.fake.app["tags"]["zava-forward-credential-name"] = old["displayName"]
+                    old["endDateTime"] = expiry
+                    original = copy.deepcopy(old)
+                    before = len(self.fake.writes)
+                    reusable = expiry == "2030-01-01T00:00:01+00:00"
+                    with patch.object(SETUP, "datetime", wraps=datetime) as clock:
+                        clock.now.return_value = now
+                        for mode in ("--check", "--dry-run"):
+                            self.assertEqual(self.invoke(mode), 0 if reusable else 2)
+                            self.assertEqual(len(self.fake.writes), before)
+                            self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+                        self.assertEqual(self.invoke("--secret-store", "app"), 0)
+                    self.assertEqual(self.fake.reg["passwordCredentials"][0], original)
+                    selected = SETUP.aad_registration(self.fake.auth)["clientSecretSettingName"]
+                    if reusable:
+                        self.assertEqual(selected, old["displayName"])
+                        self.assertEqual(len(self.fake.writes), before)
+                    else:
+                        self.assertNotEqual(selected, old["displayName"])
+                        self.assertEqual(len(self.fake.reg["passwordCredentials"]), 2)
+                        self.assertIn({"name": old["displayName"], "value": SECRET},
+                                      self.fake.app["properties"]["configuration"]["secrets"])
+
+    def mixed_secret_inventory(self):
+        references = [
+            {"name": "token-sas", "keyVaultUrl": "https://fictional-vault.vault.azure.net/secrets/token-sas",
+             "identity": "system"},
+            {"name": "other-kv", "keyVaultUrl": "https://fictional-vault.vault.azure.net/secrets/other/version",
+             "identity": "managed-identity"},
+        ]
+        configured = [*copy.deepcopy(references), {"name": "preserved"}, {"name": "empty"}]
+        self.fake.app["properties"]["configuration"]["secrets"] = configured
+        self.fake.app["properties"]["template"]["containers"][0]["env"].append(
+            {"name": "EXISTING_PASSWORD", "secretRef": "preserved"})
+        self.fake.auth["login"]["tokenStore"]["azureBlobStorage"] = {"sasUrlSettingName": "token-sas"}
+        listed = [*copy.deepcopy(references), {"name": "preserved", "value": "preserved-private-value"},
+                  {"name": "empty", "value": ""}]
+        return references, listed
+
+    def secret_response(self, response, *, project=None):
+        original = self.fake.rest
+        def rest(method, url, body):
+            if "/listSecrets?" in url:
+                return copy.deepcopy(response)
+            result = original(method, url, body)
+            if url == ARM_APP and method == "GET" and project:
+                return project(copy.deepcopy(result))
+            return result
+        return patch.object(self.fake, "rest", side_effect=rest)
+
+    def test_secret_rebuild_preserves_kv_and_app_references_across_response_shapes(self):
+        for shape in ("full", "names-only", "resolved-values", "omitted-kv", "config-names-only"):
+            with self.subTest(shape=shape):
+                self.fake = FakeAzure()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                references, listed = self.mixed_secret_inventory()
+                if shape == "names-only":
+                    listed[:2] = [{"name": r["name"]} for r in references]
+                elif shape == "resolved-values":
+                    listed[:2] = [{"name": r["name"], "value": "FICTIONAL-RESOLVED-KV"} for r in references]
+                elif shape == "omitted-kv":
+                    del listed[:2]
+                elif shape == "config-names-only":
+                    self.fake.app["properties"]["configuration"]["secrets"][:2] = [
+                        {"name": r["name"]} for r in references]
+                env_ref = {"name": "EXISTING_PASSWORD", "secretRef": "preserved"}
+                token_store = copy.deepcopy(self.fake.auth["login"]["tokenStore"])
+                projections = []
+                def metadata_only(app):
+                    for secret in app["properties"]["configuration"]["secrets"]:
+                        secret.pop("value", None)
+                    projections.append(app)
+                    return app
+                with self.secret_response({"value": listed}, project=metadata_only):
+                    self.assertEqual(self.invoke("--secret-store", "app"), 0, self.output.getvalue())
+                    writes = len(self.fake.writes)
+                    self.assertEqual(self.invoke("--check"), 0, self.output.getvalue())
+                    self.assertEqual(self.invoke(), 0, self.output.getvalue())
+                    self.assertEqual(len(self.fake.writes), writes)
+                patches = [body for method, url, body in self.fake.writes if method == "PATCH"
+                           and url == ARM_APP and "configuration" in body.get("properties", {})]
+                self.assertEqual(len(patches), 1)
+                payload = patches[0]["properties"]["configuration"]["secrets"]
+                actual = self.fake.app["properties"]["configuration"]["secrets"]
+                for inventory in (payload, actual):
+                    for reference in references:
+                        self.assertIn(reference, inventory)
+                    self.assertIn({"name": "preserved", "value": "preserved-private-value"}, inventory)
+                    self.assertIn({"name": "empty", "value": ""}, inventory)
+                    self.assertEqual(len(inventory), 5)
+                self.assertTrue(projections)
+                self.assertTrue(all("value" not in s for p in projections
+                                    for s in p["properties"]["configuration"]["secrets"]))
+                self.assertIn(env_ref, self.fake.app["properties"]["template"]["containers"][0]["env"])
+                self.assertEqual(self.fake.auth["login"]["tokenStore"], token_store)
+                self.assertNotIn("FICTIONAL-RESOLVED-KV", self.output.getvalue())
+
+    def test_unsafe_secret_inventory_fails_before_password_or_auth_write(self):
+        for shape in ("missing-array", "null-array", "not-array", "invalid-item",
+                      "duplicate", "missing-name", "missing-app", "missing-value",
+                      "invalid-value", "partial-kv", "conflicting-kv", "duplicate-config"):
+            with self.subTest(shape=shape):
+                self.fake = FakeAzure()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                _, listed = self.mixed_secret_inventory()
+                response = {"value": listed}
+                if shape == "missing-array":
+                    response = {}
+                elif shape == "null-array":
+                    response["value"] = None
+                elif shape == "not-array":
+                    response["value"] = {}
+                elif shape == "invalid-item":
+                    listed.append(SECRET)
+                elif shape == "duplicate":
+                    listed.append(copy.deepcopy(listed[-1]))
+                elif shape == "missing-name":
+                    listed.append({"value": SECRET})
+                elif shape == "missing-app":
+                    del listed[2]
+                elif shape == "missing-value":
+                    listed[2].pop("value")
+                elif shape == "invalid-value":
+                    listed[2]["value"] = None
+                elif shape == "partial-kv":
+                    listed.append({"name": "unknown-kv", "keyVaultUrl": "https://example.invalid/secret"})
+                elif shape == "conflicting-kv":
+                    listed[0]["identity"] = "different-identity"
+                else:
+                    self.fake.app["properties"]["configuration"]["secrets"].append({"name": "empty"})
+                before_app = copy.deepcopy(self.fake.app["properties"])
+                before_auth = copy.deepcopy(self.fake.auth)
+                with self.secret_response(response):
+                    self.assertEqual(self.invoke("--secret-store", "app"), 1, self.output.getvalue())
+                self.assertIn("Cannot preserve existing app secrets", self.output.getvalue())
+                self.assertFalse(self.fake.reg["passwordCredentials"])
+                self.assertFalse(any("/addPassword" in url or url == AUTH_URL for _, url, _ in self.fake.writes))
+                self.assertEqual(self.fake.app["properties"], before_app)
+                self.assertEqual(self.fake.auth, before_auth)
+                self.assertFalse(list(self.profile.iterdir()))
+
+    def test_secret_preservation_failures_do_not_activate_auth_or_bypass_on_rerun(self):
+        for corruption in ("missing-name", "keyVaultUrl", "identity", "transport"):
+            with self.subTest(corruption=corruption):
+                self.fake = FakeAzure()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                _, listed = self.mixed_secret_inventory()
+                original = self.fake.rest
+                transport_failed = []
+                def corrupt(method, url, body):
+                    if "/listSecrets?" in url:
+                        return copy.deepcopy({"value": listed})
+                    result = original(method, url, body)
+                    if url == ARM_APP and method == "PATCH" and "configuration" in body.get("properties", {}):
+                        secrets = self.fake.app["properties"]["configuration"]["secrets"]
+                        if corruption == "missing-name":
+                            del secrets[0]
+                        elif corruption != "transport":
+                            secrets[0][corruption] = "FICTIONAL-WRONG-REFERENCE"
+                    if (url == ARM_APP and method == "GET" and corruption == "transport"
+                            and not transport_failed
+                            and len(self.fake.app["properties"]["configuration"]["secrets"]) == 5):
+                        transport_failed.append(True)
+                        raise SETUP.AzureError("network")
+                    return result
+                auth_before = copy.deepcopy(self.fake.auth)
+                with patch.object(self.fake, "rest", side_effect=corrupt):
+                    self.assertEqual(self.invoke("--secret-store", "app"), 1)
+                self.assertEqual(self.fake.auth, auth_before)
+                self.assertFalse(any(url == AUTH_URL for _, url, _ in self.fake.writes))
+                self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+                if corruption == "transport":
+                    self.assertEqual(self.invoke(), 0, self.output.getvalue())
+                    self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+                else:
+                    self.assertEqual(self.invoke("--check"), 1)
+                    self.assertEqual(self.invoke(), 1)
+                    self.assertEqual(self.fake.auth, auth_before)
+                    self.assertFalse(any(url == AUTH_URL for _, url, _ in self.fake.writes))
+                    self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+
+    def test_secret_list_denial_and_patch_failure_preserve_existing_references(self):
+        for failure in ("list", "patch"):
+            with self.subTest(failure=failure):
+                self.fake = FakeAzure()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                references, listed = self.mixed_secret_inventory()
+                before = copy.deepcopy(self.fake.app["properties"])
+                auth = copy.deepcopy(self.fake.auth)
+                def fail(args):
+                    if args[0] != "rest":
+                        return False
+                    if failure == "list":
+                        return "/listSecrets?" in args[args.index("--url") + 1]
+                    return (args[args.index("--method") + 1] == "PATCH"
+                            and args[args.index("--url") + 1] == ARM_APP
+                            and "configuration" in json.loads(Path(args[args.index("--body") + 1][1:]).read_text()).get("properties", {}))
+                self.fake.fail = fail
+                with self.secret_response({"value": listed}):
+                    self.assertEqual(self.invoke("--secret-store", "app"), 1)
+                self.assertEqual(self.fake.app["properties"], before)
+                self.assertEqual(self.fake.auth, auth)
+                self.assertFalse(any(url == AUTH_URL for _, url, _ in self.fake.writes))
+                self.assertEqual(len(self.fake.reg["passwordCredentials"]), int(failure == "patch"))
+                self.assertTrue(all(r in before["configuration"]["secrets"] for r in references))
+                self.assertFalse(list(self.profile.iterdir()))
+
     def test_advisory_lock_deployment_and_revision_updates_refuse_before_auth_writes(self):
         for state in ("lock", "deployment", "revision"):
             with self.subTest(state=state):
@@ -1536,6 +1759,47 @@ class SetupTests(unittest.TestCase):
         infra = Path(__file__).resolve().parents[1]
         self.assertIn("'zava-forward-role': 'api'", (infra / "modules/containerapps.bicep").read_text())
         self.assertEqual((infra / "modules/edge.bicep").read_text().count("'zava-forward-role': 'api-edge'"), 2)
+
+
+class SecretPreservationMutationTests(unittest.TestCase):
+    def test_expiry_and_secret_field_mutations_fail_behavioral_assertions(self):
+        expiry_test = "test_stored_credential_expiry_guards_generated_and_legacy_reuse"
+        preservation_test = "test_secret_rebuild_preserves_kv_and_app_references_across_response_shapes"
+        mutations = [
+            ("expiry-filter", "secret_reference",
+             'datetime.fromisoformat(c["endDateTime"].replace("Z", "+00:00")) > now',
+             "True", expiry_test),
+            ("legacy-expiry-guard", "secret_reference",
+             'any(c.get("displayName") == existing_ref for c in valid)',
+             'any(c.get("displayName") == existing_ref for c in registration.get("passwordCredentials", []))',
+             expiry_test),
+            ("drop-kv-url", "preserve_app_secrets", "reference[field] = value",
+             'reference.update({field: value} if field != "keyVaultUrl" else {})',
+             preservation_test),
+            ("drop-kv-identity", "preserve_app_secrets", "reference[field] = value",
+             'reference.update({field: value} if field != "identity" else {})',
+             preservation_test),
+            ("lose-app-value", "preserve_app_secrets", 'reference["value"] = value',
+             'reference["value"] = ""', preservation_test),
+            ("skip-pending-reuse-guard", "secret_reference",
+             "verify_secret_handoff(cli, app, readonly)", "None",
+             "test_secret_preservation_failures_do_not_activate_auth_or_bypass_on_rerun"),
+            ("require-write-only-readback-values", "secret_reference_digest",
+             '("name", "keyVaultUrl", "identity")',
+             '("name", "keyVaultUrl", "identity", "value")', preservation_test),
+        ]
+        for name, target, old, new, test in mutations:
+            with self.subTest(mutation=name):
+                source = inspect.getsource(getattr(SETUP, target))
+                self.assertEqual(source.count(old), 1)
+                namespace = {}
+                exec(compile(source.replace(old, new), f"<mutation-{name}>", "exec"),
+                     SETUP.__dict__, namespace)
+                with patch.object(SETUP, target, namespace[target]):
+                    result = unittest.TestResult()
+                    SetupTests(test).run(result)
+                self.assertFalse(result.errors, result.errors)
+                self.assertTrue(result.failures, f"Behavioral assertions did not kill {name}")
 
 
 if __name__ == "__main__":
