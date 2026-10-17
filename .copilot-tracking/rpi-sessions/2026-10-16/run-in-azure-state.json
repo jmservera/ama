@@ -3,8 +3,8 @@
   "task_slug": "run-in-azure",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/run-in-azure-research.md",
@@ -15,6 +15,16 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "2026-10-17 P04: Research reused/Ready; Plan verification Complete/Ready, existing critique reused without new scope; rebase onto c9ba95f complete. Only index/log conflicts; upstream #176 recovery/#175 and branch #360 preservation verified byte-for-byte. Fresh isolated pip validation: staff 21, pipeline 28, full infra 307 zero skips; exact Ruff/format/mypy and local Bicep passed.",
+      "status": "local work complete; publication prepared",
+      "evidence": ".copilot-tracking/changes/2026-10-16/run-in-azure-changes.md"
+    },
+    {
+      "decision": "P04 Review executed once, Complete; outcome Residual work solely for unchanged RV-001/RV-002/RV-003. No new resolution defect. Stop after single explicit-lease branch push and PR update; no automatic session or follow-up, no tracking-only repush. Final publication receipt is PR #370/final response, not a future commit claim.",
+      "status": "review complete; remote publication pending at evidence commit",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
+    },
     {
       "decision": "Research executed; Planning Readiness Ready. User explicitly requests all four phase deliverables and implementation in this task.",
       "status": "recorded",
@@ -74,8 +84,8 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Explicit owner rebase-only continuation: Research reused/Ready and Plan verification Complete/Ready. Commit preparation evidence to keep rebase clean, then noninteractive rebase onto origin/main c9ba95f; preserve #176/#175 and #360, stop on source ambiguity. No automatic follow-up."
+    "phase": "Follow-up",
+    "action": "Rebase Review Complete, outcome Residual work; no source defect or ambiguity. Complete local evidence closeout, publish this branch once with explicit d050003 lease and update PR #370 as Refs #360; final SHA/publication receipts belong in PR and final response. Stop without tracking-only repush or automatic follow-up."
   },
   "prioritized_follow_ups": [
     {

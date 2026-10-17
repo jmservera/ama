@@ -18,13 +18,18 @@ authorizes rebase and this branch's force-with-lease push only.
 <!-- P04 -->
 ### P04: Rebase verification and publication
 
-* [ ] P04-T01: Rebase onto origin/main; combine index/log conflicts without
+* [x] P04-T01: Rebase onto origin/main; combine index/log conflicts without
   dropping #176 recovery/source evidence or existing #175 delivery.
-* [ ] P04-T02: Fresh isolated pip venv; targeted staff/pipeline and full infra
+* [x] P04-T02: Fresh isolated pip venv; targeted staff/pipeline and full infra
   tests, exact recorded Ruff/format/mypy commands and git diff --check.
-* [ ] P04-T03: One bounded rpi-review of resolutions and preservation; record
-  evidence, commit, push with explicit lease, update PR #370 as Refs #360,
-  report final SHA and stop. No follow-up or tracking-only repush.
+* [x] P04-T03: One bounded rpi-review of resolutions and preservation; record
+  local completion evidence. Review Complete, outcome Residual work.
+
+P04 local RPI execution is complete. Publication is the parent-owned final
+action after this evidence commit: push once with explicit lease, update
+PR #370 as Refs #360, report final SHA and stop. Publication has not occurred
+at this record's write time; PR readback/final response supply that receipt.
+No follow-up or tracking-only repush.
 
 Test ownership and removals: unchanged, none. Maximum additions: zero.
 Canonical targets: conflict resolutions and existing dated artifacts only.

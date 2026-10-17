@@ -18,6 +18,95 @@ committed locally before rebase so no stash, dirty-tree bypass or work loss is
 needed. No implementation scope beyond preserving both merged intents.
 All previous log/result claims below remain historical, not rerun evidence.
 
+### P04-T01 rebase result
+
+`GIT_EDITOR=true git rebase origin/main` completed onto c9ba95f.
+Only conflicts: docs/reference/README.md and docs/reference/log.md while
+replaying 37af66e. Rerere supplied the index resolution; manually inspected
+against origin/main and confirmed its entire index plus the #360 row.
+Log resolution retained the entire upstream side (#176, #178, #175 and
+other historical entries), then appended the existing #360 section unchanged.
+No new historical log entry or past validation claim was invented.
+No source conflict occurred; infra/README.md merged automatically.
+
+Post-rebase source boundary: 1d204df. `git diff --exit-code d050003 HEAD --
+.github/workflows infra docs/architecture` passed: image, dockerignore,
+timeout tests, transport, hashed requirements and runbook are identical.
+`git diff --exit-code origin/main HEAD -- src docs/reference/research` passed:
+#176 synthetic source/tests/docs and #175 privacy delivery are unchanged.
+All upstream 2026-10-17 recovery artifact directories also compare identically.
+`git diff --check` passed. Fresh venv's first staff discovery failed honestly
+with missing zava_forward; source/dependency installation follows that
+missing-package failure. Validation is not yet complete.
+
+### P04-T02 validation (2026-10-17)
+
+Assessed rebased source HEAD: 1d204df. New venv:
+`/tmp/ama-360-rebase-ZSRcWK`, Python 3.12.3,
+`include-system-site-packages = false`. Commands from repository root:
+
+```bash
+V=$(mktemp -d /tmp/ama-360-rebase-XXXXXX)
+python3 -m venv "$V"
+"$V/bin/python" -m unittest discover -s infra/tests -p test_staff_azure.py -q
+"$V/bin/python" -m pip --quiet install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
+"$V/bin/python" -m pip --quiet install 'PyYAML==6.0.3'
+"$V/bin/python" -m pip --quiet install --require-hashes -r src/api/requirements.txt
+"$V/bin/python" -m pip check
+"$V/bin/python" -m unittest discover -s infra/tests -p test_staff_azure.py -q
+"$V/bin/python" -m unittest discover -s infra/tests -p test_pipeline.py -q
+REQUIRE_AZ_BICEP=1 "$V/bin/python" -m unittest discover -s infra/tests -q
+"$V/bin/ruff" --version
+"$V/bin/python" -m pip --quiet install 'ruff==0.17.1' 'mypy==2.4.0'
+FILES="infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py infra/scripts/pipeline.py infra/tests/test_pipeline.py infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/tests/test_staff_azure.py src/check-container.py infra/tests/test_container_contract.py"
+"$V/bin/ruff" check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 $FILES
+"$V/bin/ruff" format --isolated --line-length 100 --check $FILES
+"$V/bin/mypy" --strict src/check-container.py
+"$V/bin/mypy" --strict infra/scripts/pipeline.py
+"$V/bin/mypy" --follow-imports=silent --ignore-missing-imports infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py
+for file in infra/*.bicep infra/modules/*.bicep; do
+  az bicep build --file "$file" --stdout > /dev/null || exit 1
+  az bicep lint --file "$file" || exit 1
+done
+git diff --check
+git diff --exit-code d050003 HEAD -- .github/workflows infra docs/architecture
+git diff --exit-code origin/main HEAD -- src docs/reference/research
+```
+
+Initial clean-venv discovery: missing zava_forward (one import error);
+dependency install followed that failure. Subsequent results: pip check passed;
+staff **21 passed** (0.240 s), pipeline **28 passed** (6.034 s),
+full infra **307 passed, zero skips** (68.284 s).
+Ruff initially absent (exit 127); installed only existing pinned tools after
+that failure. Exact existing ten-file Ruff E/F/I/B/UP and format commands
+passed; all three existing mypy invocations passed. All infra/module local
+Bicep build/lint commands passed without Azure service access.
+Whitespace and source equality checks passed.
+
+Additional byte assertions passed: origin/main log is an exact prefix of
+the resolved log; every original d050003 log section remains unchanged;
+all rows from both index versions survive; every upstream tracked
+synthetic-determinism-176 recovery artifact and synthetic-dictionary-175
+artifact is byte-identical. No source changes or test changes were required.
+Docker access is denied by the caller's VM evidence; no Docker command,
+bypass or image build was attempted. No Azure service calls/writes, roles,
+private datasets, secrets or new behavior. Prior live blockers stay open.
+
+P04-T01/T02 complete. Review-ready: no source conflict, ambiguity, divergence
+or unresolved local validation failure. P04-T03 Review/publication remains.
+
+### P04 local closeout before single publication
+
+Research reused/Ready, Plan verification Complete/Ready, Implement Complete,
+one rebase-resolution Review Complete, outcome Residual work for unchanged
+RV-001/RV-002/RV-003 only. P04 local markers are complete; no source defect
+or new implementation scope. Only tracking evidence changed after validated
+source 1d204df. The final evidence commit will be published once with explicit
+`--force-with-lease=refs/heads/feat/run-in-azure-360:d0500035863a596812a018c1e755a393b9c31e21`.
+This is an intended action, not a claim it already ran. PR #370 readback and
+final response will identify the actual published SHA and receipt; no extra
+tracking-only commit/push follows reporting that SHA.
+
 Full plan 360-run-in-azure. P01 complete; P02 validation/delivery active. One critique executed,
 PC-001 through PC-008 accepted. No Azure execution or image build authorized.
 

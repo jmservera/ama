@@ -22,6 +22,18 @@ open, then records evidence before the single force-with-lease publication.
 Authenticated id/login was resolved and local privacy-safe email configured
 before commits. No amending outside rebase; no issue closure or merge.
 
+P04-T01/T02 completion: rebase onto c9ba95f succeeded, only index/log conflicts;
+combined entries and exact upstream recovery retention verified. Fresh pip
+venv passed 21 staff, 28 pipeline and 307 full infra tests with zero skips,
+exact ten-file Ruff/format, three mypy commands, local Bicep build/lint and
+git diff --check. Source/workflows match d050003; upstream source matches main.
+P04-T03 is ready for one resolution-focused Review then publication.
+
+P04-T03 local Review now Complete, outcome Residual work; no source defect.
+Only the parent-owned single lease push/PR update remains at evidence commit
+time. Final response and PR readback own the exact published SHA; no further
+tracking-only closeout push is planned. Session remains manual/stopped.
+
 ## P01
 
 ### P01-T01

@@ -6,6 +6,54 @@ ms.date: 2026-10-16
 
 ## Scope and Evidence
 
+### Rebase continuation Review opening (2026-10-17)
+
+Same task 360-run-in-azure; one review of the owner-requested rebase-only
+continuation, not a repeated assessment of historical source implementation.
+Boundary: resolved index/log, source/workflow preservation and P04 evidence
+at rebased source HEAD 1d204df onto c9ba95f. P04-T01/T02 are reconciled
+complete in plan/details/changes; P04-T03 publication remains parent-owned.
+Research/plan verification reused existing decisions and critique; no new
+behavior, test changes or source ambiguity. Read-only direct review, no workers.
+Execution: In progress. Original RV-001/RV-002/RV-003 remain unresolved.
+
+### Rebase continuation Review result
+
+Execution: **Complete**, once, direct. Outcome: **Residual work** for the
+unchanged live acceptance boundary; no new resolution defect identified.
+Compared research, plan P04, phase details, existing critique dispositions,
+changes commands/results, Git conflicts and final resolved diff.
+
+* Index: diff against origin/main adds only the existing #360 continuation
+  row. All upstream rows, including #176 replay and #175 privacy, survive.
+* Log: exact upstream prefix is preserved; existing #360 section is appended
+  unchanged. Every section from d050003 remains byte-for-byte present.
+  No fabricated previous entry or rewritten historical validation.
+* All #176 recovery and #175 tracking artifacts match origin/main exactly.
+  All src and reference research files also match origin/main exactly.
+* All infra, workflow and architecture files match d050003 exactly, including
+  image COPY, dockerignore, decoded-result timeout, hash-pinned requirements
+  installs and workflow mutation guards. No source conflict, behavior change
+  or implementation divergence needed resolution. Main c9ba95f is ancestor.
+* Fresh Python 3.12.3 isolated pip venv: pip check passes; staff 21, pipeline 28,
+  full infra 307 pass with zero skips. Existing ten-file Ruff E/F/I/B/UP and
+  format checks, three scoped mypy commands and all local Bicep builds/lints
+  pass. git diff --check passes. Initial missing-source/missing-Ruff failures
+  are recorded and were resolved with venv-only existing dependencies.
+* Existing critique remains applicable: this is bounded verification of the
+  accepted plan, not a new plan or behavior candidate requiring new critique.
+  P04-T01/T02 are complete, P04-T03 Review complete; publication parent-owned.
+
+RV-001 [Medium], RV-002 [Medium], RV-003 [Low] remain routed to their existing
+separate authorized deployment, live validation and operational recovery
+follow-ups. None is resolved by this rebase or offline tests. Docker access
+is denied; no image build was attempted or inferred. No Azure service call,
+role activation, private data/secret access or new source scope.
+Parent may commit evidence and publish only this branch with the explicit
+d050003 lease, update PR #370 as Refs #360, report final SHA and stop.
+Remote CI is not a local validation result. No further review or follow-up
+implementation is requested.
+
 * Task ID: 360-run-in-azure.
 * Boundary: full offline implementation, tests, runbook and acceptance audit.
 * Plan: .copilot-tracking/plans/2026-10-16/run-in-azure-plan.md.
