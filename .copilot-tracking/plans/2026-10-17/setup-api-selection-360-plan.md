@@ -97,7 +97,7 @@ if setup pre-existing annotations prevent whole-file strictness. No broad reform
 <!-- rpi:phase id=P02 -->
 ### P02: Review and publication
 
-* [ ] P02-T01: Reconcile artifacts and one independent Review; at most two
+* [x] P02-T01: Reconcile artifacts and one independent Review; at most two
   authorized bounded corrections only for concrete defects.
 * [ ] P02-T02: Fresh privacy identity/trailer, commit/push ordinary and updatePR385
   title/body to include safe selection and preserved ACR limits; exact head.
@@ -126,4 +126,11 @@ Changes .copilot-tracking/changes/2026-10-17/setup-api-selection-360-changes.md.
 P01 complete: combined164 tests, lint/types/compile and prior eight ACR artifact
 byte parity passed. Main advanced during execution to d400eb8; fresh authorized
 owned-topic integration must finish before final independent Review/publication.
-Original source historical record and prior Review remain unchanged.
+Integration finished f48cc9b on d400eb8, one append-log conflict preserving
+exact full upstream prefix/all owned suffix, upstream #84/#94 routes. Full164
+and lint/types/format/compile passed again. P02-T01 now review-ready; source
+historical record and prior Review remain unchanged.
+The single NEW Review is Complete / Residual work; bounded source conformant,
+no defects, no corrections requested/used. RV001 live acceptance, RV002 exact
+image gates, RV003 later retirement remain excluded follow-ups. Publication
+P02-T02 alone remains active; final source fingerprints match reviewed candidate.

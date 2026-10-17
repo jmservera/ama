@@ -10,8 +10,11 @@
   "research": "Complete/Ready",
   "plan": "Ready, one critique PC001-003 resolved",
   "implementation": "P01 complete; 164 combined offline tests passed",
-  "review": "Pending one independent Review after fresh-main integration",
-  "publication": "Pending",
+  "integratedSourceHead": "f48cc9b4661f3375110a96b66829eb5678d32057",
+  "review": "Complete / Residual work; bounded source conformant, no defects; one Review only",
+  "reviewArtifact": ".copilot-tracking/reviews/logs/2026-10-17/setup-api-selection-360-review.md",
+  "correctionCyclesUsed": 0,
+  "publication": "Ready for exact-lease topic-only push after authorized rebase and PR385 update; not yet confirmed",
   "azureWritesThisContinuation": [],
   "limits": "No live setup, exact-image smoke/pin, SQL/Graph writes, browser/AI acceptance, restart or retirement; issue360 d/e remain unmet"
 }

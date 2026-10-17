@@ -61,3 +61,45 @@ main log prefix yet: authorized owned-topic rebase required. Commit current
 owned work first, integrate while clean, preserve upstream full log prefix plus
 all own appends and routes; exact old remote lease d11c273eb744c440965375c3638583565b28db6c.
 Review/publication pending; prior ACR single Review remains residual, not rerun.
+
+Authorized integration completed: source/evidence committed423f9193, clean rebase
+onto verified d400eb8. Only conflict docs/reference/log.md in oldest ACR evidence
+commit; resolved by retaining full upstream finance append then all own entries.
+Four owned commits replayed, integration source head
+f48cc9b4661f3375110a96b66829eb5678d32057. No source conflict/mutation in integration.
+Eight prior ACR artifact bytes unchanged; fresh main log is exact prefix and
+entire owned423f9193 suffix after bbbc924 is exact suffix. Upstream #84/#94 index
+rows retained. All JSON parses. Full combined164 and scoped lint/format/mypy/
+compile repeated after integration and passed. Original ACR recipe/sourcebab4bf3,
+retained base/payload hashes and adverse/residual Review unchanged.
+
+Reviewed-source candidate fingerprints SHA256:
+
+| Path | SHA256 |
+| --- | --- |
+| infra/scripts/setup-entra.py | 8cf36e2d01d19c8b94cca0dcda9f6105bcaf14471eead977dc3ed4e961f060bb |
+| infra/tests/test_setup_entra.py | 9bf651ef1eab149b0e90a58a8e5823c6cd0a27570abf7a8bd98ea8558b16f9fb |
+| infra/tests/test_staff_azure.py | 626a78dc1144cc3bed8cf23ac317daa937ee2f79ba6a85f4d74d4a8f78504c1f |
+
+P01 complete; P02-T01 ready for the one independent NEW task Review. This
+review does not revisit or upgrade prior ACR delivery/acceptance conclusions.
+
+## P02-T01: Single independent Review
+
+Complete / Residual work. Reviewer found bounded selection/no-write implementation
+conformant, no defects or unresolved decision; zero correction cycles used.
+Independently checked current fingerprints, test inventory (five additions/no
+removals), syntax, nine central guard mode/operation combinations, upstream
+ancestry/log prefix and eight original ACR artifact byte parity. Reviewer
+assessed parent164 test/lint/type receipts, did not claim a separate full rerun.
+RV001 real operator/live acceptance, RV002 exact-image publication/smoke/pin,
+RV003 later old-stack retirement remain outside active work. d/e UNMET.
+One new Review is committed with all new phase artifacts before first push.
+
+## P02-T02: Publication readiness
+
+Fresh gh api user8036360/jmservera, repository-local privacy-safe author/committer
+8036360+jmservera@users.noreply.github.com, required Copilot trailer. Existing
+PR385 OPEN/main, remote stilld11c273eb744c440965375c3638583565b28db6c. Authorized
+rebase requires that exact topic-only lease; no force to main, no merge/close.
+Push/PR body update and confirmed clean-head handoff pending.
