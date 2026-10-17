@@ -1,0 +1,15 @@
+Issue 176 / PR 368 recovery execution, 2026-10-17
+Inspected source head: 196972dc0dac256cdfd41f70bc06e7cad5fbebf2
+Environment: Python 3.12.3, Ruff 0.17.1, mypy 2.4.0
+Owned venv: /tmp/ama-176-recovery-20261017-xGWcVW
+Working directory: src/core
+Commands match project CI lint and type checking:
+<venv>/bin/python -m ruff check .
+<venv>/bin/python -m ruff format --check .
+<venv>/bin/python -m mypy
+Output follows, captured directly during this recovery, not reconstructed:
+All checks passed!
+47 files already formatted
+Success: no issues found in 100 source files
+
+Project lint/type-check exit code: 0

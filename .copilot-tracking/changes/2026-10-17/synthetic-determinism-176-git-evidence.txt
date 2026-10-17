@@ -1,0 +1,44 @@
+Issue 176 / PR 368 recovery, 2026-10-17
+Git and GitHub evidence captured directly during recovery.
+No private dataset contents are included.
+
+$ git rev-parse HEAD origin/main
+196972dc0dac256cdfd41f70bc06e7cad5fbebf2
+4ca6c7318ee4be35cef8c5ea6eee3425bf1421c4
+
+$ git merge-base HEAD origin/main
+4ca6c7318ee4be35cef8c5ea6eee3425bf1421c4
+
+$ git log --first-parent HEAD..origin/main
+
+$ git diff --name-status HEAD...origin/main
+
+$ git diff --name-status HEAD^1 HEAD (last historical main merge)
+A	.copilot-tracking/changes/2026-10-16/synthetic-dictionary-175-changes.md
+A	.copilot-tracking/details/2026-10-16/synthetic-dictionary-175-phase-details.md
+A	.copilot-tracking/plans/2026-10-16/synthetic-dictionary-175-critique.md
+A	.copilot-tracking/plans/2026-10-16/synthetic-dictionary-175-plan.md
+A	.copilot-tracking/research/2026-10-16/synthetic-dictionary-175-research.md
+A	.copilot-tracking/reviews/logs/2026-10-16/synthetic-dictionary-175-review.md
+A	.copilot-tracking/rpi-sessions/2026-10-16/synthetic-dictionary-175-state.json
+M	docs/reference/README.md
+M	docs/reference/log.md
+M	docs/reference/research/retrofit-synthetic-data/README.md
+M	docs/reference/research/retrofit-synthetic-data/data-dictionary.md
+M	docs/reference/research/retrofit-synthetic-data/provenance-register.json
+M	src/agents/README.md
+A	src/agents/tests/test_chat_provenance.py
+M	src/core/README.md
+A	src/core/src/zava_forward/core/synthetic/privacy.py
+M	src/core/tests/test_synthetic_provenance.py
+
+$ git diff --name-status f822bb9..196972d -- feature source/test, pyproject, src-ci.yml
+
+$ gh issue view 176 --json title,body,state,url
+{"body":"## Summary\n\nMake every generator run reproducible from a recorded seed and as-of date, version the outputs, and define when and how data is refreshed without silently replacing live exercise records.\n\n## Source references\n\n* support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/build_mvp_dataset.py: seed and as-of\n* support/synthetic-data/retrofit-flow/zava-forward-year-one/generator/generate_pack.py: generated_at uses the current time\n* docs/reference/research/retrofit-synthetic-data/README.md: regeneration command\n* mvp/tests/test_generated_dataset.py: determinism test\n\n## Existing delivery and status\n\nPartial. The MVP builder is seeded with an explicit as-of date and tested for determinism. The pack builder writes a wall-clock generated_at, and the stock register seed is recorded but the register generator is not in the repository.\n\n## Acceptance criteria\n\n- [ ] Same seed and as-of date give byte-identical output for each generator, including the stock register and sensor data\n- [ ] Output manifests record seed, version and generator revision\n- [ ] Refresh policy states cadence, approvals and how live seeded records are protected\n\n## Dependencies\n\nParent: #165. Related: #103.\n\n","state":"OPEN","title":"Determinism, seeds, versioning and refresh policy for synthetic data","url":"https://github.com/jmservera/ama/issues/176"}
+
+$ gh pr view 368 --json headRefOid,headRefName,baseRefOid,state,reviews,comments,closingIssuesReferences
+{"baseRefOid":"4ca6c7318ee4be35cef8c5ea6eee3425bf1421c4","closingIssuesReferences":[],"comments":[],"headRefName":"feat/synthetic-determinism-176","headRefOid":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","reviews":[],"state":"OPEN"}
+
+$ gh api repos/jmservera/ama/commits/196972dc0dac256cdfd41f70bc06e7cad5fbebf2/check-runs (selected fields)
+{"checks":[{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-api"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-agents"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-importer"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-orchestrator"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-core"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-no-working-data"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"src-namespace"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"image-paths"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"test"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"image"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"validate"},{"conclusion":"success","head_sha":"196972dc0dac256cdfd41f70bc06e7cad5fbebf2","name":"mssql"}],"total_count":12}
