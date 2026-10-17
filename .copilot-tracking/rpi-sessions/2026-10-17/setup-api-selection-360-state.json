@@ -1,0 +1,17 @@
+{
+  "task": "setup-api-selection-360",
+  "issue": 360,
+  "branch": "fix/initializer-acr-cli-360",
+  "pr": 385,
+  "session": "69875c40-cceb-4bdf-aece-bee3304c45b5",
+  "startHead": "d11c273eb744c440965375c3638583565b28db6c",
+  "initialMain": "bbbc9243505b606550327c64bf5429243f457f2e",
+  "integrationMain": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+  "research": "Complete/Ready",
+  "plan": "Ready, one critique PC001-003 resolved",
+  "implementation": "P01 complete; 164 combined offline tests passed",
+  "review": "Pending one independent Review after fresh-main integration",
+  "publication": "Pending",
+  "azureWritesThisContinuation": [],
+  "limits": "No live setup, exact-image smoke/pin, SQL/Graph writes, browser/AI acceptance, restart or retirement; issue360 d/e remain unmet"
+}

@@ -5241,3 +5241,23 @@ metadata when the knowledge base was created.
 * No new Azure writes/builds, log payload/SAS/secret/actor/identity-detail
   retrieval, initializer update/start, SQL/Graph/private data, restart or
   teardown. Actual exact-image smoke/digest/pin and #360 d/e remain UNMET.
+
+## [2026-10-17] query | Safe setup API selection during retained migration (Refs #360)
+
+* New ordered setup-api-selection-360 RPI on PR #385 found the actual demo API
+  has legacy `workload=api` plus explicit `zava-forward-ingress=direct`, but no
+  modern role tag. Old API retains workload-only metadata. Read-only selected
+  ARM fields, not names or list order, establish the existing selector.
+* [Setup runbook](../../infra/README.md#post-deployment-api-authentication-initialization)
+  and script now accept the compatible legacy direct tag combination. Exact
+  old-API override remains supported; mixed modern/legacy direct candidates
+  refuse ambiguity. Single legacy/Front Door path remains unchanged.
+* Corrected active transport guidance: `--check`, `--dry-run` and `--list-staff`
+  now refuse temporary Azure job/secret writes before request payload creation,
+  including automatic fallback. Local read-only verification remains; failed
+  private connectivity reports blocked/incomplete, not verified SQL. Mutation-mode
+  Azure preflight/roster/apply transport remains separately scoped.
+* Existing runbook and index updated; new phase evidence records red-first and
+  offline regressions. No live setup, private SQL/Graph writes, image smoke/pin,
+  restart, public access/bypass/IAM/new infrastructure or retirement. Prior ACR
+  historical receipts and Review remain unchanged; actual #360 d/e unmet.

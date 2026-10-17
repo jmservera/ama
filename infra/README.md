@@ -1308,7 +1308,8 @@ No required resource arguments. Add `--yes` to approve the SQL plan/restart
 non-interactively; it does not approve tenant admin consent, migration or spend.
 The default resource group is `ama` (other groups are
 refused). API selection prefers `zava-forward-role=api`, then the existing
-`workload=api` tag, then `ca-*-api`. New Bicep deployments tag the API and
+`workload=api` tag, then `ca-*-api`, except that an explicitly tagged direct
+API is preferred during migration as described below. New Bicep deployments tag the API and
 Front Door profile/endpoint (`zava-forward-role=api-edge`). Existing untagged
 resources still work. Ambiguity prints resource-name candidates, never IDs;
 an interactive run asks one plain question rather than guessing. A headless
@@ -1319,6 +1320,20 @@ python3 infra/scripts/setup-entra.py --container-app ca-cutover-test-api
 python3 infra/scripts/setup-entra.py --check
 python3 infra/scripts/setup-entra.py --dry-run
 ```
+
+During old/new coexistence, a unique `zava-forward-ingress=direct` API wins
+without a name guess. It must also have `zava-forward-role=api`, or the
+compatible `workload=api` tag with no modern role tag. On 2026-10-17, read-only
+ARM metadata showed precisely that legacy-workload/direct combination on
+`ca-cutover-test-demo-api`; the retained `ca-cutover-test-api` has no direct tag.
+The former modern-role-only direct filter missed this configuration and fell
+back to two workload candidates. The compatibility fix accepts the existing
+explicit deployment tag; it neither adds a selector nor changes Azure resources.
+More than one eligible direct API, including mixed modern/legacy tags, still
+refuses; a conflicting modern role does not qualify. An exact `--container-app`
+always overrides preference, including deliberate old-API/Front Door selection.
+No API, edge or backing service is removed. Offline regressions are not a live
+laptop setup, human sign-in or SQL acceptance result.
 
 `ca-cutover-test-agents` is not the API and is never selected by the fallback.
 The script matches enabled Front Door origins to the selected API FQDN and
@@ -1455,9 +1470,13 @@ The final summary separately reports SQL binding and restart, not just Entra.
 
 Exit codes: `0` means the requested configuration converged, not successful
 human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
-`1` means blocked/error; `130` means interrupted. `--dry-run` makes no remote
-mutations. `--check` never changes Entra, SQL bindings or API replicas, but
-the Azure SQL path creates/removes a temporary job and secret. Neither mode
+`1` means blocked/error; `130` means interrupted. `--dry-run`, `--check` and
+`--list-staff` make no cloud, Entra or SQL mutations and never restart replicas.
+They refuse the Azure SQL job transport before payload creation, including on
+automatic fallback, because even a read-only SQL job needs cloud job/secret writes.
+Use the same read-only command without `--run-in-azure` on an authorized
+private-connected host; unavailable SQL verification stays blocked/incomplete.
+Neither check nor dry-run
 logs in or creates a missing private profile; both require existing authorized
 sessions and cannot be combined with `--login`.
 A final fresh Container App read must report provisioning `Succeeded`.
@@ -1601,8 +1620,10 @@ This is a separate confirmation after the roster-write confirmation;
 `--yes` accepts both displayed plans. A current roster/revision with recorded restart
 evidence needs no further restart. `--check` and `--dry-run` inspect Entra and
 SQL without applying or restarting. Unknown/missing restart evidence remains
-incomplete. A blocked local candidate lookup or SQL preflight automatically
-tries the [in-VNet job path](#in-vnet-sql-staff-step-refs-360).
+incomplete. In a mutating setup invocation, a blocked local candidate lookup or
+SQL preflight automatically tries the
+[in-VNet job path](#in-vnet-sql-staff-step-refs-360). Read-only modes never do:
+the transport guard reports the missing evidence and private-host handoff.
 Explicit roster/control validation failures do not trigger fallback, and an
 uncertain local apply is never retried in another execution. If the Azure path
 cannot run, setup prints the exact discovered private-host command and reports
@@ -1624,10 +1645,13 @@ remains the same as PR #363: the first ProgrammeManager code gets the eligible
 `admin@` person, remaining positions are seeded random, and the private persisted
 mapping is reused. No Graph profile/token is uploaded. Only candidate listing,
 SQL check, SQL apply/verification and API restart execute in the job.
-`--check --run-in-azure` and `--list-staff --run-in-azure` create temporary
-management-plane jobs/secrets but perform read-only SQL and never restart.
-Azure listing prints a count, not codes or roles. `--dry-run` never creates
-a job; it reports the missing private SQL evidence rather than claiming success.
+The internal SQL-check/candidate operations in a mutating invocation use
+temporary management-plane jobs/secrets even before SQL apply. User-facing
+`--check`, `--list-staff` and `--dry-run` prohibit that transport, including
+`--run-in-azure` and automatic fallback. They report missing private SQL evidence
+rather than claiming success; use a private-connected authorized host for these
+read-only commands. Mutation-mode generated-roster discovery still prints only
+counts, not codes or roles, for Azure results.
 
 Prerequisites (not executed or deployed by setup):
 
@@ -1758,7 +1782,8 @@ prefix, or delete the source initializer. Interrupted hard-kill recovery
 requires the serialized operator window; retained ciphertext is not a clear
 roster and cannot be decrypted after losing the request key.
 Never delete `ama` or an unowned job. SQL may already have committed; first use
-`--check --run-in-azure` with the same persisted private roster, never regenerate
+`--check` without `--run-in-azure` on an authorized private-connected host with
+the same persisted private roster, never regenerate
 or blindly retry an uncertain apply. Cross-host simultaneous setup still needs
 the serialized operator window described above.
 
