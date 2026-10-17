@@ -4,3 +4,5 @@
 {"date":"2026-10-17","phase":"Plan","event":"completed","task":"182","readiness":"Ready","critique_execution":"Complete","critique_verdict":"Revise","disposition":"PC-001 and PC-002 applied directly; no repeat","next":"Implement"}
 {"date":"2026-10-17","phase":"Implement","event":"started","task":"182","scope":"Full plan P01/P02"}
 {"date":"2026-10-17","phase":"Implement","event":"completed","task":"182","scope":"Full plan P01/P02","validation":"546 core run, one live opt-in skipped; 37+7 focused passed; 15 mutants killed; CLI and Ruff/format/mypy passed","next":"Review"}
+{"date":"2026-10-17","phase":"Review","event":"started","task":"182","head":"7562515","scope":"Full task; read-only source; one review"}
+{"date":"2026-10-17","phase":"Review","event":"completed","task":"182","execution":"Complete","outcome":"Residual work","implementation_defects":0,"residual":"RV-001 consumer/live acceptance and RV-002 source/method approval remain distinct follow-ups","next":"Publish Refs #182 PR then requested stop"}
