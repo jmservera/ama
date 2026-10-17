@@ -9,12 +9,23 @@ ms.topic: reference
 
 ### Assessment reconciliation engineering continuation (2026-10-17, #84)
 
-Post-implementation Review: **Not accepted, blocking recovery defect**. An
+Original post-implementation Review: **Not accepted, blocking recovery defect**. An
 independent early/persistent discard-read failure probe found that outer lock
 cleanup can still commit a failed success audit or replace the original
 operation error. The normal-recovery evidence below remains valid but is not
-sufficient acceptance. No correction or repeated Review occurred in this task;
-any visibility PR is incomplete and #84 remains open.
+sufficient acceptance.
+
+Coordinator-authorized correction ONE fixes canonical discard ordering:
+failed writes/audits and validation state are cleared, known cache snapshots
+restored and the sync watermark invalidated before any reload reads. Actual
+one-shot/persistent failure tests preserve the original error, prevent audit
+leaks, release locks and force later reload, across all three decision wrappers.
+Ten selected canonical tests pass on actual task-owned local SQL Server;
+102 focused core/gate tests, 69 shared cleanup-consumer tests and 72 targeted
+API tests (one existing browser skip) also pass. Bounded independent verification
+closes RV-001 for this correction, with 91 focused tests and two constructed
+snapshot probes. Original Review remains historical; #84 remains open and no
+professional, source-policy or operational approval is granted.
 
 Current constructed checks independently preserve both stock assertions and
 query owner, four separate versioned technical sign-offs, affected-only

@@ -3,16 +3,17 @@
   "task_slug": "assessment-reconciliation-controls-84",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "blocked",
-  "session_status": "stopped",
+  "active_phase": "Publication",
+  "status": "ready_for_publication",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/assessment-reconciliation-controls-84-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/assessment-reconciliation-controls-84-plan.md",
     "details": ".copilot-tracking/details/2026-10-17/assessment-reconciliation-controls-84-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-17/assessment-reconciliation-controls-84-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-17/assessment-reconciliation-controls-84-changes.md",
-    "review": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-review.md"
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-review.md",
+    "correction_verification": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-correction-one-verification.md"
   },
   "confirmed_decisions": [
     {
@@ -31,30 +32,34 @@
       "evidence": ".copilot-tracking/changes/2026-10-17/assessment-reconciliation-controls-84-changes.md"
     },
     {
-      "decision": "Exactly one independent Review executed. Outcome Not accepted: RV-001 High blocks failed-recovery integrity. No source correction or repeated Review in current task.",
+      "decision": "Initial execution: exactly one independent Review, Not accepted; RV-001 blocked failed-recovery integrity. No correction occurred under the initial authorization.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-review.md"
     },
     {
       "decision": "Normal source/evidence push 2e45b5e published as incomplete draft main PR #382. Stop automatic session at concrete RV-001 blocker as explicitly requested; no correction, repeat Review, closure or merge.",
       "status": "confirmed",
-      "evidence": "https://github.com/jmservera/ama/pull/382; caller stop-at-final-push/concrete-blocker boundary"
+      "evidence": "https://github.com/jmservera/ama/pull/382; initial caller stop-at-final-push/concrete-blocker boundary"
+    },
+    {
+      "decision": "Coordinator explicitly authorized correction ONE on same branch/PR, without repeating full RPI. P04 source correction and fail-before/focused/actual local SQL Server evidence complete.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-17/assessment-reconciliation-controls-84-changes.md"
+    },
+    {
+      "decision": "Bounded independent correction verification closes RV-001 for fingerprinted source/tests: 91 focused passes and two persistent snapshot probes; final working bytes match, no source edits after verification.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-correction-one-verification.md"
     }
   ],
-  "blockers": [
+  "blockers": [],
+  "resolved_findings": [
     {
       "id": "RV-001",
       "summary": "Early/persistent SQL recovery failure can leak failed success audit or replace the original error.",
-      "resolution": "Later explicitly authorized bounded implementation must contain failed pending events and original error across outer cleanup; current task stops incomplete."
+      "resolution": "Correction ONE canonical discard ordering/cache retry and scoped transaction refusal cleanup; bounded independent verification Closed. Original adverse Review retained with appended disposition."
     }
   ],
-  "next_action": {"phase": "Implement", "action": "Current session stopped, task blocked. Only a later explicitly authorized /rpi-implement may address RV-001 early/persistent recovery faults; draft PR #382 is not accepted or merge-ready."},
-  "prioritized_follow_ups": [
-    {
-      "rank": 1,
-      "task": "Contain early/persistent SQL decision recovery failures",
-      "rationale": "Reproduced High in-scope blocker; no acceptance or successful-delivery claim before correction.",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-review.md RV-001"
-    }
-  ]
+  "next_action": {"phase": "Publication", "action": "Privacy-safe normal correction commit/push; update same draft PR382, record publication and final normal push. No merge/rebase/force push or issue closure."},
+  "prioritized_follow_ups": []
 }

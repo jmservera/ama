@@ -658,10 +658,13 @@ approval authority. The writer transaction revalidates before commit. A known
 precommit SQL failure leaves neither a new case version nor its success audit;
 the original error propagates, with recovery uncertainty explicitly reported.
 No new endpoint, role grant or sign-off competence attestation is introduced.
-Review status, 2026-10-17: that failed-decision guarantee remains **Not accepted**.
-Early/persistent recovery-read failures can still leak a failed success audit
-or replace the original error during outer cleanup. Passing normal-recovery
-tests below do not resolve this blocking defect; this continuation is incomplete.
+Original Review, 2026-10-17: **Not accepted**, RV-001. Authorized correction ONE
+clears failed pending work before recovery reads and restores known cache
+snapshots; early/persistent read failures now preserve the original error and
+cannot flush the failed success event on exit or a later save. A failed reload
+logs uncertainty and forces retry on the next operation, not a success fallback.
+Bounded independent verification closes RV-001 for this correction after 91
+focused tests and two snapshot probes; the original adverse Review is retained.
 
 The case view displays both values, source metadata and query owner, with
 authority/resolution/eligibility explicitly `Unknown`. A different case shows
@@ -700,10 +703,14 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
   test_mssqlstore.MssqlStockDecisions -v
 ```
 
-Eight tests passed on 2026-10-17, reusing canonical constructed core cases for
+Initially eight tests passed on 2026-10-17; correction ONE passed ten, reusing canonical constructed core cases for
 comparison/disposition and four sign-off success, current actor denial,
 second-connection authority change, transactional case/audit failures,
-reopen/no delayed audit and context cleanup. This is local SQL Server adapter
+reopen/no delayed audit and context cleanup. Added early/persistent actual
+recovery-read failures exercise technical/comparison/terminal paths, original
+error, empty pending state, released locks, failed retry and later recovery.
+Transactional refusal errors retain their original identity on reload failure.
+This is local SQL Server adapter
 evidence, not Azure/Entra acceptance or approved professional/source authority.
 Source-authority/resolution/eligibility rules, operational delegation and
 real-platform acceptance remain unmet; nomination/tenure routing is separate.

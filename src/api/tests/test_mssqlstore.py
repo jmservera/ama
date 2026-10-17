@@ -128,6 +128,8 @@ class MssqlStockDecisions(unittest.TestCase):
     test_sql_case_write_failure_restores_decision = stocktests.StockReconciliation.test_sql_case_write_failure_restores_decision
     test_sql_transactional_audit_failure_restores_decision = stocktests.StockReconciliation.test_sql_transactional_audit_failure_restores_decision
     test_sql_decision_scope_restored_on_every_exit = stocktests.StockReconciliation.test_sql_decision_scope_restored_on_every_exit
+    test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work = stocktests.StockReconciliation.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work
+    test_sql_transaction_refusal_keeps_original_error_when_reload_fails = stocktests.StockReconciliation.test_sql_transaction_refusal_keeps_original_error_when_reload_fails
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

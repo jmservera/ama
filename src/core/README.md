@@ -515,13 +515,15 @@ were erased or that any real resident accepted the service.
 
 ## Stock comparisons and human technical sign-offs (#84)
 
-Review status, 2026-10-17: **Not accepted; blocking recovery defect remains.**
-The checks below pass for normal recovery, but an early `_discard` read failure
-can leave a failed decision's success audit for outer lock cleanup; a persistent
-failure can replace the original exception. The recovery guarantee is therefore
-incomplete, not production/operational acceptance. Current-authority checks and
-the four existing issue mechanisms remain separately evidenced. This branch is
-an incomplete reviewable continuation, not an accepted release.
+Review status, 2026-10-17: the original Review returned **Not accepted** for
+RV-001. Authorized correction ONE disarms pending writes/audits and restores
+known snapshots before fallible SQL reload. Actual one-shot/persistent reload
+faults now preserve the original error without delayed success events across
+technical actions, stock comparisons and terminal dispositions. Ten canonical
+local SQL Server tests pass. Bounded independent verification closes RV-001
+for this correction, including 91 independent focused tests and two snapshot
+probes. This does not establish professional/source authority or operational
+acceptance; the original adverse Review remains historical.
 
 `stock.py` validates staff-recorded conflicting assertions for `epc`, `type`
 or `built`. Each comparison preserves two different values and each source's
@@ -570,7 +572,13 @@ writer transaction. A failed decision discards its pending case edits and
 success audit before lock cleanup, so a later save cannot flush a failed
 design change, sign-off or query disposition. Recovery failures are explicitly
 logged and annotate the original exception; reload to establish an uncertain
-outcome. This is not a new authority grant or a guarantee against arbitrary
+outcome. Canonical discard clears pending audit/touched/validation state before
+database reads, restores cached case/recommendation/shared-document snapshots,
+and invalidates the sync watermark so the next operation must retry reload.
+An ongoing read outage still raises an error, never a successful fallback.
+Stock/technical transaction refusals defer discard to their existing decision
+scope so recovery cannot mask the original GateError/ConflictError.
+This is not a new authority grant or a guarantee against arbitrary
 external staff writes outside the store's writer-lock protocol.
 
 The existing `signoffs.py` owns separate assessment, design, building and
@@ -601,7 +609,11 @@ behavior, current/deleted/changed-OID actors, an independent-connection
 pre-save role change, case/audit rollback and reopen, no delayed success audit,
 and decision-context cleanup. The selected canonical cases also passed against
 an isolated, local SQL Server 2022 container via
-`test_mssqlstore.MssqlStockDecisions` on 2026-10-17: eight tests, no skips.
+`test_mssqlstore.MssqlStockDecisions` on 2026-10-17: initially eight tests;
+correction ONE ten tests, no skips. Added actual early/persistent reload faults
+check all three wrappers, original error/log, unchanged case/history/audit,
+cross-thread lock availability, cache state, failed retry, later recovery and
+reopen. GateError/ConflictError refusal recovery preserves the original error too.
 That fixture used no private stock, cloud service or real source authority.
 JSON still uses separate snapshot/ledger files and does not gain SQL-style
 cross-file crash atomicity from this change.

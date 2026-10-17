@@ -5031,3 +5031,27 @@ metadata when the knowledge base was created.
   Updated current component/synthesis/index status to prevent a successful
   acceptance claim. No source correction, second Review, issue closure or
   operational approval; any visibility PR is explicitly incomplete.
+
+## [2026-10-17] query | #84 correction ONE contains failed recovery before reload
+
+* Coordinator explicitly authorized RV-001 correction on existing PR #382.
+  Original Review and Not accepted outcome retained; no repeated full RPI.
+  New actual recovery SELECT fault test failed all six one-shot/persistent
+  technical/comparison/terminal subcases before source edits. A second
+  transactional GateError/ConflictError fault test failed both cases before
+  the additional scoped refusal-path change.
+* Canonical SQL discard clears pending audit/writes/validation first, restores
+  known case/recommendation/shared-document snapshots and invalidates sync
+  watermark before fallible reads. Stock/technical refusal cleanup remains
+  with its existing decision scope, preserving original exception/logged
+  uncertainty even if reload fails; next operation retries, never succeeds
+  on dirty cached state.
+* Ten actual local SQL Server tests, 102 focused core/gate tests, 69 direct
+  shared-cleanup-consumer tests and 72 targeted API tests (one opt-in browser
+  skip) pass; core/API lint/format/types pass. Owned loopback SQL container
+  removed; no other task container touched, new dependency, private/cloud/model
+  use, authority/policy change or broad lock/architecture rewrite.
+* Bounded independent correction verification closes RV-001 for the exact
+  fingerprinted source/test content: 91 focused tests and two constructed
+  persistent-recovery snapshot probes pass. Original adverse Review retained,
+  no repeated full RPI. No merge, issue closure or human/operational approval.

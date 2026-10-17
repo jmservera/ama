@@ -11,11 +11,46 @@
 
 ## Phase Index
 
+Correction ONE is explicitly authorized by the coordinator on 2026-10-17.
+Original Review remains immutable in substance; RV-001 is current engineering
+work, not a human-permission prerequisite or accepted future residual.
+P04-T01 reproduces real early/persistent reload faults; P04-T02 fixes canonical
+discard ordering/cache invalidation; P04-T03 validates SQL Server plus focused
+existing authority/four-criterion coverage and publishes with independent
+closure status explicit. Existing RPI research/critique/Review is not repeated.
+
 | Phase | Intent | Status |
 | --- | --- | --- |
 | P01 | Fail-before evidence and narrow root fix | Complete: red/green and scoped root fix |
 | P02 | Focused validation and current documentation | Complete: core/API, browser, SQL Server, static/docs |
 | P03 | One Review, commit/push/PR | Execution complete; Not accepted RV-001; incomplete draft PR #382 published |
+| P04 | Explicit correction ONE, validation and bounded independent closure | Source/validation/closure complete; normal same-branch publication pending |
+
+<!-- rpi:phase id=P04 -->
+## P04: Authorized correction ONE
+
+P04-T01/T02 complete. Actual first/persistent recovery SELECT faults after
+failed mutation across technical/comparison/terminal wrappers failed six
+subcases before correction. Real GateError/ConflictError refusal plus
+persistent recovery SELECT fault failed two cases before the additional
+active-stock save branch correction. Canonical discard now clears failed
+pending/touched/validation first, restores known cache snapshots, invalidates
+sync for retry, then reloads. The owning stock scope alone discards/logs
+transaction refusals, preserving original exception. Existing lock/finish,
+role/ranking/source-policy semantics remain unchanged.
+
+P04-T03 validation/disposition complete: 102 focused core/gate tests, 69
+canonical cleanup-consumer tests, 72 targeted API (one opt-in browser skip),
+ten actual task-owned local SQL Server tests and core/API lint/format/types
+pass. Original adverse Review remains byte-identical above appended correction
+disposition. Bounded independent verification closes RV-001 for SHA256-bound
+source/tests with 91 focused tests and two persistent snapshot probes; it is
+not a repeated full RPI or second full-task Review. No source change followed
+verification. Normal same-branch commit/push and existing draft PR update are
+the only remaining P04 publication steps. No professional/source-policy/
+operational approval, issue closure or merge.
+
+## Original RPI Phase Details (Historical)
 
 <!-- rpi:phase id=P01 -->
 ## P01: Focused regression and implementation

@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 from typing import Any
@@ -459,6 +460,169 @@ class StockReconciliation(unittest.TestCase):
         self.assertIs(caught.exception, original)
         self.assertTrue(original.__notes__)
         self.assertEqual(self.durable_state(store), before)
+
+    def test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        store.stock_reconcile(self.users["sam"], "ZF-3", query())
+        for persistent in (False, True):
+            for kind in ("technical", "comparison", "terminal"):
+                with self.subTest(persistent=persistent, kind=kind):
+                    before = self.durable_state(store)
+                    db = store.db
+                    original = OSError("Constructed original precommit save failure")
+
+                    class RecoveryReadFault:
+                        armed = False
+                        failures = 0
+
+                        def __init__(self, db: Any, persistent: bool) -> None:
+                            self.db = db
+                            self.persistent = persistent
+
+                        def execute(self, sql: str, args: Any = ()) -> Any:
+                            if (
+                                self.armed
+                                and "FROM cases WHERE" in sql
+                                and (
+                                    sql.startswith("SELECT rowversion, body")
+                                    or sql.startswith("SELECT id, rowversion, body")
+                                )
+                                and (self.persistent or self.failures == 0)
+                            ):
+                                self.failures += 1
+                                raise OSError("Constructed early recovery read failure")
+                            return self.db.execute(sql, args)
+
+                        def __getattr__(self, name: str) -> Any:
+                            return getattr(self.db, name)
+
+                    fault = RecoveryReadFault(db, persistent)
+
+                    def failed_save(
+                        fault: RecoveryReadFault = fault, original: OSError = original
+                    ) -> None:
+                        fault.armed = True
+                        raise original
+
+                    with (
+                        patch.object(store, "db", fault),
+                        patch.object(store, "save", side_effect=failed_save),
+                        self.assertLogs("zava_forward.core.stock", level="ERROR") as logged,
+                    ):
+                        try:
+                            if kind == "technical":
+                                self.tech(
+                                    store,
+                                    "rc1",
+                                    "design_change",
+                                    note="Failed change",
+                                    affects=["design"],
+                                )
+                            elif kind == "comparison":
+                                store.stock_reconcile(self.users["sam"], "ZF-3", query())
+                            else:
+                                store.stock_query_event(
+                                    self.users["sam"],
+                                    "ZF-3",
+                                    dict(
+                                        query_id="SQ-1",
+                                        action="withdraw",
+                                        reason="Failed disposition",
+                                    ),
+                                )
+                        except OSError as caught:
+                            self.assertIs(caught, original)
+                        else:
+                            self.fail("Failed SQL decision returned success")
+                        self.assertGreaterEqual(fault.failures, 1)
+                        self.assertTrue(original.__notes__)
+                        self.assertIn("SQL recovery failed", " ".join(logged.output))
+                        self.assertEqual(store.local.pending, [])
+                        self.assertEqual(store.local.touched, set())
+                        self.assertEqual(store.lock.depth, 0)
+                        acquired: list[bool] = []
+
+                        def lock_probe(acquired: list[bool] = acquired) -> None:
+                            for lock in (store.lock.rl, store.dblock):
+                                ok = lock.acquire(timeout=1)
+                                acquired.append(ok)
+                                if ok:
+                                    lock.release()
+
+                        thread = threading.Thread(target=lock_probe)
+                        thread.start()
+                        thread.join(timeout=3)
+                        self.assertFalse(thread.is_alive())
+                        self.assertEqual(acquired, [True, True])
+                        self.assertEqual(self.durable_state(store), before)
+                        self.assertEqual(store.cases["ZF-3"], json.loads(before[0][2]))
+                        if persistent:
+                            with self.assertRaisesRegex(OSError, "recovery read failure"):
+                                store.detail("ZF-3")
+                            self.assertEqual(store.lock.depth, 0)
+                    self.assertEqual(self.durable_state(self.reopen(store)), before)
+                    # After the read fault clears, even a plain save cannot flush failed edits.
+                    store.save()
+                    self.assertEqual(list(store.audit_entries()), before[2])
+                    self.assertEqual(store.detail("ZF-3"), self.reopen(store).detail("ZF-3"))
+                    self.assertEqual(store.cases["ZF-3"], json.loads(before[0][2]))
+                    self.tech(
+                        store,
+                        "rc1",
+                        "design_change",
+                        note="Legitimate recovery",
+                        affects=["design"],
+                    )
+                    self.assertEqual(len(list(store.audit_entries())), len(before[2]) + 1)
+                    self.assertTrue(store.verify_audit())
+
+    def test_sql_transaction_refusal_keeps_original_error_when_reload_fails(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        for original in (GateError(["Constructed refusal"]), ConflictError("ZF-3")):
+            with self.subTest(error=type(original).__name__):
+                before = self.durable_state(store)
+                db = store.db
+
+                class RecoveryReadFault:
+                    armed = False
+
+                    def __init__(self, db: Any) -> None:
+                        self.db = db
+
+                    def execute(self, sql: str, args: Any = ()) -> Any:
+                        if self.armed and sql.startswith("SELECT rowversion, body FROM cases"):
+                            raise OSError("Constructed persistent recovery read failure")
+                        return self.db.execute(sql, args)
+
+                    def __getattr__(self, name: str) -> Any:
+                        return getattr(self.db, name)
+
+                fault = RecoveryReadFault(db)
+
+                def refuse(fault: RecoveryReadFault = fault, error: Exception = original) -> None:
+                    fault.armed = True
+                    raise error
+
+                with (
+                    patch.object(store, "db", fault),
+                    patch.object(store, "_validate_safety_clear", side_effect=refuse),
+                    self.assertLogs("zava_forward.core.stock", level="ERROR"),
+                ):
+                    try:
+                        self.tech(
+                            store, "rc1", "design_change", note="Failed change", affects=["design"]
+                        )
+                    except Exception as caught:
+                        self.assertIs(caught, original)
+                    else:
+                        self.fail("Refused SQL decision returned success")
+                    self.assertEqual(store.local.pending, [])
+                    self.assertEqual(store.local.touched, set())
+                    self.assertEqual(store.lock.depth, 0)
+                    self.assertEqual(self.durable_state(store), before)
+                self.assertEqual(store.detail("ZF-3"), self.reopen(store).detail("ZF-3"))
 
     def test_withdraw_unblocks_all_signoffs_without_editing_history(self) -> None:
         for store in self.stores():

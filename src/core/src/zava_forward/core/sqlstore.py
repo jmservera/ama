@@ -573,7 +573,8 @@ class SqlStore(Store):
                 self.db.execute("COMMIT")
             except (ConflictError, GateError):
                 self.db.execute("ROLLBACK")
-                self._discard()
+                if getattr(self.local, "stock_decision", None) is None:
+                    self._discard()
                 raise
             except BaseException:
                 self.db.execute("ROLLBACK")
@@ -597,20 +598,30 @@ class SqlStore(Store):
 
     def _discard(self):
         """After a refused write: forget local edits and reload from the database."""
-        for cid in list(self._touched()):
-            row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
-            if row:
-                self._load_case(cid, row[0], row[1])
+        touched = list(self._touched())
+        self.local.pending.clear()
+        self.local.touched.clear()
+        self.local.safety_clear.clear()
+        self.local.resident_clear.clear()
+        self.local.stock_clear.clear()
+        # Disarm failed writes and restore known snapshots before any fallible reload.
+        self._seq = -1
+        for cid in touched:
+            self._load_case(cid, self._rv[cid], self._snap[cid])
         recs = [r for r in self.data["recommendations"] if r["id"] in self._recs]
         self.data["recommendations"][:] = recs
         for rid, (rv, rec, body) in self._recs.items():
             rec.clear()
             rec.update(json.loads(body))
-        self._touched().clear()
-        self.local.safety_clear.clear()
-        self.local.resident_clear.clear()
-        self.local.stock_clear.clear()
-        self.local.pending.clear()
+        for key, body in self._proc_snap.items():
+            if body is None:
+                self.data.pop(key, None)
+            else:
+                self.data[key] = json.loads(body)
+        for cid in touched:
+            row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+            if row:
+                self._load_case(cid, row[0], row[1])
         self._proc_sync()
         self._sync()
 

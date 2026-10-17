@@ -7,7 +7,7 @@
 * Task slug: assessment-reconciliation-controls-84
 * Plan date: 2026-10-17
 * Planning status: Ready; one critique Complete / Revise, compatible findings resolved
-* Delivery outcome: Not accepted; one Review complete, RV-001 High blocks successful delivery
+* Delivery outcome: original Review Not accepted retained; correction ONE independently closes RV-001, normal publication pending
 * Phase details: .copilot-tracking/details/2026-10-17/assessment-reconciliation-controls-84-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/assessment-reconciliation-controls-84-plan-critique.md
 
@@ -28,15 +28,20 @@ files are not SQL-style crash-atomic; this slice does not redesign that backend.
 
 ### Unresolved Decisions or Blockers
 
-No implementation blocker. Operational competence, source authority, full BRD
-cohort/nomination acceptance and human accessibility acceptance remain unproven.
-Superseding post-implementation outcome: RV-001 is a reproduced in-scope blocker.
-Early/persistent discard-read failure can leak success audit or replace the
-original operation error. Stop implementation under the explicit concrete-
-blocker boundary; only incomplete visibility publication remains authorized.
+No current in-scope engineering blocker. Original Review reproduced RV-001
+and stopped initial delivery incomplete. Subsequent explicit correction ONE
+authorization superseded that stop; source correction and bounded independent
+verification now close RV-001 for the fingerprinted correction. Operational
+competence, source authority, full BRD cohort/nomination acceptance and human
+accessibility acceptance remain unproven, not excuses to defer this root fix.
 
 ## User Decisions and Requirements
 
+* Correction cycle ONE explicitly authorized 2026-10-17 on same issue/PR #382:
+  fix RV-001 now, preserving original Review; no repeated full RPI. Fail-before
+  early and persistent recovery-read tests for all three wrappers, actual local
+  SQL Server parity, current authority/four criteria retained. Independent
+  final-head closure remains required; normal commit/push only, no merge/rebase.
 * Full ordered RPI, dated committed research/plan/details/changes/review and phase execution; normal push/main PR using Refs #84, no closure/merge/rebase/force push.
 * Exact four criteria; #81 hierarchy only; no explicit issue dependencies.
 * Inspect actual current behavior; fail-before regressions for genuine root gaps only.
@@ -88,6 +93,33 @@ generic lock rewrite, new API or competence/source-policy registry.
 * docs/brds/agentic-retrofit-programme-brd.md: FR-037/AC-065 and RULE-017; broader acceptance remains separate.
 
 ## Phase Checklist
+
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Authorized correction ONE, RV-001
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Reproduce early/persistent cleanup faults before edits
+
+Inject actual first recovery SELECT failure and persistent SELECT failures
+after staged technical/comparison/terminal mutations and precommit save error.
+Assert original exception, visible recovery log, unchanged durable state/ledger,
+no pending/touched work or lock held, next operation recovery and reopen.
+
+<!-- rpi:task id=P04-T02 -->
+#### [x] P04-T02: Disarm canonical SQL discard before fallible reload
+
+Reuse `_discard`, clear failed pending work before database reads; ensure cache
+cannot later save failed changes and reload retries after transient failure.
+Preserve original exceptions/standard visible recovery error; no broad generic
+lock redesign or successful fallback. Correct same shared wrappers.
+
+<!-- rpi:task id=P04-T03 -->
+#### [ ] P04-T03: Validate, disposition, commit and push same PR
+
+Focused cleanup/authority/four-criteria/core/API checks and actual task-owned
+local SQL Server, lint/types as needed. Keep original Review Not accepted as
+history, append correction disposition and honest independent-closure status.
+No second full RPI, no merge or force push; stop after final normal push.
 
 <!-- rpi:phase id=P01 -->
 ### [x] P01: Focused regression and implementation
@@ -166,7 +198,8 @@ privacy-safe author/committer email; required Copilot trailer retained.
 
 ## Dependencies
 
-No explicit issue dependencies. P01-T02 depends on P01-T01;
+No explicit issue dependencies. P04-T02 depends on P04-T01; P04-T03 depends
+on P04-T02 and its validation/independent closure. P01-T02 depends on P01-T01;
 P02 depends on P01; P03 depends on recorded P02 evidence. #81 is hierarchy, not
 RPI parent. Only owned Store/SQL hunks overlap potential #90 integration.
 
@@ -180,16 +213,16 @@ Exactly one final-candidate critique executed, verdict Revise. No repeat.
 | PC-002 Medium | Planner, resolved directly; implementer executes | Test Ownership lifecycle/error matrix and P01-T01 details, within existing budget |
 | PC-003 Medium | Planner, resolved directly; implementer executes | Named MssqlStockDecisions parity class/command and exact selected cases; unavailable cases remain explicit |
 
-Review supersedes implementation acceptance of PC-002: the recovery-fault
-oracle discards successfully before raising, missing early/persistent reload
-failure. RV-001 remains blocking; no second critique or Review.
+Original Review superseded initial implementation acceptance of PC-002: the
+old recovery-fault oracle discards successfully before raising, missing actual
+early/persistent reload failure. Authorized P04 adds those actual fault tests
+and closes RV-001 via bounded independent verification. No second critique
+or full-task Review.
 
 ## Follow-Up Items
 
-* RV-001 High / blocker: later explicitly authorized implementation must
-  contain pending failed success audits and original errors across early and
-  persistent recovery failures. Not an accepted residual; current delivery
-  remains incomplete. No child task or correction is started here.
+* RV-001 High: addressed in explicitly authorized P04 correction ONE, bounded
+  independent closure recorded; no longer an active blocker or follow-up.
 * Human professional/delegation, source-policy/eligibility and broader AC-065 nomination/cohort acceptance remain outside this engineering slice; #130 owns nomination by owner direction.
 * JSON cross-file crash atomicity is an existing backend limitation, not silently replaced by SQL claims.
 
@@ -201,9 +234,17 @@ Research complete; plan Ready after one critique and direct dispositions.
 P01/P02 complete: 631 core tests (one existing opt-in skip), 72 targeted API tests
 (one browser skip), separate actual Chromium comparison test, eight actual
 isolated SQL Server tests, core/API static checks and documentation links.
-One Review complete, outcome Not accepted due to RV-001. Incomplete draft
-visibility PR #382 published; no successful delivery/acceptance claim.
-No production edits occurred during Research or Plan. Full plan is not yet
-acceptance-ready: all phase execution/publication markers complete, engineering
-delivery remains blocked. Automatic session stopped at the caller's explicit
-concrete-blocker/final-publication boundary. No follow-up work selected.
+Original Review complete, outcome Not accepted due to RV-001 retained.
+Initial draft visibility PR #382 publication preceded explicit correction ONE.
+No production edits occurred during Research or Plan.
+
+P04-T01/T02 complete: six real early/persistent first-SELECT subcases failed
+before canonical discard correction; two GateError/ConflictError cases failed
+before scoped save-refusal correction. After correction, 102 focused core,
+69 canonical cleanup-consumer and 72 targeted API tests (one browser skip),
+ten actual local SQL Server tests and core/API static checks pass. Bounded
+independent verification closes RV-001 for fingerprinted source/tests, with
+91 independent focused passes and two persistent-recovery snapshot probes.
+Original Review retained with appended disposition, not rewritten. P04-T03
+validation/disposition complete; normal commit/push and same-draft-PR update
+remain. No merge, force push, issue closure or human/operational acceptance.

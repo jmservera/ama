@@ -187,3 +187,26 @@ These are two fault cases within this one Review, not repeated Review passes. No
 ## Next Steps
 
 Return Complete / Not accepted to the parent and stop. Parent must preserve the incomplete-stop outcome and route RV-001 to a later explicitly authorized rpi-implement continuation; this invocation performs no correction, repeated Review, publication, issue closure or merge. Any visibility-only Refs #84 PR remains parent-owned and must be labelled incomplete while the blocker is unresolved. Keep genuine residuals with their distinct owners.
+
+## Correction ONE Disposition (2026-10-17)
+
+The coordinator explicitly authorized same-PR RV-001 implementation after this
+Review. All original bytes above, including the negative verdict and probes,
+remain historical; they have not been rewritten as a pass.
+
+Correction ONE disarms canonical pending writes/audits before fallible reload,
+restores known case/recommendation/shared-document snapshots, invalidates sync
+for retry and preserves stock/technical transaction refusal errors through
+owning decision-scope cleanup. Six real early/persistent SELECT subcases and
+two real GateError/ConflictError refusal subcases failed before their source
+corrections and pass after them. Ten actual local SQL Server tests pass.
+
+Bounded independent verification: **RV-001 Closed** for the fingerprinted
+correction, with no remaining scoped blocker. See
+[Correction ONE verification](assessment-reconciliation-controls-84-correction-one-verification.md)
+for exact source SHA256 binding, 91 independent focused passes, two constructed
+persistent-recovery snapshot probes, corrected no-op-save oracle and limits.
+Final source fingerprints matched this record without further source edits.
+This is not a repeated full RPI or second full-task Review, lost-commit-ack
+guarantee, source-policy/ranking/professional approval or operational acceptance.
+Normal same-branch publication remains parent-owned; no merge or issue closure.

@@ -1,6 +1,108 @@
 <!-- markdownlint-disable-file -->
 # Changes: Assessment reconciliation controls #84
 
+## Correction ONE: Explicitly Authorized RV-001 Continuation
+
+2026-10-17, same #84 / PR #382, clean requested topic at a15c7a2. Coordinator
+explicitly authorizes root correction before merge, not a repeated RPI or
+permission deferral. Original Review's two actual negative probe observations
+read: one early recovery SELECT failure leaks technical_design_change audit;
+persistent SELECT failure replaces original save error and retains pending
+success. Prior test discarded successfully before raising and was insufficient.
+
+P04 correction source and validation complete: real early/persistent SELECT
+regressions precede source edits; canonical discard disarmed before fallible
+reload with cache restoration/retry. Original Review retained byte-for-byte
+with appended disposition; bounded independent verification closes RV-001.
+No unrelated source, private data, policy, human authority or infrastructure
+change. No merge/rebase/force push; normal same-branch final push.
+
+### P04-T01: Actual red before correction source edit
+
+`PYTHONPATH=src/core/tests .venv/bin/python -m unittest
+test_stock_reconciliation.StockReconciliation.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work -v`
+failed all six subcases (technical/comparison/terminal x one-shot/persistent).
+Actual connection wrapper fails the first real recovery case SELECT, not an
+error after successful discard. One-shot fails pending/audit integrity;
+persistent fails original exception identity. Transcript retained in session
+files/issue84-correction-one-red.log. Canonical alias added to existing opt-in
+MssqlStockDecisions, no duplicated SQL semantics.
+
+### P04-T02: Canonical cleanup ordering
+
+`SqlStore._discard` now snapshots touched IDs then clears staged success audit,
+touched writes and safety/resident/stock validation state before any DB read.
+Known committed case/recommendation/shared-document snapshots are restored
+in memory first; `_seq=-1` forces next operation to reload if recovery cannot
+finish. Existing reload/discard, stock decision logging/error propagation and
+outer lock release mechanics are reused; no generic lock exception swallowing,
+new service/schema or role/policy change. A failed reload remains visibly
+uncertain, while outer cleanup has no failed write/event to flush.
+
+Additional direct root-path probe: actual transaction GateError/ConflictError
+was masked by save's eager discard when reload failed before the decision
+scope saw the original error. New refusal regression failed both subcases
+before that source correction (session issue84-correction-one-refusal-red.log).
+For active stock_decision only, rollback now rethrows to the existing owning
+decision scope for discard/logging. Other domains retain their save behavior.
+
+### P04-T03: Actual correction validation
+
+* Core focused: from src/core, `PYTHONPATH=tests ../../.venv/bin/python -m
+  unittest test_stock_reconciliation test_finance_signoffs test_sqlstore
+  test_hazard_referral test_buildings -q`: 102 tests, OK, no skips.
+* Canonical discard consumers: `PYTHONPATH=tests ../../.venv/bin/python -m
+  unittest test_bulk_edits test_change_provenance test_form_staging -q`:
+  69 tests, OK, no skips.
+* API: existing comparison/ranking/SQL portability/role/workflow command:
+  72 tests, OK, one existing opt-in stock browser skip. No web changes or new
+  browser/conformance claim; previous actual rendered evidence remains history.
+* Core and API `ruff check .`, `ruff format --check .`, `mypy` pass.
+  New test closure-binding lint errors were corrected explicitly, no exemptions.
+* Actual SQL Server: existing cached 2022 image, `--pull never`, task-owned
+  `zf-issue84-correction-one-a1251cde`, ephemeral secret only in process/container
+  environment, random loopback-only host port. Driver SELECT 1 responsive.
+  `test_mssqlstore.MssqlStockDecisions -v`: ten tests in 15.925s, OK, no skips,
+  including both new early/persistent and transactional refusal regressions.
+  Exact owned container stopped/removed; concurrent #90 container not touched.
+* Red/green compare actual durable case/history/rowversion/seq, audit/head,
+  empty pending/touched state, context/lock depth and cross-thread availability,
+  unchanged cached case, persistent read retry failure, normal next operation/
+  plain save and reopen. No delayed failed success event or write.
+* No full RPI, new critique or broad suite escalation. Original four criteria/
+  current authority remain exercised by existing focused suites.
+
+### P04-T03: Bounded independent closure
+
+One explicitly requested bounded verification, not full RPI or another full-task
+Review, returned RV-001 Closed. Artifact:
+.copilot-tracking/reviews/logs/2026-10-17/assessment-reconciliation-controls-84-correction-one-verification.md.
+Independent run: 91 focused tests, zero skips, plus constructed OSError and
+GateError persistent recovery SELECT/snapshot probes. These check restored
+recommendations/shared state and no delayed failed writes/audit, not just case
+state. The first probe's overly strict plain-save sequence oracle failed;
+it was corrected to allow the existing explicit no-op-save meta increment,
+while still requiring no case/rec/shared/audit change. No source correction
+followed verification. Source SHA256 bindings rechecked and match exactly.
+
+Current core/API guides, existing UX synthesis/index and appended log reflect
+bounded closure, not professional/source-policy/operational approval. Original
+adverse Review is byte-identical above an appended correction disposition.
+Correction engineering blocker closed; same-branch normal publication pending.
+
+Pre-publication validation: lifecycle JSON parses and every declared artifact
+exists; 356 relative documentation/artifact targets exist. Original Review and
+knowledge-log byte prefixes match HEAD exactly. Final source fingerprints match
+the independent verification, `git diff --check` passes and the exact owned
+SQL container is absent. Only owned correction source/tests and related
+documentation/artifacts are staged; no unrelated change is included.
+
+## Original RPI Execution (Historical)
+
+The following initial execution and stop record precedes explicit correction
+ONE authorization. Its adverse Review remains valid historical evidence, not
+the current correction disposition.
+
 ## Task and Scope
 
 Task 84, slug assessment-reconciliation-controls-84, 2026-10-17. Automatic
