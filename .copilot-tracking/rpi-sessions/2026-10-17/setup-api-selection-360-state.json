@@ -14,7 +14,9 @@
   "review": "Complete / Residual work; bounded source conformant, no defects; one Review only",
   "reviewArtifact": ".copilot-tracking/reviews/logs/2026-10-17/setup-api-selection-360-review.md",
   "correctionCyclesUsed": 0,
-  "publication": "Ready for exact-lease topic-only push after authorized rebase and PR385 update; not yet confirmed",
+  "publication": "Published to existing OPEN/main PR385, title/body updated; final completion-only descendant retains reviewed source",
+  "verifiedPublicationHead": "03d90083447fbbb71d48ecc0413235561c9b0ff5",
+  "workflow": "Complete; all active P01/P02 tasks done, external final-head gate and unmet acceptance remain",
   "azureWritesThisContinuation": [],
   "limits": "No live setup, exact-image smoke/pin, SQL/Graph writes, browser/AI acceptance, restart or retirement; issue360 d/e remain unmet"
 }

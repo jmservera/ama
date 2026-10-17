@@ -5261,3 +5261,18 @@ metadata when the knowledge base was created.
   offline regressions. No live setup, private SQL/Graph writes, image smoke/pin,
   restart, public access/bypass/IAM/new infrastructure or retirement. Prior ACR
   historical receipts and Review remain unchanged; actual #360 d/e unmet.
+
+## [2026-10-17] delivery | #360 setup selection offline Review and publication
+
+* New setup RPI has one independent critique, three resolved findings, 164
+  passing setup/staff/legacy regressions and scoped lint/format/types/compile.
+  Its one independent Review is Complete / Residual work: bounded source
+  conformant, no defects, no correction used. No runtime acceptance implied.
+* PR #385 now includes the narrow selector/no-cloud-write guard and dated
+  evidence, integrated onto finance main d400eb8 with exact upstream log prefix,
+  all owned append entries and #84/#94/#360 routes retained. Eight prior ACR
+  artifacts/receipt/Review remain byte-identical; historical bab4bf3 build
+  source is not relabeled as new reviewed setup source f48cc9b.
+* No Azure write during this continuation. Private-publisher authority decision,
+  exact-image smoke/pin, real operator sign-in/roles/SQL/AI and later retirement
+  remain open. External final-head gate/owner merge decision pending; no closure.

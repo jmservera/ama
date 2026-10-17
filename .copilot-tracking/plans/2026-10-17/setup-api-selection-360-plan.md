@@ -99,7 +99,7 @@ if setup pre-existing annotations prevent whole-file strictness. No broad reform
 
 * [x] P02-T01: Reconcile artifacts and one independent Review; at most two
   authorized bounded corrections only for concrete defects.
-* [ ] P02-T02: Fresh privacy identity/trailer, commit/push ordinary and updatePR385
+* [x] P02-T02: Fresh privacy identity/trailer, commit/push ordinary and updatePR385
   title/body to include safe selection and preserved ACR limits; exact head.
 
 ## Critique Disposition
@@ -134,3 +134,7 @@ The single NEW Review is Complete / Residual work; bounded source conformant,
 no defects, no corrections requested/used. RV001 live acceptance, RV002 exact
 image gates, RV003 later retirement remain excluded follow-ups. Publication
 P02-T02 alone remains active; final source fingerprints match reviewed candidate.
+Full active plan complete: privacy/trailer Review commit03d90083447fbbb71d48ecc0413235561c9b0ff5
+pushed with exact authorized expected remote d11c273, PR385 confirmed OPEN/main
+at matching head and updated title/body. Final metadata handoff is a normal
+descendant push, not a repeated rebase/Review. Residual gates remain unperformed.

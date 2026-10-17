@@ -103,3 +103,26 @@ Fresh gh api user8036360/jmservera, repository-local privacy-safe author/committ
 PR385 OPEN/main, remote stilld11c273eb744c440965375c3638583565b28db6c. Authorized
 rebase requires that exact topic-only lease; no force to main, no merge/close.
 Push/PR body update and confirmed clean-head handoff pending.
+
+## Verified Publication and Final Handoff
+
+Review/metadata commit03d90083447fbbb71d48ecc0413235561c9b0ff5 pushed successfully
+with exact expected remote d11c273eb744c440965375c3638583565b28db6c on owned topic
+only. gh pr edit updated385 title to
+"fix(infra): select configured demo API and retain ACR publication evidence";
+PR readback confirms OPEN/main and exact matching head03d90083. Body contains
+new full RPI/checks/artifact links and preserved explicitly historical ACR evidence.
+No closing reference. Original ACR artifacts unchanged; original historical source
+bab4bf3 remains distinct from new reviewed setup sourcef48cc9b and main d400eb8.
+Final completion-only metadata commit follows with ordinary push and unchanged
+reviewed executable bytes; final exact head will be reported from PR readback.
+
+P01 and P02 active tasks complete, no review correction needed. Task-owned
+.venv cleanup after all validation; no private data or unrelated cleanup.
+No Azure writes in this diagnosis/setup continuation: no build, initializer
+update/start, SQL/Graph/private-data/secret payload, API restart, IAM/network/
+public/bypass/new pool/infrastructure/resource-group/teardown operation.
+Old API/edge and ama retained. Exact-image smoke/pin and genuine runtime
+browser/role/SQL/AI acceptance remain unperformed, issue360 d/e UNMET.
+No merge/close. External coordinator final-head gate and owner merge decision
+remain separate. Resume69875c40-cceb-4bdf-aece-bee3304c45b5.
