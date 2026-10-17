@@ -94,3 +94,16 @@ bab4bf3; no hosted runs registered for 19431ad at readback. Owner/coordinator
 integration and hosted acceptance remain separate; no merge/rebase or second
 Review was performed. Final parent action publishes the terminal evidence
 snapshot and stops as explicitly requested.
+
+## Coordinator-Authorized Integration
+
+On 2026-10-17 the coordinator expressly overrode the earlier no-rebase limit
+for this run-owned topic only. Clean old head/remote lease was 6e4dbe1;
+fresh main is bab4bf3a2ac9ec030d78d27063d1390f800c5c7c. Rebase completed
+at db83d4260e4f3d29fa80ce08624155ee4f59ecce before the evidence-only commit.
+Only the append-only KB log conflicted; exact upstream prefix plus original
+issue-90 entry and both index routing-row sets are retained. Exact src
+patch parity and unchanged original Review were verified. No substantive
+production conflict or full-suite rerun; coordinator external exact-head
+gate remains forthcoming. Commands/base/head/validation and explicit lease
+are recorded in changes. No main rewrite, merge, closure or invented authority.

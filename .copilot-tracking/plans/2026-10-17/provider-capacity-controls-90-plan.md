@@ -6,7 +6,7 @@
 * Task ID: 90
 * Task slug: provider-capacity-controls-90
 * Date: 2026-10-17
-* Status: P01/P02/P03 delivered; Review Complete/Conformant; PR #384 open with upstream-integration merge blocker
+* Status: P01/P02/P03 delivered; original Review Complete/Conformant; coordinator-authorized topic integration complete, external exact-head gate pending
 * Phase details: .copilot-tracking/details/2026-10-17/provider-capacity-controls-90-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/provider-capacity-controls-90-plan-critique.md
 
@@ -121,7 +121,7 @@ No significant/divergent decision remains. These define bounded fictional engine
 
 ## Follow-Up Items
 
-* PR #384 integration: owner/coordinator must reconcile current-main/shared-KB conflicts before hosted checks and merge. GitHub reports mergeable=false/dirty against bab4bf3; explicit no-merge/no-rebase direction prevented automatic integration here.
+* PR #384 external exact-head gate/hosted checks: coordinator authorized and performed topic-only integration onto fresh bab4bf3 on 2026-10-17. Only the log conflicted; exact upstream prefix, both routing sets and original production patch/Review preserved. Integration evidence is in changes; external acceptance remains pending.
 * Actual contract evidence/delegations and operational approval: named human contract authority owner must provision and validate these before any live use. No live authority was supplied, and no test fixture grants it.
 * Hosted AI/Azure and human/screen-reader/WCAG acceptance: deployment and UX owners must commission separate approved validation. These are not required for the four local engineering criteria and were not exercised.
 
@@ -139,4 +139,4 @@ human approval or architecture divergence required a new decision/critique.
 
 ## Handoff
 
-Changes record: .copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md. P01/P02/P03 delivered; one independent Review Complete/Conformant with no substantive findings; implementation 19431ad pushed, main-targeting PR #384 open. Current-main integration is a concrete owner/coordinator blocker, not invented code acceptance or permission. Stop after final evidence push as requested; no further task/review loop.
+Changes record: .copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md. P01/P02/P03 delivered; original independent Review Complete/Conformant with no substantive findings; main-targeting PR #384 open. Coordinator-authorized topic integration onto fresh bab4bf3 completed with exact production-patch parity and original Review retained. External exact-head gate/hosted checks remain pending. Stop clean after integration evidence push; no further task/review loop.

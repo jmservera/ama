@@ -88,16 +88,31 @@ JSON remains single-process with separate snapshot/ledger crash limitations.
 No private dataset, paid AI, live provider order, award or payment was used.
 
 The requested branch started from then-latest main adedf1f. Upstream advanced
-one initializer/shared-KB commit to bab4bf3 during delivery. The explicit
-no-merge/no-rebase direction was preserved; hosted integration/mergeability
-is not replaced by a claim of integrated-main validation.
+one initializer/shared-KB commit to bab4bf3 during delivery. The initial
+publication preserved the then-explicit no-merge/no-rebase direction.
+The subsequent coordinator-authorized integration is recorded below.
 
 PR #384 was created successfully through the REST API after the GraphQL
-quota was exhausted. GitHub reported `mergeable: false`,
-`mergeable_state: dirty` against bab4bf3. Upstream/shared-KB integration is
-a concrete merge blocker for the owner/coordinator; no merge/rebase was
-performed. No hosted check runs were registered for implementation 19431ad
-at the recorded readback, so hosted CI/rubric remains pending.
+quota was exhausted. The original dirty/conflict readback was historical.
+On 2026-10-17 the coordinator expressly authorized topic-only integration
+onto freshly fetched main bab4bf3a2ac9ec030d78d27063d1390f800c5c7c.
+`git rebase origin/main` produced integrated head
+db83d4260e4f3d29fa80ce08624155ee4f59ecce before its evidence-only commit.
+Only the append-only KB log conflicted. Exact byte checks proved the complete
+upstream prefix plus the unchanged issue-90 entry, both README routing-row
+sets, all twelve other upstream files exactly main, and byte-identical src
+production/test/browser/documentation patches and original Review.
+`git range-diff`, main ancestry and diff hygiene passed. No substantive
+production conflict occurred, so no full-suite duplication or #84/#94
+production-path rerun was warranted.
+
+The final evidence commit records commands/base/integrated head and preserves
+the original independent Review's historical Complete/Conformant result.
+Topic-only publication uses an explicit force-with-lease expecting old
+remote 6e4dbe18d111673b41049830eb68bf81f89051c8, never unconditional force.
+External coordinator exact-head gating and hosted CI/rubric remain pending;
+the original Review is not a fabricated new gate. No main rewrite, merge or
+issue closure was performed.
 
 * [x] Ordered Research -> Plan -> Implement -> Review and local evidence completed.
 * [x] Exactly four issue criteria assessed; existing #78/#97 behavior retained.

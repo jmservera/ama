@@ -120,3 +120,53 @@ one Review. The automatic session stops after that final push as the user
 directed; no child delivery or new review is started. Owner/coordinator
 integration/hosted checks, real authority and human acceptance remain
 distinct follow-ups, not claimed completed.
+
+## Authorized PR #384 Main Integration (2026-10-17)
+
+The coordinator explicitly authorized rebasing only this run-owned topic,
+overriding the earlier no-rebase restriction solely for this integration.
+The old publication/stop and conflict observations above remain historical.
+No new RPI cycle, independent Review, professional authority or acceptance
+claim was created.
+
+* Clean worktree and branch verified before starting:
+  feat/provider-capacity-controls-90 at
+  6e4dbe18d111673b41049830eb68bf81f89051c8.
+* Captured expected remote lease with
+  `git ls-remote origin refs/heads/feat/provider-capacity-controls-90`:
+  6e4dbe18d111673b41049830eb68bf81f89051c8.
+* Ran `git fetch origin main --quiet`; freshly verified final integration
+  base is bab4bf3a2ac9ec030d78d27063d1390f800c5c7c.
+* Ran `git rebase origin/main`. Only docs/reference/log.md conflicted;
+  removed the conflict separators while preserving all upstream bytes first
+  and the original complete issue-90 entry afterward. README auto-merged,
+  retaining the upstream initializer route and issue-90 capacity route.
+* Ran `git add docs/reference/log.md` and
+  `GIT_EDITOR=true git rebase --continue`. Integrated topic head before the
+  evidence-only commit is db83d4260e4f3d29fa80ce08624155ee4f59ecce
+  (implementation 19431ad -> 17d7b3a; evidence 6e4dbe1 -> db83d42).
+* `git range-diff adedf1f..6e4dbe1 origin/main..HEAD` shows only shared
+  KB context differences for the implementation and an identical evidence
+  commit. Exact byte assertions confirm the entire src patch against the
+  new base equals the originally reviewed src patch against adedf1f.
+  All runtime/tests/browser/component documentation remain byte-identical
+  to the reviewed topic. All twelve other upstream changed paths exactly
+  match main. No substantive production conflict occurred.
+* Exact byte assertion confirms the final KB log equals the complete
+  upstream log prefix plus the unchanged issue-90 appended entry.
+  All Markdown table rows from both prior index versions are present.
+  The original independent Review file is byte-identical; its historical
+  Complete/Conformant result is preserved, not promoted into a new
+  exact-head external gate. `git diff --check` and main-ancestor check pass.
+* No full suite, SQL/browser rerun or dependency installation was warranted:
+  conflict resolution changed documentation only and production/test patch
+  parity is exact. Earlier executed evidence remains unchanged. No #84/#94
+  affected production path required a new combined selection.
+* Authenticated account resolved again with `gh api user`; repository-local
+  privacy-safe author/committer retained for the integration evidence commit.
+  PR body will carry the final publication commit SHA after that commit,
+  avoiding a self-referential hash inside its own contents.
+* Authorized push command is
+  `git push --force-with-lease=refs/heads/feat/provider-capacity-controls-90:6e4dbe18d111673b41049830eb68bf81f89051c8 origin HEAD:refs/heads/feat/provider-capacity-controls-90`.
+  No unconditional force, main rewrite, merge or issue closure is authorized.
+  External coordinator exact-head PR gate remains forthcoming; Refs #90 only.
