@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "73", "task_slug": null},
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "implementation_complete_review_pending",
+  "status": "ci_test_fix_complete_final_head_gates_pending",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/controlled-bulk-preview-78-research.md",
@@ -24,7 +24,7 @@
     {"decision": "Publish draft main PR with Refs 78, no closure or acceptance claim; no source fixes or repeated Review in current task", "status": "executed", "evidence": "https://github.com/jmservera/ama/pull/378; main base, requested topic, draft/open; source head 1bd60e38e8bff9e07adfed4a70d06bb2e299fb4c"},
     {"decision": "Stop automatic session after final pushed PR as explicitly requested", "status": "confirmed", "evidence": "User stop boundary; publication source head and PR 378 read back from GitHub"}
   ],
-  "blockers": ["Full criterion1 / issue78 acceptance requires coordinator independent rereview of final correction2 head; not a source implementation blocker"],
+  "blockers": ["Actual MSSQL CI must pass on the new test-fix head; local opt-in disposable SQL Server unavailable", "Coordinator independent final test-only delta/head assessment required; owner reports all-three-criteria Pass on parent5676285"],
   "correction_cycle": 2,
   "correction_authority": "Explicit 2026-10-17 owner continuation: fix RV-001, investigate RV-002, independent review, final push then stop; original Review remains historical",
   "correction_result": {"RV-001": "Corrected; independently accepted bounded fix", "RV-002": "Unfulfilled; criterion1 remains partial", "validation": "71 focused tests; core ruff/format51/mypy104 pass", "independent_review": "No substantive findings; two valid and ten invalid probe cases"},
@@ -34,8 +34,9 @@
   "correction_two_authority": "Explicit owner implementation of existing upload/offer/accept provenance and directly dependent API/UI/tests; final allowed cycle; earlier residual-only disposition superseded",
   "correction_two_result": {"RV-001": "Unchanged scoped implementation, regressions pass", "RV-002": "Requested upload/offer/accept input/history/audit gaps implemented, not deferred or claimed human-blocked; independent acceptance pending", "validation": "Core609 skip1; API574 skip111; later final focused119; core ruff/format55/mypy108; API ruff/format19/mypy50; local Chromium changed paths pass", "legacy": "Missing request metadata refuses actionably, no source/reason defaults or historical backfill", "schema_authority": "Unrelated actual human prerequisite, not a provenance implementation blocker"},
   "correction_two_publication": {"source_commit": "2e63cdf74a2f28d17e2cf3cbc993171755424fbb", "parent": "ae3adfb3f214ea3c30b073b2b71c074df4ec06ed", "verified": "Normal same-topic push, remote branch and PR API exact source, draft/open/main", "final_receipt": "Artifact-only commit atop tested source; exact final SHA supplied on PR378; no source changes or independent Pass"},
-  "next_action": {"phase": "Follow-up", "action": "Stop after final receipt normal push/readback; coordinator independently rereviews exact final SHA before acceptance/merge"},
+  "ci_maintenance": {"parent": "56762851c2acfff19aa71ecef59f931b8dd1c8a5", "authority": "SamePR378 CI correction, not new reviewfindingcycle; owner reports independent all3criteria Pass5676285", "failed_run": "39036057567", "failed_job": "117406113195", "cause": "Inherited MSSQL test reopened SQLite SqlStore instead of actual backend, nonexistent seed read;113tests1error", "fix": "Backend-specific reopen_store hook uses existing MSSQL factory without wipe; assertions and guards unchanged; executable diff test-only", "validation": "9 SQLite handoff/local dialect portability tests;API ruff/format19/mypy50 pass;mocked MSSQL factory/no-wipe routing verified, not live server", "boundary": "No local configured disposable MSSQL;actual final-head CI gate and coordinator independent delta assessment pending;no skips/production changes"},
+  "next_action": {"phase": "Follow-up", "action": "Normal same-topic privacy-safe commit/push and exact-head PR handoff then stop; actual MSSQL CI and coordinator independent delta assessment required before merge"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator independent rereview of final correction2 SHA", "rationale": "Concrete RV-002 implementation is complete but not independently accepted; no fabricated Pass or merge", "evidence": "Same changes/details/correction-review appended correction2 disposition and executed test/browser receipts"}
+    {"rank": 1, "task": "Actual MSSQL CI and coordinator independent test-only delta assessment", "rationale": "Owner reports independent Pass5676285;new backend reopen fix requires actual server gate and exact-head delta, no automatic transfer of Pass", "evidence": "Failed run39036057567/job117406113195 and same changes/review CI maintenance evidence"}
   ]
 }

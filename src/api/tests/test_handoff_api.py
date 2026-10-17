@@ -64,6 +64,9 @@ class HandoffApi(unittest.TestCase):
     def make_store(self, path: Path) -> SqlStore:
         return SqlStore(str(path), str(path.with_suffix(".sqlite")))
 
+    def reopen_store(self) -> SqlStore:
+        return SqlStore("nonexistent-seed-is-not-read", self.store.db_path)
+
     def shutdown(self) -> None:
         self.httpd.shutdown()
         self.httpd.server_close()
@@ -120,7 +123,7 @@ class HandoffApi(unittest.TestCase):
         self.assertEqual(self.post("sam", "accept-handoff")[0], 403)
         code, detail = self.post("rae", "accept-handoff")
         self.assertEqual(code, 200, detail)
-        reopened = SqlStore("nonexistent-seed-is-not-read", self.store.db_path)
+        reopened = self.reopen_store()
         self.addCleanup(reopened.db.close)
         case = reopened.cases["ZF-1"]
         for history, action in (

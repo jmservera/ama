@@ -402,3 +402,37 @@ and final evidence-only receipt. RV-001/forms implementations and original
 Not accepted Review unchanged from ae3adfb. KB prior histories/all index
 link targets retained. No further source change, merge or new review loop.
 Stop after final ordinary push/readback; full acceptance still pending.
+
+## Same-PR CI Maintenance: Backend-Polymorphic Handoff Reopen
+
+Owner reports independent final Pass on5676285 for all three criteria. This
+maintenance is not correction cycle THREE or a new finding/review loop.
+Exact-head CI run39036057567, job117406113195 failed one inherited test:
+`test_mssqlstore.MssqlHandoffApi.test_explicit_change_sources_are_required_and_reopen_from_http`.
+The retrieved log shows 113 tests, one error: line123 directly constructed
+SQLite `SqlStore` with the MSSQL state path, then tried reading the deliberately
+nonexistent seed because that SQLite database was empty. This is test backend
+selection, not failed production durable provenance.
+
+Minimal test-only executable delta: base `HandoffApi.reopen_store()` retains
+SQLite reopen behavior; `MssqlHandoffApi.reopen_store()` delegates to the
+existing MSSQL `factory` with the same nonexistent seed and existing state
+directory. It does not call initialization's `wipe()`. The inherited test uses
+this hook, leaving required-input, stale409, recipient403, success200, durable
+source version, exact history/audit equality, owner and chain assertions intact.
+No production/UI/workflow/skip/permission/guard changes.
+
+Local validation: nine tests pass (`test_handoff_api` plus the three
+`SharedSqlIsPortableTests`); API ruff check, format19 and mypy50 pass;
+diff whitespace check passes. An explicit mocked routing probe confirms the
+MSSQL override calls its factory and never wipes; it is not an engine test.
+Session receipt: `ama-78-ci-reopen-focused.log`. Existing law-store-unavailable
+fixture diagnostics remain unknown rule checks, not policy acceptance.
+
+No opted-in local disposable SQL Server is configured. No cloud/private/paid
+calls, Docker privilege escalation or attempt to substitute SQLite for actual
+MSSQL acceptance. The unchanged existing CI MSSQL job must pass on the final
+new SHA. The reported independent Pass applies to5676285; coordinator must
+assess this exact final test-only delta/head, not infer a new independent Pass.
+Same branch, normal privacy-safe commit/push, no merge/rebase/main writes;
+stop after final push/readback. Exact new SHA is supplied on PR378.

@@ -139,3 +139,25 @@ Exact correction TWO source published:
 tracking evidence atop this tested source. PR378 records exact final SHA for
 coordinator rereview. This source disposition does not replace historical
 independent verdicts with Pass.
+
+## Same-PR CI Maintenance After Reported Final Pass5676285
+
+Owner reports independent Pass5676285 for all three criteria. This is a
+reported final-head assessment, not a rewritten historical verdict or a new
+finding cycle. Subsequent exact-head CI run39036057567/job117406113195
+reproduced one test harness error in 113 tests: inherited MSSQL handoff
+provenance reopen directly called SQLite SqlStore, which tried to seed its
+unrelated empty local database from a deliberately absent file.
+
+Test-only fix introduces backend-polymorphic `reopen_store`: SQLite retains
+its existing constructor, MSSQL uses the repository's existing `factory`
+without `wipe()`. Same nonexistent seed ensures retained server data is read.
+All durable lineage/audit/ownership checks and 400/409/403 guards unchanged;
+no skip added or actual server substituted. Local nine handoff/portability
+tests and API ruff/format19/mypy50 pass. Mocked MSSQL factory/no-wipe routing
+probe passes but is not a live-dialect claim. No configured opt-in disposable
+server locally; final actual MSSQL CI remains a required gate.
+
+Coordinator independent delta assessment is required for the exact new head
+published on PR378. No new reviewer loop or self-certified Pass, merge,
+rebase, force-push or main write. Prior published source5676285 is the parent.
