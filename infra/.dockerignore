@@ -1,10 +1,8 @@
 **
 !cutover-proof.Dockerfile
-!scripts/
 !scripts/private-cutover-proof.py
 !scripts/staff_roster.py
 !scripts/staff_azure.py
 !scripts/staff-azure-worker.py
 !scripts/initialize-workbench-staff.py
-!entra/
 !entra/app-registration.json

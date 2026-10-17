@@ -4938,3 +4938,37 @@ metadata when the knowledge base was created.
   unavailable, no approved deferrals invented. No new data, private read,
   cloud/model use, merge or scope expansion. Implementation correction does not
   establish independent Pass; final exact-head independent review is required.
+
+## [2026-10-17] delivery | #360 normal-Docker private publication follow-up
+
+* Normal Docker Server29.9.0 and docker group membership verified without
+  elevation; historical socket blocker resolved after owner update. Existing
+  private ACR publicDisabled/bypassNone/adminFalse unchanged. Host DNS resolves
+  login publicly to51.143.208.3/HTTPS403; this is not an AcrPush denial.
+* Existing private endpoint NIC and private DNS zone agree on login10.40.4.21
+  and UK South data10.40.4.20. Exact-IP HTTPS probes with normal TLS/no proxy/no
+  credentials each time out at10seconds; no TLS connection or permitted private
+  route demonstrated. No authenticated login/base pull/build/push/pin attempted
+  over public routing, no Tasks/import/pool/VM/role/network workaround.
+* Native local network-disabled scratch/COPY-only context audit exposed two
+  directory-wide ignore exceptions including unrelated scripts/generated pyc.
+  Removed only !scripts/ and !entra/, retained explicit file exceptions and
+  Dockerfile/base/nonroot contract. Existing context test extended with unwanted
+  script/.env/pyc/private-profile/data exclusions. Final native audit lists
+  exactly seven intended files. Audit containers never started; both exact
+  audit container/image objects and task-owned test scratch cleaned.
+* Final focused source suite83passed/0skips; five network-forbidden source
+  imports and two isolated source-help checks pass. Missing distributions
+  restored only in task-owned venv after actual missing-package failure.
+  These are not real-image smoke or no-secrets/runtime certification.
+* Two read-visible job settings fingerprints match; old proof digest,
+  Manual initialize args, identity, registry/env/config/template preserved.
+  Existing demo deny-all retained. No SQL/private data/secret/Graph access,
+  initialization/jobstart/restart, IAM/resource/network changes, new spend,
+  retirement or image-pin idempotency claim. No new published tag/digest.
+* [Runbook](../../infra/README.md#normal-docker-private-publication-follow-up-2026-10-17-360),
+  [evidence](../architecture/cutover-evidence-pack.md#normal-docker-private-publication-follow-up-2026-10-17)
+  and index distinguish actual current route blocker from historical Docker/IAM
+  boundaries. Full ordered RPI artifacts/phase evidence retained; publication
+  remains Blocked pending an existing authorized private-connected publisher.
+  Genuine browser/roles/SQL/AI and #360 d/e remain UNMET; no inferred approval.
