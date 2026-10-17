@@ -1569,6 +1569,20 @@ run with a missing roster or the exact original placeholder template now:
    before roster generation. Setup needs permission to export the existing
    deployment templates; it does not create deployments or follow template-link
    URLs for this check. Merely renaming resources is not an override.
+   App/environment IDs are structurally checked as exact subscription/`ama`/
+   Microsoft.App resource IDs and compared case-insensitively, including the
+   `/providers/` segment; wrong group, provider, type or scope still refuses.
+   Exported templates must identify a supported resource-group ARM schema
+   (2019-04-01 or 2015-01-01), content version and resource envelope. Omitted or
+   `1.0` language uses an array; supported `2.0` uses symbolic-name resource
+   objects. Every resource needs a name, type and dated API version.
+   Unknown schemas/language versions, malformed resource entries, API-profile/
+   import extensions and nested deployment contracts explicitly refuse.
+   Nested templates/links and their parameter/default evaluation are not
+   interpreted or silently treated as neutral. This bounded check is not a
+   complete ARM/provider-schema validator, and schema validity never establishes
+   a development profile. A valid nested deployment still needs a separately
+   supported evidence path rather than a safety bypass.
 2. Reads existing SQL staff codes, approved roles, existing Contractor supplier
    scopes and a binding-present flag through the same `--list-staff` path.
    It never invents an extra code or Contractor. Existing immutable SQL
@@ -1624,6 +1638,13 @@ and [parameter default contract](https://learn.microsoft.com/en-us/azure/azure-r
 were checked on 2026-10-17. This fixes source classification, not live setup:
 credential access, initializer publication's 403 and genuine tenant/browser/
 SQL/AI acceptance remain unmet; no Azure changes or temporary jobs were run.
+Coordinator correction ONE (2026-10-17) retains the original adverse external
+assessment: mixed-case ID and malformed-envelope reproductions failed before
+correction, and the expanded offline suites pass afterward. The supported
+envelope boundary follows the official [template structure](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/syntax)
+and [resource-group template schema](https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json),
+retrieved 2026-10-17. This is correction evidence, not independent final-head
+acceptance or full setup readiness.
 
 Setup still rejects placeholders, non-GUID/zero IDs, duplicates, unknown roles,
 group-only entries, symlinks and unsafe modes before directory changes. SQL

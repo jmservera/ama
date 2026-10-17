@@ -5606,3 +5606,26 @@ metadata when the knowledge base was created.
 * No main/other-worktree write, cloud mutation, Graph, SQL or live setup.
   ACR403/private publisher and actual tenant/browser/SQL/AI remain unmet;
   no merge, issue closure, service exposure change or full-setup-ready claim.
+
+## [2026-10-17] query | Coordinator profile correction ONE (#360)
+
+* Independent coordinator exact-9561938a assessment returned Revise for two
+  Medium defects: mixed-case /Providers/ rejected valid bound ARM identity,
+  and malformed schema/resource envelopes could be classified neutral.
+* Both independent reproductions failed on unchanged source (four invalid
+  envelope acceptances and one valid-ID rejection). Correction structurally
+  validates exact subscription/ama/provider/type/name paths case-insensitively
+  and validates the supported resource-group ARM envelope before classification.
+* Supported resource arrays and languageVersion 2.0 symbolic resources require
+  typed resource entries. Unknown schemas/languages, malformed entries and
+  unsupported nested deployment parameter/default contracts explicitly refuse;
+  schema validity does not prove development. Official syntax/schema sources
+  checked 2026-10-17 and linked in the setup runbook.
+* Expanded installed-distribution setup/staff/auth/secret suites: 206 pass,
+  including six added correction methods with table cases. Original critique
+  and Review unchanged; separate correction disposition retains Revise and
+  does not claim coordinator Pass. Fresh main advanced to 22670277; no new
+  rebase authorized or attempted.
+* No live setup, private inputs, Graph, SQL, Azure/IAM/network/tag changes,
+  paid rubric dispatch, merge or issue closure. Private publisher ACR403 and
+  actual tenant/browser/SQL/AI acceptance remain unmet.

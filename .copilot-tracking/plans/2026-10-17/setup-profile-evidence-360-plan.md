@@ -123,7 +123,8 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 
 * Test ownership: infra/tests/test_setup_entra.py owns classification.
 * Exact removals: none. Replace only null-tags bound-success expectation with fail-closed coverage.
-* Maximum additions: 18 test methods, using subTest tables for variants.
+* Original implementation maximum: 18 added methods (13 used). Separately
+  authorized correction ONE adds six methods; use subTest tables for variants.
 * Canonical target: setup-entra.py and test_setup_entra.py; no generated target.
 * Semantic coverage: literal/default precedence, neutral versus unknown, contradiction and binding.
 * Regression coverage: actual reported three-deployment shape; existing admin/random/KV/private/read-only tests.
@@ -152,6 +153,25 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 * Fresh gh api user, repo-local noreply author/committer, Conventional Commit plus required Copilot trailer.
 * PR includes actual offline results and partial acceptance/live-unmet boundaries.
 
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Authorized coordinator correction ONE
+
+* Scope: exact-9561938a independent Revise, two Medium defects only; no new
+  full Review or critique. No additional rebase authorized.
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Reproduce both defects and implement bounded corrections
+
+* Two failing-first methods: four envelope acceptance failures and one mixed-ID
+  rejection error, before source edits. Structural ID and supported ARM
+  envelope guards now implemented; six new correction methods.
+
+<!-- rpi:task id=P04-T02 -->
+#### [ ] P04-T02: Validate, retain adverse disposition and publish normally
+
+* Complete expanded named suites, configured statics, exact artifact integrity,
+  separate correction disposition, fresh identity and normal same-PR push.
+
 ## Dependencies
 
 * Read-only ARM export permission is a runtime prerequisite; absence rejects safely.
@@ -175,6 +195,12 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 * Owner/coordinator: live credential and initializer-publication 403 prerequisites, then genuine tenant/browser/SQL/AI acceptance; outside source-only work.
 
 ## Handoff
+
+Correction ONE authorized after coordinator exact-9561938a Revise (two Medium
+defects): structural case-insensitive ARM IDs and supported template envelope/
+resource validation. Add failing-first tests and run complete setup/staff suites;
+preserve original critique/Review, no new full Review. No rebase onto newer
+22670277 authorized; normal own-topic correction commit/push only.
 
 * All plan tasks complete: source commit ac4b28590d8885b314f81be02c2371398270ccd4
   pushed; main PR https://github.com/jmservera/ama/pull/391 opened.

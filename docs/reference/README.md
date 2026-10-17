@@ -55,6 +55,13 @@ quality/assistant/recovery sources remain unchanged. Fresh 200 setup/staff/auth
 tests pass; live credential/private-publisher 403 and tenant/browser/SQL/AI gates
 remain unmet. Ordinary hosted checks are reported separately, not presumed green.
 
+Coordinator correction ONE for #360 addresses two Medium findings on exact
+9561938a: structurally validated case-insensitive ARM identity and fail-closed
+supported template schema/language/resource envelopes. Both independent repros
+failed first; 206 setup/staff/auth tests pass after correction. Original critique
+and single Review remain unchanged; conservative nested-contract refusal is
+documented. External corrected-head acceptance remains coordinator-owned.
+
 The #85 topic integrates merged #95 and #385 on main
 2b24456863c0a8f39d47a73e22daeff3875cc825. Its entire production/test patch
 is byte-identical across bases; fresh SQLite/manifest checks supplement

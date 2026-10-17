@@ -1,6 +1,17 @@
 <!-- markdownlint-disable-file -->
 # RPI Changes: setup-profile-evidence-360
 
+## Correction ONE Intake (2026-10-17)
+
+Coordinator independent exact-head 9561938a assessment: Revise, two Medium
+defects. Authorized correction ONE covers case-insensitive structural ARM ID
+binding and bounded supported template-envelope/resource validation. Preserve
+the original critique and single Review unchanged; no new full Review/self-Pass.
+No active own CI-watch shell remains. Fresh main is 22670277, beyond the current
+topic base 3f544fb9; no new rebase authorized or attempted. Normal own-branch
+commit/push only. Live/private publisher 403 and tenant/browser/SQL/AI gates
+remain unmet. Failing-first evidence and correction disposition follow.
+
 ## Metadata
 
 * Task ID: issue-360-followup
@@ -11,10 +22,11 @@
 
 ## Execution Status
 
-* Status: Complete for source/RPI/PR delivery; integration follow-up blocked
+* Original source/RPI/PR delivery: Complete. Authorized correction ONE:
+  implemented and validated, publication pending.
 * Declared invocation scope: full plan; implementation starts P01-T01
-* Completed scope markers: P01/P02/P03 and all six tasks
-* Remaining active-plan tasks: none; concurrent main integration is separately authorized follow-up
+* Completed scope markers: P01/P02/P03 and all six original tasks, P04-T01
+* Remaining active-plan task: P04-T02 correction publication; no further rebase authorized
 * Approved writes: setup classifier/tests, infra runbook, existing KB route/log and dated RPI artifacts.
 
 ## Execution Summary
@@ -230,3 +242,59 @@ git push --force-with-lease=refs/heads/fix/setup-profile-evidence-360:cea89c43a9
 * Original critique and Review, source/test fingerprints and new-base src
   preservation are unchanged. No new RPI cycle or full Review.
 * Automatic continuation stops at clean pushed head/resume state per owner.
+
+## Correction ONE Validation and Disposition
+
+* Separate implementation disposition:
+  .copilot-tracking/changes/2026-10-17/setup-profile-evidence-360-correction-one.md.
+* Coordinator exact-9561938a independent verdict remains Revise, two Medium
+  defects. Correction evidence is not an independent Pass; no new full Review.
+* First run, before source edits:
+  `profile-venv/bin/python -m unittest discover -s infra/tests -p test_setup_entra.py -k test_correction -v`
+  yielded two methods, four failures (invalid envelope accepted), one error
+  (valid mixed-case Providers binding refused).
+* Corrected IDs use full anchored case-insensitive parsing with canonical
+  subscription UUID and exact ama/provider/type/name scope. Normalized IDs
+  compare exactly; wrong group/provider/type/subscription or child scope refuse.
+* Template envelope validation now gates profile resolution. Missing/foreign/
+  malformed schemas, unsupported language/resource forms and nested deployment
+  contracts explicitly refuse. Literal/default profile rules and independent
+  development/test evidence remain unchanged. No generic ARM evaluator added.
+* Final installed-distribution runner:
+
+```python
+import sys, unittest
+sys.path.insert(0, "infra/tests")
+suite = unittest.defaultTestLoader.loadTestsFromNames([
+    "test_setup_entra", "test_staff_azure", "test_initialize_workbench_staff",
+    "test_initialize_api_auth", "test_secret_lifecycle",
+])
+result = unittest.TextTestRunner(verbosity=1).run(suite)
+sys.exit(not result.wasSuccessful())
+```
+
+* Executed with existing session files/profile-venv/bin/python: 206 tests
+  passed, 4.500 seconds (123 setup plus unchanged 83 staff/auth/secret tests).
+  Six new methods, table-driven boundaries; reported three-deployment regression
+  and actual/default production vetoes pass. No original test removed.
+* Existing exact README ruff lint/format commands pass (three configured files);
+  correction-line ruff zero introduced, 225 untouched legacy diagnostics.
+  compileall and git diff --check pass. No new dependency or manifest changes.
+* Full infra discovery not claimed; no missing-YAML import error represented
+  as Pass. The required complete named suites are the validation boundary.
+* Final corrected file SHA-256:
+
+| File | SHA-256 |
+| --- | --- |
+| infra/scripts/setup-entra.py | f1579774ae790e56130a80c5377945294021471ff682a9c481583f755076f25d |
+| infra/tests/test_setup_entra.py | d1e7a9af987816b8429a4845d0d3bb8f8718effbc11319d04000b2c6dc461849 |
+
+* Original critique/Review hashes match the prior recorded fingerprints.
+  Exact prior KB log byte prefix preserved; no src/quality/assistant/recovery
+  changes. Fresh main 22670277 recorded only; no rebase performed.
+* Prior exact-9561938a ordinary Source CI 39067901027 and MVP validation
+  39067900996 completed success. Those prior-head results are not corrected-head
+  acceptance and do not supersede coordinator Revise.
+* No cloud/live setup, private inputs, Graph, SQL, tags/IAM/network changes,
+  paid rubric, merge or issue closure. ACR403/private publisher and real
+  tenant/browser/SQL/AI gates remain unmet.

@@ -869,7 +869,12 @@ class SetupTests(unittest.TestCase):
             "parameters": declarations if declarations is not None else {
                 key: {"type": "object" if key == "tags" else "string"}
                 for key in parameters},
-            "resources": [],
+            "resources": [{
+                "type": ("Microsoft.App/managedEnvironments" if resource.lower() == ENV_ID.lower()
+                         else "Microsoft.App/containerApps"),
+                "apiVersion": "2025-07-01", "name": resource.rsplit("/", 1)[-1],
+                "location": "uksouth", "properties": {},
+            }],
         }
 
     def reported_profile_deployments(self):
@@ -908,6 +913,131 @@ class SetupTests(unittest.TestCase):
             SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
         self.assert_no_generation_writes()
         self.assertFalse(self.fake.sql_calls)
+
+    def test_correction_mixed_case_arm_binding_preserves_exact_resource_identity(self):
+        self.reported_profile_deployments()
+        self.fake.deployments = []
+        self.fake.app["id"] = APP_ID.replace("/providers/", "/Providers/")
+        SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+        for app_id, env_id in ((APP_ID.upper(), ENV_ID.upper()),
+                               (APP_ID, ENV_ID.replace("/providers/", "/Providers/"))):
+            with self.subTest(app_id=app_id, env_id=env_id):
+                self.fake.app["id"] = app_id
+                self.fake.app["properties"]["managedEnvironmentId"] = env_id
+                self.fake.environment["id"] = ENV_ID.upper()
+                with patch.object(SETUP.Azure, "rest", return_value=self.fake.environment):
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+
+    def test_correction_invalid_export_envelope_is_not_neutral(self):
+        for schema in (None, 7, "https://example.invalid/deploymentTemplate.json"):
+            with self.subTest(schema=schema):
+                self.fake.deployments = []
+                self.reported_profile_deployments()
+                template = self.fake.deployment_templates["demo-stage-360-20261017"]
+                if schema is None:
+                    template.pop("$schema")
+                else:
+                    template["$schema"] = schema
+                self.assert_demo_refused()
+        self.fake.deployments = []
+        self.reported_profile_deployments()
+        self.fake.deployment_templates["demo-stage-360-20261017"][
+            "resources"] = {"not-a-resource": 42}
+        self.assert_demo_refused()
+
+    def test_correction_wrong_arm_scope_provider_and_type_are_refused(self):
+        invalid = (
+            APP_ID.replace("/ama/", "/other/"),
+            APP_ID.replace("Microsoft.App", "Microsoft.Other"),
+            APP_ID.replace("containerApps", "managedEnvironments"),
+            APP_ID + "/children/extra", APP_ID + "/", APP_ID.replace(SUB, "not-a-guid"),
+            APP_ID.replace(SUB, SUB.replace("-", "")),
+            APP_ID.replace("/resourceGroups/ama", ""),
+            APP_ID.replace("/providers/", "//providers/"),
+        )
+        for value in invalid:
+            with self.subTest(app_id=value):
+                self.reported_profile_deployments()
+                self.fake.deployments = []
+                self.fake.app["id"] = value
+                self.assert_demo_refused()
+                self.fake.app["id"] = APP_ID
+        for value in (
+                ENV_ID.replace("/ama/", "/other/"),
+                ENV_ID.replace("Microsoft.App", "Microsoft.Other"),
+                ENV_ID.replace("managedEnvironments", "containerApps"),
+                ENV_ID.replace(SUB, uid("other-subscription")),
+                ENV_ID + "/children/extra", ENV_ID + "/",
+                ENV_ID.replace("/resourceGroups/ama", "")):
+            with self.subTest(environment_id=value):
+                self.fake.app["properties"]["managedEnvironmentId"] = value
+                self.assert_demo_refused()
+        self.fake.app["properties"]["managedEnvironmentId"] = ENV_ID
+        cli = SETUP.Azure(self.profile)
+        cli.subscription = uid("other-subscription")
+        with self.assertRaises(SETUP.SetupError):
+            SETUP.require_demo(cli, self.fake.app)
+
+    def test_correction_supported_arm_array_and_symbolic_templates_remain_bound(self):
+        for schema in (
+                "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"):
+            for language in (None, "1.0", "2.0"):
+                with self.subTest(schema=schema, language=language):
+                    self.fake.deployments = []
+                    self.reported_profile_deployments()
+                    for template in self.fake.deployment_templates.values():
+                        template["$schema"] = schema
+                        if language:
+                            template["languageVersion"] = language
+                        if language == "2.0":
+                            template["resources"] = {"api": template["resources"][0]}
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+                    self.fake.environment["tags"][SETUP.PROFILE_TAG] = "production"
+                    self.assert_demo_refused()
+
+    def test_correction_malformed_resource_and_language_forms_fail_closed(self):
+        self.reported_profile_deployments()
+        valid = copy.deepcopy(self.fake.deployment_templates["demo-stage-360-20261017"])
+        resource = valid["resources"][0]
+        forms = [
+            {**valid, "languageVersion": language}
+            for language in (None, 2, "", "2.1", "2.0-experimental", "3.0")]
+        forms += [{**valid, "resources": resources} for resources in (
+            [42], [None], [{}], {"api": resource}, [{"name": "api", "type": "Anything"}],
+            [{**resource, "apiVersion": None}], [{**resource, "apiVersion": "unknown"}],
+            [{**resource, "name": ""}], [{**resource, "type": ""}],
+            [{**resource, "properties": []}], [{**resource, "resources": {}}],
+        )]
+        forms += [{**valid, "languageVersion": "2.0", "resources": resources}
+                  for resources in ([resource], {"api": 42}, {"bad/name": resource}, {7: resource})]
+        forms += [{**valid, key: value} for key, value in (
+            ("variables", []), ("functions", {}), ("outputs", []), ("definitions", {}),
+            ("imports", {}), ("apiProfile", "2019-03-01-hybrid"))]
+        for template in forms:
+            with self.subTest(template=template):
+                self.fake.deployment_templates["demo-stage-360-20261017"] = template
+                self.assert_demo_refused()
+
+    def test_correction_nested_deployments_are_explicitly_unsupported(self):
+        self.reported_profile_deployments()
+        template = self.fake.deployment_templates["demo-stage-360-20261017"]
+        nested = copy.deepcopy(template)
+        nested["parameters"]["deploymentProfile"] = {
+            "type": "string", "defaultValue": "production"}
+        for properties in (
+                {"template": nested, "parameters": {}},
+                {"templateLink": {"uri": "https://example.invalid/unknown.json"}},
+                {"template": nested,
+                 "parameters": {"deploymentProfile": {"value": "development"}}}):
+            with self.subTest(properties=properties):
+                template["resources"] = [{
+                    "type": "Microsoft.Resources/deployments", "apiVersion": "2022-09-01",
+                    "name": "nested", "properties": properties}]
+                with self.assertRaisesRegex(SETUP.SetupError, "Nested deployments"):
+                    SETUP.require_demo(SETUP.Azure(self.profile), self.fake.app)
+                self.assert_no_generation_writes()
+                self.assertFalse(self.fake.sql_calls)
 
     def test_neutral_template_never_authorizes_development_by_itself(self):
         self.reported_profile_deployments()

@@ -17,6 +17,7 @@
 | P01 | Reproduce and implement | Complete | P01-T01, P01-T02 |
 | P02 | Validate and document | Complete | P02-T01, P02-T02 |
 | P03 | Review and deliver | Complete; authorized integration published | P03-T01, P03-T02 |
+| P04 | Authorized correction ONE | In progress | P04-T01, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reproduce and implement
@@ -137,3 +138,27 @@ main write or live operations. Publication/check receipt is recorded in changes.
 Exact-lease push succeeded at 9c0ffe22, PR #391 MERGEABLE; automatic ordinary
 Source CI/MVP validation queued without manual dispatch. Final receipt is a
 normal fast-forward; exact final-head check outcome is on PR #391.
+
+<!-- rpi:phase id=P04 -->
+## P04: Authorized coordinator correction ONE
+
+<!-- rpi:task id=P04-T01 -->
+### P04-T01: Failing-first repro and bounded correction
+
+Complete: two independent repro methods failed before source edits (four
+invalid export acceptances, one valid mixed-case binding refusal). Anchored
+case-insensitive group ARM identity and supported schema/language/resource
+envelope validation now implemented. No new dependency or general ARM
+interpreter; unsupported nested deployment parameter/default contracts refuse
+explicitly. Six new correction methods, original adverse disposition retained.
+
+<!-- rpi:task id=P04-T02 -->
+### P04-T02: Validation and same-PR publication
+
+Final combined 206 tests pass in 4.500 seconds; configured lint/format, correction
+line lint, syntax and whitespace pass. Original critique/Review hashes match;
+append-only log prefix and unchanged src verified. Normal commit/push pending.
+Original critique/Review must remain byte-identical. Separate disposition:
+.copilot-tracking/changes/2026-10-17/setup-profile-evidence-360-correction-one.md.
+No new full Review, self-Pass, merge, issue closure or live setup. Fresh main
+22670277 recorded read-only; no additional rebase authorized.
