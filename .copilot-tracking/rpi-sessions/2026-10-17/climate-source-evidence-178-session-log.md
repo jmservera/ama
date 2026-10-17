@@ -35,3 +35,25 @@ complete. No substantive implementation defect identified. RV-001 paired-record
 and RV-003 exact alternative terms/site gaps routed to later research; RV-002
 reuse/access decision remains with the human owner. No fixes, re-review or
 child loop started. Authorized commit/push/PR delivery is next, then stop.
+
+2026-10-17: Delivery commit
+`f1b08f8d6b472821cf3e682512c93b5b7e79e1ed` pushed to
+`docs/climate-source-evidence-178`; opened
+[PR #371](https://github.com/jmservera/ama/pull/371), base `main`, with `Refs #178`
+and criterion-by-criterion audit. Authenticated GitHub ID/login resolved;
+repository-local author and committer email
+`8036360+jmservera@users.noreply.github.com`, Copilot trailer retained.
+Eight tests passed again before staging; diff whitespace check passed.
+Initial PR status had no check results and unknown mergeability, not a CI pass.
+Main advanced by one commit during the task; no rebase, merge or rewrite.
+One completed Review reused for PR evidence rather than a second review.
+No issue edit, closure or merge performed.
+
+The requested stop is now being recorded. Final ledger commit/push and remote
+head verification are delivery bookkeeping only, not a child RPI task. The
+final SHA is reported after push rather than self-referenced in its own commit.
+
+2026-10-17: **Automatic session stopped** at the caller's explicit delivery
+boundary. Task status completed; phase Follow-up; Review outcome Residual work.
+Owner reuse/access approval, paired T/RH records and remaining relevant exact
+terms/site metadata remain open. No automatic follow-up work is authorized.
