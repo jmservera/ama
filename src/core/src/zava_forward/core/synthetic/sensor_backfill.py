@@ -12,6 +12,8 @@ the manifest records climate_source accordingly.
     python3 -m zava_forward.core.synthetic.sensor_backfill --homes 500 [--out DIR] [--seed N]
 """
 import argparse
+from collections.abc import Mapping
+from contextlib import nullcontext
 import csv
 import hashlib
 import io
@@ -22,7 +24,7 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric
+from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults
 
 VERSION = "sensor-backfill-v2"
 SCHEMA_VERSION = "reading-v1"
@@ -144,7 +146,8 @@ def resolve_window(days: int, cadence: int, as_of: str | None = None) -> tuple[d
 
 
 def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes=20,
-             start=START, *, stock: sensor_stock.Selection | None = None):
+             start=START, *, stock: sensor_stock.Selection | None = None,
+             fault_rates: Mapping[str, float] | None = None):
     """Volume and size estimate from a measured sample, computed before any full generation."""
     if stock is not None and homes is not None:
         raise ValueError("Pass homes to stock selection, not alongside a prepared selection")
@@ -152,15 +155,23 @@ def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes
     homes = len(sensors) if sensors is not None else (scale_fixture.HOMES if homes is None else homes)
     if (homes <= 0 and stock is None) or sample_homes <= 0:
         raise ValueError("homes and sample_homes must be positive")
-    resolve_window(days, cadence, (start + timedelta(days=days)).date().isoformat())
+    _, end = resolve_window(days, cadence, (start + timedelta(days=days)).date().isoformat())
+    faults = sensor_faults.configure(fault_rates) if fault_rates is not None else None
+    if faults is not None:
+        sensor_faults.validate_window(faults, days * 1440 // cadence, end)
     outdoor = outdoor_series(seed, days, cadence, start)
     rows = nbytes = 0
     sample = (sensors[:sample_homes] if sensors is not None else
               [sensor_for(h, seed) for h in scale_fixture.homes(sample_homes, scale_fixture.SEED)])
     for sensor in sample:
-        for r in readings(sensor, seed, days, cadence, outdoor, start):
+        series = readings({**sensor, "fault_profile": "none"} if faults is not None else sensor,
+                          seed, days, cadence, outdoor, start)
+        if faults is not None:
+            series = (row for packet in sensor_faults.packets(series, faults, seed, sensor["sensor_id"])
+                      for row in packet.rows)
+        for r in series:
             rows += 1
-            nbytes += len(_csv_line(r).encode())
+            nbytes += len(_csv_line(r, sensor_faults.READING_FIELDS if faults is not None else READING_FIELDS).encode())
     per_row = nbytes / rows if rows else 0.0
     steps = days * 24 * 60 // cadence
     total = round(homes * rows / len(sample)) if sample else 0
@@ -170,29 +181,44 @@ def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes
                 basis=f"measured on {len(sample)} homes; dropout faults reduce rows below nominal; SQL clustered index adds overhead")
     if stock is not None:
         result.update(coverage=stock.coverage(), stock_input_sha256=stock.input_sha256)
+    if faults is not None:
+        result["basis"] = f"measured on {len(sample)} homes; variable delivered row count; SQL/index overhead excluded"
     return result
 
 
-def revision_sources() -> tuple[Path, ...]:
+def revision_sources(*, faults: bool = False) -> tuple[Path, ...]:
     return (*scale_fixture.revision_sources(), Path(__file__), Path(sensor_stock.__file__),
-            Path(stock_fabric.__file__))
+            Path(stock_fabric.__file__), *((Path(sensor_faults.__file__),) if faults else ()))
 
 
 def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int = DAYS,
           cadence: int = CADENCE_MIN, *, as_of: str | None = None,
-          stock: sensor_stock.Selection | None = None) -> dict[str, object]:
+          stock: sensor_stock.Selection | None = None,
+          fault_rates: Mapping[str, float] | None = None) -> dict[str, object]:
     start, end = resolve_window(days, cadence, as_of)
+    faults = sensor_faults.configure(fault_rates) if fault_rates is not None else None
+    if faults is not None:
+        sensor_faults.validate_window(faults, days * 1440 // cadence, end)
     if stock is not None and homes is not None:
         raise ValueError("Pass homes to stock selection, not alongside a prepared selection")
     sensors = stock.sensors(seed) if stock is not None else None
     homes = len(sensors) if sensors is not None else (SHARD_HOMES if homes is None else homes)
     if homes <= 0 and stock is None:
         raise ValueError("homes must be positive")
-    revision = provenance.source_revision(revision_sources())
-    out = stock_fabric._destination(out) if stock is not None else Path(out)
+    revision = provenance.source_revision(revision_sources(faults=faults is not None))
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
     est = estimate(None if stock is not None else homes, days, cadence, seed,
-                   sample_homes=max(1, min(20, homes)), start=start, stock=stock)
+                   sample_homes=max(1, min(20, homes)), start=start, stock=stock,
+                   **({"fault_rates": fault_rates} if faults is not None else {}))
     out = provenance.prepare_output(out)
+    truth_dir = None
+    if faults is not None:
+        truth_dir = out / "truth"
+        truth_dir.mkdir()
+        out = out / "analysis"
+        out.mkdir()
+    reading_fields = sensor_faults.READING_FIELDS if faults is not None else READING_FIELDS
+    sensor_fields = [key for key in SENSOR_FIELDS if faults is None or key != "fault_profile"]
     (out / "estimate.json").write_text(json.dumps(est, indent=2) + "\n", encoding="utf-8", newline="\n")
     outdoor = outdoor_series(seed, days, cadence, start)
     digest, shards, total, sensors_rows = hashlib.sha256(), [], 0, []
@@ -202,14 +228,31 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         nonlocal batch, shard_no, total
         name = f"readings-{shard_no:04d}.csv"
         count = 0
-        with open(out / name, "w", encoding="utf-8", newline="") as f:
-            f.write(",".join(READING_FIELDS) + "\n")
+        truth_stream = ((truth_dir / f"truth-{shard_no:04d}.jsonl").open(
+            "w", encoding="utf-8", newline="\n") if truth_dir is not None else nullcontext())
+        with open(out / name, "w", encoding="utf-8", newline="") as f, truth_stream as truth_file:
+            f.write(",".join(reading_fields) + "\n")
             for sensor in batch:
-                for r in readings(sensor, seed, days, cadence, outdoor, start):
-                    line = _csv_line(r)
-                    digest.update(line.encode())
-                    f.write(line)
-                    count += 1
+                series = readings({**sensor, "fault_profile": "none"} if faults is not None else sensor,
+                                  seed, days, cadence, outdoor, start)
+                if faults is not None:
+                    for packet in sensor_faults.packets(series, faults, seed, sensor["sensor_id"]):
+                        truth_file.write(json.dumps(dict(
+                            sensor_id=sensor["sensor_id"], packet=packet.index, label=packet.label,
+                            clean=packet.clean, shard=name,
+                            emitted_rows=list(range(count, count + len(packet.rows)))),
+                            sort_keys=True) + "\n")
+                        for r in packet.rows:
+                            line = _csv_line(r, reading_fields)
+                            digest.update(line.encode())
+                            f.write(line)
+                            count += 1
+                else:
+                    for r in series:
+                        line = _csv_line(r)
+                        digest.update(line.encode())
+                        f.write(line)
+                        count += 1
         shards.append(dict(file=name, sensors=len(batch), rows=count))
         total += count
         shard_no += 1
@@ -225,7 +268,7 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
     if batch:
         flush()
     with open(out / "sensors.csv", "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, SENSOR_FIELDS, lineterminator="\n", extrasaction="ignore")
+        w = csv.DictWriter(f, sensor_fields, lineterminator="\n", extrasaction="ignore")
         w.writeheader()
         w.writerows(sensors_rows)
     manifest = dict(version=VERSION, schema_version=SCHEMA_VERSION, seed=seed, as_of=end.date().isoformat(),
@@ -255,9 +298,25 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         )
         manifest["parameters"]["construction_loss"] = sensor_stock.CONSTRUCTION_LOSS
         manifest["parameters"]["classification"] = "All projection and fault parameters are exercise values, not calibrated building physics or resident judgements."
+    if faults is not None:
+        manifest.update(version=sensor_faults.VERSION, schema_version=sensor_faults.SCHEMA_VERSION,
+                        storage="Synthetic CSV observations with explicit units/calibration; not compatible with the legacy SQL loader")
+        manifest.pop("ddl_contract", None)
+        if stock is not None:
+            manifest["parameters"]["classification"] = "Projection parameters are exercise values, not calibrated physics or resident judgements."
     manifest["file_sha256"] = provenance.file_hashes(
         [out / "estimate.json", out / "sensors.csv", *extra_files, *(out / shard["file"] for shard in shards)])
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
+    if truth_dir is not None:
+        truth_manifest = dict(version=sensor_faults.VERSION, seed=seed, source_type=SOURCE_TYPE,
+                              fault_rates=dict(faults.rates), rate_basis="exclusive two-observation packets; remainder valid",
+                              exercise_values=sensor_faults.EXERCISE_VALUES,
+                              clean="Nominal observations before injected corruption; evaluator-only",
+                              emitted_rows="Zero-based CSV data row positions within the named analysis shard, excluding header",
+                              analysis_manifest_sha256=hashlib.sha256((out / "manifest.json").read_bytes()).hexdigest(),
+                              file_sha256=provenance.file_hashes(truth_dir.glob("truth-*.jsonl")))
+        (truth_dir / "manifest.json").write_text(json.dumps(truth_manifest, indent=2) + "\n",
+                                               encoding="utf-8", newline="\n")
     return manifest
 
 
@@ -301,6 +360,12 @@ def load_into(conn, out, create_schema=_create_sqlite_schema):
     first and pass create_schema=None (the default hook creates SQLite-only DDL).
     """
     out = Path(out)
+    if (out / "analysis").is_dir():
+        raise ValueError("Opt-in fault snapshots require a unit/calibration-aware consumer, not load_into")
+    if (out / "manifest.json").is_file():
+        metadata = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+        if metadata.get("schema_version") == sensor_faults.SCHEMA_VERSION:
+            raise ValueError("Opt-in fault inputs require a unit/calibration-aware consumer, not load_into")
     if create_schema:
         create_schema(conn)
     with open(out / "sensors.csv", encoding="utf-8", newline="") as f:
@@ -334,17 +399,21 @@ def main(argv=None):
     ap.add_argument("--days", type=int, default=DAYS)
     ap.add_argument("--as-of", help="YYYY-MM-DD exclusive UTC end; omitted preserves the historical start")
     ap.add_argument("--estimate-only", action="store_true")
+    ap.add_argument("--fault-rate", action="append", metavar="NAME=RATE",
+                    help="Opt in to exclusive two-observation fault packets; repeat for each rate, remainder valid")
     a = ap.parse_args(argv)
     try:
+        fault_rates = sensor_faults.parse_rates(a.fault_rate) if a.fault_rate is not None else None
         stock = sensor_stock.read_register(a.register, a.homes) if a.register else None
         homes = None if stock is not None else a.homes
         start, _ = resolve_window(a.days, a.cadence, a.as_of)
         if a.estimate_only:
             result = estimate(homes=homes, days=a.days, cadence=a.cadence, seed=a.seed,
-                              sample_homes=min(20, homes) if homes else 20, start=start, stock=stock)
+                              sample_homes=min(20, homes) if homes else 20, start=start, stock=stock,
+                              fault_rates=fault_rates)
         else:
             result = {k: v for k, v in write(a.out, homes, a.seed, days=a.days, cadence=a.cadence,
-                                             as_of=a.as_of, stock=stock).items() if k != "parameters"}
+                                             as_of=a.as_of, stock=stock, fault_rates=fault_rates).items() if k != "parameters"}
     except (OSError, ValueError) as exc:
         ap.error(str(exc))
     print(json.dumps(result, indent=2))

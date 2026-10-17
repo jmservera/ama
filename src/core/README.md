@@ -851,15 +851,106 @@ are unchanged; do not use the narrow legacy DDL for stock mode. The loader
 does not migrate databases. SQLite tests and portable conditional-insert checks
 do not prove live SQL Server execution.
 
-This is partial #177 delivery: #178-#183 remain open, not owner-deferred.
+This is partial #177 delivery: child issues are not owner-deferred.
 Historical Met Office/Environment Agency records and licence confirmation,
-dated retrofit measures, full behaviour and configurable fault/truth classes,
+dated retrofit measures, full behaviour,
 and #110's future consumer validation are still missing. Owner #178 permits
 clearly labelled synthetic climate as fallback; no CO2/energy is generated.
+The opt-in fault/truth feature for #182 is described below; it does not close
+the parent's other child or live-platform acceptance.
 No AI review, hazard diagnosis, ranking change, resident action or approval
 occurs in the generator. Existing AI release/human gates are unchanged.
 `tests/test_sensor_stock.py` covers bounded 730-day histories, fabric/ID/choice
 reconciliation, byte reproducibility, bounds, estimates, hashes and local loads.
+
+### Opt-in sensor fault packets (#182)
+
+Repeat `--fault-rate NAME=RATE` on the existing sensor-backfill command. This
+reuses the same stock adapter, home/sensor identities, fictional monitoring
+choices, outdoor model and indoor equations; it does not create another stock.
+Omitting every `--fault-rate` preserves historical CSV bytes and legacy embedded
+labels. Opting in disables those historical implicit faults and uses the new
+`sensor-fault-input-v1` schema. To generate a clean valid control in the new
+schema, use `--fault-rate gap=0`.
+
+```bash
+python -m zava_forward.core.synthetic.sensor_backfill \
+  --register /path/to/wholly-fictional-stock.csv --homes 5 \
+  --days 4 --cadence 60 --as-of 2026-10-17 --seed 7 \
+  --fault-rate outlier=0.08 --fault-rate stuck=0.08 \
+  --fault-rate drift=0.08 --fault-rate gap=0.08 \
+  --fault-rate duplicate=0.08 --fault-rate out_of_order=0.08 \
+  --fault-rate unmapped=0.08 --fault-rate wrong_unit=0.08 \
+  --fault-rate clock_skewed=0.08 --fault-rate uncalibrated=0.08 \
+  --out /path/to/new-synthetic-fault-snapshot
+```
+
+API: `write(path, stock=selection, days=4, seed=7,
+fault_rates={"duplicate": 0.1, "gap": 0.1})`; `estimate()` accepts the same
+mapping, and `--estimate-only` uses the same injected row generation. Rates must
+be finite in [0, 1], with sum <=1; unknown/duplicate option names are errors.
+Each rate is a probability per consecutive two-observation packet, not an
+independent per-reading probability or guaranteed quota. One exclusive class
+applies to both observations; the remainder is `valid`. An even number of at
+least two nominal observations per monitored home is required. Invalid rates
+or windows fail before creating output. Canonical class order and a separate
+seed/sensor RNG make assignments independent of option order, sampling and
+shard boundaries. Reproduce with the same Python runtime and inputs.
+
+All following magnitudes are fictional exercise values, not calibration,
+scientific bounds, anomaly thresholds or operational rules.
+
+| Class | Observable injected input |
+| --- | --- |
+| valid | Original nominal values, degC/percent, calibrated=true |
+| outlier | Add 25 C to each temperature, without clipping |
+| stuck | Hold first packet temperature and humidity for both observations |
+| drift | Add 0.05 C times the one-based nominal slot index across that sensor's series |
+| gap | Omit both observations; retain both in evaluator truth |
+| duplicate | Emit each observation twice with identical sensor/reading identity |
+| out_of_order | Deliver second observation before first, preserving IDs and observed timestamps |
+| unmapped | Prefix the sensor ID with UNMAPPED-, absent from the sensor register |
+| wrong_unit | Convert temperature to Fahrenheit and declare temperature_unit=degF |
+| clock_skewed | Advance observed_at by 24 hours; preserve reading ID and clean time in truth |
+| uncalibrated | Set calibrated=false on both observations |
+
+The new snapshot has two sibling directories:
+
+* `analysis/`: CSV shards, sensor register without `fault_profile`, sanitized
+  stock fabric when selected, estimate and manifest. Readings have explicit
+  `temperature_unit`, `humidity_unit` and `calibrated`; no `injected_fault`.
+  For compatibility with the existing observation shape, the numeric column
+  remains named `temperature_c` even in a wrong-unit packet: consumers must
+  inspect the declared unit before interpreting it. Schema/version are explicit.
+* `truth/`: evaluator-only JSONL shards and manifest with canonical rates,
+  exercise magnitudes, seed and clean nominal packets. Each packet records its
+  label, sensor, packet index, analysis shard and zero-based emitted data-row
+  positions (headers excluded). Gaps have empty positions; duplicates have four.
+  The truth manifest hashes its payloads and binds the analysis manifest hash.
+
+Point analysis only at `analysis/`, never recursively at the snapshot root;
+give `truth/` only to an evaluator after analysis. Analysis metadata contains no
+rates, class labels, clean counterfactuals, fault profiles or truth-file links.
+This is file/interface separation, not an OS access-control boundary; operators
+must restrict evaluator files appropriately. Per-file hashes authenticate bytes,
+not scientific validity. No real device/resident data is accepted or generated.
+Declined/unknown homes still emit no sensors, observations or truth packets.
+Outputs must be outside repositories and new/empty nonsymlink snapshots.
+
+The existing `load_into()` intentionally refuses these snapshots or their
+analysis directory before changing a database. Legacy DDL/loaders do not
+understand the new unit/calibration contract; no migration is implied. #183/#110
+own future ingestion checks. AC-066's seven input classes are fixture-covered,
+not live IoT Hub/SQL/AI acceptance. AC-067/068 analytics, scientific method
+approval, resident monitoring and human review rules remain unchanged.
+
+`tests/test_sensor_faults.py` covers each forced class, valid controls, seeded
+packet frequencies, complete multi-sensor/multi-shard truth joins, no embedded
+answers, snapshot safety, hashes and tiny installed-module CLI replay. Local
+2026-10-17 evidence: 15 deliberately broken in-memory variants were detected;
+a five-home fictional selection produced 292 delivered rows and 144 truth
+packets across all 11 classes, with byte-identical reruns. These are synthetic
+engineering results, not real-device or predictive-performance evidence.
 
 ### Existing reproducibility and plausibility evidence
 
