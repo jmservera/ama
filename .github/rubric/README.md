@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-13
+ms.date: 2026-10-17
 ms.topic: how-to
 ---
 
@@ -147,6 +147,36 @@ permissions.
 * Pushes to `main` outside a pull request are scored for information only. A regression or an invalid scorecard on `main` opens an issue; an agent failure or timeout only shows as a failed run. Runs on other branches never open issues.
 * To measure scorer variance, start the workflow manually with `force` ticked two or three times on an unchanged branch. Each forced run gets its own concurrency slot, so they do not cancel each other. Forced runs score every criterion from scratch with the baseline removed from the agent's context (the prompt also tells it not to read the scores file), report in the job summary, never update `latest.json` and never open issues.
 * To recover from a stuck `pending` status, rerun the workflow from the Actions tab.
+
+### Closed and Moved Pull Request Heads
+
+The recording job checks current PR state before checkout and uses the original
+event's immutable head SHA. An explicitly closed PR is an obsolete run: it
+emits a notice and does not record or publish a score. A missing branch alone
+is not proof of closure; PR API errors or invalid responses fail visibly.
+There is no checkout fallback to `main`.
+
+For an open PR, a moved head blocks score recording and a passing verdict.
+State is checked again before recording and publication. Recording uses an
+isolated workflow-owned pre-push hook, not repository hooks, and an ordinary
+non-force push to the explicit existing branch ref. The hook requires exactly
+one update with the advertised remote OID equal to the scored SHA; Git's server
+old-OID check rejects subsequent deletion or movement, including a backward
+move. The workflow never recreates a deleted branch.
+
+After a successful score commit, publication requires the current PR head to
+equal that bot commit; when recording legitimately creates no commit, it
+requires the original scored SHA. Statuses still target only those exact
+scored/bot SHAs. PR lifecycle and Git writes are not a single transaction, and
+movement after the final API read is not claimed to be atomically prevented.
+Closed obsolete runs are not rubric passes, successful reruns or issue closure.
+
+Run the local source/compiled lifecycle and temporary-Git race regressions
+without dispatching the scorer:
+
+```bash
+python3 -m pytest .github/rubric/scripts/test_record_workflow.py -q
+```
 
 ## Adding an Artifact Type
 
