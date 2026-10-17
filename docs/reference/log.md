@@ -5852,3 +5852,8 @@ metadata when the knowledge base was created.
   63 explicit skips; actual own MSSQL25 pass; corrected non-root image48 run/
   47 pass/one skip plus source hashes/startup/negative probes; configured static
   checks pass. These are engineering receipts, not coordinator acceptance.
+* Owner-authorized one-time own-branch integration onto main74617981 retained
+  the exact complete source/test patch and full upstream index/log byte
+  prefixes. Post-integration26 JSON/SQLite checks passed. Published main
+  PR #394, Refs #102; independent final-head acceptance, merge and the remaining
+  issue checkbox stay coordinator/owner-owned. No other branch was rewritten.

@@ -102,4 +102,8 @@ these are concrete implementation receipts, not a second independent verdict.
 History gaps/legacy precision, whole-home actuals, human/legal/resident controls,
 JSON cross-file crash boundary and operational forecast prerequisites remain.
 Actual quality.py overlap with #88 is declared for coordinator integration.
-P03-T01 complete; P03-T02 authorized own-main integration and publication next.
+P03-T01 complete. P03-T02 subsequently integrated onto authorized main74617981,
+retaining exact src binary patch SHA256
+a2941c0396004da38ce7a21d9f65c155e42a5d735b1aacccab9f83eb5c077379 and full
+upstream KB byte prefixes. Post-integration actual JSON/SQLite26 tests passed.
+Normal push and main PR #394 created; independent final-head judgment remains.

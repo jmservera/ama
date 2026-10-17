@@ -104,12 +104,12 @@ Dependency: P01.
 #### [x] P02-T02: Component/KB documentation and image smoke
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: One Review and publication
+### [x] P03: One Review and publication
 Dependency: P02.
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: One original Review, bounded concrete corrections
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Privacy-safe commit, push and main PR
+#### [x] P03-T02: Privacy-safe commit, push and main PR
 
 ## Test Ownership and Locked Candidate
 
@@ -145,10 +145,13 @@ One critique executed, verdict Revise. All findings directly incorporated:
 ## Handoff
 
 Implementation creates .copilot-tracking/changes/2026-10-17/progress-event-capture-102-changes.md.
-P01/P02 and P03-T01 complete and reconciled. Next P03-T02 own publication.
+All phases/tasks complete. Published main PR #394 on own branch with Refs #102.
 No blocker or human approval inferred. No second critique or Review.
 
 Resumed state: original Review Complete/Defects found; P03-T01 correction ONE
 resolved RV-001 lifecycle fail-closed handoff waits and RV-002 exact event
 counts/version proof for committed refresh/retry/restart. Original Review
-retained. Actual correction evidence complete; publication remains.
+retained. Actual correction evidence complete; privacy-safe publication done.
+Owner-authorized one-time integration onto main74617981 preserved complete
+source/test patch and upstream KB prefixes. Next independent coordinator
+final-head judgment, not another RPI Review or automatic merge/issue closure.
