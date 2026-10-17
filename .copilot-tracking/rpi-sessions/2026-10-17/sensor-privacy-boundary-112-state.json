@@ -6,8 +6,8 @@
   "active_phase": "Publish",
   "route": "qualified-rpi-cli",
   "resume_id": "be1f37b3-9d52-4f16-b867-73e0482edda2",
-  "status": "active",
-  "session_status": "running",
+  "status": "delivered-awaiting-coordinator-gate",
+  "session_status": "complete",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/sensor-privacy-boundary-112-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/sensor-privacy-boundary-112-plan.md",
@@ -48,6 +48,15 @@
     "quality_gates": "configured Ruff, format-check, mypy passed for core/agents/api",
     "full_core": "incomplete: earlier process killed exit 137; no full pass claim"
   },
-  "next_action": {"phase": "Publish", "action": "Commit only owned code/docs/RPI, normal push and open main PR Refs112; coordinator owns final gate"},
+  "publication": {
+    "pr": "https://github.com/jmservera/ama/pull/393",
+    "base_branch": "main",
+    "head_branch": "fix/sensor-privacy-boundary-112",
+    "implementation_commit": "6225442c496653cab3b63b611f9632c642859bf5",
+    "final_head": "Resolve remote refs/heads/fix/sensor-privacy-boundary-112 after the delivery-state commit; exact value returned in CLI handoff",
+    "merge_or_issue_close": "not performed",
+    "review_acceptance": "original Not accepted retained; correction ONE verified locally, coordinator gate pending"
+  },
+  "next_action": {"phase": "Coordinator gate", "action": "Assess final PR393 head and CI; no second original Review, automatic merge or issue closure"},
   "prioritized_follow_ups": ["OD-43 genuine real-use approvals absent", "#175 historic origins remain unverified"]
 }

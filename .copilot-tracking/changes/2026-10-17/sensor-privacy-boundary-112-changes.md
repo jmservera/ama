@@ -80,3 +80,14 @@ Original single critique Revise and original Review Not accepted retained;
 both RV findings corrected without second Review/independent Pass.
 OD-43 real-use approvals and #175 origins remain separate human-owned
 follow-up, not acceptance granted by this change. Coordinator owns final gate.
+
+## Publication
+
+Normal push completed and main PR https://github.com/jmservera/ama/pull/393
+opened with Refs #112, criterion evidence and explicit limits. Implementation
+commit 6225442c496653cab3b63b611f9632c642859bf5; delivery-state commit follows
+to persist the actual PR. Final exact topic head is returned in CLI handoff
+and is resolvable from the PR/remote branch. No rebase, force-push, main write,
+merge, issue closure or CI-watching loop. Resume ID:
+be1f37b3-9d52-4f16-b867-73e0482edda2. Original Review remains Not accepted;
+correction ONE receipt is not independent acceptance.

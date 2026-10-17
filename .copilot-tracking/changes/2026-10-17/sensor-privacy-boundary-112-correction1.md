@@ -95,3 +95,8 @@ above. Original adverse Review remains unchanged and final-head independent
 acceptance is coordinator-owned. OD-43 approvals and #175 unverified origins
 remain open; no real-data activation. Ready for clean normal push and main PR
 with Refs #112, no merge/issue closure.
+
+Publication receipt: https://github.com/jmservera/ama/pull/393 targeting main,
+normal-pushed implementation commit 6225442c496653cab3b63b611f9632c642859bf5.
+Delivery-state commit persists this link; final remote topic head is returned
+in the CLI handoff. No second Review, merge or issue closure.

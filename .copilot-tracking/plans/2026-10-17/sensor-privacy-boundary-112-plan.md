@@ -144,3 +144,5 @@ corrected focused core145 run/144pass/one opt-in SQL skip, agents94pass,
 focusedAPI86pass; all configured Ruff/format/mypy pass. No second Review or
 independent Pass. Ready for normal publication; final-head acceptance remains
 coordinator-owned. No legal approval invented; full-core exit137 incomplete.
+Published main PR https://github.com/jmservera/ama/pull/393 by normal push;
+delivery state records implementation commit and coordinator handoff.

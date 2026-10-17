@@ -32,6 +32,10 @@ No second Review/independent Pass; ready for publication with final-head
 acceptance coordinator-owned, real-use OD-43 and platform/browser/human/legal
 acceptance outside active completion.
 
+Publication completed: main PR https://github.com/jmservera/ama/pull/393,
+normal pushed topic. Original Review/critique retained unchanged; final
+coordinator gate pending. No merge or issue closure.
+
 <!-- rpi:phase id=P01 -->
 ## P01: Boundary regressions and implementation
 
