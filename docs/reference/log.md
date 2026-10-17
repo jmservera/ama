@@ -5139,6 +5139,7 @@ metadata when the knowledge base was created.
   Topic publication uses explicit expected-remote lease only; no main write,
   merge, issue closure, private data/cloud/payment or automatic child work.
   External coordinator independent closure remains next.
+
 ## [2026-10-17] implementation | #90 evidenced capacity and controlled orders
 
 * Audited actual migrated procurement/controller/JSON/SQL paths against the

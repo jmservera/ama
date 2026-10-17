@@ -592,8 +592,7 @@ class SqlStore(Store):
             except (ConflictError, GateError, PermissionError) as error:
                 self.db.execute("ROLLBACK")
                 if (getattr(self.local, "stock_decision", None) is None
-                        and getattr(self.local, "procurement_validation", None) is None
-                        and getattr(self.local, "finance_validation", None) is None):
+                        and getattr(self.local, "procurement_validation", None) is None):
                     try:
                         self._discard()
                     except Exception as recovery_error:
