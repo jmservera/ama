@@ -5917,3 +5917,21 @@ metadata when the knowledge base was created.
   Route the minimal identity lookup/regression correction to later selected
   implementation, preserve the original verdict and do not repeat Review.
   No issue closure, independent coordinator acceptance, push or PR is claimed.
+
+## 2026-10-17 Correction ONE - #101 registered staff lookup
+
+* Coordinator authorized the bounded RV-001 correction in the same original
+  session/worktree/topic. Normalize only the coordinator lookup key using the
+  existing lowercase staff index; retain exact current email/code/role checks.
+  No Store/document/provenance writer,117 runtime, web or ranking changes.
+* Four failing-first JSON/SQLite direct and actual HTTP tests reproduced the
+  denial, then passed. Coordinator modules49 run/41 pass/eight skips; final
+  core plus identity30 pass, real mixed-case Chromium1 pass, configured static
+  gates and rebuilt hardened installed-source image checks pass.
+  Actual MSSQL remains historical for this pure lookup change; no fresh SQL
+  claim or backend query/refresh/authorization contract change.
+* Preserve original Review Complete/Defects found and critique Revise byte-exact.
+  Separate focused correction receipts resolve the engineering counterexample,
+  not independent coordinator/WCAG acceptance or issue closure. No second Review.
+  All denominator/hold/priority/coverage and same-filter map/list/funnel definitions
+  remain unchanged; unsupported lifecycle exclusions stay explicitly Unknown.

@@ -160,6 +160,44 @@ class CoordinatorApi(unittest.TestCase):
         self.assertEqual(self.call("/api/coordinator?view=all")[0], 400)
         self.assertEqual(self.call(self.query(metric="priority"))[0], 400)
 
+    def test_mixed_case_registered_email_authenticates_without_widening_access(self) -> None:
+        with self.store.lock:
+            registered = self.store.staff["pam@example.test"]
+            registered["email"] = "Pam@Example.Test"
+            if hasattr(self.store, "db"):
+                self.store.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(registered), "pam@example.test"),
+                )
+            self.store.save()
+        self.assertEqual(self.call("/api/me")[1]["user"]["email"], "Pam@Example.Test")
+        code, listing = self.call("/api/cases?view=all&limit=2")
+        self.assertEqual(code, 200, listing)
+        code, report = self.call(self.query())
+        self.assertEqual(code, 200, report)
+        self.assertEqual(report["records"]["total"], listing["total"])
+        self.assertEqual(report["map"]["total"], listing["total"])
+        self.assertEqual(self.call(self.query(), "")[0], 401)
+        self.assertEqual(self.call(self.query(), "con")[0], 403)
+        for role in ("Mystery", "", None):
+            with self.subTest(role=role):
+                with self.store.lock:
+                    registered = self.store.staff["pam@example.test"]
+                    registered["role"] = role
+                    if hasattr(self.store, "db"):
+                        self.store.db.execute(
+                            "UPDATE staff SET body=? WHERE email=?",
+                            (json.dumps(registered), "pam@example.test"),
+                        )
+                    self.store.save()
+                self.assertEqual(self.call(self.query())[0], 403)
+        with self.store.lock:
+            del self.store.staff["pam@example.test"]
+            if hasattr(self.store, "db"):
+                self.store.db.execute("DELETE FROM staff WHERE email=?", ("pam@example.test",))
+            self.store.save()
+        self.assertEqual(self.call(self.query())[0], 401)
+
     def test_exit_drillthrough_unknowns_and_cluster_population(self) -> None:
         code, excluded = self.call(self.query(flag="support", metric="filtered_out"))
         self.assertEqual(code, 200, excluded)

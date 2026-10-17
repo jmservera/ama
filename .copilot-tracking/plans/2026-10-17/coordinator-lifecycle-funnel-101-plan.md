@@ -107,6 +107,12 @@ KB index/log overlap with117 is declared, not resolved by an unauthorized rebase
 
 ## Phase Checklist
 
+<!-- rpi:task id=P03-C01 -->
+* [x] P03-C01 Coordinator-authorized correction ONE: normalize only the registered
+  staff lookup key for RV-001; failing-first direct and actual HTTP JSON/SQLite
+  mixed-case tests, unchanged denial controls, focused browser and static checks.
+  Original Review and critique remain byte-identical; no second Review.
+
 <!-- P01 -->
 ### P01 Read-only aggregation and HTTP contract
 
@@ -172,12 +178,20 @@ stops the affected delivery. Candidate finalized Ready after these compatible ed
 
 ## Handoff
 
+P03-C01 completed under coordinator authorization on 2026-10-17, continuing the
+same original RPI session and branch from source42f08556/baseebc8dab8. Four
+failing-first direct/HTTP JSON/SQLite regressions now pass; exact current-identity
+checks and malformed/revoked/changed-role denials retained. Actual mixed-case
+browser and rebuilt installed image exercised. RV-001's engineering blocker is
+resolved by these separate focused receipts, not a rewritten Review or independent
+acceptance. Unrelated Low formatting remains outside scope.
+
 P01/P02 implemented; P03-T01/T02 completed with actual local receipts. P03-T03
 original Review executed Complete, outcome Defects found, retained at
 .copilot-tracking/reviews/logs/2026-10-17/coordinator-lifecycle-funnel-101-review.md.
-RV-001 Medium exposes false403 for mixed-case legitimate registered emails.
-P03-T04 publication/completed delivery blocked by PC-003; local persistence does
-not close it. Route correction to later selected rpi-implement, no repeat Review.
+RV-001 Medium originally exposed false403 for mixed-case legitimate registered
+emails; correction ONE now resolves that counterexample. P03-T04 normal
+commit/push/main PR with Refs #101 is next, pending coordinator review afterward.
 Critique ran once and remains unchanged. Closed scalar summaries reuse export_fields
 rather than building full private Store summaries. Changes record:
 .copilot-tracking/changes/2026-10-17/coordinator-lifecycle-funnel-101-changes.md.

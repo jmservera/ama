@@ -135,14 +135,32 @@ mandatory boundary/correctness blocker; non-blocking deferrals need rationale.
 
 ## Current Gate
 
+Coordinator authorization 2026-10-17 selects P03-C01 correction ONE, then P03-T04
+publication, on the same original session/worktree/topic. First execution: add
+failing-first mixed-case direct and authenticated HTTP tests on JSON/SQLite.
+Normalize only the coordinator staff lookup key using the existing lowercase
+index convention; preserve exact current email/code/role identity checks.
+Exercise unknown/revoked/rebound/changed-or-missing-role denials, focused real
+browser and configured core/API ruff/format/mypy plus JS syntax. No web edit,
+writer change, Low formatting fix, new critique or Review. Prior actual MSSQL and
+image receipts remain historical unless the correction changes their contracts.
+Review SHA256 2c740ce1d81719153530139cebd703870795f669337856ea788b537115e81de3;
+critique SHA256 247f17ca6c30d54efe0a61c3a25701f19c2d2e1739e0ece3aa34064cfbe09f1d.
+
 P01/P02 complete. P03-T01/T02 complete: coupled154/97 checks and final26/18 focused
 checks, actual SQL6run/5pass/one browser skip, hardened installed image checks,
 configured core/API lint/format/types and JS syntax. Exact commands, rerun causes
 and current-versus-historical evidence are in changes. P03-T03 original Review
-executed Complete with Defects found. RV-001 Medium: verbatim registered email
-lookup falsely denies mixed-case authenticated staff on JSON/SQLite. P03-T04
-publication blocked under accepted PC-003; local commit preserves work but
-does not establish corrected delivery. Later selected rpi-implement owns the
-minimal lookup/regression correction, no second Review. One critique original
+executed Complete with Defects found. RV-001 Medium originally exposed false403
+for mixed-case staff. P03-C01 now complete: normalize lookup key only, retain exact
+identity checks. Failing-first four tests exposed two errors/two failures;
+corrected four passed. Coordinator modules49 run/41 pass/eight skips; final core
+plus identity30 pass, actual mixed-case browser1 pass, rebuilt installed image
+checks pass. Configured static gates pass after one test-variable type correction.
+Pure lookup has no SQL query/schema/refresh contract change; actual MSSQL remains
+historical, not rerun or relabelled. P03-T04 may proceed under PC-003 based on
+separate correction evidence, without another Review or independent Pass.
+This invocation owns the minimal lookup/regression correction and
+subsequent publication; no second Review. One critique original
 Revise retained; PC001-003 dispositions applied. No117 writer changes/dependency.
 Human/coordinator/WCAG acceptance remains open.

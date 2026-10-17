@@ -8,9 +8,11 @@ ms.topic: reference
 
 ## Read-only coordinator populations (#101)
 
-Known delivery blocker: original Review RV-001 exposes false denial for registered
-staff whose stored email uses mixed case. Publication remains blocked pending a
-separate lookup/regression correction; the original verdict is Defects found.
+Original Review RV-001 exposed false denial for registered staff whose stored
+email uses mixed case. Correction ONE normalizes only the registry lookup key
+and retains exact current email/code/role checks. Failing-first JSON/SQLite
+direct/HTTP regressions pass. Original Defects found verdict remains unchanged;
+separate correction evidence is not independent coordinator acceptance.
 
 `coordinator.read(store, user, query)` composes existing synchronized Store
 filtering, queue context, closed map-field validation, Leaflet grid data and

@@ -162,3 +162,64 @@ console/snapshot files. No shared resource stopped or changed. Fresh GitHub
 identity resolved id8036360/loginjmservera; local commit author and committer use
 the privacy-safe noreply address. P03-T04 remains partial: local persistence only,
 no normal push/PR/remote-head equality/CI claim while RV-001 is open.
+
+## Correction ONE: Authorized RV-001 Scope (P03-C01)
+
+Coordinator explicitly authorized this bounded correction on 2026-10-17 in the
+same original RPI0789cf67-8f5d-4441-a33f-2b243944b799. Clean source head
+42f08556e2f2854024ddfa5a03b926039d28edff, branch unchanged, fresh remote main
+ebc8dab87ae9bd6a33380b85e86f38be5ed9f213 and no PR. No rebase needed/authorized.
+Plan/details updated before source work. Write boundary: coordinator lookup,
+its direct/API tests and related current documentation/workflow artifacts only.
+First boundary failing-first JSON/SQLite direct and authenticated HTTP regression;
+retain code/email/role equality and all denial controls. Then narrow production
+fix, focused regression/browser/static gates, normal commit/push/main PR Refs #101.
+No Low formatting work, no new Review or critique, no writer paths.
+Original Review/critique hashes frozen in phase details for final byte verification.
+
+### Correction ONE: Result and Focused Receipts
+
+P03-C01 complete. Only production edit is the guarded lowercase registry lookup
+in core/coordinator.py; current actor email/code/role equality and registered
+staff-role requirements remain exactly unchanged. No whitespace normalization,
+privileged fallback, auth-provider change, writer/query/schema/refresh change,
+web edit or low-priority formatting work. Source predecessor42f08556 and
+integration baseebc8dab8 unchanged. New direct/core and real HTTP tests share
+existing JSON/SQLite harnesses and public synthetic fixture.
+
+| Command / scope | Actual result |
+| --- | --- |
+| `PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest test_coordinator.Coordinator.test_mixed_case_registered_identity_preserves_exact_current_checks test_coordinator.SqliteCoordinator.test_mixed_case_registered_identity_preserves_exact_current_checks test_coordinator_api.CoordinatorApi.test_mixed_case_registered_email_authenticates_without_widening_access test_coordinator_api.JsonCoordinatorApi.test_mixed_case_registered_email_authenticates_without_widening_access -v` before fix | Four run, two direct PermissionError errors, two HTTP403-versus200 failures, zero pass; existing authentication and case-list200 assertions succeeded |
+| Exact four selectors after fix | Four run/pass, zero skips/failures/errors |
+| `PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests ZF_COORDINATOR_BROWSER=1 .venv/bin/python -m unittest test_coordinator test_coordinator_api -q` |49 run,41 pass,eight skips (seven opt-in MSSQL, one JSON duplicate-browser), zero failures/errors; real existing Chromium journey passes |
+| Final core module plus two mixed-case HTTP selectors, same PYTHONPATH |30 run/pass, zero skips/failures/errors, after adding malformed/missing actor-field assertions |
+| Actual Chromium selector with test-only fixture patched before setup to stored Pam@Example.Test |One run/pass, zero skips/failures; real login, keyboard filters, count/record/map parity, observed exit-A drill/back, unknowns, cluster focus, reduced-motion reflow, contractor and changed-role denials |
+| Configured `ruff check . && ruff format --check . && mypy` in core and API |Final pass;67/24 files formatted,120/56 files typechecked. Initial core mypy failed from reused test-loop variable inferred as string-only; renamed second loop variable, reran both projects successfully |
+| `node --check src/api/src/zava_forward/api/web/app.js`; `git diff --check` |Pass; no web source edits |
+| `docker build -q -f src/api/Dockerfile -t zf-issue101-api:local src`; `.venv/bin/python src/check-container.py api zf-issue101-api:local` |New image8279cbf06ba19bf5a57c45896ec0ef65292d80c2ad3338bb6ca88e707cd11a13; kernel controls, negative probes and compatible startup pass |
+| Session image HTTP/hash script with mixed-case seed, installed image and task-owned loopback container |Pass: Pam/Rex200, contractor403, totals5/missing-coordinate1, exact exit-A/ZF-1 drill and five installed-source hashes; zf-issue101-api-3d5eb295a627 stopped/removed in finally |
+
+Direct tests retain denials for mismatched exact email, unknown/missing/malformed
+email, missing code/role, changed code, changed/unknown/missing role, contractor
+and revoked registry. HTTP tests prove real mixed-case auth and same-filter
+list/record/map totals, unauthenticated401, contractor403, unknown/empty/None
+current roles403 and removed-registry401. Other existing scope/privacy/audit/
+unknown/funnel regressions remain passing. SQL fixture writes exist only in tests.
+
+Actual MSSQL not rerun for this pure in-memory key normalization: no database
+contract/query/count/field/filter/lock change; SQLite reload and actual HTTP
+exercise the normalization at the common Store boundary. Prior actual MSSQL
+six run/five pass/one skip remains historical only; the newly inherited MSSQL
+identity test is not claimed executed. Prior coupled154/97 checks also historical;
+no full-suite, human/WCAG or independent coordinator Pass.
+
+Original Review and critique SHA256 match their frozen values byte-for-byte.
+RV-001's engineering counterexample is addressed by separate failing-first
+receipts, without changing original Complete/Defects found or critique Revise.
+PC-003 publication gate is satisfied for this bounded correction; independent
+coordinator review remains pending. All three issue criteria retain their prior
+count/coverage/map/filter/drill semantics and tested engineering evidence;
+unsupported lifecycle exclusions remain explicitly Unknown, not new history.
+No117 writer/runtime/shared resource changes. No task-owned container remains.
+Actual MSSQL/image prior receipts remain historical pending evidence-based
+validation decision; no historical result will be relabelled as current.

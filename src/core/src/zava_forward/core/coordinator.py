@@ -157,7 +157,8 @@ def read(store: Any, user: Record, query: Mapping[str, str]) -> Record:
     filters = {k: query[k] for k in FILTERS if k in query}
     taskqueues.validate_queue(filters.get("queue", ""))
     with store.lock:
-        actor = store.staff.get(user.get("email"))
+        email = user.get("email")
+        actor = store.staff.get(email.lower()) if isinstance(email, str) else None
         if (
             actor is None
             or actor.get("role") not in projection.STAFF_ROLES

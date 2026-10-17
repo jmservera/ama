@@ -239,6 +239,46 @@ class Coordinator(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 coordinator.read(self.store, self.pam, dict(as_of=AS_OF))
 
+    def test_mixed_case_registered_identity_preserves_exact_current_checks(self) -> None:
+        with self.store.lock:
+            registered = self.store.staff["pam@example.test"]
+            registered["email"] = "Pam@Example.Test"
+            if hasattr(self.store, "db"):
+                self.store.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(registered), "pam@example.test"),
+                )
+            self.store.save()
+        actor = dict(registered)
+        report = coordinator.read(self.store, actor, dict(as_of=AS_OF, view="all"))
+        self.assertEqual(report["records"]["total"], 5)
+        self.assertEqual(report["map"]["total"], 5)
+        for change in (
+            {"email": "pam@example.test"},
+            {"email": "missing@example.test"},
+            {"email": None},
+            {"email": ["Pam@Example.Test"]},
+            {"code": "REBOUND"},
+            {"role": "Retrofit Coordinator"},
+            {"role": ""},
+            {"role": "Contractor"},
+        ):
+            with self.subTest(change=change), self.assertRaises(PermissionError):
+                coordinator.read(self.store, {**actor, **change}, dict(as_of=AS_OF))
+        for key in ("email", "code", "role"):
+            incomplete = {k: v for k, v in actor.items() if k != key}
+            with self.subTest(missing=key), self.assertRaises(PermissionError):
+                coordinator.read(self.store, incomplete, dict(as_of=AS_OF))
+        with self.store.lock:
+            for current_change in ({"code": "REBOUND"}, {"role": "Mystery"}, {"role": None}):
+                current = {**registered, **current_change}
+                self.store.staff["pam@example.test"] = current
+                with self.subTest(current=current_change), self.assertRaises(PermissionError):
+                    coordinator.read(self.store, actor, dict(as_of=AS_OF))
+            del self.store.staff["pam@example.test"]
+            with self.assertRaises(PermissionError):
+                coordinator.read(self.store, actor, dict(as_of=AS_OF))
+
     def test_invalid_parameters_and_closed_map_fields_refuse_explicitly(self) -> None:
         for query in (
             {"as_of": ""},

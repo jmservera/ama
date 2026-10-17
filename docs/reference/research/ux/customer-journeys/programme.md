@@ -371,9 +371,13 @@ entry on any later separately authorized integration.
 
 The one original Review subsequently found RV-001: a stored mixed-case email
 authenticates and reads existing cases but the new coordinator lookup falsely
-denies access. This mandatory correctness defect blocks publication; the local
-engineering receipts do not establish acceptance or correction. Preserve the
-original Defects found verdict and route the correction to later implementation.
+denied access. Coordinator-authorized correction ONE normalizes only the lookup
+key, retaining exact current identity checks and fail-closed denials.
+Failing-first JSON/SQLite direct/HTTP regressions, actual mixed-case Chromium
+and rebuilt installed-image checks provide separate engineering correction
+evidence. The original Defects found verdict remains unchanged, not replaced by
+a second Review or independent Pass. Independent coordinator acceptance remains
+pending; authoritative lifecycle exclusions are still Unknown.
 
 ## Next steps
 

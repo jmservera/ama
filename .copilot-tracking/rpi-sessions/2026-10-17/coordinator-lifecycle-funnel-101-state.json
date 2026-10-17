@@ -3,8 +3,8 @@
   "task_slug": "coordinator-lifecycle-funnel-101",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/coordinator-lifecycle-funnel-101-research.md",
@@ -39,22 +39,21 @@
       "decision": "Exactly one original Review executed Complete; outcome Defects found. Retain original adverse verdict and all findings.",
       "status": "completed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-17/coordinator-lifecycle-funnel-101-review.md; RV-001 Medium mixed-case registered email false403, bounded JSON/SQLite repro. Low map status number-format residual. No independent coordinator acceptance."
-    }
-  ],
-  "blockers": [
+    },
     {
-      "id": "RV-001",
-      "summary": "Mandatory correctness defect: legitimate mixed-case registered staff email is falsely denied by verbatim coordinator lookup. PC-003 blocks publication/completed delivery.",
-      "resolution": "Later selected rpi-implement correction normalizes only the lookup key and adds direct/HTTP JSON/SQLite regressions; preserve original Review and current authority checks, no second Review."
+      "decision": "Coordinator authorized correction ONE for RV-001 in the same original session, followed by normal own-branch publication. No second Review/critique or unrelated Low fix.",
+      "status": "completed",
+      "evidence": "User authorization2026-10-17; P03-C01 complete, four failing-first direct/HTTP JSON/SQLite repros corrected, modules49run41pass8skip, final30pass, actual mixed-case browser1pass and rebuilt installed image8279cbf0 pass. Original Review/critique hashes byte-identical. Actual MSSQL historical only for unchanged backend contract."
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "Rank1 RV-001 correction requires later user-selected rpi-implement work. Original loop completed with Defects found, not accepted delivery. Persist original source/artifacts locally; no push/PR while PC-003 remains blocked. Session running, no child work selected."},
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "P03-C01 focused correction complete; reconcile KB/current evidence, fresh identity, commit/push normally and open main PR Refs #101. P03-T04 pending. Preserve original Review/critique, no independent acceptance."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Correct RV-001 mixed-case staff identity lookup",
-      "rationale": "Small bounded fix restores legitimate existing authority and removes the mandatory publication blocker without touching writers.",
-      "evidence": "Original Review RV-001; JSON and SQLite authenticated cases200 versus coordinator403 counterexample."
+      "task": "Independent coordinator final-head review after P03-T04 publication",
+      "rationale": "Correction ONE resolves the engineering counterexample, not independent coordinator acceptance or issue closure.",
+      "evidence": "Original Review retained; separate correction receipts in changes, same original session."
     },
     {
       "rank": 2,

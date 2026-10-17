@@ -8,9 +8,11 @@ ms.topic: reference
 
 ## Coordinator heatmap and lifecycle funnel (#101)
 
-Known delivery blocker: original Review RV-001 exposes false403 for authenticated
-staff with a mixed-case stored email. No corrected delivery or acceptance is
-claimed; publication remains blocked pending the separate correction.
+Original Review RV-001 exposed false403 for staff with a mixed-case stored email.
+Correction ONE normalizes the coordinator lookup key without weakening current
+identity checks. Actual JSON/SQLite HTTP regressions and a mixed-case Chromium
+journey pass. Original Defects found verdict remains unchanged; independent
+coordinator acceptance is still pending.
 
 From Overview, choose **Coordinator heatmap and lifecycle funnel**. The existing
 workbench/Leaflet map now has a scoped read-only coordinator mode, not a new
