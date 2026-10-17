@@ -4801,3 +4801,38 @@ metadata when the knowledge base was created.
   Actual approved schema authority is a separate human prerequisite, not
   a provenance implementation blocker. No cloud/private/model calls,
   unrelated workflow change, original-case or memory edit.
+
+## [2026-10-17] delivery | #360 scoped initializer API-only IAM activation
+
+* Started clean requested topic/worktree at latest main e065ecd2 after merged
+  #375. Activated ordered RPI Research, Plan and Implement; one independent
+  plan critique Pass and separate independent predeployment source review Pass.
+  Final full-task Review is recorded separately with publication evidence.
+* Exact owner boolean approval covers reviewed API read/restart and temporary
+  staff-job lifecycle in ama, not tags/read + tags/write on the existing
+  initializer job. Added includeResultRelay boolean default true, conditioning
+  both relay resources; explicit false safely omits that unapproved grant.
+  No new permission action, role design or operator lifecycle role created.
+* Exact API-only preview: two Creates/94 same-group Ignore; deployment
+  staff-iam-360-api-20261017 Succeeded. Existing init principal
+  3830883a-f4af-44f8-bff8-8859b78fc2f8 receives only four reviewed API actions
+  at ca-cutover-test-demo-api. Role/assignment/actions/scope read back; AcrPull
+  preserved; existing-job tag role/assignment absent, no old-API assignment.
+* Azure canonicalized the role definition URI to subscription-level while
+  retaining ama-only assignableScopes and exact API assignment. Initial
+  verification assertions were corrected for that URI and expected identity
+  Read, without redeployment, broad fallback or fabricated permission denial.
+* Existing identity11 and compiled guard48 tests passed, plus Bicep build/lint
+  and scoped Ruff/format. Restored declared dependencies only after missing
+  import/tool failures. Updated runbook/evidence/index; historical #375 and
+  prior log entries retained.
+* No Graph/SQL/vault secret read, restart/job execution/browser acceptance,
+  image build, network change/new infrastructure/spend/deletion. Demo deny-all
+  and both APIs' observed metadata unchanged; ama/old stack preserved.
+  Private publisher and exact relay approval remain blocked; #360 d/e UNMET.
+
+* Subsequent independent full-task RPI Review completed once: no implementation
+  defects; bounded verdict Conformant with justified divergence, three Medium
+  wider-delivery residuals for relay approval, publisher and human acceptance.
+  Parent retains overall Residual work/d/e UNMET; publication follows without
+  another Review, runtime execution, child delivery loop or merge.

@@ -5,6 +5,9 @@ param apiName string
 @description('Existing SQL administrator user-assigned identity name, id-<prefix>-init.')
 param initializerIdentityName string
 
+@description('Include existing-initializer result-tag grants only with separate explicit approval. False deploys API read/restart grants only.')
+param includeResultRelay bool = true
+
 module guard './modules/staff-initializer-guard.bicep' = {
   name: 'staff-initializer-scope'
   params: {
@@ -55,7 +58,7 @@ resource restartAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' 
   }
 }
 
-resource relayRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
+resource relayRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (includeResultRelay) {
   name: guid(resourceGroup().id, 'staff-initializer-result-tags')
   properties: {
     roleName: 'Staff initializer result tags (${resourceGroup().name})'
@@ -75,7 +78,7 @@ resource relayRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   dependsOn: [guard]
 }
 
-resource relayAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource relayAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (includeResultRelay) {
   scope: relay
   name: guid(relay.id, initializer.id, relayRole.id)
   properties: {

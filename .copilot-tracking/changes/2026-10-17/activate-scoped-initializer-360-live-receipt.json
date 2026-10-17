@@ -1,0 +1,207 @@
+{
+  "date": "2026-10-17",
+  "issue": 360,
+  "resource_group": "ama",
+  "deployment": "staff-iam-360-api-20261017",
+  "parameters": {
+    "apiName": "ca-cutover-test-demo-api",
+    "initializerIdentityName": "id-cutover-test-init",
+    "includeResultRelay": false
+  },
+  "source_sha256": {
+    "infra/staff-initializer-rbac.bicep": "bf2a63b667d238bb4ec54bf6a36dea6bf4c9e64d90ae6996a718cdfba1f7caf8",
+    "infra/modules/staff-initializer-guard.bicep": "f3293e29f7fd28816060545fd0f5725c8527c110ea0f114fdf392dd0110945a0"
+  },
+  "identity": {
+    "clientId": "8fd2cb23-cc1c-4ee5-ab8d-4b6fdff4564e",
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init",
+    "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8"
+  },
+  "authorization": "Owner boolean true 2026-10-17: API read/restart only; existing-job relay excluded",
+  "source_review": "Independent STANDARD source review PASS before preview/apply",
+  "what_if": "Succeeded: exact two permitted Creates; 94 same-root Ignore rows",
+  "deployment_returncode": 0,
+  "before_apps": {
+    "ca-cutover-test-demo-api": {
+      "environmentId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test-demo",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerapps/ca-cutover-test-demo-api",
+      "ingress": {
+        "external": true,
+        "ipSecurityRestrictions": [
+          {
+            "action": "Deny",
+            "description": "Blocked pending real tenant setup and reviewed exposure",
+            "ipAddressRange": "0.0.0.0/0",
+            "name": "setup-pending-deny-all"
+          }
+        ]
+      },
+      "latestReadyRevisionName": "ca-cutover-test-demo-api--wncofr9",
+      "latestRevisionName": "ca-cutover-test-demo-api--wncofr9"
+    },
+    "ca-cutover-test-api": {
+      "environmentId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerapps/ca-cutover-test-api",
+      "ingress": {
+        "external": true,
+        "ipSecurityRestrictions": null
+      },
+      "latestReadyRevisionName": "ca-cutover-test-api--bl42b7u",
+      "latestRevisionName": "ca-cutover-test-api--bl42b7u"
+    }
+  },
+  "forbidden_actions_executed": [],
+  "criterion_d": "UNMET",
+  "criterion_e": "UNMET",
+  "private_publisher": "Remains blocked; no build attempted",
+  "deployment_result": {
+    "correlationId": "2177965b-1d42-4709-962b-3475e2186264",
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/staff-iam-360-api-20261017",
+    "name": "staff-iam-360-api-20261017",
+    "state": "Succeeded"
+  },
+  "role_readback": {
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+    "name": "0d8c4586-d46e-514c-9c19-680d9f068755",
+    "properties": {
+      "assignableScopes": [
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama"
+      ],
+      "permissions": [
+        {
+          "actions": [
+            "Microsoft.App/containerApps/read",
+            "Microsoft.App/containerApps/revisions/read",
+            "Microsoft.App/containerApps/revisions/replicas/read",
+            "Microsoft.App/containerApps/revisions/restart/action"
+          ],
+          "dataActions": [],
+          "notActions": [],
+          "notDataActions": []
+        }
+      ],
+      "roleName": "Staff initializer API restart (ama)",
+      "type": "CustomRole"
+    }
+  },
+  "assignment_readback": {
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/providers/Microsoft.Authorization/roleAssignments/3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+    "name": "3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+    "properties": {
+      "condition": null,
+      "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8",
+      "principalType": "ServicePrincipal",
+      "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+      "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api"
+    }
+  },
+  "role_id_normalization": {
+    "preview": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+    "canonical_readback": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+    "explanation": "Azure returns canonical subscription-level role-definition URI; GUID and ama-only assignableScopes unchanged",
+    "initial_readback_check": "Failed exact RG-URI assertion after successful deployment; read-only canonical URI checks then passed; no redeployment or widening",
+    "operation_check": "Initial operation-type assertion also rejected expected MI Read; corrected to allow only exact existing MI Read plus the two RBAC Creates, empty-resource guard deployment and output evaluation"
+  },
+  "initializer_assignments_after": [
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/providers/Microsoft.Authorization/roleAssignments/aff130c1-dfe3-4864-bf64-b1066bd24925",
+      "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8",
+      "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d",
+      "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg"
+    },
+    {
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/providers/Microsoft.Authorization/roleAssignments/3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+      "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8",
+      "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+      "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api"
+    }
+  ],
+  "existing_acrpull_preserved": true,
+  "only_new_initializer_assignment": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/providers/Microsoft.Authorization/roleAssignments/3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+  "relay_definition_present": false,
+  "relay_assignment_present": false,
+  "old_api_new_assignment": false,
+  "observed_api_metadata_unchanged": true,
+  "after_apps": {
+    "ca-cutover-test-demo-api": {
+      "environmentId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test-demo",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerapps/ca-cutover-test-demo-api",
+      "ingress": {
+        "external": true,
+        "ipSecurityRestrictions": [
+          {
+            "action": "Deny",
+            "description": "Blocked pending real tenant setup and reviewed exposure",
+            "ipAddressRange": "0.0.0.0/0",
+            "name": "setup-pending-deny-all"
+          }
+        ]
+      },
+      "latestReadyRevisionName": "ca-cutover-test-demo-api--wncofr9",
+      "latestRevisionName": "ca-cutover-test-demo-api--wncofr9"
+    },
+    "ca-cutover-test-api": {
+      "environmentId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerapps/ca-cutover-test-api",
+      "ingress": {
+        "external": true,
+        "ipSecurityRestrictions": null
+      },
+      "latestReadyRevisionName": "ca-cutover-test-api--bl42b7u",
+      "latestRevisionName": "ca-cutover-test-api--bl42b7u"
+    }
+  },
+  "source_job_metadata": {
+    "environmentId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/managedEnvironments/cae-cutover-test",
+    "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init",
+    "identities": {
+      "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init": {
+        "clientId": "8fd2cb23-cc1c-4ee5-ab8d-4b6fdff4564e",
+        "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8"
+      }
+    },
+    "name": "job-cutover-test-init",
+    "provisioningState": "Succeeded"
+  },
+  "deployment_operations": [
+    {
+      "operation": "Create",
+      "state": "Succeeded",
+      "target": {
+        "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/providers/Microsoft.Authorization/roleAssignments/3a7e0803-3997-5cbe-af9c-c9776b37f3a7",
+        "resourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    },
+    {
+      "operation": "Create",
+      "state": "Succeeded",
+      "target": {
+        "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Authorization/roleDefinitions/0d8c4586-d46e-514c-9c19-680d9f068755",
+        "resourceType": "Microsoft.Authorization/roleDefinitions"
+      }
+    },
+    {
+      "operation": "Create",
+      "state": "Succeeded",
+      "target": {
+        "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Resources/deployments/staff-initializer-scope",
+        "resourceType": "Microsoft.Resources/deployments"
+      }
+    },
+    {
+      "operation": "Read",
+      "state": "Succeeded",
+      "target": {
+        "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init",
+        "resourceType": "Microsoft.ManagedIdentity/userAssignedIdentities"
+      }
+    },
+    {
+      "operation": "EvaluateDeploymentOutput",
+      "state": "Succeeded",
+      "target": null
+    }
+  ],
+  "readback_verdict": "PASS: exact actions/principal/API scope; only expected new initializer assignment",
+  "execution_limit": "No MI token/runtime execution or propagation test; no restart/job lifecycle performed"
+}

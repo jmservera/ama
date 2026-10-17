@@ -74,6 +74,11 @@ that broader loop; this audit grants no deployment or merge approval.
 
 ## Laptop Setup and Restricted Migration Readiness (2026-10-17)
 
+This is the original #375 readiness receipt. For the later API-only IAM
+activation, see [Scoped Initializer IAM Activation](#scoped-initializer-iam-activation-2026-10-17).
+Its API-grant status supersedes the historical absent/unattempted statements
+below; source-job relay and all live d/e gates remain unmet.
+
 Refs #360; coordinated with #349/#350 and #358. This section supersedes only
 the console/credential transport limitations and migration status in the dated
 sections below. It does not replace their observations or assert owner sign-off.
@@ -152,6 +157,62 @@ boundary). Existing CI retains reports, not publishable proof images; no private
 pool/task/self-hosted runner or ama builder VM/ACI was discovered. No claim that
 a build/import/IAM mutation failed when it was not sent. Current continuation
 made no Azure resource/credential/role/data changes; d/e remain UNMET.
+
+## Scoped Initializer IAM Activation (2026-10-17)
+
+Refs #360. Starting main: `e065ecd2c5b09b0f4bc22bfbfdb343e41910189b`,
+including merged #375. This follow-up follows ordered Research, Plan,
+Implement and independent Review; the source review before live apply is
+a separate gate, not a substitute for final Review. It does not duplicate
+the merged staff transport or credential implementation.
+
+The owner answered boolean true to deploying only reviewed API read/restart
+and temporary staff-job lifecycle permissions in `ama`, with no broader
+roles/networking/spend/deletion. Research found that the merged template
+also granted tags/read and tags/write on the **existing** initializer job.
+That separate grant was treated as unapproved, not silently included.
+Temporary-job lifecycle belongs to the operator and is not a worker MI
+grant in this template; no additional lifecycle role or job was created.
+
+One boolean opt-out, default true for compatibility, conditions both relay
+resources. Independent standard source review passed before live deployment;
+the API-only invocation explicitly set `includeResultRelay=false`. The
+[exact runbook receipt](../../infra/README.md#scoped-initializer-iam-activation-2026-10-17-360)
+records the command, IDs, actions and boundaries.
+
+| Live proof | Outcome |
+| --- | --- |
+| Exact reviewed API-only preview | Succeeded; two Creates (role definition and demo-API assignment), 94 same-group Ignore rows; no workload/network/tag changes |
+| Apply | `staff-iam-360-api-20261017` Succeeded, correlation `2177965b-1d42-4709-962b-3475e2186264` |
+| Principal | Existing `id-cutover-test-init`, `3830883a-f4af-44f8-bff8-8859b78fc2f8`, ServicePrincipal |
+| Role / scope | `0d8c4586-d46e-514c-9c19-680d9f068755`; sole assignable scope `ama`, actual assignment only on `ca-cutover-test-demo-api` |
+| Assignment | `3a7e0803-3997-5cbe-af9c-c9776b37f3a7`; exact principal, role and API scope read back |
+| Actions | Container App read, revision read, replica read, revision restart/action only; no dataActions/exclusions |
+| Relay | Role `64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c` and job assignment `8e9a497e-3b90-50e2-a783-93e58755165b` absent |
+| Preservation | Existing AcrPull retained; no old-API/job assignment; both APIs' observed environment/revision/ingress metadata unchanged, demo deny-all retained |
+| Resource writes | Two RBAC Creates plus pre-existing empty-resource guard deployment metadata only; existing initializer MI resolved by Read |
+
+The provider returned the role's canonical subscription-level definition URI,
+with unchanged GUID and **only ama in assignableScopes**. The initial
+RG-URI-only verification assertion failed after successful create; read-only
+canonical-ID and operation-kind checks then completed. This was a verification
+normalization, not an Azure denial or authorization expansion. No second
+deployment, wildcard role, tenant role or broad fallback was used.
+
+Local source gates passed: 11 identity matrix tests, 48 compiled Bicep/guard
+tests including two new semantic/mutation regressions, Bicep build/lint and
+scoped Ruff/format. Missing source packages and Ruff were restored only after
+observed dependency failures, in a session-only venv. This is offline/source
+evidence plus actual role readback, not runtime staff acceptance.
+
+The permission configuration slice succeeded. Existing-job relay activation
+still requires exact owner approval; private worker publication still requires
+an existing authorized private publisher. No new builder was started. No
+Graph/SQL/Key Vault secret reads, restart, temporary job execution, browser
+acceptance, image build, network change, spend or deletion occurred.
+MI propagation/exercised rights remain untested by design. #360 d/e are
+**UNMET**; resource group `ama`, old stack and all human approval boundaries
+remain intact.
 
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 

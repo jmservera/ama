@@ -1693,6 +1693,19 @@ the existing initializer. It changes neither SQL admin nor network configuration
 Role activation is an explicit IAM-operator action after authorization and
 what-if review, never inferred from the owner asking to continue the demo.
 
+For approval limited to API read/restart, pass `includeResultRelay=false` to
+both what-if and create. This omits both the result-tag role definition and
+its assignment; the four API actions and API-only assignment stay unchanged.
+The default remains `true` for compatibility, so omitting the parameter still
+requires explicit approval for existing-initializer-job
+`Microsoft.Resources/tags/read` and `Microsoft.Resources/tags/write`.
+Approval for temporary staff-job lifecycle does not authorize those existing
+job tag grants. Temporary-job operations belong to the operator, not this
+template or the initializer MI; do not add a general jobs/Contributor role.
+Incremental deployment with relay disabled does not revoke any pre-existing
+relay assignment. See the [scoped activation receipt](#scoped-initializer-iam-activation-2026-10-17-360)
+for the exact live outcome and remaining gates.
+
 Each operation clones only the verified source image/registry/identity into a
 unique `job-staff-<random>` manual job, with one replica, no retries and a
 600-second execution deadline. The operator uploads the bounded request
@@ -1805,7 +1818,7 @@ This is not authorization to install a new framework, add infrastructure,
 change this host's Docker rights, open ACR or create credentials. If no such
 builder exists, a separate infrastructure/spend decision is necessary.
 
-IAM is a separate **unattempted approval boundary**, not an observed Azure
+At the PR #375 evidence point, IAM was a separate **unattempted approval boundary**, not an observed Azure
 AuthorizationFailed: source-job tags and demo-API restart assignments are absent.
 Independent permissions readback reports actions `["*"]` with no exclusions;
 there is no demonstrated IAM inability. Missing explicit authorization, not
@@ -1815,6 +1828,73 @@ with `apiName=ca-cutover-test-demo-api` and
 `initializerIdentityName=id-cutover-test-init`. An authorized operator then
 rechecks the exact four-Create what-if before applying it. No broad role or
 Graph grant is needed or authorized.
+
+The later [scoped activation](#scoped-initializer-iam-activation-2026-10-17-360)
+supersedes only that API-grant status: API permissions were authorized and
+applied; existing-job relay tags are still outside the exact approval.
+
+### Scoped initializer IAM activation (2026-10-17, #360)
+
+The owner explicitly approved only reviewed API read/restart and temporary
+staff-job lifecycle permissions in `ama` on 2026-10-17 (boolean true).
+The existing-job tag relay is not temporary-job lifecycle: its
+`Microsoft.Resources/tags/read` and `Microsoft.Resources/tags/write` remain
+**unapproved and unapplied**. The template does not grant temporary-job
+lifecycle to the initializer MI. Those operations belong to the setup
+operator; no new operator role or temporary job was created.
+
+After a small conditional-exclusion amendment passed independent standard
+source review, both commands used the same source and exact parameters:
+
+```bash
+az deployment group what-if -g ama --name staff-iam-360-api-20261017 \
+  --template-file infra/staff-initializer-rbac.bicep --mode Incremental \
+  --parameters apiName=ca-cutover-test-demo-api \
+  initializerIdentityName=id-cutover-test-init includeResultRelay=false
+az deployment group create -g ama --name staff-iam-360-api-20261017 \
+  --template-file infra/staff-initializer-rbac.bicep --mode Incremental \
+  --parameters apiName=ca-cutover-test-demo-api \
+  initializerIdentityName=id-cutover-test-init includeResultRelay=false -o none
+```
+
+These commands record the performed API-only operation, not authorization to
+rerun or activate the default relay grants. The fresh what-if Succeeded with
+exactly two Creates (role definition and API child assignment), plus 94
+same-group Ignore rows. Deployment `staff-iam-360-api-20261017` **Succeeded**;
+correlation ID `2177965b-1d42-4709-962b-3475e2186264`.
+
+| Readback | Exact value |
+| --- | --- |
+| Role name / GUID | Staff initializer API restart (ama) / `0d8c4586-d46e-514c-9c19-680d9f068755` |
+| Sole assignable scope | `/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama` |
+| Assignment / resource scope | `3a7e0803-3997-5cbe-af9c-c9776b37f3a7` / `Microsoft.App/containerApps/ca-cutover-test-demo-api` in that group |
+| Principal / type | `3830883a-f4af-44f8-bff8-8859b78fc2f8` / ServicePrincipal, existing `id-cutover-test-init` |
+| Actions | `Microsoft.App/containerApps/read`, `Microsoft.App/containerApps/revisions/read`, `Microsoft.App/containerApps/revisions/replicas/read`, `Microsoft.App/containerApps/revisions/restart/action` |
+| Exclusions / data permissions | `notActions`, `dataActions`, `notDataActions` all empty |
+| Relay role / assignment | `64ec5d6d-f8ae-51ab-a93a-394f6cc97c6c` / `8e9a497e-3b90-50e2-a783-93e58755165b` absent |
+
+Azure returns the role definition's canonical subscription-level URI despite
+the resource-group-addressed preview. This is the same GUID, with only `ama`
+in `assignableScopes`, not a subscription-wide assignment or tenant role.
+The readback check was corrected for that provider URI normalization and the
+expected read-only initializer identity resolution; no redeployment or scope
+expansion occurred. Deployment operations show only the two RBAC Creates,
+the existing empty-resource scope-guard deployment, identity Read and output
+evaluation. No permission denial was observed or fabricated.
+
+Filtered assignment inventory contains the existing registry-scoped AcrPull
+and the new demo-API assignment only. No assignment was added to
+`ca-cutover-test-api` or `job-cutover-test-init`. Both APIs' observed
+environment/revision/ingress metadata are unchanged; the demo remains
+`setup-pending-deny-all`. The source initializer's identity/environment
+metadata remain unchanged. This verifies permission configuration, not MI
+token propagation or exercised restart/job rights.
+
+Private publication remains blocked on an existing authorized private
+publisher. Relay approval and genuine tenant/browser/staff/SQL/AI acceptance
+are still required; #360 d/e remain **UNMET**. No Graph/SQL/Key Vault secret
+read, restart, job execution, image build, network change, new infrastructure,
+spend or deletion occurred. Resource group `ama` and old stack are retained.
 
 ### Restricted demo staging receipt (2026-10-17, #360)
 
@@ -1837,6 +1917,9 @@ accepted anonymous-API behavior, real sign-in or replacement acceptance.
 The staged configuration still has the invalid managed-identity client sentinel
 and no browser credential, so do not remove the restriction yet.
 
+The prerequisite wording below records the original staging point; the API
+grant is now applied as documented above, while source-job relay approval
+and the other prerequisites remain outstanding.
 After an authorized private publisher supplies the worker digest and an
 authorized IAM operator activates the two exact scopes (API restart on
 `ca-cutover-test-demo-api`, tag relay on `job-cutover-test-init`), the tenant
