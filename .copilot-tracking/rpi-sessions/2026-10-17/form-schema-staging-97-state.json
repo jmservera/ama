@@ -43,7 +43,16 @@
     "validation": "85 core / 81 API passed, zero skips; both component Ruff/format/mypy passed",
     "closure": "Independent final-head reverification required; REVISE not superseded by author"
   },
-  "next_action": {"phase": "Follow-up", "action": "Push correction cycle ONE and evidence to PR #377, route exact-head independent reverification, then stop. Actual template authority remains unmet; no new loop, merge or automatic acceptance."},
+  "post_375_rebase": {
+    "old_head": "6d3b080f6836a921b043556c349ad0e8453821a6",
+    "base": "e065ecd2c5b09b0f4bc22bfbfdb343e41910189b",
+    "rebased_head_before_evidence": "a9b1a233244ec39c44813b2340d004824df5ad99",
+    "conflicts": "KB index: retain current upstream rows and add form row; log: full upstream prefix plus unchanged form entry",
+    "validation": "27 core + 22 API passed zero skips; both Ruff/format/mypy passed; runtime/tests byte-identical to corrected old head",
+    "overlap": "Concurrent #78 handler/store/permission inventory not integrated or modified",
+    "review": "Independent exact-final-head Pass required; no self-issued closure"
+  },
+  "next_action": {"phase": "Follow-up", "action": "Push authorized post-#375 rebase/evidence with explicit force-with-lease, route final head for independent Pass, then stop. Actual template authority remains unmet; no new loop or merge."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Actual schema authority and exact-version binding", "rationale": "Direct blocker to honest approved-form acceptance; obtain evidence rather than fabricate approval", "evidence": "RV-001; FR-038/AC-046"},
     {"rank": 2, "task": "Existing #98 field review, validation, packs and staleness", "rationale": "Named downstream story consumes the new immutable schema and candidate evidence", "evidence": "Issue #98; research scope assessment"},

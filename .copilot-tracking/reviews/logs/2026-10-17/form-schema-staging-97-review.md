@@ -170,3 +170,20 @@ No new full RPI Review was invoked. This author evidence does **not** overturn
 independent **REVISE** or establish closure: final exact-head independent
 reverification is still required. RV-001 actual approved-template authority
 remains unmet; #98 workflow was not delivered; no approval was fabricated.
+
+## Post-#375 exact-delta evidence 2026-10-17
+
+Authorized rebase of corrected `6d3b080` onto `e065ecd2` completed as `a9b1a23`
+before this evidence addition. No production/test edits. Only KB conflicts:
+preserved current upstream #360 index wording/all rows plus the form row;
+preserved entire upstream append-only log plus unchanged #97 entry.
+Durability correction and four subsequent topic patches are range-equivalent;
+forms/runtime, staging tests and role inventory are byte-identical to
+`6d3b080`. Exact resolutions and comparisons are in the changes record.
+
+Fresh focused gates: **27 core passed (6.458s), 22 API passed (8.942s)**,
+zero skips; both components' Ruff/format/mypy passed (core 51/104,
+API 18/48). No full-suite rerun or live-platform acceptance claimed.
+Concurrent #78 handler/store/inventory overlap is documented, not included.
+Independent exact-final-head Pass is still required; no self-issued closure
+of REVISE or actual approved-template authority gap. Same Review, no RPI restart.

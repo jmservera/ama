@@ -153,3 +153,41 @@ Independent **REVISE** is not superseded: reviewer must reverify correction on
 the final pushed head. Actual approved-template authority remains RV-001
 unmet; registry prerequisite exists, #98 remains undelivered. Same loop, one
 correction cycle, no scope expansion or issue closure.
+
+## Authorized post-#375 rebase 2026-10-17
+
+Same PR #377, no new RPI loop or correction. Clean corrected head `6d3b080`
+rebased onto fetched `origin/main`
+`e065ecd2c5b09b0f4bc22bfbfdb343e41910189b` (#375).
+Pre-evidence rebased head: `a9b1a233244ec39c44813b2340d004824df5ad99`.
+Only conflicts: reference index and append-only log.
+
+* Index: retained upstream's current laptop/migration #360 routing and all
+  other upstream rows, inserted the #97 form row, and omitted the obsolete
+  #360 routing line from the old topic context. Did not restore historical
+  wording over #375's current text.
+* Log: retained the entire upstream log as an exact prefix, then appended
+  the unchanged #97 entry. No upstream log entry rewritten.
+* `git range-diff 0bdcb2f0..6d3b080 origin/main..HEAD`: first feature patch
+  differs only in KB conflict context/row placement; other four patches,
+  including durability correction, are equivalent.
+* Byte comparisons against `6d3b080` passed for forms.py, both staging tests,
+  API handler, core Store/SqlStore/projection and role endpoint inventory.
+  No upstream infrastructure/source was edited. Concurrent #78 may overlap
+  handler/store/inventory; this branch adds no #78 change and does not claim
+  compatibility with its as-yet-unmerged delta.
+
+Fresh checks using the existing owned pip venv:
+
+| Gate | Exact command (component directory) | Actual result |
+| --- | --- | --- |
+| Core scan/staging | `PYTHONPATH=tests python -m unittest test_form_staging test_documents -q` | 27 passed, zero skips, 6.458s |
+| HTTP staging/permission inventory | `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_form_staging_api test_role_endpoint_inventory -q` | 22 passed, zero skips, 8.942s |
+| Core static | `python -m ruff check . && python -m ruff format --check . && python -m mypy` | Passed, 51 format targets / 104 mypy files |
+| API static | `python -m ruff check . && python -m ruff format --check . && python -m mypy` | Passed, 18 format targets / 48 mypy files |
+
+Includes pending/missing scan durable full-batch, repeated read/detail/reopen
+and final-save rollback/version-conflict regressions. Expected unavailable
+law-store diagnostics occurred, not failures. No full-suite/infra/cloud/private
+checks claimed. Eventual independent exact-head Pass remains required; author
+does not supersede REVISE. Actual approved-template authority gap remains open.
