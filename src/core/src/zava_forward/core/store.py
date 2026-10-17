@@ -3,6 +3,7 @@ import csv
 import hashlib
 import io
 import json
+import logging
 import os
 import re
 import threading
@@ -510,9 +511,31 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 raise GateError(why)
             self.require_safety_clear(c)
             self.require_resident_clear(c)
-            c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
-            self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
-            self.save()
+            self.require_booked_capacity(c)
+            before, saved = deepcopy(c), False
+            try:
+                c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
+                if hasattr(self, "db"):
+                    self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
+                    self.save()
+                else:
+                    self.save()
+                    saved = True
+                    self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
+            except BaseException as error:
+                if hasattr(self, "db"):
+                    try:
+                        with self.dblock:
+                            self._discard()
+                    except Exception:
+                        error.add_note("Booking recovery failed; reload to establish the outcome.")
+                        logging.getLogger(__name__).exception("Booking SQL recovery failed")
+                else:
+                    c.clear()
+                    c.update(before)
+                    if saved:
+                        self.save()
+                raise
 
     def draft(self, case_id, kind):
         with self.lock:
@@ -530,7 +553,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             body = (f"Dear {who},\n\nA quick update on the work to {c['home']['address']}: it is currently at "
                     f"'{c['stage'].lower()}'. {c['owner']} is your contact and will be in touch with the next "
                     f"step.\n\nKind regards,\n{c['owner']}\nZava North Homes")
-        return dict(text=body, note="Draft for you to read and change. Nothing is sent until you send it.")
+        return dict(text=body, note="Template draft, not approved, not an instruction. Nothing is sent by the system.")
 
     # ---- insight views
     def facets(self):

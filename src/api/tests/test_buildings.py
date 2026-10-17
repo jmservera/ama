@@ -133,6 +133,14 @@ class BuildingHttpTests(unittest.TestCase):
         self.assertEqual(code, 409)
         self.assertIn(b"Building SYN-B1", raw)
         self.assertEqual(self.store.cases["ZF-2"]["stage"], "Final checks before ordering")
+        manager = self.store.staff["pam@example.test"]
+        sibling = self.store.issue_work_order(
+            manager,
+            "PKG-OTHER",
+            "ZF-3",
+            resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
+        )
+        self.store.record_wo_appointment(manager, sibling, "Booked", "2099-01-01")
         self.assertEqual(self.call("/api/cases/ZF-3/advance", cookie, {})[0], 200)
         code, raw, _ = self.call("/api/assistants", cookie)
         self.assertEqual(code, 200)

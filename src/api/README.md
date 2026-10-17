@@ -38,6 +38,88 @@ Authorized integration onto main `bbbc924` also retains merged stock/technical
 actor validation, refusal ownership and checked-document recovery. Combined
 stock API/workflow/role checks ran with the required `src/api` module path;
 the existing opt-in stock browser check was skipped, not newly certified.
+## Provider capacity and order API (#90)
+
+Existing authenticated package, capacity and work-order routes retain their
+response shapes. `POST /api/packages` requires a nonempty `contract_version`;
+omitted, empty and whitespace-only versions return 400 without creating a
+package. The existing screen displays an inline error and focuses the version
+field without losing other inputs. Creation is a draft, never a grant of
+authority. Positive capacity requires
+the [core source and trusted delegation contract](../core/README.md#evidenced-provider-capacity-and-controlled-orders-90).
+There is no endpoint to appoint a contract manager.
+
+`POST /api/packages/{id}/capacity` accepts the existing `contractor`, `offered`,
+`committed`, `evidence` reference and the structured `details` object below.
+IDs/version/dates must refer to a real original upload in the current local
+store, not this illustrative identifier:
+
+```json
+{
+  "contractor": "Fictional Provider",
+  "offered": 9,
+  "committed": 1,
+  "evidence": "SYN-COMMITMENT",
+  "details": {
+    "source_case_id": "SYN-HOME",
+    "document_id": "actual-upload-id",
+    "source_version": "1",
+    "source_date": "2026-10-17",
+    "reviewed_on": "2026-10-17",
+    "valid_from": "2026-10-17",
+    "valid_to": "2026-12-31",
+    "unit": "home-work-order",
+    "case_ids": ["SYN-HOME"],
+    "status": "Committed"
+  }
+}
+```
+
+Unknown/invalid legacy capacity stays visible with `evidence_status` and
+`usable_committed: 0`, rather than becoming available. A larger offer never
+permits a second order against one committed unit. Existing orders may
+progress at exact quota. Issue, every appointment outcome, reissue,
+completion, correction and withdrawal each append a version/issuer snapshot.
+The existing case advance route cannot confirm an unbooked or unevidenced
+order. Contractors receive 403 for package reads and all procurement writes;
+order reads filter by their current supplier identity.
+
+The existing Capacity screen supplies labelled original-source/version/date/
+unit/home fields, explicit unknown status, keyboard submission and inline
+failure focus. Human authority and resident approvals remain server checks,
+not screen permissions. AI/template notes say not an instruction; accepting
+a proposal never issues an order.
+
+Run the exact HTTP and domain suites from `src/api` with installed editable
+packages. The optional browser check uses only temporary fictional SQLite,
+blocks non-loopback requests and exercises manager/contractor journeys:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests \
+  python -m unittest test_quality_procurement test_procurement_api test_role_matrix -q
+PYTHONPATH=tests:../core/tests:../agents/tests \
+  python checks/procurement_browser_check.py
+```
+
+With the existing opt-in SQL Server harness configured against a disposable
+local container, select `test_mssqlstore.MssqlProcurement` and
+`test_mssqlstore.MssqlProcurementApi`. Never point its destructive fixture
+reset at shared/live SQL. Local browser widths 320/390/1280, keyboard and
+reduced-motion checks are not human, screen-reader or full WCAG acceptance.
+No live orders, payments, AI inference, company delegation or Azure SQL were
+exercised. Existing #78 provenance and #97 forms contracts remain unchanged.
+
+Shared-transaction integration coverage also selects
+`test_mssqlstore.MssqlStockDecisions`,
+`test_mssqlstore.MssqlFinanceSignoffs`,
+`test_mssqlstore.MssqlStoreTests` and
+`test_mssqlstore.MssqlImproveTests` against that disposable local server.
+The finance suite replays existing budget, matching, approval-separation and
+signoff controls; it does not incorporate another unmerged finance topic.
+For merged #94's exact finance-match and recovery controls, additionally
+select `test_finance_match_controls.MssqlFinanceChecks` with
+`ZF_FINANCE_MSSQL=1` against the same disposable local server. That existing
+fixture creates and removes only its uniquely named test databases.
 
 ## Form schema and candidate API (#97)
 

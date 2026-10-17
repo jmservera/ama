@@ -204,7 +204,7 @@ function aiNotes(d, onDone, getText) {
   const cites = d.citations || [];
   if (cites.length) kids.push(h("p", { class: "muted" }, "Sources: " + cites.join("; ")));
   if (d.dropped_uncited) kids.push(h("p", { class: "muted" }, `${d.dropped_uncited} uncited statement(s) removed.`));
-  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "AI suggestion, not approved. Not reviewed by a person yet." : `${d.approval} as a draft by a person. This is not an approval, consent or safety decision.`));
+  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "AI suggestion, not approved. Not an instruction. Not reviewed by a person yet." : `${d.approval} as a draft by a person. Not an instruction. This is not an approval, consent or safety decision.`));
   if (d.record_id && d.approval === "Not reviewed") {
     const why = h("input", { type: "text", maxlength: 300, placeholder: "Reason (needed to edit or reject)", "aria-label": "Reason for your review" });
     const go = (action) => async () => {

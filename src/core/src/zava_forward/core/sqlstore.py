@@ -516,6 +516,7 @@ class SqlStore(Store):
         self.local.safety_clear.clear()
         self.local.resident_clear.clear()
         self.local.stock_clear.clear()
+        self.local.procurement_validation = None
         pending = self.local.pending
         if touched:
             with self.dblock:
@@ -548,6 +549,8 @@ class SqlStore(Store):
                 stock.validate_sql(self)
                 from .finance import validate_sql as validate_finance
                 validate_finance(self)
+                from .procurement import validate_sql as validate_procurement
+                validate_procurement(self)
                 self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1
@@ -586,9 +589,10 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
-            except (ConflictError, GateError) as error:
+            except (ConflictError, GateError, PermissionError) as error:
                 self.db.execute("ROLLBACK")
-                if getattr(self.local, "stock_decision", None) is None:
+                if (getattr(self.local, "stock_decision", None) is None
+                        and getattr(self.local, "procurement_validation", None) is None):
                     try:
                         self._discard()
                     except Exception as recovery_error:
@@ -615,6 +619,7 @@ class SqlStore(Store):
             self.local.safety_clear.clear()
             self.local.resident_clear.clear()
             self.local.stock_clear.clear()
+            self.local.procurement_validation = None
             if cur == self._seq:
                 self._seq = new
                 self.version = new
@@ -654,14 +659,18 @@ class SqlStore(Store):
     DOCS = ("procurement", "governance", "continuity", "buildings", "form_schemas", "bulk_edits")
 
     def _proc_sync(self):
-        self._proc_snap = {}
+        snapshots, loaded = {}, {}
         for key in self.DOCS:
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
-            self._proc_snap[key] = row[0] if row else None
+            snapshots[key] = row[0] if row else None
             if row:
-                self.data[key] = json.loads(row[0])
+                loaded[key] = json.loads(row[0])
+        for key in self.DOCS:
+            if key in loaded:
+                self.data[key] = loaded[key]
             else:
                 self.data.pop(key, None)
+        self._proc_snap = snapshots
 
     def _proc_write(self):
         """Inside the save transaction: write changed documents, refusing if someone else changed one first."""

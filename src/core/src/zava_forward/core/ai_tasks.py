@@ -214,7 +214,7 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
                                dict(r, prompt_version=ai_prompts.version(task)), store.version)
     rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                      latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
-                     fallback_reason=reason, envelope=env, release=r.get("release"), verified=verified,
+                     fallback_reason=reason, envelope=env, release=r.get("release"), verified=verified, instruction_status="Not an instruction",
                      continuity_epoch=epoch0, quarantine=dict(reason=reason, at=_now()) if late else None,
                      provenance=dict(citation_resolved=verified, source_verified=False, human_reviewed=False,
                                      source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=cites, unresolved=bad, dropped_uncited=dropped)
@@ -225,7 +225,7 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
             store.save()
         r = dict(r, source="template", model=None)
     return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
-                approval=NOT_REVIEWED, envelope=env, record_id=rec["id"], mode=mode, prompt_version=ai_prompts.version(task))
+                approval=NOT_REVIEWED, instruction_status="Not an instruction", envelope=env, record_id=rec["id"], mode=mode, prompt_version=ai_prompts.version(task))
 
 
 def require_registered(task):
@@ -302,7 +302,7 @@ def review(store, user, rec_id, action, reason="", text=None):
         rec["review_evidence"] = dict(reviewer=user["email"], disposition=action, reason=reason,
                                       compared=dict(ai=rec.get("ai_output"), workflow=rec.get("workflow_output")),
                                       source_hashes=now_hashes, case_version=store.version,
-                                      effect="records the review only; any task or draft is created separately by the person")
+                                      effect="Not an instruction; records the review only; any task or draft is created separately by the person")
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())
         store.save()

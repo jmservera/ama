@@ -1,11 +1,41 @@
 """Shared constructed dataset and store behaviour cases (moved from mvp/tests/test_mvp.py in M2 of #199)."""
 import json
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
 
 from zava_forward.core.store import Store
+from zava_forward.core.workflows import _today
+
+
+def supplied_contract_fixture(store: Any, pid: str, manager: dict[str, Any], contractor: str = "Test Ltd") -> dict[str, Any]:
+    """Explicit fictional delegation and original commitment bytes, never production seeding."""
+    with store.lock:
+        p = store._package(pid)
+        p["contract_version"] = "SYN-1"
+        actor = store.staff[manager["email"]]
+        authority = dict(reference="SYN-DELEGATION", version="1", contract_ref=p["contract_ref"],
+                         contract_version="SYN-1", revoked=False, valid_from="2026-01-01", valid_to="2099-12-31",
+                         actions=["rescope", "capacity", "issue", "reissue", "appointment", "complete", "correct", "withdraw"],
+                         suppliers=[contractor], scope_versions=[1, 2])
+        actor.setdefault("contract_authorities", []).append(authority)
+        if hasattr(store, "db"):
+            store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), actor["email"]))
+        ids = [cid for cid, c in store.cases.items() if c["contractor"]["name"] == contractor]
+        c = store._case(ids[0])
+        content = b"SYNTHETIC ONLY: accepted one-home-order package quota; no real instruction or legal authority."
+        doc_id = "SYN-COMMITMENT"
+        doc = dict(id=doc_id, name="synthetic-commitment.txt", kind="Other", version="1",
+                   content_sha256=hashlib.sha256(content).hexdigest(), at=_today(),
+                   scan=dict(status="clean", scanner="Synthetic fixture"))
+        c["documents"] = [d for d in c["documents"] if d["id"] != doc_id] + [doc]
+        store.docstore.put(c["id"], doc_id, content, "text/plain")
+        store.save()
+        return dict(source_case_id=c["id"], document_id=doc_id, source_version="1",
+                    source_date=_today(), reviewed_on=_today(), valid_from=p["period_from"],
+                    valid_to=p["period_to"], unit="home-work-order", case_ids=ids, status="Committed")
 
 
 def change_metadata(store: Any, cid: str = "ZF-1") -> dict[str, Any]:

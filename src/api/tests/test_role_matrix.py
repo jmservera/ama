@@ -221,15 +221,16 @@ class Matrix(unittest.TestCase):
 
     def test_new_endpoints_for_every_role(self):
         mgr = {s["role"]: s for s in self.store.data["staff"]}["Retrofit Programme Manager"]
-        pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1")
-        self.store.set_capacity(mgr, pid, "Test Ltd", 2, 2, "Signed plan")
-        self.store.set_capacity(mgr, pid, "Other Ltd", 2, 2, "Signed plan")
+        pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1", "SYN-1")
         order_case = copy.deepcopy(self.store.cases["ZF-1"])
         order_case.update(id="ZF-ROLE-ORDER", hazards=[])
         self.store.cases[order_case["id"]] = order_case
-        from dataset import RESIDENT_BINDINGS, supplied_resident_fixture
+        from dataset import RESIDENT_BINDINGS, supplied_contract_fixture, supplied_resident_fixture
         supplied_resident_fixture(order_case)
         supplied_resident_fixture(self.store.cases["ZF-2"])
+        for contractor in ("Test Ltd", "Other Ltd"):
+            details = supplied_contract_fixture(self.store, pid, mgr, contractor)
+            self.store.set_capacity(mgr, pid, contractor, 2, 2, "SYN signed commitment", details)
         w1 = self.store.issue_work_order(mgr, pid, order_case["id"], resident_bindings=RESIDENT_BINDINGS)
         w2 = self.store.issue_work_order(mgr, pid, "ZF-2", resident_bindings=RESIDENT_BINDINGS)
         for role in ROLES:

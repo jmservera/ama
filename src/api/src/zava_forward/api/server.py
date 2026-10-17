@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import forms, profile
+from zava_forward.core import controls, forms, profile
 
 from zava_forward.core import projection, quality, ranking, taskqueues
 
@@ -380,10 +380,12 @@ def make_handler(app):
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/handoffs":
                 return self._json(200, s.pending_handoffs(u))
-            if url.path == "/api/packages":
-                return self._json(200, s.list_packages(u))
-            if url.path == "/api/workorders":
-                return self._json(200, s.list_work_orders(u, q.get("case", [None])[0]))
+            if url.path in ("/api/packages", "/api/workorders"):
+                try:
+                    rows = s.list_packages(u) if url.path == "/api/packages" else s.list_work_orders(u, q.get("case", [None])[0])
+                    return self._json(200, rows)
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/checklists":
                 return self._json(200, quality.CHECKLISTS)
             if url.path == "/api/facets":
@@ -682,13 +684,14 @@ def make_handler(app):
 
         def _procurement(self, s, u, parts, body):
             """Package, capacity and work-order writes. Returns the refreshed list the screen shows."""
+            controls.refuse_bulk(body)
             kind, rest = parts[1], parts[2:]
             if kind == "packages" and not rest:
-                s.create_package(u, body.get("name"), body.get("period_from"), body.get("period_to"), body.get("scope"), body.get("contract_ref"))
+                s.create_package(u, body.get("name"), body.get("period_from"), body.get("period_to"), body.get("scope"), body.get("contract_ref"), body.get("contract_version"))
             elif kind == "packages" and len(rest) == 2 and rest[1] == "rescope":
                 s.rescope_package(u, rest[0], body.get("scope"), body.get("reason"))
             elif kind == "packages" and len(rest) == 2 and rest[1] == "capacity":
-                s.set_capacity(u, rest[0], body.get("contractor"), body.get("offered"), body.get("committed"), body.get("evidence", ""))
+                s.set_capacity(u, rest[0], body.get("contractor"), body.get("offered"), body.get("committed"), body.get("evidence", ""), body.get("details"))
             elif kind == "workorders" and not rest:
                 s.issue_work_order(u, body.get("package"), body.get("case_id"), body.get("scope", ""), body.get("resident_bindings"))
             elif kind == "workorders" and len(rest) == 2 and rest[1] in WO_ACTIONS:

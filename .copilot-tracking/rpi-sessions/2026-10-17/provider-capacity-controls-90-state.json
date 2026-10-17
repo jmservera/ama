@@ -1,0 +1,67 @@
+{
+  "task_id": "90",
+  "task_slug": "provider-capacity-controls-90",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "latest-main integration and validation complete; terminal documentation publication payload",
+  "session_status": "stopping after authorized topic publication",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/provider-capacity-controls-90-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/provider-capacity-controls-90-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/provider-capacity-controls-90-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/provider-capacity-controls-90-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/provider-capacity-controls-90-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute ordered full RPI and stop after final push",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-17; latest origin/main adedf1f; clean named topic; no existing PR. Parent #89 is hierarchy, not dependency."
+    },
+    {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C7 and independent manager review, all three waves."},
+    {"decision": "Final candidate critique executed once, verdict Revise", "status": "resolved", "evidence": "PC-001 through PC-005 directly applied to plan/details; no divergent decision."},
+    {"decision": "Implementation complete and reconciled before Review", "status": "complete", "evidence": "Eight failing-first root reproductions. Exact 63 pass; combined API 278 run/one existing skip; separate core 114 run/one existing skip; real local SQL Server 29 pass; browser and configured lint/format/types/JS pass. Plan P01/P02 and changes/details reconciled. No live delegation invented."},
+    {"decision": "One post-implementation Review executed", "status": "Complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/provider-capacity-controls-90-review.md; independent read-only lifecycle/advance/SQL/source/authority/HTTP/changed-UI comparison, no source edits or repeat."},
+    {"decision": "Review outcome for exact four local engineering criteria", "status": "Conformant", "evidence": "Canonical review record: no substantive defects or unaccepted decisions; actual operational authority and hosted/human acceptance explicitly not inferred."},
+    {"decision": "Requested branch and main PR published", "status": "delivered", "evidence": "Implementation 19431ad pushed with verified privacy-safe author/committer and required trailer; https://github.com/jmservera/ama/pull/384 open, base main, Refs #90. GraphQL quota failure resolved with REST creation."},
+    {"decision": "Preserve explicit no-merge/no-rebase direction after concurrent main advance", "status": "historical; topic integration now expressly authorized", "evidence": "Original reviewed baseline adedf1f; old PR #384 REST mergeable=false/dirty observation retained as history."},
+    {"decision": "Coordinator authorized topic-only integration onto fresh main", "status": "integrated", "evidence": "2026-10-17 authorization; clean old topic/expected remote 6e4dbe18d111673b41049830eb68bf81f89051c8. Fresh main bab4bf3a2ac9ec030d78d27063d1390f800c5c7c; git rebase origin/main -> db83d4260e4f3d29fa80ce08624155ee4f59ecce before evidence commit. Only log conflict; exact upstream prefix and both index intents preserved; src patch/original Review byte-identical. External exact-head gate pending."}
+  ],
+  "blockers": [],
+  "correction_cycle_one": {
+    "authorization": "Coordinator 2026-10-17: external Review Revise of PR384 head 527a537; require contract version, repair exact manifest hash and fictional safety booking fixtures. Normal push only, no rebase/force.",
+    "status": "implementation Complete, external correction acceptance pending; terminal publication payload",
+    "original_review": "Historical Complete/Conformant unchanged; coordinator external closure required for changed source.",
+    "red_evidence": "New version regressions: 12 failures across JSON/SQLite domain/HTTP subcases; existing safety positives two errors; scenario manifest existing integrity test one stale-source error.",
+    "validation": "Focused107 pass, existing manifest8/inventory11 pass; full core651 run/650 pass/one existing Azure SQL skip; full API613 run/471 pass/142 existing opt-in skips. Separate actual local SQL Server31 pass and local browser corrected creation/input focus/preservation pass. Full configured core/API lint/format/types, strict browser lint/format, JS/compileall/diff pass. No skip added, assertion deleted or validator weakened.",
+    "dispositions": "All three coordinator/CI gaps addressed in implementation; external independent correction closure still pending. Original Review byte-identical. No new professional authority or hosted Pass."
+  },
+  "post_382_integration": {
+    "authorization": "Coordinator topic-only rebase after completed correction ONE; explicit expected remote lease, never main, no merge/closure.",
+    "base": "bbbc9243505b606550327c64bf5429243f457f2e",
+    "expected_remote": "5244f99db0a5b53f761b6c3a7bc5f1d9c4e829c1",
+    "rebased_pre_evidence_head": "7cf8df7b5ed67055dc6d40a95c554598b448c28e",
+    "status": "Rebase/source integration and validation complete; terminal evidence publication payload",
+    "source_head": "e2314a7c2ea0d6588b696030d153f29f74208dd7",
+    "decisions": "Both stock/procurement validation hooks and harness classes retained; canonical upstream discard unchanged. Procurement/advance scope owns recovery and preserves original exception with explicit log/note. Checked-document reload stages reads/decoding before publishing snapshots. No unmerged finance94 code imported.",
+    "validation": "Eight initial failing-first recovery subcases; cancellation extension also failed first. Final twelve refusal/cancellation/reload combinations plus legitimate retry pass. Core194 pass; API73 run/72 pass/one existing opt-in skip; real local combined stock/finance/procurement/shared SQL Server74 pass/no skips; portability3 pass. Full configured core/API lint/format/types and exact upstream/own intent/historical Review/UI/fixture preservation pass. Task-owned container/credential removed.",
+    "publication": "Terminal evidence-only commit follows source_head; exact final commit is recorded in PR384 REST body/readback after authorized explicit-lease topic push. Expected remote5244f99 only; no main rewrite/merge/closure. External exact-head independent coordinator gate remains pending."
+  },
+  "latest_main_advance": {
+    "base": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+    "status": "Integrated and validated after clean own evidence commit and topic-only rebase",
+    "source_head": "7c8965cf9ebc64cd235669444c443bc33a000302",
+    "rebased_pre_final_reconciliation_head": "1463242bc05b2668f61e76a0041ae80432b83e27",
+    "scope": "All stock/finance/procurement validators retained; canonical discard(pending) and protected lock exit exact latest main; finance internal known-refusal logging and caller prior-pending restoration preserved; stock/procurement caller scopes and complete checked-document snapshots retained.",
+    "validation": "Final combined core224 pass/no skips; API77 run/76 pass/one existing opt-in skip including portability3; actual disposable local SQL Server93 pass/no skips including existing19 merged finance-match/recovery tests. Full configured core/API lint/format/types and exact latest-main/own intent preservation pass. Task-owned container/credential removed. No redundant full component suite or unchanged browser rerun.",
+    "publication": "Documentation-only terminal evidence commit follows source_head. Exact final publication head/base is recorded in PR384 REST body/readback after explicit expected-remote lease push only owned topic5244f99. Independent coordinator exact-head gate remains pending; no main rewrite/merge/closure or invented Pass."
+  },
+  "next_action": {"phase": "Follow-up", "action": "Terminal privacy-safe docs/evidence commit, explicit expected-remote lease push only owned topic5244f99, REST update/readbackPR384 exact final head/base and clean remote verification, then stop. Source integration and combined local/SQL validation complete on d400eb8. External coordinator independent exact-head closure and hosted checks remain; no main rewrite/merge/issue closure."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator external correction ONE closure and hosted checks", "rationale": "Coordinator Review Revise of527a537 and hosted gaps addressed; changed production now requires independent external closure, no invented Pass.", "evidence": "Changes Correction ONE Final Validation and Dispositions; full relevant CI discovery/actual local SQL/browser evidence, original Review preserved verbatim."},
+    {"rank": 2, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},
+    {"rank": 3, "task": "Separately approved hosted and human accessibility acceptance", "rationale": "Local browser/SQL engineering checks do not establish Azure/AI or human/screen-reader/WCAG acceptance.", "evidence": "Changes Remaining Boundaries and canonical Review Validation Evidence; deployment/UX owners commission later."}
+  ]
+}

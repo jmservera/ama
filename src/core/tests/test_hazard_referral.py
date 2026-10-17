@@ -13,7 +13,7 @@ from typing import Any
 from unittest.mock import patch
 
 from building_fixture import fixture, hold
-from dataset import DATA, RESIDENT_BINDINGS, supplied_resident_fixture
+from dataset import DATA, RESIDENT_BINDINGS, supplied_contract_fixture, supplied_resident_fixture
 from zava_forward.core import ai_tasks, projection
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError, Store
@@ -148,6 +148,15 @@ class JsonHazardReferral(unittest.TestCase):
             self.assertEqual(detail[field], before[field])
         self.assertNotIn("service_status", h)
         self.assertTrue(self.store.verify_audit())
+        pid = self.store.create_package(
+            self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
+        )
+        details = supplied_contract_fixture(self.store, pid, self.pam)
+        self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN-CAPACITY", details)
+        wid = self.store.issue_work_order(
+            self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
+        )
+        self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.store.detail("ZF-3")["stage"], "Install booked")
 
@@ -324,6 +333,11 @@ class JsonHazardReferral(unittest.TestCase):
             self.store._case("ZF-3")["quality"] = data["cases"][1]["quality"]
             self.store.data["procurement"] = data["procurement"]
             self.store.save()
+        for package in data["procurement"]["packages"]:
+            details = supplied_contract_fixture(self.store, package["id"], self.pam)
+            self.store.set_capacity(
+                self.pam, package["id"], "Test Ltd", 5, 5, "SYN-CAPACITY", details
+            )
         wid = self.store.issue_work_order(
             self.pam, "PKG-SHARED", "ZF-3", resident_bindings=RESIDENT_BINDINGS
         )
@@ -398,9 +412,10 @@ class SqlHazardReferral(JsonHazardReferral):
             with self.subTest(transition=transition):
                 a = self.sql_store(transition)
                 pid = a.create_package(
-                    self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+                    self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
                 )
-                a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+                details = supplied_contract_fixture(a, pid, self.pam)
+                a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
                 wid = ""
                 if transition != "issue":
                     wid = a.issue_work_order(
@@ -483,9 +498,10 @@ class SqlHazardReferral(JsonHazardReferral):
     def test_stale_clear_dependency_refuses_procurement_and_discards_audit(self) -> None:
         a = self.sql_store("stale")
         pid = a.create_package(
-            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
         )
-        a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+        details = supplied_contract_fixture(a, pid, self.pam)
+        a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
         wid = a.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
         a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         before = copy.deepcopy(a.data["procurement"])
@@ -524,9 +540,10 @@ class SqlHazardReferral(JsonHazardReferral):
     def test_transaction_reload_and_writer_lock_cover_validation_to_commit(self) -> None:
         a = self.sql_store("serialized")
         pid = a.create_package(
-            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
         )
-        a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY")
+        details = supplied_contract_fixture(a, pid, self.pam)
+        a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
         wid = a.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
         a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         b = self.sql_store("serialized")

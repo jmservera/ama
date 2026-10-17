@@ -1,0 +1,213 @@
+<!-- markdownlint-disable-file -->
+# RPI Plan: Provider capacity and controlled orders
+
+## Task Metadata
+
+* Task ID: 90
+* Task slug: provider-capacity-controls-90
+* Date: 2026-10-17
+* Status: Original delivery/integration complete; coordinator correction ONE implemented and locally validated, external exact-head closure pending
+* Phase details: .copilot-tracking/details/2026-10-17/provider-capacity-controls-90-phase-details.md
+* Critique: .copilot-tracking/reviews/plans/2026-10-17/provider-capacity-controls-90-plan-critique.md
+
+## Executive Summary
+
+Close proven gaps in the existing procurement workflow, not replace delivered screens or storage. Bind confirmed capacity to current source versions, dates, home-order units, covered homes, package scope and named contract delegation. Version every order mutation and stop the alternate case-booking bypass. Keep provider reads own-only and all system output non-instructional.
+
+### What You May Not Know
+
+The current 21 tests pass despite missing these exact controls. Existing SQL checked-document CAS already prevents concurrent over-allocation; it must be reused. Actual contract delegations do not exist in supplied evidence: trusted staff configuration may supply them, never a self-granting API or AI. Legacy records remain readable but cannot authorize new confirmed work.
+
+## User Decisions and Requirements
+
+* Execute full dated, committed Research -> Plan -> Implement -> Review, manager review during research, one critique and one implementation Review.
+* Satisfy all four exact #90 criteria and PRD FR-016/BRD RULE-007/008; #89 is hierarchy, no explicit issue dependencies.
+* Preserve named human instruction authority, resident/safety controls, contractor read-only own orders, #78 provenance and #97 forms.
+* No private/real data, live orders, finances, cloud or paid AI; own venv; local SQL Server via existing standard container harness if available.
+* Publish topic branch to main PR using Refs #90, no closing, merge, rebase or force push; stop after final push.
+
+## Goals
+
+* Make committed capacity and order chronology enforceable and testable on both existing stores and HTTP surfaces.
+* Surface unknown evidence and missing real permission honestly without blocking fictional engineering delivery.
+
+## Scope and Non-Goals
+
+* In scope: procurement mixin, case advance, narrow SQL transaction validation, existing API and capacity screen inputs, coupled test fixtures, component guides and existing KB synthesis/index/log.
+* Non-goals: new service/framework/schema, MVP edits, live company approval, award/payment, new AI route, broader UI redesign or full PRD FR-016 acceptance.
+
+## Functional Requirements
+
+* Registered named current manager plus explicit trusted contract delegation reference/version/effective dates for consequential package/capacity/order changes; no delegation granted by package creation.
+* Capacity source ref/version/date/review date, committed status, valid interval, exact case set, fixed home-order unit and package scope-version binding. Known zero/reduction can be recorded; deficit blocks new work.
+* Issue/reissue/booking/correction and case advance recheck quota/evidence; booking date must be inside both intervals. Offered/legacy/unknown evidence cannot authorize.
+* Every successful order change appends sequential issuer/time/state/appointment/scope/authority/capacity snapshots. Returned records are copies.
+* Drafts state not an instruction; reviewing drafts never issues. Contractors cannot mutate and cannot see another supplier's orders/packages through direct or HTTP surfaces.
+
+## Non-Functional Requirements
+
+* Reuse existing single-process JSON lock, SQL checked-document CAS, case-rowversion and writer/application locks.
+* Revalidate named staff and read-only procurement dependency inside SQL commit; failed writes restore cache and do not append success audit.
+* Keep existing Fluent 2 native styling and keyboard/label/error semantics; narrow UI fields only.
+
+## Acceptance Criteria
+
+1. Exactly one committed home allocation permits one active/completed order, never two despite larger offer, bad evidence, interval mismatch, rescope or concurrent writers; alternate advance cannot bypass.
+2. Issue plus each appointment, reissue, completion, correction and withdrawal has immutable sequential versions and stable issuer identity.
+3. Template/AI proposals and review never become instructions or alter procurement.
+4. Two fixture contractors read only own orders; every write route rejects them.
+
+## Sources
+
+* .copilot-tracking/research/2026-10-17/provider-capacity-controls-90-research.md: C1-C7, completed three waves and Ready.
+* .copilot-tracking/research/subagents/2026-10-17/provider-capacity-controls-90-manager.md: research instrument, no approval.
+
+## Phase Checklist
+
+<!-- rpi:phase id=P01 -->
+### [x] P01: Reproduce and enforce controls
+
+<!-- rpi:task id=P01-T01 -->
+#### [x] P01-T01: Add failing-first JSON/SQLite and controller regressions
+
+Exact root gaps, quota thresholds, identity/authority, source fields/dates/units, all-change snapshots, failed-write restoration and advance bypass.
+
+<!-- rpi:task id=P01-T02 -->
+#### [x] P01-T02: Implement bounded domain and transaction controls
+
+Depends on P01-T01. Add trusted staff contract-authority checks and structured committed evidence; preserve unknown/legacy reads, resident controls and current checked documents.
+
+<!-- rpi:phase id=P02 -->
+### [x] P02: Wire and validate existing surfaces
+
+<!-- rpi:task id=P02-T01 -->
+#### [x] P02-T01: Complete API/screen evidence inputs and coupled fixtures
+
+Depends on P01-T02. No redesign or permission grant. Fresh guidelines and local browser required for changed screen.
+
+<!-- rpi:task id=P02-T02 -->
+#### [x] P02-T02: Run focused parity, quality gates and document evidence
+
+Depends on P02-T01. Existing local SQL Server 2022 harness only. Record exact Pass/Fail/Not run; preserve #78 and #97 regression suites.
+
+<!-- rpi:phase id=P03 -->
+### [x] P03: Review and publish
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: One independent Review and main-targeting Refs #90 PR
+
+Depends on P02-T02. Review findings route later, no review loop. Commit dated artifacts with phase execution, privacy-safe identity/trailer, push without merge/closing.
+
+## Test Ownership and Validation Lock
+
+Parent owns new regressions in existing `test_quality_procurement.py` and new `test_procurement_api.py`; reuse existing opt-in SQL Server test factory with procurement behavior inheritance. Existing safety/resident/building fixture owners retain assertions; update only supplied capacity/delegation prerequisites and changed version expectations. Removals: none. Maximum additions: 35 test methods, no dependencies beyond existing component extras. Canonical targets are migrated Python/JS sources; no generated assets. Semantic exact-criterion tests are separate from regressions of preserved controls. Validation: focused unittest, lint/format/type commands per component, JS syntax, local browser and standard local SQL Server parity if available.
+
+## Dependencies
+
+* P01-T01 -> P01-T02 -> P02-T01 -> P02-T02 -> P03-T01.
+* No issue dependency or actual operational permission inferred.
+
+## Critique Disposition
+
+| Finding | Disposition |
+| --- | --- |
+| PC-001 | Applied: exact trusted action/contract-version/supplier/scope and unrevoked dated delegation predicate below |
+| PC-002 | Applied: original uploaded source bytes/hash/version resolved, manager acceptance recorded; explicit source/review/delivery boundaries |
+| PC-003 | Applied: advance requires one current Appointed order with latest Booked date; existing allocations use <= quota; withdrawal explicitly releases with version/reason |
+| PC-004 | Applied: deterministic two-store pre-save races and injected save failure with cache/audit/reopen oracles |
+| PC-005 | Applied: executable target/selector/budget manifest in details; no test removals or second critique |
+
+No significant/divergent decision remains. These define bounded fictional engineering contracts, not company delegations.
+
+## Follow-Up Items
+
+* PR #384 external exact-head gate/hosted checks: coordinator authorized and performed topic-only integration onto fresh bab4bf3 on 2026-10-17. Only the log conflicted; exact upstream prefix, both routing sets and original production patch/Review preserved. Integration evidence is in changes; external acceptance remains pending.
+* Actual contract evidence/delegations and operational approval: named human contract authority owner must provision and validate these before any live use. No live authority was supplied, and no test fixture grants it.
+* Hosted AI/Azure and human/screen-reader/WCAG acceptance: deployment and UX owners must commission separate approved validation. These are not required for the four local engineering criteria and were not exercised.
+
+## Implementation-Time Reconciliation
+
+P01/P02 used existing transaction helpers, not new services. JSON save/audit
+failure compensation was extended to the alternate advance path after tracing
+the same boundary; SQL retains transactional rollback. Coupled core and API
+building positives now supply an authorized fictional booked order instead of
+asserting the removed advance bypass. No original assertion was deleted.
+The final API-inclusive regression set is 278 tests (one existing opt-in
+skip); actual local SQL Server parity is 29 tests. Exact semantic tests are
+63 tests. Browser and quality evidence is in the changes record. No scope,
+human approval or architecture divergence required a new decision/critique.
+
+## Handoff
+
+Changes record: .copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md. P01/P02/P03 delivered; original independent Review Complete/Conformant with no substantive findings; main-targeting PR #384 open. Coordinator-authorized topic integration onto fresh bab4bf3 completed with exact production-patch parity and original Review retained. External exact-head gate/hosted checks remain pending. Stop clean after integration evidence push; no further task/review loop.
+
+## Authorized Correction Cycle ONE
+
+Coordinator external Review of 527a537 returned Revise. Original Review and
+its historical Conformant result remain untouched, not a new acceptance.
+The owner authorizes only the following correction on the existing branch.
+
+* [x] Reject missing/empty/whitespace contract version at creation in domain,
+  API and existing UI; preserve inputs with inline error and field focus;
+  test invalid/no-mutation and valid-positive paths.
+* [x] Refresh only the exact public dataset source hash in the existing
+  scenario manifest; retain eleven profiles/nine workflows and all
+  unavailable/provisional/proposed authority semantics, validator unchanged.
+* [x] Supply an evidenced fictional booked order/trusted delegation in the
+  existing safety workflow positive, retaining every independence assertion.
+* [x] Execute focused then full relevant core/API CI suites, configured
+  quality gates and browser; local SQL creation parity if available.
+* [x] Record findings/dispositions/validation and prepare normal privacy-safe
+  publication on the same branch; external closure remains pending.
+  No rebase/force/merge/close.
+
+Correction validation: full core 651 run/one existing Azure SQL skip, full
+API 613 run/142 existing opt-in skips, task-local actual SQL Server 31 pass,
+focused 107 pass, manifest/inventory 8/11 pass, procurement browser and full
+configured quality gates pass. Counts overlap and are not summed.
+No production guard/validator or safety independence assertion weakened.
+Original Review is untouched; coordinator Revise is separate and external
+correction closure remains pending. Publication is the remaining authorized
+action for this terminal evidence payload, not a reason to claim a new
+Conformant verdict.
+
+## Authorized Post-#382 Integration
+
+Coordinator explicitly authorizes a topic-only exact-lease rebase of the
+completed correction onto fresh bbbc924. Preserve canonical shared discard,
+all stock/procurement/finance behavior and original stock signoffs; add
+bounded coverage for original-exception preservation on procurement reload
+failure if logical integration reveals the gap. No duplicate cleanup
+primitive or unmerged finance branch import. Run combined affected regressions
+and actual local SQL parity, record decisions/base/head/commands, then
+privacy-safe integration commit and exact-lease topic push, stop clean.
+Original Review remains historical; external closure still pending.
+
+Integration execution complete at source head e2314a7 on bbbc924.
+Both validation hooks and canonical upstream discard retained; twelve
+one-shot/persistent refusal/cancellation recovery combinations exercise both
+caller scopes and valid retry. Final combined core194, API73/one existing
+skip, actual local SQL74/no skips, portability3 and configured quality gates
+pass. Exact upstream/own KB routing/history, stock/finance/signoffs and
+unchanged UI/fixture assertions pass. Final evidence-only payload and
+explicit-lease topic push follow; exact final publication head is in PR384.
+No further phase/Review is requested; independent external closure remains.
+
+Before publication, latest-main verification detected merged finance #94 at
+d400eb8. Continue the same authorized topic-only latest-main integration:
+clean own evidence commit, rebase, preserve finance pending parameter/
+protected recovery logging/validation plus stock/procurement hooks and
+canonical snapshots, then targeted combined finance-match/stock/procurement
+and actual local SQL replay. The preceding bbbc source/tests are historical,
+not the final base. Same exact remote lease5244f99; no new full RPI/Review.
+
+Latest-main integration execution complete: final base d400eb8, validated
+source7c8965cf9ebc64cd235669444c443bc33a000302. All three validators,
+canonical discard(pending), lock-exit protection, finance's internal refusal
+logging and prior-audit restoration, stock/procurement caller recovery
+retained. Final combined core224/no skips, API77/one existing skip (includes
+portability3), real local SQL93/no skips, configured quality and exact
+preservation checks pass. Details/changes hold selectors and decisions.
+Terminal documentation-only evidence commit and explicit expected-remote
+topic push follow; exact final PR head in REST body/readback. Original
+Review unchanged; external coordinator exact-head closure remains required.

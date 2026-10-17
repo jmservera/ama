@@ -97,6 +97,68 @@ tests and 18 canonical stock/selected procurement/workflow tests. The combined
 checks cover rollback/reopen, early/persistent recovery failure, original
 errors/logging, current authority, independent sign-offs, capacity and work-order
 history. External coordinator closure of the integrated #94 head remains pending.
+## Evidenced provider capacity and controlled orders (#90)
+
+The existing procurement document remains the package/order store. Positive
+committed capacity now requires an original clean uploaded source, its exact
+version and verified SHA-256 bytes, source/review dates, delivery interval,
+covered home IDs and unit `home-work-order`. One unit allocates one home order
+over the entire package period, not a crew, weekly throughput or concurrent
+appointment slot. Offered, legacy numeric-only and unknown evidence never
+authorize issue, booking, correction, completion or case advancement.
+
+Source date must be no later than review date, which must be no later than
+today and at most seven days old. Delivery endpoints are inclusive and within
+the package period. Booked dates must also fall inside that interval. Accepted
+evidence is bound to supplier, contract version and package scope version;
+rescope, source replacement, a changed hash or stale review requires renewed
+human acceptance. Zero or reduced commitment can be recorded without inventing
+positive evidence. Deficits remain visible and block further progression.
+
+Consequential actions require a current registered named manager and a trusted
+staff `contract_authorities` entry. It contains `reference`, string `version`,
+exact `contract_ref`/`contract_version`, `revoked: false`, inclusive
+`valid_from`/`valid_to`, and explicit `actions`, `suppliers`, `scope_versions`;
+optional `package_ids` further restricts scope. Actions are `capacity`,
+`rescope`, `issue`, `reissue`, `appointment`, `complete`, `correct`, `withdraw`.
+Rescope requires both old and new scope versions. There is no wildcard,
+self-granting endpoint or production delegation seed. Draft package creation
+grants no authority. Creation requires a nonempty contract/call-off version,
+which is trimmed and fixed at creation; blank versions are refused before any
+package or success audit is written. Real trusted provisioning remains a
+human prerequisite; the test-only fixture helper is not an operational delegation.
+
+New allocations require used capacity strictly below commitment. Existing
+allocations may progress at equality; completed orders retain consumption.
+Authorized withdrawal releases one allocation with a reason and new version,
+and withdrawn orders cannot reopen. Every successful order mutation appends an
+immutable sequential snapshot with named issuer/email/time, reason, state,
+appointments, scope/resident bindings, delegation and capacity version.
+Returned records are copies. Contractors can only read their own orders;
+they cannot change orders or read packages. Template/AI outputs explicitly
+remain **not an instruction**, including after review.
+
+The alternate case `advance` path requires exactly one current Appointed order
+whose latest appointment is Booked, plus current authority, capacity,
+resident and safety/building controls. It creates no order or allocation.
+SQL repeats actor/delegation, source-case rowversion and procurement dependency
+checks inside existing writer/application locks and checked-document
+transactions; rejected writes restore cache and discard success audit.
+Procurement/advance scopes own failed-operation recovery, alongside the
+existing stock/technical scope. Recovery clears pending writes before reload;
+checked-document reload publishes only a complete decoded snapshot. A failed
+reload logs explicit uncertainty and adds a note without replacing the
+original refusal/error. Cached committed state is retained, reads fail closed
+while unavailable, and later saves cannot flush the rejected mutation/audit.
+JSON uses its existing single-process lock and compensating snapshot recovery,
+not cross-process isolation or snapshot/ledger crash atomicity.
+
+The [API guide](../api/README.md#provider-capacity-and-order-api-90) gives the
+structured payload and local replay commands. Tiny fictional tests exercise
+JSON, SQLite and actual local SQL Server 2022, including competing last-unit
+writers and authority/source/booking races. These are engineering checks, not
+live supplier commitments, legal signature verification, actual delegations,
+Azure acceptance or full PRD approval.
 
 ## Form schema registry and candidate staging (#97)
 

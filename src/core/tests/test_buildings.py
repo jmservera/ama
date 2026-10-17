@@ -114,6 +114,13 @@ class BuildingTests(unittest.TestCase):
                         "Synthetic change",
                         resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
                     )
+                    sibling = store.issue_work_order(
+                        manager,
+                        "PKG-OTHER",
+                        "ZF-3",
+                        resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
+                    )
+                    store.record_wo_appointment(manager, sibling, "Booked", "2099-01-01")
                     store.advance(manager, "ZF-3")
                     self.assertEqual(store.detail("ZF-3")["stage"], "Install booked")
                     store.log_call(manager, "ZF-2", "Safety referral", "Synthetic hazard intake")

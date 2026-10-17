@@ -1,5 +1,5 @@
 
-from dataset import change_metadata
+from dataset import RESIDENT_BINDINGS, change_metadata, supplied_contract_fixture
 import copy
 import json
 import os
@@ -142,6 +142,11 @@ class Flows:
         self.assertEqual(self.store.hazard_states("ZF-3")[i]["state"], "Repair evidenced, hold active")
         self.store.release_hazard(self.bo, "ZF-3", i, "Checked on site", "Synthetic clearance")
         self.assertEqual(self.store.hazard_states("ZF-3")[i]["state"], "Retrofit hold released")
+        pid = self.store.create_package(self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1")
+        details = supplied_contract_fixture(self.store, pid, self.pam)
+        self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN commitment", details)
+        wid = self.store.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.stage("ZF-3"), "Install booked")
         for a in ("safety_raised", "safety_referred", "safety_repaired", "safety_released"):
