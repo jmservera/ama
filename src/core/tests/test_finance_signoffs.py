@@ -114,7 +114,8 @@ class Flows:
         codes = {(e["code"], e["line"]) for e in i["exceptions"]}
         self.assertIn(("quantity", 0), codes)
         self.assertIn(("not_in_scope", 1), codes)
-        self.assertIn(("over_commitment", None), codes)
+        self.assertIn(("over_commitment", 0), codes)
+        self.assertIn(("over_commitment", 1), codes)
         with self.assertRaises(ValueError):
             self.fin(self.pm2, "disposition", id="INV-1", decision="Accept for payment", note="x")
 
@@ -131,6 +132,9 @@ class Flows:
         with self.assertRaises(ValueError):
             self.fin(self.pm1, "disposition", id=a, decision="Accept for payment", note="x")
         self.fin(self.pm1, "hold_release", id=a, note="Resolved")
+        with self.assertRaises(ValueError):
+            self.fin(self.pm1, "disposition", id=a, decision="Accept for payment", note="Still duplicated")
+        self.fin(self.pm1, "disposition", id=b, decision="Reject and return to provider", note="Duplicate received")
         self.fin(self.pm1, "disposition", id=a, decision="Accept for payment", note="ok")
         self.assertEqual(self.store.detail("ZF-1")["finance"]["invoices"][0]["disposition_by"], self.pm1["name"])
 

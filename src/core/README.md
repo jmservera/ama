@@ -16,6 +16,88 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Record-only finance controls (#94)
+
+The existing finance workflow records approved budgets, commitments, invoice or
+valuation lines, exceptions, holds and human disposition. It never executes
+payment. `Paid outside this system` is a human-entered note, not a bank result;
+it does not change budgets, commitments or grant/cash records. There is no
+payment adapter, banking integration or model approval.
+
+Every match exception carries its affected zero-based `line` index, including
+budget, commitment and duplicate blockers that affect every invoice line.
+Missing budget, commitment or milestone references remain blocking unknowns;
+multiple matching approved commitments are ambiguous, never first-match wins.
+References record supplied evidence, not verified milestone authority.
+Acceptance recomputes matching against current records: a previously matched
+invoice cannot bypass a later accepted amount or a newly received duplicate.
+Resolve/reject the duplicate before accepting the original. Holds and
+`Keep on hold` remain record-only and cannot authorize payment.
+
+Finance writes require current registered named staff. Preparation captures
+email, staff code and optional OID; an approver matching any populated identifier
+is not independent, even with another email/role. Different people with the same
+permitted role can approve. Legacy preparers are looked up by their recorded
+email; an unresolved identity refuses approval rather than assuming independence.
+This establishes synthetic identity mechanics, not real delegated authority.
+
+SQLite and inherited SQL Server save repeat actor/independence checks inside the
+existing writer transaction; rowversions reject stale concurrent writes.
+Failure recovery drops failed-operation success audit and touched/validation
+state before any fallible recovery read, restores cached snapshots and forces
+the next healthy entry to refresh persisted records. A caller's prior legitimate
+audit prefix is retained. Recovery and lock-exit failures are logged and attached
+as exception notes without masking the original operation error. A retained
+audit prefix that cannot flush remains pending for the next healthy write.
+JSON caught save/audit failures restore the prior case and ledger tail;
+separate JSON/ledger files still do not promise cross-file abrupt-crash atomicity.
+Ledger rollback runs independently of the state retry. If that retry also
+cannot persist, an explicit error marks the durable outcome as potentially
+unknown: reload persisted records before retrying, never infer approval.
+Shared SQL edits are the finance validation hook, canonical `SqlStore._discard`
+cleanup and original-error preservation at save-refusal/lock-exit recovery.
+The `_discard` primitive integrates merged #84 / PR #382 from main `bbbc924`:
+committed checked-document snapshots restore before recovery reads, and an
+active stock/technical decision retains caller-owned refusal cleanup and actor
+context. The same save transaction retains provenance, bulk, stock, finance and
+safety/resident/stock checks; no second discard helper was introduced.
+Procurement #90 and signoffs #84 remain separate scopes, not inferred dependencies.
+
+From the repository root with editable src packages installed:
+
+```bash
+PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_finance_match_controls.JsonFinanceChecks \
+  test_finance_match_controls.SqlFinanceChecks test_finance_signoffs \
+  test_finance_match_api -q
+```
+
+The local isolated SQL Server contract reuses the
+[existing SQL configuration](../api/README.md) and the CI MSSQL image/driver.
+With `ZF_SQL_*` pointing at an explicitly disposable local server and credentials
+supplied privately, set `ZF_FINANCE_MSSQL=1` and run
+`test_finance_match_controls.MssqlFinanceChecks`. Each test creates and removes
+only its own UUID-named database, never wipes an existing database. On 2026-10-17,
+the original 14 local SQL Server cases passed, including reopen, audit rollback, fresh
+role/OID refusal and concurrent writers. The initial run's 14 cleanup errors
+were driver-pooled connections; the harness now disconnects only its created
+database before dropping it. This is local engineering evidence, not Azure,
+tenant, real-payment or full PRD AC-021/042 acceptance. Correction TWO then
+passed 18 SQL Server cases plus one added internal-save-refusal case, covering
+actual audit INSERT followed by first/persistent recovery SELECT failure,
+prior legitimate audit retention, failed lock-exit retry, original-error
+identity, reopened Proposed state, lock release and subsequent healthy approval.
+The exact-852b342 coordinator verdict remains Revise until external closure;
+local resolving evidence is not an independent Pass.
+
+After the authorized main integration, 232 local tests passed across finance,
+stock, procurement/workflows and shared callers, with one existing opt-in
+browser test skipped. Actual isolated local SQL Server passed all 19 finance
+tests and 18 canonical stock/selected procurement/workflow tests. The combined
+checks cover rollback/reopen, early/persistent recovery failure, original
+errors/logging, current authority, independent sign-offs, capacity and work-order
+history. External coordinator closure of the integrated #94 head remains pending.
+
 ## Form schema registry and candidate staging (#97)
 
 `forms` adds an immutable, sequentially versioned registry in the existing

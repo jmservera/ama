@@ -5055,3 +5055,87 @@ metadata when the knowledge base was created.
   fingerprinted source/test content: 91 focused tests and two constructed
   persistent-recovery snapshot probes pass. Original adverse Review retained,
   no repeated full RPI. No merge, issue closure or human/operational approval.
+
+## [2026-10-17] engineering | #94 exact record-only finance controls
+
+* Audited exact issue, PRD FR-018 and current BRD references against finance
+  helpers, API/screens and SQL transaction prior art. BRD FR-018/RULE-003 now
+  describe handoff/hazard controls; stale finance numbering is explicitly
+  preserved as a conflict, not silently corrected in source requirements.
+* Finance emits actual line indices for all match exceptions, refuses ambiguous
+  commitments, rechecks current matching at acceptance and uses current named
+  staff with email/code/OID independence. Caught JSON failure recovery and SQL
+  staged-audit rollback preserve prior state; no payment adapter or authority
+  model added. Status notes leave budget/commitment/grant cash unchanged.
+* Updated the existing [Finance journey synthesis](./research/ux/customer-journeys/finance.md#exact-finance-control-audit-2026-10-17-94),
+  core/API guides and index. Focused fixture/API and isolated local SQL Server
+  checks cover unknowns, holds, independent people, reopen, rollback, fresh rights
+  and concurrent writers. Initial MSSQL cleanup failed on pooled connections;
+  corrected exact owned-database cleanup, then 14 cases passed.
+* #93 is parent hierarchy only; no explicit dependencies. One actual shared
+  SqlStore.save validation hook may overlap #90; no shared Store/server or #84
+  signoff change. No private data, real provider/financial commitment, payment,
+  paid AI or Azure activity. No browser/WCAG, real delegation, full PRD or
+  operational acceptance claim. Original and memory unchanged.
+
+## [2026-10-17] correction | #94 persistent JSON recovery audit
+
+* The one independent Review found a blocking persistent os.replace case:
+  recovery save could fail before success-audit rollback. Coordinator correction
+  ONE added failing-first primitive-level proof, then decoupled ledger rollback
+  from the second state write. A failed restoration now explicitly reports an
+  uncertain durable outcome and requires persisted readback, never success.
+* Fifty-five focused JSON/SQLite/existing-finance/authenticated-HTTP cases and
+  scoped Ruff/format/mypy passed afterward. Prior fourteen local SQL Server
+  cases retain their original boundary; SQL is unchanged by the JSON correction.
+  Updated the existing Finance synthesis and core guide. Original Review remains
+  Complete / Not accepted for the assessed pre-correction candidate, with
+  separate objective resolving evidence; no repeated full Review or invented
+  independent pass. One of two authorized coordinator corrections used.
+
+## [2026-10-17] correction | #94 SQL recovery audit, coordinator cycle TWO
+
+* External exact-852b342 coordinator verdict Revise identified false success
+  audit after SQL audit INSERT failure plus first discard SELECT failure.
+  Three SQLite regressions reproduced original-error masking before the fix.
+  Canonical cleanup now quarantines failed audit/touched/validation state before
+  fallible I/O, restores snapshots and invalidates sync state for healthy reload.
+  Finance retains its prior legitimate audit prefix. Save-refusal/lock-exit
+  recovery preserves original exceptions with explicit notes and error logs.
+* Passed 158 combined finance/HTTP/shared-SQL/role/provenance/bulk regressions
+  plus one added internal-save-refusal test. Actual isolated local SQL Server
+  passed 18 finance cases plus that added case. New checks prove early/persistent
+  recovery failure, rollback/reopen, no false approval, prior audit retention,
+  lock release and healthy subsequent approval/chain. Scoped Ruff/format/mypy
+  and documentation checks recorded in the dated execution artifacts.
+* Updated existing Finance synthesis, index and component guides. Actual
+  `_discard` overlap with #84 / PR #382 requires coordinator integration
+  sequencing; no foreign dirty-worktree read, cherry-pick, rebase or merge.
+  Both authorized corrections are used. Original single RPI Review and JSON
+  correction ONE retained; no repeated full Review or independent Pass claimed.
+  External coordinator closure remains pending. Fictional local fixtures only,
+  no private data/cloud/payment activity; original and memory unchanged.
+
+## [2026-10-17] integration | #94 on merged assessment main bbbc924
+
+* Explicit coordinator authorization rebased only the clean run-owned finance
+  topic from published 54ed445 onto main bbbc924, which contains merged #84 /
+  PR #382. Reconciled canonical discard/save conflicts, retaining cleanup before
+  reads, committed case/recommendation/document snapshots, watermark reset,
+  stock-scoped actor/refusal ownership and finance pending-prefix/original-error
+  logging. Provenance/bulk/stock/finance/safety transaction checks all remain;
+  no duplicate helper, test removal or procurement/workflow source change.
+* Upstream log is exact byte prefix followed by finance's entries; both task
+  routes, guides and upstream synthesis retained. Original/memory and original
+  adverse Review unchanged. One combined test invocation needed src/api on the
+  path for upstream tests.test_mvp; corrected remaining invocation passed.
+  Total 232 local passes and one existing opt-in browser skip. Actual isolated
+  local SQL Server passed 19 finance and 18 stock/procurement/workflow cases;
+  exact owned container/database cleanup only. Scoped lint/format/types pass
+  after restoring the missing declared API dev Playwright package, no browser
+  download or browser acceptance claim.
+* Existing RPI evidence records base/head, conflict choices and commands. Both
+  original corrections retained; no new full RPI Review or independent Pass.
+  Topic publication uses explicit expected-remote lease only; no main write,
+  merge, issue closure, private data/cloud/payment or automatic child work.
+  External coordinator independent closure remains next.

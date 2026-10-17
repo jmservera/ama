@@ -19,6 +19,7 @@ the in-memory copy kept in step with the change sequence; the full-list export
 and the closed list also fall back to it.
 """
 import json
+import logging
 import os
 import sqlite3
 import threading
@@ -117,7 +118,19 @@ class _SyncLock:
     def __exit__(self, *exc):
         try:
             if self.depth == 1:
-                self.store._finish()
+                try:
+                    self.store._finish()
+                except Exception as error:
+                    if exc[1] is None:
+                        raise
+                    exc[1].add_note(
+                        f"SQL lock-exit recovery failed ({type(error).__name__}); "
+                        "original operation failure retained. "
+                        "Reload persisted records before retrying."
+                    )
+                    logging.getLogger(__name__).exception(
+                        "SQL lock-exit recovery failed; original operation failure retained"
+                    )
         finally:
             self.depth -= 1
             self.rl.release()
@@ -533,6 +546,8 @@ class SqlStore(Store):
                 from .bulk_edits import validate_sql
                 validate_sql(self)
                 stock.validate_sql(self)
+                from .finance import validate_sql as validate_finance
+                validate_finance(self)
                 self._validate_safety_clear()
                 cur = self._db_seq()
                 new = cur + 1
@@ -571,10 +586,20 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
-            except (ConflictError, GateError):
+            except (ConflictError, GateError) as error:
                 self.db.execute("ROLLBACK")
                 if getattr(self.local, "stock_decision", None) is None:
-                    self._discard()
+                    try:
+                        self._discard()
+                    except Exception as recovery_error:
+                        error.add_note(
+                            f"SQL write recovery failed ({type(recovery_error).__name__}); "
+                            "original operation failure retained. "
+                            "Reload persisted records before retrying."
+                        )
+                        logging.getLogger(__name__).exception(
+                            "SQL write recovery failed; original operation failure retained"
+                        )
                 raise
             except BaseException:
                 self.db.execute("ROLLBACK")
@@ -596,15 +621,15 @@ class SqlStore(Store):
             else:
                 self._sync()
 
-    def _discard(self):
-        """After a refused write: forget local edits and reload from the database."""
-        touched = list(self._touched())
-        self.local.pending.clear()
-        self.local.touched.clear()
+    def _discard(self, pending=()):
+        """Restore snapshots, retain supplied prior audit, then reload persisted records."""
+        touched = tuple(self._touched())
+        # Quarantine failed writes before any recovery I/O can fail or lock exit can flush.
+        self.local.pending[:] = pending
+        self._touched().clear()
         self.local.safety_clear.clear()
         self.local.resident_clear.clear()
         self.local.stock_clear.clear()
-        # Disarm failed writes and restore known snapshots before any fallible reload.
         self._seq = -1
         for cid in touched:
             self._load_case(cid, self._rv[cid], self._snap[cid])
