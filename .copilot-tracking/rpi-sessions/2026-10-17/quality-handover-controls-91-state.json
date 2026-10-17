@@ -49,9 +49,14 @@
       "decision": "Stop automatic session at the explicitly requested clean pushed PR terminal, not a new follow-up work item.",
       "status": "confirmed-and-delivered",
       "evidence": "User terminal instruction; https://github.com/jmservera/ama/pull/387 targets main from fix/quality-handover-controls-91. Source commit ca8b950d pushed normally; no merge/rebase/force-push or issue closure."
+    },
+    {
+      "decision": "Execute later coordinator-authorized latest-main topic rebase after correction publication, then publish only own topic with exact expected-old-head lease.",
+      "status": "implemented-and-validated",
+      "evidence": "Old head d322235641487ff2c4dea1e4339c99f973b7f75d; old base b5d4c8402692758bd929a7ff9bf1832770738346; latest fetched/verified base 2b24456863c0a8f39d47a73e22daeff3875cc825 (merged PR386 after PR385). Candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5. Four docs-only conflicts keep both intents; whole own production/test patch byte-identical. Fresh 206 local/205 pass/one opt-in browser skip; actual local MSSQL 83 pass/zero skip; configured gates and preservation checks pass. No issue95 fix duplication or independent Pass."
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Owner/coordinator reviews PR #387 and final-head checks/rubric before any separately authorized integration. Automatic session stopped at the requested PR terminal; no child task, merge or issue closure."},
+  "next_action": {"phase": "Follow-up", "action": "Stop at clean pushed PR #387 integration head on 2b24456863c0a8f39d47a73e22daeff3875cc825; coordinator independently reviews final head/checks before separately authorized integration. No new Review, merge, issue closure or unrelated task."},
   "prioritized_follow_ups": []
 }

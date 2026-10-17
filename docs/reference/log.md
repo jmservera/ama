@@ -5436,3 +5436,23 @@ metadata when the knowledge base was created.
   Actual Chromium exercised committed-refresh failure/reload as well as the
   full quality/replacement journey; configured engineering gates passed.
   Human, Azure, resident, screen-reader and full WCAG acceptance remain unclaimed.
+
+## [2026-10-17] integration | #91 onto merged grant controls and initializer base
+
+* Coordinator authorized latest-main topic rebase after correction publication.
+  Exact base 2b24456863c0a8f39d47a73e22daeff3875cc825 includes PR386/#95
+  and PR385. Prior head d322235641487ff2c4dea1e4339c99f973b7f75d rebased
+  to tested candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5.
+* Four documentation insertion conflicts retain all upstream routes and exact
+  complete log prefix, with #91 entries appended; both component sections kept.
+  Whole own production/test patch byte parity proven. No new grant/finance
+  correction, shared recovery redesign, fixture/manifest or authority change.
+* Preserved merged #95 current legacy-preparer transaction revalidation on grant
+  AND finance, scoped synthetic designation, shared finance operation, funding
+  history and neutral UI. Original #91 single Review and correction evidence
+  retained verbatim. Original case unchanged.
+* Fresh combined local tests: 206 run, 205 pass, one existing grant-browser skip.
+  Actual unique loopback SQL Server replay: 83 pass, zero skip; exact owned
+  container removed. Configured checks and document links passed. Earlier
+  broader/browser receipts are historical; no new independent Pass, Azure,
+  human-authority, screen-reader or WCAG claim, main write, merge or issue closure.

@@ -234,3 +234,96 @@ no unrelated follow-up is started. Full current head is available from git/PR
 without a self-referential commit hash in this artifact.
 
 Resume session: 723ca656-7a1a-411a-a9dd-f55919a9a289.
+
+## Authorized latest-main integration (2026-10-17)
+
+Coordinator explicitly authorized rebasing this run-owned topic after correction
+publication onto freshly fetched latest origin/main, including merged #95.
+Clean starting topic/remote/PR head:
+d322235641487ff2c4dea1e4339c99f973b7f75d.
+Old base b5d4c8402692758bd929a7ff9bf1832770738346.
+Fetched integration base 2b24456863c0a8f39d47a73e22daeff3875cc825,
+verified PR #386 merged at that exact commit; includes PR #385
+1fc7325b93ea845b9cb2e827efbea624f7d20d30.
+
+Rebase completed; candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5.
+Four conflicts were documentation-only: core/API README insertion points retain
+the full upstream #95 section followed by #91; KB index retains both rows and
+every upstream route; KB log retains exact full upstream byte prefix followed
+by both #91 entries. No ours/theirs replacement, shared recovery edit or new
+grant/finance correction. Source/test patch bytes over all src/tools/infra/mvp
+non-Markdown files are identical old-base/old-head versus new-base/candidate:
+SHA-256 a7eb041bf6ef894d67f6009a4c66074f0fe56250ade7439e268dcd3dae5038f7.
+
+Upstream finance.py/grants.py/store.py, neutral app.js, dataset fixture,
+scenario manifest and original case study verified byte-identical to integration
+base. Dataset untouched, so upstream exact hash retained without authority
+promotion or recomputation from a different fixture. Current persisted legacy
+preparer lookup remains inside grant AND finance transaction validation;
+scoped designation, shared _finance_operation and funding history retained.
+Issue91's published correction ONE and original single Review remain unchanged.
+
+Although conflicts are docs-only and the own production/test patch is identical,
+the runtime now includes substantive upstream shared finance/Store/fixture
+changes. A focused combined JSON/SQLite/HTTP and actual isolated local MSSQL
+replay will verify grant/finance/stock/procurement/hazard/quality interaction,
+rather than calling earlier pre-integration results fresh parity. No full
+RPI/Review repetition, browser/UI edit, cloud action or unrelated expansion.
+Integration validation completed on production/test candidate
+c0f67838383007c3f4a95ba0aa957378e2db0ba5. Historical counts above remain
+historical; the fresh integration results are:
+
+| Fresh combined-tree execution | Result |
+| --- | --- |
+| Quality/provider, grant JSON/SQLite, finance matching/sign-offs, stock/hazard/building, role matrix and grant/procurement HTTP | 206 run, 205 pass, one existing opt-in grant browser skip |
+| Actual local MSSQL quality/provider, stock, grant and finance matching | 83 run, 83 pass, zero skip |
+| Configured core Ruff/format/mypy | Pass: 59 format-managed files, 112 source files |
+| Configured API Ruff/format/mypy | Pass: 22 format-managed files, 54 source files |
+| Four conflicted docs' relative file links/marker checks and git diff whitespace | Pass |
+| Own whole production/test patch SHA-256 byte parity old/new bases | Pass; digest above |
+| Exact upstream log prefix, all upstream index routes, original case and #95 shared-source/fixture/manifest bytes | Pass |
+| Original single Review with closure addendum and original critique byte parity | Pass |
+
+Fresh local command, same installed local venv, no dependency restore needed:
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_quality_procurement test_grant_lifecycle_controls.JsonGrantChecks \
+  test_grant_lifecycle_controls.SqlGrantChecks \
+  test_finance_match_controls.JsonFinanceChecks \
+  test_finance_match_controls.SqlFinanceChecks test_stock_reconciliation \
+  test_finance_signoffs test_role_matrix test_grant_lifecycle_api \
+  test_procurement_api -q
+```
+
+Actual SQL selected test_mssqlstore.MssqlProcurement (includes quality),
+test_mssqlstore.MssqlStockDecisions,
+test_grant_lifecycle_controls.MssqlGrantChecks and
+test_finance_match_controls.MssqlFinanceChecks. Enabled only their explicit
+local test flags against a freshly created unique loopback container, dynamic
+port and process-generated unlogged secret. Actual SELECT 1 readiness passed.
+Owned container ama-quality91-7509b019ec5b and database
+quality91_21b884127be448218985a0f970880ac3; exact container removed in finally.
+Grant/finance tests created/dropped only their own UUID databases.
+Session-only fresh receipts: quality91-integration-local.log and
+quality91-integration-sql.log. The canonical tests explicitly cover issue91's
+real COMMIT followed by transient/persistent refresh fault with/without prior
+pending prefix, clean subsequent lock exit/reopen and exactly-once audit, legacy
+earlier-fixer resolution, and upstream issue95's transaction-time legacy
+preparer code/OID rebinding denial for both grant AND finance with no false
+audit. No duplicate issue95 implementation.
+
+No browser rerun on this integration: no UI conflict or source delta to the
+own patch, and upstream neutral UI retained verbatim. The one skip is the
+existing opt-in grant browser; previous quality/95 browser receipts remain
+historical, not fresh. No full suite, Azure, paid AI, human authority, WCAG or
+independent Pass claimed. Original law-store-unavailable diagnostics remain
+explicit in fictional HTTP fixtures.
+
+Fresh fetch immediately after validation still resolved origin/main to
+2b24456863c0a8f39d47a73e22daeff3875cc825. Publication uses the specifically
+authorized expected-old-remote lease d322235641487ff2c4dea1e4339c99f973b7f75d
+only for refs/heads/fix/quality-handover-controls-91. A separate integration
+evidence commit contains Markdown/state metadata only; final full head is
+reported by PR/git, avoiding a self-referential commit hash. No main write,
+merge, issue closure, external approval inference or other's dirty work used.

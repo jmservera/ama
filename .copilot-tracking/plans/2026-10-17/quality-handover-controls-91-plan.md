@@ -229,3 +229,15 @@ Completed: canonical probes reproduced both defects before the fixes; final
 focused checks, actual SQL Server 38 pass and actual Chromium committed-error/
 reload plus full replacement journey passed. Configured gates passed.
 No repeated critique/Review or independent regrade is claimed.
+
+## Coordinator-authorized latest-main integration
+
+After P04 publication, coordinator authorized own-topic rebase onto freshly
+fetched main 2b24456863c0a8f39d47a73e22daeff3875cc825 (merged #95/PR386
+and PR385). Four documentation-only conflicts retain full upstream prefix,
+routes and #95/#91 sections. Whole production/test patch byte parity proven;
+no new feature/correction phase, grant/finance fix or Review repetition.
+Fresh combined candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5:
+206 local tests, 205 pass/one opt-in browser skip; 83 actual local MSSQL pass,
+zero skip; configured gates and preservation checks pass. Changes record holds
+exact bases/heads/digest/selectors and lease publication boundary.

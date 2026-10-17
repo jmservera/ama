@@ -65,6 +65,14 @@ upload/offer/accept source/version/reason and exact change events; final-head
 independent reassessment remains required. Actual schema authority is a
 separate human prerequisite, not a reason to leave provenance unimplemented.
 
+Issue #91 integrates merged #95/PR386 and PR385 on main
+2b24456863c0a8f39d47a73e22daeff3875cc825. Both task routes and full knowledge
+histories are retained, with byte-identical own production/test patch. Fresh
+combined checks passed 205 of 206 local cases (one opt-in grant-browser skip)
+and all 83 actual local SQL Server cases. Original #91 Review Not accepted and
+its correction evidence remain distinct; coordinator final-head review remains
+separate. See the [integration log](./log.md#2026-10-17-integration--91-onto-merged-grant-controls-and-initializer-base).
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect grant lifecycle and designated human controls (#95) | [Core scoped exercise-authority contract](../../src/core/README.md#grant-lifecycle-and-human-exercise-designation-95) and [API/application distinction](../../src/api/README.md#grant-and-application-records-95) | [Finance journey criterion audit](./research/ux/customer-journeys/finance.md#grant-lifecycle-acceptance-audit-2026-10-17-95): existing states retained; current registry, exact state/case/route designation, fresh UTC transaction checks, independent identity and GBP evidence. Application confirmation is not award/cash; original GBP 40 million remains unverified. Original Review Not accepted retained; correction ONE restores current legacy preparer lookup with failing-first regressions; coordinator independent closure pending. No real delegation, payments or full PRD pack/export acceptance |

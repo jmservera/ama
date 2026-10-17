@@ -142,3 +142,22 @@ errors). Final implementation passes all named tests, 361 selected tests with
 notice/reload and complete handover/replacement journey. Prior pre-commit
 failure/actor/stale/provider/stock/finance checks remain covered.
 No second Review; original Complete / Not accepted retained.
+
+## Authorized integration continuation
+
+Fresh latest-main base 2b24456863c0a8f39d47a73e22daeff3875cc825 includes
+merged #95's canonical persisted legacy-preparer writer revalidation, shared
+finance operation, designation/evidence/history and neutral UI. All preserved
+verbatim, with upstream fixture/manifest bytes unchanged. Four docs conflicts
+retain upstream KB byte prefix/routes and both component sections. Whole own
+production/test patch is byte-identical against old/new bases. No source
+conflict or new defect correction.
+
+Combined-tree candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5 actually
+ran 206 focused local cases (205 pass, one opt-in grant browser skip) and 83
+actual local MSSQL cases (all pass), including grant/finance legacy rebinding,
+quality post-COMMIT prefix handling and legacy fixer, stock/procurement/
+hazard/safety gates. Exact selectors/resources/receipts and integrity checks
+are in the changes record. Earlier broader/browser counts remain historical.
+Original Review is byte-preserved; final-head independent gate belongs to
+coordinator, not this integration continuation.
