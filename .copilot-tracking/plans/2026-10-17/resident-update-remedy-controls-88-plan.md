@@ -6,7 +6,7 @@
 * Task ID: 88
 * Slug: resident-update-remedy-controls-88
 * Date: 2026-10-17
-* Planning status: authorized correction TWO implemented/validated; external disposition pending
+* Planning status: source PASS supplied by independent reviewer; sensor integration complete; metadata reconciled, coordinator acceptance/CI pending
 * Details: .copilot-tracking/details/2026-10-17/resident-update-remedy-controls-88-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/resident-update-remedy-controls-88-plan-critique.md
 
@@ -20,9 +20,24 @@ Completed coordinator-authorized scope includes departed response-owner recovery
 and final correction TWO under P01-T01/P02: route/state responsibility, not shared
 owner email, selects the status clock. Explicit manager-only versioned service/
 redress reassignment preserves captured owner history and independent clocks.
-Original Review/critique stay unchanged; no new full Review, base change or policy
-authority. Source/evidence published normally as75a12e95; external disposition
-remains. Newer main943febc2 observed read-only, not integrated without authorization.
+Original Review/critique stay unchanged; no new full Review or policy authority.
+Subsequently authorized sensor integration is complete on base
+943febc23e99e397724cb81d2580f781b91e13f7. Actual git history verifies
+rebased correction source f2e848e2a65642e33039b9980192d7b3b7cdd772
+(historical preintegration75a12e95), published with integration metadata at
+2ce01058ba22bbaba7ac478cd2c4e7988c47addc. The current metadata-only
+receipt changes no source/tests; final metadata head is reported in PR body/handoff.
+Coordinator supplies reviewer f786737f SOURCE PASS for all three criteria at
+2ce01058. Coordinator final acceptance and CI remain pending.
+
+Current integration evidence:
+.copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-sensor-integration.md.
+Its supplied validation is 240 run/237 pass/three skips,94 agent passes and100
+API passes with overlapping selectors, not a unique total. Reviewer independently
+executed120 tests/three skips. Nine actual SQL passes belong to historical
+correction TWO, not fresh integrated/final metadata execution. No tests/SQL/browser
+rerun for metadata-only reconciliation. Original Review/critique/correction ONE/
+correction TWO/sensor integration receipts remain byte-exact.
 
 ### What You May Not Know
 
@@ -157,9 +172,9 @@ Correction ONE completion: 145 resident/browser/handoff/report tests, 134 pass/
 MSSQL tests pass/no skips, final configured statics and JS syntax pass. Interrupted
 broader replay is not a completed run. Original Review/critique unchanged;
 separate correction receipt maps all three exact criteria to source/test proof.
-Source/evidence published normally as5cfa8e53 on same PR392; final metadata
-receipt follows without source changes. Independent final-head disposition remains
-external and pending. No merge/issue closure.
+Historical correction ONE source/evidence published normally as5cfa8e53 on PR392,
+subsequently rebased as a4e31b62 during completed sensor integration. Current
+publication and source disposition are recorded above; no merge/issue closure.
 
 Correction TWO completion: 74 fresh resident JSON/SQLite/API tests (72 pass/two
 existing skips), nine actual MSSQL tests pass/no skips and configured core/API
@@ -167,6 +182,12 @@ Ruff/format/mypy pass. No changed web bytes; prior browser/JS receipts historica
 Core/API guides and resident synthesis/index/log updated; original Review/critique
 and correction ONE evidence unchanged. Separate correction TWO receipt records
 exact commands/matrix/proof. No third cycle or independent self-Pass.
+Subsequent authorized sensor integration preserves exact resident patch lines
+across14 src paths and complete sensor intent. Current source PASS is supplied
+reviewer evidence, not a rewritten original RPI Review. The reviewer Low
+pre-existing independent-review intake observation stays residual for coordinator/
+repository-owner routing; no intake changes or third source correction authorized.
+RV-001 #81 triage and human/screen-reader/WCAG acceptance remain separate.
 
 ## Dependencies
 

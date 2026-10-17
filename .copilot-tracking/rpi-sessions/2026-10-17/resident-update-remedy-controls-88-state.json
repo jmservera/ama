@@ -6,21 +6,35 @@
   "active_phase": "Follow-up",
   "status": "completed",
   "session_status": "stopped",
+  "current_publication": {
+    "base": "943febc23e99e397724cb81d2580f781b91e13f7",
+    "rebased_resident_source_revision": "f2e848e2a65642e33039b9980192d7b3b7cdd772",
+    "last_verified_published_head": "2ce01058ba22bbaba7ac478cd2c4e7988c47addc",
+    "source_tree": "b0c8286dec175178b19de2fdfc8520ecef8c4d8e",
+    "integration_receipt": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-sensor-integration.md",
+    "integration": "Authorized sensor PR393 rebase and exact-topic lease publication completed; subsequent metadata-only reconciliation does not change reviewed source",
+    "source_disposition": "Coordinator supplied reviewer f786737f SOURCE PASS for all three issue88 acceptance criteria at 2ce01058; not a new full RPI Review or self-Pass",
+    "acceptance": "Coordinator final acceptance and CI pending",
+    "validation_provenance": "Delivery integration receipt supplied 240 run/237 pass/3 skips, agents94pass and API100pass with overlap; reviewer independently executed120run3skip. Nine actual MSSQL passes are historical correction TWO evidence, not a fresh integrated or metadata-head run",
+    "metadata_only": "Current records reconciled after reviewed publication; final metadata commit hash is reported in PR body and handoff, not self-referenced here"
+  },
   "authorized_correction_two": {
     "number": 2,
     "last_authorized_cycle": true,
-    "validated_base": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
+    "validated_base": "943febc23e99e397724cb81d2580f781b91e13f7",
+    "historical_correction_validation_base": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
     "observed_latest_main": "943febc23e99e397724cb81d2580f781b91e13f7",
-    "integration": "Main advanced to sensor PR393 at final check; graph read only, no authorized rebase/import",
+    "integration": "Subsequently authorized sensor PR393 integration completed onto943febc2; receipt linked in current_publication, exact resident patch parity verified",
     "start_head": "36b5dcfaba9b502887e1f727db86b5b83976dc53",
     "input": "Coordinator f786737f Revise Medium: same-person service/redress email collision changes wrong status clock",
     "scope": "P01-T01 plus P02-T01/T02; backend only, no new full Review",
     "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-correction-two.md",
-    "remaining": "Independent coordinator final-head disposition",
-    "published_source_head": "75a12e9541e2996d77fcb416f27d8174f0b047bb",
-    "publication": "Normal source push to same PR verified; final metadata-only receipt follows without source changes",
-    "validation": "Failing-first8subcasefailures;74freshresidentcoreAPI72pass2skip;9actualMSSQLpass0skip;configuredcoreAPIstaticsPass;nowebchanges",
-    "external_disposition": "Revise Medium pending coordinator acceptance"
+    "remaining": "Coordinator final acceptance and CI; source PASS supplied by independent reviewer",
+    "published_source_head": "f2e848e2a65642e33039b9980192d7b3b7cdd772",
+    "historical_preintegration_source_head": "75a12e9541e2996d77fcb416f27d8174f0b047bb",
+    "publication": "Correction source rebased as f2e848e2; completed sensor integration published at2ce01058, followed only by metadata reconciliation",
+    "validation": "Historical correction TWO: failing-first8subcasefailures;74residentcoreAPI72pass2skip;9actualMSSQLpass0skip;configuredcoreAPIstaticsPass;nowebchanges. Integrated supplied and independent executed counts are separated in current_publication",
+    "external_disposition": "Reviewer f786737f SOURCE PASS all three criteria at2ce01058; mutable metadata gate reconciliation only, coordinator acceptance pending"
   },
   "authorized_correction": {
     "number": 1,
@@ -29,8 +43,9 @@
     "start_head": "3938fb7f9ad6ec413768037f53ea7c9b9b96e608",
     "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-correction-one.md",
     "remaining": "None for original departed-owner finding; separate correction TWO covers introduced status responsibility ambiguity",
-    "published_source_head": "5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3",
-    "publication": "Normal same-topic source push verified; final metadata reconciliation follows normally without source changes",
+    "published_source_head": "a4e31b62c2932861a9688430997185208ac906da",
+    "historical_preintegration_source_head": "5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3",
+    "publication": "Historical normal correction ONE source push subsequently rebased as a4e31b62 during completed authorized sensor integration",
     "validation": "145 resident/browser/handoff/report tests:134pass11skip;24sharedguardspass;8actualMSSQLpass0skip;configuredcoreAPIstaticsandJSsyntaxpass",
     "external_disposition": "Original departed-owner Medium closed by coordinator f786737f evidence; no new full Review"
   },
@@ -71,7 +86,7 @@
     {
       "decision": "Publish own implementation and all dated RPI artifacts",
       "status": "complete; main PR open",
-      "evidence": "https://github.com/jmservera/ama/pull/392; implementation commit 2672dcbb968524b734e34666c3114439e0472c14 pushed normally; final publication/state bookkeeping will be separately committed without amend"
+      "evidence": "https://github.com/jmservera/ama/pull/392; original historical implementation2672dcbb subsequently integrated/rebased; current base/source/publication recorded in current_publication"
     },
     {
       "decision": "Retain original Review unchanged after routing RV-001",
@@ -87,7 +102,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Stop at clean normally published PR #392 for independent coordinator final-head correction TWO disposition; no idle CI watch, new full Review/third cycle, rebase, merge or issue closure."
+    "action": "Stop at clean published PR #392 after metadata-only reconciliation for coordinator acceptance and CI. Authorized sensor rebase onto943febc2 is already complete; no further rebase/integration, source correction, full Review, merge or issue closure authorized. No idle CI watch."
   },
   "prioritized_follow_ups": [
     {
@@ -95,6 +110,12 @@
       "task": "Route broader lease, scope-review and Housing/Complaints age-band governance at the next parent #81 backlog triage",
       "rationale": "RV-001 requests an actionable owner/next step, not issue88 implementation. Planning parent/repository owner must identify an existing separately owned item or assign one; Legal/Housing/Complaints retain professional approval. Do not start work or invent authority/thresholds here.",
       "evidence": "Original Review RV-001; plan Follow-Up Items; full PRD AC-063 and BRD FR-047/AC-089 exceed the three issue88 criteria"
+    },
+    {
+      "rank": 2,
+      "task": "Retain reviewer Low pre-existing independent-review intake observation as separately scoped residual",
+      "rationale": "No intake source change is authorized by this metadata gate. Coordinator/repository owner decides whether to route it separately; human/WCAG acceptance remains unperformed.",
+      "evidence": "Coordinator-supplied reviewer f786737f Low residual; not an issue88 source correction or third cycle"
     }
   ]
 }

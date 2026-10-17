@@ -9,16 +9,49 @@
 
 ## Execution Status
 
-Correction TWO implemented/validated after coordinator f786737f Revise Medium:
+Current: completed authorized sensor integration onto
+943febc23e99e397724cb81d2580f781b91e13f7. Verified git source revision
+f2e848e2a65642e33039b9980192d7b3b7cdd772 includes correction TWO;
+last verified published integration head2ce01058ba22bbaba7ac478cd2c4e7988c47addc
+adds only metadata after that source revision. Current metadata reconciliation
+does not change source/tests/web; final metadata head is reported in PR body/
+handoff rather than self-referencing its own file.
+Existing integration receipt:
+.copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-sensor-integration.md.
+Exact resident14-path patch parity, sensor intent, KB prefix/routes and original
+Review/critique hashes were independently verified per coordinator.
+
+Coordinator supplies reviewer f786737f SOURCE PASS for all three issue88 criteria
+at2ce01058. Remaining gate here is mutable metadata consistency only, not a third
+source correction or new full Review. Coordinator final acceptance and CI pending.
+Supplied integration results237pass/three skips of240run,94agentpass/100APIpass
+overlap; reviewer independently executed120run/three skips. Nine actual SQL
+passes are historical correction TWO evidence, not a fresh integrated or metadata
+head run. No SQL/browser/test rerun needed or claimed for this metadata change.
+Pre-existing independent-review intake Low remains separately scoped residual,
+with coordinator/repository owner deciding routing. RV-001 #81 triage and human/
+screen-reader/WCAG acceptance remain open; no source work authorized here.
+
+Metadata gate validation: git diff --check passed; Python json.loads parsed the
+current state and verified its current base/source ancestry. git source-tree ID
+b0c8286dec175178b19de2fdfc8520ecef8c4d8e is identical at f2e848e2 and
+reviewed2ce01058; `git diff --exit-code 2ce01058 -- src` confirms no source/test/web
+changes. Byte comparisons/SHA256 confirm original adverse Review/critique and
+both correction receipts plus sensor integration receipt unchanged. Exactly the
+three mutable JSON/plan/changes files differ. Fresh account lookup precedes the
+normal privacy-safe metadata commit/push; final hash belongs in PR body/handoff.
+
+Historical correction TWO implemented/validated after coordinator f786737f Revise Medium:
 status ownership follows responsibility, not colliding owner emails. Bounded backend work
 and fresh evidence tracked separately in resident-update-remedy-controls-88-correction-two.md.
 Original Review/critique and correction ONE evidence retained unchanged.
 Fresh 74 resident core/API tests:72pass/two existing skips; nine actual MSSQL
 tests pass/no skips; configured core/API Ruff/format/mypy pass. No web edits,
 new full Review or self-declared disposition. Source/tests/evidence normally
-published as75a12e9541e2996d77fcb416f27d8174f0b047bb on PR392;
-external final disposition pending. Base remains74617981; main's newer sensor
-PR393 observed read-only, no unauthorized integration.
+published as75a12e9541e2996d77fcb416f27d8174f0b047bb on PR392 before
+authorized sensor integration; rebased equivalent is f2e848e2 on current943febc2
+base. The prior74617981 base and then-read-only main observation are historical,
+not current integration state. Original correction receipt remains unchanged.
 
 Original implementation of P01-T01/T02 and P02-T01/T02 completed and evidence
 reconciled before the single original Review. Coordinator-authorized correction
