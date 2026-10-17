@@ -12,8 +12,8 @@ Starting head: `196972dc0dac256cdfd41f70bc06e7cad5fbebf2`.
 No application changes planned; only new dated recovery tracking evidence.
 Research, plan verification, implementation inspection and recovery Review
 performed now in order. Original 2026-10-16 artifacts remain unchanged
-historical inputs. Validation/inspection complete and passing; publication
-still pending. No private data or default generator run permitted.
+historical inputs. Validation/inspection complete and passing; evidence
+publication verified below. No private data or default generator run permitted.
 
 ## P01-T01: Implementation Inspection
 
@@ -100,3 +100,26 @@ TemporaryDirectory outputs are already cleaned. Persistent transcripts
 contain only constructed-data execution and non-secret GitHub/git metadata.
 No documentation/knowledge-base files changed during recovery, so no new
 reference index/log update is necessary.
+
+## Publication Verified and Closeout
+
+Resolved authenticated `gh api user` immediately before commit, constructed
+the returned ID/login noreply address and configured repository-local
+user.email; author and committer explicitly used that address.
+Conventional Commit with Refs #176 and required co-author trailer:
+`551b99fe0b293ceeef0b59416236f04c48fe3181`
+(`docs: record synthetic determinism recovery verification`).
+Normal push succeeded on the existing branch. `git ls-remote`, local HEAD
+and PR head all matched this full evidence SHA. PR #368 remained OPEN,
+targeting main; body preserved and recovery appendix added, Refs #176 true,
+closingIssuesReferences empty. Git diff against inspected head for
+src/infra/docs/support/mvp/prototype/.env/.vscode empty; worktree clean.
+Staged new-artifact `git diff --cached --check` passed before commit.
+
+New hosted checks on the evidence commit were queued/in progress at that
+verification, not claimed passing. Twelve SUCCESS checks belong to the
+pre-recovery inspected head only. Final metadata-only closeout will be a
+separate normal commit/push; final full HEAD is read from Git and reported
+in the handoff rather than attempting an impossible self-referential SHA.
+No Review repetition or new application/test execution is claimed.
+Task recovery is complete; session stops as explicitly requested.
