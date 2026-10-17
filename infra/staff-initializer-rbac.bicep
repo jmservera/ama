@@ -19,6 +19,10 @@ resource initializer 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-3
   name: initializerIdentityName
 }
 
+resource relay 'Microsoft.App/jobs@2025-07-01' existing = {
+  name: 'job-${substring(initializerIdentityName, 3)}'
+}
+
 resource restartRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   name: guid(resourceGroup().id, 'staff-initializer-api-restart')
   properties: {
@@ -46,6 +50,36 @@ resource restartAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' 
   name: guid(api.id, initializer.id, restartRole.id)
   properties: {
     roleDefinitionId: restartRole.id
+    principalId: initializer.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource relayRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
+  name: guid(resourceGroup().id, 'staff-initializer-result-tags')
+  properties: {
+    roleName: 'Staff initializer result tags (${resourceGroup().name})'
+    description: 'Read/merge encrypted result tags on the existing initializer only; no job settings, secrets or Graph access.'
+    type: 'CustomRole'
+    assignableScopes: [resourceGroup().id]
+    permissions: [{
+      actions: [
+        'Microsoft.Resources/tags/read'
+        'Microsoft.Resources/tags/write'
+      ]
+      notActions: []
+      dataActions: []
+      notDataActions: []
+    }]
+  }
+  dependsOn: [guard]
+}
+
+resource relayAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: relay
+  name: guid(relay.id, initializer.id, relayRole.id)
+  properties: {
+    roleDefinitionId: relayRole.id
     principalId: initializer.properties.principalId
     principalType: 'ServicePrincipal'
   }

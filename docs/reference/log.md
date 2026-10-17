@@ -4557,3 +4557,154 @@ metadata when the knowledge base was created.
   no private stock, credentials, paid model, live SQL Server/Azure or new service.
   Human accessibility/comprehension, complete workflow representation, operational
   owner ratification and live-platform exercise acceptance remain separate.
+
+## [2026-10-17] implementation | Laptop-safe setup and restricted migration (Refs #360)
+
+* Completed Research (3e24e7c), Plan (96871b3, one critique with direct
+  dispositions) and Implement. Dated phase evidence and state are committed
+  under .copilot-tracking; one post-implementation Review remains next.
+* Replaced private-console result dependence with bounded authenticated
+  ciphertext in existing initializer ARM tags, owned-run cleanup and verified
+  same-VNet parent discovery. Key Vault handoff uses a minimal secureString
+  ARM deployment, exact single-secret Create what-if and metadata verification.
+  No app fallback, plaintext roster/key in tags, or private endpoint opening.
+  Actual vault what-if passed; intercepted PUT, no secret created.
+* Approved deployment demo-stage-360-20261017 created only the replacement
+  API/auth in the already existing external environment after reviewed what-if.
+  Retained source fingerprint, immutable image, runtime settings, identity and
+  auth verified; new replica Healthy/Running. Deny-all keeps four direct routes
+  403 pending genuine tenant/runtime setup; this is not welcome/health/login
+  acceptance. Old API/environment/Front Door and all six Disabled backing
+  public-access settings remain preserved.
+* Full infra 319 tests/no skips, API auth 32 tests, all 22 Bicep build/lint,
+  existing relevant eleven-file Ruff/format, strict/scoped mypy and pip check
+  passed. No expiry/reuse or app-secret preservation edits owned by #358.
+* [Current a-f audit](../architecture/cutover-evidence-pack.md#laptop-setup-and-restricted-migration-readiness-2026-10-17),
+  [runbook](../../infra/README.md#in-vnet-sql-staff-step-refs-360) and
+  [ADR status](../adrs/0001-azure-architecture.md#direct-synthetic-demo-entry-decision-2026-10-16)
+  distinguish source delivery/staging from **UNMET d/e**.
+  Private image publisher, explicit source-job tags/demo-API restart role
+  activation and human tenant/mailbox/roster/browser/SQL/AI gates remain.
+  No live role, Graph, SQL or credential write, build, exposure or retirement;
+  no issue closure or human sign-off inferred.
+
+## [2026-10-17] review | Demo readiness full RPI phase completion (Refs #360)
+
+* Completed the one post-implementation Review of 6f43559; execution Complete,
+  outcome Residual work, not conformant live readiness. Research, Plan,
+  Implement and Review all have dated persistent artifacts/completion records.
+* No material source defect identified in the supplied boundary. RV-001/002/
+  003/004 route existing private-publisher, explicit IAM, human tenant/runtime
+  acceptance and gated retirement work to their distinct owners. No second
+  Review, source correction loop or further Azure action.
+* Refs #360 publication follows; issue d/e and human approval remain unmet.
+  No coordinator-owned issue closure, merge or child task is performed.
+
+## [2026-10-17] delivery | Demo readiness PR published and session stopped (Refs #360)
+
+* Published [PR #375](https://github.com/jmservera/ama/pull/375), base main,
+  branch fix/demo-setup-readiness-360, Refs #360 only. Observed initial remote
+  head 4b50561cff0a0f1b6598bad3451e962f66e4f890; final receipt-only completion
+  commit records this publication and stopped state, without source/live changes.
+* All four RPI phases complete with dated committed evidence. One critique,
+  one Review (Complete / Residual work); current source candidate 6f43559.
+  Exact final PR head is read back after the receipt commit push, not embedded
+  circularly in its own committed content.
+* Automatic session stopped under the caller's explicit publication boundary.
+  No issue closed, merge, force-push or child task. d/e remain UNMET; exact
+  owner actions and actual resource/validation evidence are in the PR/current
+  audit. No human approval or operational readiness is inferred.
+
+## [2026-10-17] integration | Same-session PR #375 upstream and blocker continuation
+
+* Owner explicitly resumed #360/PR #375, authorized latest-main rebase and
+  topic-only force-with-lease. Integrated main 51db4fa8 (#373 sensor faults,
+  #374 credential preservation), retaining exact #358 helper source, expiry/
+  selection/readback/handoff behavior, upstream tests and legacy CLI delegate.
+  Both index/evidence sections and entire upstream append-only log prefix
+  retained; no sensor or upstream evidence changes.
+* Four additive combined ARM/KV inventory, digest/recovery, failure and generated/
+  legacy expiry tests; focused37, unchanged setup/legacy/mutation101 and
+  full infra329/no skips passed. Existing eleven-file Ruff/format, strict/scoped
+  mypy, all22 Bicep build/lint and pip check passed. Broader retained workflow
+  results are recorded in the same changes artifact, not a new delivery loop.
+* [Concrete publisher/IAM evidence](../../infra/README.md#private-publication-blocker-evidence-2026-10-17-pr-375-continuation):
+  actual Docker socket permission denial, anonymous registry403 and GitHub
+  packages403 (missing read:packages, inventory unknown). Registry task/pool
+  lists and self-hosted runner list empty; permitted ama inventory has no
+  builder VM/ACI. Current CI retains reports, not images; historical default
+  quick-run success does not provide a private-connected publisher now.
+* Official ACR guidance requires a dedicated pool/public task-IP rules for
+  private builds, or trusted-service bypass for restricted import. No pool,
+  new spend/network change prohibited: neither build nor import attempted or
+  claimed as an actual denied write. IAM activation also not attempted:
+  explicit approval still required, not an observed AuthorizationFailed.
+  Smallest actions: identify existing private-connected builder/operator with
+  existing push rights, and separately authorize exact demo-API/source-job
+  role deployment. No credentials, role/network/resource/data changes or
+  live sign-in; #360 d/e remain UNMET and issue open.
+* Original one-pass Review remains historical. Reviewer4536f9cc unavailable
+  through agent messaging; new exact candidate SHA and retained finding boundary
+  are supplied in PR #375, not falsely described as already reviewed.
+
+* Completed broader retained workflow checks: API563 tests/OK with110 explicit
+  skips (109 disposable SQL Server, one opt-in rendered browser); core546/OK
+  with one isolated Azure SQL skip; orchestrator22/OK; branding migration25/OK
+  after restoring its missing pinned dependencies. API initial wrong-cwd import
+  errors resolved by using existing src/api workflow cwd, not source workarounds.
+  JS syntax and pip check passed. These are local synthetic checks, not live
+  staff/SQL/browser acceptance.
+
+## [2026-10-17] delivery | PR #375 continuation rebased, tested and pushed
+
+* Same #360 session, main51db4fa8 integrated; exact owner-authorized topic lease
+  from662c11b to63aea6445bb89fe5a12064aa932a9df84fea85e9 verified by remote
+  ref. Upstream helpers/tests/legacy delegate, #373/#374 artifacts and both
+  knowledge histories retained. Final completion-only commit records stopped
+  state; its exact head is supplied in PR #375, not claimed pre-reviewed.
+* P04-T01/T02/T03/T04 complete. No extra critique/Review or delivery loop,
+  no main rewrite/merge/issue closure and no live resource/credential/role/
+  network/data writes. #360 d/e remain UNMET and open. Concrete blocker actions
+  remain existing private-connected builder/operator and explicit exact IAM
+  authorization, not generic image denial or a fabricated permission failure.
+
+## [2026-10-17] delivery | PR #375 independent reuse-guard correction
+
+* Independent Revise accepted: eligible untagged/unreferenced app-backed
+  credential bypassed the requested Key Vault mode. Two new regression
+  methods failed in11 subcases before source changes, including directory
+  callback reconciliation before rejection. Original internal PC-001/no-defect
+  assessment missed it; historical evidence retained with explicit correction.
+* Actual selected generated/legacy candidate now checked before recording
+  its store. Read-only pre-reconciliation uses the same expiry/selection
+  implementation, before locks/directory writes; no incompatible reuse,
+  rotation, migration or unrelated-secret loss. #374 helpers/tests/legacy
+  and #373 source remain intact; pending digest verification stays read-only.
+* Focused41, unchanged setup101 and full infra333/no skips passed. Existing
+  lint/format/type, setup static/compile, pip and whitespace gates passed.
+  Same-loop correction only; exact pushed head supplied in PR #375.
+  Independent reviewer must verify before merge; Revise not self-overridden.
+* IAM actions ["*"]/no exclusions is not demonstrated inability; activation
+  unattempted pending explicit narrow-grant authorization. Docker socket
+  denial actual, ACR Tasks/import not attempted or proven IAM-denied.
+  No live writes or ready/login claim; restricted403 only, #360 d/e remain open.
+
+* P05-T01/T02/T03 completion persisted after ordinary topic push of
+  23db069a32618678a04bd8a0fa58d3d9ed723e99 and exact remote-ref readback.
+  Final completion-only head reported in PR #375; stopped pending independent
+  verification, no self-acceptance, extra loop, merge or issue closure.
+
+## [2026-10-17] delivery | PR #375 integration after queue PR #376
+
+* Owner-authorized topic rebase onto0bdcb2f0, no new phase or RPI/review loop.
+  Both append-only KB histories retained byte-for-byte, both index routes
+  retained; credential scripts/tests/runbook exact190391a and every other
+  #376 file exact main. Correction1 evidence/hashes remain historical.
+* Fresh focused41/setup101/full infra333/no skips and existing lint/format/
+  static/compile/type/pip gates passed on integrationc187909. Exact final
+  artifact-only head verified at topic/PR publication and posted in PR375.
+  Authorized force-with-lease only on topic, expected prior190391a.
+* Original finding remains open pending independent Pass on final head;
+  reviewer4536f9cc's review of190391a is not presumed final-head acceptance.
+  No cloud writes or merge; draft and human private-image, explicit narrow
+  IAM authorization, tenant/live d/e prerequisites remain unchanged.

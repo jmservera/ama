@@ -49,6 +49,17 @@
         "Microsoft.App/containerApps/revisions/replicas/read",
         "Microsoft.App/containerApps/revisions/restart/action"
       ]
+    },
+    {
+      "name": "staff-initializer-result-tags",
+      "identity": "existing SQL administrator id-<prefix>-init",
+      "scope": "existing initializer job only, ama",
+      "bicep": "staff-initializer-rbac.bicep",
+      "status": "Offline definition; explicit permission activation blocked",
+      "actions": [
+        "Microsoft.Resources/tags/read",
+        "Microsoft.Resources/tags/write"
+      ]
     }
   ],
   "sqlGrants": [

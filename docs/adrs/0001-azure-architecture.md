@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -102,6 +102,20 @@ separate offline implementation from required owner approval, live sign-in,
 SQL/AI proof and separately authorized retirement. No deployment or spending
 approval is implied. Front Door remains an optional production edge, not a
 demo prerequisite.
+
+2026-10-17 implementation status: the approved additive replacement API/auth
+is staged in the existing external environment with Deny `0.0.0.0/0` ingress,
+not publicly accepted. Stable direct FQDN discovery is retained while requests
+are 403 pending real registration/credential/runtime setup. The existing
+initializer can serve the replacement only after both environment subnets are
+verified in the same ama VNet. Encrypted results use bounded ARM tags on that
+initializer; the laptop writes the browser credential through a single-secret
+secureString ARM deployment, never a public vault or app-secret fallback.
+Image publication and resource-scoped tag/restart grant activation remain
+explicit prerequisites, not authority conferred by this ADR. The
+[current audit](../architecture/cutover-evidence-pack.md#laptop-setup-and-restricted-migration-readiness-2026-10-17)
+records actual actions, private-service checks and unmet d/e; no old resource
+or Front Door retirement is authorized by staging success.
 
 ## Identities and access
 

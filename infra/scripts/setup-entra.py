@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any, NoReturn
 from urllib.parse import quote, urlencode, urlsplit
 
+import credential_arm
 import staff_azure
 from staff_roster import person, roster_rows
 
@@ -1289,8 +1290,30 @@ def verify_secret_handoff(cli: Azure, app: dict[str, Any], readonly: bool) -> No
         cli.rest(app_url(app), method="PATCH", body={"tags": tags})
 
 
+def azure_credential_guard(app: dict[str, Any], auth: dict[str, Any],
+                           args: argparse.Namespace, selected: dict[str, Any] | None = None) -> None:
+    if not args.run_in_azure or args.bearer_only:
+        return
+    tagged_store = app.get("tags", {}).get(STORE_TAG)
+    recorded_name = app.get("tags", {}).get("zava-forward-credential-name")
+    secrets = app.get("properties", {}).get("configuration", {}).get("secrets") or []
+    current_name = aad_registration(auth).get("clientSecretSettingName")
+    if (args.secret_store == "app" or tagged_store == "app"
+            or (selected is not None and not selected.get("keyVaultUrl"))
+            or any(s.get("name") in (recorded_name, current_name) and not s.get("keyVaultUrl")
+                   for s in secrets)):
+        raise SetupError(
+            "Azure setup requires Key Vault storage. Existing/selected app-backed "
+            "credentials need a separately approved migration; no credential conversion made.")
+    args.secret_store = "keyvault"
+
+
 def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration: dict[str, Any],
-                     auth: dict[str, Any], args: argparse.Namespace, readonly: bool) -> tuple[str | None, bool]:
+                     auth: dict[str, Any], args: argparse.Namespace, readonly: bool, *,
+                     reuse_only: bool = False) -> tuple[str | None, bool]:
+    if reuse_only and not readonly:
+        raise SetupError("Credential reuse preflight must be read-only.")
+    azure_credential_guard(app, auth, args)
     client = object_id(registration["appId"])
     current = aad_registration(auth)
     secret_name = "entra-" + client.replace("-", "")
@@ -1307,13 +1330,17 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
                 and s["name"].startswith(secret_name)]
     if matching:
         selected = next((s for s in matching if s["name"] == existing_ref), matching[-1])
+        azure_credential_guard(app, auth, args, selected)
         return selected["name"], record_credential_store(cli, app, selected, readonly)
     if (identifier(current.get("clientId")) == client and existing_ref
             and not existing_ref.startswith(secret_name)
             and any(c.get("displayName") == existing_ref for c in valid)
             and any(s["name"] == existing_ref for s in secrets)):
         selected = next(s for s in secrets if s["name"] == existing_ref)
+        azure_credential_guard(app, auth, args, selected)
         return existing_ref, record_credential_store(cli, app, selected, readonly)
+    if reuse_only:
+        return None, False
     action = (auth.get("globalValidation") or {}).get("unauthenticatedClientAction")
     if action == "Return401" and not args.create_secret and not args.enable_browser:
         return None, False
@@ -1332,11 +1359,14 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
                 raise
             print("Browser credential missing/expired; storage discovery blocked: " + str(error))
             return secret_name, True
-        print("Checking selected Key Vault endpoint using secret metadata only; no secret values are read.")
+        print("Checking selected Key Vault using secret metadata only; no secret values are read.")
         try:
-            cli.call(["keyvault", "secret", "list", "--vault-name", vault, "--maxresults", "1"])
+            if args.run_in_azure:
+                credential_arm.preflight(cli, app, vault)
+            else:
+                cli.call(["keyvault", "secret", "list", "--vault-name", vault, "--maxresults", "1"])
         except AzureError as error:
-            if args.direct_ingress and args.secret_store is None and error.kind in (
+            if not args.run_in_azure and args.direct_ingress and args.secret_store is None and error.kind in (
                     "permission", "request", "transient", "network"):
                 action = "would use" if readonly else "using"
                 print(f"Private Key Vault unavailable here; {action} the Container App secret store for this demo; vault networking stays private.")
@@ -1365,7 +1395,12 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
     if not isinstance(password, dict) or not isinstance(password.get("secretText"), str) or not password["secretText"]:
         raise SetupError("Credential creation returned no usable secret; inspect Certificates & secrets before retrying.")
     new_secret: dict[str, Any] = {"name": secret_name}
-    if vault:
+    if vault and args.run_in_azure:
+        new_secret.update(
+            keyVaultUrl=credential_arm.store(
+                cli, app, vault, secret_name, password["secretText"], expiration),
+            identity=identity)
+    elif vault:
         filename = None
         try:
             with tempfile.NamedTemporaryFile(mode="w", dir=args.tenant_profile, delete=False) as stream:
@@ -1552,6 +1587,21 @@ def setup(args: argparse.Namespace) -> int:
             print(EXERCISE_NOTICE)
             print(f"Reusing persisted roster: {len(roster)} codes; seed {persisted['seed']}; "
                   "no reshuffle.")
+        if args.run_in_azure and not args.bearer_only:
+            try:
+                auth = cli.rest(
+                    ARM + app["id"] + f"/authConfigs/current?api-version={API_VERSION}")["properties"]
+            except AzureError as error:
+                if error.kind != "not-found":
+                    raise
+                auth = {}
+            azure_credential_guard(app, auth, args)
+            candidate_registration = registration(
+                graph, args.client_id or aad_registration(auth).get("clientId"),
+                args.registration_name)
+            if candidate_registration:
+                secret_reference(
+                    cli, graph, app, candidate_registration, auth, args, True, reuse_only=True)
         resolved_roster = resolve_roster(graph, roster, verify_people=generate or generated)
         coordination_problem = None
         try:
@@ -1793,7 +1843,7 @@ def main(argv: list[str] | None = None) -> int:
               "For an interrupted write, rerun discovery before retrying a mutation.", file=sys.stderr)
         print("SQL binding and replica restart: NOT confirmed.", file=sys.stderr)
         return 1
-    except SetupError as error:
+    except (SetupError, credential_arm.CredentialError) as error:
         print(f"Blocked: {error}", file=sys.stderr)
         print("Summary: setup incomplete; successful earlier steps are retained. Resolve the blocker and rerun.",
               file=sys.stderr)

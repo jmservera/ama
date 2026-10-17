@@ -1,0 +1,133 @@
+{
+  "task_id": "issue-360",
+  "task_slug": "demo-setup-readiness-360",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "blocked",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/demo-setup-readiness-360-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/demo-setup-readiness-360-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/demo-setup-readiness-360-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-17/demo-setup-readiness-360-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/demo-setup-readiness-360-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full automatic RPI loop; stop after pushed PR; no child task",
+      "status": "confirmed",
+      "evidence": "Caller explicitly requests Research -> Plan -> Implement -> Review."
+    },
+    {
+      "decision": "Preserve ama and backing privacy; operator-only Graph; no app-secret fallback; #358 owns expiry/preservation",
+      "status": "confirmed",
+      "evidence": "Caller direction 2026-10-17."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for bounded source/migration work, not live acceptance",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-17/demo-setup-readiness-360-research.md C1-C8/W1-W5"
+    },
+    {
+      "decision": "Plan critique executed once, Revise; PC-001/002/003 directly applied; Plan Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/plans/2026-10-17/demo-setup-readiness-360-plan.md Critique Disposition"
+    },
+    {
+      "decision": "Implement completed; 319 infra/32 API auth tests, 22 Bicep templates and existing quality gates passed",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-changes.md Final Implementation Evidence"
+    },
+    {
+      "decision": "Approved additive API/auth staging applied with deny-all; no exposure or retirement",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-resource-receipt.json; direct routes 403, six backing public-access flags Disabled"
+    },
+    {
+      "decision": "Review executed exactly once; execution Complete, outcome Residual work",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/demo-setup-readiness-360-review.md; candidate 6f43559; no material source defect identified, RV-001 through RV-004 are externally gated follow-ups"
+    },
+    {
+      "decision": "Published Refs #360 PR #375; explicit bounded-session stop, no child task/merge/closure",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-publication-receipt.json; PR OPEN, base main, initial head 4b50561cff0a0f1b6598bad3451e962f66e4f890; final receipt-only commit resolved through PR head"
+    },
+    {
+      "decision": "Same-session P04 continuation complete; owner-authorized rebase and exact-lease push, no nested RPI loop",
+      "status": "complete",
+      "evidence": "Base51db4fa80a29528f5a3d19420b1c7e1597d27213, integration63aea6445bb89fe5a12064aa932a9df84fea85e9 verified remote; exact upstream helpers/tests/evidence and legacy delegate preserved; full relevant checks recorded in changes; final record-only head reported in PR375 comment"
+    },
+    {
+      "decision": "P05 independent finding reproduced and correction validated; independent Revise not overridden",
+      "status": "complete-pending-independent-verification",
+      "evidence": "11 red subcases before fix; selected-candidate guard and exact read-only reuse preflight. Focused41/setup101/full infra333 zero skips, lint/format/type/static/pip passed. Protected upstream helpers/tests/legacy/sensor unchanged. Source correction23db069a32618678a04bd8a0fa58d3d9ed723e99 ordinary-pushed and verified against remote; final record-only head reported in PR375. Existing Review appended with missed-finding disposition, no second Review."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "independent-review-revise",
+      "summary": "Independent review of662c11b reproduces untagged/unreferenced eligible app-backed reuse bypassing Azure Key Vault rule. Blocking defect; prior internal no-defect conclusion incomplete.",
+      "resolution": "P05 correction implemented, validated and normally published at23db069a32618678a04bd8a0fa58d3d9ed723e99; independent reviewer must verify before merge. External Revise remains authoritative until independent verification."
+    },
+    {
+      "id": "private-publisher",
+      "summary": "Actual Docker socket permission denial; private ACR task/pool inventory empty and anonymous /v2/403. Tasks/import NOT attempted: documented private-network prerequisites prohibited. CI retains reports, not image archives; package inventory unknown after read:packages403.",
+      "resolution": "Owner identifies an already existing private-connected builder/operator with existing registry push rights, builds infra proof layer from retained API digest and supplies pinned result. No new pool/spend/network/credential/tool-permission workaround."
+    },
+    {
+      "id": "scoped-iam",
+      "summary": "Initializer AcrPull exists; grants absent. Reviewer reports management actions [*] without exclusions: no demonstrated IAM inability. No activation attempted; explicit narrow-grant authorization outstanding.",
+      "resolution": "IAM owner explicitly authorizes only staff-initializer-rbac for apiName=ca-cutover-test-demo-api / initializerIdentityName=id-cutover-test-init; fresh exact four-Create what-if before apply."
+    },
+    {
+      "id": "human-live-acceptance",
+      "summary": "Real registration/credential, human login, staff SQL/restart, runtime/AI and browser/per-role acceptance unmet; deny-all retained",
+      "resolution": "Tenant operator uses isolated login and existing private roster/authorized mailbox decisions after publisher/IAM prerequisites; verify auth/runtime before reviewed exposure and criterion d; no retirement before d"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Same-session integration onto0bdcb2f0 validated; publish final artifact-only head with exact lease on old remote190391a, record final SHA in PR375 then stop. Independent reviewer must Pass on final head before original finding can close or merge; no Pass assumed from review of190391a. No new phase or cloud write; human live prerequisites and #360 d/e remain."
+  },
+  "queue_main_integration": {
+    "base": "0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134",
+    "authorized_old_lease": "190391aa66d34f78a5b7f56ea28861be204b1aef",
+    "tested_candidate": "c18790917ea558bcfda8d09aa3fb1d3af51a00d1",
+    "rebased_correction_source": "85c2713",
+    "validation": "Focused41/setup101/full infra333 zero skips; existing lint/format/static/compile/types/pip passed",
+    "preservation": "Credential scripts/tests/runbook exact190391a; both log histories and index routes retained; other #376 files exact main",
+    "review_gate": "Original finding remains pending independent Pass on final head;4536f9cc checking190391a is not final-head Pass",
+    "publication": "Owner-authorized exact-lease topic only; final head resolved in PR375 comment",
+    "cloud_writes": "None",
+    "new_phase": false
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Explicit IAM authorization and exact resource-scoped activation",
+      "rationale": "Smallest bounded activation; unblocks tag relay and demo-API restart without broad privileges",
+      "evidence": "RV-002; successful four-Create demo-target what-if, not applied"
+    },
+    {
+      "rank": 2,
+      "task": "Authorized existing private proof-image publication",
+      "rationale": "Other mandatory worker prerequisite; no available approved publisher or permitted local Docker",
+      "evidence": "RV-001; private ACR bypass None/no tasks/pool, retained old proof digest"
+    },
+    {
+      "rank": 3,
+      "task": "Human tenant setup and genuine runtime/browser/SQL/AI acceptance",
+      "rationale": "High-value criterion d but depends on IAM/image and human directory authority",
+      "evidence": "RV-003; four restricted 403s, no real registration/credential/session; #349/#350"
+    },
+    {
+      "rank": 4,
+      "task": "Owner/coordinator reviewed old-path retirement",
+      "rationale": "Only eligible after d; preserving existing paths now is required, not unnecessary cleanup",
+      "evidence": "RV-004; retained source fingerprint and no retired resources; criterion e unmet"
+    }
+  ]
+}

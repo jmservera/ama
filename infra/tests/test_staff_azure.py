@@ -14,6 +14,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -21,6 +22,7 @@ import test_initialize_workbench_staff as sql_fixture
 import test_setup_entra as setup_fixture
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import credential_arm as CREDENTIAL
 import staff_azure as JOB
 
 SETUP = setup_fixture.SETUP
@@ -113,38 +115,38 @@ class FakeJobs(setup_fixture.FakeAzure):
         self.polls = 0
         self.log_mutation = lambda value: value
         self.collision = False
+        self.relay_tags = {"preserved": "original"}
+        self.published = False
+        self.credential_template = None
+        self.whatif_mutation = lambda value: value
+        self.metadata_mutation = lambda value: value
+        self.deployment_state = "Succeeded"
 
     def run(self, command, **kwargs):
-        if command[:4] == ["az", "containerapp", "job", "logs"]:
+        if command[:4] == ["az", "deployment", "group", "what-if"]:
             self.calls.append((command, kwargs["env"]))
-            if self.fail_at == "logs":
-                return subprocess.CompletedProcess(command, 1, "", setup_fixture.SECRET)
-            assert 0 < kwargs["timeout"] <= 30
-            request = self.requests[-1]
-            operation = request["operation"]
-            summary = (
-                {"candidates": self.candidates}
-                if operation == "candidates"
-                else {
-                    "positions": len(request["payload"].get("wanted", [])),
-                    "staff_changes": 0,
-                    "owner_labels": 0,
-                    "sql_verified": True,
-                    "restart_required": operation != "apply",
-                }
-            )
-            result = {
-                "version": 1,
-                "run": request["run"],
-                "operation": operation,
-                "ok": True,
-                **summary,
+            template = Path(command[command.index("--template-file") + 1])
+            parameters = Path(command[command.index("--parameters") + 1][1:])
+            assert template.stat().st_mode & 0o077 == parameters.stat().st_mode & 0o077 == 0
+            self.credential_template = json.loads(template.read_text())
+            assert json.loads(parameters.read_text())["credential"]["value"] == setup_fixture.SECRET
+            intended = self.credential_template["resources"][0]
+            planned = {
+                "status": "Succeeded",
+                "changes": [
+                    {
+                        "resourceId": ROOT_ID
+                        + "/providers/Microsoft.KeyVault/vaults/"
+                        + intended["name"].replace("/", "/secrets/", 1),
+                        "changeType": "Create",
+                    }
+                ],
             }
-            lines = "\n".join(
-                json.dumps({"TimeStamp": "fixture", "Log": line})
-                for line in JOB.encode_result(request, result)
+            return subprocess.CompletedProcess(
+                command, 0, json.dumps(self.whatif_mutation(planned)), ""
             )
-            return subprocess.CompletedProcess(command, 0, self.log_mutation(lines), "")
+        if command[:4] == ["az", "containerapp", "job", "logs"]:
+            raise AssertionError("The laptop path must never require console logs.")
         if command[:3] == ["az", "containerapp", "job"]:
             self.calls.append((command, kwargs["env"]))
             name = command[command.index("-n") + 1]
@@ -168,11 +170,79 @@ class FakeJobs(setup_fixture.FakeAzure):
 
     def rest(self, method, url, body):
         resource = url.removeprefix(SETUP.ARM).split("?")[0]
+        vault = ROOT_ID + "/providers/Microsoft.KeyVault/vaults/fictional-vault"
+        if resource == vault:
+            return {
+                "id": vault,
+                "properties": {"publicNetworkAccess": "Disabled", "enableRbacAuthorization": True},
+            }
+        if resource == vault + "/secrets":
+            return {"value": []}
+        if resource.startswith(ROOT_ID + "/providers/Microsoft.Resources/deployments/entra-"):
+            if method == "PUT":
+                assert body["properties"]["template"] == self.credential_template
+                assert (
+                    body["properties"]["parameters"]["credential"]["value"] == setup_fixture.SECRET
+                )
+            return {"properties": {"provisioningState": self.deployment_state}}
+        if resource.startswith(vault + "/secrets/"):
+            intended = self.credential_template["resources"][0]
+            return self.metadata_mutation(
+                {
+                    "id": resource,
+                    "properties": {
+                        "secretUri": "https://fictional-vault.vault.azure.net/secrets/"
+                        + intended["name"].split("/")[1],
+                        "attributes": intended["properties"]["attributes"],
+                    },
+                }
+            )
+        if url == JOB.tags_url(SOURCE):
+            if method == "PATCH":
+                self.assert_tag_delete(body)
+                return {"properties": {"tags": self.relay_tags}}
+            if self.requests and self.polls and not self.published:
+                if self.fail_at == "logs":
+                    raise SETUP.AzureError("permission")
+                request = self.requests[-1]
+                summary = (
+                    {"candidates": self.candidates}
+                    if request["operation"] == "candidates"
+                    else {
+                        "positions": len(request["payload"].get("wanted", [])),
+                        "staff_changes": 0,
+                        "owner_labels": 0,
+                        "sql_verified": True,
+                        "restart_required": request["operation"] != "apply",
+                    }
+                )
+                result = {
+                    "version": 1,
+                    "run": request["run"],
+                    "operation": request["operation"],
+                    "ok": True,
+                    **summary,
+                }
+                frames = self.log_mutation(
+                    "\n".join(
+                        json.dumps({"Log": frame}) for frame in JOB.encode_result(request, result)
+                    )
+                )
+                self.relay_tags.update(
+                    {
+                        JOB.result_prefix(request) + str(i): json.loads(frame)["Log"]
+                        for i, frame in enumerate(frames.splitlines())
+                    }
+                )
+                self.published = True
+            return {"properties": {"tags": copy.deepcopy(self.relay_tags)}}
         if "/jobs/job-staff-" in resource:
             if "/executions/" in resource:
                 self.polls += 1
                 return {"properties": {"status": "Running" if self.polls == 1 else self.status}}
             if method == "PUT":
+                self.published = False
+                self.polls = 0
                 self.jobs[resource] = copy.deepcopy(body)
                 self.jobs[resource]["properties"]["provisioningState"] = "Succeeded"
                 request = json.loads(body["properties"]["configuration"]["secrets"][0]["value"])
@@ -194,6 +264,8 @@ class FakeJobs(setup_fixture.FakeAzure):
         if resource in self.resources:
             assert method == "GET"
             return self.resources[resource]
+        if "/providers/Microsoft.App/jobs/" in resource:
+            raise SETUP.AzureError("not-found")
         if url.startswith(SETUP.GRAPH + f"users/{setup_fixture.USER}?"):
             return {
                 "id": setup_fixture.USER,
@@ -203,6 +275,13 @@ class FakeJobs(setup_fixture.FakeAzure):
                 "userType": "Member",
             }
         return super().rest(method, url, body)
+
+    def assert_tag_delete(self, body):
+        assert body["operation"] == "Delete"
+        for key, value in body["properties"]["tags"].items():
+            assert key.startswith(JOB.result_prefix(self.requests[-1]))
+            assert self.relay_tags[key] == value
+            del self.relay_tags[key]
 
 
 class TransportTests(unittest.TestCase):
@@ -235,6 +314,10 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(list(self.profile.glob("request-*.json")), [])
         self.assertIn(SOURCE, self.fake.resources)
         self.assertFalse(self.fake.jobs)
+        self.assertEqual(self.fake.relay_tags, {"preserved": "original"})
+        self.assertFalse(
+            any(c[:4] == ["az", "containerapp", "job", "logs"] for c, _ in self.fake.calls)
+        )
 
     def test_success_uses_private_secret_existing_identity_no_network_mutation(self):
         self.fake.resources[SOURCE]["properties"]["configuration"]["registries"][0].update(
@@ -259,7 +342,8 @@ class TransportTests(unittest.TestCase):
         self.assertIn({"name": "ZF_STAFF_REQUEST", "secretRef": "request"}, worker["env"])
         self.assertTrue(
             all(
-                method in {"PUT", "DELETE"} and "/jobs/job-staff-" in url
+                (method in {"PUT", "DELETE"} and "/jobs/job-staff-" in url)
+                or (method == "PATCH" and url == JOB.tags_url(SOURCE))
                 for method, url, _ in self.fake.writes
             )
         )
@@ -281,7 +365,7 @@ class TransportTests(unittest.TestCase):
         self.fake = FakeJobs()
         SETUP.subprocess.run.side_effect = self.fake.run
         with (
-            patch.object(JOB, "logs", side_effect=KeyboardInterrupt),
+            patch.object(JOB, "read_result", side_effect=KeyboardInterrupt),
             self.assertRaises(KeyboardInterrupt),
         ):
             self.execute()
@@ -379,6 +463,64 @@ class TransportTests(unittest.TestCase):
         with self.assertRaises(JOB.StaffJobError):
             self.execute()
 
+    def test_same_vnet_parent_environment_allowed_but_other_vnet_and_tag_exhaustion_block(self):
+        other = setup_fixture.ENV_ID + "-parent"
+        self.fake.resources[SOURCE]["properties"]["environmentId"] = other
+        environment = copy.deepcopy(self.fake.environment)
+        environment["id"] = other
+        environment["properties"]["vnetConfiguration"]["infrastructureSubnetId"] = (
+            ROOT_ID + "/providers/Microsoft.Network/virtualNetworks/fictional/subnets/parent"
+        )
+        self.fake.resources[other] = environment
+        self.assertTrue(self.execute()["ok"])
+        environment["properties"]["vnetConfiguration"]["infrastructureSubnetId"] = (
+            ROOT_ID + "/providers/Microsoft.Network/virtualNetworks/other/subnets/parent"
+        )
+        with self.assertRaises(JOB.StaffJobError):
+            self.execute()
+        self.fake.resources[SOURCE]["properties"]["environmentId"] = setup_fixture.ENV_ID
+        self.fake.relay_tags.update({f"other-{i}": "preserved" for i in range(10)})
+        with self.assertRaisesRegex(JOB.StaffJobError, "tag capacity"):
+            self.execute()
+
+    def test_direct_demo_automatically_discovers_only_its_verified_parent_initializer(self):
+        self.fake.app["id"] = setup_fixture.APP_ID.replace("-test-api", "-test-demo-api")
+        self.fake.app["name"] = "ca-cutover-test-demo-api"
+        result = self.execute()
+        self.assertTrue(result["ok"])
+        self.assertEqual(self.fake.requests[-1]["payload"]["target"], self.fake.app["id"])
+        self.assertEqual(self.fake.requests[-1]["payload"]["relay"], SOURCE)
+
+    def test_tag_tamper_oversize_and_failed_cleanup_block_success(self):
+        for mutation in (
+            lambda text: text.replace("ZFSTAFF:", "ZFSTAFF:wrong"),
+            lambda text: json.dumps({"Log": "x" * 257}),
+            lambda text: "",
+        ):
+            self.fake = FakeJobs()
+            SETUP.subprocess.run.side_effect = self.fake.run
+            self.fake.log_mutation = mutation
+            # A missing result is bounded by the execution deadline, even at Succeeded.
+            clock = [0]
+            with (
+                patch.object(JOB.time, "monotonic", side_effect=lambda clock=clock: clock[0]),
+                patch.object(
+                    JOB.time,
+                    "sleep",
+                    side_effect=lambda _, clock=clock: clock.__setitem__(0, clock[0] + 250),
+                ),
+                self.assertRaises(JOB.StaffJobError),
+            ):
+                self.execute()
+            self.assertFalse(self.fake.jobs)
+        self.fake = FakeJobs()
+        SETUP.subprocess.run.side_effect = self.fake.run
+        with (
+            patch.object(JOB, "clear_result", side_effect=SETUP.AzureError("permission")),
+            self.assertRaisesRegex(JOB.StaffJobError, "cleanup NOT confirmed"),
+        ):
+            self.execute()
+
     def test_secret_person_data_never_in_command_line_logs_or_leftover_body_files(self):
         payload = {
             "wanted": [{"code": "private-code", "userId": setup_fixture.USER}],
@@ -430,6 +572,8 @@ class SetupAzureTests(unittest.TestCase):
     invoke = setup_fixture.SetupTests.invoke
     demo_roster = setup_fixture.SetupTests.demo_roster
     demo_person = staticmethod(setup_fixture.SetupTests.demo_person)
+    mixed_secret_inventory = setup_fixture.SetupTests.mixed_secret_inventory
+    secret_response = setup_fixture.SetupTests.secret_response
 
     def setUp(self):
         setup_fixture.SetupTests.setUp(self)
@@ -511,6 +655,445 @@ class SetupAzureTests(unittest.TestCase):
         self.assertEqual(self.invoke("--run-in-azure", "--list-staff"), 1)
         self.assertIn("authorized private-connected host", self.output.getvalue())
 
+    def test_azure_store_guard_blocks_app_state_before_graph_writes(self):
+        for case in ("explicit", "recorded", "reference"):
+            with self.subTest(case=case):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                flags = ["--secret-store", "app"] if case == "explicit" else []
+                if case == "recorded":
+                    self.fake.app["tags"][SETUP.STORE_TAG] = "app"
+                if case == "reference":
+                    self.fake.auth["identityProviders"]["azureActiveDirectory"]["registration"][
+                        "clientSecretSettingName"
+                    ] = "preserved"
+                self.assertEqual(self.invoke("--run-in-azure", *flags), 1)
+                self.assertFalse(self.fake.writes)
+                self.assertIsNone(self.fake.reg)
+
+    def unreferenced_reuse_candidate(self, *, keyvault=False):
+        self.assertEqual(self.invoke("--run-in-azure", "--secret-store", "keyvault"), 0)
+        secrets = self.fake.app["properties"]["configuration"]["secrets"]
+        candidate = secrets[-1]
+        if not keyvault:
+            candidate.pop("keyVaultUrl")
+            candidate.pop("identity")
+            candidate["value"] = setup_fixture.SECRET
+        for name in (SETUP.STORE_TAG, "zava-forward-credential-name"):
+            self.fake.app["tags"].pop(name, None)
+        SETUP.aad_registration(self.fake.auth).pop("clientSecretSettingName", None)
+        self.fake.writes.clear()
+        self.fake.tag_writes.clear()
+        return candidate
+
+    def test_unreferenced_app_candidate_is_rejected_at_actual_azure_reuse_boundary(self):
+        for readonly in (False, True):
+            with self.subTest(readonly=readonly):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                self.unreferenced_reuse_candidate()
+                before_app, before_reg = copy.deepcopy(self.fake.app), copy.deepcopy(self.fake.reg)
+                args = SETUP.parser().parse_args(["--run-in-azure", "--secret-store", "keyvault"])
+                cli = SETUP.Azure(self.profile, body_directory=self.profile)
+                with self.assertRaisesRegex(SETUP.SetupError, "requires Key Vault"):
+                    SETUP.secret_reference(
+                        cli, cli, self.fake.app, self.fake.reg, self.fake.auth, args, readonly
+                    )
+                self.assertEqual(self.fake.app, before_app)
+                self.assertEqual(self.fake.reg, before_reg)
+                self.assertFalse(self.fake.writes)
+                self.assertFalse(self.fake.tag_writes)
+
+    def test_unreferenced_app_candidate_blocks_before_directory_reconciliation(self):
+        for lookup in ("configured", "sentinel", "explicit"):
+            for mode in ((), ("--check",), ("--dry-run",)):
+                with self.subTest(lookup=lookup, mode=mode):
+                    self.fake = FakeJobs()
+                    SETUP.subprocess.run.side_effect = self.fake.run
+                    self.unreferenced_reuse_candidate()
+                    self.fake.reg["web"]["redirectUris"] = []
+                    if lookup == "sentinel":
+                        SETUP.aad_registration(self.fake.auth)["clientId"] = (
+                            "systemAssignedIdentity"
+                        )
+                    flags = ["--client-id", setup_fixture.CLIENT] if lookup == "explicit" else []
+                    before_app = copy.deepcopy(self.fake.app)
+                    before_reg, before_auth = (
+                        copy.deepcopy(self.fake.reg),
+                        copy.deepcopy(self.fake.auth),
+                    )
+                    self.assertEqual(
+                        self.invoke("--run-in-azure", "--secret-store", "keyvault", *flags, *mode),
+                        1,
+                        self.output.getvalue(),
+                    )
+                    self.assertEqual(self.fake.reg, before_reg)
+                    self.assertEqual(self.fake.app, before_app)
+                    self.assertEqual(self.fake.auth, before_auth)
+                    self.assertFalse(self.fake.writes)
+                    self.assertFalse(self.fake.tag_writes)
+
+    def test_azure_reuse_guard_respects_actual_candidate_precedence_and_expiry(self):
+        for case in ("unrelated", "expired", "missing-expiry", "preferred-kv", "last-app"):
+            with self.subTest(case=case):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                candidate = self.unreferenced_reuse_candidate(keyvault=True)
+                other = {"name": candidate["name"] + "-other", "value": setup_fixture.SECRET}
+                self.fake.app["properties"]["configuration"]["secrets"].append(other)
+                credential = copy.deepcopy(self.fake.reg["passwordCredentials"][0])
+                credential["displayName"] = other["name"]
+                if case == "unrelated":
+                    credential["displayName"] = "unrelated-password"
+                elif case == "expired":
+                    credential["endDateTime"] = "2000-01-01T00:00:00Z"
+                elif case == "missing-expiry":
+                    credential.pop("endDateTime")
+                elif case == "preferred-kv":
+                    SETUP.aad_registration(self.fake.auth)["clientSecretSettingName"] = candidate[
+                        "name"
+                    ]
+                self.fake.reg["passwordCredentials"].append(credential)
+                before = copy.deepcopy(self.fake.app["properties"]["configuration"]["secrets"])
+                self.fake.reg["web"]["redirectUris"] = []
+                count = len(self.fake.reg["passwordCredentials"])
+                expected = 1 if case == "last-app" else 0
+                self.assertEqual(self.invoke("--run-in-azure"), expected, self.output.getvalue())
+                self.assertEqual(self.fake.app["properties"]["configuration"]["secrets"], before)
+                self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+                if case == "last-app":
+                    self.assertFalse(self.fake.writes)
+                    self.assertFalse(self.fake.tag_writes)
+                else:
+                    self.assertEqual(self.fake.app["tags"][SETUP.STORE_TAG], "keyvault")
+
+    def test_reuse_preflight_verifies_pending_handoff_without_writes_or_storage(self):
+        candidate = self.unreferenced_reuse_candidate(keyvault=True)
+        self.fake.app["tags"][SETUP.HANDOFF_TAG] = SETUP.secret_reference_digest(
+            self.fake.app["properties"]["configuration"]["secrets"]
+        )
+        before = copy.deepcopy(self.fake.app)
+        args = SETUP.parser().parse_args(["--run-in-azure", "--secret-store", "keyvault"])
+        cli = SETUP.Azure(self.profile, body_directory=self.profile)
+        with patch.object(CREDENTIAL, "store", side_effect=AssertionError("unexpected storage")):
+            result = SETUP.secret_reference(
+                cli, cli, self.fake.app, self.fake.reg, self.fake.auth, args, True, reuse_only=True
+            )
+            self.assertEqual(result[0], candidate["name"])
+            self.assertEqual(self.fake.app, before)
+            self.assertFalse(self.fake.writes)
+            self.assertFalse(self.fake.tag_writes)
+            with self.assertRaisesRegex(SETUP.SetupError, "must be read-only"):
+                SETUP.secret_reference(
+                    cli,
+                    cli,
+                    self.fake.app,
+                    self.fake.reg,
+                    self.fake.auth,
+                    args,
+                    False,
+                    reuse_only=True,
+                )
+        self.assertEqual(self.fake.app, before)
+
+    def test_azure_vault_preflight_failure_never_creates_password_or_falls_back(self):
+        self.fake.app["tags"]["zava-forward-ingress"] = "direct"
+        self.fake.app["properties"]["configuration"]["ingress"]["external"] = True
+        with patch.object(CREDENTIAL, "preflight", side_effect=SETUP.AzureError("permission")):
+            self.assertEqual(self.invoke("--run-in-azure"), 1)
+        self.assertFalse(self.fake.reg["passwordCredentials"])
+        self.assertNotEqual(self.fake.app["tags"].get(SETUP.STORE_TAG), "app")
+
+    def test_azure_vault_write_failure_preserves_auth_and_never_uses_app_storage(self):
+        secrets = json.loads(json.dumps(self.fake.app["properties"]["configuration"]["secrets"]))
+        auth = json.loads(json.dumps(self.fake.auth))
+        with patch.object(CREDENTIAL, "store", side_effect=CREDENTIAL.CredentialError("failed")):
+            self.assertEqual(self.invoke("--run-in-azure", "--secret-store", "keyvault"), 1)
+        self.assertEqual(self.fake.app["properties"]["configuration"]["secrets"], secrets)
+        self.assertEqual(self.fake.auth, auth)
+        self.assertNotEqual(self.fake.app["tags"].get(SETUP.STORE_TAG), "app")
+        self.assertNotIn(setup_fixture.SECRET, self.output.getvalue())
+
+    def test_existing_valid_keyvault_reference_is_reused_without_another_password(self):
+        self.assertEqual(self.invoke("--run-in-azure", "--secret-store", "keyvault"), 0)
+        count = len(self.fake.reg["passwordCredentials"])
+        with patch.object(CREDENTIAL, "store", side_effect=AssertionError("unexpected rotation")):
+            self.assertEqual(self.invoke("--run-in-azure", "--secret-store", "keyvault"), 0)
+        self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+
+    def test_arm_handoff_preserves_mixed_inventory_across_provider_response_shapes(self):
+        for shape in ("full", "names-only", "resolved-values", "omitted-kv", "config-names-only"):
+            with self.subTest(shape=shape):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                references, listed = self.mixed_secret_inventory()
+                if shape == "names-only":
+                    listed[:2] = [{"name": row["name"]} for row in references]
+                elif shape == "resolved-values":
+                    listed[:2] = [
+                        {"name": row["name"], "value": "FICTIONAL-RESOLVED-KV"}
+                        for row in references
+                    ]
+                elif shape == "omitted-kv":
+                    del listed[:2]
+                elif shape == "config-names-only":
+                    self.fake.app["properties"]["configuration"]["secrets"][:2] = [
+                        {"name": row["name"]} for row in references
+                    ]
+                token_store = copy.deepcopy(self.fake.auth["login"]["tokenStore"])
+
+                def metadata_only(app):
+                    for secret in app["properties"]["configuration"]["secrets"]:
+                        secret.pop("value", None)
+                    return app
+
+                with self.secret_response({"value": listed}, project=metadata_only):
+                    self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                    count = len(self.fake.reg["passwordCredentials"])
+                    with patch.object(CREDENTIAL, "store", side_effect=AssertionError("rotation")):
+                        self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                    self.assertEqual(len(self.fake.reg["passwordCredentials"]), count)
+                patches = [
+                    body
+                    for method, url, body in self.fake.writes
+                    if method == "PATCH"
+                    and url == setup_fixture.ARM_APP
+                    and "configuration" in body.get("properties", {})
+                ]
+                self.assertEqual(len(patches), 1)
+                payload = patches[0]["properties"]["configuration"]["secrets"]
+                for reference in references:
+                    self.assertIn(reference, payload)
+                self.assertIn({"name": "preserved", "value": "preserved-private-value"}, payload)
+                self.assertIn({"name": "empty", "value": ""}, payload)
+                self.assertEqual(len(payload), 5)
+                self.assertEqual(
+                    patches[0]["tags"][SETUP.HANDOFF_TAG], SETUP.secret_reference_digest(payload)
+                )
+                self.assertNotIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+                self.assertEqual(self.fake.auth["login"]["tokenStore"], token_store)
+                self.assertFalse(
+                    any(
+                        command[:3] == ["az", "keyvault", "secret"]
+                        for command, _ in self.fake.calls
+                    )
+                )
+                for private in (
+                    "FICTIONAL-RESOLVED-KV",
+                    "preserved-private-value",
+                    setup_fixture.SECRET,
+                ):
+                    self.assertNotIn(private, self.output.getvalue())
+
+    def test_arm_handoff_corruption_blocks_auth_and_rerun_without_another_credential(self):
+        for corruption in ("missing-name", "keyVaultUrl", "identity", "transport"):
+            with self.subTest(corruption=corruption):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                _, listed = self.mixed_secret_inventory()
+                original = self.fake.rest
+                transport_failed = []
+
+                def corrupt(
+                    method,
+                    url,
+                    body,
+                    *,
+                    listed=listed,
+                    original=original,
+                    corruption=corruption,
+                    transport_failed=transport_failed,
+                ):
+                    if "/listSecrets?" in url:
+                        return copy.deepcopy({"value": listed})
+                    result = original(method, url, body)
+                    if (
+                        url == setup_fixture.ARM_APP
+                        and method == "PATCH"
+                        and "configuration" in body.get("properties", {})
+                    ):
+                        secrets = self.fake.app["properties"]["configuration"]["secrets"]
+                        if corruption == "missing-name":
+                            del secrets[0]
+                        elif corruption != "transport":
+                            secrets[0][corruption] = "FICTIONAL-WRONG-REFERENCE"
+                    if (
+                        url == setup_fixture.ARM_APP
+                        and method == "GET"
+                        and corruption == "transport"
+                        and not transport_failed
+                        and len(self.fake.app["properties"]["configuration"]["secrets"]) == 5
+                    ):
+                        transport_failed.append(True)
+                        raise SETUP.AzureError("network")
+                    return result
+
+                auth_before = copy.deepcopy(self.fake.auth)
+                with patch.object(self.fake, "rest", side_effect=corrupt):
+                    self.assertEqual(self.invoke("--run-in-azure"), 1)
+                self.assertEqual(self.fake.auth, auth_before)
+                self.assertIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+                with patch.object(CREDENTIAL, "store", side_effect=AssertionError("rotation")):
+                    if corruption == "transport":
+                        self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                        self.assertNotIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+                    else:
+                        self.assertEqual(self.invoke("--run-in-azure", "--check"), 1)
+                        self.assertEqual(self.invoke("--run-in-azure"), 1)
+                        self.assertEqual(self.fake.auth, auth_before)
+                        self.assertFalse(
+                            any(url == setup_fixture.AUTH_URL for _, url, _ in self.fake.writes)
+                        )
+                self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+
+    def test_arm_inventory_rejection_precedes_password_and_vault_deployment(self):
+        for shape in ("missing-app", "conflicting-kv", "duplicate"):
+            with self.subTest(shape=shape):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                _, listed = self.mixed_secret_inventory()
+                if shape == "missing-app":
+                    del listed[2]
+                elif shape == "conflicting-kv":
+                    listed[0]["identity"] = "different-identity"
+                else:
+                    listed.append(copy.deepcopy(listed[-1]))
+                auth_before = copy.deepcopy(self.fake.auth)
+                with (
+                    self.secret_response({"value": listed}),
+                    patch.object(CREDENTIAL, "store", side_effect=AssertionError("unsafe write")),
+                ):
+                    self.assertEqual(self.invoke("--run-in-azure"), 1)
+                self.assertFalse(self.fake.reg["passwordCredentials"])
+                self.assertEqual(self.fake.auth, auth_before)
+                self.assertIsNone(self.fake.credential_template)
+
+    def test_arm_generated_and_legacy_kv_reuse_retains_upstream_expiry_boundaries(self):
+        now = datetime(2030, 1, 1, tzinfo=UTC)
+        for legacy in (False, True):
+            for expiry in (
+                None,
+                "2029-12-31T23:59:59Z",
+                "2030-01-01T00:00:00Z",
+                "2030-01-01T00:00:01+00:00",
+            ):
+                with self.subTest(legacy=legacy, expiry=expiry):
+                    self.fake = FakeJobs()
+                    SETUP.subprocess.run.side_effect = self.fake.run
+                    self.assertEqual(self.invoke("--run-in-azure"), 0)
+                    old = self.fake.reg["passwordCredentials"][0]
+                    if legacy:
+                        old["displayName"] = "legacy-browser-secret"
+                        self.fake.app["properties"]["configuration"]["secrets"][-1]["name"] = old[
+                            "displayName"
+                        ]
+                        SETUP.aad_registration(self.fake.auth)["clientSecretSettingName"] = old[
+                            "displayName"
+                        ]
+                        self.fake.app["tags"]["zava-forward-credential-name"] = old["displayName"]
+                    old["endDateTime"] = expiry
+                    before = copy.deepcopy(old)
+                    reusable = expiry == "2030-01-01T00:00:01+00:00"
+                    with patch.object(SETUP, "datetime", wraps=datetime) as clock:
+                        clock.now.return_value = now
+                        for flag in ("--check", "--dry-run"):
+                            expected = 0 if reusable and flag == "--check" else 2
+                            self.assertEqual(self.invoke("--run-in-azure", flag), expected)
+                            self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+                        self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
+                    self.assertEqual(self.fake.reg["passwordCredentials"][0], before)
+                    self.assertEqual(
+                        len(self.fake.reg["passwordCredentials"]), 1 if reusable else 2
+                    )
+                    self.assertNotIn(SETUP.HANDOFF_TAG, self.fake.app["tags"])
+
+
+class CredentialArmTests(unittest.TestCase):
+    setUp = TransportTests.setUp
+
+    def credential(self):
+        return CREDENTIAL.store(
+            self.cli,
+            self.fake.app,
+            "fictional-vault",
+            "entra-" + "a" * 32 + "-" + "b" * 12,
+            setup_fixture.SECRET,
+            "2027-04-01T00:00:00Z",
+            seconds=10,
+        )
+
+    def test_secure_single_secret_deployment_no_data_plane_or_argument_leak(self):
+        self.fake.whatif_mutation = lambda result: {
+            **result,
+            "changes": [*result["changes"], {"changeType": "Ignore", "resourceId": SOURCE}],
+        }
+        CREDENTIAL.preflight(self.cli, self.fake.app, "fictional-vault")
+        self.assertIn("/secrets/entra-", self.credential())
+        self.assertEqual(
+            self.fake.credential_template["parameters"]["credential"]["type"], "secureString"
+        )
+        self.assertNotIn("outputs", self.fake.credential_template)
+        self.assertEqual(len(self.fake.credential_template["resources"]), 1)
+        argv = json.dumps([c for c, _ in self.fake.calls])
+        self.assertNotIn(setup_fixture.SECRET, argv)
+        self.assertNotIn("keyvault", [c[1] for c, _ in self.fake.calls])
+        self.assertEqual(list(self.profile.iterdir()), [])
+        self.assertIsNone(self.cli.deadline)
+
+    def test_unreviewed_scope_or_incomplete_whatif_never_applies(self):
+        for mutate in (
+            lambda result: {**result, "status": "Running"},
+            lambda result: {**result, "changes": []},
+            lambda result: {**result, "changes": result["changes"] * 2},
+            lambda result: {
+                **result,
+                "changes": [{"resourceId": "/wrong", "changeType": "Create"}],
+            },
+            lambda result: {
+                **result,
+                "changes": [{**result["changes"][0], "changeType": "Modify"}],
+            },
+        ):
+            self.fake.whatif_mutation = mutate
+            with self.assertRaises(CREDENTIAL.CredentialError):
+                self.credential()
+            self.assertFalse(self.fake.writes)
+            self.assertEqual(list(self.profile.iterdir()), [])
+
+    def test_failed_timeout_and_unverified_metadata_never_return_reference(self):
+        self.fake.deployment_state = "Failed"
+        with self.assertRaises(CREDENTIAL.CredentialError):
+            self.credential()
+        self.fake.deployment_state = "Running"
+        clock = [0]
+        with (
+            patch.object(CREDENTIAL.time, "monotonic", side_effect=lambda: clock[0]),
+            patch.object(
+                CREDENTIAL.time, "sleep", side_effect=lambda _: clock.__setitem__(0, clock[0] + 20)
+            ),
+            self.assertRaises(CREDENTIAL.CredentialError),
+        ):
+            self.credential()
+        self.fake.deployment_state = "Succeeded"
+        for field in ("enabled", "exp"):
+
+            def mutate(value, field=field):
+                value["properties"]["attributes"] = {
+                    **value["properties"]["attributes"],
+                    field: False,
+                }
+                return value
+
+            self.fake.metadata_mutation = mutate
+            with self.assertRaises(CREDENTIAL.CredentialError):
+                self.credential()
+
+    def test_invalid_scope_and_vault_fail_before_writes(self):
+        self.cli.subscription = setup_fixture.uid("wrong-subscription")
+        with self.assertRaises(CREDENTIAL.CredentialError):
+            self.credential()
+        self.assertFalse(self.fake.writes)
+
 
 class WorkerTests(unittest.TestCase):
     def setUp(self):
@@ -531,6 +1114,7 @@ class WorkerTests(unittest.TestCase):
             "operation": "apply",
             "payload": {
                 "target": setup_fixture.APP_ID,
+                "relay": SOURCE,
                 "wanted": [{"code": "RC-01", "role": "Coordinator", "userId": sql_fixture.ONE}],
                 "people": {sql_fixture.ONE: person},
             },
@@ -595,6 +1179,7 @@ class WorkerTests(unittest.TestCase):
         env = {
             "ZF_STAFF_REQUEST": json.dumps(request),
             "ZF_STAFF_TARGET": setup_fixture.APP_ID,
+            "ZF_STAFF_RELAY": SOURCE,
             "ZF_SQL_AUTH": "msi",
             "ZF_SQL_CLIENT_ID": MI,
             "AZURE_CLIENT_ID": MI,
@@ -605,11 +1190,12 @@ class WorkerTests(unittest.TestCase):
                 mssqlstore, "_Conn", side_effect=RuntimeError(PERSON + EMAIL + sql_fixture.ONE)
             ),
             patch.object(mssqlstore, "connection_string", return_value="fixture"),
-            patch.object(WORKER.time, "sleep"),
+            patch.object(WORKER, "publish_result") as publish,
             redirect_stdout(output),
             redirect_stderr(output),
         ):
             self.assertEqual(WORKER.main(), 1)
+            self.assertFalse(publish.call_args.args[1]["ok"])
         for private in (PERSON, EMAIL, sql_fixture.ONE, request["key"]):
             self.assertNotIn(private, output.getvalue())
         self.assertNotIn("Traceback", output.getvalue())
@@ -631,6 +1217,29 @@ class WorkerTests(unittest.TestCase):
         self.assertNotIn("'*'", role)
         self.assertNotIn("Contributor", role)
         self.assertIn("Microsoft.App/containerApps/revisions/restart/action", role)
+
+    def test_worker_publishes_only_bounded_ciphertext_and_preserves_other_tags(self):
+        request = {
+            "payload": {"relay": SOURCE},
+            "run": "a" * 32,
+            "operation": "candidates",
+            "digest": "digest",
+            "key": base64.b64encode(b"a" * 32).decode(),
+        }
+        management = Mock()
+        management.request.return_value = {"properties": {"tags": {"preserved": "tag"}}}
+        with (
+            patch.dict(os.environ, {"ZF_STAFF_RELAY": SOURCE}),
+            patch.object(WORKER, "Management", return_value=management),
+        ):
+            WORKER.publish_result(request, {"private": PERSON})
+        body = management.request.call_args.kwargs["body"]
+        self.assertEqual(body["operation"], "Merge")
+        self.assertNotIn(PERSON, json.dumps(body))
+        self.assertNotIn(request["key"], json.dumps(body))
+        self.assertTrue(all(len(v) <= 256 for v in body["properties"]["tags"].values()))
+        self.assertNotIn("preserved", body["properties"]["tags"])
+        management.credential.close.assert_called_once()
 
 
 class BuildContextTests(unittest.TestCase):
