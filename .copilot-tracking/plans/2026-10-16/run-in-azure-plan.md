@@ -125,3 +125,75 @@ Authorized live image build/deployment and tenant/private SQL/browser acceptance
 ## Handoff
 
 Changes: .copilot-tracking/changes/2026-10-16/run-in-azure-changes.md.
+
+## Correction cycle 1 (2026-10-17)
+
+Task identity remains 360-run-in-azure. Research complete, Ready. Candidate
+readiness: Ready after one cycle-specific critique; earlier critique is retained
+as historical implementation evidence, not repeated.
+
+### Correction executive summary
+
+Install the existing hashed `src/api/requirements.txt` before full infra
+discovery in both MVP validation and src namespace CI. Reuse the existing
+workflow dependency validator and mutation patterns to prevent removal,
+unhashed substitution or late installation. No application/runtime or guard
+changes. Preserve commit 126ecae's manifest context and decoded-result timeout
+tests; independently demonstrate both catch in-memory regressions.
+
+### Correction requirements and boundaries
+
+The owner's explicit full-loop instruction authorizes each phase and
+same-branch commit/push/PR update, not automatic follow-up work. Use a new
+/tmp Python 3.12 venv and pip, never uv. The old MVP installation was reproduced
+there: 21 staff tests, 14 failures/four errors, missing cryptography. Test code
+must continue using real crypto. All prior deployment/acceptance blockers
+remain honest and unchanged; no Azure/data/credential/live Graph work.
+
+### Correction goals and acceptance
+
+Both known full-infra workflow steps explicitly install the same hash-pinned
+operator/runtime dependencies before tests. Full infra suite must pass with
+`REQUIRE_AZ_BICEP=1`, zero skips. Existing CI Ruff/format checks and targeted
+mypy pass. Dependency mutations, proof context mutations and real timeout
+mutations must fail at their intended assertions. Record exact commands,
+results and assessed source boundary; no overall live acceptance claim.
+
+<!-- P03 -->
+### P03: CI dependency correction and publication
+
+* [x] P03-T01: Add identical hashed requirements installation in both workflows
+  and extend existing workflow prerequisite/mutation tests.
+* [x] P03-T02: Clean pip reproduction, full infra and existing lint/format/type
+  checks; execute preserved image and timeout regressions plus mutations.
+* [ ] P03-T03: One cycle-specific Review, artifact reconciliation, privacy-safe
+  Conventional Commit, push same branch and update PR #370 with Refs #360.
+
+### Correction test ownership
+
+Owner: `infra/tests/test_pipeline.py` for dependency contract, at most two
+new test methods and a small extension to the existing validator. Removals:
+none. No new tooling or dependency manifest; reuse the generated runtime lock.
+Canonical edits: two workflow YAMLs and that test module. Generated targets:
+none. Directly related quality-gate instructions in infra/README.md also
+receive the same dependency command and clean-environment explanation.
+Existing `infra/.dockerignore` and `test_staff_azure.py` corrections
+must remain byte-for-byte unchanged. Mutation harness stays outside the
+repository under the session files directory. No test skipping/crypto mocking.
+Full infra discovery validates real encryption/decryption and lifecycle paths.
+
+### Correction follow-ups
+
+Only prior RV-001/RV-002/RV-003, outside active P03. New CI results after push
+are not assumed from local passes. Stop after the requested publication.
+
+### Correction critique disposition
+
+Execution: Complete, once for this correction candidate. Verdict: Revise,
+PC-009 only. Disposition: rejected because replacing /tmp with a project-local
+venv conflicts with explicit caller direction and contradicts observed evidence.
+The parent already created /tmp/ama-360-correction1-YRmaea and reproduced
+the failure there with pip (21 tests, 14 failures/four errors); the worker's
+reported environment restriction is not a parent restriction. Keep the required
+/tmp venv. No significant unresolved decision and no repeated critique.
+Planning execution: Complete. Readiness: Ready.

@@ -879,14 +879,18 @@ packages first, preferably in a disposable virtual environment (pip only).
 Source CI runs the gates within the existing `namespace` / `src-namespace` job
 in `.github/workflows/src-ci.yml`, including on `infra/**` changes. The legacy
 `.github/workflows/mvp-validation.yml` also runs full infra discovery. Both
-infra-test steps install the test-only `PyYAML==6.0.3` pin before discovery;
-it is not a production package dependency. All existing job/check names remain
+infra-test steps install the test-only `PyYAML==6.0.3` pin and the hashed
+operator/runtime dependencies from `src/api/requirements.txt` before discovery.
+The latter supplies real cryptography for encrypted staff-job transport tests;
+do not rely on incidental transitive dependencies. PyYAML is not a production
+package dependency. All existing job/check names remain
 unchanged, following the #321 cut-over decision. The workflow regression tests
 reject missing, unpinned or late installation without skipping pipeline controls.
 
 ```bash
 python3 -m pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
 python3 -m pip install 'PyYAML==6.0.3'
+python3 -m pip install --require-hashes -r src/api/requirements.txt
 az bicep version
 for file in infra/*.bicep infra/modules/*.bicep; do
   az bicep build --file "$file" --stdout > /dev/null || exit 1
@@ -899,12 +903,15 @@ ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.p
 ```
 
 To reproduce the test dependency boundary in a fresh venv, install only
-`pip install -e src/core -e src/agents -e src/api`, then run
+`pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`,
+then install `PyYAML==6.0.3` and run
 `python -m unittest discover -s infra/tests -q`. Without the explicit test
-prerequisite, discovery fails with `ModuleNotFoundError: No module named 'yaml'`.
-Install `python -m pip install 'PyYAML==6.0.3'` in that same venv and rerun
-the identical discovery command. This is intentional test setup, not a reason
-to add PyYAML to the application packages.
+prerequisites, missing PyYAML prevents pipeline test imports and missing
+cryptography blocks staff-job tests before lifecycle/cleanup assertions.
+Install `python -m pip install --require-hashes -r src/api/requirements.txt`
+in that same venv and rerun the identical discovery command. These are
+explicit test/operator prerequisites, not a reason to add PyYAML to the
+application packages, skip tests or replace real encryption.
 
 Image-selection tests alone need only Python, with no Azure CLI or login:
 `python3 -m unittest discover -s infra/tests -p test_deploy.py -v`.

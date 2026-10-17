@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": null,
+  "status": "active",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-16/run-in-azure-research.md",
     "plan": ".copilot-tracking/plans/2026-10-16/run-in-azure-plan.md",
@@ -34,12 +34,27 @@
       "decision": "Implementation commit 37af66e pushed; PR #370 opened against main. No Azure execution, merge or issue checkbox edits.",
       "status": "published",
       "evidence": "https://github.com/jmservera/ama/pull/370"
+    },
+    {
+      "decision": "Correction cycle 1 Research executed Complete/Ready; Plan Complete/Ready; one correction critique executed with PC-009 rejected because /tmp works in parent and is explicitly required.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-16/run-in-azure-plan.md"
+    },
+    {
+      "decision": "Correction P03-T01/T02 implemented: both infra workflows install existing hashed runtime lock before discovery. Fresh /tmp pip venv reproduces 14 failures/four errors, then passes 307 infra tests without skips, existing Ruff/format/mypy/Bicep and seven context/timeout negative controls plus six workflow mutation subcases.",
+      "status": "validated offline",
+      "evidence": ".copilot-tracking/changes/2026-10-16/run-in-azure-changes.md"
+    },
+    {
+      "decision": "Correction cycle 1 Review executed once, Complete; outcome Residual work. No source-blocking defect identified; RV-001/RV-002/RV-003 remain open. Docker context mutation granularity is explicitly limited, not image-build proof.",
+      "status": "recorded separately from critique",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Owner reviews PR #370 and CI. Any later image build, scoped role deployment and live acceptance require separate authorization; no automatic follow-up task is started."
+    "action": "Correction Research/Plan/Implement/Review complete; finish P03-T03 publication only: privacy-safe commit, push same branch, update PR #370 with Refs #360, record source-head receipt and stop."
   },
   "prioritized_follow_ups": [
     {

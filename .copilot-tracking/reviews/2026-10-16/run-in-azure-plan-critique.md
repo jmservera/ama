@@ -445,3 +445,150 @@ directly and finalize without another critique. No user action is required for
 the prescribed worker-owned least-privilege design. Stop this critique here;
 source changes, Azure execution, Git operations and deployment remain outside
 this invocation.
+
+## Correction cycle 1 critique (2026-10-17)
+
+### Metadata
+
+* Task: 360-run-in-azure; issue #360; PR #370; correction cycle 1.
+* Critique execution status: Complete.
+* Verdict: Revise.
+* Severity summary: zero Critical, zero High, one Medium, zero Low.
+* This is the single final-candidate assessment of P03. Earlier findings and
+  their historical verdict above are preserved, not reopened.
+
+### Inputs and Criterion Boundary
+
+* Assessed the correction section of
+  .copilot-tracking/research/2026-10-16/run-in-azure-research.md,
+  P03 correction candidate in
+  .copilot-tracking/plans/2026-10-16/run-in-azure-plan.md, P03 in
+  .copilot-tracking/details/2026-10-16/run-in-azure-phase-details.md,
+  .github/workflows/mvp-validation.yml, .github/workflows/src-ci.yml,
+  infra/tests/test_pipeline.py and
+  .copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md.
+* Criterion boundary: explicit existing hashed runtime requirements before
+  full infra discovery in both workflows; extend the existing dependency
+  validator with at most two test methods; removal, unhashed substitution and
+  late-install negative controls; isolated Python 3.12 pip reproduction;
+  REQUIRE_AZ_BICEP=1 full infra discovery without skips; existing Ruff,
+  formatting and mypy; preserved image-context and decoded-result execution
+  timeout regressions with in-memory mutation checks.
+* Supplied baseline: 21 staff tests, 14 failures and four errors without
+  cryptography. This is supplied/research-recorded evidence, not a reproduction
+  performed by this critique.
+* No implementation, tests, dependency installation, Azure operations,
+  external discovery, subagents, publication or changes to other artifacts
+  were performed. Existing dirty plan/research/details/state files belong to
+  the parent and were left untouched. Branch observed:
+  feat/run-in-azure-360, at 296037b.
+
+### Coverage Assessment
+
+| Requirement or task | Coverage | Evidence or concern |
+| --- | --- | --- |
+| P03-T01: both discovery sites | Covered | MVP API authentication initialization tests and src namespace Infrastructure controls and mutation regressions currently install only pinned PyYAML explicitly in their discovery scripts; details require the identical hashed runtime installation before discovery in each |
+| P03-T01: dependency ownership and test budget | Covered | infra/tests/test_pipeline.py:106-147 already owns infra_test_dependency_errors, a positive workflow assertion and PyYAML removal/unpinned/late mutations; extending that validator and using subtests fits at most two additional methods without a parallel framework |
+| P03-T01: hash and order regressions | Covered | Candidate explicitly requires removal, unhashed and late-install rejection in both workflows, while retaining pinned PyYAML and workflow/check names |
+| P03-T02: real dependency reproduction | Partial | Baseline and post-lock comparison are specified, but the prescribed scratch location cannot be used here; PC-009 |
+| P03-T02: full infra and engineering gates | Covered | Full discovery with REQUIRE_AZ_BICEP=1 and zero skips plus existing src namespace Ruff/format/mypy commands are explicit; no skip, crypto mock or guard relaxation is permitted |
+| P03-T02: preserved 126ecae regressions | Covered within supplied evidence | Research C12/C13 identifies context/manifest and decoded-result Running timeout protections; candidate requires byte-for-byte preservation and independent in-memory negative controls rather than source mutation |
+| P03-T03: review and publication | Covered | One cycle-specific Review, evidence reconciliation, privacy-safe author/committer, same-branch push and PR #370 update with Refs #360; no merge or force-push |
+| RV-001/RV-002/RV-003 and operational boundaries | Covered | Prior review and P03 keep image/role deployment, live private SQL/log/restart/browser acceptance and serialization/hard-kill concerns unresolved and separate |
+
+### Findings
+
+<!-- rpi:critique id=PC-009 -->
+#### PC-009 [Medium]: Clean-venv instructions require an unavailable scratch location
+
+* Related IDs: P03-T02; correction requirements and boundaries; research C8-C13
+  reproduction synthesis.
+* Evidence: the plan requires a new /tmp Python 3.12 pip venv; P03-T02 in
+  the phase details specifies /tmp/ama-360-correction1-YRmaea and Python 3.12.3.
+  File operations under /tmp are unavailable in this execution environment.
+* Concern: the required isolation and real-crypto evidence are sound, but the
+  literal candidate command location cannot be executed here. A previously
+  recorded baseline at that path is not a fresh post-correction validation.
+* Impact: implementation cannot complete the prescribed validation literally;
+  attempting to bypass it or substituting an existing populated environment
+  would leave the clean-dependency acceptance unsupported.
+* Smallest useful change: have the planning parent replace the new reproduction
+  venv location with a fresh project-local scratch directory, keep it
+  untracked, and preserve pip, Python 3.12, no system site packages, the
+  baseline-before-lock sequence and every validation assertion. Keep the
+  recorded historical baseline distinguishable from the new run. No new
+  tooling, dependency manifest or runtime change is needed.
+* Action owner: planning parent, then P03 implementation/validation owner.
+* Exact resolving evidence: corrected prospective P03/research instructions
+  naming the permitted project-local location; recorded commands showing a
+  newly created venv, Python version, include-system-site-packages = false,
+  interpreter/pip provenance, source --no-deps and pinned PyYAML installation,
+  the expected 21-test missing-cryptography baseline, then
+  pip install --require-hashes -r src/api/requirements.txt and successful
+  REQUIRE_AZ_BICEP=1 full infra discovery with zero skips. Record existing
+  Ruff/format/mypy and mutation results as already required; show scratch
+  artifacts are not included in the publication diff.
+* Decision route: direct planner correction to an execution location, not a
+  divergent product/design decision. No user response is required.
+
+### Strengths and Residual Risk
+
+* Installing the existing hash-pinned runtime lock in each discovery script
+  fixes the declared prerequisite rather than relying on src CI's incidental
+  transitive dependencies or introducing a second cryptography version pin.
+* The positive dependency assertion must remain green before mutations are
+  interpreted. Each negative control should change only its targeted
+  installation in one otherwise-valid workflow and establish the matching
+  dependency error, not an unrelated PyYAML failure.
+* In-memory image-context controls must cover each preserved staff allow rule,
+  including the manifest. The timeout control must fail at the decoded-result
+  Running deadline assertion, not an import, syntax or unrelated fixture
+  error. Baseline success and the intended assertion failure belong together
+  in the recorded evidence.
+* Preserve infra/.dockerignore and infra/tests/test_staff_azure.py byte-for-byte
+  relative to the correction baseline. Research describes the 126ecae
+  protections; this critique did not independently inspect those excluded
+  source files or that commit and does not claim mutation success.
+* RV-001, RV-002 and RV-003 remain unresolved. Offline tests cannot establish
+  compatible image publication, API-scoped role activation, live private
+  SQL/log/restart/browser behavior, cross-host serialization or hard-kill
+  cleanup. No Azure write/build/deploy, secret/Graph/private-data work or
+  spending is authorized. Never delete resource group ama or open services.
+
+### Limitations and Resolution Gate
+
+* This is a plan credibility assessment, not implemented-fix verification.
+  Workflow files still lack the planned hashed install in the supplied state.
+* Existing source/research evidence supports the bounded dependency correction;
+  it does not establish fresh clean-suite, lint, type, mutation or remote CI
+  results. Record actual commands and outcomes during P03, including failures.
+* No decision-critical additional discovery is required. PC-009 is the complete
+  actionable finding set for this candidate; resolve it directly without
+  another critique. All other acceptance checks remain required execution
+  evidence, not newly asserted defects.
+
+### Recommended Next Action
+
+* Highest-impact finding: PC-009.
+* Action owner: planning parent.
+* Smallest next action: correct the prospective scratch location and finalize
+  P03, then continue the authorized implementation, validation, one Review
+  and same-branch publication. This critique itself stops after appending
+  this section.
+* User response required: No.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/research/2026-10-16/run-in-azure-research.md](.copilot-tracking/research/2026-10-16/run-in-azure-research.md) | Correction research and supplied baseline |
+| [.copilot-tracking/plans/2026-10-16/run-in-azure-plan.md](.copilot-tracking/plans/2026-10-16/run-in-azure-plan.md) | P03 final candidate |
+| [.copilot-tracking/details/2026-10-16/run-in-azure-phase-details.md](.copilot-tracking/details/2026-10-16/run-in-azure-phase-details.md) | Correction execution and publication details |
+| [.copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md](.copilot-tracking/reviews/logs/2026-10-16/run-in-azure-review.md) | Preserved RV-001/RV-002/RV-003 |
+| [.copilot-tracking/reviews/2026-10-16/run-in-azure-plan-critique.md](.copilot-tracking/reviews/2026-10-16/run-in-azure-plan-critique.md) | Append-only correction critique |
+
+## Next Steps
+
+Return Complete / Revise to the active planning parent. Resolve PC-009 directly,
+then continue the already authorized full loop and publication on
+feat/run-in-azure-360 through PR #370. Do not invoke another critique, merge,
+perform live operations or treat RV-001/RV-002/RV-003 as resolved. No user
+action or further confirmation is required.

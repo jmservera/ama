@@ -190,6 +190,7 @@ jobs:
           REQUIRE_AZ_BICEP: "1"
         run: |
           pip install 'PyYAML==6.0.3'
+          pip install --require-hashes -r src/api/requirements.txt
           python -m unittest discover -s infra/tests -v
           pip install 'ruff==0.17.1'
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py

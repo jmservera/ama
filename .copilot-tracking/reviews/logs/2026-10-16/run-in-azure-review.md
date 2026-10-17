@@ -127,3 +127,88 @@ synthetic-development-only status is preserved.
 Parent publishes the existing topic branch and PR with Refs #360, without
 merging or ticking issue criteria. RV-001 is the first authorized follow-up;
 RV-002 depends on it. RV-003 remains a separate operational constraint.
+
+## Correction cycle 1 Review opening (2026-10-17)
+
+Task remains 360-run-in-azure, PR #370 on feat/run-in-azure-360.
+One read-only Review for the explicitly requested correction cycle, not a
+repetition of the original implementation Review above. Compared boundary:
+delta from 296037b239d20179de4048f0bc9f837b4704bb86 in both workflow installs,
+infra/tests/test_pipeline.py, quality-gate runbook and correction sections of
+the same research/plan/details/critique/changes/state artifacts.
+P03-T01/T02 complete; P03-T03 publication is parent-owned after this Review.
+No source edits or follow-up implementation are authorized by this Review.
+Execution: In progress. Prior RV-001/RV-002/RV-003 remain unresolved.
+
+### Correction reconciliation and assessment
+
+* P03-T01: both actual full-infra discovery steps install the existing hashed
+  runtime lock, explicitly supplying real AES-GCM. PyYAML pin, test discovery,
+  workflow/check names and all guards remain. A single new test method
+  rejects all six missing/unhashed/late-install mutations in both workflows.
+* P03-T02: fresh Python 3.12.3 pip-only /tmp venv with no system site packages
+  reproduced the CI failure, then passed the full suite after the exact
+  workflow dependency installation. No test skips or mocked crypto.
+* The prior manifest whitelist and non-vacuous decoded-result timeout tests
+  from 126ecae are preserved byte-for-byte, as are transport runtime and
+  proof Dockerfile. Source delta is confined to workflow test setup, its
+  existing contract tests and the directly related quality-gate instructions.
+* PC-009 was rejected correctly: the worker's /tmp restriction is contradicted
+  by the parent's actual successful venv creation and failure reproduction.
+  Substituting project-local storage would violate explicit caller direction.
+  One correction-candidate critique only; no unresolved significant decision.
+* The runbook dependency instructions are an immediately relevant update,
+  not a policy or architecture divergence. Plan/details/changes/state reflect
+  completed P03-T01/T02 and parent-owned P03-T03 publication.
+
+### Correction validation commands and results
+
+`V=/tmp/ama-360-correction1-YRmaea`. Exact expanded lint file set and complete
+commands are also retained in the correction changes record.
+
+| Command or check | Result |
+| --- | --- |
+| `python3 -m venv "$V"`; source `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator`; `pip install 'PyYAML==6.0.3'`; staff unittest discovery | Expected baseline exit 1: 21 tests, 14 failures/four errors, absent cryptography; same failure as run 38983585607 |
+| `"$V/bin/python" -m pip --quiet install --require-hashes -r src/api/requirements.txt`; `"$V/bin/python" -m pip check` | Passed, cryptography 50.0.2, PyYAML 6.0.3, no broken requirements |
+| `REQUIRE_AZ_BICEP=1 "$V/bin/python" -m unittest discover -s infra/tests -q` | 307 passed, no skips, 67.359 seconds |
+| `"$V/bin/python" -m unittest discover -s infra/tests -p test_staff_azure.py -v` | 21 passed, real crypto/context/timeout/cleanup regressions |
+| `"$V/bin/python" -m unittest discover -s infra/tests -p test_pipeline.py -q` | 28 passed, including six operator-dependency mutation subcases |
+| `"$V/bin/python" -m pip --quiet install 'ruff==0.17.1' 'mypy==2.4.0'` after missing Ruff exit 127 | Existing CI pins installed in the disposable venv only |
+| `"$V/bin/ruff" check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 $FILES` and `"$V/bin/ruff" format --isolated --line-length 100 --check $FILES` | All ten existing CI-gated files pass, ten already formatted |
+| `"$V/bin/mypy" --strict src/check-container.py`; `"$V/bin/mypy" --strict infra/scripts/pipeline.py`; `"$V/bin/mypy" --follow-imports=silent --ignore-missing-imports infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py` | All three passed |
+| `for file in infra/*.bicep infra/modules/*.bicep; do az bicep build --file "$file" --stdout > /dev/null || exit 1; az bicep lint --file "$file" || exit 1; done` | Passed, local Bicep 0.48.1 only, no Azure management request |
+| `git diff --exit-code 296037b -- infra/.dockerignore infra/tests/test_staff_azure.py infra/cutover-proof.Dockerfile infra/scripts/staff_azure.py`; `git diff --check` | Passed, prior corrections unchanged |
+| `"$V/bin/python" /home/azureuser/.copilot/session-state/7f2b1f61-4561-4385-be14-7db4ef3c98a0/files/correction1-mutations.py` | Three baseline tests pass; seven source mutants killed by intended assertion, no errors/skips; six workflow mutation subcases rejected |
+
+Mutation boundary: five context negative controls remove parent/file inclusion
+pairs for the four staff scripts and app-registration manifest; two transport
+negative controls accept decoded output before Succeeded or remove execution
+timeout refusal. All use in-memory mutation and real crypto. Initial removal
+of a single staff file allowance survived the old context test's prefix matcher
+because the parent inclusion still matched; this limitation is recorded rather
+than hidden. The final pair mutations prove omitted-source detection, not full
+Docker ignore semantic equivalence or a built image. Actual image validation
+remains RV-001/RV-002, not a new inferred pass.
+
+### Correction findings, routing and outcome
+
+No source-blocking defect identified in the bounded dependency correction.
+Review execution: **Complete**. Outcome: **Residual work**, because the
+original deployment/acceptance findings are explicitly still open:
+
+* RV-001 [Medium]: authorized private image build/publication, pinned digest
+  and API-only restart-role activation remain unexecuted. Same authorized
+  deployment follow-up; no action taken here.
+* RV-002 [Medium]: actual tenant/mailbox authority, private log/SQL/job cleanup,
+  restart/fresh replicas and real browser/human acceptance remain unproved.
+  Same operator validation follow-up after RV-001; no live Graph work.
+* RV-003 [Low]: cross-host serialization and hard-kill cleanup remain an
+  explicit operational rehearsal/recovery boundary.
+
+No Azure writes/deployments/image builds/role assignments/secrets/private data,
+service exposure, spending or resource-group deletion. No test skipping, guard
+weakening, merge or force-push. Remote CI at the to-be-published correction head
+has not run yet and is not represented by these local results.
+Parent may reconcile publication receipts and push/update PR #370 with Refs
+#360, then stop as requested. This Review does not start a second Review,
+source correction or automatic follow-up task.
