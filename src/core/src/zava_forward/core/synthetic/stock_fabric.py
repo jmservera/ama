@@ -4,6 +4,8 @@ assumption chosen for the exercise, not a Zava North Homes fact. Output depends
 only on the seed and the home ID, so it is reproducible."""
 
 import csv
+import hashlib
+import io
 import json
 import random
 import sys
@@ -323,6 +325,9 @@ def main(argv: Sequence[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument(
+        "--as-of", help="YYYY-MM-DD snapshot label only; unknown when omitted, never the clock"
+    )
+    ap.add_argument(
         "--register", type=Path, default=output_dir("private-north-east-stock-register.csv")
     )
     ap.add_argument(
@@ -336,16 +341,22 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     a = ap.parse_args(argv)
     try:
+        as_of = provenance.parse_as_of(a.as_of).isoformat() if a.as_of is not None else None
         out = _destination(a.out)
-        with a.register.open(encoding="utf-8-sig", newline="") as f:
+        register_bytes = a.register.read_bytes()
+        with io.StringIO(register_bytes.decode("utf-8-sig"), newline="") as f:
             register: list[Mapping[str, object]] = list(csv.DictReader(f))
         if not register:
             raise ValueError("Stock register must contain at least one home")
         rows = fabric_rows(register, a.seed)
         report = summary(rows, a.seed)
+        input_hashes = {"register": hashlib.sha256(register_bytes).hexdigest()}
+        report.update(as_of=as_of, input_sha256=input_hashes)
         data = None
         if a.cases:
-            data = json.loads(a.cases.read_text(encoding="utf-8"))
+            case_bytes = a.cases.read_bytes()
+            input_hashes["cases"] = hashlib.sha256(case_bytes).hexdigest()
+            data = json.loads(case_bytes.decode("utf-8"))
             if not isinstance(data, dict):
                 raise ValueError("Case seed must be an object")
             cases = _records(data.get("cases"), "cases")

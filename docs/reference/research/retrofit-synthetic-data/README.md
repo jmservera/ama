@@ -123,7 +123,7 @@ under accepted ADR 0006. New executable work belongs in `src/`, not `mvp/`.
 | --- | --- | --- | --- |
 | `build_mvp_dataset.py` (MVP JSON) | `--seed`, `--as-of` (defaults to the clock, so always pass it) and the stock register | `seed`, `as_of`, `generator_version`, `generator_revision` in the JSON and its `.coverage.json` receipt | `test_same_seed_date_and_register_are_byte_deterministic` |
 | `generate_pack.py` (public CSV pack) | `--seed` (omitted draws a random seed, so always pass it) and `--as-of` (defaults to the extract date 2026-09-30; sets `generated_at`, never the clock) | `seed`, `version`, `generated_at`, `as_of`, `generator_revision`, per-file `file_sha256` in `manifest.json` | `test_pack_generator_is_byte_deterministic_with_manifest` |
-| Stock fabric (`zava_forward.core.synthetic.stock_fabric`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and the register CSV; output depends only on seed and home ID, no clock | `seed`, `version`, `generator_revision` in each summary JSON; core CLI adds payload hashes and uses full SHA-256, support retains 16-hex revisions covering moved dependencies | `test_stock_fabric.py` and `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
+| Stock fabric (`zava_forward.core.synthetic.stock_fabric`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and register CSV; fabric CLI also takes optional `--cases` and strict `--as-of` label (unknown when omitted); neither uses the clock | `seed`, `version`, `generator_revision` in each summary JSON; core CLI adds payload hashes, nullable `as_of` and exact consumed `input_sha256` for register/optional cases; full source SHA-256, support retains 16-hex revisions covering moved dependencies | `test_stock_fabric.py` and `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
 | Stock register (seed 4820260930, 60000 homes) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository (it samples real OpenStreetMap anchors) |
 | Wholly fictional stock-scale fixture (not the private stock register) | `--seed`, `--as-of` snapshot label, `--homes`, `--events-per-home`; events remain calendar-year 2026 | `seed`, `version` 1.2.0, `as_of`, dependency-aware `generator_revision`, per-file `file_sha256` | `src/core/tests/test_synthetic_determinism.py`: all files, changed seed, historical payload hashes |
 | Sensor backfill (labelled synthetic climate, not device evidence) | `--seed`, `--as-of` exclusive UTC end, `--days`, `--cadence`, `--homes`; fixed recorded stock seed | `seed`, `version` sensor-backfill-v2, `as_of`, UTC start/end, dependency-aware `generator_revision`, per-file `file_sha256` including estimate and register | Same src test file: all files/multiple shards, changed seed/date, exact window, estimate propagation, historical payload hashes |
@@ -146,17 +146,35 @@ and parameters. Sensor's omitted as-of retains 2024-10-01 as start, even for
 custom days; the full 730-day default ends on 2026-10-01.
 See the [core CLI recipes](../../../../src/core/README.md#datasets-fixtures-and-synthetic-tools).
 
+Fabric receipt input hashes are over raw bytes, not normalized records:
+UTF-8 BOM, CSV line endings or case JSON whitespace can change input hashes
+without changing generated payloads. The optional as-of labels only the
+snapshot; it does not filter records, date an assessment or approve a rule.
+Repeat with the same input bytes, source revision, runtime and all parameters.
+Retain source snapshots privately alongside the receipt; hashes cannot recover
+missing inputs. The fabric receipt does not expose source paths or contents.
+Existing `stock-fabric-v1` row draws and case histories are unchanged.
+
 Refresh policy (proposed defaults; the owner has not yet approved them).
 
 * Cadence: regenerate only on a recorded trigger, such as a schema or
   generator change, a rubric or scenario change, or a new exercise baseline
   date. No scheduled refresh.
 * Approval: the project owner approves each refresh, naming seed, as-of date
-  and target. Regulatory or scenario-rule changes also need the named human
-  approval required by the repository's legal evidence conventions.
+  and target, retained input hashes, generator revision/version and runtime.
+  Record that approval before publishing or seeding; a deterministic run is
+  not approval. Regulatory or scenario-rule changes also need the named human
+  approval required by the repository's legal evidence conventions. Juan
+  Manuel Servera is the exercise Legal, Compliance and DPO owner for synthetic
+  development under accepted ADR 0005; agents only retrieve, compare, summarise
+  and flag. Real owners and binding sources remain an operational gap. This
+  policy grants no consent, safety release or financial commitment.
 * Version: a refresh that changes any row, or the seed, bumps the pack
-  `version`; a regeneration with the same seed, as-of date and
-  `generator_revision` must reproduce the manifest hashes exactly.
+  `version`; a regeneration with the same seed, as-of date, source input bytes,
+  parameters, runtime and `generator_revision` must reproduce the manifest
+  hashes exactly. Distinguish generator/algorithm version from a separately
+  named snapshot revision: do not change `stock-fabric-v1` to label a new
+  baseline, since its version participates in the seeded draw.
 * Live records: a refresh writes to a new path or version and never
   overwrites live exercise records. Operator seeding keeps the existing
   Azure SQL records and the 11 private tenant staff bindings; restart does
@@ -192,6 +210,22 @@ Open items for the owner (not decided here).
   a small deterministic sample is not a verified full-stock sensor run.
 * Decide whether to regenerate the committed pack manifest with the new
   fields.
+
+### Offline acceptance audit (2026-10-16, Refs #176)
+
+| Acceptance criterion | Result | Evidence and remaining boundary |
+| --- | --- | --- |
+| Same seed and as-of give byte-identical output for each generator, including stock register and sensors | Unmet overall; available generators pass | `src/core/tests/test_generated_dataset.py` repeats public pack, fixture-backed 980-case output, fabric and EPC; `test_synthetic_determinism.py` repeats scale/sensor files and shards; `test_sensor_stock.py` repeats register-backed sensors. `test_stock_fabric.py` repeats CLI outputs, tests exact consumed-input hashes and preserves BOM/quoted-newline semantics. The original private stock-register generator and pinned OSM inputs are absent; the fictional 60,000-home test is not the original register. |
+| Output manifests record seed, version and generator revision | Partial overall; available generator receipts pass | The same tests assert current seed/version/revision fields, source dependencies and payload hashes. The fabric CLI adds date/input provenance. Historical public/private manifests are deliberately not replaced; no new receipt can be generated for the missing original register generator. |
+| Refresh policy states cadence, approvals and protection of live seeded records | Met as documentation, not approved operational policy | The policy above specifies trigger-only cadence, named human approval, private versioned inputs/outputs and explicit reset authority; core tests prove nonempty output refusal and unchanged existing bytes, and existing SQL restart regressions preserve seeded records. No reset, policy adoption, tenant change or operational legal approval was performed. |
+
+Local Python 3.12.3 validation: 45 tests across `test_stock_fabric`,
+`test_synthetic_determinism`, `test_sensor_stock` and `test_generated_dataset`.
+The fixture-backed builder tests supply fictional source rows; they do not
+read the retained private stock or running database. Local CLI smoke, scoped
+Ruff and mypy results are recorded in the PR. No Azure or live model call;
+this is generator-tooling evidence, not application or cloud acceptance.
+All issue checkboxes are left unchanged for the coordinator's merge audit.
 
 This pack gives the Zava Forward discovery a realistic body of operating
 records to analyse. It models a competent, busy retrofit team one year into

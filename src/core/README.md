@@ -654,6 +654,7 @@ core. Install with pip before invoking those support tools.
 python3 -m zava_forward.core.synthetic.stock_fabric \
   --register /private/path/private-north-east-stock-register.csv \
   --cases /private/path/zavaforward.json \
+  --seed 4820260930 --as-of 2026-10-16 \
   --out /private/path/new-stock-fabric-snapshot
 ```
 
@@ -667,6 +668,27 @@ a checkout and when the snapshot directory does not exist yet. It validates
 inputs before creating output.
 Snapshots contain `stock-fabric.csv`, `summary.json` and, with `--cases`,
 `linked-cases.json`. No generated output belongs in git or an image.
+
+The CLI receipt (`summary.json`) records seed, algorithm version, full source
+revision, payload hashes, an optional strict ISO `--as-of` and `input_sha256`
+for the exact register and optional case bytes consumed. Logical keys
+`register`/`cases` contain hashes only, never paths or source content; `cases`
+is absent without `--cases`. Omitted as-of is `null` (unknown), not the clock.
+The date is a snapshot label, not a filter, survey date or assertion that
+operational evidence is current. Changing only that label leaves CSV/linked
+case bytes unchanged. BOM, line endings or JSON whitespace change input
+fingerprints even when parsed values and generated payloads stay identical.
+Replay requires the same input bytes, seed, source dependencies and Python
+runtime; seed/date alone cannot reconstruct external stock or case history.
+The fabric algorithm and existing linked-case behavior remain unchanged.
+
+Refs #176: the offline audit proves repeated bytes for fabric, EPC, the public
+pack, fixture-backed programme data and both sensor modes. The original
+OSM-anchored register generator and pinned source inputs remain unavailable:
+the constructed 60,000-home regression is not its reproduction. Historical
+manifests are not regenerated. See the
+[criterion-by-criterion audit](../../docs/reference/research/retrofit-synthetic-data/README.md#offline-acceptance-audit-2026-10-16-refs-176);
+the issue remains partially delivered.
 
 Every fabric row carries `fabric_is_synthetic=true` and `is_synthetic=true`.
 Build year/age band, dwelling type, construction and heating are modelling

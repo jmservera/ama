@@ -4368,6 +4368,24 @@ metadata when the knowledge base was created.
   browser sign-in, SQL binding/restart and migration/retirement approvals remain
   Not run or unmet. No Azure writes, live setup, issue ticks or approval claims.
 
+## [2026-10-16] ingest | Synthetic generator replay inputs and acceptance audit
+
+* Refs #176. Updated the existing synthetic-data README and reference index
+  with a per-criterion audit and exact fabric replay inputs; updated
+  `src/core/README.md` with the CLI recipe and provenance contract.
+* Fabric CLI now captures exact register/optional case bytes once, hashes
+  those inputs without source paths/content, and records a strict optional
+  as-of label (unknown when omitted). Algorithm draws and payload histories
+  are preserved; snapshot labels do not imply evidence freshness.
+* Local 45-test generator regression covers exact byte replay, both sensor
+  modes, source/seed/date changes, consumed-byte compatibility, manifests,
+  refused refreshes and fixture-backed SQL restart. No private source data,
+  Azure, live resets or setup-entra changes.
+* AC1 remains unmet for the missing original stock-register generator and
+  pinned OSM inputs; current manifests pass but historical stock/public
+  receipts are not regenerated. Refresh cadence/approval/live-protection
+  policy is documented, not owner-approved. No resident, legal, safety,
+  financial or operational approval is inferred; issue ticks stay unchanged.
 ## [2026-10-16] query | Offline historical climate source audit
 
 * Refs #178. Updated the existing sensor analytics research plan with the

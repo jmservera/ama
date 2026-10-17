@@ -1,0 +1,60 @@
+{
+  "task_id": "176",
+  "task_slug": "synthetic-determinism-176",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-16/synthetic-determinism-176-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-16/synthetic-determinism-176-plan.md",
+    "details": ".copilot-tracking/details/2026-10-16/synthetic-determinism-176-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-16/synthetic-determinism-176-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-16/synthetic-determinism-176-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-16/synthetic-determinism-176-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "User explicitly requests end-to-end RPI artifacts, implementation and PR; progress requested phases without an automatic follow-up session.",
+      "status": "confirmed",
+      "evidence": "Task request 2026-10-16"
+    },
+    {
+      "decision": "Research executed; Ready for bounded slice. Original stock generator unavailable; no substitute.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-16/synthetic-determinism-176-research.md"
+    },
+    {
+      "decision": "One critique executed, Revise; PC-001/002 directly accepted and applied to plan/details, ready for implementation.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-16/synthetic-determinism-176-critique.md"
+    },
+    {
+      "decision": "One Review executed, Complete; outcome Residual work. No introduced defect identified; AC1/AC2 gaps and unapproved refresh adoption retained.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-16/synthetic-determinism-176-review.md"
+    },
+    {
+      "decision": "Bounded offline change committed/pushed; PR #368 OPEN against main, Refs #176, no closing issue relationship, issue acceptance partial.",
+      "status": "published",
+      "evidence": "https://github.com/jmservera/ama/pull/368"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Review", "action": "Owner reviews PR #368; supply original stock generator/pinned inputs and approve or amend refresh policy before full acceptance"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Obtain original stock generator and pinned OSM inputs/runtime",
+      "rationale": "Required to prove AC1 and original output manifest AC2; no fictional substitute is valid.",
+      "evidence": "RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Owner approves or amends refresh policy before baseline publication",
+      "rationale": "Documented definition meets AC3 but supplies no policy adoption or live reset authority.",
+      "evidence": "RV-002"
+    }
+  ]
+}
