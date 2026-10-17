@@ -1,0 +1,39 @@
+{
+  "task_id": "206",
+  "task_slug": "issue-206-rubric-deleted-head",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/issue-206-rubric-deleted-head-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/issue-206-rubric-deleted-head-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/issue-206-rubric-deleted-head-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/issue-206-rubric-deleted-head-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/issue-206-rubric-deleted-head-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/issue-206-rubric-deleted-head-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute Research, Plan, Implement and Review in order, then commit/push/open Refs #206 PR and stop",
+      "status": "confirmed",
+      "evidence": "Explicit caller request dated 2026-10-17"
+    },
+    {"decision": "Research executed; Planning Readiness Ready", "status": "completed", "evidence": "Research C1-C5/W1-W3"},
+    {"decision": "One final-candidate critique executed, verdict Revise; PC-001..004 applied directly", "status": "completed", "evidence": ".copilot-tracking/reviews/plans/2026-10-17/issue-206-rubric-deleted-head-plan-critique.md"},
+    {"decision": "Implementation P01/P02 complete; 159 focused passes, exact 21 baseline failures unchanged", "status": "completed", "evidence": ".copilot-tracking/changes/2026-10-17/issue-206-rubric-deleted-head-changes.md"},
+    {"decision": "One Review executed: Complete; outcome Conformant for bounded repair/local evidence; no new substantive findings", "status": "completed", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-206-rubric-deleted-head-review.md"},
+    {"decision": "Reviewed candidate committed/pushed; Refs #206 PR opened; issue remains open", "status": "completed", "evidence": "4fe3b31ec91dbdde7df2852246660cdbfb99d865; https://github.com/jmservera/ama/pull/372"},
+    {"decision": "Stop automatic session after publication, no follow-up child loop", "status": "confirmed", "evidence": "Explicit caller stop boundary and persistent delivery log"},
+    {"decision": "Resume same task for bounded rebase/integration; authorize explicit force-with-lease on topic only and stop after final head report", "status": "confirmed", "evidence": "Caller 2026-10-17 continuation; research integration section"},
+    {"decision": "Integration Research reused and bounded Plan verified; existing critique retained without repetition", "status": "completed", "evidence": "Research integration section; Plan P03; details P03"},
+    {"decision": "P03 implementation complete on d890e3d; reviewed feature bytes unchanged; 159 focused passes; exact 21 baseline failure IDs unchanged; compiler no-emit/repeatability and invariant audit passed", "status": "completed", "evidence": ".copilot-tracking/changes/2026-10-17/issue-206-rubric-deleted-head-changes.md"},
+    {"decision": "Caller-requested P03 integration Review executed once: Complete; Conformant for new base/replay boundary and local evidence, no substantive findings", "status": "completed", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-206-rubric-deleted-head-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Stop automatic phase loop as explicitly requested; parent commits final evidence, lease-pushes once and verifies final remote/PR head report without another tracking push"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Reconcile existing rubric seed/registry/path-filter fixtures", "rationale": "21 pre-existing failures obscure a clean whole-suite signal; independent maintenance, not this repair", "evidence": ".copilot-tracking/changes/2026-10-17/issue-206-rubric-deleted-head-changes.md"}
+  ]
+}
