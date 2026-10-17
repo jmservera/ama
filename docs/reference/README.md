@@ -98,6 +98,13 @@ pending/unknown evidence remains a gap. Exact full core CI discovery passed
 [correction log](./log.md#2026-10-17-correction--91-current-version-quality-assistant-evidence);
 external final-head judgment remains separate, original adverse Reviews retained.
 
+The #88 topic now integrates partial progress PR #390 on pinned main
+226702779e57e490cb10dc06ab014760c7d8a761. Documentation-only conflicts
+retain both routes/contracts; exact own src patch parity and fresh140-test
+report/resident/handoff/negative-writer checks preserve precise UTC source-order
+reporting and independent remedy clocks. Prior real SQL/browser/image receipts
+remain historical, not newly run. No full event capture or independent Pass.
+
 | Task | Start with | Then consult |
 | --- | --- | --- |
 | Inspect sensor privacy admission and external exports (#112) | [Core replay and closed-field contract](../../src/core/README.md#sensor-admission-and-external-context-112) | [Dated actual-source synthesis](./research/iot-sensor-analytics-research-plan.md#sensor-privacy-engineering-boundary-2026-10-17-refs-112): exact generated observations only, explicit stock Selection, closed chat context and malformed AI/map refusal. Original Review Not accepted retained; correction ONE closes raw-status and document pre-dispatch ordering with failing-first tests, not a second independent Pass. No sensor-analysis runtime or registered sensor AI purpose; manual detail/static tiles unchanged. OD-43 and #175 source origins remain unverified; no real-use or legal approval |

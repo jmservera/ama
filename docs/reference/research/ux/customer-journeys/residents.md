@@ -168,3 +168,20 @@ markers. Wider lease/scope/age-band governance remains separately routed to the
 planning parent/repository owner for the next #81 backlog triage with
 Legal/Housing/Complaints approval. No independent final-head Pass, full PRD,
 human, operational, screen-reader or WCAG acceptance is claimed.
+
+### Authorized partial-progress integration (2026-10-17)
+
+PR #392 now integrates partial progress PR #390 on pinned main
+226702779e57e490cb10dc06ab014760c7d8a761. Only documentation insertions
+conflicted; exact issue88 production/test added/removed patch lines remain
+unchanged. Both report/export and resident routes survive, handoff writers retain
+upstream precise UTC events and authoritative source sequence, and response/
+remedy/quality/finance clocks remain separate. Original Review/critique and
+prior integration evidence are byte-identical, not re-reviewed.
+
+Fresh relevant combined tests:140run,138pass,two existing skips (JSON rollback
+inapplicable in SQLite, opt-in browser); full core/API Ruff/format/mypy pass. No persistence or web
+bytes changed, so prior actual SQL/browser/container evidence remains historical
+rather than repeated. Full historical/forward event capture stays with the
+separate issue102events workstream; no snapshot reconstruction, authority,
+WCAG, operational or independent final-head acceptance is inferred.

@@ -5727,3 +5727,28 @@ metadata when the knowledge base was created.
   in separate integration evidence, not hidden as application source fixes.
 * No other worktree/private data, Azure writes, paid AI, resident messages,
   independent coordinator Pass, merge, issue closure or full PRD/WCAG acceptance.
+
+## [2026-10-17] integration | #88 onto partial progress PR390
+
+* Coordinator authorized own-topic rebase from clean verified remote
+  a91f1737d036141169b5ba5381429cf3e49054cf onto freshly fetched
+  main226702779e57e490cb10dc06ab014760c7d8a761. Documentation-only
+  insertion conflicts retain complete upstream byte prefix plus all own log
+  entries, both component contracts and all index routes.
+* Exact own added/removed production/test/guide lines across fourteen src paths
+  are unchanged. Progress implementation/tests/API configuration are exact main;
+  resident/safety/quality/financial persistence guards and web bytes unchanged.
+  Auto-merged Store/server/workflows preserve report/export role/source checks,
+  precise UTC handoff writer timestamps and authoritative event sequence,
+  alongside separate resident commitments/remedies and truthful commit outcomes.
+* Fresh focused combined report/resident/handoff/quality/hazard/finance/grant
+  checks:140run,138pass,two existing skips (JSON rollback inapplicable
+  in SQLite, opt-in browser). Actual MSSQL classes were not selected.
+  Full configured core/API Ruff/format/mypy pass. No new SQL/Docker/browser
+  replay for documentation-only conflict plus exact source parity; previous
+  receipts remain historical, not promoted to fresh validation.
+* Original Review/critique and prior issue88 RPI/integration artifacts unchanged.
+  No new full Review, application correction, complete event capture, private
+  data, other worktree, Azure/paid AI, authority, independent Pass, merge,
+  issue closure or WCAG acceptance. Full capture stays with issue102events;
+  wider governance retains its separate named routing owner/next action.
