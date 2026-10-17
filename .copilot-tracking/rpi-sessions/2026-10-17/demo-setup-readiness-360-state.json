@@ -34,12 +34,38 @@
       "decision": "Plan critique executed once, Revise; PC-001/002/003 directly applied; Plan Ready",
       "status": "complete",
       "evidence": ".copilot-tracking/plans/2026-10-17/demo-setup-readiness-360-plan.md Critique Disposition"
+    },
+    {
+      "decision": "Implement completed; 319 infra/32 API auth tests, 22 Bicep templates and existing quality gates passed",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-changes.md Final Implementation Evidence"
+    },
+    {
+      "decision": "Approved additive API/auth staging applied with deny-all; no exposure or retirement",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-resource-receipt.json; direct routes 403, six backing public-access flags Disabled"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "private-publisher",
+      "summary": "No available approved private proof-image publication path; local Docker denied, ACR private with no tasks/pool",
+      "resolution": "Authorized existing private publisher supplies and pins updated proof digest; no new paid service or network bypass"
+    },
+    {
+      "id": "scoped-iam",
+      "summary": "Initializer source-job tag and demo-API restart grants absent; role creation/assignment authorization not inferred",
+      "resolution": "IAM owner explicitly authorizes and applies exact reviewed four-Create role deployment scoped to demo API and existing initializer"
+    },
+    {
+      "id": "human-live-acceptance",
+      "summary": "Real registration/credential, human login, staff SQL/restart, runtime/AI and browser/per-role acceptance unmet; deny-all retained",
+      "resolution": "Tenant operator uses isolated login and existing private roster/authorized mailbox decisions after publisher/IAM prerequisites; verify auth/runtime before reviewed exposure and criterion d; no retirement before d"
+    }
+  ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Implement transports and validate; evaluate only fail-closed additive migration."
+    "phase": "Review",
+    "action": "Commit completed Implement evidence, then execute exactly one canonical Review; no further live action."
   },
   "prioritized_follow_ups": []
 }

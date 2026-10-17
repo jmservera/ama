@@ -87,19 +87,28 @@ class RoleMatrixTests(unittest.TestCase):
         self.assertEqual(used, set(MATRIX["builtInRoles"]))
 
     def test_staff_initializer_custom_role_matches_matrix_and_api_only_assignment(self) -> None:
-        self.assertEqual(len(MATRIX["customRoles"]), 1)
+        self.assertEqual(len(MATRIX["customRoles"]), 2)
         role = MATRIX["customRoles"][0]
         text = BICEP[role["bicep"]]
         actions = re.search(r"actions: \[(.*?)\]", text, re.S).group(1)
         self.assertEqual(re.findall(r"'([^']+)'", actions), role["actions"])
         self.assertTrue(all("*" not in action for action in role["actions"]))
-        assignment, = ROLE_RESOURCE.findall(text)
+        assignment, relay_assignment = ROLE_RESOURCE.findall(text)
         self.assertIn("scope: api", assignment)
         self.assertIn("roleDefinitionId: restartRole.id", assignment)
         self.assertIn("principalId: initializer.properties.principalId", assignment)
         self.assertIn("notActions: []", text)
         self.assertIn("dataActions: []", text)
         self.assertIn("notDataActions: []", text)
+        relay = MATRIX["customRoles"][1]
+        relay_block = re.search(r"resource relayRole .*?^}", text, re.S | re.M).group(0)
+        relay_actions = re.search(r"actions: \[(.*?)\]", relay_block, re.S).group(1)
+        self.assertEqual(re.findall(r"'([^']+)'", relay_actions), relay["actions"])
+        self.assertEqual(relay["actions"], [
+            "Microsoft.Resources/tags/read", "Microsoft.Resources/tags/write"])
+        self.assertIn("scope: relay", relay_assignment)
+        self.assertIn("roleDefinitionId: relayRole.id", relay_assignment)
+        self.assertNotIn("Microsoft.App/jobs/write", relay_block)
 
     def test_iot_hub_grants_receiver_only_to_api(self) -> None:
         self.assertEqual([(r["identity"], r["roleId"]) for r in self.rows("iotHub")],

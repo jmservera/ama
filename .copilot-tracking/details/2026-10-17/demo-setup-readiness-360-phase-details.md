@@ -62,10 +62,11 @@ agent pool/tasks, no local Docker. Do not open networking or add a paid pool.
 For API migration only, retain its deployed immutable image, identity, complete
 read-visible configuration/template/auth, private backing references and old app.
 Create only the demo API and auth child in existing external environment.
-PC-002: initial ingress external=false, with retained runtime auth denial;
-verify auth child and a real single-tenant UUID before a separately reviewed
-external=true transition. Missing registration blocks exposure; leave new app
-internal on failure. Never infer deletion permission as rollback.
+PC-002: initial ingress has Deny 0.0.0.0/0, with retained runtime auth denial;
+verify auth child and a real single-tenant UUID before separately reviewing
+removal. Missing registration blocks exposure; leave new app restricted on
+failure. This preserves the future FQDN for laptop setup (external=false
+would change it to an internal hostname). Never infer deletion permission.
 If exact preserving payload cannot be formed, record blocker rather than infer
 redacted values. Inspect what-if before every allowed apply; no role writes.
 Probe direct welcome/health/anonymous API with no redirects; no browser login

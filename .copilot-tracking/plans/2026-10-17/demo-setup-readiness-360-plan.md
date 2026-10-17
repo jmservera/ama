@@ -66,9 +66,10 @@ No permission deployment, paid agent pool or unsupported image build.
   Reject explicit/recorded app mode and app-backed current credentials before
   reconciliation/Graph writes; do not migrate or rotate them. Existing
   private-host/explicit app mode behavior outside this mode remains.
-* Migration stages with ingress external=false; verify auth/runtime before
-  a separately reviewed exposure transition. Missing real registration means
-  leave staging internal, not expose an unauthenticated replacement.
+* Migration stages with an ingress deny-all IPv4 rule; verify auth/runtime
+  before a separately reviewed rule-removal transition. The public FQDN stays
+  stable for laptop management-plane setup; missing real registration means
+  leave the rule in place, not expose an unauthenticated replacement.
 
 ## Non-Functional Requirements
 
@@ -95,18 +96,18 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
 <!-- phase: P01 -->
 ### P01 - Implement laptop-safe transports
 
-* [ ] P01-T01 Replace console capture with bounded encrypted ARM tag relay.
-* [ ] P01-T02 Add minimal secure ARM credential deployment and surgical wiring.
-* [ ] P01-T03 Extend offline scoped RBAC and tests; coordinate #358 boundary.
+* [x] P01-T01 Replace console capture with bounded encrypted ARM tag relay.
+* [x] P01-T02 Add minimal secure ARM credential deployment and surgical wiring.
+* [x] P01-T03 Extend offline scoped RBAC and tests; coordinate #358 boundary.
 
 <!-- phase: P02 -->
 ### P02 - Validate and execute authorized readiness actions
 
-* [ ] P02-T01 Install source packages after observed import failure; focused then
+* [x] P02-T01 Install source packages after observed import failure; focused then
   full infra tests, relevant lint/type/Bicep checks.
-* [ ] P02-T02 Review exact additive API migration what-if/preservation; perform
+* [x] P02-T02 Review exact additive API migration what-if/preservation; perform
   only supported authorized changes, record resource actions and HTTP results.
-* [ ] P02-T03 Update runbook, evidence, index and append-only knowledge log.
+* [x] P02-T03 Update runbook, evidence, index and append-only knowledge log.
 
 <!-- phase: P03 -->
 ### P03 - Review and publish
@@ -133,9 +134,9 @@ Verdict Revise, three findings, all directly resolved by current owner intent:
 
 * PC-001 accepted: pre-reconciliation Azure-mode compatibility guard blocks
   app-backed credentials/recorded/explicit store. No #358 selection edits.
-* PC-002 accepted: additive API starts with external=false; separate exact
-  what-if and verified real auth/runtime required before external=true.
-  Without tenant prerequisites, staging stays private and exposure is blocked.
+* PC-002 accepted: additive API starts with deny-all ingress; separate exact
+  what-if and verified real auth/runtime required before removing the rule.
+  Without tenant prerequisites, staging stays restricted and exposure blocked.
 * PC-003 accepted: material Review findings block readiness; publish only a
   clearly blocked draft if any remain, no more live actions and no second
   Review. Known deployment prerequisites alone are not source defects.

@@ -7,7 +7,6 @@ import hashlib
 import json
 import os
 import re
-import subprocess
 import time
 import uuid
 from typing import Any
@@ -15,8 +14,46 @@ from typing import Any
 ARM = "https://management.azure.com"
 VERSION = "2025-07-01"
 MAX_INPUT = 12 * 1024
-CHUNK = 1500
-MAX_CHUNKS = 128
+CHUNK = 200
+MAX_CHUNKS = 40
+TAG_VERSION = "2021-04-01"
+
+
+def result_prefix(request: dict[str, Any]) -> str:
+    return f"zfstaff-{request['run']}-"
+
+
+def tags_url(resource_id: str) -> str:
+    return resource_url(resource_id + "/providers/Microsoft.Resources/tags/default", TAG_VERSION)
+
+
+def result_tags(request: dict[str, Any], result: dict[str, Any]) -> dict[str, str]:
+    return {
+        result_prefix(request) + str(i): frame
+        for i, frame in enumerate(encode_result(request, result))
+    }
+
+
+def read_result(cli: Any, relay: str, request: dict[str, Any]) -> dict[str, Any] | None:
+    tags = cli.rest(tags_url(relay))["properties"].get("tags") or {}
+    frames = [v for k, v in tags.items() if k.startswith(result_prefix(request))]
+    if len(frames) > MAX_CHUNKS or any(not isinstance(v, str) or len(v) > 256 for v in frames):
+        raise StaffJobError("Azure staff result tags exceed the bounded response size.")
+    return decode_result(request, "\n".join(json.dumps({"Log": v}) for v in frames))
+
+
+def clear_result(cli: Any, relay: str, request: dict[str, Any]) -> None:
+    tags = cli.rest(tags_url(relay))["properties"].get("tags") or {}
+    owned = {k: v for k, v in tags.items() if k.startswith(result_prefix(request))}
+    if owned:
+        cli.rest(
+            tags_url(relay),
+            method="PATCH",
+            body={"operation": "Delete", "properties": {"tags": owned}},
+        )
+    remaining = cli.rest(tags_url(relay))["properties"].get("tags") or {}
+    if any(k.startswith(result_prefix(request)) for k in remaining):
+        raise StaffJobError("Azure staff result cleanup was not confirmed.")
 
 
 class StaffJobError(Exception):
@@ -120,13 +157,24 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
             if not re.fullmatch(r"job-[a-z0-9-]+-init", source_name):
                 raise ValueError
             expected_source = source_name
+        source_id = root + "/providers/Microsoft.App/jobs/" + expected_source
+        try:
+            source = cli.rest(resource_url(source_id))
+        except Exception as error:
+            if (
+                source_name is not None
+                or not prefix.endswith("-demo")
+                or getattr(error, "kind", None) != "not-found"
+            ):
+                raise
+            expected_source = f"job-{prefix.removesuffix('-demo')}-init"
+            source_id = root + "/providers/Microsoft.App/jobs/" + expected_source
+            source = cli.rest(resource_url(source_id))
         identity_name = "id-" + expected_source.removeprefix("job-")
         identity_id = (
             root + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities/" + identity_name
         )
         identity = cli.rest(resource_url(identity_id, "2023-01-31"))
-        source_id = root + "/providers/Microsoft.App/jobs/" + expected_source
-        source = cli.rest(resource_url(source_id))
         if (
             identity["id"].lower() != identity_id.lower()
             or source["id"].lower() != source_id.lower()
@@ -150,8 +198,34 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
             re.IGNORECASE,
         ):
             raise ValueError
-        if source["properties"]["environmentId"].lower() != environment_id.lower():
-            raise ValueError
+        source_environment_id = source["properties"]["environmentId"]
+        if source_environment_id.lower() != environment_id.lower():
+            if not source_environment_id.lower().startswith(
+                (root + "/providers/Microsoft.App/managedEnvironments/").lower()
+            ):
+                raise ValueError
+            source_environment = cli.rest(resource_url(source_environment_id))
+            source_subnet = source_environment["properties"]["vnetConfiguration"][
+                "infrastructureSubnetId"
+            ]
+            if (
+                source_environment["id"].lower() != source_environment_id.lower()
+                or source_subnet.rsplit("/subnets/", 1)[0].lower()
+                != subnet.rsplit("/subnets/", 1)[0].lower()
+                or not re.fullmatch(
+                    re.escape(root)
+                    + r"/providers/Microsoft.Network/virtualNetworks/[^/]+/subnets/[^/]+",
+                    source_subnet,
+                    re.IGNORECASE,
+                )
+            ):
+                raise ValueError
+        relay_tags = cli.rest(tags_url(source_id))["properties"].get("tags") or {}
+        if len(relay_tags) > 50 - MAX_CHUNKS:
+            raise StaffJobError(
+                "Initializer result relay has insufficient tag capacity; inspect owned "
+                "stale runs in the serialized operator window before retrying."
+            )
         identities = source["identity"]["userAssignedIdentities"]
         if source["identity"]["type"] != "UserAssigned" or {i.lower() for i in identities} != {
             identity_id.lower()
@@ -210,6 +284,7 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
             raise ValueError
         return {
             "root": root,
+            "relay": source_id,
             "environment": environment_id,
             "identity": identity_id,
             "client": identity["properties"]["clientId"],
@@ -226,52 +301,6 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
             "Cannot verify the existing ama initializer image, VNet, SQL-admin identity and "
             "private SQL target. See the in-VNet staff runbook; no network setting was changed."
         ) from None
-
-
-def logs(cli: Any, name: str, execution: str, replica: str) -> str:
-    args = [
-        "az",
-        "containerapp",
-        "job",
-        "logs",
-        "show",
-        "-g",
-        "ama",
-        "-n",
-        name,
-        "--execution",
-        execution,
-        "--replica",
-        replica,
-        "--container",
-        "staff",
-        "--tail",
-        "300",
-        "--format",
-        "json",
-        "--only-show-errors",
-    ]
-    if cli.subscription:
-        args += ["--subscription", cli.subscription]
-    timeout = 30.0 if cli.deadline is None else min(30.0, cli.deadline - time.monotonic())
-    if timeout <= 0:
-        raise StaffJobError("Azure staff job timed out; SQL/restart outcome is unverified.")
-    try:
-        result = subprocess.run(
-            args,
-            env=cli.environment(),
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        raise StaffJobError(
-            "Azure staff log transport is unavailable; SQL outcome is unverified."
-        ) from None
-    if result.returncode:
-        raise StaffJobError("Azure staff logs are inaccessible; SQL outcome is unverified.")
-    return result.stdout
 
 
 def execute(
@@ -293,7 +322,9 @@ def execute(
     if operation not in {"candidates", "check", "apply"}:
         raise StaffJobError("Unsupported Azure staff operation.")
     target = discover(cli, app, source_name)
-    content = json.dumps({**payload, "target": target["app"]}, sort_keys=True)
+    content = json.dumps(
+        {**payload, "target": target["app"], "relay": target["relay"]}, sort_keys=True
+    )
     if len(content.encode()) > MAX_INPUT:
         raise StaffJobError("Private roster exceeds the bounded job-secret size.")
     request = {
@@ -321,6 +352,7 @@ def execute(
         "ZF_SQL_SERVER": target["server"],
         "ZF_SQL_DATABASE": target["database"],
         "ZF_STAFF_TARGET": target["app"],
+        "ZF_STAFF_RELAY": target["relay"],
     }
     body = {
         "location": target["location"],
@@ -384,31 +416,11 @@ def execute(
             if status in {"Failed", "Stopped", "Canceled", "Degraded"}:
                 raise StaffJobError("Azure staff job failed; SQL/restart outcome is unverified.")
             if result_value is None:
-                replicas = cli.call(
-                    [
-                        "containerapp",
-                        "job",
-                        "replica",
-                        "list",
-                        "-g",
-                        "ama",
-                        "-n",
-                        name,
-                        "--execution",
-                        execution,
-                    ]
-                )
-                if len(replicas) > 1:
-                    raise StaffJobError("Azure staff job has unexpected parallel replicas.")
-                if replicas:
-                    result_value = decode_result(
-                        request, logs(cli, name, execution, replicas[0]["name"])
-                    )
+                result_value = read_result(cli, target["relay"], request)
             if status == "Succeeded":
                 if result_value is None:
-                    raise StaffJobError(
-                        "Azure staff result missing; SQL/restart outcome is unverified."
-                    )
+                    time.sleep(2)
+                    continue  # ARM tag readback may lag terminal execution status.
                 completed = True
                 break
             time.sleep(2)
@@ -466,11 +478,12 @@ def execute(
                     time.sleep(2)
                 else:
                     raise StaffJobError("Job deletion was not confirmed.")
+                clear_result(cli, target["relay"], request)
             except Exception:
                 cli.deadline = previous_deadline
                 raise StaffJobError(
                     f"Azure staff cleanup NOT confirmed. Stop/delete only owned job {name} in ama "
-                    "(see runbook); its roster secret may remain. "
+                    "(see runbook); its roster secret or encrypted relay tags may remain. "
                     "SQL/restart outcome is unverified."
                 ) from None
         cli.deadline = previous_deadline

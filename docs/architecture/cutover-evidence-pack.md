@@ -72,6 +72,70 @@ helpers and their existing suite, not job transport, crypto, roster, identity or
 network policy. Reconcile the narrow shared setup/test changes before advancing
 that broader loop; this audit grants no deployment or merge approval.
 
+## Laptop Setup and Restricted Migration Readiness (2026-10-17)
+
+Refs #360; coordinated with #349/#350 and #358. This section supersedes only
+the console/credential transport limitations and migration status in the dated
+sections below. It does not replace their observations or assert owner sign-off.
+The full RPI task delivers a management-plane-only laptop path: the existing
+initializer relays bounded authenticated ciphertext in per-run ARM tags;
+Key Vault receives a minimal secureString ARM deployment with reviewed
+single-secret Create scope and verified metadata. Neither requires laptop
+access to private console, Log Analytics or vault data-plane endpoints.
+No clear roster/key/credential is placed in tags, arguments, logs or artifacts.
+The [current runbook](../../infra/README.md#in-vnet-sql-staff-step-refs-360)
+documents the normal command, prerequisites and bounded cleanup.
+
+Live read-only discovery confirmed the ARM Log Analytics proxy is still
+network-restricted, even for a constant query; this avenue was rejected.
+A real selected-vault what-if through the new adapter passed; the subsequent
+PUT was intercepted before sending. No secret was created and no credential
+exchange was claimed. The new transport is locally tested, **not live proven**:
+the retained proof image predates its worker and the narrow grants are absent.
+The fresh role what-if for `ca-cutover-test-demo-api` and `job-cutover-test-init`
+has exactly two custom role definitions and two resource-scoped assignments.
+It was **not applied**; explicit role activation authorization is still needed.
+
+The authorized additive API migration passed an exact two-Create what-if and
+created only `ca-cutover-test-demo-api` and its auth child in the existing
+external environment. Deployment `demo-stage-360-20261017` is Succeeded;
+the replica is Healthy/Running. Readback preserved the old app/auth pre-apply
+fingerprint and copied API image/template/runtime configuration/identity/auth,
+apart from reviewed direct-ingress/environment/tag changes and Azure's
+`maxInactiveRevisions=100` default. The staged ingress rule
+`setup-pending-deny-all` denies `0.0.0.0/0`. Without following redirects,
+`/`, `/healthz`, `/api/me` and `/app` all returned **403** at
+`ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io`.
+That is restriction evidence, not welcome/health 200 or real authentication.
+The app still has a managed-identity client sentinel and no browser credential;
+the rule must remain until real operator setup and reviewed exposure.
+
+SQL, Key Vault, storage, ACR, Foundry and IoT each still report public network
+access Disabled. No SQL/private dataset query, live worker run, Graph write,
+secret write, image build/push, role assignment, exposure transition or resource
+retirement occurred. The old API, environment and Front Door remain; `ama`
+must never be deleted.
+
+| #360 criterion | Current evidence | Status and remaining boundary |
+| --- | --- | --- |
+| a: direct-demo infrastructure and private backing services | Existing Bicep guards retained; all six live public-access flags Disabled; external environment already existed | Source/local delivery complete; no full-stack redeployment or broader privacy certification |
+| b: direct/edge setup and one-command initialization | Existing setup paths retained; ARM ciphertext/secure credential transport, verified same-VNet parent discovery, no app fallback, cleanup and failure regressions | Local delivery complete; live tenant/worker/credential/restart execution Not run |
+| c: owner-approved migration plan | Explicit owner continuation/migration approval; exact narrow what-if followed by verified deny-all staging | Approved additive step done; image publication path, IAM activation and later exposure remain gated |
+| d: welcome/health, login, roles, SQL and AI acceptance | Restricted routes 403; no 302 or fixture accepted as sign-in | **UNMET**. Real operator registration/login, private staff/SQL/restart, runtime/model and browser/per-role evidence required |
+| e: old stack/Front Door retirement after d | Nothing retired; source resources preserved | **UNMET**, correctly blocked by d and exact destructive-scope review |
+| f: runbook, ADR and evidence | Current runbook/ADR, this audit and reference routing updated; historical observations retained | Documentation delivered; no claim all live criteria pass |
+
+Image publication is blocked: private ACR has bypass None and no private task
+pool/task, while local Docker is permission-denied. An authorized existing
+private publisher must supply/pin the proof digest without a new paid service
+or public-access workaround. An IAM owner must separately authorize/apply the
+reviewed source-job-only tags and selected-demo-API restart grants. Then a human
+tenant operator uses the single runbook command, isolated login and existing
+private roster/authorized mailbox-purpose decisions. No SP Graph mutation or
+human approval is simulated. Only after auth/runtime verification and fresh
+exact exposure review can real browser/SQL/AI acceptance and retirement proceed.
+Issue closure remains with the coordinator; this delivery uses Refs #360.
+
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 
 Refs #360. This offline change supersedes only the earlier absence of private

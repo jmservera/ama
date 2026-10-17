@@ -504,8 +504,10 @@ old API:
 
 ```bash
 python3 infra/scripts/setup-entra.py --direct-ingress \
+  --run-in-azure --secret-store keyvault \
   --container-app ca-cutover-test-demo-api --dry-run
 python3 infra/scripts/setup-entra.py --direct-ingress \
+  --run-in-azure --secret-store keyvault \
   --container-app ca-cutover-test-demo-api --check
 ```
 
@@ -526,9 +528,11 @@ once, and applies with verified serving-replica restart when private SQL is
 reachable. Directory role assignment alone never implies SQL completion.
 
 The default command discovers the Bicep-created vault and API identity; neither
-`--vault` nor `--vault-identity` is required. Private-vault failure permits the
-direct demo's clearly announced app-local fallback, never network changes.
-Retain its resulting secret
+`--vault` nor `--vault-identity` is required. The owner-selected Azure/Key Vault
+command uses the ARM handoff and fails on vault failure, with no app fallback.
+Its worker image/scoped IAM prerequisites remain explicit; `--dry-run` cannot
+create a worker to obtain unavailable private SQL evidence and reports that
+limit rather than claiming success. Retain the resulting Key Vault secret
 reference on subsequent Bicep redeploys. Use the existing tenant authority/
 roster instructions, not Azure RG ownership as a substitute for Entra consent.
 
@@ -1396,11 +1400,21 @@ identifier; interactive selection asks once. `--vault` and `--vault-identity`
 remain optional overrides only. The API's environment, registry and SQL
 settings come from its deployed configuration; no names need to be typed.
 
-Key Vault is preferred. The command tests its private data endpoint using
-secret metadata, then attempts the write. If network/permission prevents the
-probe or write, **only direct demo mode** automatically uses the Container App
-secret store with a one-line notice. An explicit `--secret-store keyvault`
-disables fallback; `--secret-store app` remains an explicit demo alternative.
+For the owner-selected Key Vault path, use `--run-in-azure --secret-store keyvault`.
+This mode checks vault metadata through ARM and deploys exactly one new secret
+with a secureString parameter, its existing 180-day expiry and no secret output.
+The CLI waits for what-if completion; only the selected secret Create (plus
+unchanged-scope Ignore rows) is accepted before deployment. Setup verifies
+deployment success and write-only secret metadata before wiring the reference.
+No vault data-plane connection from the laptop is needed. This is the supported
+[ARM template control plane](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints#usage-scenarios),
+not a firewall/trusted-service bypass or an activation of new vault permissions.
+
+Azure mode rejects explicit/recorded app storage and currently referenced
+app-backed credentials; it never silently converts them or falls back on a
+vault failure. Existing non-Azure private-host behavior retains its historical
+direct-demo fallback; that is **not authorized for this owner-selected path**.
+An explicit `--secret-store keyvault` disables that legacy fallback too.
 No path opens vault networking, enables SQL public access, changes policy,
 deletes `ama`, or prints a credential or directory identifier. Temporary
 secret/request files have mode 0600 outside Git and are removed. Existing app
@@ -1414,8 +1428,8 @@ defaults to `keyvault`; its `app` value requires the direct demo and
 the unsafe default full deployment; the Key Vault CI pipeline also refuses.
 Use the guarded wrapper for dependency-only updates with
 `--parameter entraCredentialStore=app --parameter deployApplications=false`.
-Migration to Key Vault before later full application deployment needs the
-approved private-network path and explicit operator review. Do not bypass the
+Migration of existing app-backed credentials to Key Vault needs separately
+approved reconciliation and explicit operator review. Do not bypass the
 wrapper with raw deployment commands or silently overwrite the store.
 
 Coordination: setup refuses a running group deployment, app/environment
@@ -1597,7 +1611,7 @@ No missing roster is invented or written on that failure path.
 After the separately authorized prerequisites below, the single operator command is:
 
 ```bash
-python3 infra/scripts/setup-entra.py --run-in-azure --yes
+python3 infra/scripts/setup-entra.py --run-in-azure --secret-store keyvault --yes
 ```
 
 The command still performs directory registration, app roles and assignments
@@ -1616,9 +1630,11 @@ Prerequisites (not executed or deployed by setup):
 * An existing `job-<API-prefix>-init` in the API's actual VNet-injected
   environment in `ama`, using exactly `id-<prefix>-init`, the existing SQL Entra
   Application administrator, and an identity-authenticated registry reference.
-  Direct-demo APIs may reuse their parent proof initializer with
-  `--azure-init-job job-cutover-test-init`, but only when its actual environment
-  matches. There is no automatic cross-environment or cross-subscription search.
+  A `-demo` API automatically tries its exact parent initializer if its own
+  initializer is absent; `--azure-init-job` remains an explicit override.
+  Different environments must both have verified subnets in the same ama VNet.
+  The temporary worker runs in the selected API environment, not the parent's.
+  No general cross-environment or cross-subscription search occurs.
 * An immutable `zava-forward-cutover-proof@sha256:<digest>` initializer image
   built from the source API image. The source API already installs core,
   agents, API, cryptography and mssql-python/ODBC; the former proof image
@@ -1629,14 +1645,18 @@ Prerequisites (not executed or deployed by setup):
   `python /app/scripts/staff-azure-worker.py`. No Azure CLI is needed in the image.
 * Operator management permissions to read the API/environment, SQL
   server/database/admin and identity, create/start/read/stop/delete temporary
-  jobs, list replicas and obtain job console-log tokens. Console streaming
-  uses the environment's authenticated logstream endpoint, **not ARM alone**:
-  operator access to that endpoint is an explicit prerequisite. Failed
-  endpoint access fails closed; no network changes or Log Analytics grant is
-  attempted. The operator also needs local cryptography, available from
+  jobs, and read/merge/delete result tags on the source initializer. Results
+  use ARM only, not console streaming or a Log Analytics query. Private
+  environment log-endpoint reachability is no longer required. The operator
+  also needs existing vault metadata/secret-deployment and group deployment/
+  what-if permissions; no role is created by setup. Local cryptography comes from
   `python3 -m pip install -r src/api/requirements.txt`.
 * The existing initializer identity needs its existing SQL-admin and AcrPull
-  permissions plus the narrowly scoped API restart role below. No new identity,
+  permissions plus the narrowly scoped API restart and source-job-only tags
+  roles below. These definitions are **not activated by setup or this delivery**.
+  The tag role grants only Microsoft.Resources/tags/read and tags/write on the
+  existing initializer, not jobs/write, listSecrets or resource-group access.
+  No new identity,
   Graph permission or general Contributor role is introduced. SQL remains
   Entra-only with public access Disabled; private DNS/subnet and the actual
   SQL administrator principal are verified before a roster is transferred.
@@ -1651,18 +1671,23 @@ az containerapp job update -g ama -n <existing-init-job> \
   --image <registry-server>/zava-forward-cutover-proof@sha256:<proof-digest> -o none
 az deployment group what-if -g ama --template-file infra/staff-initializer-rbac.bicep \
   --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name>
-# Only after the authorized operator reviews scope and the what-if:
+# Requires explicit role-creation/assignment authorization, not merely RG Owner:
 az deployment group create -g ama --template-file infra/staff-initializer-rbac.bicep \
   --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> -o none
 ```
 
-Build context is only `infra/`; API image context remains `src/`. A private
-registry may require an approved private ACR Task path; never open the registry
-or private services to repair a build. The standalone Bicep template refuses
-non-ama scope and assigns only app/revision/replica reads and revision restart
-to the existing initializer identity, scoped to the selected API. It changes
-neither SQL admin nor network configuration. No secret value or identity ID
-belongs in committed parameter examples.
+Build context is only `infra/`; API image context remains `src/`. The displayed
+ACR build command is conditional on an already approved private build path.
+On 2026-10-17 the existing registry has public access Disabled, bypass None,
+and no private task pool or task. Local Docker is permission-denied. Therefore
+image publication is **Blocked**, not permission to run public ACR Tasks, add
+a paid pool, change the daemon or open the registry. An authorized publisher
+must supply a private push/build path and the immutable proof digest.
+The standalone Bicep template refuses non-ama scope and assigns app/revision/
+replica reads/restart only to the selected API, plus tags read/write only to
+the existing initializer. It changes neither SQL admin nor network configuration.
+Role activation is an explicit IAM-operator action after authorization and
+what-if review, never inferred from the owner asking to continue the demo.
 
 Each operation clones only the verified source image/registry/identity into a
 unique `job-staff-<random>` manual job, with one replica, no retries and a
@@ -1680,18 +1705,24 @@ ready replicas. Historical actor fields are preserved. A SQL no-op still
 requires restart unless setup has matching roster/revision restart evidence.
 After SQL success but restart failure, the result remains incomplete.
 
-Job logs contain counts-free generic failure messages or authenticated
-AES-GCM ciphertext, never plaintext candidates, people, codes, roster or SQL
-exceptions. Ciphertext is bound to this run/operation/input, framed in bounded
-chunks, captured by explicit execution/replica/container and decrypted only in
-operator memory. The worker holds the result for 60 seconds while its replica
-is alive; setup requires both authenticated output and terminal Succeeded.
-Console-log endpoint, truncation, missing result or deadline failure cannot
-be mistaken for success. These mechanics do not establish live log reachability.
+Job logs contain only generic failure messages, never candidates, people,
+codes, roster, keys, credentials or SQL exceptions. Results are authenticated
+AES-GCM ciphertext bound to this run/operation/input. The existing initializer's
+tags carry at most 40 frames of 200 ciphertext characters, each complete tag
+value below 256 characters (roughly 5.7 KiB of clear result capacity, depending
+on envelope size). The key remains in the temporary request secret/operator
+memory, never in tags. More than ten existing relay tags blocks transfer;
+oversized candidate results fail explicitly. No larger fallback store is made.
+Only per-run names are merged; unrelated tags and source configuration remain.
+The client polls ARM tags and job status, decrypts only in memory, and requires
+both authenticated output and terminal Succeeded. Missing/tampered/oversized
+results or a deadline failure cannot be mistaken for success; no live replica
+hold or private console endpoint is needed.
 
 Setup stops uncertain/failed executions and deletes only its owned temporary
-job, including the roster secret; it polls for confirmed absence. It never
-deletes or edits the source initializer job. A cleanup failure blocks success
+job, including the roster secret; it polls for confirmed absence and then
+selectively deletes only this run's encrypted result tags and confirms absence.
+It never deletes the source initializer or changes its configuration. A cleanup failure blocks success
 and prints only the owned temporary job name. Hard termination/power loss
 cannot guarantee cleanup: in a serialized operator window, inspect the
 `zava-forward-staff-run` tag and execution of that exact named leftover, then:
@@ -1701,13 +1732,20 @@ az containerapp job stop -g ama -n <owned-job-staff-name> -o none
 az containerapp job delete -g ama -n <owned-job-staff-name> --yes -o none
 ```
 
-Confirm the exact job is absent before retrying. Never delete `ama`, the
-initializer job or an unowned job. SQL may already have committed; first use
+After confirming that the worker has stopped and the exact job is absent,
+remove only the source initializer tags whose `zfstaff-<full-run-id>-` prefix
+matches that request. Never remove other tags, infer ownership from a short
+prefix, or delete the source initializer. Interrupted hard-kill recovery
+requires the serialized operator window; retained ciphertext is not a clear
+roster and cannot be decrypted after losing the request key.
+Never delete `ama` or an unowned job. SQL may already have committed; first use
 `--check --run-in-azure` with the same persisted private roster, never regenerate
 or blindly retry an uncertain apply. Cross-host simultaneous setup still needs
 the serialized operator window described above.
 
-If the image/job/permission/log path is unavailable, use the exact command
+If the image/job/permission/result path is unavailable, setup fails closed.
+The following is an optional authorized recovery path, **not** the primary
+laptop setup or evidence that the normal command completed. Use the exact command
 printed by setup on an authorized private-connected host with the same private
 roster and isolated Graph login. Its SQL manual fallback has this form:
 
@@ -1723,6 +1761,40 @@ enable SQL public access, add firewall rules, change Key Vault/storage network
 settings or bypass policy. Offline fake-az/worker tests exercise the path;
 actual image availability, permission activation, VNet/SQL/log access, live
 binding/restart and real browser sign-in remain **Not run** in this change.
+
+### Restricted demo staging receipt (2026-10-17, #360)
+
+The already approved additive migration created only
+`ca-cutover-test-demo-api` and `authConfigs/current` in the existing external
+`cae-cutover-test-demo`. Deployment `demo-stage-360-20261017` succeeded after
+an exact two-Create what-if and a second unchanged-input scope review.
+The retained source API digest, template/environment settings, identity,
+secret references and auth are preserved; auth forward-proxy convention changes
+to NoProxy for direct ingress. Azure materialized the default
+`maxInactiveRevisions=100`; no application setting was silently reconstructed.
+The old app/auth fingerprints match the pre-apply snapshot.
+
+The direct hostname is
+`ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io`.
+It intentionally returns **403** for `/`, `/healthz`, `/api/me` and `/app`
+under `setup-pending-deny-all` (Deny `0.0.0.0/0`). The replica is Healthy/Running.
+This is verified restricted staging, **not** public welcome/health 200,
+accepted anonymous-API behavior, real sign-in or replacement acceptance.
+The staged configuration still has the invalid managed-identity client sentinel
+and no browser credential, so do not remove the restriction yet.
+
+After an authorized private publisher supplies the worker digest and an
+authorized IAM operator activates the two exact scopes (API restart on
+`ca-cutover-test-demo-api`, tag relay on `job-cutover-test-init`), the tenant
+operator runs the single command above with `--login` once if needed. This VM
+cannot perform that tenant action. The operator needs existing authorized
+application/assignment and mailbox-purpose access, and the existing private
+roster if SQL bindings already exist; no people or authority are invented.
+Then verify real registration/credential/reference/runtime settings, review
+the exact restriction-removal what-if and only then permit browser testing.
+No restriction removal, SQL mutation/restart, live AI inference, Front Door
+retirement or old-stack deletion occurred on 2026-10-17. Resource group `ama`
+and all six backing-service privacy settings are preserved.
 
 SQL prerequisites: `python3 -m pip install -e src/core -e src/agents -e src/api
 pyodbc` and Microsoft ODBC Driver 18 for SQL Server on an authorized host

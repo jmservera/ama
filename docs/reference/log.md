@@ -4557,3 +4557,33 @@ metadata when the knowledge base was created.
   no private stock, credentials, paid model, live SQL Server/Azure or new service.
   Human accessibility/comprehension, complete workflow representation, operational
   owner ratification and live-platform exercise acceptance remain separate.
+
+## [2026-10-17] implementation | Laptop-safe setup and restricted migration (Refs #360)
+
+* Completed Research (3e24e7c), Plan (96871b3, one critique with direct
+  dispositions) and Implement. Dated phase evidence and state are committed
+  under .copilot-tracking; one post-implementation Review remains next.
+* Replaced private-console result dependence with bounded authenticated
+  ciphertext in existing initializer ARM tags, owned-run cleanup and verified
+  same-VNet parent discovery. Key Vault handoff uses a minimal secureString
+  ARM deployment, exact single-secret Create what-if and metadata verification.
+  No app fallback, plaintext roster/key in tags, or private endpoint opening.
+  Actual vault what-if passed; intercepted PUT, no secret created.
+* Approved deployment demo-stage-360-20261017 created only the replacement
+  API/auth in the already existing external environment after reviewed what-if.
+  Retained source fingerprint, immutable image, runtime settings, identity and
+  auth verified; new replica Healthy/Running. Deny-all keeps four direct routes
+  403 pending genuine tenant/runtime setup; this is not welcome/health/login
+  acceptance. Old API/environment/Front Door and all six Disabled backing
+  public-access settings remain preserved.
+* Full infra 319 tests/no skips, API auth 32 tests, all 22 Bicep build/lint,
+  existing relevant eleven-file Ruff/format, strict/scoped mypy and pip check
+  passed. No expiry/reuse or app-secret preservation edits owned by #358.
+* [Current a-f audit](../architecture/cutover-evidence-pack.md#laptop-setup-and-restricted-migration-readiness-2026-10-17),
+  [runbook](../../infra/README.md#in-vnet-sql-staff-step-refs-360) and
+  [ADR status](../adrs/0001-azure-architecture.md#direct-synthetic-demo-entry-decision-2026-10-16)
+  distinguish source delivery/staging from **UNMET d/e**.
+  Private image publisher, explicit source-job tags/demo-API restart role
+  activation and human tenant/mailbox/roster/browser/SQL/AI gates remain.
+  No live role, Graph, SQL or credential write, build, exposure or retirement;
+  no issue closure or human sign-off inferred.

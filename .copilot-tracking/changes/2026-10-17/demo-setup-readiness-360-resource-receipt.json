@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-17",
+  "issue": 360,
+  "resource_group": "ama",
+  "deployment": "demo-stage-360-20261017",
+  "deployment_state": "Succeeded",
+  "reviewed_actionable_changes": [
+    {"type": "Create", "resource": "Microsoft.App/containerApps/ca-cutover-test-demo-api"},
+    {"type": "Create", "resource": "Microsoft.App/containerApps/ca-cutover-test-demo-api/authConfigs/current"}
+  ],
+  "retained_source": "ca-cutover-test-api",
+  "source_preapply_fingerprint": "458f1e5bdc596ccd6f2f11ddf73c5330e066ece1c937ae6192078cde7f0020ba",
+  "source_readback_preserved": true,
+  "reviewed_template_fingerprint": "1bd0b85132dda26b62eda0994f3416bbc3d5ff2d0ba3e1ecffbcb3e79afbeb71",
+  "template_config_identity_auth_readback_preserved": true,
+  "allowed_provider_default": {"maxInactiveRevisions": 100},
+  "api_image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+  "revision_health": "Healthy",
+  "revision_running": "Running",
+  "fqdn": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "ingress_restriction": {"name": "setup-pending-deny-all", "action": "Deny", "ipAddressRange": "0.0.0.0/0"},
+  "http_no_redirects": {"/": 403, "/healthz": 403, "/api/me": 403, "/app": 403},
+  "backing_public_access": {"SQL": "Disabled", "KeyVault": "Disabled", "Storage": "Disabled", "ACR": "Disabled", "Foundry": "Disabled", "IoT": "Disabled"},
+  "retired_resources": [],
+  "role_activation": "Not applied; explicit authorization required",
+  "worker_image_publication": "Blocked; no approved available private publisher",
+  "graph_sql_secret_writes": "Not run",
+  "criterion_d": "UNMET",
+  "criterion_e": "UNMET"
+}
