@@ -14,9 +14,9 @@ Research: .copilot-tracking/research/2026-10-17/entra-credential-preservation-35
 
 | Phase | Intent | Status |
 | --- | --- | --- |
-| P01 | Behavioral regressions and minimal reconstruction/readback fix | Not started |
-| P02 | Mutation, existing gates and honest docs | Not started |
-| P03 | Single Review, commits and push/PR | Not started |
+| P01 | Behavioral regressions and minimal reconstruction/readback fix | Complete: 15 failing-before assertions, then passing regressions |
+| P02 | Mutation, existing gates and honest docs | Complete: seven killed mutations, 313 passing infra tests and docs |
+| P03 | Single Review, commits and push/PR | Ready: only remaining active work |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Regression and preservation
@@ -101,3 +101,4 @@ No merge/force push, cloud change or live acceptance claim.
 
 * 2026-10-17 Details established from research; all work bounded to offline preservation.
 * 2026-10-17 Single critique corrections applied: pending-handoff gate, realistic GET projection and review-outcome publication gate.
+* 2026-10-17 P01-T01/T02 and P02-T01/T02 complete; no implementation divergence; P03 Review ready.

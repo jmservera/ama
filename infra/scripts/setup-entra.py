@@ -45,6 +45,7 @@ APP_PORTAL = "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/App
 SP_PORTAL = "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview"
 LOCK_TAG = "zava-forward-auth-lock"
 STORE_TAG = "zava-forward-credential-store"
+HANDOFF_TAG = "zava-forward-secret-handoff"
 PROFILE_TAG = "zava-forward-deployment-profile"
 TEMPLATE = [{"code": "REPLACE_EXISTING_STAFF_CODE", "userId": "REPLACE_PERSON_OBJECT_ID",
              "role": "REPLACE_APPROVED_WORKBENCH_ROLE"}]
@@ -1226,6 +1227,68 @@ def assign_roster(graph: Azure, sp: dict[str, Any], resolved: list[tuple[dict[st
     return len(pending) + unresolved
 
 
+def secret_inventory(rows: Any) -> dict[str, dict[str, Any]]:
+    message = "Cannot preserve existing app secrets; inventory is incomplete or malformed."
+    if not isinstance(rows, list):
+        raise SetupError(message)
+    inventory: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        if (not isinstance(row, dict) or not isinstance(row.get("name"), str)
+                or not row["name"] or row["name"] in inventory):
+            raise SetupError(message)
+        inventory[row["name"]] = row
+    return inventory
+
+
+def preserve_app_secrets(configured: Any, response: Any) -> list[dict[str, Any]]:
+    known = secret_inventory(configured)
+    listed = secret_inventory(response.get("value") if isinstance(response, dict) else None)
+    preserved = []
+    for name in dict.fromkeys([*known, *listed]):
+        reference: dict[str, Any] = {"name": name}
+        for field in ("keyVaultUrl", "identity"):
+            current, returned = known.get(name, {}).get(field), listed.get(name, {}).get(field)
+            if current is not None and returned is not None and current != returned:
+                raise SetupError("Cannot preserve existing app secrets; reference metadata conflicts. No new credential was created.")
+            value = current if current is not None else returned
+            if value is not None:
+                reference[field] = value
+        if len(reference) > 1:
+            if not all(isinstance(reference.get(k), str) and reference[k] for k in ("keyVaultUrl", "identity")):
+                raise SetupError("Cannot preserve existing app secrets; Key Vault reference is incomplete. No new credential was created.")
+        else:
+            value = listed.get(name, {}).get("value")
+            if not isinstance(value, str):
+                raise SetupError("Cannot preserve existing app secrets; an app value is unavailable. No new credential was created.")
+            reference["value"] = value
+        preserved.append(reference)
+    return preserved
+
+
+def secret_reference_digest(rows: Any) -> str:
+    inventory = secret_inventory(rows)
+    references = [{k: inventory[name][k] for k in ("name", "keyVaultUrl", "identity")
+                   if inventory[name].get(k) is not None} for name in sorted(inventory)]
+    return hashlib.sha256(json.dumps(references, sort_keys=True).encode()).hexdigest()
+
+
+def verify_secret_handoff(cli: Azure, app: dict[str, Any], readonly: bool) -> None:
+    expected = app.get("tags", {}).get(HANDOFF_TAG)
+    if expected is None:
+        return
+    message = ("App secret preservation is not confirmed; auth was not switched. "
+               "Restore the expected secret references with an authorized operator before retrying; "
+               "do not remove the handoff tag to bypass verification.")
+    verified = wait_for(
+        lambda: cli.rest(app_url(app)),
+        lambda actual: secret_reference_digest(actual["properties"]["configuration"].get("secrets") or []) == expected,
+        message)
+    if not readonly:
+        tags = dict(verified.get("tags", {}))
+        tags.pop(HANDOFF_TAG, None)
+        cli.rest(app_url(app), method="PATCH", body={"tags": tags})
+
+
 def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration: dict[str, Any],
                      auth: dict[str, Any], args: argparse.Namespace, readonly: bool) -> tuple[str | None, bool]:
     client = object_id(registration["appId"])
@@ -1233,6 +1296,7 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
     secret_name = "entra-" + client.replace("-", "")
     secrets = app["properties"]["configuration"].get("secrets") or []
     existing_ref = current.get("clientSecretSettingName")
+    verify_secret_handoff(cli, app, readonly)
     if args.bearer_only:
         return None, False
     now = datetime.now(timezone.utc)
@@ -1290,9 +1354,7 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
         return secret_name, True
     app_url = ARM + app["id"] + f"?api-version={API_VERSION}"
     existing = cli.rest(ARM + app["id"] + f"/listSecrets?api-version={API_VERSION}", method="POST")
-    preserved = existing.get("value")
-    if not isinstance(preserved, list):
-        raise SetupError("Cannot preserve existing app secrets; no new credential was created.")
+    preserved = preserve_app_secrets(secrets, existing)
     # A unique handoff name lets an interrupted run reuse only a matched credential
     # and storage pair, never an orphan's unrecoverable value.
     secret_name += "-" + uuid.uuid4().hex[:12]
@@ -1325,14 +1387,13 @@ def secret_reference(cli: Azure, graph: Azure, app: dict[str, Any], registration
     else:
         new_secret["value"] = password["secretText"]
     configuration = {**app["properties"]["configuration"], "secrets": [*preserved, new_secret]}
+    expected = secret_reference_digest(configuration["secrets"])
     latest = cli.rest(app_url)
     cli.rest(app_url, method="PATCH", body={
         "tags": {**latest.get("tags", {}), STORE_TAG: store,
-                 "zava-forward-credential-name": secret_name},
+                 "zava-forward-credential-name": secret_name, HANDOFF_TAG: expected},
         "properties": {"configuration": configuration}})
-    wait_for(lambda: cli.rest(app_url),
-             lambda a: any(s["name"] == secret_name for s in a["properties"]["configuration"].get("secrets", [])),
-             "App secret reference is not confirmed; auth was not switched. Rerun to reconcile.")
+    verify_secret_handoff(cli, {**app, "tags": {HANDOFF_TAG: expected}}, False)
     return secret_name, True
 
 

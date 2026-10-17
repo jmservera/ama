@@ -111,27 +111,27 @@ missing/altered reference plus rerun/transport recovery subcases.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Implement focused regression protection
+### [x] P01: Implement focused regression protection
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Add behavioral regressions and capture failing-before evidence
+#### [x] P01-T01: Add behavioral regressions and capture failing-before evidence
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Reconcile secret inventory and verify reference readback
+#### [x] P01-T02: Reconcile secret inventory and verify reference readback
 
 Depends on P01-T01. Validate list/configuration shape and uniqueness, restore
 known KV pairs, retain app values, fail safely on unavailable required data.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and document partial acceptance
+### [x] P02: Validate and document partial acceptance
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Kill safeguard mutations and run focused/full infra gates
+#### [x] P02-T01: Kill safeguard mutations and run focused/full infra gates
 
 Depends on P01-T02.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Update runbook, evidence, index and append-only log
+#### [x] P02-T02: Update runbook, evidence, index and append-only log
 
 Depends on P02-T01. Preserve historical entries and owner memory.
 
@@ -183,3 +183,4 @@ Critique dispositions complete. Parent continues automatically.
 * 2026-10-17 Plan opened from completed Research; user controls and test boundary locked.
 * 2026-10-17 Final candidate ready for its single independent critique.
 * 2026-10-17 Critique executed once; PC-001-PC-003 directly resolved; Plan Ready.
+* 2026-10-17 Implement P01/P02 complete: regression/mutation/full infra evidence and docs reconciled; P03 Review/publication remains.

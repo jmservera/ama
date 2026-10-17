@@ -4527,3 +4527,19 @@ metadata when the knowledge base was created.
   spending, infra/authentication, ranking, approval or resident-choice changes.
   #183/#110 consumer integration and AC-066 live-platform acceptance remain
   separate; no analytics-method or real-monitoring approval is inferred.
+
+## [2026-10-17] update | Credential expiry and secret-reference preservation
+
+* Refs #358. Updated the existing cutover evidence pack and setup runbook with
+  generated/legacy stored-expiry coverage, KV URL/identity reconciliation across
+  full/sparse/omitted responses, exact app-value/reference retention and safe
+  inventory refusal. Added a reference-only pending-handoff guard so failed
+  readback cannot silently activate auth on rerun.
+* Recorded 15 real failing-before assertions, seven killed behavioral safeguard
+  mutations and 313 passing offline infra tests, including 101 setup tests.
+  Existing legacy delegation and merged #370 job/CI behavior are preserved.
+* Actual existing-resource non-production preservation remains UNMET / Not run;
+  public schema and mocks are not live evidence. No Azure/Graph/SQL operations,
+  secret/private-data reads, role/network changes, image builds or new spending.
+  Broader setup/job readiness and live coordination remain #360. Index updated;
+  prior log entries and owner memory untouched.
