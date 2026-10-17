@@ -139,3 +139,19 @@ source or live change; its exact final head is resolved/read back at closeout.
 Publication receipt:
 `.copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-publication-receipt.json`.
 All four phases have persistent completion; no child work is started.
+
+## P04 - Same-session owner-authorized continuation
+
+2026-10-17 caller resumes the same #360 session/PR #375, explicitly authorizing
+rebase and force-with-lease of this topic only. Starting clean head
+662c11bdb60e19879c0bf2d905e39dfab82727e6; origin/main is 51db4fa8
+(#374 credential preservation), after #373 sensor faults. Independent reviewer
+4536f9cc is assessing the prior candidate; its findings remain actionable and
+new SHA must be reported, not represented as already reviewed.
+
+Scope P04-T01/T02/T03/T04: preserve upstream expiry/inventory/handoff/legacy
+contracts and tests exactly, integrate Azure ARM transport/no-app-store guard,
+retain all knowledge histories, test combined paths and full relevant suites,
+research concrete existing-resource private publisher alternatives, then push.
+No new credentials/roles/network services, no private data or live sign-in,
+no nested loop/merge/issue closure. Existing one-pass Review remains historical.

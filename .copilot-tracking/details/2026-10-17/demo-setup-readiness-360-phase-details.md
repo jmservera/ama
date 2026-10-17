@@ -96,3 +96,20 @@ Commit dated phase artifacts and persistent completion entries. Use repository
 local GitHub noreply identity and Conventional Commit/Copilot trailer. Push
 topic only; Refs #360, not Closes. Report actual head/actions/a-f status and
 exact human action without waiting for login. Do not merge or close issues.
+
+<!-- phase: P04 -->
+## P04 - Same-session integration continuation
+
+Owner explicitly authorizes rebase onto latest origin/main and force-with-lease
+of the run-owned topic only. Upstream #374 expiry tests, inventory reconciliation,
+pending-handoff digest/readback and legacy CLI behavior must remain exact.
+Integrate only Azure-mode ARM/no-app-store wiring; add combination tests in
+test_staff_azure.py. Preserve both knowledge histories and reviewer 4536f9cc's
+material findings; report changed candidate SHA rather than implying old review
+covers the new head. No new critique/Review/delivery loop.
+
+Research actual existing private build/import paths and GitHub image retention.
+Do not infer missing permission from unattempted actions. No new paid services,
+credentials, broad grants, network exposure or privilege escalation. Live scoped
+IAM stays approval-bound; state precise minimum human action if no safe route.
+Stop after rebase/integration/validation/push and concrete blocker evidence.

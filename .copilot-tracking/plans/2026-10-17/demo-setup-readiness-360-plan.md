@@ -5,8 +5,10 @@ ms.date: 2026-10-17
 ---
 
 Task: issue-360 / demo-setup-readiness-360. Mode: automatic.
-Status: Full bounded loop completed; Review outcome Residual work. Published
-Refs #360 PR #375; d/e remain unmet and automatic session stopped.
+Status: Same-session continuation authorized for PR #375: rebase onto latest
+origin/main, preserve merged #358 contracts, validate integrations and establish
+concrete private publication/IAM blockers. Historical Review remains unchanged;
+d/e remain unmet. No new delivery loop or merge.
 
 ## Executive Summary
 
@@ -118,6 +120,28 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
   push and create Refs #360 PR; record exact remote head in publication receipt.
 
 ## Test Ownership and Locked Validation
+
+<!-- phase: P04 -->
+### P04 - Owner-authorized upstream integration and blocker evidence
+
+* [ ] P04-T01 Rebase run-owned topic onto latest origin/main, preserving upstream
+  #373/#374 source/tests and both index/log histories; integrate ARM transport
+  without changing #358 expiry/inventory/pending-handoff/legacy CLI contracts.
+* [ ] P04-T02 Add focused combined secret-path regressions, run full relevant
+  infra/legacy and existing lint/format/type gates; report any material finding.
+* [ ] P04-T03 Research existing private build/import/CI reuse options, distinguish
+  actual failed tools/permissions from unattempted authority-limited actions.
+  Execute only already authorized existing-resource/no-new-spend paths.
+* [ ] P04-T04 Commit and authorized force-with-lease topic push to PR #375,
+  report exact new SHA to independent reviewer 4536f9cc; keep #360 open and stop.
+
+## Continuation Test Boundary
+
+Preserve all upstream #358 tests exactly, with additive integration tests owned
+by test_staff_azure.py within the original 25-addition budget. Full infra and
+legacy suites plus existing CI lint/type/Bicep gates remain required.
+
+## Test Ownership and Locked Validation (Original Scope)
 
 Canonical tests: infra/tests/test_staff_azure.py (relay/worker/integration),
 infra/tests/test_setup_entra.py (only credential transport additions, not expiry/
