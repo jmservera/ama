@@ -4727,3 +4727,20 @@ metadata when the knowledge base was created.
   binding, live SQL Server/Azure and #98 review/pack/staleness remain unmet.
   No private data, source snapshots, memory, original specification or
   concurrent infrastructure/credential/sensor sources were changed.
+
+## [2026-10-17] query | Controlled administrative bulk preview (#78)
+
+* Added the existing-workstream engineering continuation in
+  `research/ux/zava-forward-prototype-profile-review.md` and its index route.
+  Component API/core guides define the closed case-reason and existing
+  handoff due/next-action contract, exact preview/outcome shapes and denials.
+* Named owner/manager and existing note visibility remain mandatory. Fresh
+  SQL staff/OID, target rowversion and guardrail checks occur under the writer
+  lock; durable issuance/consumption and immutable provenance audit accompany
+  local synthetic stale/replay/rollback/reopen tests. No controlled approval,
+  ownership acceptance, resident commitment or hazard clock is changed.
+* PRD FR-005/006/007 and same-number BRD entries have different meanings.
+  Broader preexisting evidence-upload/handoff provenance is not certified by
+  this bounded delivery. No new UI, human usability/WCAG, live Azure SQL,
+  private-data, real-model or operational acceptance claim. Memory and the
+  original case study remain unchanged.

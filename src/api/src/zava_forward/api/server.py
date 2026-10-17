@@ -704,6 +704,10 @@ def make_handler(app):
                 if not isinstance(body, dict):
                     raise ValueError("Request must be an object.")
             except ValueError:
+                if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
+                    actor = self._user()
+                    if actor:
+                        app.store.audit(actor["email"], "bulk_edit_rejected", "-", "Malformed bulk request object.")
                 return self._json(400, {"error": "Could not read that."})
             if url.path == "/api/login":
                 if not hasattr(app.provider, "login"):
@@ -727,6 +731,8 @@ def make_handler(app):
                 return self._json(200, app.provider.logout_response(switch=body.get("switchAccount") is True), {"Set-Cookie": "zf_session=; Max-Age=0; Path=/"})
             s = app.store
             if not projection.allowed(u, "post", "POST"):
+                if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
+                    s.audit(u["email"], "bulk_edit_rejected", "-", "Role cannot use administrative bulk edits.")
                 return self._json(403, {"error": "Your role does not include this."})
             if url.path.startswith("/api/law/alerts/") or url.path.startswith("/api/law/checks/"):
                 return self._rule_alerts(u, url.path, body)
@@ -740,6 +746,10 @@ def make_handler(app):
                     and parts[3] == "form-candidates"):
                 return self._forms(u, url.path, body)
             try:
+                if url.path == "/api/bulk-edits/preview":
+                    return self._json(200, s.bulk_edit_preview(u, body))
+                if url.path == "/api/bulk-edits/apply":
+                    return self._json(200, s.bulk_edit_apply(u, body))
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
                 if url.path == "/api/assistants/releases":
@@ -879,6 +889,8 @@ def make_handler(app):
             except DocumentStoreError:
                 return self._json(502, {"error": "The document store is not available. Try again shortly."})
             except ConflictError:
+                if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
+                    return self._json(409, {"error": "Preview blocked, changed or already used. Request a fresh preview before applying."})
                 return self._json(409, {"error": "Someone else changed this at the same moment. Reload and try again."})
             except GateError as e:
                 return self._json(409, {"error": "Not ready yet.", "reasons": e.reasons})
@@ -889,6 +901,9 @@ def make_handler(app):
             except ValueError as e:
                 return self._json(400, {"error": str(e)})
             except Exception:
+                if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
+                    logging.getLogger(__name__).exception("Administrative bulk edit failed")
+                    return self._json(503, {"error": "Bulk edit failed; the outcome may be unknown. Reload case history and request a fresh preview before retrying."})
                 if url.path.startswith("/api/assistants"):
                     return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
                 raise

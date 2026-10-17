@@ -94,3 +94,7 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["building_fixture", "dataset", "regulatory_fixture"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["test_bulk_edit_api", "tests.test_bulk_edit_api"]
+disallow_untyped_calls = false

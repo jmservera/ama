@@ -101,6 +101,96 @@ Run from the repository root with editable src packages installed. No UI
 change, actual human approval, live AI/Azure/SQL Server, approved template
 binding or #98 review/validation/pack/staleness acceptance is claimed.
 
+## Controlled bulk preview API (#78)
+
+Two additive authenticated POST routes expose the
+[core administrative contract](../core/README.md#controlled-administrative-bulk-edits-78).
+No web assets, role screen or existing case action changes. Trusted-proxy
+requests still need the existing `X-ZF-CSRF: 1` header. Contractors and unknown
+roles are denied; a role-visible screen cannot grant editing authority.
+
+`POST /api/bulk-edits/preview` accepts exactly:
+
+```json
+{
+  "case_ids": ["ZF-1", "ZF-2"],
+  "changes": {
+    "case_reason": "to check the supplied administrative reference"
+  },
+  "source": "SYN-REGISTER",
+  "source_version": "v3",
+  "reason": "Correct the constructed case explanation"
+}
+```
+
+Select 1-100 distinct IDs. Allowed fields are `case_reason`,
+`handoff_due_at` and `handoff_next_action`; handoff fields require an existing
+active handoff. No null/empty values, inferred source/version, silent
+truncation, extra keys, role/actor override or arbitrary nested JSON is accepted.
+This route is also the preview path for a single permitted administrative edit.
+It does not replace existing evidence, ownership or controlled workflows.
+
+The 200 response contains `preview_id`, `status`, actor, source/version/reason
+and ordered `records`. Each record has `case_id`, `changes` with field
+`old`/`new`, `failures` and an outcome. Examples of a successful preview record:
+
+```json
+{
+  "case_id": "ZF-1",
+  "changes": {
+    "case_reason": {
+      "old": "to agree a visit",
+      "new": "to check the supplied administrative reference"
+    }
+  },
+  "failures": [],
+  "outcome": "would_apply"
+}
+```
+
+| Situation | Preview / apply behavior |
+| --- | --- |
+| All targets valid | `pending`, per-case `would_apply` or `no_change`; no case mutation |
+| Any missing/noneditable/invalid target | `blocked`, failures for that ID, no inaccessible values; valid changed peers `batch_blocked` |
+| All unchanged | `pending`, all `no_change`; apply records a batch result but no fabricated field history |
+| Unknown keys/controlled fields/malformed request | 400 with explicit error and metadata-only refusal audit |
+| Foreign creator or current authority/OID revoked | 403, no target content or edits |
+| Stale, corrupted, blocked or consumed preview | 409, fresh preview required; no partial batch |
+| Unexpected storage failure | 503 with explicitly uncertain outcome; inspect case history and request a fresh preview before retry |
+
+After inspecting every record, `POST /api/bulk-edits/apply` accepts only:
+
+```json
+{"preview_id": "the-server-returned-preview-id"}
+```
+
+No new target/change is accepted at apply. Only the same current creator can
+apply it, and all permission/freshness checks repeat under the SQL writer lock.
+Success returns `status: applied` with each result `applied` or `no_change`.
+The retained source/version/actor/time/reason and old/new fields are visible
+in existing case detail `edit_history`, with normal note-visibility redaction.
+Batch result and history survive SQLite reopening. Replaying a consumed
+preview is denied, including after an uncertain commit acknowledgement.
+
+Technical, consent, safety, procurement, budget, invoice, payment, claim,
+quality, defect/complaint closure and contractor-instruction fields are absent
+from the allowlist and are rejected server-side, including mixed allowed plus
+forbidden requests. Ownership transfer still requires receiver acceptance.
+Resident-update commitments, independent hazard clocks and approvals are never
+changed by an administrative due-date or next-action edit.
+
+| Issue #78 criterion | Bounded evidence |
+| --- | --- |
+| Edits retain source/version/actor/time/reason | `test_exact_preview_before_apply_and_provenance_reopens`, exact history/audit equality and monotonic version tests |
+| Targets, changes, failures, per-case outcomes before apply | Core and real loopback HTTP exact-shape tests, mixed missing/foreign/valid and no-op targets; zero pre-apply mutation |
+| No controlled bulk approvals | Closed allowlist tests across all controlled categories, actual HTTP denials, creator/role/OID and transactional stale/guardrail races |
+
+Existing broader PRD FR-005 evidence-upload and handoff-transfer provenance is
+not fully established by this slice. FR-005/006/007 here use PRD numbering;
+the same-number BRD entries concern lifecycle and technical release. This is
+not full PRD, human usability, WCAG, live SQL Server or operational acceptance.
+No browser check is claimed because no UI code/behavior was changed.
+
 ## Regulatory evaluation and card cadence labels (#216)
 
 `GET /api/law/cards` and `GET /api/law/cards/{card_id}` add a read-only

@@ -409,6 +409,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             raise PermissionError("Stock decisions require a registered named human staff identity.")
         return actor
 
+    def bulk_edit_preview(self, user, body):
+        from . import bulk_edits
+        return bulk_edits.preview(self, user, body)
+
+    def bulk_edit_apply(self, user, body):
+        from . import bulk_edits
+        return bulk_edits.apply(self, user, body)
+
     def stock_reconcile(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)

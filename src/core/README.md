@@ -94,6 +94,90 @@ This is not full PRD AC-046/047/053 acceptance, approved-form preparation,
 actual extraction, live SQL Server/Azure proof or the downstream #98
 field-review/validation/pack/staleness workflow.
 
+## Controlled administrative bulk edits (#78)
+
+`bulk_edits` adds a closed preview/apply contract through
+`Store.bulk_edit_preview(user, body)` and `Store.bulk_edit_apply(user, body)`.
+It does not provide an arbitrary JSON patch or a controlled decision route.
+The API guide gives [request examples and outcomes](../api/README.md#controlled-bulk-preview-api-78).
+
+| Permitted field | Stored field | Additional condition |
+| --- | --- | --- |
+| `case_reason` | `case.reason` | Administrative explanation only; no state change |
+| `handoff_due_at` | `case.handoff.due_at` | Existing active handoff; timezone-qualified time, normalized to UTC |
+| `handoff_next_action` | `case.handoff.next_action` | Existing active handoff; no work instruction or approval |
+
+Every field requires a current registered named human, existing owner or
+programme-manager authority, existing case-note visibility and an open,
+unpaused case. The current default note-visible roles are Resident Liaison
+Officer, Building Safety Liaison and Retrofit Programme Manager; manager status
+alone does not grant note visibility. Identity email/code/name/role/OID must
+match the current staff record. A trusted-proxy claim never acquires a wider
+database role. JSON keeps its existing single-process lock; SQL reads staff
+fresh even when the normal process cache has not seen a case-sequence change.
+
+Preview records selected IDs in order, each field's old/new values, failures and
+predicted outcomes. Missing or noneditable targets return only the submitted ID
+and refusal, not values. Any target failure blocks the whole batch; no failure
+is silently skipped. Unchanged targets are `no_change` and receive no invented
+case edit history/version. One case is valid too. Source, source version and
+change reason are mandatory and strict-length validated, never truncated.
+
+The existing checked `bulk_edits` meta document retains server-owned requests,
+snapshots and results. SHA-256 of the canonical issuance envelope is anchored
+in the append-only hash-chain audit, independently of that mutable document.
+Returned objects are copies. Apply accepts only the creator's preview ID,
+verifies issuance and unused state, schema, current staff/role/OID, ownership,
+case rules, whole-case digest and SQL rowversion. A changed-away-and-back SQL
+case is still stale. Changed data, tampering, consumed/blocked previews and
+authority changes require a fresh preview; permission denial is not repaired
+by switching screens. This is not protection against rewriting both trusted
+storage and its ledger.
+
+SQL repeats identity, case and governance-snapshot validation after
+`BEGIN IMMEDIATE`, inside the existing cross-process writer transaction.
+Case writes, per-case `edit_history`, batch consumption/result, queue maintenance
+and hash-chain events commit together. The inherited SQL Server adapter uses
+its existing application lock and the same portable SELECTs; no new schema or
+service is required. On failure the bulk-scoped recovery drops staged success
+events/edits and reloads all shared documents, restoring absence too, before
+recording a metadata-only refusal. A lost commit acknowledgement is explicitly
+uncertain: inspect persisted case history before retry; replay cannot apply a
+consumed preview again.
+
+Each changed case retains exact old/new fields, source/version, registered
+actor/role, UTC timestamp, change reason, monotonic edit version and batch ID.
+The complete same event is hash-chain audited. Roles without note visibility
+see only event identifiers/actor/time and a held-details label. Request-wide
+input errors and apply denials are visibly audited without raw hostile values.
+Successful/blocked preview issuance is anchored; per-target failures remain in
+the retained issued preview.
+
+Bulk edits cannot alter technical work, consent, safety, procurement,
+budget commitments, invoices, payments, claims, quality, defect/complaint
+closure, contractor instructions, ownership, source documents or resident
+commitments/deadlines. A next-action note records an administrative chase, never
+issues contractor instructions. Named receiver acceptance remains the sole
+handoff ownership-transfer path.
+
+Offline tests use only temporary synthetic fixtures:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/api/tests:$PWD/src/agents/tests" \
+  .venv/bin/python -m unittest test_bulk_edits test_bulk_edit_api -q
+```
+
+Coverage includes exact previews/history, mixed/no-op outcomes, every controlled
+category, stale and ABA cases, creator/role/OID revocation, interleaved
+two-store apply, guardrail races, issuance corruption, rollback at case/document/
+audit/commit boundaries, lost acknowledgement and reopen. SQLite establishes
+the local transactional evidence; no live Azure SQL, private stock, model or
+operational approval is claimed. JSON retains its existing separate-file
+case/audit limitation and is not cross-process transactional evidence.
+The new path meets provenance assertions for its own edits; existing evidence
+upload and handoff-acceptance paths are not retroactively certified as full
+PRD FR-005 provenance acceptance.
+
 ## Read-only source cadence labels (#216)
 
 `source_monitor.source_freshness`, `card_freshness` and `dated_card` read the

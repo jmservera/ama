@@ -7,6 +7,31 @@ ms.topic: reference
 
 ## Outcome and Evidence Boundary
 
+### Controlled bulk edit engineering continuation (2026-10-17, #78)
+
+The [migrated API bulk contract](../../../../src/api/README.md#controlled-bulk-preview-api-78)
+adds a server-owned preview and all-or-nothing application for administrative
+case explanations and existing handoff due/next-action fields. Every selected
+ID has an inspectable old/new change, validation failure and predicted outcome
+before apply. Foreign/missing records disclose no field values. No-op targets
+remain unchanged without invented edit versions.
+
+The [core implementation boundary](../../../../src/core/README.md#controlled-administrative-bulk-edits-78)
+retains source/version, named actor, timestamp, reason and field changes in
+case history and immutable audit. SQL rechecks current identity/OID, field/
+owner rights, case rowversions and guardrails under the existing writer lock.
+Issuer-bound preview hashes, durable consumption and failure recovery prevent
+changed instructions, stale targets and concurrent replay from bypassing
+authority. Ownership still requires receiver acceptance; controlled approvals,
+resident commitments and hazard clocks are outside the closed field contract.
+
+This is local synthetic core/API engineering evidence, not a new UI, direct
+staff/resident research, WCAG conformance or live SQL Server acceptance.
+JSON retains its separate-file audit/state limitation. Existing evidence-upload
+and handoff-transfer provenance have not been established as complete FR-005
+acceptance; the bounded delivery must not be read as full PRD acceptance.
+Historical prototype findings below remain historical.
+
 ### Queue signal engineering continuation (2026-10-17, #77)
 
 The [src API queue completion](../../../../src/api/README.md#queue-signal-completion-77-2026-10-17)

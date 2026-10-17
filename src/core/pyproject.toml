@@ -92,3 +92,8 @@ module = ["test_rule_engine", "tests.test_rule_engine",
           "source_monitor_fixture", "tests.source_monitor_fixture",
           "test_source_monitor", "tests.test_source_monitor"]
 disallow_untyped_calls = false
+
+# Typed administrative contract calls the existing untyped Store/workflow boundary.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.bulk_edits", "test_bulk_edits", "tests.test_bulk_edits"]
+disallow_untyped_calls = false
