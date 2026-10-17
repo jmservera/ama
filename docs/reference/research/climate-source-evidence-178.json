@@ -1,0 +1,122 @@
+{
+  "analysis_version": "historic-station-monthly-bounds-v1",
+  "humidity": {
+    "reason": "No relative humidity field in this source; not inferred",
+    "status": "unavailable"
+  },
+  "interpretation": "Monthly sample statistics, not instantaneous extremes, region-wide bounds, replay limits or safety thresholds.",
+  "owner_reuse_approval": "UNMET",
+  "quality_policy": "Exclude provisional rows, then missing, then estimated values per field; categories are mutually exclusive.",
+  "source": {
+    "bytes": 92268,
+    "location": "Location: 426700E 541500N, Lat 54.768 Lon -1.585, 102 metres amsl",
+    "retrieved_on": "2026-10-17",
+    "sha256": "d2c9ff2a443b8502957ce88fe8bfdbbd0d5ac111208eab0842bc574d4d4306f9",
+    "station": "Durham",
+    "url": "https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/durhamdata.txt"
+  },
+  "temperature": {
+    "midpoint": {
+      "counts": {
+        "excluded": 9,
+        "valid": 351
+      },
+      "definition": "Arithmetic (tmax+tmin)/2, same-month accepted pairs only",
+      "maximum": {
+        "occurrences": [
+          {
+            "month": "2006-07",
+            "source_line": 1526
+          }
+        ],
+        "value": 18.3
+      },
+      "minimum": {
+        "occurrences": [
+          {
+            "month": "2010-12",
+            "source_line": 1579
+          }
+        ],
+        "value": -0.35
+      },
+      "status": "available",
+      "unit": "degC"
+    },
+    "tmax": {
+      "counts": {
+        "estimated": 9,
+        "missing": 0,
+        "provisional": 0,
+        "valid": 351
+      },
+      "definition": "Monthly average of daily maximum air temperature",
+      "maximum": {
+        "occurrences": [
+          {
+            "month": "2006-07",
+            "source_line": 1526
+          }
+        ],
+        "value": 24.2
+      },
+      "minimum": {
+        "occurrences": [
+          {
+            "month": "2010-12",
+            "source_line": 1579
+          }
+        ],
+        "value": 2.7
+      },
+      "status": "available",
+      "unit": "degC"
+    },
+    "tmin": {
+      "counts": {
+        "estimated": 9,
+        "missing": 0,
+        "provisional": 0,
+        "valid": 351
+      },
+      "definition": "Monthly average of daily minimum air temperature",
+      "maximum": {
+        "occurrences": [
+          {
+            "month": "2003-07",
+            "source_line": 1490
+          },
+          {
+            "month": "2013-07",
+            "source_line": 1610
+          },
+          {
+            "month": "2019-07",
+            "source_line": 1682
+          }
+        ],
+        "value": 12.8
+      },
+      "minimum": {
+        "occurrences": [
+          {
+            "month": "2010-12",
+            "source_line": 1579
+          }
+        ],
+        "value": -3.4
+      },
+      "status": "available",
+      "unit": "degC"
+    }
+  },
+  "window": {
+    "absent_months": [],
+    "calendar_complete": true,
+    "end": "2020-12",
+    "expected_months": 360,
+    "outside_window_rows": 1401,
+    "present_months": 360,
+    "start": "1991-01"
+  }
+}

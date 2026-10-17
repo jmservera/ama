@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -17,6 +17,11 @@ secondary sources, so a competent reviewer must confirm against the official
 text before use. Sensor data remains
 simulated until the open items in
 [BRD OD-43](../../brds/agentic-retrofit-programme-brd.md) are closed.
+
+The separate [historical climate evidence update](#historical-climate-evidence-2026-10-17-refs-178)
+now includes official product/terms checks and retrieved Durham monthly
+temperature statistics. It does not validate the indoor analytics methods,
+supply humidity records or approve external-data reuse.
 
 Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runtime-fit.md)
 (Azure IoT Hub ingestion), [ADR 0002](../../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map)
@@ -142,7 +147,155 @@ Environment, Energy and Buildings, BRE, Housing Ombudsman) and obtain the
 official BS 5250, BS EN ISO 13788 and PAS 2035 texts through the owner's
 licensed access.
 
+## Historical climate evidence (2026-10-17, Refs #178)
+
+This online continuation of merged PR #367 supersedes the all-unknown
+comparison as the current evidence position, not the original immutable
+source snapshots. All retrievals below actually occurred on **2026-10-17
+UTC**. This date is not a dataset publication date or owner approval date.
+Only official public metadata, terms and one bounded station file were
+retrieved; no accounts, paid downloads, terms-acceptance forms or private
+datasets were used.
+
+### Candidate comparison
+
+Source IDs resolve to the dated source register below. Coverage describes the
+product, not verified coverage at every intended demonstration home.
+
+| Candidate | North East coverage and historical period | Spatial/temporal resolution and variables | Licence, reuse and access | Assessment |
+| --- | --- | --- | --- | --- |
+| Met Office HadUK-Grid v1.3.2.ceda | UK land coverage includes North East England; release extends through 2025, starts vary by variable. Monthly relative humidity starts 1961 | Observations interpolated to 1km; coarser grids and regional averages also provided. Temperature daily/monthly; RH (`hurs`) monthly/seasonal/annual, not daily | C178-HUK: exact regional release OGL v3, catalogue citation required. CEDA register/login required; actual regional RH download returned login HTML | Recommended **regional monthly context candidate only**, not paired replay bounds or direct station observations |
+| Met Office MIDAS Open hourly weather observations | UK station collection begins 1853 to previous full year, but station operation/variables vary. Durham, Northumberland and Tyne-and-Wear directories are listed in v202607; individual station coverage not verified | Station points; hourly weather and separate daily products. Archive lists air temperature, dew point and **calculated** RH; inspect actual fields/flags per station before use | C178-MIDAS: collection explicitly OGL; v202607 README request redirected to login. Exact release acknowledgement and North East station/QC packet not retrieved | Best cadence-oriented next investigation for three-per-day history; no records or station recommendation claimed |
+| Met Office historic station data, Durham | Retrieved Durham 1880-01 through provisional 2026-09; 54.768 N, -1.585 E, 102m elevation. A single site, not a region-wide sample | Monthly averages of daily maximum/minimum temperature, frost, rain, sunshine. **No RH**. No adjustment for small site/instrument changes | C178-DUR/C178-TERMS: public file linked by official station page; website content OGL v3 grant and attribution, with exclusions and separate automated-copy restriction requiring review | Retrieved temperature-only cross-check; not a replacement paired source and no more automated Met Office retrieval planned |
+| Copernicus ERA5 single levels | Global coverage includes North East; 1940 onwards | Hourly reanalysis on 0.25-degree lat/lon grid (ensemble uncertainty 0.5 degree); model/observation assimilation, not station measurements. No RH calculation or record extraction performed here | C178-ERA: current exact catalogue declares **CC-BY-4.0**, not assumed OGL. Standard CDS route requires account/PAT and manual dataset terms agreement | Spatially complete alternative, but access/derived-variable/method work remains; no account or agreement made |
+| CIBSE 2025 weather files v1.1 | 28 UK climate zones; historical input baseline 1994-2023, morphed TRY/DSY files and 2030s/2050s/2080s projections. Exact North East zone not selected | Hourly dry-bulb/dew-point temperature and RH over design/reference years, not an unmodified chronological observation series | C178-CIBSE: prepayment before download, user licences including additional institutional users. Exact redistribution/derived-output permission not retrieved; **not established as open reuse** | Excluded from this no-purchase observed-history delivery; design-year extrema would answer a different question |
+| Met Office UKCP18, owner lead | UK/global observations and climate projections through 2100 are distinct products | Projection models at 60km global, 12km UK and downscaled 2.2km; family is not one observational dataset | C178-UKCP: family page is not proof of a particular file's licence or historical suitability | Refine the lead explicitly to the HadUK observational context product below, not projections used as measured history |
+| Environment Agency, owner lead | Examined England flood-monitoring API, not every EA collection | Documented water level/flow and rainfall; levels/flows usually 15-minute measurements with variable transfer frequency. No temperature/RH pair documented in this API | C178-EA: explicit OGL v3, no registration, specific acknowledgement below | This identified API does not answer the weather-pair need. No conclusion that all EA products lack climate variables; another exact dataset would need evidence |
+
+The generic Met Office HadUK variable page still lists daily temperature from
+1960. The current release-specific CEDA history says daily temperature was
+extended to 1931 in v1.3.1 and daily mean temperature added in v1.3.2.
+Use the release-specific catalogue rather than silently repeating the older
+generic start date. Neither change supplies daily humidity.
+
+### Conditional recommendation and current source register
+
+Recommend **HadUK-Grid Climate Observations by Administrative Regions over
+the UK, v1.3.2.ceda (1836-2025)**, UUID
+`386b3c1ee2054ef5ae0d73060963a9f1`, as the candidate for regional monthly
+historical context. Its observational basis, UKCP18-compatible geography,
+explicit RH field and dataset-specific OGL v3/citation make it more
+defensible for that limited purpose than a generic UKCP18/EA name, ERA5
+reanalysis or purchased design years. This is an explicit refinement of the
+owner's UKCP18 lead, not approval of a silent replacement.
+
+The 1km HadUK release (`789b3065d74a4c948ab05d33556c86d0`) is a distinct
+grid alternative, not the regional product's citation or tested download.
+No region index, cell or station has been adopted for replay. **No candidate
+currently qualifies as an adopted paired historical replay source.** Regional
+monthly context cannot establish three-per-day extrema. MIDAS is the next
+cadence-oriented lead if an authorized station/QC packet becomes available.
+The existing labelled `synthetic-uk-seasonal-model-v1` remains unchanged.
+
+All rows were checked on 2026-10-17. These are dataset metadata, provider
+terms and access evidence, not a legal opinion or operational rule.
+
+| ID / official source | Version/date and retained evidence | Reuse / attribution / current limitation |
+| --- | --- | --- |
+| C178-HUK: [regional release catalogue](https://catalogue.ceda.ac.uk/uuid/386b3c1ee2054ef5ae0d73060963a9f1/), [1km alternative](https://catalogue.ceda.ac.uk/uuid/789b3065d74a4c948ab05d33556c86d0/), [variables](https://www.metoffice.gov.uk/research/climate/maps-and-data/data/haduk-grid/datasets) | v1.3.2.ceda, published 2026-06-23; regional DOI `10.5285/386b3c1ee2054ef5ae0d73060963a9f1`. Metadata and licence retrieved, **records not retrieved** | Regional catalogue explicitly links OGL v3 and requires its dataset citation. Registration/login is separately required |
+| C178-HUK-ACCESS: [actual regional RH request](https://dap.ceda.ac.uk/badc/ukmo-hadobs/data/insitu/MOHC/HadOBS/HadUK-Grid/v1.3.2.ceda/region/hurs/mon/v20260512/hurs_hadukgrid_uk_region_mon_196101-202512.nc?download=1) | URL identifies monthly 1961-01 to 2025-12 file, version directory v20260512. Followed request returned HTTP 200 `text/html` at `accounts.ceda.ac.uk`, **not NetCDF** | Precise blocker: authenticated CEDA access, confirmed by catalogue access rules and [token guidance](https://help.ceda.ac.uk/article/5100-archive-access-tokens). No login, token or registration attempted; do not mistake a 200 login page for data |
+| C178-MIDAS: [collection](https://catalogue.ceda.ac.uk/uuid/dbd451271eb04662beade68da43546e1/), [guide](https://help.ceda.ac.uk/article/4982-midas-open-user-guide), [v202607 hourly archive](https://data.ceda.ac.uk/badc/ukmo-midas-open/data/uk-hourly-weather-obs/dataset-version-202607) | Current directory v202607 listed; [release README request](https://dap.ceda.ac.uk/badc/ukmo-midas-open/data/uk-hourly-weather-obs/dataset-version-202607/00README_catalogue_and_licence.txt) ended at login HTML | Collection OGL verified, exact release citation/acknowledgement and station records not retrieved. `qc-version-1` means latest record state, not proof every field passed QC. Ignore the guide's stale 2020 availability FAQ |
+| C178-DUR: [historic stations](https://www.metoffice.gov.uk/research/climate/maps-and-data/historic-station-data), [Durham record file](https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/durhamdata.txt) | Actual 92,268-byte file retrieved 2026-10-17; SHA-256 `d2c9ff2a443b8502957ce88fe8bfdbbd0d5ac111208eab0842bc574d4d4306f9`. Full input retained outside repository during analysis; only derived report published | Website-content terms below apply unless separately excluded; no station-specific alternative notice found in file. No RH. Retained hash does not guarantee the rolling URL will later serve identical bytes |
+| C178-TERMS: [Met Office legal](https://www.metoffice.gov.uk/policies/legal), [website terms](https://www.metoffice.gov.uk/policies/tandc), [OGL v3](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) | Terms retrieved 2026-10-17; no asserted publication/revision date for undated pages. Website content grant is free OGL v3 with stated exclusions | Attribution adjacent to reproduced licensed content: "Contains public sector information licensed under the Open Government Licence v3.0". OGL allows copying/adaptation/commercial reuse with attribution, exclusions and no endorsement/warranty. Website terms also restrict automated monitoring/copying except authorized APIs; **no further Met Office fetches after discovering this clause**. Owner must review access/reuse compatibility before repeat retrieval or adoption; no blanket automation permission inferred |
+| C178-ERA: [exact ERA5 catalogue](https://cds.climate.copernicus.eu/api/catalogue/v1/collections/reanalysis-era5-single-levels), [CDS access instructions](https://cds.climate.copernicus.eu/how-to-api), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | DOI `10.24381/cds.adbb2d47`; catalogue updated 2026-10-17, declares `CC-BY-4.0` | Credit source, link licence and indicate changes; no endorsement/additional restrictions. CDS instructions require manual dataset terms agreement and account/PAT before the standard retrieval route. No record job submitted or terms accepted |
+| C178-CIBSE: [current weather product page and FAQs](https://www.cibse.org/knowledge-research/weather-data/) | 2025 release v1.1; source states baseline, variables, zone count, purchase and user-licence route | Prepayment and MyCIBSE download; exact redistribution terms not retrieved. Purchase, institutional access and a user licence must not be assumed to permit redistribution. No files ordered/downloaded |
+| C178-UKCP: [UKCP18 overview](https://www.metoffice.gov.uk/research/approach/collaboration/ukcp) | Family remains provider-recommended/validated while UKCI is introduced; not a release identifier for this task | No family-wide licence or observation-bound claim made; use C178-HUK's exact terms for the recommended product |
+| C178-EA: [flood-monitoring API reference](https://environment.data.gov.uk/flood-monitoring/doc/reference) | Public API metadata/docs, not a downloaded weather dataset | OGL v3; provider acknowledgement: "this uses Environment Agency flood and river level data from the real-time data API (Beta)". No weather-pair bounds derived |
+
+Required regional HadUK citation, from that exact catalogue:
+Met Office; Hollis, D.; Carlisle, E.; Kendon, M.; Packman, S.; Doherty, A.
+(2026): HadUK-Grid Climate Observations by Administrative Regions over the
+UK, v1.3.2.ceda (1836-2025). NERC EDS Centre for Environmental Data
+Analysis, 23 June 2026. doi:10.5285/386b3c1ee2054ef5ae0d73060963a9f1.
+Retain this citation and the [OGL v3 link](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)
+with any later authorized derived asset. Citation here is provenance,
+not owner approval.
+
+**Owner licence/reuse approval: UNMET**, including for Durham derived evidence
+and the recommended HadUK product. Juan Manuel Servera remains the named
+exercise reviewer. Public availability, a licence grant, retrieval permission
+and an agent's recommendation do not record his approval, sign a new agreement
+or authorize operational reuse.
+
+### Retrieved temperature evidence and reproduction
+
+The [derived JSON report](./climate-source-evidence-178.json) records the
+actual Durham input hash, retrieval date, statistic definitions, source
+line/month for every tied extremum, quality counts and explicit unavailable
+humidity. It contains derived numbers, not a bundled provider dataset.
+Attribution for the Met Office-derived statistics: Contains public sector
+information licensed under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+No endorsement is implied.
+
+Selected window: **1991-01 through 2020-12**, a declared 30-year comparison
+window, not a claim that this sample captures all North East weather.
+All 360 calendar months are present. Nine estimated `*` values in each
+temperature field are excluded, leaving **351 accepted same-month pairs**;
+zero missing/provisional values within this window. There are 1,401
+out-of-window rows. Calendar completeness is not 100 percent usable coverage.
+Provisional rows, then missing tokens, then estimated values are mutually
+exclusive rejection categories per field; no filling or clipping.
+
+| Statistic (degC) | Minimum and month | Maximum and month | Accepted count |
+| --- | --- | --- | --- |
+| Monthly average of daily maximum temperature (`tmax`) | 2.7, 2010-12 | 24.2, 2006-07 | 351 |
+| Monthly average of daily minimum temperature (`tmin`) | -3.4, 2010-12 | 12.8, 2003-07 / 2013-07 / 2019-07 | 351 |
+| Arithmetic monthly midpoint `(tmax+tmin)/2`, not a separately retrieved mean field | -0.35, 2010-12 | 18.3, 2006-07 | 351 pairs |
+
+These are sample extrema of **monthly statistics**, not instantaneous/daily
+extremes, physical limits, a joint temperature/RH envelope or generator
+parameters. RH is **unavailable and not inferred**. One inland station and
+selected quality-filtered years do not establish coastal/upland or region-wide
+bounds. No historical humidity value or synthetic parameter is introduced.
+
+From repository root, using the already retained local input, the
+[offline helper](../../../tools/climate_station_bounds.py) reproduces the report:
+
+```bash
+python3 tools/climate_station_bounds.py /path/to/retained/durhamdata.txt \
+  --source-url https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/durhamdata.txt \
+  --retrieved-on 2026-10-17 --start-year 1991 --end-year 2020 \
+  --expected-sha256 d2c9ff2a443b8502957ce88fe8bfdbbd0d5ac111208eab0842bc574d4d4306f9
+python3 -m unittest discover -s tools -p 'test_climate_station_bounds.py' -v
+```
+
+The helper never downloads, accepts terms or changes data. It fails explicitly
+on hash/schema/unit/date/duplicate/malformed-value errors; an entirely excluded
+series reports unavailable/null extrema, not default bounds. Report SHA-256:
+`f75566fc1bf62608a78cf7f12647779dab12f0d0cddf86f6f1a7083df6f95615`.
+The rolling original file is not bundled and cannot be reconstructed from this
+hash. Reproduction after this session requires the exact retained bytes or an
+owner-authorized matching packet; a later changed download is a new retrieval,
+not this evidence. Review website access conditions before any new retrieval.
+
+### Current issue #178 criterion audit
+
+| Original criterion | Progress on 2026-10-17 | Remaining acceptance boundary |
+| --- | --- | --- |
+| Compare coverage, resolution, licence and reuse | Substantive official-source comparison delivered for all issue candidates plus both owner leads | CIBSE exact redistribution terms, MIDAS release acknowledgement and exact North East station/zone coverage remain explicit gaps; no blanket complete terms verification claimed |
+| Record chosen source, retrieval date and licence; keep licence open until owner confirms | Exact regional HadUK candidate, metadata/terms retrieval date, OGL v3 and required citation recorded | Conditional context recommendation, not an adopted paired replay source. Data retrieval blocked at CEDA login. **Owner reuse approval UNMET** |
+| Derive outdoor temperature and humidity bounds from records | Actual Durham monthly temperature statistics derived, quality-filtered and reproducible | **Unmet as a paired criterion**: no humidity records, no instantaneous/three-per-day or region-wide envelope. Requires authorized paired records and competent method/geographic review |
+
+Leave original issue checkboxes unchanged and #178 open. No sensor-method,
+live-platform, legal or operational acceptance follows. The next human actions
+are dataset-specific reuse/access review and, if authorized, provision of the
+exact paired source/station/QC packet; not invention of missing bounds.
+
 ## Historical outdoor climate source decision (2026-10-16, Refs #178)
+
+Historical offline audit, retained for provenance. For the current evidence
+position use the [2026-10-17 update](#historical-climate-evidence-2026-10-17-refs-178)
+above; the unknowns below describe the earlier audit only.
 
 This is an offline evidence audit, not a completed historical-source study.
 The issue and its owner comment were read on 2026-10-16; that is a GitHub
