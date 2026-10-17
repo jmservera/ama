@@ -206,3 +206,27 @@ Live credential/initializer-publication gates still unmet.
   events; manual workflow_dispatch cannot activate its Azure what-if jobs.
 * Publication/check receipt follows below. Live ACR403/private publisher and
   actual tenant/browser/SQL/AI gates remain unmet.
+
+### Integration Publication Receipt
+
+* Exact authorized command executed successfully:
+
+```bash
+git push --force-with-lease=refs/heads/fix/setup-profile-evidence-360:cea89c43a9979daabe1eb09032c85d451b137584 origin HEAD:refs/heads/fix/setup-profile-evidence-360
+```
+
+* Integrated evidence head:
+  9c0ffe22202ecf241e5c5d4f03d0b03553ab28bf. GitHub remote ref and PR #391
+  head matched; mergeable MERGEABLE, base 3f544fb9, checks initially queued
+  (UNSTABLE is not a green/accepted verdict).
+* Ordinary checks appeared automatically on the own branch: Source projects CI
+  39067847373 and MVP validation 39067847374, both pull_request events.
+  Their infra path filters matched. No manual workflow dispatch was necessary;
+  no paid rubric, release/deployment or cloud workflow was dispatched.
+* This receipt-only normal fast-forward commit follows the authorized rebase
+  publication. Exact final-head status is reported on PR #391 and in the
+  coordinator handoff; queued, cancelled, skipped or absent checks are not
+  represented as green.
+* Original critique and Review, source/test fingerprints and new-base src
+  preservation are unchanged. No new RPI cycle or full Review.
+* Automatic continuation stops at clean pushed head/resume state per owner.

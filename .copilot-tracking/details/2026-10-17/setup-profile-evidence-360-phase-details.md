@@ -16,7 +16,7 @@
 | --- | --- | --- | --- |
 | P01 | Reproduce and implement | Complete | P01-T01, P01-T02 |
 | P02 | Validate and document | Complete | P02-T01, P02-T02 |
-| P03 | Review and deliver | Complete; authorized integration publication active | P03-T01, P03-T02 |
+| P03 | Review and deliver | Complete; authorized integration published | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reproduce and implement
@@ -134,3 +134,6 @@ complete upstream prefix and own entry preserved. Source/test binary patch and
 original critique/Review byte parity verified; all src equal new base. Fresh
 200 tests and existing static checks pass. No new Review, source correction,
 main write or live operations. Publication/check receipt is recorded in changes.
+Exact-lease push succeeded at 9c0ffe22, PR #391 MERGEABLE; automatic ordinary
+Source CI/MVP validation queued without manual dispatch. Final receipt is a
+normal fast-forward; exact final-head check outcome is on PR #391.

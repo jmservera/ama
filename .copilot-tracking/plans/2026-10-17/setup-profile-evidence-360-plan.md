@@ -168,8 +168,10 @@ None for offline source work. Critique gate passed; live acceptance excluded.
 * Coordinator authorized own-branch integration onto main 3f544fb9 (#387) and
   exact old-head force-with-lease on 2026-10-17. Rebase completed with only
   append-only log conflict; exact source/test patch and critique/Review parity,
-  all upstream src preserved, 200 tests and static checks passed. Publication
-  and ordinary check receipt pending; no new full Review.
+  all upstream src preserved, 200 tests and static checks passed. Exact-lease
+  publication succeeded at 9c0ffe22; PR #391 MERGEABLE. Ordinary Source projects
+  CI and MVP validation triggered automatically; exact final-head status is
+  reported on PR #391, not presumed green. No new full Review.
 * Owner/coordinator: live credential and initializer-publication 403 prerequisites, then genuine tenant/browser/SQL/AI acceptance; outside source-only work.
 
 ## Handoff
@@ -180,7 +182,8 @@ None for offline source work. Critique gate passed; live acceptance excluded.
   mutations killed; configured lint/format and changed-line lint pass.
 * Review: Complete / Residual work, no source defects found; live gates routed
   to distinct owner/coordinator follow-up, not coordinator acceptance.
-* Remaining follow-up: publish authorized integration and obtain actual ordinary
-  check status; live acceptance still excluded. See changes integration evidence.
+* Remaining follow-up: coordinator assesses exact-head ordinary checks and final
+  acceptance; merge decision and live acceptance remain excluded. See changes
+  integration evidence and PR #391's current-head check receipt.
 * Automatic session stops per owner's clean-pushed-head instruction. No
   correction cycle, repeated Review or unauthorized history rewrite.
