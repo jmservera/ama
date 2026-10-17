@@ -16,7 +16,7 @@ import os
 import re
 from datetime import datetime, timedelta, timezone
 
-from zava_forward.core import projection
+from zava_forward.core import projection, export_fields
 from zava_forward.core.chat_privacy import ChatPrivacy, redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
@@ -31,7 +31,6 @@ SYSTEM = ("You are a read-only assistant for a UK housing association retrofit t
           "consent, contact a resident or change a record. Say when the facts do not answer the question.")
 TOOLISH = re.compile(r"(\"(tool|function)_?(call|name)s?\"\s*:|<\s*tool|\bfunction_call\b|\bBEGIN SYSTEM\b|"
                      r"\b(approve|certify|record consent|send (the )?(email|letter)|delete (the )?(case|record))\b\s*[:(])", re.I)
-CASE_KEYS = ("id", "stage", "status", "measures", "needs_notice", "named_contact", "waiting_on", "home", "resident", "owner")
 REFUSAL = "That reply was withheld because it asked for an action or exposed content this role cannot see. Ask a case question instead."
 
 
@@ -67,14 +66,12 @@ class ChatIsolation:
 
     def case_context(self, user, case_id):
         """The case through the user's own projection. None when the case is out of scope or missing."""
-        d = self.store.detail(case_id, user)
-        if d is None:
-            return None
-        ctx = {k: d[k] for k in CASE_KEYS if k in d}
-        if "resident" in d:
-            ctx["resident"] = {k: d["resident"].get(k) for k in ("adjustment", "preferred")}
-        ctx["contacts"] = [dict(channel=c.get("channel"), outcome=c.get("outcome")) for c in d.get("contacts", [])[:4]]
-        return ctx
+        with self.store.lock:
+            d = self.store.detail(case_id, user)
+            if d is None:
+                return None
+            export_fields.status_inputs(self.store._case(case_id))
+            return export_fields.chat_case(d)
 
     def memory_for(self, user, task=""):
         """Opt-in, switch-gated and labelled non-authoritative items from the #285 lifecycle; empty unless active."""

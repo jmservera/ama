@@ -2,11 +2,18 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
 ## Generated chat provenance (#175)
+
+The #112 [core context boundary](../core/README.md#sensor-admission-and-external-context-112)
+closes recursive home-field exports without changing model permissions. The
+offline chat evaluation's source binding now fingerprints the closed case/home
+contract and its version, not the removed open-container key list. Historical
+evaluation results are not silently regenerated or treated as proof of the new
+boundary. No sensor AI purpose, real-data approval or live inference is added.
 
 `tests/test_chat_provenance.py` writes all nine `chat_fixture` JSONL payloads
 to a fresh disposable directory and validates them through the shared core

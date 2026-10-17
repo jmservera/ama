@@ -5630,3 +5630,50 @@ metadata when the knowledge base was created.
 * No live setup, private inputs, Graph, SQL, Azure/IAM/network/tag changes,
   paid rubric dispatch, merge or issue closure. Private publisher ACR403 and
   actual tenant/browser/SQL/AI acceptance remain unmet.
+
+## [2026-10-17] query | Sensor privacy boundary actual-source audit (#112)
+
+* Exact upstream prefix: `74617981b71bc3f10bd21d0b78691bc3cf36c473`.
+  Read actual #112 criteria before treating stale Not started or historical
+  references as delivery. Parent #109 is hierarchy only, no issue dependency.
+* Existing runtime has an offline generator/loader, not implemented IoT
+  ingestion, sensor_analysis or a registered sensor AI purpose. The existing
+  sensor research synthesis now distinguishes that fact from ADR proposals.
+* Loader verifies exact current-generator manifest/payload replay before SQL,
+  then loads private replay-owned bytes. Stock mode requires original explicit
+  Selection; labels, pseudonymization, filenames, rehashing and unverified
+  approval-looking metadata do not establish synthetic origin. Computational
+  budget bounds replay; supported tiny fixtures and idempotency are retained.
+* Closed chat-home context prevents recursive diagnostics export; malformed
+  selected legacy AI/citation/map fields refuse without value echo. Existing
+  manual detail, static tiles/license/manual alternative and domain approvals
+  are unchanged. No service hold, health threshold or real-use grant added.
+* Failing-first sentinel regressions reproduced actual assembled chat leakage,
+  malformed map/AI exposure and unverified loader admission. Focused corrected
+  tests and actual task-owned loopback SQL establish construction/refusal
+  boundaries, not legal/privacy conformance or operational acceptance.
+* #175 unresolved external origins remain unverified. OD-43 inventory,
+  lawful basis/DPIA, retention, resident choice, thresholds and competent
+  approval remain open. No private dataset, Azure/IoT/Graph/IAM, paid inference,
+  real contact, deployment, merge or issue closure was performed.
+
+## [2026-10-17] query | Sensor privacy correction ONE (#112)
+
+* The one original Review completed with Not accepted and two High findings:
+  RV-001 raw reason/hazard owner stringification before chat/briefing export;
+  RV-002 document metadata validation after outbound AI dispatch. The original
+  Review and critique remain unchanged, not replaced by a second Pass.
+* Correction ONE validates raw status contributors at the external boundary,
+  and document metadata/citation inputs before AI dispatch and read-route
+  scan/audit interpolation. Manual case status/detail, domain state, lawful
+  approval boundaries and document-content paths remain unchanged.
+* Two new test methods reproduced six failures before correction. Corrected
+  focused core selection: 145 run, 144 pass, one opt-in SQL skip; agents:
+  94 pass; focused API AI/chat: 86 pass. Configured Ruff/format/mypy pass
+  for all three components. No weakened assertion or removed test; sixteen
+  new methods remain within the planned eighteen-method limit.
+* Earlier actual task-owned loopback MSSQL admission pass and cleanup remain
+  evidence for unchanged persistence/admission; SQL was not restarted for
+  prompt-only correction. Full core's earlier exit137 remains incomplete.
+  No paid inference, web change, new deployment or operational/legal approval.
+  Final-head independent acceptance remains coordinator-owned.

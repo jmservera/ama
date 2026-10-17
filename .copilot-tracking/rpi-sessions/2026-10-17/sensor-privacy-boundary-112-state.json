@@ -1,0 +1,62 @@
+{
+  "task_id": "112",
+  "task_slug": "sensor-privacy-boundary-112",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Publish",
+  "route": "qualified-rpi-cli",
+  "resume_id": "be1f37b3-9d52-4f16-b867-73e0482edda2",
+  "status": "delivered-awaiting-coordinator-gate",
+  "session_status": "complete",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/sensor-privacy-boundary-112-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/sensor-privacy-boundary-112-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/sensor-privacy-boundary-112-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/sensor-privacy-boundary-112-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/sensor-privacy-boundary-112-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/sensor-privacy-boundary-112-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI loop with one Review; commit, normal push and main PR",
+      "status": "confirmed",
+      "evidence": "Explicit user instruction 2026-10-17"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-17/sensor-privacy-boundary-112-research.md"
+    },
+    {
+      "decision": "One final-candidate critique executed; original Revise; PC-001 rejected erroneous environment premise, PC-002/003 applied",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/sensor-privacy-boundary-112-plan-critique.md; plan Critique Disposition"
+    }
+  ],
+  "blockers": [],
+  "review_outcome": "Not accepted",
+  "review_execution": "Complete",
+  "correction_cycle": 1,
+  "correction_findings": ["RV-001", "RV-002"],
+  "correction_status": "implemented-and-verified-not-independent-acceptance",
+  "correction_receipt": ".copilot-tracking/changes/2026-10-17/sensor-privacy-boundary-112-correction1.md",
+  "validation": {
+    "correction_core": {"run": 145, "passed": 144, "skipped": 1},
+    "correction_agents": {"run": 94, "passed": 94},
+    "correction_api": {"run": 86, "passed": 86},
+    "actual_owned_mssql": "one earlier pass; exact owned database/container/credential cleaned; persistence unchanged by correction",
+    "quality_gates": "configured Ruff, format-check, mypy passed for core/agents/api",
+    "full_core": "incomplete: earlier process killed exit 137; no full pass claim"
+  },
+  "publication": {
+    "pr": "https://github.com/jmservera/ama/pull/393",
+    "base_branch": "main",
+    "head_branch": "fix/sensor-privacy-boundary-112",
+    "implementation_commit": "6225442c496653cab3b63b611f9632c642859bf5",
+    "final_head": "Resolve remote refs/heads/fix/sensor-privacy-boundary-112 after the delivery-state commit; exact value returned in CLI handoff",
+    "merge_or_issue_close": "not performed",
+    "review_acceptance": "original Not accepted retained; correction ONE verified locally, coordinator gate pending"
+  },
+  "next_action": {"phase": "Coordinator gate", "action": "Assess final PR393 head and CI; no second original Review, automatic merge or issue closure"},
+  "prioritized_follow_ups": ["OD-43 genuine real-use approvals absent", "#175 historic origins remain unverified"]
+}

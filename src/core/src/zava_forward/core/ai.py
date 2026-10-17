@@ -12,7 +12,7 @@ import re
 import time
 import urllib.parse
 import urllib.request
-from . import ai_prompts
+from . import ai_prompts, export_fields
 
 SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
@@ -141,6 +141,7 @@ class Ai:
 
     def look_at(self, name, data, mime, off=False):
         """Describe an uploaded document. Reads text and images; other types are stored only."""
+        export_fields.scalars(dict(name=name, mime=mime), ("name", "mime"))
         system, instruction = ai_prompts.render("read_document", name=name)
         if mime.startswith("image/"):
             content = [{"type": "text", "text": instruction},

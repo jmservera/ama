@@ -21,6 +21,7 @@ import json
 import math
 import random
 import sqlite3
+import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -353,19 +354,81 @@ def _create_sqlite_schema(conn):
                  + ", PRIMARY KEY (sensor_id, reading_id))")
 
 
-def load_into(conn, out, create_schema=_create_sqlite_schema):
-    """Idempotent append keyed on (sensor_id, reading_id); rejects are counted by reason, not stored.
+def load_into(conn, out, create_schema=_create_sqlite_schema, *, stock=None, max_rows=2_000_000):
+    """Admit exact current-generator synthetic bytes, then append idempotently.
 
     Uses INSERT ... WHERE NOT EXISTS so it runs on Azure SQL as well as SQLite. For Azure SQL apply SQL_DDL
-    first and pass create_schema=None (the default hook creates SQLite-only DDL).
+    first and pass create_schema=None (the default hook creates SQLite-only DDL). Stock snapshots require
+    the original explicit Selection. max_rows bounds replay work, not an operational sensor threshold.
     """
-    out = Path(out)
+    with tempfile.TemporaryDirectory(prefix="zf-synthetic-replay-") as scratch:
+        replay = Path(scratch) / "snapshot"
+        try:
+            _verify_snapshot(Path(out), replay, stock, max_rows)
+        except _FaultInput:
+            raise ValueError("Opt-in fault inputs require a unit/calibration-aware consumer, not load_into") from None
+        except (OSError, ValueError, TypeError, KeyError, OverflowError):
+            raise ValueError("Sensor admission refused: verified current synthetic snapshot required; real-use approvals remain unverified.") from None
+        return _load_verified(conn, replay, create_schema)
+
+
+class _FaultInput(ValueError):
+    pass
+
+
+def _verify_snapshot(out, replay, stock, max_rows):
+    if out.is_symlink():
+        raise ValueError("Unsupported sensor location")
     if (out / "analysis").is_dir():
-        raise ValueError("Opt-in fault snapshots require a unit/calibration-aware consumer, not load_into")
-    if (out / "manifest.json").is_file():
-        metadata = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
-        if metadata.get("schema_version") == sensor_faults.SCHEMA_VERSION:
-            raise ValueError("Opt-in fault inputs require a unit/calibration-aware consumer, not load_into")
+        raise _FaultInput()
+    manifest_path = out / "manifest.json"
+    if manifest_path.is_symlink() or manifest_path.stat().st_size > 16_000_000:
+        raise ValueError("Unsupported sensor manifest")
+    metadata = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if isinstance(metadata, dict) and metadata.get("schema_version") == sensor_faults.SCHEMA_VERSION:
+        raise _FaultInput()
+    if not isinstance(metadata, dict) or metadata.get("source_type") != SOURCE_TYPE:
+        raise ValueError("Synthetic source required")
+    stock_mode = metadata.get("version") == "sensor-backfill-stock-v1"
+    if metadata.get("version") not in (VERSION, "sensor-backfill-stock-v1") or (
+        metadata.get("schema_version") != SCHEMA_VERSION
+        or metadata.get("generator_revision") != provenance.source_revision(revision_sources())
+        or stock_mode != isinstance(stock, sensor_stock.Selection)
+        or (not stock_mode and stock is not None)
+    ):
+        raise ValueError("Unsupported sensor provenance")
+    seed, homes, days, cadence = (metadata[k] for k in ("seed", "homes_covered", "days", "cadence_minutes"))
+    if any(type(v) is not int for v in (seed, homes, days, cadence, max_rows)):
+        raise ValueError("Invalid replay parameters")
+    if max_rows <= 0 or homes < 0 or homes > max_rows or abs(seed) > 2**63 - 1:
+        raise ValueError("Replay budget exceeded")
+    resolve_window(days, cadence, metadata["as_of"])
+    steps = days * 1440 // cadence
+    if steps > max_rows or homes * steps > max_rows:
+        raise ValueError("Replay budget exceeded")
+    if stock_mode and (
+        metadata.get("stock_input_sha256") != stock.input_sha256
+        or metadata.get("coverage") != stock.coverage()
+        or homes != sum(row["monitoring_consent"] == "granted" for row in stock.rows)
+        or len(stock.rows) > max_rows
+    ):
+        raise ValueError("Stock selection differs")
+    expected = write(replay, None if stock_mode else homes, seed, days, cadence,
+                     as_of=metadata["as_of"], stock=stock)
+    if metadata != json.loads(json.dumps(expected)):
+        raise ValueError("Synthetic manifest differs")
+    files = expected["file_sha256"]
+    if {p.name for p in out.iterdir()} != {"manifest.json", *files}:
+        raise ValueError("Unexpected sensor payload")
+    for name, digest in files.items():
+        path = out / name
+        if path.is_symlink() or not path.is_file() or path.stat().st_size != (replay / name).stat().st_size:
+            raise ValueError("Sensor payload differs")
+        if provenance.file_hashes([path])[name] != digest:
+            raise ValueError("Sensor payload differs")
+
+
+def _load_verified(conn, out, create_schema):
     if create_schema:
         create_schema(conn)
     with open(out / "sensors.csv", encoding="utf-8", newline="") as f:

@@ -16,6 +16,63 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Sensor admission and external context (#112)
+
+`synthetic.sensor_backfill.load_into()` admits only exact current-generator
+synthetic snapshots. It requires the generated manifest, supported version/
+schema, current generator revision, exact payload set and hashes, and an exact
+deterministic replay from the declared seed/window. Unknown, malformed, real,
+pseudonymized or merely relabelled/rehash-matched data refuses before the schema
+hook or any SQL statement. It loads private temporary replay bytes, never
+reopens candidate bytes after verification, and returns only inserted/rejected
+counts. No raw reading, identifier, supplied diagnostic or path is included in
+admission errors. Database failures remain failures, not admission successes.
+
+Stock mode additionally requires `load_into(conn, path, stock=selection)` with
+the original explicitly supplied `sensor_stock.Selection`. A manifest or fabric
+CSV cannot confer that source authorization. Constructed readings do not prove
+real stock identity/consent; #175's unresolved origins remain unverified.
+Default `max_rows=2_000_000` bounds nominal observations, steps and selected homes
+before replay; an offline caller can explicitly raise that positive integer
+computational budget for a reviewed larger exercise. Replay costs additional
+generation time and temporary disk, cleaned on completion/refusal. Older
+generator revisions must be explicitly regenerated; retained snapshots are not
+overwritten or silently migrated. Opt-in fault inputs remain unsupported by
+this legacy unit/calibration-unaware loader.
+
+`export_fields` applies closed selected-field contracts at chat, legacy
+AI/citation and map boundaries. Chat does not recursively expose the complete
+home dictionary. Unknown nested diagnostics stay out; selected structured/
+nonfinite fields explicitly refuse rather than stringify their contents.
+Stored/manual detail, access checks and all case/domain state are unchanged.
+Map points/clusters carry no sensor fields, and the static tile/manual routes
+are unchanged. No new sensor AI task, automatic domain mutation or indicator/
+health threshold is authorized. This is not semantic DLP for arbitrary prose.
+
+The original #112 Review was Not accepted for two outbound ordering defects.
+Correction ONE validates raw waiting/hazard-owner status contributors before
+exporting chat context or assembling briefing facts, without changing manual
+status/detail. Selected document metadata and case citations are validated
+before model dispatch; the ordinary document-reading route also checks metadata
+before scan/audit interpolation. Both original findings have failing-first
+regressions. The adverse Review remains retained, not replaced with a second
+independent Pass; final acceptance is coordinator-owned.
+
+Run the owned fictional regressions after pip editable installation:
+
+```bash
+PYTHONPATH=src/core/tests .venv/bin/python -m unittest \
+  test_sensor_privacy test_sensor_backfill test_sensor_stock test_sensor_faults -q
+```
+
+`ZF_SENSOR112_MSSQL=1` enables the owned-loopback test using existing `ZF_SQL_*`
+settings. It refuses non-loopback hosts, creates/drops only a UUID-named
+`zf_sensor112_*` database and tests actual refusal-before-schema, generated
+inserts and idempotency. Use only a uniquely named task-owned local container.
+These checks do not approve inventory, DPIA/lawful basis, retention, resident
+choice, source rights, thresholds or live operation. Real-data activation
+remains denied; see the [dated synthesis](../../docs/reference/research/iot-sensor-analytics-research-plan.md#sensor-privacy-engineering-boundary-2026-10-17-refs-112).
+
 ## Historical progress evidence and declared forecasts (#102)
 
 `Store.progress_report(user, as_of=..., start=None, view="mine",
