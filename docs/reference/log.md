@@ -5456,3 +5456,27 @@ metadata when the knowledge base was created.
   container removed. Configured checks and document links passed. Earlier
   broader/browser receipts are historical; no new independent Pass, Azure,
   human-authority, screen-reader or WCAG claim, main write, merge or issue closure.
+
+## [2026-10-17] integration | #91 preserves merged hazard commit-boundary controls
+
+* Coordinator authorized own-topic rebase onto verified latest main
+  1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c (PR388/#85), from reviewed
+  topic 210b89df0d287675cb8ac5148dd9d198d37dd9c1. Exact upstream log byte
+  prefix and all routes/quality histories retained; only log insertion conflicted.
+* Hazard writer validation and per-operation marker immediately after COMMIT
+  remain alongside stock/finance/procurement validation. Quality retains its own
+  committed snapshot/outcome and no-prefix-replay behavior. No production change,
+  shared recovery redesign, duplicate hazard/grant correction or authority change.
+* Combined run exposed a copied test record with unknown Synthetic recorder;
+  quality correctly refused before the intended hazard race. The test-only
+  precondition now names existing fictional Sam with independent Pam, preserving
+  all hazard-at-commit refusal/no-false-audit assertions. Quality regression also
+  asserts next healthy save leaves audit/state unchanged after committed failure.
+  Dataset/manifest/original case unchanged; no identity guard weakened.
+* Tested candidate 48b90f42fe8170f3f17956e3a194a0c93b33eee2: fresh local
+  243 run/241 pass/two existing skips; actual task-owned local MSSQL 99 run/
+  98 pass/one existing JSON-only skip. Both one-shot/persistent post-COMMIT
+  prior-prefix paths exercised; configured gates and integrity checks passed.
+  Exact owned container removed; source fingerprints recorded for coordinator
+  external review 42ce6748. Original adverse Reviews unchanged; no independent
+  Pass, Azure, human/WCAG acceptance, merge or issue closure claimed.

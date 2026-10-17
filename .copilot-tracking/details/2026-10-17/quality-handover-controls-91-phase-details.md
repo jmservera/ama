@@ -161,3 +161,21 @@ hazard/safety gates. Exact selectors/resources/receipts and integrity checks
 are in the changes record. Earlier broader/browser counts remain historical.
 Original Review is byte-preserved; final-head independent gate belongs to
 coordinator, not this integration continuation.
+
+Latest authorized hazard integration base
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c (PR388) preserves hazard validation/
+per-operation persisted marker immediately after actual COMMIT before _sync,
+plus independent quality snapshot-based committed handling before stock-scope
+recovery. No shared helper/caller dropped, grants/finance/stock/provider hooks
+unchanged, truthful persisted diagnostics retained.
+
+The combined race fixture initially failed because its copied Submitted quality
+record named an unknown contributor. Local test-only precondition now names
+registered fictional Sam, preserving independent Pam and exact GateError/audit/
+state assertions. Quality's existing post-COMMIT regression now explicitly checks
+next healthy save for exact audit/state equality. No shared fixture/manifest
+edit, professional authority promotion or production change. Candidate
+48b90f42fe8170f3f17956e3a194a0c93b33eee2 passed fresh 243 local tests with
+two existing skips, and 99 actual MSSQL tests with one existing JSON-only skip.
+Changes record has precise counts, first failure, source fingerprints, resources
+and commands; no new Review/independent Pass.

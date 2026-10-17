@@ -65,13 +65,15 @@ upload/offer/accept source/version/reason and exact change events; final-head
 independent reassessment remains required. Actual schema authority is a
 separate human prerequisite, not a reason to leave provenance unimplemented.
 
-Issue #91 integrates merged #95/PR386 and PR385 on main
-2b24456863c0a8f39d47a73e22daeff3875cc825. Both task routes and full knowledge
-histories are retained, with byte-identical own production/test patch. Fresh
-combined checks passed 205 of 206 local cases (one opt-in grant-browser skip)
-and all 83 actual local SQL Server cases. Original #91 Review Not accepted and
-its correction evidence remain distinct; coordinator final-head review remains
-separate. See the [integration log](./log.md#2026-10-17-integration--91-onto-merged-grant-controls-and-initializer-base).
+Issue #91 now integrates merged #85/PR388 on main
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c, retaining merged #95 and PR385.
+All task routes/full knowledge histories and both post-COMMIT caller controls
+are preserved. No production patch change; two test-only integration assertions
+are explained in the [latest integration log](./log.md#2026-10-17-integration--91-preserves-merged-hazard-commit-boundary-controls).
+Fresh combined checks: 243 local run/241 pass/two existing skips, actual local
+SQL Server 99 run/98 pass/one JSON-only skip. Original #91 Review Not accepted
+and correction evidence remain distinct; coordinator final-head judgment and
+external review 42ce6748 remain separate from this integration evidence.
 
 | Task | Start with | Then consult |
 | --- | --- | --- |

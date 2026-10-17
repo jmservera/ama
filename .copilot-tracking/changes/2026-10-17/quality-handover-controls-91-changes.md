@@ -327,3 +327,145 @@ only for refs/heads/fix/quality-handover-controls-91. A separate integration
 evidence commit contains Markdown/state metadata only; final full head is
 reported by PR/git, avoiding a self-referential commit hash. No main write,
 merge, issue closure, external approval inference or other's dirty work used.
+
+## Authorized merged-hazard integration (2026-10-17)
+
+Later coordinator authorization names freshly fetched/verified main
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c, merged PR388/#85.
+Clean prior reviewed/published topic head
+210b89df0d287675cb8ac5148dd9d198d37dd9c1 on prior base
+2b24456863c0a8f39d47a73e22daeff3875cc825. Rebase candidate:
+a17eebb30fc8be75f4cfaf6ba7f12791f9823077.
+
+Only docs/reference/log.md conflicted; retained exact complete upstream byte
+prefix followed by all quality entries. Component sections/index auto-merged,
+all upstream routes retained. No source conflict or SQL marker/harness rewrite.
+Whole own production/test patch remains byte-identical over src/tools/infra/mvp
+non-Markdown paths, SHA-256
+a7eb041bf6ef894d67f6009a4c66074f0fe56250ade7439e268dcd3dae5038f7.
+
+Inspected merged hazard.decision_scope, hazard.validate_sql/mark_committed and
+SqlStore.save: hazard validation remains alongside stock, finance and procurement
+writer validation. hazard.mark_committed executes immediately AFTER actual
+COMMIT, BEFORE committed-snapshot bookkeeping and optional _sync. It marks only
+the active hazard operation's persisted context. Existing hazard context is
+preserved/restored, committed failures report explicit persisted/reconcile notes
+and discard without restoring the committed prefix. Quality keeps its separate
+own committed-snapshot detection before shared stock recovery, explicit
+QualityOutcomeError/HTTP committed-reload guidance and no committed-prefix
+requeue. Neither caller's marker/context is reset early or repurposed.
+
+Verified SQL store, hazard, workflows, MSSQL harness, grants/finance/store,
+neutral app.js, fixture/manifest and original case byte-equal to latest base;
+both original quality Review/closure and critique byte-equal to prior head.
+No global helper redesign, duplicated #85/#95 correction or external authority
+inference. Prior results remain historical, not fresh hazard integration parity.
+Fresh combined local and actual task-owned MSSQL validation follows; no browser
+or full Review rerun. External review reference supplied by coordinator:
+42ce6748; this run reports exact source fingerprints for final-head comparison
+and does not claim its independent outcome.
+
+First combined local run: 243 run, one error and two existing skips.
+The inherited hazard race's quality-accept branch copied a building fixture
+whose Synthetic recorder/SYN-RECORDER is deliberately absent from current
+staff. Issue91 correctly refuses that unresolved legacy identity before save,
+so the test never reached its intended interleaved emergency-at-commit probe.
+This is a tightly coupled fixture precondition mismatch, not authorization to
+weaken quality unknown-identity refusal. Adjust only that test's copied Submitted
+record to identify existing fictional Sam as recorder; independent Pam and the
+original expected GateError/no-mutation/audit assertions remain. No dataset or
+building fixture/manifest change. Initial full patch parity is historical before
+this precise test-only integration correction; production bytes stay unchanged.
+
+The corrected race and both canonical post-COMMIT prefix tests passed in a
+three-method focused replay; combined local replay then passed 243 run with
+two existing skips. Actual initial merged-hazard MSSQL replay passed 99 run/
+98 pass/one existing JSON-only skip. No production change was needed.
+Added a direct assertion in the existing quality post-COMMIT regression that
+the next healthy locked save leaves exact audit and persisted case unchanged,
+matching the existing hazard test's next-save assertion. Final local/MSSQL
+replay follows for both precise test-only integration changes.
+
+### Final merged-hazard integration evidence
+
+Tested source/test candidate:
+48b90f42fe8170f3f17956e3a194a0c93b33eee2, based on rebased candidate
+a17eebb30fc8be75f4cfaf6ba7f12791f9823077 and exact main
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c.
+Only source/test delta after the byte-identical initial rebase is the two
+precise regression changes above; no production code change.
+
+| Fresh final merged-hazard candidate execution | Result |
+| --- | --- |
+| Combined quality/hazard/grant/finance/stock/provider/current-actor/legacy/HTTP selection | 243 run, 241 pass, two existing skips |
+| Actual task-owned local MSSQL affected transaction paths | 99 run, 98 pass, one existing JSON-only skip |
+| Earlier focused SQLite hazard interleave and both committed-prefix selectors | Three pass; overlaps combined count |
+| Configured core Ruff/format/mypy | Pass; 60 format-managed files, 113 source files |
+| Configured API Ruff/format/mypy | Pass; 22 format-managed files, 54 source files |
+| Production patch old/new bases byte parity | Pass; SHA-256 e932bad340014d11677937d8122e5bf0c3c1cfc4a3e1b90f31fd1ce31f3b1362 |
+| Final whole own production/test patch fingerprint, including two test changes | SHA-256 850368c99aacece702c8533fc6db944a81bc358b2dbf799a006e644524d2c4f3 |
+| Upstream KB prefix/routes, hazard hooks/marker/harness, grants/finance/stock/provider sources, fixture/manifest/original case and original Reviews | Retained; no authority promotion |
+
+Fresh final local command:
+
+```bash
+PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_quality_procurement test_hazard_referral \
+  test_grant_lifecycle_controls.JsonGrantChecks \
+  test_grant_lifecycle_controls.SqlGrantChecks \
+  test_finance_match_controls.JsonFinanceChecks \
+  test_finance_match_controls.SqlFinanceChecks test_stock_reconciliation \
+  test_finance_signoffs test_role_matrix test_grant_lifecycle_api \
+  test_procurement_api test_hazard_api -q
+```
+
+Actual final MSSQL selected test_mssqlstore.MssqlProcurement,
+test_mssqlstore.MssqlStockDecisions, test_mssqlstore.MssqlHazardReferral,
+test_grant_lifecycle_controls.MssqlGrantChecks and
+test_finance_match_controls.MssqlFinanceChecks. The inherited hazard SQL
+method contains transient/persistent post-COMMIT synchronization failures with
+legitimate prior audit, original-error identity/committed note, exact counts,
+valid ledger and next healthy save. The quality method covers transient/
+persistent actual post-COMMIT read failure with/without prior audit, explicit
+committed outcome/cause, exactly-once ledger, clean lock exit/reopen and now
+direct next-healthy-save audit/state equality. Both callers' pre-commit
+rollback/prior-pending/current-identity checks and legacy fixer/rebinding tests
+remain exercised. SQLite additionally exercises the repaired fixture's
+interleaved emergency across all nine guarded transitions.
+
+The two local skips are the existing JSON-only separate-file hazard audit
+ordering case inherited by SQLite, plus existing opt-in grant browser. The
+single MSSQL skip is that same JSON-only case inherited by MSSQL, not a skipped
+post-COMMIT/authority transaction test. No skip/validator was added or weakened.
+No browser rerun or independent Pass; earlier/browser evidence remains
+historical, with no human/Azure/WCAG inference.
+
+Fresh final SQL readiness: SELECT 1 succeeded, unique loopback dynamic port,
+process-generated unlogged secret, owned container ama-quality91-b68d9a8810be,
+database quality91_aa13e78a169f406ab2a64b27334a65c6. Exact owned container removed
+in finally; grant/finance UUID databases cleaned by their existing fixtures.
+Session-only receipts: quality91-hazard-integration-local.log (first failing
+fixture run), quality91-hazard-integration-targeted.log,
+quality91-hazard-integration-local-final.log,
+quality91-hazard-integration-sql.log (earlier overlap), and
+quality91-hazard-integration-sql-final.log. Counts overlap, do not sum.
+
+Source SHA-256 fingerprints for coordinator external review 42ce6748:
+
+| Path | SHA-256 |
+| --- | --- |
+| src/core/src/zava_forward/core/quality.py | de1373cdc116a2193b723bff3c97892b233932960e9c6f2210571c21c117b9fd |
+| src/core/src/zava_forward/core/sqlstore.py | 2788fb7a6d8b83864303177dd0f4b7159096fbb1d8924e9733304fe7b00c4832 |
+| src/core/src/zava_forward/core/hazard.py | 10e1f929b5a0628fe23105144c275f5b250ac338b388c285612925b931e4de62 |
+| src/core/src/zava_forward/core/workflows.py | 1d815030342641829a00ee0e5cb939022512da757d5af0a234626491c46275fa |
+| src/api/src/zava_forward/api/server.py | 348d5f50dd9580b3bbb24cc13a1dc4ec3e427e6ec45579d42680e17fe5888e0e |
+| src/api/tests/test_mssqlstore.py | d8dccf1ee8ddafa0e2fa49e48189929e97e0fed8f58458d4e6f8549794b8afae |
+| src/core/tests/test_quality_procurement.py | 2149af05b7c37fce157081f4d96dbe83accd3cb7008e07f2af6e6acae9a13e6f |
+| src/core/tests/test_hazard_referral.py | c1fc4c10a5fb8534355bb4651d2ce31b7f70e1c059948a361dcaf08a78663af9 |
+
+Fresh fetch after tests still resolves main to
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c. Final evidence commit is Markdown/
+state metadata only after tested candidate; final full head is reported by PR/git.
+Authorized publication uses ONLY own topic with exact expected-remote lease
+210b89df0d287675cb8ac5148dd9d198d37dd9c1. No main write, merge, issue closure,
+cloud action or independent Review rerun. Original adverse Reviews unchanged.

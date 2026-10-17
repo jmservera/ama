@@ -54,9 +54,14 @@
       "decision": "Execute later coordinator-authorized latest-main topic rebase after correction publication, then publish only own topic with exact expected-old-head lease.",
       "status": "implemented-and-validated",
       "evidence": "Old head d322235641487ff2c4dea1e4339c99f973b7f75d; old base b5d4c8402692758bd929a7ff9bf1832770738346; latest fetched/verified base 2b24456863c0a8f39d47a73e22daeff3875cc825 (merged PR386 after PR385). Candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5. Four docs-only conflicts keep both intents; whole own production/test patch byte-identical. Fresh 206 local/205 pass/one opt-in browser skip; actual local MSSQL 83 pass/zero skip; configured gates and preservation checks pass. No issue95 fix duplication or independent Pass."
+    },
+    {
+      "decision": "Later coordinator authorized rebase onto merged hazard main, preserving both callers' post-COMMIT handling and original Reviews; exact own-topic expected-head lease publication only.",
+      "status": "implemented-and-validated",
+      "evidence": "Base 1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c (PR388); prior reviewed remote 210b89df0d287675cb8ac5148dd9d198d37dd9c1. Tested candidate 48b90f42fe8170f3f17956e3a194a0c93b33eee2. Only log conflict; upstream prefix/routes and hazard hooks/commit marker/harness preserved. Two precise test-only changes: existing registered recorder precondition for hazard race; next-healthy-save quality exact-once assertion. No production change. Final fresh 243 local/241 pass/two existing skips and 99 actual MSSQL/98 pass/one JSON-only skip; configured gates pass. Source fingerprints recorded for coordinator external 42ce6748; no independent Pass or Review repetition."
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Stop at clean pushed PR #387 integration head on 2b24456863c0a8f39d47a73e22daeff3875cc825; coordinator independently reviews final head/checks before separately authorized integration. No new Review, merge, issue closure or unrelated task."},
+  "next_action": {"phase": "Follow-up", "action": "Stop at clean pushed PR #387 integration head on 1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c. Coordinator external review 42ce6748 may compare recorded source fingerprints; final-head checks/independent judgment remain separate. No merge, issue closure, new Review or cloud action."},
   "prioritized_follow_ups": []
 }

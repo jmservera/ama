@@ -241,3 +241,15 @@ Fresh combined candidate c0f67838383007c3f4a95ba0aa957378e2db0ba5:
 206 local tests, 205 pass/one opt-in browser skip; 83 actual local MSSQL pass,
 zero skip; configured gates and preservation checks pass. Changes record holds
 exact bases/heads/digest/selectors and lease publication boundary.
+
+Later coordinator integration onto merged #85/PR388 main
+1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c preserves both hazard post-COMMIT
+marker/validation and quality committed-outcome handling. Only log conflicted,
+both histories retained. Two tightly coupled test-only adjustments after initial
+whole patch parity: identify registered fictional Sam in hazard race's copied
+Submitted record so independent Pam reaches the real hazard-at-commit gate;
+assert next healthy quality save preserves exact audit/state. No production
+change or unknown-identity weakening. Tested candidate
+48b90f42fe8170f3f17956e3a194a0c93b33eee2: 243 local run/241 pass/two existing
+skips; actual MSSQL 99 run/98 pass/one JSON-only skip. Original adverse Reviews
+remain; final-head source fingerprints and full receipts in changes record.
