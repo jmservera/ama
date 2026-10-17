@@ -225,6 +225,32 @@ Original RPI records stay immutable; this separate integration state records the
 user-selected stopped endpoint. No merge, issue closure or independent Pass.
 Resume ID: 3a36c179-e1e3-4332-9c33-fa947262fd79.
 
+## Publication Receipt and Moving Main Ref
+
+Authorized exact-lease push succeeded at
+07f988c78daf1fa8107b541a13f1679cdbb4d83f. Only the two authorized old commits
+were rebased, followed by own integration evidence. No application source fix.
+
+A final prepublication integrity script asserted against the mutable
+origin/main ref, which had advanced concurrently to
+226702779e57e490cb10dc06ab014760c7d8a761 (merged #390/#102) while local
+validation ran. That prefix assertion failed; the shell command's separate
+publication chain still ran. This was not an application failure or failed
+expected-lease push. The immutable authorized base remained
+3f544fb9cda2c51b219db2cc8368c7525bbe0c86 throughout this branch's integration.
+Fresh explicit pinned-base revalidation then passed: original seven artifact
+bytes equal expected old remote, exact authorized-base log prefix retained,
+all own entries preserved and authorized base is an ancestor of this head.
+Earlier whole source patch parity was likewise proved against the pinned base.
+This tooling/ref race is retained as failed evidence, not relabelled a pass.
+
+No additional rebase or new main source was imported after the authorized
+integration. #390/#102 progress/store/API compatibility and any newer main
+integration remain coordinator-sequenced work; the combined 499/38/browser/image
+receipts apply to the pinned PR387 base, not newly arrived #390. A subsequent
+normal evidence-only commit records this distinction without another force push,
+source correction, full Review or change to original RPI artifacts.
+
 ## Residual Governance and Stop Boundary
 
 RV-001 stays separately routed to planning parent/repository owner at next #81

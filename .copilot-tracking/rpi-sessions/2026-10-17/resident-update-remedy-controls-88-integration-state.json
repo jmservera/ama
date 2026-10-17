@@ -23,6 +23,8 @@
   "correction_cycles_used": 0,
   "cleanup": "Exact owned integration container/image tag and generated external SQL credential removed after test database readback confirmed empty",
   "publication": "Commit checked evidence with fresh privacy-safe author/committer and Copilot trailer; force-with-lease limited to exact authorized expected_remote_lease; verify local/remote/PR equality. No widening a changed lease.",
+  "published_rebased_head": "07f988c78daf1fa8107b541a13f1679cdbb4d83f",
+  "moving_main_ref": "Shared origin/main advanced during validation to 226702779e57e490cb10dc06ab014760c7d8a761 (#390/#102). A final mutable-ref prefix assertion failed; explicit immutable authorized-base verification passed. No further rebase or newly arrived main source imported. Exact receipts cover pinned base3f544fb9, not #390.",
   "remaining": "Owner/coordinator retains independent final-head checks/integration acceptance and wider governance routing; no next child task starts at the user-selected published PR stop boundary",
   "governance_follow_up": "RV-001: planning parent/repository owner at next #81 triage identifies existing separate governance item or assigns one; Legal/Housing/Complaints retain approval",
   "status": "completed",
