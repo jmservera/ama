@@ -150,7 +150,9 @@ Correction ONE completion: 145 resident/browser/handoff/report tests, 134 pass/
 MSSQL tests pass/no skips, final configured statics and JS syntax pass. Interrupted
 broader replay is not a completed run. Original Review/critique unchanged;
 separate correction receipt maps all three exact criteria to source/test proof.
-Independent final-head disposition and normal publication remain external gates.
+Source/evidence published normally as5cfa8e53 on same PR392; final metadata
+receipt follows without source changes. Independent final-head disposition remains
+external and pending. No merge/issue closure.
 
 ## Dependencies
 

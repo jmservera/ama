@@ -3,16 +3,18 @@
   "task_slug": "resident-update-remedy-controls-88",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Publication",
-  "status": "implementation_complete",
-  "session_status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "authorized_correction": {
     "number": 1,
     "input": "Coordinator Revise Medium: departed response owner strands request",
     "base": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
     "start_head": "3938fb7f9ad6ec413768037f53ea7c9b9b96e608",
     "evidence": ".copilot-tracking/changes/2026-10-17/resident-update-remedy-controls-88-correction-one.md",
-    "remaining": "Normal same-PR publication and independent external final-head disposition; original Review/critique immutable",
+    "remaining": "Independent external final-head disposition; original Review/critique immutable",
+    "published_source_head": "5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3",
+    "publication": "Normal same-topic source push verified; final metadata reconciliation follows normally without source changes",
     "validation": "145 resident/browser/handoff/report tests:134pass11skip;24sharedguardspass;8actualMSSQLpass0skip;configuredcoreAPIstaticsandJSsyntaxpass",
     "external_disposition": "Revise Medium retained pending coordinator review8d5e66bd; no new full Review"
   },
@@ -68,8 +70,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Publication",
-    "action": "Publish authorized correction ONE normally to PR #392, then stop clean for coordinator independent final-head disposition. Original Review/critique retained; no rebase, merge or issue closure authorized."
+    "phase": "Follow-up",
+    "action": "Coordinator review8d5e66bd owns independent final-head correction disposition on PR #392. Stop clean, no idle CI watch; original Review/critique retained. No rebase, merge or issue closure authorized."
   },
   "prioritized_follow_ups": [
     {

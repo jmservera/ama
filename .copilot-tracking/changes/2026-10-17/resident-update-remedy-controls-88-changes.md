@@ -15,7 +15,8 @@ ONE implemented/validated for the departed-response-owner Medium finding, separa
 in resident-update-remedy-controls-88-correction-one.md in this directory.
 P01/P02 implementation evidence complete: 145 tests (134 pass/11 existing skips)
 including actual browser, 24 shared guard tests and eight actual MSSQL tests pass;
-configured core/API statics/JS pass. Normal publication and independent external
+configured core/API statics/JS pass. Source/evidence published normally as
+5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3 on PR392. Independent external
 correction disposition pending; the interrupted broader replay is not a pass.
 Original Review/critique unchanged; no new full Review or current blocker.
 

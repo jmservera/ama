@@ -27,7 +27,7 @@ finance and grants remain separate. No Legal/safety authority is created.
 * [x] Writer authority/concurrency and audit/recovery/committed outcome tests.
 * [x] Actual owned loopback MSSQL plus HTTP/browser and configured checks.
 * [x] Documentation/evidence and source fingerprints.
-* [ ] Normal same-PR publication, followed by external coordinator acceptance.
+* [x] Normal same-PR publication; external coordinator acceptance remains pending.
 
 ## Planned Evidence
 
@@ -43,8 +43,8 @@ No second full Review/self Pass, Azure/paid AI/communications or new role.
 
 ## Current State
 
-Implementation and local validation complete for the authorized correction ONE;
-normal publication pending. The external Revise/Medium disposition remains the
+Implementation, local validation and normal source publication complete for the
+authorized correction ONE. The external Revise/Medium disposition remains the
 coordinator's to close, not an implementation self-Pass. No new full Review.
 Original Review/critique retained, no rebase or scope expansion.
 
@@ -220,3 +220,17 @@ owner: next #81 backlog triage routes lease/scope/age bands to separately owned
 Legal/Housing/Complaints review. That is not a replacement for exact remedy proof
 and does not block ordinary independently evidenced issue88 behavior.
 External final correction disposition remains pending coordinator review8d5e66bd.
+
+## Publication and Stop
+
+Fresh gh api user resolved account identity; repository-local noreply email used
+for both author and committer with required Copilot coauthor trailer. Normal
+source/evidence commit5cfa8e53ef28fbfe2a9aae681902c4c6829d53e3 pushed
+from verified remote3938fb7f to the same topic/PR392, no lease/force/rebase.
+Local and PR head matched5cfa8e53 with clean worktree after source publication.
+This final publication receipt/state reconciliation is metadata only and will
+be normally committed/pushed on that topic; exact final head is recorded in PR
+body and final handoff rather than self-referencing this commit.
+PR remains open/base main74617981. No merge/issue closure or independent Pass.
+No CI watch; unreported/incomplete checks remain pending. Resume ID
+3a36c179-e1e3-4332-9c33-fa947262fd79.
