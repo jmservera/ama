@@ -88,7 +88,7 @@ followed verification. Source SHA256 bindings rechecked and match exactly.
 Current core/API guides, existing UX synthesis/index and appended log reflect
 bounded closure, not professional/source-policy/operational approval. Original
 adverse Review is byte-identical above an appended correction disposition.
-Correction engineering blocker closed; same-branch normal publication pending.
+Correction engineering blocker closed; same-branch normal publication below.
 
 Pre-publication validation: lifecycle JSON parses and every declared artifact
 exists; 356 relative documentation/artifact targets exist. Original Review and
@@ -96,6 +96,27 @@ knowledge-log byte prefixes match HEAD exactly. Final source fingerprints match
 the independent verification, `git diff --check` passes and the exact owned
 SQL container is absent. Only owned correction source/tests and related
 documentation/artifacts are staged; no unrelated change is included.
+
+### P04-T03: Actual publication and stop boundary
+
+Authenticated `gh api user` returned 8036360/jmservera. Set repository-local
+privacy-safe email and explicitly use it for author/committer, with required
+Copilot trailer. Commit b6122fbec2e98db1640808c5d0408584da0ce848 contains the
+source/tests/docs and bounded verification. Normal same-branch push succeeded.
+Committed source bytes exactly match independent verification fingerprints.
+
+`gh pr edit 382` failed because GraphQL rate limit was exhausted; not counted
+as successful publication. Standard `gh api --method PATCH
+repos/jmservera/ama/pulls/382` REST fallback updated title/body and subsequent
+REST GET independently confirmed body/title, open draft, unchanged main base,
+requested topic head and b6122fb source SHA. PR preserves exact four-criterion
+table, original adverse Review, correction red/green/SQL evidence, independent
+closure, shared seam overlap and human/source-policy/operational limits.
+No hosted check result is represented as passed.
+
+All P04 markers complete. This publication-state-only update is the final
+normal commit/push, then stop. No source edits after bounded verification,
+second full RPI/Review, merge, rebase, force push, issue closure or human approval.
 
 ## Original RPI Execution (Historical)
 

@@ -24,7 +24,7 @@ closure status explicit. Existing RPI research/critique/Review is not repeated.
 | P01 | Fail-before evidence and narrow root fix | Complete: red/green and scoped root fix |
 | P02 | Focused validation and current documentation | Complete: core/API, browser, SQL Server, static/docs |
 | P03 | One Review, commit/push/PR | Execution complete; Not accepted RV-001; incomplete draft PR #382 published |
-| P04 | Explicit correction ONE, validation and bounded independent closure | Source/validation/closure complete; normal same-branch publication pending |
+| P04 | Explicit correction ONE, validation and bounded independent closure | Complete: source/validation/closure; b6122fb normally pushed, same draft PR updated |
 
 <!-- rpi:phase id=P04 -->
 ## P04: Authorized correction ONE
@@ -46,9 +46,12 @@ pass. Original adverse Review remains byte-identical above appended correction
 disposition. Bounded independent verification closes RV-001 for SHA256-bound
 source/tests with 91 focused tests and two persistent snapshot probes; it is
 not a repeated full RPI or second full-task Review. No source change followed
-verification. Normal same-branch commit/push and existing draft PR update are
-the only remaining P04 publication steps. No professional/source-policy/
-operational approval, issue closure or merge.
+verification. Commit b6122fb normally pushed, privacy-safe author and committer
+verified with required Copilot trailer. Same draft main PR #382 updated and
+verified through REST after gh pr edit's GraphQL rate-limit failure. P04
+complete; this final publication-state record receives the final normal push
+and stop. No professional/source-policy/operational approval, issue closure
+or merge; no additional work selected.
 
 ## Original RPI Phase Details (Historical)
 

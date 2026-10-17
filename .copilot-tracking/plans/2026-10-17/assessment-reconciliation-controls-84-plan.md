@@ -7,7 +7,7 @@
 * Task slug: assessment-reconciliation-controls-84
 * Plan date: 2026-10-17
 * Planning status: Ready; one critique Complete / Revise, compatible findings resolved
-* Delivery outcome: original Review Not accepted retained; correction ONE independently closes RV-001, normal publication pending
+* Delivery outcome: original Review Not accepted retained; correction ONE independently closes RV-001, source normally pushed and draft PR #382 updated
 * Phase details: .copilot-tracking/details/2026-10-17/assessment-reconciliation-controls-84-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/assessment-reconciliation-controls-84-plan-critique.md
 
@@ -95,7 +95,7 @@ generic lock rewrite, new API or competence/source-policy registry.
 ## Phase Checklist
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Authorized correction ONE, RV-001
+### [x] P04: Authorized correction ONE, RV-001
 
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Reproduce early/persistent cleanup faults before edits
@@ -114,7 +114,7 @@ Preserve original exceptions/standard visible recovery error; no broad generic
 lock redesign or successful fallback. Correct same shared wrappers.
 
 <!-- rpi:task id=P04-T03 -->
-#### [ ] P04-T03: Validate, disposition, commit and push same PR
+#### [x] P04-T03: Validate, disposition, commit and push same PR
 
 Focused cleanup/authority/four-criteria/core/API checks and actual task-owned
 local SQL Server, lint/types as needed. Keep original Review Not accepted as
@@ -246,5 +246,8 @@ ten actual local SQL Server tests and core/API static checks pass. Bounded
 independent verification closes RV-001 for fingerprinted source/tests, with
 91 independent focused passes and two persistent-recovery snapshot probes.
 Original Review retained with appended disposition, not rewritten. P04-T03
-validation/disposition complete; normal commit/push and same-draft-PR update
-remain. No merge, force push, issue closure or human/operational acceptance.
+complete: source/evidence commit b6122fb normally pushed and same draft main
+PR #382 updated and verified through REST after GraphQL rate-limit failure.
+No merge, force push, issue closure or human/operational acceptance. This final
+publication-state record is committed and normally pushed as the stop boundary;
+no further scope or follow-up selected.
