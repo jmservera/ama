@@ -97,3 +97,50 @@ installed for this worktree. No manifest change or dependency install needed.
 * No cloud/live setup, Graph, SQL, tag/IAM/network writes, private inputs, paid
   rubric, merge or issue closure. ACR403/private publisher and genuine tenant/
   browser/SQL/AI acceptance remain unmet.
+
+## Authorized Latest-Main Integration After Correction
+
+Coordinator separately authorized own-topic rebase and exact expected-old
+lease push after correction session exited clean. Pre-write branch/status and
+remote inspection confirmed clean fix/setup-profile-evidence-360, local and
+remote bcefa42d536096082227e1d59e80c6e605831eaa. Fresh fetch and graph showed
+main 226702779e57e490cb10dc06ab014760c7d8a761, merged partial-progress #390
+on prior base 3f544fb9. No other worktree or main writes.
+
+Actual `git rebase origin/main` replayed six own commits. Only conflict was
+docs/reference/log.md in the first source commit. Removed conflict markers
+retaining both blocks and restored their separating blank line. Final exact
+byte assertion proves log equals fresh-main full bytes followed by every own
+appended byte from the prior base. Index auto-merged: every own route and
+every new/changed upstream route retained, including #102. Prior intentional
+#360 route extension remains.
+
+Rebased candidate: 952f92c3 (before this normal integration receipt).
+Exact binary diff for infra/scripts/setup-entra.py and
+infra/tests/test_setup_entra.py across old/new bases has SHA-256
+489207739cb04e225ee54ebc162f66372dc41cddb08a7ef328b5d21db55934db.
+Both corrected file fingerprints and original critique/Review fingerprints
+above match exactly. Thus both Medium corrections survive without altered
+production/test additions or removals. All src/ and .github/workflows/ bytes
+equal fresh main, preserving progress/Store/server/test config, full UTC
+precision and authoritative handoff sequence, report/export roles, quality
+selector and all safety/finance/grant/actor/rollback/exactly-once guards.
+This is preservation proof, not a new behavioral acceptance assessment.
+
+Smallest relevant validation after docs-only conflict:
+
+* Existing isolated installed-package profile-venv runner,
+  `loadTestsFromName("test_setup_entra")`: all 123 passed in 2.677s, including
+  both correction repros and reported three-deployment classification.
+* README configured three-file ruff check and format check pass; compileall
+  for setup source/test and git diff --check pass.
+* Previous full 206 correction validation remains historical evidence.
+  No repeated unrelated SQL/Docker or new live setup needed for unchanged
+  production/test bytes. No new full Review or phase/critique created.
+
+Normal privacy-safe identity/trailer receipt commit and exact lease publication
+follow. Expected old remote is bcefa42d536096082227e1d59e80c6e605831eaa.
+Exact final head, remote/PR confirmation and ordinary checks are reported on
+#391; absent/pending checks are not green. Coordinator owns independent
+acceptance. No merge, issue closure, Azure, paid AI or private inputs; all
+live 403 and tenant/browser/SQL/AI gates remain unmet.

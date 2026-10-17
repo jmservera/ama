@@ -51,10 +51,23 @@
     "ci": "Automatic ordinary Source projects CI 39067847373 and MVP validation 39067847374 queued for 9c0ffe22; final receipt push triggers current-head checks, whose actual outcome is recorded on PR #391; no manual or paid rubric dispatch",
     "new_review": false
   },
-  "blockers": ["PR #391 conflicts with advanced main; further integration requires coordinator authorization", "Independent corrected-head acceptance and live ACR403/tenant/browser/SQL/AI gates remain unmet"],
-  "next_action": {"phase": "Follow-up", "action": "Publish final normal receipt and dispatch only inspected ordinary validation; stop clean/pushed with exact-head run receipt on PR #391. Coordinator owns corrected-head assessment and conflicting-main disposition; no new full Review or rebase"},
+  "latest_main_integration": {
+    "authorization": "Coordinator 2026-10-17 after clean correction session exit; own-topic rebase plus exact expected-old lease",
+    "expected_old_remote": "bcefa42d536096082227e1d59e80c6e605831eaa",
+    "base": "226702779e57e490cb10dc06ab014760c7d8a761",
+    "rebased_candidate": "952f92c3",
+    "conflicts": ["docs/reference/log.md"],
+    "proof": "Exact upstream log byte prefix plus all own appended bytes; all routes retained; all src/workflows identical to main",
+    "infra_patch_sha256": "489207739cb04e225ee54ebc162f66372dc41cddb08a7ef328b5d21db55934db",
+    "corrections_and_review": "Both correction source/test fingerprints and original critique/Review unchanged",
+    "validation": "123 setup tests passed in 2.677s; configured lint/format, compileall and diff checks passed",
+    "publication": "Exact expected-old lease authorized; final published head/check receipt on PR #391",
+    "new_review": false
+  },
+  "blockers": ["Independent final-head acceptance and live ACR403/tenant/browser/SQL/AI gates remain unmet"],
+  "next_action": {"phase": "Follow-up", "action": "Publish latest-main integration with authorized exact lease, record exact final-head ordinary checks on PR #391 and stop clean. No merge, issue closure, new full Review or live setup"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Assess corrected-head ordinary CI, independent acceptance and conflicting-main integration", "rationale": "Correction source published; current PR CONFLICTING; no further rebase authorized; absence/pending checks not green", "evidence": "PR #391 at ed29c364; ordinary validation inspected for final-receipt dispatch; no rubric or cloud workflow dispatch"},
+    {"rank": 1, "task": "Assess latest-main integrated exact-head ordinary CI and independent acceptance", "rationale": "Authorized integration preserves both corrections and all upstream runtime bytes; absence/pending checks not green", "evidence": "Separate correction ONE integration disposition; final exact-head checks on PR #391; no rubric/cloud dispatch"},
     {"rank": 2, "task": "Establish authorized live credential/export and initializer-publication prerequisites", "rationale": "Prerequisite to genuine setup acceptance; no safe source-only bypass", "evidence": "Review RV-001; owner-reported live credential and initializer publication 403 gates"},
     {"rank": 3, "task": "Verify actual tenant/browser/role/SQL/AI acceptance before separately approved retirement", "rationale": "High value but depends on live prerequisites and separate authorization", "evidence": "Review RV-001; issue #360 criteria d/e"}
   ]

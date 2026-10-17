@@ -5568,6 +5568,7 @@ metadata when the knowledge base was created.
   Prospective complete capture is buildable separate engineering follow-up,
   not a human blocker; forecasts still lack verified operational inputs.
   No browser/WCAG, human, Azure, real AI or outcome acceptance is claimed.
+
 ## [2026-10-17] query | Resource-bound setup profile contracts (Refs #360)
 
 * Corrected the automatic setup runbook and existing index route: a bound

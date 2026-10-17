@@ -325,3 +325,31 @@ sys.exit(not result.wasSuccessful())
   Source projects CI and MVP validation on its final pushed head, then record
   exact run IDs/status on PR #391. Until observed, no corrected-head CI success
   claimed. Original adverse assessment remains unchanged.
+
+## Authorized Latest-Main Integration After Correction ONE
+
+* New coordinator authorization supersedes the earlier no-further-rebase limit
+  only for this own topic. Clean local/remote old head bcefa42d verified before
+  writes, fetched main and read actual graph: #390 at 22670277 on 3f544fb9.
+* Executed `git rebase origin/main`; six own commits replayed. Only actual
+  conflict docs/reference/log.md, resolved by retaining upstream block then
+  all own blocks, including exact separating newline. Index auto-merged.
+* Exact-byte assertion: new log = origin/main log + old own append suffix
+  relative to 3f544fb9. All own routes and new/changed main routes retained.
+* Exact infra source/test binary patch SHA-256 before and after:
+  489207739cb04e225ee54ebc162f66372dc41cddb08a7ef328b5d21db55934db.
+  Corrected source/test and original critique/Review hashes unchanged.
+* `git diff origin/main HEAD -- src .github/workflows` empty: every upstream
+  runtime, progress precision/sequence, Store/server/workflow and test config
+  change retained exactly. No runtime conflict, no resident scope or #102
+  historical-capture expansion.
+* Existing profile-venv, unittest loader test_setup_entra: 123 passed, 2.677s.
+  Exact README three-file ruff lint/format, source/test compileall and whitespace
+  checks pass. Original 206-test correction result remains historical, not
+  falsely represented as rerun. No unrelated SQL/Docker/live work repeated.
+* Expanded integration proof is in separate correction ONE disposition.
+  No new full Review, critique, retrospective phase or self-Pass.
+* Publish with exact expected-old lease
+  refs/heads/fix/setup-profile-evidence-360:bcefa42d536096082227e1d59e80c6e605831eaa.
+  Final receipt HEAD/check status belongs in PR #391 handoff. All live gates
+  remain unmet; no merge/issue closure/cloud/paid-AI/private-input actions.
