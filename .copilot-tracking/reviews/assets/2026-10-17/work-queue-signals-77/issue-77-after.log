@@ -1,0 +1,97 @@
+PASS owned server is running and responsive on loopback
+PASS Resident Liaison Officer independent own IDs/order
+PASS Resident Liaison Officer exact server-described navigation
+PASS Resident Liaison Officer current own queue
+PASS Resident Liaison Officer existing Finance endpoint authority
+PASS initial briefing held before queue navigation
+PASS cancelled briefing retried on each queue return
+PASS late cancelled briefings cannot replace the recovered briefing
+PASS completed briefing stays cached across queue navigation
+PASS briefing failure explicitly retries in the selected workflow mode
+PASS keyboard skip focuses main without changing route
+PASS own queue reflow 320px
+PASS safety marker retained 320px
+PASS hazard case reflow 320px with long source
+PASS safety controls expanded before routine forms 320px
+PASS own queue reflow 390px
+PASS safety marker retained 390px
+PASS hazard case reflow 390px with long source
+PASS safety controls expanded before routine forms 390px
+PASS own queue reflow 768px
+PASS safety marker retained 768px
+PASS hazard case reflow 768px with long source
+PASS safety controls expanded before routine forms 768px
+PASS own queue reflow 1024px
+PASS safety marker retained 1024px
+PASS hazard case reflow 1024px with long source
+PASS safety controls expanded before routine forms 1024px
+PASS own queue reflow 1280px
+PASS safety marker retained 1280px
+PASS hazard case reflow 1280px with long source
+PASS safety controls expanded before routine forms 1280px
+PASS queue 200% root text enlargement
+PASS hazard case 200% root text enlargement
+PASS independent all-case membership/order
+PASS type-before-debounce and all-scope return
+PASS reset exact IDs/order, own scope, urgent sort, search, focus and announcement
+PASS six visible engineering definitions and unapproved priority limitation
+PASS new queue exact expected IDs
+PASS stale queue exact expected IDs
+PASS overdue queue exact expected IDs
+PASS priority queue exact expected IDs
+PASS unowned queue exact expected IDs
+PASS queue clock and named owner use recorded snapshot
+PASS queue case history and suggestion current context agree
+PASS blocked step reason owner and next action are visible
+PASS source trace belongs to selected case
+PASS case switching refreshes reason source and clock without carryover
+PASS single reset clears every queue override and selection
+PASS delayed list request intercepted
+PASS late pre-reset result cannot replace restored queue
+PASS delayed obsolete route intercepted
+PASS obsolete queue cannot replace newer route
+PASS history restores case with own-queue current link
+PASS list failure explicitly announced
+PASS navigation/filter/reset leave complete case record unchanged
+PASS reset consumes server default rather than a hardcoded browser order
+PASS issue 77 expanded definitions reflow 320px
+PASS issue 77 definitions readable column 320px
+PASS issue 77 expanded definitions reflow 390px
+PASS issue 77 definitions readable column 390px
+PASS issue 77 expanded definitions reflow 1280px
+PASS issue 77 definitions readable column 1280px
+PASS issue 77 existing reduced-motion preference retained
+PASS issue 77 exact behavioral criteria; failures=[]
+PASS expired session returns explicit sign-in, no stale queue
+PASS Retrofit Programme Manager independent own IDs/order
+PASS Retrofit Programme Manager exact server-described navigation
+PASS Retrofit Programme Manager current own queue
+PASS Retrofit Programme Manager existing Finance endpoint authority
+PASS Retrofit Coordinator independent own IDs/order
+PASS Retrofit Coordinator exact server-described navigation
+PASS Retrofit Coordinator current own queue
+PASS Retrofit Coordinator existing Finance endpoint authority
+PASS Building Safety Liaison independent own IDs/order
+PASS Building Safety Liaison exact server-described navigation
+PASS Building Safety Liaison current own queue
+PASS Building Safety Liaison existing Finance endpoint authority
+PASS safety-role permitted deep link
+PASS Grants and Evidence Officer independent own IDs/order
+PASS Grants and Evidence Officer exact server-described navigation
+PASS Grants and Evidence Officer current own queue
+PASS Grants and Evidence Officer existing Finance endpoint authority
+PASS Quality Inspector independent own IDs/order
+PASS Quality Inspector exact server-described navigation
+PASS Quality Inspector current own queue
+PASS Quality Inspector existing Finance endpoint authority
+PASS Programme Support Officer independent own IDs/order
+PASS Programme Support Officer exact server-described navigation
+PASS Programme Support Officer current own queue
+PASS Programme Support Officer existing Finance endpoint authority
+PASS Contractor independent own IDs/order
+PASS Contractor exact server-described navigation
+PASS Contractor current own queue
+PASS Contractor existing Finance endpoint authority
+PASS contractor projection and other-provider scope unchanged
+PASS no uncaught JavaScript errors in shared IA checks ([])
+Manifest 152-ia-v1; Chromium 156.0.8078.4; partial AC-034/043 only.

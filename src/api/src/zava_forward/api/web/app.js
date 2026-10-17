@@ -183,7 +183,13 @@ const listState = {};
 const queueHref = () => queueOrigin === "all" ? "#/all" : "#/";
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
-const FLAGS = [["hazard", "Safety issue open"], ["support", "Needs extra support"], ["long", "Waiting 60+ days"], ["nodecision", "No resident decision yet"], ["funding", "Funding not confirmed"]];
+const FLAGS = [
+  ["hazard", "Safety issue open", "At least one recorded safety issue has not been released. The independent safety service still owns its response."],
+  ["support", "Needs extra support", "The resident's recorded support status is Yes. Missing support information remains unknown, not No."],
+  ["long", "Waiting 60+ days", "The case has spent at least 60 days in its current stage. This is a review signal, not a statutory deadline."],
+  ["nodecision", "No resident decision yet", "The recorded resident decision is neither Accepted nor Declined. This does not imply consent or refusal."],
+  ["funding", "Funding not confirmed", "The recorded funding status is not Confirmed. This signal does not approve funding or spending."],
+];
 
 // Workflow-only mode: the person can choose rules and templates instead of AI. It is recorded with each output.
 const aiMode = { workflow: false };
@@ -327,7 +333,7 @@ async function listView(view) {
   let rows = [], total = 0, policy = "", cursor = null;
   const PAGE = 50;
   const render = () => {
-    workspaceStatus.textContent = `${me.user.role}. ${view === "mine" ? "My assigned cases" : "All permitted open cases"}. ${total} ${total === 1 ? "case" : "cases"}. Search: ${listState.q || "none"}. Stage: ${listState.stage || "any"}. Area: ${listState.area || "any"}. Wave: ${listState.wave || "any"}. Owner: ${listState.owner || "any"}. Show only: ${listState.flag || "any"}. Work queue: ${listState.queue || "any"}. Order: ${fx.sorts[listState.sort]}. Default: ${me.work_queues.version}; selection: none.`;
+    workspaceStatus.textContent = `Perspective: ${me.user.role}. ${view === "mine" ? "My assigned cases" : "All permitted open cases"}. ${total} ${total === 1 ? "case" : "cases"}. Workflow stage: ${listState.stage || "any"}. Search: ${listState.q || "none"}. All-cases scope: ${view === "all" ? "on (permitted cases only)" : "off (my assigned cases)"}. Workflow stage narrows this perspective's own/all scope; it never changes your role or access. Area: ${listState.area || "any"}. Wave: ${listState.wave || "any"}. Owner: ${listState.owner || "any"}. Show only: ${listState.flag || "any"}. Work queue: ${listState.queue || "any"}. Order: ${fx.sorts[listState.sort]}. Default: ${me.work_queues.version}; selection: none.`;
     results.replaceChildren(...[
       h("p", { class: "muted" }, `${total} ${total === 1 ? "case" : "cases"}${listState.sort === "urgent" ? `. Ranked by policy version ${policy}, a fixed rule order (safety first). The order is the same every time.` : ""}`),
       h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {},
@@ -373,7 +379,7 @@ async function listView(view) {
     el.addEventListener("change", () => { listState[key] = el.value; load(); });
     return [h("label", { for: `f-${key}` }, label), el];
   };
-  const search = h("input", { id: "f-q", type: "search", placeholder: "Name, address or postcode" });
+  const search = h("input", { id: "f-q", name: "q", type: "search", autocomplete: "off", placeholder: "Name, address or postcode" });
   search.value = listState.q;
   search.addEventListener("input", () => { listState.q = search.value; clearTimeout(searchTimer); searchTimer = setTimeout(() => load(), 250); });
   const sort = h("select", { id: "f-sort" }, Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k }, t)));
@@ -392,15 +398,20 @@ async function listView(view) {
       clearTimeout(searchTimer);
       Object.assign(listState, defaultListState());
       resetFocus = true;
-      if (location.hash && location.hash !== "#/") location.hash = "#/";
+      const target = me.work_queues.default.view === "all" ? "#/all" : "#/";
+      if (location.hash !== target) location.hash = target;
       else route();
     } }, "Reset my queue")),
-    h("p", { class: "muted" }, `Default ${me.work_queues.version}: returns to your assigned cases, ${fx.sorts[me.work_queues.default.sort]}, first page and no case selection. No records change.`),
+    h("p", { class: "muted" }, `Default ${me.work_queues.version}: returns to ${me.work_queues.default.view === "all" ? "all permitted open cases" : "your assigned cases"}, ${fx.sorts[me.work_queues.default.sort]}, first page and no case selection. No records change.`),
     h("details", {}, h("summary", {}, "Queue definitions"),
       h("p", {}, me.work_queues.status), h("p", {}, me.work_queues.clock),
       h("p", {}, "Your authenticated role determines access. Work queue, search and other filters narrow the chosen own/all scope together; they never change your role."),
       h("dl", {}, me.work_queues.definitions.flatMap((d) => [
         h("dt", {}, d.label), h("dd", {}, d.definition, d.limitation ? ` Unavailable: ${d.limitation}` : "")
+      ])),
+      h("h3", {}, "Show only signals"),
+      h("dl", {}, FLAGS.flatMap(([, label, definition]) => [
+        h("dt", {}, label), h("dd", {}, definition)
       ]))));
   show(h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
@@ -448,6 +459,7 @@ async function caseView(id) {
     h("p", { class: "muted" }, "Suggested by role and workload rules. You decide."),
     workSummary(c.work),
     h("p", {}, "These are proposed reviewers, not confirmed receiving owners. Review the recorded blocked steps and prerequisites above."),
+    !c.suggestions.length && h("p", {}, "Proposed owner: Unknown. No reviewer is supplied for this case. The current owner keeps responsibility."),
     h("ul", { class: "list" }, c.suggestions.map((x) => h("li", {},
       h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
       canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));

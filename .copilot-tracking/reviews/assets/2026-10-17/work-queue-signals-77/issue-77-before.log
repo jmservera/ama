@@ -1,0 +1,70 @@
+PASS owned server is running and responsive on loopback
+PASS Resident Liaison Officer independent own IDs/order
+PASS Resident Liaison Officer exact server-described navigation
+PASS Resident Liaison Officer current own queue
+PASS Resident Liaison Officer existing Finance endpoint authority
+PASS initial briefing held before queue navigation
+PASS cancelled briefing retried on each queue return
+PASS late cancelled briefings cannot replace the recovered briefing
+PASS completed briefing stays cached across queue navigation
+PASS briefing failure explicitly retries in the selected workflow mode
+PASS keyboard skip focuses main without changing route
+PASS own queue reflow 320px
+PASS safety marker retained 320px
+PASS hazard case reflow 320px with long source
+PASS safety controls expanded before routine forms 320px
+PASS own queue reflow 390px
+PASS safety marker retained 390px
+PASS hazard case reflow 390px with long source
+PASS safety controls expanded before routine forms 390px
+PASS own queue reflow 768px
+PASS safety marker retained 768px
+PASS hazard case reflow 768px with long source
+PASS safety controls expanded before routine forms 768px
+PASS own queue reflow 1024px
+PASS safety marker retained 1024px
+PASS hazard case reflow 1024px with long source
+PASS safety controls expanded before routine forms 1024px
+PASS own queue reflow 1280px
+PASS safety marker retained 1280px
+PASS hazard case reflow 1280px with long source
+PASS safety controls expanded before routine forms 1280px
+PASS queue 200% root text enlargement
+PASS hazard case 200% root text enlargement
+PASS independent all-case membership/order
+PASS type-before-debounce and all-scope return
+PASS reset exact IDs/order, own scope, urgent sort, search, focus and announcement
+PASS six visible engineering definitions and unapproved priority limitation
+PASS new queue exact expected IDs
+PASS stale queue exact expected IDs
+PASS overdue queue exact expected IDs
+PASS priority queue exact expected IDs
+PASS unowned queue exact expected IDs
+PASS queue clock and named owner use recorded snapshot
+PASS queue case history and suggestion current context agree
+PASS blocked step reason owner and next action are visible
+PASS source trace belongs to selected case
+PASS case switching refreshes reason source and clock without carryover
+PASS single reset clears every queue override and selection
+PASS delayed list request intercepted
+PASS late pre-reset result cannot replace restored queue
+PASS delayed obsolete route intercepted
+PASS obsolete queue cannot replace newer route
+PASS history restores case with own-queue current link
+PASS list failure explicitly announced
+PASS navigation/filter/reset leave complete case record unchanged
+PASS reset consumes server default rather than a hardcoded browser order
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/azureuser/source/ama-wt/issue-77/src/api/checks/workbench_browser_check.py", line 574, in <module>
+    main(run_browser, synthetic_data)
+  File "/home/azureuser/source/ama-wt/issue-77/src/api/checks/design_system_browser_check.py", line 274, in main
+    browser_check(base)
+  File "/home/azureuser/source/ama-wt/issue-77/src/api/checks/workbench_browser_check.py", line 551, in run_browser
+    queue_signal_checks(page, base)
+  File "/home/azureuser/source/ama-wt/issue-77/src/api/checks/workbench_browser_check.py", line 170, in queue_signal_checks
+    check(f"issue 77 exact behavioral criteria; failures={failures}", not failures)
+  File "/home/azureuser/source/ama-wt/issue-77/src/api/checks/design_system_browser_check.py", line 33, in check
+    raise AssertionError(name)
+AssertionError: issue 77 exact behavioral criteria; failures=['visible definition: Safety issue open', 'visible definition: Needs extra support', 'visible definition: Waiting 60+ days', 'visible definition: No resident decision yet', 'visible definition: Funding not confirmed', 'explicit scope: Perspective: Resident Liaison Officer', 'explicit scope: Workflow stage: Contacting resident', 'explicit scope: All-cases scope: on', 'explicit scope: narrows', 'versioned all/name default exact IDs/order/scope/first-page/focus', 'empty proposed-owner state is explicit, not an assignment']

@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: reference
 ---
 
@@ -703,6 +703,37 @@ No SQL, deployment, resident consent or controlled approval behavior changed.
 Local Docker access was permission denied; image evidence must come from CI.
 
 ## Role task queues and shared case context (#76)
+
+### Queue signal completion (#77, 2026-10-17)
+
+The existing Queue definitions disclosure now also defines all five Show only
+signals, including extra support, 60-day stage waiting, resident decision and
+funding states. Sidebar terms and descriptions stack for readability. Missing
+support stays unknown; a waiting signal is not a statutory deadline and no
+signal grants consent, funding approval or safety-service authority.
+
+The live workspace status explicitly names the authenticated perspective,
+workflow stage, search and own/all-cases scope. The existing Stage filter is
+the workflow-stage scope, not a scenario picker or the optional AI "Workflow
+only" setting. Stage narrows the chosen own/all scope within existing rights;
+it never replaces the authenticated role. No role simulator is added.
+
+Reset consumes both `work_queues.default.view` and its filters/order, keeping
+first-page/null-selection, logical focus and result announcements. The current
+`work-queues-1` default remains own/urgent. Selecting a case continues to reload
+that case's recorded rationale and proposed reviewers; an empty reviewer list
+explicitly shows proposed owner Unknown, leaving current ownership unchanged.
+
+The existing `python -m checks.workbench_browser_check` runs the real local
+app/API with three constructed cases, discriminating surnames and an alternate
+server all/name default. It checks exact rendered IDs/order/scope, reset's
+offset=0/no-cursor request, two cases' own rationale/reviewers, unknown reviewer,
+expanded definitions at 320/390/1280px and reduced motion. Optional
+`ZF_QUEUE_SCREENSHOTS` saves synthetic-only screenshots to a chosen directory.
+This is first-page request evidence, not a three-case multipage test.
+No real model, private stock, SQL Server or Azure is exercised. Full scenario
+workflow coverage, operational definition ratification, human/screen-reader
+acceptance and mandatory live-platform application acceptance remain unmet.
 
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.

@@ -4543,3 +4543,17 @@ metadata when the knowledge base was created.
   secret/private-data reads, role/network changes, image builds or new spending.
   Broader setup/job readiness and live coordination remain #360. Index updated;
   prior log entries and owner memory untouched.
+
+## [2026-10-17] implementation | Queue signal definitions and versioned reset
+
+* Refs #77, parent #76 hierarchy only, no ordering dependencies. Completed the
+  existing src API queue's Show only definitions, explicit perspective/workflow
+  stage/search/own-all scope and server-versioned reset scope. Empty proposed
+  reviewer is explicitly Unknown; case selection reuses own-record context.
+* Updated the existing UX profile-review synthesis, API guide and reference
+  routing. Native disclosure/controls, Fluent tokens, reduced motion, ranking,
+  permission intersections and human/resident approval boundaries are retained.
+* Evidence uses three tiny constructed cases and the actual local application;
+  no private stock, credentials, paid model, live SQL Server/Azure or new service.
+  Human accessibility/comprehension, complete workflow representation, operational
+  owner ratification and live-platform exercise acceptance remain separate.

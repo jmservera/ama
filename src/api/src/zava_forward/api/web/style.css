@@ -154,6 +154,8 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .side{position:sticky;top:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:.6rem;padding:.2rem 1rem 1rem}
 .side select,.side input{width:100%}
 .side h2{margin-top:.8rem}
+.side details dl{grid-template-columns:minmax(0,1fr);gap:var(--sp-1)}
+.side details dd{margin-bottom:var(--sp-3)}
 .main{min-width:0}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}}
 .tile:hover{background:var(--surface)}
