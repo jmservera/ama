@@ -170,3 +170,133 @@ claim was created.
   `git push --force-with-lease=refs/heads/feat/provider-capacity-controls-90:6e4dbe18d111673b41049830eb68bf81f89051c8 origin HEAD:refs/heads/feat/provider-capacity-controls-90`.
   No unconditional force, main rewrite, merge or issue closure is authorized.
   External coordinator exact-head PR gate remains forthcoming; Refs #90 only.
+
+## Correction Cycle ONE: Coordinator Revise and Hosted CI
+
+Authorized 2026-10-17 against integrated head 527a537. Medium defect:
+create_package permits an empty immutable contract version, making the
+package unusable because later delegation checks require one and no update
+route exists. Fix by requiring version at creation, not adding an editor or
+authority grant. Add domain/API invalid and valid regressions plus explicit
+inline browser validation preserving entered values and focusing the version.
+
+Hosted failures also identify the intentionally changed dataset.py hash
+stale in the #103 manifest, and JSON/SQLite workflow safety positives lacking
+the new evidenced booked-order prerequisite. Refresh the existing exact
+hash only; do not weaken validator/authority/coverage semantics. Add fictional
+delegation/source/booking after independent safety release, retaining all
+existing safety assertions and production guards.
+
+Plan correction checklist active. Validation will reproduce exact failures,
+then run focused and full core/API discovery matching the failing CI, browser
+and configured quality checks. Actual SQL creation parity if available.
+Original independent Review remains byte-identical; coordinator Revise and
+correction evidence are separate, with external closure still required.
+
+### Correction ONE Implementation and Focused Evidence
+
+P01/P02 correction: create_package now strips and requires contract_version
+before dates/store mutation/audit, API no longer invents the empty default.
+UI uses existing native label/input/button/status patterns with required,
+aria-describedby/aria-invalid, an adjacent polite inline message and explicit
+focus to the empty version. Validation returns before request/rerender,
+preserving all package inputs; input clears the invalid state. No new editor
+or permission grant. Existing positive fixtures supply SYN-1 at creation;
+old invalid-date/name tests still supply a valid version to retain their
+original failure intent.
+
+Red-first command ran six selectors: four domain/HTTP version methods
+produced twelve subcase failures, plus both existing safety-flow selectors
+errored on missing booking. Existing manifest integrity method reproduced
+the stale dataset.py source hash. After the correction: focused combined
+procurement/API/roles/MVP/workflows 107 passed; existing scenario manifest
+8 passed and needs inventory 11 passed. Actual isolated local SQL Server
+MssqlProcurement/MssqlProcurementApi 31 passed, including the new creation
+tests. The task-owned correction container/credential were removed afterward.
+
+Browser passed empty/whitespace refusal with no package mutation, retained
+package inputs and version-field focus, valid trimmed version creation by
+keyboard, original source capacity/quota/order/contractor journeys,
+320/390/1280 reflow/reduced motion and zero page errors. Loopback navigation
+teardown may log BrokenPipe for abandoned background fetches; no external
+request is permitted. Fresh web guidelines fetched before edits and
+refreshed before changed-region review on 2026-10-17. Existing Fluent styles
+and native semantics retained; no redesign or full WCAG acceptance claimed.
+
+Configured full core/API lint, format and mypy pass (core 57 eligible
+formatted files/110 source files; API 20/52), existing migration exemptions
+unchanged. Isolated strict lint/format for changed browser harness pass;
+JS syntax, compilation of migrated production packages and diff hygiene
+pass. One added long fixture call initially failed E501, was wrapped without
+behavior change, then full core quality gates passed. No dependencies added.
+Full core/API CI discovery subsequently passed; exact results are below,
+not inferred from the previous focused runs.
+
+Exact manifest-object comparison: only sources[id=fixture].sha256 changes
+to d36bac22223c47167f5847e6b2e575c0f88dc19cf9fbc6fba4ffba5a7d6023a1.
+All other fields, eleven profiles/nine workflows, unavailable states,
+provisional roles/proposed journeys and no-approval labels are identical.
+Validator untouched. Original Review bytes exactly match head 527a537.
+
+Changed web-region review format:
+
+### src/api/src/zava_forward/api/web/ops.js
+
+Pass for correction region: associated inline status/invalid description,
+focus first invalid version, native required input, preserved values and
+keyboard activation. Existing inherited typography/navigation behavior is
+not a whole-site audit. No substantive changed-region finding.
+
+### Correction ONE Final Validation and Dispositions
+
+| Reported gap | Implementation disposition | Executed evidence |
+| --- | --- | --- |
+| Coordinator Medium: immutable blank package contract version | Addressed in source; domain/API reject omitted/empty/whitespace version before any mutation; UI inline refusal preserves values and focuses version; no updateroute/authority grant | Twelve failing subcases first, then JSON/SQLite domain/HTTP positives/negatives and browser valid keyboard creation; inherited actual SQL Server creation tests pass |
+| Hosted core needs-inventory/scenario-manifest stale source hash | Addressed by existing manifest's exact fixture SHA-256 refresh only; validator and complete authority/coverage object unchanged | Existing 8 manifest + 11 inventory tests pass; exact object assertion proves only one hash changed |
+| Hosted API/MVP CI/validation JSON/SQL safety booking positives | Addressed with fictional evidenced source/delegation/booking after independent release; no assertions removed/skipped, guard unchanged | Both exact formerly failing selectors pass; full API discovery passes |
+
+Full relevant CI replays from component directories, using the existing venv:
+
+* Core: `../../.venv/bin/python -m unittest discover -s tests -v`:
+  651 run, 650 passed, one existing isolated-Azure-SQL opt-in skip.
+* API (same command shared by src-api, MVP CI and MVP validation):
+  `PYTHONPATH=../core/tests:../agents/tests ../../.venv/bin/python -m unittest discover -s tests -v`:
+  613 run, 471 passed, 142 skips. Of those, 141 are existing SQL Server
+  opt-ins and one is the opt-in rendered check. No skips were added.
+  The changed procurement browser was executed separately and passed;
+  changed SQL behavior was executed separately on actual local SQL Server.
+* Actual task-local SQL Server 2022:
+  `test_mssqlstore.MssqlProcurement test_mssqlstore.MssqlProcurementApi -q`:
+  31 passed, no skips. These counts overlap discovery and are not summed.
+* Focused core/API/workflow/role/MVP 107 passed, exact existing manifest 8
+  and inventory 11 passed. No inference/cloud/private datasets/live orders.
+* Full configured core/API Ruff lint/format and mypy passed; strict changed
+  browser harness lint/format, JS syntax, migrated-package compileall and
+  diff hygiene passed. Dependency manifests and existing exemptions unchanged.
+
+Only the user-requested failing component suites were broadened. No unrelated
+full service/infrastructure/container build was substituted for the exact
+checks. No full original RPI or independent Review was rerun. Production
+changed after original Review, so its historical Complete/Conformant result
+is not current correction closure. Coordinator external exact-head closure
+and hosted rerun remain pending until independently provided.
+
+All corrections are local engineering changes with the original four criteria,
+human/contractor/resident/safety controls retained. No real professional
+authority, actual capacity, financial commitment, AI/cloud or human/WCAG
+acceptance is claimed. Plan/details/state/PR will reflect implementation
+complete and external closure pending, not an invented Pass. Normal push
+only on the same branch; no rebase/force/merge/issue closure in this cycle.
+
+### Correction ONE Publication Boundary
+
+This terminal payload contains implementation, regressions, exact manifest
+hash, component/KB documentation, plan/details/state and PR evidence. Source
+baseline is integrated 527a537; no new base/rewrite operation in this cycle.
+Final commit SHA is included in the live PR publication readback rather than
+self-referenced inside its own commit. Authenticated GitHub identity will be
+resolved before commit, using repository-local privacy-safe author/committer
+and required Copilot trailer. Use ordinary `git push origin
+feat/provider-capacity-controls-90`, never rebase/force/merge/closure.
+Stop clean after success; any new hosted/independent result belongs to the
+external coordinator gate, not an invented local Review verdict.

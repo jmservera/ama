@@ -107,3 +107,36 @@ patch parity and unchanged original Review were verified. No substantive
 production conflict or full-suite rerun; coordinator external exact-head
 gate remains forthcoming. Commands/base/head/validation and explicit lease
 are recorded in changes. No main rewrite, merge, closure or invented authority.
+
+## Authorized Correction ONE (2026-10-17)
+
+Coordinator external Review of integrated 527a537 returned Revise, Medium:
+new packages could persist an empty immutable contract version. Corrected
+domain/API creation to require trimmed nonempty version; existing UI now
+uses adjacent polite error/aria-describedby/aria-invalid and field focus
+without a request/rerender or lost inputs. New omitted/empty/whitespace
+regressions preceded fixes; valid version creates and later lifecycle still
+works. Coupled positive fixtures now explicitly pass SYN-1 at creation.
+
+Hosted failures also corrected without weakening contracts: exact existing
+scenario-manifest fixture SHA-256 refreshed to dataset.py's bytes, with all
+eleven/nine unavailable/provisional/proposed/no-approval fields identical and
+validator unchanged; JSON/SQLite test_workflows safety positive now records
+fictional source/delegation/booking after independent safety release, with
+all original blocking/raiser/receiver/release assertions retained.
+
+Executed: focused 107 pass; existing manifest/inventory 8/11 pass; full core
+CI discovery 651 run/650 pass/one existing Azure SQL skip; full API discovery
+shared by src-api/MVP CI/MVP validation 613 run/471 pass/142 existing opt-in
+skips (141 SQL Server, one rendered opt-in). Separately actual local SQL
+Server procurement domain/API inherited tests 31 pass and browser creation/
+capacity/contractor journeys pass, including preserved input/field focus and
+320/390/1280/reduced motion. Counts overlap. Task-owned SQL/credential cleaned.
+Full configured lint/format/types, strict browser-harness lint/format,
+JS syntax/compileall/diff pass; original legacy exemptions unchanged.
+
+Changes records failing-first evidence, findings/dispositions and limitations.
+No new RPI/Review cycle; original Review bytes unchanged and not promoted to
+new source acceptance. External coordinator closure and hosted rerun remain
+pending. Normal privacy-safe commit/push only, same branch, stop clean;
+no rebase/force/merge/closure or actual professional authority.

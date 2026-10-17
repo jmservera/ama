@@ -687,7 +687,7 @@ def make_handler(app):
             controls.refuse_bulk(body)
             kind, rest = parts[1], parts[2:]
             if kind == "packages" and not rest:
-                s.create_package(u, body.get("name"), body.get("period_from"), body.get("period_to"), body.get("scope"), body.get("contract_ref"), body.get("contract_version", ""))
+                s.create_package(u, body.get("name"), body.get("period_from"), body.get("period_to"), body.get("scope"), body.get("contract_ref"), body.get("contract_version"))
             elif kind == "packages" and len(rest) == 2 and rest[1] == "rescope":
                 s.rescope_package(u, rest[0], body.get("scope"), body.get("reason"))
             elif kind == "packages" and len(rest) == 2 and rest[1] == "capacity":

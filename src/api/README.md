@@ -41,8 +41,11 @@ the existing opt-in stock browser check was skipped, not newly certified.
 ## Provider capacity and order API (#90)
 
 Existing authenticated package, capacity and work-order routes retain their
-response shapes. `POST /api/packages` additionally accepts `contract_version`;
-creation is a draft, never a grant of authority. Positive capacity requires
+response shapes. `POST /api/packages` requires a nonempty `contract_version`;
+omitted, empty and whitespace-only versions return 400 without creating a
+package. The existing screen displays an inline error and focuses the version
+field without losing other inputs. Creation is a draft, never a grant of
+authority. Positive capacity requires
 the [core source and trusted delegation contract](../core/README.md#evidenced-provider-capacity-and-controlled-orders-90).
 There is no endpoint to appoint a contract manager.
 

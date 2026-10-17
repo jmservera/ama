@@ -148,7 +148,9 @@ class JsonHazardReferral(unittest.TestCase):
             self.assertEqual(detail[field], before[field])
         self.assertNotIn("service_status", h)
         self.assertTrue(self.store.verify_audit())
-        pid = self.store.create_package(self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN")
+        pid = self.store.create_package(
+            self.pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
+        )
         details = supplied_contract_fixture(self.store, pid, self.pam)
         self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN-CAPACITY", details)
         wid = self.store.issue_work_order(
@@ -410,7 +412,7 @@ class SqlHazardReferral(JsonHazardReferral):
             with self.subTest(transition=transition):
                 a = self.sql_store(transition)
                 pid = a.create_package(
-                    self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+                    self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
                 )
                 details = supplied_contract_fixture(a, pid, self.pam)
                 a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
@@ -496,7 +498,7 @@ class SqlHazardReferral(JsonHazardReferral):
     def test_stale_clear_dependency_refuses_procurement_and_discards_audit(self) -> None:
         a = self.sql_store("stale")
         pid = a.create_package(
-            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
         )
         details = supplied_contract_fixture(a, pid, self.pam)
         a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
@@ -538,7 +540,7 @@ class SqlHazardReferral(JsonHazardReferral):
     def test_transaction_reload_and_writer_lock_cover_validation_to_commit(self) -> None:
         a = self.sql_store("serialized")
         pid = a.create_package(
-            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN"
+            self.pam, "Synthetic race", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
         )
         details = supplied_contract_fixture(a, pid, self.pam)
         a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)

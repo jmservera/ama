@@ -38,7 +38,7 @@ safety/building gates, #78 provenance and #97 forms.
 | System draft never instruction | Template note, persisted AI marker, review effect and UI copy remain explicit; draft acceptance never mutates procurement |
 | Contractor read-only own orders | Two supplier identities, forged/foreign identity checks, package-read denial and every write-route denial pass; both contractor browser screens show only own orders |
 
-## Validation
+## Original Validation (Before Coordinator Correction ONE)
 
 * Failing-first: original 21 procurement tests passed while four new root
   regressions failed eight times across JSON/SQLite before production edits.
@@ -123,3 +123,54 @@ issue closure was performed.
 
 Refs #90. Parent #89 is hierarchy only, not an explicit dependency.
 No issue closure or merge was requested or performed.
+
+## Correction ONE: Coordinator Revise and Hosted CI (2026-10-17)
+
+The external coordinator Review of integrated head 527a537 returned **Revise**
+for a Medium defect: package creation accepted an empty immutable contract
+version although consequential operations require it. This section supersedes
+any implication that the original local Conformant Review closes the changed
+source. That original Review is retained byte-for-byte as historical evidence;
+external correction closure and hosted reruns remain pending.
+
+| Finding | Correction disposition |
+| --- | --- |
+| Empty/missing/whitespace contract version creates unusable package | Required trimmed nonempty version before domain mutation; API no longer supplies an empty default. Existing UI shows adjacent inline error with invalid/description semantics, focuses the version and retains entered fields; no new editor or authority grant |
+| Hosted core inventory/manifest tests report stale dataset.py source hash | Refreshed exactly the one fixture SHA-256 using the existing manifest contract; validator unchanged; eleven profiles/nine workflows and all unavailable/provisional/proposed/no-approval labels identical |
+| Hosted API/MVP CI/validation safety-flow positives lack evidenced booking | Supplied fictional commitment/source, trusted delegation and booked work order after independent safety release; every original blocked-advance/raiser/receiver/release assertion retained, no skips or weakened guard |
+
+New omitted/empty/whitespace domain/HTTP regressions failed first (12
+subcase failures across JSON/SQLite), while both exact existing safety
+selectors and manifest integrity reproduced the reported failures.
+After correction, focused procurement/API/workflow/role/MVP **107 passed**,
+existing manifest/inventory **8/11 passed**, then the actual failing
+component CI discovery commands passed:
+
+* Core: `cd src/core && ../../.venv/bin/python -m unittest discover -s tests -v`:
+  **651 run, 650 passed, one existing isolated-Azure-SQL opt-in skip**.
+* API, shared by src-api, MVP CI and MVP validation:
+  `cd src/api && PYTHONPATH=../core/tests:../agents/tests ../../.venv/bin/python -m unittest discover -s tests -v`:
+  **613 run, 471 passed, 142 existing opt-in skips** (141 SQL Server,
+  one rendered opt-in).
+* Separately actual new task-local SQL Server 2022:
+  MssqlProcurement/MssqlProcurementApi **31 passed**, no skips,
+  including corrected creation. Container and ephemeral credential removed.
+* Separately local browser **passed** blank/whitespace inline refusal,
+  version-field focus and input preservation, valid keyboard package
+  creation, existing source/capacity/quota/version/contractor journeys,
+  320/390/1280 reflow/reduced motion, zero page errors and external requests blocked.
+* Full configured core/API lint/format/types, isolated strict changed
+  browser-harness lint/format, JS syntax, migrated-package compileall and
+  diff checks **passed**. Existing migration exemptions unchanged.
+
+Counts overlap and must not be summed. No tests were removed, new skips
+added, manifest validator weakened or professional authority fabricated.
+Fresh web guidelines were retrieved before changes and refreshed for
+changed-region review; native Fluent-backed behavior retained without
+redesign or full WCAG claims. The original dated changes/plan/details/state
+record these dispositions separately from the untouched original Review.
+
+Normal commit/push on the same issue-90 topic only; no rebase, force push,
+merge or issue closure in this cycle. No real authority, human, AI or Azure
+acceptance is claimed. **Coordinator independent external closure remains
+required; no new Pass is asserted.** Refs #90.

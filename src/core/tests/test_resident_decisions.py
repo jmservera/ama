@@ -558,7 +558,7 @@ class JsonResidentDecisions(unittest.TestCase):
 
     def package(self) -> str:
         pid = self.store.create_package(
-            self.pam, "SYN", "2026-01-01", "2099-01-01", "SYN-SCOPE", "SYN-CONTRACT"
+            self.pam, "SYN", "2026-01-01", "2099-01-01", "SYN-SCOPE", "SYN-CONTRACT", "SYN-1"
         )
         details = supplied_contract_fixture(self.store, pid, self.pam)
         self.store.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)

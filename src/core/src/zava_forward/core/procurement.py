@@ -257,12 +257,15 @@ class ProcurementMixin:
         name, scope, contract_ref = _clean(name, 80), _clean(scope, 400), _clean(contract_ref, 60)
         if not name or not scope or not contract_ref:
             raise ValueError("Enter a package name, what it covers and the contract or call-off reference.")
+        contract_version = _clean(contract_version, 80)
+        if not contract_version:
+            raise ValueError("Enter the contract or call-off version before creating the package.")
         start, end = _iso(period_from, "the start"), _iso(period_to, "the end")
         if end < start:
             raise ValueError("The package cannot end before it starts.")
         with self._proc_operation(user, "create"):
             proc = self._proc()
-            p = dict(id=f"PKG-{len(proc['packages']) + 1:03d}", name=name, period_from=start, period_to=end, contract_ref=contract_ref, contract_version=_clean(contract_version, 80),
+            p = dict(id=f"PKG-{len(proc['packages']) + 1:03d}", name=name, period_from=start, period_to=end, contract_ref=contract_ref, contract_version=contract_version,
                      scope=scope, scope_version=1, scope_history=[dict(version=1, scope=scope, by=user["name"], at=_now(), reason="First version")],
                      capacity={}, created_by=user["name"], created_at=_now())
             proc["packages"].append(p)

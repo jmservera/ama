@@ -6,7 +6,7 @@
 * Task ID: 90
 * Task slug: provider-capacity-controls-90
 * Date: 2026-10-17
-* Status: P01/P02/P03 delivered; original Review Complete/Conformant; coordinator-authorized topic integration complete, external exact-head gate pending
+* Status: Original delivery/integration complete; coordinator correction ONE implemented and locally validated, external exact-head closure pending
 * Phase details: .copilot-tracking/details/2026-10-17/provider-capacity-controls-90-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-17/provider-capacity-controls-90-plan-critique.md
 
@@ -140,3 +140,33 @@ human approval or architecture divergence required a new decision/critique.
 ## Handoff
 
 Changes record: .copilot-tracking/changes/2026-10-17/provider-capacity-controls-90-changes.md. P01/P02/P03 delivered; original independent Review Complete/Conformant with no substantive findings; main-targeting PR #384 open. Coordinator-authorized topic integration onto fresh bab4bf3 completed with exact production-patch parity and original Review retained. External exact-head gate/hosted checks remain pending. Stop clean after integration evidence push; no further task/review loop.
+
+## Authorized Correction Cycle ONE
+
+Coordinator external Review of 527a537 returned Revise. Original Review and
+its historical Conformant result remain untouched, not a new acceptance.
+The owner authorizes only the following correction on the existing branch.
+
+* [x] Reject missing/empty/whitespace contract version at creation in domain,
+  API and existing UI; preserve inputs with inline error and field focus;
+  test invalid/no-mutation and valid-positive paths.
+* [x] Refresh only the exact public dataset source hash in the existing
+  scenario manifest; retain eleven profiles/nine workflows and all
+  unavailable/provisional/proposed authority semantics, validator unchanged.
+* [x] Supply an evidenced fictional booked order/trusted delegation in the
+  existing safety workflow positive, retaining every independence assertion.
+* [x] Execute focused then full relevant core/API CI suites, configured
+  quality gates and browser; local SQL creation parity if available.
+* [x] Record findings/dispositions/validation and prepare normal privacy-safe
+  publication on the same branch; external closure remains pending.
+  No rebase/force/merge/close.
+
+Correction validation: full core 651 run/one existing Azure SQL skip, full
+API 613 run/142 existing opt-in skips, task-local actual SQL Server 31 pass,
+focused 107 pass, manifest/inventory 8/11 pass, procurement browser and full
+configured quality gates pass. Counts overlap and are not summed.
+No production guard/validator or safety independence assertion weakened.
+Original Review is untouched; coordinator Revise is separate and external
+correction closure remains pending. Publication is the remaining authorized
+action for this terminal evidence payload, not a reason to claim a new
+Conformant verdict.

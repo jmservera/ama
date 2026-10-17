@@ -38,6 +38,28 @@ def main() -> None:
             login("pam")
             page.goto(fixture.base + "/app#/capacity")
             page.get_by_role("heading", name="Capacity and work orders", exact=True).wait_for()
+            package_fields = (
+                ("Package name", "SYN browser package"),
+                ("Starts", "2026-01-01"),
+                ("Ends", "2099-12-31"),
+                ("What it covers", "SYN Loft"),
+                ("Contract or call-off reference", "SYN-BROWSER"),
+            )
+            for label, value in package_fields:
+                page.get_by_label(label, exact=True).fill(value)
+            version = page.get_by_label("Contract or call-off version", exact=True)
+            before = len(fixture.store.data["procurement"]["packages"])
+            for invalid in ("", " \t "):
+                version.fill(invalid)
+                page.get_by_role("button", name="Create package", exact=True).click()
+                page.locator("#capacity-version-error").get_by_text(
+                    "Enter the contract or call-off version", exact=False
+                ).wait_for()
+                assert version.evaluate("(el) => el === document.activeElement")
+                assert version.get_attribute("aria-invalid") == "true"
+                for label, value in package_fields:
+                    assert page.get_by_label(label, exact=True).input_value() == value
+                assert len(fixture.store.data["procurement"]["packages"]) == before
             page.get_by_role("button", name="Save capacity", exact=True).click()
             page.get_by_role("status").get_by_text("whole number", exact=False).wait_for()
             assert (
@@ -105,10 +127,21 @@ def main() -> None:
                 assert foreign not in page.locator("main").inner_text()
                 assert fixture.call("/api/packages", actor=actor)[0] == 403
                 assert fixture.call("/api/workorders/WO-0001/withdraw", {}, actor)[0] == 403
+            login("pam")
+            page.goto(fixture.base + "/app#/capacity")
+            page.get_by_role("heading", name="Capacity and work orders", exact=True).wait_for()
+            for label, value in package_fields:
+                page.get_by_label(label, exact=True).fill(value)
+            page.get_by_label("Contract or call-off version", exact=True).fill(" SYN-1 ")
+            page.get_by_role("button", name="Create package", exact=True).focus()
+            page.keyboard.press("Enter")
+            page.get_by_role("heading", name="SYN browser package (PKG-002)", exact=True).wait_for()
+            assert fixture.store._package("PKG-002")["contract_version"] == "SYN-1"
             assert not errors, errors
             browser.close()
         print(
-            "PASS: original-source capacity inputs, inline refusal/focus, keyboard save, "
+            "PASS: required contract version, inline refusal/field focus/input preservation, "
+            "valid keyboard package creation, original-source capacity inputs, keyboard save, "
             "issue/book at quota with new version, both contractor views/write denials, "
             "320/390/1280px reflow, reduced motion, no page errors or external requests."
         )

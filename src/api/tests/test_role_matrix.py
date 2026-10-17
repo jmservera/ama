@@ -221,7 +221,7 @@ class Matrix(unittest.TestCase):
 
     def test_new_endpoints_for_every_role(self):
         mgr = {s["role"]: s for s in self.store.data["staff"]}["Retrofit Programme Manager"]
-        pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1")
+        pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1", "SYN-1")
         order_case = copy.deepcopy(self.store.cases["ZF-1"])
         order_case.update(id="ZF-ROLE-ORDER", hazards=[])
         self.store.cases[order_case["id"]] = order_case

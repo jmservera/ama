@@ -30,9 +30,17 @@
     {"decision": "Coordinator authorized topic-only integration onto fresh main", "status": "integrated", "evidence": "2026-10-17 authorization; clean old topic/expected remote 6e4dbe18d111673b41049830eb68bf81f89051c8. Fresh main bab4bf3a2ac9ec030d78d27063d1390f800c5c7c; git rebase origin/main -> db83d4260e4f3d29fa80ce08624155ee4f59ecce before evidence commit. Only log conflict; exact upstream prefix and both index intents preserved; src patch/original Review byte-identical. External exact-head gate pending."}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Publish integration evidence via expressly authorized topic-only exact-lease push and stop clean. Coordinator external exact-head PR gate/hosted checks remain forthcoming; original Review unchanged. No merge/main rewrite/issue closure."},
+  "correction_cycle_one": {
+    "authorization": "Coordinator 2026-10-17: external Review Revise of PR384 head 527a537; require contract version, repair exact manifest hash and fictional safety booking fixtures. Normal push only, no rebase/force.",
+    "status": "implementation Complete, external correction acceptance pending; terminal publication payload",
+    "original_review": "Historical Complete/Conformant unchanged; coordinator external closure required for changed source.",
+    "red_evidence": "New version regressions: 12 failures across JSON/SQLite domain/HTTP subcases; existing safety positives two errors; scenario manifest existing integrity test one stale-source error.",
+    "validation": "Focused107 pass, existing manifest8/inventory11 pass; full core651 run/650 pass/one existing Azure SQL skip; full API613 run/471 pass/142 existing opt-in skips. Separate actual local SQL Server31 pass and local browser corrected creation/input focus/preservation pass. Full configured core/API lint/format/types, strict browser lint/format, JS/compileall/diff pass. No skip added, assertion deleted or validator weakened.",
+    "dispositions": "All three coordinator/CI gaps addressed in implementation; external independent correction closure still pending. Original Review byte-identical. No new professional authority or hosted Pass."
+  },
+  "next_action": {"phase": "Follow-up", "action": "Terminal correction ONE payload: normal privacy-safe commit/push same branch then stop clean. Source changed since original Review, so external coordinator correction closure and hosted rerun remain pending. No rebase/force/merge/issue closure."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator external exact-head PR gate and hosted checks", "rationale": "Topic rebase authorized and performed; production patch parity does not fabricate a new independent exact-head acceptance.", "evidence": "Integration commands/base/head and byte assertions recorded in changes; original Review preserved verbatim."},
+    {"rank": 1, "task": "Coordinator external correction ONE closure and hosted checks", "rationale": "Coordinator Review Revise of527a537 and hosted gaps addressed; changed production now requires independent external closure, no invented Pass.", "evidence": "Changes Correction ONE Final Validation and Dispositions; full relevant CI discovery/actual local SQL/browser evidence, original Review preserved verbatim."},
     {"rank": 2, "task": "Human operational-readiness validation", "rationale": "Actual contract evidence and trusted delegation are mandatory before live use; fixture authority never grants real permission.", "evidence": "Plan Follow-Up Items and Review Plan Follow-Up Assessment; named contract authority owner provisions/validates."},
     {"rank": 3, "task": "Separately approved hosted and human accessibility acceptance", "rationale": "Local browser/SQL engineering checks do not establish Azure/AI or human/screen-reader/WCAG acceptance.", "evidence": "Changes Remaining Boundaries and canonical Review Validation Evidence; deployment/UX owners commission later."}
   ]

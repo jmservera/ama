@@ -123,8 +123,10 @@ optional `package_ids` further restricts scope. Actions are `capacity`,
 `rescope`, `issue`, `reissue`, `appointment`, `complete`, `correct`, `withdraw`.
 Rescope requires both old and new scope versions. There is no wildcard,
 self-granting endpoint or production delegation seed. Draft package creation
-grants no authority. Real trusted provisioning remains a human prerequisite;
-the test-only fixture helper is not an operational delegation.
+grants no authority. Creation requires a nonempty contract/call-off version,
+which is trimmed and fixed at creation; blank versions are refused before any
+package or success audit is written. Real trusted provisioning remains a
+human prerequisite; the test-only fixture helper is not an operational delegation.
 
 New allocations require used capacity strictly below commitment. Existing
 allocations may progress at equality; completed orders retain consumption.

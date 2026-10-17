@@ -5158,3 +5158,28 @@ metadata when the knowledge base was created.
   actual delegations, supplier commitments, Azure, human/screen-reader/WCAG
   acceptance remain unestablished. No private data, cloud/paid AI, live order,
   award, payment, merge or real financial commitment occurred.
+
+## [2026-10-17] correction | #90 coordinator Revise and hosted regressions
+
+* Coordinator Review of integrated PR #384 head 527a537 returned Revise.
+  Required contract/call-off version before package creation, with omitted,
+  empty and whitespace-only domain/API denials before mutation; the existing
+  UI retains inputs, announces the inline error and focuses the version.
+  No new editor, delegation grant, redesign or production authority.
+* Refreshed only dataset.py's exact SHA-256 in the existing #103 scenario
+  manifest after intentional fictional fixture-helper changes. Eleven
+  profiles/nine workflows remain unavailable, product roles provisional,
+  journeys proposed and actual approval not established. Validator unchanged.
+* Corrected JSON/SQLite safety-flow positives with explicitly fictional source,
+  trusted delegation and booked work order after independent safety release.
+  Original raiser/receiver/release independence and blocked-advance assertions
+  remain, with no skip or weakened production capacity guard.
+* Original independent Review remains historical Conformant evidence, separate
+  from coordinator Revise and this correction; external exact-head closure
+  remains required. No real data, live instruction, Azure/paid AI, financial
+  commitment, professional approval, issue closure or merge is claimed.
+* Correction validation: core full CI discovery 651 run/one existing skip;
+  API full CI/MVP discovery 613 run/142 existing opt-in skips; separate actual
+  local SQL Server procurement domain/API 31 pass and local browser validation
+  pass. Counts overlap. Configured lint/format/types, strict browser harness,
+  JS/compilation/diff checks pass. No test/validator weakened or skip added.

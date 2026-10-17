@@ -435,3 +435,15 @@ This narrows engineering gaps only: no real contract delegation, legal
 signature verification, staff comprehension, screen-reader acceptance,
 full WCAG conformance, financial commitment or actual company approval is
 established. The procurement-manager research instrument is not such approval.
+
+The coordinator's correction ONE review of PR #384 head 527a537 returned
+Revise: blank immutable contract versions made new packages permanently
+unusable. Creation now refuses omitted/empty/whitespace versions before
+mutation, and the existing screen retains inputs with inline field focus.
+The existing scenario manifest's exact public fixture hash is refreshed
+without changing eleven/nine unavailable journey claims or provisional/
+proposed authority. The safety-flow test now supplies a fictional evidenced
+booking after independent release, rather than relying on removed bypass
+behavior. These implementation corrections do not supersede the historical
+Review or establish external correction acceptance; coordinator closure is
+still required.

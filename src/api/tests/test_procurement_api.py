@@ -56,7 +56,7 @@ class ProcurementApi(unittest.TestCase):
         if hasattr(self.store, "db"):
             self.addCleanup(self.store.db.close)
         self.pid = self.store.create_package(
-            self.manager, "Synthetic package", "2026-01-01", "2099-12-31", "Loft", "SYN"
+            self.manager, "Synthetic package", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1"
         )
         self.details = supplied_contract_fixture(self.store, self.pid, self.manager)
         self.other_details = supplied_contract_fixture(
@@ -109,6 +109,27 @@ class ProcurementApi(unittest.TestCase):
 
     def issue(self, cid: str = "ZF-1") -> dict[str, Any]:
         return dict(package=self.pid, case_id=cid, resident_bindings=RESIDENT_BINDINGS)
+
+    def test_package_creation_requires_contract_version(self) -> None:
+        body = dict(
+            name="SYN new package",
+            period_from="2026-01-01",
+            period_to="2099-12-31",
+            scope="Loft",
+            contract_ref="SYN",
+        )
+        before = copy.deepcopy(self.store.data["procurement"])
+        audit = list(self.store.audit_entries())
+        for payload in (body, dict(body, contract_version=""), dict(body, contract_version=" \t ")):
+            with self.subTest(payload=payload):
+                code, result = self.call("/api/packages", payload)
+                self.assertEqual(code, 400)
+                self.assertIn("contract or call-off version", result["error"])
+                self.assertEqual(self.store.data["procurement"], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+        code, result = self.call("/api/packages", dict(body, contract_version=" SYN-1 "))
+        self.assertEqual(code, 200)
+        self.assertEqual(result["packages"][-1]["contract_version"], "SYN-1")
 
     def test_capacity_http_exact_threshold_and_source_inputs(self) -> None:
         path = f"/api/packages/{self.pid}/capacity"

@@ -128,28 +128,40 @@ class Flows:
             self.store.return_quality(QUIN, "ZF-1", 0, "r", "d", "o")
 
     # ---- procurement and capacity
+    def test_package_requires_contract_version_before_creation(self):
+        before = copy.deepcopy(self.store.data.get("procurement"))
+        audit = list(self.store.audit_entries())
+        for kwargs in ({}, {"contract_version": ""}, {"contract_version": " \t "}):
+            with self.subTest(kwargs=kwargs):
+                with self.assertRaisesRegex(ValueError, "contract or call-off version"):
+                    self.store.create_package(PAM, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", **kwargs)
+                self.assertEqual(self.store.data.get("procurement"), before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+        pid = self.store.create_package(PAM, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", " SYN-1 ")
+        self.assertEqual(self.store._package(pid)["contract_version"], "SYN-1")
+
     def package(self, committed=1, offered=3):
-        pid = self.store.create_package(PAM, "Wave 1 install", "2026-01-01", "2099-12-31", "Loft and wall measures", "CALL-OFF-7")
+        pid = self.store.create_package(PAM, "Wave 1 install", "2026-01-01", "2099-12-31", "Loft and wall measures", "CALL-OFF-7", "SYN-1")
         self.details = dataset.supplied_contract_fixture(self.store, pid, PAM)
         self.store.set_capacity(PAM, pid, "Test Ltd", offered, committed, "SYN signed commitment RP-1" if committed else "", self.details)
         return pid
 
     def test_package_validation_and_roles(self):
         with self.assertRaises(PermissionError):
-            self.store.create_package(SAM, "x", "2026-01-01", "2026-02-01", "s", "r")
+            self.store.create_package(SAM, "x", "2026-01-01", "2026-02-01", "s", "r", "SYN-1")
         with self.assertRaises(ValueError):
-            self.store.create_package(PAM, "x", "2026-03-01", "2026-02-01", "s", "r")
+            self.store.create_package(PAM, "x", "2026-03-01", "2026-02-01", "s", "r", "SYN-1")
         with self.assertRaises(ValueError):
-            self.store.create_package(PAM, "x", "soon", "2026-02-01", "s", "r")
+            self.store.create_package(PAM, "x", "soon", "2026-02-01", "s", "r", "SYN-1")
         with self.assertRaises(ValueError):
-            self.store.create_package(PAM, "x", "2026-01-01", "2026-02-01", "s", "")
+            self.store.create_package(PAM, "x", "2026-01-01", "2026-02-01", "s", "", "SYN-1")
         pid = self.package()
         self.store.rescope_package(PAM, pid, "Loft only", "Wall measures moved")
         p = self.store.list_packages(PAM)[0]
         self.assertEqual((p["scope_version"], len(p["scope_history"]), p["contract_ref"]), (2, 2, "CALL-OFF-7"))
 
     def test_committed_capacity_needs_evidence_and_limits_work_orders(self):
-        pid = self.store.create_package(PAM, "P", "2026-01-01", "2099-12-31", "s", "R")
+        pid = self.store.create_package(PAM, "P", "2026-01-01", "2099-12-31", "s", "R", "SYN-1")
         details = dataset.supplied_contract_fixture(self.store, pid, PAM)
         with self.assertRaises(ValueError):
             self.store.set_capacity(PAM, pid, "Test Ltd", 3, 2, "")

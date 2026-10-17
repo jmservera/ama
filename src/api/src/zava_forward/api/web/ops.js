@@ -110,11 +110,26 @@ async function capacityView() {
   };
   const name = inp("Package name", { maxlength: 80 }), from = inp("Starts", { type: "date" }), to = inp("Ends", { type: "date" });
   const scope = inp("What it covers", { maxlength: 400 }), ref = inp("Contract or call-off reference", { maxlength: 60 });
-  const contractVersion = inp("Contract or call-off version", { maxlength: 80, spellcheck: false });
+  const contractVersion = inp("Contract or call-off version", { maxlength: 80, spellcheck: false, required: true });
+  const versionError = h("p", { id: "capacity-version-error", class: "err", role: "status", "aria-live": "polite" });
+  contractVersion[1].setAttribute("aria-describedby", "capacity-version-error");
+  contractVersion[1].addEventListener("input", () => {
+    contractVersion[1].removeAttribute("aria-invalid");
+    versionError.textContent = "";
+  });
+  const createPackage = () => {
+    if (!contractVersion[1].value.trim()) {
+      contractVersion[1].setAttribute("aria-invalid", "true");
+      versionError.textContent = "Enter the contract or call-off version before creating the package.";
+      contractVersion[1].focus();
+      return;
+    }
+    return go(() => api("/api/packages", { name: name[1].value, period_from: from[1].value, period_to: to[1].value, scope: scope[1].value, contract_ref: ref[1].value, contract_version: contractVersion[1].value }));
+  };
   const create = h("section", { class: "card" }, h("h2", {}, "New package"), ...[name, from, to, scope, ref].flat(),
-    ...contractVersion,
+    ...contractVersion, versionError,
     h("p", {}, "A package is a draft, not an instruction. Creating it grants no contract authority."),
-    h("p", {}, h("button", { onclick: () => go(() => api("/api/packages", { name: name[1].value, period_from: from[1].value, period_to: to[1].value, scope: scope[1].value, contract_ref: ref[1].value, contract_version: contractVersion[1].value })) }, "Create package")));
+    h("p", {}, h("button", { onclick: createPackage }, "Create package")));
   const cards = pkgs.map((p) => {
     const con = inp("Contractor", { maxlength: 80 }), off = inp("Offered (home orders)", { type: "number", min: 0, max: 100000, step: 1, inputmode: "numeric" }), com = inp("Committed with evidence (home orders)", { type: "number", min: 0, max: 100000, step: 1, inputmode: "numeric" });
     const evi = inp("Evidence for the commitment", { maxlength: 300 });
