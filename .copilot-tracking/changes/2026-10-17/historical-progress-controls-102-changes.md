@@ -111,12 +111,30 @@ Complete / Defects found byte-for-byte.
 
 ### P03-T03: Publication
 
-Pending fresh GitHub identity, own-only commits, topic push and main-targeted
-PR. No closing keywords, issue close, merge, rebase or force push authorized.
+Published https://github.com/jmservera/ama/pull/390 targeting main from the
+supplied feat/historical-progress-controls-102 topic and exact supplied base.
+Implementation commit bfdcd2289d1f430653e94ae6dde1394b50895880 contains only
+the 18 owned source/test/docs/dated-artifact paths. Fresh `gh api user`
+returned id 8036360 / login jmservera; repository-local privacy-safe
+8036360+jmservera@users.noreply.github.com was configured for author/committer.
+Conventional Commit includes Refs #102 and required Copilot co-author trailer.
+Normal push, no merge, issue close, rebase or force push.
+
+Initial remote PR checks started; they were in progress, not claimed passed.
+Final publication metadata is a separate owned-artifact-only commit, with the
+final exact head read from PR #390 after normal push rather than attempting a
+self-referential commit hash in this record.
+Session resume ID: 047eef1a-9e80-4725-946a-20da710900a6.
+The user explicitly requested stopping at clean pushed PR delivery; no child
+task or additional full Review starts. Coordinator owns final-head acceptance.
 Commit-helper limitations: its auxiliary commit-message instruction file and
 get_changed_files tool are unavailable in this host. Repository Conventional
 Commit/privacy/trailer rules and explicit owned-path staging are used instead
 of its blanket-stage suggestion, preserving the user's own-changes-only rule.
+The PR helper's auxiliary instruction file is likewise absent, and no
+content-policy-citation.instructions.md exists in this worktree. The user-
+specified evidence-rich PR contract is followed directly; its parallel
+re-review suggestion is not used because exactly one full Review was requested.
 
 ## Remaining Work and Limitations
 

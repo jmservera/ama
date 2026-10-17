@@ -3,9 +3,9 @@
   "task_slug": "historical-progress-controls-102",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/historical-progress-controls-102-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/historical-progress-controls-102-plan.md",
@@ -44,12 +44,17 @@
       "decision": "Correction ONE for RV-001/RV-002 completed with failing-first evidence; no second Review or coordinator Pass",
       "status": "parent targeted checks passed",
       "evidence": "88 final focused tests, 8 actual loopback MSSQL tests, configured core/API ruff/format/mypy, corrected image e035732d04afafa38063af41df54916443ab8809873a09f0fad72011404859dc with source hashes and actual HTTP refusals"
+    },
+    {
+      "decision": "Published own-only implementation and dated RPI evidence in main-targeted PR #390; stop at user's clean-pushed-PR boundary",
+      "status": "delivered; independent coordinator acceptance pending",
+      "evidence": "https://github.com/jmservera/ama/pull/390; implementation bfdcd2289d1f430653e94ae6dde1394b50895880; final PR head is authoritative after publication-metadata push; session resume 047eef1a-9e80-4725-946a-20da710900a6"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Publish own source/docs/dated artifacts with fresh GitHub identity, normal topic push and main PR; no close/merge"
+    "phase": "Follow-up",
+    "action": "Coordinator reviews exact PR #390 head and sequences shared integration; session stopped per user delivery boundary, no child work"
   },
   "prioritized_follow_ups": [
     {
