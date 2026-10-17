@@ -4654,3 +4654,16 @@ metadata when the knowledge base was created.
   errors resolved by using existing src/api workflow cwd, not source workarounds.
   JS syntax and pip check passed. These are local synthetic checks, not live
   staff/SQL/browser acceptance.
+
+## [2026-10-17] delivery | PR #375 continuation rebased, tested and pushed
+
+* Same #360 session, main51db4fa8 integrated; exact owner-authorized topic lease
+  from662c11b to63aea6445bb89fe5a12064aa932a9df84fea85e9 verified by remote
+  ref. Upstream helpers/tests/legacy delegate, #373/#374 artifacts and both
+  knowledge histories retained. Final completion-only commit records stopped
+  state; its exact head is supplied in PR #375, not claimed pre-reviewed.
+* P04-T01/T02/T03/T04 complete. No extra critique/Review or delivery loop,
+  no main rewrite/merge/issue closure and no live resource/credential/role/
+  network/data writes. #360 d/e remain UNMET and open. Concrete blocker actions
+  remain existing private-connected builder/operator and explicit exact IAM
+  authorization, not generic image denial or a fabricated permission failure.

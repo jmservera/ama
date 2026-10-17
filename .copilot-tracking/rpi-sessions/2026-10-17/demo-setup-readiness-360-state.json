@@ -3,9 +3,9 @@
   "task_slug": "demo-setup-readiness-360",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/demo-setup-readiness-360-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/demo-setup-readiness-360-plan.md",
@@ -54,6 +54,11 @@
       "decision": "Published Refs #360 PR #375; explicit bounded-session stop, no child task/merge/closure",
       "status": "complete",
       "evidence": ".copilot-tracking/changes/2026-10-17/demo-setup-readiness-360-publication-receipt.json; PR OPEN, base main, initial head 4b50561cff0a0f1b6598bad3451e962f66e4f890; final receipt-only commit resolved through PR head"
+    },
+    {
+      "decision": "Same-session P04 continuation complete; owner-authorized rebase and exact-lease push, no nested RPI loop",
+      "status": "complete",
+      "evidence": "Base51db4fa80a29528f5a3d19420b1c7e1597d27213, integration63aea6445bb89fe5a12064aa932a9df84fea85e9 verified remote; exact upstream helpers/tests/evidence and legacy delegate preserved; full relevant checks recorded in changes; final record-only head reported in PR375 comment"
     }
   ],
   "blockers": [
@@ -75,7 +80,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P04-T01/T02/T03 complete on main51db4fa8: exact upstream preservation plus37 focused/101 setup/329 infra, full legacy component suites and quality gates. Commit and authorized lease push, notify PR375 of exact SHA/reviewer4536f9cc boundary, persist stopped state."
+    "action": "Stopped after P04 rebase/test/push. Owner identifies an existing private-connected builder/operator with existing push authority and separately explicitly authorizes exact scoped IAM deployment. Human tenant acceptance follows; d/e remain unmet. No automatic child loop."
   },
   "prioritized_follow_ups": [
     {

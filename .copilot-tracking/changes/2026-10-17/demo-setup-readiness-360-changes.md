@@ -303,3 +303,18 @@ No visible independent-review findings removed; none were exposed through PR
 comments/reviews at inspection. Reviewer-agent messaging unavailable, so PR
 comment is the durable exact-SHA notification channel. Existing Review is not
 rerun or relabelled as review of this head.
+
+### P04-T04 - Authorized topic publication and stop
+
+Completed exact-lease topic force push from
+662c11bdb60e19879c0bf2d905e39dfab82727e6 to
+63aea6445bb89fe5a12064aa932a9df84fea85e9. git ls-remote confirms the new
+topic SHA; base is51db4fa80a29528f5a3d19420b1c7e1597d27213. Only the
+owner-authorized topic history was rewritten. PR remains375; #360 is open.
+This final completion-record commit changes only tracking/log, not source,
+tests or acceptance evidence, and is followed by an ordinary topic push.
+Final exact head is reported durably in the PR comment, avoiding a self-hash
+inside the commit. No force push of main, merge, credentials or live resource
+write; no new critique/Review/child task. Automatic session stopped under the
+caller's bounded continuation direction. Original Review is historical, not
+an approval of the integrated head or resolution of unseen reviewer findings.

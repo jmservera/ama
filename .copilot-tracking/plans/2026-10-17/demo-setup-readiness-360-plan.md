@@ -5,10 +5,11 @@ ms.date: 2026-10-17
 ---
 
 Task: issue-360 / demo-setup-readiness-360. Mode: automatic.
-Status: Same-session continuation authorized for PR #375: rebase onto latest
-origin/main, preserve merged #358 contracts, validate integrations and establish
-concrete private publication/IAM blockers. Historical Review remains unchanged;
-d/e remain unmet. No new delivery loop or merge.
+Status: Same-session continuation complete for PR #375: rebased onto main
+51db4fa8, preserved merged #358 contracts, validated integrations and recorded
+concrete private publication/IAM blockers. Candidate63aea64 pushed with exact
+authorized lease. Historical Review unchanged; d/e unmet. Session stopped after
+publication record, no new delivery loop or merge.
 
 ## Executive Summary
 
@@ -132,7 +133,7 @@ role stays API-only. Live role changes are blocked, regardless of ambient Owner.
 * [x] P04-T03 Research existing private build/import/CI reuse options, distinguish
   actual failed tools/permissions from unattempted authority-limited actions.
   Execute only already authorized existing-resource/no-new-spend paths.
-* [ ] P04-T04 Commit and authorized force-with-lease topic push to PR #375,
+* [x] P04-T04 Commit and authorized force-with-lease topic push to PR #375,
   report exact new SHA to independent reviewer 4536f9cc; keep #360 open and stop.
 
 ## Continuation Test Boundary
@@ -187,4 +188,8 @@ Original Plan handoff authorized Implement with the above gates; no source or
 Azure writes occurred in Plan. Current delivery completed Research/Plan/
 Implement/Review and published PR #375. The publication receipt records the
 observed remote head; its final receipt-only commit is resolved by Git/PR head.
-No remaining source implementation or current-task Review, merge or closure.
+P04 same-session integration candidate63aea6445bb89fe5a12064aa932a9df84fea85e9
+pushed with caller-authorized exact lease, verified remote. Completion receipt
+commit only follows; final PR comment supplies its exact head to independent
+reviewer4536f9cc. No remaining current-task source implementation or Review,
+merge or issue closure. Live operator gates remain, not simulated acceptance.
