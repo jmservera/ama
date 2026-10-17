@@ -391,10 +391,19 @@ def discover(cli: Azure, args: argparse.Namespace, subscription: str) -> tuple[d
     rows = cli.call(["containerapp", "list", "-g", args.resource_group])
     if not isinstance(rows, list):
         raise SetupError("Container App discovery did not return a list.")
-    direct_rows = [r for r in rows if r.get("tags", {}).get("zava-forward-role") == "api"
-                   and r.get("tags", {}).get("zava-forward-ingress") == "direct"]
+    direct_rows = [
+        r for r in rows
+        if (r.get("tags", {}).get("zava-forward-role") == "api"
+            or ("zava-forward-role" not in r.get("tags", {})
+                and r.get("tags", {}).get("workload") == "api"))
+        and r.get("tags", {}).get("zava-forward-ingress") == "direct"
+    ]
     candidates = rows
     if not args.container_app and direct_rows:
+        if len(direct_rows) != 1:
+            names = ", ".join(sorted(label(r["name"]) for r in direct_rows))
+            raise SetupError(
+                f"Cannot select one api. Candidates: {names}. Pass --container-app with an exact name.")
         candidates = direct_rows
     interactive = not (args.check or args.dry_run or args.yes)
     app = choose(candidates, args.container_app, "api", r"ca-.+-api", "--container-app",
@@ -920,10 +929,12 @@ def staff_command(args: argparse.Namespace, app: dict[str, Any], *, apply: bool 
 
 def azure_staff(args: argparse.Namespace, app: dict[str, Any], operation: str,
                 cli: Azure) -> dict[str, Any]:
-    if args.dry_run:
+    if args.check or args.dry_run or args.list_staff:
+        mode = "--check" if args.check else "--dry-run" if args.dry_run else "--list-staff"
         raise staff_azure.StaffJobError(
-            "--dry-run never creates Azure jobs. Use --check --run-in-azure for a read-only SQL check "
-            "with temporary management-plane job/secret writes.")
+            f"{mode} never creates Azure jobs or secrets. Run the same read-only command "
+            "without --run-in-azure on an authorized private-connected host; "
+            "SQL binding/restart remains unverified.")
     payload: dict[str, Any] = {}
     if operation != "candidates":
         roles = {r["key"] for r in json.loads(MANIFEST.read_text())["appRoles"]}

@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-17
 ms.topic: how-to
 ---
 
@@ -1308,7 +1308,8 @@ No required resource arguments. Add `--yes` to approve the SQL plan/restart
 non-interactively; it does not approve tenant admin consent, migration or spend.
 The default resource group is `ama` (other groups are
 refused). API selection prefers `zava-forward-role=api`, then the existing
-`workload=api` tag, then `ca-*-api`. New Bicep deployments tag the API and
+`workload=api` tag, then `ca-*-api`, except that an explicitly tagged direct
+API is preferred during migration as described below. New Bicep deployments tag the API and
 Front Door profile/endpoint (`zava-forward-role=api-edge`). Existing untagged
 resources still work. Ambiguity prints resource-name candidates, never IDs;
 an interactive run asks one plain question rather than guessing. A headless
@@ -1319,6 +1320,20 @@ python3 infra/scripts/setup-entra.py --container-app ca-cutover-test-api
 python3 infra/scripts/setup-entra.py --check
 python3 infra/scripts/setup-entra.py --dry-run
 ```
+
+During old/new coexistence, a unique `zava-forward-ingress=direct` API wins
+without a name guess. It must also have `zava-forward-role=api`, or the
+compatible `workload=api` tag with no modern role tag. On 2026-10-17, read-only
+ARM metadata showed precisely that legacy-workload/direct combination on
+`ca-cutover-test-demo-api`; the retained `ca-cutover-test-api` has no direct tag.
+The former modern-role-only direct filter missed this configuration and fell
+back to two workload candidates. The compatibility fix accepts the existing
+explicit deployment tag; it neither adds a selector nor changes Azure resources.
+More than one eligible direct API, including mixed modern/legacy tags, still
+refuses; a conflicting modern role does not qualify. An exact `--container-app`
+always overrides preference, including deliberate old-API/Front Door selection.
+No API, edge or backing service is removed. Offline regressions are not a live
+laptop setup, human sign-in or SQL acceptance result.
 
 `ca-cutover-test-agents` is not the API and is never selected by the fallback.
 The script matches enabled Front Door origins to the selected API FQDN and
@@ -1455,9 +1470,13 @@ The final summary separately reports SQL binding and restart, not just Entra.
 
 Exit codes: `0` means the requested configuration converged, not successful
 human sign-in; `2` means drift in read-only mode or incomplete prerequisites;
-`1` means blocked/error; `130` means interrupted. `--dry-run` makes no remote
-mutations. `--check` never changes Entra, SQL bindings or API replicas, but
-the Azure SQL path creates/removes a temporary job and secret. Neither mode
+`1` means blocked/error; `130` means interrupted. `--dry-run`, `--check` and
+`--list-staff` make no cloud, Entra or SQL mutations and never restart replicas.
+They refuse the Azure SQL job transport before payload creation, including on
+automatic fallback, because even a read-only SQL job needs cloud job/secret writes.
+Use the same read-only command without `--run-in-azure` on an authorized
+private-connected host; unavailable SQL verification stays blocked/incomplete.
+Neither check nor dry-run
 logs in or creates a missing private profile; both require existing authorized
 sessions and cannot be combined with `--login`.
 A final fresh Container App read must report provisioning `Succeeded`.
@@ -1601,8 +1620,10 @@ This is a separate confirmation after the roster-write confirmation;
 `--yes` accepts both displayed plans. A current roster/revision with recorded restart
 evidence needs no further restart. `--check` and `--dry-run` inspect Entra and
 SQL without applying or restarting. Unknown/missing restart evidence remains
-incomplete. A blocked local candidate lookup or SQL preflight automatically
-tries the [in-VNet job path](#in-vnet-sql-staff-step-refs-360).
+incomplete. In a mutating setup invocation, a blocked local candidate lookup or
+SQL preflight automatically tries the
+[in-VNet job path](#in-vnet-sql-staff-step-refs-360). Read-only modes never do:
+the transport guard reports the missing evidence and private-host handoff.
 Explicit roster/control validation failures do not trigger fallback, and an
 uncertain local apply is never retried in another execution. If the Azure path
 cannot run, setup prints the exact discovered private-host command and reports
@@ -1624,10 +1645,13 @@ remains the same as PR #363: the first ProgrammeManager code gets the eligible
 `admin@` person, remaining positions are seeded random, and the private persisted
 mapping is reused. No Graph profile/token is uploaded. Only candidate listing,
 SQL check, SQL apply/verification and API restart execute in the job.
-`--check --run-in-azure` and `--list-staff --run-in-azure` create temporary
-management-plane jobs/secrets but perform read-only SQL and never restart.
-Azure listing prints a count, not codes or roles. `--dry-run` never creates
-a job; it reports the missing private SQL evidence rather than claiming success.
+The internal SQL-check/candidate operations in a mutating invocation use
+temporary management-plane jobs/secrets even before SQL apply. User-facing
+`--check`, `--list-staff` and `--dry-run` prohibit that transport, including
+`--run-in-azure` and automatic fallback. They report missing private SQL evidence
+rather than claiming success; use a private-connected authorized host for these
+read-only commands. Mutation-mode generated-roster discovery still prints only
+counts, not codes or roles, for Azure results.
 
 Prerequisites (not executed or deployed by setup):
 
@@ -1758,7 +1782,8 @@ prefix, or delete the source initializer. Interrupted hard-kill recovery
 requires the serialized operator window; retained ciphertext is not a clear
 roster and cannot be decrypted after losing the request key.
 Never delete `ama` or an unowned job. SQL may already have committed; first use
-`--check --run-in-azure` with the same persisted private roster, never regenerate
+`--check` without `--run-in-azure` on an authorized private-connected host with
+the same persisted private roster, never regenerate
 or blindly retry an uncertain apply. Cross-host simultaneous setup still needs
 the serialized operator window described above.
 
@@ -1837,6 +1862,12 @@ applied. The [later explicit relay approval and activation](#approved-existing-j
 supersedes the remaining tag-grant approval boundary without widening scope.
 
 ### Normal-Docker Private Publication Follow-Up (2026-10-17, #360)
+
+This section records the earlier #381 attempt, not the current CLI result.
+Its private-publisher-only prerequisite is superseded by the
+[renewed hosted CLI attempt](#renewed-initializer-acr-cli-attempt-2026-10-17-360)
+below. The private-IP timeout observations remain historical facts; they do
+not establish that hosted ACR Tasks cannot be scheduled.
 
 Following merged #375 and #379, the owner authorized publication to the
 existing private registry and an image-only pin of the existing initializer,
@@ -1928,6 +1959,126 @@ restart, new roles/networking/spend or retirement occurred. #360 d/e remain
 **UNMET**; the image blocker does not revoke the already activated #379 grants
 or authorize weakening privacy. Full RPI evidence records this blocked outcome,
 not successful image delivery.
+
+### Renewed Initializer ACR CLI Attempt (2026-10-17, #360)
+
+Refs #360, retained source `bab4bf3a2ac9ec030d78d27063d1390f800c5c7c`
+(merged #381). **An actual hosted build was attempted. Publication remains
+blocked at hosted-agent registry login, not source upload.** No new image or
+initializer pin was produced.
+
+Read-only `az acr task show-run --run-id dbb` confirms the earlier
+2026-10-16T13:53 successful ordinary cpu2 build published
+`zava-forward-cutover-proof:proof-20261016` at digest
+`sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72`.
+The five preceding/latest historical runs succeeded and no pools exist.
+That retrospective success is distinct from the current failed run below;
+neither absent pools nor VM private-endpoint failure alone proves Tasks
+unavailable.
+
+| Current command or gate | Actual result on 2026-10-17 |
+| --- | --- |
+| Local retained-base Docker build, 180-second bound | Exit 1 at retained API manifest HEAD: `403 Forbidden`, client IP not allowed; no image, so actual image smoke unavailable |
+| Native CLI archive preflight | Seven unique allowed regular paths, all bytes equal committed source; manifest SHA256 `0ed4d8a56a0c69d85fc7bd8e4d6c52c4fc0d0891cbef8bdcf2821ae78dfe27f4`. CLI appends an identical second Dockerfile entry, not an eighth unique file |
+| Corrected `az acr build`, service timeout 600 seconds/client bound 720 | Uploaded 20.157 KiB, queued QuickRun `dbc`, ordinary cpu2 |
+| Hosted logs | Source download and Docker configuration succeeded; registry login failed with `login attempt to https://crcutovertestrzsrg.azurecr.io/v2/ failed with status: 403 Forbidden` |
+| Run metadata | Failed, 17:57:22.946003 to 17:57:29.852767 UTC; `outputImages: null`; build/base pull/push not reached |
+| Actual localhost current-source smoke | One fictional case, no staff, AI off, no SQL; `/` and `/healthz` 200, anonymous `/api/me` and `/api/stats` 401. This is installed-source proof, NOT retained-base/hosted-image or genuine sign-in proof |
+| Existing job readback | Full read-visible before/after projection equal; old proof digest, Manual initialize args, identity, environment, resources, settings and registry preserved; no update/start |
+| Registry readback | Public access Disabled and bypass None before/after; no networking or IAM change |
+
+The corrected current command, run from the repository root, was:
+
+```bash
+timeout 720 az acr build -g ama -r crcutovertestrzsrg \
+  -f infra/cutover-proof.Dockerfile \
+  --build-arg API_IMAGE=crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d \
+  -t zava-forward-cutover-proof:staff-360-bab4bf3a2ac9-20261017T175718Z \
+  --timeout 600 --no-logs infra -o json
+az acr task show-run -r crcutovertestrzsrg --run-id dbc
+az acr task logs -r crcutovertestrzsrg --run-id dbc
+```
+
+The first `-f cutover-proof.Dockerfile infra` invocation failed locally with
+`Unable to find 'cutover-proof.Dockerfile'`, before upload. CLI 2.91.0 requires
+the root-relative file path in this invocation despite its context-relative
+help wording. It was corrected and retried, not counted as a service denial.
+Do not retry the recorded unique tag as though it were a successful image.
+
+The failure establishes current hosted-agent registry login403, not its exact
+network-policy versus identity cause. It does not establish an RBAC denial,
+require a paid pool, or authorize opening the registry. Source upload succeeded;
+no secret-bearing build arguments, debug output or SAS URLs were retained.
+Only the authorized source upload/failed QuickRun occurred. No workload,
+backing-resource, IAM, network, job run, API restart, tenant, SQL, Graph or
+retirement operation was performed; existing #379 grants remain unchanged.
+
+Before any future pin, join the submitted seven-file hash manifest, source
+commit, retained base, run ID and exact output digest. Pull that digest and
+verify local RepoDigest, all six copied payload hashes, UID/import/help and
+localhost smoke on that same image. A separate local build or source-only
+smoke cannot satisfy this gate. Preserve the entire existing job and prove
+non-image settings unchanged; never start its historical initialize command.
+Current image gates remain blocked. Genuine operator/browser/roles/SQL/AI
+acceptance and #360 d/e remain **UNMET**; old API/edge and group `ama` stay.
+
+### Initializer Registry403 Read-Only Diagnosis (2026-10-17, #360)
+
+Coordinator authorized diagnosis only after the failed `dbc` attempt, not a new
+build or configuration change. **Likely cause: `dbb` succeeded before registry
+isolation; `dbc` later used default hosted compute without a demonstrated
+private/exempt path.** The original
+[deployment evidence](../docs/architecture/cutover-evidence-pack.md#private-network-continuation-2026-10-16)
+and contemporaneous deployment record explicitly place image capture before
+registry isolation. Exact-registry ARM activity metadata shows a successful
+registry write at October16 13:56:53 UTC, after `dbb` finished13:53:24, followed
+by writes14:07:30,14:14:17 and22:34:36. These timestamps corroborate updates,
+not which property changed or the exact network state at `dbb`.
+
+Current read-only findings, retrieved2026-10-17:
+
+| Evidence | Interpretation and limit |
+| --- | --- |
+| Both runs | QuickRun, Linux/amd64, ordinary cpu2, no named task or selected pool; same basic platform, not proof of equal network state/token |
+| Registry | Premium UK South, publicDisabled, bypassNone, approved private endpoint, LegacyRegistryPermissions rather than ABAC |
+| Task-specific bypass | Preview2025-06-01 GET omits `networkRuleBypassAllowedForTasks`; absent is not literal false |
+| Caller effective permissions | Registry scope actions `["*"]`, no exclusions, empty dataActions; management scheduling/read succeeds, but not an attestation of agent token/pull authorization |
+| Existing alternatives | Named tasks and agent pools empty; no VM/pool in inspected ama inventory. No inherited pool/managed-identity task demonstrated; external runners outside that scope are unknown |
+| Activity scope | 194 returned exact-registry events, max200, requested October16 11:55 to October17 18:20; only timestamp/operation/status/substatus selected, no actor/claims/request/change payloads |
+
+Microsoft's [private registry quick-build guidance](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-endpoints#use-az-acr-build-with-private-endpoint-and-private-registry)
+documents default `az acr build` failure with public network disabled and offers
+dedicated pools or regional public task-IP access. Its
+[Tasks-specific bypass policy](https://learn.microsoft.com/en-us/azure/container-registry/manage-network-bypass-policy-for-tasks)
+documents default denial for unset SAMI task bypass from June1,2025, with an
+explicit UAMI exception. That is not proof this QuickRun used SAMI or that an
+arbitrary UAMI/auth flag gains network access. The
+[generic trusted-service setting](https://learn.microsoft.com/en-us/azure/container-registry/allow-access-trusted-services)
+is distinct; enabling it alone is not a proven QuickRun fix.
+
+The [pool guide](https://learn.microsoft.com/en-us/azure/container-registry/tasks-agent-pools)
+documents VNet access and allocation-based billing; UK South is not in its
+published preview region list retrieved October17. No existing pool can simply
+be selected here and a new same-region pool is not presumed available.
+[Network troubleshooting](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-troubleshoot-access)
+also warns authentication and network symptoms can overlap. Without service-side
+subreason, the exact agent token/403 cause remains uncertain; no IAM denial or
+need for broader grants is established.
+
+| Later option, not an authorized command | Security/cost decision |
+| --- | --- |
+| Existing authorized private-connected Docker publisher | Preferred no-bypass option if the owner can identify one; no new service allocation, but rights/path/capacity remain unproven |
+| New VNet-integrated pool | Private path, but allocated compute billing, region/support/quota/network review and an explicit price ceiling/spend approval required; none provisioned |
+| Explicit Tasks/trusted-service bypass appraisal | Potentially avoids new pool allocation, but relaxes network isolation; exact identity/applicability must be proven, not a guaranteed one-flag remedy |
+| Public task-IP allowlist | Changes public boundary and conflicts with current requirements; not recommended or authorized |
+
+Smallest later owner choice: identify an existing approved private publisher,
+or retain the blocker while separately appraising a costed private-pool design
+or explicit task-bypass exception. No blanket access/IAM approval is requested.
+No bypass/public change, paid pool, support ticket, new build, workload/initializer
+update/start, API restart, SQL/Graph/secret-payload access or teardown occurred
+during this read-only continuation. No new live validation, image smoke/pin or
+regulatory approval is implied; #360 d/e remain **UNMET**.
 
 ### Scoped initializer IAM activation (2026-10-17, #360)
 

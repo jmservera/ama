@@ -597,9 +597,11 @@ class SetupAzureTests(unittest.TestCase):
 
     def test_azure_candidates_are_count_only_and_cleaned_up(self):
         self.roster.unlink()
-        self.assertEqual(self.invoke("--run-in-azure", "--list-staff"), 0, self.output.getvalue())
+        self.assertEqual(self.invoke("--run-in-azure", "--list-staff"), 1, self.output.getvalue())
         self.assertNotIn("fictional-coordinator", self.output.getvalue())
-        self.assertEqual([r["operation"] for r in self.fake.requests], ["candidates"])
+        self.assertFalse(self.fake.requests)
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
         self.assertFalse(self.fake.jobs)
 
     def test_azure_generated_roster_retains_admin_seed_and_never_prints_codes(self):
@@ -646,13 +648,55 @@ class SetupAzureTests(unittest.TestCase):
     def test_candidate_auto_fallback_and_missing_image_exact_private_host_fallback(self):
         self.fake.candidate_code = 1
         self.roster.unlink()
-        self.assertEqual(self.invoke("--list-staff"), 0, self.output.getvalue())
+        self.assertEqual(self.invoke("--list-staff"), 1, self.output.getvalue())
         self.assertEqual(len(self.fake.sql_calls), 1)
-        self.assertEqual([r["operation"] for r in self.fake.requests], ["candidates"])
+        self.assertFalse(self.fake.requests)
+        self.assertFalse(self.fake.writes)
+        self.assertFalse(self.fake.tag_writes)
         self.fake.resources[SOURCE]["properties"]["template"]["containers"][0]["image"] = (
             "old:latest"
         )
         self.assertEqual(self.invoke("--run-in-azure", "--list-staff"), 1)
+
+    def test_readonly_transport_guard_precedes_payload_and_execute(self):
+        cli = SETUP.Azure(self.profile)
+        for flag in ("--check", "--dry-run", "--list-staff"):
+            args = SETUP.parser().parse_args([flag, "--roster", str(self.roster)])
+            for operation in ("candidates", "check", "apply"):
+                with (
+                    self.subTest(flag=flag, operation=operation),
+                    patch.object(SETUP, "read_roster", side_effect=AssertionError("payload")),
+                    patch.object(SETUP.staff_azure, "execute", side_effect=AssertionError("write")),
+                ):
+                    with self.assertRaises(SETUP.staff_azure.StaffJobError):
+                        SETUP.azure_staff(args, self.fake.app, operation, cli)
+        self.assertFalse(self.fake.calls)
+        self.assertFalse(self.fake.requests)
+        self.assertFalse(self.fake.writes)
+
+    def test_check_explicit_and_failed_local_fallback_make_no_cloud_writes(self):
+        for explicit in (True, False):
+            for failure in ("code", "timeout"):
+                with self.subTest(explicit=explicit, failure=failure):
+                    self.fake = FakeJobs()
+                    original = self.fake.run
+
+                    def run(command, failure=failure, original=original, **kwargs):
+                        if command[0] != "az" and failure == "timeout":
+                            self.fake.sql_calls.append(command)
+                            raise subprocess.TimeoutExpired(command, 600)
+                        return original(command, **kwargs)
+
+                    SETUP.subprocess.run.side_effect = run
+                    self.fake.sql_code = 1
+                    flags = ["--run-in-azure"] if explicit else []
+                    self.assertEqual(self.invoke("--check", *flags), 2, self.output.getvalue())
+                    self.assertFalse(self.fake.requests)
+                    self.assertFalse(self.fake.writes)
+                    self.assertFalse(self.fake.tag_writes)
+                    self.assertFalse(self.fake.jobs)
+                    self.assertTrue(all("--check" in command for command in self.fake.sql_calls))
+                    self.assertIsNone(self.fake.credential_template)
         self.assertIn("authorized private-connected host", self.output.getvalue())
 
     def test_azure_store_guard_blocks_app_state_before_graph_writes(self):
@@ -997,9 +1041,15 @@ class SetupAzureTests(unittest.TestCase):
                     with patch.object(SETUP, "datetime", wraps=datetime) as clock:
                         clock.now.return_value = now
                         for flag in ("--check", "--dry-run"):
-                            expected = 0 if reusable and flag == "--check" else 2
-                            self.assertEqual(self.invoke("--run-in-azure", flag), expected)
+                            writes = copy.deepcopy(self.fake.writes)
+                            tags = copy.deepcopy(self.fake.tag_writes)
+                            requests = copy.deepcopy(self.fake.requests)
+                            self.assertEqual(self.invoke("--run-in-azure", flag), 2)
                             self.assertEqual(len(self.fake.reg["passwordCredentials"]), 1)
+                            self.assertEqual(self.fake.reg["passwordCredentials"][0], before)
+                            self.assertEqual(self.fake.writes, writes)
+                            self.assertEqual(self.fake.tag_writes, tags)
+                            self.assertEqual(self.fake.requests, requests)
                         self.assertEqual(self.invoke("--run-in-azure"), 0, self.output.getvalue())
                     self.assertEqual(self.fake.reg["passwordCredentials"][0], before)
                     self.assertEqual(

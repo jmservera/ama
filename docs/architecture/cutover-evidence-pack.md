@@ -269,6 +269,10 @@ remain unproven; #360 d/e remain **UNMET**. Old stack and ama retained.
 
 ## Normal-Docker Private Publication Follow-Up (2026-10-17)
 
+Historical #381 evidence. The private-route-only conclusion below is superseded
+by the [current actual hosted CLI attempt](#renewed-initializer-acr-cli-attempt-2026-10-17);
+the prior endpoint measurements and unperformed-command status are preserved.
+
 Refs #360, source baseline `b15f2f00e48300c4cf74815d7586ba84f61ee1d4`
 after merged #375/#379. Owner authorization covers normal private publication
 and conditional image-only pin, not route repair or workload execution.
@@ -303,6 +307,77 @@ validated image and immutable digest before the existing Manual job can be
 considered for image-only pin. The job's historical `initialize` args must
 never run implicitly. #360 d/e and genuine browser/role/SQL/AI acceptance remain
 **UNMET**; nothing here authorizes exposure or retirement.
+
+## Renewed Initializer ACR CLI Attempt (2026-10-17)
+
+Refs #360. Current source baseline `bab4bf3a2ac9ec030d78d27063d1390f800c5c7c`
+preserves merged #375/#379/#381, retained immutable API base, upstream Python
+pin/security-upgrade source and seven-file proof context without source changes.
+The [current commands and exact error](../../infra/README.md#renewed-initializer-acr-cli-attempt-2026-10-17-360)
+supersede the assumption that VM private TCP443 failure establishes hosted Tasks
+unavailability. Independent ARM readback confirms historical `dbb` Succeeded,
+ordinary cpu2, 2026-10-16T13:53 and old proof digest; that is not current proof.
+
+| Current evidence | Result and boundary |
+| --- | --- |
+| Local retained-base build | Actual Docker attempt failed at base manifest HEAD with firewall403; no real proof image or actual image smoke |
+| Exact CLI upload preflight | Seven unique regular paths/SHA256, committed-source bytes equal; duplicate identical Dockerfile archive member disclosed |
+| Current hosted command | Actual source upload 20.157 KiB succeeded, ordinary cpu2 QuickRun `dbc` queued |
+| Current agent logs | Source download and Docker setup succeeded; registry login `/v2/` returned 403, run Failed after six seconds; no build/push/output digest |
+| Localhost source smoke | Current installed source, one fictional case/zero staff, AI off/no SQL: welcome/health200, anonymous protected endpoints401; not real-image/browser/SQL/AI evidence |
+| Existing initializer preservation | Full read-visible projection SHA256 before/after `fbc548ae52b49563b3e6c3c8d0c0cd2ecec8b1d04f8f4c109d9fff77b1c5908e`; unchanged old digest/Manual initialize args/settings/identity/environment/configuration, no update/start |
+| Restrictions | Registry public Disabled/bypass None before/after; activated #379 permissions retained, no IAM change |
+| Regression | 83 focused infra tests pass, zero skips after missing-package recovery in worktree-local pip venv |
+
+No new published tag/digest, pin or image-validation acceptance exists.
+Registry login403 does not by itself distinguish network policy from identity.
+No new pool, public access, bypass, IAM, infrastructure or workload modification
+was attempted. The authorized source upload and failed existing-service build
+are the only Azure write operations. No secret payload, private dataset, SQL,
+Graph, API restart, job execution, exposure or retirement.
+
+Future pin requires a single source/run/digest identity record and actual
+payload-hash/UID/import/help/localhost smoke on that exact hosted digest; source
+smoke and a separately built image cannot substitute. **#360 d/e UNMET**.
+Owner/operator tenant context and separately authorized retirement remain
+human gates. Old API/edge and resource group ama are untouched.
+
+### Read-Only Registry403 Root Diagnosis and PR385 Integration
+
+Coordinator-authorized continuation2026-10-17, no repeated full RPI or Review.
+Clean topic60134c5 integrated onto verified origin/main
+`bbbc9243505b606550327c64bf5429243f457f2e`; intermediate rebase head6311b51
+is an integration head, **not** tested/built source. Historical dbc receipt
+still records `bab4bf3a2ac9ec030d78d27063d1390f800c5c7c`, original base/payload
+hashes and results, byte-identical to prior PR385. Original single Review
+Complete/Residual work remains historical and unchanged; coordinator's external
+final-head review is pending, not Pass.
+
+Likely explanation is now narrower: the original deployment record says dba/
+dbb images were captured before registry isolation. Current ARM metadata shows
+registry writes after dbb (first completed October16 13:56:53, after13:53:24
+success). This supports later isolation as the cause of current default-agent
+login403; metadata alone does not identify the changed property or daemon token.
+Current registry is publicDisabled/bypassNone/LegacyRegistryPermissions. Both
+runs are QuickRun Linux/amd64/cpu2 with no named task/pool, current task/pool
+lists and ama VM inventory empty. Caller actions["*"] supports management
+operations, not proof of hosted data-plane auth; no RBAC denial is established.
+
+[Exact read-only diagnosis and options](../../infra/README.md#initializer-registry403-read-only-diagnosis-2026-10-17-360)
+cite Microsoft private-build, Tasks-specific bypass and VNet-pool guidance.
+Task bypass property is absent in preview GET, not literal false; the documented
+unset-SAMI deny rule is a candidate condition, not a proven identity or
+guaranteed trusted-services toggle fix. UK South is not in the published pool
+preview region list; no existing private publisher or same-region new pool is
+assumed available. Existing externally owned runners are outside inspected
+inventory, not proven nonexistent.
+
+No new Azure writes/build/log payload/secret/identity claim/private-data/
+initializer/API/network/IAM activity in this continuation. Preferred next
+decision is identify an existing authorized private-connected publisher; otherwise
+retain blocker while separately appraising explicit pool cost/region/network
+or task-bypass security exception. No option is authorized here. Actual image
+smoke/digest/pin and #360 d/e remain **UNMET**, old API/edge/ama untouched.
 
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 

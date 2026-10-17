@@ -140,7 +140,7 @@ class FakeAzure:
         elif args[:2] == ["containerapp", "list"]:
             value = self.apps
         elif args[:2] == ["containerapp", "show"]:
-            value = self.app
+            value = next(app for app in self.apps if app["name"] == args[args.index("-n") + 1])
         elif args[:3] == ["containerapp", "revision", "list"]:
             value = self.revisions
         elif args[:3] == ["deployment", "group", "list"]:
@@ -344,6 +344,74 @@ class SetupTests(unittest.TestCase):
         self.assertFalse(self.fake.writes)
         self.assertEqual(self.invoke("--container-app", self.fake.app["name"], "--dry-run"), 2)
         self.assert_no_edge_calls()
+
+    def discover_app(self, *flags):
+        args = SETUP.parser().parse_args(["--check", *flags])
+        cli = SETUP.Azure(self.home / "operator")
+        with redirect_stdout(self.output):
+            return SETUP.discover(cli, args, SUB)
+
+    def test_deployed_legacy_direct_pair_selects_exact_demo_in_either_order(self):
+        old = copy.deepcopy(self.fake.app)
+        old["tags"] = {"workload": "api"}
+        self.direct()
+        self.fake.app["name"] = "ca-cutover-test-demo-api"
+        self.fake.app["id"] = APP_ID.replace("ca-cutover-test-api", self.fake.app["name"])
+        self.fake.app["tags"] = {"workload": "api", "zava-forward-ingress": "direct"}
+        for rows in ([old, self.fake.app], [self.fake.app, old]):
+            with self.subTest(order=[row["name"] for row in rows]):
+                self.fake.apps = rows
+                app, urls = self.discover_app()
+                self.assertEqual(app["name"], "ca-cutover-test-demo-api")
+                self.assertEqual(app["id"], self.fake.app["id"])
+                self.assertEqual(urls, [f"https://{FQDN}"])
+        self.assert_no_edge_calls()
+        self.assertFalse(self.fake.writes)
+
+    def test_direct_pool_eligibility_and_mixed_tag_ambiguity(self):
+        self.direct()
+        selected = self.fake.app
+        for tags in ({"zava-forward-ingress": "direct"},
+                     {"zava-forward-role": "agents", "workload": "api",
+                      "zava-forward-ingress": "direct"}):
+            other = copy.deepcopy(selected)
+            other.update(name="ca-other-api", tags=tags)
+            self.fake.apps = [other, selected]
+            self.assertEqual(self.discover_app()[0]["id"], APP_ID)
+        other["tags"] = {"workload": "api", "zava-forward-ingress": "direct"}
+        other["id"] = APP_ID.replace("ca-cutover-test-api", other["name"])
+        for rows in ([other, selected], [selected, other]):
+            self.fake.apps = rows
+            with self.assertRaisesRegex(SETUP.SetupError, "Cannot select one api"):
+                self.discover_app()
+            for candidate in rows:
+                self.assertEqual(
+                    self.discover_app("--container-app", candidate["name"])[0]["id"],
+                    candidate["id"])
+        self.assertFalse(self.fake.writes)
+        self.assert_no_edge_calls()
+
+    def test_explicit_old_override_and_single_legacy_keep_edge_discovery(self):
+        old = self.fake.app
+        old["tags"] = {"workload": "api"}
+        demo = copy.deepcopy(old)
+        demo.update(name="ca-cutover-test-demo-api",
+                    id=APP_ID.replace("ca-cutover-test-api", "ca-cutover-test-demo-api"),
+                    tags={"workload": "api", "zava-forward-ingress": "direct"})
+        self.fake.apps = [demo, old]
+        app, urls = self.discover_app("--container-app", old["name"])
+        self.assertEqual(app["id"], APP_ID)
+        self.assertIn(f"https://{EDGE}", urls)
+        self.fake.apps = [old]
+        self.assertEqual(self.discover_app()[0]["id"], APP_ID)
+        with self.assertRaisesRegex(SETUP.SetupError, "--container-app"):
+            self.discover_app("--container-app", "ca-unknown-api")
+        other = copy.deepcopy(old)
+        other["name"] = "ca-other-api"
+        self.fake.apps.append(other)
+        with self.assertRaisesRegex(SETUP.SetupError, "Cannot select one api"):
+            self.discover_app()
+        self.assertFalse(self.fake.writes)
 
     def test_direct_guards_environment_origin_and_conflicting_edge(self):
         self.direct()

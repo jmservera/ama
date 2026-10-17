@@ -5184,3 +5184,95 @@ metadata when the knowledge base was created.
   local SQL Server procurement domain/API 31 pass and local browser validation
   pass. Counts overlap. Configured lint/format/types, strict browser harness,
   JS/compilation/diff checks pass. No test/validator weakened or skip added.
+
+## [2026-10-17] delivery | #360 renewed actual az acr initializer publication
+
+* Corrected the prior private-publisher-only inference with an actual hosted
+  CLI experiment on retained source bab4bf3 (#381). Read-only run dbb proves
+  historical ordinary cpu2 success on 2026-10-16, not current publication.
+* Normal Docker retained-base build failed on manifest HEAD firewall403.
+  The actual corrected hosted command uploaded 20.157 KiB, queued ordinary
+  cpu2 QuickRun dbc and downloaded source; agent registry login then failed
+  `/v2/`403. Failed run, no output image/build/push/digest/pin. Initial
+  Dockerfile-path error was local, corrected and preserved separately.
+* Exact native CLI archive contains seven unique intended regular paths, all
+  hashes equal committed source, plus identical duplicate Dockerfile member.
+  Retained base, upstream pinned/security-upgrade source and #375/#379/#381
+  implementation unchanged. Full read-visible job projection matches before/
+  after; registry public Disabled/bypass None preserved.
+* Actual current-source localhost fixture smoke: welcome/health200, anonymous
+  protected endpoints401, one fictional case/zero staff, AI off/no SQL. This
+  is NOT actual image, tenant sign-in or deployed-runtime proof. Focused
+  infra suite83passed/0skips after worktree-local pip dependency recovery.
+* Updated [current runbook](../../infra/README.md#renewed-initializer-acr-cli-attempt-2026-10-17-360),
+  [evidence pack](../architecture/cutover-evidence-pack.md#renewed-initializer-acr-cli-attempt-2026-10-17)
+  and index without rewriting earlier observations/logs. Dated ordered RPI
+  research/plan/details/critique/changes/receipt/review records accompany PR.
+  Only authorized source upload/failed QuickRun, no workload/network/IAM/
+  infrastructure/secret/private-data/Graph/SQL/restart/jobstart/retirement.
+  Exact hosted-digest image validation remains blocked; #360 d/e UNMET.
+
+## [2026-10-17] delivery | #360 PR385 integration and read-only registry403 diagnosis
+
+* Coordinator explicitly authorized clean topic60134c5 integration onto fresh
+  origin/main bbbc9243505b606550327c64bf5429243f457f2e. Only append-log
+  conflict, resolved with exact upstream prefix then complete own append;
+  both #84 upstream routing/history and #360 routing retained. No source
+  mutation. Intermediate integration6311b51 is not tested source; actual
+  dbc receipt/sourcebab4bf3/payload/base hashes and original single Review
+  Complete/Residual work preserved byte-identically. External final-head gate
+  forthcoming, not a new Pass or repeated full RPI.
+* Bounded read-only comparison found both runs QuickRun Linux/amd64/cpu2,
+  no named task/pool. Original deployment record says images captured before
+  registry isolation; ARM metadata shows registry write13:56:53 after dbb's
+  13:53:24 October16 success. Strongly supported likely isolation explanation,
+  not proof of exact changed property or daemon identity/RBAC denial.
+* Current publicDisabled/bypassNone/LegacyRegistryPermissions retained;
+  task-specific bypass property absent in preview GET, not literal false.
+  Microsoft documents default SAMI bypass denial, separate from generic trusted
+  services; applicability to exact QuickRun token not proven. Current tasks/
+  pools/ama VMs empty, externally owned private runners unknown. Pool billing/
+  region limits, including UK South absent from preview list, remain explicit.
+* [Runbook diagnosis/options](../../infra/README.md#initializer-registry403-read-only-diagnosis-2026-10-17-360),
+  [integration evidence](../architecture/cutover-evidence-pack.md#read-only-registry403-root-diagnosis-and-pr385-integration),
+  existing research/changes and current index updated. Preferred later owner
+  choice identifies an existing private publisher; new costed pool or task-bypass
+  exception requires separate specific approval, not blanket IAM/public access.
+* No new Azure writes/builds, log payload/SAS/secret/actor/identity-detail
+  retrieval, initializer update/start, SQL/Graph/private data, restart or
+  teardown. Actual exact-image smoke/digest/pin and #360 d/e remain UNMET.
+
+## [2026-10-17] query | Safe setup API selection during retained migration (Refs #360)
+
+* New ordered setup-api-selection-360 RPI on PR #385 found the actual demo API
+  has legacy `workload=api` plus explicit `zava-forward-ingress=direct`, but no
+  modern role tag. Old API retains workload-only metadata. Read-only selected
+  ARM fields, not names or list order, establish the existing selector.
+* [Setup runbook](../../infra/README.md#post-deployment-api-authentication-initialization)
+  and script now accept the compatible legacy direct tag combination. Exact
+  old-API override remains supported; mixed modern/legacy direct candidates
+  refuse ambiguity. Single legacy/Front Door path remains unchanged.
+* Corrected active transport guidance: `--check`, `--dry-run` and `--list-staff`
+  now refuse temporary Azure job/secret writes before request payload creation,
+  including automatic fallback. Local read-only verification remains; failed
+  private connectivity reports blocked/incomplete, not verified SQL. Mutation-mode
+  Azure preflight/roster/apply transport remains separately scoped.
+* Existing runbook and index updated; new phase evidence records red-first and
+  offline regressions. No live setup, private SQL/Graph writes, image smoke/pin,
+  restart, public access/bypass/IAM/new infrastructure or retirement. Prior ACR
+  historical receipts and Review remain unchanged; actual #360 d/e unmet.
+
+## [2026-10-17] delivery | #360 setup selection offline Review and publication
+
+* New setup RPI has one independent critique, three resolved findings, 164
+  passing setup/staff/legacy regressions and scoped lint/format/types/compile.
+  Its one independent Review is Complete / Residual work: bounded source
+  conformant, no defects, no correction used. No runtime acceptance implied.
+* PR #385 now includes the narrow selector/no-cloud-write guard and dated
+  evidence, integrated onto finance main d400eb8 with exact upstream log prefix,
+  all owned append entries and #84/#94/#360 routes retained. Eight prior ACR
+  artifacts/receipt/Review remain byte-identical; historical bab4bf3 build
+  source is not relabeled as new reviewed setup source f48cc9b.
+* No Azure write during this continuation. Private-publisher authority decision,
+  exact-image smoke/pin, real operator sign-in/roles/SQL/AI and later retirement
+  remain open. External final-head gate/owner merge decision pending; no closure.
