@@ -116,3 +116,137 @@ concrete command result requiring an in-scope alternative.
 Ready for bounded plan. Research disposition: executed. All three waves complete.
 Artifact self-check: questions mapped, source refs/dated external refs recorded,
 alternatives and failed retrieval disclosed. Parent continues to Plan.
+
+## Authorized Read-Only Root Diagnosis Continuation (2026-10-17)
+
+Brief: compare successful dbb (October16) and failed dbc (October17), current
+registry/platform/task identity and caller action permissions, restricted ARM
+activity metadata and official Microsoft documentation. Focused analysis-only
+cycle2; no new full RPI or repeated critique/Review. Original Review remains
+Complete/Residual work. No new builds/Azure writes, sensitive identity/activity
+payloads, secrets/SAS/log payload retrieval, network/IAM/bypass changes.
+
+Integration independently authorized: clean topic60134c5 rebased onto verified
+origin/main bbbc9243505b606550327c64bf5429243f457f2e, result6311b51 before
+this diagnosis. Only additive log conflict, exact main log prefix and both
+upstream/topic routing retained. Historical dbc tested source remains bab4bf3,
+not the integration head; command receipt and original Review byte-identical.
+
+Cycle2 questions: did success precede a firewall configuration change; what
+existing hosted identity/path and platform restrictions explain login403; are
+trusted-service/VNet-agent alternatives documented and already available?
+Start wider with retained sanitized receipts, registry/task metadata, action
+permissions and official network/task guidance, then deepen timeline and
+challenge the leading explanation. All findings remain evidence versus inference.
+No interactive intake needed; explicit scope is sufficient. No research worker.
+Readiness for cloud remediation is Not authorized; report smallest owner choice
+with cost/security impact rather than mutate or repeat an empirical build.
+
+Cycle2 Wider reflection: both runs are QuickRun Linux/amd64/cpu2, task null,
+pool null; current named tasks/pools and ama VM inventory empty. Current
+LegacyRegistryPermissions (not ABAC), Premium UK South, public Disabled/bypass
+None, approved private endpoint. Current registry networkRuleSet defaultAllow
+does not override publicDisabled. Prior primary evidence
+`.copilot-tracking/changes/2026-10-16/deployed-src-proof-changes.md:20-26`
+explicitly records all images captured BEFORE registry isolation. This materially
+supports the firewall-change hypothesis; deepen timeline rather than assume
+the successful run used today's network state. Official private-endpoint guide
+explicitly documents default az acr build failure when public access is disabled.
+General trusted-services page is not proof of task exemption; investigate the
+task-specific bypass property separately. No log payloads retrieved.
+
+Cycle2 Deeper reflection: registry-scoped activity metadata shows successful
+registry writes AFTER dbb, first completing October16 13:56:53.6373221Z, then
+14:07:30, 14:14:17 and22:34:36; dbc scheduleRun succeeded October17 17:57:22.
+Metadata proves update timing, NOT which property changed or by whom; no caller,
+claims, identity, request/response/change payload retained. Together with the
+contemporaneous "before registry isolation" record, network isolation between
+builds is the leading explanation, not an assumed same-state regression.
+
+Effective caller permissions endpoint returns actions["*"], no exclusions,
+empty dataActions; this supports control-plane read/schedule capability, not
+hosted-agent token/pull authorization. Both QuickRuns task/pool null, so no
+named managed-identity task or hidden inherited selected pool is demonstrated.
+No identities/tokens or task credential payloads inspected.
+
+Task-specific Microsoft guidance adds a material qualifier: SAMI task network
+bypass defaults to denied when networkRuleBypassAllowedForTasks is unset
+(June1,2025 transition), unlike generic trusted-service access. Current preview
+GET returns null for that property; distinguish absent/null from literal false.
+The exact daemon token identity is not exposed by selected run metadata; this
+policy is a candidate contributing condition, not a proven SAMI attribution.
+No blanket promise that toggling trusted services alone fixes QuickRun403.
+
+Cycle2 Contrarian: explicitly test same-state/auth-only/pool hypotheses.
+No named task or selected pool appears on either run; registry is not ABAC,
+caller actions include wildcard, and source upload/schedule already succeeded.
+These weaken a control-plane permission or ABAC-switch explanation but do NOT
+attest daemon credentials. Preview2025-06-01 GET confirms task-bypass property
+ABSENT (not false). Official policy says unset denies SAMI task bypass; it also
+says UAMI is unaffected, but this does not establish any UAMI as present or
+grant network access to an arbitrary quick build. Generic trusted-service table
+lists ACR import, not an automatic default QuickRun exemption. Caller-identity
+CLI option changes authentication, not network reachability.
+
+The 194 selected exact-registry activity events are below requested max200,
+oldest creation12:08:01 October16 within requested11:55 October16 to18:20
+October17 window. This is bounded returned metadata, not a complete property
+history or proof of no unlogged/provider changes. No role/principal history,
+diagnostic login logs, SAS or build log payload fetched in this continuation.
+UK South is absent from the published agent-pool preview region list (retrieved
+October17); no new same-region pool should be presumed available. Existing ama
+VM/pool inventory empty does not rule out an externally owned self-hosted runner
+outside inspected scope. No such publisher demonstrated here. Reflection:
+evidence saturates within authorized metadata scope; further empirical testing
+or property-level/auth diagnostics would need separately bounded authority.
+
+### Cycle2 Evidence and Source Register
+
+| ID | Evidence, retrieved 2026-10-17 | Finding |
+| --- | --- | --- |
+| C6 | `.copilot-tracking/changes/2026-10-16/deployed-src-proof-changes.md:20-31` | dba/dbb images captured before registry isolation, private bootstrap completed14:03:51 |
+| C7 | `infra/modules/registry.bicep:16-33` | Explicit development public switch, bypassNone; no task-specific bypass declared |
+| C8 | `.copilot-tracking/changes/2026-10-17/initializer-acr-cli-360-command-receipt.json:1-147` | Actual historical sourcebab4bf3/context/payload/base, dbc failure and unchanged-job proof, preserved byte-identical |
+| W5 | https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-endpoints#use-az-acr-build-with-private-endpoint-and-private-registry | PublicDisabled default-build limitation; dedicated pool or regional public IP allowlist alternatives |
+| W6 | https://learn.microsoft.com/en-us/azure/container-registry/manage-network-bypass-policy-for-tasks | Task-specific SAMI bypass opt-in, unset denies; UAMI qualifier; self-hosted/private and pool alternatives |
+| W7 | https://learn.microsoft.com/en-us/azure/container-registry/allow-access-trusted-services | Generic trusted-service opt-in does not remove auth requirements; ACR import usage, not blanket Tasks claim |
+| W8 | https://learn.microsoft.com/en-us/azure/container-registry/tasks-agent-pools | VNet support, allocation billing, preview/region limits; UK South not listed |
+| W9 | https://learn.microsoft.com/en-us/azure/container-registry/container-registry-tasks-authentication-managed-identity | Task identity attached/configured explicitly; no inherited named task shown for these QuickRuns |
+| W10 | https://learn.microsoft.com/en-us/azure/container-registry/container-registry-troubleshoot-access | Network403 and authentication symptoms can overlap; no automatic RBAC conclusion |
+| W11 | Exact-registry activity-log GET, October16 11:55 to October17 18:20, max200, projection timestamp/operation/status only | dbb precedes writes13:56:53,14:07:30,14:14:17,22:34:36 October16; no property delta or actor attribution |
+| W12 | Registry GET preview2025-06-01 and permissions GET2022-04-01 at exact registry scope | Task bypass absent; publicDisabled/bypassNone; actions["*"], no exclusions; empty dataActions not proof of daemon-token access |
+| W13 | Registry/task/pool/run GET projections and ama VM inventory | Premium/UKSouth/LegacyRegistryPermissions, both QuickRun linux/amd64/cpu2/no task/no pool; no current named task/pool/ama VM |
+
+### Cycle2 Synthesis, Options and Explicit Authority Gap
+
+Leading likely root reason, strongly supported: successful dbb preceded registry
+isolation; default hosted dbc later encountered registry network restrictions.
+This is not evidence that ACR Tasks cannot run: its upload/scheduling worked.
+Activity metadata corroborates later configuration writes; original primary
+record supplies the before-isolation fact. Exact public/bypass value at dbb,
+exact changed property/write, daemon token identity and server403 subreason
+remain unproven by this deliberately payload-free diagnosis. No RBAC denial
+claimed and no need for a new grant demonstrated.
+
+| Candidate next option | Security/cost impact and authority |
+| --- | --- |
+| Identify an already existing authorized private-connected Docker runner/operator | Preferred no-bypass path if one exists; uses existing rights/capacity, no new service allocation; access, authorization and capacity not demonstrated here. Owner must identify exact runner and approve bounded build/pull/smoke/publication |
+| VNet-integrated ACR agent pool | Preserves private registry path but new allocated compute is billed even idle; none exists, UK South not in documented preview list. Requires separately reviewed region/support, network, quota, price/ceiling and owner spend approval; not provisioned |
+| Task-specific/SAMI and generic trusted-service bypass investigation/opt-in | May avoid new dedicated compute but explicitly relaxes network isolation and requires exact identity/applicability validation; absent property does not authorize toggle. No guaranteed one-flag remedy, no current approval |
+| Regional public task-IP allowlist/public access | Documented alternative, but changes public network boundary; conflicts with standing owner requirement and is not recommended or authorized |
+| Change auth flag/new role alone | Not evidence-backed cure for blocked network path; no IAM change justified; no retry authorized |
+| Microsoft support using sanitized metadata | Non-mutating diagnosis option if exact service-side cause needed; no ticket or external payload submission made; owner controls support/cost context |
+
+Smallest owner decision for later work: identify an existing authorized
+private-connected publisher, or keep image delivery blocked while deciding
+whether to separately appraise a costed private-pool design or explicit
+task-bypass exception. Current no-public/no-bypass constraint remains in force.
+Do not ask for blanket permission/new roles or represent this as regulatory
+approval. No command is authorized by the option table.
+
+Cycle2 research execution Complete, disposition executed, analysis-only.
+No repeat Plan/Implement/Review; original single Review remains Residual work.
+No cloud remediation handoff authorized. Parent may integrate documentation
+and publish PR385 under explicit coordinator direction, then stop for external
+review/owner authority. No additional cycle needed within metadata-only scope;
+re-entry requires precise approved access evidence or service-side subreason.

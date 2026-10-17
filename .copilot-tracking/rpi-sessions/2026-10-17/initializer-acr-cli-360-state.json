@@ -23,16 +23,18 @@
     {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C5/W1-W4; three ordered inline waves"},
     {"decision": "One critique executed; verdict Revise; PC-001 directly resolved", "status": "complete", "evidence": "Plan criterion 3 and details P01-T02/T03 bind exact hosted digest, submitted manifest and actual smoke"},
     {"decision": "One independent Review executed; outcome Residual work", "status": "complete", "evidence": "Canonical review record; no defects; RV-001 Medium, RV-002 Low, RV-003 Low; no correction or repeated Review"},
-    {"decision": "Reviewed evidence published as open main PR385", "status": "complete", "evidence": "https://github.com/jmservera/ama/pull/385; initial evidence commit 5504f87ae9a82cc5562bd242b5694a02393b7957; remote and PR head matched"}
+    {"decision": "Reviewed evidence published as open main PR385", "status": "complete", "evidence": "https://github.com/jmservera/ama/pull/385; initial evidence commit 5504f87ae9a82cc5562bd242b5694a02393b7957; remote and PR head matched"},
+    {"decision": "Coordinator authorizes fresh-main integration and bounded read-only diagnosis, not new cloud action or full RPI", "status": "complete", "evidence": "2026-10-17 direction; main bbbc9243505b606550327c64bf5429243f457f2e, intermediate integration6311b51; historical actual dbc sourcebab4bf3/receipt and original Review unchanged"},
+    {"decision": "Network isolation between dbb and dbc is strongly supported likely reason; exact token/property cause remains uncertain", "status": "complete", "evidence": "Research cycle2 C6-C8/W5-W13; before-isolation primary record and later registry writes; task bypass absent"}
   ],
   "blockers": [
-    {"id": "hosted-registry-login", "summary": "Actual QuickRun dbc uploaded/downloaded source then failed hosted-agent registry login403; no output image", "resolution": "Later authorized existing-service access diagnosis, no network/IAM change in this task"},
+    {"id": "hosted-registry-login", "summary": "Actual QuickRun dbc failed login403; diagnosis supports post-dbb isolation, exact token/cause not proven", "resolution": "Owner identifies existing private publisher or separately appraises costed private pool/task-bypass exception; no current network/IAM authority"},
     {"id": "local-image-smoke", "summary": "Actual retained-base Docker build failed manifest HEAD firewall403, image smoke unavailable", "resolution": "Actual exact hosted-digest local validation required before any later pin"}
   ],
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Diagnose existing hosted-agent registry403 and validate exact image", "rationale": "Immediate image-delivery blocker; no new pool/network/IAM authority inferred", "evidence": "RV-001; actual QuickRun dbc upload/download success then login403"},
+    {"rank": 1, "task": "Owner selects authorized private publication path before exact-image validation", "rationale": "Read-only diagnosis complete; existing private publisher preferred if available, any new allocation/bypass requires specific cost/security approval", "evidence": "RV-001; research cycle2 completed, no new build or pin"},
     {"rank": 2, "task": "Genuine operator browser/roles/SQL/AI acceptance", "rationale": "Required criterion d after image/setup prerequisites, not source smoke", "evidence": "RV-002; issue360 criterion d UNMET"},
     {"rank": 3, "task": "Separately authorized old-edge retirement", "rationale": "Must follow criterion d and exact owner approval; no current deletion authority", "evidence": "RV-003; issue360 criterion e UNMET"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "No automatic child work; owner/coordinator reviews PR385 and may authorize later diagnosis of actual dbc registry-login403; d/e remain UNMET"}
+  "next_action": {"phase": "Follow-up", "action": "Stop after authorized topic exact-lease push and PR385 body update; coordinator external final-head gate pending, no repeated Review/merge/child work; d/e remain UNMET"}
 }

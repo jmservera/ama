@@ -1997,6 +1997,64 @@ non-image settings unchanged; never start its historical initialize command.
 Current image gates remain blocked. Genuine operator/browser/roles/SQL/AI
 acceptance and #360 d/e remain **UNMET**; old API/edge and group `ama` stay.
 
+### Initializer Registry403 Read-Only Diagnosis (2026-10-17, #360)
+
+Coordinator authorized diagnosis only after the failed `dbc` attempt, not a new
+build or configuration change. **Likely cause: `dbb` succeeded before registry
+isolation; `dbc` later used default hosted compute without a demonstrated
+private/exempt path.** The original
+[deployment evidence](../docs/architecture/cutover-evidence-pack.md#private-network-continuation-2026-10-16)
+and contemporaneous deployment record explicitly place image capture before
+registry isolation. Exact-registry ARM activity metadata shows a successful
+registry write at October16 13:56:53 UTC, after `dbb` finished13:53:24, followed
+by writes14:07:30,14:14:17 and22:34:36. These timestamps corroborate updates,
+not which property changed or the exact network state at `dbb`.
+
+Current read-only findings, retrieved2026-10-17:
+
+| Evidence | Interpretation and limit |
+| --- | --- |
+| Both runs | QuickRun, Linux/amd64, ordinary cpu2, no named task or selected pool; same basic platform, not proof of equal network state/token |
+| Registry | Premium UK South, publicDisabled, bypassNone, approved private endpoint, LegacyRegistryPermissions rather than ABAC |
+| Task-specific bypass | Preview2025-06-01 GET omits `networkRuleBypassAllowedForTasks`; absent is not literal false |
+| Caller effective permissions | Registry scope actions `["*"]`, no exclusions, empty dataActions; management scheduling/read succeeds, but not an attestation of agent token/pull authorization |
+| Existing alternatives | Named tasks and agent pools empty; no VM/pool in inspected ama inventory. No inherited pool/managed-identity task demonstrated; external runners outside that scope are unknown |
+| Activity scope | 194 returned exact-registry events, max200, requested October16 11:55 to October17 18:20; only timestamp/operation/status/substatus selected, no actor/claims/request/change payloads |
+
+Microsoft's [private registry quick-build guidance](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-endpoints#use-az-acr-build-with-private-endpoint-and-private-registry)
+documents default `az acr build` failure with public network disabled and offers
+dedicated pools or regional public task-IP access. Its
+[Tasks-specific bypass policy](https://learn.microsoft.com/en-us/azure/container-registry/manage-network-bypass-policy-for-tasks)
+documents default denial for unset SAMI task bypass from June1,2025, with an
+explicit UAMI exception. That is not proof this QuickRun used SAMI or that an
+arbitrary UAMI/auth flag gains network access. The
+[generic trusted-service setting](https://learn.microsoft.com/en-us/azure/container-registry/allow-access-trusted-services)
+is distinct; enabling it alone is not a proven QuickRun fix.
+
+The [pool guide](https://learn.microsoft.com/en-us/azure/container-registry/tasks-agent-pools)
+documents VNet access and allocation-based billing; UK South is not in its
+published preview region list retrieved October17. No existing pool can simply
+be selected here and a new same-region pool is not presumed available.
+[Network troubleshooting](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-troubleshoot-access)
+also warns authentication and network symptoms can overlap. Without service-side
+subreason, the exact agent token/403 cause remains uncertain; no IAM denial or
+need for broader grants is established.
+
+| Later option, not an authorized command | Security/cost decision |
+| --- | --- |
+| Existing authorized private-connected Docker publisher | Preferred no-bypass option if the owner can identify one; no new service allocation, but rights/path/capacity remain unproven |
+| New VNet-integrated pool | Private path, but allocated compute billing, region/support/quota/network review and an explicit price ceiling/spend approval required; none provisioned |
+| Explicit Tasks/trusted-service bypass appraisal | Potentially avoids new pool allocation, but relaxes network isolation; exact identity/applicability must be proven, not a guaranteed one-flag remedy |
+| Public task-IP allowlist | Changes public boundary and conflicts with current requirements; not recommended or authorized |
+
+Smallest later owner choice: identify an existing approved private publisher,
+or retain the blocker while separately appraising a costed private-pool design
+or explicit task-bypass exception. No blanket access/IAM approval is requested.
+No bypass/public change, paid pool, support ticket, new build, workload/initializer
+update/start, API restart, SQL/Graph/secret-payload access or teardown occurred
+during this read-only continuation. No new live validation, image smoke/pin or
+regulatory approval is implied; #360 d/e remain **UNMET**.
+
 ### Scoped initializer IAM activation (2026-10-17, #360)
 
 The API-only receipt below is historical. Its unapproved/absent relay status

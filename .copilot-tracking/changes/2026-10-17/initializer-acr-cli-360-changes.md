@@ -134,3 +134,77 @@ complete as bounded evidence delivery; image publication remains Blocked.
 Automatic session stopped at explicit owner boundary, no follow-up child work.
 Terminal lifecycle record is committed/pushed separately so no pre-publication
 state falsely claims a PR existed; final exact head checked externally.
+
+## Coordinator-Authorized Integration and Read-Only Diagnosis Continuation
+
+Date2026-10-17, same #360 workstream/PR385; no second full RPI, critique or
+Review. Original single Review Complete/Residual work is retained byte-identical.
+External coordinator final-head gate is forthcoming, not a Pass.
+
+Clean old local/origin/PR head60134c500112fe6736fbd9a97ff1d079eab9afc6
+verified before fetch. Fresh origin/main exactly
+bbbc9243505b606550327c64bf5429243f457f2e, as authorized. Rebased two owned
+commits, resolving only docs/reference/log.md conflict by keeping exact upstream
+prefix then entire own append. Both upstream #84/topic #360 KB routes/history
+retained. Intermediate integration head6311b511bb4e2b702305b6be0a882a010a819671
+is distinct from actual tested/uploaded sourcebab4bf3. Historical command receipt,
+source/context/payload/base hashes and Review are byte-identical to60134c5;
+no retroactive test/source claim or mutation.
+
+Bounded diagnosis used GET/read-only commands only: registry and preview
+2025-06-01 properties; selected dbb/dbc run metadata; task/agentpool list; ama
+VM/pool inventory; registry-scoped Authorization permissions; exact-registry
+activity metadata October16 11:55 through October17 18:20/max200, selected
+timestamp/operation/status/substatus only. Returned194 events, oldest creation
+October16 12:08:01. No actor/claims/request/response-change payload, identity
+details, new build log payload, SAS, secrets or private data accessed/output.
+Control-plane queries may themselves create ordinary audit read entries;
+no Azure configuration/build/runtime write requested.
+
+Existing primary deployment artifact records dba/dbb images captured before
+registry isolation. Registry writes completed after dbb13:53:24 success, first
+13:56:53.6373221, then14:07:30,14:14:17,22:34:36 October16. This corroborates
+network isolation as the strongly supported likely reason default-agent dbc
+login403 differs, not exact property-change proof. Current registry publicDisabled/
+bypassNone/LegacyRegistryPermissions; both runs QuickRun Linux/amd64/cpu2/task
+null/poolnull. Named tasks/pools and inspected ama VM/pool inventory empty.
+Caller effective actions["*"] no exclusions, empty dataActions; does not prove
+agent token/pull access or justify a new grant.
+
+Official Microsoft docs retrieved2026-10-17: private-endpoint az-acr-build
+limitations, Tasks-specific bypass policy, generic trusted services, managed
+task identities, dedicated pool billing/regions and network troubleshooting.
+Exact URLs/evidence W5-W13 and wider/deeper/contrarian cycle2 in research.
+Preview GET confirms networkRuleBypassAllowedForTasks absent, not false.
+Documented unset-SAMI default denial is a candidate contributing condition;
+actual daemon token identity unknown, no promise generic trusted-service toggle/
+caller identity alone fixes it. UAMI exception does not prove available path.
+UK South absent from published preview pool-region list; new same-region pool
+not assumed feasible; no existing inherited pool or named task demonstrated.
+Unknown external private runners are not claimed nonexistent.
+
+Minimal later decision: identify an existing approved private-connected Docker
+publisher (preferred no-bypass/no-new-allocation path if one exists), or retain
+blocker while separately appraising a costed supported private-pool design or
+explicit Tasks-bypass security exception. New pool needs region/quota/network/
+allocation-price ceiling approval; bypass relaxes network isolation and exact
+identity applicability remains unproven. Regional public-IP option conflicts
+with current constraints; auth/IAM change alone unsupported. No such option
+authorized/executed, no regulatory approval inferred.
+
+Existing runbook/evidence/index/additive log updated without changing old
+observations. No source, dependency, image, tests or IAM/network change; minimal
+doc/link/JSON/byte-parity checks only, not fresh component/image/runtime tests.
+Exact image smoke/pin and genuine operator/browser/SQL/AI d/e remain unperformed.
+Owner explicitly authorizes exact-lease force push ONLY this topic with lease
+60134c500112fe6736fbd9a97ff1d079eab9afc6, PRbody update and clean stop.
+
+Integration/diagnosis validation: all11 added relative documentation links/
+anchors pass, task JSON parses, git diff --check passes. Every upstream KB
+routing row except the intentionally updated own #360 row is retained exactly.
+Exact upstream log prefix plus complete prior own append verified. Entire
+src/ and infra executable/tests/Dockerfile/ignore byte-identical to newmain;
+historical command receipt, original single Review and critique byte-identical
+to oldtopic60134c5; all seven payload hashes still match bab4bf3 receipt.
+No dependency installation, test/build/image/runtime rerun or fake final-head
+acceptance. Coordinator external review remains pending.

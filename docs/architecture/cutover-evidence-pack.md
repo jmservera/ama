@@ -342,6 +342,43 @@ smoke and a separately built image cannot substitute. **#360 d/e UNMET**.
 Owner/operator tenant context and separately authorized retirement remain
 human gates. Old API/edge and resource group ama are untouched.
 
+### Read-Only Registry403 Root Diagnosis and PR385 Integration
+
+Coordinator-authorized continuation2026-10-17, no repeated full RPI or Review.
+Clean topic60134c5 integrated onto verified origin/main
+`bbbc9243505b606550327c64bf5429243f457f2e`; intermediate rebase head6311b51
+is an integration head, **not** tested/built source. Historical dbc receipt
+still records `bab4bf3a2ac9ec030d78d27063d1390f800c5c7c`, original base/payload
+hashes and results, byte-identical to prior PR385. Original single Review
+Complete/Residual work remains historical and unchanged; coordinator's external
+final-head review is pending, not Pass.
+
+Likely explanation is now narrower: the original deployment record says dba/
+dbb images were captured before registry isolation. Current ARM metadata shows
+registry writes after dbb (first completed October16 13:56:53, after13:53:24
+success). This supports later isolation as the cause of current default-agent
+login403; metadata alone does not identify the changed property or daemon token.
+Current registry is publicDisabled/bypassNone/LegacyRegistryPermissions. Both
+runs are QuickRun Linux/amd64/cpu2 with no named task/pool, current task/pool
+lists and ama VM inventory empty. Caller actions["*"] supports management
+operations, not proof of hosted data-plane auth; no RBAC denial is established.
+
+[Exact read-only diagnosis and options](../../infra/README.md#initializer-registry403-read-only-diagnosis-2026-10-17-360)
+cite Microsoft private-build, Tasks-specific bypass and VNet-pool guidance.
+Task bypass property is absent in preview GET, not literal false; the documented
+unset-SAMI deny rule is a candidate condition, not a proven identity or
+guaranteed trusted-services toggle fix. UK South is not in the published pool
+preview region list; no existing private publisher or same-region new pool is
+assumed available. Existing externally owned runners are outside inspected
+inventory, not proven nonexistent.
+
+No new Azure writes/build/log payload/secret/identity claim/private-data/
+initializer/API/network/IAM activity in this continuation. Preferred next
+decision is identify an existing authorized private-connected publisher; otherwise
+retain blocker while separately appraising explicit pool cost/region/network
+or task-bypass security exception. No option is authorized here. Actual image
+smoke/digest/pin and #360 d/e remain **UNMET**, old API/edge/ama untouched.
+
 ## In-VNet Staff Initialization Offline Follow-Up (2026-10-16)
 
 Refs #360. This offline change supersedes only the earlier absence of private

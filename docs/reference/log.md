@@ -5211,3 +5211,33 @@ metadata when the knowledge base was created.
   Only authorized source upload/failed QuickRun, no workload/network/IAM/
   infrastructure/secret/private-data/Graph/SQL/restart/jobstart/retirement.
   Exact hosted-digest image validation remains blocked; #360 d/e UNMET.
+
+## [2026-10-17] delivery | #360 PR385 integration and read-only registry403 diagnosis
+
+* Coordinator explicitly authorized clean topic60134c5 integration onto fresh
+  origin/main bbbc9243505b606550327c64bf5429243f457f2e. Only append-log
+  conflict, resolved with exact upstream prefix then complete own append;
+  both #84 upstream routing/history and #360 routing retained. No source
+  mutation. Intermediate integration6311b51 is not tested source; actual
+  dbc receipt/sourcebab4bf3/payload/base hashes and original single Review
+  Complete/Residual work preserved byte-identically. External final-head gate
+  forthcoming, not a new Pass or repeated full RPI.
+* Bounded read-only comparison found both runs QuickRun Linux/amd64/cpu2,
+  no named task/pool. Original deployment record says images captured before
+  registry isolation; ARM metadata shows registry write13:56:53 after dbb's
+  13:53:24 October16 success. Strongly supported likely isolation explanation,
+  not proof of exact changed property or daemon identity/RBAC denial.
+* Current publicDisabled/bypassNone/LegacyRegistryPermissions retained;
+  task-specific bypass property absent in preview GET, not literal false.
+  Microsoft documents default SAMI bypass denial, separate from generic trusted
+  services; applicability to exact QuickRun token not proven. Current tasks/
+  pools/ama VMs empty, externally owned private runners unknown. Pool billing/
+  region limits, including UK South absent from preview list, remain explicit.
+* [Runbook diagnosis/options](../../infra/README.md#initializer-registry403-read-only-diagnosis-2026-10-17-360),
+  [integration evidence](../architecture/cutover-evidence-pack.md#read-only-registry403-root-diagnosis-and-pr385-integration),
+  existing research/changes and current index updated. Preferred later owner
+  choice identifies an existing private publisher; new costed pool or task-bypass
+  exception requires separate specific approval, not blanket IAM/public access.
+* No new Azure writes/builds, log payload/SAS/secret/actor/identity-detail
+  retrieval, initializer update/start, SQL/Graph/private data, restart or
+  teardown. Actual exact-image smoke/digest/pin and #360 d/e remain UNMET.
