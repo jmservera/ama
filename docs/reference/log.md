@@ -4997,3 +4997,61 @@ metadata when the knowledge base was created.
   writes or workload/private-data access. Existing10.40.4.20/.21 timeouts remain
   concrete evidence; image publication/pin and #360 d/e UNMET. Stop final push,
   no merge or automatic child work.
+
+## [2026-10-17] query | #84 current-authority and failed-decision engineering continuation
+
+* Verified exact four issue criteria against PRD FR-012/013 and BRD FR-037/
+  AC-065/RULE-017, current modules and constructed baseline tests. Comparisons,
+  independent versioned sign-offs, affected-only reassessment and Unknown
+  support with other ranking factors were already delivered; none replaced.
+* Reproduced revoked SQL actor approval and failed-write success-audit gaps.
+  Added a bounded stock/technical decision scope using existing current-staff
+  validation, writer transaction and discard mechanisms. No policy weights,
+  role grants, new source authority, procurement/capacity or infrastructure/
+  package changes.
+* Eight selected canonical cases passed on a task-owned local SQL Server 2022
+  container: all decision successes, stale/removed/changed-OID actors,
+  independent pre-save authority change, case/audit rollback, reopen and no
+  later success-audit flush. Component guides, existing synthesis and index
+  updated. JSON's separate-file durability boundary remains explicit.
+* No private/cohort/real-map reads, real cloud, paid model, inferred health,
+  actual professional delegation, source-policy/legal approval or new human
+  accessibility acceptance. Broader nomination/self-referral belongs to #130;
+  this evidence does not close #84 or establish full BRD AC-065 acceptance.
+
+## [2026-10-17] query | #84 Review blocks failed-recovery acceptance
+
+* The one independent post-implementation Review completed with outcome
+  Not accepted. RV-001 High is an in-scope blocker: early `_discard` read failure
+  can leave a failed success audit for outer cleanup, while persistent failure
+  can mask the original save error. The existing recovery-fault test performs
+  successful discard before raising and does not cover those cases.
+* Four original issue mechanisms and current-authority checks remain separately
+  evidenced; passing normal-recovery suites do not resolve the blocker.
+  Updated current component/synthesis/index status to prevent a successful
+  acceptance claim. No source correction, second Review, issue closure or
+  operational approval; any visibility PR is explicitly incomplete.
+
+## [2026-10-17] query | #84 correction ONE contains failed recovery before reload
+
+* Coordinator explicitly authorized RV-001 correction on existing PR #382.
+  Original Review and Not accepted outcome retained; no repeated full RPI.
+  New actual recovery SELECT fault test failed all six one-shot/persistent
+  technical/comparison/terminal subcases before source edits. A second
+  transactional GateError/ConflictError fault test failed both cases before
+  the additional scoped refusal-path change.
+* Canonical SQL discard clears pending audit/writes/validation first, restores
+  known case/recommendation/shared-document snapshots and invalidates sync
+  watermark before fallible reads. Stock/technical refusal cleanup remains
+  with its existing decision scope, preserving original exception/logged
+  uncertainty even if reload fails; next operation retries, never succeeds
+  on dirty cached state.
+* Ten actual local SQL Server tests, 102 focused core/gate tests, 69 direct
+  shared-cleanup-consumer tests and 72 targeted API tests (one opt-in browser
+  skip) pass; core/API lint/format/types pass. Owned loopback SQL container
+  removed; no other task container touched, new dependency, private/cloud/model
+  use, authority/policy change or broad lock/architecture rewrite.
+* Bounded independent correction verification closes RV-001 for the exact
+  fingerprinted source/test content: 91 focused tests and two constructed
+  persistent-recovery snapshot probes pass. Original adverse Review retained,
+  no repeated full RPI. No merge, issue closure or human/operational approval.

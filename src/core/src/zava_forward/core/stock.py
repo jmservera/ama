@@ -1,12 +1,52 @@
 """Owned stock comparisons and explicit support uncertainty, never source authority."""
 
-from collections.abc import Mapping
+import logging
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
+from copy import deepcopy
 from datetime import UTC, date, datetime
-from typing import Literal
+from typing import Any, Literal
 
 type SupportState = Literal["Yes", "No", "Unknown"]
 STOCK_FIELDS = ("epc", "type", "built")
 SUPPORT_ENCODING = "1"
+
+
+@contextmanager
+def decision_scope(
+    store: Any, user: dict[str, Any], case_id: str
+) -> Iterator[tuple[dict[str, Any], dict[str, Any]]]:
+    """Bind stock/technical writes to current staff and discard failed SQL decisions."""
+    from .change_provenance import _actor
+
+    with store.lock:
+        actor = _actor(store, user)
+        case = store._case(case_id)
+        if not hasattr(store, "db"):
+            yield case, actor
+            return
+        previous = getattr(store.local, "stock_decision", None)
+        store.local.stock_decision = dict(user=deepcopy(user), actor=actor)
+        try:
+            yield case, actor
+        except BaseException as error:
+            try:
+                store._discard()
+            except Exception:
+                error.add_note("Stock/technical recovery failed; reload to establish the outcome.")
+                logging.getLogger(__name__).exception("Stock/technical SQL recovery failed")
+            raise
+        finally:
+            store.local.stock_decision = previous
+
+
+def validate_sql(store: Any) -> None:
+    """Repeat identity validation after acquiring the existing SQL writer lock."""
+    from .change_provenance import _actor
+
+    context = getattr(store.local, "stock_decision", None)
+    if context is not None and _actor(store, context["user"]) != context["actor"]:
+        raise PermissionError("Staff authority changed. Reload before recording this decision.")
 
 
 def support_status(resident: Mapping[str, object]) -> SupportState:

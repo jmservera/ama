@@ -2,7 +2,10 @@
 
 import copy
 import json
+import subprocess
+import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 from typing import Any
@@ -72,6 +75,20 @@ class StockReconciliation(unittest.TestCase):
             result.append(store)
         return result
 
+    def reopen(self, store: Any) -> Any:
+        reopened = SqlStore("unused-constructed-seed.json", store.db_path)
+        self.addCleanup(reopened.db.close)
+        return reopened
+
+    @staticmethod
+    def durable_state(store: Any) -> tuple[Any, ...]:
+        return (
+            store.db.execute("SELECT rowversion, seq, body FROM cases WHERE id='ZF-3'").fetchone(),
+            store._db_seq(),
+            list(store.audit_entries()),
+            store.ledger_head(),
+        )
+
     def tech(self, store: Any, actor: str, action: str, **body: object) -> None:
         store.technical_action(self.users[actor], "ZF-3", dict(action=action, **body))
 
@@ -109,13 +126,7 @@ class StockReconciliation(unittest.TestCase):
                 self.assertEqual(rows[0][key], "Unknown")
             for key in ("home", "decision", "owner_code", "stage", "hazards"):
                 self.assertEqual(detail[key], before[key])
-            reopened = (
-                Store(store.live_path)
-                if type(store) is Store
-                else SqlStore(str(Path(self.tmp.name) / "sql/synthetic.json"), store.db_path)
-            )
-            if isinstance(reopened, SqlStore):
-                self.addCleanup(reopened.db.close)
+            reopened = Store(store.live_path) if type(store) is Store else self.reopen(store)
             self.assertEqual(reopened.detail("ZF-3")["stock_reconciliation"], rows)
             self.assertTrue(reopened.verify_audit())
 
@@ -175,6 +186,11 @@ class StockReconciliation(unittest.TestCase):
             self.signed(store)
             before = store.detail("ZF-3")["technical"]
             self.assertEqual(len({s["by_email"] for s in before["signoffs"].values()}), 4)
+            self.assertEqual(
+                set(before["signoffs"]), {"assessment", "design", "building", "coordination"}
+            )
+            self.assertTrue(all(s["version"] == 1 for s in before["signoffs"].values()))
+            sibling = store.detail("ZF-2")
             self.tech(
                 store,
                 "rc1",
@@ -192,6 +208,421 @@ class StockReconciliation(unittest.TestCase):
             signed = store.detail("ZF-3")["technical"]["signoffs"]["design"]
             self.assertEqual(signed["version"], 2)
             self.assertEqual(signed["history"][-1]["by_email"], "rc2@example.test")
+            self.assertEqual(store.detail("ZF-2"), sibling)
+            if isinstance(store, SqlStore):
+                self.assertEqual(
+                    self.reopen(store).detail("ZF-3")["technical"],
+                    store.detail("ZF-3")["technical"],
+                )
+
+    def test_sql_current_actor_denial_for_all_decisions(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        for actor, action in (
+            (
+                "qi",
+                lambda u: store.technical_action(
+                    u, "ZF-3", dict(action="signoff_give", type="assessment")
+                ),
+            ),
+            ("sam", lambda u: store.stock_reconcile(u, "ZF-3", query())),
+            (
+                "pam",
+                lambda u: store.stock_query_event(
+                    u,
+                    "ZF-3",
+                    dict(query_id="SQ-1", action="withdraw", reason="Constructed duplicate"),
+                ),
+            ),
+        ):
+            if actor == "sam":
+                store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            user = self.users[actor]
+            original = store.db.execute(
+                "SELECT body FROM staff WHERE email=?", (user["email"],)
+            ).fetchone()[0]
+            for mutation in (
+                {"role": "Contractor"},
+                {"name": "Changed human"},
+                {"oid": "new-binding"},
+                None,
+            ):
+                with self.subTest(actor=actor, mutation=mutation):
+                    if mutation is None:
+                        store.db.execute("DELETE FROM staff WHERE email=?", (user["email"],))
+                    else:
+                        store.db.execute(
+                            "UPDATE staff SET body=? WHERE email=?",
+                            (json.dumps(dict(user, **mutation)), user["email"]),
+                        )
+                    before = self.durable_state(store)
+                    try:
+                        with self.assertRaises(PermissionError):
+                            action(user)
+                        self.assertEqual(self.durable_state(store), before)
+                    finally:
+                        if mutation is None:
+                            store.db.execute(
+                                "INSERT INTO staff (email, body) VALUES (?,?)",
+                                (user["email"], original),
+                            )
+                        else:
+                            store.db.execute(
+                                "UPDATE staff SET body=? WHERE email=?", (original, user["email"])
+                            )
+        self.assertTrue(store.verify_audit())
+
+    def test_stock_consumers_import_in_fresh_processes(self) -> None:
+        for module in ("mssqlstore", "ranking", "store"):
+            with self.subTest(module=module):
+                result = subprocess.run(
+                    [sys.executable, "-c", f"import zava_forward.core.{module}"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_sql_authority_rechecked_inside_writer_transaction(self) -> None:
+        store = self.stores()[-1]
+        peer = self.reopen(store)
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        save = store.save
+        for actor, action in (
+            ("qi", lambda: self.tech(store, "qi", "signoff_give", type="assessment")),
+            ("sam", lambda: store.stock_reconcile(self.users["sam"], "ZF-3", query())),
+            (
+                "pam",
+                lambda: store.stock_query_event(
+                    self.users["pam"],
+                    "ZF-3",
+                    dict(query_id="SQ-1", action="withdraw", reason="Constructed duplicate"),
+                ),
+            ),
+        ):
+            if actor == "sam":
+                store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            user = self.users[actor]
+            before = self.durable_state(store)
+
+            def revoke_then_save(user: dict[str, Any] = user) -> None:
+                peer.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(dict(user, role="Contractor")), user["email"]),
+                )
+                save()
+
+            with self.subTest(actor=actor):
+                try:
+                    with (
+                        patch.object(store, "save", side_effect=revoke_then_save),
+                        self.assertRaises(PermissionError),
+                    ):
+                        action()
+                    self.assertEqual(self.durable_state(store), before)
+                    self.assertEqual(self.durable_state(self.reopen(store)), before)
+                finally:
+                    peer.db.execute(
+                        "UPDATE staff SET body=? WHERE email=?", (json.dumps(user), user["email"])
+                    )
+
+    def test_sql_failed_decisions_do_not_commit_or_flush_success_audit(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        store.stock_reconcile(self.users["sam"], "ZF-3", query())
+        for action in (
+            lambda: self.tech(
+                store, "rc1", "design_change", note="Constructed change", affects=["design"]
+            ),
+            lambda: store.stock_reconcile(self.users["sam"], "ZF-3", query()),
+            lambda: store.stock_query_event(
+                self.users["sam"],
+                "ZF-3",
+                dict(query_id="SQ-1", action="withdraw", reason="Constructed duplicate"),
+            ),
+        ):
+            before = self.durable_state(store)
+            failure = OSError("Constructed failed write")
+            with (
+                patch.object(store, "save", side_effect=failure),
+                self.assertRaises(OSError) as caught,
+            ):
+                action()
+            self.assertIs(caught.exception, failure)
+            self.assertEqual(self.durable_state(store), before)
+            self.assertEqual(self.durable_state(self.reopen(store)), before)
+            store.save()
+            self.assertEqual(list(store.audit_entries()), before[2])
+        store.stock_query_event(
+            self.users["sam"],
+            "ZF-3",
+            dict(query_id="SQ-1", action="withdraw", reason="Constructed duplicate"),
+        )
+        self.tech(store, "qi", "signoff_give", type="assessment")
+        self.assertTrue(store.verify_audit())
+
+    def test_sql_transactional_audit_failure_restores_decision(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        before = self.durable_state(store)
+        append = store._append_audit
+
+        def append_then_fail(entries: Any) -> None:
+            append(entries)
+            raise OSError("Constructed transactional audit failure")
+
+        with (
+            patch.object(store, "_append_audit", side_effect=append_then_fail),
+            self.assertRaises(OSError),
+        ):
+            self.tech(store, "rc1", "design_change", note="Constructed change", affects=["design"])
+        self.assertEqual(self.durable_state(store), before)
+        self.assertEqual(self.durable_state(self.reopen(store)), before)
+        store.save()
+        self.assertEqual(list(store.audit_entries()), before[2])
+
+    def test_sql_case_write_failure_restores_decision(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        before = self.durable_state(store)
+        db = store.db
+
+        class FailCaseWrite:
+            failed = False
+
+            def execute(self, sql: str, args: Any = ()) -> Any:
+                result = db.execute(sql, args)
+                if sql.startswith("UPDATE cases SET rowversion") and not self.failed:
+                    self.failed = True
+                    raise OSError("Constructed case-write failure after UPDATE")
+                return result
+
+            def __getattr__(self, name: str) -> Any:
+                return getattr(db, name)
+
+        with (
+            patch.object(store, "db", FailCaseWrite()),
+            self.assertRaises(OSError),
+        ):
+            self.tech(store, "rc1", "design_change", note="Constructed change", affects=["design"])
+        self.assertEqual(self.durable_state(store), before)
+        self.assertEqual(self.durable_state(self.reopen(store)), before)
+        store.save()
+        self.assertEqual(list(store.audit_entries()), before[2])
+
+    def test_sql_decision_scope_restored_on_every_exit(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+
+        class Interrupted(BaseException):
+            pass
+
+        for previous in (None, {"outer": "preserve"}):
+            store.local.stock_decision = previous
+            with stock.decision_scope(store, self.users["sam"], "ZF-3"):
+                self.assertIsNotNone(store.local.stock_decision)
+            self.assertIs(store.local.stock_decision, previous)
+            for failure in (ValueError("Body validation"), Interrupted("Precommit interrupt")):
+                before = self.durable_state(store)
+                with self.assertRaises(type(failure)) as caught:
+                    with stock.decision_scope(store, self.users["sam"], "ZF-3") as (case, _):
+                        case["technical"]["design_version"] += 1
+                        store.audit("sam@example.test", "constructed_uncommitted", "ZF-3", "test")
+                        raise failure
+                self.assertIs(caught.exception, failure)
+                self.assertIs(store.local.stock_decision, previous)
+                self.assertEqual(self.durable_state(store), before)
+            with self.assertRaises(PermissionError):
+                with stock.decision_scope(store, dict(self.users["sam"], name="Forged"), "ZF-3"):
+                    self.fail("Forged actor entered scope")
+            self.assertIs(store.local.stock_decision, previous)
+        store.local.stock_decision = None
+        store.save()
+        self.assertNotIn("constructed_uncommitted", [e["action"] for e in store.audit_entries()])
+
+    def test_sql_recovery_fault_preserves_original_failure(self) -> None:
+        store = self.stores()[-1]
+        discard = store._discard
+        original = OSError("Constructed precommit failure")
+
+        def recovery_fault() -> None:
+            discard()
+            raise OSError("Constructed recovery uncertainty")
+
+        before = self.durable_state(store)
+        with (
+            patch.object(store, "_discard", side_effect=recovery_fault),
+            self.assertRaises(OSError) as caught,
+            self.assertLogs("zava_forward.core.stock", level="ERROR"),
+        ):
+            with stock.decision_scope(store, self.users["sam"], "ZF-3"):
+                raise original
+        self.assertIs(caught.exception, original)
+        self.assertTrue(original.__notes__)
+        self.assertEqual(self.durable_state(store), before)
+
+    def test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        store.stock_reconcile(self.users["sam"], "ZF-3", query())
+        for persistent in (False, True):
+            for kind in ("technical", "comparison", "terminal"):
+                with self.subTest(persistent=persistent, kind=kind):
+                    before = self.durable_state(store)
+                    db = store.db
+                    original = OSError("Constructed original precommit save failure")
+
+                    class RecoveryReadFault:
+                        armed = False
+                        failures = 0
+
+                        def __init__(self, db: Any, persistent: bool) -> None:
+                            self.db = db
+                            self.persistent = persistent
+
+                        def execute(self, sql: str, args: Any = ()) -> Any:
+                            if (
+                                self.armed
+                                and "FROM cases WHERE" in sql
+                                and (
+                                    sql.startswith("SELECT rowversion, body")
+                                    or sql.startswith("SELECT id, rowversion, body")
+                                )
+                                and (self.persistent or self.failures == 0)
+                            ):
+                                self.failures += 1
+                                raise OSError("Constructed early recovery read failure")
+                            return self.db.execute(sql, args)
+
+                        def __getattr__(self, name: str) -> Any:
+                            return getattr(self.db, name)
+
+                    fault = RecoveryReadFault(db, persistent)
+
+                    def failed_save(
+                        fault: RecoveryReadFault = fault, original: OSError = original
+                    ) -> None:
+                        fault.armed = True
+                        raise original
+
+                    with (
+                        patch.object(store, "db", fault),
+                        patch.object(store, "save", side_effect=failed_save),
+                        self.assertLogs("zava_forward.core.stock", level="ERROR") as logged,
+                    ):
+                        try:
+                            if kind == "technical":
+                                self.tech(
+                                    store,
+                                    "rc1",
+                                    "design_change",
+                                    note="Failed change",
+                                    affects=["design"],
+                                )
+                            elif kind == "comparison":
+                                store.stock_reconcile(self.users["sam"], "ZF-3", query())
+                            else:
+                                store.stock_query_event(
+                                    self.users["sam"],
+                                    "ZF-3",
+                                    dict(
+                                        query_id="SQ-1",
+                                        action="withdraw",
+                                        reason="Failed disposition",
+                                    ),
+                                )
+                        except OSError as caught:
+                            self.assertIs(caught, original)
+                        else:
+                            self.fail("Failed SQL decision returned success")
+                        self.assertGreaterEqual(fault.failures, 1)
+                        self.assertTrue(original.__notes__)
+                        self.assertIn("SQL recovery failed", " ".join(logged.output))
+                        self.assertEqual(store.local.pending, [])
+                        self.assertEqual(store.local.touched, set())
+                        self.assertEqual(store.lock.depth, 0)
+                        acquired: list[bool] = []
+
+                        def lock_probe(acquired: list[bool] = acquired) -> None:
+                            for lock in (store.lock.rl, store.dblock):
+                                ok = lock.acquire(timeout=1)
+                                acquired.append(ok)
+                                if ok:
+                                    lock.release()
+
+                        thread = threading.Thread(target=lock_probe)
+                        thread.start()
+                        thread.join(timeout=3)
+                        self.assertFalse(thread.is_alive())
+                        self.assertEqual(acquired, [True, True])
+                        self.assertEqual(self.durable_state(store), before)
+                        self.assertEqual(store.cases["ZF-3"], json.loads(before[0][2]))
+                        if persistent:
+                            with self.assertRaisesRegex(OSError, "recovery read failure"):
+                                store.detail("ZF-3")
+                            self.assertEqual(store.lock.depth, 0)
+                    self.assertEqual(self.durable_state(self.reopen(store)), before)
+                    # After the read fault clears, even a plain save cannot flush failed edits.
+                    store.save()
+                    self.assertEqual(list(store.audit_entries()), before[2])
+                    self.assertEqual(store.detail("ZF-3"), self.reopen(store).detail("ZF-3"))
+                    self.assertEqual(store.cases["ZF-3"], json.loads(before[0][2]))
+                    self.tech(
+                        store,
+                        "rc1",
+                        "design_change",
+                        note="Legitimate recovery",
+                        affects=["design"],
+                    )
+                    self.assertEqual(len(list(store.audit_entries())), len(before[2]) + 1)
+                    self.assertTrue(store.verify_audit())
+
+    def test_sql_transaction_refusal_keeps_original_error_when_reload_fails(self) -> None:
+        store = self.stores()[-1]
+        self.tech(store, "rc1", "design_submit", note="Constructed design")
+        for original in (GateError(["Constructed refusal"]), ConflictError("ZF-3")):
+            with self.subTest(error=type(original).__name__):
+                before = self.durable_state(store)
+                db = store.db
+
+                class RecoveryReadFault:
+                    armed = False
+
+                    def __init__(self, db: Any) -> None:
+                        self.db = db
+
+                    def execute(self, sql: str, args: Any = ()) -> Any:
+                        if self.armed and sql.startswith("SELECT rowversion, body FROM cases"):
+                            raise OSError("Constructed persistent recovery read failure")
+                        return self.db.execute(sql, args)
+
+                    def __getattr__(self, name: str) -> Any:
+                        return getattr(self.db, name)
+
+                fault = RecoveryReadFault(db)
+
+                def refuse(fault: RecoveryReadFault = fault, error: Exception = original) -> None:
+                    fault.armed = True
+                    raise error
+
+                with (
+                    patch.object(store, "db", fault),
+                    patch.object(store, "_validate_safety_clear", side_effect=refuse),
+                    self.assertLogs("zava_forward.core.stock", level="ERROR"),
+                ):
+                    try:
+                        self.tech(
+                            store, "rc1", "design_change", note="Failed change", affects=["design"]
+                        )
+                    except Exception as caught:
+                        self.assertIs(caught, original)
+                    else:
+                        self.fail("Refused SQL decision returned success")
+                    self.assertEqual(store.local.pending, [])
+                    self.assertEqual(store.local.touched, set())
+                    self.assertEqual(store.lock.depth, 0)
+                    self.assertEqual(self.durable_state(store), before)
+                self.assertEqual(store.detail("ZF-3"), self.reopen(store).detail("ZF-3"))
 
     def test_withdraw_unblocks_all_signoffs_without_editing_history(self) -> None:
         for store in self.stores():
@@ -246,13 +677,7 @@ class StockReconciliation(unittest.TestCase):
             event_audit = next(e for e in audit if e["action"] == "stock_query_withdraw")
             self.assertIn("SQ-1", event_audit["detail"])
             self.assertIn(events[0]["id"], event_audit["detail"])
-            reopened = (
-                Store(store.live_path)
-                if type(store) is Store
-                else SqlStore(str(Path(self.tmp.name) / "sql/synthetic.json"), store.db_path)
-            )
-            if isinstance(reopened, SqlStore):
-                self.addCleanup(reopened.db.close)
+            reopened = Store(store.live_path) if type(store) is Store else self.reopen(store)
             self.assertEqual(reopened.detail("ZF-3")["stock_reconciliation_events"], events)
             self.assertEqual(
                 reopened.detail("ZF-3")["stock_reconciliation"][0]["status"], "Withdrawn"

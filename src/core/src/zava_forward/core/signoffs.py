@@ -51,13 +51,9 @@ class SignoffMixin:
             raise ValueError("Unknown step.")
         if "note" in body and not isinstance(body["note"], str):
             raise ValueError("Enter the technical note as text.")
-        with self.lock:
-            actor = self.staff.get(user["email"].lower())
-            if not actor or any(actor.get(key) != user.get(key) for key in ("code", "role", "name")):
-                raise PermissionError("Technical decisions require a registered human staff identity.")
-            c = self._case(case_id)
-            detail = getattr(self, "_tech_" + action)(user, c, body)
-            self.audit(user["email"], f"technical_{action}", case_id, detail)
+        with stock.decision_scope(self, user, case_id) as (c, actor):
+            detail = getattr(self, "_tech_" + action)(actor, c, body)
+            self.audit(actor["email"], f"technical_{action}", case_id, detail)
             self.save()
 
     @staticmethod

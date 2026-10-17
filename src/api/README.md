@@ -651,6 +651,21 @@ home field is automatically selected/updated. Source-authority, resolution
 rules and eligibility stay Unknown/owner-approval-needed, not an approved
 operational reconciliation policy.
 
+Stock and technical writes also recheck the current SQL staff identity/role/OID,
+even for an existing authenticated session whose cached staff record is stale.
+Changed or removed identities receive 403; their old session cannot retain
+approval authority. The writer transaction revalidates before commit. A known
+precommit SQL failure leaves neither a new case version nor its success audit;
+the original error propagates, with recovery uncertainty explicitly reported.
+No new endpoint, role grant or sign-off competence attestation is introduced.
+Original Review, 2026-10-17: **Not accepted**, RV-001. Authorized correction ONE
+clears failed pending work before recovery reads and restores known cache
+snapshots; early/persistent read failures now preserve the original error and
+cannot flush the failed success event on exit or a later save. A failed reload
+logs uncertainty and forces retry on the next operation, not a success fallback.
+Bounded independent verification closes RV-001 for this correction after 91
+focused tests and two snapshot probes; the original adverse Review is retained.
+
 The case view displays both values, source metadata and query owner, with
 authority/resolution/eligibility explicitly `Unknown`. A different case shows
 its own comparisons, never a carried-over rationale. Existing technical forms
@@ -678,6 +693,25 @@ checks rendered values, source metadata, owner, Unknown labels, heading/keyboard
 access and navigation to another case. The default unit suite skips that
 opt-in browser method. This is engineering evidence, not direct human
 accessibility/competence acceptance, live inference, SQL Server or Azure proof.
+
+The selected changed-path local SQL Server parity suite is separate from
+browser evidence. In a throwaway local SQL Server database only, using the
+existing `ZF_TEST_MSSQL=1` and localhost `ZF_SQL_*` settings:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_mssqlstore.MssqlStockDecisions -v
+```
+
+Initially eight tests passed on 2026-10-17; correction ONE passed ten, reusing canonical constructed core cases for
+comparison/disposition and four sign-off success, current actor denial,
+second-connection authority change, transactional case/audit failures,
+reopen/no delayed audit and context cleanup. Added early/persistent actual
+recovery-read failures exercise technical/comparison/terminal paths, original
+error, empty pending state, released locks, failed retry and later recovery.
+Transactional refusal errors retain their original identity on reload failure.
+This is local SQL Server adapter
+evidence, not Azure/Entra acceptance or approved professional/source authority.
 Source-authority/resolution/eligibility rules, operational delegation and
 real-platform acceptance remain unmet; nomination/tenure routing is separate.
 

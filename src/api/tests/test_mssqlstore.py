@@ -4,6 +4,7 @@ Skipped unless ZF_TEST_MSSQL=1 and the ZF_SQL_* settings point at a database tha
 (the CI job uses a throwaway SQL Server container; never point this at the pilot database).
 """
 import importlib
+import json
 import os
 import re
 import tempfile
@@ -16,6 +17,7 @@ import test_mvp
 import test_sqlreads as reads
 import test_sqlqueues as queuetests
 import test_sqlstore as base
+import test_stock_reconciliation as stocktests
 import test_timecapture as timetests
 from zava_forward.core.sqlstore import SqlStore
 
@@ -94,6 +96,40 @@ class SharedSqlIsPortableTests(unittest.TestCase):
         shared = src[:a] + src[b:]
         banned = re.compile(r"(?i)\bINSERT\s+OR\s+(REPLACE|IGNORE)\b|\bREPLACE\s+INTO\b|\bAUTOINCREMENT\b|\bPRAGMA\b|\bINSERT OR\b")
         self.assertEqual([l.strip() for l in shared.splitlines() if banned.search(l) and not l.lstrip().startswith(("*", "#"))], [])
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlStockDecisions(unittest.TestCase):
+    """Selected canonical stock/technical cases on the throwaway SQL Server."""
+
+    setUp = stocktests.StockReconciliation.setUp
+    tech = stocktests.StockReconciliation.tech
+    signed = stocktests.StockReconciliation.signed
+    durable_state = staticmethod(stocktests.StockReconciliation.durable_state)
+
+    def stores(self):
+        wipe()
+        path = Path(self.tmp.name) / "constructed.json"
+        path.write_text(json.dumps(self.data))
+        store = factory(str(path), str(path.with_suffix(".sqlite")))
+        self.addCleanup(store.db.close)
+        return [store]
+
+    def reopen(self, store):
+        reopened = factory("unused-constructed-seed.json", store.db_path)
+        self.addCleanup(reopened.db.close)
+        return reopened
+
+    test_four_human_signoffs_and_only_affected_reassessment = stocktests.StockReconciliation.test_four_human_signoffs_and_only_affected_reassessment
+    test_withdraw_unblocks_all_signoffs_without_editing_history = stocktests.StockReconciliation.test_withdraw_unblocks_all_signoffs_without_editing_history
+    test_sql_current_actor_denial_for_all_decisions = stocktests.StockReconciliation.test_sql_current_actor_denial_for_all_decisions
+    test_sql_authority_rechecked_inside_writer_transaction = stocktests.StockReconciliation.test_sql_authority_rechecked_inside_writer_transaction
+    test_sql_failed_decisions_do_not_commit_or_flush_success_audit = stocktests.StockReconciliation.test_sql_failed_decisions_do_not_commit_or_flush_success_audit
+    test_sql_case_write_failure_restores_decision = stocktests.StockReconciliation.test_sql_case_write_failure_restores_decision
+    test_sql_transactional_audit_failure_restores_decision = stocktests.StockReconciliation.test_sql_transactional_audit_failure_restores_decision
+    test_sql_decision_scope_restored_on_every_exit = stocktests.StockReconciliation.test_sql_decision_scope_restored_on_every_exit
+    test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work = stocktests.StockReconciliation.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work
+    test_sql_transaction_refusal_keeps_original_error_when_reload_fails = stocktests.StockReconciliation.test_sql_transaction_refusal_keeps_original_error_when_reload_fails
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

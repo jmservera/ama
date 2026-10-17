@@ -515,6 +515,16 @@ were erased or that any real resident accepted the service.
 
 ## Stock comparisons and human technical sign-offs (#84)
 
+Review status, 2026-10-17: the original Review returned **Not accepted** for
+RV-001. Authorized correction ONE disarms pending writes/audits and restores
+known snapshots before fallible SQL reload. Actual one-shot/persistent reload
+faults now preserve the original error without delayed success events across
+technical actions, stock comparisons and terminal dispositions. Ten canonical
+local SQL Server tests pass. Bounded independent verification closes RV-001
+for this correction, including 91 independent focused tests and two snapshot
+probes. This does not establish professional/source authority or operational
+acceptance; the original adverse Review remains historical.
+
 `stock.py` validates staff-recorded conflicting assertions for `epc`, `type`
 or `built`. Each comparison preserves two different values and each source's
 identifier, ISO date, version and recorded validation state, plus a registered
@@ -555,6 +565,22 @@ also rechecks current stock holds inside the SQL writer transaction. No new
 schema or dialect-specific inserts/error classes are introduced. Local
 SQLite evidence does not establish SQL Server/Azure acceptance.
 
+The 2026-10-17 continuation binds stock comparison, terminal disposition and
+technical actions to the current registered staff row, including identity/OID,
+rather than a process-cached role. SQL repeats that check inside its existing
+writer transaction. A failed decision discards its pending case edits and
+success audit before lock cleanup, so a later save cannot flush a failed
+design change, sign-off or query disposition. Recovery failures are explicitly
+logged and annotate the original exception; reload to establish an uncertain
+outcome. Canonical discard clears pending audit/touched/validation state before
+database reads, restores cached case/recommendation/shared-document snapshots,
+and invalidates the sync watermark so the next operation must retry reload.
+An ongoing read outage still raises an error, never a successful fallback.
+Stock/technical transaction refusals defer discard to their existing decision
+scope so recovery cannot mask the original GateError/ConflictError.
+This is not a new authority grant or a guarantee against arbitrary
+external staff writes outside the store's writer-lock protocol.
+
 The existing `signoffs.py` owns separate assessment, design, building and
 coordination decisions. They require registered staff identities in the
 existing exercise roles, distinct people and no self-approval of the recorded
@@ -579,9 +605,21 @@ derived support/rank columns once using `meta.support_encoding=1`, preserving
 source assertions, workflow state and audit; no new SQL schema/dialect is added.
 
 `tests/test_stock_reconciliation.py` covers JSON/SQLite semantics and upgrade
-behavior. The [API guide](../api/README.md#stock-reconciliation-api-84) describes
+behavior, current/deleted/changed-OID actors, an independent-connection
+pre-save role change, case/audit rollback and reopen, no delayed success audit,
+and decision-context cleanup. The selected canonical cases also passed against
+an isolated, local SQL Server 2022 container via
+`test_mssqlstore.MssqlStockDecisions` on 2026-10-17: initially eight tests;
+correction ONE ten tests, no skips. Added actual early/persistent reload faults
+check all three wrappers, original error/log, unchanged case/history/audit,
+cross-thread lock availability, cache state, failed retry, later recovery and
+reopen. GateError/ConflictError refusal recovery preserves the original error too.
+That fixture used no private stock, cloud service or real source authority.
+JSON still uses separate snapshot/ledger files and does not gain SQL-style
+cross-file crash atomicity from this change.
+The [API guide](../api/README.md#stock-reconciliation-api-84) describes
 the staff endpoint, rendered synthetic check and remaining acceptance gates.
-Live SQL Server/Azure, real model use, source authority, competent human review
+Deployed SQL Server/Azure, real model use, source authority, competent human review
 and direct user acceptance are not established by these local tests.
 
 ## Task-bound RAI release records (#219)
