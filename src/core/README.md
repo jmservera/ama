@@ -144,6 +144,12 @@ resident and safety/building controls. It creates no order or allocation.
 SQL repeats actor/delegation, source-case rowversion and procurement dependency
 checks inside existing writer/application locks and checked-document
 transactions; rejected writes restore cache and discard success audit.
+Procurement/advance scopes own failed-operation recovery, alongside the
+existing stock/technical scope. Recovery clears pending writes before reload;
+checked-document reload publishes only a complete decoded snapshot. A failed
+reload logs explicit uncertainty and adds a note without replacing the
+original refusal/error. Cached committed state is retained, reads fail closed
+while unavailable, and later saves cannot flush the rejected mutation/audit.
 JSON uses its existing single-process lock and compensating snapshot recovery,
 not cross-process isolation or snapshot/ledger crash atomicity.
 

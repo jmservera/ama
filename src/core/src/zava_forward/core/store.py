@@ -3,6 +3,7 @@ import csv
 import hashlib
 import io
 import json
+import logging
 import os
 import re
 import threading
@@ -521,10 +522,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     self.save()
                     saved = True
                     self.audit(user["email"], "advance", case_id, BOOKED_STAGE)
-            except Exception:
+            except BaseException as error:
                 if hasattr(self, "db"):
-                    with self.dblock:
-                        self._discard()
+                    try:
+                        with self.dblock:
+                            self._discard()
+                    except Exception:
+                        error.add_note("Booking recovery failed; reload to establish the outcome.")
+                        logging.getLogger(__name__).exception("Booking SQL recovery failed")
                 else:
                     c.clear()
                     c.update(before)

@@ -11,7 +11,7 @@ import dataset
 from zava_forward.core.quality import CHECKLISTS, checklist_for
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
-from zava_forward.core.store import ConflictError
+from zava_forward.core.store import ConflictError, GateError
 
 STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
          dict(code="PM-01", name="Pam Lead", email="pam@example.test", role="Retrofit Programme Manager"),
@@ -403,6 +403,75 @@ class SqlFlows(Flows, unittest.TestCase):
 
     def reopen(self):
         return SqlStore(str(self.path), self.db)
+
+    def test_recovery_read_failure_keeps_original_error_and_disarms_failed_work(self):
+        pid = self.package()
+        wid = self.store.issue_work_order(PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS)
+        self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01")
+        store = self.store
+        for operation in ("withdraw", "advance"):
+            for failure in ("pre-save", "transaction", "cancellation"):
+                for persistent in (False, True):
+                    with self.subTest(operation=operation, failure=failure, persistent=persistent):
+                        before = copy.deepcopy(store.data["procurement"])
+                        cases = copy.deepcopy(store.cases)
+                        audit = list(store.audit_entries())
+                        original = (GateError(["SYN refusal"]) if failure == "transaction"
+                                    else KeyboardInterrupt("SYN cancellation") if failure == "cancellation"
+                                    else OSError("SYN original save failure"))
+
+                        class RecoveryReadFault:
+                            armed = False
+                            failures = 0
+
+                            def __init__(self, db):
+                                self.db = db
+
+                            def execute(self, sql, args=()):
+                                if self.armed and sql.startswith(("SELECT rowversion, body FROM cases", "SELECT value FROM meta")) and (persistent or not self.failures):
+                                    self.failures += 1
+                                    raise OSError("SYN recovery read failure")
+                                return self.db.execute(sql, args)
+
+                            def __getattr__(self, name):
+                                return getattr(self.db, name)
+
+                        fault = RecoveryReadFault(store.db)
+
+                        def fail():
+                            fault.armed = True
+                            raise original
+
+                        target = "save" if failure == "pre-save" else "_validate_safety_clear"
+                        logger = "zava_forward.core.procurement" if operation == "withdraw" else "zava_forward.core.store"
+                        with patch.object(store, "db", fault), patch.object(store, target, side_effect=fail):
+                            with self.assertLogs(logger, level="ERROR"), self.assertRaises(type(original)) as caught:
+                                if operation == "withdraw":
+                                    store.withdraw_work_order(PAM, wid, "SYN refused withdrawal")
+                                else:
+                                    store.advance(PAM, "ZF-3")
+                            self.assertIs(caught.exception, original)
+                            self.assertTrue(original.__notes__)
+                            self.assertGreaterEqual(fault.failures, 1)
+                            self.assertEqual(store.local.pending, [])
+                            self.assertEqual(store.local.touched, set())
+                            self.assertIsNone(store.local.procurement_validation)
+                            self.assertIsNone(store._proc_context)
+                            self.assertEqual(store.lock.depth, 0)
+                            self.assertEqual(store.data["procurement"], before)
+                            self.assertEqual(store.cases, cases)
+                            if persistent:
+                                with self.assertRaisesRegex(OSError, "recovery read failure"):
+                                    store.detail("ZF-3")
+                        store.save()
+                        self.assertEqual(list(store.audit_entries()), audit)
+                        self.assertEqual(store.list_work_orders(PAM), self.reopen().list_work_orders(PAM))
+                        self.assertEqual(store.detail("ZF-3")["stage"], "Final checks before ordering")
+                        self.assertTrue(store.verify_audit())
+        store.withdraw_work_order(PAM, wid, "SYN legitimate retry after recovery")
+        order = next(w for w in self.reopen().list_work_orders(PAM) if w["id"] == wid)
+        self.assertEqual(order["state"], "Withdrawn")
+        self.assertEqual(len(order["versions"]), 3)
 
     def test_two_processes_see_procurement_changes(self):
         other = self.reopen()

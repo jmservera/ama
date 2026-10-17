@@ -11,6 +11,7 @@ not a decision.
 """
 import hashlib
 import json
+import logging
 import re
 from contextlib import contextmanager
 from copy import deepcopy
@@ -128,10 +129,14 @@ class ProcurementMixin:
                     self.local.procurement_validation = context
                 self._proc_context = context
                 yield actor
-            except Exception:
+            except BaseException as error:
                 if hasattr(self, "db"):
-                    with self.dblock:
-                        self._discard()
+                    try:
+                        with self.dblock:
+                            self._discard()
+                    except Exception:
+                        error.add_note("Procurement recovery failed; reload to establish the outcome.")
+                        logging.getLogger(__name__).exception("Procurement SQL recovery failed")
                 elif before is None:
                     self.data.pop("procurement", None)
                 else:

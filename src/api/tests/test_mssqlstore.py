@@ -18,6 +18,7 @@ import test_sqlreads as reads
 import test_sqlqueues as queuetests
 import test_sqlstore as base
 import test_stock_reconciliation as stocktests
+import test_finance_signoffs as financetests
 import test_timecapture as timetests
 import test_quality_procurement as procurementtests
 import test_procurement_api as procurementapi
@@ -132,6 +133,22 @@ class MssqlStockDecisions(unittest.TestCase):
     test_sql_decision_scope_restored_on_every_exit = stocktests.StockReconciliation.test_sql_decision_scope_restored_on_every_exit
     test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work = stocktests.StockReconciliation.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work
     test_sql_transaction_refusal_keeps_original_error_when_reload_fails = stocktests.StockReconciliation.test_sql_transaction_refusal_keeps_original_error_when_reload_fails
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlFinanceSignoffs(financetests.SqlFlows):
+    @classmethod
+    def setUpClass(cls):
+        cls._orig, financetests.SqlStore = financetests.SqlStore, factory
+
+    @classmethod
+    def tearDownClass(cls):
+        financetests.SqlStore = cls._orig
+
+    def setUp(self):
+        wipe()
+        super().setUp()
+        self.addCleanup(self.store.db.close)
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

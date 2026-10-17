@@ -109,6 +109,14 @@ reduced-motion checks are not human, screen-reader or full WCAG acceptance.
 No live orders, payments, AI inference, company delegation or Azure SQL were
 exercised. Existing #78 provenance and #97 forms contracts remain unchanged.
 
+Shared-transaction integration coverage also selects
+`test_mssqlstore.MssqlStockDecisions`,
+`test_mssqlstore.MssqlFinanceSignoffs`,
+`test_mssqlstore.MssqlStoreTests` and
+`test_mssqlstore.MssqlImproveTests` against that disposable local server.
+The finance suite replays existing budget, matching, approval-separation and
+signoff controls; it does not incorporate another unmerged finance topic.
+
 ## Form schema and candidate API (#97)
 
 This is unapproved schema registration and candidate-only collection, not a

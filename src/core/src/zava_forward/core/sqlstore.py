@@ -591,7 +591,9 @@ class SqlStore(Store):
                 self.db.execute("COMMIT")
             except (ConflictError, GateError, PermissionError) as error:
                 self.db.execute("ROLLBACK")
-                if getattr(self.local, "stock_decision", None) is None:
+                if (getattr(self.local, "stock_decision", None) is None
+                        and getattr(self.local, "procurement_validation", None) is None
+                        and getattr(self.local, "finance_validation", None) is None):
                     try:
                         self._discard()
                     except Exception as recovery_error:
@@ -606,8 +608,6 @@ class SqlStore(Store):
                 raise
             except BaseException:
                 self.db.execute("ROLLBACK")
-                if getattr(self.local, "procurement_validation", None) is not None:
-                    self._discard()
                 raise
             self._proc_snap.update(proc_body)
             for cid, body in changed:
@@ -660,14 +660,18 @@ class SqlStore(Store):
     DOCS = ("procurement", "governance", "continuity", "buildings", "form_schemas", "bulk_edits")
 
     def _proc_sync(self):
-        self._proc_snap = {}
+        snapshots, loaded = {}, {}
         for key in self.DOCS:
             row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
-            self._proc_snap[key] = row[0] if row else None
+            snapshots[key] = row[0] if row else None
             if row:
-                self.data[key] = json.loads(row[0])
+                loaded[key] = json.loads(row[0])
+        for key in self.DOCS:
+            if key in loaded:
+                self.data[key] = loaded[key]
             else:
                 self.data.pop(key, None)
+        self._proc_snap = snapshots
 
     def _proc_write(self):
         """Inside the save transaction: write changed documents, refusing if someone else changed one first."""
