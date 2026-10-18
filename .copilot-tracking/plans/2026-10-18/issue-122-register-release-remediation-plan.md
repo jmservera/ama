@@ -165,6 +165,19 @@ No broad/image/SQL repeats if source intent remains unchanged. Separate
 integration-consultation receipt/manifest and current metadata only; stop for
 the same independent reviewer to assess the integration delta and source parity.
 
+P04-T05 integrated candidate 956ece15a0599c2b5e204aaf86547e1e64112f5e,
+no conflicts or source edits. Complete nine-file normalized owned source patch
+and stable patch ID 884ee570d0c338874f75d2126bf609d813955516 unchanged;
+279 protected src files match pinned upstream bytes/modes, all 35 new upstream
+paths exact except additive API README. All 44 immutable prior artifacts,
+original 27 included, retain bytes/modes; KB log exact upstream/body prefix.
+Fresh focused run: 93 run/80 pass/13 skips (12 opt-in MSSQL; one JSON-only
+SQL-writer-dependency check). Configured core/API Ruff/format/mypy pass,
+125/57 source files. No failed attempts or source changes to pass.
+Separate integration-consultation receipt/manifest records commands/results,
+complete inventory, log hashes and frozen evidence. Exact lease publication
+and draft PR reconciliation pending; no independent-review outcome available.
+
 Declared scope: P04 only, extending the completed original execution without
 repeating Research, critique or Review. No new task identity or self-acceptance.
 

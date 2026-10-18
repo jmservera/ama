@@ -25,6 +25,19 @@ files. Separate integration-consultation receipt/manifest only, current metadata
 updates. Publish only exact c20052e4 lease then normal receipt push; keep draft,
 Refs-only and empty closing refs, stop for same reviewer integration delta/parity.
 
+P04-T05 integration completed conflict-free at
+956ece15a0599c2b5e204aaf86547e1e64112f5e. Nine-file normalized owned source
+patch and stable patch ID unchanged (884ee570d0c338874f75d2126bf609d813955516).
+All 279 protected upstream src bytes/modes exact; 35 upstream delta files exact
+except composed API README; KB log exact upstream with old body prefix. All 44
+prior immutable artifacts (original 27 included) exact bytes/modes.
+Fresh focused suites: 93 run/80 pass/13 skips, consisting of 12 opt-in MSSQL
+and one JSON SQL-writer-only check. Core/API Ruff/format/mypy all pass (125/57
+source files). No failed attempts, source changes or broad/image/SQL reruns.
+Expected synthetic law-store absence remains explicit Unknown, not an approval.
+Separate integration-consultation receipt/manifest records this new boundary,
+complete commands/results/log preservation and publication evidence.
+
 ## Current P04-T04 Integration-Only Resumption
 
 Owner 2026-10-18T09:40 explicitly authorizes SAME task integration/publication

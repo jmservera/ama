@@ -20,6 +20,18 @@ actual integration conflict or changed intent warrants it. Exact c20052e4 lease
 only, stop unexpected topic movement/source conflict. Publish pinned even if
 main moves, report without reintegration. Keep draft/empty closing refs; STOP.
 
+P04-T05 integration completed at 956ece15a0599c2b5e204aaf86547e1e64112f5e
+with no conflicts/source edits. Normalized complete owned source patch identical,
+stable patch-id 884ee570d0c338874f75d2126bf609d813955516. All 279 protected
+src paths match upstream bytes/modes; all 35 upstream delta paths exact except
+additive API README; KB append-only body and upstream log retained. All 44 prior
+immutable artifacts, including original 27, match hashes/modes.
+Fresh focused 93 run/80 pass/13 skips (12 opt-in MSSQL, one JSON test excluding
+SQL-writer-only checks). Configured core/API static all pass, mypy 125/57 files.
+No failed command, broad/image/SQL rerun or source edit. Separate integration-
+consultation receipt and manifest preserve all results/logs and full inventory.
+Next action: exact c20052e4 lease publication, keep draft; reviewer result pending.
+
 Correction ONE of maximum two is already implemented for RV-001 only.
 It previously integrated exact a86282c4 and stopped when main moved.
 The following owner integration-only authorization supersedes that stop.

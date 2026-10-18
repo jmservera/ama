@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Consultation integration and focused validation executed with no conflicts or source changes; complete owned normalized source patch, protected upstream bytes/modes and all prior immutable artifacts preserved.",
+      "status": "validated-integration-not-independent-acceptance",
+      "evidence": "Integrated 956ece15a0599c2b5e204aaf86547e1e64112f5e on pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Stable patch-id 884ee570d0c338874f75d2126bf609d813955516; 279 protected src files exact bytes/modes; 44 immutable prior artifacts incl. original 27 unchanged. Fresh focused 93 run/80 pass/13 skips (12 opt-in MSSQL, one JSON SQL-writer exclusion), core/API static pass (125/57 files). No failed command or new review result."
+    },
+    {
       "decision": "Owner authorized consultation integration ONLY on SAME task/correction ONE: rebase expected local/remote c20052e49e91841749f8a08ffed137c848ce3fd1 from ab0613f3 onto exact 9403dc6a8f52f1f04c5ad910faab11a57c29ee78; ONLY exact c20052e4 lease. Preserve protected upstream procurement/server/tests bytes/modes, both README sections, KB log prefix and normalized owned source patch. Publish pinned base even if main later moves, report without reintegration; unexpected topic movement or irreconcilable source conflict stops.",
       "status": "authorized-integration-only",
       "evidence": "Owner 2026-10-18T09:59 continuation; expected clean local/topic and fetched origin/main verified. Independent review of c20052e4 running, no result available/claimed. No new source correction, metadata-echo fix, critique or original Review. Same reviewer assesses integration delta/parity after publication."
@@ -80,7 +85,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P04-T05 integration ONLY active: freeze complete source/evidence/logs, rebase pinned 9403dc6a, prove normalized patch plus upstream byte/mode parity, fresh focused continuity/consultation and core/API static, separate integration-consultation receipt/manifest; exact c20052e4 lease publish, keep draft and STOP for same independent reviewer to assess delta/parity."
+    "action": "P04-T05 integration/parity/focused validation complete. Persist separate integration-consultation receipt/manifest, publish ONLY exact c20052e4 lease, update draft PR398 current exact refs/evidence, then STOP for same independent reviewer to assess delta/parity. Existing full independent review of c20052e4 running, no outcome/ready claim."
   },
   "prioritized_follow_ups": [
     {
