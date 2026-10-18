@@ -1,0 +1,152 @@
+---
+title: Issue 122 register and release remediation phase details
+description: Bounded evidence and completion expectations for the new task
+ms.date: 2026-10-18
+---
+
+## Task and Initial Direction
+
+issue-122-register-release-remediation, automatic owner-authorized new loop.
+Research C2/C3 reproduce both coordinator findings at expected original head.
+No unresolved user decision. One independent critique Complete / Revise; PC-001
+through PC-005 directly accepted in plan and specified below. All historical
+artifacts are frozen by SHA-256, including the prior Not accepted assessment.
+
+<!-- rpi:phase id=P01 -->
+## P01: Exact integration and adverse controls
+
+<!-- rpi:task id=P01-T01 -->
+### P01-T01
+
+Check clean owned branch except new task artifacts; commit only those artifacts
+as intake evidence to preserve work during authorized rebase. Resolve identity
+through gh api user and repository-local noreply author/committer settings.
+Rebase onto exact 9c648b20, not a moving main. Compare pre/post owned source and
+historical artifacts; compare all upstream files excluding explained additive
+README/projection overlaps. Never resolve an unclear source conflict. Knowledge
+log upstream bytes and historical prefix both remain.
+
+<!-- rpi:task id=P01-T02 -->
+### P01-T02
+
+Add raw-register role/override/nested canary tests and unreferenced retained
+release lifecycle negatives before source edits. Record original red behavior.
+Construct full histories through record_release/change_release, not runtime
+history synthesis. Bare shared fixtures remain absent-history negatives.
+
+PC-005 migration map: test_continuity.Changes full-proof scenarios locally replace
+all bare releases; OfflineTests and HttpTests locally replace all bare releases
+before genuine positive scenarios. A task-owned helper in the existing epoch
+test module deletes ONLY those isolated fixture releases and creates replacements
+through record_release, including legacy bindings when needed. Never change
+release_support.install or production data. Explicit bare-history negatives use
+the untouched original Base and export those records; remove no exported record
+to claim proof. Legacy positive reinstallation must be replaced BEFORE the real
+API construction, with no manual release-recorded event backfill.
+
+New method budget (at most 12, none removed): two register read/mutation methods,
+one unreferenced lifecycle matrix, one timestamp/transition matrix, one malformed
+producer/verifier matrix, one source-state matrix, one bare-fixture negative.
+Existing tests may gain positive setup/assertions without extra semantic methods.
+
+<!-- rpi:phase id=P02 -->
+## P02: Source
+
+<!-- rpi:task id=P02-T01 -->
+### P02-T01
+
+Use projection.can_see_reason only; no role changes. A shared control-record
+summary helper can service read and mutation returns without a shared API edit.
+Closed fields preserve server-created IDs, registered scopes, enums, epochs and
+safe flags; arbitrary narratives, nested evidence, names/version/subject strings
+are withheld. Full users retain all canonical fields. Check that response
+projection does not mutate persistence or break suspension/restart.
+
+PC-004 contract: register root retains epoch, constant manual note, safe suspended
+ID/scope list, suspension/change summaries; limited effective={} with held marker,
+never arbitrary subject/version keys. Suspension responses retain generated id,
+registered scope, scope_kind, enum status, integer epoch, communication.sent=false
+and constant note, affected totals/truncation, safe proposal-presence/epoch and
+restart/decision enum/epoch/new_epoch. Changes retain generated id, kind,
+Applied/Blocked/Reversed status, generated reverses/superseded_by links.
+Free text (reason/containment/owners/audience/evidence/authority, actor/time,
+subject/version/evaluation references and unknown nested fields) is held.
+Keep usable keys needed for human operation with held markers, not raw text.
+All five routes, both Keep suspended and Restart, full canonical equality,
+both recorded-need override directions and persistent nonmutation are tested.
+
+<!-- rpi:task id=P02-T02 -->
+### P02-T02
+
+Validate task_releases metadata and shapes before indexing. Visit every retained
+record once for lifecycle completeness, even if references are empty; retain the
+existing separate reference resolution digest/version/task/active-snapshot
+contract. Validate event_total/revision/truncated with exact bool/int semantics.
+Require one initial release-recorded event and consistent state sequence without
+inventing authenticity. Handle same-time legitimate events without false order
+claims. All problems make producer incomplete and verifier invalid regardless of
+recomputed outer digest/complete flag. Unsupported no-known-record JSON remains
+explicitly limited in source scope, not fabricated release evidence.
+
+PC-001 validation order: validate raw assistant root, proposals and metadata before
+producer copy/epoch traversal; distinguish absent from falsey malformed release
+source. Verifier checks dict/list/member/string-ID shape before index/hash/get;
+proposal envelope/provenance and legacy envelope traversals are guarded. Invalid
+source sections remain explicit incomplete evidence with nonsensitive problems,
+not broad exception catches. Matrix includes null/scalar/list/object, unhashable
+IDs, wrong bool/int counts, boolean/nonfinite timestamps and malformed bodies.
+
+PC-002 source decision table:
+
+| Input state | Producer/serialized contract |
+| --- | --- |
+| Supported SQL, all counts zero, records=[], truncated=false | Valid known-empty task_releases supported=true |
+| SQL source missing/null/malformed/unavailable, even no references | Incomplete/invalid; no falsey default to known-empty |
+| Actual unchanged JSON Assistants.export: supported=false, source_status=unsupported, explicit note, zero proposals, absent task_releases | Emit task_releases supported=false, records=[], total=0, exported=0, truncated=false, explicit unsupported note; valid SOURCE-SCOPED absence only |
+| Unsupported declaration with records/counts/references or supported proposals | Incomplete/invalid, never use it to erase known evidence |
+| Audience-limited | Always incomplete; cannot verify full canonical ledger |
+
+PC-003 chronology: one recorded event at the earliest timestamp, matching task.
+Active has only that event. Suspended permits any positive number of suspension
+events and no revocation. Revoked permits suspensions followed by EXACTLY one
+terminal revocation, with no strictly later event. Equal timestamps do not encode
+insertion order: accept when at least one permissible ordering exists within
+ties; UUID sort is not chronology. Repeated suspension and equal-time recorded/
+suspended/revoked are valid. Initial strictly after a change, strictly later
+suspension after revocation, duplicate/missing initial or revocation, and
+inconsistent final status reject. Snapshot id/task/active status shape is checked
+for every retained record independently of proposal reference resolution.
+
+<!-- rpi:phase id=P03 -->
+## P03: Validation and handoff
+
+<!-- rpi:task id=P03-T01 -->
+### P03-T01
+
+Run installed focused continuity/epoch/legacy/role tests and current adjacent
+projection behavior. Preserve deterministic independent-connection publication
+races. Actual UUID-owned local SQL uses existing OwnedMssql adapters and loopback
+container; remove exact owned resources. Build API using src context, installed
+runtime no source mount, nonroot/read-only/cap-drop/no-new-privileges and tmpfs.
+Run exact HTTP register/export canaries, full/limited positives and offline
+negatives. Run configured core/API/agents Ruff/format/mypy. Do not equate skips
+with passes, local SQL with Azure, or source controls with old-image exclusion.
+
+<!-- rpi:task id=P03-T02 -->
+### P03-T02
+
+Reconcile every marker, changes evidence, source/test hashes, failures, skips,
+blockers and residuals BEFORE one original independent Review. Reviewer reads
+entire new diff plus inherited safeguards as needed. It writes only its new
+Review path; any findings route to later coordinator-selected work, no repeat
+Review or self-correction loop.
+
+<!-- rpi:task id=P03-T03 -->
+### P03-T03
+
+Check expected remote 1144647c immediately before exact authorized lease push.
+Commit Conventional Commit plus Copilot trailer, authenticated local noreply
+author and committer. Update draft PR 398 with new owner decision, separate
+history, exact base/head, full changed boundary, commands/results and unmet
+criteria. Only Refs #122, verify closingIssuesReferences empty. Stop for full
+coordinator independent review; do not merge, ready, close or mutate board.

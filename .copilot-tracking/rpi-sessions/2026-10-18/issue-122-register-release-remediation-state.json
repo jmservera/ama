@@ -1,0 +1,40 @@
+{
+  "task_id": "issue-122-register-release-remediation",
+  "task_slug": "issue-122-register-release-remediation",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-122-register-release-remediation-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-122-register-release-remediation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner authorized a NEW bounded full RPI loop for both independent findings; this is not a third historical correction.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-18; prior independent Not accepted acknowledged."
+    },
+    {
+      "decision": "Exact main integration and exact old-head force-with-lease authorized; preserve all prior evidence byte-for-byte.",
+      "status": "confirmed",
+      "evidence": "main 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; local/remote 1144647c8d539716e8ddddf9daa47407c9bd00ac verified"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; one critique executed Complete/Revise, PC-001 through PC-005 accepted directly with detailed resolving controls.",
+      "status": "implementation-ready",
+      "evidence": "New research C1-C6, plan Critique Disposition and phase-details PC contracts; no second critique."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "P01 exact-base integration, then failing controls and bounded fixes; critique dispositions locked."
+  },
+  "prioritized_follow_ups": null
+}
