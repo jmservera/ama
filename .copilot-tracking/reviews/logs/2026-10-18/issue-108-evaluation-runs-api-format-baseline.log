@@ -1,0 +1,5 @@
++ git show 69091f4149f2fd217fc33a8c965ebcb6d5064956:src/api/tests/test_ai_tasks.py
++ env -i PATH=/home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files/eval-venv/bin:/usr/bin:/bin HOME=/home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files TMPDIR=/home/azureuser/source/ama-wt/issue-108-runs/.copilot-tracking/.issue-108-tmp ruff format --check --stdin-filename tests/test_ai_tasks.py -
++ result=1
++ echo BASELINE_EXIT_CODE=1
+BASELINE_EXIT_CODE=1

@@ -291,6 +291,36 @@ them that start with `cd src/api` run from the api project.
   thresholds, human protocol, Finance validation). Any critical miss fails the
   run.
 
+### Priority repetition accounting (#108, 2026-10-18)
+
+Each priority scenario's `measures.run_results` now retains every repeated
+recommendation in order: one-based `run`, `recommendation_id`, returned `source`,
+`model`, `prompt_version`, harness wall-time `latency_ms` and returned
+`model_latency_ms`. Unknown model identity remains null. Returned model labels
+may identify configured deployments, including a rejected answer on a template
+fallback; they do not attest an actual serving model or model version.
+
+`summary.recommendation_runs` counts those priority recommendation results;
+`ai_runs` now correctly counts AI-sourced results rather than the old count of
+scenarios whose final result was AI. `template_runs` counts template/fallback
+results. These counts reconcile for the existing AI/template result contract;
+they are not provider-call counts, since attempts can fail or fall back.
+`priority_scenarios` counts measured priority scenarios. `ai_scenarios` and
+`template_scenarios` count scenarios containing each source, so mixed scenarios
+appear in both and these scenario counts are not additive. Model/prompt sets
+include known returned identities from all repetitions, not only the last.
+
+Legacy scenario source/model/prompt fields and overlap, Spearman and recall
+remain final-recommendation views; `summary.quality_scope` makes this explicit.
+Critical-miss and citation checks still cover every repetition, and existing
+latency arrays/variation remain available. The single scripted priority review
+per scenario binds the reviewer identity and final recommendation ID, not every
+repetition. The extra workflow-only comparator and separate text-task checks
+are excluded from priority repetition/reviewer totals; the top-level `scenarios`
+still includes the text-task check result. These are constructed offline control
+checks, not actual-model or human effectiveness, calibrated benefit, release
+approval, provider usage or real AI/SQL/Azure acceptance.
+
 ## Validation record
 
 ### Five retrofit assistants (2026-10-13 implementation)

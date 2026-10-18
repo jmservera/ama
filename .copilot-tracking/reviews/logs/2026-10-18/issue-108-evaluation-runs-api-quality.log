@@ -1,0 +1,219 @@
++ ruff check tests/test_ai_tasks.py
+All checks passed!
++ ruff format --check tests/test_ai_tasks.py
+unformatted: File would be reformatted
+   --> tests/test_ai_tasks.py:44:28
+    |
+43  |     def test_cited_summary_is_verified_but_not_approved(self):
+    -         self.out["text"] = "- Contacting resident [[Stage: Contacting resident]]\n- Waiting [[Days in stage: 10]]"
+44  +         self.out["text"] = (
+45  +             "- Contacting resident [[Stage: Contacting resident]]\n- Waiting [[Days in stage: 10]]"
+46  +         )
+47  |         r = self.store.ai_run(self.sam, "ZF-1", "summary")
+--------------------------------------------------------------------------------
+60  |     def test_uncited_summary_bullets_are_dropped(self):
+    -         self.out["text"] = "- Real [[Stage: Contacting resident]]\n- Made up\n- Wrong [[Stage: Survey booked]]"
+61  +         self.out["text"] = (
+62  +             "- Real [[Stage: Contacting resident]]\n- Made up\n- Wrong [[Stage: Survey booked]]"
+63  +         )
+64  |         r = self.store.ai_run(self.sam, "ZF-1", "summary")
+--------------------------------------------------------------------------------
+90  |         self.assertIsNone(rec["fallback_reason"])
+    -         self.assertGreaterEqual({x["task"] for x in self.records()}, {"summary", "briefing", "funding_draft"})
+91  +         self.assertGreaterEqual(
+92  +             {x["task"] for x in self.records()}, {"summary", "briefing", "funding_draft"}
+93  +         )
+94  |         with self.assertRaises(ValueError):
+--------------------------------------------------------------------------------
+109 |         rec = next(x for x in self.records() if x["id"] == r["record_id"])
+    -         self.assertEqual({k: rec["provenance"][k] for k in ("citation_resolved", "source_verified", "human_reviewed")},
+    -                          dict(citation_resolved=True, source_verified=False, human_reviewed=False))
+110 +         self.assertEqual(
+111 +             {
+112 +                 k: rec["provenance"][k]
+113 +                 for k in ("citation_resolved", "source_verified", "human_reviewed")
+114 +             },
+115 +             dict(citation_resolved=True, source_verified=False, human_reviewed=False),
+116 +         )
+117 |         before = json.dumps(self.store.data.get("cases"), sort_keys=True, default=str)
+--------------------------------------------------------------------------------
+123 |         self.assertTrue(ev["compared"]["ai"] and ev["compared"]["workflow"])
+    -         self.assertEqual(before, json.dumps(self.store.data.get("cases"), sort_keys=True, default=str))
+124 +         self.assertEqual(
+125 +             before, json.dumps(self.store.data.get("cases"), sort_keys=True, default=str)
+126 +         )
+127 |
+--------------------------------------------------------------------------------
+142 |             raise OSError("down")
+143 +
+144 |         self.store.ai._chat = boom
+--------------------------------------------------------------------------------
+150 |     def test_records_do_not_disturb_the_priority_flow_and_persist(self):
+    -         self.out["text"] = json.dumps([dict(case_id="ZF-4", reason="Open safety issue", cites=["Open safety issues: 1"])])
+151 +         self.out["text"] = json.dumps(
+152 +             [dict(case_id="ZF-4", reason="Open safety issue", cites=["Open safety issues: 1"])]
+153 +         )
+154 |         self.store.ai_run(self.sam, "ZF-1", "message")
+--------------------------------------------------------------------------------
+165 |     def test_priority_critical_miss_falls_back(self):
+    -         self.out["text"] = json.dumps([dict(case_id="ZF-1", reason="Oldest", cites=["Days in stage: 10"])])
+166 +         self.out["text"] = json.dumps(
+167 +             [dict(case_id="ZF-1", reason="Oldest", cites=["Days in stage: 10"])]
+168 +         )
+169 |         rec = self.store.ai_priority(self.sam, 1)
+--------------------------------------------------------------------------------
+188 |     def make_again(self):
+    -         return Store(self.path, os.path.join(self.tmp.name, "live.json"), os.path.join(self.tmp.name, "audit.jsonl"))
+189 +         return Store(
+190 +             self.path,
+191 +             os.path.join(self.tmp.name, "live.json"),
+192 +             os.path.join(self.tmp.name, "audit.jsonl"),
+193 +         )
+194 |
+--------------------------------------------------------------------------------
+243 |         self.assertEqual(s["citation_validity"], 1.0)
+    -         for key in ("mean_overlap", "mean_spearman", "latency_ms", "models", "prompt_versions", "reviewer", "variation", "added_value"):
+244 +         for key in (
+245 +             "mean_overlap",
+246 +             "mean_spearman",
+247 +             "latency_ms",
+248 +             "models",
+249 +             "prompt_versions",
+250 +             "reviewer",
+251 +             "variation",
+252 +             "added_value",
+253 +         ):
+254 |             self.assertIn(key, s)
+--------------------------------------------------------------------------------
+264 |         p.write_text(json.dumps(test_mvp.DATA))
+    -         self.store = Store(str(p), os.path.join(self.tmp.name, "live.json"), os.path.join(self.tmp.name, "audit.jsonl"))
+265 +         self.store = Store(
+266 +             str(p),
+267 +             os.path.join(self.tmp.name, "live.json"),
+268 +             os.path.join(self.tmp.name, "audit.jsonl"),
+269 +         )
+270 |         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(self.store, "zf-test")))
+--------------------------------------------------------------------------------
+279 |     def call(self, email, path, body=None):
+    -         login = urllib.request.Request(self.base + "/api/login", json.dumps(dict(email=email, password="zf-test")).encode())
+280 +         login = urllib.request.Request(
+281 +             self.base + "/api/login", json.dumps(dict(email=email, password="zf-test")).encode()
+282 +         )
+283 |         ck = urllib.request.urlopen(login).headers["Set-Cookie"].split(";")[0]
+    -         req = urllib.request.Request(self.base + path, json.dumps(body).encode() if body is not None else None, headers={"Cookie": ck})
+284 +         req = urllib.request.Request(
+285 +             self.base + path,
+286 +             json.dumps(body).encode() if body is not None else None,
+287 +             headers={"Cookie": ck},
+288 +         )
+289 |         try:
+--------------------------------------------------------------------------------
+300 |         summary = body["evaluation"]["summary"]
+    -         runs = [run for result in body["evaluation"]["results"] if result["measures"]
+    -                 for run in result["measures"]["run_results"]]
+301 +         runs = [
+302 +             run
+303 +             for result in body["evaluation"]["results"]
+304 +             if result["measures"]
+305 +             for run in result["measures"]["run_results"]
+306 +         ]
+307 |         self.assertEqual(summary["recommendation_runs"], len(runs))
+308 |         self.assertEqual(summary["ai_runs"], sum(run["source"] == "ai" for run in runs))
+309 |         self.assertEqual(summary["template_runs"], sum(run["source"] == "template" for run in runs))
+    -         self.assertEqual(summary["recommendation_runs"], summary["ai_runs"] + summary["template_runs"])
+310 +         self.assertEqual(
+311 +             summary["recommendation_runs"], summary["ai_runs"] + summary["template_runs"]
+312 +         )
+313 |         self.assertIn("tasks", body["live"])
+314 |
+315 |     def test_mode_flag_and_review_over_http(self):
+    -         code, r = self.call("sam@example.test", "/api/cases/ZF-1/ai", {"task": "message", "mode": "workflow"})
+316 +         code, r = self.call(
+317 +             "sam@example.test", "/api/cases/ZF-1/ai", {"task": "message", "mode": "workflow"}
+318 +         )
+319 |         self.assertEqual((code, r["mode"], r["approval"]), (200, "workflow-only", "Not reviewed"))
+    -         code, rec = self.call("sam@example.test", f"/api/ai/review/{r['record_id']}/reject", {"reason": "not needed"})
+320 +         code, rec = self.call(
+321 +             "sam@example.test", f"/api/ai/review/{r['record_id']}/reject", {"reason": "not needed"}
+322 +         )
+323 |         self.assertEqual((code, rec["status"]), (200, "Rejected"))
+    -         self.assertEqual(self.call("sam@example.test", f"/api/ai/review/{r['record_id']}/reject", {"reason": "x"})[0], 400)
+324 +         self.assertEqual(
+325 +             self.call(
+326 +                 "sam@example.test", f"/api/ai/review/{r['record_id']}/reject", {"reason": "x"}
+327 +             )[0],
+328 +             400,
+329 +         )
+330 |
+--------------------------------------------------------------------------------
+339 |         from zava_forward.core.assistants import REGISTRY
+340 +
+341 |         reg = ai_registry.registry()
+342 |         ids = {t["id"] for t in reg["tasks"]}
+343 |         self.assertTrue(set(REGISTRY) <= ids)
+    -         self.assertTrue({"briefing", "message", "summary", "priority", "funding_draft", "read_document"} <= ids)
+344 +         self.assertTrue(
+345 +             {"briefing", "message", "summary", "priority", "funding_draft", "read_document"} <= ids
+346 +         )
+347 |         for t in reg["tasks"]:
+    -             for k in ("scope", "permitted_capability", "source_permissions", "accountable_function", "approval_state",
+    -                       "impact_record", "prohibited_uses", "required_approval_evidence"):
+348 +             for k in (
+349 +                 "scope",
+350 +                 "permitted_capability",
+351 +                 "source_permissions",
+352 +                 "accountable_function",
+353 +                 "approval_state",
+354 +                 "impact_record",
+355 +                 "prohibited_uses",
+356 +                 "required_approval_evidence",
+357 +             ):
+358 |                 self.assertTrue(t[k], (t["id"], k))
+    -             self.assertEqual((t["accountable_individual"], t["delegation"], t["approval_state"]),
+    -                              ("unknown", "unknown", "unapproved"))
+359 +             self.assertEqual(
+360 +                 (t["accountable_individual"], t["delegation"], t["approval_state"]),
+361 +                 ("unknown", "unknown", "unapproved"),
+362 +             )
+363 |             self.assertTrue(all(v == "unknown" for v in t["authority"].values()))
+--------------------------------------------------------------------------------
+372 |         from zava_forward.core import ai_registry
+    -         ok = ai_registry.envelope("summary", ["ZF-1"], {"ZF-1": "abc"}, dict(source="ai", model="m1", prompt_version="p"), 3)
+    -         self.assertEqual((ok["provider"], ok["deployment"], ok["model"], ok["case_version"], ok["approved"], ok["approval"]),
+    -                          ("azure-openai", "m1", "m1", 3, False, "Not reviewed"))
+373 +
+374 +         ok = ai_registry.envelope(
+375 +             "summary",
+376 +             ["ZF-1"],
+377 +             {"ZF-1": "abc"},
+378 +             dict(source="ai", model="m1", prompt_version="p"),
+379 +             3,
+380 +         )
+381 +         self.assertEqual(
+382 +             (
+383 +                 ok["provider"],
+384 +                 ok["deployment"],
+385 +                 ok["model"],
+386 +                 ok["case_version"],
+387 +                 ok["approved"],
+388 +                 ok["approval"],
+389 +             ),
+390 +             ("azure-openai", "m1", "m1", 3, False, "Not reviewed"),
+391 +         )
+392 |         self.assertEqual(ok["source_versions"], {"ZF-1": "abc"})
+    -         bad = ai_registry.envelope("summary", ["ZF-1"], {}, dict(source="template", reason="AI is not configured"))
+    -         self.assertEqual((bad["outcome"], bad["failure"], bad["model"]), ("abstained-or-failed", "AI is not configured", None))
+393 +         bad = ai_registry.envelope(
+394 +             "summary", ["ZF-1"], {}, dict(source="template", reason="AI is not configured")
+395 +         )
+396 +         self.assertEqual(
+397 +             (bad["outcome"], bad["failure"], bad["model"]),
+398 +             ("abstained-or-failed", "AI is not configured", None),
+399 +         )
+    |
+
+1 file would be reformatted
++ result=1
++ echo EXIT_CODE=1
+EXIT_CODE=1
++ exit 1

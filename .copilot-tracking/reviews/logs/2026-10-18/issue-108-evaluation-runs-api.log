@@ -1,0 +1,9 @@
++ python -m unittest discover -s tests -p test_ai_tasks.py -q
+----------------------------------------------------------------------
+Ran 33 tests in 6.264s
+
+OK
++ result=0
++ echo EXIT_CODE=0
+EXIT_CODE=0
++ exit 0

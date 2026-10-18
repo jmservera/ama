@@ -1,0 +1,102 @@
++ env -i PATH=/usr/bin:/bin HOME=/home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files TMPDIR=/home/azureuser/source/ama-wt/issue-108-runs/.copilot-tracking/.issue-108-tmp /home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files/eval-venv/bin/python -c 'import tempfile; print("resolved TMPDIR:", tempfile.gettempdir())'
+resolved TMPDIR: /home/azureuser/source/ama-wt/issue-108-runs/.copilot-tracking/.issue-108-tmp
++ env -i PATH=/usr/bin:/bin HOME=/home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files TMPDIR=/home/azureuser/source/ama-wt/issue-108-runs/.copilot-tracking/.issue-108-tmp /home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files/eval-venv/bin/python -m unittest discover -s src/agents/tests -p test_ai_eval.py -q
+======================================================================
+ERROR: test_five_output_scenario_retains_each_returned_identity_and_latency (test_ai_eval.AiEvalTests.test_five_output_scenario_retains_each_returned_identity_and_latency)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 53, in test_five_output_scenario_retains_each_returned_identity_and_latency
+    rows = measures["run_results"]
+           ~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'run_results'
+
+======================================================================
+ERROR: test_golden_run_and_scenario_denominators_reconcile (test_ai_eval.AiEvalTests.test_golden_run_and_scenario_denominators_reconcile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 24, in test_golden_run_and_scenario_denominators_reconcile
+    rows = [run for m in priority for run in m["run_results"]]
+                                             ~^^^^^^^^^^^^^^^
+KeyError: 'run_results'
+
+======================================================================
+ERROR: test_mixed_ai_and_fallback_runs_are_counted_in_both_orders (test_ai_eval.AiEvalTests.test_mixed_ai_and_fallback_runs_are_counted_in_both_orders) (ai_first=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 94, in test_mixed_ai_and_fallback_runs_are_counted_in_both_orders
+    rows = measures["run_results"]
+           ~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'run_results'
+
+======================================================================
+ERROR: test_mixed_ai_and_fallback_runs_are_counted_in_both_orders (test_ai_eval.AiEvalTests.test_mixed_ai_and_fallback_runs_are_counted_in_both_orders) (ai_first=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 94, in test_mixed_ai_and_fallback_runs_are_counted_in_both_orders
+    rows = measures["run_results"]
+           ~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'run_results'
+
+======================================================================
+ERROR: test_repetition_preserves_final_only_quality_scope (test_ai_eval.AiEvalTests.test_repetition_preserves_final_only_quality_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 130, in test_repetition_preserves_final_only_quality_scope
+    self.assertIn("final recommendation", summary["quality_scope"])
+                                          ~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'quality_scope'
+
+======================================================================
+ERROR: test_template_only_repetitions_keep_unknown_model_and_single_review (test_ai_eval.AiEvalTests.test_template_only_repetitions_keep_unknown_model_and_single_review)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 111, in test_template_only_repetitions_keep_unknown_model_and_single_review
+    self.assertEqual([r["source"] for r in measures["run_results"]], ["template"] * 3)
+                                           ~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'run_results'
+
+======================================================================
+FAIL: test_early_bad_citation_still_fails_after_valid_repetition (test_ai_eval.AiEvalTests.test_early_bad_citation_still_fails_after_valid_repetition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 161, in test_early_bad_citation_still_fails_after_valid_repetition
+    self.assertEqual((measures["runs"], summary["ai_runs"]), (2, 2))
+AssertionError: Tuples differ: (2, 1) != (2, 2)
+
+First differing element 1:
+1
+2
+
+- (2, 1)
+?     ^
+
++ (2, 2)
+?     ^
+
+
+======================================================================
+FAIL: test_early_critical_miss_still_fails_after_valid_repetition (test_ai_eval.AiEvalTests.test_early_critical_miss_still_fails_after_valid_repetition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-108-runs/src/agents/tests/test_ai_eval.py", line 146, in test_early_critical_miss_still_fails_after_valid_repetition
+    self.assertEqual((measures["runs"], summary["ai_runs"]), (2, 2))
+AssertionError: Tuples differ: (2, 1) != (2, 2)
+
+First differing element 1:
+1
+2
+
+- (2, 1)
+?     ^
+
++ (2, 2)
+?     ^
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.393s
+
+FAILED (failures=2, errors=6)
++ result=1
++ echo 'EXIT_CODE=1 (expected nonzero before repair)'
+EXIT_CODE=1 (expected nonzero before repair)

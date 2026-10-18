@@ -1,0 +1,27 @@
+PASS template path puts the open safety issue and extra support first
+PASS valid cited model output is accepted as a draft and changes nothing
+PASS model invents a case id so the template is used
+PASS model returns prose with an instruction instead of JSON
+PASS injection text inside case data cannot change anything
+PASS model leaves out the open safety case so the safety guard falls back to the template
+PASS model cites a fact the case does not have so every item is dropped and the template is used
+PASS an uncited item is dropped and the cited one is kept
+PASS a model that varies between runs on identical input is measured and stays safe
+PASS reviewer rejects a valid draft and the reason is recorded
+PASS text tasks: citations, Unverified, workflow-only, comparison record, review
+11 of 11 scenarios passed
+priority recommendations: 14 runs (8 AI-sourced, 6 template/fallback), across 10 scenarios; not provider-call counts
+prompt version 2026-10-09.1; models capable
+top-k overlap 0.9, Spearman vs deterministic 0.722
+critical misses 0 (deterministic order: 0); citation validity 1.0 over 74 cited facts
+latency per run ms: mean 1.347, max 1.96
+variation: 5 runs, 3 distinct orders, pairwise overlap 0.867, Spearman 0.0 (a model that varies between runs on identical input is measured and stays safe)
+reviewer answers {'accept': 8, 'edit': 1, 'reject': 1}
+added value on 2 scenarios: AI minus deterministic 0.25, AI minus workflow-only 0.25
+golden sha256 45c5762bbece; actual model: not evaluated (scripted provider); calibration: not applicable (no meaningful scored predictions)
+benefit claim: not permitted (no calibrated actual-model or human results)
+open: Foundry model names, versions and quotas are not confirmed in the chosen Azure region (owner or Azure retrieval needed)
+open: no live-model run: actual calls need a separate finite call, token, budget and expiry authorisation and serving attestation
+open: no independently labelled held-out split, approved thresholds or cohort sample sizes exist yet (owner decision)
+open: no authorised human participant protocol has run; role agents are not participant substitutes
+open: effort and cost comparison against manual/template and rules alternatives needs Finance validation
