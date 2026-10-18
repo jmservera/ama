@@ -203,9 +203,39 @@ original completion/Not accepted efc5e52e98b0984e8609ba519716e89e420c6b85fb811ea
 ## Remaining Work and Unmet Gates
 
 Integration, implementation and local validation complete. One original Review
-and publication remain; no source edits are planned after original Review.
+has completed below; publication remains. Source is frozen after Review.
 No bounded correction of this new task has been used. Coordinator retains final
 independent acceptance. Genuine authority, witnessed drill, immutable external
 Azure head, Azure SQL drill and enforceable pre-gate-image exclusion remain unmet;
 whole #122 stays open. No private inputs, live inference, Azure/IAM/Graph,
 issue/board/merge action, shared server/web/queue/procurement edit is authorized.
+
+## ONE Original Review: Complete / Not Accepted
+
+Independent new Review at frozen c5e329c588fa68ab6a7199ddcfa5977be94fe6f3:
+.copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md.
+SHA-256 e43d6ec67d83b788e97d68fd2be20523ef962f7ac5aeb544fabc0886adbf93e4.
+The reviewer independently reran focused 65/65 and coupled 546/432 pass/114 skips,
+reconciled all new source and canonical artifacts, preserved all ten historical
+files, and separately classified supplied SQL/image/static evidence.
+
+Both original coordinator reproductions are fixed in exercised normal paths,
+but the complete bounded acceptance contract is NOT accepted:
+
+* RV-001 Medium: a parseable JSON integer timestamp 10**400 raises OverflowError
+  in math.isfinite during producer and recomputed-digest offline verification
+  instead of an explicit incomplete/invalid result.
+* RV-002 Low: malformed source count/flag metadata can echo arbitrary values into
+  limited export despite correct incomplete status. This is inherited conditional
+  defensive hardening; the actual unchanged exporter supplies typed counts, not a
+  demonstrated ordinary HTTP disclosure. Separate later follow-up.
+
+No correction is performed here. This is NOT coordinator full published-head
+acceptance. New-task correction count is zero; at most two may occur only after
+coordinator review/authorization, as the owner directed. No source or test changes
+after this original Review, no repeat Review and no self-Pass. The prior original
+Not accepted and all historical receipts remain byte-identical.
+
+Authorized next action: commit this assessment/state and publish only the owned
+branch with the exact expected-head lease, update PR 398 while retaining draft,
+Refs-only/empty closing references, and STOP for full coordinator review.

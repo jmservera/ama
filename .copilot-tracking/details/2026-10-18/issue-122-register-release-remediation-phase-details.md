@@ -19,6 +19,12 @@ none removed. SQL/image resources removed. No material divergence or unresolved
 source blocker. P03-T02 awaits the ONE original Review; P03-T03 is the authorized
 post-Review publication action. Follow-ups remain outside bounded acceptance.
 
+Post-Review reconciliation: P03-T02 now executed once, Complete / Not accepted.
+RV-001 Medium is an unhandled oversized integer timestamp, routed to later
+coordinator-selected implementation; RV-002 Low is separate inherited malformed
+metadata hardening. Neither is fixed here. P03-T03 publishes the adverse original
+assessment and stops. No second Review, source correction or self-Pass.
+
 <!-- rpi:phase id=P01 -->
 ## P01: Exact integration and adverse controls
 

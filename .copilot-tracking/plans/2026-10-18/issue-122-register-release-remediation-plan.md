@@ -121,7 +121,7 @@ Any failure/skip is reported as such; local evidence is not Azure acceptance.
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Execute local, SQL, image and static checks; update guide
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Reconcile evidence and obtain one original independent Review
+#### [x] P03-T02: Reconcile evidence and obtain one original independent Review
 <!-- rpi:task id=P03-T03 -->
 #### [ ] P03-T03: Commit/publish exact lease and stop for coordinator review
 
@@ -153,6 +153,12 @@ decision, scope expansion or second critique.
 
 ## Follow-Up Items
 
+* New original Review Complete / Not accepted: RV-001 Medium, oversized integer
+  timestamp OverflowError. Coordinator-selected later rpi-implement correction,
+  not a second Review or self-correction in this task. Both original supplied
+  reproductions are fixed in exercised normal paths; full contract not accepted.
+* RV-002 Low: inherited malformed limited-metadata passthrough, separate
+  conditional defensive hardening, not an ordinary HTTP disclosure finding.
 * Control/platform owners: genuine authority, witnessed drill, external immutable
   Azure head, Azure SQL drill and enforceable legacy-image exclusion remain unmet.
 * Coordinator: full exact published-head independent acceptance after this loop.
@@ -163,3 +169,6 @@ Details: .copilot-tracking/details/2026-10-18/issue-122-register-release-remedia
 Changes target: .copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md.
 Implementation ready after these direct dispositions. Executive summary and
 scope unchanged; exact integration remains the first implementation prerequisite.
+Current execution has reached the one original Review, Complete / Not accepted
+with the routed findings above. P03-T03 publication remains; no source edits
+after Review. Coordinator alone decides later corrections and acceptance.

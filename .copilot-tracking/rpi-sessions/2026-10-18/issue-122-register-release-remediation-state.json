@@ -3,8 +3,8 @@
   "task_slug": "issue-122-register-release-remediation",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-18/issue-122-register-release-remediation-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-122-register-release-remediation-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
   },
   "confirmed_decisions": [
     {
@@ -29,12 +29,47 @@
       "decision": "Research executed, Planning Readiness Ready; one critique executed Complete/Revise, PC-001 through PC-005 accepted directly with detailed resolving controls.",
       "status": "implementation-ready",
       "evidence": "New research C1-C6, plan Critique Disposition and phase-details PC contracts; no second critique."
+    },
+    {
+      "decision": "ONE original independent Review executed Complete / Not accepted at c5e329c588fa68ab6a7199ddcfa5977be94fe6f3. RV-001 Medium remains; RV-002 Low is separate conditional hardening.",
+      "status": "not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md SHA-256 e43d6ec67d83b788e97d68fd2be20523ef962f7ac5aeb544fabc0886adbf93e4"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Oversized parseable JSON integer timestamps cause OverflowError in producer/verifier instead of explicit invalidity.",
+      "resolution": "Coordinator review and later authorized bounded correction; no source correction or repeat Review in this loop."
+    },
+    {
+      "id": "independent-acceptance",
+      "summary": "Coordinator full exact published-head independent review remains required; PR stays draft.",
+      "resolution": "Publish preserved adverse assessment/evidence, then stop for coordinator."
+    }
+  ],
   "next_action": {
-    "phase": "Review",
-    "action": "Implementation/validation reconciled; freeze implementation commit and transition to exactly one independent original Review."
+    "phase": "Follow-up",
+    "action": "Bounded loop completed with Not accepted outcome; publish draft adverse evidence under exact lease, then STOP for coordinator independent review; no correction used."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator-selected conversion-safe timestamp correction",
+      "rationale": "Concrete Medium bounded acceptance blocker; small parsing guard/regression within current source intent.",
+      "evidence": "Original new Review RV-001, producer and serialized verifier OverflowError for 10**400."
+    },
+    {
+      "rank": 2,
+      "task": "Typed limited metadata defensive hardening",
+      "rationale": "Low conditional inherited exposure; actual unchanged source emits typed counts, so not a normal HTTP privacy blocker.",
+      "evidence": "Original new Review RV-002."
+    },
+    {
+      "rank": 3,
+      "task": "Owner-controlled authority, drill, external Azure head, Azure SQL and old-image exclusion evidence",
+      "rationale": "Whole issue operational prerequisites; outside bounded local source authority and cannot be inferred from local tests.",
+      "evidence": "Live issue 122 and original new Review residual gates."
+    }
+  ]
 }
