@@ -523,6 +523,9 @@ class Assistants:
 
     def export(self, limit=5000, release_limit=5000, event_limit=5000):
         """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""
+        if self.schema_error:
+            return dict(proposals=[], total=None, truncated=True, supported=True, source_status="unavailable",
+                        note=self.schema_error)
         if not self.sql:
             return dict(proposals=[], total=0, truncated=False, supported=False, source_status="unsupported",
                         note="Assistant proposals are durable SQL only; this JSON store holds none, so none are exported.")

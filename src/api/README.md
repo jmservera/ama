@@ -200,6 +200,13 @@ fails closed; legitimate unsupported JSON exports remain usable. Older bundles
 without this metadata must be regenerated from retained source evidence, not
 silently certified complete.
 
+A SQL migration/schema failure is unavailable evidence, not an unsupported JSON
+store or a known-empty collection. Export retains an unknown total and explicit
+truncation/unavailability with the safe operator/manual-route message; it never
+substitutes empty release proof or exposes driver exception text. Both the normal
+HTTP producer and offline verifier reject completeness, including after an
+ordinary digest is recomputed. Ordinary case/manual work remains available.
+
 Focused regressions are in `tests/test_continuity_epoch_export.py`, using installed
 `src` distributions and synthetic nonbillable providers. `ZF_CONTINUITY_MSSQL=1`
 requires `ZF_ISSUE122_OWNED_SQL` and loopback-only `ZF_SQL_*`; each test creates

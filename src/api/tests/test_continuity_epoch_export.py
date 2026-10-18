@@ -13,7 +13,8 @@ from unittest.mock import patch
 import release_support  # type: ignore[import-not-found]
 from zava_forward.core import ai_tasks, continuity
 from zava_forward.core.ai import Ai
-from zava_forward.core.assistants import canonical
+from zava_forward.core.assistants import MSSQL_DDL, Assistants, canonical
+from zava_forward.core.sqlstore import SqlStore
 
 import test_assistants as fixtures
 from test_assistants import Base, proposal
@@ -31,6 +32,23 @@ def complete_release_fixtures(test: Any) -> None:
     test.service.approvers = {test.pm["email"]}
     for body in bodies:
         test.service.record_release(test.pm, dict(body, expires="2099-01-01T00:00:00Z"))
+
+
+def assert_unavailable_export(test: Any, bundle: dict[str, Any]) -> None:
+    bundle = json.loads(json.dumps(bundle))
+    head = copy.deepcopy(bundle["ledger"]["head"])
+    test.assertFalse(bundle["complete"])
+    test.assertTrue(bundle["incomplete_reasons"])
+    test.assertEqual(bundle["assistants"]["source_status"], "unavailable")
+    test.assertIsNone(bundle["assistants"]["total"])
+    test.assertFalse(continuity.verify_export(bundle, head)["valid"])
+    bundle["complete"] = True
+    bundle["incomplete_reasons"] = []
+    bundle["digest"] = continuity.sha({k: v for k, v in bundle.items() if k != "digest"})
+    verified = continuity.verify_export(bundle, head)
+    test.assertFalse(verified["valid"])
+    test.assertFalse(verified["complete"])
+    test.assertEqual(bundle["ledger"]["head"], head)
 
 
 class EpochTests(Base):
@@ -460,6 +478,62 @@ class OfflineTests(Base):
         bundle["incomplete_reasons"] = []
         bundle["digest"] = continuity.sha({k: v for k, v in bundle.items() if k != "digest"})
         return dict(continuity.verify_export(bundle))
+
+    def test_constructor_migration_failure_cannot_omit_retained_sql_evidence(self) -> None:
+        before = self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0]
+        self.assertGreater(before, 0)
+        private = "SYNTHETIC-PRIVATE-SQL-DRIVER-FAILURE"
+        with patch.object(Assistants, "migrate", side_effect=RuntimeError(private)):
+            unavailable = Assistants(self.store, {})
+        self.addCleanup(unavailable.stop)
+        self.assertFalse(unavailable.sql)
+        self.assertIsNotNone(unavailable.schema_error)
+        source = unavailable.export()
+        head = self.store.ledger_head()
+        bundle = self.store.continuity_export(self.pm, source)
+        self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
+        self.assertNotIn(private, json.dumps(bundle))
+        assert_unavailable_export(self, bundle)
+        self.assertIsNone(bundle["task_releases"])
+        self.assertEqual(source["note"], unavailable.schema_error)
+        self.assertEqual(
+            self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0],
+            before,
+        )
+        self.assertIn("manually", unavailable.disabled())
+        self.assertIsInstance(self.store.continuity_view(self.pm), dict)
+
+    def test_actual_json_unsupported_and_available_sql_full_empty_sources(self) -> None:
+        from zava_forward.core.store import Store
+
+        full, _ = self.bundle()
+        self.assertEqual(full["assistants"]["source_status"], "available")
+        self.assertGreater(full["assistants"]["total"], 0)
+        self.assertTrue(continuity.verify_export(full, full["ledger"]["head"])["valid"])
+        empty_store = SqlStore(str(self.seed), str(self.root / "empty.sqlite"))
+        self.addCleanup(empty_store.db.close)
+        empty_service = Assistants(empty_store, {})
+        self.addCleanup(empty_service.stop)
+        empty = empty_store.continuity_export(self.pm, empty_service.export())
+        self.assertEqual(empty["assistants"]["source_status"], "available")
+        self.assertEqual(empty["task_releases"]["records"], [])
+        self.assertEqual(empty["assistants"]["total"], 0)
+        self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
+        json_store = Store(
+            str(self.seed),
+            live_path=str(self.root / "unsupported-live.json"),
+            audit_path=str(self.root / "unsupported-audit.jsonl"),
+        )
+        json_service = Assistants(json_store, {})
+        self.addCleanup(json_service.stop)
+        self.assertFalse(json_service.sql)
+        self.assertIsNone(json_service.schema_error)
+        unsupported = json_store.continuity_export(self.pm, json_service.export())
+        self.assertEqual(unsupported["assistants"]["source_status"], "unsupported")
+        self.assertEqual(unsupported["task_releases"]["records"], [])
+        self.assertTrue(
+            continuity.verify_export(unsupported, unsupported["ledger"]["head"])["valid"]
+        )
 
     def test_release_snapshot_and_lifecycle_verify_offline_after_revocation(self) -> None:
         bundle, rid = self.bundle()
@@ -915,6 +989,36 @@ class HttpTests(fixtures.ApiTests):
         super().setUp()
         complete_release_fixtures(self)
 
+    def test_http_migration_failure_reports_incomplete_without_driver_details(self) -> None:
+        retained = self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0]
+        self.assertGreater(retained, 0)
+        private = "SYNTHETIC-PRIVATE-HTTP-SQL-DRIVER"
+        with patch.object(Assistants, "migrate", side_effect=RuntimeError(private)):
+            unavailable = Assistants(self.store, {})
+        self.addCleanup(unavailable.stop)
+        self.app.assistants = unavailable
+        for role, reasons in (
+            ("Retrofit Programme Manager", "Retrofit Programme Manager"),
+            ("Retrofit Programme Manager", "Building Safety Liaison"),
+            ("Programme Support Officer", "Building Safety Liaison"),
+        ):
+            with self.subTest(role=role, reasons=reasons):
+                self.user = self.people[role]
+                head = self.store.ledger_head()
+                with patch.dict(os.environ, {"ZF_REASON_ROLES": reasons}):
+                    status, bundle = self.request("/api/continuity/export")
+                self.assertEqual(status, 200, bundle)
+                self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
+                self.assertNotIn(private, json.dumps(bundle))
+                assert_unavailable_export(self, bundle)
+                self.assertEqual(self.request("/api/continuity")[0], 200)
+                if role == "Retrofit Programme Manager":
+                    self.assertEqual(self.request("/api/cases")[0], 200)
+        self.assertEqual(
+            self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0],
+            retained,
+        )
+
     def test_register_recorded_need_canaries_and_canonical_nonmutation(self) -> None:
         canary = "SYNTHETIC-REGISTER-PRIVATE-122"
         suspended = self.store.suspend(
@@ -1312,7 +1416,48 @@ class MssqlLegacyTests(OwnedMssql, LegacyTests):
 
 @unittest.skipUnless(os.environ.get("ZF_CONTINUITY_MSSQL") == "1", "owned local MSSQL opt-in")
 class MssqlOfflineTests(OwnedMssql, OfflineTests):
-    pass
+    def test_actual_invalid_ledger_migration_retains_unavailable_evidence(self) -> None:
+        from zava_forward.core.mssqlstore import MssqlStore, _Conn, connection_string
+
+        name = "zf_continuity122_" + uuid.uuid4().hex
+        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
+        try:
+            master.execute("CREATE DATABASE " + name + " WITH LEDGER=ON")
+        finally:
+            master.close()
+        self.addCleanup(self.drop_database, name)
+        store = MssqlStore(
+            str(self.seed),
+            env=dict(self.sql_env, ZF_SQL_DATABASE=name),
+            state_dir=str(self.root / "invalid-ledger"),
+        )
+        self.addCleanup(store.db.close)
+        for table in ("assistant_events", "assistant_releases"):
+            store.db.execute(next(d for d in MSSQL_DDL if d.startswith("CREATE TABLE " + table)))
+        store.db.execute(
+            "INSERT INTO assistant_events (id,task_id,at,body) VALUES ('retained','release',0,'{}')"
+        )
+        store.db.execute(
+            "INSERT INTO assistant_releases (id,capability,status,body,revision) "
+            "VALUES ('release','stock-prioritisation','active','{}',1)"
+        )
+        unavailable = Assistants(store, {})
+        self.addCleanup(unavailable.stop)
+        self.assertFalse(unavailable.sql)
+        self.assertIsNotNone(unavailable.schema_error)
+        self.assertEqual(
+            store.db.execute(
+                "SELECT ledger_type_desc FROM sys.tables WHERE name='assistant_events'"
+            ).fetchone()[0],
+            "UPDATABLE_LEDGER_TABLE",
+        )
+        head = store.ledger_head()
+        bundle = store.continuity_export(self.pm, unavailable.export())
+        self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
+        assert_unavailable_export(self, bundle)
+        self.assertIsNone(bundle["task_releases"])
+        for table in ("assistant_events", "assistant_releases"):
+            self.assertEqual(store.db.execute("SELECT COUNT(*) FROM " + table).fetchone()[0], 1)
 
 
 @unittest.skipUnless(os.environ.get("ZF_CONTINUITY_MSSQL") == "1", "owned local MSSQL opt-in")
