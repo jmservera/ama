@@ -4,7 +4,7 @@
 
 * Task ID: actions-budget-local-rpi
 * Task slug: local-rpi-validation
-* Planning status: Accepted plan retained; P01/P02 complete, P03 validating
+* Planning status: Accepted plan reconciled; P01-P03 executed, original Review Not accepted (RV-001)
 * Plan date: 2026-10-18
 * Base: 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd
 * Phase details: .copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md
@@ -268,10 +268,10 @@ permission to omit checks now.
   invocation. KB index/log updates are required only if a KB file changes.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Consolidate hosted validation without coverage loss
+### [x] P03: Consolidate hosted validation without coverage loss
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Verify protection and move unique hosted checks
+#### [x] P03-T01: Verify protection and move unique hosted checks
 
 * Record unavailable required-context configuration without blocking independent
   local implementation. The coordinator/owner verifies mapping before merge;
@@ -282,7 +282,7 @@ permission to omit checks now.
 * Validate the consolidation locally before its first single hosted run.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Apply owner-approved trigger and disable changes
+#### [x] P03-T02: Apply owner-approved trigger and disable changes
 
 * Proposed normal policy: retain pull_request event behavior, one consolidated
   workflow run per eligible PR update; workflow_dispatch for recovery, no
@@ -347,10 +347,16 @@ and no second critique is requested.
 
 ## Handoff
 
-* Planning execution complete, both critique dispositions resolved and
-  implementation approved. Full plan is in scope, beginning P01-T01.
+* Full P01-P03 implementation steps were executed and the consolidated matrix
+  verified at 2c98c0e3fac0657bb67f093ac8f4561685c8c8d3. The one original Review
+  is Complete, outcome Not accepted: RV-001 reproduces execution of an
+  unvalidated receipt-adjacent environment binary during verification.
+  Implementation markers preserve performed work, not acceptance of that
+  defect. Route correction to a separately authorized Implement follow-up.
+* Final artifact commit requires a fresh complete external receipt. It cannot
+  close RV-001 or override the original Review. No publication is authorized.
 * Changes and validation evidence:
   .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md
 * Other autonomous delivery remains paused until the actual gate is available.
-* Changes record, created by implementation:
-  .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md
+* Independent exact-head assessment, protection/context mapping and retained
+  hosted confirmation remain coordinator/owner gates, not locally proven.

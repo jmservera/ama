@@ -6,7 +6,8 @@
 * Plan: .copilot-tracking/plans/2026-10-18/local-rpi-validation-plan.md
 * Details: .copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md
 * Original critique: .copilot-tracking/reviews/plans/2026-10-18/local-rpi-validation-plan-critique.md
-* Execution: Starting P01-T01; no implementation code written yet.
+* Initial execution entry: Starting P01-T01; no implementation code written yet.
+  Current execution and adverse original Review are recorded chronologically below.
 * Worktree: /home/azureuser/source/ama-wt/ci-budget-plan
 * Branch: docs/local-rpi-validation-plan
 * Base: 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd
@@ -204,3 +205,67 @@ Original triggers are recoverable from the recorded base; reviewed trigger
 restoration and owner-only explicit enable commands are in phase details.
 Main still equals the supplied base. Full consolidated matrix is next; no
 hosted execution or publication is claimed.
+
+## P03 Complete and Pre-Review Reconciliation
+
+Run05 passed and verified all 17 groups and 183 actual command rows for
+2c98c0e3fac0657bb67f093ac8f4561685c8c8d3 at the unchanged reviewed base.
+Receipt: `/tmp/rpi-413-run05/receipt.json`. There are 98 native workflow step
+coverage rows. Five project test/skip counts remain 1194/149, 105/0, 935/300,
+46/0 and 39/0; focused 12/0, infra 359/0, SQL 243/1 (242 applicable executed).
+Browser checks and verified axe ran; final snapshot inputs are empty.
+All four fixable gates contain zero findings. Each full report contains
+61 HIGH and two CRITICAL unfixed package findings, retained without ignores.
+SPDX-2.3 package counts: API 130, agents 110, orchestrator 129, importer 122.
+Actual DB UpdatedAt 2026-10-18T13:11:41Z, NextUpdate 2026-10-19T13:11:41Z.
+Image IDs, report/SBOM hashes and every command/skip reason are in the receipt.
+
+All in-scope implementation markers are now complete with actual evidence.
+No executable divergence or domain/helper change remains. The accepted original
+critique and both parent dispositions are unchanged. Review readiness is local
+implementation complete, not whole-issue delivery: independent exact-head
+assessment, publication authorization, remote context mapping and hosted checks
+remain expressly unperformed. Execute one original RPI Review, preserve its
+verdict/findings, commit these reconciled artifacts, then rerun for final HEAD.
+
+## One Original Review Complete: Not Accepted
+
+The original read-only Review compared full source, actual receipt/log/report
+hashes, all plan/details markers, research, unchanged original critique and live
+issue #413. It executed once directly in this qualified session, without a
+review worker. Record:
+.copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md.
+
+Execution is Complete; outcome is Not accepted. RV-001 High (10/10) reproduced
+a verifier trust-boundary defect: environment_identity launches an external
+receipt-adjacent Python binary before checking its environment/startup
+identity or complete evidence. A safe marker-only disposable fixture ran that
+binary before the verifier rejected the incomplete receipt. Probe log:
+`/tmp/rpi-413-evidence/original-review-verifier-probe.log`, also appended to
+the full actual CLI log. Fixture cleanup completed; no private data or network
+was accessed. Source and tests were not changed during Review.
+
+No correction, closure verification, second original Review or new critique
+was performed. Route RV-001 to a separately authorized corrective Implement
+invocation. The 17 passing groups do not override this adverse finding.
+Independent exact-head assessment, 403 context mapping, publication permission
+and retained hosted checks remain coordinator/owner gates.
+
+## Final Artifact Commit and External Receipt Handoff
+
+This record is committed before the requested final full matrix. Its execution
+outcome is intentionally not predicted here. The authoritative final evidence
+is `/tmp/rpi-413-final/receipt.json`, its sidecar and command/report logs, if
+the actual final run succeeds and verifies. Until then run05 is historical
+implementation evidence only. No commit after the final run is permitted
+without a fresh complete rerun; the external receipt avoids self-reference.
+
+Final matrix command, using the recorded base and restored user-space tools:
+`PATH="/tmp/rpi-413-tools:$PATH" PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd --out /tmp/rpi-413-final`.
+Verify with the same PATH/bytecode policy and
+`python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-413-final/receipt.json --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd`.
+Full actual CLI output remains `/tmp/rpi-413-local-validation.log`.
+
+The requested handoff is a clean frozen local candidate, not accepted delivery.
+Even a passing final receipt must retain RV-001 as a publication blocker.
+Do not push, open a PR, touch another worktree or resume unrelated backlog.

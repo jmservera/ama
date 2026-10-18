@@ -14,9 +14,9 @@
 
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
-| P01 | Local gate | Complete, run04 verified at 80927265 | P01-T01, P01-T02 |
-| P02 | RPI integration | Complete; topic receipt tests and actual invalidation observed | P02-T01 |
-| P03 | Hosted transition | Local edits/targeted contracts pass; complete matrix pending | P03-T01, P03-T02 |
+| P01 | Local gate | Executed, run04 verified; acceptance blocked by Review RV-001 | P01-T01, P01-T02 |
+| P02 | RPI integration | Executed; receipt tests/invalidation observed; verifier RV-001 open | P02-T01 |
+| P03 | Hosted transition | Complete local implementation; run05 verified at 2c98c0e3 | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement a complete local validation gate
@@ -98,6 +98,10 @@ selected MSSQL contract tests must actually run; missing driver, disabled env
 or inaccessible service blocks a complete pass. Existing suite-owned SQL
 functions already wipe tables, which is why endpoint ownership is mandatory.
 Clean up only the exact container/database created by this receipt.
+Actual execution identified one inherited JSON-only non-applicable method:
+test_mssqlstore.MssqlHazardReferral.test_json_postsave_audit_failure_reports_persisted_uncertainty,
+reason "JSON-only separate-file audit ordering". Only that exact ID/reason is
+accepted in the explicit SQL gate; it is counted, not hidden.
 
 ### Image and Scan Gate
 
@@ -255,3 +259,14 @@ authorize `gh workflow enable mvp-ci.yml` and
 `gh workflow enable mvp-validation.yml`; these commands were not executed.
 Final-head hosted confirmation and required-context mapping remain coordinator
 gates before merge, not local checks or blockers to independent implementation.
+
+## Original Review and Local Freeze Boundary
+
+The one original Review is Complete, outcome Not accepted. RV-001 reproduced
+unvalidated external-environment code execution during receipt verification.
+See the original Review at
+.copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md.
+This is not a plan-critique rerun or a source correction. Preserve it unchanged.
+The final artifact commit and exact-head matrix/receipt freeze are evidence
+collection, not closure of the finding. No push is permitted; coordinator routes
+a distinct corrective Implement invocation before publication can be accepted.
