@@ -5,6 +5,8 @@
 
 * Current execution: final authorized correction TWO, coupled manifest digest and
   browser refresh synchronization implemented. Runtime/domain bytes unchanged.
+  Source/test/manifest commit685fe61fff05a9ff5044052421e86e4240ff1763;
+  later delivery-only artifacts do not alter validated bytes.
   Correction-two receipt owns new results; prior receipts remain historical.
   Final full core passes1048/934 passed/114 skips using normal CI tempfiles;
   earlier extra local TMPDIR restriction and errors remain historical.

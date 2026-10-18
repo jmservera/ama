@@ -8,6 +8,9 @@
   cycle TWO, both supplied Medium findings as one batch, no new RPI loop.
 * Initially clean HEAD: 59dce3b6be4f1d358269b6848520270ee3eade9a.
 * Prior source: 0830f7c339fe9b5fa936cda849f14edc5a0e3624.
+* Current correction source/test/manifest commit:
+  685fe61fff05a9ff5044052421e86e4240ff1763. Final validation ran on its exact
+  changed bytes before commit; follow-on delivery artifacts do not alter them.
 * Base/fresh origin/main: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Branch: feat/appointment-commitment-controls-87; existing open PR397/main.
 * Frozen original Review SHA256:
@@ -327,3 +330,15 @@ publication, fresh authenticated identity and remote base check. This records
 actual execution, not independent acceptance or a change to original Review.
 No commit, push, branch operation, PR/issue/AC/board mutation, merge, independent
 acceptance, self-Pass, live approval, external inference or paid service occurred.
+
+## Parent Publication Handoff
+
+The preceding no-commit statement describes worker execution. Parent subsequently
+committed the final coherent correction with fresh gh identity jmservera/id8036360,
+privacy-safe repository-local author/committer and Copilot co-author trailer.
+Source commit685fe61fff05a9ff5044052421e86e4240ff1763 is pinned above. Normal
+same-branch push and PR397 narrative update follow under explicit coordinator
+authorization; no rebase, force push, merge, issue/AC/board mutation or new
+acceptance verdict. Origin/main must still equal pinned99056cae before push.
+This is the final authorized source correction cycle; external gate remains
+coordinator-owned. Original Review/critique remain byte-exact.

@@ -24,9 +24,11 @@
   0830f7c339fe9b5fa936cda849f14edc5a0e3624, based on starting HEAD49d3d663.
   Subsequent delivery-only artifact commits do not change validated source/docs.
   Base remains 99056cae. Main PR: https://github.com/jmservera/ama/pull/397.
-* Current source: uncommitted correction TWO on starting HEAD59dce3b6; only
+* Current source: correction TWO commit685fe61fff05a9ff5044052421e86e4240ff1763
+  on starting HEAD59dce3b6; only
   scenario source digest and browser synchronization change, plus KB/artifacts.
-  Application runtime/domain/SQL bytes are unchanged; no source SHA invented.
+  Application runtime/domain/SQL bytes are unchanged. Later delivery-artifact
+  commits do not change the validated manifest/browser/source tree.
 * Branch: feat/appointment-commitment-controls-87; target: main.
 * Lifecycle status: Research/Plan/Implement/one original Review executed.
   P01-P03 execution complete; original Review Complete / Not accepted.
@@ -320,7 +322,7 @@ failing-first details, hashes and limitations. Parent alone handles git delivery
 the original adverse Review and frozen critique remain byte-exact.
 
 Current correction-TWO handoff: both scoped source corrections are implemented
-on starting HEAD59dce3b6, uncommitted for coordinator-owned delivery. Exact named
+on starting HEAD59dce3b6, committed as685fe61f for normal PR397 delivery. Exact named
 tests 2/2 and coupled contracts 19/19 pass. The actual complete final-byte browser
 passes all later steps, with five complete corrected runs across the batch.
 Configured core/API static checks and all four public digest bindings pass.

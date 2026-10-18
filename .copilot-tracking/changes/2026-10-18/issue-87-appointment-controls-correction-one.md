@@ -400,7 +400,7 @@ or independently establish later-step coverage at every run. The separate
 correction-two receipt records exact form-replacement synchronization and actual
 complete later provider selected-date/Committed/Ended and unrelated-order/draft
 execution, including a final-byte complete run. Both named digest tests and all
-19 coupled tests pass. Full-core discovery was also executed, but existing
-generator output guards reject mandated project-local scratch (1048 run,
-32 error records over 23 methods, 114 skips). No green full-core, rerun SQL75/
-image, second Review or independent acceptance is implied.
+19 coupled tests pass. An initial extra project-local TMPDIR restriction caused
+full-core destination-guard errors. The final unchanged CI discovery uses normal
+tempfiles and passes1048 tests:934 passed,114 existing skips,zero errors.
+No rerun SQL75/image, second Review or independent acceptance is implied.

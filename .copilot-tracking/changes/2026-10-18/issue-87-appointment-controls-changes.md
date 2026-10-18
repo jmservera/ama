@@ -12,7 +12,8 @@
   below ran on its exact source tree before commit; initial-source/base statements
   elsewhere are historical context. That source received the one original Review.
 * Current correction TWO: final authorized source batch on HEAD59dce3b6,
-  coupled fixture digest and browser refresh synchronization corrected.
+  coupled fixture digest and browser refresh synchronization corrected in
+  commit685fe61fff05a9ff5044052421e86e4240ff1763.
   Fresh evidence is in issue-87-appointment-controls-correction-two.md.
   Complete browser/contracts/static checks pass; final full core1048 run,
   934 passed,114 existing skips,zero errors. Initial extra TMPDIR restriction

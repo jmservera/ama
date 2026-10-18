@@ -6,7 +6,8 @@
   "active_phase": "Follow-up",
   "status": "completed",
   "session_status": "stopped",
-  "source_head": "0830f7c339fe9b5fa936cda849f14edc5a0e3624",
+  "source_head": "685fe61fff05a9ff5044052421e86e4240ff1763",
+  "application_runtime_head": "0830f7c339fe9b5fa936cda849f14edc5a0e3624",
   "base_head": "99056cae7bc679d2ace3e42c75f28577cfce8887",
   "delivery": {
     "branch": "feat/appointment-commitment-controls-87",
@@ -73,9 +74,9 @@
   ],
   "blockers": [],
   "independent_corrected_head_acceptance": "Coordinator supplies external agent40f6133c Not accepted: original seven closed, two Medium findings now corrected with implementation evidence. Final external judgment remains coordinator-owned. No new Review/self-Pass; original Review unchanged.",
-  "next_action": {"phase": "Follow-up", "action": "Final correction TWO both findings implemented; full core1048/934 pass/114 skips, coupled19, named2 and actual complete browser passed. Commit coherent test/manifest/artifact batch, normal push and update PR397 after fresh base/identity/frozen hashes. External gate remains coordinator-owned."},
+  "next_action": {"phase": "Follow-up", "action": "Final correction TWO source685fe61f completed with full core1048/934 pass/114 skips, coupled19, named2 and actual complete browser. Normal same-branch publication/PR397 update; coordinator retains external final-head gate. No further source cycle, Review/self-Pass, merge or issue closure."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator corrected-head judgment and PR checks", "rationale": "Seven findings have correction implementation/reproduction evidence, not a new independent acceptance verdict.", "evidence": "Correction-one receipt; immutable original Review."},
+    {"rank": 1, "task": "Coordinator final corrected-head judgment and PR checks", "rationale": "Supplied external evidence closed original seven; both final Medium findings now have correction evidence, not independent acceptance.", "evidence": "Correction-two receipt; supplied agent40f6133c outcome; immutable original Review."},
     {"rank": 2, "task": "Existing live policy/evidence and UX acceptance", "rationale": "Operational ratification, real authority/capacity/competence and resident/accessibility validation remain human-owned.", "evidence": "Original Review residual work; correction-one receipt human limits and inherited guideline disclosures."}
   ]
 }
