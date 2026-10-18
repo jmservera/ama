@@ -10,7 +10,8 @@ Details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-schedule
 ## Execution Status
 
 P01/P02/P03 complete; original Review Complete / Not accepted unchanged.
-Final authorized correction TWO P04 active against integrated base f9d80724.
+Final authorized correction TWO P04 complete against integrated base f9d80724,
+tested source c326ef7b published/verified same draft PR395; no active markers.
 Coordinator supplies independent original-finding closure and new Medium import
 defect; no self-Pass or new full Review. Prior correction evidence below immutable.
 
@@ -500,3 +501,38 @@ coordinator session558e33f1; new final correction not self-accepted. No new full
 Review. Any residual defect after this LAST source cycle is human-blocked.
 Real Defender, hosted recurring scheduler and retention/owner/hold authority
 remain unmet; no merge or issue closure authorized.
+
+## Correction TWO P04-T02: Verified exact-lease publication and final handoff
+
+2026-10-18 fresh gh identity8036360/jmservera supplies privacy-safe local author/
+committer8036360+jmservera@users.noreply.github.com. Conventional fix commit
+Refs #117 and required Copilot trailer verified. Own-topic authorized rebase/
+correction published with the exact command:
+
+```bash
+git push --force-with-lease=refs/heads/feat/document-rescan-scheduler-117:6a9fd3a4f763c48b5a5de65a3a9efd892731e7d8 \
+  origin HEAD:refs/heads/feat/document-rescan-scheduler-117
+```
+
+Expected old remote verified immediately before publication; no unexpected
+advancement. Fresh main stayed authorized f9d807245e784ad2e6587741a73fc6563f8d2cd6.
+Tested integrated source commit c326ef7b7a2b9f84831d282fd007127821755afa
+equals actual local/remote/PR395 head after push; worktree clean.
+`gh pr edit 395 --body-file` publishes current correction TWO first, current
+base/source/parity/driverless/nativeSQL/image commands and honest failures/skips,
+then labelled historical original/correction ONE sections.
+PR remains Open/draft/main; issue117 Open; actual merge-base equals f9d80724.
+No main push/rewrite, merge, closure or new authority.
+
+P04-T01/P04-T02 and P04 complete. No active implementation markers remain.
+Current plan/details/state reconciled; these four metadata files alone follow
+the tested source commit. Their normal final metadata commit/push does not
+change runtime/tests; final delivered head recorded externally in PR/final
+return to avoid self-referential hashes. Final source/patch parity and immutable
+original/correction ONE evidence receipts correction2-integration-parity.log.
+Exact owned correction TWO SQL and job absent after actual stop/removal.
+No third source cycle. Coordinator independently owns final acceptance;
+any remaining defect is a human blocker. All real service/approval gates remain
+unmet, draft retained. Original Review Complete / Not accepted and critique
+Revise remain byte-exact; coordinator-supplied original-finding closure does not
+rewrite them or award final correction acceptance.

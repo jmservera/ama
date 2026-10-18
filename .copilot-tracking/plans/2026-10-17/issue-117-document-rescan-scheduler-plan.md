@@ -6,7 +6,7 @@
 * Task ID: 117
 * Task slug: issue-117-document-rescan-scheduler
 * Plan date: 2026-10-17
-* Planning status: Final authorized correction TWO P04 active, integrated onto main f9d80724
+* Planning status: Final authorized correction TWO P04 complete, integrated base f9d80724; coordinator final clearance pending
 * Phase details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-scheduler-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md
 
@@ -193,7 +193,7 @@ Reconcile correction receipts/current state and PR395 body, fresh main/identity,
 normal commit/push; retain draft and exact original Review/critique bytes.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Final authorized correction TWO and integration
+### [x] P04: Final authorized correction TWO and integration
 
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Restore optional-driver import compatibility
@@ -206,7 +206,7 @@ regressions for driverless help/discovery, normal/failing SQLite command and
 available-driver MSSQL error. Original worker/recovery contracts unchanged.
 
 <!-- rpi:task id=P04-T02 -->
-#### [ ] P04-T02: Validate integration and publish with exact lease
+#### [x] P04-T02: Validate integration and publish with exact lease
 
 Authorized rebase own topic onto fresh main f9d80724, preserve upstream runtime/
 browser routes unchanged and exact issue runtime/test patch parity except T01.
@@ -251,6 +251,9 @@ defect-free acceptance. P03 correction ONE is complete and coordinator reports
 independent original-finding closure. P04 final correction TWO fixes the new
 optional-driver import finding after authorized main integration, without
 reopening or rewriting original Review/critique/correction evidence.
-P04-T01 complete; P04-T02 validation complete, exact leased publication pending.
-Current base f9d80724; remote lease6a9fd3a4. Operational gates and independent
-final-candidate acceptance remain separate. No third source cycle is authorized.
+P04-T01/P04-T02 complete; tested integrated source
+c326ef7b7a2b9f84831d282fd007127821755afa published/verified local=remote=PR,
+clean on same draft PR395. Current base f9d80724; authorized old6a9fd3a4 lease
+used successfully, no runtime/test edits afterward. No active implementation
+markers remain. Operational gates and independent final-candidate acceptance
+remain separate. No third source cycle is authorized.

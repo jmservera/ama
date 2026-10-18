@@ -15,7 +15,7 @@ Initial direction: reuse scan/config/SQL boundaries; no operational enablement.
 | P01 | Complete; source/CLI validated | P01-T01, P01-T02 |
 | P02 | Complete; actual SQL/image/regression/docs receipts recorded | P02-T01, P02-T02 |
 | P03 | Complete; correction source published same draft PR395, no independent acceptance | P03-T01, P03-T02 |
-| P04 | T01 complete; T02 validation complete/publication pending; current base f9d80724 | P04-T01, P04-T02 |
+| P04 | Complete; source c326ef7b verified published same draft PR395; base f9d80724 | P04-T01, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded core and job
@@ -228,7 +228,7 @@ MSSQL driver fixed-marker exit1. Available-driver32/32 discovery and actual
 native SQL invalid-table error sanitize correctly. No workflow/dependency edits.
 
 <!-- rpi:task id=P04-T02 -->
-### P04-T02: Integration validation complete, publication pending
+### P04-T02: Integration validation and publication complete
 
 Main f9d80724 retains coordinator runtime/browser/test/manifest bytes unchanged.
 Pre-fix integration had no runtime conflicts; only log append resolution.
@@ -241,3 +241,11 @@ driver error), native driver-error CLI and actual success pages. Correction ONE
 SQL30 is historical, not rerun. Rebuilt hardened installed image help/failure6/
 success pages pass with hashes. Exact owned SQL stopped/removed.
 Detailed commands/results/failures/hashes in changes record P04 section.
+Actual2026-10-18 source c326ef7b7a2b9f84831d282fd007127821755afa published
+using authorized exact old6a9fd3a4 lease only on own topic. Fresh local/remote/
+PR395 equal, clean, Open/draft/main, issue117 Open, merge-base f9d80724.
+PR body current correction TWO/base/source proof precedes clearly labelled
+historical receipts. Only four RPI metadata files follow tested source;
+final delivered metadata head recorded externally in PR395/final return.
+No active markers; final coordinator clearance remains pending, no third source
+cycle/new full Review/self-Pass/merge/closure.

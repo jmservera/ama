@@ -3,9 +3,9 @@
   "task_slug": "issue-117-document-rescan-scheduler",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "completed",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/issue-117-document-rescan-scheduler-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/issue-117-document-rescan-scheduler-plan.md",
@@ -49,14 +49,25 @@
   "blockers": [
     {"id": "correction-two-import", "summary": "Independent558e33f1 new Medium: unconditional optional MSSQL driver import breaks SQLite-only CI/help.", "resolution": "Last authorized source-cycle fix implemented and driverless/native SQL/image evidence passed; final coordinator clearance pending."}
   ],
-  "next_action": {"phase": "Implement", "action": "LAST authorized source cycle P04: correct optional-driver import, driverless real discovery/help plus SQLite and actual SQL error checks, validate upstream integration parity, publish own branch only with exact6a9fd3a4 lease. Keep draft; no new Review/self-Pass/third source cycle."},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independently clears final correction TWO integrated candidate on draft PR395. No active implementation markers or authorized third source cycle; any remaining defect is a human blocker. Preserve original Review/critique/correction ONE; no new full Review/self-Pass/merge/issue closure. Real service/authority gates remain unmet."},
   "correction_two": {
     "authorization_date": "2026-10-18",
     "independent_assessment": "Coordinator supplies558e33f1 Revise: original RV001/002 closed, seven-artifact reconciliation Pass, new Medium optional-driver import",
     "current_base": "f9d807245e784ad2e6587741a73fc6563f8d2cd6",
     "expected_remote_lease": "6a9fd3a4f763c48b5a5de65a3a9efd892731e7d8",
     "integration": "Authorized rebase complete, only append-only KB log conflict, no runtime/test conflict",
-    "status": "P04-T01 complete; P04-T02 validation complete, leased publication pending",
+    "status": "P04-T01/P04-T02 complete; tested source published/verified; final independent coordinator clearance pending",
+    "source_commit": "c326ef7b7a2b9f84831d282fd007127821755afa",
+    "publication": {
+      "source_local_remote_pr_equal": true,
+      "source_worktree_clean": true,
+      "actual_merge_base": "f9d807245e784ad2e6587741a73fc6563f8d2cd6",
+      "exact_authorized_old_remote_lease_used": true,
+      "pr": 395,
+      "draft": true,
+      "issue_open": true,
+      "final_metadata_head": "Recorded externally in PR395/final return; four RPI metadata files only follow tested source"
+    },
     "original_findings": "Coordinator reports original RV001/RV002 independently closed, all seven artifacts reconciliation Pass; original Review unchanged",
     "driverless_discovery": {"run": 32, "passed": 31, "skipped": 1},
     "installed_driver_discovery": {"run": 32, "passed": 32},
