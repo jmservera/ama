@@ -417,6 +417,9 @@ class Runner:
             print(f"FAILED required group: {name}: {error}", flush=True)
         else:
             self.groups.append(name)
+        finally:
+            if name == "mssql":
+                self.cleanup_containers()
 
     def tests_env(self, project: str, own_tests: bool = False) -> dict[str, str]:
         paths = []
@@ -607,7 +610,33 @@ class Runner:
                 axe.write_bytes(response.read())
             if digest(axe) != AXE_SHA256:
                 raise GateError("Pinned axe integrity check failed")
-            self.command([py, "-m", "checks.design_system_browser_check"], "src/api", timeout=900)
+            # The unchanged harness scrubs its server environment, including bytecode settings.
+            bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
+            (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
+            (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
+                bytecode_policy
+            )
+            browser_entry = (
+                "import runpy,tempfile,os\n"
+                "from unittest.mock import patch\n"
+                "original=tempfile.TemporaryDirectory\n"
+                "def external_scratch(*args,**kwargs):\n"
+                "    kwargs['dir']=os.environ['TMPDIR']\n"
+                "    return original(*args,**kwargs)\n"
+                "with patch('tempfile.TemporaryDirectory',external_scratch):\n"
+                "    runpy.run_module('checks.design_system_browser_check',run_name='__main__')\n"
+            )
+            try:
+                self.command(
+                    [py, "-c", browser_entry],
+                    "src/api",
+                    timeout=900,
+                    env={"PYTHONPATH": str(self.safety)},
+                )
+            finally:
+                marker = self.snapshot / ".venv"
+                if marker.exists():
+                    marker.rmdir()
             self.command(
                 [
                     py,
@@ -817,11 +846,7 @@ class Runner:
             if gate_row["exit_code"]:
                 raise GateError("Fixable HIGH/CRITICAL scan failed; full report and SPDX retained")
 
-    def cleanup(self) -> None:
-        if self.process is not None:
-            os.killpg(self.process.pid, signal.SIGTERM)
-            self.process.wait(timeout=30)
-            self.process = None
+    def cleanup_containers(self) -> None:
         for container in list(self.containers):
             result = subprocess.run(
                 ["docker", "inspect", container], capture_output=True, text=True, env=self.env
@@ -837,8 +862,18 @@ class Runner:
                     ["docker", "rm", "-f", container], check=True, capture_output=True, env=self.env
                 )
             self.containers.remove(container)
+
+    def cleanup(self) -> None:
+        if self.process is not None:
+            os.killpg(self.process.pid, signal.SIGTERM)
+            self.process.wait(timeout=30)
+            self.process = None
+        self.cleanup_containers()
         if self.snapshot.exists():
-            # Worktree only; never force removal of unexpected dirty input.
+            if git(self.snapshot, "status", "--porcelain", "--untracked-files=all") or git(
+                self.snapshot, "ls-files", "--others", "--ignored", "--exclude-standard"
+            ):
+                raise GateError("Dirty owned snapshot retained for diagnosis; never force removed")
             subprocess.run(
                 ["git", "-C", str(self.root), "worktree", "remove", str(self.snapshot)],
                 check=True,
@@ -893,6 +928,10 @@ class Runner:
                 raise GateError("; ".join(self.failures))
             if self.groups != required_groups(self.extras):
                 raise GateError("Required matrix group coverage is incomplete")
+            (self.out / "snapshot-inputs.log").write_text(
+                git(self.snapshot, "status", "--porcelain", "--untracked-files=all")
+                + git(self.snapshot, "ls-files", "--others", "--ignored", "--exclude-standard")
+            )
             if (
                 clean_identity(self.snapshot, self.base) != identity
                 or clean_identity(self.root, self.base) != identity
