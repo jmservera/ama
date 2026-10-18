@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Local implementation and complete new evidence persisted",
+      "status": "committed",
+      "evidence": "afb30d84d45e18de38863f066c5e9cead1c0a856 contains the reviewed implementation and all seven new canonical artifacts. Subsequent handoff receipt is metadata-only. Working tree clean after implementation commit; author and committer use authenticated GitHub noreply identity."
+    },
+    {
       "decision": "One original Review execution and outcome",
       "status": "executed",
       "evidence": "Complete; outcome Residual work. No bounded implementation defects. RV-001 publication paused after main moved; RV-002 verified Legal applicability/approval missing; RV-003 genuine let/renew absent. Review record is preserved and will not be repeated."
@@ -43,7 +48,7 @@
       "resolution": "Coordinator supplies new integration/publication direction; preserve completed local RPI and wait."
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "Preserve local commit with all new evidence, then wait for coordinator direction on moved-main integration/publication. No push/rebase/PR changes."},
+  "next_action": {"phase": "Follow-up", "action": "Wait for coordinator direction on moved-main integration/publication. Local implementation and all evidence committed; no push/rebase/PR changes."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
