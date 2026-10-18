@@ -16,6 +16,15 @@ ad56b59a8df472fff31ed3ae906eca63505ea76fca0f63a457dda4acf540942b.
 Original Review SHA-256:
 5ae9cb33e5d46a5a486cfbce0e824ab012efd8b6b4fccf9b4e73546e772b07cc.
 
+Publication: https://github.com/jmservera/ama/pull/411. Target main's actual base:
+9d625a09e34491ecf9fd27ffc7d59e67c2373b29. Pinned ancestry remains unchanged.
+The PR records the exact final pushed head, including receipt-only lifecycle
+evidence. Source, documentation and the original changes record remain byte-for-byte
+unchanged from candidate de54472f after the original Review.
+Automatic session stopped for complete independent exact-head source/artifact/log
+review. No source repair, second original Review, merge, issue update or AC tick.
+Task-owned containers/API image/isolated venv are absent after verified cleanup.
+
 ## Source and tests (6)
 
 * src/core/src/zava_forward/core/sensor_consumer.py

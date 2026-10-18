@@ -125,8 +125,14 @@ Original Review execution Complete, outcome Defects found. RV-001 Medium and
 RV-002 Low remain open for later authorized work; RV-003 Low is baseline tooling
 residual. This checkbox records execution, not conformance or repaired findings.
 Original Review and critique remain unchanged; no source correction or repeat.
-* [ ] P03-T02: commit owned evidence/source, push, open main PR at pinned base
+* [x] P03-T02: commit owned evidence/source, push, open main PR at pinned base
   lineage; clean only task-owned resources; stop for exact-head review.
+
+Publication: PR 411, pinned source ancestry preserved; actual main PR base
+9d625a09e34491ecf9fd27ffc7d59e67c2373b29. Automatic session stopped on explicit
+owner direction for complete independent exact-published-head source/artifact/log
+review. No merge or issue-state/AC changes. RV-001/RV-002 remain unresolved;
+RV-003 remains separate tooling residual. Correction count 0.
 
 ## Locked Test Ownership and Evidence
 
