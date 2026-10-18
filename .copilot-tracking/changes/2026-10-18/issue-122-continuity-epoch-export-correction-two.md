@@ -200,6 +200,17 @@ gh api user, local email 8036360+jmservera@users.noreply.github.com; required
 Copilot trailer included. No amend, force push, rebase, issue/board edits or merge.
 Coordinator independent acceptance and required PR checks remain separate gates.
 
+## Subsequent Authorized Integration (not another source cycle)
+
+After #397 merged, coordinator explicitly authorized rebase only onto exact
+3104bb69ddc26c81e0e9d2f57000dac1d99a419a. Historical original base/source
+and correction evidence above are retained. Correction TWO source maps from
+0067f2a1cacf2bd7f821ea13988566b8b4af0b71 to
+24ee70347064886a1847b1fea8b5219ad6323e6d, with byte-identical owned source;
+projection additionally retains upstream #87 changes and README retains both
+additive sections. Integration receipt records new-base validation and exact
+old-head lease publication. No third correction or new Review was performed.
+
 ## Residuals
 
 Genuine OQ-017 authority, witnessed authorized drill, immutable externally held

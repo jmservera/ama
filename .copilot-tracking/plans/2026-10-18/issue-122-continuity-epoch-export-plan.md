@@ -8,6 +8,9 @@ Task ID: 122. Slug: issue-122-continuity-epoch-export.
 Status: Authorized correction TWO final source cycle implementation and fresh
 validation complete; publication permitted, independent acceptance pending.
 Original Complete / Not accepted Review remains frozen. No further critique or Review.
+Current operation: coordinator-authorized integration only onto exact
+3104bb69ddc26c81e0e9d2f57000dac1d99a419a after #397, not a third source
+correction. Original base and correction evidence below are historical.
 
 ## Executive Summary
 
@@ -35,6 +38,10 @@ schema refactor or live-system activity.
 
 Research artifact .copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md,
 C1-C7, W1-W2. Base 99056cae7bc679d2ace3e42c75f28577cfce8887.
+Current integration base: 3104bb69ddc26c81e0e9d2f57000dac1d99a419a.
+Original tested correction source 0067f2a1 is preserved byte-for-byte in rebased
+24ee70347064886a1847b1fea8b5219ad6323e6d, except the explicitly composed
+upstream projection and additive README context; no domain changes.
 
 ## Goals
 
@@ -140,6 +147,20 @@ Azure head and Azure SQL drill remain unmet. Wider serving configuration
 reversibility and old-image deployment exclusion remain outside this source slice.
 
 ## Handoff
+
+### Authorized ancestry integration after #397
+
+* [x] I01 Verify exact old head/remote lease and exact fetched base, rebase owned
+  branch only, retain all 35 upstream changed files and prove owned-source parity.
+* [x] I02 Execute targeted host, actual SQL cross-domain and rebuilt installed-image
+  integration checks, reconcile metadata and exact-lease update the same PR #398.
+
+Sole conflict is adjacent README section insertion; both sections retained.
+Original frozen hashes and append-only knowledge-log prefix remain intact.
+Independent full review is scheduled after integration by coordinator, not run here.
+Integration execution complete: host 563 (108 skips), actual owned SQL 81,
+installed hardened image 329 (58 skips), configured static checks pass. No known
+failure found in these selected boundaries; no new source cycle or acceptance.
 
 ### Authorized correction TWO final source cycle
 

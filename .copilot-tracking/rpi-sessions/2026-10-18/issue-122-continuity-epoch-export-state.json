@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Coordinator authorized integration-only rebase of owned PR398 branch onto exact merged397 base3104bb69ddc26c81e0e9d2f57000dac1d99a419a and exact old-head lease",
+      "status": "rebased; source/upstream parity and integration validation complete; exact-lease publication next",
+      "evidence": "Integration receipt; clean remote/local oldheada40fdd3623eae4ee23712f474909d58cdbcb7bfc; sole additive README conflict; all35 upstream files preserved; no third correction or new Review"
+    },
+    {
       "decision": "Authorized branch normally pushed and main PR #398 opened with Refs #122, all phase artifacts and original adverse verdict",
       "status": "published, not independently accepted or merged",
       "evidence": "https://github.com/jmservera/ama/pull/398; tested final source0067f2a1cacf2bd7f821ea13988566b8b4af0b71; base99056cae7bc679d2ace3e42c75f28577cfce8887; correction-two publication receipt"
@@ -74,7 +79,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator assesses PR #398 and required checks without another worker source cycle or amended Review; independent acceptance and human/Azure/deployment gates remain pending"
+    "action": "Exact-lease publish authorized integration onto base3104bb69 after tracking commit, then coordinator full review of PR398; no third source correction or worker Review"
   },
   "prioritized_follow_ups": [
     {

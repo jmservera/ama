@@ -7,6 +7,19 @@ ms.date: 2026-10-18
 Task 122, issue-122-continuity-epoch-export. Plan and research use the same dated
 slug. Current phase: authorized Implement correction TWO FINAL after the frozen
 original Complete / Not accepted Review. Original critique is Complete / Revise.
+Current operation is subsequent coordinator-authorized ancestry integration only,
+not another implementation correction: exact new base
+3104bb69ddc26c81e0e9d2f57000dac1d99a419a after #397. Original source
+0067f2a1 maps to 24ee70347064886a1847b1fea8b5219ad6323e6d. Own source
+bytes and upstream appointment projection are preserved. Integration receipt owns
+current validation/ancestry evidence; historical phase/correction outcomes below
+are unchanged, with no additional Review or self-acceptance.
+Integration validation completed: host 563 / 108 skips, actual owned MSSQL 81
+without skips and hardened installed image 329 / 58 skips, no failures; configured
+static checks pass. Own runtime patch and all 35 upstream files retain exact
+intent; only README additive conflict resolved. Receipt has exact commands and
+skip/platform distinctions. Exact-lease publication and coordinator full review
+remain separate from implementation validation.
 
 Current continuation supersedes the correction ONE blocker: coordinator authorizes
 P05 correction TWO FINAL. Existing recorded-need projection governs all exported

@@ -5,6 +5,12 @@ ms.date: 2026-10-18
 ---
 
 Task 122, issue-122-continuity-epoch-export. Full approved plan in scope.
+Current follow-up is authorized integration after #397, new base
+3104bb69ddc26c81e0e9d2f57000dac1d99a419a, not a third correction or Review.
+See issue-122-continuity-epoch-export-integration.md in this directory for exact
+rebase mapping, source/upstream parity, integration validation and lease.
+Original source 0067f2a1 is preserved in rebased 24ee7034; prior base statements
+and adverse evidence below remain historical, not rewritten.
 Implementation started after Research and Plan with one independent critique.
 Original critique Complete / Revise is frozen; PC-001/002 directly incorporated
 in plan/details before source editing. Original Review subsequently ran once:

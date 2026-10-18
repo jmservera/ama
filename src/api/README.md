@@ -207,6 +207,12 @@ authorized full export is required for that purpose. Original adverse Review
 and correction ONE failures remain historical evidence; correction TWO does not
 constitute independent acceptance or deployment readiness.
 
+The continuity follow-up is integrated onto the appointment-controls baseline
+`3104bb69ddc26c81e0e9d2f57000dac1d99a419a` (#397). Integration preserves
+both the existing appointment evidence projection and the two continuity GET
+allowlist entries; it introduces no additional domain behavior. The original
+continuity Review and both correction histories remain unchanged.
+
 Manual contact, resident challenge and independent hazard transactions still use
 their existing authority and safety gates during suspension. Synthetic exercise
 records do not prove genuine named authority, an authorized witnessed drill,
