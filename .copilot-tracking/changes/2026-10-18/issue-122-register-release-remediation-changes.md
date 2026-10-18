@@ -6,6 +6,21 @@ ms.date: 2026-10-18
 
 ## Task and Execution Boundary
 
+Current owner continuation: SAME task, P04 correction ONE of maximum two,
+RV-001 only. This supersedes historical stopped/zero-correction wording below
+without rewriting its evidence. Original Review/critique and exhausted older
+cycles remain immutable. RV-002 is a distinct non-blocking follow-up, excluded.
+Expected clean local/remote e00c521573501a4ed84dab7ec0ccf66ef57a7053 and fetched
+main a86282c4badebc58eabbf9e441410d930a201ac2 verified at intake.
+
+P04 approved boundary: core continuity.py numeric guard; focused API epoch/export
+tests; directly related README and current plan/details/changes/state; separate
+correction-one and integration parity receipts. First freeze hashes and integrate
+exact authorized base. Preserve PR407 queue/PR406 recorder, all lifecycle/source/
+privacy guards and canonical full proof. Validation: focused and configured
+checks, integrated queue/recorder, justified SQL/nonroot parity. Full independent
+coordinator review pending; no repeated critique/Review or self-Pass.
+
 issue-122-register-release-remediation, 2026-10-18, automatic full bounded scope.
 Owner explicitly authorized this new task; previous independent Not accepted
 and both exhausted historical correction cycles remain unchanged.

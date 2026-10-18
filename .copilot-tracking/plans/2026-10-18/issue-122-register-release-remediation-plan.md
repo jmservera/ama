@@ -33,6 +33,15 @@ and adjacent coordinator-evidence.json.
 
 ## User Decisions and Requirements
 
+* Current owner-authorized continuation: SAME task, correction ONE of maximum
+  two, RV-001 only. Original Review Complete / Not accepted and single critique
+  remain immutable. RV-002 remains a distinct non-blocking follow-up.
+* Integrate exact main a86282c4badebc58eabbf9e441410d930a201ac2 from prior base
+  9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; preserve PR407 queue and PR406
+  recorder production/tests/contracts. Retain both additive README sections and
+  log body prefix; stop irreconcilable source conflicts. Publish ONLY lease
+  refs/heads/fix/continuity-epoch-export-122:e00c521573501a4ed84dab7ec0ccf66ef57a7053.
+  Later receipt pushes are normal. If main moves again, report and wait.
 * New full bounded RPI loop authorized for both findings; exactly one independent
   final-candidate critique and one original Review. At most two later corrections
   only after coordinator review; no such correction is pre-authorized here.
@@ -135,6 +144,33 @@ oracles, not snapshots. Existing bare fixture tests keep absent-history negative
 controls; full positives use task-local real release APIs. No shared fixture edits.
 Exact commands/results retained in the changes record; failures preserved.
 
+## Current Bounded Correction ONE
+
+Declared scope: P04 only, extending the completed original execution without
+repeating Research, critique or Review. No new task identity or self-acceptance.
+
+<!-- rpi:phase id=P04 -->
+### [ ] P04: RV-001 correction ONE and authorized integration
+<!-- rpi:task id=P04-T01 -->
+#### [ ] P04-T01: Freeze original hashes and integrate exact authorized main
+<!-- rpi:task id=P04-T02 -->
+#### [ ] P04-T02: Conversion-safe numeric timestamp validation and JSON regressions
+<!-- rpi:task id=P04-T03 -->
+#### [ ] P04-T03: Integrated validation, parity and separate correction receipt
+<!-- rpi:task id=P04-T04 -->
+#### [ ] P04-T04: Exact-lease publication, draft PR reconciliation and STOP
+
+Preserve bool exclusion and current finite int/float semantics, rejecting numeric
+values that cannot pass the existing floating-point finiteness check explicitly.
+No date policy, lifecycle/count/association/chronology/source relaxation or
+recorded-need change. Test producer incomplete and serialized verifier invalid
+with forced completeness, recomputed digest and unchanged external ledger head.
+Use existing venv and focused continuity/export/register/role/epoch suites plus
+configured checks; actual SQL/nonroot evidence if needed for numeric parity.
+Separate correction-one receipt records prior failures, exact commands/results,
+source candidate delta, integration parity and all immutable assessment hashes.
+Full source/artifact coordinator review remains pending after publication.
+
 ## Critique Disposition
 
 Exactly one critique executed: Complete / Revise, five Medium findings,
@@ -153,10 +189,9 @@ decision, scope expansion or second critique.
 
 ## Follow-Up Items
 
-* New original Review Complete / Not accepted: RV-001 Medium, oversized integer
-  timestamp OverflowError. Coordinator-selected later rpi-implement correction,
-  not a second Review or self-correction in this task. Both original supplied
-  reproductions are fixed in exercised normal paths; full contract not accepted.
+* New original Review Complete / Not accepted remains unchanged. RV-001 is now
+  owner-selected P04 correction ONE; no repeated Review or self-Pass. Full
+  exact-head coordinator acceptance remains pending.
 * RV-002 Low: inherited malformed limited-metadata passthrough, separate
   conditional defensive hardening, not an ordinary HTTP disclosure finding.
 * Control/platform owners: genuine authority, witnessed drill, external immutable
@@ -172,5 +207,5 @@ scope unchanged; exact integration remains the first implementation prerequisite
 Current execution completed the one original Review, Complete / Not accepted,
 and authorized exact-lease publication at 916c1b0800d2a9b8d092e5eded2f996d75a73b9b.
 Final documentation-only receipt uses normal push; no source edits after Review.
-Coordinator alone decides later corrections and acceptance. Owner-requested STOP,
-not an automatically started child loop or a claim of source acceptance.
+Owner has now explicitly resumed SAME task for P04 correction ONE only.
+Coordinator alone decides independent acceptance; STOP again after publication.

@@ -6,6 +6,36 @@ ms.date: 2026-10-18
 
 ## Task and Initial Direction
 
+Current direction supersedes the historical stopped handoff below: owner resumed
+SAME task for P04 correction ONE of maximum two, RV-001 only. Integrate exact
+a86282c4badebc58eabbf9e441410d930a201ac2 before final validation. Preserve all
+original assessments/historical receipts, PR407 queue and PR406 recorder.
+RV-002 is not in this correction; no new critique or original Review.
+
+<!-- rpi:phase id=P04 -->
+## P04: Current correction ONE
+
+P04-T01 freezes original hashes and source at e00c521573501a4ed84dab7ec0ccf66ef57a7053,
+then rebases prior base 9c648b20 onto exact a86282c4. Compare every upstream path
+and preserve both additive README sections and append-only log body prefix.
+Stop on irreconcilable source conflicts or a later main movement.
+
+P04-T02 retains exact int/float and bool rejection; finite float-conversion
+overflow becomes the existing invalid-event problem, not an exception. No date
+range or lifecycle/source policy change. Add JSON-round-tripped positive and
+negative numeric controls to producer and forced-complete/recomputed-digest
+verifier with unchanged original external head.
+
+P04-T03 runs focused suites and configured core/API/agents checks, integrated
+queue/recorder controls, and justified SQL/nonroot parity. Record actual commands,
+results, prior failed runs, source delta and immutable hashes in a separate
+correction-one receipt. No private data/environment/live services.
+
+P04-T04 commits with authenticated local noreply identity and Copilot trailer,
+publishes only exact lease refs/heads/fix/continuity-epoch-export-122:e00c521573501a4ed84dab7ec0ccf66ef57a7053,
+updates draft PR398 with adverse original Review retained and full boundary,
+verifies empty closing refs, then STOP for full independent coordinator review.
+
 issue-122-register-release-remediation, automatic owner-authorized new loop.
 Research C2/C3 reproduce both coordinator findings at expected original head.
 No unresolved user decision. One independent critique Complete / Revise; PC-001
