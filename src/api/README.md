@@ -6,6 +6,52 @@ ms.date: 2026-10-18
 ms.topic: reference
 ---
 
+## Finite offline sensor ingestion (#110)
+
+`sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`
+is an API-owned in-process callable, not an HTTP endpoint or live hub client.
+It composes the [core SQL processor](../core/README.md#constructed-offline-sensor-consumer-110)
+and returns a tuple of bounded metadata-only receipts. Trusted constructed setup
+uses `adapter.consumer.configure(policy, controls)` independently of observations;
+no incoming payload is control authority. No service, daemon, background thread,
+public route, SDK, AI call or resident message is added.
+
+The batch must be a materialized list/tuple of 1..100 bounded primitive dictionaries,
+each <=20 keys and <=4096 serialized bytes. Envelope failures are refused before
+any writes. Primitive closed-schema failures, including missing IDs, produce
+digest-keyed owned DQ without inventing device identity. Only observation fields
+from `sensor_faults.Packet.rows` are inputs, never truth/labels/clean rows.
+Receipt time is an explicit trusted UTC whole-second string; no operational
+clock window, calibration, consent or range is guessed.
+
+Transactions are per observation. Invalid rows produce DQ and processing
+continues; SQL failure/uncertain acknowledgement stops immediately.
+`BatchStopped.code`, `.reference` and `.completed` contain only bounded metadata,
+including the acknowledged committed prefix. `SENSOR_COMMIT_UNCERTAIN` requires
+reconciliation, not an assertion that nothing persisted: replay the same finite
+batch to reconcile committed prefix/uncertain outcome without another append.
+Exact historical replay ignores later authority/window changes but never
+readmits or advances a projection. No task or property record changes.
+Unsupported JSON raises `UNSUPPORTED_STORE_SQL_REQUIRED`; unavailable SQL never
+returns a fake empty success. Restricted DQ inspection is Python-only.
+
+From the repository root, with project distributions installed:
+
+```bash
+PYTHONPATH=src/core/tests python -m unittest discover -s src/api/tests -p test_sensor_ingestion.py -q
+python src/api/checks/sensor_sql_check.py
+```
+
+The second command owns a uniquely named, memory/CPU-bounded SQL Server container
+and loopback port with random process-only credentials and finally cleanup.
+It exercises the same actual API suite, including concurrent independent
+connections, reopen, real engine-trigger rollback and accepted/rejected
+postcommit reconciliation. It never connects to Azure or uses private datasets.
+Local SQLite/MSSQL/nonroot read-only image evidence does not meet whole AC-066:
+real Hub identities/transport, Azure SQL acceptance and registered real AI remain
+unexecuted. ADR 0003 remains Proposed; sizing, cost, provisioning, network and
+device credential ownership remain owner decisions. No issue closure follows.
+
 ## Constructed RAI evidence register API (#126)
 
 `GET /api/governance` remains current-registered-manager only and includes

@@ -2,7 +2,7 @@
 title: ADR 0003 Journey-Derived Capabilities and IoT Hub Sensor Ingestion
 description: Proposed decisions on carrying the customer journey atlas capabilities in the existing single-API, Azure SQL and five-assistant runtime, and on using Azure IoT Hub as the in-use monitoring ingestion product with deterministic analysis
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -142,5 +142,12 @@ build).
 
 ## Implementation status
 
-Not implemented. No migration, API or screen change, IoT Hub provisioning,
-test run or deployment follows from this ADR.
+The ADR remains Proposed. Separately owner-authorized issue 110 engineering
+implements a [finite constructed offline API consumer](../../src/api/README.md#finite-offline-sensor-ingestion-110)
+with SQL stable-key append, independent exercise controls and owned DQ metadata.
+It reuses sensor_reading, not the generator's intentionally exact-replay loader.
+Local actual SQLite/SQL Server processing is not authenticated Hub transport,
+Azure SQL application acceptance or approval of this ADR. No live IoT Hub
+identity, provisioning, SDK, deployment, derived analysis, review task or screen
+follows from that slice. Whole PRD AC-066, actual-model/Azure and human/live gates
+remain unmet; the open decisions above are unchanged.

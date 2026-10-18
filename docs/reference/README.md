@@ -21,6 +21,13 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #110, the [core offline sensor contract](../../src/core/README.md#constructed-offline-sensor-consumer-110)
+and [finite API adapter](../../src/api/README.md#finite-offline-sensor-ingestion-110)
+document constructed observations-only SQL processing, independent exercise
+controls, stable-key append and owned restricted DQ. Local SQLite/SQL Server
+engineering evidence is not live Hub identity/transport, Azure/real AI
+application acceptance or approval of Proposed ADR 0003. Whole issue remains open.
+
 For issue #126, the [constructed RAI evidence register](../../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
 and [API contract](../../src/api/README.md#constructed-rai-evidence-register-api-126)
 record append-only unverified claims for all 22 open baseline checks, with exact

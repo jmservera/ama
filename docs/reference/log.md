@@ -6328,3 +6328,18 @@ metadata when the knowledge base was created.
   privacy/legal review, actual-model/Azure delivery, current PRD owner acceptance
   or operational approval. All 22 checks remain Open; whole-issue acceptance and
   version-linked real AI/SQL/Azure application acceptance remain unmet.
+
+## [2026-10-18] query | Issue 110 constructed offline sensor consumer boundary
+
+* Added narrow existing core/API guides and accurate ADR 0003/addendum/index
+  status for the owner-authorized finite offline processing slice. The exact
+  replay-only synthetic loader remains unchanged and still refuses fault inputs.
+* Independently supplied exercise mapping, consent, calibration, window, ranges
+  and manual-review ownership are not observations or operational authority.
+  SQL stable identity, current-transaction checks, restricted DQ and bounded
+  receipts do not alter case/task/priority/safety/financial/consent records.
+* Actual local SQLite/SQL Server evidence is distinct from live Hub identities,
+  transport, Azure SQL/real AI acceptance and human/privacy approval. Whole
+  issue 110/AC-066 remains open; ADR remains Proposed. Infrastructure 140
+  depends on the consumer, not the reverse; analysis 111 is not a prerequisite.
+  Memory, original case and immutable regulatory evidence remain unchanged.

@@ -6,6 +6,79 @@ ms.date: 2026-10-18
 ms.topic: reference
 ---
 
+## Constructed offline sensor consumer (#110)
+
+`sensor_consumer.SensorConsumer` is a finite SQL-only processor, distinct from
+the unchanged exact-generator replay loader. The existing API package owns the
+[finite callable adapter](../api/README.md#finite-offline-sensor-ingestion-110).
+No live Hub client, device identity authentication, thread, public route, analysis,
+case task, resident contact or property mutation is added.
+
+Trusted in-process exercise setup calls `configure(ExercisePolicy, [SensorControl])`
+with independently constructed mapping, monitoring consent, calibration context,
+units, numeric bounds, observation window, maximum past/future skew and accountable
+manual-review role/route. Unknown reviewer is `Unassigned`; an unusable route is
+refused. These are exercise fixtures, not operating policy, staff delegation,
+resident consent evidence or live authority. Observations cannot install controls.
+Current SQL controls and mapped-home existence are checked within each database
+writer transaction. A payload's home, source label or `calibrated=true` never grants
+mapping, consent or calibration authority.
+
+Input is the closed `sensor-fault-input-v1` observation shape from
+`synthetic.sensor_faults.READING_FIELDS`, not Packet labels/clean rows/evaluator
+truth. All fields are strings; sensor/reading/home IDs are uppercase ASCII
+letters/digits/underscore/hyphen, with maximum lengths 20/40/12, no whitespace.
+Scenario uses the same alphabet, max 20; seed is a signed 64-bit integer string.
+Numbers are decimal strings with at most two fractional places, no exponent,
+NaN/infinity or rounding. Bounds are explicit exercise controls. Time is UTC
+whole seconds ending `Z`. Mapping, calibration and observation windows are
+half-open; numeric and clock-skew bounds are inclusive. Unsupported units or
+calibration, declined/unknown consent and timestamp order produce visible DQ.
+Out-of-order/equal-time input is rejected, never promoted to latest or "normal".
+
+`sensor_reading` reuses the generator table and composite key. Fresh SQLite and
+SQL Server plus supported existing legacy/stock reading shapes are supported;
+legacy SQL Server schema_version is widened from 12 to 32 without replacing
+rows or keys. Other incompatible shapes are explicitly unsupported. New
+restricted SQL tables hold current controls, digest-keyed delivery outcomes
+and owned data-quality metadata, not case workflow exceptions. No shared
+sqlstore/mssqlstore change is needed.
+Closed-schema observations, including rejected quality cases, remain only in
+the restricted SQL delivery record so manual reviewers can trace the source.
+Malformed/unknown-field input retains only its digest and DQ, not arbitrary
+unknown payload content. Metadata inspection never returns the observation body.
+
+Identical witnessed replay returns the historical outcome before new authority/
+clock checks, with no new reading, success witness or DQ. This is reconciliation,
+not renewed admission after consent withdrawal. Changed content under an accepted
+sensor/reading key produces identity conflict without overwrite; legacy rows
+without a consumer witness are also explicit conflict. Identical rejected replay
+retains its historical DQ even if controls are later repaired.
+
+Receipts expose only opaque reference, status, reason and replay flag. Raw values,
+device IDs and keys never enter receipts, diagnostics, AI, maps or ordinary UI.
+`inspect_exception(reference)` is restricted in-process metadata inspection,
+not an HTTP route: reason, Open status, observed time if parseable, receipt time,
+declared exercise accountable role/manual route and reviewer/Unassigned.
+The SQL database remains restricted; this callable does not establish deployment
+database permissions or human acceptance. JSON is explicitly unsupported.
+Missing, inaccessible or malformed SQL/controls is unavailable, never empty success.
+
+Actual constructed tests cover independent connections/store instances, writer
+serialization, current control/home rechecks, reopen, accepted/rejected rollback
+and postcommit acknowledgement reconciliation. From this directory:
+
+```bash
+python -m unittest discover -s tests -p 'test_sensor_consumer.py' -q
+python -m unittest discover -s tests -p 'test_sensor_*.py' -q
+```
+
+Local SQL Server/image checks are engineering evidence only. Distinct real Hub
+identities, live transport, Azure SQL application acceptance, registered real AI,
+OD-43 and ADR 0003 owner approval remain unmet. Issue 110 cannot be considered
+complete from this slice; analysis issue 111 and infrastructure issue 140 remain
+separate, with 140 depending on the consumer, not the reverse.
+
 ## Appointment agreements and visit evidence (#87)
 
 `appointment_control(user, work_order_id, body)` records explicit offers, separate
