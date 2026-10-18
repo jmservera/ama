@@ -1,9 +1,176 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
+
+## Design traceability and review gate (2026-10-18, #156)
+
+This register extends the existing journey and prototype research for
+[#156](https://github.com/jmservera/ama/issues/156), under
+[#149](https://github.com/jmservera/ama/issues/149). It records a finite
+documentation slice, not completion of either issue. The issue's original
+"no task flows/log" description is historical: the
+[profile routes below](#all-eleven-profile-journeys),
+[PRD profile contract](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype),
+[lifecycle and return flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#case-lifecycle-role-handoffs-and-return-path)
+and [design choices](#design-decisions-and-open-questions) already supply
+relevant evidence. Their existence does not prove accepted screen designs.
+
+### Declared inventory and source versions
+
+Coverage is exactly T01-T11, the eleven PRD research perspectives, plus four
+shared core flows C01-C04: queue scope/reset, case open/return, blocked
+readiness/handoff and AI draft review. These are not authenticated-role
+equivalents. Feature-to-perspective links are this register's interpretation,
+not owner-approved role mappings. Existing journeys are research hypotheses.
+The [PRD evidence trace](../../../prds/zava-forward-retrofit-programme-demonstrator.md#brd-and-evidence-trace)
+retains upstream authority and proposed-requirement limits.
+
+Complete current/future screen-backlog coverage is **unknown**. Import/export,
+operations/account, direct resident/representative screens
+([#154](https://github.com/jmservera/ama/issues/154)), regulatory alerts/chat
+([#215](https://github.com/jmservera/ama/issues/215)) and other feature-specific
+states are outside this finite inventory. The coordinator must reconcile the
+remaining screen features before claiming #156's universal coverage criterion.
+[#233](https://github.com/jmservera/ama/issues/233) remains the wider atlas-to-screen
+workstream, not a claim that this register covers every atlas journey.
+
+| Source | Exact version and use | Evidence boundary |
+| --- | --- | --- |
+| H, [historical HTML prototype][design-h] | 2026-10-06 artifact, commit `c0f7c08aec514597af86528caf1bdad4b7250246` | Actual constructed prototype, inspected in the historical review below; not a current approved wireframe, runtime or user study |
+| E, [shared IA manifest][design-e] | `152-ia-v1`, at baseline `3104bb69ddc26c81e0e9d2f57000dac1d99a419a` | Actual engineering fixture/coverage artifact, not a screen wireframe; eight auth roles, eleven perspectives, all nine workflows partial/deferred |
+| S, source documents linked here | Baseline `3104bb69ddc26c81e0e9d2f57000dac1d99a419a`, inspected 2026-10-18 | Exact journey, flow, UX-check, WCAG and content sections; later engineering evidence does not update historical prototype acceptance |
+| Current reviewable screen designs | Not supplied | Design owner must provide exact versions and state/recovery coverage for each affected row |
+
+[H][design-h] and [E][design-e] are immutable source links; local synthesis
+links below are read at S. Neither proves current rendered behavior.
+The [architecture Excalidraw views](../../../architecture/README.md#scope-and-reading-order)
+describe system architecture, not screen layouts, and cannot fill a missing
+wireframe. No new prototype, screen drawing or user review is created here.
+
+### Profile design trace
+
+Each flow link names an existing section and the matching row or role, rather
+than implying that opening a document demonstrates a task. Requirement IDs
+refer to the [PRD requirements](../../../prds/zava-forward-retrofit-programme-demonstrator.md#functional-requirements);
+UX checks refer to the [existing proposed checks](#proposed-acceptance-checks-for-the-next-prototype),
+not executed acceptance. E statuses describe the shared IA slice only, not
+every later feature implementation. Responsible roles below are requested
+follow-up owners, not named people or supplied company delegations.
+
+| Row / screen feature | Exact journey section | Existing task-flow section / matching row | Actual artifact / version | Requirement / check | Evidence status | Missing item / owner role / next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| T01 Asset and investment, [#226](https://github.com/jmservera/ama/issues/226) | [Asset Executive hypothesis](./customer-journeys/asset.md#journey-1-asset-executive-current-state-hypothesis) | [All eleven flows](#all-eleven-profile-journeys), Asset and investment: queue -> source conflict -> resolution role | [H][design-h], asset queue; [E][design-e], Asset profile deferred | FR-003/004; UX-04; unknown investment inputs remain unknown | Historical source only; no investment approval | Current design: Not supplied / Asset product and design owners / supply exact queue/conflict design and review unresolved-input handling |
+| T02 Programme coordinator, [#230](https://github.com/jmservera/ama/issues/230) | [Programme Manager / planner](./customer-journeys/programme.md#1-programme-manager--planner) | [PRD profile flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype), Programme coordinator: returned queue -> ownership -> reset | [H][design-h], case 863; [E][design-e], Programme profile partial | FR-011/032/033; UX-02/03/05 | Historical return example; shared IA partial, no complete handoff acceptance | Current design: Not supplied / Programme and design owners / supply sent/received/accepted/returned states with separate chase/update ownership |
+| T03 Retrofit case team, [#230](https://github.com/jmservera/ama/issues/230) | [Connected service journey](./customer-journeys/customer-journey-atlas.md#one-connected-service-journey) | [PRD profile flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype), Retrofit case team; [lifecycle/return](../../../prds/zava-forward-retrofit-programme-demonstrator.md#case-lifecycle-role-handoffs-and-return-path) | [H][design-h], separate home examples; [E][design-e], case-team profile partial | FR-001/002/035; UX-04/07; separate home decisions | Historical snapshots are not one connected home lifecycle | Current design: Not supplied / Programme and design owners / supply linked-home flow without transferring sibling consent or acceptance |
+| T04 Assessor, designer and Coordinator, [#231](https://github.com/jmservera/ama/issues/231) | [Assessor](./customer-journeys/programme.md#2-surveyor--retrofit-assessor) and [designer/coordinator](./customer-journeys/programme.md#3-retrofit-designer--coordinator) | [All eleven flows](#all-eleven-profile-journeys), Retrofit Assessor, designer and Coordinator: technical queue -> missing reference -> competent return | [H][design-h], case 104; [E][design-e], technical profile partial, script deferred | FR-008/013; UX-04; stale/missing evidence blocks readiness | Historical missing-reference example, not professional sign-off | Current design: Not supplied / Technical and design owners / supply separate assessor/designer/coordinator review and return designs |
+| T05 Housing and Resident Engagement, [#232](https://github.com/jmservera/ama/issues/232) | [Resident engagement/support worker](./customer-journeys/residents.md#current-journey-d-resident-engagementsupport-worker) | [PRD profile flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype), Housing and Resident Engagement: choice -> service -> owned update | [H][design-h], case 208; [E][design-e], Housing profile partial | FR-014/045; UX-08; contact/access is not works consent | Staff-facing hypothesis; no resident contact or wording acceptance | Current design: Not supplied / Housing, Resident Engagement and design owners / supply measure/version choice and safe-route/update states for named wording review |
+| T06 Repairs and Building Safety, [#227](https://github.com/jmservera/ama/issues/227) | [Repairs/hazard response](./customer-journeys/safety.md#current-state-map-b-repairshazard-triage-and-response-staff) | [All eleven flows](#all-eleven-profile-journeys), Repairs and Building Safety: referral -> receipt/acceptance -> owned follow-up | [H][design-h], case 531; [E][design-e], Safety profile partial | FR-015; UX-04/05; external service owns hazard decisions | Historical referral example and partial IA; no authority inferred | Current design: Not supplied / Building Safety and design owners / supply distinct referral, receipt, acceptance and restart-evidence states |
+| T07 Procurement and contracts, [#228](https://github.com/jmservera/ama/issues/228) | [Procurement/contracts manager](./customer-journeys/suppliers.md#1-procurementcontracts-manager-secure-accountable-delivery) | [All eleven flows](#all-eleven-profile-journeys), Procurement and contract manager: package -> scope/capacity -> draft review | [H][design-h], case 317; [E][design-e], Procurement profile deferred | FR-016; UX-04; offer is not commitment | Historical draft package, not work release or booking | Current design: Not supplied / Procurement and design owners / supply period/version, offered/committed and unmet-prerequisite designs |
+| T08 Provider / contractor, [#228](https://github.com/jmservera/ama/issues/228) | [Contractor scheduler/supervisor](./customer-journeys/suppliers.md#2-contractor-schedulersupervisor-make-a-workable-day) | [PRD profile flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype), Provider / contractor contact: intake -> correction -> independent review | [H][design-h], staff-facing case 317; [E][design-e], Provider profile partial | FR-016/017; UX-04; submission is not independent acceptance | Historical H has no provider identity/portal; E only assigned-job/projection slice | Current design: Not supplied / Supplier product and design owners / supply bounded submission/correction design and independent-review handoff |
+| T09 Quality and assurance, [#231](https://github.com/jmservera/ama/issues/231) | [Independent QA inspector/evaluator](./customer-journeys/programme.md#4-independent-qa-inspector--retrofit-evaluator) | [All eleven flows](#all-eleven-profile-journeys), Quality and assurance: incomplete pack -> defect owner -> reinspection/disposition | [H][design-h], case 422; [E][design-e], Quality profile partial | FR-008/017; UX-04; incomplete evidence prevents handover | Historical incomplete pack; IA navigation is not QA acceptance | Current design: Not supplied / Quality and design owners / supply per-measure evidence, return and independent acceptance states |
+| T10 Finance and Grants, [#225](https://github.com/jmservera/ama/issues/225) | [Grant preparer](./customer-journeys/finance.md#a-capital-and-grant-preparer) and [payment officer](./customer-journeys/finance.md#c-payment-officer) | [PRD profile flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype), Finance and Grants: match exception -> review -> safe block/export | [H][design-h], case 752 invoice exception; [E][design-e], Finance profile partial | FR-018/019/042; UX-04; application, award, claim and cash separate | H does not demonstrate later application draft/export contract; E navigation only | Current design: Not supplied / Finance and design owners / supply exact invoice and application-pack designs, preserving separate approvals and unknown route/schema |
+| T11 Digital operator and auditor, [#229](https://github.com/jmservera/ama/issues/229) | [Digital/service operator](./customer-journeys/data.md#current-map-2-digital--service-operator) and [audit reviewer](./customer-journeys/data.md#current-map-4-independent-audit--regulatory-assurance-reviewer) | [All eleven flows](#all-eleven-profile-journeys), Digital operator and auditor: conflict/return -> original sources -> owned recovery | [H][design-h], cases 646/863; [E][design-e], Digital profile deferred | FR-012/022/024; UX-03/04; no silent correction or replay | Narrative history is not operational audit evidence | Current design: Not supplied / Data/operator and design owners / supply both source values, event metadata and explicit recovery design |
+
+### Shared core-flow design trace
+
+| Row / screen feature | Exact journey section | Existing task-flow section / matching check | Actual artifact / version | Requirement / check | Evidence status | Missing item / owner role / next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| C01 Queue scope/reset, [#152](https://github.com/jmservera/ama/issues/152) | [Programme planner](./customer-journeys/programme.md#1-programme-manager--planner) | [Existing IA flow](#shared-workbench-ia-engineering-slice-2026-10-15), own/programme -> filter -> reset; [UX-02/03](#proposed-acceptance-checks-for-the-next-prototype) | [H][design-h], historical filtering; [E][design-e], scope/reset fixture | FR-032/035; AC-034; distinguish no matches, unavailable scenario and failure | E bounded engineering; historical owner feedback and later #24 source differ | Current design: Not supplied / Workbench design owner / supply queue-state designs and compare visible counts/reset to exact fixture |
+| C02 Case open/return, [#152](https://github.com/jmservera/ama/issues/152) | [Programme planner](./customer-journeys/programme.md#1-programme-manager--planner) | [PRD profile flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype), Programme coordinator recovery; [UX-07](#proposed-acceptance-checks-for-the-next-prototype) | [H][design-h], historical detail; [E][design-e], back fixture and first-page limitation | FR-001/002/032; UX-07; retain queue context and originating focus/position | IA retains filters/sort but first page/main focus; full restoration unmet | Current design: Not supplied / Workbench design owner / supply open/close/return design and explicitly assess selection, position and focus |
+| C03 Blocked readiness/handoff, [#230](https://github.com/jmservera/ama/issues/230) | [Connected service journey](./customer-journeys/customer-journey-atlas.md#one-connected-service-journey) | [Lifecycle/return flow](../../../prds/zava-forward-retrofit-programme-demonstrator.md#case-lifecycle-role-handoffs-and-return-path); [UX-04/05](#proposed-acceptance-checks-for-the-next-prototype) | [H][design-h], held/returned examples; [E][design-e], handoff workflow deferred | FR-008/011/033; SA-003; reason, owner, next action | Historical examples, not complete ownership/accepted-handoff evidence | Current design: Not supplied / Programme and design owners / supply blocked/unknown/returned/accepted states with accountable next action |
+| C04 AI draft review, [#152](https://github.com/jmservera/ama/issues/152) shared pattern; [#233](https://github.com/jmservera/ama/issues/233) journey application | [Controlled proposal opportunities](./customer-journeys/customer-journey-atlas.md#divergent-opportunities-beyond-another-chatbot) | [Existing UX-06 flow](#proposed-acceptance-checks-for-the-next-prototype), inspect inputs -> draft/recommend/flag -> human review or manual/failure route | [H][design-h], static suggestion only; [E][design-e] does not test AI draft review | FR-025-028; SA-004; accepted draft is not approval/consent/safety decision | No AI quality, complete manual recovery or human design acceptance established here | Current design: Not supplied / Assistant product, content and design owners / supply exact draft/review/failure states with optional manual route and source labels |
+
+### Design decisions and open questions
+
+The register consolidates existing choices; it does not grant new delivery or
+professional authority. Source dates and classifications are part of each row.
+
+| Decision | Source / date | Rationale and affected rows | Status | Open question / next owner action |
+| --- | --- | --- | --- | --- |
+| D01 Adopt Fluent UI (Fluent 2), not extend the bespoke MVP | [Actual owner decision, 2026-10-15](https://github.com/jmservera/ama/issues/150#issuecomment-6194477486); [pinned design-system scope](./design-system.md#decision-adopt-fluent-ui-fluent-2) | Owner selected the alternative; use one coherent foundation across T01-T11/C01-C04. A consistency rationale is this register's interpretation, not a quoted owner reason. | Owner-selected; live #150 CLOSED when checked 2026-10-18. Pinned S still says partial native/token foundations and "Issue #150 stays open." That sentence is historical/stale status, not current issue status. Closure alone is not full Fluent/runtime or human acceptance evidence. | Design/engineering owners supply exact implementation/adoption evidence; do not silently convert pinned partial scope to full acceptance |
+| D02 Make context visible and case return recoverable | [Owner notes, 2026-10-07](#owners-notes); [derived design direction](#design-direction-derived-from-the-notes); [later source reconciliation, 2026-10-13](#later-pinned-source-reconciliation-2026-10-13) | Owner reported unclear role/workflow changes and requested full-screen case work. Queue context, reset and focus/position restoration are derived recovery requirements/proposals, not proof they were delivered. T02/T03/T11/C01/C02. | Reported owner experience plus sourced design interpretation. Later #24 filtering code does not disprove earlier feedback or pass UX-02/03. | Workbench design owner supplies exact current candidate and visible recovery evidence; UX-07 full restoration remains unmet in shared IA slice |
+| D03 Correct misleading fields/filters, deepen one exception, then connect one home | [Existing sequencing synthesis, 2026-10-06 review](#sequencing-and-scope-trade-off) | Keep scope reviewable; invoice depth before a new ledger, draft package readiness before release. T02-T04/T07/T09-T11/C03. A second home explains dependency, never transfers approval. | Source-based synthesis/proposal, not an owner-approved delivery sequence or user-validated priority | Programme/design owners confirm next bounded delivery slice and retain independent decisions |
+| D04 Preserve honest partial recovery and separate permissions from navigation | [Shared IA engineering slice, 2026-10-15](#shared-workbench-ia-engineering-slice-2026-10-15), [E][design-e] | Existing implementation keeps scope/query/filter/sort but returns to first page/main focus; do not claim full UX-07. T02/T03/T05/C01/C02. | Engineering behavior/limit, not human design acceptance; rationale to expose the limitation is this register's interpretation | Workbench owner records exact restoration design and checks; owner device/browser decisions remain open |
+
+### Design review checklist and definition of done
+
+Use this gate for each affected screen row before calling its design accepted.
+For a new screen feature, add its trace row and exact candidate version first.
+Record reviewer name/role, date, expected versus actual, outcome, findings and
+next action for that version. A source link or an unchecked box is not a result.
+
+* [ ] Trace is complete: feature, exact journey and existing task flow,
+  reviewable screen artifact/version, requirement/check and evidence status;
+  any gap has a responsible role and next action.
+* [ ] Exact screen versions show applicable default, focus, disabled, error,
+  loading, empty and blocked states; recovery preserves necessary context and
+  permissions. Status is understandable without colour. Human approvals and
+  resident choice are never inferred from receipt, navigation or a draft.
+* [ ] Accessibility evidence follows the existing
+  [proposed WCAG 2.2 AA scope](./wcag-conformance-baseline.md#decision-target-level-and-scope),
+  [audit](./wcag-conformance-baseline.md#audit) and
+  [manual check record](./wcag-conformance-baseline.md#manual-check-record):
+  keyboard/focus, names/labels/status announcements, contrast/non-colour cues,
+  targets, zoom/reflow and relevant errors/authentication, with tester/date,
+  exact candidate/tool/browser, results and exceptions. Static checks or
+  native controls do not establish conformance; unconfirmed scope/tester
+  decisions remain open, not waived.
+* [ ] Content follows the [plain-language standard](./content-standard.md#content-standard)
+  and [core-flow audit](./content-standard.md#copy-audit-of-the-core-flow):
+  reason, owner and next action; exact AI/manual labels; no implied approval.
+  [Named human resident-wording review](./content-standard.md#human-review)
+  records name/role, date, exact text/version and outcome before any use.
+  Missing approval keeps resident-facing drafts not approved.
+* [ ] A named human design reviewer records the actual task/state review and
+  finding dispositions for the exact versions. Direct accessible staff,
+  provider and resident research is reported separately, with actual methods,
+  observations and limitations under
+  [#155](https://github.com/jmservera/ama/issues/155); role-agent opinions are
+  not participant evidence or resident validation.
+
+Missing required trace, reviewable design, accessibility or content evidence
+prevents overall **Pass**. Missing required human acceptance also keeps the
+gate open. Use **Blocked** for absent prerequisite evidence and **Not accepted**
+for an assessed candidate with unresolved defects; neither is Pass. A
+documentation-complete register or engineering check cannot override either.
+User-research validation is a separate result, never inferred from a design
+review. No proposed WCAG scope, reading-age target or resident review is
+silently approved by this checklist.
+
+### Recorded design evidence review
+
+| Field | Actual record |
+| --- | --- |
+| Record / date | G156-2026-10-18, evidence inspection on 2026-10-18 |
+| Candidate boundary | T01-T11/C01-C04 documentation addition; source baseline S, historical H and engineering E at the exact versions above |
+| Reviewer | Copilot documentation agent, automated source/evidence inspection only; not a human design reviewer |
+| Human reviewer / review date | Not supplied / Not supplied |
+| Current screen artifact/text versions for human acceptance | Not supplied; H and E are not substitutes |
+| Overall design outcome | Blocked: required current designs and human/accessibility/content evidence not supplied |
+
+| Check | Expected evidence | Actual evidence / outcome | Finding, affected rows / owner role / next action |
+| --- | --- | --- | --- |
+| Finite trace documentation | Fifteen declared rows with resolvable sources, exact versions and actionable gaps | Fifteen records checked: links/anchors, table shape and pinned artifact paths resolve. Broader backlog coverage unknown, not all-screen acceptance | G01, all rows and remaining screens / coordinator / reconcile remaining feature inventory |
+| Exact screen/state designs | Current reviewable versions for applicable states and recovery | Not supplied; H historical, E engineering only. Blocked | G02, all rows / design owner / supply versioned current screen artifacts and state coverage |
+| Recovery/ownership design assessment | Actual expected/observed result for UX-02/03/05/07 on exact candidate | Historical owner report and later source reconciliation retained; IA return-position/focus limit remains. Human review Not supplied. Blocked | G03, T02/T03/T11/C01-C03 / Workbench and Programme design owners / assess exact candidate, record expected versus actual and dispositions |
+| Accessibility | Required versioned static/rendered/manual evidence and applicable owner scope decisions under existing baseline | Historical partial audit/engineering only; required current manual record Not supplied. Blocked, no conformance claim | G04, all rows / accessibility owner and named testers / record required checks and unresolved scope decisions |
+| Content and resident wording | Exact copy review; named human review of resident-facing text before use | Existing bounded copy audit; current exact text and human approval Not supplied. Blocked | G05, all rows; resident wording particularly T05/C04 / content owner and named human reviewer / supply text versions and actual review outcome |
+| Human design review | Named reviewer/role/date, exact versions, actual findings and dispositions | Not supplied. Blocked | G06, all rows / design owner / assign human reviewer and record actual results |
+| Direct user research | Actual accessible staff/provider/resident research for candidate tasks | Not supplied. Not validated; historical role research is hypothesis only | G07, all rows / research owner / run approved representative-user study and record observations/limits separately |
+
+| Independently reported result | Status at this record |
+| --- | --- |
+| Documentation completeness, finite inventory only | Complete for the fifteen evidence records: link/anchor/table/source/diff checks performed; no claim of full #156 coverage or complete design evidence |
+| Engineering | Historical/source-inspected partial evidence only; no fresh runtime checks in this documentation slice |
+| Human design review | Not supplied; not accepted by a person |
+| User-research validation | Not supplied; not validated |
+| Overall design gate | Blocked; no #156 AC, board or parent acceptance changed |
+
+[design-h]: https://github.com/jmservera/ama/blob/c0f7c08aec514597af86528caf1bdad4b7250246/.copilot-tracking/prototypes/2026-10-06/proper-warm-retrofit-workbench.html
+[design-e]: https://github.com/jmservera/ama/blob/3104bb69ddc26c81e0e9d2f57000dac1d99a419a/src/api/checks/workbench-manifest.json
 
 ## Outcome and Evidence Boundary
 
