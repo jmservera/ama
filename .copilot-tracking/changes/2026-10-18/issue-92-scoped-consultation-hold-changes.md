@@ -13,8 +13,8 @@ Implementation complete; declared scope full plan P01/P02. All markers complete.
 Approved writes: five procurement call removals, truthful refusal/audit wording,
 coupled tests and documentation. No shared server/SQL/schema/role/web changes.
 Remaining active implementation markers: none. One original Review complete.
-No safe-implementation blocker. Coordinator has authorized same-task
-integration/publication onto exact a86282c4; execution is in progress.
+No safe-implementation blocker. Authorized integration onto a86282c4 is complete
+locally. Publication blocked again: main moved to ab0613f3 before push.
 
 ## Execution Summary
 
@@ -237,3 +237,21 @@ Authorized upstream sqlstore/taskqueues corrections are preserved verbatim;
 their historical SQL/image receipts remain upstream. New SQL Server, image,
 browser, human, live Legal or genuine let/renew acceptance was not run or claimed.
 Original 135 actual SQL passes remain historical engineering evidence only.
+
+### Publication preflight: main moved again, no remote write
+
+Integration receipt and all fresh evidence committed as
+ae2bc36b14025f833d449bc12c18873ee65e4b0d; source parity rechecked at that tip.
+Immediately before publication, the exact-main guard failed because main became
+ab0613f3336109ff9b96560a16758ee842232715, rather than authorized a86282c4.
+The chained command stopped before `git push`; the authorized lease was not used.
+Read-only confirmation: remote topic remains 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7;
+PR389 remains open with unchanged body/head and empty closingIssuesReferences.
+GitHub PR baseRefOid still reports historical 1a05dfb8 and is not treated as
+current remote-main authority; `git ls-remote` supplies the observed main hash.
+
+Per explicit coordinator direction, report and wait. No further fetch/rebase,
+push, PR edit, issue/board/merge, source correction or repeated original
+assessment is attempted. A final local metadata-only receipt records this stop;
+its exact tip is given by git and the caller response. Publication goal remains
+blocked, not complete; all authorized integration results remain durable locally.

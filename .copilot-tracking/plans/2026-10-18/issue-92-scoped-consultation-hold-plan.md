@@ -179,5 +179,11 @@ inventory and ten preserved original-artifact digests are recorded separately.
 Fresh focused 212 run/199 passes/13 skips; combined queue-related 553 run/
 458 passes/95 skips; configured core/API Ruff, format and mypy pass (125/56
 typed files). Existing SQL/image evidence remains historical: no production
-conflict or integration-authored persistence change. Publication is next, gated
-on exact unchanged main and initial topic lease.
+conflict or integration-authored persistence change.
+
+Publication blocked at preflight: main moved again to
+ab0613f3336109ff9b96560a16758ee842232715. Candidate
+ae2bc36b14025f833d449bc12c18873ee65e4b0d remains local; remote topic still
+9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7. No push, PR edit or further
+rebase occurred. Wait for coordinator direction; do not independently integrate
+the new main. Original Review/critique stay byte-identical and are not repeated.

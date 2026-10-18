@@ -6257,3 +6257,15 @@ metadata when the knowledge base was created.
 * Same PR389 publication is authorized with the exact old-head lease, normal
   pushes only afterward. No private inputs, real contracts/spend, Azure, paid
   model calls, operational activation, issue/board change or merge.
+
+## [2026-10-18] integration | Scoped consultation publication waits again (#92)
+
+* Exact pre-push guard detected main ab0613f3336109ff9b96560a16758ee842232715,
+  no longer authorized a86282c4. It stopped before push; no lease was consumed.
+  Topic remote remains 9fb84836, PR389 remains unchanged/open with empty closing
+  issue references. No further rebase or PR/issue/board/merge action performed.
+* Authorized a86282c4 integration and fresh checks are committed locally at
+  ae2bc36b; a later metadata-only stop receipt records the new wait boundary.
+  Publication remains blocked pending coordinator direction. All original
+  assessment hashes, source parity and historical/fresh evidence distinctions
+  remain intact; no source correction or repeated assessment.

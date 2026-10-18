@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-92-scoped-consultation-hold-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-92-scoped-consultation-hold-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Publication preflight honored another main move",
+      "status": "blocked-before-remote-write",
+      "evidence": "Publication candidate ae2bc36b14025f833d449bc12c18873ee65e4b0d passed source parity, but remote main became ab0613f3336109ff9b96560a16758ee842232715 instead of authorized a86282c4. Shell guard stopped before git push. Remote topic remains expected9fb84836; PR389 body and closing references unchanged/empty. No lease consumed, normal push, further rebase or PR update. Coordinator direction required."
+    },
     {
       "decision": "Same-task integration and fresh validation",
       "status": "executed",
@@ -51,14 +56,20 @@
       "evidence": "9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7 rebased onto 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096, result d276d4ce8e8acfd72c3eebded58959b24c534a1c; original RPI SHA256 checks all match."
     }
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Commit integration evidence, verify main a86282c4 and remote expected9fb84836, then publish only owned topic using exact explicit lease. Update PR389 and verify empty closing refs; normal pushes only afterward. Stop if main moves; otherwise stop after publication for coordinator independent review."},
+  "blockers": [
+    {
+      "id": "publication-main-moved-again",
+      "summary": "Remote main is ab0613f3336109ff9b96560a16758ee842232715, not authorized a86282c4badebc58eabbf9e441410d930a201ac2. Preflight guard stopped before push.",
+      "resolution": "Wait for coordinator integration/publication direction. Do not rebase or publish against the new main, consume the lease or update PR389."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Wait for coordinator direction: main moved again to ab0613f3336109ff9b96560a16758ee842232715. All authorized a86282c4 integration evidence is persisted locally. No further rebase, push, PR/issue/board update, source correction, critique or original Review."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Complete independent review of final published head",
-      "rationale": "Coordinator publication authorization resolves the former moved-main blocker; independent final-head review and checks remain the immediate delivery gate.",
-      "evidence": "RV-001 historical routing retained; same-task integration receipt records exact a86282c4 boundary. No second original Review."
+      "task": "Resolve newly moved-main publication boundary",
+      "rationale": "Explicit coordinator wait condition prevents publication; independent final-head review follows only a separately authorized publication.",
+      "evidence": "Publication preflight observed ab0613f3, not authorized a86282c4. Remote topic remains expected9fb84836. No remote write or second original Review."
     },
     {
       "rank": 2,

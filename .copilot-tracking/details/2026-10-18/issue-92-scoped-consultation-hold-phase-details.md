@@ -108,3 +108,10 @@ Fresh combined run including queue selectors: 553 executions, 458 passed,
 95 explicit skips, 151.838s. Configured core/API quality passes: Ruff check,
 format (72/24 files) and mypy (125/56 source files). Historical 135 actual SQL
 passes and upstream hardened-image evidence were not rerun or promoted.
+
+Publication preflight at candidate ae2bc36b14025f833d449bc12c18873ee65e4b0d
+found main ab0613f3336109ff9b96560a16758ee842232715. The exact-main guard
+stopped before push; remote topic remains 9fb84836. Read-only PR389 inspection:
+open, unchanged remote head, closingIssuesReferences empty. No initial lease,
+normal push, PR update or further rebase performed. Integration onto authorized
+a86282c4 is complete locally; publication is blocked pending coordinator direction.

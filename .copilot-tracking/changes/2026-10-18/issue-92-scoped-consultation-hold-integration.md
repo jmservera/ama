@@ -134,3 +134,26 @@ Legal/genuine let-renew/human/live acceptance. Closing issue references must
 be empty. No issue/board/merge operation, Azure/spend, private input, Legal
 approval, real let/renew or expanded scope. Stop after publication for complete
 independent coordinator review; no follow-up implementation.
+
+## Actual publication disposition: blocked before push
+
+Evidence/receipt candidate:
+`ae2bc36b14025f833d449bc12c18873ee65e4b0d`. Exact parity rechecked at this
+commit after receipt-only changes. The immediate pre-push guard found remote
+main `ab0613f3336109ff9b96560a16758ee842232715`, not authorized
+`a86282c4badebc58eabbf9e441410d930a201ac2`, and exited before `git push`.
+No force lease was consumed and no normal push followed.
+
+Read-only confirmation: topic remains
+`9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7`; PR389 is open with unchanged
+head/body and empty closingIssuesReferences. Its reported baseRefOid remains
+historical `1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c`, not evidence that remote
+main is unchanged. No PR write or issue/board/merge action occurred.
+
+Integration onto authorized a86282c4 and fresh validation are complete locally;
+publication is blocked, not complete. Current state is automatic / running /
+Follow-up / blocked, awaiting coordinator direction under the explicit
+"if main moves again, report wait" instruction. Do not integrate the new main,
+publish, run another original Review/critique or begin follow-up implementation.
+The commit containing this final metadata-only stop is the local handoff tip;
+resolve it with `git rev-parse HEAD`. The caller reports its exact hash.
