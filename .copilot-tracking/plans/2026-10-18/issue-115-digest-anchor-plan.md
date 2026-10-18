@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 
 * Task ID: 115
 * Task slug: issue-115-digest-anchor
-* Planning status: Correction ONE implemented/locally validated; publication and same-coordinator follow-up pending
+* Planning status: Correction ONE delivered; stopped for SAME coordinator, acceptance pending
 * Plan date: 2026-10-18
 * Phase details: .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-115-digest-anchor-plan-critique.md
@@ -244,12 +244,13 @@ review remains separate; no issue closure or operational acceptance.
 Subsequent coordinator NOT ACCEPTED supersedes the historical candidate's
 positive source judgment. Current correction ONE P03 has failing-first malformed
 name/payload evidence and25/44 passing local checks; qualification is implemented,
-not independently accepted. Publication is next, then SAME coordinator follow-up.
+not independently accepted. Source d0088301ba64cba8c632b6d0b4dcd80474580e41 committed/pushed; final receipt
+reconciles actual publication. Stopped for SAME coordinator follow-up, no new Review.
 
 ## Correction ONE Active Checklist
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Qualify remote anchors after adverse coordinator finding
+### [x] P03: Qualify remote anchors after adverse coordinator finding
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Failing-first malformed-name/payload direct and CLI matrix
@@ -260,7 +261,7 @@ not independently accepted. Publication is next, then SAME coordinator follow-up
 Depends on P03-T01 expected behavioral failure, not setup error.
 
 <!-- rpi:task id=P03-T03 -->
-#### [ ] P03-T03: Local gates, frozen parity, correction receipt and PR404 publication
+#### [x] P03-T03: Local gates, frozen parity, correction receipt and PR404 publication
 
 Depends on P03-T02. No new/amended Review; stop for same coordinator.
 Receipt: .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one.md.

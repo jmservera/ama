@@ -18,7 +18,7 @@ C1-C8/W1. No blocking unknowns; operational gates remain separate.
 | --- | --- | --- | --- |
 | P01 | Reproduce then correct only recognized-anchor absence | Complete | P01-T01, P01-T02 |
 | P02 | Local validation, one Review and authorized publication | Complete, coordinator exact-final-head review remains separate | P02-T01, P02-T02 |
-| P03 | Authorized correction ONE after coordinator NOT ACCEPTED | Source/validation complete, publication pending | P03-T01, P03-T02, P03-T03 |
+| P03 | Authorized correction ONE after coordinator NOT ACCEPTED | Delivered; SAME coordinator acceptance pending | P03-T01, P03-T02, P03-T03 |
 
 ## P03: Qualify Remote Anchor Evidence
 
@@ -45,7 +45,8 @@ End with same coordinator follow-up, never a self-issued Pass or second Review.
 P03-T01/T02 actual evidence:3 malformed methods failed before source change
 (112 assertion failures/30 malformed-data errors); after qualification25 focused/
 coupled and44 full orchestrator tests pass, zero skips. Configured Ruff/format/
-mypy pass. Frozen original hashes unchanged. Publication remains P03-T03;
+mypy pass. Frozen original hashes unchanged. Source d0088301ba64cba8c632b6d0b4dcd80474580e41 committed and normally pushed;
+P03-T03 publication receipt is complete, stopped for same coordinator.
 coordinator NOT ACCEPTED remains authoritative until same-reviewer follow-up.
 
 Single original critique Complete / Revise, PC-001 applied below. No new critique

@@ -130,3 +130,45 @@ a new/amended Review or artificial Pass. Same coordinator must adjudicate
 corrected exact final head. Main still pinned; gh api user freshly resolved
 8036360/jmservera for local noreply author/committer. Normal same-branch push
 and PR404 update authorized, no integration or issue/board writes.
+
+## Actual Publication and Same-Coordinator Handoff
+
+Correction ONE source/receipt commit:
+`d0088301ba64cba8c632b6d0b4dcd80474580e41`.
+Normal `git push origin fix/digest-anchor-evidence-115` succeeded, moving remote
+bbb13521 to d0088301. Remote main checked immediately before push remains exact
+base c803614e8ca7c604e509f1c088f8b8f90f3063ef. No integration authorized or done.
+PR404 remains the same delivery surface. Final evidence-only commit containing
+this publication receipt has its exact head recorded in live PR metadata/body
+and final handoff rather than recursively embedded in its own bytes.
+
+Full correction changed boundary relative to bbb13521 (15 paths):
+
+* src/orchestrator/src/zava_forward/orchestrator/digest_blob.py
+* src/orchestrator/tests/test_digest_blob.py
+* src/orchestrator/README.md
+* .copilot-tracking/plans/2026-10-18/issue-115-digest-anchor-plan.md
+* .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
+* .copilot-tracking/rpi-sessions/2026-10-18/issue-115-digest-anchor-state.json
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-changes.md
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-delivery.md
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-pr-body.md
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one.md
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one-before.log
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one-focused.log
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one-orchestrator.log
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one-quality.log
+* .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one-probes.log
+
+Original research, critique, Review and initial validation logs untouched.
+Task fixture root confirmed empty and removed with rmdir. No new dependencies
+or services. All tests/logs are constructed public fixtures; no private input or
+environment/secret reads. Fresh gh identity8036360/jmservera and local noreply
+used for both author and committer, required Copilot trailer included.
+
+Correction ONE implementation/publication complete, not coordinator accepted.
+Coordinator's NOT ACCEPTED remains recorded, awaiting SAME reviewer's exact
+corrected-head follow-up. Original Revise critique and Residual work Review stay
+byte-exact at frozen hashes above; no new/amended Review or self-issued Pass.
+Operational/legal/resident/retention/lock/scheduled-monitoring/recovery and
+initial-history approval gates remain unmet; no whole115/114 closure.
