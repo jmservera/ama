@@ -5,7 +5,7 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
-  "session_status": "running",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-120-dpia-reference-plan.md",
@@ -49,12 +49,17 @@
       "decision": "Original critique, failures and Review immutable; zero later correction cycles; no repeated original Review",
       "status": "confirmed",
       "evidence": "User request and original Review routing; only human/coordinator follow-ups remain"
+    },
+    {
+      "decision": "Normal push and main-target PR delivery completed; issue remains open; stop for independent coordinator",
+      "status": "verified",
+      "evidence": "PR https://github.com/jmservera/ama/pull/408; source/evidence commit bc460119b5ac2cc67c87d7b4e7260f44a658c792 with exact requested parent"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete authorized commit/push/new main-target PR delivery, then stop for coordinator"
+    "action": "Stopped after authorized delivery; coordinator owns exact final-head acceptance and integration, issue owner owns live-governance follow-up"
   },
   "prioritized_follow_ups": [
     {

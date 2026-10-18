@@ -237,3 +237,28 @@ for then-tracked source edits and did not include untracked logs.
 The optional commit skill's referenced instruction file and changed-file tool
 are unavailable in this host; repository-required explicit bounded staging,
 local identity and ordinary Git commands remain the authoritative delivery path.
+
+## Authorized Delivery and Stop
+
+Source and full ordered RPI evidence committed as
+`bc460119b5ac2cc67c87d7b4e7260f44a658c792`, with exact parent
+`a86282c4badebc58eabbf9e441410d930a201ac2`. Both author and committer use
+authenticated `8036360+jmservera@users.noreply.github.com`; Conventional Commit
+and required Copilot co-author trailer retained. Normal push succeeded.
+New main-target PR: https://github.com/jmservera/ama/pull/408.
+PR body uses only `Refs #120` linkage and records full RPI paths, ancestry,
+commands, observed results, unmet criteria and coordinator stop boundary.
+
+This final evidence-only commit records delivery and the explicitly requested
+stop. It changes no assessed source, original failure/critique/Review or
+validation output. PR metadata/body and final response provide the exact final
+head after this evidence commit; no self-referential commit hash is invented.
+The branch diff remains exactly three permitted src files plus twenty
+task-owned evidence files, all in the same PR.
+
+Main still matched the supplied base immediately before push. No rebase,
+force push, main rewrite, merge, issue/board action, live activation, approval
+record or further child work. Hosted checks and independent exact-head
+coordinator acceptance are not claimed complete. Issue 120 and its unmet human
+governance criteria remain open. Automatic session stops after delivery by
+explicit caller direction; RV-001/RV-002 remain distinct human/coordinator work.
