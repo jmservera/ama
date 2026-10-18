@@ -14,7 +14,8 @@ Approved writes: five procurement call removals, truthful refusal/audit wording,
 coupled tests and documentation. No shared server/SQL/schema/role/web changes.
 Remaining active implementation markers: none. One original Review complete.
 No safe-implementation blocker. Authorized integration onto a86282c4 is complete
-locally. Publication blocked again: main moved to ab0613f3 before push.
+locally. Coordinator now authorizes exact ab0613f3 integration/publication;
+the prior main-movement stop below remains historical evidence.
 
 ## Execution Summary
 
@@ -255,3 +256,20 @@ push, PR edit, issue/board/merge, source correction or repeated original
 assessment is attempted. A final local metadata-only receipt records this stop;
 its exact tip is given by git and the caller response. Publication goal remains
 blocked, not complete; all authorized integration results remain durable locally.
+
+### Exact ab0613f3 continuation authorized
+
+Coordinator authorizes same-task integration/publication only, from local
+c6732027 onto exact fetched ab0613f3 (PR408), prior integration base a86282c4.
+No source correction, policy change, second original Review or critique.
+Preserve timecapture source/tests, additive API README, queue/recorder changes,
+both historical receipts, all old/new original assessments and append-only log.
+Fresh minimal focused/timecapture and configured static checks; no repeat broad
+suite when exact source parity holds. Historical SQL/image stays historical.
+
+Explicit topic lease remains 9fb84836; unexpected topic advancement stops
+publication. Publish on exact authorized ab0613f3 even if main later moves and
+report movement for coordinator gate. A new receipt will record this boundary.
+Both requested /tmp execution logs read and preserved as byte-identical copies
+in session cf6f1706-71c8-48ee-88ca-e30a375524dc/files; hashes in its
+inherited-execution-logs.json. Do not edit or truncate originals or copies.

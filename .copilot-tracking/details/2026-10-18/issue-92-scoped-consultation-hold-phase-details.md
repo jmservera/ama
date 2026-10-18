@@ -95,7 +95,8 @@ evidence remain historical unless a production conflict/persistence change
 requires rerun. Publish initial exact lease 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7;
 normal push only afterward. Update PR389 with Refs #92 only, empty closing refs,
 exact head/base and unmet Legal/genuine let-renew/human/live acceptance.
-Stop after publication for independent coordinator review; if main moves, wait.
+Stop after publication for independent coordinator review. The later exact-base
+authorization below supersedes the prior main-movement wait.
 
 Rebase completed without conflicts at source candidate
 adc9ad984cd9cd6bcfbd30db6d52485d9506ab47. Both README additions auto-merged
@@ -115,3 +116,23 @@ stopped before push; remote topic remains 9fb84836. Read-only PR389 inspection:
 open, unchanged remote head, closingIssuesReferences empty. No initial lease,
 normal push, PR update or further rebase performed. Integration onto authorized
 a86282c4 is complete locally; publication is blocked pending coordinator direction.
+
+## Exact ab0613f3 continuation
+
+2026-10-18 coordinator authorizes rebase from a86282c4 onto exact fetched
+ab0613f3336109ff9b96560a16758ee842232715, expected local c6732027. Preserve
+PR408 timecapture.py/test_timecapture.py byte-exact and additive API README;
+retain all queues, recorder controls, own scoped intent and old/new assessments.
+No source correction, policy change, second original Review or critique.
+Keep existing receipts unchanged and add a new integration receipt. Preserve
+/tmp/rpi-92-scoped-hold.log and /tmp/rpi-92-final-integration.log; exact copies
+and hashes are saved in this worker's permitted session files.
+
+Minimal fresh selectors: consultation/procurement API/quality procurement/
+mvp/workflows/timecapture. Configured core/API Ruff check/format/mypy.
+No broad rerun for unchanged source; prior integration smoke remains inherited.
+SQL/image remain historical unless packaging/persistence conflict changes source.
+Publish only exact topic lease 9fb84836; stop if topic advanced. Later main
+movement does not block this exact-base publication, but must be reported.
+Update PR389 with Refs #92 only, exact head/base and unmet acceptance gates;
+no review checkbox or independent acceptance claim. Stop for coordinator review.

@@ -136,14 +136,18 @@ Update component guides and KB, preserve upstream log prefix and old artifact by
 
 ## Dependencies
 
-Current authorized integration base: a86282c4badebc58eabbf9e441410d930a201ac2
-(PR407 queue correction), replacing prior base 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096.
-Local candidate 7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c; remote expected lease
+Current authorized integration base: ab0613f3336109ff9b96560a16758ee842232715
+(PR408 DPIA affirmative-reference correction), replacing integration base
+a86282c4badebc58eabbf9e441410d930a201ac2 (PR407 queue correction).
+Expected local candidate c6732027e8b4c1f6238e3073929a78a00ea16727; remote lease
 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7. Integration/publication only;
 no new source correction, critique or original Review. Preserve upstream queue
 production/tests and recorder controls, both README additions and all original
-assessments byte-identical. Fresh focused/queue smoke and configured quality;
-historical SQL/image evidence is not a fresh pass. Stop if main moves again.
+assessments byte-identical. Also preserve timecapture source/tests and additive
+API README. Fresh minimal consultation/provider/workflow/API/timecapture and
+configured static checks; recent broad results stay inherited and SQL/image
+evidence stays historical. Publish on exact ab0613f3 even if main moves later;
+report it for coordinator integration gate. Stop on unexpected topic advancement.
 Existing explicit scoped building hold is the dependent boundary, not a new
 consultation authority. No shared code overlap with active #76/#122.
 
@@ -181,9 +185,9 @@ Fresh focused 212 run/199 passes/13 skips; combined queue-related 553 run/
 typed files). Existing SQL/image evidence remains historical: no production
 conflict or integration-authored persistence change.
 
-Publication blocked at preflight: main moved again to
-ab0613f3336109ff9b96560a16758ee842232715. Candidate
-ae2bc36b14025f833d449bc12c18873ee65e4b0d remains local; remote topic still
-9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7. No push, PR edit or further
-rebase occurred. Wait for coordinator direction; do not independently integrate
-the new main. Original Review/critique stay byte-identical and are not repeated.
+Coordinator subsequently cleared that publication wait: same-task integration
+and publication on exact ab0613f3 are now authorized from local c6732027.
+Use a new receipt, preserve both historical receipts/logs byte-identically,
+and keep original Review/critique unchanged. Current next action is minimal
+integration validation then exact-lease publication and PR389 update; stop
+afterward for full coordinator independent exact-head review.
