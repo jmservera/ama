@@ -1,0 +1,4 @@
+TMPDIR verified; env -i; mocked transport; no credentials
+before123cb902 {"alert": false, "digests": 1, "exit": 0, "intact": true, "malformed_fetched": false, "ok": true}
+after-correction-two {"alert": true, "digests": 1, "exit": 1, "intact": false, "malformed_fetched": false, "ok": false}
+Exact prior-head false green and corrected ALERT/nonzero verified; no name/content leak
