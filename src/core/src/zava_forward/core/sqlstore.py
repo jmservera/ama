@@ -607,6 +607,8 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
+                from .governance import mark_committed as governance_committed
+                governance_committed(self)
                 from .appointments import mark_committed as appointment_committed
                 appointment_committed(self)
                 from .document_rescan import mark_committed as rescan_committed
@@ -615,6 +617,8 @@ class SqlStore(Store):
                 from .resident_decisions import mark_committed as resident_committed
                 resident_committed(self)
             except (ConflictError, GateError, PermissionError) as error:
+                if (getattr(self.local, "rai_evidence_write", None) or {}).get("persisted"):
+                    raise
                 self.db.execute("ROLLBACK")
                 if (getattr(self.local, "stock_decision", None) is None
                         and getattr(self.local, "hazard_decision", None) is None
@@ -636,7 +640,8 @@ class SqlStore(Store):
                 raise
             except BaseException:
                 context = getattr(self.local, "procurement_validation", None)
-                if not context or not context.get("persisted"):
+                rai = getattr(self.local, "rai_evidence_write", None)
+                if not (context and context.get("persisted") or rai and rai.get("persisted")):
                     self.db.execute("ROLLBACK")
                 raise
             self._proc_snap.update(proc_body)

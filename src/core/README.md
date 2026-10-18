@@ -2544,7 +2544,58 @@ when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 * Release decisions (RULE-020, AC-063): each phase (Phase 0 capture, Shadow testing, Live pilot) and tranche has a Release or Withhold record with requirements, evidence, unresolved issues, cost and risk envelope reference and named approvers. Releasing Phase 0 capture needs the capture gate; Shadow testing needs entry evidence, and Shadow testing and Live pilot need Phase 0 capture released first.
 * Guardrail breach (RULE-024, AC-078): `breach_record` (managers, quality inspectors and building safety liaisons, so a hazard-aware role can raise a breach without waiting for a manager) pauses the home, work package, archetype or workstream. `breach_restart` needs a different person, the OD-35 authority reference, accepted remediation evidence and a Release decision recorded after the breach. `guard_case_event` calls `require_not_paused` (home by case id or address, archetype by home type) and, for cases flagged `pilot`, `require_capture_open` in `log_call`, `set_decision`, `advance` and `return_case`; emergency and statutory hazard response continues outside any pause.
 
-Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demonstration values). Open items, not invented here: the real OD-18 definitions and MDE, the OD-36 DPIA and lawful basis, the OD-35 named authority, actual approvers, how cases are enrolled in the pilot cohort (the `pilot` flag), pause scopes for work package and workstream, and extending the guard to the remaining case workflows. The RAI closure registers in the issue (eleven residuals and eleven unassessed checks, a fresh current-source assessment, owner acceptances) are not delivered or claimed closed by this change; every item stays proposed or insufficient until qualified owners and fresh evidence exist, and live use stays blocked.
+Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demonstration values). Open items, not invented here: the real OD-18 definitions and MDE, the OD-36 DPIA and lawful basis, the OD-35 named authority, actual approvers, how cases are enrolled in the pilot cohort (the `pilot` flag), pause scopes for work package and workstream, and extending the guard to the remaining case workflows. The original protocol work did not deliver the RAI finding registers. The bounded claim register below now records their evidence inventory, not a fresh qualified assessment or owner acceptance; live use stays blocked.
+
+### Constructed RAI evidence claims (2026-10-18, #126)
+
+`rai_evidence_record(user, body)` appends an unverified constructed claim to the
+existing checked `governance` document. Current registered Retrofit Programme
+Managers and Programme Support Officers can record claims, not accept or close
+findings. SQL rechecks the exact actor inside the writer transaction and commits
+document plus success audit atomically. Competing writers fail closed. An identical
+event reference/content/recorder reconciles the original record without another
+audit; different content or actor conflicts. A new event requires `expected_revision`.
+Server UTC, recorder identity, event reference and append revision are retained.
+Unverified decision-maker references never assign responsibility or authority.
+
+The detached `governance_view(user, assessment=None)["rai_evidence"]` always lists
+the eleven residual and eleven unassessed original findings. Baseline commit
+`1cb398c7b90bec05a5700008a97d0cfac494144a`, PRD v0.14.0, report 2026-10-14 and
+planning-only acceptance 2026-10-15 remain immutable; DOWNGRADED stays open.
+The optional exact assessment object is caller-declared, not deployment
+attestation: full source commit plus task/version/release, or null task fields
+with explicit nonapplicability. No context means Unknown; a changed component
+moves claims into history, and baseline-source replay never becomes fresh.
+References and result text are bounded inert strings, never fetched or executed.
+
+Tiers distinguish implemented/source-tested, deployed-observed, proposed,
+insufficient and independent-acceptance claims. Every tier remains an unverified
+claim, including an independent-acceptance claim. Distinct matching finding
+dispositions can cover 22/22 while all 22 remain Open, adequacy remains
+unestablished and acceptance remains Unknown. History record count is separate.
+Missing/legacy evidence is insufficient; malformed history is explicitly counted
+and cannot make completeness true. Reads initialize no defaults and write no audit.
+This inventory does not change task-release admission, capture, breaches, consent,
+safety, finance, procurement or continuity.
+
+`GovernanceCommittedError` means SQL persisted but acknowledgement failed:
+reload and reconcile the event reference before another action. JSON retains
+best-effort in-process restoration and its existing cross-file crash/non-atomic
+boundary; it is not SQL-equivalent crash durability.
+
+From the repository root, with installed source distributions:
+
+```bash
+PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests .venv/bin/python -m unittest \
+  test_governance test_governance_evidence_api test_assistant_release -q
+```
+
+On 2026-10-18 this ran 107 tests with 16 explicit MSSQL opt-in skips; the same
+suite passed in the existing API image as UID10001 with read-only root,
+capabilities dropped and writable tmpfs state. Separately, all 16 current
+register cases passed on actual disposable loopback SQL Server 2022, each with a
+unique database; its owned container was removed. Local SQL is not Azure,
+witnessed restore, real-model, qualified human or application acceptance.
 
 ### Per-year ledger digests, load check and recovery drill (issue #114)
 

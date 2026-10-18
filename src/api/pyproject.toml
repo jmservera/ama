@@ -115,5 +115,6 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["test_bulk_edit_api", "tests.test_bulk_edit_api",
+          "test_governance_evidence_api", "tests.test_governance_evidence_api",
           "provenance_browser_check", "checks.provenance_browser_check"]
 disallow_untyped_calls = false

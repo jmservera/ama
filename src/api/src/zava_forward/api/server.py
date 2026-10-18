@@ -128,7 +128,8 @@ def get_kind(path):
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
-                      "benefits-approve": "benefits_approve", "release": "release_record", "breach": "breach_record", "restart": "breach_restart"}
+                      "benefits-approve": "benefits_approve", "release": "release_record", "breach": "breach_record", "restart": "breach_restart",
+                      "evidence-record": "rai_evidence_record"}
 CONTINUITY_ACTIONS = {"restart-propose": "restart_propose", "restart-decide": "restart_decide", "change": "change_record",
                       "change-reverse": "change_reverse"}
 QUALITY_ACTIONS = {
@@ -244,6 +245,22 @@ def make_handler(app):
                 return self._json(401, {"error": "Please sign in."})
             q = parse_qs(url.query)
             s = app.store
+            if url.path == "/api/governance":
+                try:
+                    result = s.governance_view(u)
+                    values = parse_qs(url.query, keep_blank_values=True)
+                    if values.keys() - {"assessment"} or any(len(v) != 1 for v in values.values()):
+                        raise ValueError("Supply only one optional declared assessment parameter.")
+                    if "assessment" in values:
+                        assessment = json.loads(values["assessment"][0])
+                        if assessment is None:
+                            raise ValueError("An explicit assessment must be an object, not null.")
+                        result = s.governance_view(u, assessment)
+                    return self._json(200, result)
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
             if url.path == "/api/coordinator":
@@ -410,11 +427,6 @@ def make_handler(app):
             if url.path == "/api/retention":
                 try:
                     return self._json(200, s.retention_due(u))
-                except PermissionError as e:
-                    return self._json(403, {"error": str(e)})
-            if url.path == "/api/governance":
-                try:
-                    return self._json(200, s.governance_view(u))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/finance":
@@ -843,6 +855,19 @@ def make_handler(app):
                 if parts[:2] == ["api", "continuity"] and len(parts) == 3 and parts[2] in CONTINUITY_ACTIONS:
                     return self._json(200, getattr(s, CONTINUITY_ACTIONS[parts[2]])(u, body))
                 if parts[:2] == ["api", "governance"] and len(parts) == 3 and parts[2] in GOVERNANCE_ACTIONS:
+                    if parts[2] == "evidence-record":
+                        from zava_forward.core.governance import GovernanceCommittedError
+                        try:
+                            result = s.rai_evidence_record(u, body)
+                        except GovernanceCommittedError as error:
+                            return self._json(409, {"error": str(error), "outcome": "committed"})
+                        try:
+                            encoded = json.dumps(result)
+                        except Exception:
+                            logging.getLogger(__name__).exception("RAI claim persisted; response encoding failed")
+                            return self._json(409, {"error": "The claim was recorded. Reload and reconcile its event reference before another action.",
+                                                    "outcome": "committed"})
+                        return self._send(200, encoded)
                     return self._json(200, getattr(s, GOVERNANCE_ACTIONS[parts[2]])(u, body))
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))

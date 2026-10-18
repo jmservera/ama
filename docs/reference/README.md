@@ -21,6 +21,15 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #126, the [constructed RAI evidence register](../../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
+and [API contract](../../src/api/README.md#constructed-rai-evidence-register-api-126)
+record append-only unverified claims for all 22 open baseline checks, with exact
+declared source/task/release comparison, explicit unknowns and current registered
+manager provenance. Local source/HTTP/disposable SQL/non-root image evidence is
+not a qualified assessment, human approval, closure or live-use acceptance.
+The [dated addendum note](../case_study_48_addendum.md#constructed-rai-evidence-register-engineering-2026-10-18)
+preserves historical report acceptance and separate real AI/SQL/Azure gates.
+
 For issue #153, the [chat and alert-panel copy audit](./research/ux/content-standard.md#chat-and-alert-panel-audit-extension-2026-10-18-153)
 extends the existing seven-file lexical guard to chat, including snapshot/envelope
 wording and recorded-time labels. Safety restart authority, exact AI labelling

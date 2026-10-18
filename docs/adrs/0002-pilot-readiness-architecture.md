@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -325,6 +325,26 @@ suspension during active/queued work. Run them against the actual serving
 version before claiming exercise acceptance; retain separate legal, direct-user,
 privacy and live-use gates. Representative fairness and understanding cannot
 be inferred from generated residents or role-agent reviews.
+
+#### Finding-Evidence Register Engineering (2026-10-18, #126)
+
+The implemented claim register reuses GovernanceMixin and the existing checked
+`governance` meta document. No new table, service, AI task or role grant is added.
+SQL's existing serialized writer rechecks the registered manager, performs
+checked-document compare-and-swap, and appends claim plus audit atomically.
+Event reconciliation and an immediate post-COMMIT witness distinguish rejection
+from committed-but-unacknowledged writes, requiring reload rather than blind
+repetition. JSON retains its documented non-atomic cross-file crash boundary.
+
+Detached reads retain all 22 open original checks and explicit insufficiency.
+Current assessment is caller-declared exact source/task/release context, not a
+build attestation; default is Unknown. Supplied decision-maker or independent-
+acceptance references are unverified claims, never assignment, signature,
+qualified acceptance or closure. Existing task-release admission and manual/
+safety/consent/finance/continuity controls remain independent. See the
+[core contract](../../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
+for local JSON/SQLite/disposable SQL and hardened-image evidence; none establishes
+the separate real AI/Azure, human, legal/privacy or operational gates.
 
 ### 1. Durable store: Azure SQL or PostgreSQL
 

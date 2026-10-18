@@ -1,0 +1,58 @@
+Actual disposable loopback SQL Server ready; UUID database per test
+sha256:cf8f0ab2ebe61feec2eed2629061a07d247f791c2a8ddda74a4ac9f06a291718
+test_all_tiers_and_explicit_owner_unknown_are_claims (test_governance.MssqlEvidenceRegister.test_all_tiers_and_explicit_owner_unknown_are_claims) ... ok
+test_append_reopen_reconcile_and_provenance (test_governance.MssqlEvidenceRegister.test_append_reopen_reconcile_and_provenance) ... ok
+test_competing_writer_and_stale_revision (test_governance.MssqlEvidenceRegister.test_competing_writer_and_stale_revision) ... ok
+test_complete_is_not_accepted_or_closed (test_governance.MssqlEvidenceRegister.test_complete_is_not_accepted_or_closed) ... ok
+test_context_staleness_and_baseline_replay (test_governance.MssqlEvidenceRegister.test_context_staleness_and_baseline_replay) ... ok
+test_current_roles_forgery_removal_and_demotion (test_governance.MssqlEvidenceRegister.test_current_roles_forgery_removal_and_demotion) ... ok
+test_failed_recovery_quarantines_success_and_preserves_pending_prefix (test_governance.MssqlEvidenceRegister.test_failed_recovery_quarantines_success_and_preserves_pending_prefix) ... RAI claim SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/src/zava_forward/core/governance.py", line 271, in _rai_evidence_append
+    self.save()
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/src/zava_forward/core/sqlstore.py", line 607, in save
+    self._append_audit(pending)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+RuntimeError: precommit unavailable
+RAI SQL recovery failed; reload to establish the durable outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/src/zava_forward/core/governance.py", line 283, in _rai_evidence_append
+    self._discard(self.local.pending[:])
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/src/zava_forward/core/sqlstore.py", line 691, in _discard
+    self._proc_sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+RuntimeError: recovery unavailable
+ok
+test_immediate_postcommit_hook_failure_has_witness (test_governance.MssqlEvidenceRegister.test_immediate_postcommit_hook_failure_has_witness) ... ok
+test_in_process_save_failure_does_not_leave_claim (test_governance.MssqlEvidenceRegister.test_in_process_save_failure_does_not_leave_claim) ... ok
+test_inert_limits_and_independent_acceptance_is_only_claim (test_governance.MssqlEvidenceRegister.test_inert_limits_and_independent_acceptance_is_only_claim) ... ok
+test_invalid_promotions_and_primitives_leave_no_success (test_governance.MssqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) ... ok
+test_inventory (test_governance.MssqlEvidenceRegister.test_inventory) ... ok
+test_lock_exit_acknowledgement_failure_reports_committed (test_governance.MssqlEvidenceRegister.test_lock_exit_acknowledgement_failure_reports_committed) ... ok
+test_postcommit_failure_requires_reload_no_duplicate_audit (test_governance.MssqlEvidenceRegister.test_postcommit_failure_requires_reload_no_duplicate_audit) ... ok
+test_schema_boundaries_and_legacy_insufficiency (test_governance.MssqlEvidenceRegister.test_schema_boundaries_and_legacy_insufficiency) ... ok
+test_transaction_actor_recheck_and_audit_rollback (test_governance.MssqlEvidenceRegister.test_transaction_actor_recheck_and_audit_rollback) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 73.800s
+
+OK
+SQL parity: 16 run; 0 failures; 0 errors; 0 skipped
+Owned SQL container removed

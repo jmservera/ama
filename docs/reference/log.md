@@ -6305,3 +6305,26 @@ metadata when the knowledge base was created.
 * Integration/publication task complete, automatic session stopped as directed.
   Legal authority, genuine let/renew and human/live acceptance remain unmet.
   No issue/board/merge/ready-state operation or review checkbox completion.
+
+## [2026-10-18] engineering | Issue 126 constructed RAI finding-evidence register
+
+* Added append-only constructed claims and deterministic detached reads in the
+  existing governance API/store for exactly eleven residual and eleven unassessed
+  baseline checks, not the separate eleven AI tasks. No new service/table/role,
+  acceptance/closure action, automatic signature or AI admission change.
+* Preserved the 2026-10-14 report, original v0.14.0/full source baseline and
+  2026-10-15 planning-only acceptance. DOWNGRADED remains open; supplied owner and
+  independent-acceptance references are unverified, not assignment or approval.
+  Exact assessment comparison is caller-declared, not deployed-source attestation.
+* Updated existing core/API guides, addendum, current PRD implementation-status
+  note, ADR 0002 and knowledge index. Memory and historical versions are unchanged.
+* Local focused suite: 107 tests, 16 explicit MSSQL opt-in skips; separate actual
+  disposable loopback SQL Server run: all 16 register cases passed, owned
+  container removed. Hardened existing API image ran the same focused suite as
+  UID10001/read-only root with dropped capabilities. Ten actual HTTP cases cover
+  constructed JSON/SQLite login, authorization, append/replay and failure outcomes.
+  Coupled preservation suite: 288 tests, 46 opt-in/other explicit skips, no failures.
+* Local engineering is not a fresh qualified RAI assessment, witnessed recovery,
+  privacy/legal review, actual-model/Azure delivery, current PRD owner acceptance
+  or operational approval. All 22 checks remain Open; whole-issue acceptance and
+  version-linked real AI/SQL/Azure application acceptance remain unmet.

@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-15
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -589,6 +589,31 @@ for its findings, limitations and remediation-planning basis. Generation-time PE
 entries above remain historical. This is not qualified legal/privacy sign-off,
 remediation closure, approval of PRD v0.16.0 or live-use acceptance. The eleven
 PARTIAL and eleven NOT_ASSESSED checks remain unchanged; live use remains BLOCKED.
+
+### Constructed RAI Evidence Register Engineering (2026-10-18)
+
+Issue #126 adds an append-only constructed-claim register in the existing
+governance API/store, not a governance service or finding-acceptance mechanism.
+The [core contract](../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
+and [API contract](../src/api/README.md#constructed-rai-evidence-register-api-126)
+retain all eleven residuals and eleven unassessed checks with original baseline
+status/verdict and dated planning-only report acceptance. DOWNGRADED stays open.
+Authenticated current managers record claims with exact declared assessed
+source/task/release or explicit nonapplicability, bounded result/references/
+limitations, unverified decision-maker references and server provenance.
+These are not qualified owner assignments, approvals or automatic signatures.
+
+Disposition coverage counts distinct findings in an exact caller-declared
+comparison context, not passing/closed findings. No context is Unknown; changed
+bindings are historical; original-baseline replay never becomes a fresh completed
+assessment. Source-tested, observed, proposed, insufficient and independent-
+acceptance claims remain unverified claims. All findings stay Open and acceptance
+Unknown, even when supplied dispositions cover 22/22. SQL transaction/restart and
+local constructed HTTP/image evidence establish bounded engineering only, not
+witnessed recovery, actual-model quality, privacy/legal approval, current PRD
+acceptance, competent human review or live release. Mandatory version-linked
+real AI/SQL/Azure application acceptance and effective scoped spending authority
+remain separately unmet; no new capture or dispatch authority is granted.
 
 ### Regulatory Evidence and Service Design
 
