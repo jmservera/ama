@@ -6206,3 +6206,31 @@ metadata when the knowledge base was created.
   final-head review/check gate remains pending, issue open. No main/other
   worktree/PR #387 write, operational legal activation, real contracts/spend,
   portal, Azure/paid AI, merge or issue closure.
+
+## [2026-10-18] query | Owner-directed scoped consultation hold (#92)
+
+* Owner direction: "Limit the hold to consultation-dependent actions; preserve
+  unrelated service work". This approves scope behavior, not Legal clearance,
+  contractual power, real spend or deployment. Separate new full RPI task;
+  original consultation research, critique, Review and all prior task artifacts
+  remain byte-exact with their historical verdicts.
+* Removed five blanket consultation checks from ordinary service operations.
+  Supplied consultation history, source/version/hash, recorder and effective
+  unknown remain intact. Existing explicit building dependency/hold scope and
+  case-wide final advancement remain; no label inference or client applicability
+  flag, role, Legal authority, true let/renew or purchase API was added.
+* Removed affected guard-bypass mocks. Fresh local combined checks: 519 run,
+  424 passes/95 skips; core discovery 1117 run, 984 passes/133 skips; API discovery
+  794 run, 542 passes/252 skips; actual owned loopback SQL Server 136 run,
+  135 passes/one intentional skip. Configured core/API lint/format/mypy and
+  25 migration tests pass. Five reintroduced blanket-guard mutants are killed.
+  Results overlap in coverage and are not a unique-test total or live acceptance.
+* Authorized integration was from topic 9fb84836 onto main 9c648b20; source
+  controls and both existing consultation log entries retained after the exact
+  upstream log prefix. Remote main subsequently moved to a86282c4; publication
+  and any further rebase are paused for coordinator direction.
+* Updated component guides, existing profile synthesis and index. No shared
+  SQL-store/queue/server/export implementation edit or active-task overlap.
+  Genuine let/renew, verified Legal authority, human/live acceptance and
+  coordinator exact-head review remain unmet. Issue stays open/partial; no PR,
+  issue/board, deployment, spending, model call or merge action at this checkpoint.

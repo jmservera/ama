@@ -10,8 +10,8 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
 
+from building_fixture import fixture, hold
 from dataset import (
     DATA,
     RESIDENT_BINDINGS,
@@ -27,7 +27,6 @@ from zava_forward.api import server
 
 class ProcurementApiFixture(unittest.TestCase):
     sql = True
-    isolate_consultation = False
 
     def make_store(self, path: Path) -> Any:
         factory: Any = SqlStore if self.sql else Store
@@ -36,12 +35,6 @@ class ProcurementApiFixture(unittest.TestCase):
         )
 
     def setUp(self) -> None:
-        if self.isolate_consultation:
-            consultation = patch(
-                "zava_forward.core.procurement.ProcurementMixin.require_consultation_clear"
-            )
-            consultation.start()
-            self.addCleanup(consultation.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / "synthetic.json"
@@ -131,8 +124,6 @@ class ProcurementApiFixture(unittest.TestCase):
 
 
 class ProcurementApi(ProcurementApiFixture):
-    isolate_consultation = True
-
     def test_package_creation_requires_contract_version(self) -> None:
         body = dict(
             name="SYN new package",
@@ -602,7 +593,7 @@ class ConsultationApi(ProcurementApiFixture):
             },
         )
 
-    def test_supplied_decisions_and_actual_order_hold(self) -> None:
+    def test_supplied_decisions_do_not_hold_unrelated_service_orders(self) -> None:
         route = f"/api/packages/{self.pid}/consultation"
         self.assertEqual(self.call(f"/api/packages/{self.pid}/capacity", self.capacity())[0], 200)
         for version, status in enumerate(("unknown", "applies", "complete", "not_applicable")):
@@ -612,10 +603,13 @@ class ConsultationApi(ProcurementApiFixture):
             self.assertEqual(row["consultation_status"], "unknown")
             self.assertEqual(row["consultation_history"][-1]["status"], status)
             self.assertEqual(row["consultation_authority"], "Unverified")
-            code, result = self.call("/api/workorders", self.issue("ZF-3"))
-            self.assertEqual(code, 400)
-            self.assertIn("Consultation status is unknown", result["error"])
-        self.assertEqual(self.call("/api/workorders")[1], [])
+            with self.assertRaisesRegex(ValueError, "Consultation status is unknown"):
+                self.store.require_consultation_clear(self.store._package(self.pid))
+        self.assertEqual(self.call("/api/workorders", self.issue("ZF-3"))[0], 200)
+        self.assertEqual(len(self.call("/api/workorders")[1]), 1)
+        for action in ("let", "renew"):
+            code, _ = self.call(f"/api/packages/{self.pid}/{action}", {})
+            self.assertEqual(code, 404)
 
     def test_consultation_route_rejects_actor_and_claimed_authority(self) -> None:
         route = f"/api/packages/{self.pid}/consultation"
@@ -628,6 +622,36 @@ class ConsultationApi(ProcurementApiFixture):
         ):
             self.assertEqual(self.call(route, dict(self.decision(), **extra))[0], 400)
         self.assertEqual(self.store.list_packages(self.manager)[0]["consultation_history"], [])
+
+    def test_explicit_held_scope_is_not_released_by_a_supplied_decision(self) -> None:
+        self.assertEqual(self.call(f"/api/packages/{self.pid}/capacity", self.capacity())[0], 200)
+        self.assertEqual(
+            self.call(f"/api/packages/{self.pid}/consultation", self.decision("complete"))[0],
+            200,
+        )
+        with self.store.lock:
+            building = fixture()["buildings"][0]
+            building["works"], building["costs"] = [], []
+            building["holds"] = [
+                dict(
+                    hold(),
+                    label="SYN consultation-dependent work awaiting human review",
+                    status="Unknown",
+                    case_ids=["ZF-3"],
+                    package_ids=[self.pid],
+                )
+            ]
+            self.store.data["buildings"] = [building]
+            self.store._case("ZF-3")["building_id"] = building["id"]
+            self.store.save()
+        before = copy.deepcopy(self.store.data["procurement"])
+        audit = list(self.store.audit_entries())
+        code, result = self.call("/api/workorders", self.issue("ZF-3"))
+        self.assertEqual(code, 409)
+        self.assertIn("consultation-dependent", " ".join(result["reasons"]))
+        self.assertEqual(self.store.data["procurement"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(self.call("/api/workorders", self.issue("ZF-1"))[0], 200)
 
     def test_consultation_version_conflict_and_source_failure(self) -> None:
         route = f"/api/packages/{self.pid}/consultation"

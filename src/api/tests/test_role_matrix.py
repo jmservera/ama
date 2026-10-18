@@ -348,9 +348,6 @@ class Matrix(unittest.TestCase):
             del os.environ["ZF_REASON_ROLES"]
 
     def test_new_endpoints_for_every_role(self):
-        consultation = patch("zava_forward.core.procurement.ProcurementMixin.require_consultation_clear")
-        consultation.start()
-        self.addCleanup(consultation.stop)
         mgr = {s["role"]: s for s in self.store.data["staff"]}["Retrofit Programme Manager"]
         pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1", "SYN-1")
         order_case = copy.deepcopy(self.store.cases["ZF-1"])

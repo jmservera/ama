@@ -475,11 +475,15 @@ presented as Legal and no supplied positive claim clears confirmation.
 
 The [core boundary](../core/README.md#consultation-records-and-confirmation-holds-92)
 explains the missing verified Legal capability and genuine let/renew seam.
-All actual order-issuing/confirming paths now hold, including the existing
-case-advance route. Earlier #90 successful booking/browser evidence above is
-historical, not current #92 acceptance. Its legacy regression class isolates
-only the new guard; separate `ConsultationApi`/`JsonConsultationApi` tests use
-the real unmodified guard. No browser/UI changes were made or newly validated.
+The 2026-10-18 owner decision limits holds to consultation-dependent actions;
+ordinary service order issue/reissue/correction/booking/advance retain their
+independent controls without a blanket consultation prerequisite. Existing
+explicit building dependency scope still holds affected instructions (HTTP 409
+with `reasons`), and final case advancement retains its case-wide building gate.
+Neither source hashes nor supplied complete/not_applicable records release
+those holds or confer Legal authority. Unknown let/renew routes remain HTTP 404,
+not a successful unsupported transition. All affected regression classes now run
+without consultation-guard bypasses. No browser/UI changes were made or newly validated.
 Exact #92 criteria remain partial; no issue closure or legal activation is claimed.
 
 ## Form schema and candidate API (#97)

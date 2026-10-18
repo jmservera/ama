@@ -333,11 +333,11 @@ class ProcurementMixin(AppointmentMixin):
                           authority_status="Unverified", source_status="Supplied human decision; not Legal approval")
             history.append(record)
             p["consultation_status"] = "unknown"
-            self._proc_save(actor, "consultation_recorded", "-", f"{pid} supplied {record['status']}; record {record['version']}; Legal authority unverified; confirmation held")
+            self._proc_save(actor, "consultation_recorded", "-", f"{pid} supplied {record['status']}; record {record['version']}; Legal authority unverified; consultation-dependent actions held")
 
     def require_consultation_clear(self, p):
         # No verified contract-consultation Legal capability exists in the current registry.
-        raise ValueError(f"Consultation status is unknown for {p['id']}. A named authorized Legal adviser must verify the decision before work can be confirmed. Legal consultation authority is not configured; supplied records cannot release this hold.")
+        raise ValueError(f"Consultation status is unknown for {p['id']}. A named authorized Legal adviser must verify the decision before a consultation-dependent action can proceed. Legal consultation authority and contract letting or renewal are not configured; supplied records cannot release this hold.")
 
     def rescope_package(self, user, pid, scope, reason):
         self._need_manager(user, "change a package scope")
@@ -378,7 +378,6 @@ class ProcurementMixin(AppointmentMixin):
         self._need_manager(user, "issue a work order")
         with self._proc_operation(user, "issue", pid=pid) as actor:
             p = self._package(pid)
-            self.require_consultation_clear(p)
             c = self._case(case_id)
             contractor = c["contractor"]["name"]
             authority = self._contract_authority(actor, p, "issue", contractor)
@@ -426,7 +425,6 @@ class ProcurementMixin(AppointmentMixin):
             raise ValueError("Say why the work order is changing.")
         with self._proc_operation(user, "reissue", wid=wid):
             w = self._work_order(wid)
-            self.require_consultation_clear(self._package(w["package"]))
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}' and cannot be changed.")
             self.require_safety_clear(self.cases[w["case_id"]])
@@ -449,7 +447,6 @@ class ProcurementMixin(AppointmentMixin):
                 self.require_appointment_commitment(w)
                 if when != w["appointment_offer"]["date"]:
                     raise ValueError("Booked date must match the confirmed appointment offer.")
-                self.require_consultation_clear(self._package(w["package"]))
                 self._existing_capacity(w, when)
                 self.require_safety_clear(self.cases[w["case_id"]])
                 self._resident_work_order_clear(w)
@@ -486,7 +483,6 @@ class ProcurementMixin(AppointmentMixin):
             raise ValueError("Say what needs correcting.")
         with self._proc_operation(user, "correct", wid=wid):
             w = self._work_order(wid)
-            self.require_consultation_clear(self._package(w["package"]))
             self._existing_capacity(w)
             self.require_safety_clear(self.cases[w["case_id"]])
             self.require_resident_clear(self.cases[w["case_id"]], resident_bindings if resident_bindings is not None else [])
@@ -587,7 +583,6 @@ class ProcurementMixin(AppointmentMixin):
         w = orders[0]
         self.require_appointment_commitment(w)
         when = w["appointment_offer"]["date"]
-        self.require_consultation_clear(self._package(w["package"]))
         cur = w["versions"][-1]
         actor = self.staff.get(cur.get("issuer_email", ""))
         if hasattr(self, "db"):

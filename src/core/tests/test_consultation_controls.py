@@ -1,20 +1,28 @@
-"""Unmocked #92 holds and supplied decisions on tiny fictional contract records."""
+"""Unmocked scoped service behavior and unverified consultation provenance."""
 
 import copy
 import json
 import os
 import tempfile
 import unittest
+from collections.abc import Callable
 from datetime import datetime
 from importlib import import_module
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from dataset import DATA, RESIDENT_BINDINGS, supplied_contract_fixture, supplied_resident_fixture
+from building_fixture import fixture, hold
+from dataset import (
+    DATA,
+    RESIDENT_BINDINGS,
+    supplied_appointment_fixture,
+    supplied_contract_fixture,
+    supplied_resident_fixture,
+)
 from zava_forward.core.procurement import CONSULTATION_STATUSES
 from zava_forward.core.sqlstore import SqlStore
-from zava_forward.core.store import ConflictError, Store
+from zava_forward.core.store import ConflictError, GateError, Store
 
 
 class JsonConsultation(unittest.TestCase):
@@ -129,10 +137,9 @@ class JsonConsultation(unittest.TestCase):
         self.assertEqual(
             self.store.list_packages(self.manager)[0]["consultation_status"], "unknown"
         )
-        with self.assertRaisesRegex(ValueError, "Consultation status is unknown"):
-            self.store.issue_work_order(
-                self.manager, self.pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
-            )
+        self.store.issue_work_order(
+            self.manager, self.pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
+        )
 
     def test_all_supplied_statuses_retain_provenance_and_never_clear(self) -> None:
         for version, status in enumerate(CONSULTATION_STATUSES):
@@ -154,9 +161,7 @@ class JsonConsultation(unittest.TestCase):
             self.assertEqual(row["consultation_status"], "unknown")
             before = self.snapshot()
             with self.assertRaisesRegex(ValueError, "Consultation status is unknown"):
-                self.store.issue_work_order(
-                    self.manager, self.pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
-                )
+                self.store.require_consultation_clear(self.store._package(self.pid))
             self.assertEqual(self.snapshot(), before)
         reopened = self.make_store()
         if self.sql:
@@ -226,46 +231,113 @@ class JsonConsultation(unittest.TestCase):
             self.store.record_consultation(self.manager, self.pid, self.payload())
         self.assertEqual(self.snapshot(), before)
 
-    def test_every_binding_seam_has_a_reachable_consultation_hold(self) -> None:
-        for name, state, invoke in self.binding_seams():
-            with self.subTest(seam=name):
-                self.historical(state)
-                before = self.snapshot()
-                with self.assertRaisesRegex(ValueError, "Consultation status is unknown"):
-                    invoke()
-                self.assertEqual(self.snapshot(), before)
-
-    def binding_seams(self) -> list[tuple[str, str, Any]]:
+    def test_ordinary_service_lifecycle_does_not_require_consultation_clearance(self) -> None:
         s, u = self.store, self.manager
-        return [
-            (
-                "issue",
-                "Issued",
+        s.record_consultation(u, self.pid, self.payload("complete"))
+        wid = s.issue_work_order(u, self.pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        s.reissue_work_order(u, wid, "SYN revised", "Human request", RESIDENT_BINDINGS)
+        supplied_appointment_fixture(s, u, wid)
+        s.record_wo_appointment(u, wid, "Booked", "2099-01-01")
+        s.advance(u, "ZF-3")
+        self.assertEqual(s.detail("ZF-3")["stage"], "Install booked")
+        s.complete_work_order(u, wid, "SYN factual completion")
+        s.correct_work_order(u, wid, "SYN correction", resident_bindings=RESIDENT_BINDINGS)
+        self.assertEqual(s._work_order(wid)["state"], "Issued")
+        self.assertEqual(s.list_packages(u)[0]["consultation_status"], "unknown")
+        self.assertEqual(
+            s.list_packages(u)[0]["consultation_history"][0]["authority_status"], "Unverified"
+        )
+        self.assertTrue(s.verify_audit())
+
+    def test_explicit_dependent_scope_stays_held_without_spreading_clearance(self) -> None:
+        s, u = self.store, self.manager
+        wid = s.issue_work_order(u, self.pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(s, u, wid)
+        s.record_wo_appointment(u, wid, "Booked", "2099-01-01")
+        with s.lock:
+            building = fixture()["buildings"][0]
+            building["works"] = []
+            building["costs"] = []
+            dependency = dict(
+                hold(),
+                label="SYN consultation-dependent work awaiting human review",
+                status="Unknown",
+                case_ids=["ZF-3"],
+                package_ids=[self.pid],
+            )
+            building["holds"] = [dependency]
+            s.data["buildings"] = [building]
+            for cid in ("ZF-2", "ZF-3"):
+                s._case(cid)["building_id"] = building["id"]
+            s._case("ZF-2")["funding_ok"] = True
+            s.save()
+        for version, status in enumerate(("complete", "not_applicable")):
+            s.record_consultation(u, self.pid, self.payload(status, version))
+            operations: tuple[Callable[[], Any], ...] = (
                 lambda: s.issue_work_order(
-                    u, self.pid, "ZF-1", resident_bindings=RESIDENT_BINDINGS
+                    u, self.pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
                 ),
-            ),
-            (
-                "reissue",
-                "Issued",
-                lambda: s.reissue_work_order(
-                    u, "WO-HIST", "SYN revised", "Human request", RESIDENT_BINDINGS
-                ),
-            ),
-            (
-                "correct",
-                "Completed",
-                lambda: s.correct_work_order(
-                    u, "WO-HIST", "Human correction", resident_bindings=RESIDENT_BINDINGS
-                ),
-            ),
-            (
-                "booking",
-                "Issued",
-                lambda: s.record_wo_appointment(u, "WO-HIST", "Booked", "2099-02-02"),
-            ),
-            ("final ordering", "Appointed", lambda: s.advance(u, "ZF-3")),
-        ]
+                lambda: s.reissue_work_order(u, wid, "SYN", "SYN change", RESIDENT_BINDINGS),
+                lambda: s.record_wo_appointment(u, wid, "Booked", "2099-01-01"),
+                lambda: s.advance(u, "ZF-3"),
+            )
+            for index, operation in enumerate(operations):
+                with self.subTest(status=status, operation=index):
+                    before, cases = self.snapshot(), copy.deepcopy(s.cases)
+                    with self.assertRaisesRegex(GateError, "consultation-dependent"):
+                        operation()
+                    self.assertEqual(self.snapshot(), before)
+                    self.assertEqual(s.cases, cases)
+        s.complete_work_order(u, wid, "SYN historical completion")
+        before = self.snapshot()
+        with self.assertRaisesRegex(GateError, "consultation-dependent"):
+            s.correct_work_order(u, wid, "SYN correction", resident_bindings=RESIDENT_BINDINGS)
+        self.assertEqual(self.snapshot(), before)
+        sibling = s.issue_work_order(u, self.pid, "ZF-2", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(s, u, sibling)
+        s.record_wo_appointment(u, sibling, "Booked", "2099-01-01")
+        s.advance(u, "ZF-2")
+        self.assertEqual(s.detail("ZF-2")["stage"], "Install booked")
+        self.assertEqual(s.list_packages(u)[0]["consultation_status"], "unknown")
+        self.assertTrue(s.verify_audit())
+
+    def test_package_operations_retain_the_casewide_final_advance_hold(self) -> None:
+        s, u = self.store, self.manager
+        with s.lock:
+            building = fixture()["buildings"][0]
+            building["works"] = []
+            building["costs"] = []
+            building["holds"] = [
+                dict(
+                    hold(),
+                    label="SYN consultation-dependent work awaiting human review",
+                    status="Unknown",
+                    case_ids=["ZF-3"],
+                    package_ids=[self.pid],
+                )
+            ]
+            s.data["buildings"] = [building]
+            s._case("ZF-3")["building_id"] = building["id"]
+            s.save()
+        other = s.create_package(
+            u, "SYN other", "2026-01-01", "2099-12-31", "Loft", "SYN-OTHER", "SYN-1"
+        )
+        source = supplied_contract_fixture(s, other, u)
+        s.set_capacity(u, other, "Test Ltd", 5, 5, "SYN commitment", source)
+        order = s.issue_work_order(u, other, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        s.reissue_work_order(u, order, "SYN revised", "SYN change", RESIDENT_BINDINGS)
+        supplied_appointment_fixture(s, u, order)
+        s.record_wo_appointment(u, order, "Booked", "2099-01-01")
+        s.require_booked_capacity(s.cases["ZF-3"])
+        before, cases = self.snapshot(), copy.deepcopy(s.cases)
+        with self.assertRaisesRegex(GateError, "consultation-dependent"):
+            s.advance(u, "ZF-3")
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(s.cases, cases)
+        self.assertEqual(len(s._proc()["work_orders"]), 1)
+        self.assertEqual(s.list_packages(u)[0]["consultation_status"], "unknown")
+        self.assertEqual(len(s.list_packages(u)[1]["consultation_history"]), 0)
+        self.assertTrue(s.verify_audit())
 
     def test_positive_claim_mutations_cannot_mint_authority(self) -> None:
         self.store.record_consultation(self.manager, self.pid, self.payload("complete"))
@@ -287,6 +359,7 @@ class JsonConsultation(unittest.TestCase):
         self.store.record_wo_appointment(self.manager, "WO-HIST", "No access")
         self.assertEqual(self.store.list_work_orders(self.manager)[0]["state"], "Issued")
         self.historical("Appointed")
+        supplied_appointment_fixture(self.store, self.manager, "WO-HIST")
         self.store.complete_work_order(self.manager, "WO-HIST", "Historical completion evidence")
         self.assertEqual(self.store.list_work_orders(self.manager)[0]["state"], "Completed")
         self.historical()

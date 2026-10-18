@@ -464,18 +464,29 @@ but no verified contract-consultation Legal capability. ADR 0005's named exercis
 Legal owner is scoped to fictional rule-card/source review, not contract approval.
 No new role/mapping/designation is added. Effective status therefore remains
 unknown for every supplied decision, including complete and not_applicable.
-Issuance, reissue, correction/reopening, positive work-order booking and case
-advancement through the booked-order gate refuse confirmation explicitly.
-There is deliberately no application path to release this hold. Draft package
-creation/rescope, capacity recording, negative appointment outcomes, withdrawal
-and factual historical completion remain subject to their existing controls.
+Owner direction on 2026-10-18 limits the hold to consultation-dependent actions
+and preserves unrelated service work. Ordinary order issuance, reissue,
+correction, positive booking and case advancement do not require consultation
+clearance. Their existing contract-action authority, provider/capacity, resident,
+hazard, building, appointment, stock, technical and funding controls remain.
+No operation becomes consultation-dependent merely because of a label, tenure,
+client boolean, source hash or supplied positive status.
+
+Existing building dependencies and holds still block their explicitly affected
+case/package instructions, including Unknown status and unknown applicability.
+Another package can pass package-aware checks, but final case advancement keeps
+its existing case-wide building hold. A different eligible case does not inherit
+an explicitly case-scoped hold. These are existing generic dependency controls,
+not verified Legal applicability or clearance. `require_consultation_clear`
+still refuses unconditionally; no genuine contract let/renew transition or
+Legal-clearance path exists. Neither is invented here.
 
 Consultation uses the existing procurement JSON document and SQL writer
 validation: current recorder, original procurement snapshot and source-case
 rowversion are rechecked in the transaction. No Store/schema changes or approved
 fixture backfills are made. Application history is not a legally signed record.
-This is **partial #92 acceptance**: supplied statuses and actual order holds are
-implemented, but a verified named Legal record and a dedicated contract/framework/
+This is **partial #92 acceptance**: supplied statuses and existing scoped dependency
+holds are implemented, but a verified named Legal record and a dedicated contract/framework/
 call-off let/renew workflow are absent. Neither a draft nor a case advance is
 claimed as exact letting/renewal acceptance. Both issue criteria remain partial.
 
@@ -486,11 +497,11 @@ PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests \
   .venv/bin/python -m unittest test_consultation_controls test_procurement_api -q
 ```
 
-The new semantic tests never bypass the consultation guard, including setup:
-explicit historical orders reach downstream seams without invented approvals.
-Legacy procurement, building, hazard, resident and role-matrix regression tests
-explicitly isolate only this guard to exercise their independent controls;
-their successful work flows are not available application clearance paths.
+Semantic and procurement, building, hazard, resident and role-matrix regressions
+exercise real scoped behavior without consultation-guard bypass mocks. Ordinary
+service lifecycle success does not turn effective unknown into Legal clearance.
+Main's independent resident/staff/capacity appointment commitments are exercised
+through the existing explicit synthetic fixture helper, never patched off.
 For a disposable, task-owned local SQL Server only, set existing `ZF_SQL_*`
 connection settings and `ZF_TEST_MSSQL=1`, then run
 `test_consultation_controls.MssqlConsultation` with

@@ -979,7 +979,11 @@ named exercise Legal capacity covers fictional rule cards/source proposals,
 not contract consultation. No new role, mapping, grant or fabricated approval
 was introduced.
 
-Unknown holds actual issue, reissue, correction/reopening, positive booking
+The historical 2026-10-17 implementation below is superseded for hold scope only
+by the 2026-10-18 owner direction in the next subsection; its original evidence
+and independent verdict are not amended.
+
+Unknown held actual issue, reissue, correction/reopening, positive booking
 and final-order case advancement. Drafts, capacity, negative appointments,
 withdrawal and factual historical completion retain existing checks. Unmocked
 fictional tests reach downstream seams using explicit historical orders, not
@@ -1010,3 +1014,36 @@ does not prohibit that mechanic. A bounded coordinator follow-up can separately
 plan the package-linked authoritative let/renew transition and exact consultation
 guard, with fictional unknown/stale/unauthorized tests and no live contracts,
 financial purchase API or portal. It is not current plan completion or acceptance.
+
+## Scoped consultation hold owner direction (2026-10-18, #92)
+
+The owner directed: "Limit the hold to consultation-dependent actions; preserve
+unrelated service work". This approves scope behavior, not Legal clearance,
+contractual power, spend or deployment. A separate new full RPI task preserves
+all prior consultation-record-controls-92 evidence and original verdicts.
+
+Source trace found no genuine contract/framework/call-off let/renew transition
+or authoritative consultation-applicability relation. Existing contract-action
+delegations and capacity case/provider/source bindings are not Legal authority.
+No client boolean, naming inference, fixture hash or supplied source status
+can establish applicability or clearance. All supplied decisions remain
+unverified, with effective status unknown and source/recorder/version intact.
+
+Five indiscriminate consultation checks were removed from ordinary service order
+issue, reissue, correction, positive booking and final advance. Existing
+source-backed building dependencies/holds keep their exact case/package scope
+and unknown-applicability refusals. Package-aware instructions can exclude
+another package's hold, but final case advancement retains the existing case-wide
+building gate. Different-case eligibility remains independent. These generic
+scoped holds are not a verified Legal consultation workflow.
+
+Main's appointment resident/staff/capacity commitment, hazard/resident/stock/
+funding/technical/provider permissions and SQL optimistic/atomic writer controls
+are retained. Direct consultation refusal remains unconditional. No web, role,
+SQL-store, queue or export implementation changed; no approval was manufactured
+to obtain service success, and affected regression bypass mocks were removed.
+
+Both exact issue criteria remain partial. Actual Legal authority, genuine
+let/renew enforcement, human/live acceptance and coordinator final-head
+independent review remain unmet. No issue, board, merge or deployment action
+is authorized by these engineering results.
