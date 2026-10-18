@@ -172,9 +172,9 @@ Changes: .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-
 Compatible critique disposition applied directly. Implementation complete:
 both phases/tasks checked with actual local validation
 in changes. One original Review complete: Residual work, no bounded defects.
-Coordinator now authorizes same-task integration/publication onto exact a86282c4.
-Separate integration receipt will record parity, fresh validation and publication.
-Stop afterward for coordinator independent review, without another original Review.
+Prior a86282c4 integration receipt records parity and the historical publication
+pause. Latest exact ab0613f3 integration/publication is complete as recorded below.
+Stop for coordinator independent review, without another original Review.
 
 Integration validation complete at source candidate
 adc9ad984cd9cd6bcfbd30db6d52485d9506ab47: clean rebase with no conflicts;
@@ -186,11 +186,11 @@ typed files). Existing SQL/image evidence remains historical: no production
 conflict or integration-authored persistence change.
 
 Coordinator subsequently cleared that publication wait: same-task integration
-and publication on exact ab0613f3 are now authorized from local c6732027.
+and publication on exact ab0613f3 were authorized from local c6732027.
 Use a new receipt, preserve both historical receipts/logs byte-identically,
-and keep original Review/critique unchanged. Current next action is minimal
-integration validation then exact-lease publication and PR389 update; stop
-afterward for full coordinator independent exact-head review.
+and keep original Review/critique unchanged. Minimal validation, initial exact
+lease and PR389 update completed; current next action is the full coordinator
+independent exact-head review after receipt-only normal publication.
 
 Exact ab0613f3 integration completed conflict-free at aafcd504. Complete owned
 normalized source patch parity, protected upstream blob parity, all fifteen
@@ -199,4 +199,10 @@ pass; old-local KB log is an exact prefix. Fresh minimal consultation/provider/
 workflow/API/timecapture: 235 run, 222 passed, 13 skips; core/API static checks
 pass (125/56 typed files). No source/persistence/packaging conflict or broader
 rerun. New receipt: issue-92-scoped-consultation-hold-integration-dpia.md beside
-changes; next action exact-lease publication, PR metadata, then coordinator gate.
+changes. Exact lease then published 5fdc9d46 and PR389 was updated/verified:
+head 5fdc9d46, base main/ab0613f3, empty closing refs, unchanged open/non-draft
+state. Receipt-only closeout uses normal push and exact final-head PR refresh.
+Integration/publication complete; no active implementation markers remain.
+Automatic session stopped as directed for coordinator independent review and
+current checks. Original new Review remains Residual work, no bounded defects.
+Legal/genuine let-renew/human/live acceptance remains unmet; no new child work.

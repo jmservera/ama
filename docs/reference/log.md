@@ -6291,3 +6291,17 @@ metadata when the knowledge base was created.
   Legal authority, genuine let/renew, human/live acceptance and independent
   exact-head review remain unmet. No private inputs, Azure/spend, issue/board
   write, review checkbox completion, ready-state change or merge.
+
+## [2026-10-18] integration | Scoped consultation exact-base publication (#92)
+
+* Initial exact expected-head lease succeeded, publishing 5fdc9d46 on authorized
+  ab0613f3. PR389 updated with scoped owner direction, full old/new RPI,
+  immutable assessments, exact head/base and unmet acceptance gates; closing
+  references verified empty. Remote main still ab0613f3 at publication.
+* Final receipt-only closeout is normal-pushed and PR head refreshed; no source
+  correction or second original assessment. Complete changed-path inventory
+  and original/fresh execution logs are retained. Hosted checks and full
+  coordinator independent exact-head review remain pending, not accepted.
+* Integration/publication task complete, automatic session stopped as directed.
+  Legal authority, genuine let/renew and human/live acceptance remain unmet.
+  No issue/board/merge/ready-state operation or review checkbox completion.

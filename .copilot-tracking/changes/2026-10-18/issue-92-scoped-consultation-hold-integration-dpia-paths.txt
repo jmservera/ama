@@ -4,6 +4,7 @@
 .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-inventory.json.gz
 .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-parity.json
 .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-paths.txt
+.copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-publication.log
 .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-static.log
 .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia.md
 .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-focused.txt

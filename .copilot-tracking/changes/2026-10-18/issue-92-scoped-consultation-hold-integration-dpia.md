@@ -173,3 +173,36 @@ Neither actual verified Legal approval nor genuine contract/framework/call-off
 let/renew software integration exists. Both exact issue criteria remain partial;
 human/resident/live acceptance and full coordinator independent exact-head
 review remain unmet. Publish and stop; no follow-up implementation.
+
+## Executed publication and coordinator handoff
+
+The single authorized exact-old-head lease succeeded, publishing
+`5fdc9d46946330f2d0ffe3ce56288987635f3eeb` from remote expected
+`9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7`. The lease is consumed; all
+subsequent pushes are normal fast-forward pushes only. Adjacent
+`-dpia-publication.log` retains the actual command output.
+
+PR389 body was updated with scoped owner direction, exact published head/base,
+old/new complete RPI and immutable hashes, fresh/historical evidence, full path
+inventory, source parity and unmet Legal/genuine let-renew/human/live gates.
+Read-only verification: open, existing non-draft state unchanged, exact head
+5fdc9d46, baseRefName main, baseRefOid ab0613f3, empty closingIssuesReferences.
+Observed remote main at publication/PR update was still exact ab0613f3.
+Hosted checks were in progress, not claimed passed or independently accepted.
+
+This closeout changes only receipt/current metadata and appends a KB log entry.
+The final handoff head is the commit containing this section, obtained with
+`git rev-parse HEAD`; normal-push and PR exact-head refresh follow, with read-only
+final head/base/closing-ref/clean-status verification. The complete 35-path
+changed inventory includes the publication log and remains committed. Final
+verification output and final exact tree/parity manifest are retained in the
+same permitted session files as `dpia-final-verification.json`,
+`dpia-final-parity.json`, `dpia-final-full-inventory.json.gz`,
+`dpia-normal-publication.log` and `dpia-pr-final.json`.
+
+Task status completed means only this authorized integration/publication scope,
+not full issue acceptance. Mode automatic, phase Follow-up, session stopped by
+explicit user direction. No bounded defect or source correction was introduced;
+original scoped Review remains Complete / Residual work. Coordinator owns full
+independent final-head review and any fresh gate if main subsequently moves.
+No review boxes, issue/board write, merge or follow-up implementation.

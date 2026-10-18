@@ -13,9 +13,10 @@ Implementation complete; declared scope full plan P01/P02. All markers complete.
 Approved writes: five procurement call removals, truthful refusal/audit wording,
 coupled tests and documentation. No shared server/SQL/schema/role/web changes.
 Remaining active implementation markers: none. One original Review complete.
-No safe-implementation blocker. Authorized integration onto a86282c4 is complete
-locally. Coordinator now authorizes exact ab0613f3 integration/publication;
-the prior main-movement stop below remains historical evidence.
+No safe-implementation blocker. Exact authorized ab0613f3 integration and
+publication complete; receipt-only closeout uses normal push. Automatic session
+stopped for coordinator independent exact-head review. Earlier publication
+stops and validation records below are historical, not current blockers.
 
 ## Execution Summary
 
@@ -46,8 +47,9 @@ remains unchanged; no second critique. Three-way scope test matrix locked.
 
 ## Blockers and Remaining Work
 
-No implementation blocker. Actual Legal approval and true let/renew remain unmet.
-P01/P02 complete and reconciled. Original Review complete; publication waits for coordinator.
+No implementation or publication blocker. Actual Legal approval and true let/renew
+remain unmet. P01/P02 complete; original Review unchanged. Integration/publication
+complete; coordinator independent exact-head review and current checks remain.
 
 ## Completed Work
 
@@ -300,3 +302,23 @@ combined queue smoke and broad/full RPI suites not repeated. Actual 135 SQL
 passes and existing image/hardened-runtime evidence remain historical only.
 No new Review/critique, private data, cloud, spend or live acceptance.
 Current plan/details/state reconciled; exact-lease publication and PR update next.
+
+### Exact-base publication executed and stopped for coordinator
+
+Authorized single force-with-lease succeeded: expected remote 9fb84836 became
+5fdc9d46946330f2d0ffe3ce56288987635f3eeb. PR389 body updated and read-only
+verified at that head, base main/ab0613f3, open and existing non-draft state
+unchanged, empty closingIssuesReferences. Main still ab0613f3 at publication.
+Current hosted checks in progress, not accepted. No issue/board/merge/ready-state
+action or review checkbox completion. Only Refs #92 as issue reference.
+
+Final closeout is receipt/current-metadata only, normal-push only after the
+initial lease; PR body is refreshed to its exact final commit. The final tip is
+the commit containing this entry, discoverable through git/PR and returned to
+coordinator. Committed 35-path inventory includes actual lease output; full
+final parity/tree and verification receipts remain in worker session files.
+Old/new original critiques/Reviews and previous receipts remain byte-identical.
+All fresh minimal checks pass; broad, SQL and image evidence remains historical.
+Task integration/publication complete; automatic session stopped by explicit
+direction. Stop for full coordinator independent exact-head review and checks.
+Legal/genuine let-renew/human/live acceptance remains unmet; no child task.

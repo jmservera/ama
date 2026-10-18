@@ -145,4 +145,12 @@ receipt files match; both README additions, queue/DPIA sections and old-local
 append-only log prefix remain. Fresh minimal 235 run/222 pass/13 skips, 69.660s;
 configured core/API Ruff/format/mypy pass (72/24 formatted, 125/56 typed).
 Previous combined queue, broad suites, SQL and image results remain inherited,
-not rerun. No failed check in this continuation. Publication gate is next.
+not rerun. No failed check in this continuation.
+
+Publication executed: initial single authorized force lease published 5fdc9d46;
+PR389 updated and verified exact head, main/ab0613f3 base, open/non-draft unchanged,
+empty closing refs. Hosted checks pending. The closeout commit is receipt-only;
+normal push and final PR exact-head refresh complete delivery. No second lease
+or rebase. Final complete changed-path manifest has 35 paths. Current state
+completed/Follow-up, automatic session stopped for coordinator independent review;
+no source correction, second original assessment or independent acceptance claim.
