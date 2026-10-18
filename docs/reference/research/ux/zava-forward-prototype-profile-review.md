@@ -28,12 +28,17 @@ not owner-approved role mappings. Existing journeys are research hypotheses.
 The [PRD evidence trace](../../../prds/zava-forward-retrofit-programme-demonstrator.md#brd-and-evidence-trace)
 retains upstream authority and proposed-requirement limits.
 
-Complete current/future screen-backlog coverage is **unknown**. Import/export,
+At the original fifteen-row inspection, complete current/future screen-backlog
+coverage was **unknown**. The later
+[bounded issue inventory](#screen-backlog-coverage-snapshot-2026-10-18-156)
+enumerates the remaining feature coverage without changing this original gate
+record or supplying missing designs. Import/export,
 operations/account, direct resident/representative screens
 ([#154](https://github.com/jmservera/ama/issues/154)), regulatory alerts/chat
 ([#215](https://github.com/jmservera/ama/issues/215)) and other feature-specific
-states are outside this finite inventory. The coordinator must reconcile the
-remaining screen features before claiming #156's universal coverage criterion.
+states were outside this finite inventory. The dated inventory continuation
+below now reconciles those feature scopes; #156's universal criterion still
+requires the actual missing design artifacts and flow evidence.
 [#233](https://github.com/jmservera/ama/issues/233) remains the wider atlas-to-screen
 workstream, not a claim that this register covers every atlas journey.
 
@@ -168,6 +173,301 @@ silently approved by this checklist.
 | Human design review | Not supplied; not accepted by a person |
 | User-research validation | Not supplied; not validated |
 | Overall design gate | Blocked; no #156 AC, board or parent acceptance changed |
+
+## Screen backlog coverage snapshot (2026-10-18, #156)
+
+This is the inventory continuation of
+[#156](https://github.com/jmservera/ama/issues/156), not a replacement for
+T01-T11/C01-C04, D01-D04 or G156 above. The
+[owner's partial-delivery record](https://github.com/jmservera/ama/issues/156#issuecomment-6245518420)
+keeps AC1 unticked after [#400](https://github.com/jmservera/ama/pull/400).
+The source work below is complete for its declared issue universe; absent
+design artifacts do not make inventory enumeration human-blocked.
+
+### Universe, provenance and classification rules
+
+The snapshot contains **all 184 public repository issues**, 139 open and
+45 closed, captured on 2026-10-18 with retrieval completed before
+**04:13:45 UTC**. It includes the open backlog and closed/delivered features,
+not just fifteen profile examples. Issue numbers are sparse, from 6 to 360.
+Pull requests, PR comments as separate backlog items, private data and work not
+expressed as a repository issue are excluded. New issues or subsequent scope
+changes require a dated delta; this is not a claim about all future screens.
+
+The coordinator's all-state export (500 maximum) contained
+184 unique issues, below its 500 cap. Independently traversing every REST page
+with `gh api --paginate 'repos/jmservera/ama/issues?state=all&per_page=100'`,
+excluding objects with `pull_request`, returned the same 184 IDs and per-ID
+states: zero missing, extra, duplicate or state-mismatched issues. The
+[REST issue source](https://api.github.com/repos/jmservera/ama/issues?state=all&per_page=100)
+is mutable; the membership/state tables below are the frozen public projection.
+Original export SHA-256:
+`e3774b99ab045926f971b47b321847d35fef59c5368ecf1b3bedba7f28291117`;
+captured REST JSONL SHA-256:
+`c3364f3da214433d9773e1b02cfbc3a0efc432f062ba5c942408c6e7bc341016`.
+Raw exports remain temporary, not a second knowledge library.
+
+Issue scope/acceptance text was read, including non-screen-named stories and
+all ambiguities. Linked current-source context is pinned to repository
+**`2ca6d1c48bb95b65e6c349fe508e99c00a74efbe`** (also this slice's base);
+the [PRD][bc-prd] is candidate v0.17.0, not fresh approval.
+Live issue delivery paragraphs can be stale: #162 still says chat endpoints
+do not exist, while the [current panel guide][bc-panel] describes merged
+#160-163 storage. Source existence does not establish current rendered behavior.
+
+| Exclusive classification | Total | Open | Closed | Meaning |
+| --- | --- | --- | --- | --- |
+| includes-screen | 74 | 57 | 17 | Explicit user-visible task, content, state or effect on a screen; includes cross-cutting changes, not only new pages |
+| no-screen | 86 | 59 | 27 | Inspected scope requires data, service, tests, research, documentation or infrastructure, without an additional prescribed screen |
+| epic-covered | 16 | 16 | 0 | Aggregate routed to classified children; "covered" means inventory routing, not delivered or accepted |
+| unknown | 8 | 7 | 1 | Body reviewed; screen versus CLI/report/manual delivery remains an actual owner choice |
+| Total | 184 | 139 | 45 | Disjoint membership, including closed issues; no silently omitted remainder |
+
+Classification is intentionally conservative about visible effects. #327 stays
+screen-bearing despite being a queue-performance fix; #160 storage prescribes
+user thread actions; #110 ingestion requires visible exceptions. Conversely
+#105's schema/envelope and #162's server isolation prescribe no additional UI;
+their visible dependencies are #219 and #159-161. #117 has visible document
+availability/retention controls in current source; #210 explicitly requires a
+non-AI provision viewer. These distinctions cannot be proved by matching totals
+or title keywords alone.
+
+### Known screen features and exact trace or gap
+
+Every row below is **includes-screen**. O/C records issue Open/Closed at the
+snapshot, not design acceptance. The issue link targets its acceptance criteria
+and is the feature/check provenance; checks remain required, not newly executed.
+Journeys are hypotheses. A stage-based journey is not silently a detailed screen
+task flow: where only partial flow context exists, the feature-specific gap is
+explicit. T/C references identify exact existing rows in the
+[profile trace](#profile-design-trace) or [core trace](#shared-core-flow-design-trace).
+
+**All 74 issues lack a supplied current reviewable screen-design version.**
+`NOT SUPPLIED` in the design column names that gap, not missing code or a
+human approval. H/E retain their exact historical/engineering versions above;
+only the explicitly named historical portion is linked, never the whole later
+feature. API guides are supporting engineering evidence, not design artifacts.
+Responsible roles are requested owners, not named delegations. For every row,
+the design owner must supply a versioned candidate including applicable default,
+focus, disabled, loading, empty, error, blocked and recovery states, then apply
+the [existing design gate](#design-review-checklist-and-definition-of-done).
+The last column adds the domain-specific missing evidence/action.
+
+| Issue / state / screen evidence and check | Exact journey section | Existing task flow / explicit feature gap | Design artifact and version evidence | Responsible role / next action |
+| --- | --- | --- | --- | --- |
+| [#74](https://github.com/jmservera/ama/issues/74#acceptance-criteria) O: versioned home links and separate shared/per-home evidence | [Connected stages 2-3][bc-connected] | [Lifecycle/return][bc-lifecycle]; detailed linked-record navigation NOT SUPPLIED | NOT SUPPLIED; [H][design-h] T03 separate-home examples only | Programme + design / specify linked-record navigation without inherited approval |
+| [#75](https://github.com/jmservera/ama/issues/75#acceptance-criteria) O: shared building systems, holds and cost views; [engineering](../../../../src/api/README.md#building-shared-context-issue-75) | [Designer/coordinator][bc-technical] | [Lifecycle/return][bc-lifecycle] dependency context; building-view task flow NOT SUPPLIED | NOT SUPPLIED | Technical + design / separate shared facts, home cost allocations and independent decisions |
+| [#76](https://github.com/jmservera/ama/issues/76#acceptance-criteria) O: role queues, full-screen case and visible next action; [engineering](../../../../src/api/README.md#role-task-queues-and-shared-case-context-76) | [Programme planner][bc-programme] | [Profile flow][bc-profile], Programme coordinator; C01-C03 partial | NOT SUPPLIED; [H][design-h]/[E][design-e] C01-C03 only | Workbench + Programme design / cover all queue signals and current accountable ownership |
+| [#77](https://github.com/jmservera/ama/issues/77#acceptance-criteria) C: signal definitions, active scope and reset; [dated source](#queue-signal-engineering-continuation-2026-10-17-77) | [Programme planner][bc-programme] | [IA flow][bc-ia], own/programme -> filter -> reset; C01 | NOT SUPPLIED; [H][design-h]/[E][design-e] C01 partial | Workbench design / design exact versioned default, reset, selected rationale and unknown owner states |
+| [#78](https://github.com/jmservera/ama/issues/78#acceptance-criteria) C: editable fields and bulk preview; [engineering](../../../../src/api/README.md#controlled-bulk-preview-api-78) | [Data steward][bc-data] | NOT SUPPLIED for preview -> inspect failures -> apply -> per-case outcome | NOT SUPPLIED | Data + design / show source/version/reason and forbidden controlled actions in preview/recovery |
+| [#79](https://github.com/jmservera/ama/issues/79#acceptance-criteria) O: ranking reason codes and policy owner; [source behavior][bc-staff] | [Asset baseline][bc-asset] | [Asset flow][bc-eleven] T01 partial; policy inspection task flow NOT SUPPLIED | NOT SUPPLIED; [H][design-h] T01 queue only | Asset/policy + design / supply explain-order and unsigned/unknown policy-owner states |
+| [#80](https://github.com/jmservera/ama/issues/80#acceptance-criteria) O: workbook mapping/conflict preview and every-list export | [Data steward][bc-data] | NOT SUPPLIED for import/row fix/export/read-only comparison | NOT SUPPLIED | Data + design / design declared workbook errors, lineage and one-way source protection |
+| [#82](https://github.com/jmservera/ama/issues/82#acceptance-criteria) O: pass/fail/unknown reasons at controlled transitions | [Connected stages 3-6][bc-connected] | [Lifecycle/return][bc-lifecycle]; C03 partial | NOT SUPPLIED; [H][design-h] blocked examples, not all gates | Programme/control + design / show each missing prerequisite and independent authority |
+| [#83](https://github.com/jmservera/ama/issues/83#acceptance-criteria) O: return/reopen and distinct handoff ownership states; [engineering](../../../../src/api/README.md#return-and-handoff-api-83) | [Programme planner][bc-programme] | [Lifecycle/return][bc-lifecycle]; [profile flow][bc-profile], Programme coordinator | NOT SUPPLIED; [H][design-h] T02/C03 returned example only | Programme + design / separate sent, receipt, acceptance, chase and update ownership |
+| [#84](https://github.com/jmservera/ama/issues/84#acceptance-criteria) C: both stock values, sign-offs and design version; [engineering](../../../../src/api/README.md#stock-reconciliation-api-84) | [Assessor][bc-assessor] / [designer][bc-technical] | [Technical flow][bc-eleven] T04; conflict-to-reapproval details NOT SUPPLIED | NOT SUPPLIED; [H][design-h] T04 missing-reference example | Technical + design / design compared sources and only affected reapproval |
+| [#85](https://github.com/jmservera/ama/issues/85#acceptance-criteria) C: visible referral receipt/acceptance, hold and service times | [Repairs/hazard][bc-safety] | [Safety flow][bc-eleven] T06 | NOT SUPPLIED; [H][design-h] T06 historical referral only | Safety + design / retain external hazard authority, unknown times and owned follow-up |
+| [#86](https://github.com/jmservera/ama/issues/86#acceptance-criteria) O: per-measure decisions, representative authority and withdrawal; [engineering](../../../../src/api/README.md#resident-decisions-and-representative-api-86) | [Household][bc-household] / [representative][bc-representative] | [Profile flow][bc-profile], Housing and Resident Engagement; pause/authority expiry details NOT SUPPLIED | NOT SUPPLIED; [H][design-h] T05 contact only, not decision-state designs | Housing + design / design Not recorded, limited/disputed authority and scoped pause/review |
+| [#87](https://github.com/jmservera/ama/issues/87#acceptance-criteria) C: offers, confirmed commitments and household constraints | [Household][bc-household] | [Appointment boundary](./customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87); full offer/confirmation task-flow design NOT SUPPLIED | NOT SUPPLIED | Housing/coordination + design / show three confirmations, no-access investigation and independent urgent route |
+| [#88](https://github.com/jmservera/ama/issues/88#acceptance-criteria) C: update commitments and separately owned remedy states | [Engagement][bc-engagement] / [redress][bc-redress] | [Resident criterion audit](./customer-journeys/residents.md#resident-commitment-and-remedy-criterion-audit-2026-10-17-88); update/remedy screen flow NOT SUPPLIED | NOT SUPPLIED | Housing/redress + design / separate response, remedy, defect, charge-query and closure states |
+| [#90](https://github.com/jmservera/ama/issues/90#acceptance-criteria) C: committed capacity, versioned orders and own-order view | [Procurement][bc-supplier] | [Procurement flow][bc-eleven] T07; [profile flow][bc-profile], Provider T08 partial | NOT SUPPLIED; [H][design-h] T07/08 draft package, no booking/portal | Procurement + design / show capacity evidence, instruction authority and draft-only readiness |
+| [#91](https://github.com/jmservera/ama/issues/91#acceptance-criteria) C: checklist, defects, remediation and independent handover | [Independent QA][bc-quality] | [Quality flow][bc-eleven] T09; [lifecycle][bc-lifecycle] | NOT SUPPLIED; [H][design-h] T09 incomplete-pack example | Quality + design / design current per-measure review, evidence replacement and reinspection |
+| [#92](https://github.com/jmservera/ama/issues/92#acceptance-criteria) O: recorded consultation status controlling contract release | [Leasehold service][bc-leasehold] | NOT SUPPLIED for Legal status -> contract let/renew block -> reviewed resolution | NOT SUPPLIED | Legal/contracts + design / decide status-entry/review surface; unknown blocks release, no lease inference |
+| [#94](https://github.com/jmservera/ama/issues/94#acceptance-criteria) C: invoice intake, line exceptions, holds and Finance disposition | [Payment officer][bc-payment] | [Profile flow][bc-profile], Finance and Grants T10 | NOT SUPPLIED; [H][design-h] T10 invoice exception only | Finance + design / design line comparison, independent review and record-only outcome |
+| [#95](https://github.com/jmservera/ama/issues/95#acceptance-criteria) C: separate grant stages and dashboard meaning | [Grant preparer][bc-finance] / [approver][bc-finance-approver] | [Profile flow][bc-profile], Finance T10 partial; full grant-stage flow NOT SUPPLIED | NOT SUPPLIED; [H][design-h] does not cover later application/export contract | Finance/grants + design / separate opportunity, application, award, claim and cash evidence |
+| [#96](https://github.com/jmservera/ama/issues/96#acceptance-criteria) O: assisted form review, validation and export | [Grant preparer][bc-finance] | [Assisted form sequence][bc-forms]; T10 partial | NOT SUPPLIED | Finance/forms + design / design candidate lineage, field disposition, stale dependencies and reviewed export |
+| [#97](https://github.com/jmservera/ama/issues/97#acceptance-criteria) O: schema/candidate lineage supporting form fields; [engineering](../../../../src/api/README.md#form-schema-and-candidate-api-97) | [Grant preparer][bc-finance] | [Assisted form sequence][bc-forms]; schema selection/staging details NOT SUPPLIED | NOT SUPPLIED | Forms + design / design unknown/unapproved template and raw candidate lineage without invented authority |
+| [#98](https://github.com/jmservera/ama/issues/98#acceptance-criteria) O: field review, validation report and pack history | [Grant preparer][bc-finance] | [Assisted form sequence][bc-forms] | NOT SUPPLIED | Forms/Finance + design / design per-field correction, validation and exact stale-review recovery |
+| [#99](https://github.com/jmservera/ama/issues/99#acceptance-criteria) O: human-approved investment inputs and breach pause signal | [Asset executive][bc-asset] / [Board][bc-board] | NOT SUPPLIED for envelope inspection -> breach -> human disposition | NOT SUPPLIED | Asset/Finance + design / show unknown inputs, downside and pause without investment approval |
+| [#101](https://github.com/jmservera/ama/issues/101#acceptance-criteria) C: map, funnel, denominators and drill-through | [Programme planner][bc-programme] | [Population/funnel boundary](./customer-journeys/programme.md#coordinator-population-and-observed-funnel-boundary-2026-10-17-101); complete map/funnel task flow NOT SUPPLIED | NOT SUPPLIED | Programme/Data + design / show selection versus metric population, missing coordinates and partial history |
+| [#102](https://github.com/jmservera/ama/issues/102#acceptance-criteria) C: historical progression, forecast and export | [Programme planner][bc-programme] / [Board][bc-board] | [Historical progress boundary](./customer-journeys/programme.md#historical-progress-engineering-boundary-2026-10-17-102); report/forecast/export task flow NOT SUPPLIED | NOT SUPPLIED | Programme/Data + design / design as-of/denominator, declared assumptions and unresolved exceptions |
+| [#106](https://github.com/jmservera/ama/issues/106#acceptance-criteria) C: cited suggestions and accept/edit/reject/manual path | [Bounded opportunities][bc-opportunities] | [UX-06][bc-ux], inspect -> draft -> human review/manual; C04 | NOT SUPPLIED; [H][design-h] C04 static suggestion only | Assistant/content + design / design review reason, unverified source and failure/manual states |
+| [#107](https://github.com/jmservera/ama/issues/107#acceptance-criteria) O: five assistants' optional proposal/review surfaces | [Bounded opportunities][bc-opportunities] | [Five assistant contract][bc-assistants]; C04 partial, per-capability task flows NOT SUPPLIED | NOT SUPPLIED | Assistant owners + design / supply each source/reviewer/denial path; proactive scan never acts as approval |
+| [#110](https://github.com/jmservera/ama/issues/110#acceptance-criteria) O: invalid/out-of-order/unmapped readings visible as exceptions | [Data operator][bc-operator] | NOT SUPPLIED for ingestion exception -> inspection -> controlled recovery | NOT SUPPLIED | Data/IoT operator + design / locate owned exception surface without exposing device IDs/raw readings |
+| [#111](https://github.com/jmservera/ama/issues/111#acceptance-criteria) O: deterministic human sensor-review task and INSUFFICIENT state | [Evaluator][bc-quality] / [Data][bc-data] | NOT SUPPLIED for signal -> human task -> insufficiency/review outcome | NOT SUPPLIED | Sensor/evaluation + design / show version/source limits, never hazard diagnosis or reduced priority |
+| [#112](https://github.com/jmservera/ama/issues/112#acceptance-criteria) C: protected map/export/AI context; [source](../../../../src/core/README.md#sensor-admission-and-external-context-112) | [DPO/control reviewer][bc-control] | NOT SUPPLIED for monitoring privacy admission and map/export state inspection | NOT SUPPLIED | DPO/Data + design / preserve raw-reading exclusions and synthetic-only admission labels |
+| [#116](https://github.com/jmservera/ama/issues/116#acceptance-criteria) O: sign-in and role/field visibility; [source][bc-staff] | NOT SUPPLIED for sign-in/account journey; [operator context][bc-operator] only | NOT SUPPLIED for sign-in, denied role, logout/account recovery | NOT SUPPLIED | Identity/workbench + design / supply permitted/denied/account states without treating navigation as rights |
+| [#117](https://github.com/jmservera/ama/issues/117#acceptance-criteria) O: upload scan availability, retention approval and legal holds; [source][bc-staff] | [Data operator][bc-operator] / [control reviewer][bc-control] | NOT SUPPLIED for scan pending/refusal, retention approval and hold recovery | NOT SUPPLIED | Records/DPO + design / design unavailable documents and separate human deletion/hold controls |
+| [#119](https://github.com/jmservera/ama/issues/119#acceptance-criteria) O: licensed map with accessible list alternative | [Programme planner][bc-programme] | NOT SUPPLIED for map -> equivalent list -> case and unavailable-tile recovery | NOT SUPPLIED | Map/accessibility + design / supply equivalent population/navigation and approved provider state |
+| [#120](https://github.com/jmservera/ama/issues/120#acceptance-criteria) O: gated staff-time entry, notice and aggregate reports; [source][bc-staff] | NOT SUPPLIED for staff-time capture journey; [control context][bc-control] only | NOT SUPPLIED for notice -> own entries -> gated/suppressed report | NOT SUPPLIED | Staff/privacy + design / supply off/approval-gap/notice states, never infer DPIA approval |
+| [#122](https://github.com/jmservera/ama/issues/122#acceptance-criteria) O: manual fallback, disable and evidence export | [Data operator][bc-operator] | [UX-06][bc-ux] manual/failure partial; service outage/disable/export flow NOT SUPPLIED | NOT SUPPLIED | Operator + design / show honest outage and controlled recovery, keep manual safety paths |
+| [#130](https://github.com/jmservera/ama/issues/130#acceptance-criteria) O: nomination, acknowledgement and challenge | [Nomination/challenge][bc-nomination] | [Nomination staged subjourney][bc-nomination] | NOT SUPPLIED | Housing/intake + design / design original account, identity correction and acknowledged owner; urgent route independent |
+| [#131](https://github.com/jmservera/ama/issues/131#acceptance-criteria) O: tenure verification and reviewed responsibility-question pack | [Leasehold service][bc-leasehold] / [shared owner][bc-shared-owner] | [Leasehold stage map][bc-leasehold]; detailed pack/authority task flow NOT SUPPLIED | NOT SUPPLIED | Leasehold/Legal + design / show ambiguity/unknown route and human-reviewed terms, no lease interpretation |
+| [#132](https://github.com/jmservera/ama/issues/132#acceptance-criteria) O: job pack, submission/correction and offline/no-show recovery | [Installer][bc-installer] / [scheduler][bc-scheduler] | [Profile flow][bc-profile], Provider T08 partial; offline capture task flow NOT SUPPLIED | NOT SUPPLIED; [H][design-h] T08 staff package, no provider identity/portal | Procurement/fieldwork + design / design mediated intake, acknowledgement versus acceptance and safe recovery |
+| [#133](https://github.com/jmservera/ama/issues/133#acceptance-criteria) O: concern route, human investigation and lived-performance view | [Household][bc-household] / [Evaluator][bc-quality] | [Connected stages 7-8][bc-connected]; detailed aftercare task flow NOT SUPPLIED | NOT SUPPLIED | Aftercare/Quality + design / show concern/remedy owner and unknown outcomes without blame or savings promise |
+| [#134](https://github.com/jmservera/ama/issues/134#acceptance-criteria) O: eleven walkthroughs and connected same-home acceptance | [Connected journey][bc-connected] | [Profile contract][bc-profile] / [lifecycle][bc-lifecycle] | NOT SUPPLIED; [H][design-h]/[E][design-e] T01-T11 partial/deferred, not connected acceptance | Programme + design / supply genuinely linked same-home states and independent sibling decisions |
+| [#135](https://github.com/jmservera/ama/issues/135#acceptance-criteria) O: conflict, failure and stranded-work exception queue | [Data steward][bc-data] / [operator][bc-operator] | [Digital flow][bc-eleven] T11 partial; import/model recovery task flow NOT SUPPLIED | NOT SUPPLIED; [H][design-h] T11 narrative, not operational audit | Data/operator + design / show both sources and owned controlled recovery, no silent replay |
+| [#146](https://github.com/jmservera/ama/issues/146#acceptance-criteria) O: operational dashboard/workbook, alerts and runbooks | [Data operator][bc-operator] | NOT SUPPLIED for dashboard -> alert -> owned runbook/recovery | NOT SUPPLIED | Operations + design / identify external workbook versus workbench surface and exact budget/error states |
+| [#150](https://github.com/jmservera/ama/issues/150#acceptance-criteria) C: component states, tokens and AI review pattern | [All-user atlas](./customer-journeys/customer-journey-atlas.md#all-user-coverage-and-jobs-to-improve) | [Core UX checks][bc-ux]; shared pattern state flows NOT SUPPLIED | NOT SUPPLIED; [design specification](./design-system.md#component-inventory) at source base, not current rendered acceptance | Design-system owner / evidence selected Fluent 2 implementation and every applicable component state; D01 status caveat retained |
+| [#151](https://github.com/jmservera/ama/issues/151#acceptance-criteria) O: keyboard, focus, reflow, errors and equivalent charts | [Profile journeys][bc-profile] | [UX-02/03/07][bc-ux]; [manual check record](./wcag-conformance-baseline.md#manual-check-record), not results | NOT SUPPLIED | Accessibility + design / assign exact scope/candidate/testers and record actual checks, not conformance by assertion |
+| [#152](https://github.com/jmservera/ama/issues/152#acceptance-criteria) O: responsive shared IA and recoverable navigation | [Programme planner][bc-programme] | [IA flow][bc-ia]; C01/C02/C04 | NOT SUPPLIED; [E][design-e] `152-ia-v1` engineering, partial/deferred | Workbench + design / supply supported-device choice and full selection/position/focus return design |
+| [#153](https://github.com/jmservera/ama/issues/153#acceptance-criteria) O: statuses, next actions, errors, AI and resident copy | [Engagement][bc-engagement] / [profile contract][bc-profile] | [Core copy audit](./content-standard.md#copy-audit-of-the-core-flow); UX-03/04/06 partial | NOT SUPPLIED; content standard at source base, not accepted current text versions | Content + design / version exact strings, remove internal terms, obtain named resident-wording review |
+| [#154](https://github.com/jmservera/ama/issues/154#acceptance-criteria) O: staff-supported resident/representative choice, visits, updates and aftercare | [Household][bc-household], [shared owner][bc-shared-owner], [representative][bc-representative] | [Connected stages][bc-connected]; detailed accessible/non-digital interaction task flows NOT SUPPLIED | NOT SUPPLIED; T05 is staff-only historical context, not direct resident designs | Resident Engagement + design / supply task-limited authority, safe contact and non-digital alternatives; no portal inferred |
+| [#159](https://github.com/jmservera/ama/issues/159#acceptance-criteria) O: optional cited case conversation panel; [source][bc-panel] | [PRD journey/agent/UI mapping][bc-chat-map] | [Chat mapping][bc-chat-map] entry/draft/manual partial; detailed conversation recovery flow NOT SUPPLIED | NOT SUPPLIED; no H/E chat design | Assistant + design / design reply/abstention/failure/announcement states; panel is distinct from #160 storage |
+| [#160](https://github.com/jmservera/ama/issues/160#acceptance-criteria) O: own thread list/resume/archive/delete | [PRD staff chat mapping][bc-chat-map] | NOT SUPPLIED for thread lifecycle; FR-056/AC-094-095 in [chat requirements][bc-chat-requirements] are checks, not flow | NOT SUPPLIED | Chat/privacy + design / supply own-thread lifecycle and metadata/content distinction |
+| [#161](https://github.com/jmservera/ama/issues/161#acceptance-criteria) O: opt-in inspect/edit/delete/expiry and off states | [PRD staff chat mapping][bc-chat-map] | NOT SUPPLIED for preference consent, inspection, edit, withdrawal and expiry | NOT SUPPLIED | Chat/DPO + design / supply memory states; unknown retention remains unknown, never controlled evidence |
+| [#163](https://github.com/jmservera/ama/issues/163#acceptance-criteria) O: free-text warning, transparency and rights handling; [panel source][bc-panel] | [DPO/control reviewer][bc-control]; staff privacy journey NOT SUPPLIED | NOT SUPPLIED for notice/warning/rights interaction | NOT SUPPLIED | DPO/content + design / design minimised warning and request route without setting unapproved retention |
+| [#210](https://github.com/jmservera/ama/issues/210#acceptance-criteria) C: explicit non-AI read-only provision viewer | [Control reviewer][bc-control] / [source change][bc-source-change] | NOT SUPPLIED for viewer search -> provision/status -> missing/partial source | NOT SUPPLIED | Regulatory product + design / supply non-AI source-viewer flow, dates/completeness and no-source state |
+| [#211](https://github.com/jmservera/ama/issues/211#acceptance-criteria) O: human rule-card review/hold lifecycle; [API-only boundary](../../../../src/api/README.md#rule-card-approval-api-211) | [Controlled source change][bc-source-change] | [Source-change stages][bc-source-change] partial; rule-card interaction task flow NOT SUPPLIED | NOT SUPPLIED; source explicitly says no rule-card UI delivered | Compliance + design / supply separate author/owner/hold states; no source download or role nomination means approval |
+| [#212](https://github.com/jmservera/ama/issues/212#acceptance-criteria) O: cited step alerts, owner, clock and acknowledgement | [Regulatory role needs][bc-reg-roles] | [Regulatory integration sequence][bc-reg-flow]; alert acknowledgement flow NOT SUPPLIED | NOT SUPPLIED | Compliance/Safety + design / design unknown/future/stale states and independent emergency intake |
+| [#214](https://github.com/jmservera/ama/issues/214#acceptance-criteria) O: home chat, conflicting sources and one-action doubt route | [Control reviewer][bc-control] / [role needs][bc-reg-roles] | [When in doubt][bc-doubt]; chat -> referral -> owner response details NOT SUPPLIED | NOT SUPPLIED | Regulatory/chat + design / design source/status dates, refusal and owned doubt, never legal conclusion |
+| [#215](https://github.com/jmservera/ama/issues/215#acceptance-criteria) O: role-shaped alert/chat patterns and comprehension; [engineering](../../../../src/api/README.md#regulatory-alert-and-home-chat-ux-215) | [Regulatory role needs][bc-reg-roles] | [Integration][bc-reg-flow] / [doubt routes][bc-doubt]; full role/state task flows NOT SUPPLIED | NOT SUPPLIED; existing patterns/protocol are not passed comprehension or current design acceptance | Compliance/content + design / supply all role patterns, no-source/doubt states and actual staff comprehension evidence |
+| [#217](https://github.com/jmservera/ama/issues/217#acceptance-criteria) O: regulatory privacy warning and unknown/simulated retention; [source](../../../../src/api/README.md#regulatory-security-privacy-and-audit-217) | [DPO/control reviewer][bc-control] | NOT SUPPLIED for regulatory privacy disclosure/rights interaction | NOT SUPPLIED | DPO/regulatory + design / supply exact warning/status text; simulated settings never imply approved disposal |
+| [#219](https://github.com/jmservera/ama/issues/219#acceptance-criteria) O: visible release denial, missing evidence, owner/manual route; [source](../../../../src/api/README.md#rai-task-release-api-219) | [Control reviewer][bc-control] / [operator][bc-operator] | [UX-06][bc-ux] manual route partial; release-denial task flow NOT SUPPLIED | NOT SUPPLIED | AI release/control + design / show version mismatch, expiry, authority gap and non-actionable drafts |
+| [#220](https://github.com/jmservera/ama/issues/220#acceptance-criteria) O: challenge/correction, explanation, owner and update | [Nomination/challenge][bc-nomination] / [redress][bc-redress] | [Challenge stages][bc-nomination]; AI/policy-specific interaction flow NOT SUPPLIED | NOT SUPPLIED | Housing/redress + design / supply accessible digital/staff-recorded routes and independent resolution |
+| [#221](https://github.com/jmservera/ama/issues/221#acceptance-criteria) O: operator suspension and visible blocked proposals/manual route | [Data operator][bc-operator] | [Operator recover stage][bc-operator] context; suspend/incident/restart task flow NOT SUPPLIED | NOT SUPPLIED | Operator/AI release + design / design scoped suspension, separate restart authority and uninterrupted manual/hazard work |
+| [#225](https://github.com/jmservera/ama/issues/225#acceptance-criteria) O: Finance/grants role screens | [Preparer][bc-finance] / [approver][bc-finance-approver] / [payment][bc-payment] | [Profile flow][bc-profile], Finance T10; [forms][bc-forms] | NOT SUPPLIED; [H][design-h]/[E][design-e] T10 partial | Finance + design / supply invoice/route/claim pack versions and explicit unknown/exception states |
+| [#226](https://github.com/jmservera/ama/issues/226#acceptance-criteria) O: Asset/Board source conflicts, investment and phase views | [Asset][bc-asset] / [Board][bc-board] | [Asset flow][bc-eleven] T01; Board investment/phase flow NOT SUPPLIED | NOT SUPPLIED; [H][design-h]/[E][design-e] T01 partial/deferred | Asset + design / design portfolio scope, source age and missing investment inputs without approval |
+| [#227](https://github.com/jmservera/ama/issues/227#acceptance-criteria) O: safety referral queue and hold/release evidence | [Safety lead](./customer-journeys/safety.md#current-state-map-a-building-safetycompliance-lead) / [repairs][bc-safety] | [Safety flow][bc-eleven] T06 | NOT SUPPLIED; [H][design-h]/[E][design-e] T06 partial | Safety + design / show awareness/source and distinct referral/receipt/acceptance with authoritative release evidence |
+| [#228](https://github.com/jmservera/ama/issues/228#acceptance-criteria) O: procurement capacity and staff-facing contractor capture | [Procurement][bc-supplier] / [scheduler][bc-scheduler] / [installer][bc-installer] | [Procurement flow][bc-eleven] T07; [profile flow][bc-profile], Provider T08 | NOT SUPPLIED; [H][design-h]/[E][design-e] T07/08 partial/deferred | Procurement + design / supply draft readiness and submission/correction designs; no provider portal or booking inferred |
+| [#229](https://github.com/jmservera/ama/issues/229#acceptance-criteria) O: data conflict/exception/recovery screens | [Data steward][bc-data] / [operator][bc-operator] / [auditor](./customer-journeys/data.md#current-map-4-independent-audit--regulatory-assurance-reviewer) | [Digital flow][bc-eleven] T11 | NOT SUPPLIED; [H][design-h]/[E][design-e] T11 historical/deferred | Data/operator + design / supply compared values, original source/event metadata and controlled recovery |
+| [#230](https://github.com/jmservera/ama/issues/230#acceptance-criteria) O: Programme queues, handoffs and lifecycle/funnel | [Programme planner][bc-programme] / [connected journey][bc-connected] | [Profile flow][bc-profile] T02/03; [lifecycle][bc-lifecycle] C03 | NOT SUPPLIED; [H][design-h]/[E][design-e] partial, separate homes not one lifecycle | Programme + design / supply return/sender/current-owner states, separate chase/update and connected-home evidence |
+| [#231](https://github.com/jmservera/ama/issues/231#acceptance-criteria) O: assessor/designer/QA evidence, sign-off and returns | [Assessor][bc-assessor] / [designer][bc-technical] / [QA][bc-quality] | [Technical/Quality flows][bc-eleven] T04/09 | NOT SUPPLIED; [H][design-h]/[E][design-e] partial, technical script deferred | Technical/Quality + design / supply separate competent returns, per-measure pack and independent reinspection |
+| [#232](https://github.com/jmservera/ama/issues/232#acceptance-criteria) O: housing/contact-centre/engagement staff screens | [Housing officer](./customer-journeys/frontline.md#1-neighbourhood-housing-officer), [contact centre](./customer-journeys/frontline.md#2-contact-centre--assisted-intake-staff-proxy), [engagement][bc-engagement] | [Profile flow][bc-profile], Housing T05 | NOT SUPPLIED; [H][design-h]/[E][design-e] T05 partial, not #154 direct designs | Housing + design / supply measure/version choice, purpose/owner/safe-route update; access never consent |
+| [#233](https://github.com/jmservera/ama/issues/233#acceptance-criteria) O: cross-role atlas-to-screen design pass, not an epic | [Atlas themes](./customer-journeys/customer-journey-atlas.md#five-design-themes-and-tensions) / [connected journey][bc-connected] | [All eleven flows][bc-eleven] / [profile contract][bc-profile]; theme-to-state task-flow resolutions NOT SUPPLIED | NOT SUPPLIED; [H][design-h]/[E][design-e] fifteen prior rows are not all atlas designs | Atlas/design owners / record every theme/perspective resolution or explicit deferral and actual same-home walkthrough |
+| [#327](https://github.com/jmservera/ama/issues/327) C: queue filter latency and CSV behavior under scale | [Programme planner][bc-programme] | [IA filter/reset][bc-ia] C01; no new flow prescribed | NOT SUPPLIED; [E][design-e] queue fixture, not 60k performance/design acceptance | Workbench + design / retain filter/count/status behavior while assessing slow/loading recovery |
+| [#344](https://github.com/jmservera/ama/issues/344#acceptance-criteria) O: public welcome, browser sign-in and deployed workbench access | NOT SUPPLIED for entry/account journey; [operator context][bc-operator] | NOT SUPPLIED for public entry -> Entra -> role workbench -> failure recovery | NOT SUPPLIED | Identity/deployment + design / supply entry/denial/callback states; redirect is not successful role access |
+| [#349](https://github.com/jmservera/ama/issues/349#acceptance-criteria) O: sign-in callback/session, logout/account switch and denial | NOT SUPPLIED for authenticated account journey | NOT SUPPLIED for account switching and unknown/wrong-role recovery | NOT SUPPLIED | Tenant/identity + design / supply user-facing recovery designs; actual tenant authority remains separate |
+| [#350](https://github.com/jmservera/ama/issues/350#acceptance-criteria) O: deployed feature parity across roles, profile/session, maps, chat and law | [Profile journeys][bc-profile]; account/photo journey NOT SUPPLIED | [Existing profile flows][bc-profile] partial; [dated parity audit](../../../architecture/mvp-to-src-parity-matrix.md#public-deployment-feature-audit-2026-10-16) is engineering inventory, not task flow | NOT SUPPLIED; historical asset presence is not rendered/authorized parity | Workbench/deployment + design / map missing current account/photo and other parity-state designs; no whole-UI validation claimed |
+| [#360](https://github.com/jmservera/ama/issues/360#acceptance-criteria) O: direct demo HTTPS welcome/sign-in/role entry | NOT SUPPLIED for direct-ingress entry journey; [operator context][bc-operator] | NOT SUPPLIED for direct entry/auth/error recovery | NOT SUPPLIED | Deployment/identity + design / supply direct entry states; no live migration, deletion or spend authorized here |
+
+### Reviewed ambiguities requiring only explicit surface decisions
+
+These eight **unknown** issues are not unreviewed inventory. Their bodies were
+inspected; each has precisely one unresolved delivery-surface question. They
+are excluded from the 74 known-screen count, not declared screen-free. If an
+owner selects a screen, add its exact trace/design requirement; no human design
+approval is implied by making that choice. Current screen artifact and detailed
+interaction task flow are **NOT SUPPLIED for all eight**.
+
+| Issue / state / evidence | Existing partial journey/flow context | Missing choice / responsible role / next action |
+| --- | --- | --- |
+| [#121](https://github.com/jmservera/ama/issues/121#acceptance-criteria) O: lawful-basis/retention records and rights requests must be logged/responded to; no interface specified | [DPO/control reviewer][bc-control]; no rights-request interaction flow | DPO/records + product / select existing service/manual record versus dedicated rights UI; specify requester/handler surfaces if needed |
+| [#125](https://github.com/jmservera/ama/issues/125#acceptance-criteria) O: optional read-only discovery assistant, readiness and comparator; no entry/output surface specified | [Data steward][bc-data] discovery context; no assistant task flow | Discovery product owner / select report/CLI/manual analysis versus workbench assistant surface |
+| [#126](https://github.com/jmservera/ama/issues/126#acceptance-criteria) O: benefits register, phase release decision and guardrail pause; no UI specified | [Board journey][bc-board] / [operator][bc-operator] | Sponsor/Programme / select governed document/register versus phase-gate screen; do not assume #226 supplies it |
+| [#127](https://github.com/jmservera/ama/issues/127#acceptance-criteria) C: review-item logging and human-approved activation; closure says nothing about screen choice | [Controlled source-change stages][bc-source-change] | Compliance product owner / identify document/API review route or screen; keep #213 automation distinct |
+| [#187](https://github.com/jmservera/ama/issues/187#acceptance-criteria) O: simulator replay, speed/pause controls and fault truth; interface unspecified | [Operator recovery][bc-operator] context, not simulator UI flow | Simulator owner / select CLI/run configuration versus operator screen; record control surface |
+| [#189](https://github.com/jmservera/ama/issues/189#acceptance-criteria) O: simulator start/stop/scale controls, owner/time limit/budget; interface unspecified | [Operator][bc-operator] context, not cost-control UI flow | Simulator/Finance owner / select CLI/job-budget control versus dashboard; no run/spend approved |
+| [#213](https://github.com/jmservera/ama/issues/213#acceptance-criteria) O: automated detection stores review items and routes to owner; no human interaction surface specified | [Source-change stages][bc-source-change]; #211 API is not a delivered review UI | Compliance/operator product owner / identify review queue UI versus API/document route and handoff |
+| [#222](https://github.com/jmservera/ama/issues/222#acceptance-criteria) O: versioned cohort/error/burden evaluation record; no viewer prescribed | [Data steward][bc-data] / [control reviewer][bc-control] | Evaluation/RAI owner / select versioned report versus screen; define scope without inventing approved thresholds |
+
+### No-screen membership and exclusion evidence
+
+All issues listed here are **no-screen**, under the bounded rule above. The
+rationale describes their required deliverable, not a statement that they have
+no dependencies, could never affect UI or are fully delivered. O/C columns
+freeze issue state. Explicit screen-impact dependencies already have rows above;
+there is no "other" bucket.
+
+| Inspected scope / exclusion rationale | Open issue IDs | Closed issue IDs |
+| --- | --- | --- |
+| Workflow detection/scoring failures; automation fixes, not product screens | [#6](https://github.com/jmservera/ama/issues/6), [#10](https://github.com/jmservera/ama/issues/10), [#33](https://github.com/jmservera/ama/issues/33), [#38](https://github.com/jmservera/ama/issues/38), [#46](https://github.com/jmservera/ama/issues/46), [#47](https://github.com/jmservera/ama/issues/47), [#48](https://github.com/jmservera/ama/issues/48), [#49](https://github.com/jmservera/ama/issues/49) | [#23](https://github.com/jmservera/ama/issues/23), [#51](https://github.com/jmservera/ama/issues/51), [#52](https://github.com/jmservera/ama/issues/52), [#53](https://github.com/jmservera/ama/issues/53), [#64](https://github.com/jmservera/ama/issues/64), [#206](https://github.com/jmservera/ama/issues/206) |
+| Registry schema/envelope, evaluation or server isolation, not an additional UI; visible release/panel effects map to #219/#159-161 | [#108](https://github.com/jmservera/ama/issues/108), [#162](https://github.com/jmservera/ama/issues/162), [#164](https://github.com/jmservera/ama/issues/164), [#216](https://github.com/jmservera/ama/issues/216), [#223](https://github.com/jmservera/ama/issues/223) | [#103](https://github.com/jmservera/ama/issues/103), [#105](https://github.com/jmservera/ama/issues/105) |
+| Discovery, equity/journey experiments and usability study/protocol, not new screen delivery; candidate screens stay separately mapped | [#124](https://github.com/jmservera/ama/issues/124), [#128](https://github.com/jmservera/ama/issues/128), [#129](https://github.com/jmservera/ama/issues/129), [#155](https://github.com/jmservera/ama/issues/155) | None |
+| Documentation/authority decisions and legal assessment; #156 is this register/gate, not another application screen | [#156](https://github.com/jmservera/ama/issues/156), [#224](https://github.com/jmservera/ama/issues/224) | [#158](https://github.com/jmservera/ama/issues/158), [#209](https://github.com/jmservera/ama/issues/209) |
+| SQL/ledger/digest, deployment/CI, credentials, network/governance and recovery infrastructure; operator dashboard #146 and browser entry #344/#349/#360 separately included | [#114](https://github.com/jmservera/ama/issues/114), [#115](https://github.com/jmservera/ama/issues/115), [#118](https://github.com/jmservera/ama/issues/118), [#137](https://github.com/jmservera/ama/issues/137), [#138](https://github.com/jmservera/ama/issues/138), [#139](https://github.com/jmservera/ama/issues/139), [#140](https://github.com/jmservera/ama/issues/140), [#141](https://github.com/jmservera/ama/issues/141), [#142](https://github.com/jmservera/ama/issues/142), [#143](https://github.com/jmservera/ama/issues/143), [#144](https://github.com/jmservera/ama/issues/144), [#145](https://github.com/jmservera/ama/issues/145), [#147](https://github.com/jmservera/ama/issues/147), [#148](https://github.com/jmservera/ama/issues/148), [#358](https://github.com/jmservera/ama/issues/358) | [#290](https://github.com/jmservera/ama/issues/290), [#322](https://github.com/jmservera/ama/issues/322), [#323](https://github.com/jmservera/ama/issues/323), [#339](https://github.com/jmservera/ama/issues/339), [#351](https://github.com/jmservera/ama/issues/351) |
+| Synthetic inventory/generator/dictionary/fixtures and provenance/refresh; consume screen requirements but do not supply screen designs | [#167](https://github.com/jmservera/ama/issues/167), [#172](https://github.com/jmservera/ama/issues/172), [#175](https://github.com/jmservera/ama/issues/175), [#176](https://github.com/jmservera/ama/issues/176) | [#166](https://github.com/jmservera/ama/issues/166), [#168](https://github.com/jmservera/ama/issues/168), [#169](https://github.com/jmservera/ama/issues/169), [#170](https://github.com/jmservera/ama/issues/170), [#171](https://github.com/jmservera/ama/issues/171), [#173](https://github.com/jmservera/ama/issues/173), [#174](https://github.com/jmservera/ama/issues/174) |
+| Sensor backfill/stream models, identity/schema, validation and documentation; replay/run-control surface ambiguities #187/#189 are not hidden here | [#177](https://github.com/jmservera/ama/issues/177), [#178](https://github.com/jmservera/ama/issues/178), [#179](https://github.com/jmservera/ama/issues/179), [#180](https://github.com/jmservera/ama/issues/180), [#181](https://github.com/jmservera/ama/issues/181), [#183](https://github.com/jmservera/ama/issues/183), [#184](https://github.com/jmservera/ama/issues/184), [#185](https://github.com/jmservera/ama/issues/185), [#186](https://github.com/jmservera/ama/issues/186), [#188](https://github.com/jmservera/ama/issues/188), [#190](https://github.com/jmservera/ama/issues/190), [#191](https://github.com/jmservera/ama/issues/191), [#192](https://github.com/jmservera/ama/issues/192), [#193](https://github.com/jmservera/ama/issues/193), [#194](https://github.com/jmservera/ama/issues/194) | [#182](https://github.com/jmservera/ama/issues/182) |
+| Source-layout ADR/parity matrix, migration/repointing, cut-over/retirement and link/KB cleanup; preserve existing UI, do not design new screens | [#198](https://github.com/jmservera/ama/issues/198), [#199](https://github.com/jmservera/ama/issues/199), [#200](https://github.com/jmservera/ama/issues/200), [#201](https://github.com/jmservera/ama/issues/201), [#202](https://github.com/jmservera/ama/issues/202), [#203](https://github.com/jmservera/ama/issues/203) | [#196](https://github.com/jmservera/ama/issues/196), [#197](https://github.com/jmservera/ama/issues/197) |
+| Rule-engine regression tests and source-monitor retry scheduling; screen/review scope belongs to #212/#213 respectively | None | [#329](https://github.com/jmservera/ama/issues/329), [#332](https://github.com/jmservera/ama/issues/332) |
+
+### Aggregate epic routing
+
+These sixteen issues are **epic-covered**, all Open. Child ranges name existing
+issue IDs, not evidence of delivery, deferral or accepted design. The preceding
+tables classify every child individually, including no-screen and unknown
+children; no epic is substituted for a screen-feature row.
+
+| Epic | Classified feature routes |
+| --- | --- |
+| [#73](https://github.com/jmservera/ama/issues/73) Home case/workbench | #74-80; linked queue follow-up #327 |
+| [#81](https://github.com/jmservera/ama/issues/81) Safety/consent/lifecycle | #82-88; related journey features #130-131 |
+| [#89](https://github.com/jmservera/ama/issues/89) Capacity/orders/quality | #90-92; related capture/aftercare #132-133 |
+| [#93](https://github.com/jmservera/ama/issues/93) Finance/forms | #94-99 |
+| [#100](https://github.com/jmservera/ama/issues/100) Insight/export | #101-103 |
+| [#104](https://github.com/jmservera/ama/issues/104) Bounded AI | #105-108 |
+| [#109](https://github.com/jmservera/ama/issues/109) Monitoring | #110-112 |
+| [#113](https://github.com/jmservera/ama/issues/113) Platform/privacy | #114-122 |
+| [#123](https://github.com/jmservera/ama/issues/123) Discovery/release governance | #124-129; cross-cutting journey contracts #130-135 |
+| [#136](https://github.com/jmservera/ama/issues/136) Bicep/deployment | #137-148; related deployment follow-ups #322/#339/#344/#349/#350/#351/#358/#360 |
+| [#149](https://github.com/jmservera/ama/issues/149) UX/accessibility | #150-156; role screens #225-233 |
+| [#157](https://github.com/jmservera/ama/issues/157) Chat/memory | #158-164 |
+| [#165](https://github.com/jmservera/ama/issues/165) Synthetic programme | #166-194, including nested aggregate stories #177/#184/#190 classified by their own prescribed data scope |
+| [#195](https://github.com/jmservera/ama/issues/195) Source consolidation | #196-203/#290; related owner check cleanup #323 |
+| [#208](https://github.com/jmservera/ama/issues/208) Regulatory assistant | #209-217; regression/retry follow-ups #329/#332 |
+| [#218](https://github.com/jmservera/ama/issues/218) RAI controls | #219-224 |
+
+### Coverage disposition and remaining real gates
+
+The four classifications reconcile to **184/184** issues; every one of the
+**74 known screen issues has an individual trace or explicit evidence gap**.
+The eight remaining ambiguities are precisely the surface decisions listed
+above, not an unspecified unreviewed backlog. This dated inventory supersedes
+only G01's "broader backlog coverage unknown" for this snapshot; the original
+fifteen-row inspection record is retained as historical evidence.
+
+Literal #156 AC1 is **not fully satisfied**: all 74 current screen-design
+versions are NOT SUPPLIED, and individual rows explicitly identify absent or
+partial detailed task flows and missing journey families (account
+entry #116/#344/#349/#360, staff-time #120, staff privacy #163, and account/photo
+within parity #350 are separately identified, not assumed complete).
+Existing exact linked sections supply only their stated portions. The design
+owner must attach actual reviewable versions; product/domain owners must supply
+the named detailed flow gaps, and choose the eight unresolved delivery surfaces.
+These are concrete artifact/owner decisions, not authorization for new UI here.
+
+G02-G07 remain open and overall design acceptance remains **Blocked**: current
+design/state versions, named human design review, required current manual
+accessibility evidence, exact content/resident-wording review and direct user
+research are not supplied by an issue inventory. Preserve the owner-selected
+Fluent 2 foundation, existing WCAG/content scope and unresolved decisions.
+Historical H, engineering E, source code, API contracts, architecture drawings,
+closed issues and a completed documentation check cannot replace those gates.
+No new UI validation, conformance, real benefit or whole-issue acceptance is
+claimed. Manual/non-digital paths, resident consent/withdrawal, independent
+safety intake, professional judgment and all human financial/legal/release
+approval boundaries remain unchanged.
+
+[bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
+[bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey
+[bc-programme]: ./customer-journeys/programme.md#1-programme-manager--planner
+[bc-assessor]: ./customer-journeys/programme.md#2-surveyor--retrofit-assessor
+[bc-technical]: ./customer-journeys/programme.md#3-retrofit-designer--coordinator
+[bc-quality]: ./customer-journeys/programme.md#4-independent-qa-inspector--retrofit-evaluator
+[bc-asset]: ./customer-journeys/asset.md#journey-1-asset-executive-current-state-hypothesis
+[bc-board]: ./customer-journeys/asset.md#journey-2-ceoboard-sponsor-and-assurance-reader
+[bc-data]: ./customer-journeys/data.md#current-map-1-data-steward--performance-analyst
+[bc-operator]: ./customer-journeys/data.md#current-map-2-digital--service-operator
+[bc-control]: ./customer-journeys/data.md#current-map-3-dpo--legal--control-reviewer
+[bc-safety]: ./customer-journeys/safety.md#current-state-map-b-repairshazard-triage-and-response-staff
+[bc-household]: ./customer-journeys/residents.md#current-journey-a-rented-resident-household
+[bc-shared-owner]: ./customer-journeys/residents.md#current-journey-b-shared-owner-or-leaseholder
+[bc-representative]: ./customer-journeys/residents.md#current-journey-c-authorised-carer-advocate-or-interpreter
+[bc-engagement]: ./customer-journeys/residents.md#current-journey-d-resident-engagementsupport-worker
+[bc-redress]: ./customer-journeys/frontline.md#3-complaint--redress-handler-distinct-proxy
+[bc-supplier]: ./customer-journeys/suppliers.md#1-procurementcontracts-manager-secure-accountable-delivery
+[bc-scheduler]: ./customer-journeys/suppliers.md#2-contractor-schedulersupervisor-make-a-workable-day
+[bc-installer]: ./customer-journeys/suppliers.md#3-installersubcontractor-field-worker-do-the-right-work-safely
+[bc-finance]: ./customer-journeys/finance.md#a-capital-and-grant-preparer
+[bc-finance-approver]: ./customer-journeys/finance.md#b-independent-capital-and-grant-approver
+[bc-payment]: ./customer-journeys/finance.md#c-payment-officer
+[bc-leasehold]: ./customer-journeys/customer-journey-atlas.md#leasehold-service-staff-current-state-map
+[bc-nomination]: ./customer-journeys/customer-journey-atlas.md#nomination-prioritisation-and-challenge-subjourney
+[bc-source-change]: ./customer-journeys/customer-journey-atlas.md#controlled-source-to-rule-change-subjourney
+[bc-opportunities]: ./customer-journeys/customer-journey-atlas.md#divergent-opportunities-beyond-another-chatbot
+[bc-reg-roles]: ./regulatory-literacy-for-journeys.md#needs-by-journey-role
+[bc-reg-flow]: ./regulatory-literacy-for-journeys.md#integration-design-for-agents
+[bc-doubt]: ./regulatory-literacy-for-journeys.md#when-in-doubt-expected-agent-behaviour
+[bc-profile]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md#profile-journey-contract-for-the-next-prototype
+[bc-lifecycle]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md#case-lifecycle-role-handoffs-and-return-path
+[bc-forms]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md#form-extraction-and-assisted-filling
+[bc-assistants]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13
+[bc-chat-map]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md#journey-agent-and-ui-mapping
+[bc-chat-requirements]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md#product-requirements
+[bc-eleven]: #all-eleven-profile-journeys
+[bc-ia]: #shared-workbench-ia-engineering-slice-2026-10-15
+[bc-ux]: #proposed-acceptance-checks-for-the-next-prototype
+[bc-panel]: ../../../../src/api/README.md#conversation-panel-issue-159
+[bc-staff]: ../../../../src/api/README.md#what-staff-see
 
 [design-h]: https://github.com/jmservera/ama/blob/c0f7c08aec514597af86528caf1bdad4b7250246/.copilot-tracking/prototypes/2026-10-06/proper-warm-retrofit-workbench.html
 [design-e]: https://github.com/jmservera/ama/blob/3104bb69ddc26c81e0e9d2f57000dac1d99a419a/src/api/checks/workbench-manifest.json
