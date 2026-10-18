@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -27,6 +27,244 @@ Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runti
 (Azure IoT Hub ingestion), [ADR 0002](../../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map)
 (capture and review-signal design), BRD FR-048/AC-090 and RULE-014, and PRD
 FR-050 with AC-066 to AC-068.
+
+## Shared observation contract and volume (2026-10-18, Refs #186)
+
+This documents the unchanged finite consumer merged in
+[PR #411](https://github.com/jmservera/ama/pull/411) at
+`100ead1bacdb72a8ea7ce5867233db30b22b2f50`. The contract dependency on
+#110 is supplied by that merge; whole issue #110 and its live acceptance gates
+remain open. Parent #184 is hierarchy, not delivery ordering.
+This is shared-contract verification and measured accounting, not live producer
+or backfill interoperability, a new schema, or a transport implementation.
+
+### Authority and required observation fields
+
+The authoritative version and closed field set are
+[`synthetic.sensor_faults.SCHEMA_VERSION` and `READING_FIELDS`](../../../src/core/src/zava_forward/core/synthetic/sensor_faults.py).
+The [consumer imports both directly](../../../src/core/src/zava_forward/core/sensor_consumer.py);
+its `_shape`, `_quality`, `process` and `preflight` define current validation.
+The table below describes that source, not an independently maintained schema
+API. There is no version negotiation: only `sensor-fault-input-v1` is accepted.
+Do not substitute the legacy backfill `reading-v1` SQL/CSV shape.
+
+One observation is **one record containing both temperature and relative
+humidity**, not two scalar records. All 13 fields below are required, and all
+values are JSON strings, including numbers and the calibration claim. Extra
+fields, evaluator labels, clean/truth records and `injected_fault` are not part
+of this observation. Only `Packet.rows` are delivered observations; a generator
+`Packet` groups two observations for evaluation, not a chosen wire message.
+
+| Field | Required type | Current constraint / meaning |
+| --- | --- | --- |
+| `sensor_id` | string | 1..20 uppercase ASCII letters/digits/underscore/hyphen; first character letter or digit |
+| `reading_id` | string | Same alphabet/first-character rule, 1..40; stable within the sensor namespace |
+| `home_id` | string | Same alphabet/first-character rule, 1..12; independently configured mapping and existing home must agree |
+| `observed_at` | string | Valid UTC calendar time, exactly `YYYY-MM-DDTHH:MM:SSZ`; no offsets or fractional seconds |
+| `temperature_c` | string | Decimal grammar `-?(0\|[1-9][0-9]{0,2})(\.[0-9]{1,2})?`; absolute value at most 999.99, then independent exercise range |
+| `humidity_pct` | string | Same decimal grammar/structural bound; independent humidity range lies within 0..100 |
+| `source_type` | string | Exactly `SYNTHETIC`; a label, not proof of source or authority |
+| `scenario` | string | Same uppercase ID alphabet/first-character rule, 1..20 |
+| `seed` | string | Optional minus, no plus or leading zeros except `0`/`-0`; integer magnitude at most 9223372036854775807 |
+| `schema_version` | string | Exactly imported `sensor-fault-input-v1` |
+| `temperature_unit` | string | Accepted admission requires `degC`, matching independent control |
+| `humidity_unit` | string | Accepted admission requires `percent`, matching independent control |
+| `calibrated` | string | Shape permits `true` or `false`; admission requires `true` and independently confirmed, in-period calibration |
+
+Numbers are not rounded, clamped or converted. Exponents, NaN/infinity,
+whitespace, plus signs and more than two fractional digits are invalid numeric
+strings. The seed magnitude check is the current symmetric bound, not the full
+signed-64-bit minimum. Structural validity does not establish admission.
+Independent trusted exercise policy/control configuration supplies mapping,
+monitoring consent, calibration, units, window, clock-skew limits, numeric ranges
+and accountable manual-review route. Observations cannot install these controls.
+Mapping/calibration/observation intervals are half-open; ranges and skew limits
+are inclusive. New observations must be strictly later than retained valid
+observations for that sensor. These controls are fictional fixtures, not real
+consent, calibration, legal authority or approved operational thresholds.
+
+### Envelope, refusals and stable append
+
+The [existing API callable](../../../src/api/src/zava_forward/api/sensor_ingestion.py)
+accepts a materialized list/tuple of 1..100 primitive dictionaries, each at most
+20 keys and 4096 bytes under `preflight`'s ASCII JSON serialization. Keys must
+be strings of at most 80 characters; values must be primitive
+string/integer/float/boolean/null, with integer magnitude at most 2^63-1.
+Nested values, oversized envelopes and invalid trusted `received_at` UTC seconds
+are refused before any writes. This envelope bound is not the closed observation
+schema or a wire-message-size/billing limit. A primitive row with missing or
+extra fields, wrong types or wrong version/source instead yields owned per-row
+DQ under the independently installed controls.
+
+Current row rejection codes are `SCHEMA`, `IDENTITY`, `PROVENANCE`, `UTC_TIME`,
+`NUMBER`, `CALIBRATION`, `UNMAPPED`, `HOME_MISMATCH`, `HOME_UNAVAILABLE`,
+`MAPPING_INTERVAL`, `CONSENT`, `WINDOW`, `CLOCK_SKEW`, `UNIT`, `RANGE`,
+`OUT_OF_ORDER` and `IDENTITY_CONFLICT`. The first applicable check wins;
+these are not diagnoses or automatic property/workflow decisions.
+Missing/malformed SQL or controls, malformed retained outcomes and uncertain
+commits are explicit bounded errors, not empty success or invented DQ authority.
+
+Append identity is the existing SQL primary key `(sensor_id, reading_id)`.
+Retain both IDs and the same observation on retry; this work assigns no new
+producer IDs. Delivery reference is SHA-256 of sorted ASCII JSON of the complete
+observation using default separators. JSON object key order is immaterial;
+changed string values are changed content, even if numerically equivalent.
+
+* An identical accepted replay with a consistent retained witness/reading
+  returns the historical `accepted`/`ACCEPTED` receipt with `replay=true`.
+  Reading, delivery and DQ counts do not increase. Later control withdrawal or
+  clock/window change does not turn reconciliation into fresh admission.
+* Changed, structurally valid content under an already accepted key yields
+  `IDENTITY_CONFLICT`, never an overwrite. A legacy reading without a consumer
+  witness also conflicts. Structurally invalid changed input may fail earlier.
+* Identical rejected replay returns the historical rejection and existing Open
+  DQ, even after controls are repaired. Malformed/inconsistent retained history
+  raises `SENSOR_OUTCOME_MALFORMED`, not a successful replay.
+
+Receipts contain only opaque reference, status, reason and replay flag, not
+IDs or raw readings. Restricted DQ metadata contains reason, Open status,
+parseable observation time, receipt time, declared accountable role/manual route
+and reviewer or `Unassigned`; inspection is in-process only, not an HTTP route.
+Closed-shape rejected observations remain restricted in the delivery record;
+unknown-field/malformed shapes retain digest/DQ, not arbitrary unknown content.
+Transactions are per observation, not whole-batch atomic. Row rejections continue;
+database failure or uncertain acknowledgement stops the finite batch.
+`BatchStopped.completed` retains the acknowledged prefix; replay the exact
+batch to reconcile an uncertain append, never assume that nothing committed.
+
+### Three-per-day accounting, not live packetization
+
+The [addendum baseline](../../case_study_48_addendum.md#sensor-data-capture-analysis-and-map-demonstrator-design)
+remains three paired observations per simulated home per day. Declare N as the
+number of eligible fictional homes in this accounting scenario, with one paired
+observation at each of three daily slots, no missing/rejected observations and
+no replays. N=60,000 uses the fictional programme stock scale, not a private stock
+extract or evidence of 60,000 devices, configured controls or throughput.
+
+Observation records/day = `3N`; time-averaged records/second = `3N / 86400`.
+There are two scalar measures per record, but that does not double the record
+count. The mean is not a peak or tested processing rate; synchronized slots could
+burst. No scheduler or live cadence is implemented or changed here.
+
+| Declared N homes | Paired observations/home/day | Observation records/day | Mean observation records/second |
+| --- | --- | --- | --- |
+| 1 | 3 | 3 | 1/28800 = 0.0000347222222222 |
+| 60,000 | 3 | 180,000 | 25/12 = 2.08333333333 |
+
+Finite API batches of 1..100 records are callable arguments, not chosen
+transport batches or scheduled API calls. Hypothetical wire messages/day equal
+`3N` **only if** one observation record is sent per message. No such live choice
+is made. For any separately approved grouping into devices/gateways `d`, with
+`R_d` daily records and at most `k_d` records/message, perfectly full packing
+apart from the last message would give `sum_d ceil(R_d/k_d)` messages/day.
+That conditional formula assumes permitted grouping and no additional byte/time
+limits, retries or rejections; it is not an adopted design.
+IoT Hub billable units, peak throughput, tier capacity and cost require separate
+transport/properties/security/packing/retry measurements and current sizing
+review. This arithmetic does not establish any of them.
+
+### Measured public synthetic sample and reproduction
+
+On 2026-10-18 the unchanged
+[`sensor_consumer_fixture.observations()[0]`](../../../src/core/tests/sensor_consumer_fixture.py)
+produced this current-contract example from legacy `sensor_for({"id": "ZF-1"})`
+and clean `Packet.rows`, not from a stock Selection. The fixture's two hourly
+observations are a small validation input, not a change to the three/day
+accounting baseline.
+
+```json
+{"calibrated": "true", "home_id": "ZF-1", "humidity_pct": "54.36", "humidity_unit": "percent", "observed_at": "2024-10-01T00:00:00Z", "reading_id": "SENS-SYN-1-1727740800", "scenario": "BACKFILL_2Y", "schema_version": "sensor-fault-input-v1", "seed": "183", "sensor_id": "SENS-SYN-1", "source_type": "SYNTHETIC", "temperature_c": "16.73", "temperature_unit": "degC"}
+```
+
+Serialization is exactly the existing `_reference` expression:
+`json.dumps(row, sort_keys=True, ensure_ascii=True).encode("utf-8")`, default
+separators including spaces, no newline. The serialized example is **366 bytes**,
+SHA-256 `efccea5eb698a3310aca7409837ad9b5ad3673b949ddb3c2395da21a8b01dc6c`.
+The fenced block's display newline is not measured. This canonical sample for
+accounting is not a mandated wire encoding, sample distribution or upper bound.
+IDs, seed, scenario and numeric-string lengths vary.
+
+| Declared N | Sample bytes/record | Records/day | Sample-scaled JSON bytes/day |
+| --- | --- | --- | --- |
+| 1 | 366 | 3 | 1,098 |
+| 60,000 | 366 | 180,000 | 65,880,000 |
+
+These are `366 * 3N` illustrative payload bytes, not measured daily traffic.
+No 60,000-home dataset was read or generated. Transport envelopes, array/batch
+framing, properties, security/TLS, retries, rejected deliveries, SQL storage/
+indexes, protocol overhead and billing rounding are excluded. The existing
+backfill `estimate()` measures CSV/default-hourly history, not these JSON/day
+or wire bytes; its defaults and implementation remain unchanged.
+
+Reproduce from repository root with the `src/core` distribution installed as
+described in [source commands](../../../src/README.md#commands). `PYTHONPATH`
+below exposes the existing public test helper only, not application source or
+`mvp`. No database, private settings or stock files are needed:
+
+```bash
+PYTHONPATH=src/core/tests python - <<'PY'
+import hashlib
+import json
+from fractions import Fraction
+from sensor_consumer_fixture import observations
+from zava_forward.core.sensor_consumer import SensorConsumer, preflight
+from zava_forward.core.synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
+
+row = observations()[0]
+assert set(row) == set(READING_FIELDS) and len(row) == 13
+assert all(type(value) is str for value in row.values())
+assert row["schema_version"] == SCHEMA_VERSION
+assert preflight([row]) == [row] and SensorConsumer._shape(row) is None
+payload = json.dumps(row, sort_keys=True, ensure_ascii=True).encode("utf-8")
+assert hashlib.sha256(payload).hexdigest() == SensorConsumer._reference(row)
+print(payload.decode("utf-8"))
+print("bytes_per_sample:", len(payload))
+print("sha256:", hashlib.sha256(payload).hexdigest())
+for homes, expected_records, expected_rate in (
+    (1, 3, Fraction(1, 28800)),
+    (60000, 180000, Fraction(25, 12)),
+):
+    records = 3 * homes
+    rate = Fraction(records, 86400)
+    assert records == expected_records and rate == expected_rate
+    print(homes, records, rate, records * len(payload))
+PY
+```
+
+This focused verifier intentionally checks current private implementation seams
+without creating a public schema API. Drift in required shape/version/validation
+fails explicitly; byte output must be compared with the dated sample above.
+Existing [core semantic tests](../../../src/core/tests/test_sensor_consumer.py)
+and [API tests](../../../src/api/tests/test_sensor_ingestion.py) exercise actual
+SQLite append/reopen/replay/conflict and schema/unit/time refusal. This is local
+engineering evidence only. No runtime, application image or UI changes occur.
+
+### Explicit producer compatibility gap and remaining gates
+
+[`sensor_stock.Selection.sensors`](../../../src/core/src/zava_forward/core/synthetic/sensor_stock.py)
+constructs `sensor_id = "SENS-SYN-" + sha256(home_id.encode()).hexdigest()`:
+9 prefix characters plus 64 lowercase-hex characters = **73**, versus the
+consumer's uppercase alphabet and maximum **20**. The existing backfill reading
+ID embeds that sensor ID plus timestamp and also exceeds the consumer's 40
+character limit. Supporting the stock SQL table's wider columns does not make
+these payloads admissible.
+
+No truncation, remap, new producer IDs, validation weakening, consumer fix or
+generator rewrite is made. Current fixture-valid records prove the shared
+consumer contract **only**, not stock/live interoperability.
+[Replay #187](https://github.com/jmservera/ama/issues/187) and
+[live/backfill consistency #188](https://github.com/jmservera/ama/issues/188)
+need a separately reviewed compatibility decision before using this contract
+with stock-derived/live inputs. This is not a waiver of their acceptance.
+
+[ADR 0003](../../adrs/0003-journey-derived-capabilities-runtime-fit.md#status)
+was already owner-accepted on 2026-10-15 with Basic IoT Hub sufficient for the
+exercise, excluding cloud-to-device messages, twins and device management.
+Its original Proposed paragraph is historical, not approval pending.
+Live Hub identities/transport, cost/network/provisioning/credential authority,
+actual Azure SQL/registered real AI acceptance, OD-43, privacy/legal and human
+gates remain separate. No issue criteria, priorities, review tasks, resident
+communications, data approvals or operational rules change.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

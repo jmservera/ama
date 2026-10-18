@@ -1,0 +1,227 @@
+2026-10-18 issue186-message-contract actual execution log
+Owner: automatic RPI coordinator. Base: 100ead1bacdb72a8ea7ce5867233db30b22b2f50.
+Record tool operations and literal shell commands/results; no inferred execution.
+
+INTAKE
+skill rpi-research loaded successfully.
+Shell command:
+git status --short && git branch --show-current && git rev-parse HEAD && gh pr list --head docs/sensor-message-contract-186 --json number,state,baseRefName,headRefName && gh issue view 186 --json title,body,state && gh pr view 411 --json state,mergeCommit,mergedAt && git ls-remote origin refs/heads/main
+Result exit 0: status empty; branch docs/sensor-message-contract-186; HEAD exact base;
+matching PR []; issue186 OPEN with literal shared versioned contract, rate/volume,
+stable-reading-ID criteria unchecked; PR411 MERGED 2026-10-18T12:32:15Z with merge
+commit exact base; origin/main exact base. No branch/base change performed.
+Reads: original case, full addendum, KB index lines1-180, memory, rpi-research
+reference and template lines1-210. Oversized first view requests returned explicit
+size errors; addendum/reference re-read with full-read flag; index/template ranges
+used. glob **/*sensor* located existing source/test and historical RPI evidence.
+glob **/copilot-tracking.instructions.md returned none in this worktree.
+Opening research artifact and automatic execution state created using apply_patch.
+
+RESEARCH Wider -> Deeper -> Contrarian, inline, ordered
+Reads (view/rg): full existing sensor synthesis; sensor_consumer.py1-720;
+synthetic/sensor_faults.py1-260; sensor_ingestion.py; coreREADME1-98;
+apiREADME1-52; sensor_consumer_fixture.py; test_sensor_consumer.py1-690;
+test_sensor_ingestion.py1-280; sensor_stock.py48-108; sensor_backfill.py20-194;
+ADR0003 lines1-75; corepyproject; housing-association primer1-100; prior110
+research1-100. Existing unchanged tests cover replay/schema/unit/time; fixture
+and sorted ASCII JSON expression suitable. No new tests required.
+Shell:
+date -u +%FT%TZ && command -v python3 && python3 -c 'import zava_forward.core.sensor_consumer as c; print(c.__file__)' && git status --short
+Result exit1 at import: 2026-10-18T12:41:18Z; /usr/bin/python3;
+ModuleNotFoundError zava_forward. Final chained git status did not run.
+Shell:
+git status --short && git branch --show-current && ls -ld .venv .venv/bin/python 2>/dev/null; gh issue view 187 --json title,body,state && gh issue view 188 --json title,body,state && gh api repos/jmservera/ama/issues/comments/6194409951 --jq '{created_at,body}'
+Result exit0: only three own tracking files untracked, expected branch; no local
+.venv paths printed. Issues187/188 OPEN with downstream dependencies; exact ADR
+comment dated2026-10-15T14:24:33Z accepts Basic amendment. No private files read.
+Research complete: shared13-field string contract verified; stock73-char/lowercase
+IDs incompatible; CSV estimate not wire bytes. Planning Readiness Ready.
+Pre-transition state persisted with Plan intended next action.
+
+PLAN
+skill rpi-plan loaded; planning reference/template/details template read.
+Post-transition state: Plan active, automatic session running.
+Plan/details persisted and finalized as implementation-ready candidates:
+six existing docs; max new tests0/removals none; existing semantic tests plus
+inline measurement; no source/runtime changes. No extra research/planning worker.
+Executive summary and all phase/task IDs reconciled before critique dispatch.
+Exactly one sync general-purpose critique worker issue186-plan-critique invoked;
+activated rpi-plan-critique, wrote only canonical critique, returned Complete/
+Revise with PC-001 High (ambient MSSQL opt-in) and PC-002 Medium (temp hygiene).
+Parent read original and retained it unchanged. Applied both compatible safeguards
+directly in plan/details; noted PC-002's blanket /tmp prohibition assertion is not
+caller authority. No second critique. Planning Ready.
+Pre-transition state persisted with Implement next action.
+
+IMPLEMENT
+skill rpi-implement and documentation loaded; implementation reference/template,
+documentation conventions/accessibility/content-sensitivity/RAI/reference template
+read. No local .github/instructions/**/*markdown* matched; use repository guidance.
+State transitioned to Implement, full plan; changes record created before work.
+Shell:
+git status --short && git branch --show-current && git rev-parse HEAD && python3 --version && git check-ignore .copilot-tracking/issue186-scratch || test ! -e .copilot-tracking/issue186-scratch
+Result exit0: only own tracking writes, expected branch/exact base, Python3.12.3,
+scratch absent. No source/remote mutation.
+Read api/agents pyproject dependency heads and srcREADME commands.
+Shell:
+mkdir .copilot-tracking/issue186-scratch && python3 -m venv /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv && TMPDIR="$PWD/.copilot-tracking/issue186-scratch" /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -m pip install --quiet -e src/core -e src/api && /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -c 'import zava_forward.core.sensor_consumer as c; import zava_forward.api.sensor_ingestion as a; print(c.__file__); print(a.__file__)'
+Result exit1: API requires local zava-forward-agents, not found on package index.
+No final binding probe executed after failed chained pip. No manifests changed.
+Shell:
+TMPDIR="$PWD/.copilot-tracking/issue186-scratch" /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -m pip install --quiet -e src/core -e src/agents -e src/api && /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -c 'import zava_forward.core.sensor_consumer as c; import zava_forward.api.sensor_ingestion as a; print(c.__file__); print(a.__file__)'
+Result exit0: both modules bound to exact current worktree src/core/src and
+src/api/src. Installed src distributions, not mvp/PYTHONPATH source workaround.
+Shell: tail -65 docs/reference/log.md && git status --short
+Result exit0: read append-only tail; only own tracking including scratch.
+
+P01-T01 actual measurement command (exit0; full stdout in changes measurement.log):
+set -o pipefail
+ZF_SENSOR_MSSQL=0 TMPDIR="$PWD/.copilot-tracking/issue186-scratch" PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python - <<'PY' | tee .copilot-tracking/changes/2026-10-18/issue186-message-contract-measurement.log
+import hashlib
+import json
+from fractions import Fraction
+from sensor_consumer_fixture import observations
+from zava_forward.core.sensor_consumer import SensorConsumer, preflight
+from zava_forward.core.synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
+
+row = observations()[0]
+assert set(row) == set(READING_FIELDS) and len(row) == 13
+assert all(type(value) is str for value in row.values())
+assert row['schema_version'] == SCHEMA_VERSION
+assert preflight([row]) == [row] and SensorConsumer._shape(row) is None
+payload = json.dumps(row, sort_keys=True, ensure_ascii=True).encode('utf-8')
+assert hashlib.sha256(payload).hexdigest() == SensorConsumer._reference(row)
+print(payload.decode('utf-8'))
+print('schema_version:', SCHEMA_VERSION)
+print('bytes_per_sample:', len(payload))
+print('sha256:', hashlib.sha256(payload).hexdigest())
+for homes, expected_records, expected_rate in ((1, 3, Fraction(1, 28800)), (60000, 180000, Fraction(25, 12))):
+    records = 3 * homes
+    rate = Fraction(records, 86400)
+    assert records == expected_records and rate == expected_rate
+    print(f'N={homes} records/day={records} mean_records/s={rate} ({float(rate):.12g}) sample_bytes/day={records * len(payload)}')
+PY
+Result:366 bytes; SHA256efccea5eb698a3310aca7409837ad9b5ad3673b949ddb3c2395da21a8b01dc6c.
+N1=>3/day,1/28800/s,1098bytes/day; N60000=>180000/day,25/12/s,65880000bytes/day.
+P01-T01 checked immediately. Six existing docs edited coherently via apply_patch;
+P01-T02/P01 checked immediately afterward. No source/test/new schema edits.
+
+P02-T01 initial command:
+set -o pipefail
+ZF_SENSOR_MSSQL=0 TMPDIR="$PWD/.copilot-tracking/issue186-scratch" PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -m unittest test_sensor_consumer test_sensor_ingestion test_sensor_faults -q 2>&1 | tee .copilot-tracking/changes/2026-10-18/issue186-message-contract-tests.log
+Result exit1:80 tests in17.901s,16 errors. Full adverse output retained. All
+reported errors are generator stock_fabric._destination rejection of repository
+output; no core/API failures reported. No source/test correction made.
+
+Independent doc check actual command:
+set -o pipefail
+ZF_SENSOR_MSSQL=0 TMPDIR="$PWD/.copilot-tracking/issue186-scratch" PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python - <<'PY' | tee .copilot-tracking/changes/2026-10-18/issue186-message-contract-doc-check.log
+import hashlib
+import json
+import re
+import subprocess
+import tempfile
+from pathlib import Path
+from sensor_consumer_fixture import observations
+from zava_forward.core.synthetic.sensor_faults import READING_FIELDS
+root = Path.cwd()
+assert Path(tempfile.gettempdir()) == root / '.copilot-tracking/issue186-scratch'
+print('tempfile root:', tempfile.gettempdir())
+path = root / 'docs/reference/research/iot-sensor-analytics-research-plan.md'
+text = path.read_text()
+section = text.split('## Shared observation contract and volume ', 1)[1].split('## Sensor privacy engineering boundary', 1)[0]
+example = json.loads(re.search(r'```json\n(.*?)\n```', section, re.S).group(1))
+assert example == observations()[0]
+fields = re.findall(r'^\| `([a-z_]+)` \| string \|', section, re.M)
+assert fields == list(READING_FIELDS), fields
+payload = json.dumps(example, sort_keys=True, ensure_ascii=True).encode('utf-8')
+assert len(payload) == 366
+assert hashlib.sha256(payload).hexdigest() in section
+assert '65,880,000' in section and 3 * 60000 * len(payload) == 65880000
+script = re.search(r"```bash\nPYTHONPATH=src/core/tests python - <<'PY'\n(.*?)\nPY\n```", section, re.S).group(1)
+exec(compile(script, str(path), 'exec'), {})
+changed = subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines()
+expected = {'docs/reference/research/iot-sensor-analytics-research-plan.md', 'src/core/README.md', 'src/api/README.md', 'docs/case_study_48_addendum.md', 'docs/reference/README.md', 'docs/reference/log.md'}
+assert set(changed) == expected, changed
+base_log = subprocess.check_output(['git', 'show', 'HEAD:docs/reference/log.md'], text=True)
+assert (root / 'docs/reference/log.md').read_text().startswith(base_log)
+for name in changed:
+    diff = subprocess.check_output(['git', 'diff', '--unified=0', '--', name], text=True)
+    added = '\n'.join(line[1:] for line in diff.splitlines() if line.startswith('+') and not line.startswith('+++'))
+    assert '.copilot-tracking/' not in added
+    for target in re.findall(r'\]\(([^)]+)\)', added):
+        if target.startswith(('http:', 'https:', '#')):
+            continue
+        file, _, anchor = target.partition('#')
+        dest = (root / name).parent / file
+        assert dest.is_file(), (name, target)
+        if anchor:
+            headings = re.findall(r'^#{1,6}\s+(.+)$', dest.read_text(), re.M)
+            slugs = [re.sub(r'[^\w\- ]', '', heading.lower()).replace(' ', '-') for heading in headings]
+            assert anchor in slugs, (name, target)
+print('PASS: exact imported field table, unchanged fixture JSON, 366-byte sample, exact documented reproduction, added relative links/anchors, append-only KB log, six-doc-only tracked diff')
+PY
+git diff --check && git diff --stat && git status --short
+Result exit0; doc-check.log contains current fixture/reproduction output and PASS.
+Tracked diff six docs only,297 insertions/2deletions at that point.
+Tool reads: changed synthesis/addendum/core/API sections reread directly, field
+constraints checked against source. Markdown table regex pipe escaped before
+Review; whitespace in compatibility wording clarified. No runtime change.
+
+Shell:
+find .copilot-tracking/issue186-scratch -maxdepth 3 -type f -printf '%P\n' && git diff --numstat && date -u +%FT%TZ
+Result exit0, no scratch files printed; six docs; 2026-10-18T12:52:22Z.
+Read stock_fabric.py298-331. _destination forbids output inside any repository.
+Plan/details/PC-002 disposition updated to session-owned external scratch;
+implementation-time execution refinement, not new critique/correction cycle.
+
+P02-T01 final command:
+set -o pipefail
+mkdir /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-temp && rmdir .copilot-tracking/issue186-scratch && ZF_SENSOR_MSSQL=0 TMPDIR=/home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-temp PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -c 'import tempfile; from pathlib import Path; p = Path(tempfile.gettempdir()); assert p.name == "issue186-temp" and p.is_dir(); print("tempfile root:", p)' && ZF_SENSOR_MSSQL=0 TMPDIR=/home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-temp PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python -m unittest test_sensor_consumer test_sensor_ingestion test_sensor_faults -q 2>&1 | tee .copilot-tracking/changes/2026-10-18/issue186-message-contract-tests-final.log
+Result exit0: verified owned session tempfile root;80 tests in18.040s,OK,
+no failures or skips. Failed initial output remains unchanged.
+
+Tracking apply_patch batch partly failed on a plan context line after five
+earlier files applied. Tool explicitly reported partial application. Parent
+inspected actual markers/status with rg, then applied only remaining plan/detail
+reconciliation; no files reverted and no lost changes.
+Shell:
+rmdir /home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-temp && test ! -e .copilot-tracking/issue186-scratch && git diff --check && git diff --quiet HEAD -- src/core/src src/core/tests src/api/src src/api/tests src/agents infra tools docs/case_study_48_original.md docs/reference/memory.md docs/adrs && git ls-remote origin refs/heads/main
+Result exit0: scratch empty/removed exactly; diff whitespace clean; runtime,
+tests, original case, memory, ADRs unchanged. origin/main exact pinned base.
+P02-T01/P02 complete, plan/details/changes/handoff/validation reconciled.
+No static/image/UI/actualSQL/Azure runs: unchanged runtime docs-only delivery;
+no new code/test requires configured static checks. Local SQLite is engineering
+only, not complete110/186, live producer/backfill/Hub/AI/privacy/human acceptance.
+Pre-transition state persisted with Review intended next action.
+
+REVIEW
+skill rpi-review loaded, review reference/template read. Opening record created
+before comparison; state transitioned to Review active. Exactly one fresh sync
+general-purpose worker issue186-original-review activated rpi-review and assessed
+the complete six-doc/task evidence boundary. Worker wrote only original Review.
+Execution Complete; outcome Conformant (bounded docs only); substantive RV0,
+Critical0/High0/Medium0/Low0. Existing FU01/FU02 remain outside feature scope.
+Worker independently executed documented reproduction and direct source checks,
+read retained80-test pass rather than rerun; no source/test/backend/remote edits.
+Review's validation evidence and limitations record its exact assessed boundary,
+including unavailable shell rg replaced by dedicated search. No nested workers.
+Original Review read by parent and retained unchanged; no corrections or repeat.
+Shell:
+gh api user --jq '{id,login}' && git status --short && git branch --show-current && git rev-parse HEAD && git ls-remote origin refs/heads/main && git diff --check && sha256sum .copilot-tracking/reviews/plans/2026-10-18/issue186-message-contract-plan-critique.md .copilot-tracking/reviews/logs/2026-10-18/issue186-message-contract-review.md
+Result exit0: authenticated id8036360/loginjmservera; own-only changes, expected
+branch/exact base; origin/main unchanged; diff clean. Immutable originals:
+critique SHA256d19d40a97143be9d04ddf03c7dc69a4ee4d7f2c875c5ea3362d12ceaaf3599c3
+Review SHA2563358a295b884ea40052da779abd67c9bc2de783e930765e4259c143393688a56.
+Pre-transition state persisted with Follow-up/publication next action.
+
+PUBLICATION PREPARATION
+git-commit skill loaded. Its referenced installed commit-message.instructions.md
+path is absent (view explicitly failed), and get_changed_files tool is not
+available in this host. Use repository Conventional Commit/user-specific safe
+author and staged git diff inspection as explicit fallback; no new tooling.
+Read .gitignore, nonempty; no PR template matched .github/*PULL* or *pull*.
+All staged targets must be six approved docs plus named issue186 evidence.
+Only normal branch push and draft PRmain are authorized, Refs186 only; no
+criteria/closure/board/merge/rebase/base change/force push. No source change
+after original Review; subsequent writes are lifecycle state/log/inventory only.

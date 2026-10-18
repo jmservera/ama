@@ -1,0 +1,7 @@
+tempfile root: /home/azureuser/source/ama-wt/issue-186-contract/.copilot-tracking/issue186-scratch
+{"calibrated": "true", "home_id": "ZF-1", "humidity_pct": "54.36", "humidity_unit": "percent", "observed_at": "2024-10-01T00:00:00Z", "reading_id": "SENS-SYN-1-1727740800", "scenario": "BACKFILL_2Y", "schema_version": "sensor-fault-input-v1", "seed": "183", "sensor_id": "SENS-SYN-1", "source_type": "SYNTHETIC", "temperature_c": "16.73", "temperature_unit": "degC"}
+bytes_per_sample: 366
+sha256: efccea5eb698a3310aca7409837ad9b5ad3673b949ddb3c2395da21a8b01dc6c
+1 3 1/28800 1098
+60000 180000 25/12 65880000
+PASS: exact imported field table, unchanged fixture JSON, 366-byte sample, exact documented reproduction, added relative links/anchors, append-only KB log, six-doc-only tracked diff

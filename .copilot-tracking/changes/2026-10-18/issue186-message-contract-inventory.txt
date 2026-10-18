@@ -1,0 +1,44 @@
+Issue186 prepublication reviewed-content inventory; 2026-10-18
+Branch: docs/sensor-message-contract-186
+Fixed base: 100ead1bacdb72a8ea7ce5867233db30b22b2f50
+origin/main: same fixed base at last remote inspection; no movement observed
+Frozen published head: recorded externally in draft PR metadata/body after normal push; not self-embedded in its own commit
+Original critique: one Complete/Revise; direct dispositions; original Review: one Complete/Conformant; correction count0
+Runtime/test/private/original-case/memory/ADR changes: none
+
+Six reviewed canonical document hashes:
+5859ae558586abc751db9564056c21599420b8825f4a4922bed2635cc6e23f63 docs/case_study_48_addendum.md
+a76f3836c88f1913addbcbc528d9249231cc810fedb37938bcf140a7eb07dfa2 docs/reference/README.md
+e0f676816ad9a25c2839989e7d60f5b3acc749cd1e47588cb3a42530567707b7 docs/reference/log.md
+f5e034505deefb5f19d39bcfafc36236b08d5fdc95e12336ffccf04d3b9fdf61 docs/reference/research/iot-sensor-analytics-research-plan.md
+b6cf2b4a036d69e457d4f1ff71eb6917a0ffc0ef52c51a79d8e13baa080c163f src/api/README.md
+f3b9769ee8671090b2761954a4df64f687b87d1ca173e147e090f7cd22cf3300 src/core/README.md
+
+Immutable independent-original hashes:
+d19d40a97143be9d04ddf03c7dc69a4ee4d7f2c875c5ea3362d12ceaaf3599c3 .copilot-tracking/reviews/plans/2026-10-18/issue186-message-contract-plan-critique.md
+3358a295b884ea40052da779abd67c9bc2de783e930765e4259c143393688a56 .copilot-tracking/reviews/logs/2026-10-18/issue186-message-contract-review.md
+
+Complete intended delivery file set at initial publication (this inventory included):
+.copilot-tracking/changes/2026-10-18/issue186-message-contract-changes.md
+.copilot-tracking/changes/2026-10-18/issue186-message-contract-doc-check.log
+.copilot-tracking/changes/2026-10-18/issue186-message-contract-inventory.txt
+.copilot-tracking/changes/2026-10-18/issue186-message-contract-measurement.log
+.copilot-tracking/changes/2026-10-18/issue186-message-contract-tests-final.log
+.copilot-tracking/changes/2026-10-18/issue186-message-contract-tests.log
+.copilot-tracking/details/2026-10-18/issue186-message-contract-phase-details.md
+.copilot-tracking/documentation/2026-10-18-issue186-session.md
+.copilot-tracking/plans/2026-10-18/issue186-message-contract-plan.md
+.copilot-tracking/research/2026-10-18/issue186-message-contract-research.md
+.copilot-tracking/reviews/logs/2026-10-18/issue186-message-contract-review.md
+.copilot-tracking/reviews/plans/2026-10-18/issue186-message-contract-plan-critique.md
+.copilot-tracking/rpi-sessions/2026-10-18/issue186-message-contract-execution.log
+.copilot-tracking/rpi-sessions/2026-10-18/issue186-message-contract-state.json
+docs/case_study_48_addendum.md
+docs/reference/README.md
+docs/reference/log.md
+docs/reference/research/iot-sensor-analytics-research-plan.md
+src/api/README.md
+src/core/README.md
+
+Later evidence-only receipt commit is permitted; canonical-doc and original-review hashes above must remain exact.
+Remaining limits: stock/live compatibility for187/188; live Hub/identity/cost/network/credentials/privacy/AI/Azure/human gates; coordinator exact-head full-PR assessment/criteria/merge.

@@ -909,6 +909,22 @@ provisioning/credential, privacy, real AI or Azure application acceptance.
 The following analysis/map flow remains a proposal, not implemented by this
 bounded slice.
 
+The [shared observation contract and volume reference](./reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+documents the unchanged consumer's imported versioned fields and stable-key
+replay, not another schema or a live producer. Each current observation pairs
+temperature and relative humidity: three per home per day means 3N observation
+records/day, or 3N/86400 mean records/second. Declared fictional N=1 and N=60,000
+give 3 and 180,000 records/day; the latter is programme-scale accounting, not a
+private stock read or live device count. A measured public synthetic JSON sample
+is 366 bytes, not a payload upper bound or Hub billing/throughput measurement.
+API batches and hypothetical wire messages remain distinct; 3N wire messages
+would require the explicit, unadopted assumption of one observation/message.
+Stock-derived 73-character lowercase-hex sensor IDs do not satisfy the current
+consumer's uppercase, 20-character limit. No IDs or validation are changed; downstream
+#187/#188 need a separate reviewed compatibility decision before producer/live
+interoperability can be claimed. This bounded documentation neither changes the
+three/day baseline nor waives the independent live and human acceptance gates.
+
 The detailed proposal is recorded in
 [ADR 0002, Sensor Data Capture and Analysis](./adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map).
 It deliberately reuses the workbench API and Azure SQL programme store rather

@@ -1,0 +1,222 @@
+======================================================================
+ERROR: test_analysis_has_no_truth_profile_config_or_clean_values (test_sensor_faults.SensorFaultTests.test_analysis_has_no_truth_profile_config_or_clean_values)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 236, in test_analysis_has_no_truth_profile_config_or_clean_values
+    sb.write(root, stock=stock(), days=1, fault_rates={"outlier": 1})
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_cli_tiny_register_replay_and_validation (test_sensor_faults.SensorFaultTests.test_cli_tiny_register_replay_and_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 351, in test_cli_tiny_register_replay_and_validation
+    result = subprocess.run(
+             ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/home/azureuser/.copilot/session-state/904bed7a-ed3d-4a25-bd79-ca51b4af63bd/files/issue186-venv/bin/python', '-m', 'zava_forward.core.synthetic.sensor_backfill', '--register', '/home/azureuser/source/ama-wt/issue-186-contract/.copilot-tracking/issue186-scratch/tmp2w4mai_0/register.csv', '--homes', '3', '--days', '2', '--cadence', '360', '--as-of', '2026-10-17', '--seed', '7', '--fault-rate', 'gap=0.2', '--fault-rate', 'duplicate=0.2', '--out', '/home/azureuser/source/ama-wt/issue-186-contract/.copilot-tracking/issue186-scratch/tmp2w4mai_0/a']' returned non-zero exit status 2.
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='outlier')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='stuck')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='drift')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='gap')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='out_of_order')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='unmapped')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='wrong_unit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='clock_skewed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_each_class_has_observable_corruption_and_clean_truth (test_sensor_faults.SensorFaultTests.test_each_class_has_observable_corruption_and_clean_truth) (name='uncalibrated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 86, in test_each_class_has_observable_corruption_and_clean_truth
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_empty_choice_and_nonempty_output_safety (test_sensor_faults.SensorFaultTests.test_empty_choice_and_nonempty_output_safety)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 299, in test_empty_choice_and_nonempty_output_safety
+    manifest = sb.write(root, stock=declined, days=1, fault_rates={"gap": 1})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_loader_refuses_new_schema_before_database_changes (test_sensor_faults.SensorFaultTests.test_loader_refuses_new_schema_before_database_changes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 315, in test_loader_refuses_new_schema_before_database_changes
+    sb.write(root, homes=1, days=1, fault_rates={})
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_replay_shards_estimate_and_option_order_do_not_change_assignments (test_sensor_faults.SensorFaultTests.test_replay_shards_estimate_and_option_order_do_not_change_assignments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 258, in test_replay_shards_estimate_and_option_order_do_not_change_assignments
+    sb.write(root / name, stock=stock(), seed=7, days=2, fault_rates=config)
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+======================================================================
+ERROR: test_writer_truth_positions_cross_sensors_shards_and_hashes (test_sensor_faults.SensorFaultTests.test_writer_truth_positions_cross_sensors_shards_and_hashes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/tests/test_sensor_faults.py", line 179, in test_writer_truth_positions_cross_sensors_shards_and_hashes
+    manifest = sb.write(
+               ^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/sensor_backfill.py", line 210, in write
+    out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-186-contract/src/core/src/zava_forward/core/synthetic/stock_fabric.py", line 316, in _destination
+    raise ValueError("Private stock output must be outside the repository")
+ValueError: Private stock output must be outside the repository
+
+----------------------------------------------------------------------
+Ran 80 tests in 17.901s
+
+FAILED (errors=16)
