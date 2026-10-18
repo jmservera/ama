@@ -21,6 +21,13 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
+distinguishes 22 personas/eleven perspectives from current eligible thread owners
+(14 users/seven perspectives). Explicit both-contractor read/list/search denial
+fixtures have valid active staff-owned targets; they are not runtime enforcement.
+The baseline was not failing, and SN-08 remains partial with actual scope/volume
+approval unverified. ADR 0004 is accepted, while OD-45 to OD-49 remain open.
+
 For issue #87, the [appointment engineering boundary](./research/ux/customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87)
 records explicit offer/agreement controls, independent visit-fact counts and the
 source-authorized record-only human home-case closure/reset boundary with retained
