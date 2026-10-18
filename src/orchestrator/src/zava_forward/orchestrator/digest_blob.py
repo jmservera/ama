@@ -12,6 +12,7 @@ ZF_DIGEST_CLIENT_ID (managed identity). ZF_DIGEST_SAS is for local tests only.
 """
 import json
 import os
+import re
 import sys
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -21,6 +22,28 @@ from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreErr
 
 ALERT_MARKER = "LEDGER_DIGEST_ALERT"
 OK_MARKER = "LEDGER_DIGEST_OK"
+
+
+class InvalidDigestError(DocumentStoreError):
+    """Remote digest bytes cannot supply anchor evidence."""
+
+
+def _valid_anchor(name, digest):
+    if not isinstance(digest, dict):
+        return False
+    count = digest.get("count")
+    head = digest.get("head")
+    if (digest.get("chain") != "main" or digest.get("algorithm") != "sha256"
+            or type(count) is not int or count < 0
+            or not isinstance(head, str) or re.fullmatch(r"[0-9a-f]{64}", head) is None):
+        return False
+    if name.startswith("digest-"):
+        return name == f"digest-{count:010d}.json" and (count != 0 or head == ledger.GENESIS)
+    year = digest.get("year")
+    first_prev = digest.get("first_prev")
+    return (isinstance(year, str) and re.fullmatch(r"[0-9]{4}", year) is not None
+            and year != "0000" and name == f"year-{year}.json" and count > 0
+            and isinstance(first_prev, str) and re.fullmatch(r"[0-9a-f]{64}", first_prev) is not None)
 
 
 class BlobDigestStore(AzureBlobDocumentStore):
@@ -68,7 +91,7 @@ class BlobDigestStore(AzureBlobDocumentStore):
         try:
             return json.loads(body)
         except ValueError:
-            raise DocumentStoreError(f"digest {name} is not valid JSON")
+            raise InvalidDigestError("invalid remote digest anchor") from None
 
 
 def open_digest_store(env=None, transport=None):
@@ -101,12 +124,22 @@ def publish(store, blob):
 def verify(store, blob):
     """Verify the ledger against the digests held in the immutable container only."""
     names = blob.list_digests()
-    heads = [blob.read_digest(n) for n in names if n.startswith("digest-")]
-    years = [blob.read_digest(n) for n in names if n.startswith("year-")]
+    heads, years, problems = [], [], []
+    for name in names:
+        if not name.startswith(("digest-", "year-")):
+            continue
+        try:
+            digest = blob.read_digest(name)
+        except InvalidDigestError:
+            problems.append(dict(check="digests", problem="invalid remote digest anchor"))
+            continue
+        if not _valid_anchor(name, digest):
+            problems.append(dict(check="digests", problem="invalid remote digest anchor"))
+            continue
+        (heads if name.startswith("digest-") else years).append(digest)
     entries = list(store.audit_entries())
     rep = ledger.verify_entries(entries, heads)
     yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
-    problems = []
     if not rep["intact"]:
         problems.append(dict(check="chain", problem=rep["problem"], digest_mismatches=rep["digest_mismatches"]))
     if not yrep["intact"]:

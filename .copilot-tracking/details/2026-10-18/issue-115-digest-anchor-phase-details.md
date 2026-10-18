@@ -18,6 +18,35 @@ C1-C8/W1. No blocking unknowns; operational gates remain separate.
 | --- | --- | --- | --- |
 | P01 | Reproduce then correct only recognized-anchor absence | Complete | P01-T01, P01-T02 |
 | P02 | Local validation, one Review and authorized publication | Complete, coordinator exact-final-head review remains separate | P02-T01, P02-T02 |
+| P03 | Authorized correction ONE after coordinator NOT ACCEPTED | Source/validation complete, publication pending | P03-T01, P03-T02, P03-T03 |
+
+## P03: Qualify Remote Anchor Evidence
+
+User2026-10-18 authorizes correction ONE, max two, same task/PR404; no new Review.
+Coordinator Medium: digest-not-a-count.json={} false green even after initial
+unrelated-only guard. Original assessments remain frozen and historical.
+Essential count/head/chain/algorithm/year/first_prev and publisher filename
+invariants are recorded in correction-one receipt; at timestamp and extra
+fields do not need a new schema. Fixed diagnostic invalid-anchor problems must
+fail report and CLI even with another valid anchor, without exposing content.
+
+P03-T01: add existing fake-based malformed filename and payload matrices,
+including syntactically valid names with {}, scalars/collections, incomplete
+fields, wrong count/hash/algorithm/chain/year/first_prev, invalid JSON/encoding;
+CLI and direct report. Record expected failures before production edit.
+P03-T02 depends on failures: qualify before ledger readers, explicit unsuccessful
+fixed problem, no broad catches/defaults, no blob mutation. Canonical count name
+uses minimum10 digits, allowing larger counts, no new clock-based year cutoff.
+P03-T03: same sanitized task TMPDIR/venv focused/coupled/full unittest and configured
+Ruff/format/mypy/diff check, original parity and correction hashes. Commit normal
+push/PR404 actual-head correction receipt; main unchanged or stop integration.
+End with same coordinator follow-up, never a self-issued Pass or second Review.
+
+P03-T01/T02 actual evidence:3 malformed methods failed before source change
+(112 assertion failures/30 malformed-data errors); after qualification25 focused/
+coupled and44 full orchestrator tests pass, zero skips. Configured Ruff/format/
+mypy pass. Frozen original hashes unchanged. Publication remains P03-T03;
+coordinator NOT ACCEPTED remains authoritative until same-reviewer follow-up.
 
 Single original critique Complete / Revise, PC-001 applied below. No new critique
 or user choice needed. Frozen original remains unchanged.

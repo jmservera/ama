@@ -219,6 +219,13 @@ schedule, Legal/DPO or owner approval acceptance.
   remote head or year digest anchors, or unreachable container prints
   `LEDGER_DIGEST_ALERT` and exits 1. Unrelated blobs do not count as anchors and
   do not affect verification alongside valid head or year digest evidence.
+  Prefixed `digest-`/`year-` objects must have the publisher's canonical filename
+  matching the payload count/year, `chain: main`, `algorithm: sha256`, an integer
+  count and lowercase SHA-256 head. Year anchors also require a positive count,
+  a four-digit nonzero year and SHA-256 `first_prev`; zero-count head anchors
+  require the GENESIS hash. Malformed candidates fail explicitly even alongside
+  valid evidence, without logging their names or content. Additional metadata
+  is allowed; the head's `at` timestamp is not used to verify chain evidence.
 * `infra/modules/storage.bicep` adds the container with a time-based retention
   policy (created unlocked); `containerapps.bicep` adds a daily
   `job-*-ledger-verify`; `main.bicep` adds a log alert on the marker to the

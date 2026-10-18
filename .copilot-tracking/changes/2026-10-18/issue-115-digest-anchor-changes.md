@@ -15,7 +15,15 @@ Branch: fix/digest-anchor-evidence-115.
 
 ## Execution Status
 
-Complete full-plan delivery. P01-T01/T02, P01, P02-T01/T02 and P02 complete.
+Current correction ONE (2026-10-18): coordinator independent complete16-path/
+13-artifact assessment of bbb13521 returned NOT ACCEPTED, one Medium malformed
+prefixed-anchor false green. Same-task correction authorized, no new Review.
+See correction-one.md and its five logs in this directory for failing-first
+evidence, source qualification,25/44 passing local tests, quality gates and
+hashes. Historical original positive source judgment below is not current
+coordinator acceptance. Correction publication/follow-up pending.
+
+Initial full-plan delivery completed. P01-T01/T02, P01, P02-T01/T02 and P02 complete.
 Original Review Complete / Residual work, source Conformant; independent
 coordinator exact-final-head review and operational follow-ups remain open. No production edits occurred
 before failing-first evidence.

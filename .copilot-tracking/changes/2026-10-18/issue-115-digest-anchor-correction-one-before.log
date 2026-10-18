@@ -1,0 +1,1450 @@
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 104, in verify
+    heads = [blob.read_digest(n) for n in names if n.startswith("digest-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest digest-0000000003.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 104, in verify
+    heads = [blob.read_digest(n) for n in names if n.startswith("digest-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest digest-0000000003.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 341, in loads
+    s = s.decode(detect_encoding(s), 'surrogatepass')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 104, in verify
+    heads = [blob.read_digest(n) for n in names if n.startswith("digest-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest digest-0000000003.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 341, in loads
+    s = s.decode(detect_encoding(s), 'surrogatepass')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 104, in verify
+    heads = [blob.read_digest(n) for n in names if n.startswith("digest-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest digest-0000000003.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=12)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                                                          ~~~~~~^^^^^^^^^
+TypeError: list indices must be integers or slices, not float
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=12)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                                                          ~~~~~~^^^^^^^^^
+TypeError: list indices must be integers or slices, not float
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=13)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                            ^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'str' and 'int'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=13)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                            ^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'str' and 'int'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=14)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                            ^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=14)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 107, in verify
+    rep = ledger.verify_entries(entries, heads)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                            ^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+KeyError: 'year'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+KeyError: 'year'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 105, in verify
+    years = [blob.read_digest(n) for n in names if n.startswith("year-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest year-2024.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 105, in verify
+    years = [blob.read_digest(n) for n in names if n.startswith("year-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest year-2024.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 341, in loads
+    s = s.decode(detect_encoding(s), 'surrogatepass')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 105, in verify
+    years = [blob.read_digest(n) for n in names if n.startswith("year-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest year-2024.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 69, in read_digest
+    return json.loads(body)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 341, in loads
+    s = s.decode(detect_encoding(s), 'surrogatepass')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 105, in verify
+    years = [blob.read_digest(n) for n in names if n.startswith("year-")]
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 71, in read_digest
+    raise DocumentStoreError(f"digest {name} is not valid JSON")
+zava_forward.core.documents.DocumentStoreError: digest year-2024.json is not valid JSON
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=8)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+KeyError: 'year'
+
+======================================================================
+ERROR: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=8)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 260, in assert_invalid_remote_anchor
+    rep = digest_blob.verify(self.store, self.blob)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/src/zava_forward/orchestrator/digest_blob.py", line 108, in verify
+    yrep = ledger.verify_years(entries, years) if entries else dict(intact=not years, years={}, missing_years=[d["year"] for d in years])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/core/src/zava_forward/core/ledger.py", line 83, in verify_years
+    sealed = {d["year"]: d for d in digests}
+              ~^^^^^^^^
+KeyError: 'year'
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='digest-not-a-count.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='digest-not-a-count.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='digest-3.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='digest-3.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='digest-00000000003.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='digest-00000000003.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='digest--000000003.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='digest--000000003.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='digest-0000000002.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='digest-0000000002.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='digest-PRIVATE_SENTINEL.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='digest-PRIVATE_SENTINEL.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='year-not-a-year.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='year-not-a-year.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='year-202.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='year-202.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='year-0000.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['0000'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='year-0000.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['0000'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=False, name='year-2025.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_prefixed_anchor_names_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_prefixed_anchor_names_fail_closed) (with_good_anchor=True, name='year-2025.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=6)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=6)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=8)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=8)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=9)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=9)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': True, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': True, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=11)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': -1, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=11)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': -1, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=15)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=15)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=16)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=16)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=17)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=17)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=18)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=18)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=19)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=19)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'chain', 'problem': None, 'digest_mismatches': [{'digest_count': 3, 'reason': 'chain differs from the digest'}]}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=20)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=20)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=21)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=21)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=22)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=22)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=23)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=23)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=24)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=24)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='digest-0000000003.json', case=26)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='digest-0000000003.json', case=26)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=6)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=6)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=9)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=9)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=11)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=11)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=12)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=12)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=13)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=13)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=14)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=14)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=15)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=15)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=16)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=16)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=17)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=17)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=18)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=18)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=19)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=19)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=20)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=20)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=21)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=21)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=22)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=22)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=23)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=23)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=24)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=24)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=26)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=26)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=27)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=27)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=28)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': [2024], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=28)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': [2024], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=29)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2025'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=29)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2025'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=30)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=30)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=31)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=31)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=False, name='year-2024.json', case=32)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_malformed_anchor_payloads_fail_closed (test_digest_blob.BlobDigestTests.test_malformed_anchor_payloads_fail_closed) (with_good_anchor=True, name='year-2024.json', case=32)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 262, in assert_invalid_remote_anchor
+    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+AssertionError: {'check': 'digests', 'problem': 'invalid remote digest anchor'} not found in [{'check': 'years', 'missing_years': ['2024'], 'broken': {}}]
+
+======================================================================
+FAIL: test_invalid_zero_head_is_not_an_anchor (test_digest_blob.BlobDigestTests.test_invalid_zero_head_is_not_an_anchor) (with_good_anchor=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_invalid_zero_head_is_not_an_anchor (test_digest_blob.BlobDigestTests.test_invalid_zero_head_is_not_an_anchor) (with_good_anchor=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 261, in assert_invalid_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.061s
+
+FAILED (failures=112, errors=30)

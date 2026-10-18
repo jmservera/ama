@@ -248,6 +248,88 @@ class BlobDigestTests(unittest.TestCase):
         self.assertIsNone(digest_blob.open_digest_store({}))
         self.assertEqual(digest_blob.main([], store=self.store, env={}, out=self.out.append), 2)
 
+    def assert_invalid_remote_anchor(self, name, body):
+        self.container.blobs = {name: body}
+        for with_good_anchor in (False, True):
+            with self.subTest(with_good_anchor=with_good_anchor):
+                if with_good_anchor:
+                    entries = list(self.store.audit_entries())
+                    good = ledger.make_digest(1, entries[0]["hash"])
+                    self.container.blobs["digest-0000000001.json"] = json.dumps(good).encode()
+                snapshot = dict(self.container.blobs)
+                rep = digest_blob.verify(self.store, self.blob)
+                self.assertFalse(rep["intact"])
+                self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+                self.out.clear()
+                self.assertEqual(self.run_job(), 1)
+                self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+                self.assertNotIn(name, "\n".join(self.out))
+                self.assertNotIn("PRIVATE_SENTINEL", "\n".join(self.out))
+                self.assertEqual(self.container.blobs, snapshot)
+                self.assertFalse(any(method in ("PUT", "DELETE") for method, _, _ in self.container.calls))
+
+    def test_malformed_prefixed_anchor_names_fail_closed(self):
+        entries = list(self.store.audit_entries())
+        head = ledger.make_digest(3, entries[-1]["hash"])
+        year = ledger.make_year_digest("2024", entries)
+        for name, payload in (
+            ("digest-not-a-count.json", {}),
+            ("digest-3.json", head),
+            ("digest-00000000003.json", head),
+            ("digest--000000003.json", head),
+            ("digest-0000000002.json", head),
+            ("digest-PRIVATE_SENTINEL.json", head),
+            ("year-not-a-year.json", year),
+            ("year-202.json", year),
+            ("year-0000.json", {**year, "year": "0000"}),
+            ("year-2025.json", year),
+        ):
+            with self.subTest(name=name):
+                self.assert_invalid_remote_anchor(name, json.dumps(payload).encode())
+
+    def test_malformed_anchor_payloads_fail_closed(self):
+        entries = list(self.store.audit_entries())
+        head = ledger.make_digest(3, entries[-1]["hash"])
+        year = ledger.make_year_digest("2024", entries)
+        for name, valid in (("digest-0000000003.json", head), ("year-2024.json", year)):
+            bodies = [b"{}", b"null", b"[]", b'"PRIVATE_SENTINEL"', b"not JSON PRIVATE_SENTINEL", b"\xff"]
+            bodies += [json.dumps({k: v for k, v in valid.items() if k != field}).encode()
+                       for field in valid if field != "at"]
+            for field, values in (
+                ("count", (True, -1, 1.5, "3", None)),
+                ("head", (None, 4, [], "PRIVATE_SENTINEL", "A" * 64)),
+                ("chain", ("other", "", None)),
+                ("algorithm", ("sha512", "", None)),
+            ):
+                bodies += [json.dumps({**valid, field: value}).encode() for value in values]
+            if name.startswith("year-"):
+                bodies += [json.dumps({**valid, field: value}).encode() for field, value in
+                           (("year", 2024), ("year", "2025"), ("count", 0),
+                            ("first_prev", None), ("first_prev", "PRIVATE_SENTINEL"))]
+            else:
+                bodies.append(json.dumps({**head, "count": 0, "head": "f" * 64}).encode())
+            for index, body in enumerate(bodies):
+                with self.subTest(name=name, case=index):
+                    self.assert_invalid_remote_anchor(name, body)
+
+    def test_anchor_qualification_preserves_publisher_and_reader_compatibility(self):
+        entries = list(self.store.audit_entries())
+        head = ledger.make_digest(3, entries[-1]["hash"])
+        del head["at"]
+        self.container.blobs = {"digest-0000000003.json": json.dumps({**head, "extra": "provenance"}).encode()}
+        self.assertEqual(self.run_job(), 0)
+        large = ledger.make_digest(10000000000, entries[-1]["hash"])
+        self.container.blobs = {"digest-10000000000.json": json.dumps(large).encode()}
+        rep = digest_blob.verify(self.store, self.blob)
+        self.assertFalse(rep["intact"])
+        self.assertEqual(rep["digests"], 1)
+        self.assertEqual([p["check"] for p in rep["problems"]], ["chain"])
+
+    def test_invalid_zero_head_is_not_an_anchor(self):
+        self.assert_invalid_remote_anchor(
+            "digest-0000000000.json", json.dumps(ledger.make_digest(0, "f" * 64)).encode())
+
 
 if __name__ == "__main__":
     unittest.main()

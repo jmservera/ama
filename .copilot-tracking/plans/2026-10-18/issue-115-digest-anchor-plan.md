@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 
 * Task ID: 115
 * Task slug: issue-115-digest-anchor
-* Planning status: Delivery complete; stopped for coordinator independent exact-final-head review
+* Planning status: Correction ONE implemented/locally validated; publication and same-coordinator follow-up pending
 * Plan date: 2026-10-18
 * Phase details: .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-115-digest-anchor-plan-critique.md
@@ -20,6 +20,10 @@ The implemented correction prevents an unrelated JSON blob from making an
 unanchored local ledger appear remotely verified. The absence guard inspects
 recognized head and year collections, with an explicit missing-anchor problem. It keeps valid
 head-only or sealed-year-only verification and create-only publication intact.
+Coordinator complete exact-head assessment subsequently found one Medium
+prefix/payload false green and returned NOT ACCEPTED. Authorized correction ONE
+qualifies actual publisher names and required ledger fields, not prefixes alone.
+Original critique/Review remain unchanged; no new Review or self-acceptance.
 
 ### User Decisions and Requirements Highlights
 
@@ -37,7 +41,8 @@ Actual lock, retention authority, scheduling and monitoring acceptance remain op
 
 ### Unresolved Decisions or Blockers
 
-None for bounded source correction. Cloud and policy decisions are outside scope.
+Coordinator acceptance is blocked by malformed prefixed remote evidence until
+same-reviewer follow-up. Correction ONE is authorized; cloud/policy remain outside scope.
 Original independent Review is Complete / Residual work, bounded source
 Conformant with no implementation defects. RV-001 publication portion completed
 on PR404; coordinator exact-final-head acceptance remains open. RV-002/003/004
@@ -46,6 +51,9 @@ are operational and first-publication trust follow-ups, not performed here.
 ## User Decisions and Requirements
 
 * Use isolated fix/digest-anchor-evidence-115 at exact c803614e8ca7c604e509f1c088f8b8f90f3063ef.
+* Correction ONE: reject malformed prefixed names and payloads using actual
+  publisher/ledger invariants; preserve original assessments and stop for SAME
+  coordinator after normal push/PR404 update. Maximum two correction cycles.
 * No recognized head/year anchor means explicit unsuccessful missing-anchor
   report, LEDGER_DIGEST_ALERT and nonzero exit; never LEDGER_DIGEST_OK.
 * First add a failing regression using existing FakeImmutableContainer with
@@ -70,7 +78,8 @@ are operational and first-publication trust follow-ups, not performed here.
 
 In scope: digest_blob.py guard/problem text, test_digest_blob.py tests and narrow
 existing orchestrator README clarification, dated task artifacts only.
-Non-goals: schema redesign, stricter filename grammar, core ledger changes,
+Correction ONE includes existing publisher filename/essential payload qualification.
+Non-goals: new digest format, timestamp-schema redesign, core ledger changes,
 retention or identity changes, services, SQL/Docker/browser/cloud validation,
 whole #115/#114 closure, KB inventory or other active workstreams.
 
@@ -85,6 +94,9 @@ whole #115/#114 closure, KB inventory or other active workstreams.
   without remote anchors fails; explicit zero-count remote head retains behavior.
 * FR5: broken chain or mismatching remote evidence remains unsuccessful even
   with unrelated blobs.
+* FR6: malformed head/year candidate name or essential payload yields an explicit
+  fixed-diagnostic unsuccessful report and CLI ALERT/exit1, even beside valid
+  evidence, without echoing remote names/content or mutating blobs.
 
 ## Non-Functional Requirements
 
@@ -108,6 +120,10 @@ whole #115/#114 closure, KB inventory or other active workstreams.
   discovery, configured Ruff/format/mypy and git diff --check have actual receipts.
 * AC5: single critique and Review are retained; all task artifacts committed;
   PR reports exact base/candidate/head and unmet gates; stop for coordinator.
+* AC6: correction malformed-name/empty/incomplete/wrong-type/invalid-JSON payload
+  regression matrices fail before source change, pass after; valid historical
+  head/year, empty GENESIS, unrelated neutrality and canonical large-count names
+  remain compatible. No new original Review, coordinator acceptance pending.
 
 ## Implementation Context Record
 
@@ -168,7 +184,9 @@ Coordinator must review exact final head independently. Details: P02-T02.
 
 Canonical test owner: src/orchestrator/tests/test_digest_blob.py and existing
 FakeImmutableContainer, not a new duplicate suite. Exact removals: none.
-Maximum additions: eight test methods; subtests may combine scenario matrices.
+Original candidate maximum additions: eight methods, completed.
+Correction ONE authorizes focused additional malformed name/payload and positive
+compatibility methods under same existing fake owner, no removals.
 Canonical production target: digest_blob.py; guide: orchestrator README ledger
 section only. Generated targets: none. No new core tests or modifications.
 Regression coverage: absence guard and CLI marker/exit. Semantic controls:
@@ -214,7 +232,7 @@ subsequent failing-first and validation commands use the bound workspace root.
 
 ## Handoff
 
-Source implementation P01/P02-T01 is complete: failing-first17/four failures,
+Historical initial delivery P01/P02-T01: failing-first17/four failures,
 passing focused21 and full orchestrator40, configured Ruff/format/mypy passed.
 Single original Review executed Complete / Residual work; source Conformant,
 zero source-correction cycles. P02-T02 complete: originals frozen and committed,
@@ -223,3 +241,26 @@ readback; final evidence-only receipt records publication, not a new assessment.
 Changes and delivery receipt own commands/hashes/publication facts.
 Stopped per user instruction. Coordinator complete independent exact-final-head
 review remains separate; no issue closure or operational acceptance.
+Subsequent coordinator NOT ACCEPTED supersedes the historical candidate's
+positive source judgment. Current correction ONE P03 has failing-first malformed
+name/payload evidence and25/44 passing local checks; qualification is implemented,
+not independently accepted. Publication is next, then SAME coordinator follow-up.
+
+## Correction ONE Active Checklist
+
+<!-- rpi:phase id=P03 -->
+### [ ] P03: Qualify remote anchors after adverse coordinator finding
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Failing-first malformed-name/payload direct and CLI matrix
+
+<!-- rpi:task id=P03-T02 -->
+#### [x] P03-T02: Minimal publisher-contract qualification and accurate guide
+
+Depends on P03-T01 expected behavioral failure, not setup error.
+
+<!-- rpi:task id=P03-T03 -->
+#### [ ] P03-T03: Local gates, frozen parity, correction receipt and PR404 publication
+
+Depends on P03-T02. No new/amended Review; stop for same coordinator.
+Receipt: .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one.md.

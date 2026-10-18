@@ -6,6 +6,12 @@ ms.date: 2026-10-18
 
 ## Actual Delivery
 
+Historical initial receipt. Coordinator subsequently returned NOT ACCEPTED
+for one Medium malformed-prefixed-anchor false green at bbb13521. Authorized
+correction ONE is recorded separately in issue-115-digest-anchor-correction-one.md,
+with failing-first and25/44 passing local checks; same-coordinator final-head
+follow-up remains required, no new/amended original Review.
+
 PR: https://github.com/jmservera/ama/pull/404, OPEN, non-draft, target main.
 Branch: fix/digest-anchor-evidence-115.
 Exact base: c803614e8ca7c604e509f1c088f8b8f90f3063ef.
