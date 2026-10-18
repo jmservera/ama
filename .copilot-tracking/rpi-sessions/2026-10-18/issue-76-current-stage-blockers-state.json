@@ -1,0 +1,76 @@
+{
+  "task_id": "76",
+  "task_slug": "issue-76-current-stage-blockers",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-76-current-stage-blockers-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-76-current-stage-blockers-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-76-current-stage-blockers-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-76-current-stage-blockers-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full ordered loop and publish topic PR; exact original base 6c1e376ff1241316272df22a5a3a6853aae9f87b",
+      "status": "confirmed",
+      "evidence": "Explicit user request; clean branch and HEAD verified"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; one critique executed, original verdict Revise, PC-001/002/003 directly disposed",
+      "status": "confirmed",
+      "evidence": "Research C1-C7 and plan Critique Disposition; original critique preserved"
+    },
+    {
+      "decision": "One original independent Review executed; outcome Residual work, bounded correction Conformant, no RV defects; zero source corrections",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-76-current-stage-blockers-review.md SHA256 527ed27ad92296fbbd42f2e148b14f9e8aed1d482748608a003da7f2aa5ff895"
+    },
+    {
+      "decision": "Normal topic push and main-target PR 407 published from original base; artifact-only reconciliation follows, source digest unchanged",
+      "status": "confirmed",
+      "evidence": "https://github.com/jmservera/ama/pull/407; historical source candidate ee8634c8754c68ad95dc3166d2a98918eee2ca45 and published head 56a8a7d700549ec4559f60a0f0406b49e9975f57; original Review and critique hashes unchanged"
+    },
+    {
+      "decision": "Explicit coordinator authorization continued the same completed/stopped task for pinned-main integration/publication only; no RPI phase restart",
+      "status": "confirmed",
+      "evidence": "User authorized exact old local/remote/PR head 56a8a7d700549ec4559f60a0f0406b49e9975f57 onto fetched main 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096, with only that old-head force-with-lease; no main push/merge or issue/board writes"
+    },
+    {
+      "decision": "Authorized rebase executed without conflicts; all original verdicts/evidence preserved and zero source correction cycles",
+      "status": "confirmed",
+      "evidence": "Rebased candidate 9067c00e20ce42cd83bfc1ffdb2c7656df6852bf; separate .copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration.md and integration-parity.json; five queue source/test files and 23 protected originals byte-identical, both README contracts retained, task86 upstream paths unchanged"
+    },
+    {
+      "decision": "Combined-state validation executed, not a new original Review or independent acceptance",
+      "status": "confirmed",
+      "evidence": "Integration receipts: 121 tests run OK with two existing skips; actual local SQL 15 passed, packaged UID10001 40 passed, complete configured core/API Ruff/format/mypy passed; initial root-cwd resident API harness import failure preserved; no pip install"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "coordinator-exact-integrated-head-review",
+      "summary": "Historical original Review does not assess the integrated/publication head; full independent coordinator review remains required",
+      "resolution": "After authorized exact-lease publication and PR head/base/empty-closing-reference verification, stop for coordinator full source/test/docs plus tracking exact-head review; no worker source correction, issue/board write or merge"
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "STOP for full independent coordinator exact-head source/test/docs plus tracking review after authorized publication transport verification. The receipt commit identity resolves with git log -1 --format=%H -- .copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration.md and must equal PR407 headRefOid and the literal head in its publication body. Only the exact old-head lease recorded in the integration receipt is authorized. Session remains stopped; no child work, RPI phase restart, issue/board writes or merge."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator full independent integrated exact-published-head review",
+      "rationale": "Required handoff after authorized integration; original Review remains historical",
+      "evidence": "Explicit integration-only user direction, original Review boundary and separate integration receipt"
+    },
+    {
+      "rank": 2,
+      "task": "Live Entra and human role-policy/queue-definition acceptance",
+      "rationale": "Issue acceptance remains unmet outside bounded offline correction",
+      "evidence": "Live issue 76 and original Review FU-01/FU-02"
+    }
+  ]
+}

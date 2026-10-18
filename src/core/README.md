@@ -1002,6 +1002,15 @@ context in staff list/detail. Both retain a process-local case-ID membership
 cache before filtering/counting/paging. JSON builds all six memberships together
 from the canonical evaluator on a cache miss.
 
+Funding, resident-decision and technical final-check requirements remain visible
+in `work.blockers` at other stages with `current_stop=false`; they do not place
+that case in Blockers or replace its current-stage reason/action. At
+`Final checks before ordering` those outstanding requirements are current stops,
+including when a handoff is pending. Membership and the selected reason/action
+use the same active set. Safety, unresolved stock and applicable shared-building
+holds retain their existing stop precedence, owners and snapshot clocks. No
+transition, consent, funding or competent-role approval gate is relaxed.
+
 SqlStore and MssqlStore persist six `queue_*` integer columns, each indexed with
 the case ID. Seeding and case writes maintain membership in the same transaction
 as the body, sequence and audit. Ordinary unlinked-case writes evaluate only
@@ -1011,9 +1020,14 @@ not a stale process copy. Older schemas add default-zero columns without marking
 them ready; startup backfills before certifying the complete generation. Reopening
 a populated database does not need the seed file.
 
-A persisted fingerprint covers queue definition version, dataset `as_of`,
+A persisted fingerprint covers queue definition version, internal membership
+evaluation revision, dataset `as_of`,
 complete ranking policy and current resident-authority/retention day. Changes
 force a full refresh; flags, fingerprint and generation publish atomically.
+The current-stage correction keeps public `work-queues-1` and the reset/default
+contract unchanged, but advances the internal membership revision to 2. Populated
+SQLite and SQL Server databases with the original fingerprint refresh derived
+flags without changing case bodies, rowversions, sequences or audit history.
 Every lookup, including a hot hit, checks freshness under a short cross-process
 writer lock and synchronises the case copy. A cache miss selects only IDs from
 the relevant covering SQL index. Filtering, global ranking and sorting still

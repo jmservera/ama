@@ -1,0 +1,17 @@
+======================================================================
+ERROR: test_resident_api (unittest.loader._FailedTest.test_resident_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/api/tests/test_resident_api.py", line 16, in <module>
+    from tests.test_mvp import DATA
+ModuleNotFoundError: No module named 'tests'
+
+
+----------------------------------------------------------------------
+Ran 113 tests in 25.985s
+
+FAILED (errors=1, skipped=1)

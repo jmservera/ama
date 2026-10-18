@@ -1537,7 +1537,7 @@ Filtering and reset do not change that authorisation boundary.
 | `new` | Current `stage_since` is between zero and seven days old, inclusive. This describes arrival in the current stage, not case creation. |
 | `priority` | Open cases under an explicitly approved ranking policy with a named owner. The existing policy is draft, so this queue is unavailable/empty. Accepted AI advice never qualifies as approved programme priority. |
 | `stale` | Last supplied EPC record's `documents.at` is older than 30 days, Survey older than 180 days, or a technical sign-off explicitly needs reassessment. Record timestamps are review triggers, not certificate expiry or proof of source validity/currentness. |
-| `blocked` | Existing safety, unresolved stock and shared-building stops, plus unmet funding/resident/technical final-check prerequisites. Future-step prerequisites are labelled separately from current stops. |
+| `blocked` | Existing safety, unresolved stock and applicable shared-building stops, plus unmet funding/resident/technical prerequisites at `Final checks before ordering`. Future-step requirements stay visible with `current_stop=false`, but do not join this queue or replace the current-stage reason/action. |
 | `overdue` | An outstanding recorded handoff acceptance, case resident-update or external safety-service response/update deadline is strictly before the snapshot. Each completion is checked independently; accepting a handoff does not complete a resident-update commitment. No deadline is invented from stage age. |
 | `unowned` | Handoff Offered, Received or Escalated, with no accepted receiver. A proposed receiver is not a confirmed owner, and the sender keeps chase responsibility. Accepted/Completed/Declined/Withdrawn are excluded. |
 

@@ -1,0 +1,11 @@
+Base: 6c1e376ff1241316272df22a5a3a6853aae9f87b
+Branch: fix/current-stage-queue-blockers-76
+Seven-file diff SHA-256: ba6bf081f159b30f36286c1a95256895991143ffd0956c9d0708b4a28004725f  -
+fff39ba9eea1e37a3bf0f821761934419cb66f0de0e34fec7dba25a7d75f110a  src/core/src/zava_forward/core/taskqueues.py
+6b481e60ba2e0074fe7fd9c3f4f2ef2068ec4956104de3880d23fc1ddf14100c  src/core/src/zava_forward/core/sqlstore.py
+6f826857342e3777be29b1e87ad6ed0c8cb54261df08f5f1b38b21a9246bf45a  src/core/tests/test_taskqueues.py
+e16ff235a8a656dd758c12a65ae7c001158e320f7686ef2ea3948d19a5f92dc6  src/core/tests/test_sqlqueues.py
+ecfbab4bf5eab17aa5257d6073d810f0b9c7bd5c6fb5a50e5d23300af7042cd1  src/api/tests/test_task_queue_api.py
+b764212c186ac98c1c4617647c11b6378bfd60b9b7bb47baf9d5b648a8cdb27f  src/core/README.md
+0c5d3242ca4e355ef14ba2b4157fdc41bcf3d857d0c3856a31a0871af6404802  src/api/README.md
+Original critique: 31e254f7de129957080e78d751f63ccac157d43f18ef2270f30cd4422e8bd1a7  .copilot-tracking/reviews/plans/2026-10-18/issue-76-current-stage-blockers-critique.md

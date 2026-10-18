@@ -1,0 +1,17 @@
+Owned SQL container ama-issue76-blockers-277925 at 127.0.0.1:32826
+Actual local SQL Server responsive: 16.0.4305.5
+test_cold_and_hot_lookup_never_evaluate_nonreturned_cases (test_mssqlstore.MssqlQueueMembership.test_cold_and_hot_lookup_never_evaluate_nonreturned_cases) ... ok
+test_failed_case_evaluation_rolls_back_body_flags_generation_and_sequence (test_mssqlstore.MssqlQueueMembership.test_failed_case_evaluation_rolls_back_body_flags_generation_and_sequence) ... ok
+test_old_certified_memberships_refresh_without_case_or_audit_writes (test_mssqlstore.MssqlQueueMembership.test_old_certified_memberships_refresh_without_case_or_audit_writes) ... ok
+test_prerequisite_clearing_refreshes_other_process_and_restart (test_mssqlstore.MssqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) ... ok
+test_refresh_failure_does_not_certify_partial_backfill (test_mssqlstore.MssqlQueueMembership.test_refresh_failure_does_not_certify_partial_backfill) ... ok
+test_refresh_only_generations_invalidate_other_process_hot_ids (test_mssqlstore.MssqlQueueMembership.test_refresh_only_generations_invalidate_other_process_hot_ids) ... ok
+test_seed_and_every_case_write_maintain_physical_flags (test_mssqlstore.MssqlQueueMembership.test_seed_and_every_case_write_maintain_physical_flags) ... ok
+test_shared_write_uses_authoritative_state_not_stale_process_documents (test_mssqlstore.MssqlQueueMembership.test_shared_write_uses_authoritative_state_not_stale_process_documents) ... ok
+test_write_between_initial_sync_and_lookup_keeps_ranks_and_context_consistent (test_mssqlstore.MssqlQueueMembership.test_write_between_initial_sync_and_lookup_keeps_ranks_and_context_consistent) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 14.699s
+
+OK
+Removed task-owned SQL container ama-issue76-blockers-277925

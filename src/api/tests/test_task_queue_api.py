@@ -127,6 +127,64 @@ class TaskQueueApi(unittest.TestCase):
             self.assertEqual(code, 400)
             self.assertIn("published work queues", error["error"])
 
+    def test_current_stage_membership_detail_csv_and_role_projection(self) -> None:
+        with self.store.lock:
+            for cid in self.store.cases:
+                self.store._case(cid)["closed"] = True
+            for cid, stage, kind in (
+                ("ZF-1", "Contacting resident", "funding"),
+                ("ZF-2", "Contacting resident", "technical"),
+                ("ZF-3", "Final checks before ordering", "technical"),
+                ("ZF-4", "Final checks before ordering", "funding"),
+            ):
+                supplied = copy.deepcopy(DATA["cases"][2])
+                supplied["funding"] = copy.deepcopy(self.store.cases[cid]["funding"])
+                supplied.update(id=cid, stage=stage, reason="PRIVATE-STAGE")
+                if kind == "funding":
+                    supplied["funding_ok"] = False
+                else:
+                    supplied["technical"]["signoffs"].pop("coordination")
+                self.store.cases[cid].clear()
+                self.store.cases[cid].update(supplied)
+            self.store.save()
+        query = "view=mine&queue=blocked&area=Test&owner=RLO-01&sort=name"
+        for actor in ("sam", "rex"):
+            with self.subTest(actor=actor):
+                scope = query.replace("view=mine", "view=all") if actor == "rex" else query
+                code, page = self.call(
+                    actor, "/api/cases?" + scope + "&role=Resident%20Liaison%20Officer"
+                )
+                self.assertEqual(code, 200)
+                self.assertEqual(page["total"], 2)
+                self.assertEqual({r["id"] for r in page["items"]}, {"ZF-3", "ZF-4"})
+                for row in page["items"]:
+                    detail = self.call(actor, "/api/cases/" + row["id"])[1]
+                    self.assertEqual(detail["work"], row["work"])
+                    self.assertTrue(row["work"]["blockers"][0]["current_stop"])
+                    self.assertEqual(row["work"]["reason"], row["work"]["blockers"][0]["reason"])
+                    self.assertEqual(
+                        row["work"]["next_action"], row["work"]["blockers"][0]["next_action"]
+                    )
+                code, text = self.call(actor, "/api/cases.csv?" + scope)
+                self.assertEqual(code, 200)
+                self.assertEqual(
+                    {r[0] for r in list(csv.reader(io.StringIO(text)))[1:]}, {"ZF-3", "ZF-4"}
+                )
+                for cid in ("ZF-1", "ZF-2"):
+                    work = self.call(actor, "/api/cases/" + cid)[1]["work"]
+                    self.assertNotIn("blocked", work["queues"])
+                    self.assertTrue(work["blockers"])
+                    self.assertFalse(work["blockers"][0]["current_stop"])
+                if actor == "rex":
+                    self.assertNotIn("PRIVATE-", json.dumps(page))
+                    work = self.call(actor, "/api/cases/ZF-3")[1]["work"]
+                    self.assertEqual(work["reason"], "Held for roles with a recorded need")
+        for suffix in ("", ".csv"):
+            self.assertEqual(
+                self.call("kim", f"/api/cases{suffix}?{query}&role=Retrofit%20Coordinator")[0],
+                403,
+            )
+
     def test_projection_and_direct_action_permissions_cannot_be_changed_by_view(self) -> None:
         for path in (
             "/api/cases?view=all&queue=new&role=Resident%20Liaison%20Officer",

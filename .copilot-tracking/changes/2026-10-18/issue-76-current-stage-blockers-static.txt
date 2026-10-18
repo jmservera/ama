@@ -1,0 +1,9 @@
+All checks passed!
+71 files already formatted
+tests/test_taskqueues.py:204: error: Incompatible types in assignment (expression has type "str", target has type "list[Any]")  [assignment]
+tests/test_taskqueues.py:311: error: Incompatible types in assignment (expression has type "str", target has type "list[Any]")  [assignment]
+Found 2 errors in 1 file (checked 124 source files)
+All checks passed!
+24 files already formatted
+Success: no issues found in 56 source files
+core_exit=1 api_exit=0

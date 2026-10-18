@@ -309,7 +309,8 @@ class SqlStore(Store):
 
     def _queue_fingerprint(self):
         return json.dumps(
-            [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT],
+            [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT,
+             taskqueues.MEMBERSHIP_REVISION],
             sort_keys=True,
         )
 
