@@ -15,10 +15,10 @@ Not accepted; green implementation checks are not independent acceptance.
 The older adverse assessments and two exhausted historical correction cycles
 remain unchanged.
 
-At receipt preparation, exact pinned integration, source/artifact parity and
-minimal validation are complete. Publication is the next authorized action.
-The publication completion section below is reconciled only after actual push.
-Final metadata-only commits do not change the integrated source boundary.
+Exact pinned integration, source/artifact parity, minimal validation and
+authorized lease publication are complete. The draft PR was updated and
+verified as recorded below. This final metadata-only receipt uses a normal push;
+it does not change the integrated source boundary or repeat an assessment.
 
 ## Exact Integration Boundary and Authority
 
@@ -198,6 +198,22 @@ the complete inventory, including all correction-one and original receipts,
 raw logs and preserved historical artifacts.
 
 ## Publication and Stop Boundary
+
+Actual exact-lease publication:
+e00c521573501a4ed84dab7ec0ccf66ef57a7053 ->
+d3b04c0cfa06fa304a7b81c21f1d38089e372e08. Fresh remote verification matched,
+main still equalled pinned ab0613f3336109ff9b96560a16758ee842232715.
+Draft PR398 body now reports the current bounded correction/integration,
+complete RPI/evidence boundaries, original adverse disposition and unmet gates.
+Actual live read after update: OPEN/draft=true/head d3b04c0c/base ab0613f3,
+closingIssuesReferences=[].
+
+Final metadata-only receipt uses a NORMAL push on the same branch. The final
+exact head is the commit containing this receipt, resolved in Git and PR
+metadata rather than a fabricated self-referential hash. All source and the 40
+prior immutable artifacts remain unchanged. Final PR body is refreshed to that
+exact head, and local/remote/PR head/base and clean state are checked afterward.
+No other branch or history rewrite; no main reintegration.
 
 Authenticated gh api user: id 8036360, login jmservera. Repository-local email
 8036360+jmservera@users.noreply.github.com is used for author and committer;

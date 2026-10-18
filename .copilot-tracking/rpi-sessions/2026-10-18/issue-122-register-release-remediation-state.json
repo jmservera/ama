@@ -3,9 +3,9 @@
   "task_slug": "issue-122-register-release-remediation",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Pinned integration published with exactly the authorized e00c5215 lease; draft PR398 current bounded correction disposition and evidence updated. Execution/publication complete, not independent acceptance. Final metadata-only receipt follows by normal push without source change.",
+      "status": "published-stopped-for-independent-review",
+      "evidence": "Exact lease push e00c521573501a4ed84dab7ec0ccf66ef57a7053 -> d3b04c0cfa06fa304a7b81c21f1d38089e372e08. Live PR398 OPEN/draft=true/head=d3b04c0c/base=ab0613f3336109ff9b96560a16758ee842232715/closingIssuesReferences=[]. Final head is the commit containing this metadata-only receipt, resolved in Git/PR rather than fabricated self-reference. Full boundary 51 paths: nine src, 42 artifacts; all 40 prior artifacts incl. original 27 unchanged."
+    },
     {
       "decision": "Pinned integration and minimal validation executed without source change/conflict. Complete normalized owned source patch unchanged; exact upstream source/test and immutable artifact parity established.",
       "status": "ready-for-authorized-publication-not-independent-acceptance",
@@ -69,15 +74,15 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "P04-T04 pinned integration/parity/minimal checks complete. Persist separate final integration receipt and exact e00c5215 lease-publish only this branch; update draft PR398, verify refs/empty closing references, then STOP for full independent coordinator review. Report later main movement without reintegration; stop unexpected topic advancement."
+    "phase": "Follow-up",
+    "action": "STOP as owner directed after pinned publication and final metadata-only normal push/PR head refresh. Coordinator performs full exact published-head source/artifact independent review before readiness. Original Not accepted immutable, RV-001 correction ONE implemented but not independently accepted; RV-002 distinct follow-up. No next source correction/critique/original Review started."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Coordinator base direction and full exact-head independent review",
-      "rationale": "Owner stop condition activated by main movement; correction ONE implemented locally, publication blocked and acceptance unavailable.",
-      "evidence": "Remote main ab0613f3336109ff9b96560a16758ee842232715; original Review Not accepted immutable; source candidate 72cf28b057dbb57e1599367dded1345a4c26c054 and separate correction-one receipt/parity locally persisted."
+      "task": "Coordinator full exact published-head source/artifact independent review",
+      "rationale": "Pinned integration and correction ONE are published with preserved adverse original assessment; acceptance and readiness belong to coordinator.",
+      "evidence": "Pinned ab0613f3336109ff9b96560a16758ee842232715, initial published d3b04c0cfa06fa304a7b81c21f1d38089e372e08; separate final-integration receipt/JSON, 51-path inventory and original Not accepted hash unchanged. Final metadata-only commit does not change source."
     },
     {
       "rank": 2,

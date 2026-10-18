@@ -45,6 +45,19 @@ SQL/image/coupled suites were deliberately not repeated. Previous command
 failures and corrections remain in original logs and receipts, not relabelled.
 Exact lease publication and draft PR metadata update remain the next action.
 
+P04-T04 publication completed using exactly the authorized lease:
+e00c521573501a4ed84dab7ec0ccf66ef57a7053 ->
+d3b04c0cfa06fa304a7b81c21f1d38089e372e08. Live PR398 read after body update:
+OPEN, draft=true, same head, base ab0613f3336109ff9b96560a16758ee842232715,
+closingIssuesReferences=[]. Main still equalled pinned base at publication.
+Final metadata-only receipt normal push follows; source and all prior evidence
+remain unchanged. Final exact head resolves to the commit containing that receipt.
+All 51 full-PR paths (nine src/42 artifacts) and preserved log paths/hashes
+are recorded in final-integration.json and final-integration.md.
+P04 execution complete, automatic session STOPPED on owner direction, not
+implementation acceptance. Full source/artifact independent review remains
+pending before readiness. No new source correction, Review or critique.
+
 Current owner continuation: SAME task, P04 correction ONE of maximum two,
 RV-001 only. This supersedes historical stopped/zero-correction wording below
 without rewriting its evidence. Original Review/critique and exhausted older

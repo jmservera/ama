@@ -626,7 +626,13 @@
     "src/core/src/zava_forward/core/store.py": "3dac9b7269bf3b24f65bb439523d865bccdc198a92946d4539e535bcd6989055"
   },
   "publication": {
-    "status": "prepared-not-pushed",
+    "status": "exact-lease-published-final-metadata-normal-push",
+    "first_published_head": "d3b04c0cfa06fa304a7b81c21f1d38089e372e08",
+    "first_published_old_head": "e00c521573501a4ed84dab7ec0ccf66ef57a7053",
+    "verified_pr_base": "ab0613f3336109ff9b96560a16758ee842232715",
+    "verified_pr_draft": true,
+    "verified_closingIssuesReferences": [],
+    "final_head_resolution": "The commit containing this metadata-only receipt; resolved after normal push in local/remote/PR verification. Source and prior artifacts remain exact.",
     "authorized_exact_lease": "refs/heads/fix/continuity-epoch-export-122:e00c521573501a4ed84dab7ec0ccf66ef57a7053",
     "allow_pinned_publication_if_main_moves": true,
     "unexpected_topic_advancement": "stop without replacing lease",

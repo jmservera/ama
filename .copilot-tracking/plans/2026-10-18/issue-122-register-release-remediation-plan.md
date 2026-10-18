@@ -162,7 +162,7 @@ timecapture.py/test_timecapture.py exactly, both README contributions, queue/
 recorder and complete normalized owned source patch; all 27 frozen originals.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: RV-001 correction ONE and authorized integration
+### [x] P04: RV-001 correction ONE and authorized integration
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Freeze original hashes and integrate exact authorized main
 <!-- rpi:task id=P04-T02 -->
@@ -170,7 +170,7 @@ recorder and complete normalized owned source patch; all 27 frozen originals.
 <!-- rpi:task id=P04-T03 -->
 #### [x] P04-T03: Integrated validation, parity and separate correction receipt
 <!-- rpi:task id=P04-T04 -->
-#### [ ] P04-T04: Exact-lease publication, draft PR reconciliation and STOP
+#### [x] P04-T04: Exact-lease publication, draft PR reconciliation and STOP
 
 Preserve bool exclusion and current finite int/float semantics, rejecting numeric
 values that cannot pass the existing floating-point finiteness check explicitly.
@@ -201,6 +201,14 @@ All 40 prior artifacts, including the original 27, remain byte-identical.
 Fresh minimal run: 37/37, zero skips (12 offline, two register/mutation, 23
 timecapture); configured core/API Ruff/format/mypy pass. No integration source/
 persistence intent change, so no broad SQL/image/coupled repetition.
+
+Publication executed: exact authorized e00c5215 lease to
+d3b04c0cfa06fa304a7b81c21f1d38089e372e08, draft PR398 updated and verified
+OPEN/draft/head d3b04c0c/base ab0613f3/empty closing refs. Final metadata-only
+receipt uses normal push, no source change. Full 51-path inventory and all parity
+hashes are in separate final-integration.json. P04 execution complete, original
+Not accepted unchanged, independent acceptance pending. Session STOPPED as
+owner directed; no further correction or assessment.
 
 ## Critique Disposition
 

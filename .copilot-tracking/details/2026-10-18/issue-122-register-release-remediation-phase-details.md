@@ -31,7 +31,13 @@ Fresh tests: OfflineTests 12, two HTTP register/mutation controls, timecapture 2
 total 37/37 with no skips. Configured core/API Ruff/format/mypy pass.
 No production/persistence intent change; broad image/SQL/coupled runs are not
 repeated and remain historical. Separate final integration receipt records this
-boundary; current next action is exact-lease publication, still pending.
+boundary. Exact e00c5215 lease publication completed at
+d3b04c0cfa06fa304a7b81c21f1d38089e372e08; draft PR398 updated and live-verified
+same head/base ab0613f3/empty closing refs. Final metadata-only receipt uses
+normal push without source change. P04-T04 complete; full 51-path inventory,
+40 frozen prior files and fresh log hashes are in separate final-integration.json.
+STOP for full exact published-head source/artifact independent coordinator review
+before readiness. Original Not accepted unchanged; no repeated assessment.
 
 P04-T01/T02 complete on exact authorized base; source guard and JSON matrix
 validated. P04-T03 results: focused 66/66, integrated host and installed nonroot
