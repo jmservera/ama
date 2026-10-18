@@ -17,14 +17,16 @@ decides, approves or restarts for anyone, and an AI assistant has no part in it.
   unauthorised restart fails. Communication templates are records only; nothing
   is sent to anyone. A witnessed authorised drill is an owner activity and is
   not claimed here.
-* Change register: a model, rule or configuration change records its version
-  and a passing evaluation result before it takes effect, and a reversal is a
-  new record that supersedes it. Nothing is overwritten.
+* Change register: records declared model, rule or configuration versions and
+  evaluation evidence. A reversal is another record, not a serving-configuration
+  switch. Task-bound release admission is the separate serving control.
 * Export: a self-describing bundle with its own digest and ledger chain, so
   evidence stays readable and verifiable with no AI supplier or live service.
 """
 import hashlib
 import json
+import math
+import uuid
 
 from . import controls as k
 
@@ -67,6 +69,11 @@ def reason_text(s):
     return f"Suspended ({s['id']}): use the manual route. {MANUAL_NOTE}"
 
 
+def epoch_current(record, epoch):
+    recorded = record.get("continuity_epoch", record.get("claim_epoch"))
+    return type(recorded) is int and recorded == epoch
+
+
 def effective_versions(doc):
     """Latest applied, unreversed change per kind and subject."""
     out = {}
@@ -84,7 +91,32 @@ class ContinuityMixin:
         return c
 
     def continuity_epoch(self):
-        return self._cont()["epoch"]
+        with self.lock:
+            return self._cont()["epoch"]
+
+    def ai_epoch_current(self, record):
+        return epoch_current(record, self.continuity_epoch())
+
+    def continuity_fence(self):
+        """Make the existing optimistic SQL writer validate the observed continuity document."""
+        if hasattr(self, "assistant_connection"):
+            self._cont()["publication_fence"] = uuid.uuid4().hex
+
+    def continuity_publish(self, task, epoch, source, publish):
+        """Retry only a known rolled-back local publication, never a provider call."""
+        from .store import ConflictError
+        for attempt in range(2):
+            try:
+                with self.lock:
+                    late = source == "ai" and (
+                        type(epoch) is not int or epoch != self._cont()["epoch"]
+                        or bool(active(self._cont(), task)))
+                    if source == "ai":
+                        self.continuity_fence()
+                    return publish(late)
+            except ConflictError as error:
+                if error.args != ("continuity",) or attempt:
+                    raise
 
     def continuity_suspension(self, task):
         return active(self._cont(), task)
@@ -250,13 +282,21 @@ class ContinuityMixin:
                 reasons.append(f"assistant proposals truncated at {assistants.get('limit')} of {assistants.get('total')}")
             if len(ledger_rows) != head_count or (ledger_rows and ledger_rows[-1]["hash"] != head_hash):
                 reasons.append("ledger changed or could not be read in full during export")
+            epoch = self._cont()["epoch"]
+            proposals = [dict(p) for p in assistants["proposals"]]
+            for p in proposals:
+                if not epoch_current(p, epoch) or active(self._cont(), p["capability"]):
+                    p.update(relied_on=False, actionable=False, epoch_current=False)
+            task_releases = assistants.get("task_releases") or dict(
+                supported=False, records=[], total=0, exported=0, truncated=False,
+                note="Task-release source unavailable; referenced evidence cannot be resolved.")
             bundle = dict(
                 format=EXPORT_FORMAT, generated_by=user["email"], generated_at=k.now(), as_of=self.as_of,
                 independence="Plain JSON with its own digest and ledger chain. Provider, deployment and model appear only as recorded data; "
                              "reading, verifying or re-importing it needs no AI supplier or live service.",
                 registry=ai_registry.registry(),
                 ai_records=[self._export_record(r) for r in recs],
-                assistant_proposals=list(assistants["proposals"]),
+                assistant_proposals=proposals, task_releases=task_releases,
                 assistants=dict(supported=assistants.get("supported", True), total=assistants["total"], exported=len(assistants["proposals"]),
                                 truncated=bool(assistants.get("truncated")), note=assistants.get("note")),
                 complete=not reasons, incomplete_reasons=reasons,
@@ -264,17 +304,109 @@ class ContinuityMixin:
                 continuity=dict(epoch=self._cont()["epoch"], suspensions=self._cont()["suspensions"]),
                 approvals=dict(protocol_versions=gov["protocol_versions"], releases=gov["releases"], breaches=gov["breaches"]),
                 ledger=dict(entries=ledger_rows, report=report, head=dict(count=head_count, hash=head_hash), digests=digests))
+            reasons.extend(release_problems(bundle))
+            bundle["complete"] = not reasons
         bundle["digest"] = sha({k_: v for k_, v in bundle.items() if k_ != "digest"})
         self.audit(user["email"], "evidence_export", "-", f"digest={bundle['digest'][:16]} records={len(bundle['ai_records'])}")
         self.save()
         return bundle
 
-    @staticmethod
-    def _export_record(r):
+    def _export_record(self, r):
         keep = ("id", "kind", "task", "case_ids", "created", "status", "mode", "source", "model", "prompt_version", "envelope", "provenance",
                 "citations", "unresolved", "verified", "fallback_reason", "ai_output", "workflow_output", "shown_output", "reviewer_action",
-                "reviewer_reason", "override_text", "resolved_by", "resolved_at", "review_evidence", "quarantine", "continuity_epoch", "user")
-        return {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
+                "reviewer_reason", "override_text", "resolved_by", "resolved_at", "review_evidence", "quarantine", "continuity_epoch", "user", "release")
+        result = {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
+        task = r.get("task", "priority")
+        current = r.get("source") != "ai" or (
+            epoch_current(r, self._cont()["epoch"]) and not active(self._cont(), task)
+            and not r.get("quarantine") and self.release_current(task, r.get("release"), r.get("model")))
+        result.update(epoch_current=r.get("source") != "ai" or epoch_current(r, self._cont()["epoch"]),
+                      actionable=current and r["status"] in ("Not reviewed", "Proposed"),
+                      relied_on=current and r["status"] in ("Accepted", "Edited"))
+        return result
+
+
+def release_problems(bundle):
+    """Check retained task-release relationships without a provider or store.
+
+    These checks detect missing/contradictory evidence, not wholesale rewriting of
+    unanchored release history. The application ledger does not bind these events.
+    """
+    from . import rai_release
+    problems, references = [], []
+    for p in bundle.get("assistant_proposals", []):
+        reference = p.get("release")
+        if reference is not None:
+            references.append((reference, p.get("capability")))
+        elif (p.get("envelope") or {}).get("source") == "ai":
+            problems.append("AI proposal has no retained task-release reference")
+        for event in [p, *(p.get("provenance") or [])]:
+            envelope = event.get("envelope") or {}
+            if envelope.get("release") is not None:
+                references.append((envelope["release"], p.get("capability")))
+                if envelope["release"] != reference:
+                    problems.append("proposal envelope task-release reference mismatch")
+            if event is not p and event.get("release") is not None:
+                references.append((event["release"], p.get("capability")))
+    for r in bundle.get("ai_records", []):
+        if r.get("release") is not None:
+            references.append((r["release"], "legacy:" + r.get("task", "priority")))
+        elif r.get("source") == "ai":
+            problems.append("Legacy AI record has no retained task-release reference")
+        envelope_release = (r.get("envelope") or {}).get("release")
+        if envelope_release is not None:
+            references.append((envelope_release, "legacy:" + r.get("task", "priority")))
+            if envelope_release != r.get("release"):
+                problems.append("legacy envelope task-release reference mismatch")
+    evidence = bundle.get("task_releases", {})
+    records = evidence.get("records", [])
+    if evidence.get("truncated") or evidence.get("total") != evidence.get("exported", len(records)) or evidence.get("exported", len(records)) != len(records):
+        problems.append("task-release evidence truncated or inconsistent")
+    if references and not evidence.get("supported"):
+        problems.append("task-release evidence unavailable")
+    found = {}
+    for record in records:
+        rid = record.get("id")
+        if rid in found:
+            problems.append("duplicate task-release evidence")
+        found[rid] = record
+    for reference, task in references:
+        if not isinstance(reference, dict):
+            problems.append("malformed task-release reference")
+            continue
+        record = found.get(reference.get("id"))
+        if record is None:
+            problems.append(f"missing task-release evidence: {reference.get('id')}")
+            continue
+        snapshot = record.get("snapshot")
+        if not isinstance(snapshot, dict) or not {"id", "release_version"} <= snapshot.keys() or snapshot.get("id") != record["id"] or snapshot.get("task") != task or record.get("task") != task or snapshot.get("status") != "active" or rai_release.reference(snapshot) != reference:
+            problems.append(f"task-release reference digest/version/task mismatch: {record['id']}")
+        events = record.get("events", [])
+        revision = record.get("revision")
+        if record.get("truncated") or record.get("event_total") != len(events) or type(revision) is not int or revision != len(events) or not events:
+            problems.append(f"task-release lifecycle missing or truncated: {record['id']}")
+            continue
+        ids = set()
+        kinds = []
+        for event in events:
+            eid, at, body = event.get("id"), event.get("at"), event.get("body")
+            if not isinstance(eid, str) or not eid or eid in ids or event.get("release_id") != record["id"] or type(at) not in (int, float) or not math.isfinite(at) or not isinstance(body, dict):
+                problems.append(f"invalid task-release event envelope: {record['id']}")
+                continue
+            ids.add(eid)
+            kind = body.get("kind")
+            kinds.append(kind)
+            if kind not in ("release-recorded", "release-suspended", "release-revoked") or (kind == "release-recorded" and body.get("task") != task):
+                problems.append(f"invalid task-release event: {record['id']}")
+        status = record.get("current_status")
+        if kinds.count("release-recorded") != 1 or status not in ("active", "suspended", "revoked") or (status == "active" and revision != 1) or (status == "suspended" and "release-revoked" in kinds):
+            problems.append(f"contradictory task-release lifecycle: {record['id']}")
+        elif status != "active":
+            valid_events = [e for e in events if type(e.get("at")) in (int, float) and isinstance(e.get("body"), dict)]
+            latest = max((e["at"] for e in valid_events), default=None)
+            if latest is None or not any(e["at"] == latest and e["body"].get("kind") == "release-" + status for e in valid_events):
+                problems.append(f"task-release status lacks lifecycle event: {record['id']}")
+    return list(dict.fromkeys(problems))
 
 
 def verify_export(bundle, expected_head=None):
@@ -290,6 +422,7 @@ def verify_export(bundle, expected_head=None):
         problems.append("unknown format")
     if sha(body) != bundle.get("digest"):
         problems.append("digest mismatch")
+    problems.extend(release_problems(bundle))
     for need in ("registry", "ai_records", "versions", "continuity", "approvals", "ledger", "complete"):
         if need not in bundle:
             problems.append(f"missing {need}")

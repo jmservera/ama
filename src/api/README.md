@@ -141,6 +141,47 @@ Run `checks/procurement_browser_check.py` with the existing API/core test paths
 for local synthetic keyboard, offer/commitment, denied-route and reflow checks.
 These checks are not resident validation or WCAG certification.
 
+## Continuity epoch and retained offline evidence (#122 partial follow-up)
+
+Durable assistant identity includes the persisted creation epoch. Suspension and
+restart invalidate old queued, leased, ready and accepted work for current use,
+even if sources and task release are unchanged. Detail/list/review/verification/
+edit-accept and export enforce this on the server. Historical disposition and
+permitted evidence remain; a fresh invocation or eligible scan creates fresh
+epoch-bound work. Missing lifetime evidence fails closed. Late calls can remain
+charged or unknown; no remote cancellation or exactly-once billing is promised.
+
+Legacy text/document/priority publication uses the existing optimistic continuity
+document check in the writer transaction. A competing epoch change refuses the
+old publication and permits only a local quarantined-record retry, never another
+provider call. Gate-aware processes refresh persisted epochs; this does not make
+an image predating the gates safe. Such images must be stopped/drained or denied
+serving access by an enforceable deployment boundary outside this source change.
+The change/reverse register is evidence, not general serving configuration control.
+
+Continuity JSON bundles retain task-release reference-time snapshots, current
+status/revision and release-ID lifecycle events with IDs/timestamps/associations.
+Offline verification resolves ID/version/digest/task and lifecycle completeness,
+in addition to bundle digest, ledger chain and optionally an externally held head.
+Missing/unavailable/truncated referenced evidence is explicitly incomplete. No raw
+provider requests or extra sensitive input fields are added. Self-contained
+hashes cannot authenticate wholesale rewriting of unanchored task-release events.
+
+Focused regressions are in `tests/test_continuity_epoch_export.py`, using installed
+`src` distributions and synthetic nonbillable providers. `ZF_CONTINUITY_MSSQL=1`
+requires `ZF_ISSUE122_OWNED_SQL` and loopback-only `ZF_SQL_*`; each test creates
+and drops a UUID-named database on an explicitly task-owned local container.
+SQLite and actual local SQL Server evidence are distinct from Azure evidence.
+The HTTP regression intentionally exposes a remaining 403: the existing
+`projection.STAFF_GET` omits the continuity route kinds. That shared #87 file
+requires coordinator authorization and has not been changed or bypassed here.
+
+Manual contact, resident challenge and independent hazard transactions still use
+their existing authority and safety gates during suspension. Synthetic exercise
+records do not prove genuine named authority, an authorized witnessed drill,
+an immutable externally held Azure head or an Azure SQL drill. These remain
+unmet; this is not completion or operational acceptance of #122.
+
 ## Coordinator heatmap and lifecycle funnel (#101)
 
 Original Review RV-001 exposed false403 for staff with a mixed-case stored email.

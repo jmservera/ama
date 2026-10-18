@@ -721,7 +721,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         off = ai_tasks.workflow_only(mode)
         with self.lock:
             hit = self._briefings.get((user["code"], off))
-            if hit and hit[0] == self.version and (
+            if hit and hit[0] == self.version and (hit[1]["source"] != "ai" or
+                    self.ai_epoch_current(hit[1])) and not self.continuity_suspension("briefing") and (
                     (hit[1]["source"] != "ai" and (off or not self.ai.configured)) or self.release_current(
                         "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
@@ -761,7 +762,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 r["cites"] = cites or []
             return r
         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
-        return dict(rec, label=self.REC_LABEL, actionable=not denied, release_denied=denied,
+        current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
+        return dict(rec, label=self.REC_LABEL, actionable=current and not denied, release_denied=denied,
+                    epoch_current=current, relied_on=current and not denied and rec["status"] in ("Accepted", "Edited"),
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
@@ -790,6 +793,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             items, _, err = ai_tasks.priority_items(text, n, sources)
             return err is None and not ai_tasks.critical_misses([i["case_id"] for i in items], hazard_ids, n)
         self.audit(user["email"], "ai_run_start", "-", f"priority_recommendation n={n}")
+        epoch0 = self.continuity_epoch()
         r = self.ai.run("priority", sysmsg, prompt, tmpl, True, check=valid,
                         off=ai_tasks.workflow_only(mode))
         items, dropped = None, 0
@@ -797,20 +801,25 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             items, dropped, _ = ai_tasks.priority_items(r["text"], n, sources)
         if items is None:
             items = tmpl_items
-        with self.lock:
+        def publish(late):
             rec = dict(id=uuid.uuid4().hex[:12], user=user["email"], created=datetime.now().isoformat(timespec="seconds"),
                        status="Proposed", source=r["source"], model=r["model"], validated=r["validated"], n=n,
                        items=items, deterministic=det, policy_version=policy_version, final_items=None,
                        resolved_by=None, resolved_at=None, reason="", workflow_items=tmpl_items, ai_output=r.get("ai_text") or (r["text"] if r["source"] == "ai" else None),
                        fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_prompts.version("priority"),
-                       release=r.get("release"),
+                       release=r.get("release"), continuity_epoch=epoch0,
+                       quarantine=dict(reason="Late priority result after epoch change") if late else None,
                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
                        case_ids=[c["id"] for c in cand], hazard_ids=hazard_ids,
                        overlap=len({i["case_id"] for i in items} & set(det)))
+            if late:
+                rec.update(status="Quarantined", items=tmpl_items,
+                           fallback_reason="Late priority result quarantined; use the manual route.")
             self.data["recommendations"].append(rec)
             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
             self.save()
             return self._rec_view(rec)
+        return self.continuity_publish("priority", epoch0, r["source"], publish)
 
     def _heuristic_priority(self, cand, n, ok=False):
         """Template used when no model is available: a different, simpler view from the ranking policy."""
@@ -853,6 +862,10 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 raise PermissionError("This suggestion was made for someone else.")
             if rec["status"] != "Proposed":
                 raise ValueError("This suggestion has already been answered.")
+            if action != "reject" and rec["source"] == "ai":
+                if not self.ai_epoch_current(rec) or self.continuity_suspension("priority"):
+                    raise PermissionError("AI output epoch changed or is suspended; use fresh work or the manual route.")
+                self.continuity_fence()
             if action != "reject" and rec["source"] == "ai" and not self.release_current(
                     "priority", rec.get("release"), rec.get("model")):
                 self.audit(user["email"], "ai_release_denied", "-", f"priority {rec_id}; use the manual route")

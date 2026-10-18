@@ -62,6 +62,11 @@ module = [
 ignore_errors = true
 follow_imports = "skip"
 
+# Typed continuity tests reuse the existing untyped assistant and Store fixtures.
+[[tool.mypy.overrides]]
+module = ["test_continuity_epoch_export", "tests.test_continuity_epoch_export"]
+disallow_untyped_calls = false
+
 [tool.setuptools.package-data]
 "zava_forward.api" = ["web/*", "web/vendor/*", "web/vendor/images/*"]
 
