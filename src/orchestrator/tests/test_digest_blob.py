@@ -110,6 +110,129 @@ class BlobDigestTests(unittest.TestCase):
         self.assertEqual(self.run_job(), 1)
         self.assertTrue(any("unavailable" in line for line in self.out))
 
+    def test_unrelated_json_is_not_a_remote_anchor(self):
+        self.container.blobs["unrelated.json"] = b"not a digest or even JSON"
+        rep = digest_blob.verify(self.store, self.blob)
+        self.assertFalse(rep["intact"])
+        self.assertEqual((rep["digests"], rep["year_digests"], rep["entries"]), (0, 0, 3))
+        self.assertEqual(rep["problems"], [
+            dict(check="digests", problem="the container holds no recognized head or year digest anchors to verify against")
+        ])
+        self.assertEqual(self.run_job(), 1)
+        self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+        self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+        self.assertFalse(any(url.endswith("/unrelated.json") for _, url, _ in self.container.calls))
+
+    def test_missing_remote_anchor_cli_alerts_without_success_marker(self):
+        self.container.blobs["unrelated.json"] = b"{}"
+        self.assertEqual(self.run_job(), 1)
+        self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+        self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+
+    def test_local_digests_do_not_substitute_for_remote_anchors(self):
+        self.store.write_digest()
+        for unrelated in (False, True):
+            with self.subTest(unrelated=unrelated):
+                self.container.blobs = {"unrelated.json": b"{}"} if unrelated else {}
+                self.out.clear()
+                rep = digest_blob.verify(self.store, self.blob)
+                self.assertFalse(rep["intact"])
+                self.assertEqual((rep["digests"], rep["year_digests"]), (0, 0))
+                self.assertEqual(self.run_job(), 1)
+                self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+
+    def test_valid_head_anchor_ignores_unrelated_blobs(self):
+        self.assertEqual(self.run_job("--publish"), 0)
+        for unrelated in (False, True):
+            with self.subTest(unrelated=unrelated):
+                if unrelated:
+                    self.container.blobs["unrelated.json"] = b"not JSON"
+                self.out.clear()
+                rep = digest_blob.verify(self.store, self.blob)
+                self.assertTrue(rep["intact"])
+                self.assertEqual((rep["digests"], rep["year_digests"]), (1, 0))
+                self.assertEqual(self.run_job(), 0)
+                self.assertTrue(any(digest_blob.OK_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(url.endswith("/unrelated.json") for _, url, _ in self.container.calls))
+
+    def test_valid_sealed_year_anchor_ignores_unrelated_blobs(self):
+        e1 = ledger.make_entry("a", "x", "c", "d", ledger.GENESIS, "2024-05-01T00:00:00")
+        e2 = ledger.make_entry("a", "y", "c", "d", e1["hash"], "2025-05-01T00:00:00")
+        self.store.audit_entries = lambda: iter([e1, e2])
+        d = ledger.year_digests([e1, e2], before=2025)[0]
+        self.blob.put_digest("year-2024.json", d)
+        for unrelated in (False, True):
+            with self.subTest(unrelated=unrelated):
+                if unrelated:
+                    self.container.blobs["unrelated.json"] = b"not JSON"
+                self.out.clear()
+                rep = digest_blob.verify(self.store, self.blob)
+                self.assertTrue(rep["intact"])
+                self.assertEqual((rep["digests"], rep["year_digests"]), (0, 1))
+                self.assertEqual(self.run_job(), 0)
+                self.assertTrue(any(digest_blob.OK_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(url.endswith("/unrelated.json") for _, url, _ in self.container.calls))
+
+    def test_empty_ledger_requires_a_remote_anchor_not_local_digests(self):
+        Path(self.store.audit_path).write_text("")
+        self.store.last_hash = ledger.GENESIS
+        self.assertEqual(list(self.store.audit_entries()), [])
+        self.store.write_digest()
+        for unrelated in (False, True):
+            with self.subTest(unrelated=unrelated):
+                self.container.blobs = {"unrelated.json": b"{}"} if unrelated else {}
+                self.out.clear()
+                rep = digest_blob.verify(self.store, self.blob)
+                self.assertFalse(rep["intact"])
+                self.assertEqual((rep["digests"], rep["year_digests"], rep["entries"]), (0, 0, 0))
+                self.assertEqual(rep["problems"][0]["check"], "digests")
+                self.assertEqual(self.run_job(), 1)
+                self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+
+    def test_empty_ledger_remote_anchor_controls(self):
+        entries = list(self.store.audit_entries())
+        head = ledger.make_digest(len(entries), entries[-1]["hash"])
+        year = ledger.year_digests(entries)[0]
+        Path(self.store.audit_path).write_text("")
+        self.store.last_hash = ledger.GENESIS
+        self.assertEqual(list(self.store.audit_entries()), [])
+        for name, digest, intact in (
+            ("digest-0000000000.json", ledger.make_digest(0, ledger.GENESIS), True),
+            ("digest-0000000003.json", head, False),
+            (f"year-{year['year']}.json", year, False),
+        ):
+            with self.subTest(name=name):
+                self.container.blobs = {"unrelated.json": b"not JSON"}
+                self.blob.put_digest(name, digest)
+                self.out.clear()
+                self.assertEqual(digest_blob.verify(self.store, self.blob)["intact"], intact)
+                self.assertEqual(self.run_job(), 0 if intact else 1)
+                self.assertEqual(any(digest_blob.OK_MARKER in line for line in self.out), intact)
+                self.assertEqual(any(digest_blob.ALERT_MARKER in line for line in self.out), not intact)
+
+    def test_unrelated_blobs_cannot_hide_anchor_mismatches(self):
+        entries = list(self.store.audit_entries())
+        head = ledger.make_digest(len(entries), "f" * 64)
+        year = {**ledger.year_digests(entries)[0], "head": "f" * 64}
+        for name, digest, check in (
+            ("digest-0000000003.json", head, "chain"),
+            (f"year-{year['year']}.json", year, "years"),
+        ):
+            with self.subTest(name=name):
+                self.container.blobs = {"unrelated.json": b"not JSON"}
+                self.blob.put_digest(name, digest)
+                self.out.clear()
+                rep = digest_blob.verify(self.store, self.blob)
+                self.assertFalse(rep["intact"])
+                self.assertTrue(any(problem["check"] == check for problem in rep["problems"]))
+                self.assertEqual(self.run_job(), 1)
+                self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+
     def test_sealed_year_digest_mismatch(self):
         e1 = ledger.make_entry("a", "x", "c", "d", ledger.GENESIS, "2024-05-01T00:00:00")
         e2 = ledger.make_entry("a", "y", "c", "d", e1["hash"], "2025-05-01T00:00:00")

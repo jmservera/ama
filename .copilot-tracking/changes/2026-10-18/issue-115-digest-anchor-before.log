@@ -1,0 +1,56 @@
+test_broken_chain_is_not_anchored (test_digest_blob.BlobDigestTests.test_broken_chain_is_not_anchored) ... ok
+test_clean_ledger_verifies_against_container (test_digest_blob.BlobDigestTests.test_clean_ledger_verifies_against_container) ... ok
+test_empty_container_and_unreachable_container_alert (test_digest_blob.BlobDigestTests.test_empty_container_and_unreachable_container_alert) ... ok
+test_empty_ledger_remote_anchor_controls (test_digest_blob.BlobDigestTests.test_empty_ledger_remote_anchor_controls) ... ok
+test_empty_ledger_requires_a_remote_anchor_not_local_digests (test_digest_blob.BlobDigestTests.test_empty_ledger_requires_a_remote_anchor_not_local_digests) ...
+  test_empty_ledger_requires_a_remote_anchor_not_local_digests (test_digest_blob.BlobDigestTests.test_empty_ledger_requires_a_remote_anchor_not_local_digests) (unrelated=True) ... FAIL
+test_local_digest_deletion_cannot_hide_a_rewrite (test_digest_blob.BlobDigestTests.test_local_digest_deletion_cannot_hide_a_rewrite) ... ok
+test_local_digests_do_not_substitute_for_remote_anchors (test_digest_blob.BlobDigestTests.test_local_digests_do_not_substitute_for_remote_anchors) ...
+  test_local_digests_do_not_substitute_for_remote_anchors (test_digest_blob.BlobDigestTests.test_local_digests_do_not_substitute_for_remote_anchors) (unrelated=True) ... FAIL
+test_missing_remote_anchor_cli_alerts_without_success_marker (test_digest_blob.BlobDigestTests.test_missing_remote_anchor_cli_alerts_without_success_marker) ... FAIL
+test_not_configured (test_digest_blob.BlobDigestTests.test_not_configured) ... ok
+test_publish_uploads_create_only_and_is_idempotent (test_digest_blob.BlobDigestTests.test_publish_uploads_create_only_and_is_idempotent) ... ok
+test_sealed_year_digest_mismatch (test_digest_blob.BlobDigestTests.test_sealed_year_digest_mismatch) ... ok
+test_success_prints_heartbeat_marker (test_digest_blob.BlobDigestTests.test_success_prints_heartbeat_marker) ... ok
+test_truncation_after_publish_alerts (test_digest_blob.BlobDigestTests.test_truncation_after_publish_alerts) ... ok
+test_unrelated_blobs_cannot_hide_anchor_mismatches (test_digest_blob.BlobDigestTests.test_unrelated_blobs_cannot_hide_anchor_mismatches) ... ok
+test_unrelated_json_is_not_a_remote_anchor (test_digest_blob.BlobDigestTests.test_unrelated_json_is_not_a_remote_anchor) ... FAIL
+test_valid_head_anchor_ignores_unrelated_blobs (test_digest_blob.BlobDigestTests.test_valid_head_anchor_ignores_unrelated_blobs) ... ok
+test_valid_sealed_year_anchor_ignores_unrelated_blobs (test_digest_blob.BlobDigestTests.test_valid_sealed_year_anchor_ignores_unrelated_blobs) ... ok
+
+======================================================================
+FAIL: test_empty_ledger_requires_a_remote_anchor_not_local_digests (test_digest_blob.BlobDigestTests.test_empty_ledger_requires_a_remote_anchor_not_local_digests) (unrelated=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 189, in test_empty_ledger_requires_a_remote_anchor_not_local_digests
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_local_digests_do_not_substitute_for_remote_anchors (test_digest_blob.BlobDigestTests.test_local_digests_do_not_substitute_for_remote_anchors) (unrelated=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 139, in test_local_digests_do_not_substitute_for_remote_anchors
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_remote_anchor_cli_alerts_without_success_marker (test_digest_blob.BlobDigestTests.test_missing_remote_anchor_cli_alerts_without_success_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 128, in test_missing_remote_anchor_cli_alerts_without_success_marker
+    self.assertEqual(self.run_job(), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unrelated_json_is_not_a_remote_anchor (test_digest_blob.BlobDigestTests.test_unrelated_json_is_not_a_remote_anchor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-115-digest/src/orchestrator/tests/test_digest_blob.py", line 116, in test_unrelated_json_is_not_a_remote_anchor
+    self.assertFalse(rep["intact"])
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.065s
+
+FAILED (failures=4)

@@ -112,8 +112,8 @@ def verify(store, blob):
     if not yrep["intact"]:
         problems.append(dict(check="years", missing_years=yrep["missing_years"],
                              broken={y: v["problems"] for y, v in yrep["years"].items() if not v["intact"]}))
-    if not names:
-        problems.append(dict(check="digests", problem="the container holds no digests to verify against"))
+    if not heads and not years:
+        problems.append(dict(check="digests", problem="the container holds no recognized head or year digest anchors to verify against"))
     return dict(intact=not problems, digests=len(heads), year_digests=len(years), entries=rep["entries"], problems=problems)
 
 

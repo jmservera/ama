@@ -215,8 +215,10 @@ schedule, Legal/DPO or owner approval acceptance.
   year digests to the `ledger-digests` container (create-only, managed identity
   via `ZF_DIGEST_ACCOUNT_URL`, `ZF_DIGEST_CONTAINER`, `ZF_DIGEST_CLIENT_ID`), then
   verifies the ledger against the digests read back from the container, not local
-  files. A broken chain is never anchored. Any mismatch, empty container or
-  unreachable container prints `LEDGER_DIGEST_ALERT` and exits 1.
+  files. A broken chain is never anchored. Any mismatch, absence of recognized
+  remote head or year digest anchors, or unreachable container prints
+  `LEDGER_DIGEST_ALERT` and exits 1. Unrelated blobs do not count as anchors and
+  do not affect verification alongside valid head or year digest evidence.
 * `infra/modules/storage.bicep` adds the container with a time-based retention
   policy (created unlocked); `containerapps.bicep` adds a daily
   `job-*-ledger-verify`; `main.bicep` adds a log alert on the marker to the
