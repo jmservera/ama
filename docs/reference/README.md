@@ -21,6 +21,23 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #87, the [appointment engineering boundary](./research/ux/customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87)
+records explicit offer/agreement controls, independent visit-fact counts and the
+source-authorized record-only human home-case closure/reset boundary with retained
+history and outstanding resident commitments. Provisional exercise
+thresholds and local engineering evidence are not live policy approval.
+Correction ONE implements the original seven findings for pre-header committed
+responses, existing-role privacy, active-count configuration, competence text,
+ended state, selected slots and protected manual drafts. Original Review
+Not accepted remains unchanged; implementation evidence is not independent
+acceptance.
+
+Issue #87 correction TWO refreshes only the public fixture SHA-256 in the
+[existing scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json)
+after the supplied appointment fixture changed. Its offline scope, unavailable
+full journeys and pending owner approval remain unchanged; a digest refresh does
+not establish application acceptance.
+
 For issue #88, the [resident criterion audit](./research/ux/customer-journeys/residents.md#responsibility-owned-response-clock-correction-2026-10-17)
 also records the final authorized responsibility-clock correction: shared service/
 redress identity never lets a non-owning reassignment alter status owner/date.

@@ -2,9 +2,75 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
+
+## Appointment control API and manual workbench (#87)
+
+`POST /api/workorders/{id}/appointment-control` accepts `offer`, `authority`,
+`confirm`, `outcome`, `configure`, `investigation` and `close_case` actions with a unique
+`event_ref`. Current registered managers also need existing appointment contract
+delegation. Contractors and forged identities cannot write. Offers record
+`date`, `period`, `options`, `constraints`, minimum-necessary `instructions`,
+explicit `paused`/`deferred`/`bundle` booleans and `expected_offer_id` (null for a
+first offer). A named resident-update commitment must already exist on the home.
+Bundles additionally need `bundle_agreed` and exact-scope competence evidence with
+a nonblank textual source reference of 1 to 500 characters.
+
+Separate confirmations carry `offer_id`, `kind` (resident/staff/capacity),
+`person`, `source` and `channel`, including phone/paper/in-person manual routes.
+Representative confirmation requires separately recorded, current appointment-only
+authority bound to that offer/home/scope/person/validity, not works-decision or
+attendance permission. Client `status` cannot grant commitment. Current work-order
+projections return derived Unknown/Offer/Committed/Ended and missing/stale evidence.
+Provider projections contain only assigned scope and necessary visit instructions.
+The existing resident-view and recorded-reason entitlements also protect
+appointment evidence from unrelated staff. Their scheduling projection retains
+date, period, instructions and state, not household/authority/closure/investigation
+evidence. No role entitlement is broadened.
+
+Outcomes name the offer, cause/owner/source and explicit `verified`, `no_access`,
+`preference_breach` and `abortive` facts. Retry reconciliation never adds another
+visit or counter increment. Reporting thresholds for breaches/abortive visits are
+Unknown. Provisional exercise threshold configuration is versioned, not policy
+approval. Changed configuration evaluates existing eligible active counts
+atomically, without recounting visits, duplicating tasks or resetting history.
+Investigation checks, corrective action, next update and task disposition
+are recorded manually; no task disposition closes the home case or resets counts.
+The same route accepts explicit `action: close_case` to record a supplied HUMAN
+underlying-home-case closure, separately from investigation task disposition.
+Supply the exact `case_id`, staff projection's `case_version` as
+`expected_case_version`, `confirmed: true`, unique `event_ref`, decision `source`,
+`source_version` and `reason`. Existing current registered manager and contract
+appointment authority are required. The server records actor/time, controlled
+history and the active-count boundary atomically with the existing case `closed`
+field. Visit/configuration history, consumed references, outstanding resident
+updates, remedies and unrelated decisions remain. Reopening alone does not reset;
+old event references cannot count again. This implements only the record-only
+human boundary in PRD DD-006/AC-033, BRD RULE-006/AC-025 and addendum EXA-014,
+not a general closure policy or technical, legal or financial approval.
+
+The existing Capacity and work orders screen uses labelled native forms, separate
+manual confirmations, textual states and inline live errors. The
+selected visit date uses the existing localized date helper; period/instructions
+are shown before confirmation and to the assigned provider, with Unknown and
+historical-ended wording. Manual drafts warn on in-app navigation and page exit,
+survive another action's refresh, and clear only after their own successful save
+or explicit confirmed discard. Retained drafts keep their original offer/case
+dependency references, so a refresh cannot silently rebind supplied evidence.
+The separate manual home-case closure form requires an explicit checkbox and
+cancellable confirmation;
+the case identity, active/closed state and retained closure count are visible.
+A case link preserves the #88 update owner and manual contact path. No message, booking, supplier
+instruction, sanction or legal/financial approval is sent or inferred.
+HTTP 409 with `outcome: committed` means the change persisted but acknowledgement
+failed: reload history, do not perform a new action.
+Response-only encoding failures are handled before sending headers; this does
+not promise recovery of a connection after response bytes have been sent.
+Run `checks/procurement_browser_check.py` with the existing API/core test paths
+for local synthetic keyboard, offer/commitment, denied-route and reflow checks.
+These checks are not resident validation or WCAG certification.
 
 ## Coordinator heatmap and lifecycle funnel (#101)
 

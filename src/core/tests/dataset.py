@@ -10,6 +10,39 @@ from zava_forward.core.store import Store
 from zava_forward.core.workflows import _today
 
 
+def supplied_appointment_fixture(
+        store: Any, actor: Any, wid: str, when: str = "2099-01-01",
+        confirmations: bool = True) -> str:
+    """Explicit synthetic household and separate appointment agreement, never live data."""
+    w = store._work_order(wid)
+    c = store.cases[w["case_id"]]
+    if not c.get("resident_update", {}).get("version"):
+        store.resident_action(actor, c["id"], dict(
+            action="update_record", expected_version=0, owner=actor["email"],
+            purpose="SYN appointment update", due_at="2099-01-01T10:00:00+00:00",
+            basis="SYN manual arrangement", status="Outstanding",
+        ))
+    ref = f"SYN-offer-{wid}-{len(w.get('appointment_events', []))}"
+    store.appointment_control(actor, wid, dict(
+        action="offer", event_ref=ref, date=when, period="Morning",
+        expected_offer_id=(w.get("appointment_offer") or {}).get("id"),
+        options=["Morning", "Different day", "Pause"],
+        constraints="SYN agreed morning only", instructions="Knock and wait",
+        paused=False, deferred=False, bundle=False,
+    ))
+    if confirmations:
+        for kind, person in (
+            ("resident", c["resident"]["name"]), ("staff", actor["name"]),
+            ("capacity", "SYN supplier authorized contact"),
+        ):
+            store.appointment_control(actor, wid, dict(
+                action="confirm", event_ref=ref + "-" + kind, offer_id=ref, kind=kind,
+                person=person, source="SYN explicit recorded agreement " + kind,
+                channel="Phone, manually recorded",
+            ))
+    return ref
+
+
 def supplied_contract_fixture(store: Any, pid: str, manager: dict[str, Any], contractor: str = "Test Ltd") -> dict[str, Any]:
     """Explicit fictional delegation and original commitment bytes, never production seeding."""
     with store.lock:
