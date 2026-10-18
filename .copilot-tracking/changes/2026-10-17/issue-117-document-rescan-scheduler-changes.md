@@ -9,11 +9,10 @@ Details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-schedule
 
 ## Execution Status
 
-Original P01/P02 implementation complete; original Review Complete / Not accepted.
-Coordinator correction ONE complete for both RV-001/RV-002, scope P03.
-P03-T01/P03-T02 complete; source9468800e published same draft PR395.
-Original Review and critique immutable; no second Review
-or coordinator acceptance claim.
+P01/P02/P03 complete; original Review Complete / Not accepted unchanged.
+Final authorized correction TWO P04 active against integrated base f9d80724.
+Coordinator supplies independent original-finding closure and new Medium import
+defect; no self-Pass or new full Review. Prior correction evidence below immutable.
 
 ## Execution Summary
 
@@ -356,3 +355,148 @@ Complete / Not accepted; targeted corrections are implemented/validated,
 independent coordinator closure/acceptance not awarded. PR395 remains draft.
 No second Review. Real Defender/Blob, recurring schedule and retention/owner/
 legal hold authority gates remain unmet; issue117 is partial.
+
+## Correction TWO authorization, integration and failing-first intake
+
+2026-10-18: same original session/worktree/topic/PR395, clean exact starting
+local/remote6a9fd3a4f763c48b5a5de65a3a9efd892731e7d8. Coordinator supplies
+independent558e33f1 full source/seven-artifact assessment: Revise for new Medium
+unconditional mssql_python import; original RV001/002 independently closed.
+Correction TWO is LAST source cycle; no new full Review or self-Pass.
+
+Explicitly authorized fetch/rebase onto origin/main
+f9d807245e784ad2e6587741a73fc6563f8d2cd6 (merged396). Actual rebase completed
+four own commits, one conflict only docs/reference/log.md; retained upstream
+entries in order before issue117 appendices. No runtime/test conflict.
+Post-rebase pre-fix head b0ebcb1f3cb5c7e702b3df676b680d452e007a04.
+Exact runtime/test parity and upstream browser/source preservation checked below.
+Remote remains expected6a9fd3a4 until explicitly leased publication.
+
+First dependency-minimal discovery overlapped rebase and observed22 passes
+while the issue test file was temporarily absent; this is invalid evidence,
+not a pass claim. Repeated on stable completed rebase before source changes:
+`PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src/core/src:src/orchestrator/src:src/core/tests
+python3 -S -m unittest discover -s src/orchestrator/tests -v` ran23 entries,
+22 passed/1 import error, exit1, exactly the supplied reproduction.
+Actual `python3 -S -m zava_forward.orchestrator.document_rescan --help` also
+failed exit1 before edits. Distinct session logs correction2-*-before*.log.
+P04 plan/details/state persisted before substantive source correction.
+
+## Correction TWO P04-T01: One bounded import correction
+
+Added existing-file regression before production edits: actual `python -S`
+help assertion failed with ModuleNotFoundError (one test, one failure).
+Removed only module-level optional-driver import. After argument parsing and
+explicit backend validation, the existing main try block imports the driver
+exception type only for MSSQL, adding it to the typed database-error tuple.
+SQLite exception handling retained; explicitly missing-module errors use the
+same fixed error marker/exit1, not a silent fallback or backend replacement.
+No worker/core scan/recovery, workflow, manifest, source/browser route or
+optional dependency installation change.
+
+Tests prove no-site process cannot find mssql_python, help succeeds, configured
+SQLite normal page exit2 clean1, missing bytes exit1 failed1, explicitly selected
+MSSQL without driver exit1 fixed marker. Available-driver Error before store
+return also sanitized; type-check first caught the test Error constructor
+missing required ddbc_error, corrected to actual two-string signature. That
+was a fixture refinement within this one source cycle, not a third cycle.
+
+Actual driverless discovery now32 run/31 pass/one optional-driver skip.
+Installed-driver discovery32/32. Configured orchestrator static checks pass.
+P04-T01 complete; P04-T02 integrated/image/publication validation active.
+
+## Correction TWO P04-T02: Current integration and fresh validation
+
+Current base f9d807245e784ad2e6587741a73fc6563f8d2cd6; original ebc8dab8 and
+correction ONE source9468800e/head6a9fd3a4 above remain historical evidence.
+No runtime conflict occurred during authorized rebase. Exact-byte proof:
+every issue117 runtime/test from old6a9fd3a4 equals integrated file except
+orchestrator/document_rescan.py and its existing test file (the authorized
+correction). Every merged396 source/test/browser/pyproject file equals upstream
+f9d80724. All upstream coordinator routes retained unchanged, no web edit.
+`docs/reference/log.md` starts with the exact f9d80724 byte-prefix; all prior
+issue append entries retained afterward. Original Review/critique equal original
+6a9fd3a4 blobs byte-for-byte; the entire correction ONE changes section also
+matches original bytes. No second full Review or self-Pass.
+
+| Actual new command | Result |
+| --- | --- |
+| `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src/core/src:src/orchestrator/src:src/core/tests python3 -S -m unittest discover -s src/orchestrator/tests -v` | Before23 entries/22 pass/1 import error exit1; final32 run/31 pass/one optional-driver skip,6.920s |
+| `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src/core/src:src/orchestrator/src python3 -S -m zava_forward.orchestrator.document_rescan --help` | Before exit1 import error; final exit0 usage output |
+| `PYTHONPATH=src/core/tests:src/orchestrator/tests .venv/bin/python -m unittest test_document_rescan_job.RescanCommand.test_driverless_help_sqlite_success_failure_and_missing_mssql_driver -q` | Failing-first one test/one failure on actual no-site module help; final included in both discoveries |
+| From `src/core`: `../../.venv/bin/ruff check . && ../../.venv/bin/ruff format --check . && ../../.venv/bin/mypy` | Passed,69 formatted/122 typed files including merged coordinator |
+| From `src/orchestrator`: same configured static commands | Passed,9 formatted/12 typed; formatter used on two owned files |
+| From `src/orchestrator`: `PYTHONPATH=../core/tests ../../.venv/bin/python -m unittest discover -s tests -q` | Installed-driver32/32 passed,9.453s; no new dependency installation |
+| `PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests .venv/bin/python -m unittest test_document_rescan test_progress_event_capture test_change_provenance test_resident_decisions test_sensor_privacy test_coordinator test_coordinator_api -q` | 273 run/186 passed/87 explicit opt-in backend/browser skips,53.343s; expected injected rollback logs |
+| `.venv/bin/python /home/azureuser/.copilot/session-state/ba90bb56-8dbf-4c5f-8825-92041810af80/files/validate_sql117_correction2.py` | Actual loopback SQL responsive SELECT1,20/20 passed96.097s; actual native driver-error and real CLI below; finally exact SQL stopped/removed |
+| `docker build -f src/orchestrator/Dockerfile -t zf-issue117-orchestrator:correction2 src` | Existing image/context build passed |
+| `PYTHONPATH=src/core/tests .venv/bin/python /home/azureuser/.copilot/session-state/ba90bb56-8dbf-4c5f-8825-92041810af80/files/validate_image117_correction2.py` | Existing hardening/check-container probes, installed help/source hashes, six safe failures and real module pages passed |
+
+No-site subprocess regression explicitly asserts
+`importlib.util.find_spec('mssql_python') is None`. Same process mode verifies
+module help exit0, configured SQLite page exit2/clean1, missing bytes exit1/
+failed1, and selected MSSQL missing-driver exit1/fixed marker. No raw diagnostics/
+tracebacks, silent fallback or backend replacement. CI workflow/install command
+unchanged. Driver-error regression uses actual installed driver's Error class
+with both required constructor strings; not a fabricated generic Exception.
+
+### Actual SQL and installed-image boundary
+
+Owned container `zf-issue117-correction2-sql-ba90bb56`, loopback-only ephemeral
+port/credentials, readiness SELECT1. `ZF_DOCUMENT_RESCAN_MSSQL=1` plus existing
+ephemeral ZF_SQL settings, actual command:
+
+```bash
+PYTHONPATH=src/core/tests:src/orchestrator/tests .venv/bin/python -m unittest \
+  test_document_rescan.MssqlRescan \
+  test_document_rescan_job.RescanCommand.test_selected_mssql_driver_error_is_sanitized_before_store_return -q
+```
+
+20/20: all19 worker guards including prior17, malformed contract, full root
+redaction, original conflict/prior prefix/winner state, own COMMIT and post-
+COMMIT no false rejection/replay. Additional actual-main factory seam opens a
+real native connection and executes SELECT against nonexistent synthetic table
+SYN_PRIVATE_MISSING_DRIVER_TABLE_117. The real native driver Error is contained:
+exit1/fixed DOCUMENT_RESCAN_ERROR, empty stdout, no sentinel/traceback.
+Actual installed subprocess MSSQL module pages exit2/0/0 clean1/2/0; exactly3
+success events, intact hold/bytes/ledger. Temporary UUID databases dropped,
+exact owned container stopped/removed in finally. No idle SQL.
+Distinct receipts correction2-sql-run.log/tests.log/cli.log and harness retained.
+Prior correction ONE30 actual SQL receipts are historical, not claimed rerun.
+
+Rebuilt image ID
+`sha256:5695460a9190c19cc921383dc3fe2bcc22fee37e9376894441495e3480388e50`.
+Installed source hashes match:
+
+| Runtime | SHA256 |
+| --- | --- |
+| core.doc_controls | e8a3da145cf670dd0200154fe60c077b24d4fd33d1bf3a43c9a22c700c6d2f8a |
+| core.document_rescan | bbeadb721c20ecabbfda47ed14c63c21a3ca0f81e1c14aec801e8406fa1b1397 |
+| core.sqlstore | 105da301e7cdc25ddeea260828bb00d0316ad696fe6691727aa591fe8832182b |
+| orchestrator.document_rescan | 2e7baf504ce3d540bf5e1017f2ec9425bc31554fee5b44e571f8898fd8e71d48 |
+
+Existing checker verifies Docker controls/negative probes/plain and hardened
+startup. UID10001/read-only/drop-all/NoNewPrivs/no-network actual installed
+module help succeeds; six injected malformed/unknown/type/outage scans exit1
+failed1/clean0 with safe diagnostics, no success/pending availability. Actual
+module pages exit2/0/0,clean1/2/0 and three exact-once events, intact held bytes
+and ledger. Exact one-shot image job removed, temporary fixtures cleaned.
+No runtime/test edits after this source boundary.
+
+### Accounting and remaining publication boundary
+
+Only genuine source-validation refinement was the required second constructor
+argument for the installed driver's Error in the new test, identified by mypy
+and fixed within this authorized coherent cycle. Initial concurrent rebase/
+discovery receipt was rejected and rerun stably as recorded above. No failure
+or skip is disguised as a pass. Existing injected non-worker rollback logs are
+not claimed eliminated. No dependency install, paid service, private input,
+Azure/Graph/IAM, approval, real communication, memory or web change.
+
+P04-T01 complete; P04-T02 validation complete, same draft PR395 publication
+pending exact remote6a9fd3a4 lease and fresh identity/main checks.
+Independent original-finding closure/all-seven-artifact Pass is supplied by
+coordinator session558e33f1; new final correction not self-accepted. No new full
+Review. Any residual defect after this LAST source cycle is human-blocked.
+Real Defender, hosted recurring scheduler and retention/owner/hold authority
+remain unmet; no merge or issue closure authorized.

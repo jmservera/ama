@@ -6007,3 +6007,28 @@ metadata when the knowledge base was created.
   Local regression/static evidence is targeted, not independent acceptance.
   Defender/Blob, hosted cadence and real retention/approval authority remain
   unmet; no private data, live Azure, paid activation, web or memory changes.
+
+## 2026-10-18 - Final rescan correction TWO and authorized integration (Refs #117)
+
+* Coordinator supplies independent558e33f1 Revise: original RV-001/RV-002
+  independently closed, all seven artifact reconciliation passes; one new Medium
+  unconditional optional MSSQL-driver import breaks dependency-minimal SQLite
+  CI/help. Authorize this LAST source cycle and own-topic rebase onto merged
+  PR #396 main f9d80724, with exact old-remote lease6a9fd3a4.
+* Real no-site discovery fails first with22 passes/one import error. Load the
+  driver error type only after explicit MSSQL selection inside the fixed error
+  boundary. Final real driverless32 run/31 pass/one driver skip, module help
+  and normal/failing SQLite CLI pass; no workflow or dependency install change.
+* Actual owned SQL20/20 passes, including all19 worker guards and driver-error
+  regression. A native invalid-table query before store return is sanitized.
+  Rebuilt hardened installed-image help/six failure runs/real module success
+  pages pass; exact SQL stopped/removed. Correction ONE30-SQL receipt remains
+  historical. Combined coordinator/progress/resident/sensor/worker regressions
+  and configured core/orchestrator checks pass with skips explicit.
+* Preserve upstream source/browser routes byte-exact, issue runtime/test patch
+  parity except two authorized CLI/test files, upstream log exact byte-prefix
+  followed by both issue append histories, original Review/critique and
+  correction ONE evidence unchanged. Reconcile [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  index and [job guide](../../src/orchestrator/README.md#optional-driver-compatibility-correction-two-2026-10-18).
+  No new full Review/self-Pass/merge/closure; draft PR #395 awaits coordinator.
+  Defender, hosted schedule and real retention/approval authority remain unmet.

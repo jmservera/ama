@@ -173,6 +173,32 @@ competing-clean/recovery-failure reproduction. Owned SQL was stopped/removed.
 These offline receipts do not enable Defender, approve retention or deploy a
 recurring schedule; all service/human gates above remain unmet.
 
+### Optional-driver compatibility correction TWO (2026-10-18)
+
+SQLite-only discovery and module help need no `mssql_python`. The command now
+imports the optional driver's exception type only after valid configuration
+selects MSSQL, inside its fixed-diagnostic error boundary. Explicit MSSQL without
+the dependency fails with `DOCUMENT_RESCAN_ERROR` and exit1; it never falls back
+to SQLite/local data. Actual available-driver database errors remain sanitized,
+including errors raised before the store factory returns.
+
+Failing-first no-site Python discovery reproduced 22 passes/one import error;
+after correction, the same discovery ran32 tests with31 passes/one unavailable-
+driver skip. `python3 -S -m zava_forward.orchestrator.document_rescan --help`
+succeeds with source packages on `PYTHONPATH`; real driverless SQLite normal/
+missing-byte subprocesses return truthful exit2/1 and structured counters.
+No workflow or dependency manifest changed to hide the optional-driver defect.
+Actual loopback SQL20/20 passed (19 worker guards plus driver-error regression),
+and a real native invalid-table query was sanitized at the CLI factory boundary.
+Existing hardened installed-image help, six failed scans and actual success
+pages passed again; exact owned SQL stopped/removed.
+
+Coordinator reports independent closure of original RV-001/RV-002 and a Revise
+for this new import defect, not overall acceptance. This is the last authorized
+source cycle; independent final-candidate clearance remains pending on draft
+PR #395. The branch was explicitly rebased onto merged coordinator PR #396;
+upstream source/browser routes and issue117 worker/core patches are unchanged.
+
 On 2026-10-17, actual owned loopback SQL ran all 17 rescan tests, and real
 MSSQL CLI pages returned 2/0/0 with 1/2/0 clean results, three success events,
 intact ledger and retained legal hold. The owned SQL container was stopped and

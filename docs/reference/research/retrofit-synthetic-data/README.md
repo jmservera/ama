@@ -472,6 +472,21 @@ execution. No live Azure, paid scanner, real communication, private document,
 approved retention period or legal-currentness claim was introduced. Issue
 #117 remains broader than this bounded engineering delivery.
 
+Correction TWO (2026-10-18), the final authorized source cycle, removes the
+unconditional optional MSSQL-driver import from the orchestrator command.
+Backend-selected error import preserves sanitized MSSQL failure without loading
+the driver for SQLite/help. Failing-first actual no-site discovery reproduced
+the defect; final32 entries/31 passed/one optional-driver skip and module help
+pass without site packages. Installed-driver discovery32/32, native SQL error
+sanitization and all19 actual SQL worker cases pass. No CI workflow or dependency
+manifest was changed. Prior correction ONE SQL30 receipts remain historical,
+not rerun claims for this cycle. The coordinator supplies independent original-
+finding closure; final correction acceptance remains coordinator-owned.
+Authorized rebase onto main f9d80724 preserves merged396 source/browser routes,
+exact issue worker/core/test parity except the bounded CLI import/test patch,
+and the upstream append-only log prefix. Real service/authority limits above
+remain unchanged; no new full Review or self-Pass.
+
 ## Synthetic data needs inventory and phase gate (2026-10-15)
 
 Issue #166, parent #165. The machine-readable inventory is

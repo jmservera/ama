@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import importlib.util
 import io
 import json
 import os
@@ -70,6 +71,95 @@ class RescanCommand(unittest.TestCase):
         self.assertEqual(repeat.returncode, 0, repeat.stderr)
         self.assertEqual(json.loads(repeat.stdout)["checked"], 0)
         self.assertEqual(len(list(self.store.audit_entries())), 3)
+
+    def test_driverless_help_sqlite_success_failure_and_missing_mssql_driver(self) -> None:
+        root = Path(__file__).resolve().parents[3]
+        env = {
+            **os.environ,
+            **self.env,
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONPATH": os.pathsep.join(
+                str(root / part)
+                for part in ("src/core/src", "src/orchestrator/src", "src/core/tests")
+            ),
+        }
+        probe = subprocess.run(
+            [
+                sys.executable,
+                "-S",
+                "-c",
+                "import importlib.util;assert importlib.util.find_spec('mssql_python') is None",
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(probe.returncode, 0, probe.stderr)
+        command = [sys.executable, "-S", "-m", "zava_forward.orchestrator.document_rescan"]
+        help_result = subprocess.run(
+            [*command, "--help"],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(help_result.returncode, 0, help_result.stderr)
+        self.assertIn("--synthetic-local", help_result.stdout)
+        success = subprocess.run(
+            [*command, "--synthetic-local", "--limit", "1"],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(success.returncode, 2, success.stderr)
+        self.assertEqual(json.loads(success.stdout)["clean"], 1)
+        self.store.docstore.delete("ZF-1", "d1")
+        failure = subprocess.run(
+            [*command, "--synthetic-local", "--limit", "1"],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(failure.returncode, 1, failure.stderr)
+        self.assertEqual(json.loads(failure.stdout)["failed"], 1)
+        self.assertIn("DOCUMENT_RESCAN_FAILED", failure.stderr)
+        missing_driver = subprocess.run(
+            [*command, "--synthetic-local"],
+            env={**env, "ZF_STORE": "mssql"},
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(missing_driver.returncode, 1)
+        self.assertIn("DOCUMENT_RESCAN_ERROR", missing_driver.stderr)
+        for result in (success, failure, missing_driver):
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertNotIn("SYN_PRIVATE", result.stdout + result.stderr)
+
+    @unittest.skipUnless(importlib.util.find_spec("mssql_python"), "optional MSSQL driver absent")
+    def test_selected_mssql_driver_error_is_sanitized_before_store_return(self) -> None:
+        from mssql_python import Error
+
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with (
+            patch.dict(os.environ, {**self.env, "ZF_STORE": "mssql"}),
+            patch(
+                "zava_forward.orchestrator.document_rescan.open_store",
+                side_effect=Error(
+                    "SYN_PRIVATE_SQL_DRIVER_DIAGNOSTIC", "SYN_PRIVATE_DDBC_DIAGNOSTIC"
+                ),
+            ),
+            contextlib.redirect_stdout(stdout),
+            contextlib.redirect_stderr(stderr),
+        ):
+            self.assertEqual(main(["--synthetic-local"]), 1)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertIn("DOCUMENT_RESCAN_ERROR", stderr.getvalue())
+        self.assertNotIn("SYN_PRIVATE", stderr.getvalue())
+        self.assertNotIn("Traceback", stderr.getvalue())
 
     def test_preflight_refuses_implicit_scanner_data_store_and_invalid_bounds(self) -> None:
         for changes, args in (

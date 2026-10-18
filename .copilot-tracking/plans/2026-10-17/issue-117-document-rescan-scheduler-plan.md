@@ -6,7 +6,7 @@
 * Task ID: 117
 * Task slug: issue-117-document-rescan-scheduler
 * Plan date: 2026-10-17
-* Planning status: Correction ONE P03 complete; original Review unchanged, coordinator clearance pending
+* Planning status: Final authorized correction TWO P04 active, integrated onto main f9d80724
 * Phase details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-scheduler-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md
 
@@ -32,9 +32,12 @@ or operational scanner approval.
 No engineering decision blocker. Original Review execution Complete / outcome
 Not accepted identified RV-001/RV-002 (Medium) at safe logging/malformed-result
 boundaries. Coordinator authorized one coherent correction cycle on 2026-10-17;
-both findings have targeted P03 implementation evidence. T01/T02 complete:
-validated source9468800e published to same draft PR395. No remaining active-plan
-markers. No second critique/Review or self-Pass; independent clearance pending.
+both findings have targeted P03 implementation evidence and coordinator reports
+independent closure in session558e33f1. That independent assessment is Revise
+for one new Medium optional-driver import defect. P04 is the LAST authorized
+source cycle, not a second full Review or self-Pass. Original artifacts and
+correction ONE evidence remain unchanged. Any unresolved defect after P04 is a
+human blocker, not authority for a third source cycle.
 Actual Defender enablement, schedule owner/cadence and retention/deletion
 delegations remain unmet human/service gates.
 
@@ -124,7 +127,8 @@ Automatic parent continues after the one critique gate.
 ## Sources
 
 Research C1-C8 and W1-W2; ADR0002 decision2/open items; PRD DH-003.
-Current source base ebc8dab87ae9bd6a33380b85e86f38be5ed9f213 includes merged102.
+Current integrated base f9d807245e784ad2e6587741a73fc6563f8d2cd6 includes
+merged396 coordinator routes and merged102. Original base ebc8dab8 is historical.
 
 ## Phase Checklist
 
@@ -188,10 +192,35 @@ core/orchestrator tools, rebuilt image/actual hardened job. Stop owned SQL.
 Reconcile correction receipts/current state and PR395 body, fresh main/identity,
 normal commit/push; retain draft and exact original Review/critique bytes.
 
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Final authorized correction TWO and integration
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Restore optional-driver import compatibility
+
+Reproduce actual driverless discovery/module help before source edits. Load
+the MSSQL exception type only for explicitly selected MSSQL, after parsing/
+configuration validation, while preserving fixed sanitized driver errors.
+No optional-driver install into SQLite CI or workflow change. Existing-file
+regressions for driverless help/discovery, normal/failing SQLite command and
+available-driver MSSQL error. Original worker/recovery contracts unchanged.
+
+<!-- rpi:task id=P04-T02 -->
+#### [ ] P04-T02: Validate integration and publish with exact lease
+
+Authorized rebase own topic onto fresh main f9d80724, preserve upstream runtime/
+browser routes unchanged and exact issue runtime/test patch parity except T01.
+Preserve upstream log byte-prefix and both append-only histories. Configured
+checks, driverless real commands, focused actual SQL driver-error and hardened
+image command. Reconcile current artifacts/source/base/next action; keep draft.
+Force-with-lease ONLY own topic against exact remote6a9fd3a4, stop if changed.
+No third source cycle, new full Review, merge, issue closure or self-Pass.
+
 ## Dependencies
 
 P01-T02 depends P01-T01; P02-T01 depends P01; P02-T02 depends P02-T01.
 P03-T02 depends P03-T01 and separate coordinator correction authorization.
+P04-T02 depends P04-T01; integration authorization expressly granted2026-10-18.
 Local SQL driver/container and installed src packages are validation prerequisites.
 
 ## Critique Disposition
@@ -210,12 +239,18 @@ All are compatible direct planner corrections; original artifact unchanged.
 * Defender account enablement and real Blob verification: owner/service gate.
 * Hosted schedule ownership/cadence/monitoring: separate authorized delivery.
 * DPO/Legal periods, holds and owner approvals: human gate, never worker authority.
+* Independent final-candidate clearance after correction TWO: coordinator gate;
+  any unresolved engineering issue after this last cycle is a human blocker.
 
 ## Handoff
 
 Full P01/P02 implementation and validation executed, with actual limits/skips
 in the changes record. The one original Review executed Complete / outcome
 Not accepted, two Medium findings. Completion markers record execution, not
-defect-free acceptance. Coordinator now authorizes correction ONE P03 for both
-findings, without reopening or rewriting the original Review/critique.
-Operational gates and independent coordinator acceptance remain separate.
+defect-free acceptance. P03 correction ONE is complete and coordinator reports
+independent original-finding closure. P04 final correction TWO fixes the new
+optional-driver import finding after authorized main integration, without
+reopening or rewriting original Review/critique/correction evidence.
+P04-T01 complete; P04-T02 validation complete, exact leased publication pending.
+Current base f9d80724; remote lease6a9fd3a4. Operational gates and independent
+final-candidate acceptance remain separate. No third source cycle is authorized.

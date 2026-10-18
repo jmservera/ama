@@ -8,7 +8,6 @@ import os
 import sqlite3
 import sys
 
-from mssql_python import Error as MssqlError
 from zava_forward.core.document_rescan import run
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
@@ -37,7 +36,12 @@ def main(argv: list[str] | None = None) -> int:
             "local requires --synthetic-local; limit is 1..100 and cursor parts nonempty."
         )
     store = None
+    database_errors: tuple[type[Exception], ...] = (sqlite3.Error,)
     try:
+        if os.environ["ZF_STORE"] == "mssql":
+            from mssql_python import Error as MssqlError
+
+            database_errors += (MssqlError,)
         store = open_store()
         result = run(
             store,
@@ -49,7 +53,14 @@ def main(argv: list[str] | None = None) -> int:
         if result["failed"] or result["committed"]:
             return 1
         return 2 if result["pending"] or result["next_after"] is not None else 0
-    except (ValueError, TypeError, OSError, DocumentStoreError, sqlite3.Error, MssqlError):
+    except (
+        ValueError,
+        TypeError,
+        OSError,
+        DocumentStoreError,
+        ModuleNotFoundError,
+        *database_errors,
+    ):
         print(
             "DOCUMENT_RESCAN_ERROR: check configuration and persisted scan/audit.", file=sys.stderr
         )

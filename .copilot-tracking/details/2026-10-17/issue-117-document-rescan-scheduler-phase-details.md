@@ -15,6 +15,7 @@ Initial direction: reuse scan/config/SQL boundaries; no operational enablement.
 | P01 | Complete; source/CLI validated | P01-T01, P01-T02 |
 | P02 | Complete; actual SQL/image/regression/docs receipts recorded | P02-T01, P02-T02 |
 | P03 | Complete; correction source published same draft PR395, no independent acceptance | P03-T01, P03-T02 |
+| P04 | T01 complete; T02 validation complete/publication pending; current base f9d80724 | P04-T01, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded core and job
@@ -200,3 +201,43 @@ ebc8dab87ae9bd6a33380b85e86f38be5ed9f213. Fresh identity/privacy-safe author/
 committer and Copilot trailer verified. Only this reconciliation metadata
 follows that tested source boundary; no runtime/test edits. No active-plan
 markers remain, independent coordinator acceptance and operational gates remain.
+<!-- rpi:phase id=P04 -->
+## P04: Final correction TWO, 2026-10-18
+
+Coordinator supplies independent session558e33f1 Revise: original RV-001/RV-002
+closed by actual SQLite CLI/log probes and seven-artifact reconciliation passes,
+one new Medium unconditional optional-driver import blocks dependency-minimal
+SQLite CI/module help. No new full Review. T01: backend-selected lazy driver
+error import, no fallback/backend switch/workflow/dependency change, exact
+driverless process coverage and available-driver sanitized error.
+T02: authorized own-topic rebase onto merged396 main f9d80724; sole actual
+conflict append-only KB log, retain exact upstream prefix then issue entries.
+Runtime/test parity and upstream source/browser equality required. Actual
+focused SQL if exception handling changes, owned container stopped afterward.
+Preserve original Review/critique and existing correction ONE sections byte-exact.
+Remaining failure after this last source cycle requires coordinator/human action.
+
+<!-- rpi:task id=P04-T01 -->
+### P04-T01: Completed backend-selected exception dependency
+
+Production change only orchestrator/document_rescan.py. Actual driverless
+discovery/help failing first, existing-file subprocess regression failing first.
+No-site driver absence asserted, same real discovery final32/31/one skip,
+help exit0, configured SQLite success/failure exit2/1 with counters, missing
+MSSQL driver fixed-marker exit1. Available-driver32/32 discovery and actual
+native SQL invalid-table error sanitize correctly. No workflow/dependency edits.
+
+<!-- rpi:task id=P04-T02 -->
+### P04-T02: Integration validation complete, publication pending
+
+Main f9d80724 retains coordinator runtime/browser/test/manifest bytes unchanged.
+Pre-fix integration had no runtime conflicts; only log append resolution.
+Issue worker/core/tests remain exact old-head bytes except authorized CLI/test
+pair. Upstream KB log prefix exact; original Review/critique and correction ONE
+changes evidence byte-identical. Fresh configured core checks69 formatted/
+122 typed; orchestrator9/12. Combined worker/progress/provenance/resident/sensor/
+coordinator API273 run/186 pass/87 opt-in skips. New SQL20/20 (all19 worker plus
+driver error), native driver-error CLI and actual success pages. Correction ONE
+SQL30 is historical, not rerun. Rebuilt hardened installed image help/failure6/
+success pages pass with hashes. Exact owned SQL stopped/removed.
+Detailed commands/results/failures/hashes in changes record P04 section.
