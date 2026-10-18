@@ -6,7 +6,8 @@ ms.date: 2026-10-18
 
 ## Execution Boundary
 
-Task 76; full approved plan. Implement active; first gate P01-T01, all new defect
+Task 76; full approved plan. Ordered RPI and publication complete; first gate was
+P01-T01, all new defect
 tests red before production edits. No source correction cycle used. Exact base
 6c1e376ff1241316272df22a5a3a6853aae9f87b. Research baseline preserved: eight
 semantic failures through real JSON Store and SQLite SqlStore, exit 1.
@@ -170,4 +171,10 @@ the explicit original base and records drift; coordinator must authorize any
 later integration. No exact-integrated-head acceptance is inferred.
 
 gh api user resolved public account id/login for repository-local noreply
-author/committer identity. Commit/publication receipt follows; P03-T04 pending.
+author/committer identity. Source/evidence commit
+ee8634c8754c68ad95dc3166d2a98918eee2ca45 pushed normally and main-target
+PR https://github.com/jmservera/ama/pull/407 created. Issue remains OPEN.
+P03-T04 publication complete; publication receipt and final state are persisted
+in a following artifact-only commit. No source or original-evidence changes.
+Hosted checks pending at initial inspection, not claimed green. Stop for
+coordinator complete independent exact-head review and integration authorization.

@@ -4,7 +4,7 @@ description: Bounded offline read-model correction and evidence gates
 ms.date: 2026-10-18
 ---
 
-Task ID: 76. Slug: issue-76-current-stage-blockers. Status: Review complete; publication pending.
+Task ID: 76. Slug: issue-76-current-stage-blockers. Status: ordered loop and publication complete.
 Base: 6c1e376ff1241316272df22a5a3a6853aae9f87b.
 
 ## Executive Summary
@@ -101,13 +101,13 @@ Existing resident tests may execute as coupled coverage, but are never edited.
   SQLite and task-owned actual MSSQL.
 
 <!-- rpi:phase id=P03 -->
-### P03: Validation and publication
+### [x] P03: Validation and publication
 
 * [x] P03-T01 Run focused/coupled suites, configured Ruff/format/mypy,
   original before/after probe and relevant non-root Docker/HTTP evidence.
 * [x] P03-T02 Update component docs; freeze source/test candidate and hashes.
 * [x] P03-T03 Execute one original independent Review; preserve finding set.
-* [ ] P03-T04 Reconcile evidence/state; commit privacy-safe identity and trailer;
+* [x] P03-T04 Reconcile evidence/state; commit privacy-safe identity and trailer;
   normal push/main PR; stop for complete independent coordinator exact-head review.
 
 ## Critique Disposition
@@ -137,6 +137,9 @@ Conformant, no defects. Remote main advanced during Review to observed
 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096. Retain original base; do not
 integrate. Publish the unchanged topic candidate with drift explicit, then
 wait for coordinator integration authorization and exact-head review.
+PR https://github.com/jmservera/ama/pull/407 is OPEN, main-target, non-closing
+Refs reference only. No merge/issue edit or unilateral integration. Final
+artifact-only reconciliation does not alter the frozen seven-file candidate.
 
 ## Handoff
 
