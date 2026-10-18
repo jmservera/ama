@@ -26,7 +26,12 @@ mapping, consent or calibration authority.
 
 Input is the closed `sensor-fault-input-v1` observation shape from
 `synthetic.sensor_faults.READING_FIELDS`, not Packet labels/clean rows/evaluator
-truth. All fields are strings; sensor/reading/home IDs are uppercase ASCII
+truth. The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+describe this imported authority without another schema: three paired records/
+home/day gives 3N records, not a selected wire-message count. Stock-derived
+73-character lowercase-hex sensor IDs are incompatible with this consumer;
+fixture-valid records do not prove stock/live interoperability.
+All fields are strings; sensor/reading/home IDs are uppercase ASCII
 letters/digits/underscore/hyphen, with maximum lengths 20/40/12, no whitespace.
 Scenario uses the same alphabet, max 20; seed is a signed 64-bit integer string.
 Numbers are decimal strings with at most two fractional places, no exponent,

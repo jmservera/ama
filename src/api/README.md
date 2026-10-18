@@ -24,6 +24,13 @@ from `sensor_faults.Packet.rows` are inputs, never truth/labels/clean rows.
 Receipt time is an explicit trusted UTC whole-second string; no operational
 clock window, calibration, consent or range is guessed.
 
+The [shared observation contract and volume reference](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+lists the imported 13 required string fields and measured synthetic example.
+One record pairs temperature and RH. Three records/home/day is the unchanged
+accounting baseline; finite callable batches are not adopted wire packetization
+or Hub billing/throughput evidence. Stock/live identity compatibility remains a
+separately reviewed downstream decision, not established by these fixtures.
+
 Transactions are per observation. Invalid rows produce DQ and processing
 continues; SQL failure/uncertain acknowledgement stops immediately.
 `BatchStopped.code`, `.reference` and `.completed` contain only bounded metadata,

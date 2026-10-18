@@ -1,0 +1,6 @@
+{"calibrated": "true", "home_id": "ZF-1", "humidity_pct": "54.36", "humidity_unit": "percent", "observed_at": "2024-10-01T00:00:00Z", "reading_id": "SENS-SYN-1-1727740800", "scenario": "BACKFILL_2Y", "schema_version": "sensor-fault-input-v1", "seed": "183", "sensor_id": "SENS-SYN-1", "source_type": "SYNTHETIC", "temperature_c": "16.73", "temperature_unit": "degC"}
+schema_version: sensor-fault-input-v1
+bytes_per_sample: 366
+sha256: efccea5eb698a3310aca7409837ad9b5ad3673b949ddb3c2395da21a8b01dc6c
+N=1 records/day=3 mean_records/s=1/28800 (3.47222222222e-05) sample_bytes/day=1098
+N=60000 records/day=180000 mean_records/s=25/12 (2.08333333333) sample_bytes/day=65880000

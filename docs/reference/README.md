@@ -21,6 +21,14 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #186, the [shared observation contract and volume reference](./research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+documents the unchanged imported 13-field consumer schema, stable-key replay and
+three paired observations/home/day. Declared N=1/60,000 gives 3/180,000 records/
+day; measured 366-byte public synthetic JSON is one sample, not a maximum or
+live traffic/cost claim. Stock 73-character lowercase-hex IDs remain incompatible
+with uppercase, 20-character admission; downstream #187/#188 require a separately reviewed
+compatibility decision. No source, transport or approval change is implied.
+
 For issue #110, the [core offline sensor contract](../../src/core/README.md#constructed-offline-sensor-consumer-110)
 and [finite API adapter](../../src/api/README.md#finite-offline-sensor-ingestion-110)
 document constructed observations-only SQL processing, independent exercise

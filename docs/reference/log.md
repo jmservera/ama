@@ -6373,3 +6373,24 @@ metadata when the knowledge base was created.
   corrupt timestamps and duplicate maxima cannot be skipped. Validated seed
   integers compare semantically across SQLite/BIGINT while retaining exact
   input/digest replay identity. No new store, service or operational policy.
+
+## [2026-10-18] query | Issue 186 shared observation contract and measured volume
+
+* Extended the existing [sensor synthesis](./research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+  with the unchanged consumer's authoritative imported 13-field string schema,
+  exact identity/time/unit constraints, envelope distinction, stable-key
+  replay/conflict and bounded receipts/DQ. No independent schema or runtime API.
+* Preserved three paired temperature/RH observations/home/day: declared N=1 and
+  fictional N=60,000 give 3 and 180,000 records/day, mean 1/28800 and 25/12 per
+  second. Reproduced one public current-contract sorted ASCII JSON sample at
+  366 bytes, yielding illustrative 1,098/65,880,000 payload bytes/day, not upper
+  bounds, wire-message counts, Hub billing, peaks or measured live traffic.
+* Explicitly recorded the stock adapter's 73-character lowercase-hex sensor-ID
+  incompatibility with uppercase, 20-character consumer admission. No remap, truncation,
+  validation weakening or source change; fixture validity is not stock/live
+  interoperability. Downstream #187/#188 need a separate reviewed decision.
+* Linked component READMEs, addendum and index. Preserved accepted ADR 0003/
+  Basic exercise amendment and its historical Proposed text; whole #110,
+  transport/identity/cost/network/privacy/real AI/Azure/human gates remain open.
+  No private stock, original-case or memory changes, new data approvals,
+  operational rules, tasks, priorities or resident communications.
