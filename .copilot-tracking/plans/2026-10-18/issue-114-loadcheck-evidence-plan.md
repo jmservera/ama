@@ -15,8 +15,8 @@
 Implemented missing-observation and failed-worker nonpassing evidence with unchanged classes,
 p95 limits, default mix and ordinary valid CLI. Original independent Review is Not accepted;
 its RV-001 duration overflow is locally addressed in separate correction ONE evidence.
-Original critique/Review remain immutable. Publication and coordinator exact-head acceptance
-remain distinct from the completed source work and local checks.
+Original critique/Review remain immutable. Publication is complete in PR #403; coordinator
+exact-head acceptance remains distinct from completed source work, publication and local checks.
 
 ### What You May Not Know
 
@@ -27,7 +27,7 @@ after the monotonic deadline; no new cancellation behavior is planned.
 ### Unresolved Decisions or Blockers
 
 No local implementation blocker. Original critique Revise and Review Not accepted preserved.
-PC-001/PC-002 dispositioned; RV-001 locally corrected once. Publication pending.
+PC-001/PC-002 dispositioned; RV-001 locally corrected once. Published PR #403; coordinator acceptance pending.
 
 ## User Decisions and Requirements
 
@@ -125,7 +125,7 @@ completion placement. Validation scratch stays in .copilot-tracking/.issue-114-t
 after use, and is never committed. CLI tests override tempfile.tempdir inside clear environment.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: One independent Review and publication
+### [x] P02: One independent Review and publication
 
 Depends on P01 completion and reconciliation of plan/details/changes/state.
 
@@ -137,7 +137,7 @@ only designated review artifact; exactly one original Review. Correct findings i
 receipts, max two source cycles, never rewrite originals or claim independent corrected acceptance.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Reconcile, commit and publish
+#### [x] P02-T02: Reconcile, commit and publish
 
 Depends on P02-T01. Resolve GitHub user, set local privacy-safe identity, Conventional Commits
 with required Copilot trailer. All task artifacts tracked. Report base/candidate/published head,
@@ -174,6 +174,7 @@ No second critique. No new mypy exemption: type canonical functions at their dyn
 ## Handoff
 
 P01 complete; P02-T01 complete with original Review Not accepted, preserved unchanged.
-Caller-selected RV-001 correction ONE locally complete; P02-T02 publication remains.
-No second original Review; coordinator owns independent corrected-head acceptance.
+Caller-selected RV-001 correction ONE locally complete; P02-T02 observed branch publication and
+PR #403 creation complete. Final artifact-only receipt commit pins its exact head externally in PR.
+Automatic session stops at caller boundary; coordinator owns independent corrected-head acceptance.
 Changes record: .copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-changes.md.

@@ -13,7 +13,7 @@
 | ID | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Bounded correction and local evidence | Complete | P01-T01, P01-T02 |
-| P02 | Original Review and publication | Original Review complete; publication pending | P02-T01, P02-T02 |
+| P02 | Original Review and publication | Complete, coordinator acceptance pending | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct and prove bounded evidence contract
@@ -115,3 +115,6 @@ Commit original Review and remaining task artifacts, push branch and create main
 PR records exact delivered head externally (self-hash cannot be in its own commit), ordered RPI paths,
 commands/results and unmet live/human gates. Verify PR head/base and branch cleanliness.
 Stop automatic session after publication per explicit caller instruction, not follow-up selection.
+Status: Complete. Branch pushed, PR #403 OPEN targeting main; initial observed head d55e96c6,
+unchanged base f9135316. Separate publication receipt records full identities and final artifact-only
+head pinning via PR body. No source integration, second Review or independent corrected acceptance.

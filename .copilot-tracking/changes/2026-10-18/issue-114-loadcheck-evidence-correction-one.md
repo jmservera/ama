@@ -70,7 +70,8 @@ This is correction verification, not another original Review or operational acce
 | loadcheck.py | a6bd8d0c4e3ae31484c6248934647b08251af688bf1f3db93a260a9d81fb9858 |
 | test_loadcheck.py | db30c48bbd9151eee3bb72af4e50dbca8ba8fbaeb2d87a7083fa6c52fdd7affd |
 
-Correction commit will be identified by the subsequent publication receipt and PR.
+Correction commit: d55e96c6e1031f4097947f1a0810da1e177a26f1, also identified by publication
+receipt and PR #403. Later publication reconciliation changes task artifacts only.
 
 ## Identity Before Correction
 

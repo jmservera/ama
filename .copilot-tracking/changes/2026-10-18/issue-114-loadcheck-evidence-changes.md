@@ -12,9 +12,9 @@
 
 ## Execution Status
 
-Partial, full-plan scope. P01 and P01-T01/T02 complete.
-P02-T01 original Review complete; correction ONE locally complete.
-Remaining: P02-T02 publication. Research executed Ready; Plan Ready after exactly one critique.
+Complete, full-plan scope: P01/P02 and all four task markers complete, including observed publication.
+Original Review remains Not accepted; correction ONE locally complete, independent acceptance pending.
+Research executed Ready; Plan Ready after exactly one critique.
 
 ## Execution Summary
 
@@ -151,9 +151,9 @@ CLI tests clear environment and override tempfile.tempdir; no actual SQL/AI call
 
 Plan P01 markers, details, completed-work evidence, validation and boundaries reconciled.
 Original Review assessed the frozen candidate; P02-T01 now complete. Correction receipt, plan,
-details/state and local validation are reconciled for publication. P02-T02 remains unchecked
-until actual branch/PR publication is observed. Coordinator exact-head independent acceptance
-is pending; original Review Not accepted is not changed to conformant.
+details/state and local validation were reconciled before publication. P02-T02 remained unchecked
+until actual publication was observed; it is now complete as recorded below. Coordinator exact-head
+independent acceptance is pending; original Review Not accepted is not changed to conformant.
 
 ## Blockers
 
@@ -161,7 +161,15 @@ None within bounded scope.
 
 ## Remaining Work
 
-P02-T02 publication, then stop for coordinator exact-head review.
+No active plan work remaining. Coordinator exact-head review remains an external acceptance gate.
+
+## Publication
+
+P02-T02: correction commit d55e96c6e1031f4097947f1a0810da1e177a26f1 published; PR #403 OPEN
+targeting main with exact unchanged base f91353169756dc41ebbcca944bdd3f44f7c04b89. Separate
+.copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-publication.md records commands,
+identities and all artifact paths. Final reconciliation commit changes artifacts only; exact final
+head is pinned in PR body/metadata rather than self-referential committed content.
 
 ## Follow-Up Items
 
@@ -171,5 +179,6 @@ human/operational acceptance remain unmet. No issue checkboxes or board changes.
 ## Return-to-Caller State
 
 Ordered Research -> Plan/one critique -> Implement -> one original independent Review complete.
-Parent lifecycle is Follow-up; caller-selected correction ONE is locally complete. Publication
-remains active. No second original Review; source acceptance belongs to coordinator at exact head.
+Parent lifecycle is Follow-up; caller-selected correction ONE and publication complete.
+Automatic session stopped at explicit caller boundary. No second original Review; source
+acceptance belongs to coordinator at exact head, not this local receipt.
