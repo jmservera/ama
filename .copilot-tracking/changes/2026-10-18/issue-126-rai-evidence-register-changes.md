@@ -5,7 +5,8 @@ ms.date: 2026-10-18
 
 Task 126; slug issue-126-rai-evidence-register; full plan scope.
 Base ab0613f3336109ff9b96560a16758ee842232715.
-Status: P01/P02 complete; ready for sole original Review. No implementation workers.
+Status: ordered RPI and publication complete; stopping for coordinator exact-head
+inspection. No implementation workers.
 
 ## P01: Core/API
 
@@ -16,7 +17,7 @@ installed editable src/core[dev,sql], src/agents, src/api[dev]. Repeated baselin
 
 Sole critique Complete/Revise, PC-001/002 applied in plan/details before source edits.
 Original SHA256 4e24e7e0cc8cf21081c4e5823cbbfbd8fbf0d1d0a8e904220ecd5b0e3235c8bb.
-Correction count: 0 (no original implementation Review yet).
+Correction count: 0. Sole original implementation Review now completed below.
 
 Fail-before: added first tests on unchanged source, 50 tests executed, 59 errors
 (subtests included), 10 MSSQL opt-in skips; missing rai_evidence_record and old view
@@ -77,10 +78,46 @@ acceptance. Whole issue 126 and all 22 baseline findings remain open.
 
 ## P03: Original Review/publication
 
-Implementation review-ready: P01/P02 markers complete and details/current
-validation reconciled. P03-T01 original Review and P03-T02 publication remain.
+Sole original Review:
+.copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-review.md.
+Execution Complete; outcome Conformant for bounded engineering; no actionable
+RV findings. Assessed source d0bb02df6a0e8ea52fe56f409b24cfcf6db2ea90 and all
+28 candidate files/receipts. Fresh read-only semantic/integrity checks are recorded
+in that original; SQL/image/HTTP receipts were inspected, not rerun by reviewer.
+Original SHA256 12788d8f7f81279012b54ba3902255f2eabe436d61d97fda3a0ae701bb6b6c24.
+Original critique SHA256 remains
+4e24e7e0cc8cf21081c4e5823cbbfbd8fbf0d1d0a8e904220ecd5b0e3235c8bb.
+Neither original was modified. No post-Review source changes, corrections or
+second Review. All remaining human/live gates remain explicit and unmet.
+
+Publication: https://github.com/jmservera/ama/pull/409, main target.
+Pinned implementation base ab0613f3336109ff9b96560a16758ee842232715.
+Observed live PR base at creation 9403dc6a8f52f1f04c5ad910faab11a57c29ee78,
+not the pinned base; main moved independently. No rebase, merge or lineage rewrite.
+Authenticated gh account id8036360/login jmservera supplied repo-local noreply
+author/committer identity. Source/initial artifacts commit d0bb02df6a0e8ea52fe56f409b24cfcf6db2ea90.
+Final handoff commit adds original Review, full inventory and lifecycle bookkeeping
+only; source/docs remain identical to the assessed source commit.
+PR creation verified closingIssuesReferences empty. No issue/board/acceptance
+action or merge occurred. Coordinator owns integration of concurrent work.
+
+### Actual Ordered Phase Log
+
+1. Research executed focused Wider -> Deeper -> Contrarian, synthesized Ready.
+2. Plan and separate phase details authored from verified source.
+3. Exactly one final-candidate critique executed Complete / Revise; PC-001/002
+   dispositioned directly in plan/details, original retained.
+4. Implement executed failing-first -> bounded source -> local/SQL/HTTP/image/
+   preservation/quality checks -> supported current documentation.
+5. Exactly one original Review executed Complete / Conformant; findings none.
+6. Published non-closing PR #409; final owned evidence handoff; explicit caller Stop.
+
+Every phase uses date 2026-10-18 and slug issue-126-rai-evidence-register.
+Full changed inventory is the adjacent `issue-126-rai-evidence-register-inventory.txt`.
+Session: .copilot-tracking/rpi-sessions/2026-10-18/issue-126-rai-evidence-register-state.json.
 No implementation blockers; required human/live acceptance is explicitly unmet.
-No issue acceptance or closure.
+No issue acceptance or closure. Stop for independent coordinator inspection of
+the final exact head, all source/artifacts and retained raw logs.
 
 ## Amendments and Divergences
 
