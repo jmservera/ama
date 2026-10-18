@@ -638,10 +638,105 @@ class HttpTests(fixtures.ApiTests):
         canary = "SYNTHETIC-RESTRICTED-REASON-122"
         self.store.audit(self.pm["email"], "log_contact", "ZF-1", canary)
         self.store.save()
+        head = self.store.ledger_head()
         self.user = self.people["Programme Support Officer"]
         status, bundle = self.request("/api/continuity/export")
         self.assertEqual(status, 200, bundle)
         self.assertNotIn(canary, json.dumps(bundle))
+        self.assertEqual(bundle["audience"]["scope"], "limited")
+        self.assertFalse(bundle["complete"])
+        self.assertFalse(bundle["ledger"]["report"]["intact"])
+        self.assertFalse(continuity.verify_export(bundle)["valid"])
+        self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
+        self.assertTrue(any(canary in json.dumps(row) for row in self.store.audit_entries()))
+
+    def test_nested_evidence_projection_and_full_manager_proof(self) -> None:
+        canary = "SYNTHETIC-NESTED-PROTECTED-TEXT-122"
+        from zava_forward.core.assistants import runtime_binding
+
+        self.service.approvers = {self.pm["email"]}
+        cap = "stock-prioritisation"
+        released = self.service.record_release(
+            self.pm,
+            release_support.fixture(
+                cap,
+                runtime_binding(cap, self.store.ai),
+                expires="2099-01-01T00:00:00Z",
+                impact_assessment=canary,
+                residual_risk_note=canary,
+            ),
+        )
+        p = self.verify(self.run_ready(cap))
+        self.service.review(self.pm, p["id"], "accept", p["revision"], canary)
+        with self.service.transaction() as db:
+            self.service.event(db, p["id"], kind="synthetic-test", nested={"free_text": canary})
+        self.service.change_release(self.pm, released["id"], "revoked", canary)
+        with self.store.lock:
+            self.store.data["recommendations"].append(
+                dict(
+                    id="synthetic-legacy122",
+                    user=self.pm["email"],
+                    kind="ai_task",
+                    task="summary",
+                    source="template",
+                    status="Not reviewed",
+                    shown_output=canary,
+                    reviewer_reason=canary,
+                    envelope=dict(nested={"arbitrary": canary}),
+                    provenance=[dict(text=canary)],
+                )
+            )
+            self.store._gov()["breaches"].append(dict(note=canary, nested={"reason": canary}))
+            self.store.save()
+        self.store.suspend(
+            self.people["Quality Inspector"],
+            dict(SUSPEND, reason=canary, containment=canary, synthetic=True),
+        )
+        self.store.audit(self.pm["email"], "synthetic-nested", "ZF-1", canary)
+        self.store.save()
+        self.user = self.pm
+        head = self.store.ledger_head()
+        status, full = self.request("/api/continuity/export")
+        self.assertEqual(status, 200, full)
+        expected = dict(count=head[0], hash=head[1])
+        self.assertEqual(full["ledger"]["head"], expected)
+        self.assertTrue(
+            continuity.verify_export(full, expected)["valid"], full["incomplete_reasons"]
+        )
+        for section in (
+            "ledger",
+            "ai_records",
+            "assistant_proposals",
+            "task_releases",
+            "approvals",
+            "continuity",
+        ):
+            self.assertIn(canary, json.dumps(full[section]), section)
+        self.assertFalse(any(row["relied_on"] for row in full["assistant_proposals"]))
+        before = copy.deepcopy(full)
+        for role in ("Programme Support Officer", "Retrofit Programme Manager"):
+            with self.subTest(role=role):
+                self.user = self.people[role]
+                # Existing recorded-need override, not a policy change or authorization bypass.
+                with patch.dict(os.environ, {"ZF_REASON_ROLES": "Building Safety Liaison"}):
+                    status, limited = self.request("/api/continuity/export")
+                self.assertEqual(status, 200, limited)
+                self.assertNotIn(canary, json.dumps(limited))
+                self.assertFalse(limited["complete"])
+                self.assertFalse(limited["audience"]["full_ledger_proof"])
+                self.assertEqual(limited["assistant_proposals"][0]["state"], "accepted")
+                self.assertFalse(limited["assistant_proposals"][0]["relied_on"])
+                self.assertFalse(continuity.verify_export(limited, expected)["valid"])
+                limited["complete"] = True
+                limited["incomplete_reasons"] = []
+                limited["digest"] = continuity.sha(
+                    {key: value for key, value in limited.items() if key != "digest"}
+                )
+                verified = continuity.verify_export(limited)
+                self.assertFalse(verified["valid"])
+                self.assertFalse(verified["complete"])
+        self.assertEqual(full, before)
+        self.assertTrue(continuity.verify_export(full, expected)["valid"])
 
     def test_continuity_http_audiences_and_offline_export(self) -> None:
         managers = ("Retrofit Programme Manager", "Programme Support Officer")
@@ -655,8 +750,11 @@ class HttpTests(fixtures.ApiTests):
                 self.assertEqual(status, 200 if role in managers else 403, body)
                 if role in managers:
                     bundle = json.loads(json.dumps(body))
-                    self.assertTrue(
-                        continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"]
+                    valid = continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"]
+                    self.assertEqual(valid, role == "Retrofit Programme Manager")
+                    self.assertEqual(
+                        bundle["audience"]["scope"],
+                        "full" if role == "Retrofit Programme Manager" else "limited",
                     )
 
     def test_http_epoch_read_review_export_and_manual_actions(self) -> None:

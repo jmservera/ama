@@ -159,7 +159,7 @@ an image predating the gates safe. Such images must be stopped/drained or denied
 serving access by an enforceable deployment boundary outside this source change.
 The change/reverse register is evidence, not general serving configuration control.
 
-Continuity JSON bundles retain task-release reference-time snapshots, current
+Full continuity JSON bundles retain task-release reference-time snapshots, current
 status/revision and release-ID lifecycle events with IDs/timestamps/associations.
 Offline verification resolves ID/version/digest/task and lifecycle completeness,
 in addition to bundle digest, ledger chain and optionally an externally held head.
@@ -188,12 +188,24 @@ access remains limited to managers, Quality Inspector and Building Safety Liaiso
 export remains manager-only. Contractor, unknown and unrelated staff denials are
 retained and exercised over actual HTTP. Correction evidence is not independent
 acceptance; the original adverse Review is unchanged.
-Publication remains blocked: the existing role endpoint inventory and a focused
-host/actual-SQL/hardened-image HTTP regression expose restricted ledger text to
-the Programme Support Officer through the restored export route. The two route
-entries and collection checks do not establish audience-safe evidence export.
-Coordinator correction must reconcile role redaction with ledger integrity;
-no new acceptance or deployment readiness is claimed.
+Coordinator-authorized correction TWO applies the existing recorded-need policy
+(`DEFAULT_REASON_ROLES`, or the configured `ZF_REASON_ROLES`) at export. A manager
+with a recorded need receives full evidence and the exact canonical ledger, still
+subject to independent completeness and external-head checks. A manager without
+that need retains HTTP export access but receives a closed, audience-limited
+summary: numeric/boolean lifetime information, known dispositions, counts and the
+recorded head. Free-text evidence, identifiers, snapshots/events, raw ledger rows
+and governance/version narratives are held rather than pattern-filtered.
+
+Limited exports say `audience.scope=limited`, `full_ledger_proof=false`,
+`ledger.full_proof=false` and `complete=false`, with an explicit nonsensitive
+reason. The verifier rejects full-proof validation, even if producer completeness
+flags and the ordinary digest are rewritten. No redacted row claims the original
+hash, and the server-side canonical evidence is unchanged. Such summaries cannot
+reconstruct task-release references or prove the full ledger; a separately
+authorized full export is required for that purpose. Original adverse Review
+and correction ONE failures remain historical evidence; correction TWO does not
+constitute independent acceptance or deployment readiness.
 
 Manual contact, resident challenge and independent hazard transactions still use
 their existing authority and safety gates during suspension. Synthetic exercise

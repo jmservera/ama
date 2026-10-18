@@ -5,8 +5,17 @@ ms.date: 2026-10-18
 ---
 
 Task 122, issue-122-continuity-epoch-export. Plan and research use the same dated
-slug. Current phase: authorized Implement correction ONE after the frozen
+slug. Current phase: authorized Implement correction TWO FINAL after the frozen
 original Complete / Not accepted Review. Original critique is Complete / Revise.
+
+Current continuation supersedes the correction ONE blocker: coordinator authorizes
+P05 correction TWO FINAL. Existing recorded-need projection governs all exported
+evidence, including nested ledger, legacy/proposal/release and governance text.
+Ineligible audiences retain permitted access with explicit limited/incomplete
+proof. Never rewrite canonical ledger rows or claim projected rows retain their
+original hashes. Full authorized manager unchanged-head verification must remain.
+P05-T01 starts with retained failing-first HTTP reproduction and existing audit
+projection prior art; P05-T02 requires fresh actual local SQL and installed image.
 
 <!-- P01 -->
 ## P01 - Lifetime enforcement
@@ -151,3 +160,28 @@ the minimal focused actual HTTP regression fails on host, actual MSSQL and harde
 image. No test relaxation, role denial change or hash-breaking redaction was
 applied. Coordinator must route correction TWO for audience-safe evidence integrity;
 the same-session correction ONE source/evidence is committed locally only.
+
+## P05 - Authorized correction TWO FINAL
+
+P05-T01 implemented using existing can_see_reason policy, NOTE_HELD and closed
+allowlist response prior art. No projection.py changes in this cycle. Full
+reason-authorized manager exports retain canonical ledger rows/hash/head and
+reference snapshots/lifecycle; ineligible managers retain HTTP 200 with explicitly
+limited/incomplete summaries and no arbitrary text subtrees. The held canonical
+head is a reference, not proof of withheld rows. No rewritten chain is certified.
+Verifier rejects full proof from declared limited evidence even after producer
+flags/reasons/digest are reset. This is the coordinator's precise authorized
+audience decision, not a new entitlement or cryptographic protocol.
+
+One added semantic test exercises nested release/proposal/legacy/governance/
+continuity/ledger canaries, original full-manager external head proof, preserved
+canonical storage, both managers under configured recorded-need override and
+no stale proposal reliance. Existing inventory assertions and original High
+negatives are retained. P05-T02 fresh outcomes and exact commands are recorded in
+the correction-two receipt; no new Review or self-acceptance follows from tests.
+P05-T02 execution complete: final host 245 with 49 opt-in MSSQL skips, existing 163,
+actual local MSSQL 72, hardened installed image 44 and configured static checks
+pass. Original frozen hashes and all 72 Store signatures preserved. Exact owned
+containers removed. Bounded task transitions to Follow-up with automatic session
+running, publication authorized and independent coordinator acceptance pending.
+Genuine human/Azure/deployment gates remain unmet; correction limit is exhausted.

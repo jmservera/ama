@@ -12,6 +12,14 @@ Complete / Not accepted, RV-001/RV-002 High. Original evidence below is retained
 Current authorized correction ONE evidence is in
 .copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-one.md.
 It is not a new Review or independent acceptance.
+Current continuation is coordinator-authorized correction TWO FINAL; see
+.copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-two.md.
+Existing-policy limited evidence is explicitly incomplete and cannot verify the
+full canonical ledger; full authorized export remains unchanged. Fresh validation
+completed: host 245 (49 skips), existing 163, actual MSSQL 72, hardened image 44,
+static checks pass; no known bounded source failure remains. Publish under the
+explicit coordinator authorization, not as independent acceptance. Correction ONE
+adverse evidence below remains historical.
 Correction ONE is blocked for publication by a newly exposed Programme Support
 Officer restricted-ledger-reason disclosure. Fresh original-finding checks pass,
 but existing role inventory and focused host/actual-SQL/image HTTP fail. Commit

@@ -3,8 +3,8 @@
   "task_slug": "issue-122-continuity-epoch-export",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "blocked",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md",
@@ -15,6 +15,16 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-continuity-epoch-export-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Correction TWO final source cycle complete; no known source failures remain in bounded validation, publication permitted but independent acceptance pending",
+      "status": "implementation and validation complete, not self-accepted",
+      "evidence": "Correction-two receipt: host245/49skips, existing163, actual owned MSSQL72, hardened installed image44, static checks and original hashes all verified"
+    },
+    {
+      "decision": "Coordinator authorizes correction TWO final source cycle with explicit limited/incomplete projected evidence for reason-ineligible audiences and intact canonical proof for authorized full export",
+      "status": "confirmed",
+      "evidence": "User instruction 2026-10-18; correction-two receipt and P05 plan/details; no additional Review, policy expansion, crypto protocol, shared SQL or appointment edits"
+    },
     {
       "decision": "Correction ONE source and validation execution completed; publication blocked by additional restricted ledger-reason disclosure",
       "status": "blocked, not independently accepted",
@@ -56,23 +66,29 @@
       "evidence": "Explicit user instruction: no knowingly defective PR, no worker corrections, maximum two coordinator-owned later correction rounds"
     }
   ],
-  "blockers": [
-    {
-      "id": "CORRECTION-ONE-AUDIENCE",
-      "summary": "Restored manager export exposes restricted synthetic ledger reason to Programme Support Officer outside reason roles",
-      "resolution": "Coordinator-routed correction TWO must reconcile permitted role projection with immutable ledger proof; retain failing tests, no publication or new Review"
-    }
-  ],
+  "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Coordinator must route correction TWO for Programme Support Officer restricted-reason export; correction ONE source/evidence retained in local commit only, no publication or new Review"
+    "phase": "Follow-up",
+    "action": "Publish authorized bounded Refs #122 PR with frozen adverse Review and final correction evidence; coordinator owns independent acceptance and unmet operational gates"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Coordinator-routed correction TWO: audience-safe continuity export with retained ledger integrity",
-      "rationale": "Restored manager access exposes restricted ledger text to Programme Support Officer; cannot publish until projection and proof obligations are reconciled without denying permitted access",
-      "evidence": "Existing role endpoint inventory failure plus focused host, actual owned MSSQL and hardened-image HTTP failures in correction-one receipt; original Review remains frozen"
+      "task": "Coordinator independent acceptance and integration of final bounded source",
+      "rationale": "Both authorized source correction cycles are exhausted; original adverse Review remains frozen and implementation tests do not grant acceptance",
+      "evidence": "Correction-two receipt and forthcoming Refs #122 PR; preserved original critique/Review"
+    },
+    {
+      "rank": 2,
+      "task": "Named control owners obtain genuine OQ-017 authority and witness authorized drill",
+      "rationale": "Synthetic identities and actual local transactions establish source behavior, not genuine delegation or witnessed operational acceptance",
+      "evidence": "Original Review operational residuals; both correction receipts"
+    },
+    {
+      "rank": 3,
+      "task": "Authorized platform owners arrange immutable external Azure head, Azure SQL drill and unsupported-old-image exclusion",
+      "rationale": "Local SQL/image proof cannot establish external custody, Azure recovery or safe exclusion of executables predating gates",
+      "evidence": "Issue owner comment, original Review and final correction residuals"
     }
   ]
 }

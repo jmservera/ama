@@ -268,7 +268,7 @@ class ContinuityMixin:
     def continuity_export(self, user, assistants=None):
         """Build the bundle. It says whether it is complete and never presents a truncated or unsupported part as whole."""
         k.require_role(user, MANAGER_ROLES, "a manager can export evidence")
-        from . import ai_registry, ledger
+        from . import ai_registry, ledger, projection
         assistants = assistants if assistants is not None else dict(
             proposals=[], total=0, truncated=False, supported=False, source_status="unavailable",
             note="No assistant source was supplied.")
@@ -308,6 +308,9 @@ class ContinuityMixin:
                 ledger=dict(entries=ledger_rows, report=report, head=dict(count=head_count, hash=head_hash), digests=digests))
             reasons.extend(release_problems(bundle))
             bundle["complete"] = not reasons
+            bundle["audience"] = dict(scope="full", full_ledger_proof=True)
+            if not projection.can_see_reason(user):
+                bundle = limited_export(bundle)
         bundle["digest"] = sha({k_: v for k_, v in bundle.items() if k_ != "digest"})
         self.audit(user["email"], "evidence_export", "-", f"digest={bundle['digest'][:16]} records={len(bundle['ai_records'])}")
         self.save()
@@ -326,6 +329,46 @@ class ContinuityMixin:
                       actionable=current and r["status"] in ("Not reviewed", "Proposed"),
                       relied_on=current and r["status"] in ("Accepted", "Edited"))
         return result
+
+
+def limited_export(bundle):
+    """Closed summaries, not rewritten ledger rows or filtered arbitrary free text."""
+    from . import projection
+    held = projection.NOTE_HELD
+
+    def summary(record):
+        result = {key: value for key in ("continuity_epoch", "claim_epoch", "epoch_current", "actionable", "relied_on", "revision")
+                  if type(value := record.get(key)) in (int, bool)}
+        for key in ("status", "state"):
+            value = record.get(key)
+            if value in ("Not reviewed", "Proposed", "Accepted", "Edited", "Rejected", "Quarantined",
+                         "pending", "leased", "ready", "accepted", "rejected", "quarantined",
+                         "Suspended", "Restarted"):
+                result[key] = value
+        return dict(result, detail=held)
+
+    reason = "Audience-limited export: protected evidence is held; the full canonical ledger cannot be verified from this bundle."
+    # Do not traverse unknown evidence fields: any free-text field can contain a reason.
+    result = {key: bundle[key] for key in ("format", "generated_by", "generated_at", "as_of", "registry")}
+    result.update(
+        independence="Plain JSON audience-limited evidence summary; not a complete ledger or task-release proof.",
+        audience=dict(scope="limited", full_ledger_proof=False, note=held),
+        complete=False, incomplete_reasons=[reason],
+        ai_records=[summary(r) for r in bundle["ai_records"]],
+        assistant_proposals=[summary(p) for p in bundle["assistant_proposals"]],
+        assistants={**{key: bundle["assistants"][key] for key in ("supported", "total", "exported", "truncated")},
+                    "source_status": bundle["assistants"]["source_status"] if bundle["assistants"]["source_status"] in
+                    ("available", "unsupported", "unavailable") else "unavailable",
+                    "note": held},
+        task_releases=dict(supported=False, records=[], total=bundle["task_releases"]["total"], exported=0,
+                           truncated=bool(bundle["task_releases"]["total"]), note=held),
+        versions=dict(effective={}, changes=[], held_count=len(bundle["versions"]["changes"]), note=held),
+        continuity=dict(epoch=bundle["continuity"]["epoch"],
+                        suspensions=[summary(s) for s in bundle["continuity"]["suspensions"]], note=held),
+        approvals={key: [] for key in ("protocol_versions", "releases", "breaches")},
+        ledger=dict(entries=[], head=dict(bundle["ledger"]["head"]), digests=[],
+                    report=dict(intact=False, problem=reason), full_proof=False, note=held))
+    return result
 
 
 def proposal_problems(bundle):
@@ -459,6 +502,9 @@ def verify_export(bundle, expected_head=None):
         problems.append("unknown format")
     if sha(body) != bundle.get("digest"):
         problems.append("digest mismatch")
+    limited = bundle.get("audience", {}).get("scope") == "limited" or bundle.get("ledger", {}).get("full_proof") is False
+    if limited:
+        problems.append("audience-limited evidence cannot verify the full canonical ledger")
     problems.extend(release_problems(bundle))
     for need in ("registry", "ai_records", "versions", "continuity", "approvals", "ledger", "complete"):
         if need not in bundle:
@@ -478,4 +524,4 @@ def verify_export(bundle, expected_head=None):
             problems.append("ledger does not match the externally held head")
     if bundle.get("complete") is not True:
         problems.append("bundle is incomplete: " + "; ".join(bundle.get("incomplete_reasons") or ["not marked complete"]))
-    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True)
+    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True and not limited)

@@ -5,9 +5,9 @@ ms.date: 2026-10-18
 ---
 
 Task ID: 122. Slug: issue-122-continuity-epoch-export.
-Status: Authorized correction ONE source implemented; publication blocked by
-newly exposed Programme Support Officer ledger-reason disclosure. Original
-Complete / Not accepted Review remains frozen. No further critique or Review.
+Status: Authorized correction TWO final source cycle implementation and fresh
+validation complete; publication permitted, independent acceptance pending.
+Original Complete / Not accepted Review remains frozen. No further critique or Review.
 
 ## Executive Summary
 
@@ -141,6 +141,19 @@ reversibility and old-image deployment exclusion remain outside this source slic
 
 ## Handoff
 
+### Authorized correction TWO final source cycle
+
+Coordinator permits existing-policy audience projection in continuity export.
+Reason-ineligible managers retain export access but receive explicitly limited,
+incomplete evidence, never restricted text or an allegedly intact redacted chain.
+Canonical server-side ledger and full reason-authorized manager proof remain.
+No appointment/shared SQL/web/policy/cryptographic protocol change or new Review.
+
+* [x] P05-T01 Reproduce retained failure, reuse audit/export projection prior art,
+  implement limited export and nested evidence/full-proof regressions.
+* [x] P05-T02 Run fresh targeted host/role inventory, actual owned MSSQL and rebuilt
+  hardened-image/static checks; reconcile and publish only if no known source failure.
+
 ### Authorized correction ONE (2026-10-18)
 
 Original Review is Complete / Not accepted and remains frozen. Same-session
@@ -161,5 +174,9 @@ Coordinator authorized both routed findings as correction ONE. Fresh validation
 is complete but adverse: existing role endpoint inventory plus focused host,
 actual MSSQL and hardened-image HTTP reproduce restricted ledger-reason disclosure
 to Programme Support Officer. Commit local evidence, no push/PR, return the
-remaining correction to coordinator. Independent acceptance and unmet operational
-gates remain separate.
+remaining correction to coordinator. That correction ONE handoff is historical:
+the coordinator subsequently authorized P05 correction TWO. Its fresh host 245
+(49 opt-in skips), existing 163, actual MSSQL 72 and hardened-image 44 runs pass;
+no known source failure remains in these checks. Publish under the explicit
+authorization, preserve the original adverse verdict, and return independent
+acceptance and operational gates to the coordinator. No further source cycle.
