@@ -179,3 +179,19 @@ source correction count 0, additional critiques 0, additional original Reviews 0
 Publish with the exact authorized lease only, subsequent receipts normal; preserve
 Refs #126 and empty closing issue references. All human/live acceptance remains
 unmet. Stop for independent coordinator full exact-head source/artifact/log inspection.
+
+Exact authorized first lease succeeded, publishing integration metadata
+`b38067293741c5667dd07f5e15e8b2ee39abd823`; remote and PR #409 verified that head,
+exact base9403dc6a and empty closing references. First immediate PR cache was stale,
+then converged without another branch write. Final receipt is normal-pushed;
+full final inventory is original30 plus integration27 paths. Final exact head is
+bound by the normal-push output and PR body, not a recursive self-commit claim.
+Automatic Follow-up remains completed/stopped, with coordinator independent
+exact-head inspection next. No additional original Review, critique or correction.
+
+Final-manifest repeat initially stopped before commit/push on a mixed
+absolute/workspace-relative path assertion after the first receipt became tracked.
+Corrected only the new integration utility's root normalization and regenerated
+workspace-relative inventory/hashes. Raw failed attempt remains in the final
+session publication log. No production source or original assessment was changed;
+source correction count stays 0.

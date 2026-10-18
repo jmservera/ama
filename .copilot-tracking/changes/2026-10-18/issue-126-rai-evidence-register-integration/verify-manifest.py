@@ -8,7 +8,7 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent.relative_to(Path.cwd())
 TARGET = "9403dc6a8f52f1f04c5ad910faab11a57c29ee78"
 REBASED = "93b7450c823d80765d869e533788662f3c61f94a"
 MUTABLE = {

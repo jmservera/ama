@@ -4,8 +4,8 @@ ms.date: 2026-10-18
 ---
 
 Task ID: 126. Slug: issue-126-rai-evidence-register. Same completed RPI task.
-Status: rebased; exact patch/protected-byte checks and fresh validation complete;
-authorized publication pending.
+Status: authorized rebase, exact patch/protected-byte checks, fresh validation
+and first lease publication complete; final handoff metadata.
 Correction count: 0. No new critique or original Review.
 
 ## Authorization and exact boundaries
@@ -121,6 +121,40 @@ Historical only, not repeated: actual disposable SQL 16/16 and hardened image
 107 executions with 16 explicit SQL opt-in skips. Exact production patch parity,
 no persistence conflict and no packaging change do not require a broad rerun
 under this integration-only authorization. No Azure/model/live acceptance follows.
+
+## Publication and final inventory
+
+Authenticated id8036360/login jmservera was rechecked before commit. Author and
+committer use repository-local `8036360+jmservera@users.noreply.github.com`;
+both replayed commits and integration commits retain the required Copilot trailer.
+First integration metadata commit and verified remote publication:
+`b38067293741c5667dd07f5e15e8b2ee39abd823`.
+The sole authorized exact old-head lease succeeded; its actual output is retained
+in `publication.log`. Initial immediate PR cache still showed the old head;
+subsequent actual remote and PR queries agree on the new first-publication head.
+PR #409 remains open with empty `closingIssuesReferences`; exact main/base observed
+at publication remains `9403dc6a8f52f1f04c5ad910faab11a57c29ee78`.
+No additional rebase, merge or source correction.
+
+Final inventory: 57 paths, comprising the original 30 plus 27 separately scoped
+integration artifacts, not an expanded production change. Only four original
+current metadata files receive additive/descriptive reconciliation. Original
+research, both assessments, inventory and all prior raw logs remain unchanged.
+The final receipt commit uses a normal push. Its exact resulting head and PR body
+are verified externally to avoid a self-referential commit identifier in this file;
+complete final publication output is retained at
+`/home/azureuser/.copilot/session-state/10f40604-edc8-40bb-9368-73353faf82a1/files/issue126-integration-final-publication.log`.
+The PR body supplies exact final head/base, fresh versus historical results,
+full inventories, original phase evidence and all unmet human/live gates.
+
+First final-manifest rerun stopped before commit/push on its path-set assertion:
+Python's absolute `__file__` mixed absolute new-artifact paths with Git-relative
+paths once those artifacts were tracked. The integration-only manifest utility
+now normalizes its root to the working directory; inventories are consistently
+workspace-relative. Original source, persistence intent and assessments are
+unchanged. The failed attempt and successful rerun are retained in the final
+session publication log; this is an evidence-generation repair, not a production
+source correction or a replacement assessment.
 
 ## Acceptance and stop boundary
 
