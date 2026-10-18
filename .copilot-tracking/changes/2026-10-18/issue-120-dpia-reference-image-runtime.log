@@ -1,0 +1,42 @@
+uid=10001(app) gid=10001(app) groups=10001(app)
+/usr/local/lib/python3.12/site-packages/zava_forward/api/timecapture.py 5655acfcdcd5c9326cac823d14c272bb82de58fd6afa762a88521e26037c9289
+TMPDIR /scratch
+CapEff:	0000000000000000
+NoNewPrivs:	1
+test_enabling_entries_and_acknowledgements_use_the_shared_store (test_timecapture.SharedStoreTests.test_enabling_entries_and_acknowledgements_use_the_shared_store) ... ok
+test_invalid_dpia_flags_cannot_write_to_shared_store (test_timecapture.SharedStoreTests.test_invalid_dpia_flags_cannot_write_to_shared_store) ... ok
+test_invalid_historical_dpia_controls_cannot_enable_after_restart (test_timecapture.SharedStoreTests.test_invalid_historical_dpia_controls_cannot_enable_after_restart) ... ok
+test_acknowledgement_is_audited_through_the_api (test_timecapture.TimeTests.test_acknowledgement_is_audited_through_the_api) ... ok
+test_acknowledgement_is_per_person_and_per_notice_version (test_timecapture.TimeTests.test_acknowledgement_is_per_person_and_per_notice_version) ... ok
+test_api_disabled_then_enabled (test_timecapture.TimeTests.test_api_disabled_then_enabled) ... ok
+test_api_invalid_dpia_refuses_all_writes_without_audit (test_timecapture.TimeTests.test_api_invalid_dpia_refuses_all_writes_without_audit) ... ok
+test_changed_dpia_flags_disable_immediately_and_new_reference_needs_renewal (test_timecapture.TimeTests.test_changed_dpia_flags_disable_immediately_and_new_reference_needs_renewal) ... ok
+test_changed_references_need_a_new_request (test_timecapture.TimeTests.test_changed_references_need_a_new_request) ... ok
+test_dpia_alone_does_not_switch_it_on (test_timecapture.TimeTests.test_dpia_alone_does_not_switch_it_on) ... ok
+test_dpia_and_flag_without_consultation_is_refused (test_timecapture.TimeTests.test_dpia_and_flag_without_consultation_is_refused) ... ok
+test_enabling_is_manager_only_and_audited_through_the_api (test_timecapture.TimeTests.test_enabling_is_manager_only_and_audited_through_the_api) ... ok
+test_flag_alone_is_refused_without_dpia (test_timecapture.TimeTests.test_flag_alone_is_refused_without_dpia) ... ok
+test_invalid_dpia_flags_refuse_all_writes_without_creating_store (test_timecapture.TimeTests.test_invalid_dpia_flags_refuse_all_writes_without_creating_store) ... ok
+test_invalid_historical_dpia_controls_cannot_enable_after_restart (test_timecapture.TimeTests.test_invalid_historical_dpia_controls_cannot_enable_after_restart) ... ok
+test_notice_approval_and_audited_enabling_are_required (test_timecapture.TimeTests.test_notice_approval_and_audited_enabling_are_required) ... ok
+test_notice_must_be_acknowledged_before_recording_or_listing (test_timecapture.TimeTests.test_notice_must_be_acknowledged_before_recording_or_listing) ... ok
+test_off_by_default_and_nothing_is_written (test_timecapture.TimeTests.test_off_by_default_and_nothing_is_written) ... ok
+test_records_with_flag_and_dpia_reference_and_validates (test_timecapture.TimeTests.test_records_with_flag_and_dpia_reference_and_validates) ... ok
+test_report_suppresses_small_groups_and_lists_no_person (test_timecapture.TimeTests.test_report_suppresses_small_groups_and_lists_no_person) ... ok
+test_requester_cannot_enable_and_same_role_cannot_enable (test_timecapture.TimeTests.test_requester_cannot_enable_and_same_role_cannot_enable) ... ok
+test_staff_see_only_their_own_entries (test_timecapture.TimeTests.test_staff_see_only_their_own_entries) ... ok
+test_valid_dpia_references_retain_trimmed_values (test_timecapture.TimeTests.test_valid_dpia_references_retain_trimmed_values) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 6.143s
+
+OK
+test_existing_http (__main__.ReferenceProbe.test_existing_http) ... {"audit_actions": [], "local_store_created": false, "probe": "http", "statuses": [403, 403, 403, 403]}
+ok
+test_real_timecapture (__main__.ReferenceProbe.test_real_timecapture) ... {"denied": ["request", "activate", "acknowledge", "record"], "local_store_created": false, "probe": "direct", "status": {"activated": false, "activated_at": null, "activated_by": null, "activated_role": null, "activities": ["Calling the resident", "Case notes and updates", "Booking visits", "Funding and evidence", "Checking safety issues", "Handover and coordination", "Other"], "consultation_recorded": true, "dpia_recorded": false, "enabled": false, "flag_on": true, "min_group": 5, "notice_approved": true, "notice_version": "draft-1", "reason": "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED), not a boolean flag such as yes, true, on or 1.", "requested": false, "requested_by": null, "requested_role": null, "storage": "a local SQLite file (/scratch/tmpl88etsn3/unused/time.sqlite; JSON demo store only)"}}
+ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.685s
+
+OK

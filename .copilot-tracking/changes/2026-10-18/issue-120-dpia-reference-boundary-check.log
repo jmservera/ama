@@ -1,0 +1,17 @@
+PASS: all production AST outside status/module prose identical to exact base
+PASS: imports, SQL statements, DDL/constants, connection lifecycle, storage/dialect hooks unchanged
+PASS: every existing test/class method unchanged; exactly seven added test methods
+  SharedStoreTests.test_invalid_dpia_flags_cannot_write_to_shared_store
+  SharedStoreTests.test_invalid_historical_dpia_controls_cannot_enable_after_restart
+  TimeTests.test_api_invalid_dpia_refuses_all_writes_without_audit
+  TimeTests.test_changed_dpia_flags_disable_immediately_and_new_reference_needs_renewal
+  TimeTests.test_invalid_dpia_flags_refuse_all_writes_without_creating_store
+  TimeTests.test_invalid_historical_dpia_controls_cannot_enable_after_restart
+  TimeTests.test_valid_dpia_references_retain_trimmed_values
+PASS: exact three-file src boundary; no server/shared fixture/schema/web/runtime changes
+BASE SHA256 c920dcf4c1c3728080049c936180ce14ee2e530626ba8ac4e39c88a90152a044 src/api/src/zava_forward/api/timecapture.py
+FINAL SHA256 5655acfcdcd5c9326cac823d14c272bb82de58fd6afa762a88521e26037c9289 src/api/src/zava_forward/api/timecapture.py
+BASE SHA256 d5a3ecc4926ce601f04e8f0269dba991de1dcd6ff70c284cb38678aebfaae88b src/api/tests/test_timecapture.py
+FINAL SHA256 6333eb77ae0d0b371e8c88d10099a508afa2626866df08fecb26af3dc10e8f37 src/api/tests/test_timecapture.py
+BASE SHA256 c19ccaf46861883dd1b69521c5e4725dbfa9330cf5e0e39261c00aceb971ff72 src/api/README.md
+FINAL SHA256 75cd7036ae16b0c0c6e09fc4b4c6d7b6ccc2b4b073c4339ac55420b5adbae42e src/api/README.md

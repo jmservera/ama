@@ -1,0 +1,9 @@
+test_existing_http (__main__.ReferenceProbe.test_existing_http) ... ok
+test_real_timecapture (__main__.ReferenceProbe.test_real_timecapture) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.688s
+
+OK
+{"audit_actions": [], "local_store_created": false, "probe": "http", "statuses": [403, 403, 403, 403]}
+{"denied": ["request", "activate", "acknowledge", "record"], "local_store_created": false, "probe": "direct", "status": {"activated": false, "activated_at": null, "activated_by": null, "activated_role": null, "activities": ["Calling the resident", "Case notes and updates", "Booking visits", "Funding and evidence", "Checking safety issues", "Handover and coordination", "Other"], "consultation_recorded": true, "dpia_recorded": false, "enabled": false, "flag_on": true, "min_group": 5, "notice_approved": true, "notice_version": "draft-1", "reason": "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED), not a boolean flag such as yes, true, on or 1.", "requested": false, "requested_by": null, "requested_role": null, "storage": "a local SQLite file (/home/azureuser/source/ama-wt/issue-120-dpia/.venv/task-tmp/tmpnpl_xyy6/unused/time.sqlite; JSON demo store only)"}}

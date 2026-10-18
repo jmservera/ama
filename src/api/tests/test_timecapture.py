@@ -12,7 +12,7 @@ from pathlib import Path
 import test_mvp
 from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
-from zava_forward.api.timecapture import ACTIVITIES, NoticeNotAcknowledged, SeparationOfDuties, TimeCapture, TimeCaptureOff
+from zava_forward.api.timecapture import ACTIVITIES, NOTICE_VERSION, TABLES, NoticeNotAcknowledged, SeparationOfDuties, TimeCapture, TimeCaptureOff
 
 SAM = test_mvp.DATA["staff"][0]
 MGR = dict(code="MGR", email="manager@example.test", role="Retrofit Programme Manager")
@@ -22,6 +22,43 @@ MGR2 = dict(code="MG2", email="support@example.test", role="Programme Support Of
 def enable(t, requester=MGR, enabler=MGR2):
     t.request_enable(requester)
     return t.activate(enabler)
+
+
+def time_rows(t):
+    with t._conn() as db:
+        return {table: db.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall() for table in TABLES}
+
+
+def assert_invalid_history(test, store, db_path):
+    env = dict(ZF_TIME_CAPTURE="on", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+    for dpia in ("yes", "true", "on", "1"):
+        with test.subTest(historical_dpia=dpia):
+            env["DPIA_APPROVED"] = f" {dpia.upper()} "
+            t = TimeCapture(store, env, db_path)
+            with t._conn() as db:
+                db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?)",
+                           ("2026-10-01T10:00", MGR["email"], MGR["role"], dpia.upper(), "C1", "N1"))
+                db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?,?,?)",
+                           ("2026-10-01T10:01", MGR2["email"], MGR2["role"], MGR["email"], MGR["role"], dpia.upper(), "C1", "N1"))
+                db.execute("INSERT INTO notice_ack (user_code, version, at) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM notice_ack WHERE user_code=? AND version=?)",
+                           (SAM["code"], NOTICE_VERSION, "2026-10-01T10:02", SAM["code"], NOTICE_VERSION))
+                db.execute("INSERT INTO time_entry (at, user_code, case_id, minutes, activity, dpia_ref, consultation_ref) VALUES (?,?,?,?,?,?,?)",
+                           ("2026-10-01T10:03", SAM["code"], "ZF-1", 5, ACTIVITIES[0], "historical-D1", "C1"))
+            before = time_rows(t)
+            fresh = TimeCapture(store, env, db_path)
+            st = fresh.status(SAM)
+            test.assertTrue(st["requested"] and st["activated"])
+            test.assertTrue(fresh.acknowledged(SAM))
+            test.assertFalse(st["dpia_recorded"])
+            test.assertFalse(st["enabled"])
+            test.assertIn("DPIA reference", st["reason"])
+            for action in (lambda: fresh.request_enable(MGR), lambda: fresh.activate(MGR2),
+                           lambda: fresh.acknowledge(SAM), lambda: fresh.record(SAM, "ZF-1", 10, ACTIVITIES[0]),
+                           lambda: fresh.mine(SAM), fresh.report):
+                with test.assertRaises(TimeCaptureOff):
+                    action()
+            test.assertEqual(time_rows(fresh), before)
+            test.assertEqual(time_rows(TimeCapture(store, env, db_path)), before)
 
 
 class TimeTests(unittest.TestCase):
@@ -60,6 +97,109 @@ class TimeTests(unittest.TestCase):
         with self.assertRaises(TimeCaptureOff):
             t.record(SAM, "ZF-1", 10, ACTIVITIES[0])
         self.assertFalse(os.path.exists(self.db))
+
+    def test_invalid_dpia_flags_refuse_all_writes_without_creating_store(self):
+        for dpia in (None, "", " \t\n ", "yes", " YeS ", "true", "\tTrUe\n", "on", " ON ", "1", " 1 "):
+            with self.subTest(dpia=dpia):
+                path = os.path.join(self.tmp.name, "unused", "time.sqlite")
+                env = dict(ZF_TIME_CAPTURE="on", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+                if dpia is not None:
+                    env["DPIA_APPROVED"] = dpia
+                t = TimeCapture(env=env, db_path=path)
+                st = t.status(SAM)
+                self.assertFalse(st["dpia_recorded"])
+                self.assertFalse(st["enabled"])
+                self.assertIn("DPIA reference", st["reason"])
+                for action in (lambda: t.request_enable(MGR), lambda: t.activate(MGR2),
+                               lambda: t.acknowledge(SAM), lambda: t.record(SAM, "ZF-1", 10, ACTIVITIES[0])):
+                    with self.assertRaises(TimeCaptureOff):
+                        action()
+                self.assertFalse(os.path.exists(os.path.dirname(path)))
+
+    def test_invalid_historical_dpia_controls_cannot_enable_after_restart(self):
+        assert_invalid_history(self, None, self.db)
+
+    def test_valid_dpia_references_retain_trimmed_values(self):
+        for dpia in ("D1", " DPIA-2026-007 ", "yes-reference"):
+            with self.subTest(dpia=dpia):
+                t = self.on(SAM, dpia=dpia)
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+                self.assertTrue(t.status(SAM)["dpia_recorded"])
+                with t._conn() as db:
+                    for table in ("time_request", "time_enabled", "time_entry"):
+                        self.assertEqual(db.execute(f"SELECT dpia_ref FROM {table} ORDER BY id DESC LIMIT 1").fetchone()[0], dpia.strip())
+                fresh = TimeCapture(env=t.env, db_path=self.db)
+                self.assertTrue(fresh.status(SAM)["enabled"])
+                self.assertTrue(fresh.mine(SAM))
+
+    def test_changed_dpia_flags_disable_immediately_and_new_reference_needs_renewal(self):
+        t = self.on(SAM, dpia="D1")
+        t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+        before = time_rows(t)
+        for dpia in (" YeS ", "true", "on", "1"):
+            with self.subTest(dpia=dpia):
+                t.env["DPIA_APPROVED"] = dpia
+                self.assertFalse(t.status(SAM)["dpia_recorded"])
+                self.assertFalse(t.status(SAM)["enabled"])
+                for action in (lambda: t.request_enable(MGR), lambda: t.activate(MGR2),
+                               lambda: t.acknowledge(SAM), lambda: t.record(SAM, "ZF-1", 10, ACTIVITIES[0])):
+                    with self.assertRaises(TimeCaptureOff):
+                        action()
+                self.assertEqual(time_rows(t), before)
+        t.env["DPIA_APPROVED"] = " D2 "
+        self.assertFalse(t.status()["enabled"])
+        with self.assertRaises(SeparationOfDuties):
+            t.activate(MGR2)
+        t.request_enable(MGR)
+        self.assertFalse(t.status()["enabled"])
+        t.activate(MGR2)
+        self.assertTrue(t.status(SAM)["enabled"])
+        t.record(SAM, "ZF-1", 10, ACTIVITIES[0])
+        self.assertEqual([e["minutes"] for e in t.mine(SAM)], [10, 5])
+
+    def test_api_invalid_dpia_refuses_all_writes_without_audit(self):
+        p = Path(self.tmp.name) / "synthetic.json"
+        data = json.loads(json.dumps(test_mvp.DATA))
+        manager = next(u for u in data["staff"] if u["role"] == MGR["role"])
+        support = dict(manager, **MGR2, name="Synthetic Support")
+        data["staff"].append(support)
+        p.write_text(json.dumps(data))
+        store = Store(str(p))
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED=" YeS ", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        t = TimeCapture(env=env, db_path=self.db)
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test", t)))
+        worker = threading.Thread(target=httpd.serve_forever, daemon=True)
+        worker.start()
+        try:
+            base = f"http://127.0.0.1:{httpd.server_address[1]}"
+            cookies = []
+            for user in (manager, support, SAM):
+                req = urllib.request.Request(base + "/api/login", json.dumps(dict(email=user["email"], password="zf-test")).encode())
+                with urllib.request.urlopen(req) as response:
+                    cookies.append(response.headers["Set-Cookie"].split(";")[0])
+            before = list(store.audit_entries())
+            for cookie, route, body in (
+                    (cookies[0], "/api/time/request-enable", {}),
+                    (cookies[1], "/api/time/enable", {}),
+                    (cookies[2], "/api/time/acknowledge", {}),
+                    (cookies[2], "/api/time", dict(case_id="ZF-1", minutes=10, activity=ACTIVITIES[0]))):
+                req = urllib.request.Request(base + route, json.dumps(body).encode(), headers={"Cookie": cookie})
+                with self.assertRaises(urllib.error.HTTPError) as cm:
+                    urllib.request.urlopen(req)
+                with cm.exception as response:
+                    self.assertEqual(response.code, 403)
+                    self.assertIn("DPIA reference", json.load(response)["error"])
+            with urllib.request.urlopen(urllib.request.Request(base + "/api/time/status", headers={"Cookie": cookies[2]})) as response:
+                st = json.load(response)
+            self.assertFalse(st["dpia_recorded"])
+            self.assertFalse(st["enabled"])
+            self.assertEqual(list(store.audit_entries()), before)
+            self.assertTrue(store.verify_audit())
+            self.assertFalse(os.path.exists(self.db))
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            worker.join()
 
     def test_dpia_alone_does_not_switch_it_on(self):
         t = self.tc(DPIA_APPROVED="DPIA-2026-007")
@@ -277,6 +417,35 @@ class SharedStoreTests(unittest.TestCase):
         return SqlStore(data, db)
 
     ENV = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+
+    def test_invalid_dpia_flags_cannot_write_to_shared_store(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = self.make_store(tmp)
+            fallback = os.path.join(tmp, "unused", "time.sqlite")
+            for dpia in (None, "", " \t ", "yes", " YeS ", "true", " TrUe ", "on", " ON ", "1", " 1 "):
+                with self.subTest(dpia=dpia):
+                    env = dict(self.ENV)
+                    if dpia is None:
+                        del env["DPIA_APPROVED"]
+                    else:
+                        env["DPIA_APPROVED"] = dpia
+                    t = TimeCapture(store, env, fallback)
+                    before = time_rows(t)
+                    self.assertFalse(t.status()["dpia_recorded"])
+                    self.assertFalse(t.status()["enabled"])
+                    for action in (lambda: t.request_enable(MGR), lambda: t.activate(MGR2),
+                                   lambda: t.acknowledge(SAM), lambda: t.record(SAM, "ZF-1", 10, ACTIVITIES[0])):
+                        with self.assertRaises(TimeCaptureOff):
+                            action()
+                    self.assertEqual(time_rows(t), before)
+                    self.assertFalse(os.path.exists(os.path.dirname(fallback)))
+
+    def test_invalid_historical_dpia_controls_cannot_enable_after_restart(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = self.make_store(tmp)
+            fallback = os.path.join(tmp, "unused", "time.sqlite")
+            assert_invalid_history(self, store, fallback)
+            self.assertFalse(os.path.exists(os.path.dirname(fallback)))
 
     def test_enabling_entries_and_acknowledgements_use_the_shared_store(self):
         with tempfile.TemporaryDirectory() as tmp:
