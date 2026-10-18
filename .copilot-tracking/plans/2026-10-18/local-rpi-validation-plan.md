@@ -4,7 +4,7 @@
 
 * Task ID: actions-budget-local-rpi
 * Task slug: local-rpi-validation
-* Planning status: RV-001 corrective source/tests complete; final exact-head freeze pending, original Review Not accepted preserved
+* Planning status: Correction 2 source/regressions complete; final exact-head matrix pending; original Review Not accepted preserved
 * Plan date: 2026-10-18
 * Base: 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd
 * Phase details: .copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md
@@ -263,6 +263,14 @@ permission to omit checks now.
   mypy pass. Six real prior environments yield stable data-only identities.
   Historical completion evidence remains in the changes record; freeze a new
   complete exact-head receipt after committing reconciled evidence.
+* Correction 2: bind verification to every trusted mandatory command, exact
+  suite/selectors and result/log evidence, not group names or counts. Use one
+  fixed host lock independent of temporary-directory environment. Interruptions
+  must retain honest failed evidence, clean only owned resources and terminate
+  the matrix immediately, including retry probes.
+  Source and all 12 focused methods, strict Ruff/format/mypy pass. Trusted
+  contracts match all 183 historical command records (179 required positions,
+  bounded SQL readiness retries). Final post-commit matrix remains pending.
 
 <!-- rpi:phase id=P02 -->
 ### [x] P02: Integrate local evidence into RPI delivery
@@ -359,6 +367,24 @@ and no second critique is requested.
   their presence in the workflow inventory.
 
 ## Handoff
+
+Correction 2 supersedes the preceding freeze next action, not its historical
+evidence. Starting HEAD 491124fcd406afea387cd95d555adcc8f9f00bde; unchanged base.
+Scope is reopened P01-T02 then directly coupled P02-T01. Write only the runner,
+its existing 12-method test file and dated plan/details/changes/state; no domain,
+helper, harness, workflow or infra test edits. Preserve RV-001's independently
+confirmed data-only fix. Run coherent focused tests/Ruff/format/mypy, commit
+source and evidence, then actual complete matrix and external verification at
+clean final HEAD with no later commit. Logs: `/tmp/rpi-413-correction2.log` and
+`/tmp/rpi-413-correction2-matrix.log`; fresh output
+`/tmp/rpi-413-correction2-final`. No push/PR, critique or original Review rerun.
+Independent source/evidence acceptance remains pending, including full direct
+review of the verbose original/corrective CLI and command logs. Partial reads
+and programmatic inspection are not complete independent evidence review.
+Correction 2 source/regression implementation is complete. Current next action
+is privacy-safe commit followed by the final clean-head actual matrix and
+external verification. Source acceptance and the unperformed independent
+evidence review are not implied. The original Review remains Not accepted.
 
 * The distinct corrective Implement invocation completed P01-T02 then P02-T01
   source/tests. P03 and P01-T01 remain historical completed work, not edits.

@@ -16,7 +16,6 @@ import signal
 import stat
 import subprocess
 import sys
-import tempfile
 import time
 from collections.abc import Iterator
 from datetime import UTC, datetime
@@ -90,6 +89,47 @@ SQL_NOT_APPLICABLE = {
         "JSON-only separate-file audit ordering",
     )
 }
+TYPE_GROUPS = (
+    ("--strict", "src/check-container.py"),
+    ("--strict", "infra/scripts/pipeline.py"),
+    ("--strict", "tools/rpi-checks.py", "tools/test_rpi_checks.py"),
+    (
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "infra/scripts/staff_azure.py",
+        "infra/scripts/staff-azure-worker.py",
+        "infra/scripts/credential_arm.py",
+    ),
+)
+WORKFLOW_INVENTORY = (
+    "import json,yaml,sys; from pathlib import Path; "
+    "print(json.dumps({name:yaml.load(Path('.github/workflows',name).read_text(),"
+    "Loader=yaml.BaseLoader)['jobs'] for name in sys.argv[1:]}))"
+)
+BROWSER_ENTRY = (
+    "import runpy,tempfile,os\n"
+    "from unittest.mock import patch\n"
+    "original=tempfile.TemporaryDirectory\n"
+    "def external_scratch(*args,**kwargs):\n"
+    "    kwargs['dir']=os.environ['TMPDIR']\n"
+    "    return original(*args,**kwargs)\n"
+    "with patch('tempfile.TemporaryDirectory',external_scratch):\n"
+    "    runpy.run_module('checks.design_system_browser_check',run_name='__main__')\n"
+)
+REGULATORY_ASSERT = (
+    "from pathlib import Path; import json,sys; "
+    "r=json.loads(Path(sys.argv[1]).read_text()); "
+    "assert 'skipped' not in json.dumps(r)"
+)
+SQL_DRIVER = (
+    "import ctypes; ctypes.CDLL('libltdl.so.7'); ctypes.CDLL('libkrb5.so.3'); import mssql_python"
+)
+SQL_QUERY = (
+    "import os,time; from zava_forward.core.mssqlstore import _Conn,connection_string; "
+    "db=_Conn(connection_string(dict(os.environ,ZF_SQL_DATABASE='master'))); "
+    "assert db.execute('SELECT 1').fetchone()[0]==1; "
+    "db.execute('CREATE DATABASE rpi_disposable'); db.close()"
+)
 
 
 class GateError(RuntimeError):
@@ -260,6 +300,446 @@ def required_groups(extras: list[str]) -> list[str]:
     ]
 
 
+def test_paths(project: str, own_tests: bool = False) -> str:
+    paths = []
+    if own_tests:
+        paths.append(f"<checkout>/src/{project}/tests")
+    if project in ("api", "agents", "orchestrator"):
+        paths.append("<checkout>/src/core/tests")
+    if project == "api":
+        paths.append("<checkout>/src/agents/tests")
+    return ":".join(paths)
+
+
+def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]:
+    """Trusted ordered command contracts, never commands loaded for execution."""
+    token, sql = receipt["owner"], receipt["sql"]
+    if (
+        not isinstance(token, str)
+        or re.fullmatch("[0-9a-f]{24}", token) is None
+        or re.fullmatch("[0-9a-f]{64}", sql["container"]) is None
+        or not sql["port"].isdigit()
+        or not 0 < int(sql["port"]) <= 65535
+        or re.fullmatch("sha256:[0-9a-f]{64}", receipt["images"]["mssql"]) is None
+    ):
+        raise GateError("Receipt owned resource identity is invalid")
+    result: list[dict[str, Any]] = []
+    group = "preflight"
+
+    def py(name: str) -> str:
+        return f"<output>/venvs/{name}/bin/python"
+
+    def add(
+        argv: list[str],
+        cwd: str = ".",
+        *,
+        env: dict[str, str] | None = None,
+        timeout: int = 900,
+        suite: bool = False,
+        integration: bool = False,
+        probe: bool = False,
+        attempts: int = 1,
+    ) -> None:
+        result.append(
+            {
+                "group": group,
+                "argv": argv,
+                "cwd": cwd,
+                "env": env or {},
+                "timeout_seconds": timeout,
+                "suite": suite,
+                "integration": integration,
+                "probe": probe,
+                "attempts": attempts,
+            }
+        )
+
+    def install(name: str, packages: list[str], dev: bool = True) -> None:
+        add(["python3", "-m", "venv", f"<output>/venvs/{name}"])
+        add([py(name), "-m", "pip", "check"])
+        add([py(name), "-c", "import zava_forward"], probe=True)
+        args = [py(name), "-m", "pip", "install"]
+        for project in packages:
+            args += ["-e", f"src/{project}" + ("[dev]" if dev and project == name else "")]
+        add(args, timeout=1200)
+        add([py(name), "-m", "pip", "check"])
+
+    def lint(python: str, files: tuple[str, ...], cwd: str = ".") -> None:
+        add(
+            [
+                python,
+                "-m",
+                "ruff",
+                "check",
+                "--isolated",
+                "--select",
+                "E,F,I,B,UP",
+                "--target-version",
+                "py312",
+                "--line-length",
+                "100",
+                *files,
+            ],
+            cwd,
+        )
+        add(
+            [
+                python,
+                "-m",
+                "ruff",
+                "format",
+                "--isolated",
+                "--line-length",
+                "100",
+                "--check",
+                *files,
+            ],
+            cwd,
+        )
+
+    for argv in (
+        ["python3", "--version"],
+        ["node", "--version"],
+        ["docker", "version"],
+        ["az", "bicep", "version"],
+        ["actionlint", "-version"],
+        ["trivy", "--version"],
+    ):
+        add(argv, timeout=60)
+    for project in PROJECTS:
+        group = f"project-{project}"
+        packages = [] if project == "core" else ["core"]
+        if project == "api":
+            packages.append("agents")
+        install(project, [*packages, project])
+        python, cwd = py(project), f"src/{project}"
+        add(
+            [python, "-m", "unittest", "discover", "-s", "tests", "-v"],
+            cwd,
+            env={"PYTHONPATH": test_paths(project)},
+            suite=True,
+            timeout=1800,
+        )
+        add([python, "-m", "ruff", "check", "."], cwd)
+        add([python, "-m", "ruff", "format", "--check", "."], cwd)
+        add([python, "-m", "mypy"], cwd)
+    group = "namespace"
+    install("namespace", list(PROJECTS), dev=False)
+    python = py("namespace")
+    for project in ("core", "agents", "orchestrator", "importer"):
+        add([python, "-m", f"zava_forward.{project}"])
+    add([python, "-c", "from zava_forward.api.version import __version__; print(__version__)"])
+    add(
+        [
+            python,
+            "-c",
+            "import zava_forward; assert zava_forward.__file__ is None; "
+            "assert len(list(zava_forward.__path__)) == 5",
+        ]
+    )
+    group = "static"
+    add(
+        [
+            python,
+            "-m",
+            "compileall",
+            "-q",
+            *[f"src/{p}/src" for p in ("core", "agents", "api", "orchestrator")],
+        ]
+    )
+    for name in ("app", "assistants"):
+        add(["node", "--check", f"src/api/src/zava_forward/api/web/{name}.js"])
+    add(["git", "ls-files", "--", "*/.assistant-test-*", "mvp/data", ":(glob)src/**/data/**"])
+    add(
+        [
+            "actionlint",
+            "-config-file",
+            "infra/tests/actionlint.yaml",
+            *[f".github/workflows/{name}" for name in WORKFLOWS],
+        ]
+    )
+    add(
+        [python, "-m", "unittest", "discover", "-s", "tools", "-p", "test_rpi_checks.py", "-v"],
+        suite=True,
+    )
+    group = "infra"
+    add([python, "-c", "import yaml, mssql_python"], probe=True)
+    add([python, "-m", "pip", "install", "PyYAML==6.0.3", "ruff==0.17.1", "mypy==2.4.0"])
+    add([python, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"])
+    add([python, "-c", WORKFLOW_INVENTORY, *WORKFLOWS])
+    for file in sorted([*root.glob("infra/*.bicep"), *root.glob("infra/modules/*.bicep")]):
+        relative = str(file.relative_to(root))
+        add(["az", "bicep", "build", "--file", relative, "--stdout"])
+        add(["az", "bicep", "lint", "--file", relative])
+    add(
+        [python, "-m", "unittest", "discover", "-s", "infra/tests", "-v"],
+        env={"REQUIRE_AZ_BICEP": "1"},
+        suite=True,
+        integration=True,
+        timeout=1800,
+    )
+    for files in RUFF_GROUPS:
+        lint(python, files)
+    for type_files in TYPE_GROUPS:
+        add([python, "-m", "mypy", *type_files])
+    group = "migration"
+    add([python, "-c", "import pptx"], probe=True)
+    add([python, "-m", "pip", "install", "-r", "tools/rename-zava-requirements.txt"])
+    add([python, "tools/rename-zava-tests.py"])
+    group = "browser"
+    python = py("api")
+    for name in ("design_system_browser_check", "regulatory_ux_check"):
+        lint(python, (f"checks/{name}.py",), "src/api")
+    add([python, "-m", "playwright", "install", "chromium"])
+    add([python, "-c", BROWSER_ENTRY], "src/api", env={"PYTHONPATH": "<output>/safety"})
+    add(
+        [
+            python,
+            "-m",
+            "checks.regulatory_ux_check",
+            "--axe",
+            "<output>/axe-4.10.3.min.js",
+            "--out",
+            "<output>/regulatory-ux-results.json",
+        ],
+        "src/api",
+        env={"PYTHONPATH": test_paths("api", True)},
+    )
+    add([python, "-c", REGULATORY_ASSERT, "<output>/regulatory-ux-results.json"])
+    group = "mssql"
+    add([python, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"])
+    add([python, "-c", SQL_DRIVER])
+    add(["docker", "pull", "mcr.microsoft.com/mssql/server:2022-latest"])
+    add(
+        [
+            "docker",
+            "run",
+            "-d",
+            "--label",
+            f"ama.rpi.owner={token}",
+            "--memory=3g",
+            "--cpus=2",
+            "--publish=127.0.0.1::1433",
+            "--env=ACCEPT_EULA=Y",
+            "--env=MSSQL_PID=Developer",
+            "--env=MSSQL_MEMORY_LIMIT_MB=2048",
+            "--env=MSSQL_SA_PASSWORD",
+            "mcr.microsoft.com/mssql/server:2022-latest",
+        ],
+        env={"MSSQL_SA_PASSWORD": "<redacted>"},
+    )
+    add(["docker", "inspect", sql["container"]])
+    sqlenv = {
+        "PYTHONPATH": test_paths("api", True),
+        "ZF_TEST_MSSQL": "1",
+        "ZF_SQL_SERVER": "127.0.0.1",
+        "ZF_SQL_PORT": sql["port"],
+        "ZF_SQL_DATABASE": "rpi_disposable",
+        "ZF_SQL_AUTH": "password",
+        "ZF_SQL_USER": "sa",
+        "ZF_SQL_PASSWORD": "<redacted>",
+        "ZF_SQL_TRUST_CERT": "1",
+    }
+    add([python, "-c", SQL_QUERY], env=sqlenv, timeout=15, attempts=60)
+    add(["docker", "inspect", sql["container"]])
+    add(["docker", "image", "inspect", receipt["images"]["mssql"]])
+    add(
+        [python, "-m", "unittest", "-v", *SQL_SELECTORS],
+        "src/api",
+        env=sqlenv,
+        suite=True,
+        integration=True,
+        timeout=1800,
+    )
+    add(["docker", "rm", "-f", sql["container"]])
+    for name in (*[f"image-{p}" for p in IMAGES], "logo-0600"):
+        group = name
+        project = "api" if name == "logo-0600" else name.removeprefix("image-")
+        context = "<output>/logo-snapshot/src" if name == "logo-0600" else "<checkout>/src"
+        image = receipt["images"][name]
+        tag = f"zava-forward-{project}:rpi-{token}" + ("-logo0600" if name == "logo-0600" else "")
+        if image["tag"] != tag or re.fullmatch("sha256:[0-9a-f]{64}", image["id"]) is None:
+            raise GateError("Receipt image identity is invalid")
+        add(
+            [
+                "docker",
+                "build",
+                "--memory=3g",
+                "--cpu-quota=200000",
+                "-f",
+                f"{context}/{project}/Dockerfile",
+                "-t",
+                tag,
+                context,
+            ],
+            timeout=1800,
+        )
+        add(["docker", "image", "inspect", tag])
+        add([py("namespace"), "src/check-container.py", project, image["id"]], timeout=300)
+        if name == "logo-0600":
+            continue
+        args = [
+            "trivy",
+            "image",
+            "--cache-dir",
+            "<output>/cache/trivy",
+            "--config",
+            "src/trivy.yaml",
+            "--scanners",
+            "vuln",
+            "--severity",
+            "HIGH,CRITICAL",
+        ]
+        add(
+            [
+                *args,
+                "--ignore-unfixed",
+                "--exit-code",
+                "1",
+                "--format",
+                "json",
+                "--output",
+                f"<output>/{project}-gate.json",
+                image["id"],
+            ]
+        )
+        add(
+            [
+                *args,
+                "--ignore-unfixed=false",
+                "--exit-code",
+                "0",
+                "--format",
+                "json",
+                "--output",
+                f"<output>/{project}-all.json",
+                image["id"],
+            ]
+        )
+        add(
+            [
+                *args,
+                "--format",
+                "spdx-json",
+                "--output",
+                f"<output>/{project}.spdx.json",
+                image["id"],
+            ]
+        )
+    for value in receipt["extras"]:
+        project, selector = extra_selector(value)
+        group = f"extra-{value}"
+        module = f"src/{project}/tests/{selector.split('.')[0]}.py"
+        if not git(root, "ls-files", "--", module):
+            raise GateError("Extra selector is not a tracked test module")
+        add(
+            [py(project), "-m", "unittest", "-v", selector],
+            f"src/{project}",
+            env={"PYTHONPATH": test_paths(project, True)},
+            suite=True,
+            integration=True,
+        )
+    return result
+
+
+def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
+    commands = iter(receipt["commands"])
+    logs: set[str] = set()
+    for check in required_checks(root, receipt):
+        for _attempt in range(check["attempts"]):
+            row = next(commands, None)
+            if row is None or any(
+                row.get(key) != check[key]
+                for key in (
+                    "group",
+                    "argv",
+                    "cwd",
+                    "env",
+                    "timeout_seconds",
+                    "suite",
+                    "integration",
+                )
+            ):
+                raise GateError(f"Required command identity missing/mismatched: {check['group']}")
+            name = row["log"]
+            if (
+                not re.fullmatch(r"[0-9]{4}-[a-zA-Z0-9_.:-]+\.log", name)
+                or name in logs
+                or receipt["files"].get(name) != row["sha256"]
+                or digest(out / name) != row["sha256"]
+            ):
+                raise GateError("Required command log evidence missing/mismatched")
+            logs.add(name)
+            output = (out / name).read_text()
+            code = row["exit_code"]
+            if row.get("interrupted") or code in (124, 127, 130) or code < 0:
+                raise GateError("Required command interrupted/timed out/unavailable")
+            if code:
+                if not row.get("expected_probe_failure") or not (
+                    check["probe"] or check["attempts"] > 1
+                ):
+                    raise GateError("Required command did not succeed")
+                if check["attempts"] > 1:
+                    continue
+            elif row.get("expected_probe_failure"):
+                raise GateError("Successful command mislabeled as a failed probe")
+            if check["suite"]:
+                counts = check_skips(output, integration=check["integration"])
+                if counts["executed"] <= 0 or any(row.get(k) != v for k, v in counts.items()):
+                    raise GateError("Required suite result evidence missing/mismatched")
+            if check["group"] == "static" and check["argv"][0] == "git" and output.strip():
+                raise GateError("Tracked data guard evidence is not empty")
+            break
+        else:
+            raise GateError("Required SQL readiness never succeeded")
+    if next(commands, None) is not None:
+        raise GateError("Receipt contains commands outside the trusted matrix")
+
+
+def verify_results(out: Path, receipt: dict[str, Any]) -> None:
+    if (out / "snapshot-inputs.log").read_text().strip():
+        raise GateError("Snapshot input evidence is not clean")
+    if digest(out / "axe-4.10.3.min.js") != AXE_SHA256:
+        raise GateError("Pinned axe evidence identity mismatch")
+    browser = json.loads((out / "regulatory-ux-results.json").read_text())
+    if (
+        browser["outcome"] != "passed"
+        or browser["axe_status"] != "executed"
+        or browser["axe_version"] != "4.10.3"
+        or browser["axe_sha256"] != AXE_SHA256
+        or not browser["scans"]
+        or "skipped" in json.dumps(browser)
+        or any(scan["violations"] for scan in browser["scans"])
+    ):
+        raise GateError("Required browser result evidence is incomplete/failed")
+    for project in IMAGES:
+        image_id = receipt["images"][f"image-{project}"]["id"]
+        for suffix in ("gate", "all"):
+            report = json.loads((out / f"{project}-{suffix}.json").read_text())
+            if (
+                report["Trivy"]["Version"] != "0.76.0"
+                or report["Metadata"]["ImageID"] != image_id
+                or not report["Results"]
+                or (suffix == "gate" and any(r.get("Vulnerabilities") for r in report["Results"]))
+            ):
+                raise GateError("Required scan result evidence is incomplete/failed")
+        spdx = json.loads((out / f"{project}.spdx.json").read_text())
+        if (
+            spdx["spdxVersion"] != "SPDX-2.3"
+            or spdx["name"] != image_id
+            or not spdx["packages"]
+            or "Tool: trivy-0.76.0" not in spdx["creationInfo"]["creators"]
+        ):
+            raise GateError("Required SPDX evidence is incomplete/mismatched")
+    inventory = next(
+        row for row in receipt["commands"] if row["argv"][1:3] == ["-c", WORKFLOW_INVENTORY]
+    )
+    jobs = json.loads((out / inventory["log"]).read_text())
+    coverage = json.loads((out / "workflow-coverage.json").read_text())
+    if coverage["steps"] != Runner.coverage_rows(jobs):
+        raise GateError("Workflow coverage evidence does not match the command inventory")
+
+
 def extra_selector(value: str) -> tuple[str, str]:
     if not re.fullmatch(r"(core|agents|api|orchestrator|importer):test_[A-Za-z0-9_.]+", value):
         raise GateError(
@@ -346,6 +826,7 @@ class Runner:
         self.secrets: list[str] = []
         self.process: subprocess.Popen[str] | None = None
         self.containers: set[str] = set()
+        self.sql_identity: dict[str, str] = {}
         self.env = {
             "PATH": os.environ.get("PATH", os.defpath),
             "HOME": str(out / "home"),
@@ -413,6 +894,9 @@ class Runner:
             "cwd": cwd,
             "started": started,
             "timeout_seconds": timeout,
+            "env": {key: self.scrub(value) for key, value in (env or {}).items()},
+            "suite": suite,
+            "integration": integration,
         }
         logfile = f"{len(self.rows):04d}-{self.group}.log"
         entry["log"] = logfile
@@ -420,6 +904,7 @@ class Runner:
         if suite or (len(argv) > 2 and argv[1] == "-m" and argv[2].startswith("checks.")):
             child_env["PYTHONPATH"] = str(self.safety) + ":" + child_env.get("PYTHONPATH", "")
         print(f"{self.group}: {self.scrub(' '.join(argv))}", flush=True)
+        cancellation = None
         try:
             self.process = subprocess.Popen(
                 argv,
@@ -433,20 +918,21 @@ class Runner:
             try:
                 output, _ = self.process.communicate(timeout=timeout)
                 code = self.process.returncode
-            except (subprocess.TimeoutExpired, KeyboardInterrupt) as error:
-                # Give the unchanged container helper time to execute its finally cleanup.
-                self.process.send_signal(signal.SIGINT)
-                try:
-                    output, _ = self.process.communicate(timeout=30)
-                except subprocess.TimeoutExpired:
-                    os.killpg(self.process.pid, signal.SIGKILL)
-                    output, _ = self.process.communicate()
+            except subprocess.TimeoutExpired:
+                output = self.stop_command()
                 code = 124
-                output += f"\nRequired command interrupted: {type(error).__name__}\n"
+                output += "\nRequired command interrupted: TimeoutExpired\n"
+            except KeyboardInterrupt as error:
+                cancellation = error
+                entry["interrupted"] = True
+                output = self.stop_command()
+                code = 130
+                output += "\nRequired command interrupted: KeyboardInterrupt\n"
         except FileNotFoundError as error:
             output, code = f"Missing tool/dependency: {error.filename}", 127
         finally:
-            self.process = None
+            if self.process is not None and self.process.returncode is not None:
+                self.process = None
         sanitized = self.scrub(output)
         (self.out / logfile).write_text(sanitized)
         print(sanitized, end="" if sanitized.endswith("\n") else "\n", flush=True)
@@ -456,6 +942,8 @@ class Runner:
             sha256=digest(self.out / logfile),
         )
         self.rows.append(entry)
+        if cancellation is not None:
+            raise cancellation
         if code:
             if retry:
                 entry["expected_probe_failure"] = True
@@ -463,6 +951,17 @@ class Runner:
             raise GateError(f"{self.group} failed ({code}); see {logfile}")
         if suite:
             entry.update(check_skips(output, integration=integration))
+        return output
+
+    def stop_command(self) -> str:
+        assert self.process is not None
+        # Signal only this command's new process group; allow helper finally cleanup.
+        os.killpg(self.process.pid, signal.SIGINT)
+        try:
+            output, _ = self.process.communicate(timeout=30)
+        except subprocess.TimeoutExpired:
+            os.killpg(self.process.pid, signal.SIGKILL)
+            output, _ = self.process.communicate()
         return output
 
     def python(self, project: str) -> str:
@@ -508,14 +1007,9 @@ class Runner:
                 self.cleanup_containers()
 
     def tests_env(self, project: str, own_tests: bool = False) -> dict[str, str]:
-        paths = []
-        if own_tests:
-            paths.append(self.snapshot / "src" / project / "tests")
-        if project in ("api", "agents", "orchestrator"):
-            paths.append(self.snapshot / "src/core/tests")
-        if project == "api":
-            paths.append(self.snapshot / "src/agents/tests")
-        return {"PYTHONPATH": ":".join(map(str, paths))}
+        return {
+            "PYTHONPATH": test_paths(project, own_tests).replace("<checkout>", str(self.snapshot))
+        }
 
     def lint(self, python: str, files: tuple[str, ...], cwd: str = ".") -> None:
         self.command(
@@ -666,18 +1160,7 @@ class Runner:
             )
             for files in RUFF_GROUPS:
                 self.lint(py, files)
-            for type_files in (
-                ("--strict", "src/check-container.py"),
-                ("--strict", "infra/scripts/pipeline.py"),
-                ("--strict", "tools/rpi-checks.py", "tools/test_rpi_checks.py"),
-                (
-                    "--follow-imports=silent",
-                    "--ignore-missing-imports",
-                    "infra/scripts/staff_azure.py",
-                    "infra/scripts/staff-azure-worker.py",
-                    "infra/scripts/credential_arm.py",
-                ),
-            ):
+            for type_files in TYPE_GROUPS:
                 self.command([py, "-m", "mypy", *type_files])
         with self.gate("migration"):
             self.command([py, "-c", "import pptx"], retry=True)
@@ -689,13 +1172,15 @@ class Runner:
             [
                 python,
                 "-c",
-                "import json,yaml,sys; from pathlib import Path; "
-                "print(json.dumps({name:yaml.load(Path('.github/workflows',name).read_text(),"
-                "Loader=yaml.BaseLoader)['jobs'] for name in sys.argv[1:]}))",
+                WORKFLOW_INVENTORY,
                 *WORKFLOWS,
             ]
         )
         jobs = json.loads(inventory)
+        atomic_json(self.out / "workflow-coverage.json", {"steps": self.coverage_rows(jobs)})
+
+    @staticmethod
+    def coverage_rows(jobs: dict[str, Any]) -> list[dict[str, Any]]:
         equivalents = {
             ("src-ci.yml", "project"): "project-*; browser; image-*; logo-0600",
             ("src-ci.yml", "namespace"): "namespace; static; infra; migration",
@@ -742,7 +1227,7 @@ class Runner:
                             "workflow_sha256": WORKFLOW_HASHES[workflow],
                         }
                     )
-        atomic_json(self.out / "workflow-coverage.json", {"steps": rows})
+        return rows
 
     def browser(self) -> None:
         with self.gate("browser"):
@@ -763,19 +1248,9 @@ class Runner:
             (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
                 bytecode_policy
             )
-            browser_entry = (
-                "import runpy,tempfile,os\n"
-                "from unittest.mock import patch\n"
-                "original=tempfile.TemporaryDirectory\n"
-                "def external_scratch(*args,**kwargs):\n"
-                "    kwargs['dir']=os.environ['TMPDIR']\n"
-                "    return original(*args,**kwargs)\n"
-                "with patch('tempfile.TemporaryDirectory',external_scratch):\n"
-                "    runpy.run_module('checks.design_system_browser_check',run_name='__main__')\n"
-            )
             try:
                 self.command(
-                    [py, "-c", browser_entry],
+                    [py, "-c", BROWSER_ENTRY],
                     "src/api",
                     timeout=900,
                     env={"PYTHONPATH": str(self.safety)},
@@ -802,9 +1277,7 @@ class Runner:
                 [
                     py,
                     "-c",
-                    "from pathlib import Path; import json,sys; "
-                    "r=json.loads(Path(sys.argv[1]).read_text()); "
-                    "assert 'skipped' not in json.dumps(r)",
+                    REGULATORY_ASSERT,
                     str(self.out / "regulatory-ux-results.json"),
                 ]
             )
@@ -819,8 +1292,7 @@ class Runner:
                 [
                     py,
                     "-c",
-                    "import ctypes; ctypes.CDLL('libltdl.so.7'); "
-                    "ctypes.CDLL('libkrb5.so.3'); import mssql_python",
+                    SQL_DRIVER,
                 ]
             )
             password = "Aa1!" + secrets.token_hex(24)
@@ -851,6 +1323,7 @@ class Runner:
             self.containers.add(container)
             metadata = json.loads(self.command(["docker", "inspect", container]))[0]
             port = owned_sql(metadata, container, self.token)
+            self.sql_identity = {"container": container, "port": port}
             sqlenv = {
                 **self.tests_env("api", True),
                 "ZF_TEST_MSSQL": "1",
@@ -862,14 +1335,8 @@ class Runner:
                 "ZF_SQL_PASSWORD": password,
                 "ZF_SQL_TRUST_CERT": "1",
             }
-            query = (
-                "import os,time; from zava_forward.core.mssqlstore import _Conn,connection_string; "
-                "db=_Conn(connection_string(dict(os.environ,ZF_SQL_DATABASE='master'))); "
-                "assert db.execute('SELECT 1').fetchone()[0]==1; "
-                "db.execute('CREATE DATABASE rpi_disposable'); db.close()"
-            )
             for _attempt in range(60):
-                self.command([py, "-c", query], env=sqlenv, timeout=15, retry=True)
+                self.command([py, "-c", SQL_QUERY], env=sqlenv, timeout=15, retry=True)
                 if self.rows[-1]["exit_code"] == 0:
                     break
                 time.sleep(2)
@@ -1102,7 +1569,7 @@ class Runner:
                 cleanup_failure = self.scrub(str(error))
                 failure = f"{failure or ''}; cleanup failed: {cleanup_failure}"
         receipt = {
-            "schema": 2,
+            "schema": 3,
             "status": "failed" if failure else "passed",
             "failure": failure,
             "identity": identity,
@@ -1111,6 +1578,8 @@ class Runner:
             "extras": self.extras,
             "commands": self.rows,
             "images": self.images,
+            "owner": self.token,
+            "sql": self.sql_identity,
             "sealed": datetime.now(UTC).isoformat(),
             "hosted_only": [
                 "GitHub approvals/protection/checks",
@@ -1131,6 +1600,13 @@ class Runner:
             for path in self.out.iterdir()
             if path.is_file() and path.name not in ("receipt.json", "receipt.sha256")
         }
+        if not failure:
+            try:
+                verify_commands(self.root, self.out, receipt)
+                verify_results(self.out, receipt)
+            except (GateError, OSError, ValueError, KeyError) as error:
+                failure = self.scrub(str(error))
+                receipt.update(status="failed", failure=failure)
         path = self.out / "receipt.json"
         atomic_json(path, receipt)
         (self.out / "receipt.sha256").write_text(digest(path) + "\n")
@@ -1145,7 +1621,7 @@ def verify(root: Path, path: Path, base: str) -> None:
     if digest(path) != path.with_name("receipt.sha256").read_text().strip():
         raise GateError("Receipt integrity mismatch")
     receipt = json.loads(path.read_text())
-    if receipt["schema"] != 2 or receipt["status"] != "passed":
+    if receipt["schema"] != 3 or receipt["status"] != "passed":
         raise GateError("Receipt does not establish a complete passing run")
     if receipt["identity"] != clean_identity(root, base):
         raise GateError("Receipt source/base/matrix/helper identity mismatch")
@@ -1158,19 +1634,10 @@ def verify(root: Path, path: Path, base: str) -> None:
         extra_selector(value)
     if receipt["groups"] != required_groups(extras):
         raise GateError("Receipt omits required matrix coverage")
-    commands = receipt["commands"]
-    if not commands or any(
-        row["exit_code"] and not row.get("expected_probe_failure") for row in commands
-    ):
-        raise GateError("Receipt contains a failed required command")
-    if set(row["group"] for row in commands) != set(required_groups(extras)):
-        raise GateError("Receipt command group coverage mismatch")
     for name, expected in receipt["files"].items():
         if Path(name).name != name or digest(path.parent / name) != expected:
             raise GateError("Receipt evidence file hash mismatch")
-    for row in commands:
-        if receipt["files"].get(row["log"]) != row["sha256"]:
-            raise GateError("Receipt command log identity mismatch")
+    verify_commands(root, path.parent, receipt)
     if receipt["trivy_database"] != scan_database(path.parent / "cache/trivy/db/metadata.json"):
         raise GateError("Trivy database changed since receipt")
     if set(receipt["images"]) != {"mssql", "logo-0600", *[f"image-{p}" for p in IMAGES]}:
@@ -1180,11 +1647,13 @@ def verify(root: Path, path: Path, base: str) -> None:
         "regulatory-ux-results.json",
         "workflow-coverage.json",
         "browser-bytecode-policy.pth",
+        "snapshot-inputs.log",
         *[f"{p}-{suffix}.json" for p in IMAGES for suffix in ("gate", "all")],
         *[f"{p}.spdx.json" for p in IMAGES],
     }
     if not required_files <= set(receipt["files"]):
         raise GateError("Required scan/browser/SBOM evidence is incomplete")
+    verify_results(path.parent, receipt)
     for name, image in receipt["images"].items():
         image_id = image if name == "mssql" else image["id"]
         reference = (
@@ -1203,7 +1672,7 @@ def verify(root: Path, path: Path, base: str) -> None:
 
 @contextlib.contextmanager
 def heavy_lock(timeout: int) -> Iterator[None]:
-    path = Path(tempfile.gettempdir()) / "ama-rpi-heavy.lock"
+    path = Path("/tmp/ama-rpi-heavy.lock")
     fd = os.open(path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     with os.fdopen(fd, "w") as stream:
         deadline = time.monotonic() + timeout

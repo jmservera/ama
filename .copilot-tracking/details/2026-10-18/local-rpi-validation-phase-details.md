@@ -14,8 +14,8 @@
 
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
-| P01 | Local gate | RV-001 source/tests complete; final exact-head matrix pending | P01-T01, P01-T02 |
-| P02 | RPI integration | Data-only verification regressions pass; independent acceptance pending | P02-T01 |
+| P01 | Local gate | Correction 2 source/regressions complete; final exact-head matrix pending | P01-T01, P01-T02 |
+| P02 | RPI integration | Correction 2 targeted verification passes; independent acceptance pending | P02-T01 |
 | P03 | Hosted transition | Complete local implementation; run05 verified at 2c98c0e3 | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
@@ -261,6 +261,68 @@ Final-head hosted confirmation and required-context mapping remain coordinator
 gates before merge, not local checks or blockers to independent implementation.
 
 ## Original Review and Local Freeze Boundary
+
+### Correction 2 current execution boundary (2026-10-18)
+
+Coordinator-authorized bounded Implement at 491124fc: reopen P01-T02 followed
+by coupled P02-T01. The independent reviewer reproduced omitted mandatory
+commands accepted under unchanged groups, caller-temp-dependent host locks,
+and KeyboardInterrupt converted into retry success/continued groups.
+Require trusted current command/check identities for every mandatory check,
+exact argv/cwd/suites/selectors, successful result/evidence validation and no
+execution of receipt commands. Fixed host lock must ignore TMPDIR/TEMP/TMP.
+Cancellation must escape both retries and gate collection immediately after
+recording failure and cleaning exact owned child/container/snapshot resources.
+Extend existing test methods only (maximum 12); no new infra/domain/helper/
+harness edits, pins or workflow changes. Preserve independently confirmed
+RV-001 data-only identity and immutable original critique/adverse Review.
+First execution is runner corrections, coherent focused/static validation,
+evidence reconciliation and privacy-safe commit, then fresh actual complete
+matrix and external receipt verification on final clean exact HEAD. No commits
+after the gate, push or PR. Output `/tmp/rpi-413-correction2-final`; full logs
+`/tmp/rpi-413-correction2.log` and `/tmp/rpi-413-correction2-matrix.log`.
+Independent reviewer owns candidate acceptance and remaining full direct
+verbose evidence review; previous partial/direct and programmatic inspection
+must not be represented as a complete independent review.
+
+Correction 2 completion evidence: required_checks is a trusted verifier-only
+contract inside the existing runner, not an external dispatcher. It requires
+the ordered exact argv/cwd/environment overrides, suite/integration flags and
+timeouts for every matrix command. Both receipt sealing and verification use
+it. Missing/extra/substituted commands or missing/duplicate log bindings fail;
+suite counts/skips are reparsed from hashed logs. Only exact bootstrap import
+probes may fail; SQL query readiness is bounded to 60 attempts and must finish
+successfully. Timeout/cancellation/missing tools cannot satisfy a required row.
+Schema 3 adds sanitized environment overrides and constrained owned SQL/token
+identities. Data-only environment inspection is unchanged. Browser outcome/
+verified axe, scan image/version/results, SPDX and empty snapshot evidence are
+validated, and workflow coverage is rebuilt from the recorded inventory.
+
+heavy_lock uses /tmp/ama-rpi-heavy.lock, never caller temporary variables.
+KeyboardInterrupt records interrupted=true/exit 130, stops the exact new child
+process group with bounded SIGINT/SIGKILL cleanup, then rethrows before retry
+handling. Matrix collection stops and retains a failed receipt; gate/container/
+snapshot finally cleanup remains ownership checked.
+
+All 12 existing focused methods, strict Ruff/check-format and mypy pass.
+Within the existing tamper method, every trusted mandatory command is removed
+individually with its file binding and recomputed receipt checksum; all reject,
+including combined removal of all eight suites. Altered selectors, counts,
+probe flags, infra opt-in, suite logs and browser/scan/SPDX/workflow results
+reject. Existing malicious interpreter/startup non-execution tests still pass.
+Differing TMPDIR/TEMP/TMP reach the same actual lock function path. Retry and
+nonretry KeyboardInterrupt prevent both later commands and matrix groups,
+retain failed/interrupted evidence and clean only exact owned resources.
+Read-only compatibility inspection matches all 183 real historical records to
+179 mandatory positions; historical removal probes reject all eight suites,
+Bicep, scanner, browser and project lint/type families. It is not the final gate.
+Logs: /tmp/rpi-413-correction2-checks-final.log and
+/tmp/rpi-413-correction2-historical-contract.log.
+
+The next step is commit then fresh full matrix/receipt verification at final
+clean HEAD, not a new critique/Review. Its actual post-commit outcome belongs
+to /tmp/rpi-413-correction2-final/receipt.json and external logs, not a predicted
+committed result. No later candidate edit/commit or publication is authorized.
 
 The one original Review is Complete, outcome Not accepted. RV-001 reproduced
 unvalidated external-environment code execution during receipt verification.

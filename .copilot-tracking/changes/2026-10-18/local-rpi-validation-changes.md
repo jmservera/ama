@@ -1,5 +1,116 @@
 # Changes: Local-first validation and Actions budget
 
+## Correction 2 Authorized Implement Opening (2026-10-18)
+
+User/coordinator authorized three independently reproduced defects at clean
+491124fcd406afea387cd95d555adcc8f9f00bde on the existing topic and unchanged
+612cbed7 base: missing mandatory checks accepted by group-only verification,
+host lock varying with caller temp environment, cancellation swallowed by retry
+and nonretry collection. Reopened P01-T02 then coupled P02-T01 before source
+edits. P01-T01/P03 remain historical complete and outside this write scope.
+Only tools/rpi-checks.py, tools/test_rpi_checks.py and dated evidence/state may
+change. Preserve independently confirmed RV-001 data-only verification and
+all existing assertions within 12 focused methods and the original two infra
+files already touched; no further infra/domain/helper/harness/workflow edits.
+Original critique and adverse Review remain byte-for-byte unchanged; Review
+SHA256 f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4.
+
+Validation intent: focused regressions for required suite removal plus other
+mandatory families, caller temp env and retry/nonretry cancellation; strict
+Ruff/format/mypy, then privacy-safe commit with Copilot trailer. Execute complete
+actual matrix at final clean HEAD into `/tmp/rpi-413-correction2-final`, verify
+external receipt and make no later commit. Logs `/tmp/rpi-413-correction2.log`
+and `/tmp/rpi-413-correction2-matrix.log`. No push, PR, cloud writes/spend,
+private inputs, settings changes, new critique or original Review.
+
+Remaining independent evidence review is explicit: reviewer read all 17 changed
+files/5,372 lines and confirmed real receipt hashes/183 records/98 workflow
+rows, suites, browser/SQL/images/scans/SPDX, but did not directly read all
+102,046 original CLI lines, 19,659 corrected matrix lines or 19,451 command-log
+lines. Programmatic inspection and partial reads do not establish complete
+independent evidence review or acceptance. Coordinator/same reviewer owns it.
+
+## Correction 2 P01-T02 / P02-T01 Source and Regression Evidence
+
+tools/rpi-checks.py now binds both sealing and verification to trusted current
+ordered command contracts for the entire matrix. It does not replay receipt
+commands or execute environment interpreters. Contracts require exact argv,
+cwd, sanitized overrides (including REQUIRE_AZ_BICEP and owned SQL opt-ins),
+timeout, suite and integration identity, hashed unique log bindings and success.
+Reparse every suite's test/executed/skip evidence; counts and skip reasons must
+match the logged real result. Only exact bootstrap import probes may fail;
+SQL query readiness can repeat at most 60 times and must end in success.
+Interrupted, timed-out, unavailable or failed required checks cannot be relabeled
+as probes. Schema 3 rejects older incomplete command contracts. The existing
+data-only environment implementation is retained unchanged.
+
+Pinned axe and browser outcome/executed scan evidence, scan version/image/
+results, SPDX image/version/packages and clean snapshot evidence are checked.
+Workflow coverage is rebuilt from the logged inventory using the same existing
+classification function. Shared script/type-group/test-path constants avoid
+divergent long command fragments. No new workflow framework/configuration
+service or alternate executable matrix is introduced.
+
+Host lock path is fixed /tmp/ama-rpi-heavy.lock, independent of caller temporary
+environment; existing no-follow, bounded flock and serialized heavy work remain.
+KeyboardInterrupt is handled separately from timeouts: exact owned child
+process-group SIGINT permits helper finally cleanup, with bounded SIGKILL only
+if needed. Record exit 130/interrupted=true, then rethrow before retry handling.
+The outer matrix stops immediately and retains a failed receipt; only exact
+owned SQL IDs and clean detached snapshot are removed.
+
+All existing 12 focused methods remain; none removed or added beyond budget.
+The tamper method constructs a complete command/evidence fixture and removes
+every mandatory position one at a time, along with its file binding and a
+consistent checksum. All reject. Combined removal of all eight mandatory
+suites also rejects despite unchanged groups and remaining install/lint rows.
+Selector/count/probe/infra-env/suite-log and browser/scan/SPDX/workflow-result
+tampering reject. Existing replacement interpreter/malicious startup tests
+continue to prove inert verification. Caller temp variants reach one fixed
+lock path. Both retry/nonretry signal-15 KeyboardInterrupt probes stop later
+commands/groups, record failed evidence and remove only the exact owned
+container and detached snapshot. No expensive concurrent probe was run.
+
+Actual coherent validation: 12 methods pass, Ruff 0.17.1 isolated E,F,I,B,UP /
+py312 / line length 100 passes, isolated format --check passes and mypy 2.4.0
+--strict passes for both files. Log:
+/tmp/rpi-413-correction2-checks-final.log. Earlier fixture hash/lint/type failures
+remain in external logs and were corrected before the final pass. Owned initial
+formatter cache was removed; subsequent caches are external.
+
+Read-only historical contract compatibility: every argv/cwd/timeout in the
+183 actual prior command records matches 179 trusted mandatory positions plus
+bounded SQL readiness retries. Data-only result verification also passes.
+In-memory removal of all eight suites and representative Bicep, scanner,
+browser and project lint/type families rejects, including removed file bindings.
+Log: /tmp/rpi-413-correction2-historical-contract.log. This is supporting
+regression evidence, not a current final-head gate or independent acceptance.
+
+P01-T02/P02-T01 and containing phases are marked source/regression complete.
+P01-T01/P03 are unchanged historical completion. User supplied independent
+confirmation of RV-001 is retained; no original critique or adverse Review
+changed, reran or became accepted. Original Review SHA256 remains
+f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4.
+Exactly the original two infra test files differ from base, neither in this
+cycle. No domain, browser/container helper, workflow or pin changed.
+
+## Correction 2 Final Commit and Freeze Boundary
+
+Commit these two source files and dated evidence with GitHub-resolved local
+noreply author/committer and required Copilot trailer. Then execute the complete
+actual matrix, not a simulated subset:
+
+`PATH="/tmp/rpi-413-tools:$PATH" PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd --out /tmp/rpi-413-correction2-final`
+
+Fetch main, then verify using the same PATH/bytecode policy:
+`python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-413-correction2-final/receipt.json --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd`.
+Actual post-commit outcomes remain external in that receipt,
+/tmp/rpi-413-correction2-matrix.log, /tmp/rpi-413-correction2-verify.log and
+/tmp/rpi-413-correction2.log. This pre-freeze checkpoint predicts no pass.
+No later commit, source modification, push or PR. Independent same-reviewer
+candidate assessment and remaining complete verbose evidence review are
+explicitly pending; no fabricated acceptance, hosted control or human approval.
+
 ## Approved Scope and Execution State
 
 * Task: actions-budget-local-rpi, full plan P01 through P03.

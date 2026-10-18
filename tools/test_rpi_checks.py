@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import json
 import os
@@ -13,7 +14,7 @@ import venv
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 SPEC = importlib.util.spec_from_file_location(
     "rpi_checks", Path(__file__).with_name("rpi-checks.py")
@@ -34,6 +35,7 @@ class GateTests(unittest.TestCase):
         for name in (
             "tools/rpi-checks.py",
             "src/check-container.py",
+            "infra/main.bicep",
             *[f".github/workflows/{name}" for name in gate.WORKFLOWS],
         ):
             path = self.root / name
@@ -180,6 +182,21 @@ class GateTests(unittest.TestCase):
         document["NetworkSettings"]["Ports"]["1433/tcp"][0]["HostIp"] = "0.0.0.0"
         with self.assertRaises(gate.GateError):
             gate.owned_sql(document, "a" * 64, first.token)
+        real_open = os.open
+        lock_paths = []
+
+        def open_lock(path: Path, flags: int, mode: int) -> int:
+            lock_paths.append(path)
+            return real_open(self.out / "owned-host-lock", flags, mode)
+
+        for directory in ("/caller-one/scratch", "/caller-two/scratch"):
+            with (
+                patch.dict(os.environ, {"TMPDIR": directory, "TEMP": directory, "TMP": directory}),
+                patch.object(gate.os, "open", side_effect=open_lock),
+                gate.heavy_lock(1),
+            ):
+                pass
+        self.assertEqual(lock_paths, [Path("/tmp/ama-rpi-heavy.lock")] * 2)
 
     def test_interruption_cleanup_only_removes_owned_container(self) -> None:
         runner = self.runner()
@@ -195,6 +212,75 @@ class GateTests(unittest.TestCase):
             self.assertRaises(gate.GateError),
         ):
             runner.cleanup()
+        real_run = gate.subprocess.run
+        for retry in (False, True):
+            with self.subTest(retry=retry):
+                output = self.out / f"cancel-{retry}"
+                output.mkdir()
+                cancelled = gate.Runner(self.root, output, self.base, [])
+                child = Mock(pid=987654321)
+                child.communicate.side_effect = [
+                    KeyboardInterrupt("Interrupted by signal 15"),
+                    ("owned child stopped\n", None),
+                ]
+                metadata = {
+                    "Id": "c" * 64,
+                    "Config": {"Labels": {"ama.rpi.owner": cancelled.token}},
+                }
+                docker_commands: list[list[str]] = []
+
+                def owned_run(
+                    argv: list[str],
+                    *,
+                    metadata: dict[str, Any] = metadata,
+                    docker_commands: list[list[str]] = docker_commands,
+                    **kwargs: Any,
+                ) -> Any:
+                    if argv[0] != "docker":
+                        return real_run(argv, **kwargs)
+                    docker_commands.append(argv)
+                    return subprocess.CompletedProcess(argv, 0, json.dumps([metadata]), "")
+
+                def interrupt(
+                    cancelled: Any = cancelled, child: Any = child, retry: bool = retry
+                ) -> None:
+                    with (
+                        patch.object(gate.subprocess, "Popen", return_value=child),
+                        patch.object(gate.os, "killpg") as killpg,
+                        cancelled.gate("mssql"),
+                    ):
+                        cancelled.containers.add("c" * 64)
+                        try:
+                            cancelled.command(["fixture-child"], retry=retry)
+                        finally:
+                            killpg.assert_called_once_with(child.pid, gate.signal.SIGINT)
+                        self.fail("Cancellation continued to the next command")
+
+                with (
+                    patch.object(cancelled, "preflight", side_effect=interrupt),
+                    patch.object(cancelled, "projects") as projects,
+                    patch.object(cancelled, "namespace_static_infra") as later,
+                    patch.object(gate, "tool_identity", return_value={}),
+                    patch.object(gate.subprocess, "run", side_effect=owned_run),
+                    self.assertRaisesRegex(gate.GateError, "Interrupted by signal 15"),
+                ):
+                    cancelled.run()
+                projects.assert_not_called()
+                later.assert_not_called()
+                self.assertEqual(
+                    docker_commands,
+                    [["docker", "inspect", "c" * 64], ["docker", "rm", "-f", "c" * 64]],
+                )
+                receipt = json.loads((output / "receipt.json").read_text())
+                self.assertEqual(receipt["status"], "failed")
+                self.assertEqual(receipt["groups"], [])
+                self.assertEqual(len(receipt["commands"]), 1)
+                row = receipt["commands"][0]
+                self.assertEqual(row["exit_code"], 130)
+                self.assertTrue(row["interrupted"])
+                self.assertNotIn("expected_probe_failure", row)
+                self.assertFalse(cancelled.snapshot.exists())
+                self.assertFalse(cancelled.containers)
 
     def test_tampered_or_failed_receipt_refuses_without_executing_content(self) -> None:
         path = self.out / "receipt.json"
@@ -203,7 +289,7 @@ class GateTests(unittest.TestCase):
         with patch.object(gate.subprocess, "run") as run, self.assertRaises(gate.GateError):
             gate.verify(self.root, path, self.base)
         run.assert_not_called()
-        gate.atomic_json(path, {"schema": 2, "status": "failed"})
+        gate.atomic_json(path, {"schema": 3, "status": "failed"})
         (self.out / "receipt.sha256").write_text(gate.digest(path))
         with self.assertRaises(gate.GateError):
             gate.verify(self.root, path, self.base)
@@ -217,35 +303,90 @@ class GateTests(unittest.TestCase):
             (distribution / "direct_url.json").write_text('{"url":"file:///fixture"}\n')
             (site / "fixture.pth").write_text("# inert fixture\n")
         receipt = {
-            "schema": 2,
+            "schema": 3,
             "status": "passed",
             "identity": gate.clean_identity(self.root, self.base),
             "tools": {},
             "environments": gate.environment_identity(self.out),
             "extras": [],
             "groups": gate.required_groups([]),
-            "commands": [
-                {"group": name, "exit_code": 0, "log": "gate.log", "sha256": "fixture"}
-                for name in gate.required_groups([])
-            ],
+            "owner": "a" * 24,
+            "sql": {"container": "b" * 64, "port": "25432"},
+            "commands": [],
             "files": {
-                "gate.log": "fixture",
                 "axe-4.10.3.min.js": "fixture",
                 "regulatory-ux-results.json": "fixture",
                 "workflow-coverage.json": "fixture",
                 "browser-bytecode-policy.pth": "fixture",
+                "snapshot-inputs.log": "fixture",
                 **{f"{p}-{s}.json": "fixture" for p in gate.IMAGES for s in ("gate", "all")},
                 **{f"{p}.spdx.json": "fixture" for p in gate.IMAGES},
             },
             "trivy_database": {},
             "images": {
-                "mssql": "fixture",
+                "mssql": "sha256:" + "c" * 64,
                 **{
-                    name: {"id": "fixture", "tag": "fixture"}
+                    name: {
+                        "id": "sha256:" + "d" * 64,
+                        "tag": "zava-forward-"
+                        + ("api" if name == "logo-0600" else name.removeprefix("image-"))
+                        + ":rpi-"
+                        + "a" * 24
+                        + ("-logo0600" if name == "logo-0600" else ""),
+                    }
                     for name in ("logo-0600", *[f"image-{p}" for p in gate.IMAGES])
                 },
             },
         }
+        checks = gate.required_checks(self.root, receipt)
+        for index, check in enumerate(checks):
+            row = {key: value for key, value in check.items() if key not in ("probe", "attempts")}
+            logfile = f"{index:04d}-{check['group']}.log"
+            text = "fixture success\n"
+            if check["suite"]:
+                text = "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                row.update(gate.check_skips(text, integration=check["integration"]))
+            if check["argv"][0] == "git":
+                text = ""
+            if check["argv"][1:3] == ["-c", gate.WORKFLOW_INVENTORY]:
+                text = json.dumps({name: {"test": {"steps": []}} for name in gate.WORKFLOWS})
+            (self.out / logfile).write_text(text)
+            row.update(exit_code=0, log=logfile, sha256=gate.digest(self.out / logfile))
+            receipt["commands"].append(row)
+            receipt["files"][logfile] = row["sha256"]
+        for name in receipt["files"]:
+            target = self.out / name
+            if target.exists():
+                continue
+            if name.endswith(("-gate.json", "-all.json")):
+                content: Any = {
+                    "Trivy": {"Version": "0.76.0"},
+                    "Metadata": {"ImageID": "sha256:" + "d" * 64},
+                    "Results": [{}],
+                }
+            elif name.endswith(".spdx.json"):
+                content = {
+                    "spdxVersion": "SPDX-2.3",
+                    "name": "sha256:" + "d" * 64,
+                    "packages": [{}],
+                    "creationInfo": {"creators": ["Tool: trivy-0.76.0"]},
+                }
+            elif name == "regulatory-ux-results.json":
+                content = {
+                    "outcome": "passed",
+                    "axe_status": "executed",
+                    "axe_version": "4.10.3",
+                    "axe_sha256": gate.AXE_SHA256,
+                    "scans": [{"violations": []}],
+                }
+            elif name == "workflow-coverage.json":
+                content = {"steps": []}
+            else:
+                target.write_text("")
+                continue
+            target.write_text(json.dumps(content))
+        receipt["files"] = {name: gate.digest(self.out / name) for name in receipt["files"]}
+        receipt["files"]["axe-4.10.3.min.js"] = gate.AXE_SHA256
         gate.atomic_json(path, receipt)
         (self.out / "receipt.sha256").write_text(gate.digest(path))
         real_digest = gate.digest
@@ -253,7 +394,9 @@ class GateTests(unittest.TestCase):
 
         def output(argv: list[str], **kwargs: Any) -> Any:
             self.assertIn(argv[0], ("git", "docker"), "Verification must not execute environments")
-            return "fixture\n" if argv[0] == "docker" else real_output(argv, **kwargs)
+            if argv[0] == "docker":
+                return "sha256:" + ("c" if argv[-1].startswith("mcr.") else "d") * 64 + "\n"
+            return real_output(argv, **kwargs)
 
         with (
             patch.object(gate, "tool_identity", return_value={}),
@@ -263,11 +406,85 @@ class GateTests(unittest.TestCase):
                 gate,
                 "digest",
                 side_effect=lambda p: (
-                    real_digest(p) if p.name == "receipt.json" or p.is_file() else "fixture"
+                    gate.AXE_SHA256 if p.name == "axe-4.10.3.min.js" else real_digest(p)
                 ),
             ),
         ):
             gate.verify(self.root, path, self.base)
+            original_receipt = copy.deepcopy(receipt)
+            # Each exact mandatory command must survive, even if groups/files stay consistent.
+            for index, check in enumerate(checks):
+                with self.subTest(missing_command=index, group=check["group"]):
+                    changed = copy.deepcopy(original_receipt)
+                    removed = changed["commands"].pop(index)
+                    changed["files"].pop(removed["log"])
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+            changed = copy.deepcopy(original_receipt)
+            suites = [row for row in changed["commands"] if row["suite"]]
+            for row in suites:
+                changed["commands"].remove(row)
+                changed["files"].pop(row["log"])
+            self.assertEqual(len(suites), 8)
+            gate.atomic_json(path, changed)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            with self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base)
+            for mutation in ("selector", "counts", "probe", "infra-env", "suite-log"):
+                with self.subTest(mutation=mutation):
+                    changed = copy.deepcopy(original_receipt)
+                    sqlrow = next(
+                        row
+                        for row in changed["commands"]
+                        if row["group"] == "mssql" and row["suite"]
+                    )
+                    if mutation == "selector":
+                        sqlrow["argv"].pop()
+                    elif mutation == "counts":
+                        sqlrow["executed"] = 0
+                    elif mutation == "probe":
+                        sqlrow.update(exit_code=1, expected_probe_failure=True)
+                    elif mutation == "infra-env":
+                        next(
+                            row
+                            for row in changed["commands"]
+                            if row["group"] == "infra" and row["suite"]
+                        )["env"] = {}
+                    else:
+                        (self.out / sqlrow["log"]).write_text("no suite executed\n")
+                        sqlrow["sha256"] = real_digest(self.out / sqlrow["log"])
+                        changed["files"][sqlrow["log"]] = sqlrow["sha256"]
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+                    if mutation == "suite-log":
+                        (self.out / sqlrow["log"]).write_text(
+                            "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                        )
+            for name, key, value in (
+                ("regulatory-ux-results.json", "outcome", "failed"),
+                ("api-gate.json", "Results", [{"Vulnerabilities": [{"Severity": "HIGH"}]}]),
+                ("api.spdx.json", "packages", []),
+                ("workflow-coverage.json", "steps", [{"coverage": "fabricated"}]),
+            ):
+                with self.subTest(result_evidence=name):
+                    target = self.out / name
+                    original_content = target.read_text()
+                    report = json.loads(original_content)
+                    report[key] = value
+                    target.write_text(json.dumps(report))
+                    changed = copy.deepcopy(original_receipt)
+                    changed["files"][name] = real_digest(target)
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+                    target.write_text(original_content)
+            gate.atomic_json(path, original_receipt)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
             environment = self.out / "venvs/core"
             site = environment / "lib/python3.12/site-packages"
             marker = self.out / "must-not-execute"
