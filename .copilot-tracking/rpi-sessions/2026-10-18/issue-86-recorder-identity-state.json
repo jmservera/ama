@@ -3,7 +3,7 @@
   "task_slug": "issue-86-recorder-identity",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
+  "active_phase": "Follow-up",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-18/issue-86-recorder-identity-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-86-recorder-identity-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-18/issue-86-recorder-identity-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-86-recorder-identity-review.md"
   },
   "confirmed_decisions": [
     {
@@ -24,12 +24,30 @@
       "decision": "Research executed Ready C1-C10; critique executed once Revise PC-001 High; planner-direct resolution forbids all unbound legacy request reconstruction",
       "status": "resolved-for-implementation",
       "evidence": "Canonical research, plan/details and unchanged original critique"
+    },
+    {
+      "decision": "Original independent Review executed exactly once on candidate 671ec03ac0e2e99478e9ae2c71537030d0541413; execution Complete, outcome Conformant; implementation defects zero; RV-001 Low is explicitly out-of-scope residual acceptance",
+      "status": "review-complete-original-frozen",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-86-recorder-identity-review.md SHA256 9d55fbff9904feb9e1d303cfb13be1f5047c766ee038aa2275cb911749a78dcc; original critique SHA256 5d39b3e712277f9441e8cb33396786b28d1620ea193ad5519b8599fdae1b48db unchanged; zero corrective source cycles"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "P01/P02 complete; freeze candidate commit then execute exactly one original independent Review"
+    "phase": "Follow-up",
+    "action": "Commit original Review and reconciliation evidence, normal push and PR main Refs #86; then stop for coordinator full independent exact published-head review"
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator full independent exact published-head review",
+      "rationale": "Explicit user handoff; required before owner acceptance or merge",
+      "evidence": "User task stop instruction; original bounded Review is not final-head coordinator acceptance"
+    },
+    {
+      "rank": 2,
+      "task": "Keep broader issue 86 acceptance open",
+      "rationale": "Formal complaints integration, historical erasure, contact identity and human accessibility/without-detriment evidence are outside this bounded correction",
+      "evidence": "Original Review RV-001 Low; plan Follow-Up Items; no issue130/76 authorization"
+    }
+  ]
 }

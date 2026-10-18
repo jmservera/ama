@@ -17,7 +17,7 @@ PC-001 resolved directly, original Revise assessment retained unchanged.
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
 | P02 | Complete, local SQL/core/API/quality/container evidence | P02-T01 |
-| P03 | Ready for frozen candidate and original Review | P03-T01 |
+| P03 | Original Review complete; publication active | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded identity contract
@@ -106,3 +106,10 @@ Authenticate GitHub account and use local id+login noreply for both commit
 identities with required Copilot coauthor. Commit evidence then push exact
 branch normally, open main PR with Refs #86. Main movement is reported, never
 unilaterally integrated. Stop for coordinator full independent exact-head review.
+
+Actual Review: Complete / Conformant on exact candidate
+671ec03ac0e2e99478e9ae2c71537030d0541413. Zero implementation defects; one Low
+RV-001 residual keeps broader #86 acceptance open. Original assessment frozen
+SHA256 9d55fbff9904feb9e1d303cfb13be1f5047c766ee038aa2275cb911749a78dcc.
+No corrective source cycle and no second Review. Publication is now active;
+no additional implementation or approval is pending in this scope.
