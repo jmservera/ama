@@ -6234,3 +6234,26 @@ metadata when the knowledge base was created.
   Genuine let/renew, verified Legal authority, human/live acceptance and
   coordinator exact-head review remain unmet. Issue stays open/partial; no PR,
   issue/board, deployment, spending, model call or merge action at this checkpoint.
+
+## [2026-10-18] integration | Scoped consultation publication on queue main (#92)
+
+* Coordinator authorized only the owned topic rebase from local 7e4aa6ec onto
+  exact main a86282c4, including PR407 queue correction; prior base 9c648b20.
+  Rebase completed without conflicts. Both README additions, upstream queue
+  production/tests and recorder controls remain; no source correction or policy
+  change. All earlier entries and the upstream log byte prefix are retained.
+* Exact normalized owned and upstream patches match; full tracked inventories
+  and ten original artifact hashes are recorded in the separate integration
+  receipt. Both old/new original Review and critique remain byte-identical.
+  No second original Review or critique was executed.
+* Fresh focused consultation/provider/workflow/API: 212 run, 199 passes,
+  13 explicit skips. Queue-related combined smoke: 553 run, 458 passes,
+  95 explicit skips. Configured core/API lint/format/mypy pass (125/56 typed
+  source files). Coverage overlaps; counts are not unique-test totals.
+* No production conflict or integration-authored persistence change required a
+  SQL/image rerun. Actual 135 SQL passes and upstream hardened-image evidence
+  remain historical, not fresh integration results. Legal authority, genuine
+  let/renew, human/live acceptance and final independent review remain unmet.
+* Same PR389 publication is authorized with the exact old-head lease, normal
+  pushes only afterward. No private inputs, real contracts/spend, Azure, paid
+  model calls, operational activation, issue/board change or merge.

@@ -204,3 +204,36 @@ and new original assessments remain byte-identical. Separate integration receipt
 will record full inventories, normalized exact patches, fresh focused/combined
 smoke, quality and exact publication boundary. Existing SQL/image evidence stays
 historical unless production conflict or persistence change justifies rerun.
+
+### Authorized integration validation
+
+Own-topic rebase onto exact a86282c4 completed without conflicts, source candidate
+adc9ad984cd9cd6bcfbd30db6d52485d9506ab47. No source correction or manual
+merge. Upstream queue source/tests, SQL recorder controls and all unaffected
+tracked paths retained. Both README additions and exact 418574-byte upstream
+log prefix plus every historical own append retained.
+
+Separate receipt and generated parity/full-inventory evidence use the
+`issue-92-scoped-consultation-hold-integration` prefix beside this changes file.
+Owned normalized patch SHA256 a886b897815c534424cad0c7132bd01586cf5192fd9f79755acfc2601b4343cb;
+protected upstream patch SHA256 5deef027e5ee3f5dbc9d2b0b6e2072066c984e274cd895fabeb3a2468f7ba386.
+Both before/after pairs match exactly; ten original research/assessment/old-task
+artifact digests match. No critique or original Review was executed again.
+
+Fresh focused command: common installed-package unittest prefix from P02,
+selectors `test_consultation_controls test_procurement_api test_quality_procurement
+test_mvp test_workflows -q`: 212 run, 199 passed, 13 explicit skips, 80.599s.
+Fresh combined command adds `test_taskqueues test_sqlqueues test_task_queue_api
+test_buildings test_hazard_referral test_resident_decisions test_role_matrix
+test_scenario_manifest test_stock_reconciliation test_grant_lifecycle_controls
+test_finance_match_controls -q`: 553 run, 458 passed, 95 explicit skips, 151.838s.
+Expected unknown law-store diagnostics remain visible in retained logs.
+Configured core/API Ruff check, format --check and mypy pass: 72/24 formatted
+files and 125/56 typed source files. Installed editable paths point into this
+worktree; UID/GID 1000. Diff check passes.
+
+No production conflict or integration-authored persistence change occurred.
+Authorized upstream sqlstore/taskqueues corrections are preserved verbatim;
+their historical SQL/image receipts remain upstream. New SQL Server, image,
+browser, human, live Legal or genuine let/renew acceptance was not run or claimed.
+Original 135 actual SQL passes remain historical engineering evidence only.

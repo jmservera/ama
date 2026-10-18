@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Same-task integration and fresh validation",
+      "status": "executed",
+      "evidence": "Clean conflict-free own-topic rebase onto a86282c4, source candidate adc9ad984cd9cd6bcfbd30db6d52485d9506ab47. Owned/upstream normalized exact patches and blobs match; ten original artifact hashes preserved. Fresh focused 212 run/199 passes/13 skips; combined queue smoke 553 run/458 passes/95 skips; configured core/API Ruff/format/mypy pass. Historical SQL/image evidence not rerun: no production conflict or integration-authored persistence change. Separate receipt: .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration.md."
+    },
+    {
       "decision": "Same-task integration/publication continuation only",
       "status": "authorized",
       "evidence": "2026-10-18 coordinator explicitly authorizes own-branch rebase from local 7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c onto fetched main a86282c4badebc58eabbf9e441410d930a201ac2, preserving PR407 queue correction and both original assessments. Initial publication lease must equal remote 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7; normal pushes only afterward. No new source correction, critique or original Review."
@@ -47,13 +52,13 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Persist snapshot and integration metadata, then rebase only owned topic onto authorized a86282c4; stop for irreconcilable source conflicts or another main move. Preserve original Review/critique bytes."},
+  "next_action": {"phase": "Follow-up", "action": "Commit integration evidence, verify main a86282c4 and remote expected9fb84836, then publish only owned topic using exact explicit lease. Update PR389 and verify empty closing refs; normal pushes only afterward. Stop if main moves; otherwise stop after publication for coordinator independent review."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Resolve moved-main publication boundary",
-      "rationale": "Immediate blocker to delivery; coordinator direction is necessary before any new integration or publication.",
-      "evidence": "RV-001; authorized main9c648b2 moved to a86282c4, topic remote remains expected9fb84836."
+      "task": "Complete independent review of final published head",
+      "rationale": "Coordinator publication authorization resolves the former moved-main blocker; independent final-head review and checks remain the immediate delivery gate.",
+      "evidence": "RV-001 historical routing retained; same-task integration receipt records exact a86282c4 boundary. No second original Review."
     },
     {
       "rank": 2,

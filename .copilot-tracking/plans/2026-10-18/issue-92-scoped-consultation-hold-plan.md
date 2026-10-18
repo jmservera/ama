@@ -171,3 +171,13 @@ in changes. One original Review complete: Residual work, no bounded defects.
 Coordinator now authorizes same-task integration/publication onto exact a86282c4.
 Separate integration receipt will record parity, fresh validation and publication.
 Stop afterward for coordinator independent review, without another original Review.
+
+Integration validation complete at source candidate
+adc9ad984cd9cd6bcfbd30db6d52485d9506ab47: clean rebase with no conflicts;
+exact owned and upstream normalized source patches and blobs match. Full tree
+inventory and ten preserved original-artifact digests are recorded separately.
+Fresh focused 212 run/199 passes/13 skips; combined queue-related 553 run/
+458 passes/95 skips; configured core/API Ruff, format and mypy pass (125/56
+typed files). Existing SQL/image evidence remains historical: no production
+conflict or integration-authored persistence change. Publication is next, gated
+on exact unchanged main and initial topic lease.

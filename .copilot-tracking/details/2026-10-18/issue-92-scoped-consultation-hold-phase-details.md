@@ -96,3 +96,15 @@ requires rerun. Publish initial exact lease 9fb84836e3e3ad24a17e142bd6a3e9d1a68d
 normal push only afterward. Update PR389 with Refs #92 only, empty closing refs,
 exact head/base and unmet Legal/genuine let-renew/human/live acceptance.
 Stop after publication for independent coordinator review; if main moves, wait.
+
+Rebase completed without conflicts at source candidate
+adc9ad984cd9cd6bcfbd30db6d52485d9506ab47. Both README additions auto-merged
+and inspected; owned source blobs and protected upstream production/tests are
+exact. Normalized zero-context patches compare exactly after removing only
+index and hunk-position metadata. Complete tree inventories and original
+assessment hashes accompany the separate integration receipt.
+Fresh focused run: 212 executions, 199 passed, 13 explicit skips, 80.599s.
+Fresh combined run including queue selectors: 553 executions, 458 passed,
+95 explicit skips, 151.838s. Configured core/API quality passes: Ruff check,
+format (72/24 files) and mypy (125/56 source files). Historical 135 actual SQL
+passes and upstream hardened-image evidence were not rerun or promoted.
