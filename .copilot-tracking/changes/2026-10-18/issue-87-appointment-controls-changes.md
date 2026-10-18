@@ -8,6 +8,12 @@
 * Details: .copilot-tracking/details/2026-10-18/issue-87-appointment-controls-phase-details.md.
 * Initial source/base: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Branch: feat/appointment-commitment-controls-87.
+* Current assessed source candidate: 22c98267. Final changed-source validation
+  below ran on its exact source tree before commit; initial-source/base statements
+  elsewhere are historical context. Source is frozen for one original Review.
+* Parent independently refreshed the complete web rules before original Review
+  from https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+  on 2026-10-18. Reviewer must inspect every changed web file using file:line output.
 
 ## Execution Status
 
@@ -18,7 +24,31 @@ human decision records optimistic concurrency, atomic count boundary and retaine
 histories. The old blocked findings/receipts explicitly labelled historical below
 are superseded by the final continuation receipt.
 Coordinator owns lifecycle state, planning decisions and final git delivery.
-One independent original Review remains future work; none was conducted here.
+The later single independent original Review completed: Not accepted, seven
+defects (two High/five Medium). P01-P03 markers record execution, not correctness.
+No normal push/PR or self-Pass is permitted while that gate remains failed.
+
+## Current Original Review Outcome and Delivery Gate
+
+Original Review assessed source22c98267ae6da365d6a2d9fceed7113c8f4578ea:
+.copilot-tracking/reviews/logs/2026-10-18/issue-87-appointment-controls-review.md.
+Execution Complete, outcome Not accepted. Independently rerun core95/API12 pass,
+but reviewer reproduced post-COMMIT serialization misinformation, unrelated-staff
+resident-evidence disclosure, missed investigation on threshold lowering, blank
+bundle competence, withdrawn commitment projection and missing selected date/
+period; source tracing found unprotected manual drafts. Exact AC1/2/4 not fully
+met, AC3 partial. The preserved SQL/browser/image receipts are actual execution,
+not proof against these counterexamples; reviewer did not rerun those resources.
+
+All RV-001 through RV-007 route once to a distinct later implementation, with
+requirements in the separate correction-routing receipt. No source changes
+after Review, no second Review, and no amended conformant verdict. The
+coordinator did not implement source. Original Review and critique fingerprints
+are recorded in that routing receipt. Main freshness recheck still equals
+99056cae7bc679d2ace3e42c75f28577cfce8887; no integration/rebase was needed.
+All owned runtime resources remain stopped/removed. Normal remote push/PR is
+withheld because the explicit correctness gate failed. Artifacts are committed
+locally; remote exact-head/PR evidence is unavailable, not fabricated.
 
 ## Approved Boundary and Validation Intent
 

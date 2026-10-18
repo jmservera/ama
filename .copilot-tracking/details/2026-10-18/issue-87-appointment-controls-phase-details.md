@@ -10,8 +10,12 @@
 * Plan: .copilot-tracking/plans/2026-10-18/issue-87-appointment-controls-plan.md.
 * Evidence: matching research artifact and its current-code lane; initial source
   and base 99056cae7bc679d2ace3e42c75f28577cfce8887.
+* Current source candidate: 22c98267. Final implementation validation ran on that
+  exact source tree immediately before the commit, not on inherited base behavior.
 * Current status: Implement complete, P01-P03; F8 explicit record-only supplied
   human closure and final changed-source local/SQL/browser/image gates evidenced.
+* Original Review: Complete / Not accepted, RV-001 through RV-007. Execution
+  completion is not correctness acceptance. No second Review or closure claimed.
 * Human live policy/authority approvals remain unavailable, not fabricated.
 
 ## Phase Index
@@ -40,7 +44,11 @@ Existing reopening semantics are unchanged. Final actual SQL tests execute
 competing closure/event writes in both winning orders, rollback, committed
 acknowledgement/retry and replay after authorized reopening. The manual browser
 checks refusal without checkbox, cancel/accept confirmation and retained update.
-No original Review or git delivery occurred.
+The later original Review completed on source22c98267 and found two High/five
+Medium defects. Its source-grounded counterexamples supersede any inferred
+acceptance from these positive execution receipts. Corrections route separately
+under the matching correction-routing receipt; no source correction or second
+Review occurs in this completed original loop.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Domain commitments and human investigation

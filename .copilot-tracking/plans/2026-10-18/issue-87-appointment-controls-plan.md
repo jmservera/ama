@@ -5,9 +5,13 @@
 
 * Task ID: 87; slug: issue-87-appointment-controls; parent: 81.
 * Plan date: 2026-10-18.
-* Source/base: 99056cae7bc679d2ace3e42c75f28577cfce8887.
+* Base/initial source: 99056cae7bc679d2ace3e42c75f28577cfce8887.
+* Current source candidate: 22c98267, committed after final implementation checks;
+  subsequent lifecycle-only commits do not change the assessed source.
 * Branch: feat/appointment-commitment-controls-87; target: main.
-* Planning status: Implement complete for P01-P03; one critique Complete/Revise, both findings resolved. Independent original Review not yet conducted.
+* Lifecycle status: Research/Plan/Implement/one original Review executed.
+  P01-P03 execution complete; original Review Complete / Not accepted.
+  One critique Complete/Revise, both findings dispositioned.
 * Details: .copilot-tracking/details/2026-10-18/issue-87-appointment-controls-phase-details.md.
 * Critique: .copilot-tracking/reviews/plans/2026-10-18/issue-87-appointment-controls-plan-critique.md.
 
@@ -19,6 +23,9 @@ entries remain unverified. Preserve committed-capacity/consent/authority control
 and record household options, necessary adjustments and a named update owner.
 Missed access creates only an owned human investigation after the sixth eligible
 event under provisional default five, with auditable configuration and closure.
+This describes implemented intent, not accepted correctness: the original Review
+found RV-001 through RV-007 (two High, five Medium). Completed markers and positive
+validation receipts do not establish a conformant or live-ready result.
 
 ### What You May Not Know
 
@@ -31,12 +38,12 @@ Review; defects require a separate correction receipt, not a second Review.
 
 ### Unresolved Decisions or Blockers
 
-No implementation blocker remains. F8 fills the missing engineering seam with an
-explicit supplied-human-decision record against the existing case identity/closed
-field. Final local regressions, actual owned SQL61, actual browser and rebuilt
-hardened installed-wheel image checks passed. No operational closure policy,
-inferred approval or automatic closure is introduced. Live adoption remains
-human-owned, outside this exercise.
+Correctness acceptance and normal push/PR are blocked by seven original-Review
+defects: response serialization truth, role-sensitive privacy, configuration
+lowering, bundle evidence validation, withdrawn-order status, readable selected
+date/period and manual draft protection. F8 closure direction was supported.
+Final SQL/browser/image checks ran but did not cover these counterexamples.
+Corrections route separately; original verdict stays unchanged.
 
 ## User Decisions and Requirements
 
@@ -250,8 +257,11 @@ No significant divergent user decision remains. No second critique is authorized
 
 ## Follow-Up Items
 
-* None outside bounded implementation. Live closure authority and policy
-  ratification remain human prerequisites, distinct from record-only exercise code.
+* RV-001 through RV-007 route to a distinct later implementation receipt,
+  .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-routing.md.
+  They are outside completed P01-P03 execution, not accepted closure or new active
+  tasks inside this original loop. Coordinator owns delegation/final-head judgment.
+* Live policy/authority/real evidence and existing UX acceptance remain human-owned.
 
 ## Handoff
 
@@ -262,5 +272,6 @@ evidence: core323 (59 skips), API/web85 (1 skip), actual owned MSSQL61 (0 skips)
 configured static checks, actual manual closure/browser confirmation/reflow and
 rebuilt hardened installed-wheel image including HTTP human closure. Exact
 commands, results and stopped resources are in the changes record. Parent owns
-the one original independent Review and later gated git delivery. No Review,
-second critique, branch changes, commit, push or PR was performed here.
+the original independent Review result: Complete / Not accepted on source
+22c98267ae6da365d6a2d9fceed7113c8f4578ea. Separate correction routing is recorded;
+no second Review, self-Pass or remote delivery is authorized by passing tests.
