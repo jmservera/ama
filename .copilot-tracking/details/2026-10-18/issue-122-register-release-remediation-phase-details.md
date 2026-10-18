@@ -12,6 +12,22 @@ a86282c4badebc58eabbf9e441410d930a201ac2 before final validation. Preserve all
 original assessments/historical receipts, PR407 queue and PR406 recorder.
 RV-002 is not in this correction; no new critique or original Review.
 
+Current blocker: git ls-remote observed main
+ab0613f3336109ff9b96560a16758ee842232715 during integrated validation. The exact
+authorized base was integrated without conflict; do not follow moving main.
+Owner explicitly requires report/wait. P04-T04 publication and PR update paused;
+remote topic remains e00c521573501a4ed84dab7ec0ccf66ef57a7053. Only cleanup,
+evidence reconciliation and local persistence continue.
+
+P04-T01/T02 complete on exact authorized base; source guard and JSON matrix
+validated. P04-T03 results: focused 66/66, integrated host and installed nonroot
+151 run/133 pass/18 skips each, owned SQL 32/32, configured static gates pass.
+Coupled 547 entries retain one namespace import error (432 pass/114 skips);
+corrected resident-only namespace command 9 run/8 pass/one skip. Separate
+receipt/parity persistence pending; P04-T04 remains blocked. Original adverse
+Review not rerun or revised. Correction count ONE of maximum two; older cycles
+remain exhausted and unchanged. RV-002 remains outside this correction.
+
 <!-- rpi:phase id=P04 -->
 ## P04: Current correction ONE
 

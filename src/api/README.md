@@ -156,7 +156,12 @@ releases with no proposal reference. Missing, truncated, malformed or contradict
 records make production incomplete and offline verification invalid, even after
 the ordinary bundle digest is recomputed. Lifecycle checks allow repeated
 suspension and timestamp ties supported by the writer, but cannot authenticate
-wholesale consistent rewriting of unanchored history. Known-empty SQL evidence
+wholesale consistent rewriting of unanchored history. Event timestamps accept
+only integers and floats that pass floating-point finiteness validation, excluding
+booleans; conversion overflow, nonfinite values and nonnumeric values explicitly
+make producer evidence incomplete and offline verification invalid. This is not
+a calendar-date policy; finite negative, fractional and large numeric values
+retain their existing meaning. Known-empty SQL evidence
 and explicit unsupported JSON storage remain distinct from unavailable evidence.
 Audience-limited exports remain explicitly incomplete, never full ledger proof;
 externally held canonical heads are unchanged. Local synthetic proof is not

@@ -821,6 +821,68 @@ class OfflineTests(Base):
             self.assertFalse(produced["complete"])
             self.assertFalse(self.redigest(produced)["valid"])
 
+    def test_json_numeric_timestamps_fail_closed_without_conversion_errors(self) -> None:
+        part = self.service.export()
+        original = self.store.continuity_export(self.pm, part)
+        head = copy.deepcopy(original["ledger"]["head"])
+        self.assertTrue(continuity.verify_export(original, head)["valid"])
+        cases = (
+            (0, True),
+            (-1, True),
+            (1.25, True),
+            (-1.25, True),
+            (10**308, True),
+            (-(10**308), True),
+            (1.7976931348623157e308, True),
+            (-1.7976931348623157e308, True),
+            (10**400, False),
+            (-(10**400), False),
+            (True, False),
+            (False, False),
+            (None, False),
+            ("2000000000", False),
+            (float("nan"), False),
+            (float("inf"), False),
+            (-float("inf"), False),
+        )
+        problem = "invalid task-release event envelope"
+        for boundary in ("producer", "verifier"):
+            for at, valid in cases:
+                with self.subTest(boundary=boundary, at=at):
+                    source = copy.deepcopy(part if boundary == "producer" else original)
+                    source["task_releases"]["records"][0]["events"][0]["at"] = at
+                    source = json.loads(json.dumps(source))
+                    if boundary == "producer":
+                        bundle = self.store.continuity_export(self.pm, source)
+                        expected_head = copy.deepcopy(bundle["ledger"]["head"])
+                        self.assertEqual(bundle["complete"], valid, bundle["incomplete_reasons"])
+                        if not valid:
+                            self.assertIn(problem, bundle["incomplete_reasons"])
+                    else:
+                        bundle = source
+                        expected_head = head
+                        bundle["complete"] = True
+                        bundle["incomplete_reasons"] = []
+                        bundle["digest"] = continuity.sha(
+                            {k: v for k, v in bundle.items() if k != "digest"}
+                        )
+                    bundle = json.loads(json.dumps(bundle))
+                    check = continuity.verify_export(bundle, expected_head)
+                    self.assertEqual(check["valid"], valid, check)
+                    self.assertEqual(check["complete"], valid, check)
+                    if boundary == "verifier":
+                        self.assertEqual(bundle["ledger"], original["ledger"])
+                    self.assertEqual(bundle["ledger"]["head"], expected_head)
+                    self.assertFalse(
+                        any(
+                            "digest mismatch" in p or "externally held" in p
+                            for p in check["problems"]
+                        ),
+                        check,
+                    )
+                    if not valid:
+                        self.assertIn(problem, check["problems"])
+
     def test_release_source_absence_and_unsupported_are_not_full_evidence(self) -> None:
         part = self.service.export()
         missing = copy.deepcopy(part)

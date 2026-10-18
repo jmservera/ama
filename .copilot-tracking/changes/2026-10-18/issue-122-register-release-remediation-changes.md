@@ -27,6 +27,68 @@ and both exhausted historical correction cycles remain unchanged.
 New critique executed once, Complete / Revise; PC-001 through PC-005 accepted
 directly in plan/details. No second critique or original Review has run yet.
 
+## Current P04-T01 and P04-T02 Correction ONE Evidence
+
+Exact authorized rebase completed without conflicts at
+e188b47d2b8a583cdaf601caad038278a077f473 onto
+a86282c4badebc58eabbf9e441410d930a201ac2. No source conflict or manual README
+resolution was needed. Original assessments frozen before integration.
+
+New JSON numeric method initially ran red with four OverflowErrors and fifteen
+oracle failures: repeated exports append audit entries, so a head captured before
+later producer calls is not their external head. Corrected test captures each
+producer head separately; offline negatives retain the unchanged original bundle
+head and entire ledger. Corrected red run: one method, four OverflowErrors only
+(positive/negative 10**400 in producer and verifier). Both red outputs retained.
+
+Source adds only a narrow OverflowError guard around the existing exact-type
+and math.isfinite check, returning the existing explicit invalid-event problem.
+No date bounds, numeric coercion, lifecycle/source/privacy changes. Focused
+matrix has seventeen numeric/type cases at both boundaries, forced complete/
+recomputed digest offline, unchanged external head and canonical ledger.
+
+## Current P04-T03 Validation and Publication Blocker
+
+Exact focused host: 66 run/66 pass/zero skips. Integrated continuity, queue,
+recorder/progress and role selectors: 151 run/133 pass/18 opt-in skips. Hardened
+installed nonroot API image runs those same selectors: 151/133 pass/18 skips.
+Actual unique owned loopback SQL: 32 run/32 pass/zero skips, including the new
+JSON matrix inherited by MssqlOfflineTests. SQL and image are justified by the
+producer's store-backed envelope versus offline shared-code parity; neither
+claims normal SQL writers emit oversized integers. Configured core/API/agents
+Ruff/format/mypy all pass (124/57/23 source files). Image checker startup and
+negative controls pass; UID/GID10001, zero effective capabilities,
+NoNewPrivs=1. Installed continuity SHA-256 equals worktree
+4afcabd0cfbc495dc71d6b4869f42da5c8db500909c6aab129d20194586883ad.
+
+Coupled command: 547 runner entries, 432 pass/114 skips/one import error because
+test_resident_api requires src/api on the module path for tests.test_mvp. This
+is retained as a failed command, not reported green. Corrected independent
+resident command adds src/api and selects tests.test_resident_api:
+9 run/8 pass/one opt-in skip. Other 546 coupled entries had no failures.
+Expected injected recovery errors and absent synthetic law-store Unknown logs
+remain visible, not legal or operational acceptance.
+
+All 27 frozen original artifacts match e00c5215, including all 16 historical
+artifacts and the new original Review/critique. All 43 upstream paths match exact
+authorized a86282c4 except additive API README; recorder projection retains exact
+upstream plus only inherited two STAFF_GET kinds. Historical log body prefix and
+whole exact upstream log are preserved. No source conflict.
+
+Remote check during validation observed main
+ab0613f3336109ff9b96560a16758ee842232715. Owner explicitly required report/wait if
+main moved again. P04-T04 is BLOCKED: no second integration, push or PR metadata
+update. Remote topic still e00c521573501a4ed84dab7ec0ccf66ef57a7053; PR stays
+draft with original Not accepted and empty closing references. Local correction
+and separate receipt are persisted only, pending coordinator base direction
+and later full exact-head source/artifact independent review. Original
+adverse review remains immutable, no self-Pass or repeated Review/critique.
+
+SQL database/container cleanup completed; exact owned image tag removed.
+No private .env/ZF_DATA, live services, Azure/IAM/Graph/spend, issue/board
+writes or merge. Separate correction receipt and machine-readable parity record
+retain raw commands/results/hashes and both failed red runs.
+
 ## P01 Exact Integration
 
 Expected local and remote source head verified

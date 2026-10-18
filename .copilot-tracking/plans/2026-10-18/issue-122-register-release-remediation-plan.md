@@ -149,12 +149,17 @@ Exact commands/results retained in the changes record; failures preserved.
 Declared scope: P04 only, extending the completed original execution without
 repeating Research, critique or Review. No new task identity or self-acceptance.
 
+Current blocker: remote main moved during validation to
+ab0613f3336109ff9b96560a16758ee842232715. Authorized integration remains exact
+a86282c4badebc58eabbf9e441410d930a201ac2; no subsequent rebase or publication.
+Owner's explicit "main moves again report wait" condition is active.
+
 <!-- rpi:phase id=P04 -->
 ### [ ] P04: RV-001 correction ONE and authorized integration
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Freeze original hashes and integrate exact authorized main
+#### [x] P04-T01: Freeze original hashes and integrate exact authorized main
 <!-- rpi:task id=P04-T02 -->
-#### [ ] P04-T02: Conversion-safe numeric timestamp validation and JSON regressions
+#### [x] P04-T02: Conversion-safe numeric timestamp validation and JSON regressions
 <!-- rpi:task id=P04-T03 -->
 #### [ ] P04-T03: Integrated validation, parity and separate correction receipt
 <!-- rpi:task id=P04-T04 -->
@@ -170,6 +175,11 @@ configured checks; actual SQL/nonroot evidence if needed for numeric parity.
 Separate correction-one receipt records prior failures, exact commands/results,
 source candidate delta, integration parity and all immutable assessment hashes.
 Full source/artifact coordinator review remains pending after publication.
+Current validation on the authorized exact base: focused 66/66; integrated host
+and installed image 151 run/133 pass/18 skips each; owned SQL 32/32; configured
+static gates pass. Coupled command retained one test-namespace import error
+(432 pass/114 skips), corrected resident-only command 9 run/8 pass/one skip.
+Receipt persistence finishes P04-T03; P04-T04 remains blocked on main movement.
 
 ## Critique Disposition
 

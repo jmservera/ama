@@ -582,9 +582,13 @@ def lifecycle_problems(record):
         if not isinstance(event, dict):
             return ["invalid task-release event envelope"]
         eid, at, body = event.get("id"), event.get("at"), event.get("body")
+        try:
+            finite_at = type(at) in (int, float) and math.isfinite(at)
+        except OverflowError:
+            finite_at = False
         if (not isinstance(eid, str) or not eid or eid in ids
-                or event.get("release_id") != record["id"] or type(at) not in (int, float)
-                or not math.isfinite(at) or not isinstance(body, dict)):
+                or event.get("release_id") != record["id"]
+                or not finite_at or not isinstance(body, dict)):
             return ["invalid task-release event envelope"]
         ids.add(eid)
         kind = body.get("kind")
