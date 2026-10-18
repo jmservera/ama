@@ -211,13 +211,16 @@ f91353169756dc41ebbcca944bdd3f44f7c04b89, with an exact old-published-head lease
 Same task/session, no new critique/Review or source scope. Preserve all merged
 #401 inventory/traces and shared KB history; reconcile separately in
 .copilot-tracking/changes/2026-10-18/issue-153-chat-copy-integration.md.
-Original P01-P03 execution below remains historical. Integration is locally
+Original P01-P03 execution below remains historical. Integration is published at
+d7fe42a83ec57aab6929f39ada8358f7bdb476d6 on the exact base above and is
 complete: sole log conflict preserves both additions; index auto-merges both
 routes. Entire src and non-overlap candidate bytes/frozen records remain exact;
 184 inventory IDs/74 traces preserved. Fresh 100 focused/coupled tests and
 existing syntax/static/link/preservation checks pass. Exact-lease publication
-and PR body update are the remaining authorized operations, then coordinator
-complete exact-head review. No new original Review or source corrections.
+and PR body update already succeeded; that lease authorization is consumed.
+Coordinator reports the full integrated-head source/integration review passed.
+Only the same independent reviewer's metadata-delta follow-up remains after
+normal push of this synchronization. No new original Review or source corrections.
 
 Implementation evidence: .copilot-tracking/changes/2026-10-18/issue-153-chat-copy-changes.md.
 P01/P02 and P03-T01 complete. One original independent Review executed Complete,
@@ -228,6 +231,6 @@ ea3208fb6068a2293210f830c71c5eed50fe8be5. A final tracking-only reconciliation
 commit records publication and stopped session; exact final head is GitHub PR
 headRefOid and the coordinator handoff, avoiding a self-referential commit hash.
 No source correction or second Review. All plan markers complete.
-Owner-directed stop after publication; coordinator exact-head review and explicit
-moved-main integration authorization remain next.
+The original post-publication stop and integration-authorization handoff are
+historical; current next action is the metadata-delta follow-up described above.
 Adverse original critique remains Revise, not relabelled Pass.

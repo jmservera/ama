@@ -126,3 +126,29 @@ incompletes remain unresolved. Actual SQL Server parity is inapplicable to this
 docs-only integration and was not run; no Docker, SQL or app service was started
 for this continuation. Stop after publication for coordinator's independent
 complete exact-head review, without starting any follow-up implementation.
+
+## Publication metadata synchronization (2026-10-18)
+
+The publication procedure above records the historical integration boundary,
+not a pending action or reusable lease permission. Exact-lease publication
+succeeded at `d7fe42a83ec57aab6929f39ada8358f7bdb476d6` on base
+`f91353169756dc41ebbcca944bdd3f44f7c04b89`; PR #402 body was updated and its
+head/base verified. Coordinator subsequently reports independent complete
+28-path source/integration review passed, actual 100 tests/Chromium and 12 CI
+checks green. These are coordinator-reported results, not fresh executions here.
+
+This authorized delta changes only current publication/handoff descriptions in
+state, plan, matching details and this addendum. It removes stale pending-
+publication language; all original phase/history records remain unchanged.
+No source correction cycle or new RPI Review. Validate JSON, metadata diff,
+all seven source/test/public-document blobs against integrated published head
+and original critique/sole Review hashes. No repeated suite for metadata only.
+Normal commit/push only; no remaining old-lease authorization, rebase or force.
+Stop for the same independent reviewer's delta follow-up. Resident human review,
+comprehension, universal coverage and accessibility acceptance remain unmet.
+
+Metadata-delta validation passed: Python json.loads and completed/stopped state
+assertions; exact four-file allowlist; all seven candidate blobs identical to
+d7fe42a8 and five non-overlap hashes identical to the original manifest; both
+frozen record SHA-256 values above unchanged; `git diff --check` and descriptive
+diff inspection. No suite/browser/image rerun for this metadata-only delta.

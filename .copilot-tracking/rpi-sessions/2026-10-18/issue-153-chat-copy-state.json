@@ -16,9 +16,9 @@
   },
   "confirmed_decisions": [
     {
-      "decision": "Authorized integration locally completed on exact base f91353169756dc41ebbcca944bdd3f44f7c04b89. Sole log conflict retains both entries; 184 inventory IDs/74 traces and frozen records preserved. Fresh 100 tests/static/parity checks passed; no new Review.",
-      "status": "integration-complete-publication-prepared",
-      "evidence": ".copilot-tracking/changes/2026-10-18/issue-153-chat-copy-integration.md and integration-parity.json. PR402 body records actual publication head after exact-lease push."
+      "decision": "Authorized integration published at d7fe42a83ec57aab6929f39ada8358f7bdb476d6 on exact base f91353169756dc41ebbcca944bdd3f44f7c04b89. Sole log conflict retains both entries; 184 inventory IDs/74 traces and frozen records preserved. Fresh 100 tests/static/parity checks passed; no new Review.",
+      "status": "integrated-published",
+      "evidence": ".copilot-tracking/changes/2026-10-18/issue-153-chat-copy-integration.md and integration-parity.json; PR402 publication verified. Coordinator reports complete exact-head source/integration review passed; metadata delta follow-up remains."
     },
     {
       "decision": "Coordinator authorizes same-session integration only: rebase onto f91353169756dc41ebbcca944bdd3f44f7c04b89 and publish with exact lease against 003a055118e71ea54fdcc2d9218e376acca2f6e3. No new Review/source expansion.",
@@ -64,10 +64,10 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Conclude integration-only execution; publish once with exact old-head lease, update PR402 actual evidence, then stop for coordinator complete exact-head review."
+    "action": "Await the same independent reviewer's metadata-only delta follow-up after normal push. Integration at d7fe42a83ec57aab6929f39ada8358f7bdb476d6 on base f91353169756dc41ebbcca944bdd3f44f7c04b89 is already published; no pending integration publication or remaining old-lease permission."
   },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator independent complete exact-head review", "rationale": "Integration explicitly authorized and completed locally; no new original Review or acceptance claimed.", "evidence": "Continuation request and integration receipt; exact published head in PR402 body after lease push."},
+    {"rank": 1, "task": "Same independent reviewer metadata-only delta follow-up", "rationale": "Coordinator reports full integrated-head source review passed; only publication/handoff synchronization changed.", "evidence": "Coordinator continuation request 2026-10-18 and integration receipt metadata synchronization addendum."},
     {"rank": 2, "task": "Named human review of exact resident wording before use", "rationale": "Required issue criterion remains unmet; synthetic checks cannot substitute.", "evidence": "content-standard.md Human review; original Review human gate."},
     {"rank": 3, "task": "Assess RV-005 textarea contrast incompletes", "rationale": "Eight actual incomplete states require specific engineering assessment.", "evidence": "Original Review RV-005 and browser.json."},
     {"rank": 4, "task": "Triage inherited form/draft/list follow-ups RV-001 through RV-004", "rationale": "Outside copy-only scope; do not consume correction cycles or change reviewed source.", "evidence": "Original Review findings; plan Follow-Up Items."},

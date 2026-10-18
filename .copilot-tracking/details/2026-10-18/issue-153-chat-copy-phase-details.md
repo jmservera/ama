@@ -11,8 +11,11 @@ Integration executed onto exact target; sole append-only log conflict resolved
 by retaining upstream then original #153 entry. Five non-overlap files and all
 src bytes unchanged; #401 synthesis/tracking preserved. Fresh 100 tests,
 syntax/static checks and inventory/trace/link assertions passed. Historical
-browser/image receipts are not fresh execution. Await exact-lease publication
-and coordinator final-head review; no rerun of original Review.
+browser/image receipts are not fresh execution. Integration was published at
+d7fe42a83ec57aab6929f39ada8358f7bdb476d6; PR #402 evidence was updated and the
+old-head lease is consumed. Coordinator reports full source/integration review
+passed. Await the same reviewer's metadata-only delta follow-up after normal
+push; no pending integration publication or rerun of original Review.
 
 Task ID: 153. Slug: issue-153-chat-copy. Date: 2026-10-18.
 Plan: .copilot-tracking/plans/2026-10-18/issue-153-chat-copy-plan.md.
