@@ -6,11 +6,10 @@ ms.date: 2026-10-18
 
 ## Task and Initial Direction
 
-Current direction supersedes the historical stopped handoff below: owner resumed
-SAME task for P04 correction ONE of maximum two, RV-001 only. Integrate exact
-a86282c4badebc58eabbf9e441410d930a201ac2 before final validation. Preserve all
-original assessments/historical receipts, PR407 queue and PR406 recorder.
-RV-002 is not in this correction; no new critique or original Review.
+Correction ONE of maximum two is already implemented for RV-001 only.
+It previously integrated exact a86282c4 and stopped when main moved.
+The following owner integration-only authorization supersedes that stop.
+RV-002 remains separate; original assessments/historical receipts unchanged.
 
 Current owner direction resumes P04-T04 integration/publication ONLY from
 expected clean local 30e4602511c9ce907b8574d1bce4939bd1792121. Rebase exact
@@ -21,6 +20,18 @@ continuity/timecapture/static checks only unless integration raises a concern.
 Publish pinned integration even if main later moves; report without reintegration.
 Unexpected topic movement stops; only original exact e00c5215 lease authorized.
 No new source correction, critique or original Review.
+
+Fresh integration completed with no conflicts at
+a01b4152fa81b3e0f11cab8fa909b4ea399ef148 on exact pinned ab0613f3. Nine-path
+owned normalized source diff and stable patch-id
+884ee570d0c338874f75d2126bf609d813955516 match pre-rebase 30e46025 exactly;
+all other 278 src paths are exact upstream. Both README sections and log prefix
+preserved. All 40 prior immutable artifact files, including original 27, match.
+Fresh tests: OfflineTests 12, two HTTP register/mutation controls, timecapture 23,
+total 37/37 with no skips. Configured core/API Ruff/format/mypy pass.
+No production/persistence intent change; broad image/SQL/coupled runs are not
+repeated and remain historical. Separate final integration receipt records this
+boundary; current next action is exact-lease publication, still pending.
 
 P04-T01/T02 complete on exact authorized base; source guard and JSON matrix
 validated. P04-T03 results: focused 66/66, integrated host and installed nonroot
@@ -40,7 +51,8 @@ remain exhausted and unchanged. RV-002 remains outside this correction.
 P04-T01 freezes original hashes and source at e00c521573501a4ed84dab7ec0ccf66ef57a7053,
 then rebases prior base 9c648b20 onto exact a86282c4. Compare every upstream path
 and preserve both additive README sections and append-only log body prefix.
-Stop on irreconcilable source conflicts or a later main movement.
+That completed iteration stopped on main movement. Current P04-T04 direction
+publishes pinned ab0613f3 even if main later moves; do not silently reintegrate.
 
 P04-T02 retains exact int/float and bool rejection; finite float-conversion
 overflow becomes the existing invalid-event problem, not an exception. No date
@@ -64,14 +76,14 @@ No unresolved user decision. One independent critique Complete / Revise; PC-001
 through PC-005 directly accepted in plan and specified below. All historical
 artifacts are frozen by SHA-256, including the prior Not accepted assessment.
 
-Current reconciliation: P01 and P02 complete; P03-T01 complete with focused host
+Historical pre-original-Review reconciliation: P01 and P02 complete; P03-T01 complete with focused host
 65/65, coupled 546/432 pass/114 skips, actual SQL 31/31 plus final two oracles,
 installed hardened image 65/65 and configured static gates. Six methods added,
 none removed. SQL/image resources removed. No material divergence or unresolved
 source blocker. P03-T02 awaits the ONE original Review; P03-T03 is the authorized
 post-Review publication action. Follow-ups remain outside bounded acceptance.
 
-Post-Review reconciliation: P03-T02 now executed once, Complete / Not accepted.
+Historical post-Review reconciliation: P03-T02 executed once, Complete / Not accepted.
 RV-001 Medium is an unhandled oversized integer timestamp, routed to later
 coordinator-selected implementation; RV-002 Low is separate inherited malformed
 metadata hardening. Neither is fixed here. P03-T03 publishes the adverse original
@@ -82,7 +94,8 @@ at 916c1b0800d2a9b8d092e5eded2f996d75a73b9b and verified draft/open PR 398 with
 empty closing references. Final receipt/state is a documentation-only normal
 push, not a source correction or re-review. All 16 historical issue-122 artifacts
 were checked against original 1144647c blobs, not just the ten recent artifacts.
-STOP for full coordinator independent review with RV-001 still open.
+At that historical publication RV-001 remained unresolved. It was subsequently
+implemented once under owner authorization, without changing the original Review.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Exact integration and adverse controls

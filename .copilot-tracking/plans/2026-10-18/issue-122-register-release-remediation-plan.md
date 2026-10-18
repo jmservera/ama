@@ -36,21 +36,24 @@ and adjacent coordinator-evidence.json.
 * Current owner-authorized continuation: SAME task, correction ONE of maximum
   two, RV-001 only. Original Review Complete / Not accepted and single critique
   remain immutable. RV-002 remains a distinct non-blocking follow-up.
-* Integrate exact main a86282c4badebc58eabbf9e441410d930a201ac2 from prior base
-  9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; preserve PR407 queue and PR406
-  recorder production/tests/contracts. Retain both additive README sections and
-  log body prefix; stop irreconcilable source conflicts. Publish ONLY lease
+* Current integration-only authorization: rebase exact prior a86282c4 onto
+  ab0613f3336109ff9b96560a16758ee842232715. Preserve PR408 timecapture source/
+  tests, PR407 queue and PR406 recorder production/tests/contracts. Retain both
+  additive README sections and log body prefix; stop irreconcilable source
+  conflicts. Publish ONLY lease
   refs/heads/fix/continuity-epoch-export-122:e00c521573501a4ed84dab7ec0ccf66ef57a7053.
-  Later receipt pushes are normal. If main moves again, report and wait.
-* New full bounded RPI loop authorized for both findings; exactly one independent
+  Later receipt pushes are normal. Publish this pinned integration even if main
+  moves again; report without reintegrating. Unexpected topic advancement stops.
+* Completed original full bounded RPI loop authorized for both findings; exactly one independent
   final-candidate critique and one original Review. At most two later corrections
-  only after coordinator review; no such correction is pre-authorized here.
+  only after coordinator review; correction ONE subsequently authorized and
+  implemented. Current continuation is not another source correction.
 * Preserve all historical original assessments/correction receipts byte-for-byte.
-* Before implementation rebase owned branch onto exact fetched
+* Completed original integration before implementation rebased onto exact fetched
   9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; stop unexpected head/source conflicts.
   Only additive documentation conflicts may be reconciled, preserving both.
-* Publish ONLY this branch with exact force-with-lease old head
-  1144647c8d539716e8ddddf9daa47407c9bd00ac; later corrections normal push.
+* Original historical publication used exact old head 1144647c8d539716e8ddddf9daa47407c9bd00ac;
+  current publication uses only the e00c5215 lease above.
 * No private data, support, secrets, Azure/IAM/Graph/spend/model calls; pip only
   src packages. No web, server, queue or procurement production changes.
 * Keep draft, use only Refs #122, verify no closing references, leave whole issue
@@ -190,6 +193,14 @@ export/release/register/numeric and timecapture suites plus configured core/API
 static gates; no broad SQL/image/coupled rerun absent a new source concern.
 Separate final integration receipt, exact lease publication, draft PR398 update,
 empty closing refs and STOP for full source/artifact coordinator review.
+Integration completed without conflicts at
+a01b4152fa81b3e0f11cab8fa909b4ea399ef148. Complete normalized nine-path owned
+source patch and stable patch ID 884ee570d0c338874f75d2126bf609d813955516
+are unchanged; all other 278 src paths match pinned upstream exactly.
+All 40 prior artifacts, including the original 27, remain byte-identical.
+Fresh minimal run: 37/37, zero skips (12 offline, two register/mutation, 23
+timecapture); configured core/API Ruff/format/mypy pass. No integration source/
+persistence intent change, so no broad SQL/image/coupled repetition.
 
 ## Critique Disposition
 
@@ -226,6 +237,7 @@ Implementation ready after these direct dispositions. Executive summary and
 scope unchanged; exact integration remains the first implementation prerequisite.
 Current execution completed the one original Review, Complete / Not accepted,
 and authorized exact-lease publication at 916c1b0800d2a9b8d092e5eded2f996d75a73b9b.
-Final documentation-only receipt uses normal push; no source edits after Review.
-Owner has now explicitly resumed SAME task for P04 correction ONE only.
-Coordinator alone decides independent acceptance; STOP again after publication.
+Historical receipt used normal push; correction ONE later changed source under
+explicit authorization. Current integration-only continuation retains that exact
+source patch and original adverse Review. Coordinator alone decides independent
+acceptance; STOP again after pinned publication.

@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Pinned integration and minimal validation executed without source change/conflict. Complete normalized owned source patch unchanged; exact upstream source/test and immutable artifact parity established.",
+      "status": "ready-for-authorized-publication-not-independent-acceptance",
+      "evidence": "Integrated a01b4152fa81b3e0f11cab8fa909b4ea399ef148 on ab0613f3336109ff9b96560a16758ee842232715; stable patch-id 884ee570d0c338874f75d2126bf609d813955516 across nine owned src paths; 278 other upstream src paths exact, 40 prior artifacts including original 27 unchanged. Fresh minimal 37/37, core/API static pass; prior SQL/image/coupled evidence historical."
+    },
+    {
       "decision": "Owner cleared main-movement blocker for integration/publication ONLY of SAME correction ONE. Rebase expected local 30e4602511c9ce907b8574d1bce4939bd1792121 from exact a86282c4 onto exact ab0613f3336109ff9b96560a16758ee842232715. Publish pinned integration even if main later moves, reporting rather than reintegrating. Unexpected topic advancement stops; exact original e00c5215 lease only.",
       "status": "authorized",
       "evidence": "Owner 2026-10-18T09:40 continuation; local clean expected head, fetched exact origin/main ab0613f3 and topic e00c5215 verified. Preserve exact PR408 timecapture source/tests, queue/recorder, owned source patch, 27 frozen originals and original adverse Review. No new source correction, critique or original Review."
@@ -65,7 +70,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P04-T04 integration/publication ONLY active: freeze source/evidence, rebase onto pinned ab0613f3, minimal fresh continuity/timecapture/static validation and separate final integration receipt, exact e00c5215 lease publication then STOP for full independent coordinator review. No new source correction/critique/Review."
+    "action": "P04-T04 pinned integration/parity/minimal checks complete. Persist separate final integration receipt and exact e00c5215 lease-publish only this branch; update draft PR398, verify refs/empty closing references, then STOP for full independent coordinator review. Report later main movement without reintegration; stop unexpected topic advancement."
   },
   "prioritized_follow_ups": [
     {

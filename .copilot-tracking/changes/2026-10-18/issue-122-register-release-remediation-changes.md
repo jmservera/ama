@@ -28,6 +28,23 @@ current metadata only; keep draft, empty closing refs and STOP for independent
 coordinator review. Both complete /tmp worker logs were read; immutable copies
 and hashes will be preserved in the session files and final receipt.
 
+Integration completed without conflicts at
+a01b4152fa81b3e0f11cab8fa909b4ea399ef148 onto pinned ab0613f3.
+Complete normalized nine-file owned src patch is identical (stable patch-id
+884ee570d0c338874f75d2126bf609d813955516), all 278 other src files match new
+upstream bytes and all 40 prior immutable artifacts (including original 27)
+match pre-rebase hashes. PR408 timecapture source/tests exact; both README
+contributions and append-only log body prefix preserved without manual edits.
+
+Fresh minimal tests run once: 37/37, zero skips (OfflineTests 12 including numeric
+and all-retained-release/source controls; two HTTP register/mutation privacy
+controls; timecapture entire suite 23). Configured core/API Ruff/format/mypy
+all pass (124/57 mypy files). Full raw output in separate final-integration logs.
+No source/persistence intent changed during integration, so broad historical
+SQL/image/coupled suites were deliberately not repeated. Previous command
+failures and corrections remain in original logs and receipts, not relabelled.
+Exact lease publication and draft PR metadata update remain the next action.
+
 Current owner continuation: SAME task, P04 correction ONE of maximum two,
 RV-001 only. This supersedes historical stopped/zero-correction wording below
 without rewriting its evidence. Original Review/critique and exhausted older
