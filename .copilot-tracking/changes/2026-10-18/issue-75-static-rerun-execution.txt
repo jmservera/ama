@@ -1,0 +1,29 @@
+Mode=static-rerun; frozen base=9d625a09e34491ecf9fd27ffc7d59e67c2373b29
+Allowlisted environment; local docs/scanner/password auth; no ambient ZF/AI/Azure settings.
+Workspace scratch=/home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch
+
+$ (.) /home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch/venv/bin/python /home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py
+Cannot migrate broken.pptx: File is not a zip file
+.........................
+----------------------------------------------------------------------
+Ran 25 tests in 0.471s
+
+OK
+EXIT=0
+
+$ (src/api) ruff check .
+All checks passed!
+EXIT=0
+
+$ (src/api) ruff format --check .
+26 files already formatted
+EXIT=0
+
+$ (src/api) mypy
+tests/test_continuity_epoch_export.py:13: error: Unused "type: ignore" comment  [unused-ignore]
+tests/test_continuity_epoch_export.py:13: error: Skipping analyzing "release_support": module is installed, but missing library stubs or py.typed marker  [import-untyped]
+tests/test_continuity_epoch_export.py:13: note: Error code "import-untyped" not covered by "type: ignore[import-not-found]" comment
+tests/test_continuity_epoch_export.py:13: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+Found 2 errors in 1 file (checked 58 source files)
+EXIT=1
+Result codes=[0, 0, 0, 1]
