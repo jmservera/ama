@@ -25,6 +25,13 @@ coordinator-selected implementation; RV-002 Low is separate inherited malformed
 metadata hardening. Neither is fixed here. P03-T03 publishes the adverse original
 assessment and stops. No second Review, source correction or self-Pass.
 
+Publication reconciliation: P03-T03 completed exact authorized lease publication
+at 916c1b0800d2a9b8d092e5eded2f996d75a73b9b and verified draft/open PR 398 with
+empty closing references. Final receipt/state is a documentation-only normal
+push, not a source correction or re-review. All 16 historical issue-122 artifacts
+were checked against original 1144647c blobs, not just the ten recent artifacts.
+STOP for full coordinator independent review with RV-001 still open.
+
 <!-- rpi:phase id=P01 -->
 ## P01: Exact integration and adverse controls
 

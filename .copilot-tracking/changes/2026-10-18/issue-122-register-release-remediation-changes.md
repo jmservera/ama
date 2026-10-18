@@ -239,3 +239,30 @@ Not accepted and all historical receipts remain byte-identical.
 Authorized next action: commit this assessment/state and publish only the owned
 branch with the exact expected-head lease, update PR 398 while retaining draft,
 Refs-only/empty closing references, and STOP for full coordinator review.
+
+## Publication and Owner-Requested STOP
+
+Authorized exact-lease push actually completed:
+1144647c8d539716e8ddddf9daa47407c9bd00ac ->
+916c1b0800d2a9b8d092e5eded2f996d75a73b9b. Fresh remote check immediately before
+push matched expected old head; no alternative lease or branch was used.
+PR 398 body updated with owner decision, new task/history separation,
+exact source/base/boundary, commands/results, adverse new original Review and
+unmet gates. Its ENTIRE previous body is preserved under an explicitly historical
+heading. Actual live read: OPEN, draft=true, main-based, head=916c1b08,
+closingIssuesReferences=[].
+
+Final receipt/state is documentation-only, published by NORMAL push. No source
+change, correction, repeated assessment, self-approval, ready flag, issue/board
+mutation, other-branch/main write or merge follows the original Review.
+Final exact head is the commit containing this receipt (discoverable in Git/PR),
+not a fabricated self-referential hash. All 34 full-PR changed paths are in
+remediation-boundary.json; all 16 historical issue-122 artifacts remain equal to
+original-head blobs. Both original assessment hashes and new independent
+assessment hashes are in that manifest/PR. Final acceptance remains blocked by
+RV-001 and coordinator review. New task correction count stays ZERO.
+
+The bounded automatic loop is complete and the session stops as the owner
+explicitly directed. This is completion of execution/publication, NOT acceptance
+of the implementation or the whole issue. Coordinator must review the final
+published head before deciding a later correction; no follow-up starts here.

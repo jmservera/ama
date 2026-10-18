@@ -117,13 +117,13 @@ Any failure/skip is reported as such; local evidence is not Azure acceptance.
 #### [x] P02-T02: Validate every retained release and preserve reference checks
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validate, reconcile and review once
+### [x] P03: Validate, reconcile and review once
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Execute local, SQL, image and static checks; update guide
 <!-- rpi:task id=P03-T02 -->
 #### [x] P03-T02: Reconcile evidence and obtain one original independent Review
 <!-- rpi:task id=P03-T03 -->
-#### [ ] P03-T03: Commit/publish exact lease and stop for coordinator review
+#### [x] P03-T03: Commit/publish exact lease and stop for coordinator review
 
 ## Test Ownership Lock
 
@@ -169,6 +169,8 @@ Details: .copilot-tracking/details/2026-10-18/issue-122-register-release-remedia
 Changes target: .copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md.
 Implementation ready after these direct dispositions. Executive summary and
 scope unchanged; exact integration remains the first implementation prerequisite.
-Current execution has reached the one original Review, Complete / Not accepted
-with the routed findings above. P03-T03 publication remains; no source edits
-after Review. Coordinator alone decides later corrections and acceptance.
+Current execution completed the one original Review, Complete / Not accepted,
+and authorized exact-lease publication at 916c1b0800d2a9b8d092e5eded2f996d75a73b9b.
+Final documentation-only receipt uses normal push; no source edits after Review.
+Coordinator alone decides later corrections and acceptance. Owner-requested STOP,
+not an automatically started child loop or a claim of source acceptance.
