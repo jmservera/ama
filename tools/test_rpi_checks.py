@@ -1,0 +1,658 @@
+"""Focused orchestration failures; application behavior stays in existing suites."""
+
+from __future__ import annotations
+
+import copy
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import unittest
+import venv
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+from unittest.mock import Mock, patch
+
+SPEC = importlib.util.spec_from_file_location(
+    "rpi_checks", Path(__file__).with_name("rpi-checks.py")
+)
+assert SPEC is not None and SPEC.loader is not None
+gate = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(gate)
+
+
+class GateTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory(prefix="rpi-contract-")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name) / "repo"
+        self.root.mkdir()
+        self.out = Path(self.temp.name) / "out"
+        self.out.mkdir()
+        for name in (
+            "tools/rpi-checks.py",
+            "src/check-container.py",
+            "infra/main.bicep",
+            *[f".github/workflows/{name}" for name in gate.WORKFLOWS],
+        ):
+            path = self.root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("# fixture\n")
+        self.git("init", "-q")
+        self.git("add", ".")
+        self.git(
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.test",
+            "commit",
+            "-qm",
+            "fixture",
+        )
+        self.base = self.git("rev-parse", "HEAD")
+        self.git("update-ref", "refs/remotes/origin/main", self.base)
+        self.git("switch", "-qc", "feat/receipt-fixture")
+
+    def git(self, *args: str) -> str:
+        return subprocess.check_output(
+            ["git", "-C", str(self.root), *args], text=True, stderr=subprocess.PIPE
+        ).strip()
+
+    def runner(self) -> Any:
+        return gate.Runner(self.root, self.out, self.base, [])
+
+    def test_nonzero_command_blocks(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        with self.assertRaises(gate.GateError):
+            runner.command([sys.executable, "-c", "raise SystemExit(7)"])
+        self.assertEqual(runner.rows[0]["exit_code"], 7)
+
+    def test_missing_tools_and_dependencies_block(self) -> None:
+        with (
+            patch.object(gate.shutil, "which", return_value=None),
+            self.assertRaises(gate.GateError),
+        ):
+            gate.tool_identity()
+        self.assertIn("shellcheck", gate.TOOLS)
+        runner = self.runner()
+        runner.snapshot = self.root
+        with (
+            patch.object(
+                gate.shutil,
+                "which",
+                side_effect=lambda name: None if name == "shellcheck" else sys.executable,
+            ),
+            patch.object(runner, "command") as command,
+        ):
+            with self.assertRaisesRegex(gate.GateError, "Missing required tool: shellcheck"):
+                gate.tool_identity()
+            runner.preflight()
+            command.assert_not_called()
+        self.assertEqual(runner.failures, ["preflight: Missing required tool: shellcheck"])
+        binary = self.out / "shellcheck"
+        binary.write_bytes(b"original tool identity")
+        with (
+            patch.object(
+                gate.shutil,
+                "which",
+                side_effect=lambda name: str(binary) if name == "shellcheck" else sys.executable,
+            ),
+            patch.object(gate.subprocess, "check_output", return_value="fixture-docker\n"),
+        ):
+            before = gate.tool_identity()
+            binary.write_bytes(b"changed tool identity")
+            after = gate.tool_identity()
+        self.assertNotEqual(before["shellcheck"], after["shellcheck"])
+        self.assertEqual(
+            {name: value for name, value in before.items() if name != "shellcheck"},
+            {name: value for name, value in after.items() if name != "shellcheck"},
+        )
+        for argv in (
+            ["/nonexistent/rpi-binary"],
+            [sys.executable, "-c", "import absent_rpi_package"],
+        ):
+            with self.subTest(argv=argv), self.assertRaises(gate.GateError):
+                runner.command(argv)
+
+    def test_timeout_blocks(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        with self.assertRaises(gate.GateError):
+            runner.command([sys.executable, "-c", "import time; time.sleep(20)"], timeout=1)
+        self.assertEqual(runner.rows[-1]["exit_code"], 124)
+
+    def test_unexpected_skip_blocks_but_declared_discovery_skip_is_recorded(self) -> None:
+        text = (
+            "test_x (test_x.SQL.test_x) ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'\n"
+            "Ran 1 test in 0.1s\n\nOK (skipped=1)\n"
+        )
+        self.assertEqual(len(gate.check_skips(text)["skips"]), 1)
+        for value, integration in (
+            (text, True),
+            (text.replace("needs a SQL Server (ZF_TEST_MSSQL=1)", "missing tool"), False),
+            (text.replace("skipped=1", "skipped=2"), False),
+        ):
+            with (
+                self.subTest(value=value, integration=integration),
+                self.assertRaises(gate.GateError),
+            ):
+                gate.check_skips(value, integration=integration)
+
+    def test_commit_identity_change_invalidates(self) -> None:
+        before = gate.clean_identity(self.root, self.base)
+        self.git(
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.test",
+            "commit",
+            "--allow-empty",
+            "-qm",
+            "correction",
+        )
+        after = gate.clean_identity(self.root, self.base)
+        self.assertNotEqual(before, after)
+
+    def test_base_movement_invalidates(self) -> None:
+        self.git(
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.test",
+            "commit",
+            "--allow-empty",
+            "-qm",
+            "main moved",
+        )
+        self.git("update-ref", "refs/remotes/origin/main", "HEAD")
+        with self.assertRaises(gate.GateError):
+            gate.clean_identity(self.root, self.base)
+
+    def test_dirty_tracked_untracked_and_ignored_inputs_block(self) -> None:
+        for name in (
+            "module.py",
+            "test_extra.py",
+            "pyproject.toml",
+            ".ignored.py",
+            "src/check-container.py",
+        ):
+            with self.subTest(name=name):
+                path = self.root / name
+                original = path.read_bytes() if path.exists() else None
+                path.write_text("uncommitted\n")
+                if name.startswith(".ignored"):
+                    (self.root / ".git/info/exclude").write_text(".ignored.py\n")
+                with self.assertRaises(gate.GateError):
+                    gate.clean_identity(self.root, self.base)
+                if original is None:
+                    path.unlink()
+                else:
+                    path.write_bytes(original)
+
+    def test_unique_resources_and_sql_ownership(self) -> None:
+        first = self.runner()
+        other = self.out / "other"
+        other.mkdir()
+        second = gate.Runner(self.root, other, self.base, [])
+        self.assertNotEqual(first.token, second.token)
+        document: dict[str, Any] = {
+            "Id": "a" * 64,
+            "State": {"Running": True},
+            "Config": {"Labels": {"ama.rpi.owner": first.token}},
+            "NetworkSettings": {
+                "Ports": {"1433/tcp": [{"HostIp": "127.0.0.1", "HostPort": "25432"}]}
+            },
+        }
+        self.assertEqual(gate.owned_sql(document, "a" * 64, first.token), "25432")
+        for owner, container in ((second.token, "a" * 64), (first.token, "b" * 64)):
+            with self.assertRaises(gate.GateError):
+                gate.owned_sql(document, container, owner)
+        document["NetworkSettings"]["Ports"]["1433/tcp"][0]["HostIp"] = "0.0.0.0"
+        with self.assertRaises(gate.GateError):
+            gate.owned_sql(document, "a" * 64, first.token)
+        real_open = os.open
+        lock_paths = []
+
+        def open_lock(path: Path, flags: int, mode: int) -> int:
+            lock_paths.append(path)
+            return real_open(self.out / "owned-host-lock", flags, mode)
+
+        for directory in ("/caller-one/scratch", "/caller-two/scratch"):
+            with (
+                patch.dict(os.environ, {"TMPDIR": directory, "TEMP": directory, "TMP": directory}),
+                patch.object(gate.os, "open", side_effect=open_lock),
+                gate.heavy_lock(1),
+            ):
+                pass
+        self.assertEqual(lock_paths, [Path("/tmp/ama-rpi-heavy.lock")] * 2)
+
+    def test_interruption_cleanup_only_removes_owned_container(self) -> None:
+        runner = self.runner()
+        runner.containers.add("a" * 64)
+        document = {"Id": "a" * 64, "Config": {"Labels": {"ama.rpi.owner": runner.token}}}
+        completed = subprocess.CompletedProcess([], 0, json.dumps([document]), "")
+        with patch.object(gate.subprocess, "run", return_value=completed) as run:
+            runner.cleanup()
+        self.assertEqual(run.call_args_list[-1].args[0], ["docker", "rm", "-f", "a" * 64])
+        runner.containers.add("b" * 64)
+        with (
+            patch.object(gate.subprocess, "run", return_value=completed),
+            self.assertRaises(gate.GateError),
+        ):
+            runner.cleanup()
+        real_run = gate.subprocess.run
+        for retry in (False, True):
+            with self.subTest(retry=retry):
+                output = self.out / f"cancel-{retry}"
+                output.mkdir()
+                cancelled = gate.Runner(self.root, output, self.base, [])
+                child = Mock(pid=987654321)
+                child.communicate.side_effect = [
+                    KeyboardInterrupt("Interrupted by signal 15"),
+                    ("owned child stopped\n", None),
+                ]
+                metadata = {
+                    "Id": "c" * 64,
+                    "Config": {"Labels": {"ama.rpi.owner": cancelled.token}},
+                }
+                docker_commands: list[list[str]] = []
+
+                def owned_run(
+                    argv: list[str],
+                    *,
+                    metadata: dict[str, Any] = metadata,
+                    docker_commands: list[list[str]] = docker_commands,
+                    **kwargs: Any,
+                ) -> Any:
+                    if argv[0] != "docker":
+                        return real_run(argv, **kwargs)
+                    docker_commands.append(argv)
+                    return subprocess.CompletedProcess(argv, 0, json.dumps([metadata]), "")
+
+                def interrupt(
+                    cancelled: Any = cancelled, child: Any = child, retry: bool = retry
+                ) -> None:
+                    with (
+                        patch.object(gate.subprocess, "Popen", return_value=child),
+                        patch.object(gate.os, "killpg") as killpg,
+                        cancelled.gate("mssql"),
+                    ):
+                        cancelled.containers.add("c" * 64)
+                        try:
+                            cancelled.command(["fixture-child"], retry=retry)
+                        finally:
+                            killpg.assert_called_once_with(child.pid, gate.signal.SIGINT)
+                        self.fail("Cancellation continued to the next command")
+
+                with (
+                    patch.object(cancelled, "preflight", side_effect=interrupt),
+                    patch.object(cancelled, "projects") as projects,
+                    patch.object(cancelled, "namespace_static_infra") as later,
+                    patch.object(gate, "tool_identity", return_value={}),
+                    patch.object(gate.subprocess, "run", side_effect=owned_run),
+                    self.assertRaisesRegex(gate.GateError, "Interrupted by signal 15"),
+                ):
+                    cancelled.run()
+                projects.assert_not_called()
+                later.assert_not_called()
+                self.assertEqual(
+                    docker_commands,
+                    [["docker", "inspect", "c" * 64], ["docker", "rm", "-f", "c" * 64]],
+                )
+                receipt = json.loads((output / "receipt.json").read_text())
+                self.assertEqual(receipt["status"], "failed")
+                self.assertEqual(receipt["groups"], [])
+                self.assertEqual(len(receipt["commands"]), 1)
+                row = receipt["commands"][0]
+                self.assertEqual(row["exit_code"], 130)
+                self.assertTrue(row["interrupted"])
+                self.assertNotIn("expected_probe_failure", row)
+                self.assertFalse(cancelled.snapshot.exists())
+                self.assertFalse(cancelled.containers)
+
+    def test_tampered_or_failed_receipt_refuses_without_executing_content(self) -> None:
+        path = self.out / "receipt.json"
+        gate.atomic_json(path, {"status": "passed", "argv": ["do-not-execute"]})
+        (self.out / "receipt.sha256").write_text("wrong\n")
+        with patch.object(gate.subprocess, "run") as run, self.assertRaises(gate.GateError):
+            gate.verify(self.root, path, self.base)
+        run.assert_not_called()
+        gate.atomic_json(path, {"schema": 3, "status": "failed"})
+        (self.out / "receipt.sha256").write_text(gate.digest(path))
+        with self.assertRaises(gate.GateError):
+            gate.verify(self.root, path, self.base)
+        for name in (*gate.PROJECTS, "namespace"):
+            environment = self.out / "venvs" / name
+            venv.EnvBuilder(with_pip=False, symlinks=True).create(environment)
+            site = environment / "lib/python3.12/site-packages"
+            distribution = site / "fixture-1.0.dist-info"
+            distribution.mkdir()
+            (distribution / "METADATA").write_text("Name: fixture\nVersion: 1.0\n")
+            (distribution / "direct_url.json").write_text('{"url":"file:///fixture"}\n')
+            (site / "fixture.pth").write_text("# inert fixture\n")
+        receipt = {
+            "schema": 3,
+            "status": "passed",
+            "identity": gate.clean_identity(self.root, self.base),
+            "tools": {"shellcheck": {"sha256": "e" * 64}},
+            "environments": gate.environment_identity(self.out),
+            "extras": [],
+            "groups": gate.required_groups([]),
+            "owner": "a" * 24,
+            "sql": {"container": "b" * 64, "port": "25432"},
+            "commands": [],
+            "files": {
+                "axe-4.10.3.min.js": "fixture",
+                "regulatory-ux-results.json": "fixture",
+                "workflow-coverage.json": "fixture",
+                "browser-bytecode-policy.pth": "fixture",
+                "snapshot-inputs.log": "fixture",
+                **{f"{p}-{s}.json": "fixture" for p in gate.IMAGES for s in ("gate", "all")},
+                **{f"{p}.spdx.json": "fixture" for p in gate.IMAGES},
+            },
+            "trivy_database": {},
+            "images": {
+                "mssql": "sha256:" + "c" * 64,
+                **{
+                    name: {
+                        "id": "sha256:" + "d" * 64,
+                        "tag": "zava-forward-"
+                        + ("api" if name == "logo-0600" else name.removeprefix("image-"))
+                        + ":rpi-"
+                        + "a" * 24
+                        + ("-logo0600" if name == "logo-0600" else ""),
+                    }
+                    for name in ("logo-0600", *[f"image-{p}" for p in gate.IMAGES])
+                },
+            },
+        }
+        checks = gate.required_checks(self.root, receipt)
+        for index, check in enumerate(checks):
+            row = {key: value for key, value in check.items() if key not in ("probe", "attempts")}
+            logfile = f"{index:04d}-{check['group']}.log"
+            text = "fixture success\n"
+            if check["suite"]:
+                text = "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                row.update(gate.check_skips(text, integration=check["integration"]))
+            if check["argv"][0] == "git":
+                text = ""
+            if check["argv"][1:3] == ["-c", gate.WORKFLOW_INVENTORY]:
+                text = json.dumps({name: {"test": {"steps": []}} for name in gate.WORKFLOWS})
+            (self.out / logfile).write_text(text)
+            row.update(exit_code=0, log=logfile, sha256=gate.digest(self.out / logfile))
+            receipt["commands"].append(row)
+            receipt["files"][logfile] = row["sha256"]
+        for name in receipt["files"]:
+            target = self.out / name
+            if target.exists():
+                continue
+            if name.endswith(("-gate.json", "-all.json")):
+                content: Any = {
+                    "Trivy": {"Version": "0.76.0"},
+                    "Metadata": {"ImageID": "sha256:" + "d" * 64},
+                    "Results": [{}],
+                }
+            elif name.endswith(".spdx.json"):
+                content = {
+                    "spdxVersion": "SPDX-2.3",
+                    "name": "sha256:" + "d" * 64,
+                    "packages": [{}],
+                    "creationInfo": {"creators": ["Tool: trivy-0.76.0"]},
+                }
+            elif name == "regulatory-ux-results.json":
+                content = {
+                    "outcome": "passed",
+                    "axe_status": "executed",
+                    "axe_version": "4.10.3",
+                    "axe_sha256": gate.AXE_SHA256,
+                    "scans": [{"violations": []}],
+                }
+            elif name == "workflow-coverage.json":
+                content = {"steps": []}
+            else:
+                target.write_text("")
+                continue
+            target.write_text(json.dumps(content))
+        receipt["files"] = {name: gate.digest(self.out / name) for name in receipt["files"]}
+        receipt["files"]["axe-4.10.3.min.js"] = gate.AXE_SHA256
+        gate.atomic_json(path, receipt)
+        (self.out / "receipt.sha256").write_text(gate.digest(path))
+        real_digest = gate.digest
+        real_output = gate.subprocess.check_output
+
+        def output(argv: list[str], **kwargs: Any) -> Any:
+            self.assertIn(argv[0], ("git", "docker"), "Verification must not execute environments")
+            if argv[0] == "docker":
+                return "sha256:" + ("c" if argv[-1].startswith("mcr.") else "d") * 64 + "\n"
+            return real_output(argv, **kwargs)
+
+        with (
+            patch.object(gate, "tool_identity", return_value=receipt["tools"]),
+            patch.object(gate, "scan_database", return_value={}),
+            patch.object(gate.subprocess, "check_output", side_effect=output),
+            patch.object(
+                gate,
+                "digest",
+                side_effect=lambda p: (
+                    gate.AXE_SHA256 if p.name == "axe-4.10.3.min.js" else real_digest(p)
+                ),
+            ),
+        ):
+            gate.verify(self.root, path, self.base)
+            with (
+                patch.object(
+                    gate, "tool_identity", return_value={"shellcheck": {"sha256": "f" * 64}}
+                ),
+                self.assertRaisesRegex(gate.GateError, "Receipt tool identity mismatch"),
+            ):
+                gate.verify(self.root, path, self.base)
+            original_receipt = copy.deepcopy(receipt)
+            # Each exact mandatory command must survive, even if groups/files stay consistent.
+            for index, check in enumerate(checks):
+                with self.subTest(missing_command=index, group=check["group"]):
+                    changed = copy.deepcopy(original_receipt)
+                    removed = changed["commands"].pop(index)
+                    changed["files"].pop(removed["log"])
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+            changed = copy.deepcopy(original_receipt)
+            suites = [row for row in changed["commands"] if row["suite"]]
+            for row in suites:
+                changed["commands"].remove(row)
+                changed["files"].pop(row["log"])
+            self.assertEqual(len(suites), 8)
+            gate.atomic_json(path, changed)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            with self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base)
+            for mutation in ("selector", "counts", "probe", "infra-env", "suite-log"):
+                with self.subTest(mutation=mutation):
+                    changed = copy.deepcopy(original_receipt)
+                    sqlrow = next(
+                        row
+                        for row in changed["commands"]
+                        if row["group"] == "mssql" and row["suite"]
+                    )
+                    if mutation == "selector":
+                        sqlrow["argv"].pop()
+                    elif mutation == "counts":
+                        sqlrow["executed"] = 0
+                    elif mutation == "probe":
+                        sqlrow.update(exit_code=1, expected_probe_failure=True)
+                    elif mutation == "infra-env":
+                        next(
+                            row
+                            for row in changed["commands"]
+                            if row["group"] == "infra" and row["suite"]
+                        )["env"] = {}
+                    else:
+                        (self.out / sqlrow["log"]).write_text("no suite executed\n")
+                        sqlrow["sha256"] = real_digest(self.out / sqlrow["log"])
+                        changed["files"][sqlrow["log"]] = sqlrow["sha256"]
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+                    if mutation == "suite-log":
+                        (self.out / sqlrow["log"]).write_text(
+                            "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                        )
+            for name, key, value in (
+                ("regulatory-ux-results.json", "outcome", "failed"),
+                ("api-gate.json", "Results", [{"Vulnerabilities": [{"Severity": "HIGH"}]}]),
+                ("api.spdx.json", "packages", []),
+                ("workflow-coverage.json", "steps", [{"coverage": "fabricated"}]),
+            ):
+                with self.subTest(result_evidence=name):
+                    target = self.out / name
+                    original_content = target.read_text()
+                    report = json.loads(original_content)
+                    report[key] = value
+                    target.write_text(json.dumps(report))
+                    changed = copy.deepcopy(original_receipt)
+                    changed["files"][name] = real_digest(target)
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+                    target.write_text(original_content)
+            gate.atomic_json(path, original_receipt)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            environment = self.out / "venvs/core"
+            site = environment / "lib/python3.12/site-packages"
+            marker = self.out / "must-not-execute"
+            malicious_startup = (
+                f"import pathlib; pathlib.Path({str(marker)!r}).write_text('executed')\n"
+            )
+            for target, content in (
+                (
+                    environment / "bin/python",
+                    f"#!/bin/sh\nprintf executed > {marker}\n".encode(),
+                ),
+                (site / "fixture.pth", malicious_startup.encode()),
+                (site / "sitecustomize.py", malicious_startup.encode()),
+                (site / "usercustomize.py", malicious_startup.encode()),
+                (site / "__editable___fixture_finder.py", malicious_startup.encode()),
+                (site / "fixture-1.0.dist-info/METADATA", b"Name: fixture\nVersion: 2.0\n"),
+                (site / "fixture-1.0.dist-info/direct_url.json", b'{"url":"file:///changed"}'),
+                (environment / "pyvenv.cfg", b"include-system-site-packages = true\n"),
+            ):
+                with self.subTest(tampered=target.relative_to(environment)):
+                    link = os.readlink(target) if target.is_symlink() else None
+                    original = target.read_bytes() if target.exists() and link is None else None
+                    mode = target.stat().st_mode if target.exists() else 0o600
+                    if target.is_symlink():
+                        target.unlink()
+                    target.write_bytes(content)
+                    target.chmod(0o700 if target.name == "python" else mode)
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+                    self.assertFalse(marker.exists(), "Untrusted interpreter/startup code executed")
+                    target.unlink()
+                    if link is not None:
+                        target.symlink_to(link)
+                    elif original is not None:
+                        target.write_bytes(original)
+                        target.chmod(mode)
+            bounded = site / "fixture-1.0.dist-info/oversized"
+            with bounded.open("wb") as stream:
+                stream.truncate(8 * 1024 * 1024 + 1)
+            with self.assertRaisesRegex(gate.GateError, "bounded regular"):
+                gate.verify(self.root, path, self.base)
+            bounded.unlink()
+            for target in (site / "linked.pth", site / "fixture-1.0.dist-info/linked"):
+                target.symlink_to(site / "fixture.pth")
+                with self.subTest(symlink=target.name), self.assertRaises(gate.GateError):
+                    gate.verify(self.root, path, self.base)
+                target.unlink()
+            fifo = site / "fifo.pth"
+            os.mkfifo(fifo)
+            with self.assertRaisesRegex(gate.GateError, "bounded regular"):
+                gate.verify(self.root, path, self.base)
+            fifo.unlink()
+            metadata = site / "fixture-1.0.dist-info/METADATA"
+            content = metadata.read_bytes()
+            metadata.unlink()
+            with self.assertRaisesRegex(gate.GateError, "METADATA is missing"):
+                gate.verify(self.root, path, self.base)
+            metadata.write_bytes(content)
+            gate.verify(self.root, path, self.base)
+            for name in ("untracked_source.py", "test_extra.py", "config.toml"):
+                (self.root / name).touch()
+                with self.assertRaises(gate.GateError):
+                    gate.verify(self.root, path, self.base)
+                (self.root / name).unlink()
+            receipt["groups"].pop()
+            gate.atomic_json(path, receipt)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            with self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base)
+
+    def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
+        self.assertEqual(len(gate.required_groups([])), 17)
+        self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")
+        for value in (
+            "api:test_module;curl external",
+            "api:../../private",
+            "bash:echo",
+            "api:test_x\nid",
+        ):
+            with self.subTest(value=value), self.assertRaises(gate.GateError):
+                gate.extra_selector(value)
+        self.assertEqual(
+            gate.extra_selector("api:test_x.Case.test_method"), ("api", "test_x.Case.test_method")
+        )
+        runner = self.runner()
+        runner.snapshot = self.root
+
+        def version(argv: list[str], **kwargs: Any) -> str:
+            return "Python 3.12.3" if argv[0] == "python3" else "Version: 0.76.0"
+
+        with (
+            patch.object(runner, "command", side_effect=version) as command,
+            patch.object(gate, "tool_identity", return_value={}),
+        ):
+            runner.preflight()
+        command.assert_any_call(["shellcheck", "--version"], timeout=60)
+        self.assertTrue(runner.failures)
+
+    def test_axe_and_scan_database_cannot_silently_skip(self) -> None:
+        with self.assertRaises(gate.GateError):
+            gate.scan_database(self.out / "absent.json")
+        path = self.out / "metadata.json"
+        now = datetime.now(UTC)
+        for delta in (-1, 1):
+            path.write_text(
+                json.dumps(
+                    {
+                        "UpdatedAt": (now - timedelta(hours=2)).isoformat(),
+                        "NextUpdate": (now + timedelta(hours=delta)).isoformat(),
+                    }
+                )
+            )
+            if delta < 0:
+                with self.assertRaises(gate.GateError):
+                    gate.scan_database(path)
+            else:
+                self.assertIn("sha256", gate.scan_database(path))
+        assert gate.__file__ is not None
+        source = Path(gate.__file__).read_text()
+        self.assertIn("if digest(axe) != AXE_SHA256:", source)
+        runner = self.runner()
+        with patch.dict(
+            os.environ,
+            {"ZF_SQL_SERVER": "real.invalid", "AZURE_TOKEN": "secret", "ZF_DATA": "/private/data"},
+        ):
+            self.assertNotIn("ZF_SQL_SERVER", runner.env)
+            self.assertNotIn("AZURE_TOKEN", runner.env)
+            self.assertNotEqual(runner.env["ZF_DATA"], "/private/data")
+
+
+if __name__ == "__main__":
+    unittest.main()

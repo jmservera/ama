@@ -1,0 +1,45 @@
+{
+  "task_id": "actions-budget-local-rpi",
+  "task_slug": "local-rpi-validation",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/local-rpi-validation-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/local-rpi-validation-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/local-rpi-validation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Owner authorized one additional hosted-lint surgical Implement cycle at e127b470; P01-T02, P02-T01 and P03-T01 for ShellCheck parity only", "status": "source/targeted complete; pre-freeze checkpoint, no repeated critique/original Review or publication", "evidence": "2026-10-18 invocation; /tmp/brief-413-hosted-lint.md; /tmp/rpi-413-hosted-lint-failure.log"},
+    {"decision": "ShellCheck mandatory/hash-bound and version row required; native shell argv preserved; five-workflow lint and existing contracts pass", "status": "actionlint 1.7.7 / ShellCheck 0.9.0; 12 methods, strict Ruff/format/mypy and 35 unchanged infra methods pass; final full gate pending commit", "evidence": "/tmp/rpi-413-hosted-lint.log; /tmp/rpi-413-hosted-lint-targeted-final.log; /tmp/rpi-413-hosted-lint-static.log; /tmp/rpi-413-hosted-lint-infra-final.log; /tmp/rpi-413-hosted-lint-argv.log"},
+    {"decision": "Independent exact-head delta scope is changed source/RPI, current primary results/receipt bindings and historical failure/correction evidence; repetitive raw logs retained, not exhaustively read", "status": "owner-approved; earlier bounded Pass at e127b470 historical only", "evidence": "2026-10-18 owner invocation; /tmp/brief-413-publish.md"},
+    {"decision": "Correction 2 authorized at 491124fc: P01-T02 then P02-T01 for all mandatory checks, fixed host lock and cancellation only; retain independently confirmed RV-001 fix", "status": "source/regressions complete; pre-freeze Implement checkpoint, no critique/Review or publication", "evidence": "2026-10-18 user invocation; .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md"},
+    {"decision": "Correction 2 trusted contracts cover every mandatory command, suite/selectors and result evidence; caller-temp-independent lock; cancellation stops retries and matrix with owned cleanup", "status": "12 focused methods and strict Ruff/format/mypy pass; historical 183-command compatibility and removal probes pass; final full gate pending commit", "evidence": "/tmp/rpi-413-correction2-checks-final.log; /tmp/rpi-413-correction2-historical-contract.log"},
+    {"decision": "RV-001 data-only verification independently confirmed resolved by supplied reviewer; retained unchanged", "status": "independently confirmed resolved; original adverse Review remains immutable", "evidence": "2026-10-18 correction 2 user instruction"},
+    {"decision": "Explicit ordered Research, accepted Plan reconciliation, Implement, one original Review; no automatic follow-up loop or publication", "status": "owner-approved", "evidence": "2026-10-18 invocation"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "executed", "evidence": ".copilot-tracking/research/2026-10-18/local-rpi-validation-research.md"},
+    {"decision": "Original critique executed with Revise; PC-001 and PC-002 resolved by parent, no rerun", "status": "preserved", "evidence": ".copilot-tracking/plans/2026-10-18/local-rpi-validation-plan.md"},
+    {"decision": "Original Review execution Complete; full P01-P03 source/evidence boundary assessed once", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md"},
+    {"decision": "Original Review outcome Not accepted; RV-001 reproduced before environment identity validation, no correction or repeated Review", "status": "adverse outcome preserved", "evidence": ".copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md"},
+    {"decision": "Stop phase progression at local-only frozen candidate; final post-commit matrix is external handoff evidence, not Review closure", "status": "owner-requested stop", "evidence": "2026-10-18 invocation; .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md"},
+    {"decision": "Distinct corrective Implement authorized for RV-001 and directly coupled regressions only; no Research, critique, original Review, push or PR", "status": "owner-authorized active invocation", "evidence": "2026-10-18 corrective invocation; .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md"},
+    {"decision": "RV-001 source/tests implemented with bounded data-only identities; 12 focused methods and strict Ruff/format/mypy pass, six real environments inspected twice; original adverse Review unchanged", "status": "implementation addressed; independent acceptance pending", "evidence": ".copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md; /tmp/rpi-413-correction-targeted-final.log; /tmp/rpi-413-correction-static.log"},
+    {"decision": "Committed state is the pre-freeze checkpoint; actual final matrix and verification outcomes live in the external receipt/logs to avoid any post-run candidate change", "status": "post-commit execution pending, not predicted", "evidence": "/tmp/rpi-413-verifier-correction-final/receipt.json; /tmp/rpi-413-verifier-correction-matrix.log; /tmp/rpi-413-verifier-correction-verify.log"}
+  ],
+  "blockers": [
+    {"id": "final-freeze", "summary": "Source/targeted hosted-lint correction complete; actual post-commit full exact-head matrix/receipt not yet executed at committed checkpoint", "resolution": "Commit then run full gate and verify /tmp/rpi-413-hosted-lint-final/receipt.json; actual outcome in external receipt/logs/handoff, no later candidate changes"},
+    {"id": "delta-assessment", "summary": "New final head requires independent exact-head delta Pass under approved primary-evidence scope", "resolution": "Coordinator assesses all changed source/RPI, current results/receipt bindings and historical correction evidence before authorizing publication"},
+    {"id": "hosted-transition", "summary": "403 required-context mapping and corrected retained hosted checks remain separate coordinator/owner gates", "resolution": "No push, hosted dispatch, merge or settings changes during this invocation"}
+  ],
+  "next_action": {"phase": "Implement", "action": "Commit source/targeted-complete hosted-lint correction then run full clean-head matrix and external verification at /tmp/rpi-413-hosted-lint-final; actual post-commit result external in receipt/logs and /tmp/rpi-413-hosted-lint-handoff.json, no later commits/publication; coordinator independent delta assessment next"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independently assess hosted-lint correction at final exact head", "rationale": "Owner-authorized primary-evidence delta assessment is required before coordinator publication; prior bounded Pass cannot cover new source", "evidence": ".copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md hosted-lint correction; final external gate pending"},
+    {"rank": 2, "task": "Establish independent exact-head assessment and required-context mapping", "rationale": "Required owner/coordinator controls remain unknown or unperformed; local green evidence cannot replace them", "evidence": "Original Review limitations; live protection/ruleset HTTP 403"},
+    {"rank": 3, "task": "Run retained hosted transition checks after separately authorized publication", "rationale": "Confirms actual consolidated PR jobs and privileged linkage only after local defects and publication authorization are resolved", "evidence": "Accepted P03; original Review hosted boundary"}
+  ]
+}

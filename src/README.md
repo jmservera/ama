@@ -2,7 +2,7 @@
 title: Zava Forward source projects
 description: Index of the isolated src projects, the dependency rule, local commands and image properties defined by ADR 0006
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -45,6 +45,69 @@ ruff check . && ruff format --check . && mypy
 
 Regenerate hashed requirements with `pip-compile --generate-hashes --no-emit-index-url --no-emit-trusted-host --output-file=requirements.txt requirements.in`. Pins are never loosened. `build-requirements.txt` holds the hashed build tools used only in the image build stage.
 
+### Local RPI gate
+
+Targeted commands above support development; they do not replace the complete
+pre-push gate, including for documentation-only issues. Finish implementation
+and the original RPI Review, commit the candidate and dated evidence, then run
+from the repository root with Python 3.12, Node, Docker, Azure CLI/offline Bicep,
+actionlint, ShellCheck and Trivy 0.76.0 available on PATH:
+
+```bash
+git fetch origin main
+BASE_SHA=$(git rev-parse origin/main)
+python3 tools/rpi-checks.py --all --base "$BASE_SHA" --out /tmp/rpi-ISSUE-final
+python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-final/receipt.json --base "$BASE_SHA"
+```
+
+Use a new external output directory for every run; never overwrite a failed
+receipt. The runner tests a fresh detached exact-HEAD checkout, installs each
+project's existing dev dependencies with pip into isolated external venvs and
+installs all five namespace distributions side by side. It runs their existing
+unit/dependency/Ruff/mypy suites, infrastructure/Bicep/actionlint, JS/compile/
+tracked-data guards, migration, actual Chromium/design-system/regulatory/axe,
+real SQL Server selectors, four Docker contracts and a separate logo-mode
+stress build, fixable HIGH/CRITICAL Trivy gates, full reports and SPDX.
+No app data or credential environment is inherited. SQL tests drop tables:
+the runner accepts only its own labelled local container and random loopback
+port, never a configured database. It serializes heavy work with the shared
+`/tmp/ama-rpi-heavy.lock` and cleans only its owned resources.
+
+Install missing prerequisites from trusted pinned sources after an actual
+missing-tool/dependency result; preserve project pins. No uv, remote model or
+cloud fallback is part of this command. Browser/system-library or scanner/DB
+failures block the gate. General-discovery opt-in skips and the one inherited
+JSON-only SQL non-applicability are enumerated by test ID and reason; unexpected
+required integration skips fail. Existing private-data, real AI, Azure/OIDC,
+reviewer protection, privileged what-if and deployment acceptance remain
+separate controls, not local successes.
+
+ShellCheck is a required preflight dependency, not an optional actionlint
+enhancement: native workflow lint must analyze shell scripts as hosted lint
+does. Its version is logged and its binary identity is receipt-bound; a missing
+or changed ShellCheck blocks the complete gate or receipt verification.
+
+For issue-specific additional unit contracts, repeat a reviewed selector such
+as `--extra-test api:test_module.Class.test_method`; the module must be tracked.
+This is an argv-based unittest interface, not a shell-command dispatcher.
+Receipts are inert evidence: their command arrays are never replayed.
+Verification hashes bounded environment configuration, interpreter files/link
+identities, distribution metadata and startup files as data. It never launches
+receipt-adjacent Python/pip or imports `.pth`/customization code. Missing,
+symlinked package/startup metadata, exceeded bounds or changed identities block
+verification; a matching receipt sidecar does not establish executable trust.
+
+Keep the authoritative receipt outside git to avoid self-reference. It binds
+HEAD/tree/base, matrix/helper/tool/package identities, command logs, images and
+fresh scan DB metadata. A committed evidence copy is historical. Every later
+commit, correction or rebase requires a full new run, as does a changed base or
+relevant tool/image identity. Dirty, untracked and ignored candidate inputs are
+refused. Fetch main again and verify immediately before independent exact-head
+review and push; if it moved, reconcile under the issue's approved RPI scope
+and rerun. Preserve original adverse findings. Local verification is not a
+replacement for independent review, owner publication permission or retained
+hosted checks, and it does not authorize changing required contexts.
+
 ## Images
 
 The [cut-over evidence pack](../docs/architecture/cutover-evidence-pack.md)
@@ -57,6 +120,7 @@ the existing `RUN --mount` instructions, tests UID/read-only/capabilities/data
 paths (and agents dependency isolation), then pushes run-ID-specific tags.
 This is not a deployment or vulnerability scan. The context retains only the
 API's explicit runtime golden-file exception; other evals/tests/data stay out.
+This historical remote route is not a fallback for a failed local RPI gate.
 
 The build context is this `src/` folder, because a workload image also needs `core`:
 
@@ -104,16 +168,37 @@ remain setup/acceptance gaps.
 
 The `src-api` browser step also runs the
 [regulatory alert/chat UX regression](./api/README.md#local-engineering-checks)
-with hash-verified axe 4.10.3. If its pinned script cannot be downloaded,
-CI warns and still runs the non-axe assertions, including actual target sizes.
-The job uploads JSON evidence with explicit axe execution/skip status.
+with hash-verified axe 4.10.3. A failed pinned download or integrity check
+blocks the browser gate; it is not silently reduced to non-axe assertions.
+The job uploads JSON evidence with explicit axe execution status.
 API unit discovery also works with runtime-only installations: importing the
 regulatory harness does not load Playwright. Pure target-size and axe-integrity
 tests remain enabled without a browser; an isolated regression blocks accidental
 eager Playwright imports even in dev environments. Playwright stays in the API
 dev extra for typed browser checks, which still run in the dedicated CI step.
 
-[`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) runs the checks `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace` and `src-no-working-data`. The `mvp-ci` and `mvp-validation` workflows keep their check names; they install source packages and their filters cover all `src/` build inputs. The `mvp-ci` image job builds `src/api/Dockerfile` with `src/` as context (`docker build -f src/api/Dockerfile src`). API packages only core, agents and API; the Bicep jobs now select the separate orchestrator image. The API entry point is `python -m zava_forward.api`; CI version probes import its version explicitly instead of starting the server. Runtime and generated synthetic data default to the per-user `ZF_DATA` folder (`~/.zava-forward/data/` without it), never under `src/`. Existing temporary ruff/mypy migration exemptions remain in each `pyproject.toml`; general cleanup is separate work.
+[`.github/workflows/src-ci.yml`](../.github/workflows/src-ci.yml) retains the checks
+`src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`,
+`src-namespace` and `src-no-working-data`, and now independently owns the
+legacy `mssql` job with its exact selectors. It also retains the legacy
+compile/migration/JavaScript/data guards, separate unreadable-logo build and
+SPDX coverage. The new local runner/tests and migration tool/requirements
+trigger Source CI. Its normal cadence is one consolidated workflow per
+eligible PR update, not one run per PR lifetime; ordinary main-push repetition
+is removed. Both legacy workflow files remain dispatch-only for rollback.
+Their duplicate `test`, `image` and `validate` contexts are not fabricated;
+the owner/coordinator must verify required-context mapping before merge,
+especially where protection APIs are unavailable. No remote workflow state or
+repository protection is changed by these files. Restore the previous triggers
+and explicitly re-enable a disabled workflow only under owner direction if
+transition coverage or enforcement regresses. Manual release and the privileged
+Source CI workflow_run what-if boundary are unchanged.
+
+API packages only core, agents and API; Bicep selects the separate orchestrator
+image. The API entry point is `python -m zava_forward.api`; CI version probes
+import its version instead of starting the server. Runtime/generated data
+default to the per-user `ZF_DATA` folder, never under `src/`. Existing temporary
+Ruff/mypy migration exemptions remain; general cleanup is separate work.
 
 Workflow/check naming remains unchanged for branch-protection continuity, following
 the issue #200 owner decision of 2026-10-15. The post-cut-over naming question must
@@ -142,10 +227,10 @@ ignore lists, baselines or repository-discovered config suppressions.
 Each workflow also runs a non-gating scan (`exit-code: "0"`,
 `ignore-unfixed: false`) and uploads `trivy-*-all.json`, retaining all
 HIGH/CRITICAL findings including unfixed packages alongside the fixable gate
-JSON. Scanner execution errors still fail visibly. Reports upload even when the
-gate fails. A runtime failure after a
-successful build does not skip its scan. Existing `mvp-ci` scans the same source
-API image with this policy; no workflow deploys as part of this change.
+JSON. Scanner execution errors still fail visibly. Reports and SPDX upload
+even when the gate fails. A runtime failure after a successful build does not
+skip its scan. Source CI generates SPDX for all four source images; disabled
+legacy workflows are not coverage for a PR. No workflow deploys as part of this change.
 The initial 2026-10-16 full scans found 61 HIGH and two CRITICAL package findings
 per image (16 unique CVEs, all unfixed in Debian 12.15). A green fixable-only
 gate is not a vulnerability-free image or hosted-hardening acceptance. See the

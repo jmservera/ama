@@ -192,6 +192,7 @@ class WorkflowTests(unittest.TestCase):
     def test_privileged_pr_workflow_is_default_branch_workflow_run_only(self):
         document = workflow("infra-plan.yml")
         self.assertEqual(set(document["on"]), {"workflow_run"})
+        self.assertEqual(document["on"]["workflow_run"]["workflows"], ["Source projects CI"])
         condition = document["jobs"]["changes"]["if"]
         for predicate in (
             "'pull_request'",
@@ -245,6 +246,32 @@ class WorkflowTests(unittest.TestCase):
             step for step in document["jobs"]["project"]["steps"] if step.get("id") == "build"
         )
         self.assertIn("image-paths.outputs.images", build["if"])
+        self.assertEqual(set(document["on"]), {"pull_request", "workflow_dispatch"})
+        for name in ("mvp-ci.yml", "mvp-validation.yml"):
+            self.assertEqual(set(workflow(name)["on"]), {"workflow_dispatch"})
+        self.assertEqual(document["jobs"]["mssql"], workflow("mvp-ci.yml")["jobs"]["mssql"])
+        self.assertNotIn("if", document["jobs"]["mssql"])
+        for path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*"):
+            self.assertIn(path, document["on"]["pull_request"]["paths"])
+        for command in (
+            "python -m compileall -q src/core/src src/agents/src src/api/src src/orchestrator/src",
+            "node --check src/api/src/zava_forward/api/web/app.js",
+            "node --check src/api/src/zava_forward/api/web/assistants.js",
+            "pip install -r tools/rename-zava-requirements.txt",
+            "python3 tools/rename-zava-tests.py",
+            "python -m unittest discover -s tools -p test_rpi_checks.py",
+            "actionlint",
+            "git archive HEAD src",
+            'chmod 600 "$RUNNER_TEMP/logo0600/src/api/src/zava_forward/api/web/zava-logo.png"',
+            "python src/check-container.py api zava-forward-api:logo0600",
+            "*/.assistant-test-*",
+            "mvp/data",
+            ":(glob)src/**/data/**",
+            '--axe "$RUNNER_TEMP/axe-4.10.3.min.js"',
+        ):
+            self.assertIn(command, commands)
+        self.assertNotIn("Pinned axe download unavailable", commands)
+        self.assertNotIn("chmod 600 src/", commands)
 
 
 class PipelineTests(unittest.TestCase):

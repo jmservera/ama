@@ -105,7 +105,7 @@ class ContainerContractTests(unittest.TestCase):
         for name in ("src-ci.yml",):
             text = (ROOT / ".github/workflows" / name).read_text()
             with self.subTest(workflow=name):
-                self.assertEqual(text.count("trivy-config: src/trivy.yaml"), 2)
+                self.assertEqual(text.count("trivy-config: src/trivy.yaml"), 3)
                 self.assertEqual(text.count("ignore-unfixed: true"), 1)
                 self.assertEqual(text.count("ignore-unfixed: false"), 1)
                 self.assertIn('exit-code: "1"', text)
@@ -114,6 +114,10 @@ class ContainerContractTests(unittest.TestCase):
                 self.assertIn("actions/upload-artifact@", text)
                 self.assertNotIn("trivyignores:", text)
                 self.assertNotIn("continue-on-error:", text)
+                self.assertIn("version: v0.76.0", text)
+                self.assertIn("format: spdx-json", text)
+                self.assertIn("zava-forward-${{ matrix.project }}.spdx.json", text)
+                self.assertIn("name: Retain SPDX evidence", text)
         text = (ROOT / ".github/workflows/src-ci.yml").read_text()
         self.assertIn("python src/check-container.py", text)
         self.assertNotIn('pythonpath: "${{ github.workspace }}', text)
