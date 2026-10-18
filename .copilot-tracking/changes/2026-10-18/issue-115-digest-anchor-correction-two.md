@@ -141,6 +141,39 @@ No second critique or new/amended original Review.
 
 gh api user re-resolved actual8036360/jmservera before commit. Configure only
 local privacy-safe noreply author/committer, Conventional Commit and Copilot
-trailer. Normal same-branch commit/push next, main must remain exact pinned base.
+trailer. Source commit aed065a014d6907dd0fda5399bb7983abf3c9784
+created and normal push succeeded (123cb902 -> aed065a0), same branch.
+Main verified still exact pinned base before push. Final evidence-only commit
+reconciles actual publication and stopped state without source changes; exact
+final head is in live PR404 metadata/body and final handoff (no self-hash).
+PR https://github.com/jmservera/ama/pull/404 targets main; Refs #115 only.
 No rebase/force/merge/issue/board changes. Independent acceptance remains
 NOT ACCEPTED pending SAME reviewer. This is correction TWO final, not a Review.
+All P04 markers complete for authorized implementation/delivery only.
+
+## Complete Correction TWO Changed Boundary
+
+Relative to123cb902, exactly14 paths, including all new receipts/logs:
+
+```text
+src/orchestrator/README.md
+src/orchestrator/src/zava_forward/orchestrator/digest_blob.py
+src/orchestrator/tests/test_digest_blob.py
+.copilot-tracking/plans/2026-10-18/issue-115-digest-anchor-plan.md
+.copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
+.copilot-tracking/rpi-sessions/2026-10-18/issue-115-digest-anchor-state.json
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-changes.md
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-pr-body.md
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two.md
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two-before.log
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two-focused.log
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two-orchestrator.log
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two-probes.log
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two-quality.log
+```
+
+Frozen originals, correction ONE, research and historical delivery unchanged.
+Entire PR additionally contains the preserved original ordered RPI artifacts,
+not new research/critique/Review. No loadcheck/web/KB/core/infra/mvp changes.
+STOP for SAME coordinator independent exact-final-head follow-up; no further
+source edits absent new owner authority. All operational ACs remain unmet.

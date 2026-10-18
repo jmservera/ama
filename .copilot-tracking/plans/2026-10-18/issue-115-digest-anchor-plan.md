@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 
 * Task ID: 115
 * Task slug: issue-115-digest-anchor
-* Planning status: Correction TWO source validated, final permitted cycle; publication pending; coordinator NOT ACCEPTED
+* Planning status: Correction TWO delivered, final permitted cycle; stopped for SAME reviewer; coordinator NOT ACCEPTED
 * Plan date: 2026-10-18
 * Phase details: .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-115-digest-anchor-plan-critique.md
@@ -275,7 +275,7 @@ Receipt: .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction
 ## Correction TWO Checklist
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Close reserved-prefix enumeration and prefetch name gap
+### [x] P04: Close reserved-prefix enumeration and prefetch name gap
 
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Failing-first malformed suffix/name and unrelated controls
@@ -290,7 +290,10 @@ compatibility and valid unrelated JSON/nonJSON/case-sensitive prefix controls.
 Depends on P04-T01 failure; same essential format, no new prefix/schema policy.
 
 <!-- rpi:task id=P04-T03 -->
-#### [ ] P04-T03: Validate, preserve originals/correction ONE, publish and STOP
+#### [x] P04-T03: Validate, preserve originals/correction ONE, publish and STOP
 
 Depends on P04-T02; focused/full/configured gates and hashes. Correction TWO
 receipt/logs separate. Same coordinator, no new Review, no third cycle.
+Source aed065a014d6907dd0fda5399bb7983abf3c9784 normally committed/pushed;
+final receipt-only commit reconciles delivery. Actual final hash in PR metadata.
+STOPPED as explicitly instructed for SAME reviewer, NOT ACCEPTED pending follow-up.

@@ -19,7 +19,7 @@ C1-C8/W1. No blocking unknowns; operational gates remain separate.
 | P01 | Reproduce then correct only recognized-anchor absence | Complete | P01-T01, P01-T02 |
 | P02 | Local validation, one Review and authorized publication | Complete, coordinator exact-final-head review remains separate | P02-T01, P02-T02 |
 | P03 | Authorized correction ONE after coordinator NOT ACCEPTED | Delivered; SAME coordinator acceptance pending | P03-T01, P03-T02, P03-T03 |
-| P04 | Authorized final correction TWO | Source validated, publication pending | P04-T01, P04-T02, P04-T03 |
+| P04 | Authorized final correction TWO | Delivered; STOPPED for SAME reviewer | P04-T01, P04-T02, P04-T03 |
 
 ## P04: Reserved Candidate Enumeration and Prefetch Qualification
 
@@ -40,7 +40,10 @@ errors. P04-T02 complete: admission preserves unrelated .json inclusion and
 rejects malformed reserved names before download. P04-T03 local gates27 focused/
 coupled and46 full pass, zero skips; configured quality pass with existing
 digest format/type exemptions. Exact rejected-head CLI0/OK versus new CLI1/ALERT
-confirmed, private-safe output/no malformed download. Publication remains next.
+confirmed, private-safe output/no malformed download. Source commit
+aed065a014d6907dd0fda5399bb7983abf3c9784 normally pushed, main pinned unchanged.
+Final receipt-only commit reconciles stopped handoff and PR404 actual head.
+No new Review/independent acceptance; final2of2 used, no third cycle authorized.
 
 ## P03: Qualify Remote Anchor Evidence
 
