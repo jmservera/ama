@@ -136,3 +136,13 @@ Publish only exact topic lease 9fb84836; stop if topic advanced. Later main
 movement does not block this exact-base publication, but must be reported.
 Update PR389 with Refs #92 only, exact head/base and unmet acceptance gates;
 no review checkbox or independent acceptance claim. Stop for coordinator review.
+
+Executed: conflict-free nine-commit replay, source candidate aafcd504.
+Complete owned patch SHA256 a886b897815c534424cad0c7132bd01586cf5192fd9f79755acfc2601b4343cb;
+incremental upstream timecapture patch c7e400c463027b6bed3707eccc6879e440711cec4fbc6ddb09b9686757301582.
+All protected source/evidence blobs and fifteen immutable originals/prior
+receipt files match; both README additions, queue/DPIA sections and old-local
+append-only log prefix remain. Fresh minimal 235 run/222 pass/13 skips, 69.660s;
+configured core/API Ruff/format/mypy pass (72/24 formatted, 125/56 typed).
+Previous combined queue, broad suites, SQL and image results remain inherited,
+not rerun. No failed check in this continuation. Publication gate is next.

@@ -6269,3 +6269,25 @@ metadata when the knowledge base was created.
   Publication remains blocked pending coordinator direction. All original
   assessment hashes, source parity and historical/fresh evidence distinctions
   remain intact; no source correction or repeated assessment.
+
+## [2026-10-18] integration | Scoped consultation exact DPIA-base continuation (#92)
+
+* Coordinator authorized same-task integration/publication from local c6732027
+  onto exact ab0613f3 (merged PR408), previous base a86282c4. Nine owned commits
+  replayed without conflicts. No source correction or policy change; complete
+  owned patch, upstream DPIA/queue/recorder bytes and README additions retained.
+* Both prior integration receipt and old/new original assessments remain
+  byte-identical; fifteen immutable artifacts verified. Old-local log remains an
+  exact prefix. New separate receipt records full tree inventories, parity
+  manifests and preserved execution-log hashes.
+* Fresh minimal consultation/provider/workflow/API/timecapture: 235 executions,
+  222 passes, 13 explicit skips; configured core/API Ruff/format/mypy pass
+  (125/56 typed source files). No failed validation check in this continuation.
+  Recent broad/queue smoke, actual 135 SQL passes and image evidence remain
+  inherited/historical, not rerun. No packaging or persistence conflict arose.
+* Publish only the owned topic using expected 9fb84836 lease; later pushes
+  normal only. Later main movement is reported for coordinator gate, without
+  changing this exact authorized base. PR389 update retains Refs #92 only.
+  Legal authority, genuine let/renew, human/live acceptance and independent
+  exact-head review remain unmet. No private inputs, Azure/spend, issue/board
+  write, review checkbox completion, ready-state change or merge.

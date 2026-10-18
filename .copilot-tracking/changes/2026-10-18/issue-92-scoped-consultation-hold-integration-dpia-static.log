@@ -1,0 +1,9 @@
+All checks passed!
+72 files already formatted
+Success: no issues found in 125 source files
+All checks passed!
+24 files already formatted
+Success: no issues found in 56 source files
+uid/gid 1000 1000
+/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/procurement.py
+/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/timecapture.py

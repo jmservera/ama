@@ -273,3 +273,30 @@ report movement for coordinator gate. A new receipt will record this boundary.
 Both requested /tmp execution logs read and preserved as byte-identical copies
 in session cf6f1706-71c8-48ee-88ca-e30a375524dc/files; hashes in its
 inherited-execution-logs.json. Do not edit or truncate originals or copies.
+
+### Exact ab0613f3 integration and minimal validation
+
+Nine owned commits replayed without conflicts; integrated source candidate
+aafcd504a4dd402b335bffd8a7a038bc31b29156 on exact authorized ab0613f3.
+New receipt `issue-92-scoped-consultation-hold-integration-dpia.md` preserves
+the old receipt byte-identically. Complete owned normalized source patch matches
+a886b897815c534424cad0c7132bd01586cf5192fd9f79755acfc2601b4343cb;
+upstream incremental timecapture source/test patch matches
+c7e400c463027b6bed3707eccc6879e440711cec4fbc6ddb09b9686757301582.
+All protected upstream queue/DPIA/evidence blobs match, fifteen original/prior
+receipt files immutable, ordered README additions retained, old-local log prefix
+exact. Full old/base/source-candidate inventories and hashes accompany receipt.
+
+Fresh command: common installed unittest prefix with consultation_controls,
+procurement_api, quality_procurement, mvp, workflows and timecapture selectors:
+235 run, 222 passed, 13 explicit skips, 69.660s. Expected unknown law-store
+diagnostics retained. Configured core/API Ruff check/format/mypy pass: 72/24
+formatted and 125/56 typed files. Diff whitespace check passes. No failed
+validation check in this continuation; earlier failures remain inherited and
+explicitly historical in the unchanged evidence.
+
+No production, packaging or persistence conflict; no source correction. Prior
+combined queue smoke and broad/full RPI suites not repeated. Actual 135 SQL
+passes and existing image/hardened-runtime evidence remain historical only.
+No new Review/critique, private data, cloud, spend or live acceptance.
+Current plan/details/state reconciled; exact-lease publication and PR update next.

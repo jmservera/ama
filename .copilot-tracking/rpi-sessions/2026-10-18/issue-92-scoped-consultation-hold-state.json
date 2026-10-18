@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Exact ab0613f3 integration and minimal fresh validation",
+      "status": "executed",
+      "evidence": "Conflict-free own-topic rebase source candidate aafcd504a4dd402b335bffd8a7a038bc31b29156 on exact ab0613f3. Complete owned patch and protected upstream bytes match; fifteen original/prior receipt hashes unchanged; README additions and old-local append-only prefix retained. Fresh consultation/provider/workflow/API/timecapture 235 run/222 passed/13 skips, 69.660s; configured core/API Ruff/format/mypy pass (125/56 typed files). No packaging/persistence conflict, broader rerun, source correction, critique or original Review. New receipt: .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia.md."
+    },
+    {
       "decision": "Exact ab0613f3 integration/publication authorization",
       "status": "confirmed",
       "evidence": "2026-10-18 coordinator: same task only; expected local c6732027e8b4c1f6238e3073929a78a00ea16727, rebase only owned branch from a86282c4 onto fetched/verified ab0613f3336109ff9b96560a16758ee842232715. Preserve PR408 DPIA timecapture source/tests and additive README, all queues/recorder controls and original assessments. Publish on this exact base even if main subsequently moves; report that move. Initial exact topic lease remains 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7; unexpected topic advancement stops publication. No source correction or new critique/Review."
@@ -62,13 +67,13 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Persist authorization and log snapshots; rebase only owned branch from a86282c4 onto exact ab0613f3. Verify exact source/upstream/assessment parity, minimal focused/timecapture and static checks, new receipt, then exact-lease publication and PR389 update. Report later main movement without changing authorized base; stop on topic advancement or irreconcilable conflict."},
+  "next_action": {"phase": "Follow-up", "action": "Commit exact-base receipt, fresh logs and parity inventories; verify remote topic remains expected9fb84836, publish only with explicit authorized lease on exact ab0613f3, then update PR389 and verify empty closing references. Report later main movement without rebase. Normal pushes only afterward; stop after publication for coordinator independent exact-head review."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Resolve newly moved-main publication boundary",
-      "rationale": "Explicit coordinator wait condition prevents publication; independent final-head review follows only a separately authorized publication.",
-      "evidence": "Publication preflight observed ab0613f3, not authorized a86282c4. Remote topic remains expected9fb84836. No remote write or second original Review."
+      "task": "Complete coordinator independent exact-head review after publication",
+      "rationale": "Exact ab0613f3 publication is now authorized; independent review and current PR checks remain the next acceptance gate, not a repeated original Review.",
+      "evidence": "Same-task exact-base receipt records complete source/upstream parity and minimal validation. Original new Review remains Residual work with no bounded defects."
     },
     {
       "rank": 2,
