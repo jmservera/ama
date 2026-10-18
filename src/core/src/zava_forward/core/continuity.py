@@ -26,6 +26,7 @@ decides, approves or restarts for anyone, and an AI assistant has no part in it.
 import hashlib
 import json
 import math
+import re
 import uuid
 
 from . import controls as k
@@ -160,7 +161,7 @@ class ContinuityMixin:
             doc["suspensions"].append(rec)
             self.audit(user["email"], "ai_suspend", "-", f"{rec['id']} {scope} epoch={rec['epoch']}")
             self.save()
-            return rec
+            return control_record(user, rec)
 
     def _suspension(self, body):
         s = next((x for x in self._cont()["suspensions"] if x["id"] == body.get("id")), None)
@@ -179,7 +180,7 @@ class ContinuityMixin:
                                  corrective_evidence=k.text(body.get("corrective_evidence"), "the corrective evidence", 600))
             self.audit(user["email"], "ai_restart_propose", "-", s["id"])
             self.save()
-            return s
+            return control_record(user, s)
 
     def restart_decide(self, user, body):
         k.refuse_bulk(body)
@@ -210,7 +211,7 @@ class ContinuityMixin:
                 rec["new_epoch"] = doc["epoch"]
             self.audit(user["email"], "ai_restart_decide", "-", f"{s['id']} {decision}")
             self.save()
-            return s
+            return control_record(user, s)
 
     # ---- change register
     def change_record(self, user, body):
@@ -234,7 +235,7 @@ class ContinuityMixin:
             doc["changes"].append(rec)
             self.audit(user["email"], "change_record", "-", f"{rec['id']} {kind} {rec['subject']} {rec['status']}")
             self.save()
-            return rec
+            return control_record(user, rec)
 
     def change_reverse(self, user, body):
         k.refuse_bulk(body)
@@ -256,22 +257,25 @@ class ContinuityMixin:
             doc["changes"].append(rev)
             self.audit(user["email"], "change_reverse", "-", f"{rev['id']} reverses {c['id']}")
             self.save()
-            return rev
+            return control_record(user, rev)
 
     def continuity_view(self, user):
         k.require_role(user, SUSPEND_ROLES, "a manager, quality inspector or building safety liaison can see the continuity register")
+        from . import projection
         doc = self._cont()
-        return dict(epoch=doc["epoch"], suspensions=doc["suspensions"], changes=doc["changes"], effective=effective_versions(doc),
-                    suspended=[dict(id=s["id"], scope=s["scope"]) for s in doc["suspensions"] if s["status"] == "Suspended"], note=MANUAL_NOTE)
+        suspensions = [control_record(user, s) for s in doc["suspensions"]]
+        return dict(epoch=doc["epoch"], suspensions=suspensions,
+                    changes=[control_record(user, c) for c in doc["changes"]],
+                    effective=effective_versions(doc) if projection.can_see_reason(user) else {},
+                    suspended=[{key: s[key] for key in ("id", "scope") if key in s}
+                               for s in suspensions if s["status"] == "Suspended"], note=MANUAL_NOTE)
 
     # ---- supplier-independent export
     def continuity_export(self, user, assistants=None):
         """Build the bundle. It says whether it is complete and never presents a truncated or unsupported part as whole."""
         k.require_role(user, MANAGER_ROLES, "a manager can export evidence")
         from . import ai_registry, ledger, projection
-        assistants = assistants if assistants is not None else dict(
-            proposals=[], total=0, truncated=False, supported=False, source_status="unavailable",
-            note="No assistant source was supplied.")
+        source = assistants if isinstance(assistants, dict) else {}
         with self.lock:
             head_count, head_hash = self.ledger_head()
             recs = [dict(r) for r in self.data["recommendations"]]
@@ -279,19 +283,29 @@ class ContinuityMixin:
             ledger_rows = list(self.audit_entries())
             report = self.verify_ledger()
             digests = ledger.read_digests(self.digest_dir)
-            reasons = []
-            if assistants.get("truncated"):
-                reasons.append(f"assistant proposals truncated at {assistants.get('limit')} of {assistants.get('total')}")
+            reasons = [] if isinstance(assistants, dict) else ["assistant source missing or malformed"]
             if len(ledger_rows) != head_count or (ledger_rows and ledger_rows[-1]["hash"] != head_hash):
                 reasons.append("ledger changed or could not be read in full during export")
             epoch = self._cont()["epoch"]
-            proposals = [dict(p) for p in assistants["proposals"]]
-            for p in proposals:
-                if not epoch_current(p, epoch) or active(self._cont(), p["capability"]):
-                    p.update(relied_on=False, actionable=False, epoch_current=False)
-            task_releases = assistants.get("task_releases") or dict(
-                supported=False, records=[], total=0, exported=0, truncated=False,
-                note="Task-release source unavailable; referenced evidence cannot be resolved.")
+            raw = source.get("proposals")
+            proposals = [dict(p) if isinstance(p, dict) else p for p in raw] if isinstance(raw, list) else raw
+            metadata = dict(supported=source.get("supported"), total=source.get("total"),
+                            exported=len(raw) if isinstance(raw, list) else None,
+                            truncated=source.get("truncated"), source_status=source.get("source_status"),
+                            note=source.get("note"))
+            if metadata["truncated"] is True:
+                reasons.append("assistant proposal evidence truncated")
+            reasons.extend(proposal_problems(dict(assistant_proposals=proposals, assistants=metadata)))
+            if isinstance(proposals, list):
+                for p in proposals:
+                    if isinstance(p, dict) and (
+                            not epoch_current(p, epoch) or active(self._cont(), p.get("capability"))):
+                        p.update(relied_on=False, actionable=False, epoch_current=False)
+            task_releases = source.get("task_releases")
+            if "task_releases" not in source and metadata["supported"] is False and not reasons:
+                task_releases = dict(
+                    supported=False, records=[], total=0, exported=0, truncated=False,
+                    note="Explicit unsupported durable task-release source: JSON store has no assistant release storage.")
             bundle = dict(
                 format=EXPORT_FORMAT, generated_by=user["email"], generated_at=k.now(), as_of=self.as_of,
                 independence="Plain JSON with its own digest and ledger chain. Provider, deployment and model appear only as recorded data; "
@@ -299,8 +313,7 @@ class ContinuityMixin:
                 registry=ai_registry.registry(),
                 ai_records=[self._export_record(r) for r in recs],
                 assistant_proposals=proposals, task_releases=task_releases,
-                assistants=dict(supported=assistants.get("supported", True), total=assistants["total"], exported=len(assistants["proposals"]),
-                                truncated=assistants.get("truncated"), source_status=assistants.get("source_status"), note=assistants.get("note")),
+                assistants=metadata,
                 complete=not reasons, incomplete_reasons=reasons,
                 versions=dict(effective=effective_versions(self._cont()), changes=self._cont()["changes"]),
                 continuity=dict(epoch=self._cont()["epoch"], suspensions=self._cont()["suspensions"]),
@@ -331,6 +344,55 @@ class ContinuityMixin:
         return result
 
 
+def control_record(user, record):
+    """Project control responses without changing the canonical retained record."""
+    from . import ai_registry, projection
+    if projection.can_see_reason(user):
+        return record
+    held = projection.NOTE_HELD
+    result = dict(detail=held)
+    for key in ("id", "reverses", "superseded_by"):
+        value = record.get(key)
+        if isinstance(value, str) and re.fullmatch(r"(SUS|CHG)-[0-9]+", value):
+            result[key] = value
+    for key, choices in (
+            ("status", ("Suspended", "Restarted", "Applied", "Blocked", "Reversed")),
+            ("kind", KINDS), ("scope_kind", ("release", "task"))):
+        if record.get(key) in choices:
+            result[key] = record[key]
+    scope = record.get("scope")
+    if isinstance(scope, str) and (scope == ALL or ai_registry.get(scope)):
+        result["scope"] = scope
+    for key in ("epoch", "affected_assistant_total"):
+        if type(record.get(key)) is int:
+            result[key] = record[key]
+    if type(record.get("affected_assistant_truncated")) is bool:
+        result["affected_assistant_truncated"] = record["affected_assistant_truncated"]
+    if isinstance(record.get("affected"), list):
+        result["affected_total"] = len(record["affected"])
+    if "communication" in record:
+        result["communication"] = dict(sent=False, owner=held, audience=held, note=COMMS_NOTE)
+    for key in ("reason", "incident_owner", "containment", "subject", "from_version", "to_version"):
+        if key in record:
+            result[key] = held
+
+    def decision_summary(value):
+        summary = dict(detail=held)
+        for key in ("epoch", "new_epoch"):
+            if type(value.get(key)) is int:
+                summary[key] = value[key]
+        if value.get("decision") in ("Restart", "Keep suspended"):
+            summary["decision"] = value["decision"]
+        return summary
+
+    for key in ("proposal", "restart"):
+        if isinstance(record.get(key), dict):
+            result[key] = decision_summary(record[key])
+    if isinstance(record.get("decisions"), list):
+        result["decisions"] = [decision_summary(d) for d in record["decisions"] if isinstance(d, dict)]
+    return result
+
+
 def limited_export(bundle):
     """Closed summaries, not rewritten ledger rows or filtered arbitrary free text."""
     from . import projection
@@ -353,15 +415,17 @@ def limited_export(bundle):
     result.update(
         independence="Plain JSON audience-limited evidence summary; not a complete ledger or task-release proof.",
         audience=dict(scope="limited", full_ledger_proof=False, note=held),
-        complete=False, incomplete_reasons=[reason],
+        complete=False, incomplete_reasons=[reason, *bundle["incomplete_reasons"]],
         ai_records=[summary(r) for r in bundle["ai_records"]],
-        assistant_proposals=[summary(p) for p in bundle["assistant_proposals"]],
+        assistant_proposals=[summary(p) for p in (bundle["assistant_proposals"] or [])
+                             if isinstance(p, dict)] if isinstance(bundle["assistant_proposals"], list) else [],
         assistants={**{key: bundle["assistants"][key] for key in ("supported", "total", "exported", "truncated")},
                     "source_status": bundle["assistants"]["source_status"] if bundle["assistants"]["source_status"] in
                     ("available", "unsupported", "unavailable") else "unavailable",
                     "note": held},
-        task_releases=dict(supported=False, records=[], total=bundle["task_releases"]["total"], exported=0,
-                           truncated=bool(bundle["task_releases"]["total"]), note=held),
+        task_releases=dict(supported=False, records=[],
+                           total=bundle["task_releases"].get("total") if isinstance(bundle["task_releases"], dict) else None,
+                           exported=0, truncated=True, note=held),
         versions=dict(effective={}, changes=[], held_count=len(bundle["versions"]["changes"]), note=held),
         continuity=dict(epoch=bundle["continuity"]["epoch"],
                         suspensions=[summary(s) for s in bundle["continuity"]["suspensions"]], note=held),
@@ -409,84 +473,134 @@ def release_problems(bundle):
     These checks detect missing/contradictory evidence, not wholesale rewriting of
     unanchored release history. The application ledger does not bind these events.
     """
-    from . import rai_release
+    from . import ai_registry, rai_release
     problems, references = proposal_problems(bundle), []
     proposals = bundle.get("assistant_proposals")
     if not isinstance(proposals, list) or any(not isinstance(p, dict) for p in proposals):
         return problems
+    def retain_reference(reference, task):
+        if not isinstance(reference, dict) or not isinstance(reference.get("id"), str) or not reference["id"]:
+            problems.append("malformed task-release reference")
+        else:
+            references.append((reference, task))
+
+    def envelope_reference(envelope, reference, task):
+        if envelope is None:
+            return
+        if not isinstance(envelope, dict):
+            problems.append("malformed release evidence envelope")
+            return
+        if envelope.get("release") is not None:
+            retain_reference(envelope["release"], task)
+            if envelope["release"] != reference:
+                problems.append("envelope task-release reference mismatch")
+
     for p in proposals:
         reference = p.get("release")
         if reference is not None:
-            references.append((reference, p.get("capability")))
-        elif (p.get("envelope") or {}).get("source") == "ai":
+            retain_reference(reference, p.get("capability"))
+        elif isinstance(p.get("envelope"), dict) and p["envelope"].get("source") == "ai":
             problems.append("AI proposal has no retained task-release reference")
-        for event in [p, *(p.get("provenance") or [])]:
-            envelope = event.get("envelope") or {}
-            if envelope.get("release") is not None:
-                references.append((envelope["release"], p.get("capability")))
-                if envelope["release"] != reference:
-                    problems.append("proposal envelope task-release reference mismatch")
-            if event is not p and event.get("release") is not None:
-                references.append((event["release"], p.get("capability")))
-    for r in bundle.get("ai_records", []):
+        envelope_reference(p.get("envelope"), reference, p.get("capability"))
+        events = p.get("provenance", [])
+        if not isinstance(events, list) or any(not isinstance(e, dict) for e in events):
+            problems.append("malformed proposal provenance collection")
+            continue
+        for event in events:
+            envelope_reference(event.get("envelope"), reference, p.get("capability"))
+            if event.get("release") is not None:
+                retain_reference(event["release"], p.get("capability"))
+    records = bundle.get("ai_records")
+    if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
+        problems.append("missing or malformed AI record collection")
+        records = []
+    for r in records:
+        task = r.get("task", "priority")
+        if not isinstance(task, str):
+            problems.append("malformed legacy task")
+            continue
+        task = "legacy:" + task
         if r.get("release") is not None:
-            references.append((r["release"], "legacy:" + r.get("task", "priority")))
+            retain_reference(r["release"], task)
         elif r.get("source") == "ai":
             problems.append("Legacy AI record has no retained task-release reference")
-        envelope_release = (r.get("envelope") or {}).get("release")
-        if envelope_release is not None:
-            references.append((envelope_release, "legacy:" + r.get("task", "priority")))
-            if envelope_release != r.get("release"):
-                problems.append("legacy envelope task-release reference mismatch")
-    evidence = bundle.get("task_releases", {})
-    records = evidence.get("records", [])
-    if evidence.get("truncated") or evidence.get("total") != evidence.get("exported", len(records)) or evidence.get("exported", len(records)) != len(records):
+        envelope_reference(r.get("envelope"), r.get("release"), task)
+    evidence = bundle.get("task_releases")
+    if not isinstance(evidence, dict):
+        return problems + ["missing or malformed task-release source"]
+    records = evidence.get("records")
+    if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
+        return problems + ["missing or malformed task-release collection"]
+    total, exported = evidence.get("total"), evidence.get("exported")
+    if any(type(n) is not int or n < 0 for n in (total, exported)) or total != exported or exported != len(records) or evidence.get("truncated") is not False:
         problems.append("task-release evidence truncated or inconsistent")
-    if references and not evidence.get("supported"):
-        problems.append("task-release evidence unavailable")
+    supported = evidence.get("supported")
+    if supported is not True:
+        metadata = bundle.get("assistants")
+        metadata = metadata if isinstance(metadata, dict) else {}
+        note = evidence.get("note")
+        if (supported is not False or records or total != 0 or exported != 0 or references
+                or metadata.get("supported") is not False or metadata.get("source_status") != "unsupported"
+                or not isinstance(note, str) or not note.strip()):
+            problems.append("task-release source unavailable or contradictory unsupported evidence")
     found = {}
     for record in records:
         rid = record.get("id")
+        task, snapshot = record.get("task"), record.get("snapshot")
+        if not isinstance(rid, str) or not rid:
+            problems.append("malformed task-release identity")
+            continue
         if rid in found:
             problems.append("duplicate task-release evidence")
         found[rid] = record
+        if (not isinstance(task, str) or ai_registry.get(task.removeprefix("legacy:")) is None
+                or not isinstance(snapshot, dict) or snapshot.get("id") != rid
+                or snapshot.get("task") != task or snapshot.get("status") != "active"
+                or not isinstance(snapshot.get("release_version"), str) or not snapshot["release_version"]):
+            problems.append("malformed or contradictory task-release snapshot")
+        problems.extend(lifecycle_problems(record))
     for reference, task in references:
-        if not isinstance(reference, dict):
-            problems.append("malformed task-release reference")
-            continue
         record = found.get(reference.get("id"))
         if record is None:
-            problems.append(f"missing task-release evidence: {reference.get('id')}")
+            problems.append("missing task-release evidence")
             continue
         snapshot = record.get("snapshot")
         if not isinstance(snapshot, dict) or not {"id", "release_version"} <= snapshot.keys() or snapshot.get("id") != record["id"] or snapshot.get("task") != task or record.get("task") != task or snapshot.get("status") != "active" or rai_release.reference(snapshot) != reference:
-            problems.append(f"task-release reference digest/version/task mismatch: {record['id']}")
-        events = record.get("events", [])
-        revision = record.get("revision")
-        if record.get("truncated") or record.get("event_total") != len(events) or type(revision) is not int or revision != len(events) or not events:
-            problems.append(f"task-release lifecycle missing or truncated: {record['id']}")
-            continue
-        ids = set()
-        kinds = []
-        for event in events:
-            eid, at, body = event.get("id"), event.get("at"), event.get("body")
-            if not isinstance(eid, str) or not eid or eid in ids or event.get("release_id") != record["id"] or type(at) not in (int, float) or not math.isfinite(at) or not isinstance(body, dict):
-                problems.append(f"invalid task-release event envelope: {record['id']}")
-                continue
-            ids.add(eid)
-            kind = body.get("kind")
-            kinds.append(kind)
-            if kind not in ("release-recorded", "release-suspended", "release-revoked") or (kind == "release-recorded" and body.get("task") != task):
-                problems.append(f"invalid task-release event: {record['id']}")
-        status = record.get("current_status")
-        if kinds.count("release-recorded") != 1 or status not in ("active", "suspended", "revoked") or (status == "active" and revision != 1) or (status == "suspended" and "release-revoked" in kinds):
-            problems.append(f"contradictory task-release lifecycle: {record['id']}")
-        elif status != "active":
-            valid_events = [e for e in events if type(e.get("at")) in (int, float) and isinstance(e.get("body"), dict)]
-            latest = max((e["at"] for e in valid_events), default=None)
-            if latest is None or not any(e["at"] == latest and e["body"].get("kind") == "release-" + status for e in valid_events):
-                problems.append(f"task-release status lacks lifecycle event: {record['id']}")
+            problems.append("task-release reference digest/version/task mismatch")
     return list(dict.fromkeys(problems))
+
+
+def lifecycle_problems(record):
+    """Check every retained history; equal timestamps establish no UUID ordering."""
+    events, revision = record.get("events"), record.get("revision")
+    if (not isinstance(events, list) or not events or record.get("truncated") is not False
+            or type(record.get("event_total")) is not int or record["event_total"] != len(events)
+            or type(revision) is not int or revision != len(events)):
+        return ["task-release lifecycle missing or truncated"]
+    ids, times = set(), {"release-recorded": [], "release-suspended": [], "release-revoked": []}
+    for event in events:
+        if not isinstance(event, dict):
+            return ["invalid task-release event envelope"]
+        eid, at, body = event.get("id"), event.get("at"), event.get("body")
+        if (not isinstance(eid, str) or not eid or eid in ids
+                or event.get("release_id") != record["id"] or type(at) not in (int, float)
+                or not math.isfinite(at) or not isinstance(body, dict)):
+            return ["invalid task-release event envelope"]
+        ids.add(eid)
+        kind = body.get("kind")
+        if not isinstance(kind, str) or kind not in times or (kind == "release-recorded" and body.get("task") != record.get("task")):
+            return ["invalid task-release event"]
+        times[kind].append(at)
+    initial, suspended, revoked = (times[k] for k in ("release-recorded", "release-suspended", "release-revoked"))
+    if len(initial) != 1 or any(at < initial[0] for at in suspended + revoked):
+        return ["contradictory task-release initial event"]
+    status = record.get("current_status")
+    if ((status == "active" and revision == 1)
+            or (status == "suspended" and suspended and not revoked)
+            or (status == "revoked" and len(revoked) == 1
+                and all(at <= revoked[0] for at in suspended))):
+        return []
+    return ["contradictory task-release lifecycle status"]
 
 
 def verify_export(bundle, expected_head=None):
@@ -524,4 +638,4 @@ def verify_export(bundle, expected_head=None):
             problems.append("ledger does not match the externally held head")
     if bundle.get("complete") is not True:
         problems.append("bundle is incomplete: " + "; ".join(bundle.get("incomplete_reasons") or ["not marked complete"]))
-    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True and not limited)
+    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True and not problems)

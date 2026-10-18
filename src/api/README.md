@@ -143,6 +143,25 @@ These checks are not resident validation or WCAG certification.
 
 ## Continuity epoch and retained offline evidence (#122 partial follow-up)
 
+The new bounded register/release remediation applies the existing recorded-need
+policy to `GET /api/continuity` and the control documents returned by suspension,
+restart, change and reversal actions. Permitted roles retain safe IDs, registered
+scope, status, epoch, proposal/decision state and communication flags; protected
+narratives, arbitrary subject/version keys and unknown nested text are held.
+Canonical stored evidence and full authorized responses are not redacted.
+This does not change who may suspend, propose, decide or export.
+
+Every retained task release is now checked for lifecycle completeness, including
+releases with no proposal reference. Missing, truncated, malformed or contradictory
+records make production incomplete and offline verification invalid, even after
+the ordinary bundle digest is recomputed. Lifecycle checks allow repeated
+suspension and timestamp ties supported by the writer, but cannot authenticate
+wholesale consistent rewriting of unanchored history. Known-empty SQL evidence
+and explicit unsupported JSON storage remain distinct from unavailable evidence.
+Audience-limited exports remain explicitly incomplete, never full ledger proof;
+externally held canonical heads are unchanged. Local synthetic proof is not
+operational acceptance of issue #122.
+
 Durable assistant identity includes the persisted creation epoch. Suspension and
 restart invalidate old queued, leased, ready and accepted work for current use,
 even if sources and task release are unchanged. Detail/list/review/verification/

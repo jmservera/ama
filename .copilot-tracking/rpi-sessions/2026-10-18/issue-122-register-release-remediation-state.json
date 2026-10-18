@@ -33,8 +33,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "P01 exact-base integration, then failing controls and bounded fixes; critique dispositions locked."
+    "phase": "Review",
+    "action": "Implementation/validation reconciled; freeze implementation commit and transition to exactly one independent original Review."
   },
   "prioritized_follow_ups": null
 }

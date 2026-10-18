@@ -12,6 +12,13 @@ No unresolved user decision. One independent critique Complete / Revise; PC-001
 through PC-005 directly accepted in plan and specified below. All historical
 artifacts are frozen by SHA-256, including the prior Not accepted assessment.
 
+Current reconciliation: P01 and P02 complete; P03-T01 complete with focused host
+65/65, coupled 546/432 pass/114 skips, actual SQL 31/31 plus final two oracles,
+installed hardened image 65/65 and configured static gates. Six methods added,
+none removed. SQL/image resources removed. No material divergence or unresolved
+source blocker. P03-T02 awaits the ONE original Review; P03-T03 is the authorized
+post-Review publication action. Follow-ups remain outside bounded acceptance.
+
 <!-- rpi:phase id=P01 -->
 ## P01: Exact integration and adverse controls
 

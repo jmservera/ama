@@ -103,23 +103,23 @@ Any failure/skip is reported as such; local evidence is not Azure acceptance.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Exact-base integration and failing controls
+### [x] P01: Exact-base integration and failing controls
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Integrate exact authorized base and preserve parity
+#### [x] P01-T01: Integrate exact authorized base and preserve parity
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Add and execute task-owned adverse controls
+#### [x] P01-T02: Add and execute task-owned adverse controls
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Bounded source remediation
+### [x] P02: Bounded source remediation
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Project control responses without altering policy/evidence
+#### [x] P02-T01: Project control responses without altering policy/evidence
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Validate every retained release and preserve reference checks
+#### [x] P02-T02: Validate every retained release and preserve reference checks
 
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Validate, reconcile and review once
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Execute local, SQL, image and static checks; update guide
+#### [x] P03-T01: Execute local, SQL, image and static checks; update guide
 <!-- rpi:task id=P03-T02 -->
 #### [ ] P03-T02: Reconcile evidence and obtain one original independent Review
 <!-- rpi:task id=P03-T03 -->

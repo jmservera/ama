@@ -20,6 +20,19 @@ from test_assistants import Base, proposal
 from test_continuity import SUSPEND
 
 
+def complete_release_fixtures(test: Any) -> None:
+    """Replace bare releases only in an isolated positive-proof test store."""
+    with test.service.transaction() as db:
+        bodies = [
+            json.loads(row[0])
+            for row in db.execute("SELECT body FROM assistant_releases").fetchall()
+        ]
+        db.execute("DELETE FROM assistant_releases")
+    test.service.approvers = {test.pm["email"]}
+    for body in bodies:
+        test.service.record_release(test.pm, dict(body, expires="2099-01-01T00:00:00Z"))
+
+
 class EpochTests(Base):
     def cycle(self: Any, store: Any = None) -> None:
         store = store or self.store
@@ -289,14 +302,18 @@ class LegacyTests(Base):
                 errors: list[Exception] = []
                 original = self.store.save
                 armed = [True]
+                existing_ids = {r["id"] for r in self.store.data["recommendations"]}
 
                 def blocked_save(
                     armed: list[bool] = armed,
                     entered: threading.Event = entered,
                     release: threading.Event = release,
                     original: Any = original,
+                    existing_ids: set[str] = existing_ids,
                 ) -> Any:
-                    if armed[0] and self.store._cont().get("publication_fence"):
+                    if armed[0] and any(
+                        r["id"] not in existing_ids for r in self.store.data["recommendations"]
+                    ):
                         armed[0] = False
                         entered.set()
                         self.assertTrue(release.wait(15))
@@ -360,10 +377,11 @@ class LegacyTests(Base):
                     records = [
                         r
                         for r in other.store.data["recommendations"]
-                        if r.get("continuity_epoch") == start
+                        if r["id"] not in existing_ids
                     ]
                 self.assertEqual(len(records), 1)
                 self.assertEqual(records[0]["status"], "Quarantined")
+                self.assertEqual(records[0]["continuity_epoch"], start)
                 self.assertIsNotNone(records[0]["ai_output"])
                 if task != "priority":
                     self.assertEqual(results[0]["source"], "template")
@@ -415,6 +433,10 @@ class LegacyTests(Base):
 
 class OfflineTests(Base):
     cycle = EpochTests.cycle
+
+    def setUp(self) -> None:
+        super().setUp()
+        complete_release_fixtures(self)
 
     def bundle(self) -> tuple[dict[str, Any], str]:
         cap = "stock-prioritisation"
@@ -601,16 +623,8 @@ class OfflineTests(Base):
         empty = self.store.continuity_export(self.pm, self.service.export())
         self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
         LegacyTests.prepare_ai(self, self.store)
-        result = self.store.ai_run(self.pm, "ZF-1", "summary")
-        # Direct fixture installation omits events; explicitly retain synthetic lifecycle evidence.
-        with self.service.transaction() as db:
-            self.service.event(
-                db,
-                result["release"]["id"],
-                kind="release-recorded",
-                task="legacy:summary",
-                evidence_class="constructed-fixture",
-            )
+        complete_release_fixtures(self)
+        self.store.ai_run(self.pm, "ZF-1", "summary")
         legacy = self.store.continuity_export(self.pm, self.service.export())
         self.assertEqual(legacy["assistant_proposals"], [])
         self.assertTrue(continuity.verify_export(legacy, legacy["ledger"]["head"])["valid"])
@@ -630,9 +644,337 @@ class OfflineTests(Base):
         unsupported["assistants"]["total"] = 1
         self.assertFalse(self.redigest(unsupported)["valid"])
 
+    def test_unreferenced_retained_release_lifecycle_is_required(self) -> None:
+        part = self.service.export()
+        self.assertEqual(part["proposals"], [])
+        original = self.store.continuity_export(self.pm, part)
+        head = copy.deepcopy(original["ledger"]["head"])
+        self.assertTrue(continuity.verify_export(original, head)["valid"])
+        for defect in ("truncated", "events", "count", "revision", "association", "task", "status"):
+            with self.subTest(defect=defect):
+                source = copy.deepcopy(part)
+                record = source["task_releases"]["records"][0]
+                if defect == "truncated":
+                    record.update(events=[], truncated=True)
+                elif defect == "events":
+                    record["events"] = []
+                elif defect == "count":
+                    record["event_total"] = True
+                elif defect == "revision":
+                    record["revision"] = True
+                elif defect == "association":
+                    record["events"][0]["release_id"] = "other"
+                elif defect == "task":
+                    record["events"][0]["body"]["task"] = "other"
+                else:
+                    record["current_status"] = "revoked"
+                bundle = self.store.continuity_export(self.pm, source)
+                self.assertFalse(bundle["complete"], defect)
+                expected = copy.deepcopy(bundle["ledger"]["head"])
+                self.redigest(bundle)
+                check = continuity.verify_export(bundle, expected)
+                self.assertFalse(check["valid"], check)
+                self.assertFalse(check["complete"], check)
+                self.assertFalse(
+                    any("digest" in p or "externally held" in p for p in check["problems"])
+                )
+        limited_events = self.store.continuity_export(self.pm, self.service.export(event_limit=0))
+        self.assertFalse(limited_events["complete"])
+        self.assertFalse(continuity.verify_export(limited_events)["valid"])
+
+    def test_unreferenced_lifecycle_transitions_and_timestamp_ties(self) -> None:
+        from zava_forward.core.assistants import runtime_binding
+
+        cap = "stock-prioritisation"
+        body = release_support.fixture(
+            cap, runtime_binding(cap, self.store.ai), expires="2099-01-01T00:00:00Z"
+        )
+        with patch.object(self.service, "now", return_value=2_000_000_000):
+            released = self.service.record_release(self.pm, body)
+            for state in ("active", "suspended", "suspended", "revoked"):
+                if state != "active":
+                    self.service.change_release(self.pm, released["id"], state, "Synthetic.")
+                bundle = self.store.continuity_export(self.pm, self.service.export())
+                record = next(
+                    r for r in bundle["task_releases"]["records"] if r["id"] == released["id"]
+                )
+                record["events"].reverse()
+                head = copy.deepcopy(bundle["ledger"]["head"])
+                self.redigest(bundle)
+                self.assertTrue(continuity.verify_export(bundle, head)["valid"])
+        for defect in (
+            "initial-late",
+            "after-revoke",
+            "duplicate-initial",
+            "duplicate-revoke",
+            "missing-initial",
+            "final",
+        ):
+            with self.subTest(defect=defect):
+                bad = copy.deepcopy(bundle)
+                record = next(
+                    r for r in bad["task_releases"]["records"] if r["id"] == released["id"]
+                )
+                recorded = next(
+                    e for e in record["events"] if e["body"]["kind"] == "release-recorded"
+                )
+                revoked = next(
+                    e for e in record["events"] if e["body"]["kind"] == "release-revoked"
+                )
+                if defect == "initial-late":
+                    recorded["at"] += 1
+                elif defect == "after-revoke":
+                    next(e for e in record["events"] if e["body"]["kind"] == "release-suspended")[
+                        "at"
+                    ] += 1
+                elif defect in ("duplicate-initial", "duplicate-revoke"):
+                    extra = copy.deepcopy(recorded if defect == "duplicate-initial" else revoked)
+                    extra["id"] = uuid.uuid4().hex
+                    record["events"].append(extra)
+                    record["revision"] += 1
+                    record["event_total"] += 1
+                elif defect == "missing-initial":
+                    record["events"].remove(recorded)
+                    record["revision"] -= 1
+                    record["event_total"] -= 1
+                else:
+                    record["current_status"] = "active"
+                self.redigest(bad)
+                self.assertFalse(continuity.verify_export(bad, head)["valid"])
+
+    def test_malformed_release_sources_fail_producer_and_verifier_without_exceptions(self) -> None:
+        part = self.service.export()
+        original = self.store.continuity_export(self.pm, part)
+        malformed_sources: tuple[Any, ...] = (None, False, [], 3, "unknown", {})
+        invalid: list[tuple[str, Any]] = [("task_releases", value) for value in malformed_sources]
+        for field, value in (
+            ("records", None),
+            ("records", [None]),
+            ("records", [{}]),
+            ("total", True),
+            ("exported", 1.0),
+            ("truncated", 0),
+            ("supported", "yes"),
+        ):
+            evidence = copy.deepcopy(part["task_releases"])
+            evidence[field] = value
+            invalid.append(("task_releases", evidence))
+        for field, value in (
+            ("id", []),
+            ("id", None),
+            ("snapshot", None),
+            ("snapshot", []),
+            ("events", None),
+            ("events", [None]),
+            ("event_total", -1),
+            ("revision", 1.0),
+            ("truncated", None),
+        ):
+            evidence = copy.deepcopy(part["task_releases"])
+            evidence["records"][0][field] = value
+            invalid.append(("task_releases", evidence))
+        for field, value in (
+            ("at", True),
+            ("at", float("nan")),
+            ("at", float("inf")),
+            ("body", None),
+            ("body", []),
+            ("id", []),
+            ("release_id", []),
+        ):
+            evidence = copy.deepcopy(part["task_releases"])
+            evidence["records"][0]["events"][0][field] = value
+            invalid.append(("task_releases", evidence))
+        for field, value in invalid:
+            with self.subTest(field=field, value=value):
+                source = copy.deepcopy(part)
+                source[field] = value
+                produced = self.store.continuity_export(self.pm, source)
+                self.assertFalse(produced["complete"])
+                self.assertTrue(produced["incomplete_reasons"])
+                bad = copy.deepcopy(original)
+                bad[field] = value
+                self.redigest(bad)
+                check = continuity.verify_export(bad, original["ledger"]["head"])
+                self.assertFalse(check["valid"])
+                self.assertFalse(check["complete"])
+                self.assertTrue(check["problems"])
+        for source in (
+            None,
+            False,
+            [],
+            3,
+            {},
+            dict(part, proposals=None),
+            dict(part, proposals=[None]),
+        ):
+            with self.subTest(source=source):
+                produced = self.store.continuity_export(self.pm, source)
+                self.assertFalse(produced["complete"])
+        for envelope, provenance in (([], []), ({}, [None]), ({}, {}), (1, [])):
+            source = copy.deepcopy(part)
+            source["proposals"] = [
+                dict(capability="stock-prioritisation", envelope=envelope, provenance=provenance)
+            ]
+            source["total"] = 1
+            produced = self.store.continuity_export(self.pm, source)
+            self.assertFalse(produced["complete"])
+            self.assertFalse(self.redigest(produced)["valid"])
+
+    def test_release_source_absence_and_unsupported_are_not_full_evidence(self) -> None:
+        part = self.service.export()
+        missing = copy.deepcopy(part)
+        del missing["task_releases"]
+        bundle = self.store.continuity_export(self.pm, missing)
+        self.assertFalse(bundle["complete"])
+        self.assertFalse(self.redigest(bundle)["valid"])
+        for field, value in (("supported", False), ("total", 0), ("exported", 0)):
+            bad = copy.deepcopy(part)
+            bad["task_releases"][field] = value
+            produced = self.store.continuity_export(self.pm, bad)
+            self.assertFalse(produced["complete"])
+            self.assertFalse(self.redigest(produced)["valid"])
+        # Real absence is retained as negative evidence, not repaired by an exporter.
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases")
+        empty = self.store.continuity_export(self.pm, self.service.export())
+        self.assertEqual(empty["task_releases"]["records"], [])
+        self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
+        release_support.install(self.store)
+        bare = self.store.continuity_export(self.pm, self.service.export())
+        self.assertFalse(bare["complete"])
+        self.assertFalse(self.redigest(bare)["valid"])
+
 
 class HttpTests(fixtures.ApiTests):
     cycle = EpochTests.cycle
+
+    def setUp(self) -> None:
+        super().setUp()
+        complete_release_fixtures(self)
+
+    def test_register_recorded_need_canaries_and_canonical_nonmutation(self) -> None:
+        canary = "SYNTHETIC-REGISTER-PRIVATE-122"
+        suspended = self.store.suspend(
+            self.pm,
+            dict(
+                SUSPEND,
+                reason=canary,
+                incident_owner=canary,
+                containment=canary,
+                comms_owner=canary,
+                comms_audience=canary,
+            ),
+        )
+        changed = self.store.change_record(
+            self.pm,
+            dict(
+                kind="model",
+                subject=canary,
+                from_version=canary + "-v1",
+                to_version=canary + "-v2",
+                reason=canary,
+                evaluation="pass",
+                evaluation_ref=canary,
+            ),
+        )
+        with self.store.lock:
+            self.store._cont()["suspensions"][0]["unknown_nested"] = {"reason": canary}
+            self.store._cont()["changes"][0]["unknown_nested"] = [canary]
+            self.store.save()
+            canonical_before = copy.deepcopy(self.store._cont())
+        for need in (None, "", "Programme Support Officer,Quality Inspector"):
+            context = (
+                patch.dict(os.environ, {"ZF_REASON_ROLES": need})
+                if need is not None
+                else patch.dict(os.environ, {}, clear=False)
+            )
+            with context:
+                from zava_forward.core import projection
+
+                for role in (
+                    "Programme Support Officer",
+                    "Quality Inspector",
+                    "Retrofit Programme Manager",
+                    "Building Safety Liaison",
+                ):
+                    with self.subTest(need=need, role=role):
+                        self.user = self.people[role]
+                        status, body = self.request("/api/continuity")
+                        self.assertEqual(status, 200, body)
+                        self.assertEqual(
+                            canary in json.dumps(body), projection.can_see_reason(self.user)
+                        )
+                        self.assertEqual(body["epoch"], suspended["epoch"])
+                        self.assertEqual(body["suspensions"][0]["id"], suspended["id"])
+                        self.assertEqual(body["changes"][0]["id"], changed["id"])
+                        self.assertFalse(body["suspensions"][0]["communication"]["sent"])
+                        if projection.can_see_reason(self.user):
+                            self.assertEqual(body["suspensions"], canonical_before["suspensions"])
+                            self.assertEqual(body["changes"], canonical_before["changes"])
+        with self.store.lock:
+            self.assertEqual(self.store._cont(), canonical_before)
+
+    def test_limited_mutation_responses_preserve_human_controls_without_text(self) -> None:
+        canary = "SYNTHETIC-MUTATION-PRIVATE-122"
+        with patch.dict(os.environ, {"ZF_REASON_ROLES": "Building Safety Liaison"}):
+            self.user = self.people["Quality Inspector"]
+            status, suspended = self.request(
+                "/api/continuity/suspend", dict(SUSPEND, reason=canary)
+            )
+            self.assertEqual(status, 200, suspended)
+            sid = suspended["id"]
+            self.assertEqual(suspended["status"], "Suspended")
+            self.assertNotIn(canary, json.dumps(suspended))
+            self.assertFalse(suspended["communication"]["sent"])
+            for decision in ("Keep suspended", "Restart"):
+                self.user = self.pm
+                status, proposed = self.request(
+                    "/api/continuity/restart-propose", dict(id=sid, corrective_evidence=canary)
+                )
+                self.assertEqual(status, 200, proposed)
+                self.assertTrue(proposed["proposal"])
+                self.assertNotIn(canary, json.dumps(proposed))
+                self.user = self.people["Programme Support Officer"]
+                status, decided = self.request(
+                    "/api/continuity/restart-decide",
+                    dict(
+                        id=sid,
+                        epoch=proposed["proposal"]["epoch"],
+                        decision=decision,
+                        authority_ref=canary,
+                    ),
+                )
+                self.assertEqual(status, 200, decided)
+                self.assertNotIn(canary, json.dumps(decided))
+                self.assertEqual(
+                    decided["status"], "Restarted" if decision == "Restart" else "Suspended"
+                )
+            status, changed = self.request(
+                "/api/continuity/change",
+                dict(
+                    kind="rule",
+                    subject=canary,
+                    from_version="v1",
+                    to_version="v2",
+                    reason=canary,
+                    evaluation="pass",
+                    evaluation_ref=canary,
+                ),
+            )
+            self.assertEqual(status, 200, changed)
+            self.assertEqual(changed["status"], "Applied")
+            self.assertNotIn(canary, json.dumps(changed))
+            status, reverse = self.request(
+                "/api/continuity/change-reverse", dict(id=changed["id"], reason=canary)
+            )
+            self.assertEqual(status, 200, reverse)
+            self.assertEqual(reverse["reverses"], changed["id"])
+            self.assertNotIn(canary, json.dumps(reverse))
+        self.user = self.pm
+        _, full = self.request("/api/continuity")
+        self.assertIn(canary, json.dumps(full))
+        self.assertEqual(full["changes"][0]["status"], "Reversed")
 
     def test_export_preserves_programme_support_reason_redaction(self) -> None:
         canary = "SYNTHETIC-RESTRICTED-REASON-122"
