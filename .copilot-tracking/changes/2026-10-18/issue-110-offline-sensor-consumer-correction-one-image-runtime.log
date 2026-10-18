@@ -1,0 +1,7 @@
+UID10001; read-only root; network none
+............................................................s..............
+----------------------------------------------------------------------
+Ran 75 tests in 0.820s
+
+OK (skipped=1)
+Actual finite API adapter accepted2/reopened replay2; no duplicate append

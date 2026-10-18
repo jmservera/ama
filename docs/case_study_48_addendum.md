@@ -890,6 +890,25 @@ Deterministic rules should control:
 
 #### Sensor Data Capture, Analysis and Map (Demonstrator Design)
 
+Owner-authorized constructed engineering on 2026-10-18 adds only the
+[finite offline API consumer](../src/api/README.md#finite-offline-sensor-ingestion-110)
+for issue 110: independently supplied exercise mapping/consent/calibration/clock/
+range controls, authoritative SQL stable-key append and restricted owned DQ.
+This is not device authentication or live ingestion. No raw observation enters
+AI, maps or ordinary UI, and no property, priority, safety, consent, financial or
+review-task state changes. Actual local SQLite/SQL Server tests do not establish
+Azure application acceptance. Whole issue 110/PRD AC-066, live Hub identities and
+transport, registered real AI, OD-43 and remaining operational owner decisions
+remain unmet. A dated reconciliation on 2026-10-18 records the existing
+[owner decision of 2026-10-15](https://github.com/jmservera/ama/issues/129#issuecomment-6194409951):
+ADR 0003 accepted with amendment, Basic IoT Hub sufficient for the exercise,
+without cloud-to-device messages, device twins or device management.
+[ADR status and proposal history](./adrs/0003-journey-derived-capabilities-runtime-fit.md#status)
+remain distinct. That acceptance is not live transport, sizing/cost, network,
+provisioning/credential, privacy, real AI or Azure application acceptance.
+The following analysis/map flow remains a proposal, not implemented by this
+bounded slice.
+
 The detailed proposal is recorded in
 [ADR 0002, Sensor Data Capture and Analysis](./adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map).
 It deliberately reuses the workbench API and Azure SQL programme store rather

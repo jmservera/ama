@@ -1,0 +1,2 @@
++ docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:correction-two-350bfa26 src
+sha256:165ebd0d6577ce9e363fe8843bd6fc1c77bacf3a04afeda2237255072b26c1b9

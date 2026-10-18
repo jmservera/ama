@@ -1,0 +1,8 @@
++ docker run --rm -i --name ama-sensor110-c2-runtime-350bfa26 --network none --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,mode=1777 --tmpfs /state:rw,uid=10001,gid=10001,mode=700 --mount type=bind,src=/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests,dst=/tests/core,readonly --mount type=bind,src=/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests,dst=/tests/api,readonly -e PYTHONPATH=/tests/core:/tests/api -e ZF_DATA=/tmp/no-default-dataset.json ama-sensor110-api:correction-two-350bfa26 python -W ignore::ResourceWarning -
+UID/GID10001; read-only root; no capabilities; NoNewPrivs; network none
+.......................................................................s..............
+----------------------------------------------------------------------
+Ran 86 tests in 1.295s
+
+OK (skipped=1)
+Actual finite API signed-zero adapter accepted2/reopened replay2/later1; rows3

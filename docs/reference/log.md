@@ -6328,3 +6328,48 @@ metadata when the knowledge base was created.
   privacy/legal review, actual-model/Azure delivery, current PRD owner acceptance
   or operational approval. All 22 checks remain Open; whole-issue acceptance and
   version-linked real AI/SQL/Azure application acceptance remain unmet.
+
+## [2026-10-18] query | Issue 110 constructed offline sensor consumer boundary
+
+* Added narrow existing core/API guides and accurate ADR 0003/addendum/index
+  status for the owner-authorized finite offline processing slice. The exact
+  replay-only synthetic loader remains unchanged and still refuses fault inputs.
+* Independently supplied exercise mapping, consent, calibration, window, ranges
+  and manual-review ownership are not observations or operational authority.
+  SQL stable identity, current-transaction checks, restricted DQ and bounded
+  receipts do not alter case/task/priority/safety/financial/consent records.
+* Actual local SQLite/SQL Server evidence is distinct from live Hub identities,
+  transport, Azure SQL/real AI acceptance and human/privacy approval. Whole
+  issue 110/AC-066 remains open; ADR remains Proposed. Infrastructure 140
+  depends on the consumer, not the reverse; analysis 111 is not a prerequisite.
+  Memory, original case and immutable regulatory evidence remain unchanged.
+
+## [2026-10-18] query | Issue 110 retained reading consistency correction
+
+* Corrected the bounded offline consumer's retained SQL replay and ordering
+  validation: malformed timestamps/numbers and inconsistent historical witness
+  content now fail with metadata-only refusal instead of success or raw parsing
+  failure. The API retains earlier committed-prefix metadata on a later failure.
+* Historical exact replay still reconciles after current exercise consent,
+  calibration and processing window change. No new admission, duplicate write,
+  shared-store mutation, live transport or operational authority is inferred.
+* Original adverse critique and Review remain unchanged; this separately
+  authorized implementation is correction ONE, not independent acceptance.
+  Whole issue/live/Proposed ADR gates and baseline API browser tooling remain.
+
+## [2026-10-18] query | Issue 110 final correction and dated ADR reconciliation
+
+* Reconciled current ADR 0003 status, core/API guides, addendum and index against
+  the [owner's 2026-10-15 decision](https://github.com/jmservera/ama/issues/129#issuecomment-6194409951),
+  retrieved 2026-10-18. Owner accepted ADR with amendment: Basic IoT Hub enough
+  for the exercise; no cloud-to-device messages, device twins or device
+  management for now. The ADR preserves its original Proposed status as history.
+  Earlier append-only entries and adverse assessment artifacts are unchanged.
+* This is not live transport, sizing/cost, network/provisioning/credential
+  authority, privacy review, real AI or Azure application acceptance. Whole
+  issue 110 and its live/human gates remain open.
+* Final authorized correction TWO validates the complete target-sensor retained
+  ordering boundary, rather than trusting MAX before validation; low-sorting
+  corrupt timestamps and duplicate maxima cannot be skipped. Validated seed
+  integers compare semantically across SQLite/BIGINT while retaining exact
+  input/digest replay identity. No new store, service or operational policy.

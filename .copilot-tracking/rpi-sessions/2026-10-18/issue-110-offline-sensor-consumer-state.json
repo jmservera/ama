@@ -1,0 +1,130 @@
+{
+  "task_id": "issue-110",
+  "task_slug": "issue-110-offline-sensor-consumer",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Final permitted source correction TWO normal-pushed at4ecf09416e3d9d4d7bdfe3f429de00fbddbc53d3. PR411 Draft with empty closing refs, base/main unchanged6fbdcee1; no rebase/integration. Final tracking-only receipt follows; no further source correction authorized.",
+      "status": "final-source-published",
+      "evidence": "Exact remote/REST PR verification, complete delta/source hash check; source/image binding and cleanup in correction-two receipt."
+    },
+    {
+      "decision": "Final correction TWO implemented all four independently assessed findings together. Actual SQLite red7/fail6 and SQL red40/fail7/error5 preserved; corrected SQLite70 and real SQL40 pass. Full configured core mypy128 and API mypy61 pass with declared devdeps; full API CI unit935/skip300 passes. No blanket type exemption.",
+      "status": "implemented-correction-two",
+      "evidence": "Separate correction-two receipt and actual command/output logs; original assessments and all correction-one artifacts remain byte-identical."
+    },
+    {
+      "decision": "Current ADR0003 owner acceptance with Basic-tier exercise amendment dated2026-10-15 is reconciled from actual issue129 comment6194409951. Historical Proposed paragraph and original phase evidence preserved; no live/human/operational acceptance inferred.",
+      "status": "dated-evidence-reconciled",
+      "evidence": "Actual GitHub comment fetched2026-10-18; ADR/current guides/addendum/KB index and append-only log."
+    },
+    {
+      "decision": "All2792 protected intake blob/modes unchanged; image165ebd0d matches all83 runtime Python source files. Hardened image86/skip1 and actual signed-zero adapter restart/later admission pass. Existing Docker CI controls/startup pass; no browser or real AI/cloud execution.",
+      "status": "final-source-verified",
+      "evidence": "Correction-two proof, source/image hashes and runtime/raw static/preservation logs. No base change; remote main still6fbdcee1."
+    },
+    {
+      "decision": "Coordinator explicitly authorizes final correction TWO for assessment eb350bd7-aad7-4696-a364-efc436f25fa9, all four findings together. Same task and base, normal pushes only; no third source correction or repeated original phase assessments.",
+      "status": "confirmed-active",
+      "evidence": "Clean exact local/remote/PR411 intake 4723f0a19eb6741079dfec638303f9a3d009d05c; base/main6fbdcee1; original hashes and actual stream sizes/hashes verified before edits."
+    },
+    {
+      "decision": "Automatic ordered RPI explicitly requested; pinned branch/base 578631ac75cc8c6a7af53922c6aaae4435e7761c; finite constructed offline SQL processing only; no nested implementation workers.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-18; clean branch and live issue bodies inspected."
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready after inline wider/deeper/contrarian cycle.",
+      "status": "completed",
+      "evidence": "Research C1-C6/W1-W3."
+    },
+    {
+      "decision": "Original final-candidate critique executed exactly once.",
+      "status": "executed",
+      "evidence": "Original critique artifact SHA256 ad56b59a8df472fff31ed3ae906eca63505ea76fca0f63a457dda4acf540942b."
+    },
+    {
+      "decision": "Critique verdict Revise; PC-001..007 directly dispositioned once; no user divergence and no repeat critique.",
+      "status": "direct-dispositions-completed",
+      "evidence": "Plan Critique Disposition and details single refinement."
+    },
+    {
+      "decision": "Scoped SQL/runtime/static validation passed. Full API mypy is not green: nine baseline missing Playwright imports; no browser execution.",
+      "status": "known-validation-limitation",
+      "evidence": "Changes command/result table; pinned-baseline comparison."
+    },
+    {
+      "decision": "Original Review executed exactly once against candidate de54472fc06d1ac16efa6dbd4f306afc1c98598e; execution Complete.",
+      "status": "executed",
+      "evidence": "Original Review SHA256 5ae9cb33e5d46a5a486cfbce0e824ab012efd8b6b4fccf9b4e73546e772b07cc."
+    },
+    {
+      "decision": "Original Review outcome Defects found: RV-001 Medium, RV-002 Low, RV-003 Low residual. At original publication all routed later, correction count 0; original bytes preserved.",
+      "status": "adverse-outcome-preserved",
+      "evidence": "Original Review Findings and Outcome sections; no post-Review source/document/changes-record edit."
+    },
+    {
+      "decision": "Task-owned containers/image tag and isolated validation venv removed. Earlier image IDs were already absent. No shared base images or unrelated resources removed.",
+      "status": "cleanup-verified",
+      "evidence": "Docker filtered container/image listings empty and exact session venv path absent."
+    },
+    {
+      "decision": "Remote main advanced to 9d625a09e34491ecf9fd27ffc7d59e67c2373b29 at pre-publication inspection. Branch remains pinned on 578631ac; no rebase/integration performed.",
+      "status": "lineage-preserved",
+      "evidence": "Read-only gh main ref inspection; source candidate de54472f unchanged."
+    },
+    {
+      "decision": "Normal push verified and PR 411 opened to main with no closing issue references. Final receipt-only commit follows; no source corrections.",
+      "status": "published",
+      "evidence": "https://github.com/jmservera/ama/pull/411; initial published head 4751b0d4b72e9d782c67036d44a03da65febcfdc; actual PR base 9d625a09e34491ecf9fd27ffc7d59e67c2373b29."
+    },
+    {
+      "decision": "Owner separately authorized same-task later rpi-implement RV-001/RV-002 correction ONE of maximum TWO, then integration-only onto exact 6fbdcee18413e9f7366e5f9ec53f68f053681096. Intake local/remote/PR head exactly 43ef35655b5a01f2a07a2d09eaef5415cc27c1dd clean; PR Draft, no closing refs.",
+      "status": "confirmed",
+      "evidence": "Owner continuation; correction ONE receipt. No Research/critique/original Review rerun."
+    },
+    {
+      "decision": "RV-001 implemented with actual SQLite/MSSQL fail-before/pass-after; RV-002 contradictory line retained as historical with accurate current handoff. Original adverse findings unchanged; no independent acceptance claim.",
+      "status": "implemented-correction-one",
+      "evidence": "Correction ONE receipt and raw logs; full core/API preservation and hardened actual adapter checks passed; full API mypy remains nine baseline missing browser imports."
+    },
+    {
+      "decision": "Integration-only onto exact authorized 6fbdcee18413e9f7366e5f9ec53f68f053681096 completed. Tested source 4be60e29ea9daa50c15ed0e6e8a3342050744178; complete normalized owned patch equal, all 2750 protected upstream blob/modes unchanged; original artifacts unchanged.",
+      "status": "integration-verified",
+      "evidence": "Correction ONE receipt, integration proof and raw checks; scoped core/API/SQL/image passes. Integrated full API mypy fails10 versus pinned baseline9, additional unused-ignore interaction not repaired."
+    },
+    {
+      "decision": "Frozen candidate published with exactly one authorized explicit intake force-with-lease; PR411 remains Draft with empty closing refs, pinned base verified. Final tracking-only receipt queued for normal push; no src/docs delta from tested candidate. Owner STOP honored.",
+      "status": "published-stopped",
+      "evidence": "Published source/evidence candidate 6b2268311335a7a677cbce98442c0dcd354990e2; final receipt-inclusive exact head identified in PR411. All original hashes, 2750 upstream entries and 56-path inventory verified; owned resources absent."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "exact-published-head-review",
+      "summary": "Complete independent exact-published-head source/artifact/log review is required after publication.",
+      "resolution": "Coordinator/owner gate; no second original Review in this task."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "STOPPED after final correction TWO. Coordinator independent exact frozen-head accumulated-delta/source/artifact/actual-stream and unchanged-doc semantic review next. No third source correction, repeated original Review, ready/merge or automatic child work."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator independent frozen-head accumulated-delta and unchanged-document semantic assessment",
+      "rationale": "All four authorized source corrections verified locally; independent acceptance remains required and no third source correction is authorized.",
+      "evidence": "Original adverse assessments preserved; final correction-two receipt and actual CI/SQL/image proofs. Historical RV-003/configured static limitation cleared by declared devdeps and minimal obsolete ignore removal."
+    }
+  ]
+}

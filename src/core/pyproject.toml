@@ -110,3 +110,9 @@ disallow_untyped_calls = false
 [[tool.mypy.overrides]]
 module = ["zava_forward.core.coordinator", "test_coordinator", "tests.test_coordinator"]
 disallow_untyped_calls = false
+
+# Narrow typed sensor boundary calls the existing migrated SQL and generator APIs.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.sensor_consumer", "sensor_consumer_fixture",
+          "test_sensor_consumer", "tests.sensor_consumer_fixture", "tests.test_sensor_consumer"]
+disallow_untyped_calls = false
