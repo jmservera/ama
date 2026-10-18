@@ -5935,3 +5935,100 @@ metadata when the knowledge base was created.
   not independent coordinator/WCAG acceptance or issue closure. No second Review.
   All denominator/hold/priority/coverage and same-filter map/list/funnel definitions
   remain unchanged; unsupported lifecycle exclusions stay explicitly Unknown.
+
+## 2026-10-17 - Bounded pending-document rescan invocation (Refs #117)
+
+* Research current src and merged PR270 evidence on the authorized merged102
+  base. Add a bounded SQL orchestrator invocation using the existing scanner,
+  factory and optimistic writer; no daemon, Azure timer or scanner activation.
+* Record stable pages and non-deleting unavailable bad verdicts, explicit
+  synthetic-local opt-in, safe incomplete/failure/committed outcomes and
+  actual owned loopback SQL race/retry/prior-audit/commit-boundary evidence in
+  the [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  [core contract](../../src/core/README.md#bounded-pending-document-rescans-117)
+  and [orchestrator guide](../../src/orchestrator/README.md#bounded-document-rescan-job-117).
+* All 17 actual SQL rescan tests passed; real SQLite/MSSQL and hardened
+  UID10001/read-only/drop-all/NoNewPrivs/no-network image commands persisted
+  bounded 1/2/0 clean pages and exactly three success events with intact ledger,
+  bytes and legal hold. Owned SQL stopped and removed. Existing document,
+  progress, resident and sensor regression selections passed with opt-in
+  skips reported separately.
+* Preserve the original one-critique Revise verdict and directly applied
+  findings. One original Review and external coordinator acceptance are
+  separate from these implementation receipts. Real Defender/Blob enablement,
+  recurring hosted schedule/cadence, approved retention triggers/periods,
+  deletion/hold delegations and human approvals remain unmet. No private
+  dataset, memory edit, web, paid service, real communication or live Azure.
+
+## 2026-10-17 - Original rescan Review outcome and separate routing (Refs #117)
+
+* The one original Review executed Complete / outcome Not accepted. Two
+  Medium findings reproduce raw nested SQL recovery diagnostics and malformed
+  scanner result report escape. Pending state remains unavailable in both
+  repros; prior successful SQL/image receipts are not overwritten or promoted
+  into overall acceptance.
+* Reconcile the [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  index and [job status](../../src/orchestrator/README.md#bounded-document-rescan-job-117).
+  Route corrections separately; no production/test patch, repeat Review or
+  independent coordinator Pass. Original critique Revise and original Review
+  are retained. Real-service, schedule and human-authority gates remain open.
+
+## 2026-10-17 - Draft rescan publication receipt (Refs #117)
+
+* Publish [PR #395](https://github.com/jmservera/ama/pull/395) to main from the
+  authorized branch, preserving the original Not accepted Review and both
+  Medium correction routes. No source/test correction, second Review,
+  independent coordinator Pass, merge or issue action.
+* Fresh main stays `ebc8dab87ae9bd6a33380b85e86f38be5ed9f213`; source commit
+  `4763c0e6337d06846d9a9c46f7d9e0cf7470079f` matches the published head.
+  Owned SQL remains stopped/removed. Hosted checks are running, not presumed
+  successful; Defender/scheduling and human approval gates remain unmet.
+
+## 2026-10-18 - Authorized rescan correction ONE evidence (Refs #117)
+
+* Coordinator authorizes both original Medium findings in one coherent cycle
+  on the same branch/draft [PR #395](https://github.com/jmservera/ama/pull/395).
+  Preserve original Review Complete / Not accepted and critique byte-exact;
+  no second Review, self-Pass, merge or issue closure.
+* Failing-first JSON/SQLite/actual CLI cases reproduce nested recovery private
+  diagnostics, malformed-result escape and invalid container acceptance.
+  Worker-owned SQL recovery now runs before automatic traceback emission;
+  shared closed scanner-result shape/verdict/detail validation occurs before
+  unpack/mutation. Explicit TypeError boundaries return safe truthful failures,
+  preserving original conflict, winner, pending prefix and own-COMMIT distinction.
+* All 19 actual SQL worker cases (including the prior17) plus 11 shared progress/
+  resident recovery cases pass. Actual MSSQL CLI failure streams and rebuilt
+  nonroot/read-only/drop-all/NoNewPrivs/no-network installed-image job prove
+  unavailable failed records, retained bytes/hold, truthful counters, no private
+  sentinel/traceback and exactly-once success. Exact owned SQL stopped/removed.
+* Reconcile the [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  index, [core contract](../../src/core/README.md#bounded-pending-document-rescans-117)
+  and [job guide](../../src/orchestrator/README.md#bounded-document-rescan-job-117).
+  Local regression/static evidence is targeted, not independent acceptance.
+  Defender/Blob, hosted cadence and real retention/approval authority remain
+  unmet; no private data, live Azure, paid activation, web or memory changes.
+
+## 2026-10-18 - Final rescan correction TWO and authorized integration (Refs #117)
+
+* Coordinator supplies independent558e33f1 Revise: original RV-001/RV-002
+  independently closed, all seven artifact reconciliation passes; one new Medium
+  unconditional optional MSSQL-driver import breaks dependency-minimal SQLite
+  CI/help. Authorize this LAST source cycle and own-topic rebase onto merged
+  PR #396 main f9d80724, with exact old-remote lease6a9fd3a4.
+* Real no-site discovery fails first with22 passes/one import error. Load the
+  driver error type only after explicit MSSQL selection inside the fixed error
+  boundary. Final real driverless32 run/31 pass/one driver skip, module help
+  and normal/failing SQLite CLI pass; no workflow or dependency install change.
+* Actual owned SQL20/20 passes, including all19 worker guards and driver-error
+  regression. A native invalid-table query before store return is sanitized.
+  Rebuilt hardened installed-image help/six failure runs/real module success
+  pages pass; exact SQL stopped/removed. Correction ONE30-SQL receipt remains
+  historical. Combined coordinator/progress/resident/sensor/worker regressions
+  and configured core/orchestrator checks pass with skips explicit.
+* Preserve upstream source/browser routes byte-exact, issue runtime/test patch
+  parity except two authorized CLI/test files, upstream log exact byte-prefix
+  followed by both issue append histories, original Review/critique and
+  correction ONE evidence unchanged. Reconcile [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  index and [job guide](../../src/orchestrator/README.md#optional-driver-compatibility-correction-two-2026-10-18).
+  No new full Review/self-Pass/merge/closure; draft PR #395 awaits coordinator.
+  Defender, hosted schedule and real retention/approval authority remain unmet.

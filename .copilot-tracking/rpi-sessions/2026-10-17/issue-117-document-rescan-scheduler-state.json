@@ -1,0 +1,104 @@
+{
+  "task_id": "117",
+  "task_slug": "issue-117-document-rescan-scheduler",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "completed",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/issue-117-document-rescan-scheduler-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/issue-117-document-rescan-scheduler-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/issue-117-document-rescan-scheduler-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/issue-117-document-rescan-scheduler-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop automatically; implement, commit, push and main PR authorized, not merge or issue closure.",
+      "status": "confirmed",
+      "evidence": "User instruction 2026-10-17; clean feat/document-rescan-scheduler-117 at authorized ebc8dab87ae9bd6a33380b85e86f38be5ed9f213; no existing PR."
+    },
+    {
+      "decision": "Research executed with wider/deeper/contrarian waves; Planning Readiness Ready for bounded SQL job.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/research/2026-10-17/issue-117-document-rescan-scheduler-research.md C1-C8,W1-W2"
+    },
+    {
+      "decision": "One original post-implementation Review executed against complete candidate and exact installed-source hashes; outcome Not accepted, two Medium implementation findings RV-001/RV-002.",
+      "status": "Review execution Complete; outcome Not accepted; routed separately, no source corrections or repeat Review",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md"
+    },
+    {
+      "decision": "One final-candidate critique executed; original verdict Revise. PC-001..003 directly applied: own-COMMIT witness, incomplete exit/cursor semantics, construction cleanup. No repeat critique.",
+      "status": "completed; dispositions resolved; plan ready",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md and plan Critique Disposition"
+    },
+    {
+      "decision": "Published draft main PR395 from authorized branch; original Review Not accepted and both Medium corrections remain separate. Source commit 4763c0e6337d06846d9a9c46f7d9e0cf7470079f matches remote/PR. Main remained ebc8dab87ae9bd6a33380b85e86f38be5ed9f213. Issue117 remains Open.",
+      "status": "historical original publication executed; draft acceptance blocked; no merge or issue action",
+      "evidence": "https://github.com/jmservera/ama/pull/395; gh PR/issue/remote verification 2026-10-17; owned SQL stopped/removed"
+    },
+    {
+      "decision": "Coordinator authorized correction ONE for both original Medium findings on same topic/draft PR395; original session finished before continuation, no second Review, no self-Pass.",
+      "status": "P03-T01/P03-T02 complete; source9468800e published normally to same draft PR395, no independent acceptance",
+      "evidence": "2026-10-17 authorization; failing-first5 tests; final focused46/27/19 skips; actual SQL30/30; rebuilt installed hardened image safe failures and actual jobs; current changes P03 receipts dated2026-10-18"
+    }
+  ],
+  "blockers": [
+    {"id": "correction-two-import", "summary": "Independent558e33f1 new Medium: unconditional optional MSSQL driver import breaks SQLite-only CI/help.", "resolution": "Last authorized source-cycle fix implemented and driverless/native SQL/image evidence passed; final coordinator clearance pending."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independently clears final correction TWO integrated candidate on draft PR395. No active implementation markers or authorized third source cycle; any remaining defect is a human blocker. Preserve original Review/critique/correction ONE; no new full Review/self-Pass/merge/issue closure. Real service/authority gates remain unmet."},
+  "correction_two": {
+    "authorization_date": "2026-10-18",
+    "independent_assessment": "Coordinator supplies558e33f1 Revise: original RV001/002 closed, seven-artifact reconciliation Pass, new Medium optional-driver import",
+    "current_base": "f9d807245e784ad2e6587741a73fc6563f8d2cd6",
+    "expected_remote_lease": "6a9fd3a4f763c48b5a5de65a3a9efd892731e7d8",
+    "integration": "Authorized rebase complete, only append-only KB log conflict, no runtime/test conflict",
+    "status": "P04-T01/P04-T02 complete; tested source published/verified; final independent coordinator clearance pending",
+    "source_commit": "c326ef7b7a2b9f84831d282fd007127821755afa",
+    "publication": {
+      "source_local_remote_pr_equal": true,
+      "source_worktree_clean": true,
+      "actual_merge_base": "f9d807245e784ad2e6587741a73fc6563f8d2cd6",
+      "exact_authorized_old_remote_lease_used": true,
+      "pr": 395,
+      "draft": true,
+      "issue_open": true,
+      "final_metadata_head": "Recorded externally in PR395/final return; four RPI metadata files only follow tested source"
+    },
+    "original_findings": "Coordinator reports original RV001/RV002 independently closed, all seven artifacts reconciliation Pass; original Review unchanged",
+    "driverless_discovery": {"run": 32, "passed": 31, "skipped": 1},
+    "installed_driver_discovery": {"run": 32, "passed": 32},
+    "actual_sql": {"run": 20, "passed": 20, "native_driver_error_sanitized": true, "stopped_removed": true},
+    "image": "sha256:5695460a9190c19cc921383dc3fe2bcc22fee37e9376894441495e3480388e50",
+    "last_authorized_source_cycle": true
+  },
+  "correction_one": {
+    "starting_head": "552be52db0c2cb84a45449c2bce8d610abebfa74",
+    "base": "ebc8dab87ae9bd6a33380b85e86f38be5ed9f213",
+    "authorization_date": "2026-10-17",
+    "validation_date": "2026-10-18",
+    "original_review_sha256": "4e57eccdcd7817590110afd90c889d1f3c87de5b0bb48ac0353777fb7b3a2ac9",
+    "original_critique_sha256": "f788cc3d53a983f00493bf26eee2a1764696bcdfe155464576e6691bfb8beea8",
+    "actual_sql_tests": {"run": 30, "passed": 30, "worker": 19, "progress": 5, "resident": 6},
+    "actual_sql_stopped_removed": true,
+    "image": "sha256:fd51f7dc1ea25f7a025efdb580ed9b0268ba034b3a24873b13fc7f8a93e39d5f",
+    "independent_acceptance": "Pending coordinator; not awarded",
+    "publication": {
+      "source_commit": "9468800e85b645b783f439de4e72018b7ae2488e",
+      "verified_source_local_remote_pr_equal": true,
+      "verified_source_worktree_clean": true,
+      "pr": 395,
+      "draft": true,
+      "issue_open": true,
+      "final_metadata_head": "Recorded externally in PR395/final return; only RPI receipt metadata follows tested source commit"
+    }
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator independent final-candidate clearance of correction TWO optional-driver import and authorized integration", "rationale": "Coordinator reports original findings closed; last source cycle implements new Medium with exact integration parity and driverless/native SQL evidence. Any residual requires human action, not a third source cycle.", "evidence": "Current changes P04 receipts; coordinator-supplied558e33f1 Revise; original Review unchanged"},
+    {"rank": 2, "task": "Authorize real Defender/Blob enablement and scheduled operation", "rationale": "High operational value but requires real service, minimum-permission, cadence and monitoring authorization outside offline engineering.", "evidence": "Issue117 comment; original Review Plan Follow-Up Assessment"},
+    {"rank": 3, "task": "Obtain owner/Legal/DPO retention and hold approvals", "rationale": "Human authority gate; cannot be solved by scanner identity or invented periods.", "evidence": "PRD DH-003/PR-003 and original Review Plan Follow-Up Assessment"}
+  ]
+}

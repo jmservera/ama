@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -69,6 +69,58 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `test_chat_isolation` and `test_continuity` are in `src/api/tests/`. Run the suite from `src/core` with
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
+
+## Bounded pending-document rescans (#117)
+
+`document_rescan.run(store, limit=100, after=None)` consumes one SQL-only
+page of missing/pending non-generated documents through the existing
+`_scan_stored` service, using a non-deleting bad-verdict mode. `after` is a
+`(case_id, document_id)` tuple and limits must be integer 1..100. See the
+[orchestrator command](../orchestrator/README.md#bounded-document-rescan-job-117)
+for configuration, explicit synthetic opt-in, counters, exit codes and sweep
+continuation. The older unbounded `rescan_pending()` is retained for compatibility,
+not used by the bounded job.
+
+Each candidate is rechecked under the current Store lock and touched through
+`_case`, so SQL persists scan metadata through the existing optimistic writer.
+Concurrent writers cannot overwrite a newer scan or unrelated case change.
+Failed attempts preserve the prior pending audit prefix and quarantine failed
+success audit before recovery I/O; retries begin a new sweep. An explicit
+own-operation witness set immediately after COMMIT distinguishes committed
+refresh/acknowledgement failure from a competitor's refreshed snapshot.
+Committed failures cannot replay audit at lock exit and report reconciliation,
+never rejection. Store construction now closes an opened connection if setup
+fails, without replacing the original initialization error.
+
+Only exact clean is available. Scan results must be exact two-string tuples
+with a closed `clean|pending|infected|mismatch` verdict. Malformed results
+are explicit errors before upload/rescan metadata mutation, not deletion or
+availability; no supplied object is coerced or echoed. Valid manual scan
+exceptions remain unchanged. Unknown verdicts are errors; pending/Defender
+tag outage remains pending. Infected/mismatched worker results retain bytes and
+remain unavailable; the job cannot delete, approve retention or release a hold.
+Manual scan behavior, existing retention listing/approval, resident safeguards,
+sensor exports and progress capture are unchanged. The worker identity
+`system:document-rescan` is an audit purpose, not a human delegation.
+No retention trigger/period or real scanner approval is introduced.
+
+`tests/test_document_rescan.py` uses fresh synthetic fixtures only. Its
+original 17-test suite ran on actual independent loopback SQL Server connections
+on 2026-10-17 as well as SQLite. Correction ONE (2026-10-18) ran all 19 current
+worker cases plus 11 actual SQL progress/resident recovery guard cases, passing
+30/30. It covers persisted pending/bad/clean results,
+fairness including all-skipped pages, 100-attempt bound, CAS retry/conflict with
+failed recovery, SQL failure after audit INSERT, prior prefix, and immediate/
+refresh post-COMMIT failure without duplicate successful transition audit.
+Actual command/image receipts are described in the orchestrator guide.
+The worker now owns SQL recovery before nested automatic diagnostic logging.
+Entire CLI root streams in the conflict/recovery reproduction contain no private
+sentinel or traceback, with original conflict, competing winner and audit prefix
+preserved. Non-worker recovery behavior remains unchanged. Original Review
+Complete / Not accepted and original critique remain unchanged; these targeted
+correction results are not independent coordinator acceptance or a new Review.
+Operational Defender enablement, hosted cadence/missing-run monitoring and
+owner/Legal/DPO authority remain unmet; no production protection is claimed.
 
 ## Sensor admission and external context (#112)
 

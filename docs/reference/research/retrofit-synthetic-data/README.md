@@ -1,7 +1,7 @@
 ---
 title: Retrofit Synthetic Evidence Pack - Zava Forward Year One
 description: Fifteen months of synthetic operating records from a professional retrofit delivery team that knows it has bottlenecks but not where they are
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -430,6 +430,62 @@ Open items: the real funding form schema, terms and approved rules are unresolve
 are generator-owned; the PRD requires human engineering adjudication before
 held-out testing, which has not happened. Documents are plain-text fixtures, not
 rendered PDFs or images.
+
+### Pending-document rescan engineering boundary (2026-10-17, Refs #117)
+
+The single original Review executed Complete / outcome Not accepted and remains
+unchanged. Coordinator-authorized correction ONE (2026-10-18) implements both
+Medium findings: worker-owned SQL recovery before nested traceback logging,
+and closed tuple/arity/string/verdict validation before scanner result use.
+Explicit worker/CLI TypeError boundaries produce truthful failures, not silent
+fallbacks. Failing-first JSON/SQLite/actual CLI tests preceded production edits.
+Targeted evidence below is not a second Review or overall engineering acceptance;
+independent coordinator clearance is still pending.
+
+The [bounded orchestrator invocation](../../../../src/orchestrator/README.md#bounded-document-rescan-job-117)
+reuses the current scanner and SQL writer for pages of 1..100 missing/pending
+documents. Fresh temporary constructed bytes and the existing small test
+dataset, not private documents or the original stock register, supplied this
+engineering check. No generated public fixture or retained data was replaced.
+
+| Criterion | Current evidence | Residual authority or service gate |
+| --- | --- | --- |
+| Uploads scanned before availability | Existing document/API tests plus new pending/outage/unknown refusal and exact-clean SQL persistence checks | Actual Defender enablement and real Blob tag verification remain unmet; local scanner is not antivirus |
+| Bounded rescan scheduling mechanism | Existing-pattern one-shot module, fair composite pages, actual SQLite/MSSQL CLI and hardened installed-image execution | No recurring hosted timer, owner cadence or missing-run monitoring has been deployed |
+| Retention job lists due records and needs approval; hold blocks deletion | Existing synthetic document-control regressions passed; new worker retains held bytes and cannot invoke deletion/hold release | Real periods/triggers, delegations and owner approvals remain unapproved; rescan job does not schedule retention |
+| Durable retry/audit behavior | Original 17 actual SQL worker cases retained; correction ONE passes all 19 current worker cases plus 11 progress/resident shared recovery cases on owned loopback SQL. Original conflict, winner/prefix, own-COMMIT and exactly-once success retained | Engineering result only; independent coordinator/owner acceptance and operational assurance are separate |
+
+Correction actual MSSQL main exercised seven malformed/unknown/scanner-error
+cases plus competing-clean/recovery failure: exit1, failed1/clean0/committed0,
+no private sentinel or traceback in captured entire CLI root stream. Pending
+and held bytes remained unavailable except the competing writer's legitimate
+clean result. Rebuilt installed image matched all four source hashes; six safe
+failure runs preceded real exit2/0/0 module pages and three success-once events
+under UID10001/read-only/drop-all/NoNewPrivs/no-network. Local regression receipts:
+281 run/203 passed/78 opt-in skips; API57 run/45 passed/12 skips; orchestrator30
+passed; store/recovery57 passed; configured core/orchestrator lint/format/types
+passed. Expected non-worker injected error logs and existing sensor
+ResourceWarnings are not claimed eliminated.
+
+The owned SQL container was stopped and removed after tests and actual command
+execution. No live Azure, paid scanner, real communication, private document,
+approved retention period or legal-currentness claim was introduced. Issue
+#117 remains broader than this bounded engineering delivery.
+
+Correction TWO (2026-10-18), the final authorized source cycle, removes the
+unconditional optional MSSQL-driver import from the orchestrator command.
+Backend-selected error import preserves sanitized MSSQL failure without loading
+the driver for SQLite/help. Failing-first actual no-site discovery reproduced
+the defect; final32 entries/31 passed/one optional-driver skip and module help
+pass without site packages. Installed-driver discovery32/32, native SQL error
+sanitization and all19 actual SQL worker cases pass. No CI workflow or dependency
+manifest was changed. Prior correction ONE SQL30 receipts remain historical,
+not rerun claims for this cycle. The coordinator supplies independent original-
+finding closure; final correction acceptance remains coordinator-owned.
+Authorized rebase onto main f9d80724 preserves merged396 source/browser routes,
+exact issue worker/core/test parity except the bounded CLI import/test patch,
+and the upstream append-only log prefix. Real service/authority limits above
+remain unchanged; no new full Review or self-Pass.
 
 ## Synthetic data needs inventory and phase gate (2026-10-15)
 
