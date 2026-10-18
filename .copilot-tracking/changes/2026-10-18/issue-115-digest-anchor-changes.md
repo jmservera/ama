@@ -16,8 +16,7 @@ Branch: fix/digest-anchor-evidence-115.
 ## Execution Status
 
 Partial full-plan invocation; source implementation and local checks Complete.
-Completed P01-T01/T02, P01 and P02-T01. Remaining P02-T02 (original independent
-Review and publication) and its containing P02. No production edits occurred
+Completed P01-T01/T02, P01 and P02-T01. Remaining P02-T02 publication and its containing P02; original Review complete. No production edits occurred
 before failing-first evidence.
 Approved writes: digest_blob.py, existing fake suite, narrow orchestrator guide,
 and this task's dated artifacts. No runtime services or cloud/private data.
@@ -29,7 +28,7 @@ and this task's dated artifacts. No runtime services or cloud/private data.
 | 1 | Research | rpi-research executed Wider -> Deeper -> Contrarian; Ready, C1-C8/W1 |
 | 2 | Plan | rpi-plan executed, candidate plan/details written; one independent rpi-plan-critique Complete / Revise, Medium PC-001 |
 | 3 | Implement | rpi-implement executed failing-first -> minimal guard/guide -> passing local gates |
-| 4 | Review | Not yet executed; exactly one independent original required |
+| 4 | Review | rpi-review executed once by fresh independent digest-original-review; Complete / Residual work, bounded source Conformant |
 
 ## Completed Work
 
@@ -144,11 +143,12 @@ recognized anchors and tested head/year/empty controls; see research artifact.
 
 ## Pre-Review Reconciliation
 
-Ready for the one original independent Review of the source candidate.
+At handoff, source candidate was ready for one original independent Review.
 Plan/details mark P01/P01-T01/T02/P02-T01 complete; P02-T02 remains accurately
-open for Review/publication. Evidence, summary, boundaries, follow-ups and
+open for Review/publication then. Evidence, summary, boundaries, follow-ups and
 validation reconciled. No source or validation blockers; full plan not yet
-claimed complete.
+claimed complete at that boundary. Original Review has since executed exactly
+once, with receipt below; current remaining work is actual publication only.
 
 ## Frozen Source and Evidence Hashes
 
@@ -163,6 +163,39 @@ SHA-256 before original Review:
 | issue-115-digest-anchor-focused.log | 8121e91006dbeec28a89618d7be950c205eee8640604d05d45e4a6668d2b9ddc |
 | issue-115-digest-anchor-orchestrator.log | e0a9a529dbea99d89e8c1bf2c90bcc9270dba1673aada985652e089799ac39da |
 | issue-115-digest-anchor-quality.log | ef29fcc39ea5cdd006365ec062fe5406748501ac545ea6f5dad8e7d0245d5e3c |
+
+## One Original Independent Review Receipt
+
+Exact source candidate: d53a7c68245dc708c628bb37853c308d9811fcbe.
+Fresh worker digest-original-review activated rpi-review and compared the complete
+artifact set and exact base/candidate diff. Execution Complete, outcome
+Residual work; bounded source Conformant, no implementation defects.
+Original file:
+.copilot-tracking/reviews/logs/2026-10-18/issue-115-digest-anchor-review.md.
+Frozen SHA-256:
+`dc72719806ba648af00d34c9ef6b0c0d049ed87372d60ee49e959b328694186e`.
+No second original Review, no source-correction cycles required (zero of two).
+Neither adverse original critique nor residual original Review was rewritten.
+
+Independent actual reruns:21 focused/coupled and40 discovery passed, configured
+Ruff/format/mypy and diff checks passed. Reviewer independently replayed exact
+base source in-memory and confirmed the same four behavioral failures without
+modifying candidate or pretending to witness the original historical order.
+Additional direct-report/CLI and AST prior-test/fake-preservation checks passed.
+Reviewer encountered shell rg unavailable (exit127), read relevant source
+directly and completed checks; no application check failed at candidate.
+Review scratch cache was removed, both task-created empty temporary roots were
+removed with rmdir after confirming empty. No persistent service started.
+
+| Finding | Severity | Type and actual route |
+| --- | --- | --- |
+| RV-001 | Low | Existing P02-T02 publication continuation then coordinator independent exact-final-head assessment |
+| RV-002 | Medium | Distinct owner/compliance retention/irreversible-lock approval and actual evidence, not source correction |
+| RV-003 | Medium | Distinct separately authorized hosted scheduler/monitoring/recovery acceptance |
+| RV-004 | Medium | Distinct second-human first-publication reconciliation against independent historical record |
+
+All findings are residual obligations, not bounded-source defects or approval
+to perform those operational actions. Whole115/114 not accepted/closed here.
 
 ## Commit and Publication Preparation
 
@@ -193,6 +226,9 @@ scheduler/monitoring/recovery gates remain outside this correction.
 
 ## Return-to-Caller State
 
-Active automatic parent; source implementation Complete, full plan Partial
-pending P02-T02; Ready for one original independent Review. No additional
-critique, schema redesign or operational authority inferred.
+Automatic RPI assessment complete in Follow-up; source implementation and one
+original Review Complete, overall Review outcome Residual work (source
+Conformant). Full delivery plan Partial pending P02-T02 actual publication.
+No source corrections, second critique/Review, schema redesign or operational
+authority inferred. Explicit user stop applies after publication, not a new
+child selection or additional automatic loop.

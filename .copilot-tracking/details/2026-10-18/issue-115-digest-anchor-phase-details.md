@@ -17,7 +17,7 @@ C1-C8/W1. No blocking unknowns; operational gates remain separate.
 | Phase | Intent | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Reproduce then correct only recognized-anchor absence | Complete | P01-T01, P01-T02 |
-| P02 | Local validation, one Review and authorized publication | Validation complete; original Review/publication remaining | P02-T01, P02-T02 |
+| P02 | Local validation, one Review and authorized publication | Validation and original Review complete; publication remaining | P02-T01, P02-T02 |
 
 Single original critique Complete / Revise, PC-001 applied below. No new critique
 or user choice needed. Frozen original remains unchanged.
@@ -105,3 +105,8 @@ unmet operational gates, source candidate versus final receipt commit distinct.
 Record actual publication and checks rather than stale authorization language.
 Completion: clean committed worktree, remote head verified, PR URL/head/base,
 state waiting for coordinator independent exact-head review.
+
+Actual source candidate d53a7c68245dc708c628bb37853c308d9811fcbe received the
+single original independent Review: Complete / Residual work, bounded source
+Conformant, no source defects. Zero source-correction cycles; original critique
+and Review frozen with hashes in changes. Only publication portion remains.

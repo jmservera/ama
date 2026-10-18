@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 
 * Task ID: 115
 * Task slug: issue-115-digest-anchor
-* Planning status: Source implemented and locally validated; original Review/publication remaining
+* Planning status: Source/local validation and one original independent Review complete; publication remaining
 * Plan date: 2026-10-18
 * Phase details: .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-115-digest-anchor-plan-critique.md
@@ -38,6 +38,9 @@ Actual lock, retention authority, scheduling and monitoring acceptance remain op
 ### Unresolved Decisions or Blockers
 
 None for bounded source correction. Cloud and policy decisions are outside scope.
+Original independent Review is Complete / Residual work, bounded source
+Conformant with no implementation defects. RV-001 publication/final-head handoff
+remains; RV-002/003/004 are operational and first-publication trust follow-ups.
 
 ## User Decisions and Requirements
 
@@ -211,6 +214,7 @@ subsequent failing-first and validation commands use the bound workspace root.
 
 Source implementation P01/P02-T01 is complete: failing-first17/four failures,
 passing focused21 and full orchestrator40, configured Ruff/format/mypy passed.
-P02-T02 remains active for the one original independent Review and publication;
-not a source-readiness gap. Changes path owns commands/results/hashes.
+Single original Review executed Complete / Residual work; source Conformant,
+zero source-correction cycles. P02-T02 remains active only for actual publication
+and frozen delivery receipt, not source-readiness. Changes owns commands/hashes.
 No ordinary approval blocker. Coordinator exact-final-head review remains separate.
