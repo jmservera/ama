@@ -6,7 +6,7 @@
 * Task ID: 117
 * Task slug: issue-117-document-rescan-scheduler
 * Plan date: 2026-10-17
-* Planning status: Coordinator-authorized correction ONE active; original Review unchanged
+* Planning status: Correction ONE P03 complete; original Review unchanged, coordinator clearance pending
 * Phase details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-scheduler-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md
 
@@ -32,8 +32,9 @@ or operational scanner approval.
 No engineering decision blocker. Original Review execution Complete / outcome
 Not accepted identified RV-001/RV-002 (Medium) at safe logging/malformed-result
 boundaries. Coordinator authorized one coherent correction cycle on 2026-10-17;
-both findings have targeted P03 implementation evidence. T01 complete and T02
-validation complete; publication pending. No second critique/Review or self-Pass.
+both findings have targeted P03 implementation evidence. T01/T02 complete:
+validated source9468800e published to same draft PR395. No remaining active-plan
+markers. No second critique/Review or self-Pass; independent clearance pending.
 Actual Defender enablement, schedule owner/cadence and retention/deletion
 delegations remain unmet human/service gates.
 
@@ -166,7 +167,7 @@ Stop owned SQL and record exact commands/results. Original execution performed
 no source correction after Review; the separately authorized P03 below now applies.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Coordinator-authorized correction ONE
+### [x] P03: Coordinator-authorized correction ONE
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Reproduce and correct RV-001/RV-002 together
@@ -179,7 +180,7 @@ Worker owns recovery under its active context, before nested traceback emission.
 Preserve non-worker error/recovery semantics and manual valid scan behavior.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Validate, reconcile and publish corrected candidate
+#### [x] P03-T02: Validate, reconcile and publish corrected candidate
 
 Depends P03-T01. Actual SQL reruns all prior17 worker cases plus new malformed/
 recovery tests; relevant progress102/resident88/sensor regressions, configured

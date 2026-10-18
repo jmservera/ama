@@ -3,9 +3,9 @@
   "task_slug": "issue-117-document-rescan-scheduler",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "completed",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-17/issue-117-document-rescan-scheduler-research.md",
     "plan": ".copilot-tracking/plans/2026-10-17/issue-117-document-rescan-scheduler-plan.md",
@@ -42,7 +42,7 @@
     },
     {
       "decision": "Coordinator authorized correction ONE for both original Medium findings on same topic/draft PR395; original session finished before continuation, no second Review, no self-Pass.",
-      "status": "P03-T01 complete; P03-T02 validation complete, publication pending",
+      "status": "P03-T01/P03-T02 complete; source9468800e published normally to same draft PR395, no independent acceptance",
       "evidence": "2026-10-17 authorization; failing-first5 tests; final focused46/27/19 skips; actual SQL30/30; rebuilt installed hardened image safe failures and actual jobs; current changes P03 receipts dated2026-10-18"
     }
   ],
@@ -50,7 +50,7 @@
     {"id": "RV-001", "summary": "Original Review Medium retained: nested SQL recovery diagnostics.", "resolution": "Authorized fix implemented and targeted SQL/CLI root-stream evidence passed; independent coordinator closure pending."},
     {"id": "RV-002", "summary": "Original Review Medium retained: malformed scanner result reporting escape.", "resolution": "Authorized closed result validation and explicit worker/CLI TypeError boundaries implemented; failing-first/result-shape/image evidence passed; independent coordinator closure pending."}
   ],
-  "next_action": {"phase": "Implement", "action": "Publish validated correction ONE normally to same draft PR395 after fresh main/identity; reconcile P03-T02 only after verified publication. Original Review/critique immutable; no second Review; independent coordinator clearance remains required."},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independently verifies original RV-001/RV-002 against published correction candidate. Keep draft PR395 until coordinator clears; original Review/critique unchanged, no second full Review. No implementation markers remain; service/authority gates remain unmet."},
   "correction_one": {
     "starting_head": "552be52db0c2cb84a45449c2bce8d610abebfa74",
     "base": "ebc8dab87ae9bd6a33380b85e86f38be5ed9f213",
@@ -62,12 +62,19 @@
     "actual_sql_stopped_removed": true,
     "image": "sha256:fd51f7dc1ea25f7a025efdb580ed9b0268ba034b3a24873b13fc7f8a93e39d5f",
     "independent_acceptance": "Pending coordinator; not awarded",
-    "publication": "Pending"
+    "publication": {
+      "source_commit": "9468800e85b645b783f439de4e72018b7ae2488e",
+      "verified_source_local_remote_pr_equal": true,
+      "verified_source_worktree_clean": true,
+      "pr": 395,
+      "draft": true,
+      "issue_open": true,
+      "final_metadata_head": "Recorded externally in PR395/final return; only RPI receipt metadata follows tested source commit"
+    }
   },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Contain nested worker SQL recovery diagnostics (RV-001)", "rationale": "Bounded existing-context correction with direct privacy value; preserves audit recovery and non-worker behavior.", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md RV-001"},
-    {"rank": 2, "task": "Normalize malformed scanner results and contain CLI errors (RV-002)", "rationale": "Small typed-boundary improvement restores per-document reporting and fair page consumption without new services.", "evidence": ".copilot-tracking/reviews/logs/2026-10-17/issue-117-document-rescan-scheduler-review.md RV-002"},
-    {"rank": 3, "task": "Authorize real Defender/Blob enablement and scheduled operation", "rationale": "High operational value but requires real service, minimum-permission, cadence and monitoring authorization outside offline engineering.", "evidence": "Issue117 comment; original Review Plan Follow-Up Assessment"},
-    {"rank": 4, "task": "Obtain owner/Legal/DPO retention and hold approvals", "rationale": "Human authority gate; cannot be solved by scanner identity or invented periods.", "evidence": "PRD DH-003/PR-003 and original Review Plan Follow-Up Assessment"}
+    {"rank": 1, "task": "Coordinator independent verification/clearance of correction ONE for original RV-001/RV-002", "rationale": "Both targeted corrections now implemented/validated/published; original adverse Review preserved, no self-awarded closure.", "evidence": "Current changes P03 receipts, source9468800e and unchanged original Review"},
+    {"rank": 2, "task": "Authorize real Defender/Blob enablement and scheduled operation", "rationale": "High operational value but requires real service, minimum-permission, cadence and monitoring authorization outside offline engineering.", "evidence": "Issue117 comment; original Review Plan Follow-Up Assessment"},
+    {"rank": 3, "task": "Obtain owner/Legal/DPO retention and hold approvals", "rationale": "Human authority gate; cannot be solved by scanner identity or invented periods.", "evidence": "PRD DH-003/PR-003 and original Review Plan Follow-Up Assessment"}
   ]
 }

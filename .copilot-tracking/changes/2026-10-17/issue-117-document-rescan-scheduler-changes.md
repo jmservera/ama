@@ -10,8 +10,8 @@ Details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-schedule
 ## Execution Status
 
 Original P01/P02 implementation complete; original Review Complete / Not accepted.
-Coordinator correction ONE now active for both RV-001/RV-002, scope P03.
-P03-T01 complete; P03-T02 validation complete, publication remains.
+Coordinator correction ONE complete for both RV-001/RV-002, scope P03.
+P03-T01/P03-T02 complete; source9468800e published same draft PR395.
 Original Review and critique immutable; no second Review
 or coordinator acceptance claim.
 
@@ -329,3 +329,30 @@ Real Defender/Blob enablement, recurring service/cadence, retention policy/
 owner approvals and hold/deletion authority remain unmet. Issue117 remains
 partial. No private input, real communication, Azure/Graph/IAM/paid AI or service
 activation, web changes, memory edits, merge, closure, rebase or force-push.
+
+## Correction ONE P03-T02: Verified publication and implementation handoff
+
+Actual 2026-10-18: fresh `gh api user`8036360/jmservera resolved before commit;
+repository-local author and committer email8036360+jmservera@users.noreply.github.com
+verified from the resulting commit. Conventional fix commit with Refs #117 and
+required Copilot trailer. Normal push same authorized topic; no rewrite/merge.
+Source/test/docs/artifact correction commit:
+`9468800e85b645b783f439de4e72018b7ae2488e`.
+
+`gh pr edit 395 --body-file` publishes exact original/correction evidence,
+commands, failures/skips, SQL/image/source hashes and human/service gates.
+Fresh `gh pr view 395`: Open, draft, base main, source head9468800e; `git
+ls-remote` and local HEAD equal exact full source commit, worktree clean.
+Main remains authorized ebc8dab87ae9bd6a33380b85e86f38be5ed9f213 at fresh checks.
+Issue117 stays Open. Exact owned correction SQL/job inspection is empty.
+Original Review/critique SHA256 remain byte-identical to intake values.
+
+P03-T01/P03-T02 and P03 complete, no remaining active implementation markers.
+This handoff metadata records observed publication; no runtime/test changes
+follow the tested source commit. A normal metadata commit/push carries this
+receipt; its final delivered head is recorded externally in PR395/final return
+rather than inventing a self-referential commit hash. Original Review remains
+Complete / Not accepted; targeted corrections are implemented/validated,
+independent coordinator closure/acceptance not awarded. PR395 remains draft.
+No second Review. Real Defender/Blob, recurring schedule and retention/owner/
+legal hold authority gates remain unmet; issue117 is partial.

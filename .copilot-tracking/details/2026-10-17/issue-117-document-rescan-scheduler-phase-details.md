@@ -14,7 +14,7 @@ Initial direction: reuse scan/config/SQL boundaries; no operational enablement.
 | --- | --- | --- |
 | P01 | Complete; source/CLI validated | P01-T01, P01-T02 |
 | P02 | Complete; actual SQL/image/regression/docs receipts recorded | P02-T01, P02-T02 |
-| P03 | T01 complete; T02 validation complete, publication pending | P03-T01, P03-T02 |
+| P03 | Complete; correction source published same draft PR395, no independent acceptance | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded core and job
@@ -193,4 +193,10 @@ then exact-once success pages. Local regressions281/203/78 skips, API57/45/12
 skips, orchestrator30/30, store57/57; configured static checks pass.
 Exact SQL stopped/removed. Full commands, selectors, hashes and genuine failure/
 warning history are in the correction section of the changes record.
-T02 remains active until same-draft PR395 publication and final branch verification.
+T02 complete after actual publication/verification: correction source commit
+9468800e85b645b783f439de4e72018b7ae2488e equals local, remote and PR395 head,
+clean worktree, PR Open/draft/main, issue117 Open. Main remains authorized
+ebc8dab87ae9bd6a33380b85e86f38be5ed9f213. Fresh identity/privacy-safe author/
+committer and Copilot trailer verified. Only this reconciliation metadata
+follows that tested source boundary; no runtime/test edits. No active-plan
+markers remain, independent coordinator acceptance and operational gates remain.
