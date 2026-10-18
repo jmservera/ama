@@ -149,6 +149,22 @@ Exact commands/results retained in the changes record; failures preserved.
 
 ## Current Bounded Correction ONE
 
+Current continuation, P04-T05: integration ONLY from verified clean local/remote
+c20052e49e91841749f8a08ffed137c848ce3fd1, prior ab0613f3 onto pinned
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Preserve exact protected upstream
+procurement/server/consultation tests bytes and modes, both README sections,
+KB append-only log and complete normalized owned source patch. No source
+correction, new critique or original Review; RV-002 remains separate.
+Independent review of c20052e4 is running, no result or readiness is claimed.
+Publish only exact lease refs/heads/fix/continuity-epoch-export-122:c20052e49e91841749f8a08ffed137c848ce3fd1;
+later receipt normal push. Publish pinned integration even if main later moves;
+report rather than reintegrate. Stop unexpected topic movement/source conflicts.
+Fresh focused continuity offline/HTTP/epoch plus consultation API/controls and
+configured core/API static. Use src/api in test path to avoid namespace ambiguity.
+No broad/image/SQL repeats if source intent remains unchanged. Separate
+integration-consultation receipt/manifest and current metadata only; stop for
+the same independent reviewer to assess the integration delta and source parity.
+
 Declared scope: P04 only, extending the completed original execution without
 repeating Research, critique or Review. No new task identity or self-acceptance.
 
@@ -162,7 +178,7 @@ timecapture.py/test_timecapture.py exactly, both README contributions, queue/
 recorder and complete normalized owned source patch; all 27 frozen originals.
 
 <!-- rpi:phase id=P04 -->
-### [x] P04: RV-001 correction ONE and authorized integration
+### [ ] P04: RV-001 correction ONE and authorized integration
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Freeze original hashes and integrate exact authorized main
 <!-- rpi:task id=P04-T02 -->
@@ -171,6 +187,8 @@ recorder and complete normalized owned source patch; all 27 frozen originals.
 #### [x] P04-T03: Integrated validation, parity and separate correction receipt
 <!-- rpi:task id=P04-T04 -->
 #### [x] P04-T04: Exact-lease publication, draft PR reconciliation and STOP
+<!-- rpi:task id=P04-T05 -->
+#### [ ] P04-T05: Pinned consultation integration, validation, publication and reviewer handoff
 
 Preserve bool exclusion and current finite int/float semantics, rejecting numeric
 values that cannot pass the existing floating-point finiteness check explicitly.

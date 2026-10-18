@@ -6,6 +6,25 @@ ms.date: 2026-10-18
 
 ## Task and Execution Boundary
 
+## Current P04-T05 Consultation Integration ONLY
+
+Owner 2026-10-18T09:59 authorized SAME-task integration ONLY from clean expected
+local/remote c20052e49e91841749f8a08ffed137c848ce3fd1. Fetched main exactly
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78; prior base ab0613f3. Preserve
+upstream consultation-dependent hold scope, protected procurement/server/tests
+bytes/modes, both README sections, KB append-only log, complete owned source
+patch and frozen assessments/logs. No new source correction, critique or original
+Review; correction count ONE, RV-002 separate. Existing independent review of
+c20052e4 is running, result unavailable and not inferred.
+
+Plan/details/state record P04-T05. Fresh focused continuity/consultation plus
+configured core/API static, no broad repetition absent conflict/changed intent.
+Read full /tmp/rpi-122-publish.log and retain original/correction logs already
+read in the same context; all three complete logs copied/hash-verified in worker
+files. Separate integration-consultation receipt/manifest only, current metadata
+updates. Publish only exact c20052e4 lease then normal receipt push; keep draft,
+Refs-only and empty closing refs, stop for same reviewer integration delta/parity.
+
 ## Current P04-T04 Integration-Only Resumption
 
 Owner 2026-10-18T09:40 explicitly authorizes SAME task integration/publication

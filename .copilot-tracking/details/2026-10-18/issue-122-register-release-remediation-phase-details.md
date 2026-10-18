@@ -6,6 +6,20 @@ ms.date: 2026-10-18
 
 ## Task and Initial Direction
 
+Current P04-T05 continuation is integration ONLY: verified clean expected local/
+remote c20052e49e91841749f8a08ffed137c848ce3fd1, exact prior ab0613f3 onto
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Preserve upstream procurement/server/
+test_consultation_controls bytes/modes, additive API README and KB log prefix.
+Complete owned normalized source patch and all prior frozen artifacts/logs remain
+unchanged. No continuity source intent or RV-002 change; no new source correction,
+critique or original Review. Full independent review of c20052e4 is running,
+outcome unavailable; same reviewer assesses the new delta/parity after publication.
+Fresh focused continuity export/HTTP/epoch and consultation API/controls use
+src/api path; configured core/API static. No broad/image/SQL repetition unless
+actual integration conflict or changed intent warrants it. Exact c20052e4 lease
+only, stop unexpected topic movement/source conflict. Publish pinned even if
+main moves, report without reintegration. Keep draft/empty closing refs; STOP.
+
 Correction ONE of maximum two is already implemented for RV-001 only.
 It previously integrated exact a86282c4 and stopped when main moved.
 The following owner integration-only authorization supersedes that stop.
