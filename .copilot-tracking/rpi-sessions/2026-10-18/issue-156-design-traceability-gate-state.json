@@ -44,12 +44,17 @@
       "decision": "Overall design remains Blocked; full issue156 coverage, human design/accessibility/content/user acceptance and external CI/coordinator gates are not granted",
       "status": "open-product-evidence",
       "evidence": "Original Review RV-001-RV-003; synthesis G01-G07"
+    },
+    {
+      "decision": "Accepted documentation and all actual dated RPI artifacts committed together and pushed; main-target PR400 created with Refs #156, no issue closure",
+      "status": "published-awaiting-external-gates",
+      "evidence": "https://github.com/jmservera/ama/pull/400; initial artifact commit e127d93c5c67e9e579f0f59f65572e742fac58eb; source/branch base 3104bb69ddc26c81e0e9d2f57000dac1d99a419a retained without rebase; observed PR main base 3bc46912684cb4d865572023a6d16da14b9b8463; initial check rollup empty, not Passed"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish accepted bounded documentation with all actual artifacts in same main-target PR Refs #156; leave hosted checks/merge/acceptance to coordinator/owner; no child work selected"
+    "action": "PR400 published. Coordinator/owner waits for hosted checks and independently assesses exact final head; choose routed follow-up only in later work. Automatic session remains running at Follow-up; no child selected, no correction, second/amended Review, merge, rebase, issue/AC/board change or external-gate self-certification authorized."
   },
   "prioritized_follow_ups": [
     {
