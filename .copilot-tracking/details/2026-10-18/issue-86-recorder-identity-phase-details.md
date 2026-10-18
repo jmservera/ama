@@ -17,7 +17,7 @@ PC-001 resolved directly, original Revise assessment retained unchanged.
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
 | P02 | Complete, local SQL/core/API/quality/container evidence | P02-T01 |
-| P03 | Original Review complete; publication active | P03-T01 |
+| P03 | Complete; original Review and PR406 publication verified | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded identity contract
@@ -111,5 +111,11 @@ Actual Review: Complete / Conformant on exact candidate
 671ec03ac0e2e99478e9ae2c71537030d0541413. Zero implementation defects; one Low
 RV-001 residual keeps broader #86 acceptance open. Original assessment frozen
 SHA256 9d55fbff9904feb9e1d303cfb13be1f5047c766ee038aa2275cb911749a78dcc.
-No corrective source cycle and no second Review. Publication is now active;
-no additional implementation or approval is pending in this scope.
+No corrective source cycle and no second Review. Publication is complete:
+normal push and OPEN main PR406 verified at initial head
+1b484df4bb63b2ec9aa28dc574fc65d2aa7f0da8. The final evidence-only receipt commit
+defines final HEAD and is normally pushed to the same PR; source/test/component
+contracts remain identical to candidate. No additional implementation or
+authorization is pending in scope. Main remained exact base, so no integration,
+rebase or forced update was performed. Initial hosted checks unavailable/empty,
+not Pass. STOP per user for coordinator full independent final-head review.

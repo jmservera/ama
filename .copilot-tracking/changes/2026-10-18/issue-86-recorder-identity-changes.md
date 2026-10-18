@@ -10,8 +10,11 @@ Task 86 / issue-86-recorder-identity. Full plan scope P01-P03.
 Exact base: 6c1e376ff1241316272df22a5a3a6853aae9f87b.
 Branch: fix/review-recorder-identity-86. No pre-existing working changes.
 Plan/details/research use this slug/date in their canonical directories.
-P01/P02 complete; locally verified delivery is ready for its one original Review.
-P03 Review/publication remain pending below.
+P01/P02/P03 complete; full ordered loop and publication delivered. One original
+Review Complete / Conformant; automatic session stops on the explicit coordinator
+handoff instruction. Final evidence-only publication receipt is committed with
+delivery; exact final HEAD is the commit containing this receipt and is recorded
+in the PR body and CLI handoff (a file cannot embed its own enclosing commit hash).
 
 ## Decisions and Amendments
 
@@ -154,8 +157,19 @@ Original critique hash remains unchanged; the original Revise/PC-001 finding is
 not rewritten as Pass. Later handoff commits change evidence/state only; delivery
 source/test/component contracts remain byte-identical to the reviewed candidate.
 
-P03 original Review complete; authorized publication now in progress, not blocked
-on an invented authorization. No push or PR yet.
+P03 original Review and authorized publication complete, not blocked on any
+invented authorization. Normal first push published
+1b484df4bb63b2ec9aa28dc574fc65d2aa7f0da8, then `gh pr create --repo jmservera/ama
+--base main --head fix/review-recorder-identity-86 --title "fix: preserve historical
+recorder identity for independent review" --body-file <session-files>/issue-86-recorder-identity-pr.md`
+created https://github.com/jmservera/ama/pull/406, OPEN, main base.
+PR body uses Refs #86, no issue-closing keyword. Final publication receipt is an
+additional evidence-only commit, normally pushed to the same PR. No source,
+test or component-contract change since reviewed candidate; original hashes
+unchanged. Remote main remained exact base at PR creation, no integration
+authorization needed or inferred. Initial statusCheckRollup was empty, not Pass;
+hosted checks and rubric are separate from local validation and merge remains
+owner-controlled. No issue/board write, merge, rebase, force push or main rewrite.
 `gh api user --jq '{id,login}'` returned id8036360/login
 jmservera. Both author/committer will use repository-local
 8036360+jmservera@users.noreply.github.com; no private/global email.
@@ -169,6 +183,24 @@ jmservera. Both author/committer will use repository-local
 | test_resident_api.py | 4f07cb91e44a7ca4ea767fbcc28aed4e4d0ca88a36d5d7d3fb10513e18dfa5e1 |
 | Original plan critique | 5d39b3e712277f9441e8cb33396786b28d1620ea193ad5519b8599fdae1b48db |
 | Original independent Review | 9d55fbff9904feb9e1d303cfb13be1f5047c766ee038aa2275cb911749a78dcc |
+
+## Final Routing and Stop
+
+P03 complete: original Review recorded unchanged, all task evidence committed
+with delivery, normal branch publication and PR verified. User explicitly directs
+STOP after publication for coordinator full independent exact published-head
+review. No new task, repeated Review or correction cycle is started. Ranked
+remaining work: (1) coordinator full exact-head review, because explicit owner
+acceptance is next; (2) RV-001 broader issue86 acceptance under separately
+authorized integration/privacy/contact/human work. Neither is self-approved.
+Final source boundary remains the six reviewed paths: resident domain,
+dependent projection, existing core/API resident tests and two component READMEs.
+All other task changes are dated RPI evidence; no unrelated implementation.
+Final local hygiene: unique SQL services absent, task-only API image tag/image
+removed after successful packaged checks, task-local temporary venv removed.
+State JSON parsed with duplicate-key rejection; all seven artifact pointers
+exist, task completed/session stopped, both original hashes verified unchanged.
+Final `git diff --check` and six delivery-path parity against candidate pass.
 
 ## Boundaries and Unmet Gates
 
