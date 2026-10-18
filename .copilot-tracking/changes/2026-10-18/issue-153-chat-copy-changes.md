@@ -170,6 +170,11 @@ and Git inspection instead; do not claim that unavailable helper check ran.
 
 ## Actual Publication and Final Handoff
 
+Later same-session integration is explicitly authorized and recorded separately
+in .copilot-tracking/changes/2026-10-18/issue-153-chat-copy-integration.md.
+That receipt supersedes the historical no-authorization/no-rebase handoff below
+for publication ancestry only. Original source/Review evidence is not rewritten.
+
 P03-T02 completed: initial delivery commit
 `ea3208fb6068a2293210f830c71c5eed50fe8be5` was pushed with normal
 `git push --set-upstream origin fix/chat-copy-audit-153`.

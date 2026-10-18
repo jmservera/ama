@@ -1,0 +1,24 @@
+{
+  "base": "f91353169756dc41ebbcca944bdd3f44f7c04b89",
+  "old_published_head": "003a055118e71ea54fdcc2d9218e376acca2f6e3",
+  "post_rebase_head_before_reconciliation": "b096ab996bba2bb66410a048f30e1f95bba746f3",
+  "nonoverlap_candidate_files_byte_identical": [
+    "docs/reference/research/ux/content-standard.md",
+    "src/api/checks/regulatory_ux_check.py",
+    "src/api/src/zava_forward/api/web/app.js",
+    "src/api/src/zava_forward/api/web/chat.js",
+    "src/api/tests/test_content_standard.py"
+  ],
+  "frozen_critique_sha256": "692167765b35a377e5ff986ac2fb8efb7c63a51bc27720b49834c1fff1c4f446",
+  "frozen_original_review_sha256": "31c28dad1e60798e86ca32ab1ff57c292cad5af0beedd15002df312cc3abdf31",
+  "other_upstream_blobs_unchanged": 2420,
+  "inventory_issues": 184,
+  "individual_screen_traces": 74,
+  "inventory_synthesis_byte_identical_to_upstream": true,
+  "kb_index_exact_upstream_plus_original_issue153_route": true,
+  "kb_log_exact_upstream_prefix_plus_original_issue153_entry": true,
+  "added_local_links_and_anchors_passed": 2,
+  "conflict_markers_absent": true,
+  "new_original_review": false,
+  "browser_nonroot_evidence": "historical only; all src tree identical to old published head"
+}

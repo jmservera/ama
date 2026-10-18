@@ -7,6 +7,12 @@ Authorized continuation: integration-only rebase onto
 f91353169756dc41ebbcca944bdd3f44f7c04b89, preserving non-overlap candidate
 bytes and all #401 inventory/traces. Original phase evidence is retained;
 no new Review. Integration receipt owns current validation/publication facts.
+Integration executed onto exact target; sole append-only log conflict resolved
+by retaining upstream then original #153 entry. Five non-overlap files and all
+src bytes unchanged; #401 synthesis/tracking preserved. Fresh 100 tests,
+syntax/static checks and inventory/trace/link assertions passed. Historical
+browser/image receipts are not fresh execution. Await exact-lease publication
+and coordinator final-head review; no rerun of original Review.
 
 Task ID: 153. Slug: issue-153-chat-copy. Date: 2026-10-18.
 Plan: .copilot-tracking/plans/2026-10-18/issue-153-chat-copy-plan.md.

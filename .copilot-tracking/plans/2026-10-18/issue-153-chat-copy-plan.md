@@ -211,7 +211,13 @@ f91353169756dc41ebbcca944bdd3f44f7c04b89, with an exact old-published-head lease
 Same task/session, no new critique/Review or source scope. Preserve all merged
 #401 inventory/traces and shared KB history; reconcile separately in
 .copilot-tracking/changes/2026-10-18/issue-153-chat-copy-integration.md.
-Original P01-P03 execution below remains historical; integration is pending.
+Original P01-P03 execution below remains historical. Integration is locally
+complete: sole log conflict preserves both additions; index auto-merges both
+routes. Entire src and non-overlap candidate bytes/frozen records remain exact;
+184 inventory IDs/74 traces preserved. Fresh 100 focused/coupled tests and
+existing syntax/static/link/preservation checks pass. Exact-lease publication
+and PR body update are the remaining authorized operations, then coordinator
+complete exact-head review. No new original Review or source corrections.
 
 Implementation evidence: .copilot-tracking/changes/2026-10-18/issue-153-chat-copy-changes.md.
 P01/P02 and P03-T01 complete. One original independent Review executed Complete,
