@@ -4,7 +4,7 @@
 
 * Task ID: actions-budget-local-rpi
 * Task slug: local-rpi-validation
-* Planning status: Correction 2 source/regressions complete; final exact-head matrix pending; original Review Not accepted preserved
+* Planning status: Hosted-lint source/targeted checks complete; final exact-head gate pending commit; original Review Not accepted preserved
 * Plan date: 2026-10-18
 * Base: 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd
 * Phase details: .copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md
@@ -65,6 +65,16 @@ implementation loop, manages the immediate workflow disable actions.
   paused #137 worktree and original execution evidence.
 * Do not change branch protection, deploy, disable other workflows or claim
   unavailable required checks passed.
+* On 2026-10-18 the owner authorized one additional surgical Implement cycle
+  after PR #414 run 39163882224 failed native actionlint with hosted ShellCheck.
+  Correct dependency argument splitting and the unused rollback readiness-loop
+  variable, require ShellCheck in local preflight/tool receipts, and extend the
+  existing 12 methods. Preserve SQL selectors/readiness and prior contracts.
+  No repeated critique/original Review, push, PR creation or merge is authorized.
+  Coordinator independent exact-head delta Pass is required before publication.
+  Its approved primary-evidence scope covers all changed source/RPI, current
+  results/receipt bindings and historical correction/failure evidence; repetitive
+  raw logs remain retained, not necessarily exhaustively read.
 
 ## Goals
 
@@ -88,6 +98,9 @@ implementation loop, manages the immediate workflow disable actions.
 * Bind receipts to the exact source, base, tool versions and image digests.
 * Inspect external environment/package/startup identity as bounded inert data;
   never execute receipt-adjacent interpreters or import their startup content.
+* Require ShellCheck on PATH before native actionlint so local shell coverage
+  cannot silently fall below hosted coverage; bind its binary and recorded
+  version command through the existing tool/command receipt mechanisms.
 
 ## Non-Functional Requirements
 
@@ -270,7 +283,16 @@ permission to omit checks now.
   the matrix immediately, including retry probes.
   Source and all 12 focused methods, strict Ruff/format/mypy pass. Trusted
   contracts match all 183 historical command records (179 required positions,
-  bounded SQL readiness retries). Final post-commit matrix remains pending.
+  bounded SQL readiness retries). Correction 2 gate and independent bounded
+  Pass at e127b470 are historical evidence, not the new candidate's acceptance.
+* Hosted-lint correction: require and identify ShellCheck; prove its absence
+  blocks preflight and changed identity rejects a complete receipt within
+  the existing 12 methods. Run native actionlint with ShellCheck on all five
+  workflows, targeted/static and existing two infra contracts, then commit and
+  execute a new complete exact-head matrix with external receipt verification.
+  Source/regressions complete: native actionlint 1.7.7 / ShellCheck 0.9.0 passes
+  all five workflows; 12 methods, strict Ruff/format/mypy and 35 existing infra
+  methods pass. Final post-commit full matrix remains an external freeze gate.
 
 <!-- rpi:phase id=P02 -->
 ### [x] P02: Integrate local evidence into RPI delivery
@@ -287,6 +309,9 @@ permission to omit checks now.
 * RV-001: prove complete receipt verification performs no environment execution
   and retains complete-matrix/evidence checks. Existing guidance and all P03
   workflow/helper/domain coverage remain unchanged.
+* Hosted-lint correction: document the mandatory ShellCheck prerequisite and
+  reconcile source/evidence/state before freezing; independent delta assessment
+  and coordinator authorization remain publication gates.
 
 <!-- rpi:phase id=P03 -->
 ### [x] P03: Consolidate hosted validation without coverage loss
@@ -301,6 +326,12 @@ permission to omit checks now.
   retaining current check names until an explicit approved context transition.
 * Update existing workflow contract tests to assert coverage survives relocation.
 * Validate the consolidation locally before its first single hosted run.
+* Hosted-lint correction: split the trusted whitespace-delimited dependency
+  matrix into a native Bash array, preserving zero/one/two editable dependency
+  installs; use an intentionally unused readiness-loop variable. Do not change
+  rollback SQL selectors, retry count, query readiness or other contracts.
+  Native Bash argv matches all five matrix rows, including empty/core and
+  two/API dependencies; unchanged existing infra contracts pass.
 
 <!-- rpi:task id=P03-T02 -->
 #### [x] P03-T02: Apply owner-approved trigger and disable changes
@@ -368,40 +399,34 @@ and no second critique is requested.
 
 ## Handoff
 
-Correction 2 supersedes the preceding freeze next action, not its historical
-evidence. Starting HEAD 491124fcd406afea387cd95d555adcc8f9f00bde; unchanged base.
-Scope is reopened P01-T02 then directly coupled P02-T01. Write only the runner,
-its existing 12-method test file and dated plan/details/changes/state; no domain,
-helper, harness, workflow or infra test edits. Preserve RV-001's independently
-confirmed data-only fix. Run coherent focused tests/Ruff/format/mypy, commit
-source and evidence, then actual complete matrix and external verification at
-clean final HEAD with no later commit. Logs: `/tmp/rpi-413-correction2.log` and
-`/tmp/rpi-413-correction2-matrix.log`; fresh output
-`/tmp/rpi-413-correction2-final`. No push/PR, critique or original Review rerun.
-Independent source/evidence acceptance remains pending, including full direct
-review of the verbose original/corrective CLI and command logs. Partial reads
-and programmatic inspection are not complete independent evidence review.
-Correction 2 source/regression implementation is complete. Current next action
-is privacy-safe commit followed by the final clean-head actual matrix and
-external verification. Source acceptance and the unperformed independent
-evidence review are not implied. The original Review remains Not accepted.
+Owner-authorized hosted-lint correction starts at
+e127b47034180e06716356b69c63511bac958e67 on the existing topic, unchanged base
+612cbed78a35a4ab426571aa7d2aeb0ae6d691dd, open PR #414 / Refs #413.
+Completed source/targeted P01-T02, coupled P02-T01 and P03-T01 only.
+P01-T01/P03-T02 remain
+historical complete. Write boundary: runner, its existing 12-method test file,
+src/README.md, src-ci.yml, mvp-ci.yml, frozen workflow hashes and dated
+plan/details/changes/state. No domain/helper/harness edits or additional infra
+test files. Preserve independently confirmed prior fixes and all evidence.
 
-* The distinct corrective Implement invocation completed P01-T02 then P02-T01
-  source/tests. P03 and P01-T01 remain historical completed work, not edits.
-  Source boundary: tools/rpi-checks.py and tools/test_rpi_checks.py, related
-  runner documentation only if needed, and these dated state/evidence files.
-* Original Review is Complete, outcome Not accepted. Preserve it byte-for-byte
-  (SHA256 f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4).
-  No Research, critique or original Review repetition or independent acceptance
-  is authorized. RV-001 implementation is addressed with passing targeted
-  regressions; independent exact-head acceptance remains pending.
-* Targeted tests/static checks pass. Commit reconciled evidence, then run the
-  actual complete matrix at final clean HEAD and verify its external receipt at
-  `/tmp/rpi-413-verifier-correction-final/receipt.json`.
-  Make no later commit; no push or PR. Coordinator owns independent exact-head
-  assessment and the finding's acceptance disposition.
-* Changes and validation evidence:
-  .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md
-* Other autonomous delivery remains paused until the actual gate is available.
-* Independent exact-head assessment, protection/context mapping and retained
-  hosted confirmation remain coordinator/owner gates, not locally proven.
+Native actionlint 1.7.7 with actual ShellCheck 0.9.0 passes all five workflows;
+12 focused methods, strict Ruff/format/mypy and 35 methods in the two unchanged
+infra contract files pass. Missing ShellCheck blocks preflight; a changed binary
+identity rejects a complete receipt; trusted command contracts require its
+version row. Native Bash argv preserves every dependency matrix row and both
+MSSQL job dictionaries are identical. Commit
+coherent source/evidence using GitHub-resolved local noreply identity and trailer.
+Then run the complete actual matrix at clean final HEAD in a fresh external
+directory `/tmp/rpi-413-hosted-lint-final` and verify after fetching main.
+No subsequent candidate edit or commit. Logs: `/tmp/rpi-413-hosted-lint.log`
+and `/tmp/rpi-413-hosted-lint-matrix.log`; actual post-commit results remain
+external, never predicted in the committed checkpoint.
+
+Original Review remains Complete / Not accepted, byte-for-byte unchanged
+(SHA256 f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4),
+and original critique unchanged. No repeat of either. The preceding independent
+bounded Pass at e127b470 is historical; this new head requires independent
+exact-head delta assessment under the owner-approved primary-evidence scope.
+No push/PR creation/merge or hosted dispatch until coordinator authorization.
+Unknown required-context mapping and retained hosted confirmation remain
+separate coordinator/owner gates. No settings changes or fake contexts.

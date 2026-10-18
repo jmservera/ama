@@ -73,7 +73,9 @@ jobs:
       - name: Install the project editable with its development tools
         env:
           DEPS: ${{ matrix.deps }}
-        run: pip install $DEPS -e ".[dev]"
+        run: |
+          read -r -a dependencies <<< "$DEPS"
+          pip install "${dependencies[@]}" -e ".[dev]"
       - name: Unit tests and dependency-rule test
         env:
           PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || (matrix.project == 'orchestrator' || matrix.project == 'agents') && format('{0}/src/core/tests', github.workspace) || '' }}

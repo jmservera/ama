@@ -1,5 +1,120 @@
 # Changes: Local-first validation and Actions budget
 
+## Hosted-Lint Correction Authorized Implement Opening (2026-10-18)
+
+Owner explicitly authorized one more bounded Implement cycle at clean
+e127b47034180e06716356b69c63511bac958e67, unchanged 612cbed7 base and open
+PR #414 / Refs #413. Actual hosted run 39163882224 failed native actionlint
+1.7.7 with ShellCheck: src-ci.yml dependency expansion SC2086 and mvp-ci.yml
+image HTTP readiness-loop unused i SC2034. The supplied "SQL readiness" label
+does not match the logged line; preserve both HTTP readiness and the unchanged
+identical SQL jobs/selectors. Failure captured at
+/tmp/rpi-413-hosted-lint-failure.log. Other eight checks passed per owner.
+
+Root cause: local actionlint lacked ShellCheck and silently used lower coverage.
+Observed actual `shellcheck --version` fails "command not found"; Ubuntu noble
+official package metadata offers shellcheck 0.9.0-1 with SHA256
+eadf78f4dfcb1a271f47a9be5e38d124dffe9d4fea74956fab34e8c3e322a854.
+Restore only in external user-space scratch after that failure; record actual
+tool/version and checksum evidence, no system install or uv.
+
+Reconciled plan/details/state before source changes. Reopen P01-T02, coupled
+P02-T01 and P03-T01. Allowed source writes: runner, existing 12-method tests,
+src/README.md, src-ci.yml and mvp-ci.yml plus corresponding frozen hashes.
+No new infra file, domain/helper/harness edit, warning suppression or weakened
+contract. Use native Bash array splitting for the trusted dependency matrix,
+including empty core deps, and an intentionally unused readiness-loop variable.
+Require ShellCheck in existing binary identity and record its version through
+the same trusted preflight command contract; test absence/identity tampering.
+
+Validation intent: all five native workflows with actual ShellCheck/actionlint,
+12 focused methods/strict Ruff-format-mypy and both existing infra contracts.
+Commit coherent source/evidence with privacy-safe local Git identity/trailer;
+then complete actual matrix at final clean HEAD into new external
+/tmp/rpi-413-hosted-lint-final, fetch main and verify receipt. No later commit.
+Actual results stay external in /tmp/rpi-413-hosted-lint.log and
+/tmp/rpi-413-hosted-lint-matrix.log, not predicted in committed evidence.
+
+Preserve every prior receipt/log/finding and original critique/adverse Review
+byte-for-byte (SHA256 respectively
+46c74e233553820ef75af073df3f60ef046e1910b63d79d796a708d5a5591c2c and
+f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4).
+No repeated critique or original Review. Previous bounded independent Pass
+is historical, not acceptance of a changed head. Owner-approved delta-review
+scope: all changed source/RPI, current primary results/receipt bindings and
+historical correction/failure evidence; repetitive raw logs retained without
+mandatory exhaustive reading. No push, PR creation, merge, hosted dispatch,
+settings changes, cloud writes/spend or private inputs.
+
+## Hosted-Lint P01-T02 / P02-T01 / P03-T01 Completion and Freeze
+
+ShellCheck restored from the official Ubuntu noble signed-package catalogue,
+package 0.9.0-1, expected SHA256 above verified before dpkg-deb user-space
+extraction. Actual executable SHA256:
+54dc63164186ad21fb909f5194fb5291f4035c2d2cae04b5680385b8d8fbb73c.
+Located via /tmp/rpi-413-tools/shellcheck; no system/global configuration changed.
+Native actionlint 1.7.7 with ShellCheck 0.9.0 reproduced exactly SC2086/SC2034
+before edits, then passed all five workflows after the coherent correction.
+The intermediate same-case deps/DEPS naming raised SC2153; renamed the local
+array dependencies rather than suppressing the warning. No lint was disabled.
+
+src-ci.yml uses read -r -a dependencies and quoted array expansion so zero,
+one and two sibling editable dependency pairs remain separate pip arguments.
+Actual native Bash execution with an inert pip argument recorder matched all
+five expected matrix rows. mvp-ci.yml uses `_` in the same 30-attempt HTTP
+image readiness loop; its curl/sleep/failure and all SQL selectors/readiness
+remain unchanged. Complete source/rollback MSSQL dictionaries compare equal.
+Only the two changed frozen workflow hashes were refreshed.
+
+Runner's existing required tool identity now includes ShellCheck binary SHA256;
+both native preflight and trusted mandatory command contracts require its
+--version command. Extended the existing missing-tool, tampered-receipt and
+matrix-drift methods, leaving exactly 12 total and all prior assertions intact.
+Tests prove missing ShellCheck prevents commands/preflight success, changing
+only its binary changes only that tool identity, a complete receipt rejects
+changed ShellCheck identity, and its version command is required. Existing
+mandatory-row removal coverage now also removes/rejects the version row.
+src/README.md documents the mandatory, version-logged, identity-bound dependency.
+Data-only verification, fixed host lock and cancellation cleanup are unchanged.
+
+Actual final targeted results:
+* 12 focused methods pass: /tmp/rpi-413-hosted-lint-targeted-final.log.
+* Strict Ruff 0.17.1/check-format and mypy 2.4.0 pass for both runner files:
+  /tmp/rpi-413-hosted-lint-static.log.
+* Existing unchanged infra files pass 28 plus seven methods:
+  /tmp/rpi-413-hosted-lint-infra-final.log.
+* Native dependency argv/SQL parity: /tmp/rpi-413-hosted-lint-argv.log.
+* Native five-workflow actionlint result/versions:
+  /tmp/rpi-413-hosted-lint.log.
+
+Adverse attempts remain retained: the initial focused fixture wrongly created
+two Runner instances in one output, fixed by reusing its instance; initial infra
+test failed because historical venv imports referred to a removed snapshot.
+Confirmed missing zava_forward import before restoring a fresh disposable
+installed-package environment. No prior venv/evidence was altered. Existing
+pinned Ruff/mypy modules were used after PATH executable lookup failed; no
+package versions changed. Cleaned only the three new named egg-info directories
+created by targeted editable installation. No ignored/untracked input remains.
+Original Review/critique hashes are unchanged. The same two original infra
+files differ from base, neither edited in this cycle. No domain/helper/harness
+change, test removal, new test framework or scope expansion.
+
+P01-T02/P02-T01/P03-T01 source/targeted markers are complete; P01-T01/P03-T02
+unchanged historical completion. This is the committed pre-freeze checkpoint,
+not a predicted final matrix result or independent acceptance. Next commit
+coherent source/evidence with resolved GitHub noreply author/committer/trailer,
+then actual complete matrix at final clean HEAD:
+
+`PATH="/tmp/rpi-413-tools:$PATH" PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd --out /tmp/rpi-413-hosted-lint-final`
+
+Fetch main, verify external receipt with the same PATH/bytecode policy and
+`--verify-receipt /tmp/rpi-413-hosted-lint-final/receipt.json --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd`.
+Actual final outcome belongs to that external receipt and
+/tmp/rpi-413-hosted-lint-matrix.log, /tmp/rpi-413-hosted-lint-verify.log and
+/tmp/rpi-413-hosted-lint-handoff.json. No subsequent commit/source change.
+No new critique/original Review or publication. Coordinator owns independent
+exact-head delta assessment under the approved primary-evidence scope.
+
 ## Correction 2 Authorized Implement Opening (2026-10-18)
 
 User/coordinator authorized three independently reproduced defects at clean

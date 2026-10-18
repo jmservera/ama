@@ -49,14 +49,14 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "9d69301cd5eaf0ce6110f958ea6cec7ad6fe1c4709552481427d22d6ab5f5d5a",
-    "mvp-ci.yml": "7d826c2740c9647d0bd1b7de4abf5d9369073f3a79c5795f4de82dd2c558ab2d",
+    "src-ci.yml": "9e031a1804570391c27eeeb2e1f09fca7026151b73bd1268012c0329b21a2b91",
+    "mvp-ci.yml": "63ee7334071d4854d3c7f99045a894a88f6f1338b9bfca7e749f04c325cade7a",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "1dd9d684220adc38f665ed6f15bfa521824f5bcea7cdc22602c928ae31df7f0c",
     "infra-plan.yml": "232e84f01559055bc2121379a44c6ac3121e66f9e398e92e6a571a26c8c00a88",
 }
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
-TOOLS = ("python3", "node", "docker", "az", "bicep", "actionlint", "trivy")
+TOOLS = ("python3", "node", "docker", "az", "bicep", "actionlint", "shellcheck", "trivy")
 EXPECTED_SKIP_REASONS = {
     "needs a SQL Server (ZF_TEST_MSSQL=1)",
     "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
@@ -403,6 +403,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         ["docker", "version"],
         ["az", "bicep", "version"],
         ["actionlint", "-version"],
+        ["shellcheck", "--version"],
         ["trivy", "--version"],
     ):
         add(argv, timeout=60)
@@ -1053,6 +1054,7 @@ class Runner:
                 ["docker", "version"],
                 ["az", "bicep", "version"],
                 ["actionlint", "-version"],
+                ["shellcheck", "--version"],
                 ["trivy", "--version"],
             ):
                 text = self.command(argv, timeout=60)

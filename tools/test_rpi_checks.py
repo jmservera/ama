@@ -77,8 +77,40 @@ class GateTests(unittest.TestCase):
             self.assertRaises(gate.GateError),
         ):
             gate.tool_identity()
+        self.assertIn("shellcheck", gate.TOOLS)
         runner = self.runner()
         runner.snapshot = self.root
+        with (
+            patch.object(
+                gate.shutil,
+                "which",
+                side_effect=lambda name: None if name == "shellcheck" else sys.executable,
+            ),
+            patch.object(runner, "command") as command,
+        ):
+            with self.assertRaisesRegex(gate.GateError, "Missing required tool: shellcheck"):
+                gate.tool_identity()
+            runner.preflight()
+            command.assert_not_called()
+        self.assertEqual(runner.failures, ["preflight: Missing required tool: shellcheck"])
+        binary = self.out / "shellcheck"
+        binary.write_bytes(b"original tool identity")
+        with (
+            patch.object(
+                gate.shutil,
+                "which",
+                side_effect=lambda name: str(binary) if name == "shellcheck" else sys.executable,
+            ),
+            patch.object(gate.subprocess, "check_output", return_value="fixture-docker\n"),
+        ):
+            before = gate.tool_identity()
+            binary.write_bytes(b"changed tool identity")
+            after = gate.tool_identity()
+        self.assertNotEqual(before["shellcheck"], after["shellcheck"])
+        self.assertEqual(
+            {name: value for name, value in before.items() if name != "shellcheck"},
+            {name: value for name, value in after.items() if name != "shellcheck"},
+        )
         for argv in (
             ["/nonexistent/rpi-binary"],
             [sys.executable, "-c", "import absent_rpi_package"],
@@ -306,7 +338,7 @@ class GateTests(unittest.TestCase):
             "schema": 3,
             "status": "passed",
             "identity": gate.clean_identity(self.root, self.base),
-            "tools": {},
+            "tools": {"shellcheck": {"sha256": "e" * 64}},
             "environments": gate.environment_identity(self.out),
             "extras": [],
             "groups": gate.required_groups([]),
@@ -399,7 +431,7 @@ class GateTests(unittest.TestCase):
             return real_output(argv, **kwargs)
 
         with (
-            patch.object(gate, "tool_identity", return_value={}),
+            patch.object(gate, "tool_identity", return_value=receipt["tools"]),
             patch.object(gate, "scan_database", return_value={}),
             patch.object(gate.subprocess, "check_output", side_effect=output),
             patch.object(
@@ -411,6 +443,13 @@ class GateTests(unittest.TestCase):
             ),
         ):
             gate.verify(self.root, path, self.base)
+            with (
+                patch.object(
+                    gate, "tool_identity", return_value={"shellcheck": {"sha256": "f" * 64}}
+                ),
+                self.assertRaisesRegex(gate.GateError, "Receipt tool identity mismatch"),
+            ):
+                gate.verify(self.root, path, self.base)
             original_receipt = copy.deepcopy(receipt)
             # Each exact mandatory command must survive, even if groups/files stay consistent.
             for index, check in enumerate(checks):
@@ -576,10 +615,11 @@ class GateTests(unittest.TestCase):
             return "Python 3.12.3" if argv[0] == "python3" else "Version: 0.76.0"
 
         with (
-            patch.object(runner, "command", side_effect=version),
+            patch.object(runner, "command", side_effect=version) as command,
             patch.object(gate, "tool_identity", return_value={}),
         ):
             runner.preflight()
+        command.assert_any_call(["shellcheck", "--version"], timeout=60)
         self.assertTrue(runner.failures)
 
     def test_axe_and_scan_database_cannot_silently_skip(self) -> None:

@@ -5,8 +5,8 @@
 * Task ID: actions-budget-local-rpi
 * Task slug: local-rpi-validation
 * Related plan: .copilot-tracking/plans/2026-10-18/local-rpi-validation-plan.md
-* Planning state: Complete, both findings from the single critique resolved;
-  full-plan implementation approved on 2026-10-18 and P01 starts first.
+* Planning state: Complete, original critique dispositions unchanged;
+  hosted-lint source/targeted correction complete, pre-freeze checkpoint.
 * The owner will disable MVP CI and MVP validation; transition validation must
   not rely on those workflows. Other backlog pushes and merges remain paused.
 
@@ -14,9 +14,70 @@
 
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
-| P01 | Local gate | Correction 2 source/regressions complete; final exact-head matrix pending | P01-T01, P01-T02 |
-| P02 | RPI integration | Correction 2 targeted verification passes; independent acceptance pending | P02-T01 |
-| P03 | Hosted transition | Complete local implementation; run05 verified at 2c98c0e3 | P03-T01, P03-T02 |
+| P01 | Local gate | Hosted-lint source/12-method/static checks complete; final gate pending | P01-T01, P01-T02 |
+| P02 | RPI integration | ShellCheck prerequisite/evidence reconciled; final receipt pending | P02-T01 |
+| P03 | Hosted transition | Five-workflow native lint and 35 infra methods pass; publication blocked | P03-T01, P03-T02 |
+
+## Current Hosted-Lint Correction Boundary (2026-10-18)
+
+Owner authorized one additional Implement cycle at e127b470 after PR #414
+run 39163882224 failed SC2086 for unquoted multi-package DEPS in src-ci.yml
+and SC2034 for the rollback image readiness-loop variable in mvp-ci.yml.
+The latter is the image HTTP readiness loop, not the SQL job; preserve both
+HTTP readiness behavior and the identical consolidated/rollback MSSQL job.
+The other eight reported checks passed, including real MSSQL.
+
+Reopened P01-T02, coupled P02-T01 and P03-T01. Native actionlint had silently
+omitted shell analysis locally because ShellCheck was absent. Require its
+binary in existing tool_identity, record shellcheck --version in both preflight
+and trusted required command contracts, and retain existing binary-hash receipt
+invalidation. Extend existing missing-tool/tampered-receipt methods within 12
+total. Use Bash read -r -a plus quoted array expansion for trusted matrix
+dependency tokens, including empty core dependencies. No eval or blanket
+quoting of the entire multi-package string; no warnings disabled.
+
+Approved writes: tools/rpi-checks.py, tools/test_rpi_checks.py, src/README.md,
+src-ci.yml, mvp-ci.yml, associated frozen workflow hashes and dated evidence.
+No domain/helper/harness changes or extra infra files. Restore a missing tool
+only after observed missing-dependency failure, from official checksum/package
+sources in external user-space scratch; no uv or system/settings changes.
+
+Validate native actionlint 1.7.7 with ShellCheck on all five workflows, the
+12 focused methods/strict Ruff/format/mypy and the existing test_pipeline.py /
+test_container_contract.py contracts. Reconcile and commit, then execute the
+actual full matrix on final clean exact HEAD at /tmp/rpi-413-hosted-lint-final
+and verify its external receipt after fetching main. No later commit. Logs
+/tmp/rpi-413-hosted-lint.log and /tmp/rpi-413-hosted-lint-matrix.log.
+Original critique/adverse Review remain immutable, no repeated execution.
+Independent exact-head delta assessment requires all changed source/RPI,
+current primary results/receipt bindings and historical correction/failure
+evidence; repetitive raw logs are retained, not necessarily exhaustively read.
+This current owner-approved evidence scope supersedes older exhaustive-log
+handoff wording below. No publication until coordinator independent delta Pass.
+
+Current source/targeted completion: actual actionlint 1.7.7 / restored official
+Ubuntu ShellCheck 0.9.0 passes all five native files. Both original diagnostics
+were first reproduced with those versions. read -r -a dependencies plus quoted
+array expansion preserves actual Bash argv for every matrix row, including
+zero, one and two sibling editable dependencies. Readiness uses `_` with the
+same 30 attempts/HTTP query/sleep/failure behavior; identical SQL job dictionaries
+are unchanged. Frozen hashes updated only for these two workflow changes.
+Runner requires/hashes ShellCheck and records --version as a trusted mandatory
+row; existing tests prove missing binary stops preflight, changed binary hash
+changes identity, and identity mismatch rejects an otherwise complete receipt.
+The all-mandatory-row removal regression also covers ShellCheck's new row.
+
+All 12 methods pass, strict Ruff 0.17.1/check-format and mypy 2.4.0 pass;
+test_pipeline.py 28 and test_container_contract.py seven methods pass unchanged.
+Initial fixture reinitialization error was corrected within the same test
+method. First infra probe used a historical venv whose deleted snapshot makes
+editable imports unavailable; a confirmed missing zava_forward import justified
+a new disposable installed-package venv, without modifying historical evidence.
+Only newly generated named egg-info directories were cleaned from the candidate.
+Final source/targeted result paths are recorded in the changes artifact.
+Markers reflect source/targeted completion, not a predicted post-commit pass.
+Next: commit, complete actual final-head matrix and external verification;
+no candidate change after that run, independent delta assessment still required.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement a complete local validation gate

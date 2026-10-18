@@ -51,7 +51,7 @@ Targeted commands above support development; they do not replace the complete
 pre-push gate, including for documentation-only issues. Finish implementation
 and the original RPI Review, commit the candidate and dated evidence, then run
 from the repository root with Python 3.12, Node, Docker, Azure CLI/offline Bicep,
-actionlint and Trivy 0.76.0 available on PATH:
+actionlint, ShellCheck and Trivy 0.76.0 available on PATH:
 
 ```bash
 git fetch origin main
@@ -81,6 +81,11 @@ JSON-only SQL non-applicability are enumerated by test ID and reason; unexpected
 required integration skips fail. Existing private-data, real AI, Azure/OIDC,
 reviewer protection, privileged what-if and deployment acceptance remain
 separate controls, not local successes.
+
+ShellCheck is a required preflight dependency, not an optional actionlint
+enhancement: native workflow lint must analyze shell scripts as hosted lint
+does. Its version is logged and its binary identity is receipt-bound; a missing
+or changed ShellCheck blocks the complete gate or receipt verification.
 
 For issue-specific additional unit contracts, repeat a reviewed selector such
 as `--extra-test api:test_module.Class.test_method`; the module must be tracked.
