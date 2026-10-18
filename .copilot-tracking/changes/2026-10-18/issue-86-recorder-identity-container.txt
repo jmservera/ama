@@ -1,0 +1,360 @@
+UID 10001
+CAPS ['CapEff:\t0000000000000000']
+resident_decisions.py 02a2f9e7fb44b95150a94f53f832f5ebe1283f250900250e6638ac7384ae1b1a
+projection.py 1b28e6080a675b4db9231e1f992a97184b5331b0496284be979701cf98a3c276
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+----------------------------------------------------------------------
+Ran 9 tests in 5.573s
+
+OK (skipped=1)

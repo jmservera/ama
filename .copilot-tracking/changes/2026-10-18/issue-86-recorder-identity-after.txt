@@ -1,0 +1,74 @@
+[
+  {
+    "backend": "JsonResidentDecisions",
+    "stable": "code",
+    "operation": "open",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "JsonResidentDecisions",
+    "stable": "code",
+    "operation": "reassign",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "SqlResidentDecisions",
+    "stable": "code",
+    "operation": "open",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "SqlResidentDecisions",
+    "stable": "code",
+    "operation": "reassign",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "OidJson",
+    "stable": "oid",
+    "operation": "open",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "OidJson",
+    "stable": "oid",
+    "operation": "reassign",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "OidSql",
+    "stable": "oid",
+    "operation": "open",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  },
+  {
+    "backend": "OidSql",
+    "stable": "oid",
+    "operation": "reassign",
+    "snapshot": true,
+    "denied": true,
+    "case_unchanged": true,
+    "audit_unchanged": true
+  }
+]

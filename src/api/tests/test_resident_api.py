@@ -513,6 +513,186 @@ class ResidentApi(unittest.TestCase):
         self.assertTrue(again.verify_audit())
         self.assertEqual(self.call("/api/assistants", "sam")[0], 200)
 
+    def test_historical_recorder_changed_email_http_denials_and_distinct_controls(self) -> None:
+        sam = dict(self.store.staff["sam@example.test"], oid="SYN-HTTP-RECORDER-CANARY")
+        self.store.db.execute(
+            "UPDATE staff SET body=? WHERE email=?", (json.dumps(sam), sam["email"])
+        )
+        self.store.staff[sam["email"]] = sam
+        self.context()
+        self.assertEqual(
+            self.action(
+                "decision_record",
+                measure="Loft insulation",
+                context_revision=1,
+                status="Accepted",
+                answered_by="The resident",
+                source="SYN",
+                recorder_identity=dict(code="FORGED", email="forged@example.test"),
+            )[0],
+            200,
+        )
+        service = dict(
+            route="Independent review",
+            review_measure="Loft insulation",
+            review_decision_version=1,
+            review_reference="SYN historical",
+            summary="SYN",
+            desired_outcome="SYN",
+            next_update="2099-01-01",
+            service_owner="pam@example.test",
+            redress_owner="rae@example.test",
+        )
+        code, detail = self.action("service_open", "pam", **service)
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(detail["service_requests"][0]["reviewed_identity"]["oid"], sam["oid"])
+        for stable in ("code", "oid"):
+            changed = dict(
+                sam,
+                email="changed@example.test",
+                code=sam["code"] if stable == "code" else "SYN changed code",
+                oid="SYN changed oid" if stable == "code" else sam["oid"],
+            )
+            self.store.db.execute(
+                "UPDATE staff SET email=?, body=? WHERE email=?",
+                (changed["email"], json.dumps(changed), sam["email"]),
+            )
+            before = copy.deepcopy(self.store.cases["ZF-1"])
+            audit = list(self.store.audit_entries())
+            for action, body in (
+                ("service_open", dict(service, redress_owner=changed["email"])),
+                (
+                    "service_reassign",
+                    dict(
+                        id="SR-1",
+                        expected_version=1,
+                        responsibility="redress",
+                        owner=changed["email"],
+                        note="SYN",
+                    ),
+                ),
+            ):
+                with self.subTest(stable=stable, action=action):
+                    code, refused = self.action(
+                        action, "pam", **body, reviewed_identity=dict(code="FORGED")
+                    )
+                    self.assertEqual(code, 403, refused)
+                    self.assertIn("contested decision", refused["error"])
+                    self.assertEqual(self.store.cases["ZF-1"], before)
+                    self.assertEqual(list(self.store.audit_entries()), audit)
+            self.store.db.execute(
+                "UPDATE staff SET email=?, body=? WHERE email=?",
+                (sam["email"], json.dumps(sam), changed["email"]),
+            )
+        code, detail = self.action(
+            "service_reassign",
+            "pam",
+            id="SR-1",
+            expected_version=1,
+            responsibility="redress",
+            owner="rex@example.test",
+            note="SYN different person",
+        )
+        self.assertEqual(code, 200, detail)
+        for path in ("/api/cases/ZF-1", "/api/cases.csv"):
+            self.assertNotIn(sam["oid"], str(self.call(path, "kim")[1]))
+        # A role without resident viewing cannot acquire the new nested snapshot.
+        rex = self.store.staff["rex@example.test"]
+        self.store.db.execute(
+            "UPDATE staff SET body=? WHERE email=?",
+            (json.dumps(dict(rex, role="Quality Inspector")), rex["email"]),
+        )
+        self.store.staff[rex["email"]] = dict(rex, role="Quality Inspector")
+        for path in ("/api/cases/ZF-1", "/api/cases.csv"):
+            self.assertNotIn(sam["oid"], str(self.call(path, "rex")[1]))
+        self.assertTrue(self.store.verify_audit())
+
+    def test_http_legacy_unknown_and_bound_review_after_deleted_version_reuse(self) -> None:
+        self.context()
+        answer: dict[str, Any] = dict(
+            measure="Loft insulation",
+            context_revision=1,
+            status="Accepted",
+            answered_by="The resident",
+            source="SYN",
+        )
+        self.assertEqual(self.action("decision_record", **answer)[0], 200)
+        service = dict(
+            route="Independent review",
+            review_measure="Loft insulation",
+            review_decision_version=1,
+            review_reference="SYN",
+            summary="SYN",
+            desired_outcome="SYN",
+            next_update="2099-01-01",
+            service_owner="pam@example.test",
+            redress_owner="rae@example.test",
+        )
+        for _ in range(2):
+            self.assertEqual(self.action("service_open", "pam", **service)[0], 200)
+        with self.store.lock:
+            case = self.store._case("ZF-1")
+            case["service_requests"][1].pop("reviewed_identity")
+            case["resident"]["first_contact_at"] = "2020-01-01"
+            self.store.save()
+        self.assertEqual(
+            self.call("/api/cases/ZF-1/retention-approve", "pam", dict(id="resident-decisions"))[0],
+            200,
+        )
+        self.assertEqual(
+            self.action(
+                "scope_record",
+                "rex",
+                measure="Loft insulation",
+                design_version=1,
+                scope="SYN new scope",
+                source="SYN",
+            )[0],
+            200,
+        )
+        self.assertEqual(self.action("decision_record", "rex", **answer)[0], 200)
+        reopened = SqlStore(str(self.path), str(self.path.with_suffix(".sqlite")))
+        self.addCleanup(reopened.db.close)
+        self.store = reopened
+        self.app.store = reopened
+        body = dict(
+            id="SR-2",
+            expected_version=1,
+            responsibility="redress",
+            owner="rex@example.test",
+            note="SYN legacy unknown",
+        )
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        code, refused = self.action("service_reassign", "pam", **body)
+        self.assertEqual(code, 403, refused)
+        self.assertIn("Unknown", refused["error"])
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        code, detail = self.action("service_reassign", "pam", **dict(body, id="SR-1"))
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(
+            detail["service_requests"][0]["reviewed_identity"]["code"],
+            self.store.staff["sam@example.test"]["code"],
+        )
+        self.assertEqual(detail["service_requests"][1]["reviewed_identity_status"], "Unknown")
+        self.assertNotIn("reviewed_identity", detail["service_requests"][1])
+        # Email-only historical decisions never gain code/oid from today's registry.
+        with self.store.lock:
+            self.store._case("ZF-1")["measure_decisions"]["Loft insulation"][0].pop(
+                "recorder_identity"
+            )
+            self.store.save()
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        self.assertEqual(self.action("service_open", "pam", **service)[0], 403)
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(
+            self.action("service_open", "pam", **dict(service, route="Complaint"))[0], 200
+        )
+        self.assertEqual(self.action("decision_record", "rex", **answer)[0], 200)
+
     def test_roles_authority_disclosure_and_no_failure_mutation(self) -> None:
         self.context()
         self.assertEqual(self.action("decision_record", actor="")[0], 401)

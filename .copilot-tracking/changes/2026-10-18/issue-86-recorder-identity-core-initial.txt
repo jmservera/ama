@@ -1,0 +1,41 @@
+======================================================================
+ERROR: test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid (test_resident_decisions.JsonResidentDecisions.test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid) (stable='code')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/tests/test_resident_decisions.py", line 853, in test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid
+    self.store.staff.pop(changed["email"])
+KeyError: 'changed@example.test'
+
+======================================================================
+ERROR: test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid (test_resident_decisions.JsonResidentDecisions.test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid) (stable='oid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/tests/test_resident_decisions.py", line 853, in test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid
+    self.store.staff.pop(changed["email"])
+KeyError: 'changed@example.test'
+
+======================================================================
+ERROR: test_review_binding_survives_new_versions_and_retention_ordinal_reuse (test_resident_decisions.JsonResidentDecisions.test_review_binding_survives_new_versions_and_retention_ordinal_reuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/tests/test_resident_decisions.py", line 981, in test_review_binding_survives_new_versions_and_retention_ordinal_reuse
+    self.store.resident_action(
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/src/zava_forward/core/resident_decisions.py", line 429, in resident_action
+    with _operation(self, user, case_id, body):
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/src/zava_forward/core/resident_decisions.py", line 203, in _operation
+    detail = getattr(store, "_res_" + body["action"])(actor, c, context["body"])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/src/zava_forward/core/resident_decisions.py", line 623, in _res_service_reassign
+    owner = _person(self, body.get("owner"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/src/core/src/zava_forward/core/resident_decisions.py", line 108, in _person
+    raise ValueError("Choose a current named resident-workflow colleague from the staff list.")
+ValueError: Choose a current named resident-workflow colleague from the staff list.
+
+----------------------------------------------------------------------
+Ran 78 tests in 13.380s
+
+FAILED (errors=3, skipped=1)

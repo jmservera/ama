@@ -1238,6 +1238,18 @@ no downstream transport consumes it and no message is sent. Legacy
 representative-addressed templates remain refused; authorized staff AI
 proposals are non-addressed drafts and still require human review.
 
+New decision versions contain server-derived `recorder_identity`; new independent
+requests bind `reviewed_identity` to the selected exact measure/decision version.
+Opening or reassigning redress to the original recorder returns 403 even after an
+email change when the historical code or oid matches. Missing/insufficient legacy
+identity also returns 403 with an explicit `Unknown` error, without case or
+successful-audit mutation. Detail derives `recorder_identity_status` and
+`reviewed_identity_status` without rewriting old evidence. Unbound legacy requests
+never acquire a snapshot from today's staff or a reused decision ordinal after
+retention deletion. Other service/complaint and consent paths remain available
+under existing controls. New identifiers retain the existing resident-view
+boundary and are omitted from other staff/contractor detail and exports.
+
 Work-order issue/reissue/correction requires `resident_bindings`, for example:
 
 ```json

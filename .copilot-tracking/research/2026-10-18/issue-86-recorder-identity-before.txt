@@ -1,0 +1,80 @@
+[
+  {
+    "backend": "JsonResidentDecisions",
+    "stable": "code",
+    "operation": "open",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "JsonResidentDecisions",
+    "stable": "code",
+    "operation": "reassign",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "SqlResidentDecisions",
+    "stable": "code",
+    "operation": "open",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "SqlResidentDecisions",
+    "stable": "code",
+    "operation": "reassign",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "OidJson",
+    "stable": "oid",
+    "operation": "open",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "OidJson",
+    "stable": "oid",
+    "operation": "reassign",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "OidSql",
+    "stable": "oid",
+    "operation": "open",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  },
+  {
+    "backend": "OidSql",
+    "stable": "oid",
+    "operation": "reassign",
+    "snapshot": false,
+    "denied": false,
+    "case_unchanged": false,
+    "audit_unchanged": false
+  }
+]
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-86-recorder/.copilot-tracking/research/2026-10-18/issue-86-recorder-identity-probe.py", line 102, in <module>
+    unittest.TestCase().assertTrue(all(row["denied"] for row in results))
+  File "/usr/lib/python3.12/unittest/case.py", line 727, in assertTrue
+    raise self.failureException(msg)
+AssertionError: False is not true

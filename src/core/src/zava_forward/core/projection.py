@@ -157,7 +157,7 @@ def redact_staff_detail(user, d):
             if measure.get("context"):
                 measure["context"].pop("source", None)
             for answer in measure.get("versions", []):
-                for key in ("source", "note", "representative_ref", "review_ref"):
+                for key in ("source", "note", "representative_ref", "review_ref", "recorder_identity"):
                     answer.pop(key, None)
             if measure.get("review"):
                 measure["review"].pop("review_ref", None)

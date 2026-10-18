@@ -737,6 +737,347 @@ class JsonResidentDecisions(unittest.TestCase):
             )
         else:
             self.store.staff[actor["email"]] = copy.deepcopy(actor)
+            for index, current in enumerate(self.store.data["staff"]):
+                if current["email"] == actor["email"]:
+                    self.store.data["staff"][index] = copy.deepcopy(actor)
+            self.store.save()
+
+    def review_body(self, **kw: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="service_open",
+                route="Independent review",
+                review_measure=MEASURES[0],
+                review_decision_version=1,
+                review_reference="SYN recorded decision",
+                summary="SYN review",
+                desired_outcome="SYN independent person",
+                service_owner=self.pam["email"],
+                redress_owner=self.rae["email"],
+                next_update="2099-01-01",
+            ),
+            **kw,
+        )
+
+    def change_staff_email(self, actor: dict[str, Any], **kw: Any) -> dict[str, Any]:
+        changed = dict(actor, email="changed@example.test", **kw)
+        if self.sql:
+            assert isinstance(self.store, SqlStore)
+            self.store.db.execute(
+                "UPDATE staff SET email=?, body=? WHERE email=?",
+                (changed["email"], json.dumps(changed), actor["email"]),
+            )
+        else:
+            self.store.staff.pop(actor["email"])
+            self.store.staff[changed["email"]] = copy.deepcopy(changed)
+            for index, current in enumerate(self.store.data["staff"]):
+                if current["email"] == actor["email"]:
+                    self.store.data["staff"][index] = copy.deepcopy(changed)
+            self.store.save()
+        return changed
+
+    def test_decision_recorder_snapshot_is_server_derived_and_immutable(self) -> None:
+        self.sam["oid"] = "SYN-RECORDER-OID"
+        self.register_followup_actor(self.sam)
+        self.scope()
+        forged = dict(self.rae)
+        self.answer(
+            recorder_identity=forged,
+            recorded_by_email=forged["email"],
+            recorded_by=forged["name"],
+        )
+        first = copy.deepcopy(self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0])
+        self.assertEqual(
+            first["recorder_identity"],
+            {key: self.sam.get(key) for key in ("email", "code", "name", "role", "oid")},
+        )
+        body = dict(
+            action="decision_record",
+            measure=MEASURES[0],
+            context_revision=1,
+            status="Accepted",
+            answered_by="The resident",
+            source="SYN",
+        )
+        for actor in (dict(self.sam, oid="FORGED"), dict(self.sam, code="FORGED"), self.pam):
+            self.unchanged_failure(partial(self.store.resident_action, actor, "ZF-1", body))
+        self.store.resident_action(self.rex, "ZF-1", body)
+        again = self.open_store()
+        self.assertEqual(again.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0], first)
+        self.assertEqual(
+            again.detail("ZF-1", self.sam)["measure_decisions"][0]["versions"][0][
+                "recorder_identity_status"
+            ],
+            "Known",
+        )
+
+    def test_changed_email_recorder_denied_open_and_reassignment_by_code_or_oid(self) -> None:
+        self.sam["oid"] = "SYN-ORIGINAL-OID"
+        self.register_followup_actor(self.sam)
+        self.scope()
+        self.answer()
+        self.store.resident_action(self.pam, "ZF-1", self.review_body())
+        historical = copy.deepcopy(self.store.cases["ZF-1"]["measure_decisions"])
+        for stable in ("code", "oid"):
+            with self.subTest(stable=stable):
+                changed = self.change_staff_email(
+                    self.sam,
+                    code=self.sam["code"] if stable == "code" else "SYN-NEW-CODE",
+                    oid="SYN-NEW-OID" if stable == "code" else self.sam["oid"].swapcase(),
+                )
+                self.store = self.open_store()
+                self.unchanged_failure(
+                    partial(
+                        self.store.resident_action,
+                        self.pam,
+                        "ZF-1",
+                        self.review_body(
+                            redress_owner=changed["email"], reviewed_identity=dict(self.rae)
+                        ),
+                    )
+                )
+                self.unchanged_failure(
+                    partial(
+                        self.store.resident_action,
+                        self.pam,
+                        "ZF-1",
+                        dict(
+                            action="service_reassign",
+                            id="SR-1",
+                            expected_version=1,
+                            responsibility="redress",
+                            owner=changed["email"],
+                            reviewed_identity=dict(self.rae),
+                            note="SYN",
+                        ),
+                    )
+                )
+                self.assertEqual(self.store.cases["ZF-1"]["measure_decisions"], historical)
+                # Restore the current registry only, never the historical snapshot.
+                if self.sql:
+                    assert isinstance(self.store, SqlStore)
+                    self.store.db.execute(
+                        "UPDATE staff SET email=?, body=? WHERE email=?",
+                        (self.sam["email"], json.dumps(self.sam), changed["email"]),
+                    )
+                else:
+                    self.store.staff.pop(changed["email"])
+                    for index, current in enumerate(self.store.data["staff"]):
+                        if current["email"] == changed["email"]:
+                            self.store.data["staff"][index] = copy.deepcopy(self.sam)
+                    self.register_followup_actor(self.sam)
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-1",
+                expected_version=1,
+                responsibility="redress",
+                owner=self.rex["email"],
+                note="SYN genuinely distinct reviewer",
+            ),
+        )
+        self.assertEqual(
+            self.open_store().cases["ZF-1"]["service_requests"][0]["redress_identity"]["code"],
+            self.rex["code"],
+        )
+        self.assertTrue(self.store.verify_audit())
+
+    def test_review_binding_survives_new_versions_and_retention_ordinal_reuse(self) -> None:
+        self.scope()
+        self.answer()
+        original = copy.deepcopy(self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0])
+        for _ in range(2):
+            self.store.resident_action(self.pam, "ZF-1", self.review_body())
+        with self.store.lock:
+            case = self.store._case("ZF-1")
+            case["service_requests"][1].pop("reviewed_identity")
+            self.store.save()
+        self.store.resident_action(
+            self.rex,
+            "ZF-1",
+            dict(
+                action="decision_record",
+                measure=MEASURES[0],
+                context_revision=1,
+                status="Accepted",
+                answered_by="The resident",
+                source="SYN newer version by different recorder",
+            ),
+        )
+        self.store.resident_action(self.pam, "ZF-1", self.review_body())
+        self.assertEqual(
+            self.store.cases["ZF-1"]["service_requests"][2]["reviewed_identity"],
+            original["recorder_identity"],
+        )
+        changed = self.change_staff_email(self.sam)
+        self.store = self.open_store()
+        for after_deletion in (False, True):
+            if after_deletion:
+                with self.store.lock:
+                    case = self.store._case("ZF-1")
+                    case["resident"]["first_contact_at"] = "2020-01-01"
+                    self.store.save()
+                with patch.object(controls, "today", return_value="2026-10-18"):
+                    self.store.approve_retention_deletion(
+                        self.pam, "ZF-1", "resident-decisions", today=date(2026, 10, 18)
+                    )
+                self.store.resident_action(
+                    self.rex,
+                    "ZF-1",
+                    dict(
+                        action="scope_record",
+                        measure=MEASURES[0],
+                        design_version=1,
+                        scope="SYN recreated",
+                        source="SYN",
+                    ),
+                )
+                self.store.resident_action(
+                    self.rex,
+                    "ZF-1",
+                    dict(
+                        action="decision_record",
+                        measure=MEASURES[0],
+                        context_revision=1,
+                        status="Accepted",
+                        answered_by="The resident",
+                        source="SYN recreated version one",
+                    ),
+                )
+                self.store = self.open_store()
+                self.assertEqual(
+                    self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0]["version"], 1
+                )
+            for request_id in ("SR-1", "SR-2", "SR-3"):
+                with self.subTest(after_deletion=after_deletion, request=request_id):
+                    self.unchanged_failure(
+                        partial(
+                            self.store.resident_action,
+                            self.pam,
+                            "ZF-1",
+                            dict(
+                                action="service_reassign",
+                                id=request_id,
+                                expected_version=1,
+                                responsibility="redress",
+                                owner=changed["email"],
+                                note="SYN",
+                            ),
+                        )
+                    )
+        self.unchanged_failure(
+            lambda: self.store.resident_action(
+                self.pam,
+                "ZF-1",
+                dict(
+                    action="service_reassign",
+                    id="SR-2",
+                    expected_version=1,
+                    responsibility="redress",
+                    owner=self.rex["email"],
+                    note="SYN cannot adopt recreated recorder",
+                ),
+            )
+        )
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-1",
+                expected_version=1,
+                responsibility="redress",
+                owner=self.rex["email"],
+                note="SYN distinct from original, even after deletion",
+            ),
+        )
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-2",
+                expected_version=1,
+                responsibility="service",
+                owner=changed["email"],
+                note="SYN unrelated handler reassignment remains possible",
+            ),
+        )
+        requests = self.store.detail("ZF-1", self.pam)["service_requests"]
+        self.assertEqual(requests[0]["reviewed_identity"], original["recorder_identity"])
+        self.assertEqual(requests[0]["reviewed_identity_status"], "Known")
+        self.assertNotIn("reviewed_identity", requests[1])
+        self.assertEqual(requests[1]["reviewed_identity_status"], "Unknown")
+        self.assertEqual(requests[0]["remedy"]["status"], "Open")
+
+    def test_legacy_recorder_unknown_never_backfilled_or_blocks_unrelated_service(self) -> None:
+        self.scope()
+        self.answer()
+        original = copy.deepcopy(self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0])
+        for unknown in (None, {}, "invalid", {"email": self.sam["email"]}, {"code": " "}):
+            with self.subTest(unknown=unknown):
+                with self.store.lock:
+                    decision = self.store._case("ZF-1")["measure_decisions"][MEASURES[0]][0]
+                    if unknown is None:
+                        decision.pop("recorder_identity", None)
+                    else:
+                        decision["recorder_identity"] = unknown
+                    self.store.save()
+                self.store = self.open_store()
+                before = copy.deepcopy(self.store.cases["ZF-1"]["measure_decisions"])
+                self.assertEqual(
+                    self.store.detail("ZF-1", self.sam)["measure_decisions"][0]["versions"][0][
+                        "recorder_identity_status"
+                    ],
+                    "Unknown",
+                )
+                self.unchanged_failure(
+                    lambda: self.store.resident_action(
+                        self.pam, "ZF-1", self.review_body(reviewed_identity=dict(self.sam))
+                    )
+                )
+                self.assertEqual(self.store.cases["ZF-1"]["measure_decisions"], before)
+        # Today's owner of the historical email cannot become historical evidence.
+        rebound = dict(self.rex, email=self.sam["email"])
+        self.register_followup_actor(rebound)
+        self.unchanged_failure(
+            lambda: self.store.resident_action(self.pam, "ZF-1", self.review_body())
+        )
+        for route in ("Service request", "Complaint"):
+            self.store.resident_action(self.pam, "ZF-1", self.review_body(route=route))
+        self.register_followup_actor(self.sam)
+        self.answer()
+        self.assertEqual(
+            self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0]["recorded_by_email"],
+            original["recorded_by_email"],
+        )
+        self.assertEqual(
+            self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][0]["recorder_identity"],
+            {"code": " "},
+        )
+
+    def test_historical_recorder_identity_projection_and_model_canary(self) -> None:
+        self.sam["oid"] = "SYN-PRIVATE-RECORDER-IDENTITY-CANARY"
+        self.register_followup_actor(self.sam)
+        self.scope()
+        self.answer()
+        self.store.resident_action(self.pam, "ZF-1", self.review_body())
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        for role in projection.STAFF_ROLES + ("Contractor",):
+            user = dict(self.kim, role=role)
+            detail = self.store.detail("ZF-1", user)
+            if role in controls.RESIDENT_VIEW_ROLES:
+                self.assertIn(self.sam["oid"], json.dumps(detail))
+            else:
+                self.assertNotIn(self.sam["oid"], json.dumps(detail))
+                self.assertNotIn('recorder_identity"', json.dumps(detail))
+                self.assertNotIn('reviewed_identity"', json.dumps(detail))
+        self.assertNotIn(self.sam["oid"], self.store._facts(before))
+        self.assertNotIn(self.sam["oid"], json.dumps(list(self.store.audit_entries())))
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
 
     def test_response_reassignment_status_clock_follows_responsibility_not_shared_person(
         self,
@@ -1576,6 +1917,31 @@ class AzureResidentDecisions(unittest.TestCase):
 class SqlResidentDecisions(JsonResidentDecisions):
     sql = True
     store: SqlStore
+
+    def test_decision_snapshot_rechecks_registered_actor_in_writer_transaction(self) -> None:
+        self.scope()
+        save = self.store.save
+        for field in ("code", "oid"):
+            with self.subTest(field=field):
+
+                def change_registry(field: str = field) -> None:
+                    other = self.store.assistant_connection()
+                    try:
+                        other.execute(
+                            "UPDATE staff SET body=? WHERE email=?",
+                            (
+                                json.dumps(dict(self.sam, **{field: "SYN changed"})),
+                                self.sam["email"],
+                            ),
+                        )
+                    finally:
+                        other.close()
+                    save()
+
+                with patch.object(self.store, "save", side_effect=change_registry):
+                    self.unchanged_failure(lambda: self.answer())
+                self.register_followup_actor(self.sam)
+                self.assertNotIn("measure_decisions", self.open_store().cases["ZF-1"])
 
     def test_response_reassignment_rechecks_writer_actor_assignee_and_version(self) -> None:
         self.request()
