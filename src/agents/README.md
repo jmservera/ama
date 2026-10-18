@@ -2,7 +2,7 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -19,7 +19,9 @@ boundary. No sensor AI purpose, real-data approval or live inference is added.
 to a fresh disposable directory and validates them through the shared core
 `synthetic.privacy` checker. Each payload is independently mutated with a false
 label and an email pattern, with the aggregate hash refreshed so a hash error
-cannot mask a broken scanner. Existing fixture bytes are unchanged.
+cannot mask a broken scanner. The #175 scanner change left fixture bytes unchanged;
+the subsequent #172 isolation addition below changes only the isolation payload
+and its generated aggregate manifest hash.
 
 ```bash
 PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
@@ -33,6 +35,34 @@ Actual user/model content may be personal; passing fixture checks is not DPO
 approval or a universal PII-free guarantee. The separate source-provenance
 audit still rejects three unverified historic source entries, leaving that
 issue #175 criterion unmet. No live service, model or private dataset is used.
+
+### Resource-specific isolation fixtures (#172, 2026-10-18)
+
+`test_chat_fixture` separates all eleven persona/memory perspectives from the
+thread owners derived from current assistant eligibility (14 users across seven
+perspectives). Both contractors retain empty eligible-task lists and zero owned
+threads. Six explicit contractor-as-actor read/list/search denial expectations
+target an existing active eligible staff-owned thread. Generation fails explicitly
+if no legitimate target exists; tests reject missing actor/action probes,
+self-pairing, missing/mismatched/inactive targets and non-denial expectations.
+These are declarative fixture contracts, not runtime enforcement evidence.
+
+From the repository root, with editable core, agents and API installed:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests:$PWD/src/api/tests" \
+  python3 -m unittest test_chat_fixture test_chat_provenance test_chat_fixture_roles -q
+```
+
+The 22 personas, role/task mapping, nine labelled synthetic payloads, lifecycle
+null content and metadata-only ledger remain unchanged except for the appended
+isolation probes. Equal seeds compare every payload and manifest byte; another
+seed changes data. Generated manifests compute current hashes via `write()`;
+no frozen snapshots need rewriting. The baseline already passed: its eleven-
+perspective assertion included memory and was not proof of eleven eligible
+thread-owner perspectives. SN-08 stays partial with scope/volume approval
+unverified; OD-45 to OD-49 and human privacy/retention authority remain open.
+No live SQL, Azure, AI or browser check applies to this fixture-only change.
 
 ## Regulatory evaluation gates (#216)
 

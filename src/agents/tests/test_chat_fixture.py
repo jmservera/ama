@@ -1,3 +1,4 @@
+import copy
 import re
 import tempfile
 import unittest
@@ -19,7 +20,10 @@ class ChatFixtureTests(unittest.TestCase):
             ma, mb, mc = cf.write(a), cf.write(b), cf.write(c, seed=1)
             self.assertEqual(ma, mb)
             self.assertNotEqual(ma["sha256"], mc["sha256"])
-            self.assertEqual(Path(a, "threads.jsonl").read_bytes(), Path(b, "threads.jsonl").read_bytes())
+            self.assertEqual({p.name for p in Path(a).iterdir()},
+                             {f"{name}.jsonl" for name in self.d} | {"manifest.json"})
+            for path in Path(a).iterdir():
+                self.assertEqual(path.read_bytes(), Path(b, path.name).read_bytes(), path.name)
 
     def test_personas_cover_eleven_perspectives_with_known_app_roles(self):
         people = self.d["personas"]
@@ -84,9 +88,10 @@ class ChatFixtureTests(unittest.TestCase):
         cases = self.d["isolation_cases"]
         self.assertEqual({c["kind"] for c in cases}, {
             "same_role_cross_user", "owner_access", "cross_role", "spoofed_user_key",
-            "role_revoked_mid_thread", "administrator_access"})
+            "role_revoked_mid_thread", "administrator_access", "contractor_access_denied"})
         keys = {p["user_key"]: p for p in self.d["personas"]}
-        covered = {keys[c["owner"]]["persona_id"] for c in cases if c["kind"] == "same_role_cross_user"}
+        covered = {keys[c["owner"]]["persona_id"] for c in cases
+                   if c["kind"] == "same_role_cross_user" and c["resource"] == "memory"}
         self.assertEqual(len(covered), 11)
         for c in cases:
             if c["kind"] in ("same_role_cross_user", "spoofed_user_key", "cross_role"):
@@ -95,6 +100,92 @@ class ChatFixtureTests(unittest.TestCase):
         admin = [c["expected"] for c in cases if c["kind"] == "administrator_access"]
         self.assertTrue({"deny", "allow_time_limited_audited"} <= set(admin))
         self.assertEqual(len({c["case_id"] for c in cases}), len(cases))
+
+    def test_thread_isolation_covers_exactly_the_eligible_owners(self):
+        people = {p["user_key"]: p for p in self.d["personas"]}
+        eligible = {key for key, p in people.items() if p["eligible_tasks"]}
+        threads = {t["thread_id"]: t for t in self.d["threads"]}
+        self.assertTrue(eligible)
+        self.assertEqual({t["user_key"] for t in threads.values()}, eligible)
+        cases = [c for c in self.d["isolation_cases"]
+                 if c["kind"] == "same_role_cross_user" and c["resource"] == "thread"]
+        expected = {(owner, action) for owner in eligible for action in ("read", "list", "search")}
+        self.assertEqual({(c["owner"], c["action"]) for c in cases}, expected)
+        self.assertEqual(len(cases), len(expected))
+        for c in cases:
+            self.assertIn(c["resource_id"], threads)
+            self.assertEqual(threads[c["resource_id"]]["user_key"], c["owner"])
+            self.assertNotEqual(c["actor"], c["owner"])
+            self.assertEqual(people[c["actor"]]["role"], people[c["owner"]]["role"])
+            self.assertIn(threads[c["resource_id"]]["task"], people[c["owner"]]["eligible_tasks"])
+            self.assertEqual(c["expected"], "deny")
+
+    def assert_contractor_denials(self, cases, people, threads):
+        by_key = {p["user_key"]: p for p in people}
+        by_thread = {t["thread_id"]: t for t in threads}
+        contractors = {key for key, p in by_key.items() if p["app_role"] == "ZavaForward.Contractor"}
+        self.assertEqual(len(contractors), cf.USERS_PER_PERSPECTIVE)
+        for key in contractors:
+            self.assertEqual(by_key[key]["eligible_tasks"], [])
+        self.assertFalse(contractors & {t["user_key"] for t in threads})
+        probes = [c for c in cases if c["kind"] == "contractor_access_denied"]
+        expected = {(key, action) for key in contractors for action in ("read", "list", "search")}
+        self.assertEqual({(c["actor"], c["action"]) for c in probes}, expected)
+        self.assertEqual(len(probes), len(expected))
+        for c in probes:
+            self.assertEqual((c["resource"], c["expected"], c["is_synthetic"]), ("thread", "deny", True))
+            self.assertNotEqual(c["actor"], c["owner"])
+            self.assertIn(c["owner"], by_key)
+            self.assertNotIn(c["owner"], contractors)
+            self.assertIn(c["resource_id"], by_thread)
+            target = by_thread[c["resource_id"]]
+            self.assertEqual(target["user_key"], c["owner"])
+            self.assertEqual(target["state"], "active")
+            self.assertTrue(target["content_present"])
+            self.assertIn(target["task"], by_key[c["owner"]]["eligible_tasks"])
+
+    def test_contractors_have_explicit_denials_against_eligible_owner_threads(self):
+        for seed in (cf.SEED, 0, 1, 999):
+            with self.subTest(seed=seed):
+                data = cf.build(seed)
+                self.assert_contractor_denials(data["isolation_cases"], data["personas"], data["threads"])
+
+    def test_contractor_coverage_rejects_missing_or_invalid_probes(self):
+        cases = self.d["isolation_cases"]
+        probes = [c for c in cases if c["kind"] == "contractor_access_denied"]
+        self.assert_contractor_denials(cases, self.d["personas"], self.d["threads"])
+        for probe in probes:
+            with self.subTest(actor=probe["actor"], action=probe["action"], mutation="removed"):
+                remaining = [c for c in cases if c["case_id"] != probe["case_id"]]
+                with self.assertRaises(AssertionError):
+                    self.assert_contractor_denials(remaining, self.d["personas"], self.d["threads"])
+        probe = probes[0]
+        alternate_owner = next(t for t in self.d["threads"]
+                               if t["user_key"] != probe["owner"] and t["state"] == "active")
+        inactive = next(t for t in self.d["threads"] if t["state"] != "active")
+        for fields in (
+            {"owner": probe["actor"]},
+            {"resource_id": "THR-SYN-MISSING"},
+            {"resource_id": alternate_owner["thread_id"]},
+            {"owner": inactive["user_key"], "resource_id": inactive["thread_id"]},
+            {"expected": "allow"},
+            {"resource": "memory"},
+        ):
+            with self.subTest(mutation=fields):
+                mutated = copy.deepcopy(cases)
+                next(c for c in mutated if c["case_id"] == probe["case_id"]).update(fields)
+                with self.assertRaises(AssertionError):
+                    self.assert_contractor_denials(mutated, self.d["personas"], self.d["threads"])
+
+    def test_contractor_denials_require_a_legitimate_active_target(self):
+        for threads in (
+            [],
+            [dict(t, state="expired", content_present=False) for t in self.d["threads"]],
+            [dict(t, task="unregistered-task") for t in self.d["threads"]],
+        ):
+            with self.subTest(thread_count=len(threads)):
+                with self.assertRaisesRegex(ValueError, "active eligible staff-owned thread"):
+                    cf.isolation_cases(self.d["personas"], threads, self.d["memory_items"])
 
     def test_deletion_cases_keep_only_ledger_metadata(self):
         cases = self.d["deletion_cases"]

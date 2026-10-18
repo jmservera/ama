@@ -171,7 +171,7 @@ def exclusion_probes(people):
 
 
 def isolation_cases(people, threads, items):
-    """Cross-user, cross-role, revoked-role, spoofed-key and administrator probes (AC-094, AC-102)."""
+    """Cross-user, contractor, revoked-role, spoofed-key and administrator probes (AC-094, AC-102)."""
     rows = []
     by_key = {p["user_key"]: p for p in people}
     owned = {}
@@ -209,6 +209,20 @@ def isolation_cases(people, threads, items):
             add("administrator_access", "U-SYN-ADMIN", a, "thread", t["thread_id"], "read", "deny", "no reason or time limit")
             add("administrator_access", "U-SYN-ADMIN", a, "thread", t["thread_id"], "read",
                 "allow_time_limited_audited", "reason recorded, access time-limited and audited")
+
+    contractors = [p for p in people if p["app_role"] == "ZavaForward.Contractor"]
+    if contractors:
+        target = next((t for t in threads
+                       if t["state"] == "active" and t["content_present"]
+                       and by_key[t["user_key"]]["app_role"] != "ZavaForward.Contractor"
+                       and t["task"] in by_key[t["user_key"]]["eligible_tasks"]), None)
+        if target is None:
+            raise ValueError("Contractor denial probes require an active eligible staff-owned thread")
+        for actor in contractors:
+            for action in ("read", "list", "search"):
+                add("contractor_access_denied", actor["user_key"], target["user_key"],
+                    "thread", target["thread_id"], action, "deny",
+                    "staff-only chat; contractor is an actor, never a thread owner")
     return rows
 
 

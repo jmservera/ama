@@ -6090,3 +6090,22 @@ metadata when the knowledge base was created.
   journeys, partial IA provenance, exact fixture defaults and pending owner
   approval. Existing hash validation and negative mutation assertions are not
   weakened; the digest correction grants no new coverage or approval.
+
+## [2026-10-18] query | Resource-specific chat isolation fixture coverage (#172)
+
+* Update the [chat fixture dictionary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172),
+  [agents guide](../../src/agents/README.md#resource-specific-isolation-fixtures-172-2026-10-18)
+  and index with current public-only evidence: 22 personas across eleven
+  perspectives, but current assistant eligibility permits 14 thread owners
+  across seven perspectives. The prior test included memory and was not failing.
+* Add explicit denial expectations for both contractors as read/list/search
+  actors against a legitimate active eligible staff-owned thread; no contractor
+  eligibility or ownership is added. Removal and malformed-target regressions
+  protect the coverage; existing synthetic-label/pattern canaries, lifecycle
+  null content, opt-in/withdrawal and metadata-only ledger remain separate.
+* Fresh generated manifests hash current bytes through existing tooling; no
+  private input, frozen snapshot or unrelated source fingerprint is rewritten.
+  Declarative expectations are not runtime enforcement. SN-08 remains partial,
+  actual scope/volume approval unverified; ADR 0004 was accepted as written
+  October 15 (#158/PR #279), while OD-45 to OD-49 remain open. No new policy,
+  human approval, regulatory-currentness claim or whole-issue closure is implied.
