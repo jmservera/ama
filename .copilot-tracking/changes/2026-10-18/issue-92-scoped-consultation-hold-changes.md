@@ -13,7 +13,8 @@ Implementation complete; declared scope full plan P01/P02. All markers complete.
 Approved writes: five procurement call removals, truthful refusal/audit wording,
 coupled tests and documentation. No shared server/SQL/schema/role/web changes.
 Remaining active implementation markers: none. One original Review complete.
-No safe-implementation blocker; remote publication paused because main moved.
+No safe-implementation blocker. Coordinator has authorized same-task
+integration/publication onto exact a86282c4; execution is in progress.
 
 ## Execution Summary
 
@@ -191,3 +192,15 @@ and any new integration direction. No PR, issue, board, merge or remote write ye
 
 Named Legal/Procurement authority contract and genuine let/renew integration need
 separate human/coordinator direction. No live, deployment or issue closure claim.
+
+## Same-task integration/publication authorization
+
+2026-10-18 coordinator superseded the historical publication pause above.
+Only integration/publication is in scope: local candidate 7e4aa6ec onto exact
+main a86282c4, prior base 9c648b2, initial remote lease 9fb84836. Preserve PR407
+queue production/tests and recorder controls; README conflicts additive only.
+No new source correction, policy change, critique or original Review. Both old
+and new original assessments remain byte-identical. Separate integration receipt
+will record full inventories, normalized exact patches, fresh focused/combined
+smoke, quality and exact publication boundary. Existing SQL/image evidence stays
+historical unless production conflict or persistence change justifies rerun.

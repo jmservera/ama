@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "blocked",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-92-scoped-consultation-hold-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-92-scoped-consultation-hold-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Same-task integration/publication continuation only",
+      "status": "authorized",
+      "evidence": "2026-10-18 coordinator explicitly authorizes own-branch rebase from local 7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c onto fetched main a86282c4badebc58eabbf9e441410d930a201ac2, preserving PR407 queue correction and both original assessments. Initial publication lease must equal remote 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7; normal pushes only afterward. No new source correction, critique or original Review."
+    },
     {
       "decision": "Local implementation and complete new evidence persisted",
       "status": "committed",
@@ -41,14 +46,8 @@
       "evidence": "9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7 rebased onto 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096, result d276d4ce8e8acfd72c3eebded58959b24c534a1c; original RPI SHA256 checks all match."
     }
   ],
-  "blockers": [
-    {
-      "id": "publication-main-moved",
-      "summary": "Remote main moved from authorized 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096 to a86282c4badebc58eabbf9e441410d930a201ac2. No further rebase or publication attempted.",
-      "resolution": "Coordinator supplies new integration/publication direction; preserve completed local RPI and wait."
-    }
-  ],
-  "next_action": {"phase": "Follow-up", "action": "Wait for coordinator direction on moved-main integration/publication. Local implementation and all evidence committed; no push/rebase/PR changes."},
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Persist snapshot and integration metadata, then rebase only owned topic onto authorized a86282c4; stop for irreconcilable source conflicts or another main move. Preserve original Review/critique bytes."},
   "prioritized_follow_ups": [
     {
       "rank": 1,

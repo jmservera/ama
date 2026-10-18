@@ -136,7 +136,14 @@ Update component guides and KB, preserve upstream log prefix and old artifact by
 
 ## Dependencies
 
-Main 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; rebase d276d4ce.
+Current authorized integration base: a86282c4badebc58eabbf9e441410d930a201ac2
+(PR407 queue correction), replacing prior base 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096.
+Local candidate 7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c; remote expected lease
+9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7. Integration/publication only;
+no new source correction, critique or original Review. Preserve upstream queue
+production/tests and recorder controls, both README additions and all original
+assessments byte-identical. Fresh focused/queue smoke and configured quality;
+historical SQL/image evidence is not a fresh pass. Stop if main moves again.
 Existing explicit scoped building hold is the dependent boundary, not a new
 consultation authority. No shared code overlap with active #76/#122.
 
@@ -160,5 +167,7 @@ denial with one otherwise eligible appointed P2 order and unchanged state/audit.
 Changes: .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-changes.md.
 Compatible critique disposition applied directly. Implementation complete:
 both phases/tasks checked with actual local validation
-in changes. Ready for one original Review. Publication paused: main moved to
-a86282c4badebc58eabbf9e441410d930a201ac2; no further rebase/push without direction.
+in changes. One original Review complete: Residual work, no bounded defects.
+Coordinator now authorizes same-task integration/publication onto exact a86282c4.
+Separate integration receipt will record parity, fresh validation and publication.
+Stop afterward for coordinator independent review, without another original Review.

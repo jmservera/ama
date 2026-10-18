@@ -80,5 +80,19 @@ Completion evidence: combined 519 run/95 skips; core1117/133; API794/252;
 actual SQL136/one; configured core/API ruff check/format/mypy; migration25pass;
 five adverse guard mutants killed; old artifact digests and upstream log prefix
 match. No independent control source or fixture/schema changed. Source/tests/
-docs are review-ready. Remote main moved to a86282c4, so publication and further
-integration wait for coordinator direction as explicitly required.
+docs completed one original Review: Residual work, no bounded defects.
+
+## Authorized integration/publication continuation
+
+Coordinator cleared the moved-main blocker on 2026-10-18: rebase only owned
+branch from local 7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c onto exact
+a86282c4badebc58eabbf9e441410d930a201ac2. Preserve PR407 production/tests,
+recorder controls, additive README sections and both original assessments.
+No source correction or policy change. Prove normalized exact patch parity and
+full inventory; run fresh consultation/provider/workflow/API and queue smoke,
+plus configured core/API quality. Actual 135 SQL passes and hardened-image
+evidence remain historical unless a production conflict/persistence change
+requires rerun. Publish initial exact lease 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7;
+normal push only afterward. Update PR389 with Refs #92 only, empty closing refs,
+exact head/base and unmet Legal/genuine let-renew/human/live acceptance.
+Stop after publication for independent coordinator review; if main moves, wait.
