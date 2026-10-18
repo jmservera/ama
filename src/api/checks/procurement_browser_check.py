@@ -183,10 +183,21 @@ def main() -> None:
                 assert page.get_by_label("Threshold configuration evidence (WO-0001)", exact=True).input_value() == "SYN pending manual draft retained"
                 expect(page.get_by_label("Confirmation source (WO-0001)", exact=True)).to_have_value("")
             page.locator('form[data-appointment-form="WO-0001-configure"]').locator("..").evaluate("(el) => el.open = true")
-            draft = page.get_by_label("Threshold configuration evidence (WO-0001)", exact=True)
+            saved_form = page.locator(
+                'form[data-appointment-form="WO-0001-configure"]'
+            ).element_handle()
+            assert saved_form is not None
             page.get_by_role("button", name="Record provisional threshold", exact=True).click()
-            page.wait_for_function("() => !document.querySelector('form[data-unsaved=\"true\"]')")
-            assert draft.input_value() == ""
+            page.wait_for_function("(form) => !form.isConnected", arg=saved_form)
+            saved_form.dispose()
+            expect(page.locator('form[data-unsaved="true"]')).to_have_count(0)
+            refreshed_form = page.locator('form[data-appointment-form="WO-0001-configure"]')
+            expect(refreshed_form).not_to_have_attribute("data-unsaved", "true")
+            expect(
+                refreshed_form.get_by_label(
+                    "Threshold configuration evidence (WO-0001)", exact=True
+                )
+            ).to_have_value("")
             provider_context = browser.new_context(reduced_motion="reduce")
             provider_context.route(
                 "**/*",

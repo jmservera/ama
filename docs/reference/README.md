@@ -32,6 +32,12 @@ ended state, selected slots and protected manual drafts. Original Review
 Not accepted remains unchanged; implementation evidence is not independent
 acceptance.
 
+Issue #87 correction TWO refreshes only the public fixture SHA-256 in the
+[existing scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json)
+after the supplied appointment fixture changed. Its offline scope, unavailable
+full journeys and pending owner approval remain unchanged; a digest refresh does
+not establish application acceptance.
+
 For issue #88, the [resident criterion audit](./research/ux/customer-journeys/residents.md#responsibility-owned-response-clock-correction-2026-10-17)
 also records the final authorized responsibility-clock correction: shared service/
 redress identity never lets a non-owning reassignment alter status owner/date.

@@ -6080,3 +6080,13 @@ metadata when the knowledge base was created.
   Configuration changes create no duplicate/reset task or automatic consequence.
   Original Review remains Not accepted; correction implementation and synthetic
   validation are not independent acceptance, live policy or WCAG certification.
+
+## 2026-10-18: Issue #87 coupled public fixture digest correction
+
+* Refresh only the `src/core/tests/dataset.py` source SHA-256 in the existing
+  [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json)
+  after the supplied appointment fixture changed, and update the knowledge index.
+* Retain version 0.2.1, the offline iteration, all twenty unavailable full
+  journeys, partial IA provenance, exact fixture defaults and pending owner
+  approval. Existing hash validation and negative mutation assertions are not
+  weakened; the digest correction grants no new coverage or approval.

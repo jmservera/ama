@@ -7,10 +7,15 @@
 * Original source: 22c98267ae6da365d6a2d9fceed7113c8f4578ea.
 * Base: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Branch: feat/appointment-commitment-controls-87.
-* Current status: authorized correction ONE implemented for all seven findings;
-  fresh failing-first/current-source evidence is in the matching correction-one
-  receipt. Original routing below remains history, not a second Review,
-  independent acceptance, self-Pass or operational approval.
+* Current status: final authorized correction TWO implements the supplied
+  coupled source digest and browser replacement-wait findings. Fresh complete
+  browser and 2/2 named plus 19/19 coupled tests pass, configured static passes.
+  Final full core executes1048 tests,934 passed,114 existing skips,zero errors.
+  Initial extra project-local TMPDIR errors resolved with standard CI tempfile
+  behavior, no source/guard change. Coordinator owns publication/external gate.
+  No runtime change or third cycle.
+  Correction-two receipt owns exact evidence. Correction ONE/original routing
+  below remain history, not a second Review or independent acceptance.
 * Original Review execution: Complete; outcome: Not accepted; two High/five Medium.
 * Owner: backlog coordinator delegates later rpi-implement correction work within
   issue87; no unrelated issue work or new automatic child is started.

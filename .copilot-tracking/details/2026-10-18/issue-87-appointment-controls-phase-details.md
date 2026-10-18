@@ -3,7 +3,13 @@
 
 ## Metadata
 
-* Current execution: authorized correction ONE, all seven original findings;
+* Current execution: final authorized correction TWO, coupled manifest digest and
+  browser refresh synchronization implemented. Runtime/domain bytes unchanged.
+  Correction-two receipt owns new results; prior receipts remain historical.
+  Final full core passes1048/934 passed/114 skips using normal CI tempfiles;
+  earlier extra local TMPDIR restriction and errors remain historical.
+
+* Prior execution: authorized correction ONE, all seven original findings;
   original P01-P03 receipts below remain historical execution evidence.
   Correction-one receipt owns fresh failing-first and corrected-head results.
 
@@ -20,7 +26,7 @@
   Later delivery-artifact commits do not change that validated source/docs tree.
 * Delivery: normal own-branch push and main PR397 completed; original adverse
   Review is unchanged. No corrected-head independent acceptance or merge claimed.
-* Current status: correction ONE implemented for all seven original findings;
+* Prior correction status: correction ONE implemented for all seven original findings;
   fresh core336/API93/actual MSSQL75/browser/hardened-image/static evidence is
   recorded separately. P01-P03 remain historical completed execution markers.
 * Original Review: Complete / Not accepted, RV-001 through RV-007. Execution
@@ -35,7 +41,33 @@
 | P02 | API and existing workbench | Complete; separate confirmed manual home-case closure | P02-T01 |
 | P03 | Validation and handoff evidence | Complete; final local/SQL/browser/image receipts reconciled | P03-T01, P03-T02 |
 
-## Current correction ONE evidence
+## Current correction TWO evidence
+
+P03-T01/P03-T02 bounded continuation, no new phase or original-marker changes:
+the scenario manifest changes only its public fixture digest; the Python browser
+check waits for the submitted form to detach before checking absence of dirty
+forms and the refreshed form's cleared evidence. No runtime/domain/SQL edits.
+
+Exact named tests pass 2/2 and coupled modules pass 19/19, zero skips/errors.
+Actual complete final-byte browser passes through provider selected slot,
+Committed/Ended, second-order saves, unrelated draft retention, cancellation,
+manual human closure and retained identity/keyboard/reflow checks. Five corrected
+complete runs across the batch include one on final bytes; no partial receipt.
+Core/API configured lint/format/mypy and all four manifest source hashes pass.
+
+Final full core follows unchanged CI discovery with standard temporary directories:
+1048 run,934 passed,114 existing skips,zero errors/failures. The earlier imposed
+project-local TMPDIR conflicted with existing destination guards; removing that
+extra restriction resolved validation without source/test/guard changes.
+No excluded tests, privacy-guard bypass or third source correction.
+Coordinator owns publication judgment and external gate. Receipt:
+.copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-two.md.
+
+SQL75 and hardened-image results below remain historical; runtime bytes match
+starting HEAD59dce3b6 exactly. Frozen Review/critique and coordinator state are
+unchanged. This execution status is not independent acceptance.
+
+## Historical correction ONE evidence
 
 All RV-001 through RV-007 are implemented within P01/P02/P03 intent: response
 encoding inside the truthful post-commit/pre-header boundary; explicit actor and

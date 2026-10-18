@@ -11,7 +11,13 @@
 * Original assessed source candidate: 22c98267. Final changed-source validation
   below ran on its exact source tree before commit; initial-source/base statements
   elsewhere are historical context. That source received the one original Review.
-* Current correction ONE: authorized on HEAD49d3d663, base99056cae, all seven
+* Current correction TWO: final authorized source batch on HEAD59dce3b6,
+  coupled fixture digest and browser refresh synchronization corrected.
+  Fresh evidence is in issue-87-appointment-controls-correction-two.md.
+  Complete browser/contracts/static checks pass; final full core1048 run,
+  934 passed,114 existing skips,zero errors. Initial extra TMPDIR restriction
+  errors remain historical. No independent acceptance claimed.
+* Historical correction ONE: authorized on HEAD49d3d663, base99056cae, all seven
   findings committed coherently as 0830f7c339fe9b5fa936cda849f14edc5a0e3624.
   Normal own-branch push/main PR397 completed; no independent acceptance implied.
   Fresh correction evidence is
@@ -23,10 +29,15 @@
 
 ## Execution Status
 
-Current correction execution is complete with fresh core336/API93/actual MSSQL75,
-browser/static/hardened-image evidence and owned-resource cleanup. Original Review
-remains Complete / Not accepted; no independent acceptance or second Review is
-asserted. Coordinator alone owns delivery judgment and commit/push/PR.
+Current correction-TWO source execution is complete for both supplied findings.
+Exact named tests pass 2/2, coupled contracts 19/19 and final-byte complete
+browser passes. Configured static and exact manifest digests pass; runtime is
+unchanged. Final complete core discovery ran1048 tests:934 passed,114 existing
+skips,zero errors/failures. Initial errors from extra project-local TMPDIR were
+resolved by normal CI tempfile behavior, without guard/skip/selection changes.
+Coordinator owns publication judgment, state and
+git delivery; no source commit/push is performed by this worker.
+Original Review remains Complete / Not accepted, no second Review or self-Pass.
 The remaining sections describe the historical original implementation and routing.
 
 Complete P01-P03 implementation, including the source-authorized F8/P01-T02 human

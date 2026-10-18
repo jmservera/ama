@@ -45,7 +45,7 @@
   "sources": [
     {"id": "workbench", "path": "src/api/checks/workbench-manifest.json", "sha256": "0d46cee7b0cc758bf183eacc91680148a55fb5f2cc83665a4ddcf94dc8ad47eb"},
     {"id": "recipe", "path": "src/api/checks/workbench_browser_check.py", "sha256": "32e75323ac53cab44484f7351d6cd66f59568e12a30eb907c7586da0fca537c4"},
-    {"id": "fixture", "path": "src/core/tests/dataset.py", "sha256": "cdc3beba9fb6ff5dac05ac5db3222ac5e8df243d74da72a1386b870cb41747c9"},
+    {"id": "fixture", "path": "src/core/tests/dataset.py", "sha256": "a54612aa549cd5d048281a875b4c80a3a26b22e6d59c9c83d080eebbc8760dc5"},
     {"id": "navigation-tests", "path": "src/api/tests/test_workbench.py", "sha256": "62b3be27e69d32f39ef0cc52b91f44dceae31579edf9fd1c08bb25e36649ba96"}
   ],
   "fixture_contract": {

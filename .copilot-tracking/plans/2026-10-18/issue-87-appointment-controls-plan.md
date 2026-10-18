@@ -3,7 +3,15 @@
 
 ## Task Metadata
 
-* Current invocation: coordinator-authorized correction ONE for RV-001 through
+* Current bounded invocation: coordinator-authorized correction TWO, final source
+  cycle, starting clean HEAD59dce3b6. Fix coupled scenario source digest and
+  browser refreshed-view synchronization together; no new research/plan/Review.
+  Both source findings are corrected; full browser and manifest contracts pass.
+  Final full-core discovery passes1048/934 passed/114 existing skips after
+  removing an unnecessary local TMPDIR override; no source/guard change.
+* Current evidence: .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-two.md.
+
+* Prior invocation: coordinator-authorized correction ONE for RV-001 through
   RV-007, 2026-10-18; starting HEAD49d3d663. One coherent implementation cycle,
   no second Review or independent acceptance implied.
 * Correction evidence: .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md.
@@ -12,10 +20,13 @@
 * Plan date: 2026-10-18.
 * Base/initial source: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Original assessed source: 22c98267, original Review Not accepted, unchanged.
-* Current source: correction ONE committed as
+* Prior source: correction ONE committed as
   0830f7c339fe9b5fa936cda849f14edc5a0e3624, based on starting HEAD49d3d663.
   Subsequent delivery-only artifact commits do not change validated source/docs.
   Base remains 99056cae. Main PR: https://github.com/jmservera/ama/pull/397.
+* Current source: uncommitted correction TWO on starting HEAD59dce3b6; only
+  scenario source digest and browser synchronization change, plus KB/artifacts.
+  Application runtime/domain/SQL bytes are unchanged; no source SHA invented.
 * Branch: feat/appointment-commitment-controls-87; target: main.
 * Lifecycle status: Research/Plan/Implement/one original Review executed.
   P01-P03 execution complete; original Review Complete / Not accepted.
@@ -37,6 +48,13 @@ validation receipts do not establish a conformant or live-ready result.
 Authorized correction ONE now implements all seven findings, with failing-first
 regressions and fresh core336/API93/MSSQL75/browser/image evidence in its receipt.
 This is implementation completion, not independent corrected-head acceptance.
+Final authorized correction TWO repairs the coupled public fixture digest and
+waits for actual browser form replacement. Both named tests and all 19 coupled
+contracts pass; final-byte browser completes all later provider/date/Committed/
+Ended and unrelated-order/draft assertions. Final full core passes1048 tests:
+934 passed,114 existing skips. An initial extra project-local TMPDIR restriction
+caused destination-guard errors; normal CI tempfile behavior resolved the
+validation environment without changing source or weakening checks.
 
 ### What You May Not Know
 
@@ -49,14 +67,13 @@ Review; defects require a separate correction receipt, not a second Review.
 
 ### Unresolved Decisions or Blockers
 
-All seven original findings are implemented in the authorized coherent correction
-ONE batch. Fresh evidence covers their counterexamples and affected retained
-controls; no known in-scope implementation blocker remains. Original Review stays
-Complete / Not accepted. Coordinator owns final delivery judgment and any normal
-commit/push/PR; no second Review/self-Pass or operational approval is implied.
-Normal own-branch push and PR397 were completed under the explicit correction
-authorization. Independent corrected-head judgment, PR checks and merge remain
-outside implementation completion; no issue closure or merge was performed.
+Both correction-TWO source findings are addressed without runtime changes.
+Required full-core, manifest and complete browser validation now pass; no
+assertion, skip or guard was weakened. Coordinator owns publication judgment.
+Original Review stays Complete / Not accepted. Previous
+correction-ONE evidence/publication remains historical; it is not a fresh green
+full-core receipt or independent corrected-head acceptance. No second Review,
+self-Pass, operational approval, issue closure or merge is performed.
 
 ## User Decisions and Requirements
 
@@ -270,6 +287,11 @@ No significant divergent user decision remains. No second critique is authorized
 
 ## Follow-Up Items
 
+* Final correction TWO source batch and required validation are complete.
+  Coordinator retains external corrected-head gate and PR/merge decisions;
+  no outside-scope source fix, suppression or third cycle is authorized.
+  Evidence is in the correction-two receipt; original P01-P03 execution markers
+  remain historical, not a new acceptance claim.
 * RV-001 through RV-007 correction ONE is implemented, with the distinct receipt
   .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md.
   Historical P01-P03 execution markers remain checked; no new Review/acceptance
@@ -289,10 +311,22 @@ the original independent Review result: Complete / Not accepted on source
 22c98267ae6da365d6a2d9fceed7113c8f4578ea. Separate correction routing is recorded;
 no second Review, self-Pass or remote delivery is authorized by passing tests.
 
-Current handoff: correction ONE implementation complete on HEAD49d3d663 plus the
+Historical correction-ONE handoff: implementation complete on HEAD49d3d663 plus the
 uncommitted coherent patch. Fresh core336 (277 pass/59 existing skips), API93
 (92 pass/1 existing skip), actual owned MSSQL75/75, configured static checks,
 actual browser and final rebuilt hardened image passed. Owned containers and
 synthetic scratch data are removed. The correction receipt owns precise commands,
 failing-first details, hashes and limitations. Parent alone handles git delivery;
 the original adverse Review and frozen critique remain byte-exact.
+
+Current correction-TWO handoff: both scoped source corrections are implemented
+on starting HEAD59dce3b6, uncommitted for coordinator-owned delivery. Exact named
+tests 2/2 and coupled contracts 19/19 pass. The actual complete final-byte browser
+passes all later steps, with five complete corrected runs across the batch.
+Configured core/API static checks and all four public digest bindings pass.
+Final full-core discovery ran all1048 tests:934 passed,114 existing skips,
+zero errors/failures. Initial project-local TMPDIR errors are preserved in the
+receipt; removing that extra restriction matches normal CI tempfile behavior,
+without test selection or source changes. Runtime bytes are
+unchanged, so SQL75/image receipts remain historical and are not rerun.
+No new phase/acceptance marker, Review or source commit is created here.

@@ -390,3 +390,17 @@ at pinned99056cae immediately before push; no main advance/rebase/force was used
 Follow-on commit reconciles delivery artifacts only, not validated source/docs.
 No merge, issue close, automatic live action or second Review occurred. PR checks
 are external follow-on evidence, not a substitute for the executed local gates.
+
+## Later Correction-TWO Clarification
+
+The coordinator-supplied external evidence later found a nondeterministic wait
+in the browser check and a stale coupled public fixture digest. Earlier observed
+results above remain unchanged; they do not prove deterministic synchronization
+or independently establish later-step coverage at every run. The separate
+correction-two receipt records exact form-replacement synchronization and actual
+complete later provider selected-date/Committed/Ended and unrelated-order/draft
+execution, including a final-byte complete run. Both named digest tests and all
+19 coupled tests pass. Full-core discovery was also executed, but existing
+generator output guards reject mandated project-local scratch (1048 run,
+32 error records over 23 methods, 114 skips). No green full-core, rerun SQL75/
+image, second Review or independent acceptance is implied.
