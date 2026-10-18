@@ -27,6 +27,10 @@ ROLES = {
     "Programme Support Officer": "Programme support",
     "Grants and Evidence Officer": "Finance and grants",
 }
+COPY_SOURCE_CANARY = (
+    "Synthetic hazard reports go to a human reviewer; this fixture is not law. "
+    "Exact source terms: gate, hold, provenance, trace, snapshot, envelope."
+)
 CONTROLS = (
     "summary:visible, a[href]:visible, button:visible:enabled, "
     "input:visible:enabled, select:visible:enabled, textarea:visible:enabled"
@@ -158,6 +162,8 @@ def run(axe_path: Path | None) -> dict[str, Any]:
     reports: list[dict[str, Any]] = []
     fixture.setUp()
     try:
+        fixture.f.source(version=2, text=COPY_SOURCE_CANARY)
+        fixture.f.card(pid="synthetic@v2#0001")
         # This clock is deliberately fictional and never supplied through HTTP.
         fixture.app.rule_engine().run(
             fixture.f.store, "ZF-1", "schedule", now=NOW + timedelta(days=1)
@@ -210,6 +216,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 "Safe action",
                 "Decision owner",
                 "Clock",
+                "Check recorded at",
                 "Source and status",
                 "Retrieved/observed:",
                 "Owner acknowledgement: required",
@@ -217,6 +224,17 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             ):
                 expect(alerts).to_contain_text(field)
             expect(alerts).to_contain_text("Coverage: unknown")
+            expect(alerts).to_contain_text(
+                "This panel cannot acknowledge, decide compliance or restart stopped retrofit work."
+            )
+            expect(alerts.locator(".notice")).to_contain_text(
+                "Use the existing human emergency or hazard service now. "
+                "Do not wait for alerts, chat or this application."
+            )
+            expect(page.locator(".work-context").first).to_contain_text("recorded as of:")
+            expect(page.locator(".safety-clock").first).to_contain_text(
+                "Safety clock in this recorded view:"
+            )
             # The safety route is visible while optional chat is collapsed.
             expect(page.locator("#chat-panel")).not_to_have_attribute("open", "")
             expect(alerts.locator(".notice")).to_be_visible()
@@ -232,6 +250,12 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.keyboard.press("Shift+Tab")
             expect(page.locator("#alerts-plain-mode")).to_be_focused()
             keyboard_activate(page, "#chat-panel > summary")
+            expect(page.locator("#chat-panel > .muted")).to_contain_text(
+                "AI suggestion, not approved"
+            )
+            expect(page.locator("#chat-panel > .muted")).to_contain_text(
+                "it can only request a proposal that someone else reviews"
+            )
             keyboard_activate(page, "#regulatory-chat > summary", "Space")
             chat = page.locator("#regulatory-chat")
             expect(chat).to_contain_text("Synthetic source lookup available")
@@ -275,10 +299,12 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 "Who decides",
             ):
                 expect(chat.locator("h4", has_text=heading)).to_be_visible()
-            expect(chat).to_contain_text("Synthetic hazard reports go to a human reviewer")
+            expect(chat.locator("blockquote")).to_have_text(
+                f"[synthetic@v2#0001] {COPY_SOURCE_CANARY}"
+            )
             expect(chat).to_contain_text("Effective: 2026-01-01")
             expect(chat.locator("a").first).to_have_attribute(
-                "href", "/api/law/provisions/synthetic%40v1%230001"
+                "href", "/api/law/provisions/synthetic%40v2%230001"
             )
             scan(page, axe, reports, "cited-answer")
             doubt = chat.locator(".regulatory-turn button").first
@@ -322,9 +348,15 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
             expect(chat.locator(".regulatory-turn")).to_have_count(2)
-            expect(chat.locator("[role=status]")).to_contain_text("historical snapshots")
+            expect(chat.locator("[role=status]")).to_have_text(
+                "Stored synthetic-demo excerpts restored. "
+                "These are historical records; ask again for a fresh lookup."
+            )
+            expect(chat.locator("blockquote")).to_have_text(
+                f"[synthetic@v2#0001] {COPY_SOURCE_CANARY}"
+            )
 
-            fixture.f.source(version=2)
+            fixture.f.source(version=3)
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
@@ -357,6 +389,15 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 open_home(page, fixture.base)
                 expect(alerts.locator(".regulatory-guidance")).to_contain_text(text)
                 expect(alerts).to_contain_text("For everyone handling data")
+                if role == "Building Safety Liaison":
+                    expect(alerts.locator(".regulatory-guidance")).to_contain_text(
+                        "only an authorised human can make a restart decision "
+                        "for stopped retrofit work."
+                    )
+                if role == "Quality Inspector":
+                    expect(alerts.locator(".regulatory-guidance")).to_contain_text(
+                        "Licensed PAS 2035 text and contract incorporation are unverified."
+                    )
                 if role == "Quality Inspector":
                     expect(alerts).to_contain_text("No visible alerts does not mean no risk")
                 scan(page, axe, reports, role)
@@ -383,6 +424,13 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             axe_status="executed" if axe is not None else "skipped: not supplied",
             scans=reports,
             staff_comprehension="Not run; unmet",
+            copy_audit=dict(
+                application_owned_labels="chat/alerts and coupled recorded-time labels",
+                source_canary=COPY_SOURCE_CANARY,
+                source_preserved="exact before and after history restoration",
+                human_restart_authority="retained",
+                resident_wording_review="Not supplied; unmet",
+            ),
         )
     finally:
         fixture.doCleanups()

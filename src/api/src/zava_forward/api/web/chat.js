@@ -82,7 +82,7 @@ function chatCasePanel(id) {
 
 const regulatoryRoleHelp = {
   "Resident Liaison Officer": "Repairs and intake: recognise a possible hazard and use the human hazard service immediately. Record the reported awareness time without guessing. Do not wait for chat or a check.",
-  "Building Safety Liaison": "Building Safety: review hazard categorisation, recorded clocks and independent evidence. Completion is not safety assurance; only an authorised human can decide a hold.",
+  "Building Safety Liaison": "Building Safety: review hazard categorisation, recorded clocks and independent evidence. Completion is not safety assurance; only an authorised human can make a restart decision for stopped retrofit work.",
   "Retrofit Coordinator": "Assessment and coordination: check appointed roles, risk path and independent evidence. Only a PAS 2035 overview is held; licensed text and contract incorporation are unverified.",
   "Quality Inspector": "Assessment and quality: check independent evidence and the appointed coordinator's review. Completion is not assurance. Licensed PAS 2035 text and contract incorporation are unverified.",
   "Retrofit Programme Manager": "Programme: distinguish policy targets from duties in force. Check source status and dependencies before planning; a target or allocation is not an approved commitment or award.",
@@ -147,11 +147,11 @@ function regulatoryAlertsPanel(caseId) {
           h("dt", {}, "Safe action"), h("dd", {}, alert.safe_action || "Use the human owner route; do not infer an action."),
           h("dt", {}, "Decision owner"), h("dd", {}, `${alert.decision_owner || "Unassigned"}; route: ${alert.escalation_role || "unknown"}`),
           h("dt", {}, "Clock"), h("dd", {}, `${alert.clock || "No approved clock held"}; due: ${alert.due_at || "unknown, not calculated here"}`),
-          h("dt", {}, "Check snapshot"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
+          h("dt", {}, "Check recorded at"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
           h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active bounded control" : "Not active or source uncertain; retained risk still needs human review"),
           h("dt", {}, "Latest check"), h("dd", {}, `${alert.latest_result || "unknown"} at ${alert.latest_evaluated_at || "unknown"}`)),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
-        h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or release a hold.`))));
+        h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
     } catch (e) {
       list.replaceChildren();
@@ -267,7 +267,7 @@ function regulatoryChatPanel(caseId) {
           if (answer.schema === "regulatory-chat-v1") show({ ...answer, turn: turn.seq }, tid);
         }
       }
-      status.textContent = "Stored synthetic-demo excerpts restored. Dates are historical snapshots; ask again for a fresh lookup.";
+      status.textContent = "Stored synthetic-demo excerpts restored. These are historical records; ask again for a fresh lookup.";
     } catch (e) { status.textContent = `Stored regulatory chat unavailable: ${e.message}`; }
   }).catch((e) => {
     input.disabled = true;

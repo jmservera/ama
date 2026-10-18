@@ -1,0 +1,1184 @@
+{
+  "outcome": "passed",
+  "scope": "Synthetic changed surfaces only; not a WCAG conformance certification",
+  "axe_version": "4.10.3",
+  "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+  "axe_status": "executed",
+  "scans": [
+    {
+      "state": "alert-collapsed-chat",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 21
+    },
+    {
+      "state": "cited-answer",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 504.484375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1198,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 182.4375,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 235.640625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "no-source-refused",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 504.484375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1198,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 182.4375,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 466.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 235.640625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "320px-reflow",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 241.203125,
+          "height": 48,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 262,
+          "height": 48,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 262,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 262,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 262,
+          "height": 64,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 220.40625,
+          "height": 72,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 182.4375,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 241.203125,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 241.203125,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 262,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 235.640625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 262,
+          "height": 90,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "390px-reflow",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 311.203125,
+          "height": 48,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 332,
+          "height": 48,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 332,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 332,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 332,
+          "height": 64,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 290.40625,
+          "height": 48,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 182.4375,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 311.203125,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 311.203125,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 332,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 235.640625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 332,
+          "height": 66,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "1280px-reflow",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 504.484375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1198,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 182.4375,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 466.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 235.640625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "200-percent-text-320px",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 241.203125,
+          "height": 288,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 262,
+          "height": 114,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 262,
+          "height": 48,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 262,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 262,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 262,
+          "height": 256,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 220.40625,
+          "height": 288,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 220.40625,
+          "height": 96,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 241.203125,
+          "height": 306,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 241.203125,
+          "height": 306,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 262,
+          "height": 162,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 262,
+          "height": 162,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 262,
+          "height": 258,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 22
+    },
+    {
+      "state": "source-changed-retained-risk",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 504.484375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1198,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 182.4375,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 235.640625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                "#regulatory-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "disabled-chat",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "chat-question",
+          "width": 1198,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Ask</button>",
+          "width": 62.8125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 504.484375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1198,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 485.28125,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                "#chat-question"
+              ],
+              "reason": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            }
+          ]
+        }
+      ],
+      "passes": 21
+    },
+    {
+      "state": "Resident Liaison Officer",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 21
+    },
+    {
+      "state": "Building Safety Liaison",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 21
+    },
+    {
+      "state": "Retrofit Coordinator",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "Quality Inspector",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "Retrofit Programme Manager",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 460.875,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 21
+    },
+    {
+      "state": "Programme Support Officer",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "Grants and Evidence Officer",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 168.421875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1198,
+          "height": 24,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 16
+    },
+    {
+      "state": "supplier-human-route",
+      "target_sizes": [],
+      "violations": [],
+      "incomplete": [],
+      "passes": 1
+    }
+  ],
+  "staff_comprehension": "Not run; unmet",
+  "copy_audit": {
+    "application_owned_labels": "chat/alerts and coupled recorded-time labels",
+    "source_canary": "Synthetic hazard reports go to a human reviewer; this fixture is not law. Exact source terms: gate, hold, provenance, trace, snapshot, envelope.",
+    "source_preserved": "exact before and after history restoration",
+    "human_restart_authority": "retained",
+    "resident_wording_review": "Not supplied; unmet"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-18",
+  "task": "issue-153-chat-copy",
+  "base": "2ca6d1c48bb95b65e6c349fe508e99c00a74efbe",
+  "candidate_kind": "Git tree: entire baseline plus seven staged source/test/docs changes, before original independent Review",
+  "candidate_tree": "7f7487566422ba84380608de1d2ea1b4f913b8f6",
+  "files": {
+    "docs/reference/README.md": "fa19864ef7daf09afd311ce572519e0a49dcb172943d13ceece5ef06cdd27988",
+    "docs/reference/log.md": "cfb14beeb82658019f5cc89fda7b415b8558204979602fd016fe32011a817fca",
+    "docs/reference/research/ux/content-standard.md": "afaa66fe7c2260e6dd9c55e88bc4a2b953d1b55ea4013295260f31354049912b",
+    "src/api/checks/regulatory_ux_check.py": "7b4555b5cc042e675b43a006811985262a4130c3c000d1152c71a493d59c703a",
+    "src/api/src/zava_forward/api/web/app.js": "3dc29901cccc49f1f6776efbd50bfa8f5555be7e14dbc38ebc48b01c235c8336",
+    "src/api/src/zava_forward/api/web/chat.js": "b979bd798d91662edd171a871761f90c25f733df86b7e535c1a5e4c0dd821909",
+    "src/api/tests/test_content_standard.py": "ad8a8d486c8d65b8e8bca42a9eaa535562bc07325ba365bf394bf8a185042c32"
+  },
+  "frozen_critique_sha256": "692167765b35a377e5ff986ac2fb8efb7c63a51bc27720b49834c1fff1c4f446"
+}

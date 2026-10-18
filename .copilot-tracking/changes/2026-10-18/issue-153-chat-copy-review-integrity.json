@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-18",
+  "candidate_tree": "7f7487566422ba84380608de1d2ea1b4f913b8f6",
+  "candidate_files_unchanged_after_review": true,
+  "public_docs_byte_identical_to_reviewed_candidate": true,
+  "original_critique_sha256": "692167765b35a377e5ff986ac2fb8efb7c63a51bc27720b49834c1fff1c4f446",
+  "original_review_sha256": "31c28dad1e60798e86ca32ab1ff57c292cad5af0beedd15002df312cc3abdf31",
+  "review_execution": "Complete",
+  "review_outcome": "Conformant for bounded slice",
+  "scoped_defects": 0,
+  "inherited_residual_low_followups": 5,
+  "correction_cycles_used": 0
+}

@@ -8,23 +8,65 @@ from zava_forward.core.store import Store
 ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
-BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?)\b", re.I)
-# Code identifiers and one stored value that are not shown as wording to a person.
-ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "Keep on hold", 'category("holds",')
+BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
+AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "index.html", "welcome.html")
+# Exact identifiers, raw technical JSON key and legacy stored finance value only.
+ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "Keep on hold", 'category("holds",', "envelope: p.envelope", "p.snapshot")
 
 
-def visible_lines(path):
-    for n, line in enumerate(path.read_text().splitlines(), 1):
+def copy_violations(text):
+    """Conservative lexical guard, not a JS visibility parser or a dynamic-content audit."""
+    for n, line in enumerate(text.splitlines(), 1):
         for ok in ALLOWED:
             line = line.replace(ok, "")
-        yield n, line
+        if BANNED.search(line):
+            yield n, line
 
 
 class CopyAudit(unittest.TestCase):
     def test_no_internal_terms_in_web_copy(self):
-        for f in ("app.js", "assistants.js", "panels.js", "ops.js", "index.html", "welcome.html"):
-            for n, line in visible_lines(WEB / f):
-                self.assertIsNone(BANNED.search(line), f"{f}:{n}: {line.strip()[:100]}")
+        for f in AUDITED_FILES:
+            self.assertEqual(list(copy_violations((WEB / f).read_text())), [], f)
+
+    def test_all_standard_vocabulary_families_are_guarded(self):
+        for word in ("gate", "gates", "hold", "holds", "provenance", "trace", "traces",
+                     "snapshot", "snapshots", "envelope", "envelopes"):
+            with self.subTest(word=word):
+                self.assertTrue(list(copy_violations(f'h("p", {{}}, "{word.upper()}");')))
+
+    def test_identifier_exceptions_do_not_hide_adjacent_bad_copy(self):
+        for identifier in ("c.gate", "p.provenance", "earlier.provenance", "i.hold",
+                           "x.hold", "envelope: p.envelope", "p.snapshot"):
+            with self.subTest(identifier=identifier):
+                self.assertEqual(list(copy_violations(identifier)), [])
+                self.assertTrue(list(copy_violations(f'{identifier}; h("dt", {{}}, "Check snapshot");')))
+        # Dynamic quotations, facts and user/model text are not application-owned literals.
+        for expression in ("source.quote", "fact.text", "answer.reply", "turn.content"):
+            self.assertEqual(list(copy_violations(f'h("blockquote", {{}}, {expression});')), [])
+
+    def test_chat_safety_and_copy_contract(self):
+        js = (WEB / "chat.js").read_text()
+        for text in ("AI suggestion, not approved", "only an authorised human can make a restart decision for stopped retrofit work",
+                     "This panel cannot acknowledge, decide compliance or restart stopped retrofit work.",
+                     "Check recorded at", "These are historical records; ask again for a fresh lookup.",
+                     "Use the existing human emergency or hazard service now.",
+                     "Evidence is missing or cannot be relied on. Do not treat this as clear.",
+                     "Licensed PAS 2035 text and contract incorporation are unverified.",
+                     "it can only request a proposal that someone else reviews"):
+            self.assertIn(text, js)
+
+    def test_restored_bad_chat_labels_fail_the_actual_guard(self):
+        js = (WEB / "chat.js").read_text()
+        for corrected, original in (
+            ("make a restart decision for stopped retrofit work", "decide a hold"),
+            ("restart stopped retrofit work", "release a hold"),
+            ("Check recorded at", "Check snapshot"),
+            ("These are historical records", "Dates are historical snapshots"),
+        ):
+            with self.subTest(original=original):
+                self.assertIn(corrected, js)
+                mutated = js.replace(corrected, original, 1)
+                self.assertTrue(list(copy_violations(mutated)), original)
 
     def test_ai_label_is_exact_and_never_implies_approval(self):
         self.assertEqual(Store.REC_LABEL, "AI suggestion, not approved")

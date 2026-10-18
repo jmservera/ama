@@ -1,0 +1,5 @@
+EXPECTED FAIL: restored 'decide a hold': actual test_no_internal_terms_in_web_copy failed (1 assertion failure, 0 errors)
+EXPECTED FAIL: restored 'release a hold': actual test_no_internal_terms_in_web_copy failed (1 assertion failure, 0 errors)
+EXPECTED FAIL: restored 'Check snapshot': actual test_no_internal_terms_in_web_copy failed (1 assertion failure, 0 errors)
+EXPECTED FAIL: restored 'Dates are historical snapshots': actual test_no_internal_terms_in_web_copy failed (1 assertion failure, 0 errors)
+RESTORED CANONICAL SOURCE: audit passes; no production file was modified by the probe.
