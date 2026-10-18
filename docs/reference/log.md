@@ -6109,3 +6109,21 @@ metadata when the knowledge base was created.
   actual scope/volume approval unverified; ADR 0004 was accepted as written
   October 15 (#158/PR #279), while OD-45 to OD-49 remain open. No new policy,
   human approval, regulatory-currentness claim or whole-issue closure is implied.
+
+## 2026-10-18: Finite design traceability and recorded review gate (#156)
+
+* Extend the [existing prototype profile synthesis](./research/ux/zava-forward-prototype-profile-review.md#design-traceability-and-review-gate-2026-10-18-156)
+  with eleven PRD profile rows and four declared shared core flows, linked to
+  exact journey/task-flow sections, immutable historical prototype and shared
+  IA versions, requirements/checks, status and missing-evidence owners/actions.
+  Existing task flows and decisions correct a universal reading of the issue's
+  historical absence claim; complete screen-backlog coverage remains unknown.
+* Consolidate the actual 2026-10-15 owner Fluent 2 choice, reported recovery
+  needs and source-qualified sequencing/IA interpretations. Record live #150
+  CLOSED separately from the pinned partial-foundation scope and stale
+  "stays open" sentence; no full Fluent or human acceptance is inferred.
+* Add accessibility/content definition-of-done links and an actual dated
+  automated evidence review, not an invented human design review. Current
+  screen designs, named review, resident-wording approval and direct user
+  research remain Not supplied; the overall design gate is Blocked. No UI,
+  runtime, configuration, agent, prompt, workflow or prototype change.

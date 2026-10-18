@@ -1,0 +1,74 @@
+{
+  "task_id": "156",
+  "task_slug": "issue-156-design-traceability-gate",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-156-design-traceability-gate-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-156-design-traceability-gate-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-156-design-traceability-gate-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-156-design-traceability-gate-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-156-design-traceability-gate-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-156-design-traceability-gate-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run full ordered RPI with one independent critique and one original Review; retain supplied base and publish only if original Review accepted",
+      "status": "confirmed",
+      "evidence": "Caller instruction 2026-10-18"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for bounded documentation only",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-18/issue-156-design-traceability-gate-research.md C1-C9/W1-W5"
+    },
+    {
+      "decision": "Single independent final-candidate critique executed; verdict Pass; no PC findings or required decisions",
+      "status": "accepted-original-frozen",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-18/issue-156-design-traceability-gate-plan-critique.md"
+    },
+    {
+      "decision": "Implementation P01/P02 complete; documentation checks pass; original critique hash unchanged",
+      "status": "ready-for-original-review",
+      "evidence": ".copilot-tracking/changes/2026-10-18/issue-156-design-traceability-gate-changes.md"
+    },
+    {
+      "decision": "One original independent Review executed Complete / Conformant for exact bounded documentation candidate; no implementation defects; RV-001-RV-003 are planned residual follow-ups",
+      "status": "accepted-original-frozen",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-156-design-traceability-gate-review.md SHA-256 c5fe3b125fa9c555d6062488dca6a673617e33c7ba86291a4c399a361e06941b; critique SHA-256 eaf67c15688175f5b0fe9ac9383bdcec5624b1de37bbc522988ec9de449d55d6"
+    },
+    {
+      "decision": "Overall design remains Blocked; full issue156 coverage, human design/accessibility/content/user acceptance and external CI/coordinator gates are not granted",
+      "status": "open-product-evidence",
+      "evidence": "Original Review RV-001-RV-003; synthesis G01-G07"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Publish accepted bounded documentation with all actual artifacts in same main-target PR Refs #156; leave hosted checks/merge/acceptance to coordinator/owner; no child work selected"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator reconcile remaining screen-feature inventory",
+      "rationale": "Lowest implementation effort and high traceability value; defines honest remaining coverage without new UI or invented designs",
+      "evidence": "Original Review RV-003; synthesis G01; full issue156 coverage unknown"
+    },
+    {
+      "rank": 2,
+      "task": "Design owner supply exact current artifacts and obtain named human design review",
+      "rationale": "Unlocks version-specific state/recovery assessment; greater prerequisite effort than inventory, essential product-design evidence",
+      "evidence": "Original Review RV-001; synthesis G02/G03/G06; current designs Not supplied"
+    },
+    {
+      "rank": 3,
+      "task": "Accessibility/content/research owners record actual required validation",
+      "rationale": "High acceptance value but requires named testers, exact text and representative participants; no documentation substitute",
+      "evidence": "Original Review RV-002; synthesis G04/G05/G07"
+    }
+  ]
+}
