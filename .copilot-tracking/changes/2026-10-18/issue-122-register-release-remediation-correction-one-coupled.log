@@ -1,0 +1,618 @@
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 262, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_quality_procurement.py", line 1004, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 448, in _sync
+    seq = self._db_seq()
+          ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 443, in _db_seq
+    row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 686, in _discard
+    self._proc_sync()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 695, in _proc_sync
+    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 262, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_quality_procurement.py", line 1004, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 448, in _sync
+    seq = self._db_seq()
+          ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 443, in _db_seq
+    row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 686, in _discard
+    self._proc_sync()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 695, in _proc_sync
+    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Controlled change JSON recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/change_provenance.py", line 106, in controlled
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/change_provenance.py", line 193, in operation
+    yield case, event
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/store.py", line 627, in add_document
+    scan = self.scan_new_document(case_id, did, name, data, mime)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN PRIVATE scanner outage
+Change restoration failed; the durable outcome may be unknown.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/change_provenance.py", line 133, in controlled
+    Store.save(store)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN restoration unavailable
+Failed upload object cleanup failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/store.py", line 627, in add_document
+    scan = self.scan_new_document(case_id, did, name, data, mime)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN PRIVATE scanner outage
+Change restoration failed; the durable outcome may be unknown.
+Uploaded object cleanup failed; check storage before retrying.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/store.py", line 638, in add_document
+    self.docstore.delete(case_id, did)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN cleanup unavailable
+Controlled change SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/change_provenance.py", line 106, in controlled
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/change_provenance.py", line 193, in operation
+    yield case, event
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/store.py", line 627, in add_document
+    scan = self.scan_new_document(case_id, did, name, data, mime)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN PRIVATE scanner outage
+Change recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/change_provenance.py", line 119, in controlled
+    store._discard(prior)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 160, in failed_recovery
+    raise OSError("SYN recovery unavailable")
+OSError: SYN recovery unavailable
+Failed upload object cleanup failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/store.py", line 627, in add_document
+    scan = self.scan_new_document(case_id, did, name, data, mime)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN PRIVATE scanner outage
+Change recovery failed; reload to establish the outcome.
+Uploaded object cleanup failed; check storage before retrying.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/store.py", line 638, in add_document
+    self.docstore.delete(case_id, did)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+OSError: SYN cleanup unavailable
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 245, in submit_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 862, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 869, in failed_sync
+    raise OSError("SYN post-COMMIT sync failed")
+OSError: SYN post-COMMIT sync failed
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 687, in _discard
+    self._sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 869, in failed_sync
+    raise OSError("SYN post-COMMIT sync failed")
+OSError: SYN post-COMMIT sync failed
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 262, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 862, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 869, in failed_sync
+    raise OSError("SYN post-COMMIT sync failed")
+OSError: SYN post-COMMIT sync failed
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 687, in _discard
+    self._sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 869, in failed_sync
+    raise OSError("SYN post-COMMIT sync failed")
+OSError: SYN post-COMMIT sync failed
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/quality.py", line 319, in hand_over_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 862, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 869, in failed_sync
+    raise OSError("SYN post-COMMIT sync failed")
+OSError: SYN post-COMMIT sync failed
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/sqlstore.py", line 687, in _discard
+    self._sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/tests/test_progress_event_capture.py", line 869, in failed_sync
+    raise OSError("SYN post-COMMIT sync failed")
+OSError: SYN post-COMMIT sync failed
+======================================================================
+ERROR: test_resident_api (unittest.loader._FailedTest.test_resident_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_resident_api.py", line 16, in <module>
+    from tests.test_mvp import DATA
+ModuleNotFoundError: No module named 'tests'
+
+
+----------------------------------------------------------------------
+Ran 547 tests in 174.975s
+
+FAILED (errors=1, skipped=114)

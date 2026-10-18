@@ -18,7 +18,7 @@
     {
       "decision": "Correction ONE source implementation exercised, not independently accepted: narrow OverflowError guard and 34 JSON numeric boundary subcases; no RV-002 source change, no repeat critique or Review.",
       "status": "implemented-pending-independent-review",
-      "evidence": "Authorized exact-base focused 66/66; integrated host/image 151 run/133 pass/18 skips each; actual owned SQL 32/32; core/API/agents static pass. Coupled import error retained, resident corrected separately. Receipt local only because main moved."
+      "evidence": "Source candidate 72cf28b057dbb57e1599367dded1345a4c26c054. Authorized exact-base focused 66/66; integrated host/image 151 run/133 pass/18 skips each; actual owned SQL 32/32; core/API/agents static pass. Coupled import error retained, resident corrected separately. .copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one.md and correction-one-parity.json persist 47-path boundary/27 original hashes/11 raw logs. Local only because main moved."
     },
     {
       "decision": "Owner resumed SAME task for correction ONE of maximum two, RV-001 only; original Review and critique immutable, RV-002 excluded. Rebase prior base 9c648b20 onto exact a86282c4; preserve queue PR407 and recorder PR406; sole history publication exact lease e00c521573501a4ed84dab7ec0ccf66ef57a7053.",
@@ -65,14 +65,14 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "BLOCKED/STOPPED on main movement. Finish only owned-resource cleanup and persist available correction evidence; no rebase/publication/PR update. Report and wait for coordinator main/base direction as owner instructed."
+    "action": "BLOCKED/STOPPED on main movement. P04-T01/T02/T03 complete locally, resources cleaned, correction receipt/parity persisted. P04-T04 remains unexecuted: no rebase/publication/PR update. Report and wait for coordinator main/base direction; full source/artifact independent review remains pending."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
       "task": "Coordinator base direction and full exact-head independent review",
       "rationale": "Owner stop condition activated by main movement; correction ONE implemented locally, publication blocked and acceptance unavailable.",
-      "evidence": "Remote main ab0613f3336109ff9b96560a16758ee842232715; original Review Not accepted immutable; correction receipt pending local persistence."
+      "evidence": "Remote main ab0613f3336109ff9b96560a16758ee842232715; original Review Not accepted immutable; source candidate 72cf28b057dbb57e1599367dded1345a4c26c054 and separate correction-one receipt/parity locally persisted."
     },
     {
       "rank": 2,

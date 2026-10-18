@@ -1,0 +1,454 @@
+{
+  "old_base": "9c648b2006e8b2e563823ea7d5aabdf7f1ac7096",
+  "new_base": "a86282c4badebc58eabbf9e441410d930a201ac2",
+  "old_head": "e00c521573501a4ed84dab7ec0ccf66ef57a7053",
+  "integrated_head": "e188b47d2b8a583cdaf601caad038278a077f473",
+  "conflicts": [],
+  "upstream_paths": {
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-after.txt": {
+      "base_sha256": "4cdd7a678e9660d85f9bf9037ed19189d84629b378daea1b09fafb6b6302971b",
+      "candidate_sha256": "4cdd7a678e9660d85f9bf9037ed19189d84629b378daea1b09fafb6b6302971b",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-changes.md": {
+      "base_sha256": "b73505d950038a63fa7a4dd42d229cf5df8e88f52819f7bbcc18439f3c8cbbe7",
+      "candidate_sha256": "b73505d950038a63fa7a4dd42d229cf5df8e88f52819f7bbcc18439f3c8cbbe7",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-coupled.txt": {
+      "base_sha256": "8b4c6e2ca25dfd2bf2386bf155b984738e68e84c34214dbbea4e030ce90a3cc0",
+      "candidate_sha256": "8b4c6e2ca25dfd2bf2386bf155b984738e68e84c34214dbbea4e030ce90a3cc0",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-docker-build.txt": {
+      "base_sha256": "eacc7c34ab31942c66b79bb3e389190877e6d626a8f995f4feb0ba2782e049e3",
+      "candidate_sha256": "eacc7c34ab31942c66b79bb3e389190877e6d626a8f995f4feb0ba2782e049e3",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-docker-runtime-final.txt": {
+      "base_sha256": "baedf21aed5a0be906bdb04d92caaa79b81fca17497a7bdd96d12c245f857942",
+      "candidate_sha256": "baedf21aed5a0be906bdb04d92caaa79b81fca17497a7bdd96d12c245f857942",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-docker-runtime.txt": {
+      "base_sha256": "7f8ad70199b7cdd5c7a1a69dca957012f067977241738cce5c1e007784722430",
+      "candidate_sha256": "7f8ad70199b7cdd5c7a1a69dca957012f067977241738cce5c1e007784722430",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-focused-final.txt": {
+      "base_sha256": "cee808e59f26c5bf865541b1308bca2a360a2bbcf4cb23a9d13b379234e4ac50",
+      "candidate_sha256": "cee808e59f26c5bf865541b1308bca2a360a2bbcf4cb23a9d13b379234e4ac50",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-focused.txt": {
+      "base_sha256": "5d140cc9067efb2c54177bf512ed149a6b3cef7426b0dcc2aa75516eb0922fe2",
+      "candidate_sha256": "5d140cc9067efb2c54177bf512ed149a6b3cef7426b0dcc2aa75516eb0922fe2",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-freeze.txt": {
+      "base_sha256": "bc965f801eb658a85013180fb0c3e33d9fc82c7f9dabc36d78b55c55a78fb3e5",
+      "candidate_sha256": "bc965f801eb658a85013180fb0c3e33d9fc82c7f9dabc36d78b55c55a78fb3e5",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-image.txt": {
+      "base_sha256": "f9475ac5a45178fe93d0000ffa14531030c307644a3692d583ffebba821060b3",
+      "candidate_sha256": "f9475ac5a45178fe93d0000ffa14531030c307644a3692d583ffebba821060b3",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-mssql.txt": {
+      "base_sha256": "f41730047a41d193354c55873aabb5827e83063d277731f62eb8ad5b74098ef1",
+      "candidate_sha256": "f41730047a41d193354c55873aabb5827e83063d277731f62eb8ad5b74098ef1",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-nonroot.txt": {
+      "base_sha256": "d31f93b6a33d05497439cdcb1aea420feeac60ae5dee457e5f342a001a7a43c6",
+      "candidate_sha256": "d31f93b6a33d05497439cdcb1aea420feeac60ae5dee457e5f342a001a7a43c6",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-parity.json": {
+      "base_sha256": "6c0c3a9f4041fe357989fb0b681fb5ddd70fbf051615c94805b17874ec1f4091",
+      "candidate_sha256": "6c0c3a9f4041fe357989fb0b681fb5ddd70fbf051615c94805b17874ec1f4091",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-quality.txt": {
+      "base_sha256": "09dc91d71306d46fcaed9a2159255b25538179031370309e2db554d1bc8eb392",
+      "candidate_sha256": "09dc91d71306d46fcaed9a2159255b25538179031370309e2db554d1bc8eb392",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-sql.py": {
+      "base_sha256": "64e730f9b947706dcb18d6219f11dbadf424dce8f3ace55997b50542142689ec",
+      "candidate_sha256": "64e730f9b947706dcb18d6219f11dbadf424dce8f3ace55997b50542142689ec",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-tests-final.txt": {
+      "base_sha256": "879cf72cde93b0e083363276442fc3f36af60ed3f1b2ac581ab7bdb1a2834cfc",
+      "candidate_sha256": "879cf72cde93b0e083363276442fc3f36af60ed3f1b2ac581ab7bdb1a2834cfc",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-tests.txt": {
+      "base_sha256": "997480ec3fcbe441d5f56b163c6c7edad8d57bdd68ac3e9290565b78af41678a",
+      "candidate_sha256": "997480ec3fcbe441d5f56b163c6c7edad8d57bdd68ac3e9290565b78af41678a",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration.md": {
+      "base_sha256": "a3de10bd69449d74757fd2e95fac749396c2c49a979b24f0a6950fc8e260457c",
+      "candidate_sha256": "a3de10bd69449d74757fd2e95fac749396c2c49a979b24f0a6950fc8e260457c",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql-corrected-run.txt": {
+      "base_sha256": "c43de89f16de7a27e91a11c428e528bce9b822b1002146ddad4486253558bb2e",
+      "candidate_sha256": "c43de89f16de7a27e91a11c428e528bce9b822b1002146ddad4486253558bb2e",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql-final.txt": {
+      "base_sha256": "924173d1dc654ac6cbd8fa643b96100c58476932163d5e9b256a302370e22193",
+      "candidate_sha256": "924173d1dc654ac6cbd8fa643b96100c58476932163d5e9b256a302370e22193",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql.sh": {
+      "base_sha256": "4516b694dca392bb3ec012125bbec1c09f2eae254673e4e4d3f86c9bd9b8f07c",
+      "candidate_sha256": "4516b694dca392bb3ec012125bbec1c09f2eae254673e4e4d3f86c9bd9b8f07c",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql.txt": {
+      "base_sha256": "a91a2ac1408b8dbc26960971160500308915ac9ce49dcba4b830ddf09d97ee4c",
+      "candidate_sha256": "a91a2ac1408b8dbc26960971160500308915ac9ce49dcba4b830ddf09d97ee4c",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-publication.md": {
+      "base_sha256": "28da45a9824257f63f67e9b2686496bcc0d8aaa09b6a166a0bc193b0a5587dae",
+      "candidate_sha256": "28da45a9824257f63f67e9b2686496bcc0d8aaa09b6a166a0bc193b0a5587dae",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-red-harness-corrected.txt": {
+      "base_sha256": "27e45d7e7d7958b9b9b680828ff28fcbfadce2552b15c419eb4668373e2c9b3a",
+      "candidate_sha256": "27e45d7e7d7958b9b9b680828ff28fcbfadce2552b15c419eb4668373e2c9b3a",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-red.txt": {
+      "base_sha256": "fe012f3a415d5b04ddf5b720d0117dc0bdf8f41403f6cbc55a8393ee1d05325a",
+      "candidate_sha256": "fe012f3a415d5b04ddf5b720d0117dc0bdf8f41403f6cbc55a8393ee1d05325a",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-static-corrected.txt": {
+      "base_sha256": "746ec4b7cafd08601cee13db4b11c2d761af6c2d3ce922e978f98a3d4994faa0",
+      "candidate_sha256": "746ec4b7cafd08601cee13db4b11c2d761af6c2d3ce922e978f98a3d4994faa0",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-static-final.txt": {
+      "base_sha256": "746ec4b7cafd08601cee13db4b11c2d761af6c2d3ce922e978f98a3d4994faa0",
+      "candidate_sha256": "746ec4b7cafd08601cee13db4b11c2d761af6c2d3ce922e978f98a3d4994faa0",
+      "exact": true
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-static.txt": {
+      "base_sha256": "3983937438cd1986e11791317c9789dbd8f5f8d33629d313e75eddd3873bdffa",
+      "candidate_sha256": "3983937438cd1986e11791317c9789dbd8f5f8d33629d313e75eddd3873bdffa",
+      "exact": true
+    },
+    ".copilot-tracking/details/2026-10-18/issue-76-current-stage-blockers-phase-details.md": {
+      "base_sha256": "0dc9f18ee4387301967c764373916beef9851db1df3912b6d696247be055390e",
+      "candidate_sha256": "0dc9f18ee4387301967c764373916beef9851db1df3912b6d696247be055390e",
+      "exact": true
+    },
+    ".copilot-tracking/plans/2026-10-18/issue-76-current-stage-blockers-plan.md": {
+      "base_sha256": "f23a47eeef4bc9959f5096f7881b326ed84f8f9304890ecb0f04e2101706d60b",
+      "candidate_sha256": "f23a47eeef4bc9959f5096f7881b326ed84f8f9304890ecb0f04e2101706d60b",
+      "exact": true
+    },
+    ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-before.txt": {
+      "base_sha256": "61e97f8cee5551b85da1ca08e3111c94de92f5cf26a9e0ae9f67291a4500b86b",
+      "candidate_sha256": "61e97f8cee5551b85da1ca08e3111c94de92f5cf26a9e0ae9f67291a4500b86b",
+      "exact": true
+    },
+    ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-probe.py": {
+      "base_sha256": "2a94a8cd7077a58e2981f1517c6b03c1a92cfb0e74d8ffaf9de8ae9174f8dd70",
+      "candidate_sha256": "2a94a8cd7077a58e2981f1517c6b03c1a92cfb0e74d8ffaf9de8ae9174f8dd70",
+      "exact": true
+    },
+    ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-research.md": {
+      "base_sha256": "a5f47715532d7865899ef01fbf7cb53a6dc5939dd1034267dfa1a27bb8b51162",
+      "candidate_sha256": "a5f47715532d7865899ef01fbf7cb53a6dc5939dd1034267dfa1a27bb8b51162",
+      "exact": true
+    },
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-76-current-stage-blockers-review.md": {
+      "base_sha256": "527ed27ad92296fbbd42f2e148b14f9e8aed1d482748608a003da7f2aa5ff895",
+      "candidate_sha256": "527ed27ad92296fbbd42f2e148b14f9e8aed1d482748608a003da7f2aa5ff895",
+      "exact": true
+    },
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-76-current-stage-blockers-critique.md": {
+      "base_sha256": "31e254f7de129957080e78d751f63ccac157d43f18ef2270f30cd4422e8bd1a7",
+      "candidate_sha256": "31e254f7de129957080e78d751f63ccac157d43f18ef2270f30cd4422e8bd1a7",
+      "exact": true
+    },
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-76-current-stage-blockers-state.json": {
+      "base_sha256": "e3b82a31e5e572343ed1afff735030cd53f8bfe88f5458d1bf57cdaaec0c26ef",
+      "candidate_sha256": "e3b82a31e5e572343ed1afff735030cd53f8bfe88f5458d1bf57cdaaec0c26ef",
+      "exact": true
+    },
+    "src/api/README.md": {
+      "base_sha256": "c19ccaf46861883dd1b69521c5e4725dbfa9330cf5e0e39261c00aceb971ff72",
+      "candidate_sha256": "a0cd7723ce040e5d29376d6088f521816993be035d6746859d919de288577cef",
+      "exact": false
+    },
+    "src/api/tests/test_task_queue_api.py": {
+      "base_sha256": "ecfbab4bf5eab17aa5257d6073d810f0b9c7bd5c6fb5a50e5d23300af7042cd1",
+      "candidate_sha256": "ecfbab4bf5eab17aa5257d6073d810f0b9c7bd5c6fb5a50e5d23300af7042cd1",
+      "exact": true
+    },
+    "src/core/README.md": {
+      "base_sha256": "207bd08a89f6bc8477421fce85bec180a66903d36d55308c82d4128993dd3cb6",
+      "candidate_sha256": "207bd08a89f6bc8477421fce85bec180a66903d36d55308c82d4128993dd3cb6",
+      "exact": true
+    },
+    "src/core/src/zava_forward/core/sqlstore.py": {
+      "base_sha256": "6b481e60ba2e0074fe7fd9c3f4f2ef2068ec4956104de3880d23fc1ddf14100c",
+      "candidate_sha256": "6b481e60ba2e0074fe7fd9c3f4f2ef2068ec4956104de3880d23fc1ddf14100c",
+      "exact": true
+    },
+    "src/core/src/zava_forward/core/taskqueues.py": {
+      "base_sha256": "fff39ba9eea1e37a3bf0f821761934419cb66f0de0e34fec7dba25a7d75f110a",
+      "candidate_sha256": "fff39ba9eea1e37a3bf0f821761934419cb66f0de0e34fec7dba25a7d75f110a",
+      "exact": true
+    },
+    "src/core/tests/test_sqlqueues.py": {
+      "base_sha256": "e16ff235a8a656dd758c12a65ae7c001158e320f7686ef2ea3948d19a5f92dc6",
+      "candidate_sha256": "e16ff235a8a656dd758c12a65ae7c001158e320f7686ef2ea3948d19a5f92dc6",
+      "exact": true
+    },
+    "src/core/tests/test_taskqueues.py": {
+      "base_sha256": "6f826857342e3777be29b1e87ad6ed0c8cb54261df08f5f1b38b21a9246bf45a",
+      "candidate_sha256": "6f826857342e3777be29b1e87ad6ed0c8cb54261df08f5f1b38b21a9246bf45a",
+      "exact": true
+    }
+  },
+  "frozen_hashes": {
+    ".copilot-tracking/changes/2026-10-15/issue-122-service-continuity-changes.md": "4c0ace74c56083fdf51c22ae342c771af9249888ca94af1b29b2ecc41bbf8974",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-changes.md": "1bff1d8a1f2e0f7466664e440150abb4275c7846b214795485d2aa28c9b7612a",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-one.md": "575971b9581c0e490395425949c689b8d0a871d5c329176b1959538af90f5bca",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-two.md": "5320301a9e6395ae70d62c61858fe6f256dbed98fd566a860438334cf7be2aeb",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-integration.md": "b80b5baac042e9e4354d8ee351214b578a8b4854babe010cfff2e8be97470cf5",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-atomicity.log": "5c7192cccaac69f54b83e994111a70bfa7175a4f81e4d89e2ade06cfd04cdcd3",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-boundary.json": "0cf9605ec0331a2a1de22641ba0793cad18d6ead446c9b5d7129033edc1a0a7d",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-integration.json": "fe5f1d8f462a1044d25da51f06ab13f647cbef0c0b4b98d32be5ebffa3efa2a4",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-owned-sql.py": "0669a619dbbec27a99954c153861b8dae6e7c5317c8301b43ea8dbefa91fae27",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-red.log": "1a4cb283557a72fda1010b4cb746ddc3c33f366131be150d412b313491549113",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-static.log": "8254ee460ee9d67ce85769d006a1327544b5edbc963b5313c86ba2f5fcb67e91",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-validation.json": "a3f97be90267d270f01cb12444c7dcebdff2182cc1c5839f2496f6a3f5972248",
+    ".copilot-tracking/details/2026-10-15/issue-122-service-continuity-details.md": "f3eec13cddb7dc6fc33af2dd7374e91d256b5bdee853c15cc57da534b49a8513",
+    ".copilot-tracking/details/2026-10-18/issue-122-continuity-epoch-export-phase-details.md": "4a66b538f43849bb87d10f6566dedd6b7da247abdba7af5729fbfd3e4a2edc63",
+    ".copilot-tracking/plans/2026-10-15/issue-122-service-continuity-plan.md": "7817df653c3a8edd584fb17be65bfe5dbd1636fd5fe15389b0cb088659695f0b",
+    ".copilot-tracking/plans/2026-10-18/issue-122-continuity-epoch-export-plan.md": "62161e32c8924a2bf888aad3de35b1f3182487b401b0071dce745f300607b36e",
+    ".copilot-tracking/research/2026-10-15/issue-122-service-continuity-research.md": "2c696f99dadac3a57725a53d4985fb11703a15247c1ac134395344529e104ab7",
+    ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md": "1d6fb6d79c2e7f3ebd6b69e11af1acbc83596c9d2d474ffc1ba8fe157d4d71d3",
+    ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-coordinator-evidence.json": "cbfad85c175ea333bced57c6567fa35ce8f80424a6b3428354eec5cd040edc88",
+    ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md": "6f8310cd5eb59cb1045ca25bf9064904b68fe80dae69988d7321940d14f68b5f",
+    ".copilot-tracking/reviews/2026-10-15/issue-122-service-continuity-review.md": "d5c90f686a3359bf78068f480efa5c8f71ba772d8ea3ea650e045caa0e4d841b",
+    ".copilot-tracking/reviews/2026-10-18/issue-122-continuity-epoch-export-plan-critique.md": "4eeda2d60235f571916a83de65fa9cda8d73e2159291a50286e8055328fc77be",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-122-continuity-epoch-export-review.md": "9d9d0bff0fdda5a8d163967c4ba8a997ee1bc315ae5a896611fc331aff200abc",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md": "e43d6ec67d83b788e97d68fd2be20523ef962f7ac5aeb544fabc0886adbf93e4",
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-122-register-release-remediation-plan-critique.md": "343c3e14ecebe3fa813b2bb8c0a0a914b555a786996dd987c583356798d36ca7",
+    ".copilot-tracking/rpi-sessions/2026-10-15/issue-122-service-continuity-state.json": "a165eef66d7f04ad1c6ebd336d81c9931204393ac41cc3a30818f7cf09546c0c",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-122-continuity-epoch-export-state.json": "f7767af42bc8a2ad6b13c32608af458696ef7361f6d089cee55e559a9f52b14e"
+  },
+  "historical_artifact_count": 16,
+  "log_exact_upstream": true,
+  "log_historical_body_prefix": true,
+  "source_pre_correction_exact_old": true,
+  "source_candidate": "72cf28b057dbb57e1599367dded1345a4c26c054",
+  "source_candidate_delta": {
+    "src/api/README.md": {
+      "before_sha256": "22bf18843c9dd90cf8448518638e4e98665a0857f3769a30d5eff611885ea236",
+      "after_sha256": "a0cd7723ce040e5d29376d6088f521816993be035d6746859d919de288577cef",
+      "diff": "diff --git a/src/api/README.md b/src/api/README.md\nindex ce89133a..cf401f62 100644\n--- a/src/api/README.md\n+++ b/src/api/README.md\n@@ -87,7 +87,12 @@ releases with no proposal reference. Missing, truncated, malformed or contradict\n records make production incomplete and offline verification invalid, even after\n the ordinary bundle digest is recomputed. Lifecycle checks allow repeated\n suspension and timestamp ties supported by the writer, but cannot authenticate\n-wholesale consistent rewriting of unanchored history. Known-empty SQL evidence\n+wholesale consistent rewriting of unanchored history. Event timestamps accept\n+only integers and floats that pass floating-point finiteness validation, excluding\n+booleans; conversion overflow, nonfinite values and nonnumeric values explicitly\n+make producer evidence incomplete and offline verification invalid. This is not\n+a calendar-date policy; finite negative, fractional and large numeric values\n+retain their existing meaning. Known-empty SQL evidence\n and explicit unsupported JSON storage remain distinct from unavailable evidence.\n Audience-limited exports remain explicitly incomplete, never full ledger proof;\n externally held canonical heads are unchanged. Local synthetic proof is not\n"
+    },
+    "src/api/tests/test_continuity_epoch_export.py": {
+      "before_sha256": "3e0e753a03c88855260f515bce2e0f26a5203b9e77aa77f0f068c48057849956",
+      "after_sha256": "8d0734c32d393a010626cd008ea0e65e09429fcd94d7b5067d969c830906738b",
+      "diff": "diff --git a/src/api/tests/test_continuity_epoch_export.py b/src/api/tests/test_continuity_epoch_export.py\nindex 60706e0e..29052be2 100644\n--- a/src/api/tests/test_continuity_epoch_export.py\n+++ b/src/api/tests/test_continuity_epoch_export.py\n@@ -821,6 +821,68 @@ class OfflineTests(Base):\n             self.assertFalse(produced[\"complete\"])\n             self.assertFalse(self.redigest(produced)[\"valid\"])\n \n+    def test_json_numeric_timestamps_fail_closed_without_conversion_errors(self) -> None:\n+        part = self.service.export()\n+        original = self.store.continuity_export(self.pm, part)\n+        head = copy.deepcopy(original[\"ledger\"][\"head\"])\n+        self.assertTrue(continuity.verify_export(original, head)[\"valid\"])\n+        cases = (\n+            (0, True),\n+            (-1, True),\n+            (1.25, True),\n+            (-1.25, True),\n+            (10**308, True),\n+            (-(10**308), True),\n+            (1.7976931348623157e308, True),\n+            (-1.7976931348623157e308, True),\n+            (10**400, False),\n+            (-(10**400), False),\n+            (True, False),\n+            (False, False),\n+            (None, False),\n+            (\"2000000000\", False),\n+            (float(\"nan\"), False),\n+            (float(\"inf\"), False),\n+            (-float(\"inf\"), False),\n+        )\n+        problem = \"invalid task-release event envelope\"\n+        for boundary in (\"producer\", \"verifier\"):\n+            for at, valid in cases:\n+                with self.subTest(boundary=boundary, at=at):\n+                    source = copy.deepcopy(part if boundary == \"producer\" else original)\n+                    source[\"task_releases\"][\"records\"][0][\"events\"][0][\"at\"] = at\n+                    source = json.loads(json.dumps(source))\n+                    if boundary == \"producer\":\n+                        bundle = self.store.continuity_export(self.pm, source)\n+                        expected_head = copy.deepcopy(bundle[\"ledger\"][\"head\"])\n+                        self.assertEqual(bundle[\"complete\"], valid, bundle[\"incomplete_reasons\"])\n+                        if not valid:\n+                            self.assertIn(problem, bundle[\"incomplete_reasons\"])\n+                    else:\n+                        bundle = source\n+                        expected_head = head\n+                        bundle[\"complete\"] = True\n+                        bundle[\"incomplete_reasons\"] = []\n+                        bundle[\"digest\"] = continuity.sha(\n+                            {k: v for k, v in bundle.items() if k != \"digest\"}\n+                        )\n+                    bundle = json.loads(json.dumps(bundle))\n+                    check = continuity.verify_export(bundle, expected_head)\n+                    self.assertEqual(check[\"valid\"], valid, check)\n+                    self.assertEqual(check[\"complete\"], valid, check)\n+                    if boundary == \"verifier\":\n+                        self.assertEqual(bundle[\"ledger\"], original[\"ledger\"])\n+                    self.assertEqual(bundle[\"ledger\"][\"head\"], expected_head)\n+                    self.assertFalse(\n+                        any(\n+                            \"digest mismatch\" in p or \"externally held\" in p\n+                            for p in check[\"problems\"]\n+                        ),\n+                        check,\n+                    )\n+                    if not valid:\n+                        self.assertIn(problem, check[\"problems\"])\n+\n     def test_release_source_absence_and_unsupported_are_not_full_evidence(self) -> None:\n         part = self.service.export()\n         missing = copy.deepcopy(part)\n"
+    },
+    "src/core/src/zava_forward/core/continuity.py": {
+      "before_sha256": "b29d50e069c86c80d9925f4d8a28ccab179494287b553b9936b1dda3855444d2",
+      "after_sha256": "4afcabd0cfbc495dc71d6b4869f42da5c8db500909c6aab129d20194586883ad",
+      "diff": "diff --git a/src/core/src/zava_forward/core/continuity.py b/src/core/src/zava_forward/core/continuity.py\nindex e7aef25a..8ea05d96 100644\n--- a/src/core/src/zava_forward/core/continuity.py\n+++ b/src/core/src/zava_forward/core/continuity.py\n@@ -582,9 +582,13 @@ def lifecycle_problems(record):\n         if not isinstance(event, dict):\n             return [\"invalid task-release event envelope\"]\n         eid, at, body = event.get(\"id\"), event.get(\"at\"), event.get(\"body\")\n+        try:\n+            finite_at = type(at) in (int, float) and math.isfinite(at)\n+        except OverflowError:\n+            finite_at = False\n         if (not isinstance(eid, str) or not eid or eid in ids\n-                or event.get(\"release_id\") != record[\"id\"] or type(at) not in (int, float)\n-                or not math.isfinite(at) or not isinstance(body, dict)):\n+                or event.get(\"release_id\") != record[\"id\"]\n+                or not finite_at or not isinstance(body, dict)):\n             return [\"invalid task-release event envelope\"]\n         ids.add(eid)\n         kind = body.get(\"kind\")\n"
+    }
+  },
+  "raw_logs": {
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-build.log": {
+      "sha256": "37a2ae36e0f9d9aa9c45f260c6f9eaaef3836fefba3d7541669ba9b5e1ba064c",
+      "bytes": 72
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-container-check.log": {
+      "sha256": "b053f0a2a11d9538e132746da5e5b29c2a81c94cf0e5dfc1997b73813ee634f6",
+      "bytes": 66
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-coupled.log": {
+      "sha256": "dcf3fa41339db4b9dbbe2fc219e4be6f64e783d5baf8eaae244dffe0255fa038",
+      "bytes": 36856
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-focused-exact.log": {
+      "sha256": "67c6db6909f8fc2f41a08101290f8b19d3356d874c92cbd74b967e9a01a0d7dd",
+      "bytes": 21981
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-focused.log": {
+      "sha256": "1beff1747049e2433d69995fb1b7516e229e3bd528745a03db96e306de2f1199",
+      "bytes": 38435
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-image.log": {
+      "sha256": "673b81d49ba8d3b9e8a88200bcaa09d1631f54146ca5763eea7350ce3a797461",
+      "bytes": 36913
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-red-corrected.log": {
+      "sha256": "20318091734bd98d5f4e81419a71a34af30be9d8a65489982aa65972cee70ffb",
+      "bytes": 7257
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-red.log": {
+      "sha256": "4fb4e538c6a5d2cf24f26c4d434bd6914635a133926adfcff1faf9e831fea9fa",
+      "bytes": 19895
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-resident-corrected.log": {
+      "sha256": "c471f5224284ddfac7c0a3f614ecea711dd80f08fe6d0730aed9b2bdd831bed7",
+      "bytes": 23033
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-sql.log": {
+      "sha256": "1429ae09ebaa6a2226111c21a0cf7b8e31196b8ae91658a58458798f1f75152f",
+      "bytes": 3858
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-static.log": {
+      "sha256": "66a932417e7ee0db0782a1bf7d66b269cf07a3f08a90739ecf5d101225e24212",
+      "bytes": 314
+    }
+  },
+  "full_pr_boundary": [
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-one.md",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-two.md",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-integration.md",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-atomicity.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-boundary.json",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-build.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-container-check.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-coupled.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-focused-exact.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-focused.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-image.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-parity.json",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-red-corrected.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-red.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-resident-corrected.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-sql.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-static.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one.md",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-integration.json",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-owned-sql.py",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-red.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-static.log",
+    ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-validation.json",
+    ".copilot-tracking/details/2026-10-18/issue-122-continuity-epoch-export-phase-details.md",
+    ".copilot-tracking/details/2026-10-18/issue-122-register-release-remediation-phase-details.md",
+    ".copilot-tracking/plans/2026-10-18/issue-122-continuity-epoch-export-plan.md",
+    ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
+    ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md",
+    ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-coordinator-evidence.json",
+    ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
+    ".copilot-tracking/reviews/2026-10-18/issue-122-continuity-epoch-export-plan-critique.md",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-122-continuity-epoch-export-review.md",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md",
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-122-register-release-remediation-plan-critique.md",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-122-continuity-epoch-export-state.json",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-122-register-release-remediation-state.json",
+    "src/api/README.md",
+    "src/api/pyproject.toml",
+    "src/api/tests/test_continuity.py",
+    "src/api/tests/test_continuity_epoch_export.py",
+    "src/core/src/zava_forward/core/ai_tasks.py",
+    "src/core/src/zava_forward/core/assistants.py",
+    "src/core/src/zava_forward/core/continuity.py",
+    "src/core/src/zava_forward/core/projection.py",
+    "src/core/src/zava_forward/core/store.py"
+  ],
+  "boundary_count": 47,
+  "observed_moved_main": "ab0613f3336109ff9b96560a16758ee842232715",
+  "publication": {
+    "status": "blocked-main-moved",
+    "push_executed": false,
+    "authorized_exact_lease": "refs/heads/fix/continuity-epoch-export-122:e00c521573501a4ed84dab7ec0ccf66ef57a7053",
+    "remote_head_unchanged": "e00c521573501a4ed84dab7ec0ccf66ef57a7053",
+    "pr_draft": true,
+    "closing_references": []
+  },
+  "image": {
+    "sha256": "0937579bb90f6505e544df379ab36112348d4d128b049cebd90414b53e0ac95b",
+    "uid": 10001,
+    "gid": 10001,
+    "cap_eff": "0000000000000000",
+    "no_new_privs": 1,
+    "installed_continuity_sha256": "4afcabd0cfbc495dc71d6b4869f42da5c8db500909c6aab129d20194586883ad",
+    "owned_tag_removed": true
+  },
+  "results": {
+    "initial_red": {
+      "run": 1,
+      "failures": 15,
+      "errors": 4
+    },
+    "corrected_red": {
+      "run": 1,
+      "failures": 0,
+      "errors": 4
+    },
+    "focused_exact": {
+      "run": 66,
+      "pass": 66,
+      "skip": 0
+    },
+    "integrated_host": {
+      "run": 151,
+      "pass": 133,
+      "skip": 18
+    },
+    "installed_image": {
+      "run": 151,
+      "pass": 133,
+      "skip": 18
+    },
+    "actual_mssql": {
+      "run": 32,
+      "pass": 32,
+      "skip": 0,
+      "version": "16.0.4305.5",
+      "owned_container_removed": true
+    },
+    "coupled_initial": {
+      "run": 547,
+      "pass": 432,
+      "skip": 114,
+      "error": 1,
+      "reason": "tests.test_mvp namespace not on path for test_resident_api"
+    },
+    "resident_corrected": {
+      "run": 9,
+      "pass": 8,
+      "skip": 1
+    },
+    "static": {
+      "ruff": "pass",
+      "format": "pass",
+      "mypy": "pass",
+      "mypy_files": [
+        124,
+        57,
+        23
+      ]
+    }
+  },
+  "assessment": {
+    "original_review": "Complete / Not accepted (unchanged)",
+    "new_critique_executed": false,
+    "repeat_review_executed": false,
+    "correction_count": 1,
+    "maximum_corrections": 2,
+    "RV-002": "excluded, distinct nonblocking follow-up",
+    "independent_coordinator_review": "pending"
+  }
+}

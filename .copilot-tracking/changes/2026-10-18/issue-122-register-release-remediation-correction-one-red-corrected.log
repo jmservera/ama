@@ -1,0 +1,76 @@
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 856, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    bundle = self.store.continuity_export(self.pm, source)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 322, in continuity_export
+    reasons.extend(release_problems(bundle))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 856, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    bundle = self.store.continuity_export(self.pm, source)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 322, in continuity_export
+    reasons.extend(release_problems(bundle))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='verifier', at=10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 870, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    check = continuity.verify_export(bundle, expected_head)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 622, in verify_export
+    problems.extend(release_problems(bundle))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='verifier', at=-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 870, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    check = continuity.verify_export(bundle, expected_head)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 622, in verify_export
+    problems.extend(release_problems(bundle))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+----------------------------------------------------------------------
+Ran 1 test in 0.680s
+
+FAILED (errors=4)

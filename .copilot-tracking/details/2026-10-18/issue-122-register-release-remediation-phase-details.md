@@ -24,7 +24,10 @@ validated. P04-T03 results: focused 66/66, integrated host and installed nonroot
 151 run/133 pass/18 skips each, owned SQL 32/32, configured static gates pass.
 Coupled 547 entries retain one namespace import error (432 pass/114 skips);
 corrected resident-only namespace command 9 run/8 pass/one skip. Separate
-receipt/parity persistence pending; P04-T04 remains blocked. Original adverse
+correction-one.md and correction-one-parity.json persist P04-T03 completion
+with 47 full-PR paths, 27 frozen originals and 11 raw logs.
+Source candidate 72cf28b057dbb57e1599367dded1345a4c26c054 is committed locally;
+P04-T04 remains blocked. Original adverse
 Review not rerun or revised. Correction count ONE of maximum two; older cycles
 remain exhausted and unchanged. RV-002 remains outside this correction.
 

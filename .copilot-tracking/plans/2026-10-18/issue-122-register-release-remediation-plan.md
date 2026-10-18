@@ -161,7 +161,7 @@ Owner's explicit "main moves again report wait" condition is active.
 <!-- rpi:task id=P04-T02 -->
 #### [x] P04-T02: Conversion-safe numeric timestamp validation and JSON regressions
 <!-- rpi:task id=P04-T03 -->
-#### [ ] P04-T03: Integrated validation, parity and separate correction receipt
+#### [x] P04-T03: Integrated validation, parity and separate correction receipt
 <!-- rpi:task id=P04-T04 -->
 #### [ ] P04-T04: Exact-lease publication, draft PR reconciliation and STOP
 
@@ -179,7 +179,9 @@ Current validation on the authorized exact base: focused 66/66; integrated host
 and installed image 151 run/133 pass/18 skips each; owned SQL 32/32; configured
 static gates pass. Coupled command retained one test-namespace import error
 (432 pass/114 skips), corrected resident-only command 9 run/8 pass/one skip.
-Receipt persistence finishes P04-T03; P04-T04 remains blocked on main movement.
+Separate correction-one.md and correction-one-parity.json persist P04-T03,
+including 47 full-PR boundary paths and 27 immutable original file hashes.
+P04-T04 remains blocked on main movement; no publication or PR update occurred.
 
 ## Critique Disposition
 

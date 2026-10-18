@@ -1,0 +1,203 @@
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 856, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    bundle = self.store.continuity_export(self.pm, source)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 322, in continuity_export
+    reasons.extend(release_problems(bundle))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 856, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    bundle = self.store.continuity_export(self.pm, source)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 322, in continuity_export
+    reasons.extend(release_problems(bundle))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='verifier', at=10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 868, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    check = continuity.verify_export(bundle, head)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 622, in verify_export
+    problems.extend(release_problems(bundle))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+ERROR: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='verifier', at=-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 868, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    check = continuity.verify_export(bundle, head)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 622, in verify_export
+    problems.extend(release_problems(bundle))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 561, in release_problems
+    problems.extend(lifecycle_problems(record))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py", line 587, in lifecycle_problems
+    or not math.isfinite(at) or not isinstance(body, dict)):
+           ^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=1.25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-1.25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=1.7976931348623157e+308)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-1.7976931348623157e+308)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 869, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(check["valid"], valid, check)
+AssertionError: False != True : {'valid': False, 'problems': ['ledger does not match the externally held head'], 'complete': False}
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[2967 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 4457 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[3271 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 4820 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[3573 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 5287 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at='2000000000')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[3875 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 5700 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[4177 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 6113 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=inf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[4479 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 6526 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) (boundary='producer', at=-inf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 871, in test_json_numeric_timestamps_fail_closed_without_conversion_errors
+    self.assertEqual(bundle["ledger"], original["ledger"])
+AssertionError: {'entries': [{'at': '2026-10-18T09:27:44', 'who': 'hum[4781 chars]: []} != {'entries': [], 'report': {'intact': True, 'entries': [251 chars]: []}
+Diff is 6939 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.648s
+
+FAILED (failures=15, errors=4)

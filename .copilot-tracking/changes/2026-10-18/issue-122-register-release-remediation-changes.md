@@ -89,6 +89,15 @@ No private .env/ZF_DATA, live services, Azure/IAM/Graph/spend, issue/board
 writes or merge. Separate correction receipt and machine-readable parity record
 retain raw commands/results/hashes and both failed red runs.
 
+Local source candidate is 72cf28b057dbb57e1599367dded1345a4c26c054.
+Separate receipt:
+.copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one.md.
+Machine-readable companion correction-one-parity.json records the complete
+47-path PR boundary, exact source candidate delta, 27 original file hashes and
+11 raw command-log hashes. P04-T03 complete, P04-T04 blocked. Fresh read of PR398
+confirmed OPEN/draft=true/head=e00c5215/closingIssuesReferences=[]; PR metadata
+was not written. Final local evidence commit follows; no remote publication.
+
 ## P01 Exact Integration
 
 Expected local and remote source head verified
