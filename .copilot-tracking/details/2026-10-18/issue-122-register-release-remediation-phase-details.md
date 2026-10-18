@@ -6,6 +6,20 @@ ms.date: 2026-10-18
 
 ## Task and Initial Direction
 
+CURRENT P06 INTEGRATION ONLY supersedes historical directions below. Owner
+reports independent bounded Pass733cb491 at96099bb5. Clean expected local/
+remote/PR96099bb57c58e76b4afc7d278ff5f17be43f5a8d, prior base9403dc6a;
+fetch verified target578631ac75cc8c6a7af53922c6aaae4435e7761c. Sole rewrite
+exact96099bb5lease, receipt normal push; pinned publish even if main moves.
+No source correction after TWO FINAL, no critique/original Review; material
+conflict/bug routes human. P06-T01 freeze complete (73immutable, original27,
+five full workerlogs); T02 rebase/parity, T03 focused governance/core/API HTTP,
+atomicity/continuity/role plus configured quality. Assess thread-local governance
+commit witness; SQL/image only changed intent or unresolved concern. T04 draft
+publication/Refs-only/empty closing refs then SAME reviewer delta STOP.
+Protected upstream entire tree bytes/modes except owned9+currentmetadata/new
+artifacts; README/config additive union, KB exact upstream. Preserve old reviews.
+
 P05-T02/T03 now complete: source candidate
 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0, only four source/test/guide deltas.
 Final host/image each 86/86; supplied probe 15/15; actual MSSQL 16/16 and final

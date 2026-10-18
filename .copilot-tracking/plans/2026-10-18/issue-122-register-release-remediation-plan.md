@@ -33,6 +33,42 @@ and adjacent coordinator-evidence.json.
 
 ## User Decisions and Requirements
 
+Current continuation P06 is INTEGRATION ONLY, not correction. Owner reports
+independent bounded Pass by SAME733cb491 reviewer at96099bb5. Original adverse
+assessments remain immutable. Rebase clean verified local/remote/PR
+96099bb57c58e76b4afc7d278ff5f17be43f5a8d from9403dc6a onto EXACT
+578631ac75cc8c6a7af53922c6aaae4435e7761c. Preserve upstream governance/
+sqlstore/server/tests/config/docs bytes/modes except additive README/config union;
+keep complete normalized nine-path owned source intent. Sole rewrite exact
+96099bb5 lease; unexpected topic advancement stops. Publish pinned integration
+even if main moves, report without reintegration. Subsequent receipt normal push.
+No source correction/third cycle, critique or second original Review; material
+source conflict/bug routes human. RV-002 remains separate. Keep draft/Refs-only/
+empty closing refs; STOP for same reviewer final integration delta assessment.
+
+<!-- rpi:phase id=P06 -->
+### [ ] P06: Pinned governance integration ONLY
+<!-- rpi:task id=P06-T01 -->
+#### [x] P06-T01: Verify intake and freeze all prior source/evidence/logs
+<!-- rpi:task id=P06-T02 -->
+#### [ ] P06-T02: Rebase pinned baseline and verify complete intent/upstream parity
+<!-- rpi:task id=P06-T03 -->
+#### [ ] P06-T03: Focused governance/shared SQL-write/continuity/role and quality checks
+<!-- rpi:task id=P06-T04 -->
+#### [ ] P06-T04: Exact-lease publish, draft reconciliation and same-reviewer STOP
+
+Shared sqlstore witness must be assessed: new mark_committed only marks active
+thread-local rai_evidence_write context; no continuity writer sets that context.
+Run existing governance failure/commit-witness, atomicity, continuity and role
+suites plus export/assistant release/unavailable and core/API quality.
+Actual SQL/image only if changed production intent or unresolved concern; do
+not redundantly repeat earlier correction evidence. Preserve actual probes
+by final source parity; no private/cloud inputs. Separate integration-governance
+receipt/manifest/raw logs and current metadata only. All73prior immutable
+artifacts frozen; original27/prior80boundary verified. Five complete logs copied.
+
+### Historical Correction and Publication Directions
+
 * Current scope supersedes prior integration-only directions: correction TWO
   and FINAL of this SAME task, unavailable SQL export classification only.
   Independent review 733cb491-5a80-4b82-8034-12671261e9d4 is Not accepted,

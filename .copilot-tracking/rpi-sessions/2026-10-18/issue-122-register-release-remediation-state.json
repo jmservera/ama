@@ -3,9 +3,9 @@
   "task_slug": "issue-122-register-release-remediation",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": "stopped",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Owner authorizes integration ONLY after reported independent bounded Pass by SAME733cb491 reviewer at96099bb57c58e76b4afc7d278ff5f17be43f5a8d. Original adverse assessments immutable; correction TWO FINAL exhausted, no third correction/critique/second original Review. Any material source conflict/bug routes human.",
+      "status": "authorized-integration-only",
+      "evidence": "Owner2026-10-18T10:34 continuation; clean local/remote/PR96099bb5/base9403dc6a/draft/empty refs; fetched origin/main EXACT578631ac75cc8c6a7af53922c6aaae4435e7761c. Rebase only owned topic, sole exact96099bb5lease. Preserve PR409 protected governance/sqlstore/server/tests/config/docs, union additive README/config.73prior immutable artifacts frozen, prior80boundary hashes verified, original27 unchanged; five complete workerlogs copied/hashverified."
+    },
     {
       "decision": "Correction TWO FINAL exercised and normally published, P05 complete; explicit owner STOP for SAME independent reviewer. Not independently accepted, no readiness. No further source correction allowed; remaining blocker routes human. Final metadata-only receipt follows by normal push and exact PR-head refresh.",
       "status": "published-stopped-for-same-reviewer",
@@ -104,8 +109,8 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Normal correction/evidence publication 41846a5a45ef2491fa6fa53f27498039703b3593 and exact draft PR398 head/base9403dc6a/empty refs verified. Transition to completed execution and stopped session per explicit owner STOP; final metadata-only receipt normal push/PR exact-head refresh follows. SAME reviewer assesses correction/integration delta; no third source correction or new original Review."
+    "phase": "Implement",
+    "action": "Owner integration ONLY from verified clean local/remote/PR96099bb57c58e76b4afc7d278ff5f17be43f5a8d/base9403dc6a to EXACT578631ac75cc8c6a7af53922c6aaae4435e7761c. Rebase only owned topic; sole authorized rewrite exact96099bb5lease. No source correction/third cycle/critique/original Review. Preserve normalized9path intent, protected upstream and73prior immutable artifacts. Then focused shared-write/quality validation, pinned publication, same-reviewer STOP."
   },
   "prioritized_follow_ups": [
     {
