@@ -1832,6 +1832,16 @@ missing deployment/data/model/photo/law prerequisites are tracked by #350.
   of staff. The demo data has a single manager role, so enabling there needs a
   second user with the `Programme Support Officer` role (Entra app role
   `ZavaForward.SupportOfficer`); the status reason says so.
+  `DPIA_APPROVED` rejects missing/blank values and bare `yes`, `true`, `on` or
+  `1`, ignoring case and surrounding whitespace. Use a reference such as `D1`
+  or `DPIA-2026-007`; valid references keep the existing whitespace trimming.
+  Rejection prevents new enabling requests, activations, notice acknowledgements
+  and time entries, even with matching historical controls; history is retained.
+  Changing to a different valid reference still requires a new request and
+  activation. This checks reference presence only, not authenticity or legal
+  approval. Actual DPIA review, staff consultation, notice approval and
+  administrator ratification remain human prerequisites, not results of this
+  string check.
 * Download any list for Excel, and check a spreadsheet: columns are matched
   for you, rows to fix are listed and the file is never changed.
 

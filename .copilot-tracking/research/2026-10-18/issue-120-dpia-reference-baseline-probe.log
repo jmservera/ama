@@ -1,0 +1,39 @@
+test_existing_http (__main__.ReferenceProbe.test_existing_http) ... FAIL
+test_real_timecapture (__main__.ReferenceProbe.test_real_timecapture) ... FAIL
+
+======================================================================
+FAIL: test_existing_http (__main__.ReferenceProbe.test_existing_http)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-120-dpia/.copilot-tracking/research/2026-10-18/issue-120-dpia-reference-probe.py", line 95, in test_existing_http
+    self.assertEqual(outcomes, [403, 403, 403, 403])
+AssertionError: Lists differ: [200, 200, 200, 200] != [403, 403, 403, 403]
+
+First differing element 0:
+200
+403
+
+- [200, 200, 200, 200]
++ [403, 403, 403, 403]
+
+======================================================================
+FAIL: test_real_timecapture (__main__.ReferenceProbe.test_real_timecapture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-120-dpia/.copilot-tracking/research/2026-10-18/issue-120-dpia-reference-probe.py", line 47, in test_real_timecapture
+    self.assertEqual(denied, ["request", "activate", "acknowledge", "record"])
+AssertionError: Lists differ: [] != ['request', 'activate', 'acknowledge', 'record']
+
+Second list contains 4 additional elements.
+First extra element 0:
+'request'
+
+- []
++ ['request', 'activate', 'acknowledge', 'record']
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.622s
+
+FAILED (failures=2)
+{"audit_actions": ["time_capture_enable_requested", "time_capture_enabled", "time_notice_acknowledged"], "local_store_created": true, "probe": "http", "statuses": [200, 200, 200, 200]}
+{"denied": [], "local_store_created": true, "probe": "direct", "status": {"acknowledged": true, "activated": true, "activated_at": "2026-10-18T09:06", "activated_by": "support@example.test", "activated_role": "Programme Support Officer", "activities": ["Calling the resident", "Case notes and updates", "Booking visits", "Funding and evidence", "Checking safety issues", "Handover and coordination", "Other"], "consultation_recorded": true, "dpia_recorded": true, "enabled": true, "flag_on": true, "min_group": 5, "notice": "Time capture records the minutes you choose to enter against a case and an activity. Only you can see your own entries. Managers see totals by activity, never by person, and groups of fewer than the minimum number of people are hidden. The entries are used to measure the process, not to rate you. Entering time is your choice to switch on case by case once you have read this notice.", "notice_approved": true, "notice_version": "draft-1", "reason": "", "requested": true, "requested_by": "manager@example.test", "requested_role": "Retrofit Programme Manager", "storage": "a local SQLite file (/tmp/tmplimd9wih/unused/time.sqlite; JSON demo store only)"}}

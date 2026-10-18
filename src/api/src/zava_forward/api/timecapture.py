@@ -3,8 +3,10 @@
 It records nothing unless all of these hold:
 
 * ZF_TIME_CAPTURE=on (the feature flag, off by default);
-* DPIA_APPROVED=<reference of the approved DPIA> (it cannot be a bare yes: the
-  reference is stored with every entry);
+* DPIA_APPROVED=<reference of the approved DPIA> (bare yes, true, on and 1 are
+  refused, ignoring case and surrounding whitespace; the trimmed reference is
+  stored with every entry). This checks reference presence, not authenticity
+  or legal approval;
 * ZF_TIME_CONSULTATION=<reference of the completed staff consultation>, also
   stored with every entry;
 * ZF_TIME_NOTICE_APPROVED=<reference of the approval of the staff notice
@@ -133,14 +135,15 @@ class TimeCapture:
     def status(self, user=None):
         flag = (self.env.get("ZF_TIME_CAPTURE") or "").strip().lower() in ("1", "on", "true", "yes")
         dpia = (self.env.get("DPIA_APPROVED") or "").strip()
+        dpia_recorded = bool(dpia) and dpia.casefold() not in ("yes", "true", "on", "1")
         consult = (self.env.get("ZF_TIME_CONSULTATION") or "").strip()
         notice = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
         req = self.request()
         act = self.activation()
         if not flag:
             why = "Time capture is switched off."
-        elif not dpia:
-            why = "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED)."
+        elif not dpia_recorded:
+            why = "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED), not a boolean flag such as yes, true, on or 1."
         elif not consult:
             why = "Time capture cannot be switched on until the staff consultation is recorded (ZF_TIME_CONSULTATION)."
         elif not notice:
@@ -151,7 +154,7 @@ class TimeCapture:
             why = f"Time capture is requested by {req['role']}; it needs enabling by a manager in a different role."
         else:
             why = ""
-        out = dict(enabled=not why, flag_on=flag, dpia_recorded=bool(dpia), consultation_recorded=bool(consult),
+        out = dict(enabled=not why, flag_on=flag, dpia_recorded=dpia_recorded, consultation_recorded=bool(consult),
                    notice_approved=bool(notice), requested=bool(req), requested_by=req and req["by"], requested_role=req and req["role"],
                    activated=bool(act), activated_by=act and act["by"], activated_at=act and act["at"], activated_role=act and act["role"],
                    reason=why, activities=list(ACTIVITIES), min_group=self.min_group(), notice_version=NOTICE_VERSION, storage=self.where)
