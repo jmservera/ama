@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 
 * Task ID: 115
 * Task slug: issue-115-digest-anchor
-* Planning status: Source/local validation and one original independent Review complete; publication remaining
+* Planning status: Delivery complete; stopped for coordinator independent exact-final-head review
 * Plan date: 2026-10-18
 * Phase details: .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-115-digest-anchor-plan-critique.md
@@ -39,8 +39,9 @@ Actual lock, retention authority, scheduling and monitoring acceptance remain op
 
 None for bounded source correction. Cloud and policy decisions are outside scope.
 Original independent Review is Complete / Residual work, bounded source
-Conformant with no implementation defects. RV-001 publication/final-head handoff
-remains; RV-002/003/004 are operational and first-publication trust follow-ups.
+Conformant with no implementation defects. RV-001 publication portion completed
+on PR404; coordinator exact-final-head acceptance remains open. RV-002/003/004
+are operational and first-publication trust follow-ups, not performed here.
 
 ## User Decisions and Requirements
 
@@ -145,7 +146,7 @@ Change only absent-evidence predicate/problem wording and related README sentenc
 Depends on P01-T01 failing evidence. Details: P01-T02.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, reconcile and hand off for one original Review
+### [x] P02: Validate, reconcile and hand off for one original Review
 
 Dependency: P01 complete.
 
@@ -156,7 +157,7 @@ Focused/coupled tests, full orchestrator discovery, configured Ruff/format/mypy,
 diff check and hashes; reconcile task markers and changes. Details: P02-T01.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Freeze original independent Review and publish delivery
+#### [x] P02-T02: Freeze original independent Review and publish delivery
 
 One original independent Review, immutable receipts, max two separate correction
 cycles only if needed. Commit, push, open non-closing PR and reconcile publication.
@@ -205,8 +206,9 @@ subsequent failing-first and validation commands use the bound workspace root.
 
 ## Follow-Up Items
 
-* Coordinator independent exact-head review after publication; outside this
-  original Review and owned by coordinator.
+* Coordinator independent exact-head review on published PR404; outside this
+  original Review and owned by coordinator. Publication portion of RV-001 is
+  complete; this is not a second independent acceptance claim.
 * Owner-controlled retention duration/irreversible lock and real scheduled
   verifier/alert/recovery acceptance; outside offline source correction.
 
@@ -215,6 +217,9 @@ subsequent failing-first and validation commands use the bound workspace root.
 Source implementation P01/P02-T01 is complete: failing-first17/four failures,
 passing focused21 and full orchestrator40, configured Ruff/format/mypy passed.
 Single original Review executed Complete / Residual work; source Conformant,
-zero source-correction cycles. P02-T02 remains active only for actual publication
-and frozen delivery receipt, not source-readiness. Changes owns commands/hashes.
-No ordinary approval blocker. Coordinator exact-final-head review remains separate.
+zero source-correction cycles. P02-T02 complete: originals frozen and committed,
+branch pushed and PR404 opened to unchanged pinned main with actual identity
+readback; final evidence-only receipt records publication, not a new assessment.
+Changes and delivery receipt own commands/hashes/publication facts.
+Stopped per user instruction. Coordinator complete independent exact-final-head
+review remains separate; no issue closure or operational acceptance.

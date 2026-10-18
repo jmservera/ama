@@ -15,8 +15,9 @@ Branch: fix/digest-anchor-evidence-115.
 
 ## Execution Status
 
-Partial full-plan invocation; source implementation and local checks Complete.
-Completed P01-T01/T02, P01 and P02-T01. Remaining P02-T02 publication and its containing P02; original Review complete. No production edits occurred
+Complete full-plan delivery. P01-T01/T02, P01, P02-T01/T02 and P02 complete.
+Original Review Complete / Residual work, source Conformant; independent
+coordinator exact-final-head review and operational follow-ups remain open. No production edits occurred
 before failing-first evidence.
 Approved writes: digest_blob.py, existing fake suite, narrow orchestrator guide,
 and this task's dated artifacts. No runtime services or cloud/private data.
@@ -218,6 +219,42 @@ Its get_changed_files tool is unavailable, so staged CLI inspection provides
 the evidence instead. Explicit user publication workflow takes precedence
 over that skill's isolated no-push scope.
 
+## P02-T02 Actual Publication and Stop
+
+Source candidate: d53a7c68245dc708c628bb37853c308d9811fcbe.
+Original-Review/evidence delivery commit:
+211458f94c25a705971b0f912b1990f0b8de7aec.
+`git push --set-upstream origin fix/digest-anchor-evidence-115` exit0.
+`gh pr create --repo jmservera/ama --base main --head fix/digest-anchor-evidence-115
+--title 'fix(orchestrator): require recognized remote digest anchors' --body ...`
+exit0, actual PR https://github.com/jmservera/ama/pull/404, OPEN, non-draft.
+Body uses Refs #115 and no issue-closing instruction.
+Main readback immediately before and after initial push:
+c803614e8ca7c604e509f1c088f8b8f90f3063ef, unchanged. Initial remote topic
+head and PR head both211458f94c25a705971b0f912b1990f0b8de7aec.
+No integration, rebase, force-push, merge or other issue/PR/board/settings action.
+
+Frozen originals checked with sha256sum -c (both OK); `git diff --exit-code
+d53a7c68245dc708c628bb37853c308d9811fcbe -- src` exit0. All subsequent delivery
+changes are task evidence/state only. Exact final head of the receipt-containing
+commit is returned via Git/PR metadata and final response, not recursively
+embedded in its own bytes. Actual final publication receipt:
+.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-delivery.md.
+
+Hosted checks on initial211458f9 were in progress: test/validate/image/mssql,
+image-paths/src-namespace; src-no-working-data succeeded. Not claimed green or
+as final-head acceptance. Publication triggers existing CI only; no local
+SQL Server/Docker/Azure validation or deployment was performed by this task.
+Later sync may restart checks; live PR status is authoritative.
+
+Pull-request helper installation uses rules/ rather than its documented missing
+instructions/ path; content-policy guard read, no concern identified in body.
+No PR template found in .github/docs. Additional generic PR-reference files and
+parallel PR reviews were intentionally not created: user requires this dated
+bounded artifact set and exactly one original independent Review, already done.
+Canonical PR body is the dated changes artifact, not generic shared pr.md.
+These are workflow-shape adaptations, not omitted source validation.
+
 ## Blockers, Remaining Work and Follow-Up Items
 
 No bounded-source blocker. Remaining markers above. Coordinator independent
@@ -226,9 +263,10 @@ scheduler/monitoring/recovery gates remain outside this correction.
 
 ## Return-to-Caller State
 
-Automatic RPI assessment complete in Follow-up; source implementation and one
-original Review Complete, overall Review outcome Residual work (source
-Conformant). Full delivery plan Partial pending P02-T02 actual publication.
+Automatic RPI task and full delivery plan completed in Follow-up; session
+stopped per explicit user instruction after publication. Source implementation
+and one original Review Complete; original overall outcome Residual work
+(source Conformant) remains unchanged. All task artifacts delivered.
 No source corrections, second critique/Review, schema redesign or operational
-authority inferred. Explicit user stop applies after publication, not a new
-child selection or additional automatic loop.
+authority inferred. Next owner is coordinator for complete independent
+exact-final-head review on PR404, not a new automatic child.

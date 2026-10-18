@@ -102,3 +102,13 @@ acceptance. No SQL/Docker/infra/IAM/Graph/retention-policy change, service,
 deployment, spending, production/private dataset access or irreversible action.
 No new mvp, loadcheck, web/KB inventory changes or issue/board/check-box updates.
 Do not merge: stop for coordinator complete independent exact-head review.
+
+## Actual Publication
+
+PR404 is OPEN at https://github.com/jmservera/ama/pull/404, targeting main.
+Initial publication head: `211458f94c25a705971b0f912b1990f0b8de7aec`.
+Main remained the pinned base before/after that push. Final receipt-only commit
+reconciles delivery and stopped state without changing source or frozen originals.
+Exact final head is appended from live Git/PR metadata below. Hosted checks are
+not presumed passed; coordinator complete independent exact-head review remains
+required. All task artifacts are committed, no merge or issue closure.

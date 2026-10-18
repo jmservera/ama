@@ -17,7 +17,7 @@ C1-C8/W1. No blocking unknowns; operational gates remain separate.
 | Phase | Intent | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Reproduce then correct only recognized-anchor absence | Complete | P01-T01, P01-T02 |
-| P02 | Local validation, one Review and authorized publication | Validation and original Review complete; publication remaining | P02-T01, P02-T02 |
+| P02 | Local validation, one Review and authorized publication | Complete, coordinator exact-final-head review remains separate | P02-T01, P02-T02 |
 
 Single original critique Complete / Revise, PC-001 applied below. No new critique
 or user choice needed. Frozen original remains unchanged.
@@ -109,4 +109,9 @@ state waiting for coordinator independent exact-head review.
 Actual source candidate d53a7c68245dc708c628bb37853c308d9811fcbe received the
 single original independent Review: Complete / Residual work, bounded source
 Conformant, no source defects. Zero source-correction cycles; original critique
-and Review frozen with hashes in changes. Only publication portion remains.
+and Review frozen with hashes in changes. Publication completed on
+https://github.com/jmservera/ama/pull/404, initial delivery commit
+211458f94c25a705971b0f912b1990f0b8de7aec; source bytes unchanged from candidate.
+Final evidence-only receipt reconciles actual publication and stop state.
+Source/policy acceptance has not changed. All task markers complete; coordinator
+exact-final-head review and RV-002/003/004 remain distinct external follow-ups.

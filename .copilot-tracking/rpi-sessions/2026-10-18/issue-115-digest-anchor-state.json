@@ -5,7 +5,7 @@
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
-  "session_status": "running",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-115-digest-anchor-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-115-digest-anchor-plan.md",
@@ -36,12 +36,12 @@
       "evidence": "critique SHA256 d1add2a5642689cb9a615f3aaa989871a3b405f7f5cab076689fdcc0110314e0; plan Critique Disposition"
     },
     {
-      "decision": "Source implementation complete: expected four behavioral failures before minimal guard; focused21/full orchestrator40 pass, configured Ruff/format/mypy pass. P02-T02 remains for original Review/publication.",
+      "decision": "At source handoff: expected four behavioral failures before minimal guard; focused21/full orchestrator40 pass, configured Ruff/format/mypy pass. P02-T02 then remained for original Review/publication; subsequently completed below.",
       "status": "verified",
       "evidence": ".copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-changes.md; before/focused/orchestrator/quality logs and frozen hashes"
     },
     {
-      "decision": "Source candidate committed d53a7c68245dc708c628bb37853c308d9811fcbe; start exactly one independent original Review. Later commits may reconcile receipts only unless separate authorized correction evidence is needed.",
+      "decision": "Source candidate committed d53a7c68245dc708c628bb37853c308d9811fcbe and handed to exactly one independent original Review, subsequently completed below. Later commits reconcile receipts only; no source correction was needed.",
       "status": "confirmed",
       "evidence": "Candidate commit includes source/tests/guide, Research/Plan/critique/changes/state and all validation logs; source hashes frozen in changes"
     },
@@ -49,10 +49,15 @@
       "decision": "Exactly one original independent Review executed Complete / Residual work on d53a7c68245dc708c628bb37853c308d9811fcbe; bounded source Conformant, no implementation defects. RV-001 delivery/final-head; RV-002 retention; RV-003 operations/recovery; RV-004 initial publication trust.",
       "status": "review-complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-115-digest-anchor-review.md SHA256 dc72719806ba648af00d34c9ef6b0c0d049ed87372d60ee49e959b328694186e; original unchanged"
+    },
+    {
+      "decision": "Published branch and opened PR404 to main; actual initial delivery head 211458f94c25a705971b0f912b1990f0b8de7aec, base still exact pinned c803614e8ca7c604e509f1c088f8b8f90f3063ef. No merge, closing keywords, source correction, rebase or force-push.",
+      "status": "published",
+      "evidence": "https://github.com/jmservera/ama/pull/404; git push and gh pr create succeeded; gh pr view and git ls-remote match. This stopped-state receipt is delivered by a final evidence-only commit; exact final hash is reported in live PR body/metadata and final handoff, avoiding self-hash recursion."
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "RPI assessment complete; finish already-authorized delivery/publication P02-T02, then stop per user instruction for coordinator exact-final-head review."},
+  "next_action": {"phase": "Follow-up", "action": "Stopped per explicit user instruction. Coordinator must complete independent exact-final-head review of https://github.com/jmservera/ama/pull/404. No child work, operational action or second original Review authorized."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator complete independent exact-final-head review", "rationale": "Required next acceptance boundary; source candidate Review cannot assess later delivery receipts.", "evidence": "RV-001; user stop instruction"},
     {"rank": 2, "task": "Owner-approved retention and immutable lock evidence", "rationale": "Literal issue acceptance remains unmet; policy choice/irreversible action outside this correction.", "evidence": "RV-002; issue115 AC1"},
