@@ -11,7 +11,13 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from dataset import DATA, RESIDENT_BINDINGS, supplied_contract_fixture, supplied_resident_fixture
+from dataset import (
+    DATA,
+    RESIDENT_BINDINGS,
+    supplied_appointment_fixture,
+    supplied_contract_fixture,
+    supplied_resident_fixture,
+)
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
 
@@ -182,11 +188,119 @@ class ProcurementApi(unittest.TestCase):
             ("correct", dict(reason="SYN", resident_bindings=RESIDENT_BINDINGS)),
             ("withdraw", dict(reason="SYN")),
         ):
+            if action == "appointment" and body["outcome"] == "Booked":
+                supplied_appointment_fixture(self.store, self.manager, "WO-0001", body["date"])
             self.assertEqual(self.call(route + action, body)[0], 200, action)
         versions = self.call("/api/workorders")[1][0]["versions"]
         self.assertEqual([row["version"] for row in versions], list(range(1, 9)))
         self.assertTrue(all(row["issuer_email"] == self.manager["email"] for row in versions))
         self.assertEqual(versions[0]["appointments"], [])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_appointment_controls_http_provenance_denials_and_committed_response(self) -> None:
+        from unittest.mock import patch
+
+        self.call(f"/api/packages/{self.pid}/capacity", self.capacity())
+        self.call("/api/workorders", self.issue())
+        route = "/api/workorders/WO-0001/appointment-control"
+        code, result = self.call("/api/workorders")
+        self.assertEqual(result[0]["appointment_control"]["status"], "Unknown")
+        ref = supplied_appointment_fixture(self.store, self.manager, "WO-0001", confirmations=False)
+        self.assertEqual(
+            self.call(route, dict(action="confirm", event_ref="FORGED", status="Committed"))[0], 400
+        )
+        for actor in ("kim", "kai"):
+            self.assertEqual(self.call(route, dict(action="confirm"), actor)[0], 403)
+        for kind, person in (
+            ("resident", "Pat Test"),
+            ("staff", self.manager["name"]),
+            ("capacity", "SYN supplier"),
+        ):
+            body = dict(
+                action="confirm",
+                event_ref="HTTP-" + kind,
+                offer_id=ref,
+                kind=kind,
+                person=person,
+                source="SYN recorded source",
+                channel="Phone, manual",
+            )
+            if kind == "capacity":
+                with patch.object(
+                    self.store, "list_packages", side_effect=OSError("SYN projection")
+                ):
+                    code, result = self.call(route, body)
+                self.assertEqual((code, result["outcome"]), (409, "committed"))
+                # Retry reconciles the already consumed reference, not a new confirmation.
+            code, result = self.call(route, body)
+            self.assertEqual(code, 200)
+            self.assertEqual(
+                result["work_orders"][0]["appointment_control"]["status"],
+                "Committed" if kind == "capacity" else "Offer",
+            )
+        self.assertEqual(len(self.store._work_order("WO-0001")["appointment_events"]), 4)
+
+    def test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry(self) -> None:
+        from unittest.mock import patch
+
+        self.call(f"/api/packages/{self.pid}/capacity", self.capacity())
+        self.call("/api/workorders", self.issue())
+        route = "/api/workorders/WO-0001/appointment-control"
+        supplied_appointment_fixture(self.store, self.manager, "WO-0001")
+        state = self.call("/api/workorders")[1][0]["appointment_control"]
+        update = self.store.detail("ZF-1")["resident_update"]
+        body = dict(
+            action="close_case",
+            event_ref="HTTP-HUMAN-CLOSE",
+            case_id="ZF-1",
+            expected_case_version=state["case_version"],
+            confirmed=True,
+            source="SYN supplied human closure",
+            source_version="SYN-1",
+            reason="SYN human decision",
+        )
+        for actor in ("kim", "kai"):
+            self.assertEqual(self.call(route, body, actor)[0], 403)
+        for delta in (
+            {"source": ""},
+            {"reason": ""},
+            {"source_version": ""},
+            {"confirmed": False},
+            {"case_id": "ZF-2"},
+            {"at": "2000-01-01"},
+        ):
+            self.assertEqual(self.call(route, dict(body, **delta))[0], 400)
+        self.assertEqual(self.call(route, dict(body, expected_case_version="stale"))[0], 409)
+        self.assertFalse(self.store.detail("ZF-1")["closed"])
+        with patch.object(
+            self.store, "list_packages", side_effect=OSError("SYN closure projection")
+        ):
+            code, result = self.call(route, body)
+        self.assertEqual((code, result["outcome"]), (409, "committed"))
+        code, result = self.call(route, body)
+        self.assertEqual(code, 200)
+        state = result["work_orders"][0]["appointment_control"]
+        self.assertTrue(state["case_closed"])
+        self.assertEqual(state["eligible_no_access"], 0)
+        self.assertEqual(len(state["closure_history"]), 1)
+        self.assertEqual(state["closure_history"][0]["actor"]["email"], self.manager["email"])
+        self.assertEqual(self.store.detail("ZF-1")["resident_update"], update)
+        self.assertEqual(
+            self.call(
+                route,
+                dict(body, event_ref="CLOSE-AGAIN", expected_case_version=state["case_version"]),
+            )[0],
+            400,
+        )
+        self.store.reopen_case(
+            self.manager,
+            "ZF-1",
+            "SYN human reopen",
+            metadata=dict(source="SYN review", next_action="Human review"),
+        )
+        self.assertEqual(self.call(route, body)[0], 200)
+        self.assertFalse(self.store.detail("ZF-1")["closed"])
+        self.assertEqual(len(self.store.cases["ZF-1"]["home_case_closures"]), 1)
         self.assertTrue(self.store.verify_audit())
 
 

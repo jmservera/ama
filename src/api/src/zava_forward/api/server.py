@@ -141,6 +141,7 @@ QUALITY_ACTIONS = {
     "quality-aftercare": lambda s, u, cid, b: s.add_aftercare(u, cid, b.get("index"), b.get("note")),
 }
 WO_ACTIONS = {
+    "appointment-control": lambda s, u, wid, b: s.appointment_control(u, wid, b),
     "reissue": lambda s, u, wid, b: s.reissue_work_order(u, wid, b.get("scope"), b.get("reason"), b.get("resident_bindings")),
     "appointment": lambda s, u, wid, b: s.record_wo_appointment(u, wid, b.get("outcome"), b.get("date", "")),
     "complete": lambda s, u, wid, b: s.complete_work_order(u, wid, b.get("note", "")),
@@ -741,7 +742,11 @@ def make_handler(app):
                 WO_ACTIONS[rest[1]](s, u, rest[0], body)
             else:
                 raise KeyError("route")
-            return dict(packages=s.list_packages(u), work_orders=s.list_work_orders(u))
+            try:
+                return dict(packages=s.list_packages(u), work_orders=s.list_work_orders(u))
+            except Exception as error:
+                from zava_forward.core.appointments import AppointmentCommittedError
+                raise AppointmentCommittedError("The procurement change committed. Reload its history; do not repeat it.") from error
 
         def do_POST(self):
             url = urlparse(self.path)
@@ -844,7 +849,12 @@ def make_handler(app):
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
-                    return self._json(200, self._procurement(s, u, parts, body))
+                    from zava_forward.core.appointments import AppointmentCommittedError
+                    try:
+                        result = self._procurement(s, u, parts, body)
+                    except AppointmentCommittedError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
+                    return self._json(200, result)
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
                     return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:

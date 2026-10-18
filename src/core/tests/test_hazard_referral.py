@@ -13,7 +13,13 @@ from typing import Any
 from unittest.mock import patch
 
 from building_fixture import fixture, hold
-from dataset import DATA, RESIDENT_BINDINGS, supplied_contract_fixture, supplied_resident_fixture
+from dataset import (
+    DATA,
+    RESIDENT_BINDINGS,
+    supplied_appointment_fixture,
+    supplied_contract_fixture,
+    supplied_resident_fixture,
+)
 from zava_forward.core import ai_tasks, projection
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError, Store
@@ -311,6 +317,7 @@ class JsonHazardReferral(unittest.TestCase):
         wid = self.store.issue_work_order(
             self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
         )
+        supplied_appointment_fixture(self.store, self.pam, wid)
         self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.store.detail("ZF-3")["stage"], "Install booked")
@@ -781,7 +788,15 @@ class SqlHazardReferral(JsonHazardReferral):
                     wid = a.issue_work_order(
                         self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
                     )
-                    a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
+                    supplied_appointment_fixture(
+                        a, self.pam, wid, "2099-01-02" if transition == "book" else "2099-01-01"
+                    )
+                    a.record_wo_appointment(
+                        self.pam,
+                        wid,
+                        "Booked",
+                        "2099-01-02" if transition == "book" else "2099-01-01",
+                    )
                 if transition == "correct":
                     a.complete_work_order(self.pam, wid)
                 if transition in ("accept", "handover", "signoff"):
@@ -867,6 +882,7 @@ class SqlHazardReferral(JsonHazardReferral):
         details = supplied_contract_fixture(a, pid, self.pam)
         a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
         wid = a.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(a, self.pam, wid)
         a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         before = copy.deepcopy(a.data["procurement"])
         b = self.sql_store("stale")
@@ -909,6 +925,7 @@ class SqlHazardReferral(JsonHazardReferral):
         details = supplied_contract_fixture(a, pid, self.pam)
         a.set_capacity(self.pam, pid, "Test Ltd", 5, 5, "SYN-CAPACITY", details)
         wid = a.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(a, self.pam, wid)
         a.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         b = self.sql_store("serialized")
         statements: list[str] = []

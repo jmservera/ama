@@ -606,6 +606,8 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
+                from .appointments import mark_committed as appointment_committed
+                appointment_committed(self)
                 from .document_rescan import mark_committed as rescan_committed
                 rescan_committed(self)
                 mark_committed(self)
@@ -632,7 +634,9 @@ class SqlStore(Store):
                         )
                 raise
             except BaseException:
-                self.db.execute("ROLLBACK")
+                context = getattr(self.local, "procurement_validation", None)
+                if not context or not context.get("persisted"):
+                    self.db.execute("ROLLBACK")
                 raise
             self._proc_snap.update(proc_body)
             for cid, body in changed:

@@ -6,6 +6,58 @@ ms.date: 2026-10-18
 ms.topic: reference
 ---
 
+## Appointment agreements and visit evidence (#87)
+
+`appointment_control(user, work_order_id, body)` records explicit offers, separate
+resident/staff/current committed-capacity confirmations, bounded appointment-only
+representative authority, visit facts and provisional configuration. Each action
+requires an event reference; identical retries reconcile the recorded action and
+conflicting reuse fails. `appointment_control` in work-order projections derives
+Unknown/Offer/Committed on the server. Historical Booked does not confer agreement.
+Direct booking, completion and case advance require the current agreement as well
+as existing capacity, works consent, safety and building gates.
+
+Offers bind the actual home, work-order scope, resident scope revisions, contract,
+package period, date and visit period. Replacement requires the current offer ID.
+Capacity/authority changes invalidate dependent evidence without clearing unrelated
+resident decisions or the independently owned resident-update/remedy records.
+Create the named #88 resident-update commitment first. Record options, household
+constraints, pause/deferral and minimum-necessary provider instructions; provider
+projections omit household reasons, confirmation sources and investigations.
+Bundles need explicit resident agreement and scope-bound competence evidence.
+Nothing schedules or sends anything, and urgent hazard intake remains independent.
+
+Verified resident no-access counts only once per explicitly confirmed visit while
+the underlying home case has `closed is False`. Provider/cancel/reschedule/Unknown,
+unverified and unconfirmed events never qualify. The versioned exercise threshold
+defaults provisionally to 5; count strictly greater than the threshold creates one
+owned human investigation, not refusal, withdrawal, sanctions or priority changes.
+Human checks record confirmation, notice, attendance, adjustments, contact and
+circumstances as evidence or explicit Unknown, corrective action and next update.
+Preference-breach and abortive facts have independent overlapping cause/owner
+counts; their reporting threshold remains Unknown.
+
+`appointment_control` action `close_case` records only a supplied human decision
+to close the existing underlying home case (PRD DD-006/AC-033, BRD RULE-006/AC-025,
+addendum EXA-014). Current registered manager and contract appointment authority,
+exact `case_id`, the staff summary's `case_version` as `expected_case_version`, `confirmed: true`,
+unique `event_ref`, decision `source`, `source_version` and human `reason` are
+required. Actor/time and the controlled-event history are server-recorded.
+Closure atomically sets the existing `closed` field and resets only active
+no-access counting; visit/configuration histories, consumed IDs and prior human
+investigation remain. Outstanding resident updates, remedies and other decisions
+are unchanged. Task disposition, pause, order/appointment completion, remedy
+closure, imported closed flags and reopening never reset counts or permit replay.
+Existing reopening remains separate. New eligible visits after reopening use the
+new count boundary. Recording closure is not technical handover, legal/financial
+approval, agent-decided readiness or ratified live closure policy.
+
+SQL writes recheck procurement, case rowversions and current contract authority
+inside the writer transaction. Failed pending audit rolls back. A committed change
+whose acknowledgement fails raises `AppointmentCommittedError`; reload history
+rather than executing another action. Focused synthetic checks extend
+`tests/test_quality_procurement.py` and the shared explicit appointment fixture.
+
 ## Read-only coordinator populations (#101)
 
 Original Review RV-001 exposed false denial for registered staff whose stored

@@ -14,7 +14,13 @@ from pathlib import Path
 from typing import Any, Self
 from unittest.mock import patch
 
-from dataset import DATA, RESIDENT_BINDINGS, change_metadata, supplied_contract_fixture
+from dataset import (
+    DATA,
+    RESIDENT_BINDINGS,
+    change_metadata,
+    supplied_appointment_fixture,
+    supplied_contract_fixture,
+)
 from zava_forward.core import progress
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.quality import checklist_for
@@ -228,6 +234,7 @@ class JsonCapture(unittest.TestCase):
         wid = self.store.issue_work_order(
             self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS
         )
+        supplied_appointment_fixture(self.store, self.pam, wid)
         self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
 
     def offer(self) -> None:

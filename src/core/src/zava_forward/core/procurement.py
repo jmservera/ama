@@ -12,12 +12,14 @@ not a decision.
 import hashlib
 import json
 import logging
+import os
 import re
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import date
 
 from . import projection
+from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
 from .documents import DocumentStoreError
 from .workflows import MANAGER_ROLES, _now, _today
@@ -70,7 +72,7 @@ def validate_sql(store):
             raise PermissionError("Contract delegation changed before confirmation. Ask the contract manager to review it again.")
 
 
-class ProcurementMixin:
+class ProcurementMixin(AppointmentMixin):
     def _proc(self):
         return self.data.setdefault("procurement", dict(packages=[], work_orders=[]))
 
@@ -113,16 +115,24 @@ class ProcurementMixin:
     @contextmanager
     def _proc_operation(self, user, action, pid=None, wid=None):
         with self.lock:
+            if hasattr(self, "db"):
+                self._touched()
             before = deepcopy(self.data.get("procurement"))
+            case_before = None
+            pending = list(self.local.pending) if hasattr(self, "db") else []
+            audit_size = os.path.getsize(self.audit_path) if not hasattr(self, "db") and os.path.exists(self.audit_path) else 0
+            audit_head = getattr(self, "last_hash", None)
             context = None
             try:
                 actor = self._need_manager(user, action)
                 w = self._work_order(wid) if wid else None
+                if w:
+                    case_before = (w["case_id"], deepcopy(self._case(w["case_id"])))
                 p = self._package(w["package"] if w else pid) if pid or w else None
                 authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action != "capacity" else None
                 context = dict(user=deepcopy(user), actor=actor, authority=authority, cases={},
                                snapshot=self._proc_snap.get("procurement") if hasattr(self, "db") else None,
-                               authorities=[])
+                               authorities=[], persisted=False)
                 if authority:
                     context["authorities"].append((actor, deepcopy(p), action, w["contractor"] if w else None, authority))
                 if hasattr(self, "local"):
@@ -133,16 +143,29 @@ class ProcurementMixin:
                 if hasattr(self, "db"):
                     try:
                         with self.dblock:
-                            self._discard()
+                            self._discard(() if context and context.get("persisted") else pending)
                     except Exception:
                         error.add_note("Procurement recovery failed; reload to establish the outcome.")
                         logging.getLogger(__name__).exception("Procurement SQL recovery failed")
+                elif context and context.get("persisted"):
+                    pass
                 elif before is None:
                     self.data.pop("procurement", None)
                 else:
                     self.data["procurement"] = before
-                if not hasattr(self, "db") and context is not None and context.get("saved"):
-                    self.save()
+                if not hasattr(self, "db") and context is not None and not context.get("persisted"):
+                    if case_before is not None:
+                        case = self.cases[case_before[0]]
+                        case.clear()
+                        case.update(case_before[1])
+                    if os.path.exists(self.audit_path):
+                        with open(self.audit_path, "r+b") as audit:
+                            audit.truncate(audit_size)
+                    self.last_hash = audit_head
+                    from .store import Store
+                    Store.save(self)
+                if context and context.get("persisted"):
+                    raise AppointmentCommittedError("The procurement change committed, but acknowledgement failed. Reload its history before another action.") from error
                 raise
             finally:
                 self._proc_context = None
@@ -154,10 +177,10 @@ class ProcurementMixin:
             self.audit(user["email"], action, cid, detail)
             self.save()
         else:
-            self.save()
-            if getattr(self, "_proc_context", None) is not None:
-                self._proc_context["saved"] = True
             self.audit(user["email"], action, cid, detail)
+            self.save()
+        if getattr(self, "_proc_context", None) is not None:
+            self._proc_context["persisted"] = True
 
     def _capacity_source(self, details):
         cid, doc_id = details.get("source_case_id"), details.get("document_id")
@@ -382,6 +405,9 @@ class ProcurementMixin:
             if w["state"] not in (ISSUED, APPOINTED):
                 raise ValueError(f"This work order is '{w['state']}'. Appointments can only be recorded while it is open.")
             if outcome == "Booked":
+                self.require_appointment_commitment(w)
+                if when != w["appointment_offer"]["date"]:
+                    raise ValueError("Booked date must match the confirmed appointment offer.")
                 self._existing_capacity(w, when)
                 self.require_safety_clear(self.cases[w["case_id"]])
                 self._resident_work_order_clear(w)
@@ -390,6 +416,8 @@ class ProcurementMixin:
                     self._wo_move(w, APPOINTED, user, f"Booked {when}")
             elif w["state"] == APPOINTED:
                 self._wo_move(w, ISSUED, user, outcome)
+            if outcome != "Booked" and w.get("appointment_offer"):
+                w["appointment_offer"]["ended"] = True
             w["appointments"].append(dict(outcome=outcome, date=when, by=user["name"], at=_now()))
             cur = w["versions"][-1]
             self._new_version(w, user, cur["scope"], f"Appointment: {outcome}", cur.get("resident_bindings"))
@@ -399,6 +427,7 @@ class ProcurementMixin:
         self._need_manager(user, "record completion")
         with self._proc_operation(user, "complete", wid=wid):
             w = self._work_order(wid)
+            self.require_appointment_commitment(w)
             self._existing_capacity(w)
             self.require_safety_clear(self.cases[w["case_id"]])
             self._resident_work_order_clear(w)
@@ -450,6 +479,7 @@ class ProcurementMixin:
                    measures=", ".join(b["measure"] for b in bindings) if bindings else "Unknown (resident scope confirmation needed)",
                    needs_notice=projection.needs_notice(c), named_contact=c["owner"], state=w["state"],
                    version=cur["version"], scope=cur["scope"],
+                   appointment_control=self.appointment_summary(w, contractor_view),
                    appointments=[{k: a[k] for k in ("outcome", "date")} for a in w["appointments"]])
         if not contractor_view:
             out.update(contractor=w["contractor"], issued_by=cur["issued_by"], issued_at=cur["issued_at"], versions=w["versions"],
@@ -506,8 +536,8 @@ class ProcurementMixin:
         if len(orders) != 1 or orders[0]["state"] != APPOINTED:
             raise ValueError("A single evidenced work order with a confirmed appointment is required. Ask the contract manager to issue and book it.")
         w = orders[0]
-        if not w["appointments"] or w["appointments"][-1]["outcome"] != "Booked":
-            raise ValueError("The latest work-order appointment is not confirmed.")
+        self.require_appointment_commitment(w)
+        when = w["appointment_offer"]["date"]
         cur = w["versions"][-1]
         actor = self.staff.get(cur.get("issuer_email", ""))
         if hasattr(self, "db"):
@@ -515,16 +545,19 @@ class ProcurementMixin:
             actor = json.loads(row[0]) if row else None
         if not actor or actor.get("role") not in MANAGER_ROLES:
             raise PermissionError("The booked order needs a current named contract issuer.")
-        if self._contract_authority(actor, self._package(w["package"]), "appointment", w["contractor"]) != cur.get("authority"):
+        staff_confirmation = w["appointment_offer"]["confirmations"]["staff"]
+        actor = staff_confirmation["actor"]
+        if self._contract_authority(actor, self._package(w["package"]), "appointment", w["contractor"]) != staff_confirmation["authority"]:
             raise PermissionError("Booked order authority changed. Ask the contract manager to confirm again.")
         if hasattr(self, "local"):
             context = dict(user=deepcopy(actor), actor=deepcopy(actor), cases={},
                            snapshot=self._proc_snap.get("procurement"),
-                           authorities=[(deepcopy(actor), deepcopy(self._package(w["package"])), "appointment", w["contractor"], cur["authority"])])
+                           authorities=[(deepcopy(actor), deepcopy(self._package(w["package"])), "appointment", w["contractor"], staff_confirmation["authority"])])
             self.local.procurement_validation = context
             self._proc_context = context
         try:
-            self._existing_capacity(w, w["appointments"][-1]["date"])
+            self.require_appointment_commitment(w)
+            self._existing_capacity(w, when)
             self._resident_work_order_clear(w)
         finally:
             self._proc_context = None

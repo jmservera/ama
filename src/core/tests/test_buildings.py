@@ -7,6 +7,7 @@ from copy import deepcopy
 from typing import Any
 
 from building_fixture import fixture, hold, open_store
+from dataset import supplied_appointment_fixture
 from zava_forward.core import buildings
 from zava_forward.core.store import ConflictError, GateError
 
@@ -120,6 +121,7 @@ class BuildingTests(unittest.TestCase):
                         "ZF-3",
                         resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
                     )
+                    supplied_appointment_fixture(store, manager, sibling)
                     store.record_wo_appointment(manager, sibling, "Booked", "2099-01-01")
                     store.advance(manager, "ZF-3")
                     self.assertEqual(store.detail("ZF-3")["stage"], "Install booked")

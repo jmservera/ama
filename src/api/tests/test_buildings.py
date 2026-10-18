@@ -11,6 +11,7 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from building_fixture import fixture, hold, open_store
+from dataset import supplied_appointment_fixture
 
 from zava_forward.api.server import App, make_handler
 
@@ -140,6 +141,7 @@ class BuildingHttpTests(unittest.TestCase):
             "ZF-3",
             resident_bindings=[dict(measure="Loft insulation", context_revision=1)],
         )
+        supplied_appointment_fixture(self.store, manager, sibling)
         self.store.record_wo_appointment(manager, sibling, "Booked", "2099-01-01")
         self.assertEqual(self.call("/api/cases/ZF-3/advance", cookie, {})[0], 200)
         code, raw, _ = self.call("/api/assistants", cookie)

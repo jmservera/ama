@@ -15,7 +15,7 @@ from threading import Barrier
 from typing import Any
 from unittest.mock import patch
 
-from dataset import DATA, supplied_contract_fixture
+from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
 from zava_forward.core import ai_tasks, controls, projection
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
@@ -590,6 +590,7 @@ class JsonResidentDecisions(unittest.TestCase):
             self.unchanged_failure(
                 lambda: self.store.record_wo_appointment(self.pam, wid_a, "Booked", "2098-01-01")
             )
+        supplied_appointment_fixture(self.store, self.pam, wid_b, "2098-01-01")
         self.store.record_wo_appointment(self.pam, wid_b, "Booked", "2098-01-01")
         self.store.complete_work_order(self.pam, wid_b)
         self.unchanged_failure(
@@ -602,6 +603,7 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         self.unchanged_failure(lambda: self.answer())
         self.answer(review_ref="SYN-HUMAN-REVIEW")
+        supplied_appointment_fixture(self.store, self.pam, wid_a, "2098-01-01")
         self.store.record_wo_appointment(self.pam, wid_a, "Booked", "2098-01-01")
         self.assertEqual(
             self.store.cases["ZF-1"]["resident_reviews"][MEASURES[0]]["status"],
@@ -1217,6 +1219,7 @@ class JsonResidentDecisions(unittest.TestCase):
         wid = self.store.issue_work_order(
             self.pam, pid, "ZF-1", resident_bindings=self.bind(MEASURES[0])
         )
+        supplied_appointment_fixture(self.store, self.pam, wid)
         self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.complete_work_order(self.pam, wid, "SYN physical completion only")
         order = self.store._work_order(wid)

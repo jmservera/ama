@@ -6032,3 +6032,37 @@ metadata when the knowledge base was created.
   index and [job guide](../../src/orchestrator/README.md#optional-driver-compatibility-correction-two-2026-10-18).
   No new full Review/self-Pass/merge/closure; draft PR #395 awaits coordinator.
   Defender, hosted schedule and real retention/approval authority remain unmet.
+
+### 2026-10-18: Appointment commitment controls (#87), partial engineering boundary
+
+* Extend the [existing resident journey](./research/ux/customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87)
+  with separate resident/staff/current-capacity appointment agreement, explicitly
+  bounded representative authority, household options/pause/owner and minimal
+  provider instructions. Preserve independent works consent and urgent safety.
+* Record provisional strict-greater-than default 5, idempotent verified visits,
+  human investigation checks and independent preference-breach/abortive cause/
+  owner facts. Reporting thresholds remain Unknown; no automatic consequence.
+* Source tracing found no authorized human underlying-home-case closure writer.
+  Reset remains unavailable/fail-closed; no task completion is treated as case
+  closure. Human closure/reset acceptance is not claimed. Update the index and
+  [core](../../src/core/README.md#appointment-agreements-and-visit-evidence-87)/
+  [API](../../src/api/README.md#appointment-control-api-and-manual-workbench-87)
+  guides. Synthetic engineering is not ratified live policy, legal approval,
+  resident validation or WCAG certification.
+
+### 2026-10-18: Appointment human closure writer clarification (#87)
+
+* Correct the preceding partial implementation boundary: PRD DD-006/AC-033,
+  BRD RULE-006/AC-025 and addendum EXA-014 explicitly authorize recording a supplied
+  human same-home-case closure/reset. Absence of a writer was an engineering seam,
+  not absence of source permission. Preserve that earlier entry as history.
+* Update the [resident journey](./research/ux/customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87),
+  index and [core](../../src/core/README.md#appointment-agreements-and-visit-evidence-87)/
+  [API](../../src/api/README.md#appointment-control-api-and-manual-workbench-87)
+  guides for the separate confirmed manual operation, current actor/authority,
+  optimistic case version and explicit human source/version/reason. Closure
+  atomically resets only the active count, retaining event/configuration and
+  investigation history, consumed references, resident updates and remedies.
+* No task/order/remedy completion or reopen implies reset. No general closure
+  policy, technical handover, legal/financial approval, live service activation,
+  resident validation or accessibility conformance is inferred.

@@ -1,0 +1,47 @@
+{
+  "task_id": "87",
+  "task_slug": "issue-87-appointment-controls",
+  "parent_task": {"task_id": "81", "task_slug": null},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-87-appointment-controls-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-87-appointment-controls-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-87-appointment-controls-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-87-appointment-controls-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full ordered bounded issue 87 RPI loop, with one plan critique and one original Review; coordinator does not implement source.",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-18; branch feat/appointment-commitment-controls-87 clean at 99056cae7bc679d2ace3e42c75f28577cfce8887, origin/main identical; no branch PR."
+    },
+    {
+      "decision": "No live appointments, messages, allocation, spend, legal clearance, approvals, private data or unrelated issue implementation.",
+      "status": "confirmed",
+      "evidence": "Explicit user boundaries. Normal own-branch push and PR authorized only after correctness gate; main advancement requires integration authorization."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Sixth verified eligible event triggers investigation; human case closure may reset active count while preserving history.",
+      "status": "verified",
+      "evidence": ".copilot-tracking/research/2026-10-18/issue-87-appointment-controls-research.md C1-C10 W1-W3; exact EXA-014, FR-031, RULE-006 wording."
+    },
+    {
+      "decision": "One final-candidate critique executed Complete, verdict Revise; PC-001 and PC-002 resolved by parent directly. Original critique remains unchanged; no repeat.",
+      "status": "resolved",
+      "evidence": "Plan Critique Disposition; revised F5/F6/F7, AC4/8 and P01-T02 state table remove unsupported investigation-case reset and require separate breach/abortive facts."
+    },
+    {
+      "decision": "Fill missing closure writer with explicit source-bound human case-closure record, not inferred approval; full P01-P03 implementation and final local gates completed by source owners.",
+      "status": "implemented-awaiting-review",
+      "evidence": "Plan F8/P01-T02; final changes receipt: core323/59 skips, API85/1 skip, actual MSSQL61/61, configured lint/format/mypy/JS, actual keyboard/reflow browser, rebuilt hardened installed-wheel image; exact owned runtimes removed."
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Review", "action": "Pin source candidate locally, then run exactly ONE independent original Review of full issue87 boundary; preserve verdict and route any defects separately."},
+  "prioritized_follow_ups": []
+}

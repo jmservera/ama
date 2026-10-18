@@ -7,6 +7,7 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 from dataset import DATA as DATA
+from dataset import supplied_appointment_fixture
 from dataset import ImproveTests, case  # noqa: F401  shared fixtures live in src/core/tests (M2 of #199)
 from zava_forward.core.store import Store
 from zava_forward.api import server
@@ -50,6 +51,7 @@ class StoreTests(unittest.TestCase):
         details = supplied_contract_fixture(self.store, pid, self.pam)
         self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN-CAPACITY", details)
         wid = self.store.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(self.store, self.pam, wid)
         self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.store.detail("ZF-3")["stage"], "Install booked")

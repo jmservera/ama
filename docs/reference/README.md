@@ -21,6 +21,12 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #87, the [appointment engineering boundary](./research/ux/customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87)
+records explicit offer/agreement controls, independent visit-fact counts and the
+source-authorized record-only human home-case closure/reset boundary with retained
+history and outstanding resident commitments. Provisional exercise
+thresholds and local engineering evidence are not live policy approval.
+
 For issue #88, the [resident criterion audit](./research/ux/customer-journeys/residents.md#responsibility-owned-response-clock-correction-2026-10-17)
 also records the final authorized responsibility-clock correction: shared service/
 redress identity never lets a non-owning reassignment alter status owner/date.

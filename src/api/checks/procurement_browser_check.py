@@ -103,6 +103,63 @@ def main() -> None:
 
             record("Test Ltd", fixture.details)
             issue("ZF-1", "WO-0001")
+            page.get_by_role("heading", name="Appointment: Unknown", exact=True).wait_for()
+            page.get_by_text("Record separate confirmation for WO-0001", exact=True).click()
+            page.get_by_label("Confirming person (WO-0001)", exact=True).fill("Pat Test")
+            page.get_by_label("Confirmation source (WO-0001)", exact=True).fill("SYN phone")
+            page.get_by_label(
+                "Confirmation channel, including phone or in person (WO-0001)", exact=True
+            ).fill("Phone")
+            page.get_by_role("button", name="Record separate confirmation", exact=True).click()
+            page.get_by_role("status").get_by_text(
+                "current specific appointment offer", exact=False
+            ).wait_for()
+            fixture.store.resident_action(
+                fixture.manager,
+                "ZF-1",
+                dict(
+                    action="update_record",
+                    expected_version=0,
+                    owner=fixture.manager["email"],
+                    purpose="SYN appointment update",
+                    due_at="2099-01-01T10:00:00+00:00",
+                    basis="SYN manual arrangement",
+                    status="Outstanding",
+                ),
+            )
+            page.get_by_text("Record appointment offer for WO-0001", exact=True).click()
+            for label, value in (
+                ("Offer date", "2099-01-01"),
+                ("Visit period", "Morning"),
+                ("Options offered, separated by semicolons", "Morning;Different day;Pause"),
+                ("Household constraints or Unknown", "Morning only"),
+                ("Necessary provider instructions only, no diagnoses", "Knock and wait"),
+            ):
+                page.get_by_label(f"{label} (WO-0001)", exact=True).fill(value)
+            page.get_by_role("button", name="Record appointment offer", exact=True).focus()
+            page.keyboard.press("Enter")
+            page.get_by_role("heading", name="Appointment: Offer", exact=True).wait_for()
+            for kind, person in (
+                ("resident", "Pat Test"),
+                ("staff", fixture.manager["name"]),
+                ("capacity", "SYN supplier contact"),
+            ):
+                page.get_by_text("Record separate confirmation for WO-0001", exact=True).click()
+                page.get_by_label("Confirmation kind (WO-0001)", exact=True).select_option(kind)
+                page.get_by_label("Confirming person (WO-0001)", exact=True).fill(person)
+                page.get_by_label("Confirmation source (WO-0001)", exact=True).fill(
+                    "SYN explicit " + kind
+                )
+                page.get_by_label(
+                    "Confirmation channel, including phone or in person (WO-0001)", exact=True
+                ).fill("Phone, manual route")
+                page.get_by_role("button", name="Record separate confirmation", exact=True).focus()
+                page.keyboard.press("Enter")
+                page.get_by_role(
+                    "heading",
+                    name="Appointment: " + ("Committed" if kind == "capacity" else "Offer"),
+                    exact=True,
+                ).wait_for()
             page.get_by_label("Note or date for WO-0001", exact=True).fill("2099-01-01")
             page.get_by_role(
                 "button", name="Record appointment (date for Booked)", exact=True
@@ -117,6 +174,42 @@ def main() -> None:
                     assert field.get_attribute("aria-label") or field.evaluate(
                         "(el) => el.labels && el.labels.length > 0"
                     )
+            page.get_by_text(
+                "Record human underlying home-case closure for WO-0001", exact=True
+            ).click()
+            for label, value in (
+                ("Human home-case closure decision source", "SYN supplied human decision"),
+                ("Human closure source version", "SYN-1"),
+                ("Human underlying home-case closure reason", "SYN human closure decision"),
+            ):
+                page.get_by_label(f"{label} (WO-0001)", exact=True).fill(value)
+            closure_button = page.get_by_role(
+                "button", name="Record human underlying home-case closure", exact=True
+            ).first
+            closure_button.focus()
+            page.keyboard.press("Enter")
+            assert not fixture.store.detail("ZF-1")["closed"]
+            confirm = page.get_by_label(
+                "I am recording the supplied human underlying home-case closure, not investigation task disposition (WO-0001)",
+                exact=True,
+            )
+            confirm.focus()
+            page.keyboard.press("Space")
+            page.once("dialog", lambda dialog: dialog.dismiss())
+            closure_button.focus()
+            page.keyboard.press("Enter")
+            assert not fixture.store.detail("ZF-1")["closed"]
+            update_before = fixture.store.detail("ZF-1")["resident_update"]
+            page.once("dialog", lambda dialog: dialog.accept())
+            closure_button.focus()
+            page.keyboard.press("Enter")
+            page.get_by_text(
+                "Underlying home case ZF-1: Closed. Recorded human closures: 1. History is retained.",
+                exact=True,
+            ).wait_for()
+            assert fixture.store.detail("ZF-1")["closed"]
+            assert fixture.store.detail("ZF-1")["resident_update"] == update_before
+            assert len(fixture.store.cases["ZF-1"]["home_case_closures"]) == 1
             for actor, own, foreign in (
                 ("kim", "WO-0001", "WO-0002"),
                 ("kai", "WO-0002", "WO-0001"),
@@ -143,6 +236,8 @@ def main() -> None:
             "PASS: required contract version, inline refusal/field focus/input preservation, "
             "valid keyboard package creation, original-source capacity inputs, keyboard save, "
             "issue/book at quota with new version, both contractor views/write denials, "
+            "Unknown/Offer/Committed, missing-offer refusal, separate manual keyboard confirmations, "
+            "human underlying-case closure requires explicit checkbox and cancellable confirmation, preserves update, "
             "320/390/1280px reflow, reduced motion, no page errors or external requests."
         )
     finally:

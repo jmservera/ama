@@ -1,5 +1,5 @@
 
-from dataset import RESIDENT_BINDINGS, change_metadata, supplied_contract_fixture
+from dataset import RESIDENT_BINDINGS, change_metadata, supplied_appointment_fixture, supplied_contract_fixture
 import copy
 import json
 import os
@@ -146,6 +146,7 @@ class Flows:
         details = supplied_contract_fixture(self.store, pid, self.pam)
         self.store.set_capacity(self.pam, pid, "Test Ltd", 1, 1, "SYN commitment", details)
         wid = self.store.issue_work_order(self.pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(self.store, self.pam, wid)
         self.store.record_wo_appointment(self.pam, wid, "Booked", "2099-01-01")
         self.store.advance(self.sam, "ZF-3")
         self.assertEqual(self.stage("ZF-3"), "Install booked")
