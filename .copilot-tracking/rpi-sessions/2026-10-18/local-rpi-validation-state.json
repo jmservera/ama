@@ -20,5 +20,5 @@
     {"decision": "Original critique executed with Revise; PC-001 and PC-002 resolved by parent, no rerun", "status": "preserved", "evidence": ".copilot-tracking/plans/2026-10-18/local-rpi-validation-plan.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Execute P01-T01 coverage inventory and P01-T02 runner"}
+  "next_action": {"phase": "Implement", "action": "Run full consolidated candidate matrix; reconcile P03 before the one original Review"}
 }

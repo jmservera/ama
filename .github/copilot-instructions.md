@@ -68,6 +68,20 @@ also require the relevant existing tests: for example, from `src/api`,
 use `python3 tools/rename-zava-tests.py` from the repository root. Use the
 component guides and existing workflows rather than infer that no tests exist.
 
+Every final RPI candidate, including documentation-only work, also requires the
+[complete local gate](../src/README.md#local-rpi-gate) before publication:
+commit the implementation and dated original RPI evidence, then run
+`python3 tools/rpi-checks.py --all --base <reviewed-main-sha>
+--out <new-external-directory>`. Keep the final receipt external and verify it
+with `--verify-receipt <receipt.json> --base <current-origin-main-sha>` immediately
+before push and independent exact-head assessment. Fetch main first. Any later
+commit, correction, rebase, source/base/tool/image change or dirty/untracked/
+ignored input invalidates the gate. Committed receipt copies are historical.
+Preserve original critique/Review outcomes and require independent review;
+passing local checks do not satisfy human or hosted approval gates. Missing
+SQL/browser/scanner prerequisites block publication without a cloud fallback,
+skip token, fabricated status or protection change.
+
 ## Web Development Guidance
 
 Apply this guidance to web implementation, design, redesign, styling and review.

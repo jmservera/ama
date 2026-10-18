@@ -175,38 +175,44 @@ treated as delivery failure.
    Session names are unique per issue and a retry reuses the name only after
    the old session is gone.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
-   repository conventions and the instruction to validate with the relevant
-   existing tests, commit with the Conventional Commit trailer rules, push the
-   branch and open a PR that links the issue (`Closes #{number}`) and states
-   evidence and validation. The brief must open with the instruction to run the
+   repository conventions and the instruction to validate with the complete
+   local gate, commit with the Conventional Commit trailer rules and return a
+   clean frozen local candidate with its external receipt. The coordinator
+   independently assesses that exact head before authorizing publication in
+   step 6. The eventual PR links the issue (`Closes #{number}` only when all
+   acceptance criteria are met) and states evidence and validation. The brief
+   must open with the instruction to run the
    full RPI loop, in order: research, plan, implement, review, each writing its
    dated artifacts under `.copilot-tracking/` (research, plans and details,
    changes, reviews) for that issue. Passing `--agent` only preloads the agent;
    a session can still skip the loop and edit files directly, so the brief
    states the loop and the required artifacts explicitly.
-   The brief also requires local-first testing before any push, so CI/CD is
-   not the first place a change runs: (1) run the unit suite in `mvp/`;
-   (2) run the CI jobs locally where possible: the SQL Server parity suite
-   against a local SQL Server container and the Docker image build and
-   non-root run, using the local Docker daemon; (3) start the app locally and
-   exercise the changed behaviour (Playwright for UI changes); (4) only when
-   the issue needs Azure behaviour that cannot be reproduced locally, deploy to
-   the owner's `ama` resource group with the already signed-in `az` account and
-   test there. Azure use is limited to that resource group, to Azure services
-   (SQLite and other non-Azure services stay local), to the least resources
-   needed, and to resources the session created: record each in the PR and
-   delete them when done. Never create or change subscriptions, role
-   assignments or other resource groups, and never print secrets. Record each
-   step, its command and its result in the changes artifact and the PR
-   validation. If Docker or `az` is unavailable to the session, say so in the
-   PR and mark the criterion unmet rather than claiming it passed. Each loop keeps its
+   The brief requires the complete [local gate](../../src/README.md#local-rpi-gate)
+   before every push, including documentation-only work. After implementation
+   and the original RPI Review, commit the dated artifacts and candidate, then
+   run `python3 tools/rpi-checks.py --all --base <reviewed-main-sha>
+   --out <new-external-directory>`. It covers all five isolated source projects,
+   infrastructure, actual disposable SQL, Chromium/axe, migration, four images,
+   logo stress, scans and SPDX. Issue-specific checks use reviewed
+   `--extra-test PROJECT:test_module.Class.method` selectors or separately
+   recorded planned checks, never commands imported from receipt content.
+   Use the shared heavy-resource lock; do not run additional heavy gates
+   outside it. Missing tools, unexpected skips, failed scanners/databases or
+   local resource failures block publication, not trigger a cloud fallback.
+   Real AI, Azure/OIDC, protected what-if and deployment acceptance remain
+   separate owner-authorized gates; this local gate grants no cloud authority.
+   Keep the authoritative receipt external. Any committed evidence copy is
+   historical: every subsequent commit, correction, rebase or changed base
+   requires a new full run on the final exact HEAD. Never overwrite adverse
+   receipts or fabricate check contexts. Each loop keeps its
    own `.copilot-tracking/` per worktree; do not share tracking state between
    worktrees. The RPI artifacts are part of the delivery: commit them on the
-   issue branch and push them in the same PR (the repository already tracks
+   issue branch and publish them in the eventual same PR (the repository already tracks
    `.copilot-tracking/`). Never commit secrets or unrelated tracking files from
    other work. Set the issue to In progress on the
    board when the loop starts and to In review when its PR opens. Track each session's tmux name, log
-   and required outputs: a pushed branch, an open PR and validation evidence.
+   and required outputs: a frozen clean commit, complete local receipt,
+   original RPI artifacts and validation evidence.
    A session that fails to start, exits without them or hangs is retried once
    in the same worktree, then becomes a human blocker with its log path. Do not hold a long
    blocking loop or sleep while sessions run. After launching a wave, register
@@ -234,15 +240,28 @@ treated as delivery failure.
    goes back to its loop once to run the missing phases and push the artifacts;
    if it still lacks them, record it as a ledgered blocker. Do not fabricate
    artifacts after the fact to satisfy the check.
-6. **Review each PR.** Run `/rpi-review` or the `hve-core-all:code-review-*`
-   agents against each PR diff, and also review the open PRs of a wave
+6. **Review each candidate independently before publishing.** Preserve the
+   issue loop's original RPI Review, including adverse findings. Fetch main
+   and verify the clean final candidate with
+   `python3 tools/rpi-checks.py --verify-receipt <external-receipt.json>
+   --base <current-origin-main-sha>` before independent exact-head assessment.
+   A dirty/untracked/ignored input, changed source/base/tool/image or invalid
+   receipt blocks review/push handoff. Independently assess the actual diff
+   and complete execution evidence, not only the loop's summary. Push/open or
+   update the PR only after this gate and the owner's publication boundary
+   permit it. An explicit local-only handoff ends with a frozen clean candidate,
+   not a push. For the published PR, use the `hve-core-all:code-review-*`
+   agents against each PR diff without rerunning or replacing the loop's
+   original RPI Review, and also review the open PRs of a wave
    together for contradictions between them. Send findings back to that
    issue's loop as commits on the same branch, up to two correction cycles.
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
    verified by commands run now: every dependency is merged, the PR is
    `MERGEABLE`, no required or reported check has failed or is pending
-   (`gh pr checks`; `skipping` is acceptable), the latest review verdict is
+   (`gh pr checks`; only explained, policy-allowed skips are acceptable),
+   the local receipt still verifies for the exact PR head and current main,
+   the independent assessment is current, the latest review verdict is
    Pass with no open blocking finding, the PR links its issue, it touches no
    human blocker, and the RPI evidence check below passes. RPI evidence check:
    `gh pr diff {n} --name-only` lists, for this issue, at least one file under
@@ -268,6 +287,11 @@ treated as delivery failure.
    changes' intent (append-only files such as the knowledge-base log keep both
    entries), rerun the validation, and push with `--force-with-lease`. If
    intent cannot be reconciled, treat it as a human blocker for that PR.
+   A correction or rebase invalidates the local receipt and independent
+   assessment: rerun the full gate and assess the resulting exact HEAD before
+   any further push. Unknown protection/ruleset mapping and missing retained
+   hosted checks remain owner gates; disabled legacy workflows are not test
+   coverage or green required contexts.
 9. **Loop.** Return to step 3 with the new `main`. Start every newly
    unblocked issue in parallel while blocked ones wait, and refresh the
    blocker ledger. End the loop when all issues are merged or blocked, or a

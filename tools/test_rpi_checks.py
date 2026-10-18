@@ -51,6 +51,7 @@ class GateTests(unittest.TestCase):
         )
         self.base = self.git("rev-parse", "HEAD")
         self.git("update-ref", "refs/remotes/origin/main", self.base)
+        self.git("switch", "-qc", "feat/receipt-fixture")
 
     def git(self, *args: str) -> str:
         return subprocess.check_output(
@@ -221,6 +222,8 @@ class GateTests(unittest.TestCase):
                 "gate.log": "fixture",
                 "axe-4.10.3.min.js": "fixture",
                 "regulatory-ux-results.json": "fixture",
+                "workflow-coverage.json": "fixture",
+                "browser-bytecode-policy.pth": "fixture",
                 **{f"{p}-{s}.json": "fixture" for p in gate.IMAGES for s in ("gate", "all")},
                 **{f"{p}.spdx.json": "fixture" for p in gate.IMAGES},
             },

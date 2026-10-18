@@ -4,7 +4,7 @@
 
 * Task ID: actions-budget-local-rpi
 * Task slug: local-rpi-validation
-* Planning status: Implementation approved on 2026-10-18; P01 starting
+* Planning status: Accepted plan retained; P01/P02 complete, P03 validating
 * Plan date: 2026-10-18
 * Base: 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd
 * Phase details: .copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md
@@ -235,7 +235,7 @@ permission to omit checks now.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Implement a complete local validation gate
+### [x] P01: Implement a complete local validation gate
 
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Establish exact workflow-to-local coverage
@@ -245,7 +245,7 @@ permission to omit checks now.
 * Freeze versions and existing allowlists, not new dependency policy.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Implement the runner and focused failure tests
+#### [x] P01-T02: Implement the runner and focused failure tests
 
 * Execute every group in the phase details with structured logs, explicit
   skip classification and signal-safe owned-resource cleanup.
@@ -255,10 +255,10 @@ permission to omit checks now.
   three full SQL/image/browser gates concurrently on the 16 GB VM.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Integrate local evidence into RPI delivery
+### [x] P02: Integrate local evidence into RPI delivery
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Make pushing conditional on exact-source local receipts
+#### [x] P02-T01: Make pushing conditional on exact-source local receipts
 
 * Amend the coordinator's outdated mvp unit-suite instruction to the canonical
   five src projects and add verify-before-push, corrections and rebase rules.
@@ -273,8 +273,9 @@ permission to omit checks now.
 <!-- rpi:task id=P03-T01 -->
 #### [ ] P03-T01: Verify protection and move unique hosted checks
 
-* Obtain owner confirmation of required contexts; never change protection
-  through this plan. Unknown configuration blocks removal of required jobs.
+* Record unavailable required-context configuration without blocking independent
+  local implementation. The coordinator/owner verifies mapping before merge;
+  never change protection or fabricate missing contexts through this plan.
 * Add SQL, SPDX/logo, compileall and migration checks to Source projects CI,
   retaining current check names until an explicit approved context transition.
 * Update existing workflow contract tests to assert coverage survives relocation.
@@ -290,9 +291,10 @@ permission to omit checks now.
   many runners or a skip token that leaves required contexts pending.
 * Commit RPI changes/artifacts together and avoid an immediate second
   artifact-only push: PR filters use the cumulative diff and can rerun all jobs.
-* Keep legacy workflows dispatch-only for one transition PR; after verified
-  parity, offer exact `gh workflow disable` operations for the two legacy
-  workflows, executed only on explicit owner approval.
+* Keep legacy workflow files dispatch-only for one transition PR. The owner
+  already disabled both on 2026-10-18; perform no remote workflow-state change.
+  Preserve exact rollback instructions and require coordinator confirmation
+  before publication/merge.
 * Privileged infra-plan still consumes successful Source CI workflow_run;
   do not disconnect it accidentally. No local OIDC/approval fabrication.
 * Record exact prior trigger/settings state for rollback. Re-enable workflows

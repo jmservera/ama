@@ -14,9 +14,9 @@
 
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
-| P01 | Local gate | P01-T01 complete; validating P01-T02 | P01-T01, P01-T02 |
-| P02 | RPI integration | Pending P01 | P02-T01 |
-| P03 | Hosted transition | Approved local edits; remote mapping remains coordinator gate | P03-T01, P03-T02 |
+| P01 | Local gate | Complete, run04 verified at 80927265 | P01-T01, P01-T02 |
+| P02 | RPI integration | Complete; topic receipt tests and actual invalidation observed | P02-T01 |
+| P03 | Hosted transition | Local edits/targeted contracts pass; complete matrix pending | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement a complete local validation gate
@@ -247,6 +247,11 @@ consequences, suspend automerge unless its acceptance policy is deliberately
 changed, and disclose reduced independent assurance. No skip-ci trailers or
 fabricated green contexts. Do not re-enable automated delivery implicitly.
 
-Rollback evidence: previous triggers and workflow states, parity receipt,
-single final-head hosted confirmation, owner-approved context mapping, and
-`gh workflow enable` instructions for each retired workflow.
+Rollback evidence: initial trigger definitions are at base
+612cbed78a35a4ab426571aa7d2aeb0ae6d691dd. Both MVP workflows were observed
+disabled_manually before local edits. Restore those trigger definitions by a
+reviewed follow-up commit if parity/enforcement regresses. Only the owner may
+authorize `gh workflow enable mvp-ci.yml` and
+`gh workflow enable mvp-validation.yml`; these commands were not executed.
+Final-head hosted confirmation and required-context mapping remain coordinator
+gates before merge, not local checks or blockers to independent implementation.

@@ -49,9 +49,9 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "ef4f7a3149f55e80e7e4ab5c0949e5d8f2d1e32caf4423c518a830ee40457186",
-    "mvp-ci.yml": "cfb4c656d6b5e2166bfe232a54d5ccf8a258339f4fe9952b5e261850b3e554ba",
-    "mvp-validation.yml": "148bf5e9360426938e005204b3b19c1456134c5f76b0ed7a97b1b02131c2fac9",
+    "src-ci.yml": "9d69301cd5eaf0ce6110f958ea6cec7ad6fe1c4709552481427d22d6ab5f5d5a",
+    "mvp-ci.yml": "7d826c2740c9647d0bd1b7de4abf5d9369073f3a79c5795f4de82dd2c558ab2d",
+    "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "1dd9d684220adc38f665ed6f15bfa521824f5bcea7cdc22602c928ae31df7f0c",
     "infra-plan.yml": "232e84f01559055bc2121379a44c6ac3121e66f9e398e92e6a571a26c8c00a88",
 }
@@ -155,6 +155,12 @@ def environment_identity(out: Path) -> dict[str, str]:
             env={"PATH": os.defpath, "HOME": str(out / "home"), "PYTHONDONTWRITEBYTECODE": "1"},
         )
         result[name] = hashlib.sha256(frozen).hexdigest()
+        startup = out / "venvs" / name / "lib/python3.12/site-packages"
+        result[f"{name}-startup"] = hashlib.sha256(
+            "\n".join(
+                f"{path.name}:{digest(path)}" for path in sorted(startup.glob("*.pth"))
+            ).encode()
+        ).hexdigest()
     return result
 
 
@@ -564,6 +570,7 @@ class Runner:
             self.command(
                 [py, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"]
             )
+            self.workflow_coverage(py)
             for file in sorted(
                 [*self.snapshot.glob("infra/*.bicep"), *self.snapshot.glob("infra/modules/*.bicep")]
             ):
@@ -596,6 +603,66 @@ class Runner:
             self.command([py, "-c", "import pptx"], retry=True)
             self.command([py, "-m", "pip", "install", "-r", "tools/rename-zava-requirements.txt"])
             self.command([py, "tools/rename-zava-tests.py"], timeout=900)
+
+    def workflow_coverage(self, python: str) -> None:
+        inventory = self.command(
+            [
+                python,
+                "-c",
+                "import json,yaml,sys; from pathlib import Path; "
+                "print(json.dumps({name:yaml.load(Path('.github/workflows',name).read_text(),"
+                "Loader=yaml.BaseLoader)['jobs'] for name in sys.argv[1:]}))",
+                *WORKFLOWS,
+            ]
+        )
+        jobs = json.loads(inventory)
+        equivalents = {
+            ("src-ci.yml", "project"): "project-*; browser; image-*; logo-0600",
+            ("src-ci.yml", "namespace"): "namespace; static; infra; migration",
+            ("src-ci.yml", "no-working-data"): "static",
+            ("src-ci.yml", "mssql"): "mssql",
+            ("mvp-ci.yml", "test"): "project-api; project-orchestrator; static",
+            ("mvp-ci.yml", "image"): "image-api; logo-0600",
+            ("mvp-ci.yml", "mssql"): "mssql",
+            ("mvp-validation.yml", "validate"): "project-api; static; infra; migration",
+        }
+        rows = []
+        for workflow, document in jobs.items():
+            for job, metadata in document.items():
+                for index, step in enumerate(metadata["steps"]):
+                    boundary = equivalents.get((workflow, job))
+                    action = step.get("uses", "")
+                    if workflow in ("src-deploy.yml", "infra-plan.yml"):
+                        boundary = (
+                            "hosted-only authenticated/approval/release; infra fake contracts only"
+                        )
+                    elif job == "image-paths":
+                        boundary = (
+                            "hosted-only PR path context; infra local changed-images contracts"
+                        )
+                    elif action.startswith("actions/upload-artifact@"):
+                        boundary = (
+                            "hosted-only artifact publication; equivalent external local files"
+                        )
+                    elif action.startswith("actions/checkout@"):
+                        boundary = "local exact-HEAD detached checkout; not GitHub event identity"
+                    elif action.startswith("actions/setup-python@"):
+                        boundary = "local Python 3.12 isolated bootstrap; not hosted provisioning"
+                    if boundary is None:
+                        raise GateError(
+                            f"Workflow step has no coverage classification: {workflow}/{job}"
+                        )
+                    rows.append(
+                        {
+                            "workflow": workflow,
+                            "job": job,
+                            "step": index,
+                            "name": step.get("name", step.get("id", action)),
+                            "coverage": boundary,
+                            "workflow_sha256": WORKFLOW_HASHES[workflow],
+                        }
+                    )
+        atomic_json(self.out / "workflow-coverage.json", {"steps": rows})
 
     def browser(self) -> None:
         with self.gate("browser"):
@@ -1031,6 +1098,8 @@ def verify(root: Path, path: Path, base: str) -> None:
     required_files = {
         "axe-4.10.3.min.js",
         "regulatory-ux-results.json",
+        "workflow-coverage.json",
+        "browser-bytecode-policy.pth",
         *[f"{p}-{suffix}.json" for p in IMAGES for suffix in ("gate", "all")],
         *[f"{p}.spdx.json" for p in IMAGES],
     }

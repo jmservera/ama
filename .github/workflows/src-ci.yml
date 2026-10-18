@@ -2,10 +2,7 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "infra/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
-  push:
-    branches: [main]
-    paths: ["src/**", "infra/**", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
+    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
   workflow_dispatch:
 
 permissions:
@@ -97,17 +94,12 @@ jobs:
         run: |
           python -m playwright install --with-deps chromium
           python -m checks.design_system_browser_check
-          set --
-          if curl --fail --silent --show-error --location --retry 2 \
+          curl --fail --silent --show-error --location --retry 2 \
             --connect-timeout 10 --max-time 30 \
             https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
-            --output "$RUNNER_TEMP/axe-4.10.3.min.js"; then
-            set -- --axe "$RUNNER_TEMP/axe-4.10.3.min.js"
-          else
-            echo "::warning::Pinned axe download unavailable; running all non-axe regulatory UX assertions"
-          fi
+            --output "$RUNNER_TEMP/axe-4.10.3.min.js"
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
-            python -m checks.regulatory_ux_check "$@" --out "$RUNNER_TEMP/regulatory-ux-results.json"
+            python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/regulatory-ux-results.json"
       - name: Retain regulatory UX evidence
         if: always() && matrix.project == 'api'
         uses: actions/upload-artifact@v4
@@ -124,6 +116,15 @@ jobs:
         if: matrix.image && contains(fromJSON(needs.image-paths.outputs.images), matrix.project)
         working-directory: .
         run: python src/check-container.py ${{ matrix.project }} zava-forward-${{ matrix.project }}:ci
+      - name: API unreadable-logo build and unchanged startup contract
+        if: matrix.project == 'api' && contains(fromJSON(needs.image-paths.outputs.images), 'api')
+        working-directory: .
+        run: |
+          mkdir -p "$RUNNER_TEMP/logo0600"
+          git archive HEAD src | tar -x -C "$RUNNER_TEMP/logo0600"
+          chmod 600 "$RUNNER_TEMP/logo0600/src/api/src/zava_forward/api/web/zava-logo.png"
+          docker build -f "$RUNNER_TEMP/logo0600/src/api/Dockerfile" -t zava-forward-api:logo0600 "$RUNNER_TEMP/logo0600/src"
+          python src/check-container.py api zava-forward-api:logo0600
       - name: Gate fixable high and critical vulnerabilities
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
@@ -159,6 +160,23 @@ jobs:
             trivy-${{ matrix.project }}.json
             trivy-${{ matrix.project }}-all.json
           if-no-files-found: error
+      - name: Generate SBOM (SPDX)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
+          format: spdx-json
+          output: zava-forward-${{ matrix.project }}.spdx.json
+          scan-type: image
+          skip-setup-trivy: true
+      - name: Retain SPDX evidence
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: zava-forward-${{ matrix.project }}-sbom
+          path: zava-forward-${{ matrix.project }}.spdx.json
+          if-no-files-found: error
 
   namespace:
     name: src-namespace
@@ -178,6 +196,11 @@ jobs:
           for name in core agents orchestrator importer; do python -m zava_forward.$name; done
           python -c 'from zava_forward.api.version import __version__; print(f"zava-forward-api {__version__}")'
           python -c "import zava_forward; assert getattr(zava_forward, '__file__', None) is None; assert len(list(zava_forward.__path__)) == 5"
+      - name: Compile migrated source and check browser JavaScript syntax
+        run: |
+          python -m compileall -q src/core/src src/agents/src src/api/src src/orchestrator/src
+          node --check src/api/src/zava_forward/api/web/app.js
+          node --check src/api/src/zava_forward/api/web/assistants.js
       - name: Build and lint all infrastructure templates offline
         run: |
           az bicep version
@@ -207,6 +230,25 @@ jobs:
           mypy --strict src/check-container.py
           mypy --strict infra/scripts/pipeline.py
           mypy --follow-imports=silent --ignore-missing-imports infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py
+      - name: Local gate orchestration contracts and strict checks
+        run: |
+          python -m unittest discover -s tools -p test_rpi_checks.py -v
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py
+          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py
+          mypy --strict tools/rpi-checks.py tools/test_rpi_checks.py
+      - name: Branding migration regressions
+        run: |
+          pip install -r tools/rename-zava-requirements.txt
+          python3 tools/rename-zava-tests.py
+      - name: Native workflow actionlint
+        run: |
+          version=1.7.7
+          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v$version/actionlint_${version}_linux_amd64.tar.gz" -o "$RUNNER_TEMP/actionlint.tar.gz"
+          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v$version/actionlint_${version}_checksums.txt" -o "$RUNNER_TEMP/actionlint-checksums.txt"
+          cp "$RUNNER_TEMP/actionlint.tar.gz" "$RUNNER_TEMP/actionlint_${version}_linux_amd64.tar.gz"
+          (cd "$RUNNER_TEMP" && grep " actionlint_${version}_linux_amd64.tar.gz$" actionlint-checksums.txt | sha256sum -c -)
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml .github/workflows/mvp-ci.yml .github/workflows/mvp-validation.yml
 
   no-working-data:
     name: src-no-working-data
@@ -217,4 +259,41 @@ jobs:
         with:
           persist-credentials: false
       - name: Refuse committed working data under src
-        run: test -z "$(git ls-files ':(glob)src/**/data/**')"
+        run: test -z "$(git ls-files -- '*/.assistant-test-*' mvp/data ':(glob)src/**/data/**')"
+
+  mssql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Zf-Test-12345!"
+        ports: ["1433:1433"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install driver system libraries
+        run: sudo apt-get update && sudo apt-get install -y libltdl7 libkrb5-3
+      - name: Install pinned driver
+        run: pip install --require-hashes -r src/api/requirements.txt && pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator
+      - name: Store and five-assistant contracts on SQL Server
+        env:
+          ZF_TEST_MSSQL: "1"
+          ZF_SQL_SERVER: localhost
+          ZF_SQL_DATABASE: master
+          ZF_SQL_AUTH: password
+          ZF_SQL_USER: sa
+          ZF_SQL_PASSWORD: "Zf-Test-12345!"
+          ZF_SQL_TRUST_CERT: "1"
+        run: |
+          cd src/api
+          PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
+            test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
+            test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
+            test_assistants.MssqlLedgerTests
