@@ -402,7 +402,7 @@ class SensorConsumer:
         ).hexdigest()
 
     def _retained_reading(
-        self, db: Connection, reading: Sequence[object], expected: Observation | None = None
+        self, reading: Sequence[object], expected: Observation | None = None
     ) -> datetime:
         stored = dict(zip(READING_COLUMNS, reading, strict=True))
         value = stored["observed_at"]
@@ -421,22 +421,10 @@ class SensorConsumer:
             raise ConsumerError("SENSOR_OUTCOME_MALFORMED") from None
 
         if expected is None:
-            extract = "JSON_VALUE" if self.mssql else "json_extract"
-            valid = "ISJSON" if self.mssql else "json_valid"
-            safe_body = f"CASE WHEN {valid}(observation_body)=1 THEN observation_body ELSE NULL END"
-            witnesses = db.execute(
-                "SELECT reference, observation_body FROM sensor_delivery"
-                " WHERE status='accepted' AND reason='ACCEPTED'"
-                f" AND {extract}({safe_body}, '$.sensor_id')=?"
-                f" AND {extract}({safe_body}, '$.reading_id')=?",
-                (stored["sensor_id"], stored["reading_id"]),
-            ).fetchall()
-            if not witnesses and stored["schema_version"] == "reading-v1":
+            if stored["schema_version"] == "reading-v1":
                 # Legacy generator rows predate consumer witnesses.
                 return observed
-            if len(witnesses) != 1:
-                raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
-            expected = self._accepted_witness(witnesses[0][1], str(witnesses[0][0]))
+            raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
         if self._shape(expected) is not None:
             raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
         for name in READING_COLUMNS:
@@ -445,7 +433,12 @@ class SensorConsumer:
             elif name in ("temperature_c", "humidity_pct"):
                 matches = Decimal(str(stored[name])) == Decimal(str(expected[name]))
             elif name == "seed":
-                matches = str(stored[name]) == str(expected[name])
+                seed = str(stored[name])
+                matches = (
+                    re.fullmatch(r"-?(?:0|[1-9][0-9]{0,18})", seed) is not None
+                    and abs(int(seed)) <= 2**63 - 1
+                    and int(seed) == int(str(expected[name]))
+                )
             elif name == "injected_fault":
                 matches = stored[name] is None
             else:
@@ -466,6 +459,35 @@ class SensorConsumer:
         if self._reference(parsed) != reference:
             raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
         return cast(Observation, parsed)
+
+    def _latest_observed(self, db: Connection, sensor_id: Primitive) -> datetime | None:
+        extract = "JSON_VALUE" if self.mssql else "json_extract"
+        valid = "ISJSON" if self.mssql else "json_valid"
+        safe_body = f"CASE WHEN {valid}(observation_body)=1 THEN observation_body ELSE NULL END"
+        retained = db.execute(
+            "SELECT reference, observation_body FROM sensor_delivery"
+            " WHERE status='accepted' AND reason='ACCEPTED'"
+            f" AND {extract}({safe_body}, '$.sensor_id')=?",
+            (sensor_id,),
+        ).fetchall()
+        witnesses: dict[str, Observation] = {}
+        for reference, body in retained:
+            witness = self._accepted_witness(body, str(reference))
+            reading_id = str(witness["reading_id"])
+            if witness["sensor_id"] != sensor_id or reading_id in witnesses:
+                raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+            witnesses[reading_id] = witness
+        readings = db.execute(
+            f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading WHERE sensor_id=?",
+            (sensor_id,),
+        ).fetchall()
+        latest = None
+        for reading in readings:
+            observed = self._retained_reading(reading, witnesses.pop(str(reading[1]), None))
+            latest = observed if latest is None else max(latest, observed)
+        if witnesses:
+            raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+        return latest
 
     def _quality(
         self, db: Connection, row: Observation, policy: ExercisePolicy, received: datetime
@@ -511,17 +533,9 @@ class SensorConsumer:
             return "RANGE"
         if not policy.humidity_min <= float(str(row["humidity_pct"])) <= policy.humidity_max:
             return "RANGE"
-        latest = db.execute(
-            f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading WHERE sensor_id=?"
-            " AND (observed_at IS NULL OR observed_at="
-            " (SELECT MAX(observed_at) FROM sensor_reading WHERE sensor_id=?))"
-            " ORDER BY CASE WHEN observed_at IS NULL THEN 0 ELSE 1 END",
-            (row["sensor_id"], row["sensor_id"]),
-        ).fetchone()
-        if latest is not None:
-            previous = self._retained_reading(db, latest)
-            if observed <= previous:
-                return "OUT_OF_ORDER"
+        latest = self._latest_observed(db, row["sensor_id"])
+        if latest is not None and observed <= latest:
+            return "OUT_OF_ORDER"
         return None
 
     def process(self, row: Observation, received_at: str) -> Receipt:
@@ -550,7 +564,7 @@ class SensorConsumer:
                     ).fetchone()
                     if reading is None:
                         raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
-                    self._retained_reading(db, reading, witness)
+                    self._retained_reading(reading, witness)
                 elif prior_status == "rejected" and prior_reason in REJECTIONS:
                     quality = db.execute(
                         "SELECT reason, status FROM sensor_data_quality_exception"

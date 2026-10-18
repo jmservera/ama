@@ -1,0 +1,40 @@
++ cd src/core
++ PYTHONPATH=tests
++ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-two/bin/python -W ignore::ResourceWarning -m unittest test_sensor_consumer test_sensor_backfill test_sensor_faults test_sensor_plausibility test_sensor_privacy test_sensor_stock test_sqlstore test_buildings test_chat_privacy test_regulatory_privacy test_governance test_rai_release test_sqlqueues test_taskqueues -q
+RAI claim SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/governance.py", line 271, in _rai_evidence_append
+    self.save()
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sqlstore.py", line 607, in save
+    self._append_audit(pending)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+RuntimeError: precommit unavailable
+RAI SQL recovery failed; reload to establish the durable outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/governance.py", line 283, in _rai_evidence_append
+    self._discard(self.local.pending[:])
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sqlstore.py", line 691, in _discard
+    self._proc_sync()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1193, in _execute_mock_call
+    raise effect
+RuntimeError: recovery unavailable
+----------------------------------------------------------------------
+Ran 236 tests in 69.785s
+
+OK (skipped=17)

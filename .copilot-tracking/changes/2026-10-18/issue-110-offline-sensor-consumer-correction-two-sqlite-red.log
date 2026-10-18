@@ -1,0 +1,64 @@
+======================================================================
+FAIL: test_low_sorting_retained_timestamp_refused (test_sensor_consumer.SensorConsumerTests.test_low_sorting_retained_timestamp_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 486, in test_low_sorting_retained_timestamp_refused
+    self.assert_corrupt_ordering_refused("!bad-time")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 481, in assert_corrupt_ordering_refused
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_invalid_month_retained_timestamp_refused (test_sensor_consumer.SensorConsumerTests.test_invalid_month_retained_timestamp_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 489, in test_invalid_month_retained_timestamp_refused
+    self.assert_corrupt_ordering_refused("2024-00-01T01:00:00Z")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 481, in assert_corrupt_ordering_refused
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_duplicate_maximum_witness_mismatch_refused (test_sensor_consumer.SensorConsumerTests.test_duplicate_maximum_witness_mismatch_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 492, in test_duplicate_maximum_witness_mismatch_refused
+    self.assert_corrupt_ordering_refused(str(observations()[0]["observed_at"]))
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 481, in assert_corrupt_ordering_refused
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_low_sorting_corruption_preserves_prefix (test_sensor_ingestion.ApiSensorTests.test_low_sorting_corruption_preserves_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 158, in test_low_sorting_corruption_preserves_prefix
+    self.assert_corrupt_history_prefix("!bad-time")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 138, in assert_corrupt_history_prefix
+    with self.assertRaises(BatchStopped) as caught:
+AssertionError: BatchStopped not raised
+
+======================================================================
+FAIL: test_invalid_month_corruption_preserves_prefix (test_sensor_ingestion.ApiSensorTests.test_invalid_month_corruption_preserves_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 161, in test_invalid_month_corruption_preserves_prefix
+    self.assert_corrupt_history_prefix("2024-00-01T01:00:00Z")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 138, in assert_corrupt_history_prefix
+    with self.assertRaises(BatchStopped) as caught:
+AssertionError: BatchStopped not raised
+
+======================================================================
+FAIL: test_duplicate_maximum_corruption_preserves_prefix (test_sensor_ingestion.ApiSensorTests.test_duplicate_maximum_corruption_preserves_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 164, in test_duplicate_maximum_corruption_preserves_prefix
+    self.assert_corrupt_history_prefix(str(observations()[0]["observed_at"]))
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 138, in assert_corrupt_history_prefix
+    with self.assertRaises(BatchStopped) as caught:
+AssertionError: BatchStopped not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.649s
+
+FAILED (failures=6)

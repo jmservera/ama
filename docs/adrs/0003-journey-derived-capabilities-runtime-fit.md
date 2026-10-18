@@ -1,12 +1,26 @@
 ---
 title: ADR 0003 Journey-Derived Capabilities and IoT Hub Sensor Ingestion
-description: Proposed decisions on carrying the customer journey atlas capabilities in the existing single-API, Azure SQL and five-assistant runtime, and on using Azure IoT Hub as the in-use monitoring ingestion product with deterministic analysis
+description: Owner-accepted decisions with an exercise Basic IoT Hub amendment, retaining proposal history and separate live implementation gates
 author: AMA programme
 ms.date: 2026-10-18
 ms.topic: reference
 ---
 
 ## Status
+
+Accepted with amendment by the AMA project owner on 2026-10-15, reconciled on
+2026-10-18 against the
+[owner decision on issue 129](https://github.com/jmservera/ama/issues/129#issuecomment-6194409951)
+(comment created 2026-10-15T14:24:33Z). Basic IoT Hub is sufficient for the exercise;
+cloud-to-device messages, device twins and device management are excluded for
+now. This records the existing owner decision, not a new approval or evidence
+of deployment, cost/network/provisioning/credential authority, DPO/legal review,
+real AI, Azure application acceptance or completion of issue 110.
+
+### Proposal history (2026-10-14, superseded status)
+
+The following paragraph preserves the original proposal status and narrower
+product-choice evidence. It is historical, not the current owner disposition.
 
 Proposed. This ADR records a proposal by the AMA programme. It does not record
 approval by the owner, the DPO, Legal, the Board, control owners or any
@@ -86,11 +100,14 @@ build).
      No device key or connection string appears in source or telemetry, and
      device credential issue and rotation need a named owner. Raw readings and device identifiers stay
      out of AI prompts, map tiles, cluster payloads and diagnostic logs.
-   * Tier, region (`uksouth`), unit count, device provisioning (for example the
-     Device Provisioning Service) and retention are open items. The basic tier
+   * The 2026-10-15 owner amendment selects Basic for the exercise, with no
+     cloud-to-device messages, device twins or device management. Region
+     (`uksouth`), unit count, device provisioning (for example the Device
+     Provisioning Service) and retention remain separate implementation items.
+     The basic tier
      supports device-to-cloud only, and the standard tier adds cloud-to-device
      messaging, twins and IoT Edge; message routing is on both (Microsoft
-     Learn, retrieved 2026-10-14). Confirm the tier and pricing before
+     Learn, retrieved 2026-10-14). Verify sizing and pricing before
      provisioning. Event Hubs alone is
      not chosen.
 
@@ -125,8 +142,8 @@ build).
   challenge refinement.
 * DPO decision on representative data retention and minimisation.
 * Atlas-owner confirmation of the bundle to opportunity mapping in the PRD.
-* IoT Hub infrastructure proposals (B1, one unit, uksouth, 1 day retention, private endpoint in production, individual device identities, credential owner Juan Manuel Servera) are recorded in `infra/README.md` for issue 140; owner approval, a verified cost and a live what-if remain open.
-* IoT Hub tier, sizing, cost estimate, device provisioning approach, network
+* IoT Hub infrastructure proposals (B1, one unit, uksouth, 1 day retention, private endpoint in production, individual device identities, credential owner Juan Manuel Servera) are recorded in `infra/README.md` for issue 140. Basic is owner-selected for the exercise; the remaining infrastructure choices, a verified cost and a live what-if remain unapproved/unexecuted.
+* IoT Hub sizing, cost estimate, device provisioning approach, network
   exposure and Entra role design and device credential ownership; BRD OD-43 inventory, lawful basis, DPIA,
   retention and thresholds.
 * Completion of research phases R1 to R5 in the analytics research plan before
@@ -142,12 +159,13 @@ build).
 
 ## Implementation status
 
-The ADR remains Proposed. Separately owner-authorized issue 110 engineering
+The owner accepted this ADR with the scoped Basic-tier amendment above.
+Separately owner-authorized issue 110 engineering
 implements a [finite constructed offline API consumer](../../src/api/README.md#finite-offline-sensor-ingestion-110)
 with SQL stable-key append, independent exercise controls and owned DQ metadata.
 It reuses sensor_reading, not the generator's intentionally exact-replay loader.
 Local actual SQLite/SQL Server processing is not authenticated Hub transport,
-Azure SQL application acceptance or approval of this ADR. No live IoT Hub
+Azure SQL application acceptance or additional operational approval. No live IoT Hub
 identity, provisioning, SDK, deployment, derived analysis, review task or screen
 follows from that slice. Whole PRD AC-066, actual-model/Azure and human/live gates
-remain unmet; the open decisions above are unchanged.
+remain unmet. Acceptance of the ADR and exercise tier does not satisfy those gates.

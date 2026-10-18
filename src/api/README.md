@@ -52,8 +52,11 @@ connections, reopen, real engine-trigger rollback and accepted/rejected
 postcommit reconciliation. It never connects to Azure or uses private datasets.
 Local SQLite/MSSQL/nonroot read-only image evidence does not meet whole AC-066:
 real Hub identities/transport, Azure SQL acceptance and registered real AI remain
-unexecuted. ADR 0003 remains Proposed; sizing, cost, provisioning, network and
-device credential ownership remain owner decisions. No issue closure follows.
+unexecuted. The
+[2026-10-15 owner acceptance of ADR 0003](../../docs/adrs/0003-journey-derived-capabilities-runtime-fit.md#status)
+selects Basic IoT Hub for the exercise, excluding cloud-to-device messages,
+device twins and device management. Sizing, cost, provisioning, network and
+device credential ownership remain separate decisions. No issue closure follows.
 
 ## Constructed RAI evidence register API (#126)
 

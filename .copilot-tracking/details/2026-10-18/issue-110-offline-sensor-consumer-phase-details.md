@@ -18,6 +18,20 @@ SENSOR_OUTCOME_MALFORMED so the existing API BatchStopped preserves the earlier
 committed prefix. Red/green actual-engine evidence and exact pinned integration
 are recorded in the correction ONE receipt, not a replacement Review.
 
+## Final separately authorized correction TWO
+
+All four independent findings are one final source batch. Preserve accepted
+seed strings/digests but compare validated persisted seeds numerically.
+Ordering must validate all target-sensor retained timestamps and witness
+consistency before deriving latest, including equal-max rows; no unchecked
+MAX may hide low-sorting malformed or inconsistent history. Validate within the
+existing writer transaction with per-sensor scope, no new store/framework.
+Actual prefix-sensor/API regressions require exactly one earlier committed
+receipt and no target/trailing admission on malformed target history.
+Remove only the now-obsolete continuity import ignore, not strict checks.
+Reconcile current ADR status from the actual 2026-10-15 owner decision while
+retaining proposal history. No live operational acceptance follows.
+
 ## Single planning refinement after original critique
 
 PC-001: inspect existing SQLite columns/PK and MSSQL column capacities/types/PK.

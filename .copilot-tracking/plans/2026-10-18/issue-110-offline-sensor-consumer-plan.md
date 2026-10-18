@@ -15,7 +15,9 @@ sensor_reading and the existing independent SQL connections/writer lock.
 Constructed controls explicitly supply mapping, consent, calibration, window,
 ranges and manual DQ route independently of observations. Local actual SQLite,
 disposable SQL Server and hardened image evidence are required, not Azure
-acceptance. Whole issue 110 and ADR acceptance remain open.
+acceptance. Whole issue 110 and operational acceptance remain open. The current
+ADR status is owner-accepted with the 2026-10-15 Basic-tier exercise amendment;
+the original proposal assumptions are preserved in historical phase evidence.
 
 ## Sources
 
@@ -163,6 +165,25 @@ no significant/divergent owner decision and no repeat critique.
 | PC-007 | Parent | Real engine trigger rejection rollback and rejected postcommit acknowledgement/reopen tests added alongside accepted equivalents. |
 
 ## Follow-Up Items
+
+### Separately authorized final correction TWO (2026-10-18)
+
+Same-task independent assessment eb350bd7-aad7-4696-a364-efc436f25fa9.
+No Research/critique/original Review rerun, no base change or third correction.
+
+* [x] C2-T01: actual SQLite/MSSQL red tests and declared-dependency full API
+  strict-mypy intake reproduction.
+* [x] C2-T02: all four authorized fixes: dependent obsolete ignore, semantic
+  seed, validated full sensor ordering boundary and dated ADR reconciliation.
+* [x] C2-T03: full relevant configured static/local CI, sensor/SQL/privacy/
+  authority/building/governance preservation and hardened image/restart.
+* [ ] C2-T04: complete delta inventory/hashes, immutable historical evidence,
+  normal-pushed frozen Draft PR411 candidate, cleanup and coordinator STOP.
+
+Active receipt:
+.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two.md.
+Intake 4723f0a19eb6741079dfec638303f9a3d009d05c; base remains
+6fbdcee18413e9f7366e5f9ec53f68f053681096.
 
 ### Separately authorized same-task correction ONE (2026-10-18)
 

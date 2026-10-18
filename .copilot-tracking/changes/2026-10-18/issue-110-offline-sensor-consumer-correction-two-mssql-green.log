@@ -1,0 +1,6 @@
+Task-owned SQL Server responsive on loopback; actual API suite starting.
+----------------------------------------------------------------------
+Ran 40 tests in 19.408s
+
+OK
+Task-owned SQL container removed.

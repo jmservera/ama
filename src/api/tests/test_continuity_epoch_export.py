@@ -10,7 +10,7 @@ import uuid
 from typing import Any
 from unittest.mock import patch
 
-import release_support  # type: ignore[import-not-found]
+import release_support
 from zava_forward.core import ai_tasks, continuity
 from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import MSSQL_DDL, Assistants, canonical

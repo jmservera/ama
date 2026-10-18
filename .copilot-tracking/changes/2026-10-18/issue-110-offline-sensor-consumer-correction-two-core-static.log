@@ -1,0 +1,8 @@
++ cd src/core
++ PY=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-two/bin/python
++ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-two/bin/python -m ruff check .
+All checks passed!
++ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-two/bin/python -m ruff format --check .
+75 files already formatted
++ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-two/bin/python -m mypy
+Success: no issues found in 128 source files

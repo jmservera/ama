@@ -3,9 +3,9 @@
   "task_slug": "issue-110-offline-sensor-consumer",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": "stopped",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md",
@@ -15,6 +15,26 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Final correction TWO implemented all four independently assessed findings together. Actual SQLite red7/fail6 and SQL red40/fail7/error5 preserved; corrected SQLite70 and real SQL40 pass. Full configured core mypy128 and API mypy61 pass with declared devdeps; full API CI unit935/skip300 passes. No blanket type exemption.",
+      "status": "implemented-correction-two",
+      "evidence": "Separate correction-two receipt and actual command/output logs; original assessments and all correction-one artifacts remain byte-identical."
+    },
+    {
+      "decision": "Current ADR0003 owner acceptance with Basic-tier exercise amendment dated2026-10-15 is reconciled from actual issue129 comment6194409951. Historical Proposed paragraph and original phase evidence preserved; no live/human/operational acceptance inferred.",
+      "status": "dated-evidence-reconciled",
+      "evidence": "Actual GitHub comment fetched2026-10-18; ADR/current guides/addendum/KB index and append-only log."
+    },
+    {
+      "decision": "All2792 protected intake blob/modes unchanged; image165ebd0d matches all83 runtime Python source files. Hardened image86/skip1 and actual signed-zero adapter restart/later admission pass. Existing Docker CI controls/startup pass; no browser or real AI/cloud execution.",
+      "status": "final-source-verified",
+      "evidence": "Correction-two proof, source/image hashes and runtime/raw static/preservation logs. No base change; remote main still6fbdcee1."
+    },
+    {
+      "decision": "Coordinator explicitly authorizes final correction TWO for assessment eb350bd7-aad7-4696-a364-efc436f25fa9, all four findings together. Same task and base, normal pushes only; no third source correction or repeated original phase assessments.",
+      "status": "confirmed-active",
+      "evidence": "Clean exact local/remote/PR411 intake 4723f0a19eb6741079dfec638303f9a3d009d05c; base/main6fbdcee1; original hashes and actual stream sizes/hashes verified before edits."
+    },
     {
       "decision": "Automatic ordered RPI explicitly requested; pinned branch/base 578631ac75cc8c6a7af53922c6aaae4435e7761c; finite constructed offline SQL processing only; no nested implementation workers.",
       "status": "confirmed",
@@ -91,20 +111,15 @@
       "id": "exact-published-head-review",
       "summary": "Complete independent exact-published-head source/artifact/log review is required after publication.",
       "resolution": "Coordinator/owner gate; no second original Review in this task."
-    },
-    {
-      "id": "integration-full-api-static",
-      "summary": "Full API mypy remains not green: nine baseline missing browser imports plus unused upstream import ignore exposed by combined fixture lookup.",
-      "resolution": "Coordinator scope decision; no browser installation or extra source/config fix during integration-only."
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "STOPPED: coordinator complete independent exact frozen PR411-head source/artifact/actual-log review and static residual decision. No automatic child work, second original Review, ready or merge action."},
+  "next_action": {"phase": "Implement", "action": "Freeze verified final correction TWO with exact delta hashes/inventory, cleanup owned resources, normal commit/push on unchanged base; then persist completed/stopped coordinator handoff. No third source correction or repeated original Review."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "RV-003 and integration static limitation: separately scope full API static-check restoration",
-      "rationale": "Nine baseline browser imports plus unused upstream ignore under integrated fixture lookup; no browser/source fix authorized during integration-only.",
-      "evidence": "Integrated mypy10; isolated authorized-target baseline9. Raw outputs and correction ONE receipt."
+      "task": "Coordinator independent frozen-head accumulated-delta and unchanged-document semantic assessment",
+      "rationale": "All four authorized source corrections verified locally; independent acceptance remains required and no third source correction is authorized.",
+      "evidence": "Original adverse assessments preserved; final correction-two receipt and actual CI/SQL/image proofs. Historical RV-003/configured static limitation cleared by declared devdeps and minimal obsolete ignore removal."
     }
   ]
 }

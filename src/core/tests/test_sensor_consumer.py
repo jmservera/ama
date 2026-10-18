@@ -419,6 +419,78 @@ class SensorConsumerTests(unittest.TestCase):
         )
         self.assertEqual(self.retained_state(), before)
 
+    def test_seed_integer_semantics_reopen_replay_and_later_admission(self) -> None:
+        baseline = observations()[0]
+        for index, seed in enumerate(
+            ("-0", "0", "-1", "-9223372036854775807", "9223372036854775807")
+        ):
+            with self.subTest(seed=seed):
+                row = {
+                    **baseline,
+                    "reading_id": f"SEED-{index}",
+                    "observed_at": f"2024-10-01T00:{index * 10:02d}:00Z",
+                    "seed": seed,
+                }
+                first = self.consume([row])[0]
+                self.assertEqual(first.status, "accepted")
+                reopened = store_at(self.tmp.name)
+                self.addCleanup(reopened.db.close)
+                before = self.retained_state()
+                replay = self.consume([row], consumer=SensorConsumer(reopened))[0]
+                self.assertEqual(replay, replace(first, replay=True))
+                self.assertEqual(self.retained_state(), before)
+                later = {
+                    **row,
+                    "reading_id": f"SEED-LATER-{index}",
+                    "observed_at": f"2024-10-01T00:{index * 10 + 5:02d}:00Z",
+                }
+                self.assertEqual(self.consume([later])[0].status, "accepted")
+        self.assertEqual(self.counts(), (10, 10, 0))
+
+    def corrupt_ordering_timestamp(self, row: Observation, value: str) -> None:
+        if self.consumer.mssql:
+            kind = self.store.db.execute(
+                "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS"
+                " WHERE TABLE_NAME='sensor_reading' AND COLUMN_NAME='observed_at'"
+            ).fetchone()
+            assert kind is not None
+            if kind[0] == "datetime2":
+                self.store.db.execute(
+                    "ALTER TABLE sensor_reading ALTER COLUMN observed_at NVARCHAR(40) NULL"
+                )
+                for accepted in observations():
+                    self.store.db.execute(
+                        "UPDATE sensor_reading SET observed_at=? WHERE reading_id=?",
+                        (accepted["observed_at"], accepted["reading_id"]),
+                    )
+        self.store.db.execute(
+            "UPDATE sensor_reading SET observed_at=? WHERE sensor_id=? AND reading_id=?",
+            (value, row["sensor_id"], row["reading_id"]),
+        )
+
+    def assert_corrupt_ordering_refused(self, value: str) -> None:
+        first, second = observations()
+        self.consume([first, second])
+        between = {
+            **first,
+            "reading_id": "BETWEEN",
+            "observed_at": "2024-10-01T00:30:00Z",
+        }
+        self.corrupt_ordering_timestamp(second, value)
+        before = self.retained_state()
+        with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+            self.consume([between])
+        self.assertEqual(self.retained_state(), before)
+
+    def test_low_sorting_retained_timestamp_refused(self) -> None:
+        self.assert_corrupt_ordering_refused("!bad-time")
+
+    def test_invalid_month_retained_timestamp_refused(self) -> None:
+        self.assert_corrupt_ordering_refused("2024-00-01T01:00:00Z")
+
+    def test_duplicate_maximum_witness_mismatch_refused(self) -> None:
+        self.assert_corrupt_ordering_refused(str(observations()[0]["observed_at"]))
+
     def test_independent_connection_same_key_concurrency(self) -> None:
         row = observations()[0]
         barrier = threading.Barrier(2)

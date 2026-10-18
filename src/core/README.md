@@ -57,11 +57,21 @@ retains its historical DQ even if controls are later repaired.
 
 Accepted replay validates the restricted historical witness digest, closed shape
 and retained reading time/numeric/source consistency before acknowledging history.
-Latest consumer readings receive the same consistency check before ordering a new
-admission; legacy generator readings retain their separate witness-free contract.
+All retained readings for the target sensor receive timestamp/numeric validation,
+and consumer readings must match their accepted witnesses, before deriving the
+latest observation for a new admission. No unchecked SQL MAX can hide a
+low-sorting corrupt timestamp or skip a duplicate-maximum row. Two sensor-filtered
+SQL reads and an in-memory witness index avoid a query per retained row. Returned
+data and in-memory validation are linear in that sensor's history; the JSON
+witness predicate may scan delivery history. This is finite constructed
+processing, not a throughput or production sizing claim.
+Legacy generator readings retain their separate witness-free contract.
 Malformed persistence raises bounded `SENSOR_OUTCOME_MALFORMED`, not a successful
 replay or raw parse failure. These checks do not reapply today's consent,
 calibration or window to truthful historical replay.
+Validated seed values compare as integers across SQL representations, including
+`-0` persisted as BIGINT zero; the original observation and exact-retry digest
+remain unchanged.
 
 Receipts expose only opaque reference, status, reason and replay flag. Raw values,
 device IDs and keys never enter receipts, diagnostics, AI, maps or ordinary UI.
@@ -82,8 +92,13 @@ python -m unittest discover -s tests -p 'test_sensor_*.py' -q
 ```
 
 Local SQL Server/image checks are engineering evidence only. Distinct real Hub
-identities, live transport, Azure SQL application acceptance, registered real AI,
-OD-43 and ADR 0003 owner approval remain unmet. Issue 110 cannot be considered
+identities, live transport, Azure SQL application acceptance, registered real AI
+and OD-43 remain unmet.
+[ADR 0003](../../docs/adrs/0003-journey-derived-capabilities-runtime-fit.md#status)
+was owner-accepted with amendment on 2026-10-15: Basic IoT Hub for the exercise,
+without cloud-to-device messages, device twins or device management. That
+decision is not live cost, network, provisioning, credential or privacy approval.
+Issue 110 cannot be considered
 complete from this slice; analysis issue 111 and infrastructure issue 140 remain
 separate, with 140 depending on the consumer, not the reverse.
 

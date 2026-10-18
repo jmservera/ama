@@ -1,0 +1,1273 @@
+● skill(rpi-research)
+
+● Read case_study_48_addendum.md
+  │ docs/case_study_48_addendum.md
+  └ 1 line read
+
+● Read README.md
+  │ docs/reference/README.md
+  └ 1 line read
+
+● Read research.md
+  │ ~/.copilot/installed-plugins/hve-core/hve-core-all/skills/rpi/rpi-research/references/research.m
+  │ d
+  └ 1 line read
+
+● Read case_study_48_original.md
+  │ docs/case_study_48_original.md
+  └ 49 lines read
+
+/ Search (glob)
+  │ "**/*sensor*"
+  └ 52 files found
+
+● Read memory.md
+  │ docs/reference/memory.md
+  └ 67 lines read
+
+/ Search (glob)
+  │ "**/*0003*"
+  └ 1 file found
+
+● Inspect pinned branch and live issue dependencies (shell)
+  │ git status --short && git branch --show-current && git rev-parse HEAD && gh pr list --head
+  │ feat/offline-sensor-consumer-110 --json number,state,baseRefName && gh issue view 110 --json
+  │ title,body,state && gh issue view 140 --json title,body && gh issue view 109 --json title,body
+  │ && gh issue view 111 --json title,body
+  └ 7 lines…
+
+● update_todo todos: "- [ ] Research live contracts, persistence and offline autho…"
+  └ TODO list updated
+
+● Read research.md
+  │ ~/.copilot/installed-plugins/hve-core/hve-core-all/skills/rpi/rpi-research/templates/research.md
+  └ 1 line read
+
+● Read README.md
+  │ docs/reference/README.md
+  └ L1:95 (95 lines read)
+
+● Read sensor_faults.py
+  │ src/core/src/zava_forward/core/synthetic/sensor_faults.py
+  └ L1:170 (155 lines read)
+
+● Read sensor_backfill.py
+  │ src/core/src/zava_forward/core/synthetic/sensor_backfill.py
+  └ L1:240 (240 lines read)
+
+/ Search (glob)
+  │ "**/*instructions.md"
+  └ 9 files found
+
+/ Search (grep)
+  │ "sensor|FR-050|AC-066|consent" (docs/case_study_48_addendum.md,
+  │ docs/adrs/0003-journey-derived-capabilities-runtime-fit.md,
+  │ docs/prds/zava-forward-retrofit-programme-demonstrator.md)
+  └ 95 lines found
+
+/ Search (glob)
+  │ "src/{core,api}/**/*{store,sql,repository}*"
+  └ 9 files found
+
+● Edit
+  │ Create .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Create .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+  └ Create .copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md
+
+I’m tracing the existing SQL and sensor contracts before choosing the consumer boundary. This run is pinned to the supplied base and covers constructed offline processing only; live IoT Hub delivery and whole-issue acceptance remain outside it.
+
+
+● Read research.md
+  │ ~/.copilot/installed-plugins/hve-core/hve-core-all/skills/rpi/rpi-research/references/research.m
+  │ d
+  └ L1:145 (144 lines read)
+
+● Read mssqlstore.py
+  │ src/core/src/zava_forward/core/mssqlstore.py
+  └ L1:225 (225 lines read)
+
+● Read 0003-journey-derived-capabilities-runtime-fit.md
+  │ docs/adrs/0003-journey-derived-capabilities-runtime-fit.md
+  └ L1:205 (146 lines read)
+
+● Read sqlstore.py
+  │ src/core/src/zava_forward/core/sqlstore.py
+  └ L1:230 (230 lines read)
+
+● Read README.md
+  │ src/core/README.md
+  └ L1:160 (160 lines read)
+
+/ Search (grep)
+  │ "sensor_|def .*transaction|BEGIN|data.quality|exception"
+  │ (src/core/src/zava_forward/core/sqlstore.py, src/core/src/zava_forward/core/mssqlstore.py,
+  │ src/core/src/zava_forward/core/synthetic/sensor_backfill.py)
+  └ 73 lines found
+
+● Read README.md
+  │ src/api/README.md
+  └ L1:155 (154 lines read)
+
+● Read case_study_48_addendum.md
+  │ docs/case_study_48_addendum.md
+  └ L1:125 (125 lines read)
+
+/ Search (glob)
+  │ "src/{core,api}/{pyproject.toml,**/Dockerfile,tests/*sql*,src/zava_forward/api/*.py}"
+  └ 13 files found
+
+● Request failed due to a transient API error. Retrying...
+
+● Read pyproject.toml
+  │ src/api/pyproject.toml
+  └ 120 lines read
+
+● Read Dockerfile
+  │ src/api/Dockerfile
+  └ 35 lines read
+
+● Read housing-association-primer.md
+  │ docs/reference/research/sector/housing-association-primer.md
+  └ L1:60 (60 lines read)
+
+/ Search (glob)
+  │ "{pyproject.toml,ruff.toml,.github/workflows/*.yml,src/api/checks/*}"
+  └ 14 files found
+
+● Read test_sqlstore.py
+  │ src/core/tests/test_sqlstore.py
+  └ L1:85 (85 lines read)
+
+● Read pyproject.toml
+  │ src/core/pyproject.toml
+  └ 112 lines read
+
+● Read sensor_backfill.py
+  │ src/core/src/zava_forward/core/synthetic/sensor_backfill.py
+  └ L320:460 (141 lines read)
+
+/ Search (grep)
+  │ "data.quality|DQ_|exception_route|data_quality" in *.py (src/core/src)
+  └ No matches found
+
+● Read test_mssqlstore.py
+  │ src/api/tests/test_mssqlstore.py
+  └ L1:170 (170 lines read)
+
+● Inspect installed validation tools and Docker capacity (shell)
+  │ command -v python3 && python3 -m pip show zava-forward-core zava-forward-api ruff mypy
+  │ mssql-python 2>/dev/null | grep -E '^(Name|Version|Location):'; docker info --format
+  │ '{{.MemTotal}}'; git ls-files '*ruff*' '*mypy*' '*requirements*' '*pyproject*'
+  └ 23 lines…
+
+● Edit
+  │ Edit .copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● skill(rpi-plan)
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Create .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Create .copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+The candidate preserves the offline boundary and replay-loader contract. I am checking the transaction and evidence details for gaps that could leave acceptance ambiguous, particularly current control authority and durable rejection/reconciliation behavior.The assessment requires revision. The clearest source-backed issue is SQL compatibility: the existing SQL Server schema allows 12 characters for schema_version, while sensor-fault-input-v1 requires 21. I also found unresolved batch/replay semantics and missing explicit evidence cases for current authority and rejected-outcome durability. These are planner-owned corrections within the approved scope; no new user decision is needed.Execution: **Complete**. Verdict: **Revise**.
+
+Seven findings: **3 High, 4 Medium**. Highest impact: **PC-001**, existing SQL Server schema cannot store the proposed schema-version value unchanged.
+
+Owner: planning parent. Next action: define non-destructive schema compatibility, then disposition all findings once. No user response or second critique required. No implementation performed; only the critique artifact was written.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md) | Original adverse critique; preserve unchanged. |
+
+## Next Steps
+
+Return to the automatic planning parent for direct disposition.● General-purpose (model: gpt-6.1-sol) Critique offline consumer plan                         3m 16s
+  │ Execution: **Complete**. Verdict: **Revise**.
+  │ Edit
+  │   └ Create
+  │
+  │   .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  └ Verify sole critique artifact and complete finding set (shell)
+      │ git status --short && git diff --stat && python3 - <<'PY'
+      │ from pathlib import Path
+      │ import hashlib
+      │
+      p=Path('.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-crit
+      │ ique.md')…
+      └ 19 lines…
+
+● Read issue-110-offline-sensor-consumer-plan-critique.md
+  │ .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  └ 1 line read
+
+● Read issue-110-offline-sensor-consumer-plan-critique.md
+  │ .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  └ L1:240 (155 lines read)
+
+✗ Edit
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit .copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md
+  └ Error: Failed to find expected lines in /home/azureuser/source/ama-wt/issue-110-consumer/.copilo
+    t-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md:
+    record and the active-count boundary atomically with the existing case `closed`
+
+● Edit
+  │ Edit .copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● skill(rpi-implement)
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Create .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  └ Create src/api/tests/test_sensor_ingestion.py
+
+✗ Run failing-first missing API adapter check (shell)
+  │ python3 -m unittest discover -s src/api/tests -p test_sensor_ingestion.py -q
+  └ ======================================================================
+    ERROR: test_existing_api_owns_callable
+    (test_sensor_ingestion.AdapterExists.test_existing_api_owns_callable)
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 8, in test_existing_api_owns_callable
+    from zava_forward.api.sensor_ingestion import SensorIngestion
+    ModuleNotFoundError: No module named 'zava_forward'
+
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.000s
+
+    FAILED (errors=1)
+    Failed with exit code 1
+
+✗ Install missing local distributions and rerun failing-first check (shell)
+  │ python3 -m pip install --quiet --user --no-deps -e src/core -e src/agents -e src/api && python3
+  │ -m unittest discover -s src/api/tests -p test_sensor_ingestion.py -q
+  └ error: externally-managed-environment
+
+    × This environment is externally managed
+    ╰─> To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+
+    If you wish to install a non-Debian-packaged Python package,
+    create a virtual environment using python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+
+    If you wish to install a non-Debian packaged Python application,
+    it may be easiest to use pipx install xyz, which will manage a
+    virtual environment for you. Make sure you have pipx installed.
+
+    See /usr/share/doc/python3.12/README.venv for more information.
+
+    note: If you believe this is a mistake, please contact your Python installation or OS
+    distribution provider. You can override this, at the risk of breaking your Python installation
+    or OS, by passing --break-system-packages.
+    hint: See PEP 668 for the detailed specification.
+    Failed with exit code 1
+
+✗ Use isolated venv and establish adapter-specific red result (shell)                             9s
+  │ python3 -m venv --system-site-packages
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv &&
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pip
+  │ install --quiet --no-deps -e src/core -e src/agents -e src/api && /home/azureuser/.copilot/se
+  │ ssion-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m unittest discover -s…
+  └ ======================================================================
+    ERROR: test_existing_api_owns_callable
+    (test_sensor_ingestion.AdapterExists.test_existing_api_owns_callable)
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 8, in test_existing_api_owns_callable
+    from zava_forward.api.sensor_ingestion import SensorIngestion
+    ModuleNotFoundError: No module named 'zava_forward.api.sensor_ingestion'
+
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.001s
+
+    FAILED (errors=1)
+    Failed with exit code 1
+
+● Edit
+  │ Create src/core/src/zava_forward/core/sensor_consumer.py
+  └ Create src/api/src/zava_forward/api/sensor_ingestion.py
+
+● Edit
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Create src/core/tests/sensor_consumer_fixture.py
+  └ Create src/core/tests/test_sensor_consumer.py
+
+/ Search (grep)
+  │ "def _seed|seeded|def _create_schema|time_entry" (src/core/src/zava_forward/core/sqlstore.py)
+  └ 115 lines found
+
+● Probe static tools and available local image names (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pytho
+  │ n -m ruff --version; /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881
+  │ /files/venv/bin/python -m mypy --version; docker image ls --format '{{.Repository}}:{{.Tag}}' |
+  │ head -12
+  └ 14 lines…
+
+● Run actual SQLite consumer tests (shell)                                                        5s
+  │ PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d
+  │ 93881/files/venv/bin/python -m unittest discover -s src/core/tests -p test_sensor_consumer.py -q
+  └ 4 lines…
+
+● Edit
+  │ Edit src/core/tests/sensor_consumer_fixture.py
+  │ Edit src/core/tests/test_sensor_consumer.py
+  │ Edit src/api/tests/test_sensor_ingestion.py
+  │ Create src/api/checks/sensor_sql_check.py
+  │ Edit src/core/pyproject.toml
+  └ Edit src/api/pyproject.toml
+
+✗ Restore missing configured tools and check changed Python files (shell)                         5s
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pip
+  │ install --quiet 'ruff==0.17.1' 'mypy==2.4.0' && /home/azureuser/.copilot/session-state/350bfa
+  │ 26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m ruff check
+  │ src/core/src/zava_forward/core/sensor_consumer.py src/core/tests/sensor_consumer_fixture.py
+  │ src/core/tests/test_sensor_consumer.py src/api/src/zava_forward/api/sensor_ingestion.py …
+  └ I001 [*] Import block is un-sorted or un-formatted
+    --> src/api/tests/test_sensor_ingestion.py:3:1
+    |
+    1 |   """Finite offline adapter integration, using constructed controls only."""
+    2 |
+    3 | / import unittest
+    4 | |
+    5 | | import test_sensor_consumer as coretests
+    6 | | from sensor_consumer_fixture import RECEIVED, observations
+    7 | | from zava_forward.api.sensor_ingestion import BatchStopped, SensorIngestion
+    8 | | from zava_forward.core.sensor_consumer import Observation, Receipt, SensorConsumer
+    | |__________________________________________________________________________________^
+    help: Organize imports
+    |
+    6  | from sensor_consumer_fixture import RECEIVED, observations
+    - from zava_forward.api.sensor_ingestion import BatchStopped, SensorIngestion
+    7  | from zava_forward.core.sensor_consumer import Observation, Receipt, SensorConsumer
+    8  |
+    9  + from zava_forward.api.sensor_ingestion import BatchStopped, SensorIngestion
+    10 +
+    11 |
+    |
+
+    E501 Line too long (103 > 100)
+    --> src/core/src/zava_forward/core/sensor_consumer.py:216:101
+    |
+    214 |         tables = {
+    215 |             "sensor_consumer_policy": f"(id INT NOT NULL PRIMARY KEY, body {text} NOT
+    NULL)",
+    216 |             "sensor_consumer_control": f"(sensor_id {key} NOT NULL PRIMARY KEY, body
+    {text} NOT NULL)",
+    |
+    ^^^
+    217 |             "sensor_delivery": (
+    218 |                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
+    |
+
+    E501 Line too long (105 > 100)
+    --> src/core/src/zava_forward/core/sensor_consumer.py:284:101
+    |
+    282 |                 raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
+    283 |             if int(str(columns["schema_version"][2])) < len(SCHEMA_VERSION):
+    284 |                 db.execute("ALTER TABLE sensor_reading ALTER COLUMN schema_version
+    VARCHAR(32) NOT NULL")
+    |
+    ^^^^^
+    285 |         else:
+    286 |             rows = db.execute("PRAGMA table_info(sensor_reading)").fetchall()
+    |
+
+    E501 Line too long (102 > 100)
+    --> src/core/tests/test_sensor_consumer.py:190:101
+    |
+    188 |         ):
+    189 |             self.consumer.configure(policy, [control])
+    190 |             result = self.consume([{**row, "reading_id": name, "observed_at": observed}],
+    received)[0]
+    |
+    ^^
+    191 |             self.assertEqual(result.reason, reason)
+    |
+
+    B023 Function definition does not bind loop variable `waiting`
+    --> src/core/tests/test_sensor_consumer.py:273:17
+    |
+    272 |             def admission() -> Receipt:
+    273 |                 waiting.set()
+    |                 ^^^^^^^
+    274 |                 return self.consume([{**baseline, "reading_id": f"CURRENT-{index}"}],
+    275 |                                     consumer=stale)[0]
+    |
+
+    B023 Function definition does not bind loop variable `index`
+    --> src/core/tests/test_sensor_consumer.py:274:76
+    |
+    272 |             def admission() -> Receipt:
+    273 |                 waiting.set()
+    274 |                 return self.consume([{**baseline, "reading_id": f"CURRENT-{index}"}],
+    |                                                                            ^^^^^
+    275 |                                     consumer=stale)[0]
+    |
+
+    B023 Function definition does not bind loop variable `stale`
+    --> src/core/tests/test_sensor_consumer.py:275:46
+    |
+    273 |                 waiting.set()
+    274 |                 return self.consume([{**baseline, "reading_id": f"CURRENT-{index}"}],
+    275 |                                     consumer=stale)[0]
+    |                                              ^^^^^
+    276 |
+    277 |             with ThreadPoolExecutor(max_workers=1) as pool:
+    |
+
+    Found 7 errors.
+    [*] 1 fixable with `--fix`.
+    Failed with exit code 1
+
+✗ Run API integration on SQLite then disposable real SQL Server (shell)                           7s
+  │ PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d
+  │ 93881/files/venv/bin/python -m unittest discover -s src/api/tests -p test_sensor_ingestion.py -q
+  │ && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/py
+  │ thon src/api/checks/sensor_sql_check.py
+  └ ======================================================================
+    FAIL: test_full_preflight_before_writes_and_unavailable_not_empty (test_sensor_ingestion.ApiSens
+    orTests.test_full_preflight_before_writes_and_unavailable_not_empty)
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 84, in test_full_preflight_before_writes_and_unavailable_not_empty
+    self.assertNotIn("SENS", str(caught.exception))
+    AssertionError: 'SENS' unexpectedly found in 'SENSOR_SQL_UNAVAILABLE'
+
+    ----------------------------------------------------------------------
+    Ran 25 tests in 7.356s
+
+    FAILED (failures=1)
+    Failed with exit code 1
+
+● Edit
+  │ Edit src/api/tests/test_sensor_ingestion.py
+  │ Edit src/core/tests/test_sensor_consumer.py
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  └ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+
+✗ Format owned Python files and type-check core boundary (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff check --fix src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/sensor_consumer_fixture.py src/core/tests/test_sensor_consumer.py
+  │ src/api/src/zava_forward/api/sensor_ingestion.py src/api/tests/test_sensor_ingestion.py
+  │ src/api/checks/sensor_sql_check.py; /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-…
+  └ E501 Line too long (103 > 100)
+    --> src/core/src/zava_forward/core/sensor_consumer.py:222:101
+    |
+    220 |         tables = {
+    221 |             "sensor_consumer_policy": f"(id INT NOT NULL PRIMARY KEY, body {text} NOT
+    NULL)",
+    222 |             "sensor_consumer_control": f"(sensor_id {key} NOT NULL PRIMARY KEY, body
+    {text} NOT NULL)",
+    |
+    ^^^
+    223 |             "sensor_delivery": (
+    224 |                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
+    |
+
+    E501 Line too long (105 > 100)
+    --> src/core/src/zava_forward/core/sensor_consumer.py:290:101
+    |
+    288 |                 raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
+    289 |             if int(str(columns["schema_version"][2])) < len(SCHEMA_VERSION):
+    290 |                 db.execute("ALTER TABLE sensor_reading ALTER COLUMN schema_version
+    VARCHAR(32) NOT NULL")
+    |
+    ^^^^^
+    291 |         else:
+    292 |             rows = db.execute("PRAGMA table_info(sensor_reading)").fetchall()
+    |
+
+    E501 Line too long (102 > 100)
+    --> src/core/tests/test_sensor_consumer.py:190:101
+    |
+    188 |         ):
+    189 |             self.consumer.configure(policy, [control])
+    190 |             result = self.consume([{**row, "reading_id": name, "observed_at": observed}],
+    received)[0]
+    |
+    ^^
+    191 |             self.assertEqual(result.reason, reason)
+    |
+
+    Found 4 errors (1 fixed, 3 remaining).
+    5 files reformatted, 1 file left unchanged
+    src/zava_forward/core/sensor_consumer.py:439: error: No overload variant of "__setitem__" of
+    "list" matches argument types "int", "datetime"  [call-overload]
+    src/zava_forward/core/sensor_consumer.py:439: note: Possible overload variants:
+    src/zava_forward/core/sensor_consumer.py:439: note:     def __setitem__(self, SupportsIndex, str
+    | int | float | None, /) -> None
+    src/zava_forward/core/sensor_consumer.py:439: note:     def __setitem__(self,
+    slice[SupportsIndex | None, SupportsIndex | None, SupportsIndex | None], Iterable[str | int |
+    float | None], /) -> None
+    tests/test_sensor_consumer.py:58: error: Incompatible return value type (got "tuple[int, ...]",
+    expected "tuple[int, int, int]")  [return-value]
+    Found 2 errors in 2 files (checked 3 source files)
+    Failed with exit code 1
+
+✗ Exercise finite API adapter on actual SQLite and SQL Server (shell)                            10s
+  │ PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d
+  │ 93881/files/venv/bin/python -m unittest discover -s src/api/tests -p test_sensor_ingestion.py -q
+  │ && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/py
+  │ thon src/api/checks/sensor_sql_check.py
+  └ ----------------------------------------------------------------------
+    Ran 25 tests in 7.843s
+
+    OK
+    Task-owned SQL container removed.
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/checks/sensor_sql_check.py", line
+    103, in <module>
+    raise SystemExit(main())
+    ^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/checks/sensor_sql_check.py", line
+    56, in main
+    db = mssql_python.connect(connection, autocommit=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/.local/lib/python3.12/site-packages/mssql_python/db_connection.py", line
+    89, in connect
+    conn = Connection(
+    ^^^^^^^^^^^
+    File "/home/azureuser/.local/lib/python3.12/site-packages/mssql_python/connection.py", line 378,
+    in __init__
+    self.connection_str, parsed_params = self._construct_connection_string(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/.local/lib/python3.12/site-packages/mssql_python/connection.py", line 919,
+    in _construct_connection_string
+    parsed_params = parser._parse(connection_str)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File
+    "/home/azureuser/.local/lib/python3.12/site-packages/mssql_python/connection_string_parser.py",
+    line 273, in _parse
+    raise ConnectionStringParseError(errors)
+    mssql_python.exceptions.ConnectionStringParseError: Connection string parsing failed:
+    Unknown keyword 'connection timeout' is not recognized
+    Failed with exit code 1
+
+● Edit
+  │ Edit src/api/checks/sensor_sql_check.py
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Edit src/core/tests/test_sensor_consumer.py
+  └ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+
+● update_todo todos: "- [x] Research live contracts, persistence and offline autho…"
+  └ TODO list updated
+
+✗ Check configured Ruff format and mypy for owned files (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff check src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/sensor_consumer_fixture.py src/core/tests/test_sensor_consumer.py
+  │ src/api/src/zava_forward/api/sensor_ingestion.py src/api/tests/test_sensor_ingestion.py
+  │ src/api/checks/sensor_sql_check.py && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1…
+  └ E501 Line too long (103 > 100)
+    --> src/core/src/zava_forward/core/sensor_consumer.py:237:101
+    |
+    235 |         tables = {
+    236 |             "sensor_consumer_policy": f"(id INT NOT NULL PRIMARY KEY, body {text} NOT
+    NULL)",
+    237 |             "sensor_consumer_control": f"(sensor_id {key} NOT NULL PRIMARY KEY, body
+    {text} NOT NULL)",
+    |
+    ^^^
+    238 |             "sensor_delivery": (
+    239 |                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
+    |
+
+    Found 1 error.
+    Failed with exit code 1
+
+✗ Run task-owned real SQL Server API acceptance suite (shell)                                    12s
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pytho
+  │ n src/api/checks/sensor_sql_check.py
+  └ Task-owned SQL Server responsive on loopback; actual API suite starting.
+    ======================================================================
+    ERROR: test_sensor_ingestion (unittest.loader._FailedTest.test_sensor_ingestion)
+    ----------------------------------------------------------------------
+    ImportError: Failed to import test module: test_sensor_ingestion
+    Traceback (most recent call last):
+    File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 5, in <module>
+    import test_sensor_consumer as coretests
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 10, in <module>
+    from sensor_consumer_fixture import CONTROL, POLICY, RECEIVED, observations, store_at
+    File
+    "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/sensor_consumer_fixture.py",
+    line 9, in <module>
+    import dataset
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/dataset.py", line 9, in
+    <module>
+    from zava_forward.core.store import Store
+    ModuleNotFoundError: No module named 'zava_forward'
+
+
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.000s
+
+    FAILED (errors=1)
+    Task-owned SQL container removed.
+    Failed with exit code 1
+
+● Read sensor_consumer.py
+  │ src/core/src/zava_forward/core/sensor_consumer.py
+  └ L220:345 (126 lines read)
+
+● Read sensor_sql_check.py
+  │ src/api/checks/sensor_sql_check.py
+  └ L1:150 (103 lines read)
+
+● Diagnose SQL runner interpreter identity (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pytho
+  │ n -c 'import sys; print(sys.executable); import mssql_python; print(sys.executable); import
+  │ zava_forward.core; print("local distributions available")'
+  └ 3 lines…
+
+● Edit
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Edit src/api/checks/sensor_sql_check.py
+  └ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+
+✗ Run changed-file lint and both component type checks (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff check src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/sensor_consumer_fixture.py src/core/tests/test_sensor_consumer.py
+  │ src/api/src/zava_forward/api/sensor_ingestion.py src/api/tests/test_sensor_ingestion.py
+  │ src/api/checks/sensor_sql_check.py && cd src/core && /home/azureuser/.copilot/session-state/35…
+  └ All checks passed!
+    src/zava_forward/core/sensor_consumer.py:439: error: Incompatible types in assignment
+    (expression has type "list[str | int | float | None]", variable has type "list[object]")
+    [assignment]
+    src/zava_forward/core/sensor_consumer.py:439: note: "list" is invariant -- see
+    https://mypy.readthedocs.io/en/stable/common_issues.html#variance
+    src/zava_forward/core/sensor_consumer.py:439: note: Consider using "Sequence" instead, which is
+    covariant
+    Found 1 error in 1 file (checked 3 source files)
+    Failed with exit code 1
+
+✗ Rerun real SQL engine suite with preserved interpreter environment (shell)                     12s
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pytho
+  │ n src/api/checks/sensor_sql_check.py
+  └ Task-owned SQL Server responsive on loopback; actual API suite starting.
+    ======================================================================
+    ERROR: test_sensor_ingestion (unittest.loader._FailedTest.test_sensor_ingestion)
+    ----------------------------------------------------------------------
+    ImportError: Failed to import test module: test_sensor_ingestion
+    Traceback (most recent call last):
+    File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 5, in <module>
+    import test_sensor_consumer as coretests
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 10, in <module>
+    from sensor_consumer_fixture import CONTROL, POLICY, RECEIVED, observations, store_at
+    File
+    "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/sensor_consumer_fixture.py",
+    line 9, in <module>
+    import dataset
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/dataset.py", line 9, in
+    <module>
+    from zava_forward.core.store import Store
+    ModuleNotFoundError: No module named 'zava_forward'
+
+
+    ----------------------------------------------------------------------
+    Ran 1 test in 0.000s
+
+    FAILED (errors=1)
+    Task-owned SQL container removed.
+    Failed with exit code 1
+
+● Read sensor_consumer.py
+  │ src/core/src/zava_forward/core/sensor_consumer.py
+  └ L425:450 (26 lines read)
+
+● Isolate subprocess virtualenv import failure (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pytho
+  │ n -c 'import subprocess,sys,os;
+  │ e=dict(os.environ,PYTHONPATH="/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests");
+  │ print(sys.executable,flush=True); subprocess.run([sys.executable,"-c","import
+  │ sys;print(sys.executable,sys.prefix);import
+  │ zava_forward.core;print(zava_forward.core.__path__)"], env=e, check=True)'
+  └ 3 lines…
+
+● Locate installed SQL driver for targeted interpreter diagnosis (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pytho
+  │ n -c 'import mssql_python,pathlib; print(pathlib.Path(mssql_python.__file__).parent)'
+  └ 1 line…
+
+/ Search (grep)
+  │ "executable|PYTHONHOME|VIRTUAL_ENV|LD_LIBRARY_PATH|os\.environ|execv|subprocess" in *.py
+  │ (~/.local/lib/python3.12/site-packages/mssql_python)
+  └ 3 lines found
+
+● Edit
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  └ Edit src/api/checks/sensor_sql_check.py
+
+● Read log.md
+  │ docs/reference/log.md
+  └ L1:35 (35 lines read)
+
+/ Search (grep)
+  │ "sensor|Sensor" (docs/case_study_48_addendum.md)
+  └ 12 lines found
+
+✗ Verify typed SQL parameter boundary and API adapter (shell)
+  │ cd src/core && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv/bin/python -m mypy src/zava_forward/core/sensor_consumer.py
+  │ tests/sensor_consumer_fixture.py tests/test_sensor_consumer.py && cd ../api && /home/azureuser
+  │ /.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m mypy
+  │ src/zava_forward/api/sensor_ingestion.py tests/test_sensor_ingestion.py …
+  └ Success: no issues found in 3 source files
+    src/zava_forward/api/sensor_ingestion.py:12: error: Class cannot subclass "ConsumerError" (has
+    type "Any")  [misc]
+    tests/test_sensor_ingestion.py:19: error: Class cannot subclass "SensorConsumerTests" (has type
+    "Any")  [misc]
+    tests/test_sensor_ingestion.py:55: error: Class cannot subclass "SensorConsumer" (has type
+    "Any")  [misc]
+    tests/test_sensor_ingestion.py:91: error: Argument "received_at" to "consume" of
+    "SensorIngestion" has incompatible type "str | bool"; expected "str"  [arg-type]
+    Found 4 errors in 2 files (checked 3 source files)
+    Failed with exit code 1
+
+● Run real SQL tests with active virtualenv interpreter path (shell)                             22s
+  │ PATH=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin:
+  │ $PATH /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin
+  │ /python src/api/checks/sensor_sql_check.py
+  └ 6 lines…
+
+● Edit
+  │ Edit src/api/src/zava_forward/api/sensor_ingestion.py
+  │ Edit src/api/pyproject.toml
+  └ Edit src/core/tests/test_sensor_consumer.py
+
+● Read case_study_48_addendum.md
+  │ docs/case_study_48_addendum.md
+  └ L875:925 (51 lines read)
+
+● Inspect append-only log end and configured component checks (shell)
+  │ tail -35 docs/reference/log.md && sed -n '1,160p' .github/workflows/src-ci.yml
+  └ 194 lines…
+
+✗ Check precise imported core types in the API project (shell)
+  │ cd src/api && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/
+  │ venv/bin/python -m mypy src/zava_forward/api/sensor_ingestion.py tests/test_sensor_ingestion.py
+  │ checks/sensor_sql_check.py
+  └ Output too large to read at once (43.2 KB). Saved to:
+    /tmp/1792321014885-copilot-tool-output-398004-c470df4d-6a37-4638-aceb-3978fc3dccbe.txt
+    Consider using tools like rg (for searching), head/tail (for viewing start/end), view with
+    view_range (for specific sections), or jq (for JSON) to examine portions of the output.
+
+    Preview (first 500 chars):
+    /home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/release_support.py:10: error:
+    Function is missing a type annotation  [no-untyped-def]
+    /home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/release_support.py:26: error:
+    Function is missing a type annotation  [no-untyped-def]
+    /home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/release_support.py:51: error:
+    Call to untyped function "fixture" in typed context  [no-untyped-call]
+    /home/azureuser/source/ama-wt/issue
+    Failed with exit code 1
+
+● Inspect precise transitive mypy failures (shell)
+  │ head -15 /tmp/1792321014885-copilot-tool-output-398004-c470df4d-6a37-4638-aceb-3978fc3dccbe.txt
+  │ && tail -12
+  │ /tmp/1792321014885-copilot-tool-output-398004-c470df4d-6a37-4638-aceb-3978fc3dccbe.txt
+  └ 27 lines…
+
+● Edit
+  │ Edit src/api/pyproject.toml
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Edit src/core/README.md
+  │ Edit src/api/README.md
+  │ Edit docs/adrs/0003-journey-derived-capabilities-runtime-fit.md
+  │ Edit docs/case_study_48_addendum.md
+  │ Edit docs/reference/README.md
+  └ Edit docs/reference/log.md
+
+● Edit
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Read test_sensor_privacy.py
+  │ src/core/tests/test_sensor_privacy.py
+  └ L1:110 (110 lines read)
+
+/ Search (glob)
+  │ "src/api/tests/*{privacy,role,auth}*.py"
+  └ 4 files found
+
+● Format and type-check integrated typed API/core test harness (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff format src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py src/api/src/zava_forward/api/sensor_ingestion.py
+  │ src/api/checks/sensor_sql_check.py && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1
+  │ f-81b7-0434d2d93881/files/venv/bin/python -m ruff check …
+  └ 9 lines…
+
+● Build existing hardened API image with owned consumer code (shell)                             20s
+  │ docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:offline-20261018 src
+  └ 1 line…
+
+● Run hardened networkless image suite and actual finite adapter/reopen (shell)                   5s
+  │ docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges
+  │ --tmpfs /tmp:rw,nosuid,nodev,size=256m --tmpfs
+  │ /state:rw,nosuid,nodev,uid=10001,gid=10001,size=32m -v "$PWD/src/core/tests:/tests/core:ro" -v
+  │ "$PWD/src/api/tests:/tests/api:ro" -e PYTHONPATH=/tests/core:/tests/api -e
+  │ ZF_DATA=/tmp/no-default-dataset.json ama-sensor110-api:offline-20261018 python -c 'import …
+  └ 22 lines…
+
+● Run full configured component lint and type checks without hiding failures (shell)              5s
+  │ cd src/core && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv/bin/python -m ruff check . > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f
+  │ -81b7-0434d2d93881/files/core-ruff.log 2>&1; rc=$?; tail -5 /home/azureuser/.copilot/session-s
+  │ tate/350bfa26-8783-4b1f-81b7-0434d2d93881/files/core-ruff.log; echo core-ruff-exit=$rc; /home/
+  │ azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m…
+  └ 23 lines…
+
+● Verify final SQL source and two-store concurrency on actual SQL Server (shell)                 31s
+  │ PATH=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin:
+  │ $PATH /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin
+  │ /python src/api/checks/sensor_sql_check.py
+  └ 6 lines…
+
+● Run sensor/privacy and API identity/route/privacy regressions (shell)                        1m 2s
+  │ cd src/core && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files
+  │ /venv/bin/python -m unittest discover -s tests -p 'test_sensor_*.py' -q && cd ../api &&
+  │ PYTHONPATH=tests:../core/tests:../agents/tests /home/azureuser/.copilot/session-state/350bfa26-8
+  │ 783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m unittest test_sensor_ingestion test_auth
+  │ test_role_matrix test_role_endpoint_inventory test_chat_isolation -q
+  └ 8 lines…
+
+✗ Read pyproject.toml
+  │ src/api/pyproject.toml
+  └ view_range out of bounds
+
+● Summarize regression counts and exact full API static failure scope (shell)
+  │ grep -E 'Ran [0-9]+ tests|^OK|FAILED|ERROR:|FAIL:'
+  │ /tmp/1792321233294-copilot-tool-output-398004-e115a672-8402-4b56-983b-4c105944dfeb.txt && grep
+  │ 'error:'
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/api-mypy.log
+  │ | cut -d: -f1 | sort | uniq -c && head -9 …
+  └ 32 lines…
+
+● Run full configured core and API formatter checks (shell)
+  │ cd src/core && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files
+  │ /venv/bin/python -m ruff format --check .; cd ../api && /home/azureuser/.copilot/session-state/3
+  │ 50bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m ruff format --check .
+  └ 2 lines…
+
+● Edit
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Edit src/core/tests/test_sensor_consumer.py
+  └ Edit src/api/pyproject.toml
+
+● Recheck full API types after preserving core fixture ownership (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff format src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py && cd src/api && /home/azureuser/.copilot/session-state
+  │ /350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m mypy > /home/azureuser/.copilot
+  │ /session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/api-mypy-final.log 2>&1; rc=$?; cat …
+  └ 15 lines…
+
+/ Search (grep)
+  │ "skip|Skip" in test_sensor_*.py (src/core/tests)
+  └ 1 line found
+
+✗ Confirm missing browser type dependency on pinned baseline configuration (shell)
+  │ git show 578631ac75cc8c6a7af53922c6aaae4435e7761c:src/api/pyproject.toml > /home/azureuser/.co
+  │ pilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/api-baseline.toml && cd src/api
+  │ && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin
+  │ /python -m mypy --config-file /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0
+  │ 434d2d93881/files/api-baseline.toml checks/workbench_browser_check.py …
+  └ checks/design_system_browser_check.py:26: error: Cannot find implementation or library stub for
+    module named "playwright.sync_api"  [import-not-found]
+    checks/workbench_browser_check.py:12: error: Cannot find implementation or library stub for
+    module named "playwright.sync_api"  [import-not-found]
+    checks/provenance_browser_check.py:12: error: Cannot find implementation or library stub for
+    module named "playwright.sync_api"  [import-not-found]
+    checks/provenance_browser_check.py:12: note: See
+    https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+    tests/test_coordinator_api.py:253: error: Cannot find implementation or library stub for module
+    named "playwright.sync_api"  [import-not-found]
+    tests/test_resident_api.py:311: error: Cannot find implementation or library stub for module
+    named "playwright.sync_api"  [import-not-found]
+    tests/test_stock_reconciliation_api.py:258: error: Cannot find implementation or library stub
+    for module named "playwright.sync_api"  [import-not-found]
+    tests/test_grant_lifecycle_api.py:93: error: Cannot find implementation or library stub for
+    module named "playwright.sync_api"  [import-not-found]
+    checks/procurement_browser_check.py:6: error: Cannot find implementation or library stub for
+    module named "playwright.sync_api"  [import-not-found]
+    checks/regulatory_ux_check.py:18: error: Cannot find implementation or library stub for module
+    named "playwright.sync_api"  [import-not-found]
+    Found 9 errors in 9 files (checked 9 source files)
+    Failed with exit code 1
+
+● Inspect owned inventory and authenticated privacy-safe commit identity (shell)
+  │ git status --short && git diff --stat && gh api user --jq '{id,login}' && sha256sum
+  │ .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  └ 32 lines…
+
+● Edit
+  └ Edit src/core/tests/test_sensor_consumer.py
+
+✗ Finalize format and configured component static validation (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff format src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py && cd src/core && /home/azureuser/.copilot/session-stat
+  │ e/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m ruff check . && /home/azureuse
+  │ r/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m ruff …
+  └ 2 files left unchanged
+    E501 Line too long (101 > 100)
+    --> src/zava_forward/core/sensor_consumer.py:472:101
+    |
+    470 |                 elif status == "rejected" and reason in REJECTIONS:
+    471 |                     quality = db.execute(
+    472 |                         "SELECT reason, status FROM sensor_data_quality_exception WHERE
+    reference=?",
+    |
+    ^
+    473 |                         (reference,),
+    474 |                     ).fetchone()
+    |
+
+    Found 1 error.
+    Failed with exit code 1
+
+● Edit
+  └ Edit src/core/src/zava_forward/core/sensor_consumer.py
+
+✗ Execute final component static checks and bounded preservation suites (shell)
+  │ cd src/core && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv/bin/python -m ruff check . && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1
+  │ f-81b7-0434d2d93881/files/venv/bin/python -m ruff format --check . && /home/azureuser/.copilot
+  │ /session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m mypy && /home/azu
+  │ reuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -W …
+  └ All checks passed!
+    75 files already formatted
+    src/zava_forward/core/sensor_consumer.py:482: error: Incompatible types in assignment
+    (expression has type "str | None", variable has type "str")  [assignment]
+    Found 1 error in 1 file (checked 128 source files)
+    Failed with exit code 1
+
+● Rebuild final image and execute hardened suite plus actual adapter/restart (shell)             31s
+  │ docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:offline-20261018 src && docker
+  │ run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs
+  │ /tmp:rw,nosuid,nodev,size=256m --tmpfs /state:rw,nosuid,nodev,uid=10001,gid=10001,size=32m -v
+  │ "$PWD/src/core/tests:/tests/core:ro" -v "$PWD/src/api/tests:/tests/api:ro" -e
+  │ PYTHONPATH=/tests/core:/tests/api -e ZF_DATA=/tmp/no-default-dataset.json …
+  └ 22 lines…
+
+● Verify expanded finite adapter suite on actual loopback SQL Server (shell)                     33s
+  │ PATH=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin:
+  │ $PATH /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin
+  │ /python src/api/checks/sensor_sql_check.py
+  └ 6 lines…
+
+● Edit
+  └ Edit src/core/src/zava_forward/core/sensor_consumer.py
+
+● Run final lint/types and sensor/SQL/API preservation checks (shell)                         1m 25s
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff format src/core/src/zava_forward/core/sensor_consumer.py && cd src/core && /home/a
+  │ zureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m
+  │ ruff check . && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fi
+  │ les/venv/bin/python -m ruff format --check . && /home/azureuser/.copilot/session-state/350bfa2…
+  └ 37 lines…
+
+● Edit
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Edit src/core/tests/test_sensor_consumer.py
+  └ Edit src/core/README.md
+
+● Finalize owned source and full available static validation (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/pyt
+  │ hon -m ruff format src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py && cd src/core && /home/azureuser/.copilot/session-stat
+  │ e/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m ruff check . && /home/azureuse
+  │ r/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin/python -m ruff …
+  └ 14 lines…
+
+● Run final hardened networkless image suite and separate adapter restart (shell)                29s
+  │ docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:offline-20261018 src && docker
+  │ run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs
+  │ /tmp:rw,nosuid,nodev,size=256m --tmpfs /state:rw,nosuid,nodev,uid=10001,gid=10001,size=32m -v
+  │ "$PWD/src/core/tests:/tests/core:ro" -v "$PWD/src/api/tests:/tests/api:ro" -e
+  │ PYTHONPATH=/tests/core:/tests/api -e ZF_DATA=/tmp/no-default-dataset.json …
+  └ 22 lines…
+
+● Prove final real SQL concurrency recovery and finite API processing (shell)                    41s
+  │ PATH=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin:
+  │ $PATH /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv/bin
+  │ /python src/api/checks/sensor_sql_check.py
+  └ 6 lines…
+
+● Verify final sensor/privacy SQL and API preservation behavior (shell)                       1m 19s
+  │ cd src/core && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv/bin/python -W ignore::ResourceWarning -m unittest discover -s tests -p
+  │ 'test_sensor_*.py' -q && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2
+  │ d93881/files/venv/bin/python -W ignore::ResourceWarning -m unittest discover -s tests -p
+  │ test_sqlstore.py -q && cd ../api && PYTHONPATH=tests:../core/tests:../agents/tests /home/azure…
+  └ 19 lines…
+
+● Edit
+  │ Edit src/core/tests/test_sensor_consumer.py
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Run final bound-test image suite and diff/format checks (shell)
+  │ docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges
+  │ --tmpfs /tmp:rw,nosuid,nodev,size=256m --tmpfs
+  │ /state:rw,nosuid,nodev,uid=10001,gid=10001,size=32m -v "$PWD/src/core/tests:/tests/core:ro" -v
+  │ "$PWD/src/api/tests:/tests/api:ro" -e PYTHONPATH=/tests/core:/tests/api -e
+  │ ZF_DATA=/tmp/no-default-dataset.json ama-sensor110-api:offline-20261018 python -c 'import …
+  └ 14 lines…
+
+● Verify populated legacy migration on actual SQLite and SQL Server (shell)                      23s
+  │ PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4
+  │ b1f-81b7-0434d2d93881/files/venv/bin/python -m unittest test_sensor_consumer.SensorConsumerTes
+  │ ts.test_existing_legacy_and_stock_reading_schemas_retained
+  │ test_sensor_ingestion.ApiSensorTests.test_existing_legacy_and_stock_reading_schemas_retained
+  │ -q && PATH=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/v…
+  └ 12 lines…
+
+● Edit
+  │ Create .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Commit owned implementation and full pre-Review RPI evidence (shell)
+  │ read -r account_id account_login < <(gh api user --jq '[.id,.login]|@tsv') &&
+  │ email="${account_id}+${account_login}@users.noreply.github.com" && git config --local
+  │ user.name "$account_login" && git config --local user.email "$email" && git add
+  │ docs/adrs/0003-journey-derived-capabilities-runtime-fit.md docs/case_study_48_addendum.md
+  │ docs/reference/README.md docs/reference/log.md src/core/README.md src/api/README.md …
+  └ 26 lines…
+
+● skill(rpi-review)
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+## RPI Review: Issue 110 | Bounded implementation
+
+Reviewing the pinned candidate, complete task evidence and owner invariants. Only the canonical review record will change; no fixes, workers, live calls or UI execution. Evidence readiness and acceptance remain unconfirmed until comparison. This is the one original Review, not a second critique.
+The Review is Complete, with outcome **Defects found**. Actual memory-only SQLite confirmed malformed persisted readings can return accepted replay or escape bounded batch-failure reporting. The record also preserves the stale handoff and baseline API mypy limitation. No source fixes were made; correction count remains zero.
+Review: `.copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md`
+
+Execution: **Complete**  
+Outcome: **Defects found**  
+Severity: **0 Critical, 0 High, 1 Medium, 2 Low**
+
+* **RV-001 Medium:** malformed SQL readings permit success-shaped replay or bypass bounded batch-failure reporting; independently reproduced.
+* **RV-002 Low:** final changes handoff contradicts P01/P02 completion.
+* **RV-003 Low, residual:** full API mypy retains nine baseline missing browser imports.
+
+Only the review record was written. No workers, source fixes or repeated Review. Correction count remains **zero**; publication and exact-published-head gate remain parent-owned.● General-purpose (model: gpt-6.1-sol) Execute one original Review                            5m 12s
+  │ Review: `.copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-c...
+  │ Edit
+  │   └ Edit .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md
+  └ Verify exact source additions and persisted Review structure/write boundary (shell)
+      │ PYTHONDONTWRITEBYTECODE=1
+      /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d
+      │ 2d93881/files/venv/bin/python -B - <<'PY'
+      │ from pathlib import Path
+      │ import re
+      │ import subprocess…
+      └ 29 lines…
+
+● Read issue-110-offline-sensor-consumer-review.md
+  │ .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md
+  └ L1:230 (230 lines read)
+
+● Hash immutable original assessments and confirm no post-Review source changes (shell)
+  │ sha256sum
+  │ .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  │ .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md && git
+  │ status --short && git rev-parse HEAD && git diff --name-only
+  │ de54472fc06d1ac16efa6dbd4f306afc1c98598e -- src docs
+  └ 7 lines…
+
+● Read issue-110-offline-sensor-consumer-review.md
+  │ .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md
+  └ L230:295 (66 lines read)
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● update_todo todos: "- [x] Research live contracts, persistence and offline autho…"
+  └ TODO list updated
+
+✗ Clean only task-owned images and isolated validation virtualenv (shell)
+  │ docker ps -a --filter name=ama-sensor110- --format '{{.Names}} {{.Status}}' && docker image rm
+  │ ama-sensor110-api:offline-20261018
+  │ sha256:e20e5633906285ecf394c0f0e110d898107419b15d030930355e9b5681c3673e
+  │ sha256:627297c5906ad5d32470cfa99d5dbbb7438d776cf1b80298a3fa2f97535c6ae1 && rm -rf
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv
+  └ Untagged: ama-sensor110-api:offline-20261018
+    Deleted: sha256:52d3a038a16ed73e72ce4efa2b915e97f4e3b1eb763ed028d5e68799a5bde990
+    Error response from daemon: No such image:
+    sha256:e20e5633906285ecf394c0f0e110d898107419b15d030930355e9b5681c3673e
+    Error response from daemon: No such image:
+    sha256:627297c5906ad5d32470cfa99d5dbbb7438d776cf1b80298a3fa2f97535c6ae1
+    Failed with exit code 1
+
+● Inspect actual main base and preserve original assessment integrity (shell)
+  │ gh api repos/jmservera/ama/git/ref/heads/main --jq '.object.sha' && git diff --name-only
+  │ de54472fc06d1ac16efa6dbd4f306afc1c98598e -- src docs && git diff --check && sha256sum
+  │ .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  │ .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md
+  └ 3 lines…
+
+● Finish isolated venv cleanup and verify owned runtime resources absent (shell)
+  │ rm -rf /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv &&
+  │ test ! -e /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv
+  │ && docker ps -a --filter name=ama-sensor110- --format '{{.Names}} {{.Status}}' && docker image
+  │ ls ama-sensor110-api --format '{{.ID}} {{.Tag}}'
+  └ No Content
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Commit immutable Review and normal-push pinned branch (shell)
+  │ read -r account_id account_login < <(gh api user --jq '[.id,.login]|@tsv') &&
+  │ email="${account_id}+${account_login}@users.noreply.github.com" && git config --local
+  │ user.name "$account_login" && git config --local user.email "$email" && git add
+  │ .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md …
+  └ 19 lines…
+
+● Edit
+  └ Create ~/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-pr-body.md
+
+● Edit
+  └ Edit ~/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-pr-body.md
+
+● Open main PR with exact revisions and preserved adverse findings (shell)
+  │ gh pr create --base main --head feat/offline-sensor-consumer-110 --title "feat(core): bounded
+  │ offline sensor consumer processing" --body-file /home/azureuser/.copilot/session-state/350bfa26-
+  │ 8783-4b1f-81b7-0434d2d93881/files/issue110-pr-body.md && gh pr view --json
+  │ number,url,headRefOid,baseRefOid,baseRefName,state,closingIssuesReferences
+  └ 2 lines…
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Verify complete inventory, commit stopped-session receipts and normal-push final head (shell)
+  │ python3 - <<'PY'
+  │ import json, re, subprocess
+  │ from pathlib import Path
+  │ base='578631ac75cc8c6a7af53922c6aaae4435e7761c'
+  │ root=Path('.copilot-tracking')…
+  └ 35 lines…
+
+● Verify clean worktree and no remaining task-owned runtime resources (shell)
+  │ git status --short && docker ps -a --filter name=ama-sensor110- --format '{{.Names}}
+  │ {{.Status}}' && docker image ls ama-sensor110-api --format '{{.ID}} {{.Tag}}' && test ! -e
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv
+  └ No Content
+
+● Verify remote final head, issue preservation and immutable original hashes (shell)
+  │ gh pr view 411 --json
+  │ headRefOid,baseRefOid,baseRefName,url,state,closingIssuesReferences,statusCheckRollup && gh
+  │ issue view 110 --json state && git ls-remote origin
+  │ refs/heads/feat/offline-sensor-consumer-110 && git --no-pager log -3 --format='%h %s%nAuthor:
+  │ %ae%nCommitter: %ce' && sha256sum …
+  └ 16 lines…
+
+● Edit
+  └ Edit ~/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-pr-body.md
+
+● Persist exact final-head PR receipt and verify no closing references (shell)
+  │ gh pr edit 411 --body-file /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2
+  │ d93881/files/issue110-pr-body.md && gh pr view 411 --json
+  │ headRefOid,baseRefOid,closingIssuesReferences,body --jq
+  │ '{head:.headRefOid,base:.baseRefOid,closing:.closingIssuesReferences,bodyHasFinalHead:(.body|con
+  │ tains("43ef35655b5a01f2a07a2d09eaef5415cc27c1dd"))}' && git status --short
+  └ 2 lines…
+
+● update_todo todos: "- [x] Research live contracts, persistence and offline autho…"
+  └ TODO list updated
+
+**Published #411 at `43ef35655b5a01f2a07a2d09eaef5415cc27c1dd`.** Full ordered RPI executed. Automatic session is **stopped in Follow-up** for independent exact-head review.
+
+Pinned base: `578631ac75cc8c6a7af53922c6aaae4435e7761c`. Actual PR main base: `9d625a09e34491ecf9fd27ffc7d59e67c2373b29`. No rebase, merge, issue closure or AC updates.
+
+**Original assessments:** critique **Complete / Revise**, seven direct planning dispositions; original Review **Complete / Defects found**, with **correction count 0** and no second Review:
+* **RV-001 Medium:** malformed SQL readings can produce success-shaped replay or escape bounded batch-failure reporting.
+* **RV-002 Low:** contradictory final changes handoff remains.
+* **RV-003 Low residual:** nine baseline missing browser imports prevent green full API mypy.
+
+Validation recorded: sensor **75 tests**, SQL-store **18**, API preservation **124**, actual SQL Server API **28**, hardened image **66**, plus separate adapter admission/reopen/replay. Sensor/image runs each retain one existing opt-in skip. Scoped static checks pass; full API mypy does **not**. Initial failures remain recorded.
+
+Unchanged original SHA-256 hashes:
+```text
+Critique ad56b59a8df472fff31ed3ae906eca63505ea76fca0f63a457dda4acf540942b
+Review   5ae9cb33e5d46a5a486cfbce0e824ab012efd8b6b4fccf9b4e73546e772b07cc
+```
+
+Worktree is clean. Task-owned containers, API image and isolated venv were removed and absence verified. Whole issue #110 and live/human acceptance gates remain unmet.
+
+| Artifact | Evidence |
+| --- | --- |
+| [.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md](.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md) | Full verified 23-path inventory |
+| [.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl](.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl) | Actual 23-event phase execution log |
+| [.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json](.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json) | Stopped state, blockers and ranked follow-ups |
+| [.copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md](.copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md) | Research |
+| [.copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md](.copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md) | Plan and direct dispositions |
+| [.copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md](.copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md) | Detailed contracts and fixtures |
+| [.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md) | Unchanged original adverse critique |
+| [.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md](.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md) | Commands, results and retained failures |
+| [.copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md](.copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md) | Unchanged original Review and routed findings |
+
+## Next Steps
+
+**STOP:** coordinator/owner complete independent review of exact head `43ef35655b5a01f2a07a2d09eaef5415cc27c1dd`, including source, all artifacts and the actual phase log. No repair or further Review started.
+
+
+
+Changes    +2777 -91
+AI Credits 299.74 (44m 3s)
+Tokens     ↑ 12.4m (12.1m cached, 299.7k written) • ↓ 103.7k (27.5k reasoning)
+Resume     copilot --resume=350bfa26-8783-4b1f-81b7-0434d2d93881
+exit=0

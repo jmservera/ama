@@ -113,3 +113,52 @@ class ApiSensorTests(coretests.SensorConsumerTests):
                 self.assertNotIn(str(old["sensor_id"]), str(caught.exception))
                 self.assertNotIn("not-a-number", str(caught.exception))
                 self.assertNotIn(str(old["temperature_c"]), str(caught.exception.completed))
+
+    def assert_corrupt_history_prefix(self, value: str) -> None:
+        from dataclasses import replace
+
+        from sensor_consumer_fixture import CONTROL, POLICY
+
+        self.consumer.configure(POLICY, [CONTROL, replace(CONTROL, sensor_id="SENS-SYN-OTHER")])
+        first, second = observations()
+        self.consume([first, second])
+        between = {
+            **first,
+            "reading_id": "BETWEEN",
+            "observed_at": "2024-10-01T00:30:00Z",
+        }
+        self.corrupt_ordering_timestamp(second, value)
+        target_before = tuple(
+            self.store.db.execute(
+                "SELECT * FROM sensor_reading WHERE sensor_id=?", (first["sensor_id"],)
+            ).fetchall()
+        )
+        prefix = {**first, "sensor_id": "SENS-SYN-OTHER", "reading_id": "PREFIX"}
+        trailing = {**prefix, "reading_id": "TRAILING"}
+        with self.assertRaises(BatchStopped) as caught:
+            self.consume([prefix, between, trailing])
+        self.assertEqual(caught.exception.code, "SENSOR_OUTCOME_MALFORMED")
+        self.assertEqual(str(caught.exception), "SENSOR_OUTCOME_MALFORMED")
+        self.assertEqual(len(caught.exception.completed), 1)
+        self.assertFalse(caught.exception.completed[0].replay)
+        self.assertEqual(caught.exception.completed[0].status, "accepted")
+        self.assertEqual(self.counts(), (3, 3, 0))
+        self.assertEqual(
+            tuple(
+                self.store.db.execute(
+                    "SELECT * FROM sensor_reading WHERE sensor_id=?", (first["sensor_id"],)
+                ).fetchall()
+            ),
+            target_before,
+        )
+        self.assertNotIn(str(first["sensor_id"]), repr(caught.exception.completed))
+        self.assertNotIn(value, repr(caught.exception.completed))
+
+    def test_low_sorting_corruption_preserves_prefix(self) -> None:
+        self.assert_corrupt_history_prefix("!bad-time")
+
+    def test_invalid_month_corruption_preserves_prefix(self) -> None:
+        self.assert_corrupt_history_prefix("2024-00-01T01:00:00Z")
+
+    def test_duplicate_maximum_corruption_preserves_prefix(self) -> None:
+        self.assert_corrupt_history_prefix(str(observations()[0]["observed_at"]))

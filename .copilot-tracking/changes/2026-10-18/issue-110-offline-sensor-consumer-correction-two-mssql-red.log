@@ -1,0 +1,153 @@
+Task-owned SQL Server responsive on loopback; actual API suite starting.
+======================================================================
+ERROR: test_seed_integer_semantics_reopen_replay_and_later_admission (test_sensor_ingestion.ApiSensorTests.test_seed_integer_semantics_reopen_replay_and_later_admission) (seed='-0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 439, in test_seed_integer_semantics_reopen_replay_and_later_admission
+    replay = self.consume([row], consumer=SensorConsumer(reopened))[0]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
+
+======================================================================
+ERROR: test_seed_integer_semantics_reopen_replay_and_later_admission (test_sensor_ingestion.ApiSensorTests.test_seed_integer_semantics_reopen_replay_and_later_admission) (seed='0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 434, in test_seed_integer_semantics_reopen_replay_and_later_admission
+    first = self.consume([row])[0]
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
+
+======================================================================
+ERROR: test_seed_integer_semantics_reopen_replay_and_later_admission (test_sensor_ingestion.ApiSensorTests.test_seed_integer_semantics_reopen_replay_and_later_admission) (seed='-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 434, in test_seed_integer_semantics_reopen_replay_and_later_admission
+    first = self.consume([row])[0]
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
+
+======================================================================
+ERROR: test_seed_integer_semantics_reopen_replay_and_later_admission (test_sensor_ingestion.ApiSensorTests.test_seed_integer_semantics_reopen_replay_and_later_admission) (seed='-9223372036854775807')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 434, in test_seed_integer_semantics_reopen_replay_and_later_admission
+    first = self.consume([row])[0]
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
+
+======================================================================
+ERROR: test_seed_integer_semantics_reopen_replay_and_later_admission (test_sensor_ingestion.ApiSensorTests.test_seed_integer_semantics_reopen_replay_and_later_admission) (seed='9223372036854775807')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 434, in test_seed_integer_semantics_reopen_replay_and_later_admission
+    first = self.consume([row])[0]
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
+
+======================================================================
+FAIL: test_duplicate_maximum_corruption_preserves_prefix (test_sensor_ingestion.ApiSensorTests.test_duplicate_maximum_corruption_preserves_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 164, in test_duplicate_maximum_corruption_preserves_prefix
+    self.assert_corrupt_history_prefix(str(observations()[0]["observed_at"]))
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 142, in assert_corrupt_history_prefix
+    self.assertEqual(len(caught.exception.completed), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_duplicate_maximum_witness_mismatch_refused (test_sensor_ingestion.ApiSensorTests.test_duplicate_maximum_witness_mismatch_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 492, in test_duplicate_maximum_witness_mismatch_refused
+    self.assert_corrupt_ordering_refused(str(observations()[0]["observed_at"]))
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 481, in assert_corrupt_ordering_refused
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_invalid_month_corruption_preserves_prefix (test_sensor_ingestion.ApiSensorTests.test_invalid_month_corruption_preserves_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 161, in test_invalid_month_corruption_preserves_prefix
+    self.assert_corrupt_history_prefix("2024-00-01T01:00:00Z")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 142, in assert_corrupt_history_prefix
+    self.assertEqual(len(caught.exception.completed), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_invalid_month_retained_timestamp_refused (test_sensor_ingestion.ApiSensorTests.test_invalid_month_retained_timestamp_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 489, in test_invalid_month_retained_timestamp_refused
+    self.assert_corrupt_ordering_refused("2024-00-01T01:00:00Z")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 481, in assert_corrupt_ordering_refused
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_low_sorting_corruption_preserves_prefix (test_sensor_ingestion.ApiSensorTests.test_low_sorting_corruption_preserves_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 158, in test_low_sorting_corruption_preserves_prefix
+    self.assert_corrupt_history_prefix("!bad-time")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 142, in assert_corrupt_history_prefix
+    self.assertEqual(len(caught.exception.completed), 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_low_sorting_retained_timestamp_refused (test_sensor_ingestion.ApiSensorTests.test_low_sorting_retained_timestamp_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 486, in test_low_sorting_retained_timestamp_refused
+    self.assert_corrupt_ordering_refused("!bad-time")
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 481, in assert_corrupt_ordering_refused
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_seed_integer_semantics_reopen_replay_and_later_admission (test_sensor_ingestion.ApiSensorTests.test_seed_integer_semantics_reopen_replay_and_later_admission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 448, in test_seed_integer_semantics_reopen_replay_and_later_admission
+    self.assertEqual(self.counts(), (10, 10, 0))
+AssertionError: Tuples differ: (1, 1, 0) != (10, 10, 0)
+
+First differing element 0:
+1
+10
+
+- (1, 1, 0)
++ (10, 10, 0)
+?   +   +
+
+
+----------------------------------------------------------------------
+Ran 40 tests in 14.838s
+
+FAILED (failures=7, errors=5)
+Task-owned SQL container removed.

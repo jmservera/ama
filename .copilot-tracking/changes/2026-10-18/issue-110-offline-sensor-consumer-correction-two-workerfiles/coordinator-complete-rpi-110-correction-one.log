@@ -1,0 +1,998 @@
+● skill(rpi-implement)
+
+● Verify exact intake lease, clean branch, draft PR and authorized integration base (shell)
+  │ git status --short && git branch --show-current && git rev-parse HEAD && git ls-remote origin
+  │ refs/heads/feat/offline-sensor-consumer-110 && gh pr view 411 --json
+  │ headRefOid,isDraft,baseRefOid,closingIssuesReferences && sha256sum
+  │ .copilot-tracking/reviews/{plans,logs}/2026-10-18/issue-110-offline-sensor-consumer-* && git
+  │ fetch origin main && git rev-parse origin/main && git cat-file -t …
+  └ 11 lines…
+
+● Read memory.md
+  │ docs/reference/memory.md
+  └ 67 lines read
+
+● Read sensor_consumer.py
+  │ src/core/src/zava_forward/core/sensor_consumer.py
+  └ L1:580 (495 lines read)
+
+● Read test_sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py
+  └ L1:620 (451 lines read)
+
+● Read test_sensor_ingestion.py
+  │ src/api/tests/test_sensor_ingestion.py
+  └ 92 lines read
+
+● Read issue-110-offline-sensor-consumer-state.json
+  │ .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ 102 lines read
+
+● Read case_study_48_original.md
+  │ docs/case_study_48_original.md
+  └ 49 lines read
+
+● Read README.md
+  │ docs/reference/README.md
+  └ L1:45 (44 lines read)
+
+● Read issue-110-offline-sensor-consumer-review.md
+  │ .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md
+  └ L118:195 (78 lines read)
+
+● Read case_study_48_addendum.md
+  │ docs/case_study_48_addendum.md
+  └ L891:925 (35 lines read)
+
+● update_todo todos: "- [ ] Resume same task and record correction-one authority/i…"
+  └ TODO list updated
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  │ Create .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+
+The intake matches exactly: clean local and remote head `43ef3565`, Draft #411, and authorized integration base `6fbdcee1`. I’m resuming correction ONE for RV-001/RV-002 only, preserving both adverse originals and the exact remote lease.
+
+
+● Read sensor_sql_check.py
+  │ src/api/checks/sensor_sql_check.py
+  └ 106 lines read
+
+● Read sensor_ingestion.py
+  │ src/api/src/zava_forward/api/sensor_ingestion.py
+  └ 36 lines read
+
+● Read sensor_consumer_fixture.py
+  │ src/core/tests/sensor_consumer_fixture.py
+  └ 75 lines read
+
+● Read implementation.md
+  │ ~/.copilot/installed-plugins/hve-core/hve-core-all/skills/rpi/rpi-implement/references/implement
+  │ ation.md
+  └ L1:110 (110 lines read)
+
+● Read issue-110-offline-sensor-consumer-changes.md
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  └ L120:235 (42 lines read)
+
+✗ Probe existing installed validation distributions before restoration (shell)
+  │ python3 -c 'import zava_forward.core, ruff, mypy; print("installed projects and tools present")'
+  └ Traceback (most recent call last):
+    File "<string>", line 1, in <module>
+    ModuleNotFoundError: No module named 'zava_forward'
+    Failed with exit code 1
+
+/ Search (grep)
+  │ "JSON_VALUE|json_extract" in *.py (src/core/src)
+  └ No matches found
+
+● Edit
+  │ Edit src/core/tests/test_sensor_consumer.py
+  └ Edit src/api/tests/test_sensor_ingestion.py
+
+● Edit
+  └ Edit src/api/tests/test_sensor_ingestion.py
+
+✗ Restore missing local distributions in task-owned isolated venv (shell)                         9s
+  │ python3 -m venv --system-site-packages /home/azureuser/.copilot/session-state/350bfa26-8783-4b
+  │ 1f-81b7-0434d2d93881/files/venv-correction-one && /home/azureuser/.copilot/session-state/350bf
+  │ a26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-one/bin/pip install --quiet --no-deps -e
+  │ src/core -e src/agents -e src/api && /home/azureuser/.copilot/session-state/350bfa26-8783-4b1
+  │ f-81b7-0434d2d93881/files/venv-correction-one/bin/python -c 'import ruff, mypy; print("tools …
+  └ Traceback (most recent call last):
+    File "<string>", line 1, in <module>
+    ModuleNotFoundError: No module named 'ruff'
+    Failed with exit code 1
+
+● Restore configured static tools after explicit missing-tool failure (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correctio
+  │ n-one/bin/pip install --quiet 'ruff==0.17.1' 'mypy==2.4.0'
+  └ No Content
+
+✗ Run focused actual SQLite/core/API fail-before regressions (shell)
+  │ set -o pipefail; PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-stat
+  │ e/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-one/bin/python -m unittest
+  │ test_sensor_consumer.SensorConsumerTests.test_retained_reading_replay_refuses_malformed_and_in
+  │ consistent_values
+  │ test_sensor_consumer.SensorConsumerTests.test_retained_witness_must_match_reading_and_digest …
+  └ Output too large to read at once (32.1 KB). Saved to:
+    /tmp/1792322880671-copilot-tool-output-432556-777d2fd5-baa2-4740-8518-d1636e35c0d2.txt
+    Consider using tools like rg (for searching), head/tail (for viewing start/end), view with
+    view_range (for specific sections), or jq (for JSON) to examine portions of the output.
+
+    Preview (first 500 chars):
+    ======================================================================
+    ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_consumer
+    .SensorConsumerTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error)
+    (column='observed_at')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 391, in tes
+    Failed with exit code 1
+
+✗ Capture actual disposable SQL Server fail-before API regression evidence (shell)               27s
+  │ set -o pipefail; /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv-correction-one/bin/python src/api/checks/sensor_sql_check.py 2>&1 | tee /home/azureuser/
+  │ .copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one-mssql-red.log
+  └ Task-owned SQL Server responsive on loopback; actual API suite starting.
+    ======================================================================
+    ERROR: test_later_corrupt_reading_preserves_committed_prefix
+    (test_sensor_ingestion.ApiSensorTests.test_later_corrupt_reading_preserves_committed_prefix)
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 103, in test_later_corrupt_reading_preserves_committed_prefix
+    self.consumer.configure(
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 253, in configure
+    self._schema(db)
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 309, in _schema
+    self._check_reading_schema(db)
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 337, in _check_reading_schema
+    raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
+    zava_forward.core.sensor_consumer.ConsumerError: SENSOR_SCHEMA_UNSUPPORTED
+
+    ======================================================================
+    ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_ingestio
+    n.ApiSensorTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error)
+    (column='observed_at')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 391, in test_new_admission_refuses_malformed_latest_without_raw_parse_error
+    self.consume([second])
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_inges
+    tion.py", line 33, in consume
+    completed.append(self.consumer.process(observation, received_at))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 494, in process
+    reason = "IDENTITY_CONFLICT" if exists else self._quality(db, row, policy, received)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 447, in _quality
+    previous = value.replace(tzinfo=UTC) if isinstance(value, datetime) else utc(str(value))
+    ^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 78, in utc
+    raise ValueError("UTC_SECONDS_REQUIRED")
+    ValueError: UTC_SECONDS_REQUIRED
+
+    ======================================================================
+    ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_ingestio
+    n.ApiSensorTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error)
+    (column='temperature_c')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 391, in test_new_admission_refuses_malformed_latest_without_raw_parse_error
+    self.consume([second])
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_inges
+    tion.py", line 33, in consume
+    completed.append(self.consumer.process(observation, received_at))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 494, in process
+    reason = "IDENTITY_CONFLICT" if exists else self._quality(db, row, policy, received)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 447, in _quality
+    previous = value.replace(tzinfo=UTC) if isinstance(value, datetime) else utc(str(value))
+    ^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 78, in utc
+    raise ValueError("UTC_SECONDS_REQUIRED")
+    ValueError: UTC_SECONDS_REQUIRED
+
+    ======================================================================
+    ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_ingestio
+    n.ApiSensorTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error)
+    (column='humidity_pct')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 391, in test_new_admission_refuses_malformed_latest_without_raw_parse_error
+    self.consume([second])
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py",
+    line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_inges
+    tion.py", line 33, in consume
+    completed.append(self.consumer.process(observation, received_at))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 494, in process
+    reason = "IDENTITY_CONFLICT" if exists else self._quality(db, row, policy, received)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 447, in _quality
+    previous = value.replace(tzinfo=UTC) if isinstance(value, datetime) else utc(str(value))
+    ^^^^^^^^^^^^^^^
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_con
+    sumer.py", line 78, in utc
+    raise ValueError("UTC_SECONDS_REQUIRED")
+    ValueError: UTC_SECONDS_REQUIRED
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='observed_at', value='invalid-sql-time')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='temperature_c', value='not-a-number')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='humidity_pct', value='NaN')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='home_id', value='ZF-OTHER')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='scenario', value='DIFFERENT')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='schema_version', value='reading-v1')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='temperature_c', value='21.00')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingest
+    ion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values)
+    (column='injected_fault', value='OUTLIER')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_witness_must_match_reading_and_digest
+    (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest)
+    (body='not-json')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_witness_must_match_reading_and_digest
+    (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest)
+    (body='{"sensor_id": "SENS-SYN-1", "reading_id": "SENS-SYN-1-1727740800", "home_id": "ZF-1",
+    "observed_at": "2024-10-01T00:00:00Z", "temperature_c": "21.00", "humidity_pct": "54.36",
+    "source_type": "SYNTHETIC", "scenario": "BACKFILL_2Y", "seed": "183", "schema_version":
+    "sensor-fault-input-v1", "temperature_unit": "degC", "humidity_unit": "percent", "calibrated":
+    "true"}')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_witness_must_match_reading_and_digest
+    (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest)
+    (body='{"sensor_id": "SENS-SYN-1", "reading_id": "SENS-SYN-1-1727740800", "home_id": "ZF-1",
+    "observed_at": "2024-10-01T00:00:00Z", "temperature_c": "16.73", "humidity_pct": "54.36",
+    "source_type": "SYNTHETIC", "scenario": "BACKFILL_2Y", "seed": "183", "schema_version":
+    "sensor-fault-input-v1", "temperature_unit": "degC", "humidity_unit": "percent", "calibrated":
+    "false"}')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_witness_must_match_reading_and_digest
+    (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest)
+    (body='{"sensor_id": "SENS-SYN-1", "reading_id": "OTHER", "home_id": "ZF-1", "observed_at":
+    "2024-10-01T00:00:00Z", "temperature_c": "16.73", "humidity_pct": "54.36", "source_type":
+    "SYNTHETIC", "scenario": "BACKFILL_2Y", "seed": "183", "schema_version":
+    "sensor-fault-input-v1", "temperature_unit": "degC", "humidity_unit": "percent", "calibrated":
+    "true"}')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+    AssertionError: ConsumerError not raised
+
+    ======================================================================
+    FAIL: test_retained_witness_must_match_reading_and_digest
+    (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest)
+    (body='{"source_type": "SYNTHETIC"}')
+    ----------------------------------------------------------------------
+    Traceback (most recent call last):
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py",
+    line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+    AssertionError: ConsumerError not raised
+
+    ----------------------------------------------------------------------
+    Ran 33 tests in 12.486s
+
+    FAILED (failures=13, errors=4)
+    Task-owned SQL container removed.
+    Failed with exit code 1
+
+● Edit
+  │ Edit src/api/tests/test_sensor_ingestion.py
+  └ Edit src/core/tests/test_sensor_consumer.py
+
+✗ Capture isolated final failing-first SQLite/core/API regression counts (shell)
+  │ set -o pipefail; PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-stat
+  │ e/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-one/bin/python -m unittest
+  │ test_sensor_consumer.SensorConsumerTests.test_retained_reading_replay_refuses_malformed_and_in
+  │ consistent_values
+  │ test_sensor_consumer.SensorConsumerTests.test_retained_witness_must_match_reading_and_digest …
+  └ ----------------------------------------------------------------------
+    Ran 9 tests in 4.461s
+
+    FAILED (failures=32, errors=2)
+    Failed with exit code 1
+
+✗ Capture isolated final fail-before actual SQL Server API results (shell)                       26s
+  │ set -o pipefail; /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv-correction-one/bin/python src/api/checks/sensor_sql_check.py > /home/azureuser/.copilot/
+  │ session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one-mssql-red-final.log
+  │ 2>&1; rc=$?; tail -7 /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881
+  │ /files/correction-one-mssql-red-final.log; exit $rc
+  └ AssertionError: ConsumerError not raised
+
+    ----------------------------------------------------------------------
+    Ran 33 tests in 11.541s
+
+    FAILED (failures=17, errors=1)
+    Task-owned SQL container removed.
+    Failed with exit code 1
+
+● Edit
+  └ Edit src/core/src/zava_forward/core/sensor_consumer.py
+
+● Apply configured formatting and check correction types (shell)
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correct
+  │ ion-one/bin/python -m ruff check --fix src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py src/api/tests/test_sensor_ingestion.py;
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correct
+  │ ion-one/bin/python -m ruff format src/core/src/zava_forward/core/sensor_consumer.py …
+  └ 18 lines…
+
+● Run corrected full actual SQLite core and finite API suites (shell)                            26s
+  │ set -o pipefail; PYTHONPATH=src/core/tests:src/api/tests /home/azureuser/.copilot/session-stat
+  │ e/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-one/bin/python -m unittest
+  │ test_sensor_consumer test_sensor_ingestion -q > /home/azureuser/.copilot/session-state/350bfa2
+  │ 6-8783-4b1f-81b7-0434d2d93881/files/correction-one-sqlite-green.log 2>&1; rc=$?; tail -12
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-o…
+  └ 5 lines…
+
+● Run corrected actual disposable SQL Server API suite (shell)                                   32s
+  │ set -o pipefail; /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fil
+  │ es/venv-correction-one/bin/python src/api/checks/sensor_sql_check.py > /home/azureuser/.copilot/
+  │ session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one-mssql-green.log 2>&1;
+  │ rc=$?; tail -18 /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/file
+  │ s/correction-one-mssql-green.log; exit $rc
+  └ 6 lines…
+
+● Read issue-110-offline-sensor-consumer-changes.md
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  └ 161 lines read
+
+● Read issue-110-offline-sensor-consumer-correction-one.md
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  └ 56 lines read
+
+● Read sensor_consumer.py
+  │ src/core/src/zava_forward/core/sensor_consumer.py
+  └ L300:600 (301 lines read)
+
+● Inspect change scope and existing preservation/image commands (shell)
+  │ git status --short && git diff --stat && sed -n '1,200p' src/api/Dockerfile && rg -n
+  │ 'mypy|ruff|sensor|docker|unittest' src/api/README.md src/core/README.md .github/workflows/*.yml
+  │ | tail -70
+  └ 50 lines…
+
+● skill(rpi-implement)
+
+● update_todo todos: "- [x] Verify exact intake lease and preserve original assess…"
+  └ TODO list updated
+
+● Read implementation.md
+  │ ~/.copilot/installed-plugins/hve-core/hve-core-all/skills/rpi/rpi-implement/references/implement
+  │ ation.md
+  └ 114 lines read
+
+● Read README.md
+  │ src/core/README.md
+  └ L1:160 (160 lines read)
+
+● Read issue-110-offline-sensor-consumer-state.json
+  │ .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ 102 lines read
+
+● Read test_sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py
+  └ L1:155 (155 lines read)
+
+● Read README.md
+  │ src/api/README.md
+  └ L1:210 (210 lines read)
+
+✗ Edit
+  │ Edit src/core/src/zava_forward/core/sensor_consumer.py
+  │ Edit src/core/README.md
+  │ Edit src/api/README.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  └ Error: Failed to find expected lines in /home/azureuser/source/ama-wt/issue-110-consumer/.copilo
+    t-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md:
+    * [ ] C1-T01: Add actual SQLite/MSSQL fail-before regressions and narrowly correct
+
+● Read issue-110-offline-sensor-consumer-inventory.md
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  └ 68 lines read
+
+● Read README.md
+  │ docs/reference/README.md
+  └ L1:60 (60 lines read)
+
+/ Search (glob)
+  │ "src/{core,api}/tests/test*{privacy,continuity,governance,rai,building,sqlstore,role,auth,chat_i
+  │ solation}*.py"
+  └ 16 files found
+
+● Collect exact red counts and current checklist/log targets (shell)
+  │ tail -45 .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md && tail
+  │ -30 .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl &&
+  │ for f in correction-one-sqlite-red.log correction-one-mssql-red.log
+  │ correction-one-sqlite-red-final.log correction-one-mssql-red-final.log; do echo "$f"; tail -5
+  │ "/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/$f"; done; …
+  └ 94 lines…
+
+● Inspect narrow correction source diff and append-only log context (shell)
+  │ tail -24 docs/reference/log.md && git --no-pager diff --
+  │ src/core/src/zava_forward/core/sensor_consumer.py
+  └ 161 lines…
+
+● Read sensor_consumer_fixture.py
+  │ src/core/tests/sensor_consumer_fixture.py
+  └ 75 lines read
+
+● Read pyproject.toml
+  │ src/core/pyproject.toml
+  └ L1:170 (118 lines read)
+
+● Read pyproject.toml
+  │ src/api/pyproject.toml
+  └ L1:155 (145 lines read)
+
+● Identify pinned upstream integration boundary without mutation (shell)
+  │ git --no-pager show --stat 6fbdcee18413e9f7366e5f9ec53f68f053681096 && git --no-pager diff
+  │ --name-status 578631ac75cc8c6a7af53922c6aaae4435e7761c 6fbdcee18413e9f7366e5f9ec53f68f053681096
+  │ | head -75
+  └ 121 lines…
+
+● Edit
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit docs/reference/README.md
+  │ Edit docs/reference/log.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+Correction ONE now rejects malformed retained readings and inconsistent historical witnesses on both actual SQL engines, while preserving truthful replay after authority withdrawal and the API’s committed-prefix metadata. I’m completing preservation checks before the authorized pinned integration; the original adverse assessments remain unchanged.
+
+
+● Run full configured core lint formatting and type preservation (shell)
+  │ cd src/core && PY=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/
+  │ files/venv-correction-one/bin/python && { "$PY" -m ruff check . && "$PY" -m ruff format
+  │ --check . && "$PY" -m mypy; } > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/correction-one-core-static.log 2>&1; rc=$?; tail -8 /home/azureuser/.copil
+  │ ot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one-core-static.log; …
+  └ 4 lines…
+
+● Run scoped API static checks and record full baseline limitation (shell)
+  │ cd src/api && PY=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/f
+  │ iles/venv-correction-one/bin/python && { "$PY" -m ruff check . && "$PY" -m ruff format --check
+  │ . && "$PY" -m mypy src/zava_forward/api/sensor_ingestion.py tests/test_sensor_ingestion.py
+  │ checks/sensor_sql_check.py; } > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/correction-one-api-static.log 2>&1; rc=$?; tail -8 /home/azureuser/.copilo…
+  └ 12 lines…
+
+● Build task-owned hardened API image from corrected source (shell)                              27s
+  │ docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:correction-one-350bfa26 src >
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one
+  │ -image-build.log 2>&1; rc=$?; tail -5 /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-
+  │ 81b7-0434d2d93881/files/correction-one-image-build.log; exit $rc
+  └ 1 line…
+
+● Confirm final corrected source on actual SQL Server (shell)                                    50s
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correctio
+  │ n-one/bin/python src/api/checks/sensor_sql_check.py > /home/azureuser/.copilot/session-state/350
+  │ bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one-mssql-final.log 2>&1; rc=$?; tail -7
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one
+  │ -mssql-final.log; exit $rc
+  └ 6 lines…
+
+● Run actual SQLite core sensor SQL privacy governance preservation (shell)                      57s
+  │ cd src/core && PYTHONPATH=tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/venv-correction-one/bin/python -W ignore::ResourceWarning -m unittest
+  │ test_sensor_consumer test_sensor_backfill test_sensor_faults test_sensor_plausibility
+  │ test_sensor_privacy test_sensor_stock test_sqlstore test_buildings test_chat_privacy
+  │ test_regulatory_privacy test_governance test_rai_release -q > /home/azureuser/.copilot/session…
+  └ 11 lines…
+
+● Run API actual adapter roles continuity governance building preservation (shell)            1m 22s
+  │ cd src/api && PYTHONPATH=tests:../core/tests:../agents/tests /home/azureuser/.copilot/session-
+  │ state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-one/bin/python -W
+  │ ignore::ResourceWarning -m unittest test_sensor_ingestion test_auth test_role_matrix
+  │ test_role_endpoint_inventory test_chat_isolation test_continuity test_governance_evidence_api
+  │ test_buildings test_mssqlstore -q > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-…
+  └ 13 lines…
+
+● Verify immutable assessments lease authorized target and commit identity (shell)
+  │ git --no-pager diff --name-only 578631ac75cc8c6a7af53922c6aaae4435e7761c && sha256sum
+  │ .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
+  │ .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md && gh api
+  │ user --jq '{id,login}' && git ls-remote origin refs/heads/feat/offline-sensor-consumer-110 &&
+  │ git fetch origin main && git rev-parse origin/main
+  └ 30 lines…
+
+● Execute corrected finite adapter and regressions in hardened nonroot image (shell)
+  │ docker run --rm --name ama-sensor110-c1-image-350bfa26 --network none --read-only --cap-drop
+  │ ALL --security-opt no-new-privileges --tmpfs /tmp:rw,mode=1777 --tmpfs
+  │ /state:rw,uid=10001,gid=10001,mode=700 --mount
+  │ type=bind,src="$PWD/src/core/tests",dst=/tests/core,readonly --mount
+  │ type=bind,src="$PWD/src/api/tests",dst=/tests/api,readonly -e …
+  └ 26 lines…
+
+● Assess integration overlap and bounded raw evidence size (shell)
+  │ git --no-pager log --oneline --reverse 578631ac75cc8c6a7af53922c6aaae4435e7761c..HEAD && git
+  │ --no-pager diff --name-only 578631ac75cc8c6a7af53922c6aaae4435e7761c
+  │ 6fbdcee18413e9f7366e5f9ec53f68f053681096 -- src docs | tail -80 && du -h /home/azureuser/.copilo
+  │ t/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/correction-one-*.log && git status
+  │ --short
+  └ 39 lines…
+
+● Edit
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit .copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+
+● Read issue-110-offline-sensor-consumer-phase-details.md
+  │ .copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md
+  └ L1:42 (42 lines read)
+
+● Edit
+  └ Edit .copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md
+
+● Persist raw red/green evidence tested-source hashes and privacy-safe local identity (shell)
+  │ for name in correction-one-sqlite-red correction-one-mssql-red correction-one-sqlite-red-final
+  │ correction-one-mssql-red-final correction-one-sqlite-green correction-one-mssql-green
+  │ correction-one-core-static correction-one-api-static correction-one-api-mypy-full
+  │ correction-one-core-preservation correction-one-api-preservation correction-one-mssql-final
+  │ correction-one-image-build correction-one-image-runtime; do cp …
+  └ No Content
+
+● Edit
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Edit
+  └ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+
+● Commit verified correction ONE and complete red/green evidence (shell)
+  │ git diff --check && git add src/core/src/zava_forward/core/sensor_consumer.py
+  │ src/core/tests/test_sensor_consumer.py src/api/tests/test_sensor_ingestion.py
+  │ src/core/README.md src/api/README.md docs/reference/README.md docs/reference/log.md
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-*
+  │ .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md …
+  └ 27 lines…
+
+● update_todo todos: "- [x] Verify exact intake lease and preserve original assess…"
+  └ TODO list updated
+
+The verified correction is committed as `e41985ca`. I’m now integrating only onto the authorized `6fbdcee1` base, with no further bugfixes, then checking complete owned-patch parity and protected upstream files before publication.
+
+
+● Perform explicitly authorized integration-only rebase onto exact pinned target (shell)
+  │ git diff --binary --no-ext-diff --no-renames --unified=0
+  │ 578631ac75cc8c6a7af53922c6aaae4435e7761c e41985ca496f51958b561772f65223168c617e30 -- src docs
+  │ > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-p
+  │ reintegration-source.patch && git ls-tree -r 6fbdcee18413e9f7366e5f9ec53f68f053681096 >
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-aut…
+  └ 17 lines…
+
+● Edit
+  └ Create ~/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-integration-
+    proof.py
+
+● Prove complete owned patch parity and every protected upstream blob/mode (shell)
+  │ python3 /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issu
+  │ e110-integration-proof.py && cp /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/issue110-integration-rebase.log
+  │ .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-integration-rebase.log
+  │ && git --no-pager log --oneline -5 && sha256sum …
+  └ 47 lines…
+
+● Read sensor_sql_check.py
+  │ src/api/checks/sensor_sql_check.py
+  └ L1:200 (106 lines read)
+
+● Read test_mssqlstore.py
+  │ src/api/tests/test_mssqlstore.py
+  └ L1:100 (100 lines read)
+
+● Read test_continuity_epoch_export.py
+  │ src/api/tests/test_continuity_epoch_export.py
+  └ L1:60 (60 lines read)
+
+/ Search (glob)
+  │ "src/core/tests/test_*{continuity,governance,rai,building,queue}*.py"
+  └ 6 files found
+
+/ Search (glob)
+  │ "src/api/checks/*sql*"
+  └ 1 file found
+
+● Validate integrated API owned static scope and retain full baseline failure (shell)
+  │ cd src/api && PY=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/f
+  │ iles/venv-correction-one/bin/python && { "$PY" -m ruff check . && "$PY" -m ruff format --check
+  │ . && "$PY" -m mypy src/zava_forward/api/sensor_ingestion.py tests/test_sensor_ingestion.py
+  │ checks/sensor_sql_check.py; } > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/integration-api-static.log 2>&1; rc=$?; tail -8 /home/azureuser/.copilot/s…
+  └ 11 lines…
+
+● Validate full core static checks on pinned integrated source (shell)
+  │ cd src/core && PY=/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/fi
+  │ les/venv-correction-one/bin/python && { "$PY" -m ruff check . && "$PY" -m ruff format --check .
+  │ && "$PY" -m mypy; } > /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d9388
+  │ 1/files/integration-core-static.log 2>&1; rc=$?; tail -8 /home/azureuser/.copilot/session-state/
+  │ 350bfa26-8783-4b1f-81b7-0434d2d93881/files/integration-core-static.log; exit $rc
+  └ 3 lines…
+
+● Build hardened image from exact pinned integrated candidate (shell)                            26s
+  │ docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:integrated-350bfa26 src >
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/integration-im
+  │ age-build.log 2>&1; rc=$?; tail -5 /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b
+  │ 7-0434d2d93881/files/integration-image-build.log; exit $rc
+  └ 1 line…
+
+● Run integrated finite adapter on actual owned SQL Server (shell)                               50s
+  │ /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correctio
+  │ n-one/bin/python src/api/checks/sensor_sql_check.py > /home/azureuser/.copilot/session-state/350
+  │ bfa26-8783-4b1f-81b7-0434d2d93881/files/integration-mssql.log 2>&1; rc=$?; tail -7 /home/azureus
+  │ er/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/integration-mssql.log; exit
+  │ $rc
+  └ 6 lines…
+
+● Check integrated sensor SQL privacy building governance and queue preservation (shell)       1m 7s
+  │ cd src/core && PYTHONPATH=tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/venv-correction-one/bin/python -W ignore::ResourceWarning -m unittest
+  │ test_sensor_consumer test_sensor_backfill test_sensor_faults test_sensor_plausibility
+  │ test_sensor_privacy test_sensor_stock test_sqlstore test_buildings test_chat_privacy
+  │ test_regulatory_privacy test_governance test_rai_release test_sqlqueues test_taskqueues -q > …
+  └ 11 lines…
+
+● Verify integrated actual API and upstream continuity epoch building roles (shell)           1m 46s
+  │ cd src/api && PYTHONPATH=tests:../core/tests:../agents/tests /home/azureuser/.copilot/session-
+  │ state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/venv-correction-one/bin/python -W
+  │ ignore::ResourceWarning -m unittest test_sensor_ingestion test_auth test_role_matrix
+  │ test_role_endpoint_inventory test_chat_isolation test_continuity test_continuity_epoch_export
+  │ test_governance_evidence_api test_buildings test_mssqlstore -q > /home/azureuser/.copilot/sess…
+  └ 15 lines…
+
+● Identify exact integrated full API static residual without source edits (shell)
+  │ git --no-pager show 6fbdcee18413e9f7366e5f9ec53f68f053681096:src/api/pyproject.toml | grep -n -E
+  │ 'mypy_path|release_support|follow_imports' && cat /home/azureuser/.copilot/session-state/350bfa2
+  │ 6-8783-4b1f-81b7-0434d2d93881/files/integration-api-mypy-full.log && git diff --check && git
+  │ rev-parse HEAD
+  └ 16 lines…
+
+● Verify integrated runtime source in hardened image and actual adapter (shell)
+  │ docker run --rm --name ama-sensor110-integration-image-350bfa26 --network none --read-only
+  │ --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,mode=1777 --tmpfs
+  │ /state:rw,uid=10001,gid=10001,mode=700 --mount
+  │ type=bind,src="$PWD/src/core/tests",dst=/tests/core,readonly --mount
+  │ type=bind,src="$PWD/src/api/tests",dst=/tests/api,readonly -e …
+  └ 26 lines…
+
+● Bind actual hardened image runtime to every integrated package Python source (shell)
+  │ docker run --rm --name ama-sensor110-image-binding-350bfa26 --network none --read-only
+  │ --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,mode=1777 --tmpfs
+  │ /state:rw,uid=10001,gid=10001,mode=700 -e ZF_DATA=/tmp/no-default-dataset.json
+  │ ama-sensor110-api:integrated-350bfa26 python -c 'import hashlib,json,pathlib;
+  │ root=pathlib.Path("/usr/local/lib/python3.12/site-packages"); …
+  └ 16 lines…
+
+● Measure pinned upstream full API mypy baseline separately without edits (shell)
+  │ mkdir -p /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/iss
+  │ ue110-target-baseline && git archive 6fbdcee18413e9f7366e5f9ec53f68f053681096 src/core src/api
+  │ | tar -x -C /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files
+  │ /issue110-target-baseline && cd /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7
+  │ -0434d2d93881/files/issue110-target-baseline/src/api && /home/azureuser/.copilot/session-state…
+  └ 11 lines…
+
+● Read sensor_consumer.py
+  │ src/core/src/zava_forward/core/sensor_consumer.py
+  └ L195:270 (76 lines read)
+
+✗ Record additional bounded-witness residual without integration source changes (shell)
+  │ PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d
+  │ 2d93881/files/venv-correction-one/bin/python - <<'PY' > /home/azureuser/.copilot/session-state
+  │ /350bfa26-8783-4b1f-81b7-0434d2d93881/files/integration-additional-witness-probe.log 2>&1
+  │ import tempfile
+  │ from dataclasses import replace…
+  └ Traceback (most recent call last):
+    File "<stdin>", line 16, in <module>
+    File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_inges
+    tion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+    zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
+    Failed with exit code 1
+
+● Resolve whether speculative nested JSON failure is real in actual runtime (shell)
+  │ PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d
+  │ 2d93881/files/venv-correction-one/bin/python - <<'PY'
+  │ import sys,json
+  │ from zava_forward.core.sensor_consumer import SensorConsumer
+  │ print('Runtime recursion limit:',sys.getrecursionlimit())…
+  └ 8 lines…
+
+● Correct speculative probe expectation and preserve bounded refusal evidence (shell)
+  │ PYTHONPATH=src/core/tests /home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d
+  │ 2d93881/files/venv-correction-one/bin/python - <<'PY' > /home/azureuser/.copilot/session-state
+  │ /350bfa26-8783-4b1f-81b7-0434d2d93881/files/integration-additional-witness-probe-corrected.log
+  │ 2>&1
+  │ import tempfile…
+  └ 29 lines…
+
+● Confirm no integration source changes remote lease Draft and resource ownership (shell)
+  │ git diff --exit-code 4be60e29ea9daa50c15ed0e6e8a3342050744178 -- src docs && git ls-remote
+  │ origin refs/heads/feat/offline-sensor-consumer-110 && gh pr view 411 --json
+  │ headRefOid,isDraft,state,closingIssuesReferences && git fetch origin main && git rev-parse
+  │ origin/main && docker ps -a --format '{{.ID}} {{.Names}}' --filter name=ama-sensor110
+  └ 5 lines…
+
+● Edit
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+
+Pinned integration preserved the complete owned patch and all 2,750 protected upstream files. The integrated SQL, preservation and hardened-image checks pass. Full API mypy is **not green**: it reports the nine baseline browser-import errors plus one upstream unused-ignore interaction. That limitation is recorded for the coordinator; no integration-only source fix was made.
+
+
+● Persist integration raw evidence and confirm receipt-only delta and identity (shell)
+  │ for name in integration-core-static integration-api-static integration-api-mypy-full
+  │ integration-core-preservation integration-api-preservation integration-mssql
+  │ integration-image-build integration-image-runtime integration-target-api-mypy-baseline
+  │ integration-additional-witness-probe integration-additional-witness-probe-corrected; do cp
+  │ "/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/$name.log" …
+  └ 13 lines…
+
+● Remove exact task-owned image tags venv and baseline export after validation (shell)
+  │ docker image rm ama-sensor110-api:correction-one-350bfa26
+  │ ama-sensor110-api:integrated-350bfa26 && python3 - <<'PY'
+  │ from pathlib import Path
+  │ import shutil
+  │ root=Path('/home/azureuser/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files')…
+  └ 15 lines…
+
+● Edit
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+
+● Commit complete integration proof raw transcript and 57-path inventory (shell)
+  │ python3 - <<'PY'
+  │ import pathlib, subprocess
+  │ base='6fbdcee18413e9f7366e5f9ec53f68f053681096'
+  │ path=pathlib.Path('.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inte
+  │ gration-inventory.txt')…
+  └ 39 lines…
+
+● Publish pinned integration once using only the exact authorized intake lease (shell)
+  │ test "$(git rev-parse HEAD)" = 6b2268311335a7a677cbce98442c0dcd354990e2 && test "$(git branch
+  │ --show-current)" = feat/offline-sensor-consumer-110 && test -z "$(git status --porcelain)" &&
+  │ test "$(git ls-remote origin refs/heads/feat/offline-sensor-consumer-110 | cut -f1)" =
+  │ 43ef35655b5a01f2a07a2d09eaef5415cc27c1dd && git push --force-with-lease=refs/heads/feat/offlin
+  │ e-sensor-consumer-110:43ef35655b5a01f2a07a2d09eaef5415cc27c1dd origin …
+  └ 7 lines…
+
+● Refresh GitHub PR metadata after exact-leased branch publication (shell)
+  │ gh api repos/jmservera/ama/pulls/411 --jq '{head: .head.sha,base: .base.sha,draft: .draft,state:
+  │ .state,url: .html_url}' && gh pr view 411 --json
+  │ closingIssuesReferences,headRefOid,baseRefOid,isDraft && git status --short
+  └ 2 lines…
+
+● Verify published proof tested-source binding original hashes and complete inventory (shell)     5s
+  │ python3 - <<'PY'
+  │ import hashlib,json,pathlib,subprocess
+  │ root=pathlib.Path('.copilot-tracking/changes/2026-10-18')
+  │ proof=json.loads((root/'issue-110-offline-sensor-consumer-integration-proof.json').read_text()
+  │ )…
+  └ 24 lines…
+
+● Edit
+  │ Edit .copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md
+  │ Edit .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Edit
+  │ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
+
+● Edit
+  └ Edit .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
+
+● Normal-push final tracking-only frozen handoff and stopped same-task state (shell)
+  │ git diff --check && git diff --exit-code 4be60e29ea9daa50c15ed0e6e8a3342050744178 -- src docs
+  │ && python3 - <<'PY'
+  │ import json,pathlib
+  │ state=json.loads(pathlib.Path('.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sen
+  │ sor-consumer-state.json').read_text())…
+  └ 28 lines…
+
+● Edit
+  └ Create ~/.copilot/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-correction-o
+    ne-pr-body.md
+
+● Verify frozen final source artifact inventory cleanup and clean worktree binding (shell)
+  │ python3 - <<'PY'
+  │ import hashlib,json,pathlib,subprocess
+  │ root=pathlib.Path('.copilot-tracking/changes/2026-10-18')
+  │ proof=json.loads((root/'issue-110-offline-sensor-consumer-integration-proof.json').read_text()
+  │ )…
+  └ 30 lines…
+
+● Bind Draft PR411 to exact frozen final head base and adverse evidence (shell)
+  │ test "$(git ls-remote origin refs/heads/feat/offline-sensor-consumer-110 | cut -f1)" =
+  │ 4723f0a19eb6741079dfec638303f9a3d009d05c && gh pr edit 411 --body-file /home/azureuser/.copilo
+  │ t/session-state/350bfa26-8783-4b1f-81b7-0434d2d93881/files/issue110-correction-one-pr-body.md
+  │ && gh api repos/jmservera/ama/pulls/411 --jq '{head: .head.sha,base: .base.sha,draft:
+  │ .draft,state: .state,url: .html_url}' && gh pr view 411 --json …
+  └ 4 lines…
+
+● update_todo todos: "- [x] Verify exact intake lease and preserve original assess…"
+  └ TODO list updated
+
+**Correction ONE is pushed and frozen in Draft PR #411.** The same automatic task is completed in Follow-up and **stopped** for coordinator review; this is not independent acceptance.
+
+| Binding | Commit |
+|---|---|
+| Final pushed head | `4723f0a19eb6741079dfec638303f9a3d009d05c` |
+| Authorized base | `6fbdcee18413e9f7366e5f9ec53f68f053681096` |
+| Tested source | `4be60e29ea9daa50c15ed0e6e8a3342050744178` |
+
+RV-001’s retained-reading/witness validation and RV-002’s handoff reconciliation are implemented. Historical replay survives current authority withdrawal; malformed persistence produces bounded refusal with committed-prefix metadata. One exact intake-lease push performed integration; the final tracking-only receipt used normal push. PR remains Draft with empty closing references.
+
+**Actual evidence:** isolated red SQLite ran 9 tests with 32 failures/2 errors; red SQL Server ran 33 with 17 failures/1 error. Corrected SQLite core/API passed 59 tests. Integrated SQL Server passed 33; core preservation ran 232 with 17 skips; API preservation ran 408 with 213 skips. Hardened UID10001/read-only/network-disabled runtime ran 75 with one skip, plus actual adapter admission/reopen/replay. Complete normalized patch parity, all **2,750 protected upstream files**, and all **83 image runtime Python files** were verified.
+
+**Full API mypy is not green:** nine baseline browser-import errors plus one unused upstream ignore exposed by integrated fixture lookup. RV-003 and that additional static interaction remain coordinator decisions; no integration-only fix was added. Whole-issue/live/human gates remain unmet. Worktree is clean; owned containers, image tags/IDs, venv and baseline export are removed.
+
+Original assessments remain unchanged, executed once each:
+* Critique: **Complete / Revise**, SHA-256 `ad56b59a8df472fff31ed3ae906eca63505ea76fca0f63a457dda4acf540942b`
+* Review: **Complete / Defects found**, SHA-256 `5ae9cb33e5d46a5a486cfbce0e824ab012efd8b6b4fccf9b4e73546e772b07cc`
+
+| Artifact | Content |
+|---|---|
+| [.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json](.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json) | Same-task stopped state |
+| [.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl](.copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl) | 38-event actual phase log |
+| [.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md](.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md) | Full correction/integration commands, failures, results and cleanup |
+| [.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-integration-inventory.txt](.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-integration-inventory.txt) | Complete 56-path inventory |
+| [.copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md](.copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md) | Original Research |
+| [.copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md](.copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md) | Completed correction checklist |
+| [.copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md](.copilot-tracking/details/2026-10-18/issue-110-offline-sensor-consumer-phase-details.md) | Current implementation contract |
+| [.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md](.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md) | Preserved historical and accurate current handoff |
+| [.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md) | Immutable original critique |
+| [.copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md](.copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md) | Immutable adverse original Review |
+
+## Next Steps
+
+Coordinator’s complete independent review of the exact frozen head, source, artifacts and actual log. **Correction count: ONE of maximum TWO.** No further source work, second original Review, readiness or merge action was performed.
+
+
+
+Changes    +3645 -163
+AI Credits 497.88 (1h 8m 3s)
+Tokens     ↑ 19.8m (19.2m cached, 601.6k written) • ↓ 155.7k (40.7k reasoning)
+Resume     copilot --resume=350bfa26-8783-4b1f-81b7-0434d2d93881
+exit=0

@@ -6356,3 +6356,20 @@ metadata when the knowledge base was created.
 * Original adverse critique and Review remain unchanged; this separately
   authorized implementation is correction ONE, not independent acceptance.
   Whole issue/live/Proposed ADR gates and baseline API browser tooling remain.
+
+## [2026-10-18] query | Issue 110 final correction and dated ADR reconciliation
+
+* Reconciled current ADR 0003 status, core/API guides, addendum and index against
+  the [owner's 2026-10-15 decision](https://github.com/jmservera/ama/issues/129#issuecomment-6194409951),
+  retrieved 2026-10-18. Owner accepted ADR with amendment: Basic IoT Hub enough
+  for the exercise; no cloud-to-device messages, device twins or device
+  management for now. The ADR preserves its original Proposed status as history.
+  Earlier append-only entries and adverse assessment artifacts are unchanged.
+* This is not live transport, sizing/cost, network/provisioning/credential
+  authority, privacy review, real AI or Azure application acceptance. Whole
+  issue 110 and its live/human gates remain open.
+* Final authorized correction TWO validates the complete target-sensor retained
+  ordering boundary, rather than trusting MAX before validation; low-sorting
+  corrupt timestamps and duplicate maxima cannot be skipped. Validated seed
+  integers compare semantically across SQLite/BIGINT while retaining exact
+  input/digest replay identity. No new store, service or operational policy.

@@ -26,7 +26,11 @@ and [finite API adapter](../../src/api/README.md#finite-offline-sensor-ingestion
 document constructed observations-only SQL processing, independent exercise
 controls, stable-key append and owned restricted DQ. Local SQLite/SQL Server
 engineering evidence is not live Hub identity/transport, Azure/real AI
-application acceptance or approval of Proposed ADR 0003. Whole issue remains open.
+application acceptance. The
+[ADR 0003 status reconciliation](../adrs/0003-journey-derived-capabilities-runtime-fit.md#status)
+records the existing 2026-10-15 owner acceptance with Basic IoT Hub amendment
+for the exercise, excluding cloud-to-device messages, twins and device
+management. Remaining operational/human gates are not implied; whole issue remains open.
 The same contract records retained reading/witness validation and bounded
 partial-batch refusal, while historical exact replay survives withdrawn current
 exercise authority. These are local engineering safeguards, not live acceptance.
