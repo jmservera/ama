@@ -3,8 +3,8 @@
   "task_slug": "issue-172-chat-fixture-isolation",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-172-chat-fixture-isolation-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-18/issue-172-chat-fixture-isolation-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-172-chat-fixture-isolation-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-18/issue-172-chat-fixture-isolation-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-172-chat-fixture-isolation-review.md"
   },
   "confirmed_decisions": [
     {
@@ -34,12 +34,36 @@
       "decision": "Implement P01/P02 complete; validation passed and pre-Review reconciliation ready",
       "status": "complete",
       "evidence": "Changes record: baseline 11; failing-first 15 with 9 failures; corrected focused 15; public coupling 54; agents discovery 98; Ruff check/format and mypy pass with existing exclusions disclosed"
+    },
+    {
+      "decision": "Exactly one original independent Review executed; outcome Conformant for bounded offline fixture engineering, zero RV findings",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-172-chat-fixture-isolation-review.md; source 39f6ec16c0fd3bd18f64f31d6e8116045a059a4d; base 3104bb69ddc26c81e0e9d2f57000dac1d99a419a; independent worker issue172-original-review"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Create local implementation snapshot; independent original Review pending, no publication before verdict"
+    "phase": "Follow-up",
+    "action": "Preserve original Review and commit closeout evidence; normal push same branch and main PR Refs #172, then coordinator independent publication gate"
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator independent publication gate",
+      "rationale": "Verify published source/base/head, original critique/Review and bounded acceptance before any merge decision",
+      "evidence": "Caller instruction; original Review Conformant for offline engineering only"
+    },
+    {
+      "rank": 2,
+      "task": "Owner decision on SN-08 actual scope and volume",
+      "rationale": "SN-08 remains partial; fixture coverage cannot approve whole-issue scope or volume",
+      "evidence": "needs-inventory.json SN-08; research C5; original Review plan follow-up assessment"
+    },
+    {
+      "rank": 3,
+      "task": "Separate runtime and human privacy/retention evidence",
+      "rationale": "Declarative probes cannot establish serving authorization or resolve OD-45 to OD-49",
+      "evidence": "Original Review follow-up routing; ADR 0004; caller boundaries"
+    }
+  ]
 }

@@ -11,9 +11,9 @@
 
 ## Execution Status
 
-Completed implementation: P01/P02 within the full parent plan; P03 independent
-Review and publication are later parent-owned work. Completed markers: P01,
-P01-T01, P01-T02, P02, P02-T01. Remaining: P03/P03-T01 only.
+Completed implementation: P01/P02 and parent P03 original independent Review.
+Completed markers: P01, P01-T01, P01-T02, P02, P02-T01, P03, P03-T01.
+Publication gate accepted; remote commit/push/PR receipt still pending.
 Approved source boundary: public helper/test and directly related docs only.
 First execution boundary: tests before helper. No engineering blocker.
 
@@ -21,7 +21,8 @@ First execution boundary: tests before helper. No engineering blocker.
 
 Research actually executed and disproved the alleged baseline failure. Exactly
 one independent critique executed: original Pass, zero findings. Implementation
-and local verification now complete; original independent Review not yet run.
+and local verification complete; original independent Review executed once,
+Complete / Conformant for bounded offline engineering, zero findings.
 
 ## Completed Work
 
@@ -60,6 +61,22 @@ probes; existing `write()` computes the new aggregate hash for temporary output.
 No tracked chat output/source hash exists to refresh. Public scenario source
 hashes do not cover this helper; registry and frozen reports were left intact.
 
+### P03-T01: Original independent Review and source identity
+
+Local implementation snapshot: `39f6ec16c0fd3bd18f64f31d6e8116045a059a4d`.
+Exact caller base: `3104bb69ddc26c81e0e9d2f57000dac1d99a419a`.
+Branch: `test/chat-fixture-isolation-172`.
+Source SHA-256: helper `dc983dbe0b84bdeb2b96e054119509d0c170ea995dfbf4abb80035613ac867b8`;
+test `283df291ac423f1fa1dde78117e013035027ee65c4f02f943db6e573237b057f`.
+
+Fresh independent worker executed the one original Review and wrote only its
+canonical review artifact. Original execution Complete, outcome Conformant,
+zero RV findings. It independently ran 46 focused/public tests and static gates,
+compared exact-base generation across four seeds (all eight other payloads and
+121 original isolation rows unchanged), and rejected all six omitted actor/action
+probes. New isolation total is 127. Original critique and Review remain unedited.
+No corrections or repeat Review. Publication allowed, not whole-issue closure.
+
 ## Implementation-Time Plan and Detail Updates
 
 None. No requirement or scope change, amendment or significant divergence.
@@ -94,10 +111,12 @@ historic external source entries; passing tests do not mean those were verified.
 
 ## Pre-Review Reconciliation
 
-Ready. Plan markers and phase details match completed P01/P02; all required
+At Review handoff: ready. Plan markers and phase details matched completed P01/P02; all required
 implementation checks passed, completed-work evidence and handoff current.
-P03/P03-T01 original independent Review remains unchecked and parent-owned.
-No active engineering blocker. Approval/runtime follow-ups remain separate.
+P03/P03-T01 was pending at source snapshot, as correctly assessed by original
+Review. After Review return, parent reconciled P03 as complete and recorded
+the outcome in state; original Review itself is frozen. Approval/runtime
+follow-ups remain separate.
 
 ## Blockers
 
@@ -105,7 +124,7 @@ None for bounded engineering. Human policy/scope decisions remain separate.
 
 ## Remaining Work
 
-Only parent P03/P03-T01 original Review/publication gate.
+Parent normal publication receipt, then coordinator independent gate.
 
 ## Follow-Up Items
 
@@ -114,6 +133,7 @@ outside this fixture-only task, owned by owner/coordinator.
 
 ## Return-to-Caller State
 
-Implement P01/P02 complete, review-ready. Original critique Pass preserved.
-No amendment/divergence. Parent owns single original Review and publication
-decision; this implementation result is not a self-awarded Review outcome.
+Implement P01/P02 and original Review complete. Original critique Pass and
+independent Review Conformant preserved; no amendment/divergence. Parent proceeds
+to authorized publication, then coordinator independent gate. Session remains
+running in Follow-up; no child work selected or started.
