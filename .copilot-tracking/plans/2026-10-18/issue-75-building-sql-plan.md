@@ -137,12 +137,12 @@ counts, failures/skips and cleanup. Run migration regression and configured
 API Ruff/format/mypy. Record application image check as redundant if unchanged.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: One original Review and publication
+### [x] P03: One original Review and publication
 
 Dependency: P02 evidence reconciled.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Review once, freeze evidence and publish draft
+#### [x] P03-T01: Review once, freeze evidence and publish draft
 
 Activate rpi-review exactly once. Preserve original findings; no post-review
 source correction without coordinator authorization. Commit tests/docs and all
@@ -180,5 +180,9 @@ execution evidence still belongs to Implement. No second critique.
 ## Handoff
 
 Changes record: `.copilot-tracking/changes/2026-10-18/issue-75-building-sql-changes.md`.
-Ready task after critique: P01-T01. Original Review path:
+All execution markers complete. Source/evidence commit:
+7eb509e9e382b48a940cbd555c1328a80a02a69f.
+Draft PR410: https://github.com/jmservera/ama/pull/410.
+Publication bookkeeping is evidence-only; no source changes after original Review.
+Automatic session stopped on explicit caller direction. Original Review path:
 `.copilot-tracking/reviews/logs/2026-10-18/issue-75-building-sql-review.md`.

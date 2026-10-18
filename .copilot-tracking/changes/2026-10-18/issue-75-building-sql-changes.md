@@ -20,7 +20,9 @@ Completed P01/P01-T01: tests and README, source-only diff is two files.
 Completed P02/P02-T01: focused regressions, actual SQL, cleanup fault probes,
 configured static checks and migration. Original Review: execution Complete,
 outcome Conformant within bounded local constructed SQL conformance only.
-Remaining: P03 publication bookkeeping, no source corrections or second Review.
+P03 complete: source/evidence commit and draft PR410 published; subsequent
+evidence-only bookkeeping. Session stopped on explicit caller direction.
+No remaining active task, source corrections, second Review or child task.
 
 ## Full Ordered Phase Log
 
@@ -44,6 +46,14 @@ Remaining: P03 publication bookkeeping, no source corrections or second Review.
    this compact diff. Execution Complete, outcome Conformant within bounded
    scope; no substantive defect. Original record frozen, no second Review.
    Parent moves to authorized publication only, then stops.
+9. Source/tests/docs and all issue RPI artifacts committed together as
+   7eb509e9e382b48a940cbd555c1328a80a02a69f, Conventional Commit with required
+   Copilot trailer and authenticated noreply author/committer.
+   Branch pushed without rewrite; draft PR410 published targeting main:
+   https://github.com/jmservera/ama/pull/410, Refs #75 only.
+10. Publication-only plan/details/state/log bookkeeping persisted; no assessed
+    source or original Review/critique altered. Automatic session stopped as
+    explicitly requested, no follow-up execution or second Review.
 
 ## Approved Implementation Boundary
 
@@ -177,6 +187,12 @@ Assessed executable blob: `351c81ab24c09811a4e3195b9d88482456482b01`;
 README blob: `3c8b48ae6c6a37d38100a9c860768727fa162073`.
 No source edits after that Review. Commit/push/draft metadata may be appended
 by the parent; this is not another Review or source correction.
+
+Publication verified with gh: PR410 OPEN, draft=true, base main, head
+test/building-sql-conformance-75; issue75 remains OPEN. Hosted CI was in progress
+at initial publication (image-paths/no-working-data passed); no full hosted
+acceptance claimed and no check names changed. Final evidence-only commit
+updates this log, plan markers, phase status and stopped state only.
 
 Task-owned workspace scratch (virtualenv, constructed document bytes, digests,
 temporary fixtures and archived baseline) removed by exact resolved path after

@@ -19,7 +19,7 @@ disposed in plan and incorporated below before implementation.
 | --- | --- | --- |
 | P01 | Focused test-only conformance | Complete |
 | P02 | Local constructed evidence | Complete; adverse attempts preserved |
-| P03 | Single original Review and draft publication | Review ready |
+| P03 | Single original Review and draft publication | Complete; PR410 draft, session stopped |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Add focused conformance evidence
@@ -131,3 +131,9 @@ Publication metadata may need one evidence-only follow-up commit; do not
 change assessed source after Review. Do not self-merge or rewrite/rebase.
 Completion: frozen SHA/base, draft URL, path inventory, actual SQL results,
 cleanup and explicit operational/human/live gates. No child task automatically.
+
+Completion evidence: source/evidence commit
+7eb509e9e382b48a940cbd555c1328a80a02a69f, draft PR410
+https://github.com/jmservera/ama/pull/410. One original Review Complete,
+Conformant within bounded scope. Only publication bookkeeping after that commit.
+No human review checkbox marked, no issue-state change or merge.
