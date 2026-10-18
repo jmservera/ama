@@ -6,6 +6,28 @@ ms.date: 2026-10-18
 
 ## Task and Execution Boundary
 
+## Current P04-T04 Integration-Only Resumption
+
+Owner 2026-10-18T09:40 explicitly authorizes SAME task integration/publication
+ONLY. Expected local 30e4602511c9ce907b8574d1bce4939bd1792121 and remote
+e00c521573501a4ed84dab7ec0ccf66ef57a7053 verified clean; fetched main
+ab0613f3336109ff9b96560a16758ee842232715 verified. Rebase exact prior base
+a86282c4 onto that pinned base. Preserve PR408 timecapture source/tests and both
+README contributions, prior queue/recorder and all owned source/evidence.
+No new source correction, critique or original Review. Correction count stays
+ONE of maximum two; RV-002 remains separate. All original adverse assessments
+and older exhausted cycles remain immutable.
+
+Publish pinned integration even if main moves again, reporting it without a
+further rebase. Unexpected topic advancement stops; ONLY original exact
+e00c5215 lease authorized. Fresh minimal continuity export/release/register/
+numeric/timecapture plus configured core/API static checks. Prior broad SQL/
+image/coupled evidence stays historical, including the namespace import failure
+and separate corrected resident run. Separate final integration receipt and
+current metadata only; keep draft, empty closing refs and STOP for independent
+coordinator review. Both complete /tmp worker logs were read; immutable copies
+and hashes will be preserved in the session files and final receipt.
+
 Current owner continuation: SAME task, P04 correction ONE of maximum two,
 RV-001 only. This supersedes historical stopped/zero-correction wording below
 without rewriting its evidence. Original Review/critique and exhausted older

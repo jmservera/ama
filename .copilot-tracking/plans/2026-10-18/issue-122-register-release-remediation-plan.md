@@ -149,10 +149,14 @@ Exact commands/results retained in the changes record; failures preserved.
 Declared scope: P04 only, extending the completed original execution without
 repeating Research, critique or Review. No new task identity or self-acceptance.
 
-Current blocker: remote main moved during validation to
-ab0613f3336109ff9b96560a16758ee842232715. Authorized integration remains exact
-a86282c4badebc58eabbf9e441410d930a201ac2; no subsequent rebase or publication.
-Owner's explicit "main moves again report wait" condition is active.
+Current owner direction clears the prior main-movement blocker for integration/
+publication ONLY: expected local 30e4602511c9ce907b8574d1bce4939bd1792121,
+rebase a86282c4 onto EXACT ab0613f3336109ff9b96560a16758ee842232715.
+Publish this pinned integration even if main later moves, reporting it without
+reintegrating. Unexpected topic advancement stops; original exact e00c5215 lease
+only. No new source correction, critique or original Review. Preserve PR408
+timecapture.py/test_timecapture.py exactly, both README contributions, queue/
+recorder and complete normalized owned source patch; all 27 frozen originals.
 
 <!-- rpi:phase id=P04 -->
 ### [ ] P04: RV-001 correction ONE and authorized integration
@@ -181,7 +185,11 @@ static gates pass. Coupled command retained one test-namespace import error
 (432 pass/114 skips), corrected resident-only command 9 run/8 pass/one skip.
 Separate correction-one.md and correction-one-parity.json persist P04-T03,
 including 47 full-PR boundary paths and 27 immutable original file hashes.
-P04-T04 remains blocked on main movement; no publication or PR update occurred.
+P04-T04 now resumes under explicit integration-only authorization. Fresh minimal
+export/release/register/numeric and timecapture suites plus configured core/API
+static gates; no broad SQL/image/coupled rerun absent a new source concern.
+Separate final integration receipt, exact lease publication, draft PR398 update,
+empty closing refs and STOP for full source/artifact coordinator review.
 
 ## Critique Disposition
 

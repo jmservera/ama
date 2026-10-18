@@ -12,12 +12,15 @@ a86282c4badebc58eabbf9e441410d930a201ac2 before final validation. Preserve all
 original assessments/historical receipts, PR407 queue and PR406 recorder.
 RV-002 is not in this correction; no new critique or original Review.
 
-Current blocker: git ls-remote observed main
-ab0613f3336109ff9b96560a16758ee842232715 during integrated validation. The exact
-authorized base was integrated without conflict; do not follow moving main.
-Owner explicitly requires report/wait. P04-T04 publication and PR update paused;
-remote topic remains e00c521573501a4ed84dab7ec0ccf66ef57a7053. Only cleanup,
-evidence reconciliation and local persistence continue.
+Current owner direction resumes P04-T04 integration/publication ONLY from
+expected clean local 30e4602511c9ce907b8574d1bce4939bd1792121. Rebase exact
+a86282c4 onto pinned ab0613f3336109ff9b96560a16758ee842232715. Preserve PR408
+timecapture source/test bytes, additive README sections, queue/recorder,
+normalized owned source delta and all 27 frozen originals. Fresh minimal
+continuity/timecapture/static checks only unless integration raises a concern.
+Publish pinned integration even if main later moves; report without reintegration.
+Unexpected topic movement stops; only original exact e00c5215 lease authorized.
+No new source correction, critique or original Review.
 
 P04-T01/T02 complete on exact authorized base; source guard and JSON matrix
 validated. P04-T03 results: focused 66/66, integrated host and installed nonroot
@@ -27,7 +30,7 @@ corrected resident-only namespace command 9 run/8 pass/one skip. Separate
 correction-one.md and correction-one-parity.json persist P04-T03 completion
 with 47 full-PR paths, 27 frozen originals and 11 raw logs.
 Source candidate 72cf28b057dbb57e1599367dded1345a4c26c054 is committed locally;
-P04-T04 remains blocked. Original adverse
+P04-T04 now resumes under the explicit integration-only direction above. Original adverse
 Review not rerun or revised. Correction count ONE of maximum two; older cycles
 remain exhausted and unchanged. RV-002 remains outside this correction.
 

@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "blocked",
-  "session_status": "stopped",
+  "status": "active",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Owner cleared main-movement blocker for integration/publication ONLY of SAME correction ONE. Rebase expected local 30e4602511c9ce907b8574d1bce4939bd1792121 from exact a86282c4 onto exact ab0613f3336109ff9b96560a16758ee842232715. Publish pinned integration even if main later moves, reporting rather than reintegrating. Unexpected topic advancement stops; exact original e00c5215 lease only.",
+      "status": "authorized",
+      "evidence": "Owner 2026-10-18T09:40 continuation; local clean expected head, fetched exact origin/main ab0613f3 and topic e00c5215 verified. Preserve exact PR408 timecapture source/tests, queue/recorder, owned source patch, 27 frozen originals and original adverse Review. No new source correction, critique or original Review."
+    },
     {
       "decision": "Correction ONE source implementation exercised, not independently accepted: narrow OverflowError guard and 34 JSON numeric boundary subcases; no RV-002 source change, no repeat critique or Review.",
       "status": "implemented-pending-independent-review",
@@ -53,11 +58,6 @@
   ],
   "blockers": [
     {
-      "id": "main-moved",
-      "summary": "Remote main moved again to ab0613f3336109ff9b96560a16758ee842232715; only a86282c4badebc58eabbf9e441410d930a201ac2 was authorized for this integration.",
-      "resolution": "Owner explicitly instructed report and wait on main movement. No new integration or publication until coordinator supplies direction; branch remote remains e00c521573501a4ed84dab7ec0ccf66ef57a7053."
-    },
-    {
       "id": "independent-acceptance",
       "summary": "Coordinator full exact published-head independent review remains required; PR stays draft.",
       "resolution": "Publish preserved adverse assessment/evidence, then stop for coordinator."
@@ -65,7 +65,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "BLOCKED/STOPPED on main movement. P04-T01/T02/T03 complete locally, resources cleaned, correction receipt/parity persisted. P04-T04 remains unexecuted: no rebase/publication/PR update. Report and wait for coordinator main/base direction; full source/artifact independent review remains pending."
+    "action": "P04-T04 integration/publication ONLY active: freeze source/evidence, rebase onto pinned ab0613f3, minimal fresh continuity/timecapture/static validation and separate final integration receipt, exact e00c5215 lease publication then STOP for full independent coordinator review. No new source correction/critique/Review."
   },
   "prioritized_follow_ups": [
     {
