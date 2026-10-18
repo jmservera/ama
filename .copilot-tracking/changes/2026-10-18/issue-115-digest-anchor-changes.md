@@ -15,7 +15,16 @@ Branch: fix/digest-anchor-evidence-115.
 
 ## Execution Status
 
-Current correction ONE (2026-10-18): coordinator independent complete16-path/
+Current correction TWO (final authorized cycle, 2of2): SAME coordinator rejected
+123cb902 with a Medium suffix-prefilter false green after correction ONE.
+P04 source/tests/guide corrected and validated:27 focused/coupled,46 full tests,
+configured Ruff/format/mypy pass; exact prior-head CLI0/OK replay now CLI1/ALERT.
+Separate correction-two.md and five logs preserve failing-first/after evidence
+and hashes. Original critique/Review and correction ONE records unchanged.
+Publication reconciliation follows; NOT ACCEPTED pending SAME reviewer, no new
+Review, no third cycle or operational acceptance.
+
+Historical correction ONE (2026-10-18): coordinator independent complete16-path/
 13-artifact assessment of bbb13521 returned NOT ACCEPTED, one Medium malformed
 prefixed-anchor false green. Same-task correction authorized, no new Review.
 See correction-one.md and its five logs in this directory for failing-first

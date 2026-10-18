@@ -28,6 +28,12 @@ class InvalidDigestError(DocumentStoreError):
     """Remote digest bytes cannot supply anchor evidence."""
 
 
+def _valid_anchor_name(name):
+    return re.fullmatch(
+        r"(?:digest-(?:[0-9]{10}|[1-9][0-9]{10,})|year-(?!0000)[0-9]{4})\.json", name
+    ) is not None
+
+
 def _valid_anchor(name, digest):
     if not isinstance(digest, dict):
         return False
@@ -79,7 +85,8 @@ class BlobDigestStore(AzureBlobDocumentStore):
                 root = ET.fromstring(body)
             except ET.ParseError:
                 raise DocumentStoreError("unreadable digest listing")
-            names += [n.text for n in root.iter("Name") if n.text and n.text.endswith(".json")]
+            names += [n.text for n in root.iter("Name") if n.text and (
+                n.text.endswith(".json") or n.text.startswith(("digest-", "year-")))]
             marker = (root.findtext("NextMarker") or "").strip()
             if not marker:
                 return sorted(names)
@@ -127,6 +134,9 @@ def verify(store, blob):
     heads, years, problems = [], [], []
     for name in names:
         if not name.startswith(("digest-", "year-")):
+            continue
+        if not _valid_anchor_name(name):
+            problems.append(dict(check="digests", problem="invalid remote digest anchor"))
             continue
         try:
             digest = blob.read_digest(name)

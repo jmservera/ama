@@ -8,7 +8,26 @@ ms.date: 2026-10-18
 
 Refs #115
 
-**Correction ONE after coordinator NOT ACCEPTED:** one Medium tightly coupled
+**Correction TWO (final authorized cycle, 2of2), acceptance still NOT ACCEPTED:**
+SAME reviewer found a Medium enumeration gap at123cb902: valid anchor plus
+digest-malformed.txt bypassed the .json prefilter and emitted OK/exit0.
+Listing now additionally admits every exact case-sensitive digest-/year-
+candidate, preserving unrelated JSON inclusion/nonJSON exclusion. Canonical
+name qualification happens BEFORE download; malformed candidates emit fixed
+invalid-anchor problems and ALERT/exit1, no name/content disclosure. Unrelated
+JSON/nonJSON/uppercase alternative prefixes remain ignored and unfetched.
+
+Failing-first2 methods/46 expected assertion failures; after27 focused/coupled
+and46 full orchestrator tests, zero skips, configured Ruff/format/mypy pass.
+Exact rejected-head CLI0/OK and corrected CLI1/ALERT replayed with fake transport.
+Both prefixes tested with .txt/.JSON/.Json/.json.bak/no extension alone and with
+good head/year; previous25/44 controls retained. No new Review/self-Pass; original
+critique/Review and correction ONE receipt/logs frozen. Separate receipt:
+`.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-two.md`
+and five adjacent logs. STOP for SAME independent coordinator; no third cycle
+without owner authorization. Actual published head appended below.
+
+**Historical correction ONE after coordinator NOT ACCEPTED:** one Medium tightly coupled
 false green was found on prior head bbb13521dcdd8d7a760324619fc0f8f612f08ad6:
 prefix-only objects could count as anchors without meaningful payloads.
 Qualification now enforces existing publisher filename/count/year and required
@@ -22,8 +41,8 @@ replayed as implementation probes. After correction25 focused/coupled and44
 orchestrator tests pass, zero skips; configured Ruff/format/mypy pass. Existing
 head/year/unrelated/truncation/rewrite/sealed-year/create-only controls pass.
 This is implementation evidence, NOT independent acceptance. Same coordinator
-must follow up on corrected exact head. One of maximum two correction cycles
-used; no new/amended original Review. Full commands/errors/results/source/log
+must follow up on corrected exact head. This consumed the first of maximum two
+correction cycles; no new/amended original Review. Full commands/errors/results/source/log
 hashes: `.copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one.md`
 and five adjacent correction-one logs.
 
@@ -37,7 +56,8 @@ Exact base: `c803614e8ca7c604e509f1c088f8b8f90f3063ef` (merged PR #403).
 Source candidate: `d53a7c68245dc708c628bb37853c308d9811fcbe`.
 Delivery head is appended from the actual published Git/PR metadata below;
 Initial delivery commits contained evidence/state only; correction ONE now
-changes the same three orchestrator source/test/guide paths as recorded above.
+changes the same three orchestrator source/test/guide paths as recorded above;
+correction TWO updates those same paths with enumeration/prefetch qualification.
 No explicit issue dependencies; parent #114 is hierarchy, not ordering.
 The issue's local-only delivery statement is stale: remote publish/read-back
 already exists. This PR does not establish whole #115/#114 acceptance.
@@ -50,7 +70,7 @@ task-owned TMPDIR correction was adopted; original remains byte-exact.
 Implementation ran failing-first -> minimal guard/README -> passing local gates.
 Historical one original independent Review: Complete / Residual work; bounded source
 Conformant, no implementation defects at that assessment. Coordinator later
-returned NOT ACCEPTED as recorded above. Correction ONE used, no second
+returned NOT ACCEPTED twice as recorded above. Corrections ONE and TWO used, no second
 critique or original Review; originals remain byte-exact.
 
 Original critique SHA-256:
@@ -115,7 +135,8 @@ acceptance and RV-004 second-human first-publication historical reconciliation
 remain unmet distinct follow-ups. No retention period or lock authority inferred.
 An anchored prefix/year does not independently anchor all later/local state.
 An explicit zero-count GENESIS remote head retains narrow existing empty-ledger
-behavior; this is not digest-schema validation or proof of prior authenticity.
+behavior; essential anchor validation is not a full schema redesign or proof
+of prior authenticity.
 
 SQL Server, Docker, browser and Azure validation N/A/not run for this bounded
 offline source delta; the coupled SQLite unit is not external SQL/recovery

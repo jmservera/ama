@@ -19,6 +19,28 @@ C1-C8/W1. No blocking unknowns; operational gates remain separate.
 | P01 | Reproduce then correct only recognized-anchor absence | Complete | P01-T01, P01-T02 |
 | P02 | Local validation, one Review and authorized publication | Complete, coordinator exact-final-head review remains separate | P02-T01, P02-T02 |
 | P03 | Authorized correction ONE after coordinator NOT ACCEPTED | Delivered; SAME coordinator acceptance pending | P03-T01, P03-T02, P03-T03 |
+| P04 | Authorized final correction TWO | Source validated, publication pending | P04-T01, P04-T02, P04-T03 |
+
+## P04: Reserved Candidate Enumeration and Prefetch Qualification
+
+Same reviewer NOT ACCEPTED at123cb902 for suffix-prefilter false green.
+Correction TWO final (2of2), no third cycle/no new Review. P04-T01 matrix checks
+both prefixes, malformed extensions/no extension alone and beside actual valid
+head or year; malformed names must not be fetched and no names/content output.
+Unrelated JSON listing inclusion preserved, unrelated nonJSON excluded, both
+unfetched by verifier. Existing publisher case-sensitive prefixes retained.
+P04-T02 depends on failing-first evidence: minimally admit all reserved prefix
+names in list_digests; before read_digest use canonical publisher-name helper.
+No change to publish/read/core ledger/payload or unrelated listing contracts.
+P04-T03: required sanitized focused/full and configured quality checks, separate
+correction-two receipts/hashes, frozen original and correction ONE byte parity,
+normal same-branch commit/push, PR404 actual head and STOP for same reviewer.
+Actual P04-T01:2 methods/46 expected behavioral assertion failures, no setup
+errors. P04-T02 complete: admission preserves unrelated .json inclusion and
+rejects malformed reserved names before download. P04-T03 local gates27 focused/
+coupled and46 full pass, zero skips; configured quality pass with existing
+digest format/type exemptions. Exact rejected-head CLI0/OK versus new CLI1/ALERT
+confirmed, private-safe output/no malformed download. Publication remains next.
 
 ## P03: Qualify Remote Anchor Evidence
 

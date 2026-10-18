@@ -330,6 +330,65 @@ class BlobDigestTests(unittest.TestCase):
         self.assert_invalid_remote_anchor(
             "digest-0000000000.json", json.dumps(ledger.make_digest(0, "f" * 64)).encode())
 
+    def test_reserved_malformed_names_are_rejected_before_download(self):
+        e1 = ledger.make_entry("a", "x", "c", "d", ledger.GENESIS, "2024-05-01T00:00:00")
+        e2 = ledger.make_entry("a", "y", "c", "d", e1["hash"], "2025-05-01T00:00:00")
+        self.store.audit_entries = lambda: iter([e1, e2])
+        head = json.dumps(ledger.make_digest(2, e2["hash"])).encode()
+        year = json.dumps(ledger.make_year_digest("2024", [e1])).encode()
+        names = ["digest-malformed.txt"]
+        names += [prefix + stem + suffix for prefix, stem in
+                  (("digest-", "0000000002"), ("year-", "2024"))
+                  for suffix in (".txt", ".JSON", ".Json", ".json.bak", "")]
+        names += ["digest-2.json", "digest-00000000002.json", "year-0000.json", "year-invalid.json"]
+        for name in names:
+            for anchor in ({}, {"digest-0000000002.json": head}, {"year-2024.json": year}):
+                with self.subTest(name=name, anchor=list(anchor)):
+                    self.container.calls.clear()
+                    self.container.blobs = {**anchor, name: b"PRIVATE_SENTINEL"}
+                    snapshot = dict(self.container.blobs)
+                    rep = digest_blob.verify(self.store, self.blob)
+                    self.assertIn(dict(check="digests", problem="invalid remote digest anchor"), rep["problems"])
+                    self.assertFalse(rep["intact"])
+                    self.out.clear()
+                    self.assertEqual(self.run_job(), 1)
+                    self.assertTrue(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                    self.assertFalse(any(digest_blob.OK_MARKER in line for line in self.out))
+                    self.assertNotIn(name, "\n".join(self.out))
+                    self.assertNotIn("PRIVATE_SENTINEL", "\n".join(self.out))
+                    downloads = [urllib.parse.unquote(urllib.parse.urlparse(url).path.split("/")[-1])
+                                 for method, url, _ in self.container.calls
+                                 if method == "GET" and "comp=list" not in url and "metadata" not in url]
+                    self.assertNotIn(name, downloads)
+                    self.assertEqual(self.container.blobs, snapshot)
+                    self.assertFalse(any(method in ("PUT", "DELETE") for method, _, _ in self.container.calls))
+
+    def test_listing_and_unrelated_object_compatibility(self):
+        e1 = ledger.make_entry("a", "x", "c", "d", ledger.GENESIS, "2024-05-01T00:00:00")
+        e2 = ledger.make_entry("a", "y", "c", "d", e1["hash"], "2025-05-01T00:00:00")
+        self.store.audit_entries = lambda: iter([e1, e2])
+        unrelated = {"unrelated.json": b"not JSON", "unrelated.txt": b"PRIVATE_SENTINEL",
+                     "Digest-malformed.txt": b"PRIVATE_SENTINEL", "Year-2024.json": b"not JSON"}
+        for anchor in (
+            {"digest-0000000002.json": json.dumps(ledger.make_digest(2, e2["hash"])).encode()},
+            {"year-2024.json": json.dumps(ledger.make_year_digest("2024", [e1])).encode()},
+        ):
+            with self.subTest(anchor=list(anchor)):
+                self.container.calls.clear()
+                self.container.blobs = {**unrelated, **anchor}
+                self.assertEqual(self.blob.list_digests(), sorted([*anchor, "unrelated.json", "Year-2024.json"]))
+                self.out.clear()
+                self.assertTrue(digest_blob.verify(self.store, self.blob)["intact"])
+                self.assertEqual(self.run_job(), 0)
+                self.assertTrue(any(digest_blob.OK_MARKER in line for line in self.out))
+                self.assertFalse(any(digest_blob.ALERT_MARKER in line for line in self.out))
+                self.assertFalse(any(urllib.parse.urlparse(url).path.split("/")[-1] in unrelated
+                                     for method, url, _ in self.container.calls if method == "GET"))
+        self.container.blobs = {**unrelated, "digest-malformed.txt": b"PRIVATE_SENTINEL",
+                                "year-2024": b"PRIVATE_SENTINEL"}
+        self.assertEqual(self.blob.list_digests(),
+                         sorted(["unrelated.json", "Year-2024.json", "digest-malformed.txt", "year-2024"]))
+
 
 if __name__ == "__main__":
     unittest.main()

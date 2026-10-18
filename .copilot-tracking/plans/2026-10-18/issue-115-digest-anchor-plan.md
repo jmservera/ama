@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 
 * Task ID: 115
 * Task slug: issue-115-digest-anchor
-* Planning status: Correction ONE delivered; stopped for SAME coordinator, acceptance pending
+* Planning status: Correction TWO source validated, final permitted cycle; publication pending; coordinator NOT ACCEPTED
 * Plan date: 2026-10-18
 * Phase details: .copilot-tracking/details/2026-10-18/issue-115-digest-anchor-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-115-digest-anchor-plan-critique.md
@@ -24,6 +24,9 @@ Coordinator complete exact-head assessment subsequently found one Medium
 prefix/payload false green and returned NOT ACCEPTED. Authorized correction ONE
 qualifies actual publisher names and required ledger fields, not prefixes alone.
 Original critique/Review remain unchanged; no new Review or self-acceptance.
+Correction ONE follow-up was also NOT ACCEPTED: suffix filtering hid reserved
+non-JSON candidates. Correction TWO adds reserved-name enumeration and validates
+names before any download, preserving unrelated listing compatibility.
 
 ### User Decisions and Requirements Highlights
 
@@ -54,6 +57,9 @@ are operational and first-publication trust follow-ups, not performed here.
 * Correction ONE: reject malformed prefixed names and payloads using actual
   publisher/ledger invariants; preserve original assessments and stop for SAME
   coordinator after normal push/PR404 update. Maximum two correction cycles.
+* Correction TWO is final permitted cycle: every case-sensitive digest-/year-
+  candidate reaches qualification regardless suffix; invalid names rejected
+  before fetch, unrelated objects ignored/not fetched. No third cycle authorized.
 * No recognized head/year anchor means explicit unsuccessful missing-anchor
   report, LEDGER_DIGEST_ALERT and nonzero exit; never LEDGER_DIGEST_OK.
 * First add a failing regression using existing FakeImmutableContainer with
@@ -265,3 +271,26 @@ Depends on P03-T01 expected behavioral failure, not setup error.
 
 Depends on P03-T02. No new/amended Review; stop for same coordinator.
 Receipt: .copilot-tracking/changes/2026-10-18/issue-115-digest-anchor-correction-one.md.
+
+## Correction TWO Checklist
+
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Close reserved-prefix enumeration and prefetch name gap
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Failing-first malformed suffix/name and unrelated controls
+
+Both prefixes; .txt/.JSON/.json.bak/no extension, alone/valid head/valid year.
+Direct and CLI report/markers/status, no download/leak/mutation. Test listing
+compatibility and valid unrelated JSON/nonJSON/case-sensitive prefix controls.
+
+<!-- rpi:task id=P04-T02 -->
+#### [x] P04-T02: Minimal listing admission and canonical prefetch qualification
+
+Depends on P04-T01 failure; same essential format, no new prefix/schema policy.
+
+<!-- rpi:task id=P04-T03 -->
+#### [ ] P04-T03: Validate, preserve originals/correction ONE, publish and STOP
+
+Depends on P04-T02; focused/full/configured gates and hashes. Correction TWO
+receipt/logs separate. Same coordinator, no new Review, no third cycle.

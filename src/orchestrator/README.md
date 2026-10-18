@@ -226,6 +226,11 @@ schedule, Legal/DPO or owner approval acceptance.
   require the GENESIS hash. Malformed candidates fail explicitly even alongside
   valid evidence, without logging their names or content. Additional metadata
   is allowed; the head's `at` timestamp is not used to verify chain evidence.
+  Enumeration includes every case-sensitive `digest-`/`year-` candidate regardless
+  of extension. Noncanonical names (including `.txt`, `.JSON` or no extension)
+  fail before their content is fetched; unrelated JSON and non-JSON blobs are
+  not fetched by verification. Prefix and `.json` case follow the existing
+  publisher; no alternate uppercase prefix is treated as a digest candidate.
 * `infra/modules/storage.bicep` adds the container with a time-based retention
   policy (created unlocked); `containerapps.bicep` adds a daily
   `job-*-ledger-verify`; `main.bicep` adds a log alert on the marker to the
