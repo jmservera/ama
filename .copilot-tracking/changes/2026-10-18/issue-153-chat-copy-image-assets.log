@@ -1,0 +1,5 @@
+PASS: exact installed image JS hashes match candidate worktree assets
+{
+  "chat.js": "b979bd798d91662edd171a871761f90c25f733df86b7e535c1a5e4c0dd821909",
+  "app.js": "3dc29901cccc49f1f6776efbd50bfa8f5555be7e14dbc38ebc48b01c235c8336"
+}

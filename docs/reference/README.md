@@ -21,6 +21,12 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #153, the [chat and alert-panel copy audit](./research/ux/content-standard.md#chat-and-alert-panel-audit-extension-2026-10-18-153)
+extends the existing seven-file lexical guard to chat, including snapshot/envelope
+wording and recorded-time labels. Safety restart authority, exact AI labelling
+and verbatim sources remain distinct. This is partial synthetic engineering
+coverage, not universal error coverage, comprehension or named resident review.
+
 For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
 distinguishes 22 personas/eleven perspectives from current eligible thread owners
 (14 users/seven perspectives). Explicit both-contractor read/list/search denial

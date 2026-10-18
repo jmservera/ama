@@ -1,0 +1,61 @@
+{
+  "task_id": "153",
+  "task_slug": "issue-153-chat-copy",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-153-chat-copy-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-153-chat-copy-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-153-chat-copy-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-153-chat-copy-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-153-chat-copy-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-153-chat-copy-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered automatic loop and publication on the supplied branch/base; stop after publication for coordinator review.",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-18; clean branch/base verified."
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; coupled app.js time-label edits required by vocabulary alignment.",
+      "status": "accepted",
+      "evidence": "Research C1-C6/W1, ordered Wider/Deeper/Contrarian cycle."
+    },
+    {
+      "decision": "One independent plan critique executed: Revise; PC-001 through PC-003 directly applied. Original frozen, no repeat critique.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-18/issue-153-chat-copy-plan-critique.md; canonical plan Critique Disposition."
+    },
+    {
+      "decision": "P01/P02 local evidence complete: 61+39 tests, actual Chromium, mutation, static and Docker checks passed with explicit evidence limits.",
+      "status": "ready-for-review",
+      "evidence": ".copilot-tracking/changes/2026-10-18/issue-153-chat-copy-changes.md and adjacent receipts."
+    },
+    {
+      "decision": "origin/main moved to f91353169756dc41ebbcca944bdd3f44f7c04b89; do not integrate without coordinator authorization.",
+      "status": "reported-no-integration",
+      "evidence": "Read-only git ls-remote before Review; pinned base retained."
+    },
+    {
+      "decision": "One original independent Review executed Complete; outcome Conformant for candidate tree 7f7487566422ba84380608de1d2ea1b4f913b8f6. No scoped defects, five Low inherited/residual follow-ups; no correction cycles.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-153-chat-copy-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Publish authorized PR after completed RPI source task, then stop for coordinator exact-head review."
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator exact-head review and explicit integration authorization", "rationale": "Owner-required publication handoff; main moved and must not be integrated autonomously.", "evidence": "User request and read-only remote main observation."},
+    {"rank": 2, "task": "Named human review of exact resident wording before use", "rationale": "Required issue criterion remains unmet; synthetic checks cannot substitute.", "evidence": "content-standard.md Human review; original Review human gate."},
+    {"rank": 3, "task": "Assess RV-005 textarea contrast incompletes", "rationale": "Eight actual incomplete states require specific engineering assessment.", "evidence": "Original Review RV-005 and browser.json."},
+    {"rank": 4, "task": "Triage inherited form/draft/list follow-ups RV-001 through RV-004", "rationale": "Outside copy-only scope; do not consume correction cycles or change reviewed source.", "evidence": "Original Review findings; plan Follow-Up Items."},
+    {"rank": 5, "task": "Remaining core-flow/error audit and direct comprehension research", "rationale": "Partial lexical/runtime evidence does not establish whole-issue acceptance.", "evidence": "content-standard.md audit boundary and original Review."}
+  ]
+}

@@ -6148,3 +6148,20 @@ metadata when the knowledge base was created.
   content/user evidence remain missing; literal AC1 is not fully satisfied
   and the overall design gate stays Blocked. No UI, runtime, agent, instruction,
   workflow, private-data or platform change; no issue checkbox/board/merge action.
+
+## [2026-10-18] query | Chat and alert-panel copy audit extension (#153)
+
+* Extend the [existing content standard and audit](./research/ux/content-standard.md#chat-and-alert-panel-audit-extension-2026-10-18-153)
+  and index without replacing earlier evidence. Include chat.js in the named
+  lexical guard, align snapshot/envelope vocabulary and change only
+  application-owned safety/time wording in chat and the coupled case summary.
+* Retain authorised human restart decisions, independent hazard routes,
+  unknown/unverified warnings, exact AI suggestion labels and proposal-only
+  operation. No safety policy, role, backend, consent or resident contact change.
+* Distinguish application labels from exact source quotations, user/model text,
+  recorded facts, identifiers and raw technical detail. Add a synthetic
+  browser source-quotation canary before/after history restore, not source
+  sanitization or a claim that every visible term is forbidden.
+* Universal core-flow/error coverage, actual user comprehension and named
+  resident-facing wording review remain unmet. This partial slice does not
+  close the issue, approve resident use or establish WCAG/legal conformance.

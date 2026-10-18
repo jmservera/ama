@@ -311,10 +311,10 @@ function workSummary(work) {
   return h("div", { class: "work-context" },
     h("p", {}, `Current owner: ${work.owner}. Reason: ${work.reason}.`),
     h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
-    h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; snapshot: ${work.as_of}.`),
+    h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
     work.hazard_clocks.map((clock) => h("p", { class: "safety-clock" },
-      `Safety clock at snapshot: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing.`)));
+      `Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing.`)));
 }
 
 function workSteps(work) {
@@ -327,7 +327,7 @@ function workSteps(work) {
     work.overdue.length > 0 && h("ul", {}, work.overdue.map((task) => h("li", {},
       `${task.task}: due ${task.due_at}; owner: ${task.owner}; completion: ${task.completion}.`))),
     h("details", {}, h("summary", {}, "Task sources"),
-      h("p", {}, `Case ${work.case_id}; definition ${work.definition_version}; snapshot ${work.as_of}. Missing evidence stays Unknown; freshness does not establish validity.`),
+      h("p", {}, `Case ${work.case_id}; definition ${work.definition_version}; recorded as of ${work.as_of}. Missing evidence stays Unknown; freshness does not establish validity.`),
       h("ul", {}, work.evidence_freshness.map((item) => h("li", {},
         `${item.kind}: ${item.status}; record date: ${item.recorded_at}; evidence: ${item.evidence}; source: ${item.source}; version: ${item.version}.`)))));
 }

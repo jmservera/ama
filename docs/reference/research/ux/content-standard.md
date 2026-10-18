@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-10-15
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -75,13 +75,16 @@ in one sentence, for example "Choose which sign-off this is."
 | Stopped retrofit work / Restart decision | Retrofit hold / Release hold | The restriction covers the linked home's retrofit work only; the hazard service still owns its case |
 | Resident has not confirmed | Consent pending | The resident has not said they want the works |
 | Ready to book the installation | Advance | The next step for a case at final checks |
+| Check recorded at / Recorded as of / Recorded view | Snapshot | When a check or view was recorded; not proof that its evidence is current |
+| Historical records | Historical snapshots | Restored information from an earlier lookup; ask again for a fresh lookup |
+| Suggestion details | Envelope | Technical information about a suggestion, not an approval or decision |
 
 ## Copy audit of the core flow
 
 Scope: staff case list, case page, final checks, drafts and AI notes, priority
 suggestion, assistant proposal card, finance panels and import summary.
-Method: search the web scripts for the banned terms gate, hold, provenance and
-trace, then read each match; review of server-supplied messages in `store.py`
+Method: search the named web files for the banned terms gate, hold, provenance,
+trace, snapshot and envelope, then read each match; review of server-supplied messages in `store.py`
 and `signoffs.py`. Automated by `src/api/tests/test_content_standard.py`.
 
 | Finding | Location | Change |
@@ -97,6 +100,45 @@ and `signoffs.py`. Automated by `src/api/tests/test_content_standard.py`.
 Remaining by design, not shown as wording to a person: the internal
 identifiers `gate`, `provenance` and `hold` in code and API fields, and the
 stored finance decision value "Keep on hold".
+
+### Chat and alert-panel audit extension (2026-10-18, #153)
+
+The existing lexical regression now names seven files: `app.js`,
+`assistants.js`, `panels.js`, `ops.js`, `chat.js`, `index.html` and
+`welcome.html`. It includes singular/plural snapshot and envelope as well as
+the previously guarded vocabulary. This is a conservative source-level guard,
+not a JavaScript/HTML visibility parser or a universal audit of dynamic messages.
+
+| Finding | Application-owned location | Plain wording |
+| --- | --- | --- |
+| "decide a hold" | Building Safety role guidance in chat and alerts | Only an authorised human can make a restart decision for stopped retrofit work |
+| "release a hold" | Alert-panel authority disclaimer | This panel cannot acknowledge, decide compliance or restart stopped retrofit work |
+| "Check snapshot" | Alert check date label | Check recorded at |
+| "historical snapshots" | Restored cited-lookup status | Historical records; ask again for a fresh lookup |
+| "snapshot" time labels | Existing case task summary, safety clock and task sources | Recorded as of / Safety clock in this recorded view |
+
+The safety alternatives come from the existing stopped-work/restart glossary.
+They do not close a hazard-service case, establish safety, give the panel new
+authority or permit a restart without the existing human decision process.
+The exact "AI suggestion, not approved" label, proposal-only operation,
+independent human emergency/hazard route and unknown/unverified source warnings
+are retained.
+
+Scope excludes user/model-authored content, recorded facts, source quotations,
+source titles, identifiers, API fields and raw technical JSON shown under
+suggestion details. The narrow lexical exceptions retain the existing finance
+stored value, code field references and the technical JSON `envelope` key;
+these are not permission to use internal terms in adjacent interface labels.
+In particular, quoted evidence may contain all six prohibited terms and must
+remain verbatim. The local synthetic browser regression in
+`src/api/checks/regulatory_ux_check.py` checks that exact quotation before and
+after history restoration, separately from application-owned labels.
+
+This extension is partial engineering coverage, not universal core-flow or
+reason/owner/next-action coverage for every error. The local browser flow
+exercises changed wording and safety/unknown/AI boundaries, not actual staff
+or resident comprehension, operational approval, full WCAG conformance or
+named human acceptance of resident-facing wording.
 
 ## Human review
 
