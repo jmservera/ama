@@ -13,12 +13,14 @@
 ## Execution Status
 
 Partial, full-plan scope. P01 and P01-T01/T02 complete.
-Remaining: P02-T01/T02. Research executed Ready; Plan Ready after exactly one critique.
+P02-T01 original Review complete; correction ONE locally complete.
+Remaining: P02-T02 publication. Research executed Ready; Plan Ready after exactly one critique.
 
 ## Execution Summary
 
 Implemented two-file harness correction and focused offline tests; local validation complete.
-Ready for exactly one independent original Review after candidate commit.
+Exactly one independent original Review executed, Not accepted; RV-001 locally addressed in
+separate correction ONE receipt. No second Review or independent corrected acceptance.
 No cloud/data/UI/store-schema/runtime-image changes authorized or needed.
 
 ## Completed Work
@@ -118,8 +120,29 @@ was run or claimed. No idle SQL server started; all fixture storage was task-loc
 | src/core/src/zava_forward/core/synthetic/loadcheck.py | 7cd7a506e439f0814320cfb7b22e6a3f94b47a18ba255f8eb45dec7e5f581dfb |
 | src/core/tests/test_loadcheck.py | b45296f3a9eec3478fb3c68987b85b68a538a22ffad6793c5bfa50ebd01100d2 |
 
-Candidate commit: pending creation of the commit containing this reconciled P01 record.
-Original critique hash remains unchanged. Post-Review source correction cycles used: 0 of 2.
+Candidate commit: e63426148b5bac564ffef4195a9ba3b1b873d068, created with authenticated
+8036360+jmservera@users.noreply.github.com for author and committer, required Copilot trailer.
+This candidate contains source/tests and Research/Plan/details/critique/changes/state artifacts.
+Original critique hash remains unchanged. Post-Review source correction cycles used: 1 of 2.
+
+## Original Review and Separate Correction
+
+P02-T01 complete. Original independent Review execution Complete, outcome Not accepted,
+RV-001 Medium oversized-duration preflight defect. Original report SHA-256
+6510bcd1d1055621b7fb37f73f7ef84426ec5160b65ef1e8bef7bd424017befe is unchanged.
+Reviewer independently ran 75 tests, configured checks, original-source replay, four mutations
+and goodpath equality; these independent results belong to the original Review, not parent claims.
+
+Caller preauthorized correction of original findings. Separate receipt:
+.copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-correction-one.md.
+It records exact failing-first reproduction, two-file source/test delta, all commands/failures,
+75 final coupled tests, configured Ruff/format/mypy, 16 detected mutants and corrected API/CLI
+interfaces before file/store access. All maximum-representable duration subcases pass without
+an arbitrary duration policy cap. No second source correction cycle needed or started.
+
+Final corrected SHA-256: source a6bd8d0c4e3ae31484c6248934647b08251af688bf1f3db93a260a9d81fb9858;
+tests db30c48bbd9151eee3bb72af4e50dbca8ba8fbaeb2d87a7083fa6c52fdd7affd.
+These differ deliberately from the frozen original candidate; no report is retroactively regraded.
 
 Planned validation uses `TMPDIR=$R/.copilot-tracking/.issue-114-tmp`, no inherited service data.
 CLI tests clear environment and override tempfile.tempdir; no actual SQL/AI calls.
@@ -127,8 +150,10 @@ CLI tests clear environment and override tempfile.tempdir; no actual SQL/AI call
 ## Pre-Review Reconciliation
 
 Plan P01 markers, details, completed-work evidence, validation and boundaries reconciled.
-Review readiness: Ready after candidate commit is pinned. P02-T01 original Review and
-P02-T02 publication remain unchecked. No original Review executed yet.
+Original Review assessed the frozen candidate; P02-T01 now complete. Correction receipt, plan,
+details/state and local validation are reconciled for publication. P02-T02 remains unchecked
+until actual branch/PR publication is observed. Coordinator exact-head independent acceptance
+is pending; original Review Not accepted is not changed to conformant.
 
 ## Blockers
 
@@ -136,7 +161,7 @@ None within bounded scope.
 
 ## Remaining Work
 
-P02 original independent Review and publication.
+P02-T02 publication, then stop for coordinator exact-head review.
 
 ## Follow-Up Items
 
@@ -145,5 +170,6 @@ human/operational acceptance remain unmet. No issue checkboxes or board changes.
 
 ## Return-to-Caller State
 
-Automatic parent continues full ordered loop. Current phase Implement, P01 Complete,
-Review-ready with no local blocker. P02 is still remaining work; not a full-plan completion.
+Ordered Research -> Plan/one critique -> Implement -> one original independent Review complete.
+Parent lifecycle is Follow-up; caller-selected correction ONE is locally complete. Publication
+remains active. No second original Review; source acceptance belongs to coordinator at exact head.

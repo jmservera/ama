@@ -10,9 +10,9 @@ Cost is not computed here: it needs the Azure meter rates and measured vCore sec
 import argparse
 import copy
 import json
-import math
 import os
 import statistics
+import sys
 import tempfile
 import threading
 import time
@@ -45,7 +45,7 @@ def pct(xs: list[float], p: float) -> float | None:
 
 def run(store: Any, user: dict[str, Any], seconds: float, sessions: int = 5,
         writers: int = 2) -> dict[str, Any]:
-    if isinstance(seconds, bool) or not math.isfinite(seconds) or seconds <= 0:
+    if isinstance(seconds, bool) or not 0 < seconds <= sys.float_info.max:
         raise ValueError("seconds must be finite and positive")
     if type(sessions) is not int or sessions <= 0:
         raise ValueError("sessions must be a positive integer")
@@ -110,7 +110,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--homes", type=int, default=60000)
     ap.add_argument("--seconds", type=int, default=30)
     a = ap.parse_args(argv)
-    if a.seconds <= 0:
+    if not 0 < a.seconds <= sys.float_info.max:
         ap.error("seconds must be finite and positive")
     if a.homes <= 0:
         ap.error("homes must be a positive integer")

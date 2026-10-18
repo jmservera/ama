@@ -13,7 +13,7 @@
 | ID | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Bounded correction and local evidence | Complete | P01-T01, P01-T02 |
-| P02 | Original Review and publication | Review-ready | P02-T01, P02-T02 |
+| P02 | Original Review and publication | Original Review complete; publication pending | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct and prove bounded evidence contract
@@ -31,6 +31,8 @@ Keep all-writer workloads allowed: existing direct API has no requirement for re
 Validate homes and empty seed before grow and CLI store creation; validate direct run case IDs
 before launching workers. Rejecting invalid direct input with ValueError is intentional.
 Use explicit static validation messages and argparse.error at CLI; do not serialize arbitrary error text.
+RV-001 correction ONE clarifies finite representability: use ordered comparison against
+sys.float_info.max, avoiding conversion OverflowError, in both API and pre-file CLI guards.
 
 Missing percentiles are None. Build within from actual nonempty measurements and unrounded p95.
 Keep p50/p95/max rounding and report shape otherwise. Do not add sample-count or max-latency gates.
@@ -79,6 +81,9 @@ not a new committed test harness. No SQL Docker/nonroot check needed absent cont
 Implementation status: Complete. Final 16 focused tests pass, coupled 75-test run passes,
 core Ruff lint/format and mypy (124 files) pass. Old source red; 14 targeted mutants detected.
 Separate clock-compatible original/fixed goodpath reports match exactly. Scratch removed.
+Correction ONE adds oversized positive/negative duration and maximum-representable accepted
+subcases within the same 16 methods. Exact final source passes 75 coupled tests and configured
+checks; original red/healthy equality and all 16 updated mutants are recorded separately.
 
 <!-- rpi:phase id=P02 -->
 ## P02: One original independent Review and publication
@@ -95,6 +100,9 @@ Fresh worker performs one original Review using rpi-review; no source edits, nes
 second original Review. It writes only .copilot-tracking/reviews/logs/2026-10-18/issue-114-loadcheck-evidence-review.md.
 If adverse, keep original unchanged and create separate correction receipt with before/after hashes,
 exact finding dispositions and validation. At most two source cycles, no implicit acceptance.
+Status: Complete. Original Review executed once on e63426148b5bac564ffef4195a9ba3b1b873d068,
+Not accepted with RV-001 Medium. Original bytes unchanged. Caller-selected correction ONE is
+locally complete with separate receipt; this is not an independent corrected-head acceptance.
 
 <!-- rpi:task id=P02-T02 -->
 ### P02-T02: Reconcile, commit and publish

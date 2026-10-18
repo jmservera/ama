@@ -5,6 +5,7 @@ import io
 import itertools
 import json
 import os
+import sys
 import tempfile
 import threading
 import time
@@ -66,6 +67,7 @@ class LoadcheckEvidenceTests(unittest.TestCase):
         writers: int = 1,
         ticks: list[float] | None = None,
         durations: list[float] | None = None,
+        seconds: float = 1,
     ) -> dict[str, Any]:
         with (
             patch.object(threading, "Thread", InlineThread),
@@ -82,7 +84,7 @@ class LoadcheckEvidenceTests(unittest.TestCase):
             ),
         ):
             return loadcheck.run(
-                store if store is not None else store_fixture(), {}, 1, sessions, writers
+                store if store is not None else store_fixture(), {}, seconds, sessions, writers
             )
 
     def assert_missing(self, report: dict[str, Any], kind: str) -> None:
@@ -104,12 +106,14 @@ class LoadcheckEvidenceTests(unittest.TestCase):
             loadcheck.grow({"cases": []}, 1)
 
     def test_run_rejects_invalid_parameters_before_reading_store(self) -> None:
-        store = Mock()
+        store = Mock(spec=[])
         for seconds, sessions, writers in (
             (0, 1, 1),
             (-1, 1, 1),
             (float("nan"), 1, 1),
             (float("inf"), 1, 1),
+            (10**400, 1, 1),
+            (-(10**400), 1, 1),
             (True, 1, 1),
             (1, 0, 0),
             (1, -1, 1),
@@ -135,10 +139,12 @@ class LoadcheckEvidenceTests(unittest.TestCase):
             worker.assert_not_called()
 
     def test_no_observations_are_insufficient(self) -> None:
-        report = self.run_once(ticks=[0, 2])
-        self.assertEqual(report["errors"], 0)
-        for kind in loadcheck.LIMITS:
-            self.assert_missing(report, kind)
+        for seconds in (1, sys.float_info.max, int(sys.float_info.max)):
+            with self.subTest(seconds=seconds):
+                report = self.run_once(ticks=[0, float("inf")], seconds=seconds)
+                self.assertEqual(report["errors"], 0)
+                for kind in loadcheck.LIMITS:
+                    self.assert_missing(report, kind)
 
     def test_missing_required_writer_measurements_cannot_pass(self) -> None:
         store = store_fixture()
@@ -270,26 +276,37 @@ class LoadcheckEvidenceTests(unittest.TestCase):
     def test_cli_invalid_inputs_reject_before_store_initialization(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             seed = Path(tmp) / "synthetic.json"
+            case = {"id": "SYN-1", "resident": {"name": "Synthetic Resident"}}
             inputs: list[tuple[list[str], list[dict[str, Any]]]] = [
-                (["--seconds", "0"], [{}]),
-                (["--seconds", "-1"], [{}]),
-                (["--homes", "0"], [{}]),
-                (["--homes", "-1"], [{}]),
+                (["--seconds", "0"], [case]),
+                (["--seconds", "-1"], [case]),
+                (["--seconds", str(10**400)], [case]),
+                (["--seconds", str(-(10**400))], [case]),
+                (["--homes", "0"], [case]),
+                (["--homes", "-1"], [case]),
                 ([], []),
             ]
             for extra, cases in inputs:
-                seed.write_text(json.dumps({"cases": cases}), encoding="utf-8")
-                with (
-                    self.subTest(extra=extra, cases=cases),
-                    patch.dict(os.environ, {}, clear=True),
-                    patch.object(tempfile, "tempdir", tmp),
-                    patch("zava_forward.core.factory.open_store") as factory,
-                    contextlib.redirect_stderr(io.StringIO()),
-                    self.assertRaises(SystemExit) as exit_status,
-                ):
-                    loadcheck.main(["--data", str(seed), *extra])
-                self.assertEqual(exit_status.exception.code, 2)
-                factory.assert_not_called()
+                seed.write_text(
+                    json.dumps(
+                        {
+                            "cases": cases,
+                            "staff": [{"role": "Retrofit Programme Manager"}],
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                with self.subTest(extra=extra, cases=cases):
+                    with (
+                        patch.dict(os.environ, {}, clear=True),
+                        patch.object(tempfile, "tempdir", tmp),
+                        patch("zava_forward.core.factory.open_store") as factory,
+                        contextlib.redirect_stderr(io.StringIO()),
+                        self.assertRaises(SystemExit) as exit_status,
+                    ):
+                        loadcheck.main(["--data", str(seed), "--homes", "1", *extra])
+                    self.assertEqual(exit_status.exception.code, 2)
+                    factory.assert_not_called()
 
     def test_cli_exit_status_tracks_real_run_evidence(self) -> None:
         for mode in ("good", "missing", "request", "latency", "startup", "selection"):

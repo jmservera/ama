@@ -12,9 +12,11 @@
 
 ## Executive Summary
 
-Prevent missing observations and failed workers from producing passing loadcheck evidence.
-Keep the existing classes, p95 limits, default mix and valid CLI unchanged. Make two focused
-source/test changes; preserve every original independent finding in immutable critique/Review.
+Implemented missing-observation and failed-worker nonpassing evidence with unchanged classes,
+p95 limits, default mix and ordinary valid CLI. Original independent Review is Not accepted;
+its RV-001 duration overflow is locally addressed in separate correction ONE evidence.
+Original critique/Review remain immutable. Publication and coordinator exact-head acceptance
+remain distinct from the completed source work and local checks.
 
 ### What You May Not Know
 
@@ -24,8 +26,8 @@ after the monotonic deadline; no new cancellation behavior is planned.
 
 ### Unresolved Decisions or Blockers
 
-None for the bounded implementation. Original critique Revise preserved; PC-001 and PC-002
-dispositions below resolve the plan without repeating critique.
+No local implementation blocker. Original critique Revise and Review Not accepted preserved.
+PC-001/PC-002 dispositioned; RV-001 locally corrected once. Publication pending.
 
 ## User Decisions and Requirements
 
@@ -128,7 +130,7 @@ after use, and is never committed. CLI tests override tempfile.tempdir inside cl
 Depends on P01 completion and reconciliation of plan/details/changes/state.
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Preserve original independent Review
+#### [x] P02-T01: Preserve original independent Review
 
 Pin candidate commit and source SHA-256. Fresh independent worker activates rpi-review, writes
 only designated review artifact; exactly one original Review. Correct findings if any in separate
@@ -164,11 +166,14 @@ No second critique. No new mypy exemption: type canonical functions at their dyn
 
 ## Follow-Up Items
 
+* Coordinator exact-head independent acceptance after publication. RV-001 original Medium
+  finding is locally addressed in correction ONE, same two files and 16 methods; no second Review.
 * Issue #114 remaining live load/cost, annual ledger verification, recovery/deletion and human
   acceptance remain outside this slice; owner/coordinator controls future authorized work.
 
 ## Handoff
 
-P01 complete and review-ready; authorized parent pins candidate and advances to the single
-original independent Review. P02-T01/T02 remain active, not yet claimed complete.
+P01 complete; P02-T01 complete with original Review Not accepted, preserved unchanged.
+Caller-selected RV-001 correction ONE locally complete; P02-T02 publication remains.
+No second original Review; coordinator owns independent corrected-head acceptance.
 Changes record: .copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-changes.md.
