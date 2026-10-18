@@ -1,0 +1,11 @@
+checks/workbench_browser_check.py:12: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/design_system_browser_check.py:26: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/provenance_browser_check.py:12: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/provenance_browser_check.py:12: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+tests/test_stock_reconciliation_api.py:258: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_resident_api.py:311: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_coordinator_api.py:253: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/regulatory_ux_check.py:18: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/procurement_browser_check.py:6: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_grant_lifecycle_api.py:93: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+Found 9 errors in 9 files (checked 60 source files)

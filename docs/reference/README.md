@@ -27,6 +27,9 @@ document constructed observations-only SQL processing, independent exercise
 controls, stable-key append and owned restricted DQ. Local SQLite/SQL Server
 engineering evidence is not live Hub identity/transport, Azure/real AI
 application acceptance or approval of Proposed ADR 0003. Whole issue remains open.
+The same contract records retained reading/witness validation and bounded
+partial-batch refusal, while historical exact replay survives withdrawn current
+exercise authority. These are local engineering safeguards, not live acceptance.
 
 For issue #126, the [constructed RAI evidence register](../../src/core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
 and [API contract](../../src/api/README.md#constructed-rai-evidence-register-api-126)

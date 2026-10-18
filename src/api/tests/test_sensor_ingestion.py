@@ -90,3 +90,26 @@ class ApiSensorTests(coretests.SensorConsumerTests):
             with self.assertRaisesRegex(RuntimeError, "INVALID_RECEIPT_TIME"):
                 SensorIngestion(self.store).consume(observations(), received_at=received)
         self.assertEqual(self.counts(), (0, 0, 0))
+
+    def test_later_corrupt_reading_preserves_committed_prefix(self) -> None:
+        old, later = observations()
+        self.consume([old])
+        # Independent fixture sensor allows a genuine new prefix commit before failure.
+        from dataclasses import replace
+
+        from sensor_consumer_fixture import CONTROL, POLICY
+
+        self.consumer.configure(POLICY, [CONTROL, replace(CONTROL, sensor_id="SENS-SYN-OTHER")])
+        self.damage_reading("temperature_c", "not-a-number")
+        prefix = {**old, "sensor_id": "SENS-SYN-OTHER", "reading_id": "PREFIX"}
+        for target in (old, later):
+            with self.subTest(replay=target is old):
+                with self.assertRaises(BatchStopped) as caught:
+                    self.consume([prefix, target, later])
+                self.assertEqual(caught.exception.code, "SENSOR_OUTCOME_MALFORMED")
+                self.assertEqual(len(caught.exception.completed), 1)
+                self.assertEqual(caught.exception.completed[0].status, "accepted")
+                self.assertEqual(self.counts(), (2, 2, 0))
+                self.assertNotIn(str(old["sensor_id"]), str(caught.exception))
+                self.assertNotIn("not-a-number", str(caught.exception))
+                self.assertNotIn(str(old["temperature_c"]), str(caught.exception.completed))

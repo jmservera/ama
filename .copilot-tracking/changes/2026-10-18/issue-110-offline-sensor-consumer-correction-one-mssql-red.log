@@ -1,0 +1,190 @@
+Task-owned SQL Server responsive on loopback; actual API suite starting.
+======================================================================
+ERROR: test_later_corrupt_reading_preserves_committed_prefix (test_sensor_ingestion.ApiSensorTests.test_later_corrupt_reading_preserves_committed_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 103, in test_later_corrupt_reading_preserves_committed_prefix
+    self.consumer.configure(
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 253, in configure
+    self._schema(db)
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 309, in _schema
+    self._check_reading_schema(db)
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 337, in _check_reading_schema
+    raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
+zava_forward.core.sensor_consumer.ConsumerError: SENSOR_SCHEMA_UNSUPPORTED
+
+======================================================================
+ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_ingestion.ApiSensorTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error) (column='observed_at')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 391, in test_new_admission_refuses_malformed_latest_without_raw_parse_error
+    self.consume([second])
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 33, in consume
+    completed.append(self.consumer.process(observation, received_at))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 494, in process
+    reason = "IDENTITY_CONFLICT" if exists else self._quality(db, row, policy, received)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 447, in _quality
+    previous = value.replace(tzinfo=UTC) if isinstance(value, datetime) else utc(str(value))
+                                                                             ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 78, in utc
+    raise ValueError("UTC_SECONDS_REQUIRED")
+ValueError: UTC_SECONDS_REQUIRED
+
+======================================================================
+ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_ingestion.ApiSensorTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error) (column='temperature_c')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 391, in test_new_admission_refuses_malformed_latest_without_raw_parse_error
+    self.consume([second])
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 33, in consume
+    completed.append(self.consumer.process(observation, received_at))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 494, in process
+    reason = "IDENTITY_CONFLICT" if exists else self._quality(db, row, policy, received)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 447, in _quality
+    previous = value.replace(tzinfo=UTC) if isinstance(value, datetime) else utc(str(value))
+                                                                             ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 78, in utc
+    raise ValueError("UTC_SECONDS_REQUIRED")
+ValueError: UTC_SECONDS_REQUIRED
+
+======================================================================
+ERROR: test_new_admission_refuses_malformed_latest_without_raw_parse_error (test_sensor_ingestion.ApiSensorTests.test_new_admission_refuses_malformed_latest_without_raw_parse_error) (column='humidity_pct')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 391, in test_new_admission_refuses_malformed_latest_without_raw_parse_error
+    self.consume([second])
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/tests/test_sensor_ingestion.py", line 29, in consume
+    return adapter.consume(rows, received_at=received_at)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 33, in consume
+    completed.append(self.consumer.process(observation, received_at))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 494, in process
+    reason = "IDENTITY_CONFLICT" if exists else self._quality(db, row, policy, received)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 447, in _quality
+    previous = value.replace(tzinfo=UTC) if isinstance(value, datetime) else utc(str(value))
+                                                                             ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/src/zava_forward/core/sensor_consumer.py", line 78, in utc
+    raise ValueError("UTC_SECONDS_REQUIRED")
+ValueError: UTC_SECONDS_REQUIRED
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='observed_at', value='invalid-sql-time')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='temperature_c', value='not-a-number')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='humidity_pct', value='NaN')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='home_id', value='ZF-OTHER')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='scenario', value='DIFFERENT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='schema_version', value='reading-v1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='temperature_c', value='21.00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_reading_replay_refuses_malformed_and_inconsistent_values (test_sensor_ingestion.ApiSensorTests.test_retained_reading_replay_refuses_malformed_and_inconsistent_values) (column='injected_fault', value='OUTLIER')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 354, in test_retained_reading_replay_refuses_malformed_and_inconsistent_values
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED") as caught:
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_witness_must_match_reading_and_digest (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest) (body='not-json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_witness_must_match_reading_and_digest (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest) (body='{"sensor_id": "SENS-SYN-1", "reading_id": "SENS-SYN-1-1727740800", "home_id": "ZF-1", "observed_at": "2024-10-01T00:00:00Z", "temperature_c": "21.00", "humidity_pct": "54.36", "source_type": "SYNTHETIC", "scenario": "BACKFILL_2Y", "seed": "183", "schema_version": "sensor-fault-input-v1", "temperature_unit": "degC", "humidity_unit": "percent", "calibrated": "true"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_witness_must_match_reading_and_digest (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest) (body='{"sensor_id": "SENS-SYN-1", "reading_id": "SENS-SYN-1-1727740800", "home_id": "ZF-1", "observed_at": "2024-10-01T00:00:00Z", "temperature_c": "16.73", "humidity_pct": "54.36", "source_type": "SYNTHETIC", "scenario": "BACKFILL_2Y", "seed": "183", "schema_version": "sensor-fault-input-v1", "temperature_unit": "degC", "humidity_unit": "percent", "calibrated": "false"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_witness_must_match_reading_and_digest (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest) (body='{"sensor_id": "SENS-SYN-1", "reading_id": "OTHER", "home_id": "ZF-1", "observed_at": "2024-10-01T00:00:00Z", "temperature_c": "16.73", "humidity_pct": "54.36", "source_type": "SYNTHETIC", "scenario": "BACKFILL_2Y", "seed": "183", "schema_version": "sensor-fault-input-v1", "temperature_unit": "degC", "humidity_unit": "percent", "calibrated": "true"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+======================================================================
+FAIL: test_retained_witness_must_match_reading_and_digest (test_sensor_ingestion.ApiSensorTests.test_retained_witness_must_match_reading_and_digest) (body='{"source_type": "SYNTHETIC"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/core/tests/test_sensor_consumer.py", line 375, in test_retained_witness_must_match_reading_and_digest
+    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+AssertionError: ConsumerError not raised
+
+----------------------------------------------------------------------
+Ran 33 tests in 12.486s
+
+FAILED (failures=13, errors=4)
+Task-owned SQL container removed.

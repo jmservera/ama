@@ -322,6 +322,103 @@ class SensorConsumerTests(unittest.TestCase):
         with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
             self.consume([invalid])
 
+    def retained_state(self) -> tuple[object, ...]:
+        return tuple(
+            tuple(self.store.db.execute(f"SELECT * FROM {table}").fetchall())
+            for table in ("sensor_reading", "sensor_delivery", "sensor_data_quality_exception")
+        )
+
+    def damage_reading(self, column: str, value: str) -> None:
+        if self.consumer.mssql and value in ("invalid-sql-time", "not-a-number", "NaN"):
+            self.store.db.execute(
+                f"ALTER TABLE sensor_reading ALTER COLUMN {column} NVARCHAR(40) NULL"
+            )
+        self.store.db.execute(f"UPDATE sensor_reading SET {column}=?", (value,))
+
+    def test_retained_reading_replay_refuses_malformed_and_inconsistent_values(self) -> None:
+        row = observations()[0]
+        self.consume([row])
+        for column, value in (
+            ("observed_at", "invalid-sql-time"),
+            ("temperature_c", "not-a-number"),
+            ("humidity_pct", "NaN"),
+            ("home_id", "ZF-OTHER"),
+            ("scenario", "DIFFERENT"),
+            ("schema_version", "reading-v1"),
+            ("temperature_c", "21.00"),
+            ("injected_fault", "OUTLIER"),
+        ):
+            with self.subTest(column=column, value=value):
+                self.damage_reading(column, value)
+                before = self.retained_state()
+                try:
+                    with self.assertRaisesRegex(
+                        ConsumerError, "SENSOR_OUTCOME_MALFORMED"
+                    ) as caught:
+                        self.consume([row])
+                    self.assertEqual(str(caught.exception), "SENSOR_OUTCOME_MALFORMED")
+                    self.assertEqual(self.retained_state(), before)
+                finally:
+                    self.store.db.execute(
+                        f"UPDATE sensor_reading SET {column}=?", (row.get(column),)
+                    )
+
+    def test_retained_witness_must_match_reading_and_digest(self) -> None:
+        row = observations()[0]
+        self.consume([row])
+        for body in (
+            "not-json",
+            json.dumps({**row, "temperature_c": "21.00"}),
+            json.dumps({**row, "calibrated": "false"}),
+            json.dumps({**row, "reading_id": "OTHER"}),
+            json.dumps({"source_type": "SYNTHETIC"}),
+        ):
+            with self.subTest(body=body):
+                self.store.db.execute("UPDATE sensor_delivery SET observation_body=?", (body,))
+                before = self.retained_state()
+                with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+                    self.consume([row])
+                self.assertEqual(self.retained_state(), before)
+
+    def test_new_admission_refuses_malformed_latest_without_raw_parse_error(self) -> None:
+        first, second = observations()
+        self.consume([first])
+        for column, value in (
+            ("observed_at", "invalid-sql-time"),
+            ("temperature_c", "not-a-number"),
+            ("humidity_pct", "NaN"),
+        ):
+            with self.subTest(column=column):
+                self.damage_reading(column, value)
+                before = self.retained_state()
+                try:
+                    with self.assertRaisesRegex(ConsumerError, "SENSOR_OUTCOME_MALFORMED"):
+                        self.consume([second])
+                    self.assertEqual(self.retained_state(), before)
+                finally:
+                    self.store.db.execute(f"UPDATE sensor_reading SET {column}=?", (first[column],))
+
+    def test_truthful_historical_replay_ignores_withdrawn_current_authority(self) -> None:
+        row = observations()[0]
+        accepted = self.consume([row])[0]
+        self.consumer.configure(
+            replace(POLICY, window_start="2025-10-01T00:00:00Z", window_end="2025-10-02T00:00:00Z"),
+            [
+                replace(
+                    CONTROL,
+                    consent="declined",
+                    calibration_confirmed=False,
+                    mapping_start="2025-10-01T00:00:00Z",
+                    mapping_end="2025-10-02T00:00:00Z",
+                )
+            ],
+        )
+        before = self.retained_state()
+        self.assertEqual(
+            self.consume([row], "2026-01-01T00:00:00Z")[0], replace(accepted, replay=True)
+        )
+        self.assertEqual(self.retained_state(), before)
+
     def test_independent_connection_same_key_concurrency(self) -> None:
         row = observations()[0]
         barrier = threading.Barrier(2)

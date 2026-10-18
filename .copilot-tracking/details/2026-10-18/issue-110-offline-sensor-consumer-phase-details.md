@@ -6,6 +6,18 @@ ms.date: 2026-10-18
 
 Task: issue-110 / issue-110-offline-sensor-consumer. No implementation delegated.
 
+## Later authorized correction ONE
+
+Same-task RV-001/RV-002 implementation only, no new Research/Plan/critique/Review.
+Historical accepted witness shape/digest and retained reading semantic consistency
+are checked before replay acknowledgement, independently of current authority.
+Latest consumer reading must also match its historical witness before new
+timestamp ordering. Legacy generator rows retain their witness-free contract.
+Timestamp/numeric parse failure or mismatch raises bounded
+SENSOR_OUTCOME_MALFORMED so the existing API BatchStopped preserves the earlier
+committed prefix. Red/green actual-engine evidence and exact pinned integration
+are recorded in the correction ONE receipt, not a replacement Review.
+
 ## Single planning refinement after original critique
 
 PC-001: inspect existing SQLite columns/PK and MSSQL column capacities/types/PK.

@@ -55,6 +55,14 @@ sensor/reading key produces identity conflict without overwrite; legacy rows
 without a consumer witness are also explicit conflict. Identical rejected replay
 retains its historical DQ even if controls are later repaired.
 
+Accepted replay validates the restricted historical witness digest, closed shape
+and retained reading time/numeric/source consistency before acknowledging history.
+Latest consumer readings receive the same consistency check before ordering a new
+admission; legacy generator readings retain their separate witness-free contract.
+Malformed persistence raises bounded `SENSOR_OUTCOME_MALFORMED`, not a successful
+replay or raw parse failure. These checks do not reapply today's consent,
+calibration or window to truthful historical replay.
+
 Receipts expose only opaque reference, status, reason and replay flag. Raw values,
 device IDs and keys never enter receipts, diagnostics, AI, maps or ordinary UI.
 `inspect_exception(reference)` is restricted in-process metadata inspection,

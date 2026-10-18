@@ -158,4 +158,28 @@ authority. Original critique Revise retained unchanged.
 
 ## Remaining work and handoff
 
+The following line is the contradictory historical pre-Review handoff identified
+by original RV-002; it is retained verbatim as adverse evidence, not current state:
+
 P01/P02 pending. Review not executed; correction count 0.
+
+## Current handoff after separately authorized correction ONE
+
+P01/P02/P03 were completed for the original bounded offline delivery. Original
+Review executed once, Complete / Defects found; RV-001 Medium, RV-002 Low and
+RV-003 Low residual remain the immutable original findings. Later owner authority
+resumed this same task in Implement for RV-001/RV-002 only, correction count ONE
+of maximum TWO. No Research, critique or original Review was rerun.
+
+Retained reading/witness validation now refuses malformed or inconsistent SQL
+with bounded ConsumerError, preserving finite API committed-prefix metadata.
+Historical exact replay remains independent of current withdrawn authority.
+Actual SQLite and disposable SQL Server tests are green after recorded red runs.
+Current correction validation, pinned integration, hashes and publication evidence
+are recorded separately in
+[the correction ONE receipt](issue-110-offline-sensor-consumer-correction-one.md).
+Independent exact-published-head review remains the coordinator's gate; this is
+implementation evidence, not a replacement Review or acceptance.
+
+RV-003 full API baseline browser-import tooling remains residual and not green.
+All whole-issue/live/human gates above remain unmet. No issue closure or AC tick.

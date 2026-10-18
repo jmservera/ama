@@ -32,6 +32,9 @@ reconciliation, not an assertion that nothing persisted: replay the same finite
 batch to reconcile committed prefix/uncertain outcome without another append.
 Exact historical replay ignores later authority/window changes but never
 readmits or advances a projection. No task or property record changes.
+Malformed/inconsistent retained reading or witness raises bounded
+`SENSOR_OUTCOME_MALFORMED`; `BatchStopped.completed` preserves earlier committed
+rows even when a later retained timestamp or numeric value is corrupt.
 Unsupported JSON raises `UNSUPPORTED_STORE_SQL_REQUIRED`; unavailable SQL never
 returns a fake empty success. Restricted DQ inspection is Python-only.
 

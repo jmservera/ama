@@ -164,6 +164,21 @@ no significant/divergent owner decision and no repeat critique.
 
 ## Follow-Up Items
 
+### Separately authorized same-task correction ONE (2026-10-18)
+
+Owner authorized later rpi-implement for RV-001/RV-002 only, maximum TWO
+corrections; RV-003 remains residual. Original critique and Review unchanged.
+No new Research/Plan/critique/Review phase execution is authorized.
+
+* [x] C1-T01: actual SQLite/SQL Server failing-first regressions and RV-001 fix.
+* [x] C1-T02: RV-002 historical label/current handoff and correction validation.
+* [ ] C1-T03: integration-only onto exact 6fbdcee18413e9f7366e5f9ec53f68f053681096,
+  complete owned-patch/upstream-blob parity, integrated validation, exact-leased
+  Draft PR411 publication and stopped coordinator handoff.
+
+Receipt: .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-one.md.
+Exact intake lease: 43ef35655b5a01f2a07a2d09eaef5415cc27c1dd.
+
 Live IoT Hub identities/transport and infrastructure owner decisions; Azure SQL
 and registered real AI acceptance; analysis issue 111. Not prerequisites for this
 offline slice. Independent exact published-head review remains a separate gate.

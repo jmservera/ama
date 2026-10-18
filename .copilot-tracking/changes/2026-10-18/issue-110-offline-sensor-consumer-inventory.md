@@ -4,6 +4,10 @@ description: Owned source, documentation and ordered RPI evidence inventory
 ms.date: 2026-10-18
 ---
 
+The next sections describe the original frozen delivery, before separately
+authorized correction ONE. Current inventory and integration evidence are
+appended below; original assessment outcomes are not replaced.
+
 Pinned base: 578631ac75cc8c6a7af53922c6aaae4435e7761c.
 Branch: feat/offline-sensor-consumer-110.
 Delivery inventory: 23 paths. Candidate implementation:
@@ -66,3 +70,15 @@ No original case/memory, private env/data/support, shared sqlstore/mssqlstore,
 governance/consultation/queue/recorder/DPIA source or existing tests, infra,
 browser/UI, live SDK or transport change. Existing exact replay loader unchanged.
 No issue/board/AC/merge/rebase/force-push action.
+
+## Current correction ONE
+
+Same 23 original paths, plus the separate correction ONE receipt and generated
+red/green/static/image logs. Production correction is confined to
+src/core/src/zava_forward/core/sensor_consumer.py; the API adapter source,
+shared stores and exact-generator loader are unchanged.
+Full post-integration tracked inventory, protected blob/mode manifest and
+normalized owned-patch comparisons are recorded with the correction receipt.
+Current correction count ONE; original Complete / Defects found preserved.
+No second original Review. RV-003 remains residual; independent coordinator
+exact-published-head review and whole-issue/live/human gates remain unmet.

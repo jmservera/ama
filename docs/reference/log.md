@@ -6343,3 +6343,16 @@ metadata when the knowledge base was created.
   issue 110/AC-066 remains open; ADR remains Proposed. Infrastructure 140
   depends on the consumer, not the reverse; analysis 111 is not a prerequisite.
   Memory, original case and immutable regulatory evidence remain unchanged.
+
+## [2026-10-18] query | Issue 110 retained reading consistency correction
+
+* Corrected the bounded offline consumer's retained SQL replay and ordering
+  validation: malformed timestamps/numbers and inconsistent historical witness
+  content now fail with metadata-only refusal instead of success or raw parsing
+  failure. The API retains earlier committed-prefix metadata on a later failure.
+* Historical exact replay still reconciles after current exercise consent,
+  calibration and processing window change. No new admission, duplicate write,
+  shared-store mutation, live transport or operational authority is inferred.
+* Original adverse critique and Review remain unchanged; this separately
+  authorized implementation is correction ONE, not independent acceptance.
+  Whole issue/live/Proposed ADR gates and baseline API browser tooling remain.

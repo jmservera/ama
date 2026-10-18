@@ -3,9 +3,9 @@
   "task_slug": "issue-110-offline-sensor-consumer",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": "stopped",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md",
@@ -46,7 +46,7 @@
       "evidence": "Original Review SHA256 5ae9cb33e5d46a5a486cfbce0e824ab012efd8b6b4fccf9b4e73546e772b07cc."
     },
     {
-      "decision": "Original Review outcome Defects found: RV-001 Medium, RV-002 Low, RV-003 Low residual. All routed later; correction count 0; original bytes preserved.",
+      "decision": "Original Review outcome Defects found: RV-001 Medium, RV-002 Low, RV-003 Low residual. At original publication all routed later, correction count 0; original bytes preserved.",
       "status": "adverse-outcome-preserved",
       "evidence": "Original Review Findings and Outcome sections; no post-Review source/document/changes-record edit."
     },
@@ -64,36 +64,29 @@
       "decision": "Normal push verified and PR 411 opened to main with no closing issue references. Final receipt-only commit follows; no source corrections.",
       "status": "published",
       "evidence": "https://github.com/jmservera/ama/pull/411; initial published head 4751b0d4b72e9d782c67036d44a03da65febcfdc; actual PR base 9d625a09e34491ecf9fd27ffc7d59e67c2373b29."
+    },
+    {
+      "decision": "Owner separately authorized same-task later rpi-implement RV-001/RV-002 correction ONE of maximum TWO, then integration-only onto exact 6fbdcee18413e9f7366e5f9ec53f68f053681096. Intake local/remote/PR head exactly 43ef35655b5a01f2a07a2d09eaef5415cc27c1dd clean; PR Draft, no closing refs.",
+      "status": "confirmed",
+      "evidence": "Owner continuation; correction ONE receipt. No Research/critique/original Review rerun."
+    },
+    {
+      "decision": "RV-001 implemented with actual SQLite/MSSQL fail-before/pass-after; RV-002 contradictory line retained as historical with accurate current handoff. Original adverse findings unchanged; no independent acceptance claim.",
+      "status": "implemented-correction-one",
+      "evidence": "Correction ONE receipt and raw logs; full core/API preservation and hardened actual adapter checks passed; full API mypy remains nine baseline missing browser imports."
     }
   ],
   "blockers": [
-    {
-      "id": "RV-001",
-      "summary": "Acceptance remains adverse: malformed restricted SQL readings can return success-shaped replay or escape bounded batch prefix handling.",
-      "resolution": "Later separately authorized rpi-implement; no source correction in this run."
-    },
     {
       "id": "exact-published-head-review",
       "summary": "Complete independent exact-published-head source/artifact/log review is required after publication.",
       "resolution": "Coordinator/owner gate; no second original Review in this task."
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "STOPPED for coordinator/owner complete independent review of PR411 exact published head source, all 23 paths, original artifacts and actual phase log. No child work, repair, second original Review or merge."},
+  "next_action": {"phase": "Implement", "action": "Commit verified correction ONE; integrate only onto exact authorized 6fbdcee18413e9f7366e5f9ec53f68f053681096; prove complete normalized patch/upstream blob parity, validate integrated candidate and publish with exact intake lease. No repeat original Review."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "RV-001: bounded malformed-reading and witness consistency refusal",
-      "rationale": "Confirmed Medium defect violates explicit SQL-state/prefix contract; highest correctness value.",
-      "evidence": "Original Review actual SQLite reproduction; later rpi-implement."
-    },
-    {
-      "rank": 2,
-      "task": "RV-002: reconcile stale final changes handoff",
-      "rationale": "Small Low evidence correction improves trustworthy lifecycle handoff; intentionally not repaired now.",
-      "evidence": "Original Review final changes-section contradiction; later coordinator evidence action."
-    },
-    {
-      "rank": 3,
       "task": "RV-003: restore separately authorized API static-check dependency environment",
       "rationale": "Low nonblocking baseline tooling limitation; owner no-Playwright scope prevents changing it here.",
       "evidence": "Nine missing browser imports reproduced with pinned baseline configuration."
