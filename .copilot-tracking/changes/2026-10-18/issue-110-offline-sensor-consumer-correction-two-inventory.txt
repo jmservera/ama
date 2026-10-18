@@ -8,6 +8,7 @@
 .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-core-static.log
 .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-dependencies.txt
 .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-files.sha256
+.copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-full-pr-inventory.txt
 .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-image-build.log
 .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-image-check.py
 .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-correction-two-image-python-hashes.json

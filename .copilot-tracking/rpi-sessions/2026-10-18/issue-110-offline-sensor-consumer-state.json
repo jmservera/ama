@@ -3,9 +3,9 @@
   "task_slug": "issue-110-offline-sensor-consumer",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-110-offline-sensor-consumer-plan.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Final permitted source correction TWO normal-pushed at4ecf09416e3d9d4d7bdfe3f429de00fbddbc53d3. PR411 Draft with empty closing refs, base/main unchanged6fbdcee1; no rebase/integration. Final tracking-only receipt follows; no further source correction authorized.",
+      "status": "final-source-published",
+      "evidence": "Exact remote/REST PR verification, complete delta/source hash check; source/image binding and cleanup in correction-two receipt."
+    },
     {
       "decision": "Final correction TWO implemented all four independently assessed findings together. Actual SQLite red7/fail6 and SQL red40/fail7/error5 preserved; corrected SQLite70 and real SQL40 pass. Full configured core mypy128 and API mypy61 pass with declared devdeps; full API CI unit935/skip300 passes. No blanket type exemption.",
       "status": "implemented-correction-two",
@@ -113,7 +118,7 @@
       "resolution": "Coordinator/owner gate; no second original Review in this task."
     }
   ],
-  "next_action": {"phase": "Implement", "action": "Freeze verified final correction TWO with exact delta hashes/inventory, cleanup owned resources, normal commit/push on unchanged base; then persist completed/stopped coordinator handoff. No third source correction or repeated original Review."},
+  "next_action": {"phase": "Follow-up", "action": "STOPPED after final correction TWO. Coordinator independent exact frozen-head accumulated-delta/source/artifact/actual-stream and unchanged-doc semantic review next. No third source correction, repeated original Review, ready/merge or automatic child work."},
   "prioritized_follow_ups": [
     {
       "rank": 1,

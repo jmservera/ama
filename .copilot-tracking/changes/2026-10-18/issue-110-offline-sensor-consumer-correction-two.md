@@ -255,3 +255,33 @@ network/provisioning/device credential decisions, OD-43/privacy/human review,
 real AI and Azure SQL/application acceptance remain unexecuted/unmet.
 No live Hub, new SDK/public route/service, AI/task/priority mutation, Azure/
 Graph/IAM/spend or original private dataset was involved.
+
+## Published source and final coordinator handoff
+
+Source and full execution evidence committed as
+4ecf09416e3d9d4d7bdfe3f429de00fbddbc53d3, then normal-pushed:
+`git push origin HEAD:refs/heads/feat/offline-sensor-consumer-110`.
+Remote advanced only intake4723f0a1..4ecf0941; intake ancestry verified.
+GitHub REST/PR verify source head4ecf0941, base6fbdcee1, Draft/open, empty closing
+references. Remote main remains exactly the authorized base; no main movement,
+rebase, integration, force push or unexpected advancement.
+
+Authenticated identity freshly resolved with gh api user; repository-local
+noreply constructed from returned id/login and used for both author/committer.
+Conventional source commit includes required Copilot coauthor and Refs #110 only.
+
+This source commit binds all executed code/tests/config/documentation checks;
+final receipt-only publication changes tracking, with zero src/docs delta.
+The final exact receipt-inclusive head is recorded in PR411 and the final
+response rather than attempting a self-referential Git commit hash.
+Complete correction delta inventory/hashes and complete cumulative PR path
+inventory are committed. The hash manifest excludes only itself; Git's frozen
+tree binds that final manifest. Earlier complete logs and adverse outcomes are
+retained, never relabelled green.
+
+Stop after final normal receipt push per explicit owner direction. Automatic
+session task completed, Follow-up, session stopped; correction count TWO.
+No worker independent Pass, second original Review, third source correction,
+ready/merge or live acceptance. Independent exact final-head source/artifact/
+actual-stream assessment, including accumulated delta and previously incomplete
+unchanged-doc semantic coverage, remains the coordinator's gate.

@@ -177,7 +177,7 @@ No Research/critique/original Review rerun, no base change or third correction.
   seed, validated full sensor ordering boundary and dated ADR reconciliation.
 * [x] C2-T03: full relevant configured static/local CI, sensor/SQL/privacy/
   authority/building/governance preservation and hardened image/restart.
-* [ ] C2-T04: complete delta inventory/hashes, immutable historical evidence,
+* [x] C2-T04: complete delta inventory/hashes, immutable historical evidence,
   normal-pushed frozen Draft PR411 candidate, cleanup and coordinator STOP.
 
 Active receipt:
