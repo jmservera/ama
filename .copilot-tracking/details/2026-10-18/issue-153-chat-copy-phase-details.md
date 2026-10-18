@@ -13,7 +13,7 @@ Research: .copilot-tracking/research/2026-10-18/issue-153-chat-copy-research.md.
 | --- | --- | --- |
 | P01 | Complete, source batch present | P01-T01, P01-T02 |
 | P02 | Complete, local evidence recorded | P02-T01 |
-| P03 | Original Review complete; publication pending | P03-T01 complete, P03-T02 pending |
+| P03 | Complete; PR #402 published, coordinator handoff | P03-T01, P03-T02 complete |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Copy and regression evidence
@@ -109,3 +109,11 @@ Conventional commit plus required Copilot trailer. Push only supplied branch,
 create PR to main with Refs #153 and no closing directives. Report base movement
 and exact base/candidate/head; do not integrate or alter another PR.
 Stop for independent coordinator exact-head review after publication.
+
+Completion evidence: initial delivery ea3208fb6068a2293210f830c71c5eed50fe8be5
+was pushed; gh pr create returned https://github.com/jmservera/ama/pull/402.
+Read-only verification found OPEN, target main at
+f91353169756dc41ebbcca944bdd3f44f7c04b89, initial head as above and no hosted
+results yet. Final tracking-only commit updates lifecycle/publication facts;
+source/test/docs remain the exact reviewed tree's seven changed blobs.
+No merge/integration, source correction, issue mutation or repeated Review.
