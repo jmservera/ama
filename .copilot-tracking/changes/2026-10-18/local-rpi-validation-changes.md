@@ -76,3 +76,18 @@ Actionlint is 1.7.7. Driver system libraries were observed present. Native
 workflow actionlint passed before transition. No system install or cloud
 fallback was used. Initial author-created Ruff/mypy/bytecode scratch is removed
 before committing so it cannot enter candidate validation.
+
+### P01-T02 First Actual Matrix, Adverse Receipt Preserved
+
+Candidate dfe39a2a ran the actual core suite: 1,194 tests, 149 declared skips,
+three failures and one error. The runner incorrectly forced ZF_AI=off, which
+prevented existing mocked-provider contracts executing. Removed that override;
+instead scrub credentials/endpoints and install a runner-owned Python audit
+guard denying non-loopback test connections. No domain tests were changed.
+The original failed receipt and complete output remain external at
+`/tmp/rpi-413-run01/receipt.json` and the CLI log. This is not a passing run.
+
+Continue independent required groups after an individual gate failure to
+collect honest coverage, while blocking receipt success. Retain unfixed-inclusive
+reports and SPDX even when a fixable scan fails. These are in-scope runner
+corrections, not a new plan or critique.

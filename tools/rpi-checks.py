@@ -226,6 +226,7 @@ class Runner:
         self.envs = out / "venvs"
         self.rows: list[dict[str, Any]] = []
         self.groups: list[str] = []
+        self.failures: list[str] = []
         self.images: dict[str, Any] = {}
         self.secrets: list[str] = []
         self.process: subprocess.Popen[str] | None = None
@@ -247,12 +248,24 @@ class Runner:
             "MYPY_CACHE_DIR": str(out / "cache/mypy"),
             "PLAYWRIGHT_BROWSERS_PATH": str(out / "chromium"),
             "ZF_DATA": str(out / "unused-data/zavaforward.json"),
-            "ZF_AI": "off",
             "ZF_STORE": "json",
             "LANG": "C.UTF-8",
         }
         for folder in ("home", "tmp", "cache", "azure", "unused-data"):
             (out / folder).mkdir(parents=True)
+        safety = out / "safety"
+        safety.mkdir()
+        (safety / "sitecustomize.py").write_text(
+            "import sys\n"
+            "def local_only(event, args):\n"
+            "    if event == 'socket.connect':\n"
+            "        address = args[1]\n"
+            "        if isinstance(address, tuple) and address[0] not in "
+            "('127.0.0.1', 'localhost', '::1'):\n"
+            "            raise RuntimeError('Local RPI test refused non-loopback connection')\n"
+            "sys.addaudithook(local_only)\n"
+        )
+        self.safety = safety
         self.group = "preflight"
 
     def scrub(self, text: str) -> str:
@@ -288,12 +301,15 @@ class Runner:
         }
         logfile = f"{len(self.rows):04d}-{self.group}.log"
         entry["log"] = logfile
+        child_env = {**self.env, **(env or {})}
+        if suite or (len(argv) > 2 and argv[1] == "-m" and argv[2].startswith("checks.")):
+            child_env["PYTHONPATH"] = str(self.safety) + ":" + child_env.get("PYTHONPATH", "")
         print(f"{self.group}: {self.scrub(' '.join(argv))}", flush=True)
         try:
             self.process = subprocess.Popen(
                 argv,
                 cwd=self.snapshot / cwd,
-                env={**self.env, **(env or {})},
+                env=child_env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -363,10 +379,15 @@ class Runner:
     def gate(self, name: str) -> Iterator[None]:
         self.group = name
         start = len(self.rows)
-        yield
-        if len(self.rows) == start:
-            raise GateError(f"Required group {name} has no execution evidence")
-        self.groups.append(name)
+        try:
+            yield
+            if len(self.rows) == start:
+                raise GateError(f"Required group {name} has no execution evidence")
+        except GateError as error:
+            self.failures.append(f"{name}: {error}")
+            print(f"FAILED required group: {name}: {error}", flush=True)
+        else:
+            self.groups.append(name)
 
     def tests_env(self, project: str, own_tests: bool = False) -> dict[str, str]:
         paths = []
@@ -722,7 +743,10 @@ class Runner:
                     image_id,
                 ],
                 timeout=900,
+                retry=True,
             )
+            gate_row = self.rows[-1]
+            gate_row.pop("expected_probe_failure", None)
             self.command(
                 [
                     *args,
@@ -761,6 +785,8 @@ class Runner:
                 ):
                     raise GateError("Scanner report/SBOM is invalid")
             scan_database(self.out / "cache/trivy/db/metadata.json")
+            if gate_row["exit_code"]:
+                raise GateError("Fixable HIGH/CRITICAL scan failed; full report and SPDX retained")
 
     def cleanup(self) -> None:
         if self.process is not None:
@@ -812,6 +838,8 @@ class Runner:
             if clean_identity(self.snapshot, self.base) != identity:
                 raise GateError("Snapshot differs from exact candidate")
             self.preflight()
+            if self.failures:
+                raise GateError("; ".join(self.failures))
             self.projects()
             self.namespace_static_infra()
             self.browser()
@@ -832,6 +860,8 @@ class Runner:
                         suite=True,
                         integration=True,
                     )
+            if self.failures:
+                raise GateError("; ".join(self.failures))
             if self.groups != required_groups(self.extras):
                 raise GateError("Required matrix group coverage is incomplete")
             if (

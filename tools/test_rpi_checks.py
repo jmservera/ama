@@ -221,9 +221,9 @@ class GateTests(unittest.TestCase):
         with (
             patch.object(runner, "command", return_value=""),
             patch.object(gate, "tool_identity", return_value={}),
-            self.assertRaises(gate.GateError),
         ):
             runner.preflight()
+        self.assertTrue(runner.failures)
 
     def test_axe_and_scan_database_cannot_silently_skip(self) -> None:
         with self.assertRaises(gate.GateError):
