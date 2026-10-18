@@ -8,7 +8,7 @@ ms.date: 2026-10-18
 
 * Task ID: 108
 * Task slug: issue-108-evaluation-runs
-* Planning status: Implemented P01/P02; P03 local validation complete, Review/publication next
+* Planning status: Complete; source candidate reviewed and PR #405 published
 * Base: 69091f4149f2fd217fc33a8c965ebcb6d5064956
 * Details: .copilot-tracking/details/2026-10-18/issue-108-evaluation-runs-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-18/issue-108-evaluation-runs-plan-critique.md
@@ -142,7 +142,7 @@ Depends on P01. Keep final-only quality fields and failure gates intact.
 Depends on P02-T01. Narrow README paragraph and API assertion only.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validate, independently review and publish bounded delivery
+### [x] P03: Validate, independently review and publish bounded delivery
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Run local checks and reconcile handoff
@@ -150,7 +150,7 @@ Depends on P02-T01. Narrow README paragraph and API assertion only.
 Depends on P02. Record command/output evidence and explicit N/A/not-run boundaries.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: One original independent Review and publication
+#### [x] P03-T02: One original independent Review and publication
 
 Depends on P03-T01. Preserve immutable original review; separate receipts for
 any bounded corrections, maximum two source correction cycles. Publish branch
@@ -190,13 +190,20 @@ No source correction or second critique is needed.
 
 * Coordinator independent complete exact-head review and any main integration
   authorization are separate acceptance work, not unilateral source changes.
+* RV-001 Low: existing migration-quality owner may separately address inherited
+  format/type exclusions; publication retains the limitation, not strict coverage.
 * Issue #108 actual-model/held-out/human/Finance/region/quota/serving evidence
   remains unmet; authorized future exercise owner supplies those prerequisites.
 
 ## Handoff
 
 Changes target: .copilot-tracking/changes/2026-10-18/issue-108-evaluation-runs-changes.md.
-P01/P02 and P03-T01 complete. Ready for the one original independent Review.
-P03-T02 deliberately remains open for that Review and publication; it is not
-unfinished source work. All critique findings dispositioned. No human approval
-or actual-model acceptance inferred.
+P01-P03 and every task complete. Original independent Review executed once on
+source candidate a39ebe9755d07df23730ee81256c0c792fc0ff51: Complete, Conformant
+with justified divergence; RV-001 Low inherited coverage residual, no introduced
+defects. Original Review is immutable. Normal branch publication and main PR
+https://github.com/jmservera/ama/pull/405 authorized and executed.
+Delivery evidence commit adds no source changes; its exact hash is pinned in PR
+metadata and the final handoff. No source correction cycle or second Review.
+Stop for coordinator independent complete exact-head review. No main integration,
+merge, issue closure, human approval or actual-model acceptance inferred.

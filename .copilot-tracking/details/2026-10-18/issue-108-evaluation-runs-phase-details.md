@@ -9,7 +9,7 @@ ms.date: 2026-10-18
 Task ID 108; slug issue-108-evaluation-runs; date 2026-10-18.
 Plan: .copilot-tracking/plans/2026-10-18/issue-108-evaluation-runs-plan.md.
 Research: .copilot-tracking/research/2026-10-18/issue-108-evaluation-runs-research.md.
-Current status: P01/P02 and P03-T01 complete; P03-T02 Review/publication next.
+Current status: P01-P03 complete; PR #405 published, coordinator exact-head review next.
 
 ## Phase Index
 
@@ -17,7 +17,7 @@ Current status: P01/P02 and P03-T01 complete; P03-T02 Review/publication next.
 | --- | --- | --- |
 | P01 | Behavioral regression and red baseline | Complete |
 | P02 | Minimal accounting/contract repair | Complete |
-| P03 | Local validation, one Review, publication | Local validation complete; one Review/publication remain |
+| P03 | Local validation, one Review, publication | Complete |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Lock regression evidence
@@ -124,3 +124,13 @@ Reconcile published handoff, exact base/candidate/head boundaries and unmet
 gates. If main moves, report it and await explicit coordinator integration
 authorization; no rebase/force/merge. Final stop is coordinator exact-head
 independent complete review, not actual-model acceptance.
+
+Actual completion: original Review execution Complete, outcome Conformant with
+justified divergence, RV-001 Low inherited checking residual and no introduced
+defects. Source candidate a39ebe9755d07df23730ee81256c0c792fc0ff51; original Review
+SHA-256 550efe3ad714778e7e378980cbf6643077d432212b3a63d81de244d477b496c1.
+Normal topic push and main PR #405 executed. Final artifact-only delivery commit
+retains identical source and immutable originals; no source corrections or second
+Review. Exact publication head is pinned in PR metadata/final response. All
+P01-P03 markers complete, no pending publication authorization. User-directed
+stop is for coordinator's separate independent complete exact-head review.
