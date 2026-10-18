@@ -4,7 +4,7 @@
 
 * Task ID: actions-budget-local-rpi
 * Task slug: local-rpi-validation
-* Planning status: Accepted plan reconciled; P01-P03 executed, original Review Not accepted (RV-001)
+* Planning status: RV-001 corrective source/tests complete; final exact-head freeze pending, original Review Not accepted preserved
 * Plan date: 2026-10-18
 * Base: 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd
 * Phase details: .copilot-tracking/details/2026-10-18/local-rpi-validation-phase-details.md
@@ -86,6 +86,8 @@ implementation loop, manages the immediate workflow disable actions.
   place of these integration gates.
 * Separate locally reproducible checks from authenticated GitHub/Azure controls.
 * Bind receipts to the exact source, base, tool versions and image digests.
+* Inspect external environment/package/startup identity as bounded inert data;
+  never execute receipt-adjacent interpreters or import their startup content.
 
 ## Non-Functional Requirements
 
@@ -253,6 +255,14 @@ permission to omit checks now.
   missing-tool/package result. Use pip, never uv.
 * Execute heavy groups serially under a host-wide resource lock; do not run
   three full SQL/image/browser gates concurrently on the 16 GB VM.
+* RV-001 corrective invocation: replace environment subprocess identity with
+  bounded data-only package/startup/interpreter metadata inspection. Extend
+  existing tampering tests within 12 methods to prove replacement interpreters
+  and malicious .pth files are not executed and tampering is rejected.
+* Corrective targeted evidence: all 12 focused methods, strict Ruff/format and
+  mypy pass. Six real prior environments yield stable data-only identities.
+  Historical completion evidence remains in the changes record; freeze a new
+  complete exact-head receipt after committing reconciled evidence.
 
 <!-- rpi:phase id=P02 -->
 ### [x] P02: Integrate local evidence into RPI delivery
@@ -266,6 +276,9 @@ permission to omit checks now.
   assessment. Do not use local validation to bypass human blockers.
 * Update existing src/README.md and relevant repository guidance to one runner
   invocation. KB index/log updates are required only if a KB file changes.
+* RV-001: prove complete receipt verification performs no environment execution
+  and retains complete-matrix/evidence checks. Existing guidance and all P03
+  workflow/helper/domain coverage remain unchanged.
 
 <!-- rpi:phase id=P03 -->
 ### [x] P03: Consolidate hosted validation without coverage loss
@@ -347,14 +360,20 @@ and no second critique is requested.
 
 ## Handoff
 
-* Full P01-P03 implementation steps were executed and the consolidated matrix
-  verified at 2c98c0e3fac0657bb67f093ac8f4561685c8c8d3. The one original Review
-  is Complete, outcome Not accepted: RV-001 reproduces execution of an
-  unvalidated receipt-adjacent environment binary during verification.
-  Implementation markers preserve performed work, not acceptance of that
-  defect. Route correction to a separately authorized Implement follow-up.
-* Final artifact commit requires a fresh complete external receipt. It cannot
-  close RV-001 or override the original Review. No publication is authorized.
+* The distinct corrective Implement invocation completed P01-T02 then P02-T01
+  source/tests. P03 and P01-T01 remain historical completed work, not edits.
+  Source boundary: tools/rpi-checks.py and tools/test_rpi_checks.py, related
+  runner documentation only if needed, and these dated state/evidence files.
+* Original Review is Complete, outcome Not accepted. Preserve it byte-for-byte
+  (SHA256 f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4).
+  No Research, critique or original Review repetition or independent acceptance
+  is authorized. RV-001 implementation is addressed with passing targeted
+  regressions; independent exact-head acceptance remains pending.
+* Targeted tests/static checks pass. Commit reconciled evidence, then run the
+  actual complete matrix at final clean HEAD and verify its external receipt at
+  `/tmp/rpi-413-verifier-correction-final/receipt.json`.
+  Make no later commit; no push or PR. Coordinator owns independent exact-head
+  assessment and the finding's acceptance disposition.
 * Changes and validation evidence:
   .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md
 * Other autonomous delivery remains paused until the actual gate is available.

@@ -14,8 +14,8 @@
 
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
-| P01 | Local gate | Executed, run04 verified; acceptance blocked by Review RV-001 | P01-T01, P01-T02 |
-| P02 | RPI integration | Executed; receipt tests/invalidation observed; verifier RV-001 open | P02-T01 |
+| P01 | Local gate | RV-001 source/tests complete; final exact-head matrix pending | P01-T01, P01-T02 |
+| P02 | RPI integration | Data-only verification regressions pass; independent acceptance pending | P02-T01 |
 | P03 | Hosted transition | Complete local implementation; run05 verified at 2c98c0e3 | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
@@ -270,3 +270,58 @@ This is not a plan-critique rerun or a source correction. Preserve it unchanged.
 The final artifact commit and exact-head matrix/receipt freeze are evidence
 collection, not closure of the finding. No push is permitted; coordinator routes
 a distinct corrective Implement invocation before publication can be accepted.
+
+## Authorized RV-001 Implement Invocation (2026-10-18)
+
+The owner authorized this distinct invocation on the existing branch/base.
+Scope is P01-T02 and directly coupled P02-T01 verification only. Preserve all
+original execution/adverse receipts, the accepted critique and the original
+Not accepted Review byte-for-byte. No Research, critique or Review runs again.
+Original Review SHA256:
+f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4.
+
+Replace pip-freeze subprocess inspection with trusted runner inspection of
+bounded regular environment metadata: interpreter/configuration identities,
+distribution metadata and startup files, without launching receipt-adjacent
+executables or importing startup code. Reject malformed, missing, over-limit
+or changed metadata explicitly. A receipt sidecar grants no executable trust.
+Retain all command/group/file/tool/image/DB completeness requirements.
+Extend existing tampering coverage within the 12-method ceiling; demonstrate
+non-execution and rejection for replaced interpreters and malicious .pth
+content, plus package/startup identity binding and coupled bounds failures.
+Do not change the matrix, pins, domain tests, container/browser helpers, or
+either of the two already updated infra files.
+
+First boundary: implement data-only identities, then targeted 12-method tests,
+strict Ruff/format and mypy. Reconcile markers/evidence and commit using local
+GitHub noreply author/committer with Copilot trailer. Run the full actual matrix
+on that clean exact HEAD in a fresh external directory and verify its receipt;
+no changes/commits afterward. Execution log:
+`/tmp/rpi-413-verifier-correction.log`. No publication; coordinator independently
+assesses the frozen exact-head candidate.
+
+Corrective source/tests are complete. Data-only identity records pyvenv.cfg,
+interpreter bytes or un-followed link text, all distribution metadata (including
+METADATA/direct_url/RECORD) and .pth/customization/editable startup identities.
+Per-environment bounds are 4096 enumerated entries, depth eight for metadata,
+8 MiB per metadata/startup file, 64 MiB per regular interpreter and 128 MiB
+aggregate. Nonregular files and symlinked package/startup metadata fail;
+no interpreter or startup file is executed/imported by identity inspection.
+Receipt schema 2 rejects legacy pip-freeze identities rather than silently
+converting them. Complete-matrix/tool/file/image/DB verification is unchanged.
+
+All 12 focused methods pass with real disposable no-pip venv fixtures, including
+replaced interpreter, malicious .pth/sitecustomize/usercustomize/editable code,
+package/config tampering, oversized metadata, symlinks, FIFO and missing
+METADATA. Marker remains absent and verification subprocess calls are restricted
+to existing trusted git/Docker checks by the test spy. Strict Ruff/format/mypy
+pass. Two read-only inspections of all six real historical environments also
+produce identical 12 identities. Source-independent helpers, pins, domain and
+infra tests are unchanged in this invocation.
+
+This committed checkpoint precedes final exact-head execution. Its actual
+outcome must be read from the fresh external
+`/tmp/rpi-413-verifier-correction-final/receipt.json` and full run/verification
+logs, not inferred here. RV-001 implementation disposition: addressed by
+data-only code and regression evidence, pending independent coordinator
+assessment; original Review remains Not accepted and unchanged.

@@ -3,8 +3,8 @@
   "task_slug": "local-rpi-validation",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "blocked",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/local-rpi-validation-research.md",
@@ -20,15 +20,18 @@
     {"decision": "Original critique executed with Revise; PC-001 and PC-002 resolved by parent, no rerun", "status": "preserved", "evidence": ".copilot-tracking/plans/2026-10-18/local-rpi-validation-plan.md"},
     {"decision": "Original Review execution Complete; full P01-P03 source/evidence boundary assessed once", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md"},
     {"decision": "Original Review outcome Not accepted; RV-001 reproduced before environment identity validation, no correction or repeated Review", "status": "adverse outcome preserved", "evidence": ".copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md"},
-    {"decision": "Stop phase progression at local-only frozen candidate; final post-commit matrix is external handoff evidence, not Review closure", "status": "owner-requested stop", "evidence": "2026-10-18 invocation; .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md"}
+    {"decision": "Stop phase progression at local-only frozen candidate; final post-commit matrix is external handoff evidence, not Review closure", "status": "owner-requested stop", "evidence": "2026-10-18 invocation; .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md"},
+    {"decision": "Distinct corrective Implement authorized for RV-001 and directly coupled regressions only; no Research, critique, original Review, push or PR", "status": "owner-authorized active invocation", "evidence": "2026-10-18 corrective invocation; .copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md"},
+    {"decision": "RV-001 source/tests implemented with bounded data-only identities; 12 focused methods and strict Ruff/format/mypy pass, six real environments inspected twice; original adverse Review unchanged", "status": "implementation addressed; independent acceptance pending", "evidence": ".copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md; /tmp/rpi-413-correction-targeted-final.log; /tmp/rpi-413-correction-static.log"},
+    {"decision": "Committed state is the pre-freeze checkpoint; actual final matrix and verification outcomes live in the external receipt/logs to avoid any post-run candidate change", "status": "post-commit execution pending, not predicted", "evidence": "/tmp/rpi-413-verifier-correction-final/receipt.json; /tmp/rpi-413-verifier-correction-matrix.log; /tmp/rpi-413-verifier-correction-verify.log"}
   ],
   "blockers": [
-    {"id": "RV-001", "summary": "Receipt verifier executes unvalidated receipt-adjacent environment code before identity validation; reproduced High finding blocks acceptance/publication", "resolution": "Coordinator assigns a separately authorized corrective Implement invocation; preserve original adverse Review and rerun complete gate after correction"},
+    {"id": "RV-001", "summary": "Implementation addressed with data-only identities and passing focused regressions; independent acceptance/publication still blocked", "resolution": "Freeze final clean exact HEAD with actual full matrix and data-only receipt verification; coordinator independently assesses finding disposition"},
     {"id": "hosted-transition", "summary": "Independent exact-head assessment, 403 required-context mapping, publication authorization and retained hosted checks are unperformed owner/coordinator gates", "resolution": "Coordinator/owner establishes these controls before publication/merge; no fabricated contexts or settings changes"}
   ],
-  "next_action": {"phase": "Implement", "action": "Coordinator independently assesses frozen local candidate and external final receipt, then separately authorizes corrective RV-001 work; no push while finding remains open"},
+  "next_action": {"phase": "Implement", "action": "Commit reconciled source/evidence, execute full matrix at final clean HEAD and verify fresh external receipt; no later candidate changes, Review or publication; coordinator performs independent exact-head assessment"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Correct data-only external receipt environment verification", "rationale": "Reproduced High trust-boundary defect blocks publication; bounded correction fits existing runner and 12-method test budget without replanning", "evidence": ".copilot-tracking/reviews/logs/2026-10-18/local-rpi-validation-review.md RV-001"},
+    {"rank": 1, "task": "Independently assess RV-001 corrective exact-head implementation and complete receipt", "rationale": "Data-only correction and targeted regressions implemented; final freeze and independent acceptance cannot be inferred from the preserved adverse Review", "evidence": ".copilot-tracking/changes/2026-10-18/local-rpi-validation-changes.md RV-001 correction; original Review remains unchanged"},
     {"rank": 2, "task": "Establish independent exact-head assessment and required-context mapping", "rationale": "Required owner/coordinator controls remain unknown or unperformed; local green evidence cannot replace them", "evidence": "Original Review limitations; live protection/ruleset HTTP 403"},
     {"rank": 3, "task": "Run retained hosted transition checks after separately authorized publication", "rationale": "Confirms actual consolidated PR jobs and privileged linkage only after local defects and publication authorization are resolved", "evidence": "Accepted P03; original Review hosted boundary"}
   ]

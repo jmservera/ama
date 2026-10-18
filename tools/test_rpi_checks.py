@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import venv
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -202,16 +203,25 @@ class GateTests(unittest.TestCase):
         with patch.object(gate.subprocess, "run") as run, self.assertRaises(gate.GateError):
             gate.verify(self.root, path, self.base)
         run.assert_not_called()
-        gate.atomic_json(path, {"schema": 1, "status": "failed"})
+        gate.atomic_json(path, {"schema": 2, "status": "failed"})
         (self.out / "receipt.sha256").write_text(gate.digest(path))
         with self.assertRaises(gate.GateError):
             gate.verify(self.root, path, self.base)
+        for name in (*gate.PROJECTS, "namespace"):
+            environment = self.out / "venvs" / name
+            venv.EnvBuilder(with_pip=False, symlinks=True).create(environment)
+            site = environment / "lib/python3.12/site-packages"
+            distribution = site / "fixture-1.0.dist-info"
+            distribution.mkdir()
+            (distribution / "METADATA").write_text("Name: fixture\nVersion: 1.0\n")
+            (distribution / "direct_url.json").write_text('{"url":"file:///fixture"}\n')
+            (site / "fixture.pth").write_text("# inert fixture\n")
         receipt = {
-            "schema": 1,
+            "schema": 2,
             "status": "passed",
             "identity": gate.clean_identity(self.root, self.base),
             "tools": {},
-            "environments": {},
+            "environments": gate.environment_identity(self.out),
             "extras": [],
             "groups": gate.required_groups([]),
             "commands": [
@@ -242,11 +252,11 @@ class GateTests(unittest.TestCase):
         real_output = gate.subprocess.check_output
 
         def output(argv: list[str], **kwargs: Any) -> Any:
+            self.assertIn(argv[0], ("git", "docker"), "Verification must not execute environments")
             return "fixture\n" if argv[0] == "docker" else real_output(argv, **kwargs)
 
         with (
             patch.object(gate, "tool_identity", return_value={}),
-            patch.object(gate, "environment_identity", return_value={}),
             patch.object(gate, "scan_database", return_value={}),
             patch.object(gate.subprocess, "check_output", side_effect=output),
             patch.object(
@@ -257,6 +267,65 @@ class GateTests(unittest.TestCase):
                 ),
             ),
         ):
+            gate.verify(self.root, path, self.base)
+            environment = self.out / "venvs/core"
+            site = environment / "lib/python3.12/site-packages"
+            marker = self.out / "must-not-execute"
+            malicious_startup = (
+                f"import pathlib; pathlib.Path({str(marker)!r}).write_text('executed')\n"
+            )
+            for target, content in (
+                (
+                    environment / "bin/python",
+                    f"#!/bin/sh\nprintf executed > {marker}\n".encode(),
+                ),
+                (site / "fixture.pth", malicious_startup.encode()),
+                (site / "sitecustomize.py", malicious_startup.encode()),
+                (site / "usercustomize.py", malicious_startup.encode()),
+                (site / "__editable___fixture_finder.py", malicious_startup.encode()),
+                (site / "fixture-1.0.dist-info/METADATA", b"Name: fixture\nVersion: 2.0\n"),
+                (site / "fixture-1.0.dist-info/direct_url.json", b'{"url":"file:///changed"}'),
+                (environment / "pyvenv.cfg", b"include-system-site-packages = true\n"),
+            ):
+                with self.subTest(tampered=target.relative_to(environment)):
+                    link = os.readlink(target) if target.is_symlink() else None
+                    original = target.read_bytes() if target.exists() and link is None else None
+                    mode = target.stat().st_mode if target.exists() else 0o600
+                    if target.is_symlink():
+                        target.unlink()
+                    target.write_bytes(content)
+                    target.chmod(0o700 if target.name == "python" else mode)
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+                    self.assertFalse(marker.exists(), "Untrusted interpreter/startup code executed")
+                    target.unlink()
+                    if link is not None:
+                        target.symlink_to(link)
+                    elif original is not None:
+                        target.write_bytes(original)
+                        target.chmod(mode)
+            bounded = site / "fixture-1.0.dist-info/oversized"
+            with bounded.open("wb") as stream:
+                stream.truncate(8 * 1024 * 1024 + 1)
+            with self.assertRaisesRegex(gate.GateError, "bounded regular"):
+                gate.verify(self.root, path, self.base)
+            bounded.unlink()
+            for target in (site / "linked.pth", site / "fixture-1.0.dist-info/linked"):
+                target.symlink_to(site / "fixture.pth")
+                with self.subTest(symlink=target.name), self.assertRaises(gate.GateError):
+                    gate.verify(self.root, path, self.base)
+                target.unlink()
+            fifo = site / "fifo.pth"
+            os.mkfifo(fifo)
+            with self.assertRaisesRegex(gate.GateError, "bounded regular"):
+                gate.verify(self.root, path, self.base)
+            fifo.unlink()
+            metadata = site / "fixture-1.0.dist-info/METADATA"
+            content = metadata.read_bytes()
+            metadata.unlink()
+            with self.assertRaisesRegex(gate.GateError, "METADATA is missing"):
+                gate.verify(self.root, path, self.base)
+            metadata.write_bytes(content)
             gate.verify(self.root, path, self.base)
             for name in ("untracked_source.py", "test_extra.py", "config.toml"):
                 (self.root / name).touch()

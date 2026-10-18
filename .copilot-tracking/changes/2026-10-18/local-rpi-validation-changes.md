@@ -269,3 +269,98 @@ Full actual CLI output remains `/tmp/rpi-413-local-validation.log`.
 The requested handoff is a clean frozen local candidate, not accepted delivery.
 Even a passing final receipt must retain RV-001 as a publication blocker.
 Do not push, open a PR, touch another worktree or resume unrelated backlog.
+
+## Distinct Authorized RV-001 Implement Invocation: Opening State
+
+On 2026-10-18 the owner explicitly authorized correcting only RV-001 and
+directly coupled regressions using the accepted plan. This is a distinct
+Implement invocation, not a new Research, critique or original Review.
+The original adverse Review remains immutable, with SHA256
+f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4.
+Starting HEAD is 15ac3766437b03d0f0df892fcd747b4310f124a9; branch and supplied
+base match; candidate was clean, no open PR exists, fetched main is unchanged.
+Original full execution log and all adverse receipts remain external untouched.
+
+Reopened P01-T02 then P02-T01 (and their containing phases) for the bounded
+implementation; previous completion evidence is historical, not erased.
+P01-T01 and P03 remain complete and outside source scope. Approved write
+boundary is runner/tests and dated plan/details/changes/state. Replace external
+environment execution with bounded data-only interpreter/config/package/startup
+inspection. Keep all complete-matrix checks and explicit errors; no allowlisted
+execution or fallback. Extend the existing test categories within 12 methods.
+All pins, domain tests, container/browser helpers and the two-infra-file limit
+remain unchanged.
+
+Validation intent: focused 12-method regressions and strict Ruff/format/mypy,
+then commit source and reconciled evidence, run a fresh complete actual matrix
+on clean final HEAD, verify the external receipt and make no later commit.
+Log: `/tmp/rpi-413-verifier-correction.log`. RV-001 is not yet implemented;
+independent acceptance remains coordinator-owned. No push or PR is authorized.
+
+## RV-001 P01-T02 and P02-T01 Implementation Evidence
+
+Replaced receipt-adjacent `python -m pip freeze --all` execution with bounded
+trusted-code data inspection in tools/rpi-checks.py. Hash pyvenv.cfg, interpreter
+bytes/un-followed symlink text, complete distribution metadata (including
+versions, editable direct_url and RECORD) and .pth/customization/editable startup
+files plus corresponding cached startup identities. Inspect no imported module,
+execute no external environment interpreter, and reject symlinked/nonregular
+metadata or exceeded explicit entry/depth/per-file/aggregate limits. The same
+inspection seals and verifies identities. Schema 2 prevents old executable-
+inspection receipts from being accepted under the changed identity contract.
+No command matrix, dependency pin, domain/helper assertion or workflow changes.
+Updated directly related src README inert-receipt guidance.
+
+Expanded the existing tampered-receipt method, keeping exactly 12 focused
+methods. Disposable real no-pip venvs replace the old mocked environment
+identity. Valid fixture verification succeeds; changed interpreter executable,
+malicious .pth/sitecustomize/usercustomize/editable code, package METADATA,
+editable URL and pyvenv.cfg all reject with no marker execution. A verification
+subprocess spy refuses any environment invocation. Oversized metadata, symlinked
+startup/package metadata, FIFO and missing METADATA also reject. Restored
+identity verifies again. Existing dirty/group-completeness assertions remain.
+Original Review and original critique have no diff.
+
+Targeted checks actually executed:
+
+* `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools
+  -p test_rpi_checks.py -v`: 12/12 pass; final log
+  `/tmp/rpi-413-correction-targeted-final.log`. Expected adverse subprocess
+  fixtures remain reported, not suppressed.
+* Existing Ruff 0.17.1 isolated E,F,I,B,UP/py312/100 check and format:
+  pass; strict mypy 2.4.0 for both runner files: pass.
+  Log: `/tmp/rpi-413-correction-static.log`. Initial B023 closure lint failure
+  was fixed by nesting distribution records; no failed check is called passed.
+* Twice inspected all six actual historical runner environments as inert data:
+  12 identities stable. Log:
+  `/tmp/rpi-413-correction-real-environments.log`.
+* Git diff/whitespace and original Review SHA256 checks pass. Original Review
+  remains f2d752e762a0f222e3955ec58773d71d189f884cf3ec47966f5671139d8188f4.
+  Exactly the original two infra files differ from base; neither changed here.
+  Browser/container helpers and all domain tests have no corrective diff.
+
+P01-T02 and directly coupled P02-T01 are checked with this implementation
+evidence; their phases reconcile accordingly. RV-001 implementation disposition
+is addressed, not independently accepted or a changed original Review verdict.
+All adverse historical evidence is preserved. No new Research, critique or
+Review has executed. Coordinator owns independent exact-head assessment and
+publication/context/hosted approval; no push or PR is authorized.
+
+## Corrective Final-Commit Freeze Protocol
+
+Commit this source and reconciled dated evidence using the GitHub-resolved
+repository-local noreply identity and required Copilot trailer. This checkpoint
+cannot truthfully predict the post-commit matrix result. Run with fresh external
+output, using the unchanged supplied/fetched base:
+
+`PATH="/tmp/rpi-413-tools:$PATH" PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd --out /tmp/rpi-413-verifier-correction-final`
+
+Then fetch main and use the same PATH/bytecode policy to execute:
+`python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-413-verifier-correction-final/receipt.json --base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd`.
+Actual complete matrix and verification logs:
+`/tmp/rpi-413-verifier-correction-matrix.log` and
+`/tmp/rpi-413-verifier-correction-verify.log`, alongside the full corrective
+execution transcript `/tmp/rpi-413-verifier-correction.log`. Do not overwrite
+prior outputs, change/commit candidate files afterward, or publish. A failed
+run remains adverse evidence, never a passing receipt. The final external
+receipt and logs are authoritative for freeze outcome, not this pre-run record.

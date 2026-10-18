@@ -86,6 +86,11 @@ For issue-specific additional unit contracts, repeat a reviewed selector such
 as `--extra-test api:test_module.Class.test_method`; the module must be tracked.
 This is an argv-based unittest interface, not a shell-command dispatcher.
 Receipts are inert evidence: their command arrays are never replayed.
+Verification hashes bounded environment configuration, interpreter files/link
+identities, distribution metadata and startup files as data. It never launches
+receipt-adjacent Python/pip or imports `.pth`/customization code. Missing,
+symlinked package/startup metadata, exceeded bounds or changed identities block
+verification; a matching receipt sidecar does not establish executable trust.
 
 Keep the authoritative receipt outside git to avoid self-reference. It binds
 HEAD/tree/base, matrix/helper/tool/package identities, command logs, images and

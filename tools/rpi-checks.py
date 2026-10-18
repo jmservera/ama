@@ -13,6 +13,7 @@ import re
 import secrets
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -147,20 +148,99 @@ def tool_identity() -> dict[str, dict[str, str]]:
 
 
 def environment_identity(out: Path) -> dict[str, str]:
+    """Hash bounded environment data without executing Python or loading startup code."""
     result = {}
+    venvs = out / "venvs"
+    if venvs.is_symlink() or not venvs.is_dir():
+        raise GateError("Missing or symlinked environment directory")
     for name in (*PROJECTS, "namespace"):
-        python = out / "venvs" / name / "bin/python"
-        frozen = subprocess.check_output(
-            [str(python), "-m", "pip", "freeze", "--all"],
-            env={"PATH": os.defpath, "HOME": str(out / "home"), "PYTHONDONTWRITEBYTECODE": "1"},
-        )
-        result[name] = hashlib.sha256(frozen).hexdigest()
-        startup = out / "venvs" / name / "lib/python3.12/site-packages"
-        result[f"{name}-startup"] = hashlib.sha256(
-            "\n".join(
-                f"{path.name}:{digest(path)}" for path in sorted(startup.glob("*.pth"))
-            ).encode()
-        ).hexdigest()
+        environment = venvs / name
+        site = environment / "lib/python3.12/site-packages"
+        entries = 0
+        total = 0
+
+        def children(directory: Path) -> list[Path]:
+            nonlocal entries
+            if directory.is_symlink() or not directory.is_dir():
+                raise GateError("Missing or symlinked environment metadata directory")
+            paths = []
+            for child in directory.iterdir():
+                entries += 1
+                if entries > 4096:
+                    raise GateError("Environment metadata entry limit exceeded")
+                paths.append(child)
+            return sorted(paths)
+
+        def record(path: Path, *, interpreter: bool = False) -> dict[str, Any]:
+            nonlocal total
+            if interpreter and path.is_symlink():
+                # Bind link text, never follow a receipt-controlled interpreter target.
+                target = os.readlink(path)
+                if len(target) > 4096:
+                    raise GateError("Environment interpreter link limit exceeded")
+                return {"link": target}
+            if path.is_symlink():
+                raise GateError("Symlinked package/startup metadata is not permitted")
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            with os.fdopen(fd, "rb") as stream:
+                info = os.fstat(stream.fileno())
+                limit = 64 * 1024 * 1024 if interpreter else 8 * 1024 * 1024
+                if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
+                    raise GateError("Environment metadata must be bounded regular files")
+                content = stream.read(limit + 1)
+                total += len(content)
+                if len(content) > limit or total > 128 * 1024 * 1024:
+                    raise GateError("Environment metadata byte limit exceeded")
+            return {
+                "mode": stat.S_IMODE(info.st_mode),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+
+        def metadata(directory: Path, depth: int = 0) -> dict[str, Any]:
+            if depth > 8:
+                raise GateError("Environment metadata depth limit exceeded")
+            records = {}
+            for path in children(directory):
+                if path.is_symlink():
+                    raise GateError("Symlinked package/startup metadata is not permitted")
+                if path.is_dir():
+                    records[path.name] = metadata(path, depth + 1)
+                else:
+                    records[path.name] = record(path)
+            return records
+
+        for directory in (environment, environment / "lib", site.parent):
+            if directory.is_symlink() or not directory.is_dir():
+                raise GateError("Missing or symlinked environment directory")
+        packages = {"pyvenv.cfg": record(environment / "pyvenv.cfg")}
+        interpreters = [p for p in children(environment / "bin") if p.name.startswith("python")]
+        if not any(p.name == "python" for p in interpreters):
+            raise GateError("Environment interpreter identity is missing")
+        for path in interpreters:
+            packages[str(path.relative_to(environment))] = record(path, interpreter=True)
+        startup = {}
+        distributions = 0
+        for path in children(site):
+            if path.name.endswith(".dist-info"):
+                distributions += 1
+                records = metadata(path)
+                if "METADATA" not in records:
+                    raise GateError("Package distribution METADATA is missing")
+                packages[str(path.relative_to(environment))] = records
+            elif path.name.endswith((".pth", ".egg-link")) or path.name.startswith(
+                ("sitecustomize.", "usercustomize.", "__editable__")
+            ):
+                startup[str(path.relative_to(environment))] = record(path)
+            elif path.name == "__pycache__":
+                for cached in children(path):
+                    if cached.name.startswith(("sitecustomize.", "usercustomize.", "__editable__")):
+                        startup[str(cached.relative_to(environment))] = record(cached)
+        if not distributions:
+            raise GateError("Environment package metadata is missing")
+        for key, records in ((name, packages), (f"{name}-startup", startup)):
+            result[key] = hashlib.sha256(
+                json.dumps(records, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
     return result
 
 
@@ -1022,7 +1102,7 @@ class Runner:
                 cleanup_failure = self.scrub(str(error))
                 failure = f"{failure or ''}; cleanup failed: {cleanup_failure}"
         receipt = {
-            "schema": 1,
+            "schema": 2,
             "status": "failed" if failure else "passed",
             "failure": failure,
             "identity": identity,
@@ -1065,7 +1145,7 @@ def verify(root: Path, path: Path, base: str) -> None:
     if digest(path) != path.with_name("receipt.sha256").read_text().strip():
         raise GateError("Receipt integrity mismatch")
     receipt = json.loads(path.read_text())
-    if receipt["schema"] != 1 or receipt["status"] != "passed":
+    if receipt["schema"] != 2 or receipt["status"] != "passed":
         raise GateError("Receipt does not establish a complete passing run")
     if receipt["identity"] != clean_identity(root, base):
         raise GateError("Receipt source/base/matrix/helper identity mismatch")
