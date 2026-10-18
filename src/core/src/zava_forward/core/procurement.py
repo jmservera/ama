@@ -472,32 +472,36 @@ class ProcurementMixin(AppointmentMixin):
             raise ValueError("The package scope changed. Reissue with current resident scope bindings.")
         self.require_resident_clear(self.cases[w["case_id"]], w["versions"][-1].get("resident_bindings", []))
 
-    def _wo_view(self, w, c, contractor_view):
+    def _wo_view(self, w, c, user):
+        contractor_view = projection.is_contractor(user)
         cur = w["versions"][-1]
         bindings = cur.get("resident_bindings") or []
         out = dict(id=w["id"], package=w["package"], case_id=w["case_id"], address=c["home"]["address"], postcode=c["home"]["postcode"],
                    measures=", ".join(b["measure"] for b in bindings) if bindings else "Unknown (resident scope confirmation needed)",
                    needs_notice=projection.needs_notice(c), named_contact=c["owner"], state=w["state"],
                    version=cur["version"], scope=cur["scope"],
-                   appointment_control=self.appointment_summary(w, contractor_view),
+                   appointment_control=self.appointment_summary(w, user),
                    appointments=[{k: a[k] for k in ("outcome", "date")} for a in w["appointments"]])
         if not contractor_view:
             out.update(contractor=w["contractor"], issued_by=cur["issued_by"], issued_at=cur["issued_at"], versions=w["versions"],
                        corrections=w["corrections"], history=w["history"])
         return deepcopy(out)
 
+    def _work_order_reader(self, user):
+        if projection.is_contractor(user):
+            actor = self.staff.get(user.get("email", "").lower())
+            if hasattr(self, "db"):
+                row = self.db.execute("SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)).fetchone()
+                actor = json.loads(row[0]) if row else None
+            if not actor or any(actor.get(k) != user.get(k) for k in ("email", "code", "name", "role", "contractor", "oid")):
+                raise PermissionError("Current registered contractor identity is required to read assigned orders.")
+        else:
+            _actor(self, user)
+
     def list_work_orders(self, user, case_id=None):
         with self.lock:
             contractor_view = projection.is_contractor(user)
-            if contractor_view:
-                actor = self.staff.get(user.get("email", "").lower())
-                if hasattr(self, "db"):
-                    row = self.db.execute("SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)).fetchone()
-                    actor = json.loads(row[0]) if row else None
-                if not actor or any(actor.get(k) != user.get(k) for k in ("email", "code", "name", "role", "contractor", "oid")):
-                    raise PermissionError("Current registered contractor identity is required to read assigned orders.")
-            else:
-                _actor(self, user)
+            self._work_order_reader(user)
             out = []
             for w in self._proc()["work_orders"]:
                 if contractor_view and w["contractor"] != user.get("contractor"):
@@ -506,7 +510,7 @@ class ProcurementMixin(AppointmentMixin):
                     continue
                 c = self.cases.get(w["case_id"])
                 if c:
-                    out.append(self._wo_view(w, c, contractor_view))
+                    out.append(self._wo_view(w, c, user))
             return out
 
     def list_packages(self, user):

@@ -6066,3 +6066,17 @@ metadata when the knowledge base was created.
 * No task/order/remedy completion or reopen implies reset. No general closure
   policy, technical handover, legal/financial approval, live service activation,
   resident validation or accessibility conformance is inferred.
+
+### 2026-10-18: Appointment correction ONE (#87)
+
+* Update the [resident appointment boundary](./research/ux/customer-journeys/residents.md#appointment-control-engineering-boundary-2026-10-18-87),
+  index and component guides for seven original-Review corrections: truthful
+  pre-header committed-response encoding, existing resident/reason-role privacy,
+  atomic configuration evaluation of existing eligible active counts, bounded
+  textual exact-scope competence, withdrawn Ended state, selected localized visit
+  details and protected manual drafts with retained dependency references.
+* Preserve explicit tri-party agreement, separate works consent, current capacity,
+  same-case human-only closure/reset, consumed histories and outstanding updates.
+  Configuration changes create no duplicate/reset task or automatic consequence.
+  Original Review remains Not accepted; correction implementation and synthetic
+  validation are not independent acceptance, live policy or WCAG certification.

@@ -26,6 +26,11 @@ records explicit offer/agreement controls, independent visit-fact counts and the
 source-authorized record-only human home-case closure/reset boundary with retained
 history and outstanding resident commitments. Provisional exercise
 thresholds and local engineering evidence are not live policy approval.
+Correction ONE implements the original seven findings for pre-header committed
+responses, existing-role privacy, active-count configuration, competence text,
+ended state, selected slots and protected manual drafts. Original Review
+Not accepted remains unchanged; implementation evidence is not independent
+acceptance.
 
 For issue #88, the [resident criterion audit](./research/ux/customer-journeys/residents.md#responsibility-owned-response-clock-correction-2026-10-17)
 also records the final authorized responsibility-clock correction: shared service/

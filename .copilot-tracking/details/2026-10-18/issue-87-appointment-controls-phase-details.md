@@ -3,6 +3,10 @@
 
 ## Metadata
 
+* Current execution: authorized correction ONE, all seven original findings;
+  original P01-P03 receipts below remain historical execution evidence.
+  Correction-one receipt owns fresh failing-first and corrected-head results.
+
 * Continuation execution: F8/P01-T02 and P03 complete; existing source changes
   remain authorized and preserved. Parent owns the one original Review.
 
@@ -10,10 +14,12 @@
 * Plan: .copilot-tracking/plans/2026-10-18/issue-87-appointment-controls-plan.md.
 * Evidence: matching research artifact and its current-code lane; initial source
   and base 99056cae7bc679d2ace3e42c75f28577cfce8887.
-* Current source candidate: 22c98267. Final implementation validation ran on that
-  exact source tree immediately before the commit, not on inherited base behavior.
-* Current status: Implement complete, P01-P03; F8 explicit record-only supplied
-  human closure and final changed-source local/SQL/browser/image gates evidenced.
+* Original assessed source candidate: 22c98267; original validation below is
+  historical. Current source is HEAD49d3d663 plus uncommitted correction ONE,
+  with base99056cae. No new commit SHA is asserted.
+* Current status: correction ONE implemented for all seven original findings;
+  fresh core336/API93/actual MSSQL75/browser/hardened-image/static evidence is
+  recorded separately. P01-P03 remain historical completed execution markers.
 * Original Review: Complete / Not accepted, RV-001 through RV-007. Execution
   completion is not correctness acceptance. No second Review or closure claimed.
 * Human live policy/authority approvals remain unavailable, not fabricated.
@@ -26,7 +32,30 @@
 | P02 | API and existing workbench | Complete; separate confirmed manual home-case closure | P02-T01 |
 | P03 | Validation and handoff evidence | Complete; final local/SQL/browser/image receipts reconciled | P03-T01, P03-T02 |
 
-## Current implementation evidence
+## Current correction ONE evidence
+
+All RV-001 through RV-007 are implemented within P01/P02/P03 intent: response
+encoding inside the truthful post-commit/pre-header boundary; explicit actor and
+existing resident/reason-role appointment projection; bounded text competence;
+withdrawn Ended status with history; atomic existing-active-count evaluation on
+configuration with all affected case dependencies; selected localized visit
+details before confirmation; and manual dirty/router/refresh protection retaining
+original evidence bindings. No tests or neighboring authority guards were weakened.
+
+Fresh core336 (277 pass/59 existing skips), API/web93 (92 pass/1 existing skip),
+actual owned MSSQL75/75, configured lint/format/mypy/JS syntax, actual local
+Chromium and latest src-context hardened installed-wheel runtime passed.
+All owned SQL/app containers and synthetic scratch data are removed. See
+.copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md
+for actual failing-first failures, corrected attempts, command/resource/hash
+receipts, bounded guideline findings and human limitations.
+
+No source implementation blocker remains. Implementation completion is not
+independent acceptance. Original Review remains Complete / Not accepted and the
+critique remains frozen; no second Review, self-Pass or state mutation occurred.
+Coordinator owns final artifact/git delivery judgment.
+
+## Historical original implementation evidence
 
 All P01-P03 markers are checked. Final changed-source evidence: core323 (264
 passed, 59 existing skips), API/web85 (84 passed, 1 existing skip), actual owned

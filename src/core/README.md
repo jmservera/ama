@@ -13,7 +13,8 @@ resident/staff/current committed-capacity confirmations, bounded appointment-onl
 representative authority, visit facts and provisional configuration. Each action
 requires an event reference; identical retries reconcile the recorded action and
 conflicting reuse fails. `appointment_control` in work-order projections derives
-Unknown/Offer/Committed on the server. Historical Booked does not confer agreement.
+Unknown/Offer/Committed on the server; withdrawing an agreed order derives Ended,
+with its confirmations retained as history. Historical Booked does not confer agreement.
 Direct booking, completion and case advance require the current agreement as well
 as existing capacity, works consent, safety and building gates.
 
@@ -24,7 +25,13 @@ resident decisions or the independently owned resident-update/remedy records.
 Create the named #88 resident-update commitment first. Record options, household
 constraints, pause/deferral and minimum-necessary provider instructions; provider
 projections omit household reasons, confirmation sources and investigations.
-Bundles need explicit resident agreement and scope-bound competence evidence.
+Appointment evidence requires both the existing resident-view and recorded-reason
+entitlements. Unrelated staff receive the same minimal scheduling fields as
+providers, not household reasons, representative sources or closure/investigation
+histories. Direct summary reads require an explicit current registered actor;
+there is no privileged default.
+Bundles need explicit resident agreement and exact-scope competence evidence with
+a nonblank textual reference of at most 500 characters.
 Nothing schedules or sends anything, and urgent hazard intake remains independent.
 
 Verified resident no-access counts only once per explicitly confirmed visit while
@@ -32,6 +39,10 @@ the underlying home case has `closed is False`. Provider/cancel/reschedule/Unkno
 unverified and unconfirmed events never qualify. The versioned exercise threshold
 defaults provisionally to 5; count strictly greater than the threshold creates one
 owned human investigation, not refusal, withdrawal, sanctions or priority changes.
+Changing configuration atomically evaluates already eligible active counts across
+affected home cases. It does not require another failed visit, recount events or
+reset an existing task. New tasks reference the current rule version and existing
+eligible events; inactive cases and consumed pre-closure events cannot create one.
 Human checks record confirmation, notice, attendance, adjustments, contact and
 circumstances as evidence or explicit Unknown, corrective action and next update.
 Preference-breach and abortive facts have independent overlapping cause/owner

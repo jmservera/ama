@@ -854,7 +854,14 @@ def make_handler(app):
                         result = self._procurement(s, u, parts, body)
                     except AppointmentCommittedError as error:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
-                    return self._json(200, result)
+                    try:
+                        raw = json.dumps(result).encode("utf-8")
+                    except Exception:
+                        return self._json(409, {
+                            "error": "The procurement change committed. Reload its history; do not repeat it.",
+                            "outcome": "committed",
+                        })
+                    return self._send(200, raw)
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
                     return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:

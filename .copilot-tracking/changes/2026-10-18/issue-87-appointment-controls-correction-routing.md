@@ -7,8 +7,10 @@
 * Original source: 22c98267ae6da365d6a2d9fceed7113c8f4578ea.
 * Base: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Branch: feat/appointment-commitment-controls-87.
-* Status: routed, not started. This is a correction handoff, not a correction
-  implementation, second Review, self-Pass or grant of operational approval.
+* Current status: authorized correction ONE implemented for all seven findings;
+  fresh failing-first/current-source evidence is in the matching correction-one
+  receipt. Original routing below remains history, not a second Review,
+  independent acceptance, self-Pass or operational approval.
 * Original Review execution: Complete; outcome: Not accepted; two High/five Medium.
 * Owner: backlog coordinator delegates later rpi-implement correction work within
   issue87; no unrelated issue work or new automatic child is started.
@@ -45,6 +47,14 @@ records failing-first reproductions, exact source changes, final local checks,
 actual SQL/browser/image reruns where affected and cleanup in a new correction
 receipt. Preserve original Review and critique byte-for-byte. No second Review
 or corrected-self-Pass is required or authorized by this routing.
+
+Correction ONE implementer has completed the coherent batch on HEAD49d3d663 plus
+uncommitted source/tests/docs. Fresh core336/API93/actual MSSQL75, local Chromium,
+configured static checks and latest src-context hardened image passed. Exact
+owned SQL/app resources and synthetic scratch data are removed. See
+.copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md.
+The coordinator did not implement source; the original Review/critique are
+byte-exact and adverse outcome remains. No new acceptance verdict is supplied.
 
 Live threshold/lifecycle/configuration ratification, real authority/competence/
 capacity and resident/accessibility validation remain human-owned prerequisites.

@@ -649,7 +649,7 @@ class Flows:
             dataset.supplied_appointment_fixture(self.store, PAM, wid)
             body = self.outcome(wid, f"VISIT-{number}")
             self.store.appointment_control(PAM, wid, body)
-            result = self.store.appointment_summary(self.store._work_order(wid), False)
+            result = self.store.appointment_summary(self.store._work_order(wid), PAM)
             self.assertEqual(result["eligible_no_access"], number)
             self.assertEqual(bool(result["investigation"]), number > 5)
         with self.assertRaises(ValueError):
@@ -658,18 +658,18 @@ class Flows:
             action="investigation", event_ref="HUMAN-CHECK", disposition="Task reviewed, not case closed",
             checks={key: "Unknown" for key in ("confirmation", "notice", "attendance", "adjustments", "contact", "circumstances")},
             corrective_action="Human contact and accessibility review", next_update="SYN owner to call tomorrow"))
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 6)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 6)
         again = self.reopen()
         if hasattr(again, "db"):
             self.addCleanup(again.db.close)
-        result = again.appointment_summary(again._work_order(wid), False)
+        result = again.appointment_summary(again._work_order(wid), PAM)
         self.assertEqual(result["eligible_no_access"], 6)
         self.assertEqual(len(result["investigation"]["history"]), 1)
         self.assertFalse(again.cases["ZF-1"]["closed"])
         self.assertIn("human underlying home-case closure", result["case_reset"])
 
     def closure_body(self, wid, ref="HUMAN-CLOSE"):
-        state = self.store.appointment_summary(self.store._work_order(wid), False)
+        state = self.store.appointment_summary(self.store._work_order(wid), PAM)
         return dict(action="close_case", event_ref=ref, case_id=state["case_id"],
                     expected_case_version=state["case_version"], confirmed=True,
                     source="SYN supplied human closure decision", source_version="SYN-1",
@@ -717,7 +717,7 @@ class Flows:
         before_proc = copy.deepcopy(self.store._proc())
         body = self.closure_body(wid)
         self.store.appointment_control(PAM, wid, body)
-        state = self.store.appointment_summary(self.store._work_order(wid), False)
+        state = self.store.appointment_summary(self.store._work_order(wid), PAM)
         self.assertEqual(state["eligible_no_access"], 0)
         self.assertIsNone(state["investigation"])
         for key in ("appointment_outcomes", "appointment_configurations", "appointment_investigations"):
@@ -732,19 +732,19 @@ class Flows:
         self.store.reopen_case(PAM, "ZF-1", "SYN human reopen",
                                metadata=dict(source="SYN supplied human review", next_action="Human review"))
         self.store.appointment_control(PAM, wid, old)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 0)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
         with self.assertRaises(ConflictError):
             self.store.appointment_control(PAM, wid, dict(body, event_ref="REPLAY-CLOSE"))
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         self.outcome(wid, "AFTER-CLOSE")
-        state = self.store.appointment_summary(self.store._work_order(wid), False)
+        state = self.store.appointment_summary(self.store._work_order(wid), PAM)
         self.assertEqual(state["eligible_no_access"], 1)
         self.assertEqual(state["investigation"]["events"], ["AFTER-CLOSE"])
         self.assertEqual(state["investigation"]["closure_version"], 1)
         again = self.reopen()
         if hasattr(again, "db"):
             self.addCleanup(again.db.close)
-        self.assertEqual(again.appointment_summary(again._work_order(wid), False), state)
+        self.assertEqual(again.appointment_summary(again._work_order(wid), PAM), state)
         self.assertEqual(len(again._proc()["appointment_outcomes"]), 2)
 
     def test_human_closure_failed_save_rolls_back_case_boundary_and_history(self):
@@ -778,7 +778,7 @@ class Flows:
         self.outcome(wid, "UNVERIFIED", verified=False)
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         self.outcome(wid, "PREFERENCE-ONLY", no_access=False, preference_breach=True)
-        result = self.store.appointment_summary(self.store._work_order(wid), False)
+        result = self.store.appointment_summary(self.store._work_order(wid), PAM)
         self.assertEqual(result["eligible_no_access"], 0)
         self.assertEqual(sum(result["counts"]["preference_breach"].values()), 5)
         self.assertEqual(sum(result["counts"]["abortive"].values()), 4)
@@ -815,7 +815,7 @@ class Flows:
             self.store._case("ZF-1")["closed"] = True
             self.store.save()
         self.outcome(wid, "INACTIVE")
-        result = self.store.appointment_summary(self.store._work_order(wid), False)
+        result = self.store.appointment_summary(self.store._work_order(wid), PAM)
         self.assertEqual(result["eligible_no_access"], 1)
         self.store.appointment_control(PAM, wid, body)
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 2)
@@ -832,13 +832,86 @@ class Flows:
         body.update(event_ref="BUNDLE", bundle=True)
         body["expected_offer_id"] = w["appointment_offer"]["id"]
         for change in ({}, {"bundle_agreed": True},
-                       {"bundle_agreed": True, "competence": {"scope": {}, "source": "SYN"}}):
+                       {"bundle_agreed": True, "competence": {"scope": {}, "source": "SYN"}},
+                       *[dict(bundle_agreed=True, competence=dict(
+                           scope=self.store._appointment_binding(w), source=bad))
+                         for bad in ("", " \t ", None, 42, True, [], {}, "x" * 501)]):
             with self.assertRaises(ValueError):
                 self.store.appointment_control(PAM, wid, dict(body, **change))
         self.store.appointment_control(PAM, wid, dict(
             body, bundle_agreed=True,
             competence=dict(scope=self.store._appointment_binding(w), source="SYN scoped competence register")))
         self.assertEqual(self.store.appointment_status(self.store._work_order(wid))["status"], "Offer")
+
+    def test_configuration_evaluates_existing_active_counts_once(self):
+        wid = self.appointment_order()
+        for number in range(5):
+            dataset.supplied_appointment_fixture(self.store, PAM, wid)
+            self.outcome(wid, f"CONFIG-VISIT-{number}")
+        before = copy.deepcopy(self.store._proc()["appointment_outcomes"])
+        config_wid = self.store.issue_work_order(
+            PAM, self.package(), "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
+        body = dict(action="configure", event_ref="LOWER", threshold=4, basis="SYN human rule")
+        self.store.appointment_control(PAM, config_wid, body)
+        task = copy.deepcopy(self.store._proc().get("appointment_investigations", {}).get("ZF-1"))
+        self.assertIsNotNone(task)
+        self.assertEqual(task["events"], [e["ref"] for e in before])
+        self.assertEqual(task["configuration"]["version"], 1)
+        for ref, threshold in (("RAISE", 10), ("LOWER-AGAIN", 0)):
+            self.store.appointment_control(PAM, config_wid, dict(body, event_ref=ref, threshold=threshold))
+        self.store.appointment_control(PAM, config_wid, body)
+        self.assertEqual(len(self.store._proc()["appointment_configurations"]), 3)
+        self.assertEqual(self.store._proc()["appointment_investigations"]["ZF-1"], task)
+        self.assertEqual(self.store._proc()["appointment_outcomes"], before)
+        self.store.appointment_control(PAM, wid, self.closure_body(wid))
+        self.store.appointment_control(PAM, config_wid, dict(body, event_ref="CLOSED", threshold=0))
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
+        self.store.reopen_case(PAM, "ZF-1", "SYN reopen",
+                               metadata=dict(source="SYN human", next_action="Human review"))
+        self.store.appointment_control(PAM, config_wid, dict(body, event_ref="REOPEN", threshold=0))
+        self.assertIsNone(self.store.appointment_summary(self.store._work_order(wid), PAM)["investigation"])
+        self.assertEqual(self.store._proc()["appointment_outcomes"], before)
+
+    def test_withdrawn_appointment_is_ended_and_history_retained(self):
+        wid = self.appointment_order()
+        dataset.supplied_appointment_fixture(self.store, PAM, wid)
+        before = copy.deepcopy(self.store._work_order(wid)["appointment_offer"])
+        self.store.withdraw_work_order(PAM, wid, "SYN withdrawn")
+        self.assertEqual(self.store.appointment_status(self.store._work_order(wid))["status"], "Ended")
+        self.assertEqual(self.store._work_order(wid)["appointment_offer"], before)
+        for actor in (PAM, STAFF[4]):
+            self.assertEqual(self.store.list_work_orders(actor)[0]["appointment_control"]["status"], "Ended")
+        for call in (lambda: self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01"),
+                     lambda: self.store.complete_work_order(PAM, wid),
+                     lambda: self.store.advance(PAM, "ZF-1")):
+            with self.assertRaises(ValueError):
+                call()
+
+    def test_appointment_reads_apply_existing_resident_evidence_roles(self):
+        wid = self.appointment_order()
+        dataset.supplied_appointment_fixture(self.store, PAM, wid)
+        w = self.store._work_order(wid)
+        self.store.appointment_control(PAM, wid, dict(
+            action="configure", event_ref="PRIVATE-CONFIG", threshold=0, basis="SYN private rule"))
+        self.outcome(wid, "PRIVATE-VISIT")
+        self.store.appointment_control(PAM, wid, dict(
+            action="investigation", event_ref="PRIVATE-CHECK",
+            checks={k: "PRIVATE-CIRCUMSTANCES" for k in
+                    ("confirmation", "notice", "attendance", "adjustments", "contact", "circumstances")},
+            corrective_action="PRIVATE-CIRCUMSTANCES", next_update="SYN human",
+            disposition="SYN reviewed"))
+        body = self.closure_body(wid)
+        body["reason"] = "PRIVATE-CLOSURE"
+        self.store.appointment_control(PAM, wid, body)
+        w = self.store._work_order(wid)
+        self.assertIn("PRIVATE-CLOSURE", json.dumps(self.store.list_work_orders(PAM)))
+        for actor in (QUIL, STAFF[4]):
+            payload = json.dumps(self.store.list_work_orders(actor))
+            for marker in ("PRIVATE-CLOSURE", "PRIVATE-CIRCUMSTANCES", "SYN agreed morning only",
+                           "SYN explicit supplied resident agreement"):
+                self.assertNotIn(marker, payload)
+            self.assertIn("Knock and wait", payload)
+        self.assertNotIn("PRIVATE-CLOSURE", json.dumps(self.store.detail("ZF-1", QUIL)))
 
 
 class JsonFlows(Flows, unittest.TestCase):
@@ -1154,6 +1227,97 @@ class SqlFlows(Flows, unittest.TestCase):
         self.assertEqual(again.list_work_orders(PAM), expected["orders"])
         self.assertTrue(again.verify_audit())
 
+    def configuration_race(self, competing, configuration_wins):
+        wid = self.appointment_order()
+        dataset.supplied_appointment_fixture(self.store, PAM, wid)
+        self.outcome(wid, "CONFIG-RACE-OLD")
+        dataset.supplied_appointment_fixture(self.store, PAM, wid)
+        offer = self.store._work_order(wid)["appointment_offer"]["id"]
+        config = dict(action="configure", event_ref="CONFIG-RACE", threshold=0, basis="SYN human rule")
+        event = dict(action="outcome", event_ref="CONFIG-RACE-NEW", offer_id=offer,
+                     cause="Resident", owner="SYN human", source="SYN checked",
+                     verified=True, no_access=True, preference_breach=False, abortive=False)
+        body = self.closure_body(wid) if competing == "closure" else event
+        first, second = (body, config) if configuration_wins else (config, body)
+        self.race(lambda: self.store.appointment_control(PAM, wid, first),
+                  lambda other: other.appointment_control(PAM, wid, second))
+        state = self.store.appointment_summary(self.store._work_order(wid), PAM)
+        self.assertEqual(len(self.store._proc().get("appointment_configurations", [])), int(configuration_wins))
+        if configuration_wins:
+            self.assertEqual(state["investigation"]["events"], ["CONFIG-RACE-OLD"])
+            self.assertEqual(state["investigation"]["configuration"]["version"], 1)
+            if competing == "closure":
+                body = self.closure_body(wid)
+            self.store.appointment_control(PAM, wid, body)
+        else:
+            self.store.appointment_control(PAM, wid, config)
+        self.store.appointment_control(PAM, wid, config)
+        state = self.store.appointment_summary(self.store._work_order(wid), PAM)
+        self.assertEqual(len(self.store._proc()["appointment_configurations"]), 1)
+        self.assertEqual(state["eligible_no_access"], 0 if competing == "closure" else 2)
+        if competing == "closure":
+            self.assertIsNone(state["investigation"])
+            self.assertEqual(len(state["closure_history"]), 1)
+        else:
+            self.assertEqual(state["investigation"]["events"],
+                             ["CONFIG-RACE-OLD"] if configuration_wins else ["CONFIG-RACE-OLD", "CONFIG-RACE-NEW"])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_configuration_wins_outcome_race(self):
+        self.configuration_race("outcome", True)
+
+    def test_outcome_wins_configuration_race(self):
+        self.configuration_race("outcome", False)
+
+    def test_configuration_wins_human_closure_race(self):
+        self.configuration_race("closure", True)
+
+    def test_human_closure_wins_configuration_race(self):
+        self.configuration_race("closure", False)
+
+    def test_configuration_rechecks_other_eligible_home_lifecycle(self):
+        wid = self.appointment_order()
+        dataset.supplied_appointment_fixture(self.store, PAM, wid)
+        self.outcome(wid, "OTHER-HOME-VISIT")
+        pid = self.package()
+        other_wid = self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
+        config = dict(action="configure", event_ref="OTHER-HOME-CONFIG", threshold=0, basis="SYN human")
+
+        def inactive(other):
+            with other.lock:
+                other._case("ZF-1")["closed"] = True
+                other.save()
+
+        self.race(lambda: self.store.appointment_control(PAM, other_wid, config), inactive)
+        self.assertFalse(self.store._proc().get("appointment_configurations"))
+        self.store.appointment_control(PAM, other_wid, config)
+        self.assertNotIn("ZF-1", self.store._proc().get("appointment_investigations", {}))
+        self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 1)
+
+    def configuration_versions_race(self, lower_wins):
+        wid = self.appointment_order()
+        dataset.supplied_appointment_fixture(self.store, PAM, wid)
+        self.outcome(wid, "CONFIG-VERSION-VISIT")
+        lower = dict(action="configure", event_ref="VERSION-LOWER", threshold=0, basis="SYN human")
+        higher = dict(action="configure", event_ref="VERSION-HIGHER", threshold=4, basis="SYN human")
+        first, second = (higher, lower) if lower_wins else (lower, higher)
+        self.race(lambda: self.store.appointment_control(PAM, wid, first),
+                  lambda other: other.appointment_control(PAM, wid, second))
+        self.assertEqual(len(self.store._proc()["appointment_configurations"]), 1)
+        self.store.appointment_control(PAM, wid, first)
+        self.store.appointment_control(PAM, wid, second)
+        self.assertEqual(len(self.store._proc()["appointment_configurations"]), 2)
+        task = self.store._proc()["appointment_investigations"]["ZF-1"]
+        self.assertEqual(task["events"], ["CONFIG-VERSION-VISIT"])
+        self.assertEqual(task["configuration"]["version"], 1 if lower_wins else 2)
+        self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 1)
+
+    def test_lower_configuration_wins_version_race(self):
+        self.configuration_versions_race(True)
+
+    def test_higher_configuration_wins_version_race(self):
+        self.configuration_versions_race(False)
+
     def test_concurrent_last_slot_keeps_only_winning_order_and_audit(self):
         pid = self.package()
         self.race(
@@ -1305,7 +1469,7 @@ class SqlFlows(Flows, unittest.TestCase):
             source="SYN fixture review", next_action="Human appointment review"))
         self.store.appointment_control(PAM, wid, body)
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 1)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 0)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
 
     def test_human_closure_wins_against_stale_event_without_count_or_history_loss(self):
         wid = self.appointment_order()
@@ -1319,13 +1483,13 @@ class SqlFlows(Flows, unittest.TestCase):
                   lambda other: other.appointment_control(PAM, wid, closure))
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
         self.assertEqual([e["ref"] for e in self.store._proc()["appointment_outcomes"]], ["CLOSURE-RACE-OLD"])
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 0)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
         self.store.appointment_control(PAM, wid, event)
         self.assertFalse(self.store._proc()["appointment_outcomes"][-1]["eligible"])
         self.store.reopen_case(PAM, "ZF-1", "SYN reopen", metadata=dict(source="SYN human", next_action="Review"))
         self.store.appointment_control(PAM, wid, old)
         self.store.appointment_control(PAM, wid, event)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 0)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 2)
 
     def test_event_wins_against_stale_human_closure_then_fresh_closure_preserves_event(self):
@@ -1339,11 +1503,11 @@ class SqlFlows(Flows, unittest.TestCase):
         self.race(lambda: self.store.appointment_control(PAM, wid, closure),
                   lambda other: other.appointment_control(PAM, wid, event))
         self.assertFalse(self.store.cases["ZF-1"]["closed"])
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 1)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 1)
         self.store.appointment_control(PAM, wid, closure)
         self.assertEqual(self.store._proc()["appointment_outcomes"][0]["ref"], "EVENT-WINS")
         self.assertEqual(self.store.cases["ZF-1"]["home_case_closures"][0]["outcome_boundary"], 1)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), False)["eligible_no_access"], 0)
+        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
 
     def test_human_closure_pending_audit_rollback_and_postcommit_truthful_retry(self):
         from zava_forward.core.appointments import AppointmentCommittedError

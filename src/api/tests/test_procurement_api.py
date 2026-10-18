@@ -56,6 +56,11 @@ class ProcurementApi(unittest.TestCase):
                 )
             ]
         )
+        data["staff"].append(
+            dict(
+                code="QI-02", name="Quil Other", email="quil@example.test", role="Quality Inspector"
+            )
+        )
         self.manager = data["staff"][1]
         self.path.write_text(json.dumps(data))
         self.store = self.make_store(self.path)
@@ -302,6 +307,270 @@ class ProcurementApi(unittest.TestCase):
         self.assertFalse(self.store.detail("ZF-1")["closed"])
         self.assertEqual(len(self.store.cases["ZF-1"]["home_case_closures"]), 1)
         self.assertTrue(self.store.verify_audit())
+
+    def test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure(self) -> None:
+        from unittest.mock import patch
+
+        self.call(f"/api/packages/{self.pid}/capacity", self.capacity())
+        self.call("/api/workorders", self.issue())
+        route = "/api/workorders/WO-0001/appointment-control"
+        ref = supplied_appointment_fixture(self.store, self.manager, "WO-0001", confirmations=False)
+        state = self.call("/api/workorders")[1][0]["appointment_control"]
+        encode = json.dumps
+
+        def fault(obj: Any, *args: Any, **kwargs: Any) -> str:
+            if (
+                isinstance(obj, dict)
+                and obj.get("work_orders")
+                and "appointment_control" in obj["work_orders"][0]
+            ):
+                raise ValueError("SYN response-only encoder failure")
+            return encode(obj, *args, **kwargs)
+
+        bodies = [
+            dict(
+                action="confirm",
+                event_ref="SERIAL-CONFIRM",
+                offer_id=ref,
+                kind="resident",
+                person="Pat Test",
+                source="SYN human",
+                channel="Phone",
+            ),
+            dict(
+                action="close_case",
+                event_ref="SERIAL-CLOSE",
+                case_id="ZF-1",
+                expected_case_version=state["case_version"],
+                confirmed=True,
+                source="SYN human",
+                source_version="SYN-1",
+                reason="SYN human decision",
+            ),
+        ]
+        for body in bodies:
+            with patch.object(json, "dumps", side_effect=fault):
+                code, result = self.call(route, body)
+            self.assertEqual((code, result.get("outcome")), (409, "committed"))
+            self.assertIn("Reload", result["error"])
+            self.assertEqual(
+                sum(
+                    e["ref"] == body["event_ref"]
+                    for e in self.store._work_order("WO-0001")["appointment_events"]
+                ),
+                1,
+            )
+            self.assertEqual(self.call(route, body)[0], 200)
+            self.assertEqual(
+                sum(
+                    e["ref"] == body["event_ref"]
+                    for e in self.store._work_order("WO-0001")["appointment_events"]
+                ),
+                1,
+            )
+        self.assertEqual(len(self.store.cases["ZF-1"]["home_case_closures"]), 1)
+
+    def test_bundle_competence_http_requires_bounded_text_and_exact_scope(self) -> None:
+        self.call(f"/api/packages/{self.pid}/capacity", self.capacity())
+        self.call("/api/workorders", self.issue())
+        supplied_appointment_fixture(self.store, self.manager, "WO-0001", confirmations=False)
+        w = self.store._work_order("WO-0001")
+        body = dict(
+            w["appointment_events"][0]["body"],
+            event_ref="BUNDLE",
+            bundle=True,
+            bundle_agreed=True,
+            expected_offer_id=w["appointment_offer"]["id"],
+        )
+        route = "/api/workorders/WO-0001/appointment-control"
+        bad_values: tuple[Any, ...] = ("", " \t ", None, 42, True, [], {}, "x" * 501)
+        for bad in bad_values:
+            with self.subTest(bad=bad):
+                self.assertEqual(
+                    self.call(
+                        route,
+                        dict(
+                            body,
+                            competence=dict(scope=self.store._appointment_binding(w), source=bad),
+                        ),
+                    )[0],
+                    400,
+                )
+        self.assertEqual(
+            self.call(route, dict(body, competence=dict(scope={}, source="SYN")))[0], 400
+        )
+        self.assertEqual(
+            self.call(
+                route,
+                dict(
+                    body,
+                    competence=dict(
+                        scope=self.store._appointment_binding(w), source="SYN exact competence"
+                    ),
+                ),
+            )[0],
+            200,
+        )
+
+    def test_withdrawal_http_ends_current_appointment_for_staff_and_provider(self) -> None:
+        self.call(f"/api/packages/{self.pid}/capacity", self.capacity())
+        self.call("/api/workorders", self.issue())
+        supplied_appointment_fixture(self.store, self.manager, "WO-0001")
+        self.assertEqual(self.call("/api/workorders/WO-0001/withdraw", dict(reason="SYN"))[0], 200)
+        for actor in ("pam", "kim"):
+            self.assertEqual(
+                self.call("/api/workorders", actor=actor)[1][0]["appointment_control"]["status"],
+                "Ended",
+            )
+        for route, body in (
+            ("/api/workorders/WO-0001/appointment", dict(outcome="Booked", date="2099-01-01")),
+            ("/api/workorders/WO-0001/complete", dict(note="SYN")),
+            ("/api/cases/ZF-1/advance", {}),
+        ):
+            self.assertEqual(self.call(route, body)[0], 400)
+
+    def test_appointment_http_serialized_canaries_follow_existing_roles(self) -> None:
+        self.call(f"/api/packages/{self.pid}/capacity", self.capacity())
+        self.call("/api/workorders", self.issue())
+        wid = "WO-0001"
+        route = f"/api/workorders/{wid}/appointment-control"
+        ref = supplied_appointment_fixture(self.store, self.manager, wid, confirmations=False)
+        self.assertEqual(
+            self.call(
+                route,
+                dict(
+                    action="authority",
+                    event_ref="PRIVATE-GRANT",
+                    offer_id=ref,
+                    representative_ref="SYN-REP",
+                    person="SYN Helper",
+                    source="PRIVATE-AUTHORITY",
+                    valid_from="2026-01-01",
+                    valid_to="2099-12-31",
+                    revoked=False,
+                ),
+            )[0],
+            200,
+        )
+        for kind, person in (
+            ("resident", "SYN Helper"),
+            ("staff", self.manager["name"]),
+            ("capacity", "SYN supplier"),
+        ):
+            self.assertEqual(
+                self.call(
+                    route,
+                    dict(
+                        action="confirm",
+                        event_ref="PRIVATE-" + kind,
+                        offer_id=ref,
+                        kind=kind,
+                        person=person,
+                        source="PRIVATE-CONFIRMATION",
+                        channel="Phone",
+                        representative_ref="SYN-REP" if kind == "resident" else None,
+                    ),
+                )[0],
+                200,
+            )
+        self.assertEqual(
+            self.call(
+                route,
+                dict(action="configure", event_ref="PRIVATE-RULE", threshold=0, basis="SYN human"),
+            )[0],
+            200,
+        )
+        self.assertEqual(
+            self.call(
+                route,
+                dict(
+                    action="outcome",
+                    event_ref="PRIVATE-OUTCOME",
+                    offer_id=ref,
+                    cause="Resident",
+                    owner="SYN human",
+                    source="SYN checked",
+                    verified=True,
+                    no_access=True,
+                    preference_breach=False,
+                    abortive=False,
+                ),
+            )[0],
+            200,
+        )
+        self.assertEqual(
+            self.call(
+                route,
+                dict(
+                    action="investigation",
+                    event_ref="PRIVATE-INVESTIGATION",
+                    checks={
+                        key: "PRIVATE-CIRCUMSTANCES"
+                        for key in (
+                            "confirmation",
+                            "notice",
+                            "attendance",
+                            "adjustments",
+                            "contact",
+                            "circumstances",
+                        )
+                    },
+                    corrective_action="PRIVATE-CIRCUMSTANCES",
+                    next_update="SYN human",
+                    disposition="SYN task reviewed",
+                ),
+            )[0],
+            200,
+        )
+        state = self.call("/api/workorders")[1][0]["appointment_control"]
+        self.assertEqual(
+            self.call(
+                route,
+                dict(
+                    action="close_case",
+                    event_ref="PRIVATE-CLOSE",
+                    case_id="ZF-1",
+                    expected_case_version=state["case_version"],
+                    confirmed=True,
+                    source="PRIVATE-CLOSURE-SOURCE",
+                    source_version="SYN-1",
+                    reason="PRIVATE-CLOSURE",
+                ),
+            )[0],
+            200,
+        )
+        markers = (
+            "PRIVATE-AUTHORITY",
+            "PRIVATE-CONFIRMATION",
+            "PRIVATE-CIRCUMSTANCES",
+            "PRIVATE-CLOSURE",
+            "SYN agreed morning only",
+        )
+        privileged = json.dumps(self.call("/api/workorders")[1])
+        self.assertTrue(all(marker in privileged for marker in markers))
+        for actor in ("quil", "kim"):
+            code, rows = self.call("/api/workorders", actor=actor)
+            self.assertEqual(code, 200)
+            payload = json.dumps(rows)
+            for marker in markers:
+                self.assertNotIn(marker, payload)
+                self.assertNotIn(marker, json.dumps(list(self.store.audit_entries())))
+            self.assertIn("Knock and wait", payload)
+            self.assertIn("2099-01-01", payload)
+            summary = self.store.appointment_summary(
+                self.store._work_order(wid), self.store.staff[f"{actor}@example.test"]
+            )
+            self.assertNotIn("closure_history", summary)
+        from unittest.mock import patch
+
+        with patch.dict("os.environ", {"ZF_REASON_ROLES": ""}):
+            payload = json.dumps(self.call("/api/workorders")[1])
+            self.assertFalse(any(marker in payload for marker in markers))
+        with self.assertRaises(PermissionError):
+            self.store.appointment_summary(
+                self.store._work_order(wid),
+                dict(self.store.staff["quil@example.test"], name="Forged"),
+            )
 
 
 class JsonProcurementApi(ProcurementApi):

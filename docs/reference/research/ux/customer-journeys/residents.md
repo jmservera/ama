@@ -117,12 +117,27 @@ recorded alongside the existing named #88 resident-update owner; providers do no
 receive the household reasons or investigation evidence. Bundle agreement and
 scope-bound competence do not authorize delay to urgent safety response.
 
+Correction ONE implements seven original-Review findings, not independent
+acceptance. The original Review remains Not accepted. Existing resident-view and
+recorded-reason entitlements now also protect appointment evidence from unrelated
+staff; providers and unrelated staff retain only scheduling state, date/period
+and necessary instructions. Bundle competence requires a bounded nonblank text
+reference and exact scope. Withdrawn orders show Ended, not current commitment.
+Authorized screens show the selected localized date/period before confirmation,
+and protect manual drafts on navigation and unrelated saves without rebinding
+their original offer/case references. Committed-response encoding is guarded
+before headers, not promised recoverable after bytes are sent.
+
 The provisional exercise default 5 creates only an owned human investigation on
 the sixth eligible verified confirmed resident no-access event in the same active
 home case. Provider failure, cancellations, rescheduling, Unknown and unconfirmed
 events do not count. Preference-breach and abortive facts retain separate
 cause/owner counts, may overlap and do not themselves imply resident no-access;
 their reporting threshold remains Unknown.
+Configuration changes atomically apply to already eligible active counts across
+affected cases, creating at most one task for the current closure boundary with
+the current rule version and existing event references. Raising/lowering/retrying
+does not reset a task or replay consumed events; inactive cases are excluded.
 
 The exercise source explicitly authorizes recording a supplied human closure of
 the same underlying home case: PRD DD-006/AC-033, BRD RULE-006/AC-025 and addendum

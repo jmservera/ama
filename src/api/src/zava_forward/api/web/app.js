@@ -9,6 +9,7 @@ let queueOrigin = "mine";
 let coordinatorOrigin = null;
 let resetFocus = false;
 const workspaceStatus = document.getElementById("workspace-status");
+let displayedHash = location.hash || "#/";
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -140,6 +141,14 @@ async function loadPhoto(account) {
 }
 
 async function route() {
+  const nextHash = location.hash || "#/";
+  if (nextHash !== displayedHash && document.querySelector('form[data-unsaved="true"]')) {
+    if (!window.confirm("Leave this screen and discard unsaved changes?")) {
+      history.replaceState(null, "", displayedHash);
+      return;
+    }
+  }
+  displayedHash = nextHash;
   routeController.abort();
   routeController = new AbortController();
   clearTimeout(searchTimer);

@@ -3,11 +3,17 @@
 
 ## Task Metadata
 
+* Current invocation: coordinator-authorized correction ONE for RV-001 through
+  RV-007, 2026-10-18; starting HEAD49d3d663. One coherent implementation cycle,
+  no second Review or independent acceptance implied.
+* Correction evidence: .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md.
+
 * Task ID: 87; slug: issue-87-appointment-controls; parent: 81.
 * Plan date: 2026-10-18.
 * Base/initial source: 99056cae7bc679d2ace3e42c75f28577cfce8887.
-* Current source candidate: 22c98267, committed after final implementation checks;
-  subsequent lifecycle-only commits do not change the assessed source.
+* Original assessed source: 22c98267, original Review Not accepted, unchanged.
+* Current source: starting HEAD49d3d663 plus uncommitted correction ONE source/
+  tests/docs. No new commit SHA is asserted. Base remains 99056cae.
 * Branch: feat/appointment-commitment-controls-87; target: main.
 * Lifecycle status: Research/Plan/Implement/one original Review executed.
   P01-P03 execution complete; original Review Complete / Not accepted.
@@ -26,6 +32,9 @@ event under provisional default five, with auditable configuration and closure.
 This describes implemented intent, not accepted correctness: the original Review
 found RV-001 through RV-007 (two High, five Medium). Completed markers and positive
 validation receipts do not establish a conformant or live-ready result.
+Authorized correction ONE now implements all seven findings, with failing-first
+regressions and fresh core336/API93/MSSQL75/browser/image evidence in its receipt.
+This is implementation completion, not independent corrected-head acceptance.
 
 ### What You May Not Know
 
@@ -38,12 +47,11 @@ Review; defects require a separate correction receipt, not a second Review.
 
 ### Unresolved Decisions or Blockers
 
-Correctness acceptance and normal push/PR are blocked by seven original-Review
-defects: response serialization truth, role-sensitive privacy, configuration
-lowering, bundle evidence validation, withdrawn-order status, readable selected
-date/period and manual draft protection. F8 closure direction was supported.
-Final SQL/browser/image checks ran but did not cover these counterexamples.
-Corrections route separately; original verdict stays unchanged.
+All seven original findings are implemented in the authorized coherent correction
+ONE batch. Fresh evidence covers their counterexamples and affected retained
+controls; no known in-scope implementation blocker remains. Original Review stays
+Complete / Not accepted. Coordinator owns final delivery judgment and any normal
+commit/push/PR; no second Review/self-Pass or operational approval is implied.
 
 ## User Decisions and Requirements
 
@@ -257,10 +265,10 @@ No significant divergent user decision remains. No second critique is authorized
 
 ## Follow-Up Items
 
-* RV-001 through RV-007 route to a distinct later implementation receipt,
-  .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-routing.md.
-  They are outside completed P01-P03 execution, not accepted closure or new active
-  tasks inside this original loop. Coordinator owns delegation/final-head judgment.
+* RV-001 through RV-007 correction ONE is implemented, with the distinct receipt
+  .copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md.
+  Historical P01-P03 execution markers remain checked; no new Review/acceptance
+  markers are introduced. Coordinator owns final-head delivery judgment.
 * Live policy/authority/real evidence and existing UX acceptance remain human-owned.
 
 ## Handoff
@@ -275,3 +283,11 @@ commands, results and stopped resources are in the changes record. Parent owns
 the original independent Review result: Complete / Not accepted on source
 22c98267ae6da365d6a2d9fceed7113c8f4578ea. Separate correction routing is recorded;
 no second Review, self-Pass or remote delivery is authorized by passing tests.
+
+Current handoff: correction ONE implementation complete on HEAD49d3d663 plus the
+uncommitted coherent patch. Fresh core336 (277 pass/59 existing skips), API93
+(92 pass/1 existing skip), actual owned MSSQL75/75, configured static checks,
+actual browser and final rebuilt hardened image passed. Owned containers and
+synthetic scratch data are removed. The correction receipt owns precise commands,
+failing-first details, hashes and limitations. Parent alone handles git delivery;
+the original adverse Review and frozen critique remain byte-exact.

@@ -8,14 +8,24 @@
 * Details: .copilot-tracking/details/2026-10-18/issue-87-appointment-controls-phase-details.md.
 * Initial source/base: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Branch: feat/appointment-commitment-controls-87.
-* Current assessed source candidate: 22c98267. Final changed-source validation
+* Original assessed source candidate: 22c98267. Final changed-source validation
   below ran on its exact source tree before commit; initial-source/base statements
-  elsewhere are historical context. Source is frozen for one original Review.
+  elsewhere are historical context. That source received the one original Review.
+* Current correction ONE: authorized on HEAD49d3d663, base99056cae, all seven
+  findings implemented as one uncommitted batch. Fresh correction evidence is
+  in issue-87-appointment-controls-correction-one.md in this directory; this
+  original changes record retains historical receipts, not corrected-head tests.
 * Parent independently refreshed the complete web rules before original Review
   from https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
   on 2026-10-18. Reviewer must inspect every changed web file using file:line output.
 
 ## Execution Status
+
+Current correction execution is complete with fresh core336/API93/actual MSSQL75,
+browser/static/hardened-image evidence and owned-resource cleanup. Original Review
+remains Complete / Not accepted; no independent acceptance or second Review is
+asserted. Coordinator alone owns delivery judgment and commit/push/PR.
+The remaining sections describe the historical original implementation and routing.
 
 Complete P01-P03 implementation, including the source-authorized F8/P01-T02 human
 closure writer and FINAL changed-source P03 validation/reconciliation. Existing
@@ -28,7 +38,7 @@ The later single independent original Review completed: Not accepted, seven
 defects (two High/five Medium). P01-P03 markers record execution, not correctness.
 No normal push/PR or self-Pass is permitted while that gate remains failed.
 
-## Current Original Review Outcome and Delivery Gate
+## Historical Original Review Outcome and Delivery Gate
 
 Original Review assessed source22c98267ae6da365d6a2d9fceed7113c8f4578ea:
 .copilot-tracking/reviews/logs/2026-10-18/issue-87-appointment-controls-review.md.
@@ -49,6 +59,14 @@ are recorded in that routing receipt. Main freshness recheck still equals
 All owned runtime resources remain stopped/removed. Normal remote push/PR is
 withheld because the explicit correctness gate failed. Artifacts are committed
 locally; remote exact-head/PR evidence is unavailable, not fabricated.
+
+The preceding gate describes the completed original loop before explicit
+correction authorization. The 2026-10-18T01:37Z coordinator instruction authorizes
+normal own-branch/main PR publication after correction ONE addresses all seven
+findings. Fresh correction evidence is in the separate correction-one receipt.
+Original Review remains Not accepted on its original source, not amended to a
+conformant verdict. Publication of correction evidence is not independent
+corrected-head acceptance, merge permission or issue closure.
 
 ## Approved Boundary and Validation Intent
 

@@ -109,12 +109,23 @@ function qualityPanel(c, id, refresh) {
   return box;
 }
 
+function appointmentSlot(state) {
+  const offer = state.offer || state;
+  const ended = state.status === "Ended" || offer.ended;
+  return h("div", {},
+    h("p", {}, offer.date
+      ? `${ended ? "Historical visit (ended)" : "Selected visit"}: ${fmtDate(offer.date)}. Period: ${offer.period || "Unknown"}.`
+      : "Selected visit: Unknown. No verified offer."),
+    h("p", {}, `Necessary instructions: ${offer.instructions || "Unknown"}`));
+}
+
 function workOrdersCard(rows, mine) {
   return h("section", { class: "card" }, h("h2", {}, mine ? "Your work orders" : "Work orders"),
     rows.length ? h("ul", { class: "list" }, rows.map((w) => h("li", {},
       h("strong", {}, `${w.id}, version ${w.version}`), ` ${w.state}. ${w.address}, ${w.postcode}. Works: ${w.measures}. `,
       w.needs_notice ? h("span", { class: "flag" }, "Needs notice") : "No extra notice needed", `. Named contact: ${w.named_contact}.`,
-      h("p", {}, `Appointment: ${w.appointment_control.status}. ${w.appointment_control.missing.join("; ")}. Necessary instructions: ${w.appointment_control.instructions || "Unknown"}`),
+      h("p", {}, `Appointment: ${w.appointment_control.status}.${w.appointment_control.missing.length ? ` ${w.appointment_control.missing.join("; ")}.` : ""}`),
+      appointmentSlot(w.appointment_control),
       h("div", { class: "muted" }, w.scope), w.appointments.length > 0 && h("div", { class: "muted" }, "Visits: " + w.appointments.map((a) => `${a.outcome}${a.date ? ` ${a.date}` : ""}`).join("; "))))) : h("p", {}, "No work orders yet."));
 }
 
@@ -122,13 +133,26 @@ async function contractorOrders() {
   return workOrdersCard(await api("/api/workorders"), true);
 }
 
+function appointmentDrafts() {
+  return [...document.querySelectorAll('form[data-appointment-form][data-unsaved="true"]')].map((form) => ({
+    key: form.dataset.appointmentForm,
+    context: form.appointmentContext,
+    open: form.parentElement.open,
+    values: [...form.elements].filter((el) => el.name).map((el) => ({ name: el.name, value: el.value, checked: el.checked }))
+  }));
+}
+
 async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
   const msg = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
-  const go = async (fn) => {
+  const go = async (fn, savedForm) => {
     const button = document.activeElement;
     if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
-    try { await fn(); await capacityView(); }
+    try {
+      await fn();
+      if (savedForm) delete savedForm.dataset.unsaved;
+      await capacityView();
+    }
     catch (e) { msg.replaceChildren(h("p", { class: "err" }, e.message)); msg.focus(); }
     finally { if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); } }
   };
@@ -192,12 +216,12 @@ async function capacityView() {
   const actions = orders.map((w) => {
     const note = h("input", { type: "text", name: `order-note-${w.id}`, autocomplete: "off", maxlength: 300, "aria-label": `Note or date for ${w.id}` });
     const out = h("select", { name: `legacy-outcome-${w.id}`, "aria-label": `Appointment outcome for ${w.id}` }, WO_OUTCOMES.map((x) => h("option", {}, x)));
-    const call = (a, body) => go(() => api(`/api/workorders/${w.id}/${a}`, body));
+    const call = (a, body, savedForm) => go(() => api(`/api/workorders/${w.id}/${a}`, body), savedForm);
     const open = w.state === "Issued" || w.state === "Appointed";
     const bindings = h("input", { type: "text", maxlength: 1000, "aria-label": `Affected Measure|revision bindings for new version of ${w.id}` });
     return h("li", {}, h("strong", {}, `${w.id}, version ${w.version}`), ` ${w.state}. ${w.contractor}. ${w.address}. Issued by ${w.issued_by}.`,
       h("div", { class: "muted" }, w.scope),
-      appointmentControls(w, (body) => call("appointment-control", body)),
+      appointmentControls(w, (body, form) => call("appointment-control", body, form)),
       w.state !== "Withdrawn" && h("div", { class: "row" }, note, bindings,
         open && [out, h("button", { class: "alt", onclick: () => call("appointment", { outcome: out.value, date: note.value }) }, "Record appointment (date for Booked)"),
           h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/reissue`, { scope: note.value, reason: "Changed", resident_bindings: residentBindings(bindings.value) })) }, "New version"),
@@ -205,13 +229,28 @@ async function capacityView() {
           h("button", { class: "alt", onclick: () => call("withdraw", { reason: note.value }) }, "Withdraw (add the reason)")],
         w.state === "Completed" && h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/correct`, { reason: note.value, resident_bindings: residentBindings(bindings.value) })) }, "Record a correction (add the reason)")));
   });
+  const drafts = appointmentDrafts();
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),
     msg, create, ...cards, h("section", { class: "card" }, h("h2", {}, "Work orders"), orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
+  for (const draft of drafts) {
+    const form = [...document.querySelectorAll("form[data-appointment-form]")].find((el) => el.dataset.appointmentForm === draft.key);
+    if (!form) continue;
+    for (const saved of draft.values) {
+      const control = form.elements.namedItem(saved.name);
+      if (control) { control.value = saved.value; if (control.type === "checkbox") control.checked = saved.checked; }
+    }
+    form.appointmentContext = draft.context;
+    form.dataset.unsaved = "true";
+    form.parentElement.open = draft.open;
+  }
 }
 
 function appointmentControls(w, submit) {
   const state = w.appointment_control;
+  if (!state.current_binding) return h("section", { "aria-label": `Appointment controls for ${w.id}` },
+    h("h3", {}, `Appointment: ${state.status}`), appointmentSlot(state),
+    h("p", {}, "Appointment evidence is held for roles with a recorded need. Ask the resident-service owner to review the next step."));
   const offer = state.offer;
   let field = 0;
   const input = (label, type = "text", value = "", required = true) => {
@@ -236,11 +275,24 @@ function appointmentControls(w, submit) {
   };
   const section = (title, fields, action, body) => {
     const event = input(`${title} event reference`, "text", crypto.randomUUID());
-    const form = h("form", { onsubmit: (e) => {
+    const form = h("form", {
+      "data-appointment-form": `${w.id}-${action}`,
+      oninput: () => { form.dataset.unsaved = "true"; },
+      onchange: () => { form.dataset.unsaved = "true"; },
+      onreset: (e) => {
+        if (form.dataset.unsaved === "true" && !window.confirm("Discard only this unsaved draft?")) { e.preventDefault(); return; }
+        delete form.dataset.unsaved; form.appointmentContext = { ...initialContext };
+      },
+      onsubmit: (e) => {
       e.preventDefault();
       if (action === "close_case" && !window.confirm(`Record the supplied human closure of underlying home case ${state.case_id}? This resets its active no-access count, not its history. Outstanding resident updates and remedies remain. This is not investigation task disposition or technical, legal or financial approval.`)) return;
-      submit(Object.assign({ action, event_ref: event[1].value }, body()));
-    } }, ...event, ...fields, h("button", { type: "submit", class: "alt" }, title));
+      submit(Object.assign({ action, event_ref: event[1].value }, body(), form.appointmentContext), form);
+    } }, ...event, ...fields, h("button", { type: "submit", class: "alt" }, title),
+    h("button", { type: "reset", class: "alt" }, "Discard this draft"));
+    const initialContext = action === "offer" ? { expected_offer_id: offer ? offer.id : null }
+      : ["confirm", "authority", "outcome"].includes(action) ? { offer_id: offer && offer.id }
+      : action === "close_case" ? { case_id: state.case_id, expected_case_version: state.case_version } : {};
+    form.appointmentContext = { ...initialContext };
     return h("details", {}, h("summary", {}, `${title} for ${w.id}`), form);
   };
   const date = input("Offer date", "date"), period = input("Visit period");
@@ -320,6 +372,7 @@ function appointmentControls(w, submit) {
     }));
   return h("section", { "aria-label": `Appointment controls for ${w.id}` },
     h("h3", {}, `Appointment: ${state.status}`),
+    appointmentSlot(state),
     h("p", {}, state.missing.length ? state.missing.join("; ") : "Resident, staff and current contractor capacity confirmations recorded."),
     h("p", {}, "An offer is not an agreement. Works consent remains separate. Nothing is sent. Urgent safety response does not wait for a bundle or investigation."),
     h("a", { href: `#/case/${encodeURIComponent(w.case_id)}` }, "Record or review the named resident-update commitment and safe contact"),

@@ -1,8 +1,9 @@
 """Local fictional capacity screen exercise; no model or external request."""
 
 from typing import Any
+import os
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 from test_procurement_api import ProcurementApi
 
 
@@ -114,6 +115,8 @@ def main() -> None:
             page.get_by_role("status").get_by_text(
                 "current specific appointment offer", exact=False
             ).wait_for()
+            page.once("dialog", lambda dialog: dialog.accept())
+            page.get_by_role("button", name="Record separate confirmation", exact=True).locator("..").get_by_role("button", name="Discard this draft").click()
             fixture.store.resident_action(
                 fixture.manager,
                 "ZF-1",
@@ -139,6 +142,23 @@ def main() -> None:
             page.get_by_role("button", name="Record appointment offer", exact=True).focus()
             page.keyboard.press("Enter")
             page.get_by_role("heading", name="Appointment: Offer", exact=True).wait_for()
+            if os.environ.get("ZF_APPOINTMENT_REPRO") != "draft":
+                page.get_by_text("Selected visit: 1 Jan 2099. Period: Morning.", exact=True).first.wait_for(timeout=3000)
+                page.get_by_text("Necessary instructions: Knock and wait", exact=True).first.wait_for()
+                assert fixture.store._work_order("WO-0001")["appointments"] == []
+            page.get_by_text("Record provisional threshold for WO-0001", exact=True).click()
+            draft = page.get_by_label("Threshold configuration evidence (WO-0001)", exact=True)
+            draft.fill("SYN pending manual draft")
+            draft.focus()
+            page.keyboard.press("End")
+            page.keyboard.type(" retained")
+            page.once("dialog", lambda dialog: dialog.dismiss())
+            link = page.get_by_role("link", name="Record or review the named resident-update commitment and safe contact").first
+            link.focus()
+            page.keyboard.press("Enter")
+            page.wait_for_timeout(200)
+            assert draft.input_value(timeout=3000) == "SYN pending manual draft retained"
+            assert page.url.endswith("#/capacity")
             for kind, person in (
                 ("resident", "Pat Test"),
                 ("staff", fixture.manager["name"]),
@@ -160,6 +180,30 @@ def main() -> None:
                     name="Appointment: " + ("Committed" if kind == "capacity" else "Offer"),
                     exact=True,
                 ).wait_for()
+                assert page.get_by_label("Threshold configuration evidence (WO-0001)", exact=True).input_value() == "SYN pending manual draft retained"
+                expect(page.get_by_label("Confirmation source (WO-0001)", exact=True)).to_have_value("")
+            page.locator('form[data-appointment-form="WO-0001-configure"]').locator("..").evaluate("(el) => el.open = true")
+            draft = page.get_by_label("Threshold configuration evidence (WO-0001)", exact=True)
+            page.get_by_role("button", name="Record provisional threshold", exact=True).click()
+            page.wait_for_function("() => !document.querySelector('form[data-unsaved=\"true\"]')")
+            assert draft.input_value() == ""
+            provider_context = browser.new_context(reduced_motion="reduce")
+            provider_context.route(
+                "**/*",
+                lambda route: route.continue_()
+                if route.request.url.startswith(fixture.base + "/") else route.abort(),
+            )
+            provider_page = provider_context.new_page()
+            provider_page.goto(fixture.base + "/app")
+            provider_page.locator("#email").fill("kim@example.test")
+            provider_page.locator("#pw").fill("synthetic-password")
+            provider_page.locator("button[type=submit]").click()
+            provider_page.get_by_role("heading", name="Your work orders", exact=True).wait_for()
+            provider_page.get_by_text("Appointment: Committed.", exact=True).wait_for()
+            provider_page.get_by_text("Selected visit: 1 Jan 2099. Period: Morning.", exact=True).wait_for()
+            provider_page.get_by_text("Necessary instructions: Knock and wait", exact=True).wait_for()
+            assert fixture.store._work_order("WO-0001")["appointments"] == []
+            provider_context.close()
             page.get_by_label("Note or date for WO-0001", exact=True).fill("2099-01-01")
             page.get_by_role(
                 "button", name="Record appointment (date for Booked)", exact=True
@@ -167,6 +211,22 @@ def main() -> None:
             page.get_by_text("WO-0001, version 2", exact=True).wait_for()
             record("Other Ltd", fixture.other_details)
             issue("ZF-2", "WO-0002")
+            page.get_by_text("Record appointment offer for WO-0001", exact=True).click()
+            pending = page.get_by_label("Household constraints or Unknown (WO-0001)", exact=True)
+            pending.fill("SYN other order must not erase this draft")
+            page.get_by_text("Record provisional threshold for WO-0002", exact=True).click()
+            page.get_by_label("Threshold configuration evidence (WO-0002)", exact=True).fill("SYN another order rule")
+            page.locator('form[data-appointment-form="WO-0002-configure"]').get_by_role("button", name="Record provisional threshold", exact=True).focus()
+            page.keyboard.press("Enter")
+            expect(page.get_by_label("Threshold configuration evidence (WO-0002)", exact=True)).to_have_value("")
+            expect(pending).to_have_value("SYN other order must not erase this draft")
+            assert page.locator('form[data-appointment-form="WO-0001-offer"]').get_attribute("data-unsaved") == "true"
+            page.once("dialog", lambda dialog: dialog.dismiss())
+            page.locator('form[data-appointment-form="WO-0001-offer"]').get_by_role("button", name="Discard this draft").focus()
+            page.keyboard.press("Enter")
+            expect(pending).to_have_value("SYN other order must not erase this draft")
+            page.once("dialog", lambda dialog: dialog.accept())
+            page.locator('form[data-appointment-form="WO-0001-offer"]').get_by_role("button", name="Discard this draft").click()
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
@@ -230,6 +290,10 @@ def main() -> None:
             page.keyboard.press("Enter")
             page.get_by_role("heading", name="SYN browser package (PKG-002)", exact=True).wait_for()
             assert fixture.store._package("PKG-002")["contract_version"] == "SYN-1"
+            assert fixture.call("/api/workorders/WO-0001/withdraw", {"reason": "SYN withdrawn"})[0] == 200
+            login("kim")
+            page.get_by_text("Appointment: Ended. Work order withdrawn; historical agreement only.", exact=True).wait_for()
+            page.get_by_text("Historical visit (ended): 1 Jan 2099. Period: Morning.", exact=True).wait_for()
             assert not errors, errors
             browser.close()
         print(
@@ -238,6 +302,8 @@ def main() -> None:
             "issue/book at quota with new version, both contractor views/write denials, "
             "Unknown/Offer/Committed, missing-offer refusal, separate manual keyboard confirmations, "
             "human underlying-case closure requires explicit checkbox and cancellable confirmation, preserves update, "
+            "selected localized slot before confirmation and provider Committed/Ended without legacy visits, "
+            "keyboard navigation/discard cancellation preserves drafts, unrelated-order save retains only pending drafts, "
             "320/390/1280px reflow, reduced motion, no page errors or external requests."
         )
     finally:

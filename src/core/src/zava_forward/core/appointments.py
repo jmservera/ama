@@ -131,6 +131,8 @@ class AppointmentMixin:
         missing: list[str] = []
         if not offer:
             return dict(status="Unknown", missing=["No verified appointment offer"])
+        if w["state"] == "Withdrawn":
+            return dict(status="Ended", missing=["Work order withdrawn; historical agreement only"])
         if self.cases[w["case_id"]].get("closed") is not False:
             missing.append("Underlying home case is not evidenced active")
         if offer["binding"] != self._appointment_binding(w):
@@ -228,6 +230,11 @@ class AppointmentMixin:
                         provisional=True,
                     )
                 )
+                for cid in {e["case_id"] for e in self._proc().get("appointment_outcomes", [])}:
+                    case = self._case(cid)
+                    if hasattr(self, "db"):
+                        self._proc_context["cases"][cid] = self._rv[cid]
+                    self._evaluate_appointment_investigation(case, configs[-1])
             elif action == "investigation":
                 investigation = self._proc().get("appointment_investigations", {}).get(c["id"])
                 if not investigation or investigation.get("closure_version", 0) != len(
@@ -285,6 +292,8 @@ class AppointmentMixin:
             raise ValueError(
                 "A bundle needs explicit resident agreement and scope-bound competence evidence."
             )
+        if bundle:
+            text(b["competence"]["source"], "the scoped competence evidence reference")
         old = w.get("appointment_offer")
         if b.get("expected_offer_id") != (old["id"] if old else None):
             raise ValueError("The appointment offer changed. Reload before replacing it.")
@@ -434,17 +443,22 @@ class AppointmentMixin:
                 at=_now(),
             )
         )
+        if eligible:
+            self._evaluate_appointment_investigation(c, config)
+        offer["ended"] = True
+        if w["state"] == "Appointed":
+            self._wo_move(w, "Issued", actor, "Appointment outcome recorded")
+
+    def _evaluate_appointment_investigation(self: Any, c: Any, config: Any) -> None:
+        if c.get("closed") is not False:
+            return
         active = self._active_appointment_outcomes(c["id"])
         count = sum(e["eligible"] for e in active)
         investigations = self._proc().setdefault("appointment_investigations", {})
         epoch = len(c.get("home_case_closures", []))
-        if (
-            eligible
-            and count > config["threshold"]
-            and (
-                c["id"] not in investigations
-                or investigations[c["id"]].get("closure_version", 0) != epoch
-            )
+        if count > config["threshold"] and (
+            c["id"] not in investigations
+            or investigations[c["id"]].get("closure_version", 0) != epoch
         ):
             investigations[c["id"]] = dict(
                 owner=deepcopy((c.get("resident_update") or {}).get("owner_identity")),
@@ -456,19 +470,22 @@ class AppointmentMixin:
                 at=_now(),
                 next_action="Human investigation only; no consent or priority consequence",
             )
-        offer["ended"] = True
-        if w["state"] == "Appointed":
-            self._wo_move(w, "Issued", actor, "Appointment outcome recorded")
 
-    def appointment_summary(self: Any, w: Any, provider: bool) -> Any:
+    def appointment_summary(self: Any, w: Any, user: Any) -> Any:
+        from . import projection
+
+        self._work_order_reader(user)
+        if projection.is_contractor(user) and w["contractor"] != user.get("contractor"):
+            raise PermissionError("Only assigned work orders may be read.")
         offer = w.get("appointment_offer")
         result = self.appointment_status(w)
-        if provider:
+        if not projection.appointment_evidence_visible(user):
             return dict(
                 **result,
                 date=offer["date"] if offer else None,
                 period=offer["period"] if offer else None,
                 instructions=offer["instructions"] if offer else "Unknown",
+                ended=bool(offer and (offer.get("ended") or w["state"] == "Withdrawn")),
             )
         outcomes = [
             e for e in self._proc().get("appointment_outcomes", []) if e["case_id"] == w["case_id"]

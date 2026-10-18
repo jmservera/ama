@@ -17,6 +17,7 @@ need see a "held" marker in place of staff-written notes and contact outcomes.
 """
 import os
 from copy import deepcopy
+from typing import Any
 
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
 from .resident_decisions import RESIDENT_FIELDS, case_measures, current_context, resident_gate
@@ -43,17 +44,21 @@ SUMMARY_FIELDS = ("id", "address", "town", "postcode", "stage", "status", "next_
 DETAIL_FIELDS = ("id", "stage", "status", "measures", "needs_notice", "named_contact")
 
 
-def reason_roles():
+def reason_roles() -> tuple[str, ...]:
     raw = os.environ.get("ZF_REASON_ROLES")
     return tuple(r.strip() for r in raw.split(",") if r.strip()) if raw is not None else DEFAULT_REASON_ROLES
 
 
-def is_contractor(user):
+def is_contractor(user: dict[str, Any]) -> bool:
     return user.get("role") == CONTRACTOR
 
 
-def can_see_reason(user):
+def can_see_reason(user: dict[str, Any]) -> bool:
     return user.get("role") in reason_roles()
+
+def appointment_evidence_visible(user: dict[str, Any]) -> bool:
+    """Appointment sources and human histories retain both existing evidence boundaries."""
+    return user.get("role") in RESIDENT_VIEW_ROLES and can_see_reason(user)
 
 
 def allowed(user, kind, method="GET"):
