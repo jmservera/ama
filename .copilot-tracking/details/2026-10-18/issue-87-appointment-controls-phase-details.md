@@ -15,8 +15,11 @@
 * Evidence: matching research artifact and its current-code lane; initial source
   and base 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Original assessed source candidate: 22c98267; original validation below is
-  historical. Current source is HEAD49d3d663 plus uncommitted correction ONE,
-  with base99056cae. No new commit SHA is asserted.
+  historical. Corrected source is committed at
+  0830f7c339fe9b5fa936cda849f14edc5a0e3624, with base99056cae.
+  Later delivery-artifact commits do not change that validated source/docs tree.
+* Delivery: normal own-branch push and main PR397 completed; original adverse
+  Review is unchanged. No corrected-head independent acceptance or merge claimed.
 * Current status: correction ONE implemented for all seven original findings;
   fresh core336/API93/actual MSSQL75/browser/hardened-image/static evidence is
   recorded separately. P01-P03 remain historical completed execution markers.

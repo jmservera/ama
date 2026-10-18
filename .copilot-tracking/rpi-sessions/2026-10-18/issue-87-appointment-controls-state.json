@@ -3,9 +3,21 @@
   "task_slug": "issue-87-appointment-controls",
   "parent_task": {"task_id": "81", "task_slug": null},
   "mode": "automatic",
-  "active_phase": "Delivery",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "source_head": "0830f7c339fe9b5fa936cda849f14edc5a0e3624",
+  "base_head": "99056cae7bc679d2ace3e42c75f28577cfce8887",
+  "delivery": {
+    "branch": "feat/appointment-commitment-controls-87",
+    "base": "main",
+    "pull_request": 397,
+    "url": "https://github.com/jmservera/ama/pull/397",
+    "normal_push": "completed",
+    "final_head_reference": "This delivery-artifact commit and matching remote branch; validated source remains source_head.",
+    "merged": false,
+    "issue_closed": false
+  },
   "correction_cycle": 1,
   "correction_cycle_ceiling": 2,
   "correction_receipt": ".copilot-tracking/changes/2026-10-18/issue-87-appointment-controls-correction-one.md",
@@ -56,7 +68,7 @@
   ],
   "blockers": [],
   "independent_corrected_head_acceptance": "Not performed; original Review remains Complete / Not accepted on original source22c98267. No second Review or self-Pass.",
-  "next_action": {"phase": "Delivery", "action": "Commit coherent correction ONE and all current artifacts with fresh private identity; recheck pinned main then normal push own branch and open main PR Refs87 under explicit latest coordinator authorization. Preserve original verdict and disclose implementation evidence is not independent acceptance."},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator/owner retains corrected-head judgment and PR397 checks/merge decision. Correction ONE all seven findings implemented with fresh evidence and normally published; session stops without second Review, self-Pass, merge or issue closure."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator corrected-head judgment and PR checks", "rationale": "Seven findings have correction implementation/reproduction evidence, not a new independent acceptance verdict.", "evidence": "Correction-one receipt; immutable original Review."},
     {"rank": 2, "task": "Existing live policy/evidence and UX acceptance", "rationale": "Operational ratification, real authority/capacity/competence and resident/accessibility validation remain human-owned.", "evidence": "Original Review residual work; correction-one receipt human limits and inherited guideline disclosures."}

@@ -12,7 +12,9 @@
   below ran on its exact source tree before commit; initial-source/base statements
   elsewhere are historical context. That source received the one original Review.
 * Current correction ONE: authorized on HEAD49d3d663, base99056cae, all seven
-  findings implemented as one uncommitted batch. Fresh correction evidence is
+  findings committed coherently as 0830f7c339fe9b5fa936cda849f14edc5a0e3624.
+  Normal own-branch push/main PR397 completed; no independent acceptance implied.
+  Fresh correction evidence is
   in issue-87-appointment-controls-correction-one.md in this directory; this
   original changes record retains historical receipts, not corrected-head tests.
 * Parent independently refreshed the complete web rules before original Review

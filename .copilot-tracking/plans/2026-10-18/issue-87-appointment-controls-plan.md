@@ -12,8 +12,10 @@
 * Plan date: 2026-10-18.
 * Base/initial source: 99056cae7bc679d2ace3e42c75f28577cfce8887.
 * Original assessed source: 22c98267, original Review Not accepted, unchanged.
-* Current source: starting HEAD49d3d663 plus uncommitted correction ONE source/
-  tests/docs. No new commit SHA is asserted. Base remains 99056cae.
+* Current source: correction ONE committed as
+  0830f7c339fe9b5fa936cda849f14edc5a0e3624, based on starting HEAD49d3d663.
+  Subsequent delivery-only artifact commits do not change validated source/docs.
+  Base remains 99056cae. Main PR: https://github.com/jmservera/ama/pull/397.
 * Branch: feat/appointment-commitment-controls-87; target: main.
 * Lifecycle status: Research/Plan/Implement/one original Review executed.
   P01-P03 execution complete; original Review Complete / Not accepted.
@@ -52,6 +54,9 @@ ONE batch. Fresh evidence covers their counterexamples and affected retained
 controls; no known in-scope implementation blocker remains. Original Review stays
 Complete / Not accepted. Coordinator owns final delivery judgment and any normal
 commit/push/PR; no second Review/self-Pass or operational approval is implied.
+Normal own-branch push and PR397 were completed under the explicit correction
+authorization. Independent corrected-head judgment, PR checks and merge remain
+outside implementation completion; no issue closure or merge was performed.
 
 ## User Decisions and Requirements
 

@@ -21,14 +21,16 @@
 
 ## Execution Status
 
-Complete implementation of RV-001 through RV-007 as one coherent uncommitted
-correction batch. No known in-scope implementation blocker remains. Parent
+Complete implementation of RV-001 through RV-007 as one coherent correction
+batch, now source commit0830f7c339fe9b5fa936cda849f14edc5a0e3624. No known
+in-scope implementation blocker remains. Parent
 coordinator did not implement source. No policy/research decision is inferred.
 Implementation evidence is not independent acceptance; original Review remains
 Complete / Not accepted. No second Review, critique or self-Pass was run.
 
-Current source is starting HEAD49d3d663 plus this uncommitted correction, not a
-fabricated new commit. Base/origin-main remains99056cae. SHA256 of
+Validation ran on starting HEAD49d3d663 plus the correction before commit; the
+identical source/docs tree is now pinned by the source commit above.
+Base/origin-main remains99056cae. SHA256 of
 `git diff 49d3d663 -- src docs` is
 `2a7ee976ce7556663a453cb8bb54021975b8d6515a793f5fd4a4549f20bac16d`.
 Tracking receipt reconciliation is outside that source/docs patch fingerprint.
@@ -371,3 +373,20 @@ explicitly outstanding and are not silently treated as conformant. An unrelated
 issue122 SQL container observed during parent cleanup verification was untouched;
 no issue87 owned runtime remains. Final publication identifiers are recorded
 after source is pinned and remote creation succeeds, not invented beforehand.
+
+## Publication Receipt
+
+Normal push of the coherent correction succeeded under the latest explicit
+coordinator authorization. Source commit:
+0830f7c339fe9b5fa936cda849f14edc5a0e3624. Main pull request:
+https://github.com/jmservera/ama/pull/397. PR body uses Refs87, names parent81,
+retains the original Not accepted verdict and distinguishes fresh correction
+evidence from independent acceptance and historical receipts.
+
+Fresh authenticated identity was jmservera, id8036360; repository-local privacy
+address 8036360+jmservera@users.noreply.github.com was used for author and committer
+with Conventional Commit and Copilot co-author trailer. Origin/main was checked
+at pinned99056cae immediately before push; no main advance/rebase/force was used.
+Follow-on commit reconciles delivery artifacts only, not validated source/docs.
+No merge, issue close, automatic live action or second Review occurred. PR checks
+are external follow-on evidence, not a substitute for the executed local gates.
