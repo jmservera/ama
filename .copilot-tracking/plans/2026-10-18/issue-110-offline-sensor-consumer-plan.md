@@ -172,7 +172,7 @@ No new Research/Plan/critique/Review phase execution is authorized.
 
 * [x] C1-T01: actual SQLite/SQL Server failing-first regressions and RV-001 fix.
 * [x] C1-T02: RV-002 historical label/current handoff and correction validation.
-* [ ] C1-T03: integration-only onto exact 6fbdcee18413e9f7366e5f9ec53f68f053681096,
+* [x] C1-T03: integration-only onto exact 6fbdcee18413e9f7366e5f9ec53f68f053681096,
   complete owned-patch/upstream-blob parity, integrated validation, exact-leased
   Draft PR411 publication and stopped coordinator handoff.
 

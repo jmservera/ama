@@ -271,3 +271,31 @@ Whole issue110/AC066 remains open: Hub identities/live transport, owner tier/
 sizing/cost/provisioning/network/device credential decisions, Azure SQL/real AI
 application acceptance and human/privacy approval remain unmet. ADR Proposed.
 No issue closure, closing reference, AC tick, board change, ready or merge action.
+
+## Exact-lease publication and stopped receipt
+
+Executed exactly one authorized rewritten-lineage push:
+
+```bash
+git push --force-with-lease=refs/heads/feat/offline-sensor-consumer-110:43ef35655b5a01f2a07a2d09eaef5415cc27c1dd \
+  origin HEAD:refs/heads/feat/offline-sensor-consumer-110
+```
+
+Result: remote changed from exact intake to
+6b2268311335a7a677cbce98442c0dcd354990e2. No lease replacement or guessed head.
+Immediate PR metadata was briefly stale at intake; refreshed GitHub REST and
+PR inspection both verified head6b226831/base6fbdcee1, Draft/open/empty closing
+references. No unexpected remote advancement occurred.
+
+Post-publication proof rechecked all 2750 protected upstream blob/modes, all14
+tested source/config/doc hashes, immutable original assessments, identical
+normalized patches and exact 56-path inventory against the published commit.
+No src/docs delta from tested 4be60e29. This final receipt changes tracking only
+and is published with normal push, never a second rewritten-lineage push.
+PR411's updated body identifies the final exact receipt-inclusive pushed head,
+the same tested source and authorized base. No ready/merge/issue action.
+
+Automatic session stops on the owner's explicit instruction after frozen
+candidate publication. Current phase Follow-up, task execution completed,
+session stopped, correction count ONE. Independent exact-head source/artifact/
+actual-log review and static residual decisions remain coordinator-owned.
