@@ -115,6 +115,12 @@ Commit original Review and remaining task artifacts, push branch and create main
 PR records exact delivered head externally (self-hash cannot be in its own commit), ordered RPI paths,
 commands/results and unmet live/human gates. Verify PR head/base and branch cleanliness.
 Stop automatic session after publication per explicit caller instruction, not follow-up selection.
-Status: Complete. Branch pushed, PR #403 OPEN targeting main; initial observed head d55e96c6,
-unchanged base f9135316. Separate publication receipt records full identities and final artifact-only
-head pinning via PR body. No source integration, second Review or independent corrected acceptance.
+Status: Complete for original publication. PR #403 initially published d55e96c6, then artifact-only
+84e11721, on original base f9135316. Historical publication receipt remains unchanged.
+Coordinator continuation explicitly authorizes integration onto exact 2975c4fd only.
+Rebase completed conflict-free, post-rebase validation candidate 6d95a2a5. Production/tests,
+original reports and correction ONE receipt remain byte-identical to 84e11721. All 28 upstream
+#402 paths and #401 ancestry retained. 75 tests/71 formatted files/124 type-checked files pass.
+Separate integration receipt owns commands and parity; final artifact-only head/push outcome is
+pinned in PR #403 under the exact specified old-head lease. No new original Review or independent
+corrected acceptance. Stop for coordinator independent complete exact-head review.

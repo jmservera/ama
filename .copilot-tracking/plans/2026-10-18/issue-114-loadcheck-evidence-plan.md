@@ -17,6 +17,9 @@ p95 limits, default mix and ordinary valid CLI. Original independent Review is N
 its RV-001 duration overflow is locally addressed in separate correction ONE evidence.
 Original critique/Review remain immutable. Publication is complete in PR #403; coordinator
 exact-head acceptance remains distinct from completed source work, publication and local checks.
+Same-session coordinator-authorized integration now rebases this branch onto exactly
+2975c4fdd7bf7d78e97b703aa2bef8bc97f56c3b, retaining all #402/#401 content and byte-identical
+loadcheck/tests/frozen reports. Post-integration 75 tests and configured checks pass.
 
 ### What You May Not Know
 
@@ -33,6 +36,8 @@ PC-001/PC-002 dispositioned; RV-001 locally corrected once. Published PR #403; c
 
 * Full ordered Research, Plan with one independent critique, Implement, one original independent Review.
 * Exact base f91353169756dc41ebbcca944bdd3f44f7c04b89, branch fix/loadcheck-evidence-114; no unilateral integration.
+* Coordinator continuation explicitly authorizes rebase onto exact main 2975c4fdd7bf7d78e97b703aa2bef8bc97f56c3b
+  only, then exact old-head lease publication; no source expansion, new original Review or merge.
 * Correct only AC2 evidence trust, not AC2 completion, ledger, restore/deletion or human approval.
 * No private data/.env/support, Azure/IAM/Graph changes, deployment, spend or actual AI.
 * Preserve adverse original reports; separate correction receipts, at most two source correction cycles.
@@ -89,7 +94,7 @@ KB changes, web edits, queue redesign, SQL/runtime-image contract changes or unr
 | Details | .copilot-tracking/details/2026-10-18/issue-114-loadcheck-evidence-phase-details.md |
 | Critique | .copilot-tracking/reviews/plans/2026-10-18/issue-114-loadcheck-evidence-plan-critique.md, original Revise; parent dispositions complete |
 | Changes | .copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-changes.md, implementation-owned |
-| Continuation | Authorized automatic parent, after one critique dispositions |
+| Continuation | Integration-only Follow-up; stop after exact-lease publication for coordinator independent complete exact-head review |
 
 ## Sources
 
@@ -142,7 +147,8 @@ receipts, max two source cycles, never rewrite originals or claim independent co
 Depends on P02-T01. Resolve GitHub user, set local privacy-safe identity, Conventional Commits
 with required Copilot trailer. All task artifacts tracked. Report base/candidate/published head,
 remote main movement and unmet gates. Push normally and create main PR, Refs #114 only.
-Stop for coordinator's exact-head review, no merge/rebase/force-push.
+Original publication stopped for coordinator review. The explicit later integration authorization
+below supersedes the prior no-rebase/no-force instruction only for this exact branch/target/lease.
 
 ## Dependencies
 
@@ -175,6 +181,11 @@ No second critique. No new mypy exemption: type canonical functions at their dyn
 
 P01 complete; P02-T01 complete with original Review Not accepted, preserved unchanged.
 Caller-selected RV-001 correction ONE locally complete; P02-T02 observed branch publication and
-PR #403 creation complete. Final artifact-only receipt commit pins its exact head externally in PR.
-Automatic session stops at caller boundary; coordinator owns independent corrected-head acceptance.
+PR #403 creation complete. Authorized rebase onto 2975c4fd completed without conflicts; production/
+tests/original reports/correction receipt byte-identical and all 28 upstream #402 paths retained.
+75 post-integration tests and configured Ruff/format/mypy pass. Integration receipt:
+.copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-integration.md.
+Final exact head/push result is pinned in PR #403 using only the coordinator-specified old-head
+lease. Stop for coordinator independent complete exact-head review; no new original Review,
+source correction TWO, further integration or merge authorized.
 Changes record: .copilot-tracking/changes/2026-10-18/issue-114-loadcheck-evidence-changes.md.

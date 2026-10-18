@@ -35,9 +35,11 @@ head. Prior mutation/good-run evidence stays attributed to the unchanged source,
 
 ## Execution
 
-In progress. Persist authorization, commit tracking-only checkpoint, rebase exact base-to-target,
-verify all upstream content retained and frozen parity, then focused/coupled core and configured
-checks. No production source edits planned.
+Local integration and validation complete. Four owned commits replayed without conflicts onto
+the exact approved target. No production or test source edits, no correction TWO, no new critique
+or original Review. Final receipt reconciliation is artifact-only. Publication uses the exact
+old-head lease below; final SHA and observed push outcome are pinned externally in PR #403,
+avoiding a self-referential commit hash or an unauthorized second lease.
 
 ## Commands and Results
 
@@ -51,6 +53,77 @@ checks. No production source edits planned.
   no overlap with issue #114 source/tests/tracking.
 * `sha256sum` of the four frozen files: exact expected hashes above.
 * `gh api user --jq '{id,login}'`: id 8036360, login jmservera; configure local noreply before commits.
+* Preflight tracking checkpoint committed as 94ec9765, with authenticated local noreply author
+  and committer and required Copilot trailer.
+* `GIT_COMMITTER_EMAIL="$identity" GIT_SEQUENCE_EDITOR=true git rebase --onto 2975c4fdd7bf7d78e97b703aa2bef8bc97f56c3b f91353169756dc41ebbcca944bdd3f44f7c04b89 fix/loadcheck-evidence-114`:
+  passed, 4/4 commits replayed, no conflicts; post-rebase head
+  6d95a2a5ee3ccfacab797fd58aa75541c08bc425.
+
+## Commit Mapping
+
+| Original identity | Rebased identity |
+| --- | --- |
+| e63426148b5bac564ffef4195a9ba3b1b873d068 original candidate | e365879b (same source/artifact patch) |
+| d55e96c6e1031f4097947f1a0810da1e177a26f1 correction ONE | c100d6b8 |
+| 84e11721df930cb96c2f031a0430df503ec2f498 publication receipt | 0b6ab5a3 |
+| 94ec9765 integration authorization checkpoint | 6d95a2a5ee3ccfacab797fd58aa75541c08bc425 |
+
+Original reports continue to identify their original candidate. They are not rewritten to pretend
+assessment of rebased commits. Current integration base is 2975c4fd; f9135316 remains original base.
+
+## Parity Verification
+
+An inline Python check uses `git show OLD:path` versus `git show HEAD:path` for production
+loadcheck, test_loadcheck, original critique, original Review and correction ONE receipt.
+All five are byte-identical. Correction ONE receipt SHA-256:
+b6ed21c6a096cde854fe23901b8b4ef40e1944954b83c9ee0f6817c5d58e2f8f.
+The other four hashes exactly match the frozen table.
+
+`git merge-base --is-ancestor` passes for both #401 merge f9135316 and #402 merge 2975c4fd.
+All 28 paths changed by `git diff --name-only f9135316 2975c4fd` have identical
+`git ls-tree TARGET -- path` and `git ls-tree HEAD -- path` output (blob and mode).
+Thus all upstream #402 content is retained, and all #401 ancestry remains. The only topic diff
+against target is the existing two loadcheck source/test files plus task-owned tracking artifacts.
+
+## Post-Integration Validation
+
+`V=/home/azureuser/.copilot/session-state/619ef4ca-dccb-4a9a-b8db-fb4de739c825/files/loadcheck-venv`.
+Existing installed editable core[dev] reused; no dependency install required.
+`R=/home/azureuser/source/ama-wt/issue-114-loadcheck`.
+Commands executed:
+
+```bash
+mkdir -p .copilot-tracking/.issue-114-integration-tmp
+cd src/core
+env -i PATH=/usr/bin:/bin TMPDIR=$R/.copilot-tracking/.issue-114-integration-tmp $V/bin/ruff check .
+env -i PATH=/usr/bin:/bin $V/bin/ruff format --check .
+env -i PATH=/usr/bin:/bin $V/bin/mypy
+cd tests
+env -i PATH=/usr/bin:/bin TMPDIR=$R/.copilot-tracking/.issue-114-integration-tmp $V/bin/python -m unittest test_loadcheck test_sqlreads test_sqlstore test_taskqueues test_sqlqueues test_queue_benchmark -q
+```
+
+All passed: Ruff clean; 71 files already formatted; mypy no issues in 124 files;
+75 tests in 87.495s, no skips. Includes 16 focused loadcheck methods and directly coupled local
+SQLite/query/queue tests. Printed benchmark timings are incidental local observations, not Azure
+load, performance improvement or operational acceptance.
+No validation failures or new dependencies during integration.
+
+Prior 16-mutant and exact healthy-report equality evidence is preserved, not re-executed:
+the production and test bytes are unchanged. No need to rerun web/API/#402, Docker/nonroot,
+Azure SQL-provider, migration or full repository suites for this no-overlap integration; all upstream
+changed files are retained exactly and no store/schema/runtime-image contract changed.
+Task scratch is removed with `rmdir .copilot-tracking/.issue-114-integration-tmp`;
+`git diff --check` and final parity are required before publication.
+
+## Publication and Actual Handoff
+
+Final artifact-only reconciliation commit follows this validated 6d95a2a5 integration candidate.
+PR #403 body/metadata records the exact resulting final head, base 2975c4fd, observed exact-lease
+push outcome and final verification. No ordinary push, blanket force, implicit lease or alternate
+remote target is permitted. If the specified lease fails, stop without fallback.
+All ten task-owned artifacts remain committed. Original publication receipt is historical;
+this integration receipt supersedes its old-current-base/head and no-integration handoff text.
+Original critique, Review and correction ONE receipt remain entirely unchanged.
 
 ## Boundaries and Handoff
 

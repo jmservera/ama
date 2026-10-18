@@ -163,7 +163,7 @@ None within bounded scope.
 
 No active plan work remaining. Coordinator exact-head review remains an external acceptance gate.
 
-## Publication
+## Original Publication (Historical)
 
 P02-T02: correction commit d55e96c6e1031f4097947f1a0810da1e177a26f1 published; PR #403 OPEN
 targeting main with exact unchanged base f91353169756dc41ebbcca944bdd3f44f7c04b89. Separate
@@ -180,5 +180,10 @@ human/operational acceptance remain unmet. No issue checkboxes or board changes.
 
 Ordered Research -> Plan/one critique -> Implement -> one original independent Review complete.
 Parent lifecycle is Follow-up; caller-selected correction ONE and publication complete.
-Automatic session stopped at explicit caller boundary. No second original Review; source
-acceptance belongs to coordinator at exact head, not this local receipt.
+Same-session coordinator-authorized integration onto exact main 2975c4fd is locally complete;
+75 post-integration tests and configured checks pass, source/test/report/correction receipt
+bytes unchanged, all 28 upstream paths retained. Separate integration receipt owns actual commands
+and supersedes prior no-integration/current-base handoff prose. Publish only with the exact
+84e11721 old-head lease, record final head externally in PR #403, then stop for coordinator
+independent complete exact-head review. No second original Review or source correction TWO.
+No live issue criterion is fulfilled by this integration; acceptance is not this local receipt.
