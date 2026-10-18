@@ -3,8 +3,8 @@
   "task_slug": "issue-110-offline-sensor-consumer",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-110-offline-sensor-consumer-research.md",
@@ -74,6 +74,11 @@
       "decision": "RV-001 implemented with actual SQLite/MSSQL fail-before/pass-after; RV-002 contradictory line retained as historical with accurate current handoff. Original adverse findings unchanged; no independent acceptance claim.",
       "status": "implemented-correction-one",
       "evidence": "Correction ONE receipt and raw logs; full core/API preservation and hardened actual adapter checks passed; full API mypy remains nine baseline missing browser imports."
+    },
+    {
+      "decision": "Integration-only onto exact authorized 6fbdcee18413e9f7366e5f9ec53f68f053681096 completed. Tested source 4be60e29ea9daa50c15ed0e6e8a3342050744178; complete normalized owned patch equal, all 2750 protected upstream blob/modes unchanged; original artifacts unchanged.",
+      "status": "integration-verified",
+      "evidence": "Correction ONE receipt, integration proof and raw checks; scoped core/API/SQL/image passes. Integrated full API mypy fails10 versus pinned baseline9, additional unused-ignore interaction not repaired."
     }
   ],
   "blockers": [
@@ -81,15 +86,20 @@
       "id": "exact-published-head-review",
       "summary": "Complete independent exact-published-head source/artifact/log review is required after publication.",
       "resolution": "Coordinator/owner gate; no second original Review in this task."
+    },
+    {
+      "id": "integration-full-api-static",
+      "summary": "Full API mypy remains not green: nine baseline missing browser imports plus unused upstream import ignore exposed by combined fixture lookup.",
+      "resolution": "Coordinator scope decision; no browser installation or extra source/config fix during integration-only."
     }
   ],
-  "next_action": {"phase": "Implement", "action": "Commit verified correction ONE; integrate only onto exact authorized 6fbdcee18413e9f7366e5f9ec53f68f053681096; prove complete normalized patch/upstream blob parity, validate integrated candidate and publish with exact intake lease. No repeat original Review."},
+  "next_action": {"phase": "Follow-up", "action": "Commit integration receipts only; publish with exact explicit intake lease once, keep PR411 Draft/empty closing refs, normal receipt push then STOP for independent coordinator exact-head source/artifact/log review. Owned resource cleanup verified."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "RV-003: restore separately authorized API static-check dependency environment",
-      "rationale": "Low nonblocking baseline tooling limitation; owner no-Playwright scope prevents changing it here.",
-      "evidence": "Nine missing browser imports reproduced with pinned baseline configuration."
+      "task": "RV-003 and integration static limitation: separately scope full API static-check restoration",
+      "rationale": "Nine baseline browser imports plus unused upstream ignore under integrated fixture lookup; no browser/source fix authorized during integration-only.",
+      "evidence": "Integrated mypy10; isolated authorized-target baseline9. Raw outputs and correction ONE receipt."
     }
   ]
 }

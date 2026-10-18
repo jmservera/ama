@@ -82,3 +82,19 @@ normalized owned-patch comparisons are recorded with the correction receipt.
 Current correction count ONE; original Complete / Defects found preserved.
 No second original Review. RV-003 remains residual; independent coordinator
 exact-published-head review and whole-issue/live/human gates remain unmet.
+
+## Integrated candidate inventory
+
+Authorized base: 6fbdcee18413e9f7366e5f9ec53f68f053681096.
+Tested source: 4be60e29ea9daa50c15ed0e6e8a3342050744178.
+The complete path-by-path inventory is the adjacent generated
+issue-110-offline-sensor-consumer-integration-inventory.txt, including itself.
+Integration proof JSON lists all protected upstream blob/modes, all 14 owned
+source/config/doc hashes and the complete original-owned path list.
+Before/after normalized full patches, raw correction/integration attempts and
+image-source hashes are committed, not summaries standing in for execution.
+Only src/api README/pyproject incorporate additive upstream context unions.
+All 83 runtime package Python files match the tested image. Publication receipts
+are tracking-only; every src/docs path remains bound to the tested candidate.
+Both task-owned image IDs/tags, SQL/runtime containers, validation venv and exact
+target-baseline export were cleaned; no shared resource was removed.

@@ -165,3 +165,109 @@ Identity resolved afresh with `gh api user`: id 8036360/login jmservera; local
 author and committer noreply set before commit, no global configuration change.
 Remote lease rechecked exact intake; fetched main still exact authorized target.
 Next action is authorized integration-only, no further source correction.
+
+## C1-T03 exact pinned integration
+
+Local verified correction commit:
+e41985ca496f51958b561772f65223168c617e30. No correction push occurred, so the
+only authorized remote lease remains intake
+43ef35655b5a01f2a07a2d09eaef5415cc27c1dd.
+
+After a clean-worktree and exact remote lease check, executed:
+
+```bash
+git -c core.editor=true rebase --onto \
+  6fbdcee18413e9f7366e5f9ec53f68f053681096 \
+  578631ac75cc8c6a7af53922c6aaae4435e7761c \
+  feat/offline-sensor-consumer-110
+```
+
+All four commits replayed without conflict or manual edit. Rebased correction
+and tested integrated source candidate:
+4be60e29ea9daa50c15ed0e6e8a3342050744178. Exact authorized target is its parent
+workstream base; no later-main rebase. A later fetch still showed the same main.
+
+Complete proof, not sampled:
+`issue-110-offline-sensor-consumer-integration-proof.json` records all 2750
+protected upstream paths with mode/type/blob and zero mismatches, every owned
+path and all 14 source/config/documentation hashes.
+Complete owned and source-only normalized patches match before/after.
+Normalization removes only `index` and `@@` metadata from binary-safe,
+no-renames, zero-context Git diff; no content lines are discarded.
+Both complete normalized patches are committed with identical SHA-256
+3f2b730f0ff267db2f0349d1088cdd0425f4d6dde76564f5cf3e47864cd97700.
+
+Only additive context unions are src/api/README.md (upstream building-conformance
+documentation plus sensor guide) and src/api/pyproject.toml (upstream continuity
+test type settings plus existing sensor settings). No manual conflict resolution.
+KB index/log had no upstream overlap; all existing entries and original order
+are preserved. Protected upstream building tests, continuity/governance/roles,
+shared stores, recorder, DPIA and original adverse artifacts are unchanged.
+No substantive source fix was included during integration.
+
+## Integrated source-bound validation
+
+All following commands ran against candidate 4be60e29, before receipt-only edits.
+Raw logs use prefix `issue-110-offline-sensor-consumer-integration-`.
+
+| Directory | Actual command | Result |
+| --- | --- | --- |
+| src/core | Same full Ruff/formatter/mypy command above | Pass; 75 formatted/128 typed |
+| src/api | Same full Ruff/formatter and owned mypy3 command above | Pass; 28 formatted/3 selected typed |
+| src/core | Same core preservation command plus `test_sqlqueues test_taskqueues` | 232 tests, 17 existing opt-in skips, no failures |
+| src/api | Same API preservation command plus `test_continuity_epoch_export` | 408 tests, 213 existing opt-in SQL skips, no failures |
+| repository | `PY src/api/checks/sensor_sql_check.py` | Actual responsive loopback SQL Server, API33 passed; container removed |
+| repository | `docker build --quiet -f src/api/Dockerfile -t ama-sensor110-api:integrated-350bfa26 src` | sha256:b6ed3b21ececca54a5dbcd464fbf90bc80cb7b865c7ef3b1d677eb91fb20116d |
+| repository | Same hardened runtime command with integrated tag and name ama-sensor110-integration-image-350bfa26 | 75 tests, 1 existing opt-in skip; actual adapter accepted2/reopened replay2, row count2 |
+| src/api | `PY -m mypy` | FAIL, 10 errors/10 files, 61 checked; details below |
+
+All 83 runtime Python files across core/agents/API were SHA-256 compared between
+the actual integrated image and source: exact equality. Committed image hash
+manifest binds runtime evidence to candidate sources. Later receipts do not
+change any src/docs path.
+
+Additional static limitation for coordinator decision: integrated full API mypy
+has the nine missing browser imports plus an unused existing
+`type: ignore[import-not-found]` at test_continuity_epoch_export.py:13.
+The unchanged upstream file's release_support import becomes resolvable through
+the existing sensor core-fixture mypy path. This is an integration type-check
+interaction, NOT a tenth proven baseline error and NOT a green full check.
+An isolated exact authorized-target export, with its own original pyproject,
+ran full API mypy: 9 browser-import errors/9 files, 58 checked.
+No ignore removal, config workaround, dependency installation or further
+source fix was smuggled into integration. RV-003 remains residual; the additional
+unused-ignore limitation is explicitly routed to coordinator scope decision.
+
+One extra speculative malformed-nested-witness probe initially expected a raw
+RecursionError and exited nonzero because the actual runtime instead raised
+the correct bounded BatchStopped. Both attempts are retained, not relabelled.
+A corrected actual SQLite probe with a 4001-byte nested retained body asserted
+SENSOR_OUTCOME_MALFORMED, prefix1 and two committed rows; passed without any
+source edit. No additional runtime defect was established by that probe.
+
+Publication/cleanup and frozen-head receipt follow after exact-lease push.
+
+## Resource cleanup before publication
+
+Every unique task-owned loopback SQL container was removed in the existing
+harness's finally, including red runs. Hardened runtime/source-binding containers
+used `--rm`; filtered Docker container listing is empty.
+Executed `docker image rm ama-sensor110-api:correction-one-350bfa26
+ama-sensor110-api:integrated-350bfa26`: both exact tags and image IDs deleted.
+Removed only exact session directories `files/venv-correction-one` and
+`files/issue110-target-baseline` after all checks; absence asserted.
+No shared SQL/base image, unrelated container, global package or dataset removed.
+Full raw logs/manifests remain committed and session outputs retained.
+
+## Current task handoff
+
+Correction ONE is implemented and integrated; original Review remains
+Complete / Defects found, one execution, no second original Review.
+RV-001/RV-002 scoped corrections are source-tested, not independently accepted.
+RV-003 and the integrated unused-ignore interaction remain explicit residual
+static limitations. Complete independent frozen-head source/artifact/log review
+and any next correction decision belong to coordinator, not this session.
+Whole issue110/AC066 remains open: Hub identities/live transport, owner tier/
+sizing/cost/provisioning/network/device credential decisions, Azure SQL/real AI
+application acceptance and human/privacy approval remain unmet. ADR Proposed.
+No issue closure, closing reference, AC tick, board change, ready or merge action.

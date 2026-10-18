@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<stdin>", line 16, in <module>
+  File "/home/azureuser/source/ama-wt/issue-110-consumer/src/api/src/zava_forward/api/sensor_ingestion.py", line 35, in consume
+    raise BatchStopped(error, tuple(completed)) from None
+zava_forward.api.sensor_ingestion.BatchStopped: SENSOR_OUTCOME_MALFORMED
