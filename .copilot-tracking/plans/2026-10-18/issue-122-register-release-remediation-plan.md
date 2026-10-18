@@ -174,7 +174,7 @@ Only assistants.py, directly related existing tests/README and current metadata/
 new evidence may change. Preserve all other controls and original assessments.
 
 <!-- rpi:phase id=P05 -->
-### [ ] P05: Final unavailable SQL source correction
+### [x] P05: Final unavailable SQL source correction
 <!-- rpi:task id=P05-T01 -->
 #### [x] P05-T01: Verify stopped clean intake and freeze attributed independent input
 <!-- rpi:task id=P05-T02 -->
@@ -182,7 +182,7 @@ new evidence may change. Preserve all other controls and original assessments.
 <!-- rpi:task id=P05-T03 -->
 #### [x] P05-T03: Fresh focused/static/owned SQL/nonroot image validation and full manifest
 <!-- rpi:task id=P05-T04 -->
-#### [ ] P05-T04: Normal publication, draft reconciliation and STOP for same reviewer
+#### [x] P05-T04: Normal publication, draft reconciliation and STOP for same reviewer
 
 Source candidate 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0 on pinned base.
 Fresh final host/image each 86/86, coordinator probe 15/15, actual owned SQL
@@ -192,7 +192,13 @@ parity pass. Four source/test/guide deltas only, every other source unchanged.
 Prior 48 immutable artifacts and original 27 retain hashes/modes. Failed red,
 static/import, parity-syntax and stale J-fixture attempts retained honestly in
 separate correction-two receipt/logs/manifest. Resources removed exactly by name.
-P05-T04 normal publication pending; original Not accepted unchanged.
+P05-T04 normal publication executed: source 5fa69b3e then evidence
+41846a5a45ef2491fa6fa53f27498039703b3593, live PR398 same head/base9403dc6a,
+OPEN/draft/empty closing refs. Main remained pinned. Final metadata-only receipt
+uses normal push/exact PR head refresh; source unchanged. Boundary 80 paths,
+nine source/71 artifacts. Execution complete, session explicitly STOPPED for
+SAME independent reviewer correction/integration delta assessment. Original Not
+accepted unchanged; remaining blocker routes human, no third source correction.
 
 ## Historical Correction ONE and Integration Evidence
 

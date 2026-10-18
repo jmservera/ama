@@ -264,6 +264,14 @@ PR398 stays OPEN/draft, Refs #122 only, closing references empty. Exact final
 head/base and clean status recorded by post-publication verification in session
 files and draft PR body, not fabricated inside its own commit.
 
+Executed normal publication: source 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0,
+then evidence 41846a5a45ef2491fa6fa53f27498039703b3593. Live PR398 head
+41846a5a/base9403dc6a/OPEN/draft/empty closing refs and live main9403dc6a
+verified after body update. Final metadata-only receipt normal push and exact
+PR head refresh follows, with unchanged source and all prior frozen evidence.
+P05 complete; automatic session explicitly stopped for same reviewer, not a
+new review cycle or independent acceptance.
+
 STOP for SAME independent reviewer to assess correction and integration delta
 against prior complete 51-path boundary and actual adverse probes. No independent
 acceptance/readiness claim or review boxes. Actual authority/OQ-017, witnessed

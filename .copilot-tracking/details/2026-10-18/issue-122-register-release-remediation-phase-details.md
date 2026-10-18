@@ -15,7 +15,12 @@ failed commands are preserved, including zero-return wrapper masking failed
 mypy, stale J fixture replaced by real JSON initialization, syntax-only parity
 probe correction. SQL UUID DBs/exact containers and unique image tag cleaned.
 48 prior immutable artifact hashes/modes and original 27 unchanged; protected
-upstream source exact. P05-T04 normal publication pending; no acceptance claim.
+upstream source exact. P05-T04 normal publication completed at
+41846a5a45ef2491fa6fa53f27498039703b3593 after source5fa69b3e normal push;
+PR398 exact head/base9403dc6a/OPEN/draft/empty refs verified, main still pinned.
+Final metadata-only receipt uses normal push/PR exact-head refresh. Boundary80
+paths (nine source/71 artifacts), P05 complete, session explicitly stopped for
+SAME reviewer. No acceptance claim or third correction; further blocker human.
 
 Current P05 is correction TWO and FINAL of SAME task. Intake clean equal local/
 remote/PR d0a6f616afde75bda50665ba5b77555621dc3432, pinned base/main

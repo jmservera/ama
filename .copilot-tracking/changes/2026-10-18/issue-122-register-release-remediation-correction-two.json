@@ -3341,9 +3341,9 @@
         "bytes": 7186
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md": {
-        "sha256": "ab96fc520c3170a06c8c801675f6263f1c645d2eda0c32a51c91647df38c7fad",
+        "sha256": "f2eb651ac148043576afec5d7f60fa31614dce8d0cf00025a0aae17c031a62e1",
         "mode": "100644",
-        "bytes": 32089
+        "bytes": 32895
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-build.log": {
         "sha256": "37a2ae36e0f9d9aa9c45f260c6f9eaaef3836fefba3d7541669ba9b5e1ba064c",
@@ -3416,9 +3416,9 @@
         "bytes": 72
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-two-commands.json": {
-        "sha256": "770ca1a7e98d9c14bc5737739ae17d38f2b724376ef88a1c6edd7cb4460ceae1",
+        "sha256": "0ea7c46d8f656c9cd081187a400fa14e1149eb988e22fbedb9feeb8cbb544e78",
         "mode": "100644",
-        "bytes": 53080
+        "bytes": 61336
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-two-container-check.log": {
         "sha256": "b053f0a2a11d9538e132746da5e5b29c2a81c94cf0e5dfc1997b73813ee634f6",
@@ -3531,9 +3531,9 @@
         "self_reference": "Manifest itself; hash resolved externally after publication"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-two.md": {
-        "sha256": "8f69048ae677ed7e9881861416da0c6c9b6e6ec3724757a043c876ff6197acd6",
+        "sha256": "b2e097b5c45949758649d4e2be9f3487903e0091bb63859a0edd77eace44bc9e",
         "mode": "100644",
-        "bytes": 14930
+        "bytes": 15431
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-final-integration-focused.log": {
         "sha256": "816ff73de63e5172cc39e2f747fe762d1eddc4754e0388d37c5718c4170e5804",
@@ -3606,9 +3606,9 @@
         "bytes": 12117
       },
       ".copilot-tracking/details/2026-10-18/issue-122-register-release-remediation-phase-details.md": {
-        "sha256": "e198bc48262e2747175abe41ee7c20ea5b2790987b87e1ca8a3b52b5e638b892",
+        "sha256": "888c5101eaf9ffd8a7a49e77056cca8f51680814825f8855e95fa03841d0d4ee",
         "mode": "100644",
-        "bytes": 18895
+        "bytes": 19271
       },
       ".copilot-tracking/plans/2026-10-18/issue-122-continuity-epoch-export-plan.md": {
         "sha256": "62161e32c8924a2bf888aad3de35b1f3182487b401b0071dce745f300607b36e",
@@ -3616,9 +3616,9 @@
         "bytes": 11030
       },
       ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md": {
-        "sha256": "b10560ec44270571a595567a3b39915e6f6e7c29812a629eeea4c50430acfb4b",
+        "sha256": "43fe7d92cf6d3e5f796e2bcb8d0e14f2169cead556c54a92797fc0636923b82b",
         "mode": "100644",
-        "bytes": 20207
+        "bytes": 20677
       },
       ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md": {
         "sha256": "1d6fb6d79c2e7f3ebd6b69e11af1acbc83596c9d2d474ffc1ba8fe157d4d71d3",
@@ -3661,9 +3661,9 @@
         "bytes": 6570
       },
       ".copilot-tracking/rpi-sessions/2026-10-18/issue-122-register-release-remediation-state.json": {
-        "sha256": "4c600b162d0349a101733b9a7b9caa7d045d3465fcb540d320fdf01663abc618",
+        "sha256": "efed9dc542cf7888ed036649b8aaa744e6a5de57bba43fe5e74d2fba2befa6ba",
         "mode": "100644",
-        "bytes": 12750
+        "bytes": 13740
       },
       "src/api/README.md": {
         "sha256": "e0c58ffbd0992fc4e7fff3f812f5553a8436d132a375342beb61954968fd75ff",
@@ -3888,6 +3888,10 @@
     "pr": 398,
     "draft": true,
     "refs": "Refs #122",
+    "published_source_head": "5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0",
+    "published_evidence_head": "41846a5a45ef2491fa6fa53f27498039703b3593",
+    "initial_live_pr_verified": "41846a5a/base9403dc6a/OPEN/draft/empty closing refs; live main9403dc6a",
+    "state": "P05 execution completed; automatic Follow-up/stopped by explicit owner STOP; independent acceptance pending",
     "final_head": "Resolve commit containing final evidence via Git/remote/PR; no self-reference",
     "final_verification": "/home/azureuser/.copilot/session-state/28a50b1e-793d-4cd3-b584-4ab290f9a34f/files/correction-two-published-verification.json"
   },
