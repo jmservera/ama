@@ -16,9 +16,9 @@ import os
 import re
 from contextlib import contextmanager
 from copy import deepcopy
-from datetime import date
+from datetime import UTC, date, datetime
 
-from . import projection
+from . import controls, projection
 from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
 from .documents import DocumentStoreError
@@ -28,6 +28,7 @@ OUTCOMES = ("Booked", "Declined by provider", "Resident not available", "No acce
 ISSUED, APPOINTED, COMPLETED, WITHDRAWN = "Issued", "Appointed", "Completed", "Withdrawn"
 ACTIVE = (ISSUED, APPOINTED, COMPLETED)
 TRANSITIONS = {ISSUED: (APPOINTED, WITHDRAWN), APPOINTED: (COMPLETED, WITHDRAWN, ISSUED), COMPLETED: (ISSUED,), WITHDRAWN: ()}
+CONSULTATION_STATUSES = ("applies", "complete", "not_applicable", "unknown")
 
 
 def _clean(text, n=300):
@@ -129,7 +130,7 @@ class ProcurementMixin(AppointmentMixin):
                 if w:
                     case_before = (w["case_id"], deepcopy(self._case(w["case_id"])))
                 p = self._package(w["package"] if w else pid) if pid or w else None
-                authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action != "capacity" else None
+                authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action not in ("capacity", "consultation") else None
                 context = dict(user=deepcopy(user), actor=actor, authority=authority, cases={},
                                snapshot=self._proc_snap.get("procurement") if hasattr(self, "db") else None,
                                authorities=[], persisted=False)
@@ -295,10 +296,48 @@ class ProcurementMixin(AppointmentMixin):
             proc = self._proc()
             p = dict(id=f"PKG-{len(proc['packages']) + 1:03d}", name=name, period_from=start, period_to=end, contract_ref=contract_ref, contract_version=contract_version,
                      scope=scope, scope_version=1, scope_history=[dict(version=1, scope=scope, by=user["name"], at=_now(), reason="First version")],
-                     capacity={}, created_by=user["name"], created_at=_now())
+                     capacity={}, consultation_status="unknown", consultation_history=[],
+                     created_by=user["name"], created_at=_now())
             proc["packages"].append(p)
             self._proc_save(user, "package_created", "-", f"{p['id']} {name} {start} to {end} ref {contract_ref}; draft, not an instruction")
             return p["id"]
+
+    def record_consultation(self, user, pid, details):
+        """Record a supplied human decision, never certify Legal authority or compliance."""
+        from .store import ConflictError
+        fields = {"status", "decided_by", "reason", "source_case_id", "document_id",
+                  "source_version", "expected_version"}
+        if not isinstance(details, dict) or set(details) != fields:
+            raise ValueError("Supply the consultation status, named human decision maker, reason, source/version and current record version.")
+        if details["status"] not in CONSULTATION_STATUSES:
+            raise ValueError("Choose applies, complete, not_applicable or unknown.")
+        if type(details["expected_version"]) is not int or details["expected_version"] < 0:
+            raise ValueError("Supply the current consultation record version.")
+        for key in fields - {"status", "expected_version"}:
+            limit = 300 if key == "reason" else 100
+            if not isinstance(details[key], str) or len(details[key]) > limit:
+                raise ValueError(f"Supply {key} as text, at most {limit} characters.")
+        values = {key: controls.text(details[key], key, 300 if key == "reason" else 100)
+                  for key in fields - {"status", "expected_version"}}
+        with self._proc_operation(user, "consultation", pid=pid) as actor:
+            p = self._package(pid)
+            history = p.setdefault("consultation_history", [])
+            if details["expected_version"] != len(history):
+                raise ConflictError("Consultation record changed. Reload before recording a decision.")
+            doc = self._capacity_source(values)
+            record = dict(values, status=details["status"], version=len(history) + 1,
+                          contract_ref=p["contract_ref"], contract_version=p.get("contract_version"),
+                          scope_version=p["scope_version"], content_sha256=doc["content_sha256"],
+                          recorded_by={k: actor.get(k) for k in ("email", "code", "name", "role", "oid")},
+                          recorded_at=datetime.now(UTC).isoformat(),
+                          authority_status="Unverified", source_status="Supplied human decision; not Legal approval")
+            history.append(record)
+            p["consultation_status"] = "unknown"
+            self._proc_save(actor, "consultation_recorded", "-", f"{pid} supplied {record['status']}; record {record['version']}; Legal authority unverified; consultation-dependent actions held")
+
+    def require_consultation_clear(self, p):
+        # No verified contract-consultation Legal capability exists in the current registry.
+        raise ValueError(f"Consultation status is unknown for {p['id']}. A named authorized Legal adviser must verify the decision before a consultation-dependent action can proceed. Legal consultation authority and contract letting or renewal are not configured; supplied records cannot release this hold.")
 
     def rescope_package(self, user, pid, scope, reason):
         self._need_manager(user, "change a package scope")
@@ -532,7 +571,9 @@ class ProcurementMixin(AppointmentMixin):
                     except (ValueError, PermissionError, DocumentStoreError) as error:
                         item.update(evidence_status=f"Unknown - not confirmed: {error}", usable_committed=0)
                 out.append(dict(id=p["id"], name=p["name"], period_from=p["period_from"], period_to=p["period_to"], contract_ref=p["contract_ref"], contract_version=p.get("contract_version"),
-                                scope=p["scope"], scope_version=p["scope_version"], scope_history=p["scope_history"], capacity=cap))
+                                scope=p["scope"], scope_version=p["scope_version"], scope_history=p["scope_history"], capacity=cap,
+                                consultation_status="unknown", consultation_authority="Unverified",
+                                consultation_history=p.get("consultation_history", [])))
             return deepcopy(out)
 
     def require_booked_capacity(self, c):

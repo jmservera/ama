@@ -1,0 +1,272 @@
+{
+  "authorized_base": "ab0613f3336109ff9b96560a16758ee842232715",
+  "candidate": "aafcd504a4dd402b335bffd8a7a038bc31b29156",
+  "full_inventory": {
+    "compressed_sha256": "6a505cc1c5d840df72d885dab71dec002d32c875fb038ddbc675a3cca945355c",
+    "counts": {
+      "authorized_base": 2584,
+      "integrated_candidate": 2604,
+      "old_local": 2584
+    },
+    "uncompressed_sha256": "236db4de447ecd40119a6e286c48eb104908fc96cda4547107aafb42e37669ad"
+  },
+  "immutable_originals_and_prior_receipts": {
+    ".copilot-tracking/changes/2026-10-17/consultation-record-controls-92-changes.md": {
+      "after_sha256": "83fc6f4707ce555064b111ff4b9d5d9724667a5e7fd9d9383cb56e8d01e4e0ac",
+      "before_sha256": "83fc6f4707ce555064b111ff4b9d5d9724667a5e7fd9d9383cb56e8d01e4e0ac"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-focused.txt": {
+      "after_sha256": "ab3fefd80e610b4a177520dc41a7f16a2ec85f472237794b4ad0500f67e98eba",
+      "before_sha256": "ab3fefd80e610b4a177520dc41a7f16a2ec85f472237794b4ad0500f67e98eba"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-inventory.json.gz": {
+      "after_sha256": "6e5f571595013568586436b43db321d690b7a1cd207453c5cb8325949497722c",
+      "before_sha256": "6e5f571595013568586436b43db321d690b7a1cd207453c5cb8325949497722c"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-parity.json": {
+      "after_sha256": "be932dc1e3f272c064654b6373c5437df7a5445186775f578b9737ad700640fe",
+      "before_sha256": "be932dc1e3f272c064654b6373c5437df7a5445186775f578b9737ad700640fe"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-tests.txt": {
+      "after_sha256": "9a06a11770c6672df00bc9e4b1e73458c6b9281c92df0322405f59f8893d6c15",
+      "before_sha256": "9a06a11770c6672df00bc9e4b1e73458c6b9281c92df0322405f59f8893d6c15"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration.md": {
+      "after_sha256": "1086432cbcad7dbe613d776d091d9ebfb8a22928a0438a8c0290906fd8bf27e8",
+      "before_sha256": "1086432cbcad7dbe613d776d091d9ebfb8a22928a0438a8c0290906fd8bf27e8"
+    },
+    ".copilot-tracking/details/2026-10-17/consultation-record-controls-92-phase-details.md": {
+      "after_sha256": "f0ebf66ae2008bf66223ec6ed0b421830902ae802fd03330dea34d12e67b929e",
+      "before_sha256": "f0ebf66ae2008bf66223ec6ed0b421830902ae802fd03330dea34d12e67b929e"
+    },
+    ".copilot-tracking/plans/2026-10-17/consultation-record-controls-92-plan.md": {
+      "after_sha256": "059f301e633fbb010e7cde3d2dd1f5ef7028c614452d1cca4b6f525e77af757f",
+      "before_sha256": "059f301e633fbb010e7cde3d2dd1f5ef7028c614452d1cca4b6f525e77af757f"
+    },
+    ".copilot-tracking/research/2026-10-17/consultation-record-controls-92-research.md": {
+      "after_sha256": "f752ddb14e4b2d2c469c9a42d337587a5e7ac420d48aa78ab866dbf88f3dbb4f",
+      "before_sha256": "f752ddb14e4b2d2c469c9a42d337587a5e7ac420d48aa78ab866dbf88f3dbb4f"
+    },
+    ".copilot-tracking/research/2026-10-18/issue-92-scoped-consultation-hold-research.md": {
+      "after_sha256": "2aba70a247d61e4504e40911ac4a810cc593004ca53b21b22bc35004df1b653e",
+      "before_sha256": "2aba70a247d61e4504e40911ac4a810cc593004ca53b21b22bc35004df1b653e"
+    },
+    ".copilot-tracking/reviews/logs/2026-10-17/consultation-record-controls-92-review.md": {
+      "after_sha256": "e4a7543ac73f1e0fdaee61ca8c093acdb1cc4f6b9b2c433b69fcb7384391a59f",
+      "before_sha256": "e4a7543ac73f1e0fdaee61ca8c093acdb1cc4f6b9b2c433b69fcb7384391a59f"
+    },
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-92-scoped-consultation-hold-review.md": {
+      "after_sha256": "ab5cb437f994e556b08febb57903385c337090d5f12f42b92d099de582af5573",
+      "before_sha256": "ab5cb437f994e556b08febb57903385c337090d5f12f42b92d099de582af5573"
+    },
+    ".copilot-tracking/reviews/plans/2026-10-17/consultation-record-controls-92-plan-critique.md": {
+      "after_sha256": "dc6c9bca23f55e9f80cfc9ed231547ae668b0e72cee5b538ab5b6f25ec24ce17",
+      "before_sha256": "dc6c9bca23f55e9f80cfc9ed231547ae668b0e72cee5b538ab5b6f25ec24ce17"
+    },
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-92-scoped-consultation-hold-plan-critique.md": {
+      "after_sha256": "a404f6d5381e2e5520c0a60d328a56d45bc46a5d660e5876936e51fd130818ec",
+      "before_sha256": "a404f6d5381e2e5520c0a60d328a56d45bc46a5d660e5876936e51fd130818ec"
+    },
+    ".copilot-tracking/rpi-sessions/2026-10-17/consultation-record-controls-92-state.json": {
+      "after_sha256": "bc91cc85c0c0686dbced3572815d4ba3c79c33e5f4e1ad2e9ed7c6fb3274bca3",
+      "before_sha256": "bc91cc85c0c0686dbced3572815d4ba3c79c33e5f4e1ad2e9ed7c6fb3274bca3"
+    }
+  },
+  "incremental_upstream_changed_inventory": [
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-api-checks-final.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-api-checks.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-boundary-check.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-boundary-check.py",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-failing-first-tests.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-image-build.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-image-runtime.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-probe-after.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-tests-final.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-tests.log",
+    ".copilot-tracking/details/2026-10-18/issue-120-dpia-reference-phase-details.md",
+    ".copilot-tracking/plans/2026-10-18/issue-120-dpia-reference-plan.md",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-baseline-probe.log",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-contrarian.log",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-probe.py",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-research.md",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-120-dpia-reference-review.md",
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-120-dpia-reference-plan-critique.md",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-120-dpia-reference-state.json",
+    "src/api/README.md",
+    "src/api/src/zava_forward/api/timecapture.py",
+    "src/api/tests/test_timecapture.py"
+  ],
+  "inherited_log_snapshots": {
+    "/tmp/rpi-92-final-integration.log": {
+      "bytes": 19952,
+      "copy": "/home/azureuser/.copilot/session-state/cf6f1706-71c8-48ee-88ca-e30a375524dc/files/rpi-92-final-integration.log",
+      "sha256": "78ff14e59d07b3b68bd3d3129261e5ae73ed492416b9736c9d486d69c3e9f7c6"
+    },
+    "/tmp/rpi-92-scoped-hold.log": {
+      "bytes": 74057,
+      "copy": "/home/azureuser/.copilot/session-state/cf6f1706-71c8-48ee-88ca-e30a375524dc/files/rpi-92-scoped-hold.log",
+      "sha256": "eeb2d352e059a0cee1807b5ddf517dc4a78167857da567ce28716d94ab876121"
+    }
+  },
+  "normalized_patch_comparisons": {
+    "owned_complete_source": {
+      "after_sha256": "a886b897815c534424cad0c7132bd01586cf5192fd9f79755acfc2601b4343cb",
+      "before_sha256": "a886b897815c534424cad0c7132bd01586cf5192fd9f79755acfc2601b4343cb",
+      "exact_normalized_match": true,
+      "paths": [
+        "src/api/src/zava_forward/api/server.py",
+        "src/api/tests/test_procurement_api.py",
+        "src/core/src/zava_forward/core/procurement.py",
+        "src/core/tests/test_consultation_controls.py"
+      ]
+    },
+    "upstream_incremental_source": {
+      "after_sha256": "c7e400c463027b6bed3707eccc6879e440711cec4fbc6ddb09b9686757301582",
+      "before_sha256": "c7e400c463027b6bed3707eccc6879e440711cec4fbc6ddb09b9686757301582",
+      "exact_normalized_match": true,
+      "paths": [
+        "src/api/src/zava_forward/api/timecapture.py",
+        "src/api/tests/test_timecapture.py"
+      ]
+    }
+  },
+  "old_integration_base": "a86282c4badebc58eabbf9e441410d930a201ac2",
+  "old_local": "c6732027e8b4c1f6238e3073929a78a00ea16727",
+  "old_local_log_exact_prefix": true,
+  "original_source_candidate": "7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c",
+  "owned_changed_path_inventory": [
+    ".copilot-tracking/changes/2026-10-17/consultation-record-controls-92-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-focused.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-inventory.json.gz",
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-parity.json",
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-tests.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration.md",
+    ".copilot-tracking/details/2026-10-17/consultation-record-controls-92-phase-details.md",
+    ".copilot-tracking/details/2026-10-18/issue-92-scoped-consultation-hold-phase-details.md",
+    ".copilot-tracking/plans/2026-10-17/consultation-record-controls-92-plan.md",
+    ".copilot-tracking/plans/2026-10-18/issue-92-scoped-consultation-hold-plan.md",
+    ".copilot-tracking/research/2026-10-17/consultation-record-controls-92-research.md",
+    ".copilot-tracking/research/2026-10-18/issue-92-scoped-consultation-hold-research.md",
+    ".copilot-tracking/reviews/logs/2026-10-17/consultation-record-controls-92-review.md",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-92-scoped-consultation-hold-review.md",
+    ".copilot-tracking/reviews/plans/2026-10-17/consultation-record-controls-92-plan-critique.md",
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-92-scoped-consultation-hold-plan-critique.md",
+    ".copilot-tracking/rpi-sessions/2026-10-17/consultation-record-controls-92-state.json",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-92-scoped-consultation-hold-state.json",
+    "docs/reference/README.md",
+    "docs/reference/log.md",
+    "docs/reference/research/ux/zava-forward-prototype-profile-review.md",
+    "src/api/README.md",
+    "src/api/src/zava_forward/api/server.py",
+    "src/api/tests/test_procurement_api.py",
+    "src/core/README.md",
+    "src/core/src/zava_forward/core/procurement.py",
+    "src/core/tests/test_consultation_controls.py"
+  ],
+  "owned_source_blob_mismatches": [],
+  "protected_upstream_blob_mismatches": [],
+  "protected_upstream_inventory": [
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-api-checks-final.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-api-checks.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-boundary-check.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-boundary-check.py",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-failing-first-tests.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-image-build.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-image-runtime.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-probe-after.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-tests-final.log",
+    ".copilot-tracking/changes/2026-10-18/issue-120-dpia-reference-tests.log",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-after.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-changes.md",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-coupled.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-docker-build.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-docker-runtime-final.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-docker-runtime.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-focused-final.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-focused.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-freeze.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-image.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-mssql.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-nonroot.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-parity.json",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-quality.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-sql.py",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-tests-final.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration-tests.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration.md",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql-corrected-run.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql-final.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql.sh",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-mssql.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-publication.md",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-red-harness-corrected.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-red.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-static-corrected.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-static-final.txt",
+    ".copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-static.txt",
+    ".copilot-tracking/details/2026-10-18/issue-120-dpia-reference-phase-details.md",
+    ".copilot-tracking/details/2026-10-18/issue-76-current-stage-blockers-phase-details.md",
+    ".copilot-tracking/plans/2026-10-18/issue-120-dpia-reference-plan.md",
+    ".copilot-tracking/plans/2026-10-18/issue-76-current-stage-blockers-plan.md",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-baseline-probe.log",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-contrarian.log",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-probe.py",
+    ".copilot-tracking/research/2026-10-18/issue-120-dpia-reference-research.md",
+    ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-before.txt",
+    ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-probe.py",
+    ".copilot-tracking/research/2026-10-18/issue-76-current-stage-blockers-research.md",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-120-dpia-reference-review.md",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-76-current-stage-blockers-review.md",
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-120-dpia-reference-plan-critique.md",
+    ".copilot-tracking/reviews/plans/2026-10-18/issue-76-current-stage-blockers-critique.md",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-120-dpia-reference-state.json",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-76-current-stage-blockers-state.json",
+    "src/api/src/zava_forward/api/timecapture.py",
+    "src/api/tests/test_task_queue_api.py",
+    "src/api/tests/test_timecapture.py",
+    "src/core/src/zava_forward/core/sqlstore.py",
+    "src/core/src/zava_forward/core/taskqueues.py",
+    "src/core/tests/test_sqlqueues.py",
+    "src/core/tests/test_taskqueues.py"
+  ],
+  "readme_addition_preservation": {
+    "src/api/README.md": {
+      "owned_original": {
+        "added_lines": 39,
+        "all_ordered_blocks_preserved": true,
+        "blocks": 1
+      },
+      "upstream_dpia": {
+        "added_lines": 10,
+        "all_ordered_blocks_preserved": true,
+        "blocks": 1
+      },
+      "upstream_queue": {
+        "added_lines": 1,
+        "all_ordered_blocks_preserved": true,
+        "blocks": 1
+      }
+    },
+    "src/core/README.md": {
+      "owned_original": {
+        "added_lines": 65,
+        "all_ordered_blocks_preserved": true,
+        "blocks": 1
+      },
+      "upstream_dpia": {
+        "added_lines": 0,
+        "all_ordered_blocks_preserved": true,
+        "blocks": 0
+      },
+      "upstream_queue": {
+        "added_lines": 15,
+        "all_ordered_blocks_preserved": true,
+        "blocks": 3
+      }
+    }
+  },
+  "unrelated_paths": []
+}

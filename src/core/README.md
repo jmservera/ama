@@ -444,6 +444,71 @@ PYTHONPATH=src/core/tests:src/api:src/api/tests:src/agents/tests \
 `ZF_RESIDENT_MSSQL=1` enables `MssqlResidentControls` against an explicitly
 task-owned loopback SQL Server configured through `ZF_SQL_*`. Each test creates/
 drops only its UUID-named `zf_resident88_*` database. Never use shared/live SQL.
+## Consultation records and confirmation holds (#92)
+
+The existing provider package is the contract/call-off reference record.
+New records default to `consultation_status: "unknown"`; legacy missing values
+are also unknown. `record_consultation` accepts supplied statuses `applies`,
+`complete`, `not_applicable` or `unknown`, but stores them in
+`consultation_history` as unverified claims, never as effective clearance.
+Every record requires a named supplied human decision maker, reason, exact
+source case/document/version and expected history version. Clean non-generated
+original bytes must match their stored hash. The server records the current
+registered manager recorder separately, UTC time, monotonic version, contract
+reference/version, scope version and source hash. It does not decide applicability,
+interpret leases, certify completion or verify that the supplied adviser has
+Legal authority. Stale expected versions return a conflict without a new record.
+
+The current registry has contract-manager delegations and rule-card owner roles,
+but no verified contract-consultation Legal capability. ADR 0005's named exercise
+Legal owner is scoped to fictional rule-card/source review, not contract approval.
+No new role/mapping/designation is added. Effective status therefore remains
+unknown for every supplied decision, including complete and not_applicable.
+Owner direction on 2026-10-18 limits the hold to consultation-dependent actions
+and preserves unrelated service work. Ordinary order issuance, reissue,
+correction, positive booking and case advancement do not require consultation
+clearance. Their existing contract-action authority, provider/capacity, resident,
+hazard, building, appointment, stock, technical and funding controls remain.
+No operation becomes consultation-dependent merely because of a label, tenure,
+client boolean, source hash or supplied positive status.
+
+Existing building dependencies and holds still block their explicitly affected
+case/package instructions, including Unknown status and unknown applicability.
+Another package can pass package-aware checks, but final case advancement keeps
+its existing case-wide building hold. A different eligible case does not inherit
+an explicitly case-scoped hold. These are existing generic dependency controls,
+not verified Legal applicability or clearance. `require_consultation_clear`
+still refuses unconditionally; no genuine contract let/renew transition or
+Legal-clearance path exists. Neither is invented here.
+
+Consultation uses the existing procurement JSON document and SQL writer
+validation: current recorder, original procurement snapshot and source-case
+rowversion are rechecked in the transaction. No Store/schema changes or approved
+fixture backfills are made. Application history is not a legally signed record.
+This is **partial #92 acceptance**: supplied statuses and existing scoped dependency
+holds are implemented, but a verified named Legal record and a dedicated contract/framework/
+call-off let/renew workflow are absent. Neither a draft nor a case advance is
+claimed as exact letting/renewal acceptance. Both issue criteria remain partial.
+
+After editable source installation, from the repository root:
+
+```bash
+PYTHONPATH=src/core/tests:src/api/tests:src/agents/tests \
+  .venv/bin/python -m unittest test_consultation_controls test_procurement_api -q
+```
+
+Semantic and procurement, building, hazard, resident and role-matrix regressions
+exercise real scoped behavior without consultation-guard bypass mocks. Ordinary
+service lifecycle success does not turn effective unknown into Legal clearance.
+Main's independent resident/staff/capacity appointment commitments are exercised
+through the existing explicit synthetic fixture helper, never patched off.
+For a disposable, task-owned local SQL Server only, set existing `ZF_SQL_*`
+connection settings and `ZF_TEST_MSSQL=1`, then run
+`test_consultation_controls.MssqlConsultation` with
+`PYTHONPATH=src/api:src/core/tests:src/api/tests:src/agents/tests`.
+Its existing wipe/factory harness resets the configured test database.
+Never target shared, Azure or operational data. No legal-currentness claim,
+operational approval, real order, private dataset or UI acceptance is established.
 
 ## Grant lifecycle and human exercise designation (#95)
 

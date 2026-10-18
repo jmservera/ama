@@ -6165,3 +6165,143 @@ metadata when the knowledge base was created.
 * Universal core-flow/error coverage, actual user comprehension and named
   resident-facing wording review remain unmet. This partial slice does not
   close the issue, approve resident use or establish WCAG/legal conformance.
+## [2026-10-17] query | Consultation record and unknown confirmation hold (#92)
+
+* Audited the existing migrated procurement package and #90/#384 source;
+  the issue's old mvp note is stale. Added a supplied-human consultation record
+  with source/version/hash, reason, contract/scope, registered recorder, UTC time
+  and version conflict controls. No Legal authority or approval was invented.
+* Updated core/API READMEs, the existing prototype/profile synthesis and this
+  index's task route. Immutable regulatory sources, memory, original/addendum
+  and generated fixture/hash manifests remain unchanged.
+* No verified contract-consultation Legal capability or genuine let/renew seam
+  exists. All supplied statuses remain unverified, effective unknown holds
+  binding order confirmations, and both exact issue criteria remain partial.
+  Legacy domain regressions explicitly isolate that hold; unmocked consultation
+  semantics, individual seam mutations and actual loopback SQL Server recording/
+  conflict/reload checks supply separate engineering evidence.
+* No real contract/order/spend, resident communication, operational legal
+  activation, private data, Azure, paid AI, UI/WCAG acceptance or issue closure.
+
+## [2026-10-17] integration | Consultation controls on hazard main (#92)
+
+* Coordinator authorized own-topic rebase from PR #389 head
+  5411f0d41fc4425a5ab3cc9592f175a2f293bd82 onto freshly fetched main
+  1a05dfb8a4c4d9992d72a57228ce15123e9bcf2c, including merged hazard #388.
+  Only manual conflict was this log: upstream exact prefix retained, followed
+  by all own entries. Both consultation/hazard KB routes and syntheses remain.
+* Entire own src added/removed bytes match across bases; original Review and
+  critique unchanged. Upstream hazard/workflows/shared SQL/Store/finance/grants/
+  signoffs, fixture/hash manifest and MSSQL harness are byte-unchanged. No
+  current-actor, scoped hold, recovery or pending/committed audit redesign.
+* Fresh combined JSON/SQLite/API/manifest validation: 348 executions, 300 passes,
+  48 explicit skips. Full component lint/format/types pass (114 core/54 API
+  typed files); six added relative links/anchors verified. Original 70 actual
+  SQL Server passes remain historical; no new MSSQL run for docs-only conflict.
+* Both exact criteria remain partial: no actual verified authorized Legal
+  decision and, separately, no genuine let/renew software seam. Isolated
+  fail-closed decision recording already exists. Proposed bounded genuine
+  workflow integration is coordinator follow-up, not secretly expanded scope.
+* Original independent verdict retained, no repeat full Review. Coordinator
+  final-head review/check gate remains pending, issue open. No main/other
+  worktree/PR #387 write, operational legal activation, real contracts/spend,
+  portal, Azure/paid AI, merge or issue closure.
+
+## [2026-10-18] query | Owner-directed scoped consultation hold (#92)
+
+* Owner direction: "Limit the hold to consultation-dependent actions; preserve
+  unrelated service work". This approves scope behavior, not Legal clearance,
+  contractual power, real spend or deployment. Separate new full RPI task;
+  original consultation research, critique, Review and all prior task artifacts
+  remain byte-exact with their historical verdicts.
+* Removed five blanket consultation checks from ordinary service operations.
+  Supplied consultation history, source/version/hash, recorder and effective
+  unknown remain intact. Existing explicit building dependency/hold scope and
+  case-wide final advancement remain; no label inference or client applicability
+  flag, role, Legal authority, true let/renew or purchase API was added.
+* Removed affected guard-bypass mocks. Fresh local combined checks: 519 run,
+  424 passes/95 skips; core discovery 1117 run, 984 passes/133 skips; API discovery
+  794 run, 542 passes/252 skips; actual owned loopback SQL Server 136 run,
+  135 passes/one intentional skip. Configured core/API lint/format/mypy and
+  25 migration tests pass. Five reintroduced blanket-guard mutants are killed.
+  Results overlap in coverage and are not a unique-test total or live acceptance.
+* Authorized integration was from topic 9fb84836 onto main 9c648b20; source
+  controls and both existing consultation log entries retained after the exact
+  upstream log prefix. Remote main subsequently moved to a86282c4; publication
+  and any further rebase are paused for coordinator direction.
+* Updated component guides, existing profile synthesis and index. No shared
+  SQL-store/queue/server/export implementation edit or active-task overlap.
+  Genuine let/renew, verified Legal authority, human/live acceptance and
+  coordinator exact-head review remain unmet. Issue stays open/partial; no PR,
+  issue/board, deployment, spending, model call or merge action at this checkpoint.
+
+## [2026-10-18] integration | Scoped consultation publication on queue main (#92)
+
+* Coordinator authorized only the owned topic rebase from local 7e4aa6ec onto
+  exact main a86282c4, including PR407 queue correction; prior base 9c648b20.
+  Rebase completed without conflicts. Both README additions, upstream queue
+  production/tests and recorder controls remain; no source correction or policy
+  change. All earlier entries and the upstream log byte prefix are retained.
+* Exact normalized owned and upstream patches match; full tracked inventories
+  and ten original artifact hashes are recorded in the separate integration
+  receipt. Both old/new original Review and critique remain byte-identical.
+  No second original Review or critique was executed.
+* Fresh focused consultation/provider/workflow/API: 212 run, 199 passes,
+  13 explicit skips. Queue-related combined smoke: 553 run, 458 passes,
+  95 explicit skips. Configured core/API lint/format/mypy pass (125/56 typed
+  source files). Coverage overlaps; counts are not unique-test totals.
+* No production conflict or integration-authored persistence change required a
+  SQL/image rerun. Actual 135 SQL passes and upstream hardened-image evidence
+  remain historical, not fresh integration results. Legal authority, genuine
+  let/renew, human/live acceptance and final independent review remain unmet.
+* Same PR389 publication is authorized with the exact old-head lease, normal
+  pushes only afterward. No private inputs, real contracts/spend, Azure, paid
+  model calls, operational activation, issue/board change or merge.
+
+## [2026-10-18] integration | Scoped consultation publication waits again (#92)
+
+* Exact pre-push guard detected main ab0613f3336109ff9b96560a16758ee842232715,
+  no longer authorized a86282c4. It stopped before push; no lease was consumed.
+  Topic remote remains 9fb84836, PR389 remains unchanged/open with empty closing
+  issue references. No further rebase or PR/issue/board/merge action performed.
+* Authorized a86282c4 integration and fresh checks are committed locally at
+  ae2bc36b; a later metadata-only stop receipt records the new wait boundary.
+  Publication remains blocked pending coordinator direction. All original
+  assessment hashes, source parity and historical/fresh evidence distinctions
+  remain intact; no source correction or repeated assessment.
+
+## [2026-10-18] integration | Scoped consultation exact DPIA-base continuation (#92)
+
+* Coordinator authorized same-task integration/publication from local c6732027
+  onto exact ab0613f3 (merged PR408), previous base a86282c4. Nine owned commits
+  replayed without conflicts. No source correction or policy change; complete
+  owned patch, upstream DPIA/queue/recorder bytes and README additions retained.
+* Both prior integration receipt and old/new original assessments remain
+  byte-identical; fifteen immutable artifacts verified. Old-local log remains an
+  exact prefix. New separate receipt records full tree inventories, parity
+  manifests and preserved execution-log hashes.
+* Fresh minimal consultation/provider/workflow/API/timecapture: 235 executions,
+  222 passes, 13 explicit skips; configured core/API Ruff/format/mypy pass
+  (125/56 typed source files). No failed validation check in this continuation.
+  Recent broad/queue smoke, actual 135 SQL passes and image evidence remain
+  inherited/historical, not rerun. No packaging or persistence conflict arose.
+* Publish only the owned topic using expected 9fb84836 lease; later pushes
+  normal only. Later main movement is reported for coordinator gate, without
+  changing this exact authorized base. PR389 update retains Refs #92 only.
+  Legal authority, genuine let/renew, human/live acceptance and independent
+  exact-head review remain unmet. No private inputs, Azure/spend, issue/board
+  write, review checkbox completion, ready-state change or merge.
+
+## [2026-10-18] integration | Scoped consultation exact-base publication (#92)
+
+* Initial exact expected-head lease succeeded, publishing 5fdc9d46 on authorized
+  ab0613f3. PR389 updated with scoped owner direction, full old/new RPI,
+  immutable assessments, exact head/base and unmet acceptance gates; closing
+  references verified empty. Remote main still ab0613f3 at publication.
+* Final receipt-only closeout is normal-pushed and PR head refreshed; no source
+  correction or second original assessment. Complete changed-path inventory
+  and original/fresh execution logs are retained. Hosted checks and full
+  coordinator independent exact-head review remain pending, not accepted.
+* Integration/publication task complete, automatic session stopped as directed.
+  Legal authority, genuine let/renew and human/live acceptance remain unmet.
+  No issue/board/merge/ready-state operation or review checkbox completion.

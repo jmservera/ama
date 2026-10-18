@@ -1,0 +1,118 @@
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/quality.py", line 262, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/tests/test_quality_procurement.py", line 1004, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 448, in _sync
+    seq = self._db_seq()
+          ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 443, in _db_seq
+    row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 686, in _discard
+    self._proc_sync()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 695, in _proc_sync
+    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical SQL recovery failed
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/stock.py", line 31, in decision_scope
+    yield case, actor
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/quality.py", line 90, in _quality_operation
+    yield c, actor
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/quality.py", line 262, in accept_quality
+    self.save()
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/tests/test_quality_procurement.py", line 1004, in concurrent_save
+    save()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 658, in save
+    self._sync()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 448, in _sync
+    seq = self._db_seq()
+          ^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 443, in _db_seq
+    row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Stock/technical recovery failed; reload to establish the outcome.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/stock.py", line 34, in decision_scope
+    store._discard()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 686, in _discard
+    self._proc_sync()
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/src/zava_forward/core/sqlstore.py", line 695, in _proc_sync
+    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/core/tests/test_quality_procurement.py", line 989, in execute
+    raise OSError("SYN post-commit refresh read")
+OSError: SYN post-commit refresh read
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-92/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+----------------------------------------------------------------------
+Ran 235 tests in 69.660s
+
+OK (skipped=13)

@@ -1,0 +1,96 @@
+{
+  "task_id": "92",
+  "task_slug": "issue-92-scoped-consultation-hold",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-92-scoped-consultation-hold-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-92-scoped-consultation-hold-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-92-scoped-consultation-hold-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-92-scoped-consultation-hold-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-92-scoped-consultation-hold-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Exact-base integration/publication completed; stop for coordinator",
+      "status": "executed",
+      "evidence": "Initial single authorized force-with-lease published 5fdc9d46946330f2d0ffe3ce56288987635f3eeb from expected remote 9fb84836 on exact base ab0613f3. PR389 updated and verified open/non-draft, exact head/base, closingIssuesReferences empty; no review checkbox, issue/board, ready-state or merge action. Current checks pending, not acceptance. This receipt-only closeout is followed only by normal push and PR exact-head refresh; the final tip is the commit containing this state, resolved by git/PR. User-directed stop for full coordinator independent exact-head review; no follow-up implementation or second original Review/critique."
+    },
+    {
+      "decision": "Exact ab0613f3 integration and minimal fresh validation",
+      "status": "executed",
+      "evidence": "Conflict-free own-topic rebase source candidate aafcd504a4dd402b335bffd8a7a038bc31b29156 on exact ab0613f3. Complete owned patch and protected upstream bytes match; fifteen original/prior receipt hashes unchanged; README additions and old-local append-only prefix retained. Fresh consultation/provider/workflow/API/timecapture 235 run/222 passed/13 skips, 69.660s; configured core/API Ruff/format/mypy pass (125/56 typed files). No packaging/persistence conflict, broader rerun, source correction, critique or original Review. New receipt: .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia.md."
+    },
+    {
+      "decision": "Exact ab0613f3 integration/publication authorization",
+      "status": "confirmed",
+      "evidence": "2026-10-18 coordinator: same task only; expected local c6732027e8b4c1f6238e3073929a78a00ea16727, rebase only owned branch from a86282c4 onto fetched/verified ab0613f3336109ff9b96560a16758ee842232715. Preserve PR408 DPIA timecapture source/tests and additive README, all queues/recorder controls and original assessments. Publish on this exact base even if main subsequently moves; report that move. Initial exact topic lease remains 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7; unexpected topic advancement stops publication. No source correction or new critique/Review."
+    },
+    {
+      "decision": "Publication preflight honored another main move",
+      "status": "blocked-before-remote-write",
+      "evidence": "Publication candidate ae2bc36b14025f833d449bc12c18873ee65e4b0d passed source parity, but remote main became ab0613f3336109ff9b96560a16758ee842232715 instead of authorized a86282c4. Shell guard stopped before git push. Remote topic remains expected9fb84836; PR389 body and closing references unchanged/empty. No lease consumed, normal push, further rebase or PR update. Coordinator direction required."
+    },
+    {
+      "decision": "Same-task integration and fresh validation",
+      "status": "executed",
+      "evidence": "Clean conflict-free own-topic rebase onto a86282c4, source candidate adc9ad984cd9cd6bcfbd30db6d52485d9506ab47. Owned/upstream normalized exact patches and blobs match; ten original artifact hashes preserved. Fresh focused 212 run/199 passes/13 skips; combined queue smoke 553 run/458 passes/95 skips; configured core/API Ruff/format/mypy pass. Historical SQL/image evidence not rerun: no production conflict or integration-authored persistence change. Separate receipt: .copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration.md."
+    },
+    {
+      "decision": "Same-task integration/publication continuation only",
+      "status": "authorized",
+      "evidence": "2026-10-18 coordinator explicitly authorizes own-branch rebase from local 7e4aa6eca3a65dd9fe5a403a57f63b3edf62cb5c onto fetched main a86282c4badebc58eabbf9e441410d930a201ac2, preserving PR407 queue correction and both original assessments. Initial publication lease must equal remote 9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7; normal pushes only afterward. No new source correction, critique or original Review."
+    },
+    {
+      "decision": "Local implementation and complete new evidence persisted",
+      "status": "committed",
+      "evidence": "afb30d84d45e18de38863f066c5e9cead1c0a856 contains the reviewed implementation and all seven new canonical artifacts. Subsequent handoff receipt is metadata-only. Working tree clean after implementation commit; author and committer use authenticated GitHub noreply identity."
+    },
+    {
+      "decision": "One original Review execution and outcome",
+      "status": "executed",
+      "evidence": "Complete; outcome Residual work. No bounded implementation defects. RV-001 publication paused after main moved; RV-002 verified Legal applicability/approval missing; RV-003 genuine let/renew absent. Review record is preserved and will not be repeated."
+    },
+    {
+      "decision": "Research and one final-candidate critique",
+      "status": "executed",
+      "evidence": "Research executed Ready C1-C8. Critique executed once, verdict Revise, PC-001 Medium directly disposed by retaining case-wide final advancement and testing three-way scope distinction; no repeat."
+    },
+    {
+      "decision": "Owner-directed bounded full RPI and scope behavior",
+      "status": "confirmed",
+      "evidence": "2026-10-18 user: Limit the hold to consultation-dependent actions; preserve unrelated service work. No Legal clearance, spend or deployment. Stop after new full RPI publication."
+    },
+    {
+      "decision": "Authorized branch integration",
+      "status": "executed",
+      "evidence": "9fb84836e3e3ad24a17e142bd6a3e9d1a68d70e7 rebased onto 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096, result d276d4ce8e8acfd72c3eebded58959b24c534a1c; original RPI SHA256 checks all match."
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator owns full independent review of exact final local/remote/PR head and current checks against authorized ab0613f3 base; report any later main movement for a fresh integration gate. Worker session stopped as directed after receipt-only normal publication and final PR-head verification. No new task, source correction, original Review/critique, issue/board/merge or acceptance claim."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete coordinator independent exact-head review after publication",
+      "rationale": "Exact ab0613f3 publication is now authorized; independent review and current PR checks remain the next acceptance gate, not a repeated original Review.",
+      "evidence": "Same-task exact-base receipt records complete source/upstream parity and minimal validation. Original new Review remains Residual work with no bounded defects."
+    },
+    {
+      "rank": 2,
+      "task": "Establish verified scoped Legal applicability and approval contract",
+      "rationale": "Prerequisite to meaningful binding authority; service restoration cannot supply it.",
+      "evidence": "RV-002 and research C1-C5; effective status remains unknown."
+    },
+    {
+      "rank": 3,
+      "task": "Identify and authorize genuine let/renew integration",
+      "rationale": "Needed for exact issue acceptance, after authority boundary is defined; outside this task's approved scope.",
+      "evidence": "RV-003; actual let/renew route unsupported, both issue criteria partial."
+    }
+  ]
+}
