@@ -11,6 +11,7 @@ from unittest.mock import patch
 from building_fixture import fixture, hold, open_store
 from dataset import DATA, change_metadata
 from test_sqlreads import STAFF, dataset, queue_cases
+from test_stock_reconciliation import query
 from zava_forward.core import ranking, taskqueues
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -198,6 +199,134 @@ class QueueDefinitions(unittest.TestCase):
 
 
 class StoreQueueParity(unittest.TestCase):
+    def test_current_stage_requirements_through_real_stores(self) -> None:
+        data: dict[str, Any] = copy.deepcopy(DATA)
+        data["as_of"] = AS_OF
+        data["cases"] = []
+        for stage in (
+            "Contacting resident",
+            "Survey booked",
+            "Final checks before ordering",
+            "Install booked",
+        ):
+            for kind in ("clear", "funding", "resident", "technical"):
+                case = copy.deepcopy(DATA["cases"][2])
+                case.update(id=f"{stage}-{kind}", stage=stage)
+                if kind == "funding":
+                    case["funding_ok"] = False
+                elif kind == "resident":
+                    case["measure_decisions"] = {}
+                elif kind == "technical":
+                    case["technical"]["signoffs"].pop("coordination")
+                if stage == "Final checks before ordering":
+                    case["handoff"] = dict(state="Offered", next_action="Chase the receiver.")
+                data["cases"].append(case)
+        for sql in (False, True):
+            with tempfile.TemporaryDirectory() as tmp:
+                store = open_store(tmp, sql, data)
+                try:
+                    members = {
+                        row["id"]
+                        for row in store.list_cases(
+                            DATA["staff"][1], "all", filters={"queue": "blocked"}
+                        )
+                    }
+                    for case in data["cases"]:
+                        with self.subTest(sql=sql, case=case["id"]):
+                            work = store.detail(case["id"], DATA["staff"][1])["work"]
+                            expected = case["stage"] == "Final checks before ordering" and not case[
+                                "id"
+                            ].endswith("-clear")
+                            self.assertEqual(case["id"] in members, expected)
+                            self.assertEqual(
+                                bool(work["blockers"]), not case["id"].endswith("-clear")
+                            )
+                            self.assertEqual(
+                                any(b["current_stop"] for b in work["blockers"]), expected
+                            )
+                            if expected:
+                                selected = work["blockers"][0]
+                                self.assertEqual(work["reason"], selected["reason"])
+                                self.assertEqual(work["next_action"], selected["next_action"])
+                                self.assertTrue(store.gate_reasons(store.cases[case["id"]]))
+                            elif case["stage"] != "Final checks before ordering":
+                                self.assertEqual(work["reason"], case["reason"])
+                                self.assertEqual(
+                                    work["next_action"],
+                                    "Ask Sam Example to record the next action.",
+                                )
+                finally:
+                    if sql:
+                        store.db.close()
+
+    def test_current_holds_keep_membership_owner_and_hazard_clock(self) -> None:
+        for sql in (False, True):
+            with self.subTest(sql=sql), tempfile.TemporaryDirectory() as tmp:
+                data = fixture()
+                data["as_of"] = AS_OF
+                data["buildings"][0]["holds"].append(hold())
+                case = data["cases"][0]
+                case.update(stage="Contacting resident", funding_ok=False)
+                case["hazards"] = [
+                    dict(
+                        category="Damp",
+                        priority="P1",
+                        released=False,
+                        owner="Bea Safe",
+                        aware_at="2026-10-15T12:00Z",
+                    )
+                ]
+                store = open_store(tmp, sql, data)
+                try:
+                    store.stock_reconcile(DATA["staff"][0], "ZF-2", query())
+                    work = store.detail("ZF-2", DATA["staff"][1])["work"]
+                    current = [b for b in work["blockers"] if b["current_stop"]]
+                    self.assertEqual(
+                        [b["step"] for b in current],
+                        ["Safety review", "Stock review", "Shared building review"],
+                    )
+                    self.assertEqual(current[0]["owner"], "Bea Safe")
+                    self.assertEqual(current[1]["owner"], "Sam Example")
+                    self.assertEqual(work["hazard_clocks"][0]["elapsed_hours"], 12)
+                    self.assertEqual(work["hazard_clocks"][0]["owner"], "Bea Safe")
+                    self.assertEqual(work["reason"], current[0]["reason"])
+                    self.assertEqual(work["next_action"], current[0]["next_action"])
+                    self.assertIn(
+                        "ZF-2",
+                        {
+                            r["id"]
+                            for r in store.list_cases(
+                                DATA["staff"][1], "all", filters={"queue": "blocked"}
+                            )
+                        },
+                    )
+                    self.assertFalse(work["blockers"][-1]["current_stop"])
+                finally:
+                    if sql:
+                        store.db.close()
+
+    def test_json_prerequisite_clearing_and_stage_changes_survive_restart(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data: dict[str, Any] = copy.deepcopy(DATA)
+            data["as_of"] = AS_OF
+            data["cases"] = [copy.deepcopy(DATA["cases"][2])]
+            store = open_store(tmp, False, data)
+            for stage, funded, blocked in (
+                ("Contacting resident", False, False),
+                ("Final checks before ordering", False, True),
+                ("Final checks before ordering", True, False),
+                ("Install booked", False, False),
+            ):
+                with self.subTest(stage=stage, funded=funded):
+                    with store.lock:
+                        store.cases["ZF-3"].update(stage=stage, funding_ok=funded)
+                        store.save()
+                    for target in (store, open_store(tmp, False)):
+                        rows = target.list_cases(
+                            DATA["staff"][1], "all", filters={"queue": "blocked"}
+                        )
+                        self.assertEqual([r["id"] for r in rows], ["ZF-3"] if blocked else [])
+
     @patch.dict(ranking.CURRENT, dict(ranking.CURRENT, status="Approved", owner="Synthetic owner"))
     def test_all_queue_filters_sorts_and_visibility_match_uncached_selection(self) -> None:
         data = dataset(queue_cases(90))

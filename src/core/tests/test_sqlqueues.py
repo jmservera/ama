@@ -1,7 +1,10 @@
 """Durable queue flags, transactional dependencies, migration and dialect contracts."""
 
+import copy
 import json
 import re
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,8 +12,9 @@ from typing import Any
 from unittest.mock import patch
 
 from building_fixture import fixture, hold
+from dataset import DATA
 from test_sqlreads import STAFF, dataset, queue_cases
-from zava_forward.core import ranking, taskqueues
+from zava_forward.core import controls, ranking, taskqueues
 from zava_forward.core.mssqlstore import TABLES, MssqlStore, _Conn, _indexes
 from zava_forward.core.sqlstore import QUEUE_COLS, SqlStore
 
@@ -39,6 +43,154 @@ class SqlQueueMembership(unittest.TestCase):
             for cid, *flags in rows:
                 queues = store.work_context(store.cases[cid], None)["queues"]
                 self.assertEqual(flags, [int(col[6:] in queues) for col in QUEUE_COLS], cid)
+
+    def test_old_certified_memberships_refresh_without_case_or_audit_writes(self) -> None:
+        with self.store.lock:
+            for cid in self.store.cases:
+                case = self.store._case(cid)
+                supplied = copy.deepcopy(DATA["cases"][2])
+                supplied["funding"] = copy.deepcopy(case["funding"])
+                supplied.update(id=cid, closed=cid != "ZF-00001")
+                case.clear()
+                case.update(supplied)
+            self.store.cases["ZF-00001"].update(stage="Contacting resident", funding_ok=False)
+            self.store.save()
+        before = self.store.db.execute(
+            "SELECT id, body, rowversion, seq FROM cases ORDER BY id"
+        ).fetchall()
+        head = self.store.ledger_head()
+        old = json.dumps(
+            [taskqueues.VERSION, self.store.as_of, controls.today(), ranking.CURRENT],
+            sort_keys=True,
+        )
+        self.store.db.execute("UPDATE cases SET queue_blocked=1 WHERE id='ZF-00001'")
+        self.store._meta_set("queue_context", old)
+        generation = int(
+            self.store.db.execute("SELECT value FROM meta WHERE key='queue_generation'").fetchone()[
+                0
+            ]
+        )
+        self.seed.unlink()
+        reopened = self.make_store(self.seed)
+        self.addCleanup(reopened.db.close)
+        self.assertEqual(reopened.list_cases(STAFF[1], "all", filters={"queue": "blocked"}), [])
+        self.assertEqual(
+            reopened.db.execute("SELECT queue_blocked FROM cases WHERE id='ZF-00001'").fetchone(),
+            (0,),
+        )
+        self.assertGreater(
+            int(
+                reopened.db.execute(
+                    "SELECT value FROM meta WHERE key='queue_generation'"
+                ).fetchone()[0]
+            ),
+            generation,
+        )
+        self.assertEqual(
+            reopened.db.execute(
+                "SELECT id, body, rowversion, seq FROM cases ORDER BY id"
+            ).fetchall(),
+            before,
+        )
+        self.assertEqual(reopened.ledger_head(), head)
+        self.assert_flags(reopened)
+
+    def test_prerequisite_clearing_refreshes_other_process_and_restart(self) -> None:
+        other = self.make_store(self.seed)
+        self.addCleanup(other.db.close)
+        for kind in ("funding", "technical", "resident"):
+            for stage, missing, expected in (
+                ("Contacting resident", True, False),
+                ("Final checks before ordering", True, True),
+                ("Final checks before ordering", False, False),
+                ("Install booked", True, False),
+            ):
+                with self.subTest(kind=kind, stage=stage, missing=missing):
+                    with self.store.lock:
+                        case = self.store._case("ZF-00001")
+                        supplied = copy.deepcopy(DATA["cases"][2])
+                        supplied["funding"] = copy.deepcopy(case["funding"])
+                        supplied.update(id=case["id"], stage=stage)
+                        if missing:
+                            if kind == "funding":
+                                supplied["funding_ok"] = False
+                            elif kind == "technical":
+                                supplied["technical"]["signoffs"].pop("coordination")
+                            else:
+                                supplied["measure_decisions"] = {}
+                        case.clear()
+                        case.update(supplied)
+                        self.store.save()
+                    for target in (other, self.store):
+                        rows = target.list_cases(STAFF[1], "all", filters={"queue": "blocked"})
+                        self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+                        self.assertEqual(
+                            target.db.execute(
+                                "SELECT queue_blocked FROM cases WHERE id='ZF-00001'"
+                            ).fetchone(),
+                            (int(expected),),
+                        )
+                        work = target.detail("ZF-00001", STAFF[1])["work"]
+                        self.assertEqual(any(b["current_stop"] for b in work["blockers"]), expected)
+                    reopened = self.make_store(self.seed)
+                    try:
+                        rows = reopened.list_cases(STAFF[1], "all", filters={"queue": "blocked"})
+                        self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+                    finally:
+                        reopened.db.close()
+
+        with self.store.lock:
+            case = self.store._case("ZF-00001")
+            case.update(
+                stage="Contacting resident",
+                funding_ok=False,
+                measure_decisions=copy.deepcopy(DATA["cases"][2]["measure_decisions"]),
+            )
+            self.store.save()
+        other.list_cases(STAFF[1], "all", filters={"queue": "blocked"})
+        child = """
+import os
+import sys
+from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.mssqlstore import MssqlStore
+seed, db, dialect, stage, funded = sys.argv[1:]
+store = (MssqlStore(seed, state_dir=os.path.dirname(db)) if dialect == "mssql"
+         else SqlStore(seed, db))
+try:
+    with store.lock:
+        store._case("ZF-00001").update(stage=stage, funding_ok=funded == "true")
+        store.save()
+finally:
+    store.db.close()
+"""
+        for funded, expected in (("false", True), ("true", False)):
+            subprocess.run(
+                [
+                    sys.executable,
+                    "-c",
+                    child,
+                    str(self.seed),
+                    self.store.db_path,
+                    "mssql" if isinstance(self.store, MssqlStore) else "sqlite",
+                    "Final checks before ordering",
+                    funded,
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                "ZF-00001"
+                in {
+                    row["id"]
+                    for row in other.list_cases(STAFF[1], "all", filters={"queue": "blocked"})
+                },
+                expected,
+            )
+            self.assertEqual(
+                other.db.execute("SELECT queue_blocked FROM cases WHERE id='ZF-00001'").fetchone(),
+                (int(expected),),
+            )
 
     def test_seed_and_every_case_write_maintain_physical_flags(self) -> None:
         self.assert_flags(self.store)

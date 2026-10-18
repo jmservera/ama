@@ -4,6 +4,7 @@ from datetime import UTC, datetime, time
 from typing import Any
 
 VERSION = "work-queues-1"
+MEMBERSHIP_REVISION = 2
 UNKNOWN = "Unknown"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
@@ -222,6 +223,7 @@ def context(
             "Ask the case owner to identify the shared-building reviewer and evidence.",
             "building",
         )
+    final_checks = case["stage"] == "Final checks before ordering"
     if not case.get("funding_ok"):
         block(
             "Final checks: funding",
@@ -229,7 +231,7 @@ def context(
             owner,
             "Check funding evidence and record confirmation through the permitted review.",
             "funding",
-            active=False,
+            active=final_checks,
         )
     for reason in resident_reasons:
         block(
@@ -238,7 +240,7 @@ def context(
             owner,
             "Obtain the resident's supplied decision and current scope evidence.",
             "measure_decisions",
-            active=False,
+            active=final_checks,
         )
     for item in technical_missing:
         if item["assigned_to"] == "Stock query owner":
@@ -249,7 +251,7 @@ def context(
             UNKNOWN,
             "Ask the responsible role to record the required evidence or decision.",
             "technical",
-            active=False,
+            active=final_checks,
             role=item["assigned_to"],
             version=(case.get("technical") or {}).get("design_version"),
         )
@@ -319,13 +321,6 @@ def context(
             source, version = origin("returns")["source"], returned.get("version") or UNKNOWN
             evidence = text(returned.get("source"))
             recorded_at = returned.get("at") or UNKNOWN
-    if not next_action and case["stage"] == "Final checks before ordering" and blockers:
-        next_action = blockers[0]["next_action"]
-        reason, source, version = (
-            blockers[0]["reason"],
-            blockers[0]["source"],
-            blockers[0]["version"],
-        )
     if not next_action:
         next_action = f"Ask {owner} to record the next action."
     matched = [
@@ -334,7 +329,7 @@ def context(
             ("new", new),
             ("priority", approved_priority(policy)),
             ("stale", stale),
-            ("blocked", bool(blockers)),
+            ("blocked", bool(active)),
             ("overdue", bool(overdue)),
             ("unowned", pending),
         )

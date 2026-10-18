@@ -1,0 +1,24 @@
+Owned SQL container ama-issue76-blockers-275971 at 127.0.0.1:32825
+Actual local SQL Server responsive: 16.0.4305.5
+test_mssqlstore (unittest.loader._FailedTest.test_mssqlstore) ... ERROR
+
+======================================================================
+ERROR: test_mssqlstore (unittest.loader._FailedTest.test_mssqlstore)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_mssqlstore
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/api/tests/test_mssqlstore.py", line 15, in <module>
+    import test_handoff_api as handofftests
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/api/tests/test_handoff_api.py", line 16, in <module>
+    from tests.test_mvp import DATA
+ModuleNotFoundError: No module named 'tests'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+Removed task-owned SQL container ama-issue76-blockers-275971

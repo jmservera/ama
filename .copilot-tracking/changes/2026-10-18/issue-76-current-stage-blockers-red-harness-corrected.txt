@@ -1,0 +1,328 @@
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Contacting resident-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Contacting resident-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Contacting resident-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Survey booked-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Survey booked-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Survey booked-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Final checks before ordering-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 243, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(
+AssertionError: False != True
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Final checks before ordering-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 243, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(
+AssertionError: False != True
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Final checks before ordering-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 243, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(
+AssertionError: False != True
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Install booked-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Install booked-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=False, case='Install booked-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Contacting resident-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Contacting resident-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Contacting resident-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Survey booked-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Survey booked-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Survey booked-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Final checks before ordering-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 243, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(
+AssertionError: False != True
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Final checks before ordering-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 243, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(
+AssertionError: False != True
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Final checks before ordering-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 243, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(
+AssertionError: False != True
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Install booked-funding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Install booked-resident')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_requirements_through_real_stores (test_taskqueues.StoreQueueParity.test_current_stage_requirements_through_real_stores) (sql=True, case='Install booked-technical')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 241, in test_current_stage_requirements_through_real_stores
+    self.assertEqual(case["id"] in members, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_json_prerequisite_clearing_and_stage_changes_survive_restart (test_taskqueues.StoreQueueParity.test_json_prerequisite_clearing_and_stage_changes_survive_restart) (stage='Contacting resident', funded=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 323, in test_json_prerequisite_clearing_and_stage_changes_survive_restart
+    self.assertEqual([r["id"] for r in rows], ["ZF-3"] if blocked else [])
+AssertionError: Lists differ: ['ZF-3'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'ZF-3'
+
+- ['ZF-3']
++ []
+
+======================================================================
+FAIL: test_json_prerequisite_clearing_and_stage_changes_survive_restart (test_taskqueues.StoreQueueParity.test_json_prerequisite_clearing_and_stage_changes_survive_restart) (stage='Install booked', funded=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_taskqueues.py", line 323, in test_json_prerequisite_clearing_and_stage_changes_survive_restart
+    self.assertEqual([r["id"] for r in rows], ["ZF-3"] if blocked else [])
+AssertionError: Lists differ: ['ZF-3'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'ZF-3'
+
+- ['ZF-3']
++ []
+
+======================================================================
+FAIL: test_old_certified_memberships_refresh_without_case_or_audit_writes (test_sqlqueues.SqlQueueMembership.test_old_certified_memberships_refresh_without_case_or_audit_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 72, in test_old_certified_memberships_refresh_without_case_or_audit_writes
+    self.assertEqual(
+AssertionError: Lists differ: [{'id': 'ZF-00001', 'resident': 'Pat Test'[1753 chars]ne}}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'id': 'ZF-00001', 'resident': 'Pat Test', 'address': '1 Test Road', 'town': 'Testville', 'postcode': 'TE1 1ST', 'phone': '01000 000000', 'stage': 'Contacting resident', 'status': 'Waiting on Sam Example to agree a visit', 'owner': 'Sam Example', 'days': 10, 'last_contact': None, 'next_visit': None, 'area': 'Test', 'wave': 'Wave 1', 'funding': 'Draft ready', 'owner_code': 'RLO-01', 'hazard': False, 'support': False, 'support_status': 'No', 'support_coverage': 'Recorded', 'closed': False, 'rank': 1, 'reasons': ['Waiting 10 days in this stage', "At 'Contacting resident'"], 'work': {'case_id': 'ZF-00001', 'definition_version': 'work-queues-1', 'as_of': '2026-10-16', 'owner': 'Sam Example', 'reason': 'to agree a visit', 'next_action': 'Ask Sam Example to record the next action.', 'source': 'case:ZF-00001/stage', 'version': 'Unknown', 'evidence': 'Unknown', 'recorded_at': '2026-01-01', 'queues': ['stale', 'blocked'], 'blockers': [{'step': 'Final checks: funding', 'reason': 'Funding has not been confirmed.', 'owner': 'Sam Example', 'responsible_role': 'Unknown', 'next_action': 'Check funding evidence and record confirmation through the permitted review.', 'current_stop': False, 'case_id': 'ZF-00001', 'source': 'case:ZF-00001/funding', 'version': 'Unknown', 'as_of': '2026-10-16'}], 'hazard_clocks': [], 'overdue': [], 'evidence_freshness': [{'kind': 'EPC', 'status': 'Stale', 'recorded_at': '2026-01-01', 'evidence': 'SYN-EPC', 'case_id': 'ZF-00001', 'source': 'case:ZF-00001/documents', 'version': 'Unknown', 'as_of': '2026-10-16'}, {'kind': 'Survey', 'status': 'Stale', 'recorded_at': '2026-01-01', 'evidence': 'SYN-Survey', 'case_id': 'ZF-00001', 'source': 'case:ZF-00001/documents', 'version': 'Unknown', 'as_of': '2026-10-16'}], 'technical_reassessment': False, 'handoff': None}}
+
+Diff is 2995 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='funding', stage='Contacting resident', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 121, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='funding', stage='Final checks before ordering', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 126, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual(any(b["current_stop"] for b in work["blockers"]), expected)
+AssertionError: False != True
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='funding', stage='Install booked', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 121, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='technical', stage='Contacting resident', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 121, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='technical', stage='Final checks before ordering', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 126, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual(any(b["current_stop"] for b in work["blockers"]), expected)
+AssertionError: False != True
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='technical', stage='Install booked', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 121, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='resident', stage='Contacting resident', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 121, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='resident', stage='Final checks before ordering', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 126, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual(any(b["current_stop"] for b in work["blockers"]), expected)
+AssertionError: False != True
+
+======================================================================
+FAIL: test_prerequisite_clearing_refreshes_other_process_and_restart (test_sqlqueues.SqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart) (kind='resident', stage='Install booked', missing=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/core/tests/test_sqlqueues.py", line 121, in test_prerequisite_clearing_refreshes_other_process_and_restart
+    self.assertEqual("ZF-00001" in {r["id"] for r in rows}, expected)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_current_stage_membership_detail_csv_and_role_projection (test_task_queue_api.TaskQueueApi.test_current_stage_membership_detail_csv_and_role_projection) (actor='sam')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/api/tests/test_task_queue_api.py", line 158, in test_current_stage_membership_detail_csv_and_role_projection
+    self.assertEqual(page["total"], 2)
+AssertionError: 4 != 2
+
+======================================================================
+FAIL: test_current_stage_membership_detail_csv_and_role_projection (test_task_queue_api.TaskQueueApi.test_current_stage_membership_detail_csv_and_role_projection) (actor='rex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-76-blockers/src/api/tests/test_task_queue_api.py", line 158, in test_current_stage_membership_detail_csv_and_role_projection
+    self.assertEqual(page["total"], 2)
+AssertionError: 4 != 2
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.187s
+
+FAILED (failures=38)

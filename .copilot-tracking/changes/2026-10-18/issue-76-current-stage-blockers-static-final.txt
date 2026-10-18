@@ -1,0 +1,7 @@
+All checks passed!
+71 files already formatted
+Success: no issues found in 124 source files
+All checks passed!
+24 files already formatted
+Success: no issues found in 56 source files
+core_exit=0 api_exit=0
