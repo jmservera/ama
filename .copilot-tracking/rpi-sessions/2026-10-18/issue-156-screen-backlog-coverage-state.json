@@ -1,0 +1,68 @@
+{
+  "task_id": "issue-156-screen-backlog-coverage",
+  "task_slug": "issue-156-screen-backlog-coverage",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-156-screen-backlog-coverage-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-156-screen-backlog-coverage-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-156-screen-backlog-coverage-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-156-screen-backlog-coverage-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-156-screen-backlog-coverage-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-156-screen-backlog-coverage-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "New ordered full RPI, one independent critique and one original Review, documentation only; preserve frozen #400 records",
+      "status": "confirmed",
+      "evidence": "User direction 2026-10-18; clean docs/screen-backlog-coverage-156 at 2ca6d1c48bb95b65e6c349fe508e99c00a74efbe; no existing PR"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "New research C1-C5/W1-W2; all 184 issues reconciled; 74 includes-screen, 86 no-screen, 16 epic-covered, eight unknown"
+    },
+    {
+      "decision": "One independent critique executed Partial / Blocked; PC-001 to PC-003 directly resolved by parent",
+      "status": "original verdict retained; plan Ready",
+      "evidence": "Critique artifact unchanged; plan Critique Disposition, research original-export comparison/frozen memberships and details full-set validation"
+    },
+    {
+      "decision": "Implementation and P02-T01 complete; original Review ready",
+      "status": "recorded",
+      "evidence": "Changes record: 184 exact ID/state matches, 74 exact trace IDs, 251 local targets, preservation and whitespace checks passed"
+    },
+    {
+      "decision": "Exactly one original independent Review executed Complete / Conformant",
+      "status": "accepted bounded inventory; design acceptance remains Blocked",
+      "evidence": "Original Review on 2334d0b3867c1935ce843a7a405e89cf4f130562, SHA256 6861ccebcbedaf94ccc187a4fd6b886845601bc5b34ef0c8ea1118ebe1415994; zero implementation defects; RV-001/RV-002 distinct follow-ups"
+    },
+    {
+      "decision": "Bounded documentation task published in Open PR #401 targeting main",
+      "status": "published; no coordinator-wide or #156 acceptance",
+      "evidence": "https://github.com/jmservera/ama/pull/401; normal topic push; 2026-10-18T04:36:59Z no hosted checks or branch workflow runs reported, not CI success; #156 remains Open/partial"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator routing for RV-002 surface decisions or RV-001 actual artifacts/human evidence; alternatively Stop automatic session or switch to manual. No child work begun; #156 remains partial; PR #401 merge is owner-owned"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Record the eight explicit delivery-surface decisions",
+      "rationale": "Small bounded owner choices remove actual ambiguity without new inventory research or UI implementation",
+      "evidence": "RV-002; synthesis ambiguity rows #121/#125/#126/#127/#187/#189/#213/#222"
+    },
+    {
+      "rank": 2,
+      "task": "Supply actual feature-specific flows/design versions and qualified human evidence",
+      "rationale": "Highest design-acceptance impact but requires real artifacts and named review; cannot be inferred from documentation",
+      "evidence": "RV-001; 74 screen rows; G02-G07; #156 AC1 incomplete"
+    }
+  ]
+}
