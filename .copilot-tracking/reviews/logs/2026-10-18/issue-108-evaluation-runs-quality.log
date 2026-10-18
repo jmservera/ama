@@ -1,0 +1,10 @@
++ ruff check .
+All checks passed!
++ ruff format --check .
+19 files already formatted
++ mypy
+Success: no issues found in 23 source files
++ result=0
++ echo EXIT_CODE=0
+EXIT_CODE=0
++ exit 0

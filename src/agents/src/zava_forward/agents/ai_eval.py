@@ -213,7 +213,11 @@ def _run(sc, workdir, fails, measures):
         deterministic_critical_misses=len(hazard - set(det)) if len(hazard) <= n else 0,
         latency_ms=latencies, model_latency_ms=[r["latency_ms"] for r in recs],
         runs=len(runs), distinct_orders=len({tuple(r) for r in runs}),
-        review=dict(action=ans["action"], reason=ans.get("reason", "")),
+        run_results=[dict(run=i, recommendation_id=r["id"], source=r["source"], model=r["model"],
+                          prompt_version=r["prompt_version"], latency_ms=latency, model_latency_ms=r["latency_ms"])
+                     for i, (r, latency) in enumerate(zip(recs, latencies), 1)],
+        review=dict(action=ans["action"], reason=ans.get("reason", ""),
+                    reviewer=OWNER["email"], recommendation_id=rec["id"]),
         cites=measures.get("cites", []))
     if len(runs) > 1:
         pairs = [(a, b) for i, a in enumerate(runs) for b in runs[i + 1:]]
@@ -294,7 +298,8 @@ def run_task_checks(workdir):
 def summarise(results):
     ms = [r["measures"] for r in results if r.get("measures") and "review" in r["measures"]]
     ai = [m for m in ms if m.get("source") == "ai"]
-    lat = [x for m in ms for x in m.get("latency_ms", [])]
+    runs = [run for m in ms for run in m["run_results"]]
+    lat = [run["latency_ms"] for run in runs]
     cites = [c for m in ms for c in m.get("cites", [])]
     rv = {"accept": 0, "edit": 0, "reject": 0}
     reasons = []
@@ -306,14 +311,22 @@ def summarise(results):
     rec = [m["recall"] for m in ai if "recall" in m]
     return dict(
         mean_overlap=_mean([m["overlap"] for m in ms]), mean_spearman=_mean([m["spearman"] for m in ms]),
-        ai_runs=len(ai), critical_misses=sum(m["critical_misses"] for m in ms),
+        priority_scenarios=len(ms),
+        ai_scenarios=sum(any(r["source"] == "ai" for r in m["run_results"]) for m in ms),
+        template_scenarios=sum(any(r["source"] == "template" for r in m["run_results"]) for m in ms),
+        recommendation_runs=len(runs),
+        ai_runs=sum(r["source"] == "ai" for r in runs),
+        template_runs=sum(r["source"] == "template" for r in runs),
+        quality_scope="overlap, Spearman and recall use the final recommendation per scenario; critical and citation checks cover every recommendation run",
+        critical_misses=sum(m["critical_misses"] for m in ms),
         deterministic_critical_misses=sum(m["deterministic_critical_misses"] for m in ms),
         citation_validity=round(sum(cites) / len(cites), 3) if cites else None, cited_facts=len(cites),
         variation=[dict(scenario=r["name"], runs=r["measures"]["runs"], distinct_orders=r["measures"]["distinct_orders"],
                         pairwise_overlap=r["measures"].get("pairwise_overlap"), pairwise_spearman=r["measures"].get("pairwise_spearman"))
                    for r in results if r.get("measures") and r["measures"].get("runs", 0) > 1],
         latency_ms=dict(mean=_mean(lat), max=max(lat) if lat else None, runs=len(lat)),
-        models=sorted({m["model"] for m in ms if m.get("model")}), prompt_versions=sorted({m["prompt_version"] for m in ms}),
+        models=sorted({r["model"] for r in runs if r["model"]}),
+        prompt_versions=sorted({r["prompt_version"] for r in runs if r["prompt_version"]}),
         reviewer=dict(counts=rv, reasons=reasons),
         added_value=dict(scenarios=len(rec),
                          ai_minus_deterministic=_mean([x["ai"] - x["deterministic"] for x in rec]),
@@ -375,6 +388,7 @@ def main(argv=None):
             print("   - " + f)
     print(f"{sum(r['passed'] for r in rep['results'])} of {rep['scenarios']} scenarios passed")
     s = rep["summary"]
+    print(f"priority recommendations: {s['recommendation_runs']} runs ({s['ai_runs']} AI-sourced, {s['template_runs']} template/fallback), across {s['priority_scenarios']} scenarios; not provider-call counts")
     print(f"prompt version {rep['prompt_version']}; models {', '.join(s['models']) or 'none (scripted)'}")
     print(f"top-k overlap {s['mean_overlap']}, Spearman vs deterministic {s['mean_spearman']}")
     print(f"critical misses {s['critical_misses']} (deterministic order: {s['deterministic_critical_misses']}); citation validity {s['citation_validity']} over {s['cited_facts']} cited facts")

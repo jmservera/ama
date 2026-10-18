@@ -256,6 +256,19 @@ class Endpoints(unittest.TestCase):
         code, body = self.call("pam@example.test", "/api/ai/report")
         self.assertEqual(code, 200)
         self.assertTrue(body["evaluation"]["passed"])
+        summary = body["evaluation"]["summary"]
+        runs = [
+            run
+            for result in body["evaluation"]["results"]
+            if result["measures"]
+            for run in result["measures"]["run_results"]
+        ]
+        self.assertEqual(summary["recommendation_runs"], len(runs))
+        self.assertEqual(summary["ai_runs"], sum(run["source"] == "ai" for run in runs))
+        self.assertEqual(summary["template_runs"], sum(run["source"] == "template" for run in runs))
+        self.assertEqual(
+            summary["recommendation_runs"], summary["ai_runs"] + summary["template_runs"]
+        )
         self.assertIn("tasks", body["live"])
 
     def test_mode_flag_and_review_over_http(self):

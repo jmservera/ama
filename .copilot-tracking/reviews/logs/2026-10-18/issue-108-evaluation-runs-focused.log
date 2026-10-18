@@ -1,0 +1,9 @@
++ env -i PATH=/usr/bin:/bin HOME=/home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files TMPDIR=/home/azureuser/source/ama-wt/issue-108-runs/.copilot-tracking/.issue-108-tmp /home/azureuser/.copilot/session-state/c9d20e32-acb0-442b-b8a6-6ed95534cb8b/files/eval-venv/bin/python -m unittest discover -s src/agents/tests -p test_ai_eval.py -q
+----------------------------------------------------------------------
+Ran 13 tests in 0.393s
+
+OK
++ result=0
++ echo EXIT_CODE=0
+EXIT_CODE=0
++ exit 0

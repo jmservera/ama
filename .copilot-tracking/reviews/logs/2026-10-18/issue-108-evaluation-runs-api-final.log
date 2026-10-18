@@ -1,0 +1,12 @@
++ ruff check tests/test_ai_tasks.py
+All checks passed!
++ ruff format --check --force-exclude tests/test_ai_tasks.py
++ python -m unittest discover -s tests -p test_ai_tasks.py -q
+----------------------------------------------------------------------
+Ran 33 tests in 5.355s
+
+OK
++ result=0
++ echo EXIT_CODE=0
+EXIT_CODE=0
++ exit 0

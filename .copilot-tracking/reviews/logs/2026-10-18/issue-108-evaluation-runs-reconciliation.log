@@ -1,0 +1,7 @@
+resolved TMPDIR: /home/azureuser/source/ama-wt/issue-108-runs/.copilot-tracking/.issue-108-tmp
+PASS: 11 report results; 10 priority scenarios; 14 recommendation results = 8 AI + 6 template/fallback; latency runs 14
+PASS: all per-run identity sets, scripted final-review bindings and reviewer counts 8 accept/1 edit/1 reject reconcile
+PASS: baseline final-only quality unchanged: overlap .9, Spearman .722, 0 critical misses, 74/74 citations, recall differences .25
+PASS: actual-model/human not evaluated; benefit not permitted; calibration not applicable; all 5 open gates retained
+NOTE: AI-sourced means scripted returned recommendation, not actual model or provider-call count
+offline report sha256: b89eaf3d50ecc43365d71a6e92f53cd8b9f9986d1698eb06103edec8f6258192
