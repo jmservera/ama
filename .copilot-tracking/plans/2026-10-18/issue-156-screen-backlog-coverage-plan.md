@@ -4,7 +4,9 @@ description: Final candidate for bounded public documentation inventory
 ms.date: 2026-10-18
 ---
 
-Task ID: `issue-156-screen-backlog-coverage`. Status: Ready after direct critique dispositions.
+Task ID: `issue-156-screen-backlog-coverage`. Status: Bounded documentation task
+completed and published in PR #401; original Review Complete / Conformant.
+Whole #156/design acceptance remains partial/Blocked.
 
 ## Executive Summary
 
@@ -91,7 +93,7 @@ punctuation, frontmatter/date, existing KB style, append-only log.
 ### P03: Freeze and conditional publication
 
 * [x] P03-T01 Finalize state/changes with actual evidence and original verdict.
-* [ ] P03-T02 Commit own files with fresh GitHub identity; if accepted, normal
+* [x] P03-T02 Commit own files with fresh GitHub identity; if accepted, normal
   push and main PR; otherwise local freeze only, coordinator routing required.
 
 ## Locked Validation and Ownership
@@ -126,6 +128,11 @@ design/accessibility/content/user evidence and the eight surface decisions
 remain later owner work; no additional discovery task invented to fill a quota.
 
 ## Sources and Handoff
+
+Publication: https://github.com/jmservera/ama/pull/401, Open, base main.
+At 2026-10-18T04:36:59Z no hosted checks or branch workflow runs were reported;
+this is not CI success. Original candidate production docs and critique remain
+byte-identical. Coordinator owns later selection/merge; no child work begun.
 
 Research: `.copilot-tracking/research/2026-10-18/issue-156-screen-backlog-coverage-research.md`.
 Details: `.copilot-tracking/details/2026-10-18/issue-156-screen-backlog-coverage-phase-details.md`.

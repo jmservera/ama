@@ -8,7 +8,8 @@ ms.date: 2026-10-18
 
 Task `issue-156-screen-backlog-coverage`, full approved plan. Base/source
 `2ca6d1c48bb95b65e6c349fe508e99c00a74efbe`.
-Implementation P01 and P02-T01 complete, ready for original Review. Research is newly executed; one independent
+P01-P03 complete for this bounded documentation task, published in PR #401;
+the single original Review is Complete / Conformant. Research is newly executed; one independent
 critique Partial / Blocked remains frozen, with PC-001 to PC-003 directly
 resolved before implementation. No second critique.
 Canonical plan/details/research/state share this task slug and 2026-10-18 date.
@@ -95,11 +96,24 @@ Original critique SHA above is unchanged. All three production hashes still
 equal the reviewed candidate; post-Review changes are tracking/freeze only.
 No post-Review defect correction, second/amended Review or self-Pass.
 
-Parent may now commit the original Review and final tracking, remove temporary
-source projection, and perform the authorized normal push/main PR Refs #156.
-Publication is pending at this record; actual PR/check status is a later
-tracking receipt, not an inferred success. #156 remains open/partial, AC1
-unticked; no issue/board/merge action.
+The parent committed original Review/final tracking as
+`a070c04586217d98481c8605ce9d25656bf46257`, removed the temporary source
+projection and task-owned raw REST/readable-body files, then normally pushed
+the topic and opened https://github.com/jmservera/ama/pull/401 targeting main
+with Refs #156. The supplied coordinator export was not deleted.
+
+Publication receipt at 2026-10-18T04:36:59Z: PR #401 Open, base main, head
+docs/screen-backlog-coverage-156; `statusCheckRollup=[]` and branch workflow
+run list `[]`. No hosted checks were reported, not CI success. Live #156
+remains Open with AC1 unticked and AC2-4 checked; no issue/board/merge action.
+This final tracking receipt will be a normal follow-on commit, not a source
+correction or second Review. Final head is reported externally to avoid a
+self-referential commit identifier in its own content.
+
+All own changes are restricted to three public documentation files and seven
+new task artifacts. Original critique and Review are immutable. All post-Review
+production bytes remain identical to candidate 2334d0b3. No independent review,
+human acceptance or coordinator-wide completion is inferred from publication.
 
 ## Amendments and divergences
 

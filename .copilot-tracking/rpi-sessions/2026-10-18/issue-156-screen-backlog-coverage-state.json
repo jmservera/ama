@@ -39,12 +39,17 @@
       "decision": "Exactly one original independent Review executed Complete / Conformant",
       "status": "accepted bounded inventory; design acceptance remains Blocked",
       "evidence": "Original Review on 2334d0b3867c1935ce843a7a405e89cf4f130562, SHA256 6861ccebcbedaf94ccc187a4fd6b886845601bc5b34ef0c8ea1118ebe1415994; zero implementation defects; RV-001/RV-002 distinct follow-ups"
+    },
+    {
+      "decision": "Bounded documentation task published in Open PR #401 targeting main",
+      "status": "published; no coordinator-wide or #156 acceptance",
+      "evidence": "https://github.com/jmservera/ama/pull/401; normal topic push; 2026-10-18T04:36:59Z no hosted checks or branch workflow runs reported, not CI success; #156 remains Open/partial"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Finalize permitted commit/push/main PR receipt, then return coordinator control; no child task without selection; #156 remains partial"
+    "action": "Coordinator routing for RV-002 surface decisions or RV-001 actual artifacts/human evidence; alternatively Stop automatic session or switch to manual. No child work begun; #156 remains partial; PR #401 merge is owner-owned"
   },
   "prioritized_follow_ups": [
     {
