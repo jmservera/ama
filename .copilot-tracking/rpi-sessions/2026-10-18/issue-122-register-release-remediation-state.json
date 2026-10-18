@@ -3,9 +3,9 @@
   "task_slug": "issue-122-register-release-remediation",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": "stopped",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
@@ -15,6 +15,16 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Correction TWO FINAL implemented and exercised, not independent acceptance. P05-T02/T03 complete; P05-T04 normal publication pending. Exact production delta three export classification lines; no third source correction allowed.",
+      "status": "validated-pending-normal-publication",
+      "evidence": "Source candidate 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0; final host/image 86/86 each, coordinator probe 15/15, actual owned MSSQL 16/16 plus final subset 3/3, zero skips; core/API Ruff/format/mypy 125/57 pass; installed UID10001/source parity/checker pass. Four source/test/guide deltas, 48 immutable prior artifacts and original27 unchanged. Raw failed commands retained. Exact owned resources cleaned. Separate correction-two receipt/manifest."
+    },
+    {
+      "decision": "Correction TWO and FINAL authorized on SAME task for independent Medium SQL-unavailable export finding only. No new original Review/critique; historical two exhausted cycles and original Not accepted immutable. RV-002 excluded. Normal commits/push only; pinned base retained even if main moves.",
+      "status": "authorized-implementation",
+      "evidence": "Live clean local/remote/PR d0a6f616afde75bda50665ba5b77555621dc3432; base/main 9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Predecessor log exit=0 and canonical stopped state. Independent input 733cb491-5a80-4b82-8034-12671261e9d4/coordinator event 8f76b215-93d9-4129-88be-77ca37968648 preserved verbatim separately. All 44 manifest artifacts verified; all 48 prior task artifacts frozen, original 27 retained."
+    },
     {
       "decision": "Consultation integration published using only exact authorized c20052e4 lease; PR398 updated and verified draft/open/empty closing refs. P04-T05 execution complete, not independent acceptance. Final metadata-only receipt follows by normal push with source and all prior evidence unchanged.",
       "status": "published-stop-for-same-reviewer",
@@ -85,19 +95,19 @@
     {
       "id": "independent-acceptance",
       "summary": "Coordinator full exact published-head independent review remains required; PR stays draft.",
-      "resolution": "Publish preserved adverse assessment/evidence, then stop for coordinator."
+      "resolution": "Publish correction TWO FINAL with preserved adverse assessment/evidence, then stop for SAME reviewer to assess correction/integration delta; any remaining blocker routes human, not third correction."
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "STOP after final metadata-only normal push/exact PR-head refresh. SAME independent reviewer assesses pinned consultation integration delta/source parity alongside running review of c20052e4; outcome unavailable, no second full original Review, Pass/readiness or new source correction. Original Not accepted and historical exhausted cycles unchanged; RV-002 distinct follow-up."
+    "phase": "Implement",
+    "action": "P05-T04: source-only normal push is verified local/remote/PR 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0/base9403dc6a/draft/empty refs. Raw-evidence whitespace blocked evidence commit, not source validation; separate push still ran. Preserve raw bytes and finish guarded evidence commit/normal push from exact 5fa69b3e. Then draft PR reconciliation and STOP for SAME reviewer, no third correction."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Same independent reviewer assesses consultation integration delta and source parity",
-      "rationale": "Existing full review of c20052e4 is running; this integration preserves the complete owned source patch and protected upstream bytes/modes but still needs reviewer assessment before readiness.",
-      "evidence": "Pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78; initial publication 523f28a1e60c86fcba98af97a5d0d62af216eb1b; separate integration-consultation receipt/manifest with 55-path inventory, 44 immutable prior artifacts, original Not accepted unchanged. No outcome of running review available."
+      "task": "Same independent reviewer assesses FINAL correction and integration delta",
+      "rationale": "Complete review 733cb491-5a80-4b82-8034-12671261e9d4 was Not accepted. Correction TWO addresses its blocking unavailable-SQL finding, not self-acceptance. No third source correction; any remaining blocker routes human.",
+      "evidence": "Source candidate 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0 on pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78; correction-two receipt/manifest and verbatim independent input preserve previous complete51-path boundary, subsequent55-path integration and adverse probes."
     },
     {
       "rank": 2,

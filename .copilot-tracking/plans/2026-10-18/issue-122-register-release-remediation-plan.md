@@ -33,6 +33,16 @@ and adjacent coordinator-evidence.json.
 
 ## User Decisions and Requirements
 
+* Current scope supersedes prior integration-only directions: correction TWO
+  and FINAL of this SAME task, unavailable SQL export classification only.
+  Independent review 733cb491-5a80-4b82-8034-12671261e9d4 is Not accepted,
+  not running without an outcome. Its input is preserved separately and verbatim.
+  Normal commits/push only; pinned base 9403dc6a retained, no rebase/force push.
+  Original Review/critique and historical exhausted cycles remain immutable.
+  RV-002 excluded; remaining blocking findings after this cycle route to human.
+
+### Historical Decisions Superseded for Current Execution
+
 * Current owner-authorized continuation: SAME task, correction ONE of maximum
   two, RV-001 only. Original Review Complete / Not accepted and single critique
   remain immutable. RV-002 remains a distinct non-blocking follow-up.
@@ -147,7 +157,44 @@ oracles, not snapshots. Existing bare fixture tests keep absent-history negative
 controls; full positives use task-local real release APIs. No shared fixture edits.
 Exact commands/results retained in the changes record; failures preserved.
 
-## Current Bounded Correction ONE
+## Current Bounded Correction TWO FINAL
+
+Intake: predecessor exited successfully and stopped, clean local/remote/PR398
+d0a6f616afde75bda50665ba5b77555621dc3432, base/main
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78, OPEN/draft/empty closing refs.
+All 44 prior manifest entries verified; freeze all 48 preceding immutable task
+artifacts and all source hashes before correction. Correct only classification
+of SQL migration/schema unavailability versus genuine unsupported JSON.
+Actual constructor/export and normal HTTP retained-data regressions must fail
+before the fix. Validate SQL full/empty and JSON positives; unavailable producer
+incomplete and verifier invalid even with recomputed digest/unchanged head.
+Fresh focused continuity/assistant/HTTP, core/API static, uniquely owned actual
+MSSQL invalid-ledger migration with retained data, installed nonroot image.
+Only assistants.py, directly related existing tests/README and current metadata/
+new evidence may change. Preserve all other controls and original assessments.
+
+<!-- rpi:phase id=P05 -->
+### [ ] P05: Final unavailable SQL source correction
+<!-- rpi:task id=P05-T01 -->
+#### [x] P05-T01: Verify stopped clean intake and freeze attributed independent input
+<!-- rpi:task id=P05-T02 -->
+#### [x] P05-T02: Actual constructor/export/HTTP red regression and minimal classification fix
+<!-- rpi:task id=P05-T03 -->
+#### [x] P05-T03: Fresh focused/static/owned SQL/nonroot image validation and full manifest
+<!-- rpi:task id=P05-T04 -->
+#### [ ] P05-T04: Normal publication, draft reconciliation and STOP for same reviewer
+
+Source candidate 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0 on pinned base.
+Fresh final host/image each 86/86, coordinator probe 15/15, actual owned SQL
+16/16 plus final changed-assertion subset 3/3, all zero skips. Configured core/API
+static pass (125/57 mypy files); container hardening/startup and installed source
+parity pass. Four source/test/guide deltas only, every other source unchanged.
+Prior 48 immutable artifacts and original 27 retain hashes/modes. Failed red,
+static/import, parity-syntax and stale J-fixture attempts retained honestly in
+separate correction-two receipt/logs/manifest. Resources removed exactly by name.
+P05-T04 normal publication pending; original Not accepted unchanged.
+
+## Historical Correction ONE and Integration Evidence
 
 Current continuation, P04-T05: integration ONLY from verified clean local/remote
 c20052e49e91841749f8a08ffed137c848ce3fd1, prior ab0613f3 onto pinned

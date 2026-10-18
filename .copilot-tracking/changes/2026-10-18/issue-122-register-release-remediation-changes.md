@@ -6,6 +6,73 @@ ms.date: 2026-10-18
 
 ## Task and Execution Boundary
 
+## Current P05 Correction TWO FINAL Intake
+
+Publication reconciliation: tested source candidate 5fa69b3e was normally pushed
+alone when raw log/patch whitespace caused the evidence-commit chain to stop
+but a separately sequenced push still ran. No evidence commit or embedded
+guard ran in that compound attempt. Live local/remote/PR equality and pinned
+9403dc6a/draft/empty refs immediately verified. Preserve raw bytes, check
+source/text separately and finish guarded normal evidence publication.
+
+P05-T03 complete, P05-T04 publication pending. Source candidate
+5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0 changes four source/test/guide files
+only. Final host 86/86/image 86/86, coordinator probe 15/15, natural retained-data
+MSSQL migration/export/HTTP suite 16/16, final explicit-head/assertion subset
+3/3; all zero skips. Core/API Ruff/format/mypy pass, 125/57 files. Installed
+UID/GID10001 and source bytes exact, checker hardening/startup/negatives pass.
+All 48 prior immutable artifacts including original 27 unchanged; every other
+source byte/mode preserved. Only owned UUID databases, exact loopback containers
+and unique image tag removed. Separate final receipt/manifest/rawlogs preserve
+failures, original input and complete source+artifact boundary. No acceptance.
+
+P05-T02 red recorded before production edit: three targeted tests, one positive
+pass and four expected negative subcase failures (direct plus three HTTP audience
+cases). Exact supplied coordinator probe now discovers 15 tests due two added
+OfflineTests; two expected failures, original probe plus new direct regression.
+No namespace failure. Minimal production fix adds only schema_error branch in
+Assistants.export: supported SQL source unavailable, total unknown, truncated
+true, safe pre-existing migration/manual message. No constructor catch, verifier
+or source policy changed. README documents classification. P05-T02 implemented;
+P05-T03 validation pending, no acceptance claim.
+
+Fresh focused 52/52, supplied coordinator probe 15/15, owned actual MSSQL
+16/16 (including natural invalid updatable-ledger migration with retained event
+and release rows), installed nonroot image 52/52 and container checker pass.
+Numeric continuity module retains exact correction ONE bytes. Initial static
+run failed API import sorting; formatter corrected only test imports. Next mypy
+failed indirect fixtures.SqlStore re-export, corrected to direct SqlStore import;
+its shell wrapper incorrectly returned zero after break, not a passing static
+run. Final configured core/API checks pass. First installed parity one-liner
+had mismatched-brace SyntaxError; corrected syntax verifies UID/GID10001 and
+exact assistants/continuity hashes, no production change.
+
+Additional register/role suite exposed one stale uninitialized J test double
+without schema_error (34 run, 33 pass/one error). Replace it with real
+Assistants(JSON Store) construction/cleanup, preserving every assertion.
+This is directly coupled fixture correction, not weakened production behavior
+or a third source cycle. Preserve initial failed command and rerun this boundary.
+
+Owner explicitly authorizes final source cycle for SAME task, unavailable SQL
+classification only. Verified clean local/remote/PR398
+d0a6f616afde75bda50665ba5b77555621dc3432, pinned base/current main
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78, OPEN/draft/empty closing refs.
+Predecessor log exit=0 and stopped state confirmed; process scan found current
+correction-two worker only, no predecessor. P05-T01 complete. All 44 frozen
+manifest entries verified, all 48 preceding immutable artifacts frozen plus
+every source hash. Complete consultation integration log read/copied, SHA-256
+30a1e213610a97dcf56644b167f440940b2a50c2f58453e7c27e4d0287512b46.
+Original three logs preserved unchanged. Independent adverse finding recovered
+verbatim from coordinator event 8f76b215-93d9-4129-88be-77ca37968648,
+reviewer 733cb491-5a80-4b82-8034-12671261e9d4. Actual supplied probe/red
+copied/hashed; 11 retained releases were falsely complete/offline-valid.
+
+This updates current plan/details/state without repeating critique or original
+Review. Starting P05-T02 with actual constructor/export/HTTP regression before
+production edit. Normal commits/push only; no rebase, force push, readiness or
+merge. RV-002 excluded. Prior review-is-running prose below remains historical;
+current independent result is Not accepted. Final correction cannot self-accept.
+
 ## Current P04-T05 Consultation Integration ONLY
 
 Owner 2026-10-18T09:59 authorized SAME-task integration ONLY from clean expected

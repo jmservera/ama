@@ -6,6 +6,33 @@ ms.date: 2026-10-18
 
 ## Task and Initial Direction
 
+P05-T02/T03 now complete: source candidate
+5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0, only four source/test/guide deltas.
+Final host/image each 86/86; supplied probe 15/15; actual MSSQL 16/16 and final
+three-case assertion subset 3/3; zero skips. Core/API configured static checks
+pass, installed bytes/UID10001 and startup/hardening pass. Red and incidental
+failed commands are preserved, including zero-return wrapper masking failed
+mypy, stale J fixture replaced by real JSON initialization, syntax-only parity
+probe correction. SQL UUID DBs/exact containers and unique image tag cleaned.
+48 prior immutable artifact hashes/modes and original 27 unchanged; protected
+upstream source exact. P05-T04 normal publication pending; no acceptance claim.
+
+Current P05 is correction TWO and FINAL of SAME task. Intake clean equal local/
+remote/PR d0a6f616afde75bda50665ba5b77555621dc3432, pinned base/main
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78, predecessor exited/stopped.
+Independent full review 733cb491-5a80-4b82-8034-12671261e9d4 returned Not
+accepted for SQL-unavailable classification; retain its exact adverse input,
+not another original Review. All original assessments and prior receipts frozen.
+P05-T01 complete; P05-T02 actual constructor/export/normal HTTP red before
+minimal assistants.export classification fix. P05-T03 fresh focused/static,
+safe unique owned MSSQL migrationfailure/retained rows, installed nonroot image.
+P05-T04 normal commit/push only, draft/Refs-only/empty closing refs, then stop
+for SAME reviewer. No third source correction; remaining blockers route human.
+Preserve numeric fix, privacy/need/full canonical proof, all retained lifecycle
+and epoch/lease/authority guards; RV-002 distinct excluded follow-up. No private
+inputs, Azure, spend or broad catch changes. Prior integration prose below is
+historical, not the current review disposition or rewrite authorization.
+
 Current P04-T05 continuation is integration ONLY: verified clean expected local/
 remote c20052e49e91841749f8a08ffed137c848ce3fd1, exact prior ab0613f3 onto
 9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Preserve upstream procurement/server/
