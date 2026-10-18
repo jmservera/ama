@@ -9,10 +9,11 @@ Details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-schedule
 
 ## Execution Status
 
-Complete full-plan implementation: P01/P01-T01/P01-T02/P02/P02-T01/P02-T02.
-No remaining active-plan markers. One original Review executed Complete /
-outcome Not accepted, two Medium findings routed separately; not a coordinator
-acceptance claim.
+Original P01/P02 implementation complete; original Review Complete / Not accepted.
+Coordinator correction ONE now active for both RV-001/RV-002, scope P03.
+P03-T01 complete; P03-T02 validation complete, publication remains.
+Original Review and critique immutable; no second Review
+or coordinator acceptance claim.
 
 ## Execution Summary
 
@@ -176,3 +177,155 @@ rebase, issue action, additional Review or correction implementation.
 This receipt/state/append-only-log follow-up commit changes evidence metadata
 only; the reviewed production/test patch and installed source hashes are
 unchanged. Final remote/head verification follows its normal push.
+
+## Correction ONE authorization and opening state
+
+2026-10-17 coordinator authorizes both original Medium findings in one coherent
+implementation cycle, same worktree/branch/draft PR395. Start head552be52d,
+clean; main fresh at authorized ebc8dab8. No other session/agent is active.
+Read original findings in full, current source/tests/component guides and
+mandatory knowledge context. P03 plan/details added before source edits.
+First action: failing-first regressions within existing two owned test files,
+then worker recovery ownership and closed scanner-result validation together.
+Validation includes actual SQL, CLI/root logs, JSON/shared manual boundary,
+existing guard regressions and rebuilt installed image.
+Original Review SHA2564e57eccdcd7817590110afd90c889d1f3c87de5b0bb48ac0353777fb7b3a2ac9;
+critique f788cc3d53a983f00493bf26eee2a1764696bcdfe155464576e6691bfb8beea8.
+These remain untouched. Historical receipts above are not new correction runs.
+
+## Correction ONE P03-T01: Failing-first reproduction and coherent correction
+
+Actual 2026-10-17 execution, before production edits: selected five new/
+strengthened tests across existing core/orchestrator files. Ran5, failures6,
+errors3, command exit1. Full receipt `correction1-failing-first.log` in session
+files. Includes original SQL recovery sentinel/traceback, malformed None
+TypeError escaping manual JSON/SQLite/CLI, invalid container accepted as clean,
+and consequent state assertions. Those are genuine pre-fix failures, not passes.
+
+One production batch: SQL automatic recovery recognizes the active
+`document_rescan` context so `_attempt` owns recovery before nested diagnostics;
+all other contexts/COMMIT order unchanged. Shared scan-result validator checks
+exact tuple/arity/string verdict/string detail before unpack or mutation at
+upload/stored-scan boundaries. Closed verdict set; fixed RuntimeError text,
+no coercion or echo of result/object. Worker contains explicit TypeError and
+continues the selected page; CLI contains TypeError with fixed error marker.
+Valid/manual bad verdict ValueError behavior and scanner exceptions remain
+unchanged outside the explicit worker boundary.
+
+New/strengthened tests cover the entire root log/CLI streams, real competing
+SQL writer winner and pending audit prefix, None/arity/container/verdict/detail,
+hostile object coercion, scanner TypeError, storage outage, continued page,
+JSON/SQL manual upload/rescan refusal, bytes/hold retention/no deletion/no success.
+Focused command `PYTHONPATH=src/core/tests:src/orchestrator/tests .venv/bin/python
+-m unittest test_document_rescan test_document_rescan_job -q`: final46 run,
+27 passed,19 explicit MSSQL skips in7.109s. No second Review performed.
+P03-T01 complete; P03-T02 actual SQL/image/regression/publication active.
+
+## Correction ONE P03-T02: Actual validation, 2026-10-18
+
+The original loop receipts above remain historical. All results below are new
+executions for the authorized correction, not a repeated Review. No additional
+dependencies were installed. Production diff is four existing runtime files;
+test ownership remains the same existing two files. Existing KB synthesis/index/
+append-only log and component core/orchestrator guides updated, no web/API code.
+
+| Actual command | New result |
+| --- | --- |
+| From `src/core`: `../../.venv/bin/ruff check . && ../../.venv/bin/ruff format --check . && ../../.venv/bin/mypy` | Passed,67 formatted files/120 typed sources |
+| Same configured commands from `src/orchestrator` | Passed,9 formatted files/12 typed sources |
+| `PYTHONPATH=src/core/tests:src/orchestrator/tests .venv/bin/python -m unittest test_document_rescan test_document_rescan_job -q` | Final46 run,27 passed,19 MSSQL opt-in skips,8.171s; root DEBUG capture in conflict cases |
+| From `src/orchestrator`: `PYTHONPATH=../core/tests ../../.venv/bin/python -m unittest discover -s tests -q` | 30 passed,10.682s; real SQLite subprocess commands plus actual-main fault injections |
+| `PYTHONPATH=src/core/tests .venv/bin/python -m unittest test_document_rescan test_progress_event_capture test_change_provenance test_stock_reconciliation test_resident_decisions test_sensor_privacy test_sensor_backfill test_sensor_stock test_sensor_faults -q` | 281 run,203 passed,78 existing opt-in/backend skips,56.360s |
+| `PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests .venv/bin/python -m unittest test_document_controls test_documents test_progress_report_api -q` | 57 run,45 passed,12 existing skips,115.454s |
+| `PYTHONPATH=src/core/tests .venv/bin/python -m unittest test_sqlstore test_sqlreads test_sqlqueues test_recovery -q` | 57 passed,91.430s; generated60,000-case fixtures, not private datasets |
+| `.venv/bin/python /home/azureuser/.copilot/session-state/ba90bb56-8dbf-4c5f-8825-92041810af80/files/validate_sql117_correction1.py` | Owned loopback SQL responsive SELECT1;30/30 tests,135.363s; actual CLI/main cases below; finally stopped/removed exact container |
+| `docker build -f src/orchestrator/Dockerfile -t zf-issue117-orchestrator:correction1 src` | Passed; final rebuild includes final scanner-contract docstring; no runtime edits afterward |
+| `PYTHONPATH=src/core/tests .venv/bin/python /home/azureuser/.copilot/session-state/ba90bb56-8dbf-4c5f-8825-92041810af80/files/validate_image117_correction1.py` | Existing `src/check-container.py` hardening/startup/negative probes pass; installed hashes match;6 safe failures and real module success pages |
+
+### Actual owned SQL selectors and CLI results
+
+Harness uses ephemeral random password only in process environment; binds
+127.0.0.1 on an assigned port, verifies SELECT1, enables existing opt-ins:
+`ZF_DOCUMENT_RESCAN_MSSQL=1 ZF_CAPTURE_MSSQL=1 ZF_RESIDENT_MSSQL=1`, current
+`ZF_SQL_*` driver configuration and `PYTHONPATH=src/core/tests`. Executes:
+
+```bash
+.venv/bin/python -m unittest \
+  test_document_rescan.MssqlRescan \
+  test_progress_event_capture.MssqlCapture.test_upload_outage_preserves_prior_audit_and_truthful_failures_after_reload \
+  test_progress_event_capture.MssqlCapture.test_operational_rejection_preserves_original_error_and_no_success_on_recovery_failure \
+  test_progress_event_capture.MssqlCapture.test_document_committed_acknowledgement_is_not_rejected_or_cleaned_up \
+  test_progress_event_capture.MssqlCapture.test_sql_rollback_and_failed_recovery_preserve_original_prefix_and_retry \
+  test_progress_event_capture.MssqlCapture.test_sql_postcommit_sync_failure_is_committed_once_second_connection_and_retry \
+  test_resident_decisions.MssqlResidentControls.test_response_reassignment_faults_preserve_history_and_exactly_once_outcome \
+  test_resident_decisions.MssqlResidentControls.test_concurrent_followup_writers_one_version_one_success_event \
+  test_resident_decisions.MssqlResidentControls.test_followup_audit_insert_and_recovery_faults_never_replay_success \
+  test_resident_decisions.MssqlResidentControls.test_followup_postcommit_sync_fault_is_truthful_and_not_replayed \
+  test_resident_decisions.MssqlResidentControls.test_save_clears_scoped_dependencies_inside_outer_lock \
+  test_resident_decisions.MssqlResidentControls.test_stock_race_rechecks_all_dependencies_and_clears_them_after_rollback -q
+```
+
+19 current worker methods include all17 original cases, plus malformed-result/
+fair continuation and JSON/manual scanner contract. The other11 cover changed
+shared recovery seams from merged102/resident88: original error/prefix, failed
+audit INSERT/recovery, committed acknowledgement without false rejection/replay,
+current writer identity/stock dependencies and concurrent exact-once outcomes.
+
+Actual subprocess `python -m zava_forward.orchestrator.document_rescan
+--synthetic-local --limit 1`, then `--after ZF-1 d0`, then a fresh sweep:
+exit2/0/0, clean1/2/0, exactly3 success events. On a fresh pending record, actual
+MSSQL `main()` with real store/transport plus injected scanner/recovery seams:
+None, wrong arity, invalid list, unknown verdict, invalid detail, scanner
+TypeError, scanner OSError, and competing-clean plus `_discard` recover-then-
+OSError. All8 exit1, checked1/failed1/clean0/committed0, captured entire effective
+root/CLI streams contain neither private sentinel nor traceback. Failed records
+remain pending, no false success; final competitor's legitimate clean persists
+once. Bytes/hold/ledger intact.
+
+Exact container `zf-issue117-correction1-sql-ba90bb56` stopped/removed in finally.
+Only UUID-owned test databases created/dropped by fixtures, including existing
+progress/resident prefixes. No idle SQL remains. Session receipts:
+`correction1-sql-run.log`, `correction1-sql-tests.log`,
+`correction1-sql-cli.log`, `validate_sql117_correction1.py`.
+
+### Final installed-image boundary
+
+Image ID `sha256:fd51f7dc1ea25f7a025efdb580ed9b0268ba034b3a24873b13fc7f8a93e39d5f`.
+Actual installed-source SHA256:
+
+| Runtime module | SHA256 |
+| --- | --- |
+| core.doc_controls | e8a3da145cf670dd0200154fe60c077b24d4fd33d1bf3a43c9a22c700c6d2f8a |
+| core.document_rescan | bbeadb721c20ecabbfda47ed14c63c21a3ca0f81e1c14aec801e8406fa1b1397 |
+| core.sqlstore | 105da301e7cdc25ddeea260828bb00d0316ad696fe6691727aa591fe8832182b |
+| orchestrator.document_rescan | 0d6c14b4619d5919717d6b7bfcad6746aca68d8bf39dac0dfd4c8d9086bb4741 |
+
+UID/GID10001, read-only root, drop-all capabilities, NoNewPrivs, tmpfs, no
+network and temporary synthetic SQLite/bytes only. Injected scanner results
+None, wrong arity, invalid list, unknown and TypeError/OSError:6/6 exit1,
+failed1/clean0, no raw private diagnostic/traceback, no audit success or pending
+availability. Then unpatched actual installed module pages exit2/0/0,
+clean1/2/0; exactly3 persisted success events and intact ledger/hold/bytes.
+Exact one-shot job `zf-issue117-correction1-job-ba90bb56` removed; fixtures clean.
+Receipts `correction1-image-build-final.log`, `correction1-image-run.log`.
+
+### Failure/warning and authority accounting
+
+Failing-first5 selected tests failed with6 assertion failures/3 errors, preserved
+in `correction1-failing-first.log`, then fixed in one source cycle. Configured
+static checks passed after formatter-only test layout adjustment. A tracking
+patch partially applied only the details file, then remaining plan hunks were
+applied explicitly; no code/validation failure was concealed. Existing injected
+non-worker progress/SQL error logs include synthetic tracebacks, intentionally
+unchanged outside the worker-owned context. Existing sensor ResourceWarnings
+are still present. Backend skips are counted above, not claimed as passes;
+all19 current worker MSSQL cases ran separately with opt-in.
+
+Final immutable original Review/critique hashes still match intake values.
+Original Review remains Complete / Not accepted; original critique Revise.
+No second full Review or independent coordinator Pass. P03-T02 validation
+complete, awaiting same-draft publication and exact clean remote verification.
+Real Defender/Blob enablement, recurring service/cadence, retention policy/
+owner approvals and hold/deletion authority remain unmet. Issue117 remains
+partial. No private input, real communication, Azure/Graph/IAM/paid AI or service
+activation, web changes, memory edits, merge, closure, rebase or force-push.

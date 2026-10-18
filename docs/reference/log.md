@@ -5983,3 +5983,27 @@ metadata when the knowledge base was created.
   `4763c0e6337d06846d9a9c46f7d9e0cf7470079f` matches the published head.
   Owned SQL remains stopped/removed. Hosted checks are running, not presumed
   successful; Defender/scheduling and human approval gates remain unmet.
+
+## 2026-10-18 - Authorized rescan correction ONE evidence (Refs #117)
+
+* Coordinator authorizes both original Medium findings in one coherent cycle
+  on the same branch/draft [PR #395](https://github.com/jmservera/ama/pull/395).
+  Preserve original Review Complete / Not accepted and critique byte-exact;
+  no second Review, self-Pass, merge or issue closure.
+* Failing-first JSON/SQLite/actual CLI cases reproduce nested recovery private
+  diagnostics, malformed-result escape and invalid container acceptance.
+  Worker-owned SQL recovery now runs before automatic traceback emission;
+  shared closed scanner-result shape/verdict/detail validation occurs before
+  unpack/mutation. Explicit TypeError boundaries return safe truthful failures,
+  preserving original conflict, winner, pending prefix and own-COMMIT distinction.
+* All 19 actual SQL worker cases (including the prior17) plus 11 shared progress/
+  resident recovery cases pass. Actual MSSQL CLI failure streams and rebuilt
+  nonroot/read-only/drop-all/NoNewPrivs/no-network installed-image job prove
+  unavailable failed records, retained bytes/hold, truthful counters, no private
+  sentinel/traceback and exactly-once success. Exact owned SQL stopped/removed.
+* Reconcile the [existing synthesis](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117),
+  index, [core contract](../../src/core/README.md#bounded-pending-document-rescans-117)
+  and [job guide](../../src/orchestrator/README.md#bounded-document-rescan-job-117).
+  Local regression/static evidence is targeted, not independent acceptance.
+  Defender/Blob, hosted cadence and real retention/approval authority remain
+  unmet; no private data, live Azure, paid activation, web or memory changes.

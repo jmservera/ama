@@ -49,7 +49,7 @@ def main(argv: list[str] | None = None) -> int:
         if result["failed"] or result["committed"]:
             return 1
         return 2 if result["pending"] or result["next_after"] is not None else 0
-    except (ValueError, OSError, DocumentStoreError, sqlite3.Error, MssqlError):
+    except (ValueError, TypeError, OSError, DocumentStoreError, sqlite3.Error, MssqlError):
         print(
             "DOCUMENT_RESCAN_ERROR: check configuration and persisted scan/audit.", file=sys.stderr
         )

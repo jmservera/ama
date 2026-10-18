@@ -103,6 +103,7 @@ def run(store: Any, *, limit: int = 100, after: Key | None = None) -> Record:
             ValueError,
             KeyError,
             RuntimeError,
+            TypeError,
             ConflictError,
             store.dberror,
         ):

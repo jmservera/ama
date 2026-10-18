@@ -109,6 +109,116 @@ class RescanCommand(unittest.TestCase):
         with self.assertRaises(sqlite3.ProgrammingError):
             self.store.db.execute("SELECT 1")
 
+    def test_actual_cli_conflict_recovery_entire_root_stream_is_safe(self) -> None:
+        constructor: Any = SqlStore
+        other = constructor(str(self.path), self.env["ZF_SQLITE"])
+        self.addCleanup(other.db.close)
+        discard = self.store._discard
+        self.store.audit("system", "SYN_prior", "ZF-1", "SYN committed prefix")
+
+        def scan(*args: Any) -> tuple[str, str]:
+            from zava_forward.core.document_rescan import run
+
+            self.assertEqual(run(other, limit=1)["clean"], 1)
+            return "clean", "SYN stale"
+
+        def broken_recovery(pending: Any = ()) -> None:
+            discard(pending)
+            raise OSError("SYN_PRIVATE_SQL_RECOVERY_DIAGNOSTIC")
+
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with (
+            patch.dict(os.environ, self.env),
+            patch("zava_forward.orchestrator.document_rescan.open_store", return_value=self.store),
+            patch.object(self.store.scanner, "scan", side_effect=scan),
+            patch.object(self.store, "_discard", side_effect=broken_recovery),
+            contextlib.redirect_stdout(stdout),
+            contextlib.redirect_stderr(stderr),
+            self.assertLogs(level="DEBUG") as logs,
+        ):
+            self.assertEqual(main(["--synthetic-local", "--limit", "1"]), 1)
+        report = json.loads(stdout.getvalue())
+        self.assertEqual((report["failed"], report["clean"], report["committed"]), (1, 0, 0))
+        entire_stream = "\n".join(logs.output) + stderr.getvalue() + stdout.getvalue()
+        self.assertNotIn("SYN_PRIVATE", entire_stream)
+        self.assertNotIn("Traceback", entire_stream)
+        self.assertIn("DOCUMENT_RESCAN_FAILED", entire_stream)
+        with other.lock:
+            self.assertEqual(other.detail("ZF-1")["documents"][0]["scan"]["status"], "clean")
+        self.assertEqual(
+            [entry["action"] for entry in other.audit_entries()],
+            ["SYN_prior", "document_rescanned"],
+        )
+        self.assertTrue(other.verify_audit())
+
+    def test_actual_cli_malformed_scanner_returns_structured_safe_failure(self) -> None:
+        for value in (
+            None,
+            (),
+            ("clean",),
+            ("clean", "SYN", "extra"),
+            ["clean", "SYN"],
+            {"clean": "SYN"},
+            "clean",
+            ("unknown", "SYN_PRIVATE"),
+            ("clean", None),
+        ):
+            constructor: Any = SqlStore
+            target = constructor(str(self.path), self.env["ZF_SQLITE"])
+            stdout, stderr = io.StringIO(), io.StringIO()
+            with (
+                self.subTest(shape=type(value).__name__),
+                patch.dict(os.environ, self.env),
+                patch("zava_forward.orchestrator.document_rescan.open_store", return_value=target),
+                patch.object(target.scanner, "scan", return_value=value),
+                contextlib.redirect_stdout(stdout),
+                contextlib.redirect_stderr(stderr),
+                self.assertLogs(level="ERROR") as logs,
+            ):
+                self.assertEqual(main(["--synthetic-local", "--limit", "1"]), 1)
+                report = json.loads(stdout.getvalue())
+                self.assertEqual((report["failed"], report["clean"], report["checked"]), (1, 0, 1))
+            self.assertNotIn("Traceback", "\n".join(logs.output) + stderr.getvalue())
+            self.assertNotIn("SYN_PRIVATE", "\n".join(logs.output) + stderr.getvalue())
+            with self.store.lock:
+                self.assertEqual(
+                    self.store.detail("ZF-1")["documents"][0]["scan"]["status"], "pending"
+                )
+            self.assertEqual(list(self.store.audit_entries()), [])
+            self.assertTrue(self.store.detail("ZF-1")["legal_hold"]["active"])
+            self.assertEqual(self.store.docstore.get("ZF-1", "d0"), b"SYN body")
+        for boundary in ("scanner", "storage", "runner"):
+            constructor = SqlStore
+            target = constructor(str(self.path), self.env["ZF_SQLITE"])
+            stdout, stderr = io.StringIO(), io.StringIO()
+            failure: Exception = TypeError("SYN_PRIVATE_SCANNER_DIAGNOSTIC")
+            if boundary == "storage":
+                failure = OSError("SYN_PRIVATE_STORAGE_DIAGNOSTIC")
+                location = patch.object(target.docstore, "get", side_effect=failure)
+            elif boundary == "scanner":
+                location = patch.object(target.scanner, "scan", side_effect=failure)
+            else:
+                location = patch(
+                    "zava_forward.orchestrator.document_rescan.run", side_effect=failure
+                )
+            with (
+                patch.dict(os.environ, self.env),
+                patch("zava_forward.orchestrator.document_rescan.open_store", return_value=target),
+                location,
+                contextlib.redirect_stdout(stdout),
+                contextlib.redirect_stderr(stderr),
+            ):
+                if boundary != "runner":
+                    with self.assertLogs(level="ERROR") as logs:
+                        self.assertEqual(main(["--synthetic-local", "--limit", "1"]), 1)
+                    self.assertEqual(json.loads(stdout.getvalue())["failed"], 1)
+                    self.assertNotIn("SYN_PRIVATE", "\n".join(logs.output))
+                else:
+                    self.assertEqual(main(["--synthetic-local"]), 1)
+                    self.assertIn("DOCUMENT_RESCAN_ERROR", stderr.getvalue())
+            self.assertNotIn("SYN_PRIVATE", stdout.getvalue() + stderr.getvalue())
+            self.assertNotIn("Traceback", stdout.getvalue() + stderr.getvalue())
+
     def test_initialization_failure_after_real_open_closes_without_masking(self) -> None:
         connections = []
         original_open = SqlStore._open

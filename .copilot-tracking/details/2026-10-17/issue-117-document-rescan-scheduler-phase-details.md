@@ -14,6 +14,7 @@ Initial direction: reuse scan/config/SQL boundaries; no operational enablement.
 | --- | --- | --- |
 | P01 | Complete; source/CLI validated | P01-T01, P01-T02 |
 | P02 | Complete; actual SQL/image/regression/docs receipts recorded | P02-T01, P02-T02 |
+| P03 | T01 complete; T02 validation complete, publication pending | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded core and job
@@ -120,8 +121,9 @@ Review inside this task without new explicit coordinator authorization.
 
 P01/P02 full-plan implementation completed 2026-10-17. Canonical actual commands,
 counts, skips and the final installed-image source hashes are in the changes
-record. No task markers remain. One original Review is the next phase, not
-presumed accepted. No human/service operational gate is marked complete.
+record. Those original markers are complete. The one original Review subsequently
+executed Complete / Not accepted; P03 is the separately authorized correction.
+No human/service operational gate is marked complete.
 
 Local refinement: unsupported verdict uses RuntimeError, so the retained legacy
 helper cannot misclassify it as a removed document via its ValueError catch.
@@ -131,7 +133,64 @@ This is an in-scope compatibility correction, tested on SQLite and actual SQL.
 
 The one original Review executed Complete / outcome Not accepted. RV-001 and
 RV-002 are two Medium safe-diagnostics/malformed-result defects routed to later
-rpi-implement with separate coordinator authorization. No production/test
-correction or second Review is performed in this task. Completed P01/P02 markers
+rpi-implement with separate coordinator authorization, now received for P03.
+No correction was made during the original loop; P03 implements both findings
+without a second Review. Completed P01/P02 markers
 describe execution only. Research Status header metadata reconciled separately;
 original evidence/outcomes remain intact.
+
+<!-- rpi:phase id=P03 -->
+## P03: Coordinator correction ONE
+
+Authorized 2026-10-17 after original session completion. Exact starting local/
+remote/PR head552be52db0c2cb84a45449c2bce8d610abebfa74; main remains
+ebc8dab87ae9bd6a33380b85e86f38be5ed9f213. Original Review SHA256
+4e57eccdcd7817590110afd90c889d1f3c87de5b0bb48ac0353777fb7b3a2ac9;
+critique f788cc3d53a983f00493bf26eee2a1764696bcdfe155464576e6691bfb8beea8.
+
+<!-- rpi:task id=P03-T01 -->
+### P03-T01: Both reproduced defects in one coherent implementation batch
+
+RV-001: recognize the worker-owned SQL recovery context alongside existing
+validation contexts. Let `_attempt` preserve captured pending prefix, original
+error and winner state, and emit safe recovery marker without nested traceback.
+Keep all non-worker recovery and existing COMMIT marker ordering unchanged.
+Strengthen the existing actual conflict test to inspect root logging text,
+including traceback and private sentinel, then add actual CLI coverage.
+
+RV-002: validate scanner return before unpack, exact tuple/arity, closed
+string verdict and string detail. Reject None, wrong arity, invalid containers,
+invalid verdict/detail types without coercion/private diagnostic interpolation.
+Share the validation at upload/stored-scan boundaries where appropriate;
+valid/manual bad-verdict exceptions stay unchanged. Explicit TypeError handling
+at worker and CLI boundaries, not a broad catch or success-shaped fallback.
+Existing tests only; failing-first SQLite and actual CLI, plus JSON shared scan
+validation and retained bytes/hold/state checks. Continue bounded page on failure.
+
+<!-- rpi:task id=P03-T02 -->
+### P03-T02: Exact correction evidence and publication
+
+Run actual owned loopback SQL for complete worker class and relevant shared
+rollback/prefix/committed regressions. Reuse existing local harness patterns
+with distinct correction logs, never overwrite original test receipts.
+Configured core/orchestrator Ruff/format/mypy and relevant API/manual,
+progress/resident/sensor checks. Existing Docker build/hardening/real job,
+updated source hashes. Preserve immutable original artifacts, stop exact owned
+SQL/container, document commands/results/limits, commit/push same draft PR395.
+No independent acceptance or second Review.
+
+### Current P03 evidence (2026-10-18)
+
+T01 complete: five selected failing-first tests reproduced both defects before
+production edits; final focused46 run/27 passed/19 MSSQL opt-in skips.
+T02 validation complete: all19 current worker cases on actual SQL, including
+prior17, plus5 progress and6 resident shared recovery selectors, total30/30.
+Actual MSSQL subprocess pages exit2/0/0, clean1/2/0; seven malformed/error
+actual-main runs and competing-clean/recovery failure exit1 with failed1/
+clean0/committed0 and no private sentinel/traceback in complete root streams.
+Hardened rebuilt installed image matched four source hashes, safe failure6/6
+then exact-once success pages. Local regressions281/203/78 skips, API57/45/12
+skips, orchestrator30/30, store57/57; configured static checks pass.
+Exact SQL stopped/removed. Full commands, selectors, hashes and genuine failure/
+warning history are in the correction section of the changes record.
+T02 remains active until same-draft PR395 publication and final branch verification.

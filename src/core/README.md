@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -92,7 +92,11 @@ Committed failures cannot replay audit at lock exit and report reconciliation,
 never rejection. Store construction now closes an opened connection if setup
 fails, without replacing the original initialization error.
 
-Only exact clean is available. Unknown verdicts are errors; pending/Defender
+Only exact clean is available. Scan results must be exact two-string tuples
+with a closed `clean|pending|infected|mismatch` verdict. Malformed results
+are explicit errors before upload/rescan metadata mutation, not deletion or
+availability; no supplied object is coerced or echoed. Valid manual scan
+exceptions remain unchanged. Unknown verdicts are errors; pending/Defender
 tag outage remains pending. Infected/mismatched worker results retain bytes and
 remain unavailable; the job cannot delete, approve retention or release a hold.
 Manual scan behavior, existing retention listing/approval, resident safeguards,
@@ -101,12 +105,20 @@ sensor exports and progress capture are unchanged. The worker identity
 No retention trigger/period or real scanner approval is introduced.
 
 `tests/test_document_rescan.py` uses fresh synthetic fixtures only. Its
-17-test suite ran on actual independent loopback SQL Server connections on
-2026-10-17 as well as SQLite. It covers persisted pending/bad/clean results,
+original 17-test suite ran on actual independent loopback SQL Server connections
+on 2026-10-17 as well as SQLite. Correction ONE (2026-10-18) ran all 19 current
+worker cases plus 11 actual SQL progress/resident recovery guard cases, passing
+30/30. It covers persisted pending/bad/clean results,
 fairness including all-skipped pages, 100-attempt bound, CAS retry/conflict with
 failed recovery, SQL failure after audit INSERT, prior prefix, and immediate/
 refresh post-COMMIT failure without duplicate successful transition audit.
 Actual command/image receipts are described in the orchestrator guide.
+The worker now owns SQL recovery before nested automatic diagnostic logging.
+Entire CLI root streams in the conflict/recovery reproduction contain no private
+sentinel or traceback, with original conflict, competing winner and audit prefix
+preserved. Non-worker recovery behavior remains unchanged. Original Review
+Complete / Not accepted and original critique remain unchanged; these targeted
+correction results are not independent coordinator acceptance or a new Review.
 Operational Defender enablement, hosted cadence/missing-run monitoring and
 owner/Legal/DPO authority remain unmet; no production protection is claimed.
 

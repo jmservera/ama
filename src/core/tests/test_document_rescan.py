@@ -24,7 +24,7 @@ from zava_forward.core.doc_controls import (
 )
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 from zava_forward.core.sqlstore import SqlStore
-from zava_forward.core.store import ConflictError
+from zava_forward.core.store import ConflictError, Store
 
 
 def seed(path: Path) -> None:
@@ -220,6 +220,88 @@ class SqliteRescan(unittest.TestCase):
                 self.store.rescan_pending()
         self.assertEqual(document_rescan.run(self.store, limit=1)["clean"], 1)
 
+    def test_malformed_results_fail_closed_without_coercion_and_page_continues(self) -> None:
+        class PrivateObject:
+            def __str__(self) -> str:
+                raise AssertionError("SYN_PRIVATE object must not be stringified")
+
+            def __iter__(self) -> Any:
+                raise AssertionError("SYN_PRIVATE object must not be iterated")
+
+        malformed = (
+            None,
+            (),
+            ("clean",),
+            ("clean", "SYN", "extra"),
+            ["clean", "SYN"],
+            {"clean": "SYN"},
+            "clean",
+            PrivateObject(),
+            (PrivateObject(), "SYN"),
+            ("clean", PrivateObject()),
+            ("unknown", "SYN_PRIVATE"),
+            ("clean", None),
+        )
+        for value in malformed:
+            with (
+                self.subTest(shape=type(value).__name__),
+                patch.object(self.store.scanner, "scan", return_value=value),
+                patch.object(self.store.docstore, "delete") as delete,
+                self.assertLogs(level="ERROR") as logs,
+            ):
+                result = document_rescan.run(self.store, limit=1)
+                self.assertEqual(result["checked"], 1)
+                self.assertEqual(result["failed"], 1)
+                self.assertEqual(result["clean"], 0)
+                self.assertEqual(result["next_after"], ["ZF-1", "d0"])
+                delete.assert_not_called()
+            self.assertNotIn("SYN_PRIVATE", "\n".join(logs.output))
+            self.assertNotIn("Traceback", "\n".join(logs.output))
+            self.assertEqual(self.doc()["scan"]["status"], "pending")
+            self.assertEqual(self.actions(), [])
+            self.assertEqual(self.store.docstore.get("ZF-1", "d0"), b"SYN body")
+            self.assertTrue(self.store.detail("ZF-1")["legal_hold"]["active"])
+        for failure in (None, TypeError("SYN_PRIVATE_SCANNER_DIAGNOSTIC")):
+            with (
+                patch.object(
+                    self.store.scanner,
+                    "scan",
+                    side_effect=[failure, ("clean", "SYN")]
+                    if failure is not None
+                    else [None, ("clean", "SYN")],
+                ),
+                self.assertLogs(level="ERROR") as logs,
+            ):
+                result = document_rescan.run(self.store, limit=2)
+            self.assertEqual(result["failed"], 1)
+            self.assertEqual(result["clean"], 1)
+            self.assertEqual(result["checked"], 2)
+            self.assertEqual(result["next_after"], ["ZF-1", "d1"])
+            self.assertNotIn("SYN_PRIVATE", "\n".join(logs.output))
+            with self.store.lock:
+                self.store._case("ZF-1")["documents"][1]["scan"] = {"status": "pending"}
+                self.store.save()
+
+    def test_json_and_sql_manual_scan_and_upload_reject_malformed_result(self) -> None:
+        constructor: Any = Store
+        json_store = constructor(str(self.path))
+        json_store.docstore.put("ZF-1", "d0", b"SYN body", "text/plain")
+        for target in (json_store, self.store):
+            before = copy.deepcopy(target.detail("ZF-1"))
+            for value in (None, ("clean",), ["clean", "SYN"], ("clean", None)):
+                with (
+                    patch.object(target.scanner, "scan", return_value=value),
+                    patch.object(target.docstore, "delete") as delete,
+                ):
+                    with self.assertRaises(RuntimeError):
+                        target.rescan_document(DATA["staff"][0], "ZF-1", "d0")
+                    with self.assertRaises(RuntimeError):
+                        target.scan_new_document("ZF-1", "d0", "SYN.txt", b"SYN body", "text/plain")
+                    delete.assert_not_called()
+                self.assertEqual(target.detail("ZF-1"), before)
+                self.assertEqual(list(target.audit_entries()), [])
+                self.assertEqual(target.docstore.get("ZF-1", "d0"), b"SYN body")
+
     def test_concurrent_connections_commit_success_once(self) -> None:
         other = self.open_store()
         barrier = threading.Barrier(2)
@@ -293,24 +375,26 @@ class SqliteRescan(unittest.TestCase):
 
         def competing_scan(*args: Any) -> tuple[str, str]:
             self.assertEqual(document_rescan.run(other, limit=1)["clean"], 1)
-            return "pending", "SYN stale"
+            return "clean", "SYN stale"
 
         def broken_recovery(pending: Any = ()) -> None:
             discard(pending)
-            raise OSError("SYN recovery fault")
+            raise OSError("SYN_PRIVATE_SQL_RECOVERY_DIAGNOSTIC")
 
         with self.store.lock:
             self.store.audit("system", "SYN_prior", "ZF-1", "SYN prefix")
             with (
                 patch.object(self.store.scanner, "scan", side_effect=competing_scan),
                 patch.object(self.store, "_discard", side_effect=broken_recovery),
-                self.assertLogs(level="ERROR"),
+                self.assertLogs(level="DEBUG") as logs,
             ):
                 result = document_rescan.run(self.store, limit=1)
         self.assertEqual(result["failed"], 1)
         self.assertEqual(result["committed"], 0)
         self.assertEqual(self.actions(), ["document_rescanned", "SYN_prior"])
         self.assertEqual(self.doc()["scan"]["status"], "clean")
+        self.assertNotIn("SYN_PRIVATE_SQL_RECOVERY_DIAGNOSTIC", "\n".join(logs.output))
+        self.assertNotIn("Traceback", "\n".join(logs.output))
 
     def test_audit_insert_then_failure_does_not_flush_success(self) -> None:
         append = self.store._append_audit

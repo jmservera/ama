@@ -52,7 +52,7 @@ class Scanner:
     name = "none"
 
     def scan(self, case_id, doc_id, name, data, mime):
-        """Return (verdict, detail); verdict is clean, infected, mismatch or pending."""
+        """Return a two-string tuple (verdict, detail); verdict is clean, infected, mismatch or pending."""
         raise NotImplementedError
 
 
@@ -122,6 +122,15 @@ def _day(text):
     return datetime.strptime(str(text)[:10], "%Y-%m-%d").date()
 
 
+def _scan_result(result):
+    if (type(result) is not tuple or len(result) != 2
+            or type(result[0]) is not str or type(result[1]) is not str):
+        raise RuntimeError("The scanner returned a malformed result; the document remains unavailable.")
+    if result[0] not in ("clean", "pending", "infected", "mismatch"):
+        raise RuntimeError("The scanner returned an unsupported verdict; the document remains unavailable.")
+    return result
+
+
 class DocControlsMixin:
     """Mixed into Store. Needs self.docstore, self.scanner, self.audit, self.save, self.lock and self._case."""
 
@@ -131,7 +140,7 @@ class DocControlsMixin:
 
     def scan_new_document(self, case_id, did, name, data, mime):
         """Scan a stored upload. Returns the scan record; deletes the blob and raises on a bad verdict."""
-        verdict, detail = self.scanner.scan(case_id, did, name, data, mime)
+        verdict, detail = _scan_result(self.scanner.scan(case_id, did, name, data, mime))
         if verdict in ("infected", "mismatch"):
             self.docstore.delete(case_id, did)
             raise ValueError("That file failed the content check and was not kept." if verdict == "mismatch"
@@ -160,9 +169,7 @@ class DocControlsMixin:
     def _scan_stored(self, case_id, doc, who, *, remove_bad=True):
         """Scan a stored document (caller holds the lock). A missing scan field counts as pending. Returns the scan record."""
         data = self.docstore.get(case_id, doc["id"])
-        verdict, detail = self.scanner.scan(case_id, doc["id"], doc["name"], data, doc["mime"])
-        if verdict not in ("clean", "pending", "infected", "mismatch"):
-            raise RuntimeError("The scanner returned an unsupported verdict; the document remains unavailable.")
+        verdict, detail = _scan_result(self.scanner.scan(case_id, doc["id"], doc["name"], data, doc["mime"]))
         if remove_bad and verdict in ("infected", "mismatch"):
             self._remove_document(case_id, doc, "document_quarantined_deleted", who, f"{doc['id']}: {doc['kind']}: {verdict}")
             raise ValueError("That file failed the content check and was removed.")

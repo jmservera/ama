@@ -6,7 +6,7 @@
 * Task ID: 117
 * Task slug: issue-117-document-rescan-scheduler
 * Plan date: 2026-10-17
-* Planning status: Implemented; original Review Not accepted, corrections routed separately
+* Planning status: Coordinator-authorized correction ONE active; original Review unchanged
 * Phase details: .copilot-tracking/details/2026-10-17/issue-117-document-rescan-scheduler-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-17/issue-117-document-rescan-scheduler-plan-critique.md
 
@@ -31,7 +31,9 @@ or operational scanner approval.
 
 No engineering decision blocker. Original Review execution Complete / outcome
 Not accepted identified RV-001/RV-002 (Medium) at safe logging/malformed-result
-boundaries; separate implementation authorization is needed before corrections.
+boundaries. Coordinator authorized one coherent correction cycle on 2026-10-17;
+both findings have targeted P03 implementation evidence. T01 complete and T02
+validation complete; publication pending. No second critique/Review or self-Pass.
 Actual Defender enablement, schedule owner/cadence and retention/deletion
 delegations remain unmet human/service gates.
 
@@ -46,6 +48,10 @@ delegations remain unmet human/service gates.
 * Preserve merged102 recovery, audit, resident and sensor controls.
 * Commit/push authorized branch and main PR, using Refs #117; no merge/issue closure.
 * Fresh main movement requires coordinator authorization; no silent integration.
+* Coordinator authorizes correction ONE for RV-001/RV-002 on the same branch/
+  draft PR395, with failing-first tests, actual SQL and hardened image receipts.
+  Preserve original Review and critique byte-exact; keep draft pending independent
+  coordinator acceptance. No second full Review.
 
 ## Goals
 
@@ -156,11 +162,35 @@ Use pip-installed distributions and existing tool versions.
 Depends P02-T01. Existing Docker context src/; run `src/check-container.py`
 plus actual job as UID10001/read-only/drop-all/NoNewPrivs. Update component
 READMEs, existing synthetic evidence synthesis/index and append-only log.
-Stop owned SQL and record exact commands/results. No source after Review.
+Stop owned SQL and record exact commands/results. Original execution performed
+no source correction after Review; the separately authorized P03 below now applies.
+
+<!-- rpi:phase id=P03 -->
+### [ ] P03: Coordinator-authorized correction ONE
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Reproduce and correct RV-001/RV-002 together
+
+Add failing-first coverage within the two existing owned test files. Inspect
+the entire actual CLI root log/stream, CAS winner/prior prefix/original conflict
+and own-COMMIT boundary. Validate exact scanner tuple shape, arity, verdict and
+string detail before unpack/mutation; do not stringify unknown objects.
+Worker owns recovery under its active context, before nested traceback emission.
+Preserve non-worker error/recovery semantics and manual valid scan behavior.
+
+<!-- rpi:task id=P03-T02 -->
+#### [ ] P03-T02: Validate, reconcile and publish corrected candidate
+
+Depends P03-T01. Actual SQL reruns all prior17 worker cases plus new malformed/
+recovery tests; relevant progress102/resident88/sensor regressions, configured
+core/orchestrator tools, rebuilt image/actual hardened job. Stop owned SQL.
+Reconcile correction receipts/current state and PR395 body, fresh main/identity,
+normal commit/push; retain draft and exact original Review/critique bytes.
 
 ## Dependencies
 
 P01-T02 depends P01-T01; P02-T01 depends P01; P02-T02 depends P02-T01.
+P03-T02 depends P03-T01 and separate coordinator correction authorization.
 Local SQL driver/container and installed src packages are validation prerequisites.
 
 ## Critique Disposition
@@ -176,10 +206,6 @@ All are compatible direct planner corrections; original artifact unchanged.
 
 ## Follow-Up Items
 
-* RV-001: later rpi-implement contains nested SQL recovery diagnostics, preserving
-  existing non-worker recovery. Original Review reproduced the leak; not fixed here.
-* RV-002: later rpi-implement normalizes malformed scanner results and contains
-  CLI errors. Original Review reproduced report escape; not fixed here.
 * Defender account enablement and real Blob verification: owner/service gate.
 * Hosted schedule ownership/cadence/monitoring: separate authorized delivery.
 * DPO/Legal periods, holds and owner approvals: human gate, never worker authority.
@@ -189,6 +215,6 @@ All are compatible direct planner corrections; original artifact unchanged.
 Full P01/P02 implementation and validation executed, with actual limits/skips
 in the changes record. The one original Review executed Complete / outcome
 Not accepted, two Medium findings. Completion markers record execution, not
-defect-free acceptance. Route RV-001/RV-002 to separate authorized work;
-do not reopen Implement or Review in this task. Critique remains original
-Revise. Operational gates and independent coordinator acceptance remain separate.
+defect-free acceptance. Coordinator now authorizes correction ONE P03 for both
+findings, without reopening or rewriting the original Review/critique.
+Operational gates and independent coordinator acceptance remain separate.

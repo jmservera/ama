@@ -2,7 +2,7 @@
 title: Zava Forward orchestrator
 description: Scheduled job documentation (ledger digest publish and verification) for the orchestrator project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-18
 ms.topic: reference
 ---
 
@@ -91,12 +91,15 @@ persisted review items; they do not scrape or read private datasets.
 
 ## Bounded document rescan job (#117)
 
-Original Review status (2026-10-17): Not accepted. Two Medium defects remain:
-nested SQL recovery can emit raw diagnostic tracebacks, and malformed scanner
-results can escape the controlled report/CLI boundary. The fixed-marker
-contract below is the intended behavior, not universal proved containment.
-Both route to separate correction work; no second Review or operational
-acceptance is claimed. Pending state remained unavailable in the reproductions.
+Original Review status (2026-10-17): Complete / Not accepted, retained unchanged.
+Coordinator-authorized correction ONE implements both Medium findings:
+worker-owned SQL recovery prevents the nested diagnostic traceback, and closed
+scanner-result validation plus explicit TypeError boundaries preserve controlled
+reporting. Failing-first tests reproduced both defects before the changes.
+Correction validation (2026-10-18) passed all 19 actual SQL worker tests plus 11
+progress/resident recovery guards, full CLI root-stream checks and hardened
+installed-image failures/successes. This is targeted implementation evidence,
+not a second Review or independent coordinator acceptance. PR #395 stays draft.
 
 `python -m zava_forward.orchestrator.document_rescan` consumes one bounded
 SQL page through the existing scan service. It adds no daemon, Azure schedule
@@ -157,6 +160,18 @@ SQL Server with existing `ZF_SQL_*`; they reject other hosts and create/drop
 only UUID-named `zf_rescan117_*` test databases. Never point them at live/shared
 SQL. Docker uses the existing build context and hardening commands above;
 actual image job checks must supplement ordinary version-only startup.
+
+Correction ONE rebuilt `zf-issue117-orchestrator:correction1` with the existing
+Dockerfile/context. All four installed runtime source hashes matched. With
+UID10001, network disabled, read-only root, all capabilities dropped and
+NoNewPrivs, six injected malformed/unknown/TypeError/outage runs returned exit1,
+failed1/clean0, no private diagnostics or traceback, and no state/audit success.
+Subsequent real module pages returned exit2/0/0 and clean1/2/0, exactly three
+persisted success events with intact bytes, hold and ledger. Actual loopback
+MSSQL main also exercised seven malformed/error cases and the original
+competing-clean/recovery-failure reproduction. Owned SQL was stopped/removed.
+These offline receipts do not enable Defender, approve retention or deploy a
+recurring schedule; all service/human gates above remain unmet.
 
 On 2026-10-17, actual owned loopback SQL ran all 17 rescan tests, and real
 MSSQL CLI pages returned 2/0/0 with 1/2/0 clean results, three success events,
