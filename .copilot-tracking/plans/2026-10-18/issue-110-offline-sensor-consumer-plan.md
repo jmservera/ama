@@ -118,8 +118,13 @@ initial failures, final counts and the baseline comparison.
 <!-- P03 -->
 ### P03: Original Review and publication
 
-* [ ] P03-T01: reconcile artifacts, run one independent original Review, retain
+* [x] P03-T01: reconcile artifacts, run one independent original Review, retain
   its outcome unchanged; route findings, correction count 0.
+
+Original Review execution Complete, outcome Defects found. RV-001 Medium and
+RV-002 Low remain open for later authorized work; RV-003 Low is baseline tooling
+residual. This checkbox records execution, not conformance or repaired findings.
+Original Review and critique remain unchanged; no source correction or repeat.
 * [ ] P03-T02: commit owned evidence/source, push, open main PR at pinned base
   lineage; clean only task-owned resources; stop for exact-head review.
 

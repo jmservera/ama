@@ -6,8 +6,15 @@ ms.date: 2026-10-18
 
 Pinned base: 578631ac75cc8c6a7af53922c6aaae4435e7761c.
 Branch: feat/offline-sensor-consumer-110.
-Final intended inventory: 23 paths. Original Review is pending at candidate commit;
-its completed original and publication state are added without source correction.
+Delivery inventory: 23 paths. Candidate implementation:
+de54472fc06d1ac16efa6dbd4f306afc1c98598e. Original Review execution Complete,
+outcome Defects found. Publication adds its unchanged original and lifecycle
+evidence without source correction. RV-001/RV-002 remain open; correction count 0.
+
+Original critique SHA-256:
+ad56b59a8df472fff31ed3ae906eca63505ea76fca0f63a457dda4acf540942b.
+Original Review SHA-256:
+5ae9cb33e5d46a5a486cfbce0e824ab012efd8b6b4fccf9b4e73546e772b07cc.
 
 ## Source and tests (6)
 
@@ -40,7 +47,7 @@ its completed original and publication state are added without source correction
 * .copilot-tracking/reviews/plans/2026-10-18/issue-110-offline-sensor-consumer-plan-critique.md
 * .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-changes.md
 * .copilot-tracking/changes/2026-10-18/issue-110-offline-sensor-consumer-inventory.md
-* .copilot-tracking/reviews/2026-10-18/issue-110-offline-sensor-consumer-review.md
+* .copilot-tracking/reviews/logs/2026-10-18/issue-110-offline-sensor-consumer-review.md
 * .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-log.jsonl
 * .copilot-tracking/rpi-sessions/2026-10-18/issue-110-offline-sensor-consumer-state.json
 
