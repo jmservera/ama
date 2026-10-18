@@ -1767,7 +1767,13 @@
     "reviewer_next_action": "same reviewer assesses integration delta and source parity before readiness"
   },
   "publication": {
-    "status": "prepared-not-published",
+    "status": "exact-lease-published-final-metadata-normal-push",
+    "first_published_head": "523f28a1e60c86fcba98af97a5d0d62af216eb1b",
+    "first_published_old_head": "c20052e49e91841749f8a08ffed137c848ce3fd1",
+    "verified_pr_base": "9403dc6a8f52f1f04c5ad910faab11a57c29ee78",
+    "verified_pr_draft": true,
+    "verified_closingIssuesReferences": [],
+    "final_head_resolution": "Commit containing this metadata-only receipt; resolved after normal push in local/remote/PR verification. Source intent and all 44 immutable prior artifacts unchanged.",
     "authorized_exact_lease": "refs/heads/fix/continuity-epoch-export-122:c20052e49e91841749f8a08ffed137c848ce3fd1",
     "publish_pinned_even_if_main_moves": true,
     "unexpected_topic_advancement": "STOP; do not replace lease",

@@ -3,9 +3,9 @@
   "task_slug": "issue-122-register-release-remediation",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Consultation integration published using only exact authorized c20052e4 lease; PR398 updated and verified draft/open/empty closing refs. P04-T05 execution complete, not independent acceptance. Final metadata-only receipt follows by normal push with source and all prior evidence unchanged.",
+      "status": "published-stop-for-same-reviewer",
+      "evidence": "Exact lease c20052e49e91841749f8a08ffed137c848ce3fd1 -> 523f28a1e60c86fcba98af97a5d0d62af216eb1b. Live PR398 head 523f28a1/base 9403dc6a8f52f1f04c5ad910faab11a57c29ee78/OPEN/draft=true/closingIssuesReferences=[]. Main matched pinned base at publication. Final head is commit containing final metadata-only receipt, resolved in Git/remote/PR rather than self-reference. Full inventory 55 paths: nine src and 46 artifacts. Existing review of c20052e4 running with outcome unavailable; SAME reviewer assesses integration delta/parity."
+    },
     {
       "decision": "Consultation integration and focused validation executed with no conflicts or source changes; complete owned normalized source patch, protected upstream bytes/modes and all prior immutable artifacts preserved.",
       "status": "validated-integration-not-independent-acceptance",
@@ -84,15 +89,15 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "P04-T05 integration/parity/focused validation complete. Persist separate integration-consultation receipt/manifest, publish ONLY exact c20052e4 lease, update draft PR398 current exact refs/evidence, then STOP for same independent reviewer to assess delta/parity. Existing full independent review of c20052e4 running, no outcome/ready claim."
+    "phase": "Follow-up",
+    "action": "STOP after final metadata-only normal push/exact PR-head refresh. SAME independent reviewer assesses pinned consultation integration delta/source parity alongside running review of c20052e4; outcome unavailable, no second full original Review, Pass/readiness or new source correction. Original Not accepted and historical exhausted cycles unchanged; RV-002 distinct follow-up."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Coordinator full exact published-head source/artifact independent review",
-      "rationale": "Pinned integration and correction ONE are published with preserved adverse original assessment; acceptance and readiness belong to coordinator.",
-      "evidence": "Pinned ab0613f3336109ff9b96560a16758ee842232715, initial published d3b04c0cfa06fa304a7b81c21f1d38089e372e08; separate final-integration receipt/JSON, 51-path inventory and original Not accepted hash unchanged. Final metadata-only commit does not change source."
+      "task": "Same independent reviewer assesses consultation integration delta and source parity",
+      "rationale": "Existing full review of c20052e4 is running; this integration preserves the complete owned source patch and protected upstream bytes/modes but still needs reviewer assessment before readiness.",
+      "evidence": "Pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78; initial publication 523f28a1e60c86fcba98af97a5d0d62af216eb1b; separate integration-consultation receipt/manifest with 55-path inventory, 44 immutable prior artifacts, original Not accepted unchanged. No outcome of running review available."
     },
     {
       "rank": 2,

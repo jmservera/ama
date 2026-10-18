@@ -176,9 +176,22 @@ hash receipts remain immutable at their original Git paths.
 
 ## Publication, Identity and Reviewer Handoff
 
-At receipt preparation, parity and fresh checks are complete; exact lease
-publication remains the next action. Actual publication is recorded below only
-after the push. Final metadata-only receipt commits do not change source.
+Actual publication used exactly the authorized lease:
+c20052e49e91841749f8a08ffed137c848ce3fd1 ->
+523f28a1e60c86fcba98af97a5d0d62af216eb1b. Remote ref matched; main remained
+exact pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78 at publication.
+PR398 current body records the consultation integration, exact source boundary,
+fresh/historical checks and running-review limitation. Actual live read after
+update: OPEN/draft=true/head 523f28a1/base 9403dc6a/closingIssuesReferences=[].
+
+Final metadata-only receipt is committed and published by normal push; no second
+rewrite or source change. Exact final head resolves to the commit containing
+this receipt in Git/remote/PR, rather than a fabricated self-referential hash.
+PR body is refreshed to that exact final head and clean local/remote/PR state
+verified. Complete full-PR inventory: 55 paths = nine src and 46 artifacts.
+All 44 immutable prior files and original hashes stay unchanged. P04-T05
+execution completed; session STOPPED for same-reviewer delta/parity assessment,
+not new acceptance or readiness.
 
 Authenticated gh api user is id 8036360/login jmservera; repository-local
 8036360+jmservera@users.noreply.github.com is used for both author and committer.

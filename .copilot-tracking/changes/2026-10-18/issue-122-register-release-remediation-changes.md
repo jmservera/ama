@@ -38,6 +38,18 @@ Expected synthetic law-store absence remains explicit Unknown, not an approval.
 Separate integration-consultation receipt/manifest records this new boundary,
 complete commands/results/log preservation and publication evidence.
 
+P04-T05 exact authorized lease publication completed:
+c20052e49e91841749f8a08ffed137c848ce3fd1 ->
+523f28a1e60c86fcba98af97a5d0d62af216eb1b. No replacement lease or other
+rewrite. Live PR398 after body update: OPEN/draft=true/same head/base
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78/closingIssuesReferences=[].
+Main matched pinned base at publication. Separate consultation receipt/manifest
+enumerate 55 full-PR paths: nine src/46 artifacts. Final metadata-only normal
+push/exact PR-head refresh follows; source and all 44 prior frozen artifacts
+unchanged. P04-T05 execution complete, session STOPPED, not independent acceptance.
+SAME independent reviewer assesses integration delta and source parity alongside
+running c20052e4 review; no outcome/Pass/readiness claimed, no second full Review.
+
 ## Current P04-T04 Integration-Only Resumption
 
 Owner 2026-10-18T09:40 explicitly authorizes SAME task integration/publication

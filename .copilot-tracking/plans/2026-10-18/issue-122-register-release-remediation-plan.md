@@ -175,8 +175,13 @@ Fresh focused run: 93 run/80 pass/13 skips (12 opt-in MSSQL; one JSON-only
 SQL-writer-dependency check). Configured core/API Ruff/format/mypy pass,
 125/57 source files. No failed attempts or source changes to pass.
 Separate integration-consultation receipt/manifest records commands/results,
-complete inventory, log hashes and frozen evidence. Exact lease publication
-and draft PR reconciliation pending; no independent-review outcome available.
+complete inventory, log hashes and frozen evidence. Exact c20052e4 lease
+publication completed at 523f28a1e60c86fcba98af97a5d0d62af216eb1b; draft PR398
+live verified OPEN/draft/head 523f28a1/base 9403dc6a/empty closing refs.
+Final metadata-only receipt uses normal push, source unchanged. Full current
+inventory 55 paths: nine source/config/test/guide and 46 artifacts. P04-T05
+execution complete; STOP for SAME reviewer delta/parity assessment, no result
+or readiness inferred from running full review of c20052e4.
 
 Declared scope: P04 only, extending the completed original execution without
 repeating Research, critique or Review. No new task identity or self-acceptance.
@@ -191,7 +196,7 @@ timecapture.py/test_timecapture.py exactly, both README contributions, queue/
 recorder and complete normalized owned source patch; all 27 frozen originals.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: RV-001 correction ONE and authorized integration
+### [x] P04: RV-001 correction ONE and authorized integration
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Freeze original hashes and integrate exact authorized main
 <!-- rpi:task id=P04-T02 -->
@@ -201,7 +206,7 @@ recorder and complete normalized owned source patch; all 27 frozen originals.
 <!-- rpi:task id=P04-T04 -->
 #### [x] P04-T04: Exact-lease publication, draft PR reconciliation and STOP
 <!-- rpi:task id=P04-T05 -->
-#### [ ] P04-T05: Pinned consultation integration, validation, publication and reviewer handoff
+#### [x] P04-T05: Pinned consultation integration, validation, publication and reviewer handoff
 
 Preserve bool exclusion and current finite int/float semantics, rejecting numeric
 values that cannot pass the existing floating-point finiteness check explicitly.
