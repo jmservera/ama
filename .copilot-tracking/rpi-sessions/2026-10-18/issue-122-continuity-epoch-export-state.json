@@ -1,0 +1,104 @@
+{
+  "task_id": "122",
+  "task_slug": "issue-122-continuity-epoch-export",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-122-continuity-epoch-export-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-122-continuity-epoch-export-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-18/issue-122-continuity-epoch-export-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-continuity-epoch-export-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Coordinator authorized integration-only rebase of owned PR398 branch onto exact merged397 base3104bb69ddc26c81e0e9d2f57000dac1d99a419a and exact old-head lease",
+      "status": "rebased; source/upstream parity and integration validation complete; exact-lease publication next",
+      "evidence": "Integration receipt; clean remote/local oldheada40fdd3623eae4ee23712f474909d58cdbcb7bfc; sole additive README conflict; all35 upstream files preserved; no third correction or new Review"
+    },
+    {
+      "decision": "Authorized branch normally pushed and main PR #398 opened with Refs #122, all phase artifacts and original adverse verdict",
+      "status": "published, not independently accepted or merged",
+      "evidence": "https://github.com/jmservera/ama/pull/398; tested final source0067f2a1cacf2bd7f821ea13988566b8b4af0b71; base99056cae7bc679d2ace3e42c75f28577cfce8887; correction-two publication receipt"
+    },
+    {
+      "decision": "Correction TWO final source cycle complete; no known source failures remain in bounded validation, publication permitted but independent acceptance pending",
+      "status": "implementation and validation complete, not self-accepted",
+      "evidence": "Correction-two receipt: host245/49skips, existing163, actual owned MSSQL72, hardened installed image44, static checks and original hashes all verified"
+    },
+    {
+      "decision": "Coordinator authorizes correction TWO final source cycle with explicit limited/incomplete projected evidence for reason-ineligible audiences and intact canonical proof for authorized full export",
+      "status": "confirmed",
+      "evidence": "User instruction 2026-10-18; correction-two receipt and P05 plan/details; no additional Review, policy expansion, crypto protocol, shared SQL or appointment edits"
+    },
+    {
+      "decision": "Correction ONE source and validation execution completed; publication blocked by additional restricted ledger-reason disclosure",
+      "status": "blocked, not independently accepted",
+      "evidence": "Correction-one receipt: original finding regressions pass; existing role inventory and focused actual host/MSSQL/hardened-image HTTP redaction tests fail; local commit only, no push/PR"
+    },
+    {
+      "decision": "Coordinator authorizes correction ONE for both High findings, exact projection route append, normal push and Refs #122 PR if ready",
+      "status": "confirmed",
+      "evidence": "User continuation 2026-10-18; correction receipt records exact source/head/base and frozen original hashes"
+    },
+    {
+      "decision": "Execute full ordered RPI with one independent critique and one original Review",
+      "status": "confirmed",
+      "evidence": "Explicit user instruction 2026-10-18; safe synthetic/offline slice only"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "Research C1-C7 and actual baseline reproduction; three ordered waves completed"
+    },
+    {
+      "decision": "One critique Complete, original verdict Revise; PC-001 and PC-002 directly applied to plan/details",
+      "status": "ready",
+      "evidence": "Original critique retained unchanged; atomic legacy publication and independent offline verification required"
+    },
+    {
+      "decision": "Implementation and validation execution complete with known material HTTP export failure",
+      "status": "not accepted by worker",
+      "evidence": "Changes final validation table: 66 actual SQL tests (one HTTP 403 failure); final image 19 tests (same failure); no protected shared-file edit"
+    },
+    {
+      "decision": "One original independent Review executed Complete; original outcome Not accepted",
+      "status": "frozen",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-continuity-epoch-export-review.md; RV-001 and RV-002 High; independent 307-test run and two verifier negatives"
+    },
+    {
+      "decision": "User-directed stop after adverse original Review; commit local source/evidence only",
+      "status": "confirmed",
+      "evidence": "Explicit user instruction: no knowingly defective PR, no worker corrections, maximum two coordinator-owned later correction rounds"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Exact-lease publish authorized integration onto base3104bb69 after tracking commit, then coordinator full review of PR398; no third source correction or worker Review"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator independent acceptance and integration of final bounded source",
+      "rationale": "Both authorized source correction cycles are exhausted; original adverse Review remains frozen and implementation tests do not grant acceptance",
+      "evidence": "Correction-two receipt and forthcoming Refs #122 PR; preserved original critique/Review"
+    },
+    {
+      "rank": 2,
+      "task": "Named control owners obtain genuine OQ-017 authority and witness authorized drill",
+      "rationale": "Synthetic identities and actual local transactions establish source behavior, not genuine delegation or witnessed operational acceptance",
+      "evidence": "Original Review operational residuals; both correction receipts"
+    },
+    {
+      "rank": 3,
+      "task": "Authorized platform owners arrange immutable external Azure head, Azure SQL drill and unsupported-old-image exclusion",
+      "rationale": "Local SQL/image proof cannot establish external custody, Azure recovery or safe exclusion of executables predating gates",
+      "evidence": "Issue owner comment, original Review and final correction residuals"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "task_id": "issue-122-register-release-remediation",
+  "task_slug": "issue-122-register-release-remediation",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-122-register-release-remediation-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-122-register-release-remediation-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-122-register-release-remediation-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "P06 integration ONLY published using sole authorized96099bb5lease; draft PR updated/verified, execution complete, session explicitly stopped for SAME reviewer final integrationdelta. Prior boundedPass96099bb5 retained, not selfextended to newbase. Original adverse assessments unchanged. Final metadata-only normal push/PR exacthead refresh follows.",
+      "status": "published-stopped-for-same-reviewer",
+      "evidence": "Exactlease96099bb57c58e76b4afc7d278ff5f17be43f5a8d -> ef66334f8968c16de1d64d9144ee0085937472ac. LivePR398 headsame/base578631ac75cc8c6a7af53922c6aaae4435e7761c/OPEN/draft=true/closingIssuesReferences=[]; mainstill578631ac. Finalhead is commit containing finalmetadata receipt, resolved inGit/remote/PR not selfreference. Full93paths9src84artifacts; normalized9path equality stable8c04a096ac0a1e79289da685b55f1713d66f4fc8;73prior immutable/original27 and2642protected upstream files exact. No source correction/critique/original Review."
+    },
+    {
+      "decision": "P06 integration and focused shared-write validation executed without conflicts or source edits. Normalized complete ninepath intent exact, README/config additive unions exact. No additional source correction or original Review.",
+      "status": "validated-integration-pending-authorized-publication",
+      "evidence": "Candidate9f930d820f4133227717dc7b319903372ad8396e on578631ac75cc8c6a7af53922c6aaae4435e7761c;2642protected upstream files/280src exact blobs+modes;73prior immutable/original27 unchanged. Fresh focused173run157pass16MSSQLopt-in skips, atomicity/role51/51, coordinator numericprivacy3/3/unavailable15/15, coreAPIquality125/58pass. Governance witness threadlocal activecontext-only/restoredfinally, existing shared-write failures and continuity suites pass; no unresolved concern to warrant SQL/image reruns. Existing boundedPass733cb491 at96099bb5 preserved separately; integration delta awaits same reviewer."
+    },
+    {
+      "decision": "Owner authorizes integration ONLY after reported independent bounded Pass by SAME733cb491 reviewer at96099bb57c58e76b4afc7d278ff5f17be43f5a8d. Original adverse assessments immutable; correction TWO FINAL exhausted, no third correction/critique/second original Review. Any material source conflict/bug routes human.",
+      "status": "authorized-integration-only",
+      "evidence": "Owner2026-10-18T10:34 continuation; clean local/remote/PR96099bb5/base9403dc6a/draft/empty refs; fetched origin/main EXACT578631ac75cc8c6a7af53922c6aaae4435e7761c. Rebase only owned topic, sole exact96099bb5lease. Preserve PR409 protected governance/sqlstore/server/tests/config/docs, union additive README/config.73prior immutable artifacts frozen, prior80boundary hashes verified, original27 unchanged; five complete workerlogs copied/hashverified."
+    },
+    {
+      "decision": "Correction TWO FINAL exercised and normally published, P05 complete; explicit owner STOP for SAME independent reviewer. Not independently accepted, no readiness. No further source correction allowed; remaining blocker routes human. Final metadata-only receipt follows by normal push and exact PR-head refresh.",
+      "status": "published-stopped-for-same-reviewer",
+      "evidence": "Published source5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0 then evidence41846a5a45ef2491fa6fa53f27498039703b3593 by normal pushes only. Draft PR398 exact head41846a5a/base9403dc6a8f52f1f04c5ad910faab11a57c29ee78/OPEN/closingIssuesReferences=[] verified; main still pinned. Final head resolved as commit containing final metadata receipt, not self-referential. Complete80path boundary,9source71artifacts; all48prior frozen/original27 and279protected upstream exact. Source only four paths differ, production three lines. Receipt retains all failed commands, no selfPass."
+    },
+    {
+      "decision": "Correction TWO FINAL implemented and exercised, not independent acceptance. P05-T02/T03 complete; P05-T04 normal publication pending. Exact production delta three export classification lines; no third source correction allowed.",
+      "status": "validated-pending-normal-publication",
+      "evidence": "Source candidate 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0; final host/image 86/86 each, coordinator probe 15/15, actual owned MSSQL 16/16 plus final subset 3/3, zero skips; core/API Ruff/format/mypy 125/57 pass; installed UID10001/source parity/checker pass. Four source/test/guide deltas, 48 immutable prior artifacts and original27 unchanged. Raw failed commands retained. Exact owned resources cleaned. Separate correction-two receipt/manifest."
+    },
+    {
+      "decision": "Correction TWO and FINAL authorized on SAME task for independent Medium SQL-unavailable export finding only. No new original Review/critique; historical two exhausted cycles and original Not accepted immutable. RV-002 excluded. Normal commits/push only; pinned base retained even if main moves.",
+      "status": "authorized-implementation",
+      "evidence": "Live clean local/remote/PR d0a6f616afde75bda50665ba5b77555621dc3432; base/main 9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Predecessor log exit=0 and canonical stopped state. Independent input 733cb491-5a80-4b82-8034-12671261e9d4/coordinator event 8f76b215-93d9-4129-88be-77ca37968648 preserved verbatim separately. All 44 manifest artifacts verified; all 48 prior task artifacts frozen, original 27 retained."
+    },
+    {
+      "decision": "Consultation integration published using only exact authorized c20052e4 lease; PR398 updated and verified draft/open/empty closing refs. P04-T05 execution complete, not independent acceptance. Final metadata-only receipt follows by normal push with source and all prior evidence unchanged.",
+      "status": "published-stop-for-same-reviewer",
+      "evidence": "Exact lease c20052e49e91841749f8a08ffed137c848ce3fd1 -> 523f28a1e60c86fcba98af97a5d0d62af216eb1b. Live PR398 head 523f28a1/base 9403dc6a8f52f1f04c5ad910faab11a57c29ee78/OPEN/draft=true/closingIssuesReferences=[]. Main matched pinned base at publication. Final head is commit containing final metadata-only receipt, resolved in Git/remote/PR rather than self-reference. Full inventory 55 paths: nine src and 46 artifacts. Existing review of c20052e4 running with outcome unavailable; SAME reviewer assesses integration delta/parity."
+    },
+    {
+      "decision": "Consultation integration and focused validation executed with no conflicts or source changes; complete owned normalized source patch, protected upstream bytes/modes and all prior immutable artifacts preserved.",
+      "status": "validated-integration-not-independent-acceptance",
+      "evidence": "Integrated 956ece15a0599c2b5e204aaf86547e1e64112f5e on pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78. Stable patch-id 884ee570d0c338874f75d2126bf609d813955516; 279 protected src files exact bytes/modes; 44 immutable prior artifacts incl. original 27 unchanged. Fresh focused 93 run/80 pass/13 skips (12 opt-in MSSQL, one JSON SQL-writer exclusion), core/API static pass (125/57 files). No failed command or new review result."
+    },
+    {
+      "decision": "Owner authorized consultation integration ONLY on SAME task/correction ONE: rebase expected local/remote c20052e49e91841749f8a08ffed137c848ce3fd1 from ab0613f3 onto exact 9403dc6a8f52f1f04c5ad910faab11a57c29ee78; ONLY exact c20052e4 lease. Preserve protected upstream procurement/server/tests bytes/modes, both README sections, KB log prefix and normalized owned source patch. Publish pinned base even if main later moves, report without reintegration; unexpected topic movement or irreconcilable source conflict stops.",
+      "status": "authorized-integration-only",
+      "evidence": "Owner 2026-10-18T09:59 continuation; expected clean local/topic and fetched origin/main verified. Independent review of c20052e4 running, no result available/claimed. No new source correction, metadata-echo fix, critique or original Review. Same reviewer assesses integration delta/parity after publication."
+    },
+    {
+      "decision": "Pinned integration published with exactly the authorized e00c5215 lease; draft PR398 current bounded correction disposition and evidence updated. Execution/publication complete, not independent acceptance. Final metadata-only receipt follows by normal push without source change.",
+      "status": "published-stopped-for-independent-review",
+      "evidence": "Exact lease push e00c521573501a4ed84dab7ec0ccf66ef57a7053 -> d3b04c0cfa06fa304a7b81c21f1d38089e372e08. Live PR398 OPEN/draft=true/head=d3b04c0c/base=ab0613f3336109ff9b96560a16758ee842232715/closingIssuesReferences=[]. Final head is the commit containing this metadata-only receipt, resolved in Git/PR rather than fabricated self-reference. Full boundary 51 paths: nine src, 42 artifacts; all 40 prior artifacts incl. original 27 unchanged."
+    },
+    {
+      "decision": "Pinned integration and minimal validation executed without source change/conflict. Complete normalized owned source patch unchanged; exact upstream source/test and immutable artifact parity established.",
+      "status": "ready-for-authorized-publication-not-independent-acceptance",
+      "evidence": "Integrated a01b4152fa81b3e0f11cab8fa909b4ea399ef148 on ab0613f3336109ff9b96560a16758ee842232715; stable patch-id 884ee570d0c338874f75d2126bf609d813955516 across nine owned src paths; 278 other upstream src paths exact, 40 prior artifacts including original 27 unchanged. Fresh minimal 37/37, core/API static pass; prior SQL/image/coupled evidence historical."
+    },
+    {
+      "decision": "Owner cleared main-movement blocker for integration/publication ONLY of SAME correction ONE. Rebase expected local 30e4602511c9ce907b8574d1bce4939bd1792121 from exact a86282c4 onto exact ab0613f3336109ff9b96560a16758ee842232715. Publish pinned integration even if main later moves, reporting rather than reintegrating. Unexpected topic advancement stops; exact original e00c5215 lease only.",
+      "status": "authorized",
+      "evidence": "Owner 2026-10-18T09:40 continuation; local clean expected head, fetched exact origin/main ab0613f3 and topic e00c5215 verified. Preserve exact PR408 timecapture source/tests, queue/recorder, owned source patch, 27 frozen originals and original adverse Review. No new source correction, critique or original Review."
+    },
+    {
+      "decision": "Correction ONE source implementation exercised, not independently accepted: narrow OverflowError guard and 34 JSON numeric boundary subcases; no RV-002 source change, no repeat critique or Review.",
+      "status": "implemented-pending-independent-review",
+      "evidence": "Source candidate 72cf28b057dbb57e1599367dded1345a4c26c054. Authorized exact-base focused 66/66; integrated host/image 151 run/133 pass/18 skips each; actual owned SQL 32/32; core/API/agents static pass. Coupled import error retained, resident corrected separately. .copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one.md and correction-one-parity.json persist 47-path boundary/27 original hashes/11 raw logs. Local only because main moved."
+    },
+    {
+      "decision": "Owner resumed SAME task for correction ONE of maximum two, RV-001 only; original Review and critique immutable, RV-002 excluded. Rebase prior base 9c648b20 onto exact a86282c4; preserve queue PR407 and recorder PR406; sole history publication exact lease e00c521573501a4ed84dab7ec0ccf66ef57a7053.",
+      "status": "authorized",
+      "evidence": "Owner instruction 2026-10-18 in session 28a50b1e-793d-4cd3-b584-4ab290f9a34f; clean local/remote expected head verified, exact origin/main verified."
+    },
+    {
+      "decision": "Owner authorized a NEW bounded full RPI loop for both independent findings; this is not a third historical correction.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-18; prior independent Not accepted acknowledged."
+    },
+    {
+      "decision": "Exact main integration and exact old-head force-with-lease authorized; preserve all prior evidence byte-for-byte.",
+      "status": "confirmed",
+      "evidence": "main 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; local/remote 1144647c8d539716e8ddddf9daa47407c9bd00ac verified"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; one critique executed Complete/Revise, PC-001 through PC-005 accepted directly with detailed resolving controls.",
+      "status": "implementation-ready",
+      "evidence": "New research C1-C6, plan Critique Disposition and phase-details PC contracts; no second critique."
+    },
+    {
+      "decision": "ONE original independent Review executed Complete / Not accepted at c5e329c588fa68ab6a7199ddcfa5977be94fe6f3. RV-001 Medium remains; RV-002 Low is separate conditional hardening.",
+      "status": "not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-122-register-release-remediation-review.md SHA-256 e43d6ec67d83b788e97d68fd2be20523ef962f7ac5aeb544fabc0886adbf93e4"
+    },
+    {
+      "decision": "Exact authorized lease publication and draft PR metadata update completed; no source change after original Review.",
+      "status": "published",
+      "evidence": "Published 916c1b0800d2a9b8d092e5eded2f996d75a73b9b from exact expected 1144647c8d539716e8ddddf9daa47407c9bd00ac; PR398 OPEN/draft/closingIssuesReferences=[] verified. Final receipt is documentation-only normal push."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "independent-acceptance",
+      "summary": "Prior96099bb5 correction TWO independently accepted boundedPass; new578631ac governance integration delta still needs SAME reviewer assessment. PR stays draft.",
+      "resolution": "Publish exact authorized96099bb5lease, final normal receipt/PR refresh then STOP for SAME reviewer final integration delta; any material source bug routes human, no third correction."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Exact96099bb5lease publication completed ef66334f8968c16de1d64d9144ee0085937472ac; draft PR exacthead/base578631ac/emptyrefs verified, main still pinned. Transition execution completed/session stopped per explicit owner STOP. Final metadata-only normal push/PR exacthead refresh follows, then SAME reviewer final integration-delta assessment. No source correction or new original Review."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Same independent reviewer assesses final governance integration delta",
+      "rationale": "Prior correction TWO accepted boundedPass733cb491 at96099bb5; complete9path patch preserved on578631ac but final integrationdelta not yet independently assessed. No new original Review or third correction; any material source bug routes human.",
+      "evidence": "Integrated9f930d820f4133227717dc7b319903372ad8396e/base578631ac75cc8c6a7af53922c6aaae4435e7761c; separate integration-governance receipt/manifest93path boundary,73prior immutable and2642protected upstream exact. Prior adverse and boundedPass payloads preserved."
+    },
+    {
+      "rank": 2,
+      "task": "Typed limited metadata defensive hardening",
+      "rationale": "Low conditional inherited exposure; actual unchanged source emits typed counts, so not a normal HTTP privacy blocker.",
+      "evidence": "Original new Review RV-002."
+    },
+    {
+      "rank": 3,
+      "task": "Owner-controlled authority, drill, external Azure head, Azure SQL and old-image exclusion evidence",
+      "rationale": "Whole issue operational prerequisites; outside bounded local source authority and cannot be inferred from local tests.",
+      "evidence": "Live issue 122 and original new Review residual gates."
+    }
+  ]
+}

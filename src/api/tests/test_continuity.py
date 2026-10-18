@@ -150,6 +150,8 @@ class Suspension(Base):
 class Changes(Base):
     def setUp(self):
         super().setUp()
+        from test_continuity_epoch_export import complete_release_fixtures
+        complete_release_fixtures(self)
         self.pso = self.people["Programme Support Officer"]
 
     def change(self, **kw):
@@ -240,10 +242,16 @@ class JsonStore(unittest.TestCase):
             store.restart_propose(pm, dict(id=s["id"], corrective_evidence="Reviewed."))
             store.restart_decide(pso, dict(id=s["id"], epoch=1, decision="Restart", authority_ref="Ref"))
             self.assertFalse(store.continuity_block("priority"))
-            bundle = json.loads(json.dumps(store.continuity_export(pm, Assistants.export(type('J', (), {'sql': False})()))))
+            service = Assistants(store, {})
+            self.addCleanup(service.stop)
+            bundle = json.loads(json.dumps(store.continuity_export(pm, service.export())))
             self.assertTrue(continuity.verify_export(bundle)["valid"])
             self.assertFalse(bundle["assistants"]["supported"])
             self.assertIn("JSON store", bundle["assistants"]["note"])
+            self.assertFalse(bundle["task_releases"]["supported"])
+            self.assertEqual(bundle["task_releases"]["records"], [])
+            self.assertIn("unsupported", bundle["task_releases"]["note"])
+            self.assertTrue(continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"])
 
 
 if __name__ == "__main__":

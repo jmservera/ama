@@ -1,0 +1,41 @@
+
+PROJECT core
+All checks passed!
+72 files already formatted
+Success: no issues found in 125 source files
+
+PROJECT api
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_continuity_epoch_export.py:3:1
+   |
+ 1 |   """Synthetic epoch lifetime and offline evidence checks; no live provider use."""
+ 2 |
+ 3 | / import copy
+ 4 | | import json
+ 5 | | import os
+ 6 | | import threading
+ 7 | | import unittest
+ 8 | | import urllib.request
+ 9 | | import uuid
+10 | | from typing import Any
+11 | | from unittest.mock import patch
+12 | |
+13 | | import release_support  # type: ignore[import-not-found]
+14 | | from zava_forward.core import ai_tasks, continuity
+15 | | from zava_forward.core.ai import Ai
+16 | | from zava_forward.core.assistants import Assistants, MSSQL_DDL, canonical
+17 | |
+18 | | import test_assistants as fixtures
+19 | | from test_assistants import Base, proposal
+20 | | from test_continuity import SUSPEND
+   | |___________________________________^
+help: Organize imports
+   |
+15 | from zava_forward.core.ai import Ai
+   - from zava_forward.core.assistants import Assistants, MSSQL_DDL, canonical
+16 + from zava_forward.core.assistants import MSSQL_DDL, Assistants, canonical
+17 |
+   |
+
+Found 1 error.
+[*] 1 fixable with `--fix`.

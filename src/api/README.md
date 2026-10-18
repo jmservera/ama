@@ -141,6 +141,115 @@ Run `checks/procurement_browser_check.py` with the existing API/core test paths
 for local synthetic keyboard, offer/commitment, denied-route and reflow checks.
 These checks are not resident validation or WCAG certification.
 
+## Continuity epoch and retained offline evidence (#122 partial follow-up)
+
+The new bounded register/release remediation applies the existing recorded-need
+policy to `GET /api/continuity` and the control documents returned by suspension,
+restart, change and reversal actions. Permitted roles retain safe IDs, registered
+scope, status, epoch, proposal/decision state and communication flags; protected
+narratives, arbitrary subject/version keys and unknown nested text are held.
+Canonical stored evidence and full authorized responses are not redacted.
+This does not change who may suspend, propose, decide or export.
+
+Every retained task release is now checked for lifecycle completeness, including
+releases with no proposal reference. Missing, truncated, malformed or contradictory
+records make production incomplete and offline verification invalid, even after
+the ordinary bundle digest is recomputed. Lifecycle checks allow repeated
+suspension and timestamp ties supported by the writer, but cannot authenticate
+wholesale consistent rewriting of unanchored history. Event timestamps accept
+only integers and floats that pass floating-point finiteness validation, excluding
+booleans; conversion overflow, nonfinite values and nonnumeric values explicitly
+make producer evidence incomplete and offline verification invalid. This is not
+a calendar-date policy; finite negative, fractional and large numeric values
+retain their existing meaning. Known-empty SQL evidence
+and explicit unsupported JSON storage remain distinct from unavailable evidence.
+Audience-limited exports remain explicitly incomplete, never full ledger proof;
+externally held canonical heads are unchanged. Local synthetic proof is not
+operational acceptance of issue #122.
+
+Durable assistant identity includes the persisted creation epoch. Suspension and
+restart invalidate old queued, leased, ready and accepted work for current use,
+even if sources and task release are unchanged. Detail/list/review/verification/
+edit-accept and export enforce this on the server. Historical disposition and
+permitted evidence remain; a fresh invocation or eligible scan creates fresh
+epoch-bound work. Missing lifetime evidence fails closed. Late calls can remain
+charged or unknown; no remote cancellation or exactly-once billing is promised.
+
+Legacy text/document/priority publication uses the existing optimistic continuity
+document check in the writer transaction. A competing epoch change refuses the
+old publication and permits only a local quarantined-record retry, never another
+provider call. Gate-aware processes refresh persisted epochs; this does not make
+an image predating the gates safe. Such images must be stopped/drained or denied
+serving access by an enforceable deployment boundary outside this source change.
+The change/reverse register is evidence, not general serving configuration control.
+
+Full continuity JSON bundles retain task-release reference-time snapshots, current
+status/revision and release-ID lifecycle events with IDs/timestamps/associations.
+Offline verification resolves ID/version/digest/task and lifecycle completeness,
+in addition to bundle digest, ledger chain and optionally an externally held head.
+Missing/unavailable/truncated referenced evidence is explicitly incomplete. No raw
+provider requests or extra sensitive input fields are added. Self-contained
+hashes cannot authenticate wholesale rewriting of unanchored task-release events.
+Proposal collection and source metadata are required even for empty collections.
+The verifier independently checks exact boolean flags, nonnegative integer
+total/exported counts and serialized list agreement. Declared truncation is
+invalid regardless of producer completeness flags or a recomputed bundle digest.
+Source status distinguishes available SQL evidence, explicitly unsupported empty
+JSON-store proposals, and unavailable evidence. Missing/unavailable source metadata
+fails closed; legitimate unsupported JSON exports remain usable. Older bundles
+without this metadata must be regenerated from retained source evidence, not
+silently certified complete.
+
+A SQL migration/schema failure is unavailable evidence, not an unsupported JSON
+store or a known-empty collection. Export retains an unknown total and explicit
+truncation/unavailability with the safe operator/manual-route message; it never
+substitutes empty release proof or exposes driver exception text. Both the normal
+HTTP producer and offline verifier reject completeness, including after an
+ordinary digest is recomputed. Ordinary case/manual work remains available.
+
+Focused regressions are in `tests/test_continuity_epoch_export.py`, using installed
+`src` distributions and synthetic nonbillable providers. `ZF_CONTINUITY_MSSQL=1`
+requires `ZF_ISSUE122_OWNED_SQL` and loopback-only `ZF_SQL_*`; each test creates
+and drops a UUID-named database on an explicitly task-owned local container.
+SQLite and actual local SQL Server evidence are distinct from Azure evidence.
+The original independent Review was Not accepted (RV-001/RV-002). Authorized
+correction ONE adds only the two continuity GET route kinds to the outer staff
+allowlist and validates proposal collection completeness offline. Inner register
+access remains limited to managers, Quality Inspector and Building Safety Liaison;
+export remains manager-only. Contractor, unknown and unrelated staff denials are
+retained and exercised over actual HTTP. Correction evidence is not independent
+acceptance; the original adverse Review is unchanged.
+Coordinator-authorized correction TWO applies the existing recorded-need policy
+(`DEFAULT_REASON_ROLES`, or the configured `ZF_REASON_ROLES`) at export. A manager
+with a recorded need receives full evidence and the exact canonical ledger, still
+subject to independent completeness and external-head checks. A manager without
+that need retains HTTP export access but receives a closed, audience-limited
+summary: numeric/boolean lifetime information, known dispositions, counts and the
+recorded head. Free-text evidence, identifiers, snapshots/events, raw ledger rows
+and governance/version narratives are held rather than pattern-filtered.
+
+Limited exports say `audience.scope=limited`, `full_ledger_proof=false`,
+`ledger.full_proof=false` and `complete=false`, with an explicit nonsensitive
+reason. The verifier rejects full-proof validation, even if producer completeness
+flags and the ordinary digest are rewritten. No redacted row claims the original
+hash, and the server-side canonical evidence is unchanged. Such summaries cannot
+reconstruct task-release references or prove the full ledger; a separately
+authorized full export is required for that purpose. Original adverse Review
+and correction ONE failures remain historical evidence; correction TWO does not
+constitute independent acceptance or deployment readiness.
+
+The continuity follow-up is integrated onto the appointment-controls baseline
+`3104bb69ddc26c81e0e9d2f57000dac1d99a419a` (#397). Integration preserves
+both the existing appointment evidence projection and the two continuity GET
+allowlist entries; it introduces no additional domain behavior. The original
+continuity Review and both correction histories remain unchanged.
+
+Manual contact, resident challenge and independent hazard transactions still use
+their existing authority and safety gates during suspension. Synthetic exercise
+records do not prove genuine named authority, an authorized witnessed drill,
+an immutable externally held Azure head or an Azure SQL drill. These remain
+unmet; this is not completion or operational acceptance of #122.
+
 ## Coordinator heatmap and lifecycle funnel (#101)
 
 Original Review RV-001 exposed false403 for staff with a mixed-case stored email.

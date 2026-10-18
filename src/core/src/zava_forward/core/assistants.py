@@ -521,10 +521,13 @@ class Assistants:
                  if scope in (continuity.ALL, c)]
         return Affected(found[:limit], total=len(found))
 
-    def export(self, limit=5000):
+    def export(self, limit=5000, release_limit=5000, event_limit=5000):
         """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""
+        if self.schema_error:
+            return dict(proposals=[], total=None, truncated=True, supported=True, source_status="unavailable",
+                        note=self.schema_error)
         if not self.sql:
-            return dict(proposals=[], total=0, truncated=False, supported=False,
+            return dict(proposals=[], total=0, truncated=False, supported=False, source_status="unsupported",
                         note="Assistant proposals are durable SQL only; this JSON store holds none, so none are exported.")
         with self.transaction() as db:
             ids = [r[0] for r in db.execute("SELECT id FROM assistant_tasks ORDER BY id").fetchall()]
@@ -533,10 +536,25 @@ class Assistants:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
                 s = continuity.active(self.continuity(db), body["capability"])
-                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
+                current = continuity.epoch_current(body, self.continuity(db)["epoch"])
+                row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
+                stale = row is None or digest(self.snapshot(db, body["capability"], json.loads(row[0]))) != body["source_signature"]
+                out.append(dict(body, provenance=events, epoch_current=current, stale=stale, relied_on=current and not stale and body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
                                 and body.get("release") == self.release_reference(db, body["capability"]),
                                 suspension=s["id"] if s else None))
-            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit)
+            releases = []
+            rows = db.execute("SELECT id,capability,status,body,revision FROM assistant_releases ORDER BY id").fetchall()
+            for rid, cap, status, raw, revision in rows[:release_limit]:
+                events = db.execute("SELECT id,at,body FROM assistant_events WHERE task_id=? ORDER BY at,id", (rid,)).fetchall()
+                releases.append(dict(id=rid, task=cap, current_status=status, revision=revision,
+                                     snapshot=dict(json.loads(raw), id=rid, status="active"),
+                                     events=[dict(id=eid, release_id=rid, at=at, body=json.loads(body))
+                                             for eid, at, body in events[:event_limit]],
+                                     event_total=len(events), truncated=len(events) > event_limit))
+            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, source_status="available", limit=limit,
+                        epoch=self.continuity(db)["epoch"],
+                        task_releases=dict(supported=True, records=releases, total=len(rows), exported=len(releases),
+                                           truncated=len(rows) > release_limit))
 
     def disabled(self, db=None, capability=None):
         l = self.limits
@@ -602,14 +620,15 @@ class Assistants:
         signature = digest(snapshot)
         identity = proposal_identity(capability)
         release = self.release_reference(db, capability)
-        tid = digest([capability, VERSION, c["id"], signature, identity, release])
+        epoch = self.continuity(db)["epoch"]
+        tid = digest([capability, VERSION, c["id"], signature, identity, release, epoch])
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
             reason = self.disabled(db, capability)
             body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
                         source_signature=signature, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
-                        release=release, reason=reason, created_at=self.now(db))
+                        release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db))
             state = "disabled" if reason else "pending"
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
@@ -659,15 +678,19 @@ class Assistants:
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
         held = continuity.active(self.continuity(db), body["capability"])
+        body["epoch_current"] = continuity.epoch_current(body, self.continuity(db)["epoch"])
         body["release_denial"] = self.admission(db, body["capability"])
         if not body["release_denial"] and body.get("release") != self.release_reference(db, body["capability"]):
             body["release_denial"] = rel.denial("activation release changed", ["original activation release"], body["capability"])
-        body["actionable"] = held is None and body["state"] not in ("quarantined", "disabled") and not body["release_denial"]
+        body["actionable"] = body["epoch_current"] and not body["stale"] and held is None and body["state"] in ("ready", "accepted") and not body["release_denial"]
+        body["relied_on"] = body["actionable"] and body["state"] == "accepted"
         body["suspension"] = held["id"] if held else None
         if held:
             body["display_state"] = "suspended"
         elif body["release_denial"]:
             body["display_state"] = "release-denied"
+        elif not body["epoch_current"]:
+            body["display_state"] = "epoch-stale"
         return body
 
     def detail(self, user, tid, history_offset=0):
@@ -770,6 +793,8 @@ class Assistants:
                 self.event(db, tid, kind="exhausted", outcome="attempts-exhausted")
                 return None
             reason = self.disabled(db, task["capability"])
+            if not reason and not continuity.epoch_current(task, self.continuity(db)["epoch"]):
+                reason = "Proposal epoch changed or is unavailable; request fresh work or use the manual route."
             if not reason and task.get("release") != self.release_reference(db, task["capability"]):
                 reason = rel.denial("activation release changed", ["original activation release"], task["capability"])["reason"]
             if reason:
@@ -843,7 +868,7 @@ class Assistants:
             epoch = self.continuity(db)["epoch"]
             denied = self.admission(db, current["capability"])
             binding = digest(runtime_binding(current["capability"], self.store.ai))
-            quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"])) or bool(
+            quarantined = not continuity.epoch_current(current, epoch) or epoch != current.get("claim_epoch") or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
             if not quarantined and envelope.get("outcome") == "returned":
                 # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
@@ -931,6 +956,8 @@ class Assistants:
                 returned.set()
         with self.transaction() as db:
             held = self.suspended(db, task["capability"]) or (self.admission(db, task["capability"]) or {}).get("reason")
+            if not held and not continuity.epoch_current(task, self.continuity(db)["epoch"]):
+                held = "Epoch changed before dispatch; use the manual route."
             if not held and task.get("release") != self.release_reference(db, task["capability"]):
                 held = "Release changed before dispatch; use the manual route."
         if held:
@@ -975,6 +1002,8 @@ class Assistants:
             if type(revision) is not int or revision != task["revision"]:
                 raise ConflictError(tid)
             if action != "reject":
+                if not task["epoch_current"]:
+                    raise PermissionError("Proposal epoch changed or is unavailable; request fresh work or use the manual route.")
                 if task["suspension"]:
                     raise PermissionError(self.suspended(db, task["capability"]))
                 if task["release_denial"]:
@@ -1002,7 +1031,7 @@ class Assistants:
                 task["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
             state = task["state"] if action == "verify" else ("rejected" if action == "reject" else "accepted")
             task.pop("provenance", None)
-            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial"):
+            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial", "epoch_current", "relied_on"):
                 task.pop(key, None)
             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
                              (canonical(task), state, tid, revision))

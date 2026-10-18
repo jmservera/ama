@@ -1,0 +1,48 @@
+Exact main installed image, final semantic oracle (expected product failures):
+======================================================================
+FAIL: test_legacy_text_document_priority_publication_race (test_continuity_epoch_export.LegacyTests.test_legacy_text_document_priority_publication_race) (task='summary')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tests/api/test_continuity_epoch_export.py", line 374, in test_legacy_text_document_priority_publication_race
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: [ConflictError('continuity')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+ConflictError('continuity')
+
+- [ConflictError('continuity')]
++ []
+
+======================================================================
+FAIL: test_legacy_text_document_priority_publication_race (test_continuity_epoch_export.LegacyTests.test_legacy_text_document_priority_publication_race) (task='read_document')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tests/api/test_continuity_epoch_export.py", line 383, in test_legacy_text_document_priority_publication_race
+    self.assertEqual(records[0]["status"], "Quarantined")
+AssertionError: 'Not reviewed' != 'Quarantined'
+- Not reviewed
++ Quarantined
+
+
+======================================================================
+FAIL: test_legacy_text_document_priority_publication_race (test_continuity_epoch_export.LegacyTests.test_legacy_text_document_priority_publication_race) (task='priority')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tests/api/test_continuity_epoch_export.py", line 383, in test_legacy_text_document_priority_publication_race
+    self.assertEqual(records[0]["status"], "Quarantined")
+AssertionError: 'Proposed' != 'Quarantined'
+- Proposed
++ Quarantined
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.058s
+
+FAILED (failures=3)
+
+Fixed installed hardened image, identical final oracle:
+----------------------------------------------------------------------
+Ran 1 test in 0.070s
+
+OK

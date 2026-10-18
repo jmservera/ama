@@ -1,0 +1,26 @@
+{
+  "base": "9c648b2006e8b2e563823ea7d5aabdf7f1ac7096",
+  "pre_integration": "1144647c8d539716e8ddddf9daa47407c9bd00ac",
+  "integrated_head": "08dd12762e1789bc3dd387b37b1d572716b3d810",
+  "integrated_tree": "0c4c5047873aedaaaa909bf0b902055895c42c25",
+  "conflicts": [],
+  "upstream_file_count": 148,
+  "explained_overlaps": [
+    "src/api/README.md",
+    "src/core/src/zava_forward/core/projection.py"
+  ],
+  "historical_hashes": {
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-changes.md": "1bff1d8a1f2e0f7466664e440150abb4275c7846b214795485d2aa28c9b7612a",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-one.md": "575971b9581c0e490395425949c689b8d0a871d5c329176b1959538af90f5bca",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-two.md": "5320301a9e6395ae70d62c61858fe6f256dbed98fd566a860438334cf7be2aeb",
+    ".copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-integration.md": "b80b5baac042e9e4354d8ee351214b578a8b4854babe010cfff2e8be97470cf5",
+    ".copilot-tracking/details/2026-10-18/issue-122-continuity-epoch-export-phase-details.md": "4a66b538f43849bb87d10f6566dedd6b7da247abdba7af5729fbfd3e4a2edc63",
+    ".copilot-tracking/plans/2026-10-18/issue-122-continuity-epoch-export-plan.md": "62161e32c8924a2bf888aad3de35b1f3182487b401b0071dce745f300607b36e",
+    ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md": "1d6fb6d79c2e7f3ebd6b69e11af1acbc83596c9d2d474ffc1ba8fe157d4d71d3",
+    ".copilot-tracking/reviews/2026-10-18/issue-122-continuity-epoch-export-plan-critique.md": "4eeda2d60235f571916a83de65fa9cda8d73e2159291a50286e8055328fc77be",
+    ".copilot-tracking/reviews/logs/2026-10-18/issue-122-continuity-epoch-export-review.md": "9d9d0bff0fdda5a8d163967c4ba8a997ee1bc315ae5a896611fc331aff200abc",
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-122-continuity-epoch-export-state.json": "f7767af42bc8a2ad6b13c32608af458696ef7361f6d089cee55e559a9f52b14e"
+  },
+  "log_exact_upstream": true,
+  "log_historical_body_prefix": true
+}

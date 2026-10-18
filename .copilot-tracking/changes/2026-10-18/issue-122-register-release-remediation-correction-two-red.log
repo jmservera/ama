@@ -1,0 +1,57 @@
+test_constructor_migration_failure_cannot_omit_retained_sql_evidence (test_continuity_epoch_export.OfflineTests.test_constructor_migration_failure_cannot_omit_retained_sql_evidence) ... FAIL
+test_actual_json_unsupported_and_available_sql_full_empty_sources (test_continuity_epoch_export.OfflineTests.test_actual_json_unsupported_and_available_sql_full_empty_sources) ... ok
+test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) ... 
+  test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) (role='Retrofit Programme Manager', reasons='Retrofit Programme Manager') ... FAIL
+  test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) (role='Retrofit Programme Manager', reasons='Building Safety Liaison') ... FAIL
+  test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) (role='Programme Support Officer', reasons='Building Safety Liaison') ... FAIL
+
+======================================================================
+FAIL: test_constructor_migration_failure_cannot_omit_retained_sql_evidence (test_continuity_epoch_export.OfflineTests.test_constructor_migration_failure_cannot_omit_retained_sql_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 493, in test_constructor_migration_failure_cannot_omit_retained_sql_evidence
+    assert_unavailable_export(self, bundle)
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 39, in assert_unavailable_export
+    test.assertFalse(bundle["complete"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) (role='Retrofit Programme Manager', reasons='Retrofit Programme Manager')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 1010, in test_http_migration_failure_reports_incomplete_without_driver_details
+    assert_unavailable_export(self, bundle)
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 39, in assert_unavailable_export
+    test.assertFalse(bundle["complete"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) (role='Retrofit Programme Manager', reasons='Building Safety Liaison')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 1010, in test_http_migration_failure_reports_incomplete_without_driver_details
+    assert_unavailable_export(self, bundle)
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 41, in assert_unavailable_export
+    test.assertEqual(bundle["assistants"]["source_status"], "unavailable")
+AssertionError: 'unsupported' != 'unavailable'
+- unsupported
++ unavailable
+
+
+======================================================================
+FAIL: test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.HttpTests.test_http_migration_failure_reports_incomplete_without_driver_details) (role='Programme Support Officer', reasons='Building Safety Liaison')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 1010, in test_http_migration_failure_reports_incomplete_without_driver_details
+    assert_unavailable_export(self, bundle)
+  File "/home/azureuser/source/ama-wt/issue-122/src/api/tests/test_continuity_epoch_export.py", line 41, in assert_unavailable_export
+    test.assertEqual(bundle["assistants"]["source_status"], "unavailable")
+AssertionError: 'unsupported' != 'unavailable'
+- unsupported
++ unavailable
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.278s
+
+FAILED (failures=4)

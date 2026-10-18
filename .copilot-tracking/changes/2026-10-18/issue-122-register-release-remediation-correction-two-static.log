@@ -1,0 +1,11 @@
+
+PROJECT core
+All checks passed!
+72 files already formatted
+Success: no issues found in 125 source files
+
+PROJECT api
+All checks passed!
+25 files already formatted
+tests/test_continuity_epoch_export.py:510: error: Module "test_assistants" does not explicitly export attribute "SqlStore"  [attr-defined]
+Found 1 error in 1 file (checked 57 source files)

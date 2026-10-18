@@ -1,0 +1,28 @@
+HEAD 956ece15a0599c2b5e204aaf86547e1e64112f5e
+test_empty_legacy_and_explicit_unsupported_sources_are_distinct (test_continuity_epoch_export.OfflineTests.test_empty_legacy_and_explicit_unsupported_sources_are_distinct) ... ok
+test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.OfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors) ... ok
+test_legacy_top_level_release_and_collection_restart_are_retained (test_continuity_epoch_export.OfflineTests.test_legacy_top_level_release_and_collection_restart_are_retained) ... ok
+test_malformed_release_sources_fail_producer_and_verifier_without_exceptions (test_continuity_epoch_export.OfflineTests.test_malformed_release_sources_fail_producer_and_verifier_without_exceptions) ... ok
+test_original_review_missing_and_truncated_proposals_with_unchanged_head (test_continuity_epoch_export.OfflineTests.test_original_review_missing_and_truncated_proposals_with_unchanged_head) ... ok
+test_producer_marks_missing_and_bounded_release_evidence_incomplete (test_continuity_epoch_export.OfflineTests.test_producer_marks_missing_and_bounded_release_evidence_incomplete) ... ok
+test_proposal_metadata_shapes_counts_and_source_status_fail_closed (test_continuity_epoch_export.OfflineTests.test_proposal_metadata_shapes_counts_and_source_status_fail_closed) ... ok
+test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases (test_continuity_epoch_export.OfflineTests.test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases) ... ok
+test_release_snapshot_and_lifecycle_verify_offline_after_revocation (test_continuity_epoch_export.OfflineTests.test_release_snapshot_and_lifecycle_verify_offline_after_revocation) ... ok
+test_release_source_absence_and_unsupported_are_not_full_evidence (test_continuity_epoch_export.OfflineTests.test_release_source_absence_and_unsupported_are_not_full_evidence) ... ok
+test_unreferenced_lifecycle_transitions_and_timestamp_ties (test_continuity_epoch_export.OfflineTests.test_unreferenced_lifecycle_transitions_and_timestamp_ties) ... ok
+test_unreferenced_retained_release_lifecycle_is_required (test_continuity_epoch_export.OfflineTests.test_unreferenced_retained_release_lifecycle_is_required) ... ok
+test_migration_failure_cannot_certify_retained_sql_evidence_absent (__main__.UnavailableSource.test_migration_failure_cannot_certify_retained_sql_evidence_absent) ... {"retained_release_count": 11, "source": {"proposals": [], "total": 0, "truncated": false, "supported": false, "source_status": "unsupported", "note": "Assistant proposals are durable SQL only; this JSON store holds none, so none are exported."}, "complete": true, "reasons": [], "verified": {"valid": true, "problems": [], "complete": true}}
+FAIL
+
+======================================================================
+FAIL: test_migration_failure_cannot_certify_retained_sql_evidence_absent (__main__.UnavailableSource.test_migration_failure_cannot_certify_retained_sql_evidence_absent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.copilot/session-state/b9cc4727-b806-4e0f-a2cf-c5010d92428c/files/coordinator122-unavailable-probe.py", line 37, in test_migration_failure_cannot_certify_retained_sql_evidence_absent
+    self.assertFalse(bundle["complete"], "Unavailable SQL was falsely certified complete")
+AssertionError: True is not false : Unavailable SQL was falsely certified complete
+
+----------------------------------------------------------------------
+Ran 13 tests in 6.534s
+
+FAILED (failures=1)

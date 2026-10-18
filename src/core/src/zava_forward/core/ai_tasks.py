@@ -173,7 +173,8 @@ def add_record(store, user, **fields):
     with store.lock:
         rec = dict(id=uuid.uuid4().hex[:12], kind="ai_task", user=user["email"], created=_now(), status=NOT_REVIEWED,
                    prompt_version=ai_prompts.version(fields["task"]), reviewer_action=None, reviewer_reason="", override_text=None,
-                   resolved_by=None, resolved_at=None, **fields)
+                   resolved_by=None, resolved_at=None)
+        rec.update(fields)
         store.data["recommendations"].append(rec)
         store.audit(user["email"], "ai_record", (rec["case_ids"] or ["-"])[0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec['id']} mode={rec['mode']} source={rec['source']} verified={rec['verified']}")
@@ -205,28 +206,26 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         cites = [x for x in cites if x not in bad]
         verified = bool(cites) and not bad
     reason = r.get("reason")
-    late = r["source"] == "ai" and epoch0 is not None and store.continuity_epoch() != epoch0
-    if late:  # the call began before a suspension or restart: keep it for reconstruction, never as a proposal
-        reason, text, cites, verified = "late result quarantined after a suspension or restart", workflow_text, [], False
     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
     from . import ai_registry
     env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
                                                for cid, labels in sources.items()},
                                dict(r, prompt_version=ai_prompts.version(task)), store.version)
-    rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
-                     latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
-                     fallback_reason=reason, envelope=env, release=r.get("release"), verified=verified, instruction_status="Not an instruction",
-                     continuity_epoch=epoch0, quarantine=dict(reason=reason, at=_now()) if late else None,
-                     provenance=dict(citation_resolved=verified, source_verified=False, human_reviewed=False,
-                                     source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=cites, unresolved=bad, dropped_uncited=dropped)
-    if late:
-        with store.lock:
-            rec["status"] = QUARANTINED
-            store.audit(user["email"], "ai_quarantine", "-", f"{task} {rec['id']}")
-            store.save()
-        r = dict(r, source="template", model=None)
-    return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
-                approval=NOT_REVIEWED, instruction_status="Not an instruction", envelope=env, record_id=rec["id"], mode=mode, prompt_version=ai_prompts.version(task))
+    def publish(late):
+        why = "late result quarantined after a suspension or restart" if late else reason
+        shown, citations, checked = (workflow_text, [], False) if late else (text, cites, verified)
+        rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
+                         latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=shown,
+                         fallback_reason=why, envelope=env, release=r.get("release"), verified=checked, instruction_status="Not an instruction",
+                         status=QUARANTINED if late else NOT_REVIEWED,
+                         continuity_epoch=epoch0, quarantine=dict(reason=why, at=_now()) if late else None,
+                         provenance=dict(citation_resolved=checked, source_verified=False, human_reviewed=False,
+                                         source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=citations, unresolved=bad, dropped_uncited=dropped)
+        result = dict(r, source="template", model=None, reason=why) if late else r
+        return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
+                    approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
+                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task))
+    return store.continuity_publish(task, epoch0, r["source"], publish)
 
 
 def require_registered(task):
@@ -280,6 +279,11 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise ValueError("This AI output has already been reviewed.")
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
+        if action != "reject" and rec["source"] == "ai":
+            from .continuity import epoch_current
+            if not epoch_current(rec, store.continuity_epoch()):
+                raise PermissionError("AI output epoch changed or is unavailable; use fresh work or the manual route.")
+            store.continuity_fence()
         if action != "reject" and rec["source"] == "ai" and not store.release_current(
                 rec["task"], rec.get("release"), rec.get("model")):
             store.audit(user["email"], "ai_release_denied", "-", f"{rec['task']} {rec_id}; use the manual route")
