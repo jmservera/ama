@@ -1,0 +1,25 @@
+Mode=static-final; frozen base=9d625a09e34491ecf9fd27ffc7d59e67c2373b29
+Allowlisted environment; local docs/scanner/password auth; no ambient ZF/AI/Azure settings.
+Workspace scratch=/home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch
+
+$ (.) /home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch/venv/bin/python /home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py
+Cannot migrate broken.pptx: File is not a zip file
+.........................
+----------------------------------------------------------------------
+Ran 25 tests in 0.773s
+
+OK
+EXIT=0
+
+$ (src/api) ruff check .
+All checks passed!
+EXIT=0
+
+$ (src/api) ruff format --check .
+26 files already formatted
+EXIT=0
+
+$ (src/api) mypy
+Success: no issues found in 58 source files
+EXIT=0
+Result codes=[0, 0, 0, 0]

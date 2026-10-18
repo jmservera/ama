@@ -1871,6 +1871,31 @@ registry. No live model inference, Azure deployment, actual SQL Server or
 human/browser accessibility acceptance is implied. There is no register
 editor or automatic retrofit of building data into an already populated store.
 
+`tests/test_mssqlstore.py` adds five constructed building semantic tests and
+replays the same three HTTP tests on the existing disposable SQL harness.
+From `src/api`, with installed source distributions:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_mssqlstore.MssqlBuildings test_mssqlstore.MssqlBuildingHttp -v
+```
+
+These tests are destructive. Enable `ZF_TEST_MSSQL=1` only with `ZF_SQL_*`
+explicitly targeting a task-owned throwaway local SQL Server/database, never a
+configured or pilot dataset. Use a sanitized environment with
+`ZF_DOC_STORE=local`, `ZF_SCANNER=local`, `ZF_AUTH=password`, `ZF_ENV=test`
+and task-owned local `TMPDIR`, `ZF_DOC_DIR` and `ZF_DIGEST_DIR`; do not inherit
+blob, AI, identity or private-path settings. Delete the exact owned container
+and its database after the run. Without opt-in, the eight tests are **Not run**,
+not passing SQL evidence.
+
+The added checks cover seed-free reopen, full shared record and separate home
+allocations/evidence, committed hold visibility across independent sessions,
+stale shared-document refusal, both home/package scope dimensions and missing
+resident/funding/technical/QA approvals. This is local constructed-engine
+conformance only, not Azure, operational register/update rights, allocation
+policy, human/accessibility acceptance or live application acceptance.
+
 ## What staff see
 
 The #344 public edge now targets the existing immutable src API, not a rebuilt

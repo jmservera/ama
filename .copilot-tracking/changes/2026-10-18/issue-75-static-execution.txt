@@ -1,0 +1,94 @@
+Mode=static; frozen base=9d625a09e34491ecf9fd27ffc7d59e67c2373b29
+Allowlisted environment; local docs/scanner/password auth; no ambient ZF/AI/Azure settings.
+Workspace scratch=/home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch
+
+$ (.) /home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch/venv/bin/python /home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py
+Cannot migrate broken.pptx: File is not a zip file
+...E......E.EE.....E...EE
+======================================================================
+ERROR: test_cross_run_pptx_text_notes_and_metadata (__main__.RenameTests.test_cross_run_pptx_text_notes_and_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 210, in test_cross_run_pptx_text_notes_and_metadata
+    from pptx import Presentation
+ModuleNotFoundError: No module named 'pptx'
+
+======================================================================
+ERROR: test_identical_working_and_published_decks_share_exact_output (__main__.RenameTests.test_identical_working_and_published_decks_share_exact_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 166, in test_identical_working_and_published_decks_share_exact_output
+    from pptx import Presentation
+ModuleNotFoundError: No module named 'pptx'
+
+======================================================================
+ERROR: test_logo_added_once (__main__.RenameTests.test_logo_added_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 236, in test_logo_added_once
+    from pptx import Presentation
+ModuleNotFoundError: No module named 'pptx'
+
+======================================================================
+ERROR: test_logo_clears_the_existing_title_band (__main__.RenameTests.test_logo_clears_the_existing_title_band)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 149, in test_logo_clears_the_existing_title_band
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+
+======================================================================
+ERROR: test_style_rename_does_not_break_later_slide_sources (__main__.RenameTests.test_style_rename_does_not_break_later_slide_sources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 89, in test_style_rename_does_not_break_later_slide_sources
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+
+======================================================================
+ERROR: test_wrapped_pptx_runs (__main__.RenameTests.test_wrapped_pptx_runs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 226, in test_wrapped_pptx_runs
+    from pptx import Presentation
+ModuleNotFoundError: No module named 'pptx'
+
+======================================================================
+ERROR: test_yaml_logo_source_and_dimensions (__main__.RenameTests.test_yaml_logo_source_and_dimensions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/tools/rename-zava-tests.py", line 71, in test_yaml_logo_source_and_dimensions
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.347s
+
+FAILED (errors=7)
+EXIT=1
+
+$ (src/api) ruff check .
+All checks passed!
+EXIT=0
+
+$ (src/api) ruff format --check .
+26 files already formatted
+EXIT=0
+
+$ (src/api) mypy
+checks/workbench_browser_check.py:12: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/design_system_browser_check.py:26: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/provenance_browser_check.py:12: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_stock_reconciliation_api.py:258: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_resident_api.py:311: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_coordinator_api.py:253: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/regulatory_ux_check.py:18: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+checks/procurement_browser_check.py:6: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_grant_lifecycle_api.py:93: error: Cannot find implementation or library stub for module named "playwright.sync_api"  [import-not-found]
+tests/test_continuity_epoch_export.py:13: error: Unused "type: ignore" comment  [unused-ignore]
+tests/test_continuity_epoch_export.py:13: error: Skipping analyzing "release_support": module is installed, but missing library stubs or py.typed marker  [import-untyped]
+tests/test_continuity_epoch_export.py:13: note: Error code "import-untyped" not covered by "type: ignore[import-not-found]" comment
+tests/test_continuity_epoch_export.py:13: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+Found 11 errors in 10 files (checked 58 source files)
+EXIT=1
+Result codes=[1, 0, 0, 1]

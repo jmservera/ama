@@ -9,8 +9,12 @@ import os
 import re
 import tempfile
 import unittest
+from copy import deepcopy
 from pathlib import Path
+from unittest.mock import patch
 
+import building_fixture
+import test_buildings as buildingapi
 import test_chatthreads as chattests
 import test_handoff_api as handofftests
 import test_hazard_referral as hazardtests
@@ -24,6 +28,7 @@ import test_timecapture as timetests
 import test_quality_procurement as procurementtests
 import test_procurement_api as procurementapi
 from zava_forward.core.sqlstore import SqlStore
+from zava_forward.core.store import ConflictError, GateError
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
 TABLES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
@@ -32,14 +37,222 @@ TABLES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread", "
 def wipe():
     from zava_forward.core.mssqlstore import _Conn, connection_string
     c = _Conn(connection_string())
-    c.execute("IF OBJECT_ID(N'audit_append_only', N'TR') IS NOT NULL DROP TRIGGER audit_append_only")
-    for t in TABLES:
-        c.execute(f"IF OBJECT_ID(N'{t}', N'U') IS NOT NULL DROP TABLE {t}")
+    try:
+        c.execute("IF OBJECT_ID(N'audit_append_only', N'TR') IS NOT NULL DROP TRIGGER audit_append_only")
+        for t in TABLES:
+            c.execute(f"IF OBJECT_ID(N'{t}', N'U') IS NOT NULL DROP TABLE {t}")
+    finally:
+        c.close()
 
 
 def factory(data, db, *a, **k):
     from zava_forward.core.mssqlstore import MssqlStore
     return MssqlStore(data, state_dir=os.path.dirname(db))
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlBuildings(unittest.TestCase):
+    """Constructed building conformance, using real independent SQL sessions."""
+
+    def setUp(self):
+        wipe()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+
+    def make_store(self, data=None):
+        def owned_factory(*args, **kwargs):
+            store = factory(*args, **kwargs)
+            self.addCleanup(self.close_store, store)
+            return store
+
+        with patch.object(building_fixture, "SqlStore", owned_factory):
+            return building_fixture.open_store(self.tmp.name, True, data)
+
+    @staticmethod
+    def close_store(store):
+        if store.db.raw is not None:
+            store.db.close()
+            store.db.raw = None
+
+    def test_record_and_home_allocations_reopen_without_seed(self):
+        data = building_fixture.fixture()
+        data["buildings"][0]["dependencies"] = [
+            dict(building_fixture.hold(), id="DEP-1", status="Resolved")
+        ]
+        store = self.make_store(data)
+        building = deepcopy(store.data["buildings"])
+        homes = deepcopy(store.cases)
+        store.save()
+        self.close_store(store)
+        reopened = None
+        try:
+            Path(self.tmp.name, "synthetic.json").unlink()
+            reopened = factory("nonexistent-constructed-seed.json", store.db_path)
+            self.assertEqual(reopened.data["buildings"], building)
+            self.assertEqual(reopened.cases, homes)
+            view = reopened.building_view(reopened.staff["pam@example.test"], "SYN-B1")
+            self.assertEqual(view["costs"][0]["amount_gbp"], "12000.00")
+            for home in homes.values():
+                self.assertEqual(home["cost_allocation"][0]["amount_gbp"], "6000.00")
+            for key in ("cost_allocation", "documents", "quality", "technical", "decision"):
+                self.assertNotIn(key, json.dumps(view))
+        finally:
+            if reopened is not None:
+                reopened.db.close()
+
+    def test_independent_hold_visibility_and_stale_document_conflict(self):
+        first = self.make_store(building_fixture.fixture())
+        second = self.make_store()
+        self.assertIsNot(first.db.raw, second.db.raw)
+        first.data["buildings"][0]["holds"].append(building_fixture.hold())
+        first.save()
+        view = second.building_view(second.staff["pam@example.test"], "SYN-B1")
+        self.assertEqual(view["holds"], [building_fixture.hold()])
+        self.assertIn("Building SYN-B1", " ".join(second.detail("ZF-2")["gate"]))
+        with first.lock:
+            second.data["buildings"][0]["version"] = 2
+            second.data["buildings"][0]["name"] = "Committed winning building"
+            second.save()
+            winner = deepcopy(second.data["buildings"])
+            first.data["buildings"][0]["version"] = 3
+            first.data["buildings"][0]["holds"] = []
+            with self.assertRaises(ConflictError):
+                first.save()
+        self.assertEqual(first.data["buildings"], winner)
+        third = self.make_store()
+        self.assertIsNot(third.db.raw, second.db.raw)
+        self.assertEqual(third.data["buildings"], winner)
+        self.assertEqual(third.data["buildings"][0]["holds"], [building_fixture.hold()])
+
+    def test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable(self):
+        from dataset import supplied_appointment_fixture
+
+        writer = self.make_store(building_fixture.fixture())
+        manager = writer.staff["pam@example.test"]
+        bindings = [dict(measure="Loft insulation", context_revision=1)]
+        wid = writer.issue_work_order(
+            manager, "PKG-SHARED", "ZF-2", resident_bindings=bindings
+        )
+        writer.data["buildings"][0]["holds"].append(building_fixture.hold())
+        writer.save()
+        store = self.make_store()
+        self.assertIsNot(writer.db.raw, store.db.raw)
+        cases = deepcopy(store.cases)
+        orders = deepcopy(store.data["procurement"]["work_orders"])
+        for operation, args, kwargs in (
+            (store.advance, (manager, "ZF-2"), {}),
+            (store.issue_work_order, (manager, "PKG-SHARED", "ZF-2"),
+             dict(resident_bindings=bindings)),
+            (store.reissue_work_order, (manager, wid, "Changed scope", "Synthetic change"),
+             dict(resident_bindings=bindings)),
+        ):
+            with self.subTest(operation=operation.__name__):
+                with self.assertRaises(GateError) as caught:
+                    operation(*args, **kwargs)
+                self.assertIn("Building SYN-B1", str(caught.exception))
+                self.assertIn("Competent review pending", str(caught.exception))
+                self.assertEqual(store.cases, cases)
+                self.assertEqual(store.data["procurement"]["work_orders"], orders)
+        other = store.issue_work_order(
+            manager, "PKG-OTHER", "ZF-2", resident_bindings=bindings
+        )
+        store.reissue_work_order(
+            manager, other, "Changed other scope", "Synthetic change",
+            resident_bindings=bindings,
+        )
+        sibling = store.issue_work_order(
+            manager, "PKG-SHARED", "ZF-3", resident_bindings=bindings
+        )
+        supplied_appointment_fixture(store, manager, sibling)
+        store.record_wo_appointment(manager, sibling, "Booked", "2099-01-01")
+        store.advance(manager, "ZF-3")
+        reopened = self.make_store()
+        self.assertEqual(reopened.detail("ZF-3")["stage"], "Install booked")
+        self.assertEqual(reopened.cases["ZF-2"]["stage"], cases["ZF-2"]["stage"])
+        self.assertEqual(reopened.data["buildings"][0]["holds"], [building_fixture.hold()])
+        self.assertTrue(reopened.verify_audit())
+
+    def test_clear_building_does_not_supply_independent_home_approvals(self):
+        for missing, reason in (
+            ("resident", "Resident decision or authority needs confirmation"),
+            ("funding", "Funding has not been confirmed"),
+            ("technical", "Technical stage:"),
+        ):
+            with self.subTest(missing=missing):
+                wipe()
+                data = building_fixture.fixture()
+                home = data["cases"][0]
+                if missing == "resident":
+                    home["decision"]["status"] = "Waiting"
+                    home["measure_decisions"] = {}
+                elif missing == "funding":
+                    home["funding_ok"] = False
+                else:
+                    home["technical"] = {"signoffs": {}, "design_version": 1}
+                store = self.make_store(data)
+                before = deepcopy(store.cases)
+                view = store.building_view(data["staff"][1], "SYN-B1")
+                self.assertEqual(view["holds"], [])
+                self.assertEqual(view["dependencies"], [])
+                with self.assertRaises(GateError) as caught:
+                    store.advance(data["staff"][1], "ZF-2")
+                self.assertIn(reason, str(caught.exception))
+                self.assertNotIn("Building SYN-B1", str(caught.exception))
+                reopened = self.make_store()
+                self.assertEqual(reopened.cases, before)
+                self.assertEqual(reopened.cases["ZF-3"]["quality"][0]["state"], "Accepted")
+                self.close_store(reopened)
+                self.close_store(store)
+
+    def test_clear_building_does_not_supply_sibling_qa_or_handover(self):
+        data = building_fixture.fixture()
+        data["cases"][1]["closed"] = True
+        data["cases"][0]["quality"] = [
+            dict(data["cases"][1]["quality"][0], state="Submitted", accepted_by=None)
+        ]
+        store = self.make_store(data)
+        before = deepcopy(store.cases)
+        view = store.building_view(data["staff"][1], "SYN-B1")
+        self.assertEqual([home["closed"] for home in view["homes"]], [False, True])
+        with self.assertRaisesRegex(
+            ValueError, "This work is 'Submitted'. It cannot go to 'Handed over' from there"
+        ):
+            store.hand_over_quality(data["staff"][1], "ZF-2", 0, "Synthetic handover", True)
+        self.assertEqual(self.make_store().cases, before)
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlBuildingHttp(buildingapi.BuildingHttpTests):
+    """Replay existing HTTP projections and gates on the disposable SQL database."""
+
+    def setUp(self):
+        wipe()
+
+        def owned_factory(*args, **kwargs):
+            store = factory(*args, **kwargs)
+            self.addCleanup(MssqlBuildings.close_store, store)
+            return store
+
+        try:
+            with patch.object(building_fixture, "SqlStore", owned_factory):
+                super().setUp()
+        finally:
+            self.addCleanup(self.close_http)
+
+    def close_http(self):
+        server = getattr(self, "server", None)
+        thread = getattr(self, "thread", None)
+        if server is not None:
+            if thread is not None and thread.is_alive():
+                server.shutdown()
+                thread.join()
+            server.server_close()
+        if hasattr(self, "tmp"):
+            self.tmp.cleanup()
+
+    def tearDown(self):
+        # Registered cleanups cover both partial setup and normal completion.
+        pass
 
 
 class _Recorder:

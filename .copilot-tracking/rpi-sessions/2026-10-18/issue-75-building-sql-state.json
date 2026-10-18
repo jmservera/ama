@@ -1,0 +1,64 @@
+{
+  "task_id": "75",
+  "task_slug": "issue-75-building-sql",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-75-building-sql-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-75-building-sql-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-75-building-sql-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-18/issue-75-building-sql-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-75-building-sql-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-75-building-sql-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic full ordered RPI and draft publication on supplied branch and exact base; stop after one original Review and publication",
+      "status": "confirmed",
+      "evidence": "Explicit caller authorization 2026-10-18"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-18/issue-75-building-sql-research.md C1-C7/W1-W3"
+    },
+    {
+      "decision": "One independent critique executed, original verdict Revise; PC-001 through PC-004 accepted and directly disposed before implementation",
+      "status": "complete; plan Ready",
+      "evidence": ".copilot-tracking/plans/2026-10-18/issue-75-building-sql-plan.md Critique Disposition"
+    },
+    {
+      "decision": "One original Review executed; assessed test blob 351c81ab24c09811a4e3195b9d88482456482b01, base 9d625a09e34491ecf9fd27ffc7d59e67c2373b29",
+      "status": "execution Complete; outcome Conformant within bounded local constructed SQL conformance only",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-18/issue-75-building-sql-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Publish authorized draft only; P03 publication bookkeeping pending, no source edits or second Review"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator review of full issue75 acceptance and draft proof",
+      "rationale": "Highest-value immediate handoff; bounded SQL evidence cannot adjudicate whole issue",
+      "evidence": "Original Review Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 2,
+      "task": "Operational register/update authority and allocation policy",
+      "rationale": "Requires explicit authority and policy decisions before any governed write path",
+      "evidence": "Plan Follow-Up Items and original Review residual routing"
+    },
+    {
+      "rank": 3,
+      "task": "Named human/accessibility and live application acceptance",
+      "rationale": "Separate operational evidence, not inferable from constructed loopback/SQL checks",
+      "evidence": "Original Review outcome boundary"
+    }
+  ]
+}

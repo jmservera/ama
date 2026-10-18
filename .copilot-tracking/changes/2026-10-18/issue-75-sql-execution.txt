@@ -1,0 +1,69 @@
+Mode=sql; frozen base=9d625a09e34491ecf9fd27ffc7d59e67c2373b29
+Allowlisted environment; local docs/scanner/password auth; no ambient ZF/AI/Azure settings.
+Workspace scratch=/home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch
+Owned container=zf-issue75-2aa8f2b8233b4f7eb094f076976aa1de
+Exact container ID=d7c3bfb08eaa1a76f839662171e509d4ff5e3dc2ee883031a7c7e586c6b1d26e
+Owned database=issue75_2aa8f2b8233b4f7eb094f076976aa1de
+Server responsive on 127.0.0.1:32851
+Actual server version=Microsoft SQL Server 2022 (RTM-CU27-GDR) (KB5126934) - 16.0.4305.5 (X64) 
+	Oct  2 2026 17:28:11 
+	Copyright (C) 2022 Microsoft Corporation
+	Developer Edition (64-bit) on Linux (Ubuntu 22.04.5 LTS) <X64>
+Image=sha256:cf8f0ab2ebe61feec2eed2629061a07d247f791c2a8ddda74a4ac9f06a291718
+
+$ (src/api) /home/azureuser/source/ama-wt/issue-75-sql/.copilot-tracking/.issue75-scratch/venv/bin/python -m unittest test_mssqlstore.MssqlBuildings test_mssqlstore.MssqlBuildingHttp -v
+test_clear_building_does_not_supply_independent_home_approvals (test_mssqlstore.MssqlBuildings.test_clear_building_does_not_supply_independent_home_approvals) ... ok
+test_clear_building_does_not_supply_sibling_qa_or_handover (test_mssqlstore.MssqlBuildings.test_clear_building_does_not_supply_sibling_qa_or_handover) ... ok
+test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable (test_mssqlstore.MssqlBuildings.test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable) ... ERROR
+test_independent_hold_visibility_and_stale_document_conflict (test_mssqlstore.MssqlBuildings.test_independent_hold_visibility_and_stale_document_conflict) ... ok
+test_record_and_home_allocations_reopen_without_seed (test_mssqlstore.MssqlBuildings.test_record_and_home_allocations_reopen_without_seed) ... ERROR
+test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts (test_mssqlstore.MssqlBuildingHttp.test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts) ... ok
+test_local_app_and_bidirectional_navigation (test_mssqlstore.MssqlBuildingHttp.test_local_app_and_bidirectional_navigation) ... ok
+test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake (test_mssqlstore.MssqlBuildingHttp.test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake) ... Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-2
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/api/src/zava_forward/api/server.py", line 89, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/api/src/zava_forward/api/server.py", line 80, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+
+======================================================================
+ERROR: test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable (test_mssqlstore.MssqlBuildings.test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/api/tests/test_mssqlstore.py", line 133, in test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable
+    wid = writer.issue_work_order(
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/core/src/zava_forward/core/procurement.py", line 378, in issue_work_order
+    self._need_manager(user, "issue a work order")
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/core/src/zava_forward/core/procurement.py", line 83, in _need_manager
+    raise PermissionError(f"Only a manager can {what}.")
+PermissionError: Only a manager can issue a work order.
+
+======================================================================
+ERROR: test_record_and_home_allocations_reopen_without_seed (test_mssqlstore.MssqlBuildings.test_record_and_home_allocations_reopen_without_seed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-75-sql/src/api/tests/test_mssqlstore.py", line 94, in test_record_and_home_allocations_reopen_without_seed
+    self.assertEqual(view["costs"][0]["amount_gbp"], "12000.00")
+                     ~~~~^^^^^^^^^
+KeyError: 'costs'
+
+----------------------------------------------------------------------
+Ran 8 tests in 17.050s
+
+FAILED (errors=2)
+EXIT=1
+d7c3bfb08eaa1a76f839662171e509d4ff5e3dc2ee883031a7c7e586c6b1d26e
+Cleanup rm exit=0; remaining exact ID=''
+Result codes=[1]
