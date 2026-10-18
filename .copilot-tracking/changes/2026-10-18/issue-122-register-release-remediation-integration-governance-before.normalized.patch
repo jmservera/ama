@@ -1,0 +1,2414 @@
+diff --git a/src/api/README.md b/src/api/README.md
+--- a/src/api/README.md
++++ b/src/api/README.md
+@@ HUNK @@ Run `checks/procurement_browser_check.py` with the existing API/core test paths
+ for local synthetic keyboard, offer/commitment, denied-route and reflow checks.
+ These checks are not resident validation or WCAG certification.
+ 
++## Continuity epoch and retained offline evidence (#122 partial follow-up)
++
++The new bounded register/release remediation applies the existing recorded-need
++policy to `GET /api/continuity` and the control documents returned by suspension,
++restart, change and reversal actions. Permitted roles retain safe IDs, registered
++scope, status, epoch, proposal/decision state and communication flags; protected
++narratives, arbitrary subject/version keys and unknown nested text are held.
++Canonical stored evidence and full authorized responses are not redacted.
++This does not change who may suspend, propose, decide or export.
++
++Every retained task release is now checked for lifecycle completeness, including
++releases with no proposal reference. Missing, truncated, malformed or contradictory
++records make production incomplete and offline verification invalid, even after
++the ordinary bundle digest is recomputed. Lifecycle checks allow repeated
++suspension and timestamp ties supported by the writer, but cannot authenticate
++wholesale consistent rewriting of unanchored history. Event timestamps accept
++only integers and floats that pass floating-point finiteness validation, excluding
++booleans; conversion overflow, nonfinite values and nonnumeric values explicitly
++make producer evidence incomplete and offline verification invalid. This is not
++a calendar-date policy; finite negative, fractional and large numeric values
++retain their existing meaning. Known-empty SQL evidence
++and explicit unsupported JSON storage remain distinct from unavailable evidence.
++Audience-limited exports remain explicitly incomplete, never full ledger proof;
++externally held canonical heads are unchanged. Local synthetic proof is not
++operational acceptance of issue #122.
++
++Durable assistant identity includes the persisted creation epoch. Suspension and
++restart invalidate old queued, leased, ready and accepted work for current use,
++even if sources and task release are unchanged. Detail/list/review/verification/
++edit-accept and export enforce this on the server. Historical disposition and
++permitted evidence remain; a fresh invocation or eligible scan creates fresh
++epoch-bound work. Missing lifetime evidence fails closed. Late calls can remain
++charged or unknown; no remote cancellation or exactly-once billing is promised.
++
++Legacy text/document/priority publication uses the existing optimistic continuity
++document check in the writer transaction. A competing epoch change refuses the
++old publication and permits only a local quarantined-record retry, never another
++provider call. Gate-aware processes refresh persisted epochs; this does not make
++an image predating the gates safe. Such images must be stopped/drained or denied
++serving access by an enforceable deployment boundary outside this source change.
++The change/reverse register is evidence, not general serving configuration control.
++
++Full continuity JSON bundles retain task-release reference-time snapshots, current
++status/revision and release-ID lifecycle events with IDs/timestamps/associations.
++Offline verification resolves ID/version/digest/task and lifecycle completeness,
++in addition to bundle digest, ledger chain and optionally an externally held head.
++Missing/unavailable/truncated referenced evidence is explicitly incomplete. No raw
++provider requests or extra sensitive input fields are added. Self-contained
++hashes cannot authenticate wholesale rewriting of unanchored task-release events.
++Proposal collection and source metadata are required even for empty collections.
++The verifier independently checks exact boolean flags, nonnegative integer
++total/exported counts and serialized list agreement. Declared truncation is
++invalid regardless of producer completeness flags or a recomputed bundle digest.
++Source status distinguishes available SQL evidence, explicitly unsupported empty
++JSON-store proposals, and unavailable evidence. Missing/unavailable source metadata
++fails closed; legitimate unsupported JSON exports remain usable. Older bundles
++without this metadata must be regenerated from retained source evidence, not
++silently certified complete.
++
++A SQL migration/schema failure is unavailable evidence, not an unsupported JSON
++store or a known-empty collection. Export retains an unknown total and explicit
++truncation/unavailability with the safe operator/manual-route message; it never
++substitutes empty release proof or exposes driver exception text. Both the normal
++HTTP producer and offline verifier reject completeness, including after an
++ordinary digest is recomputed. Ordinary case/manual work remains available.
++
++Focused regressions are in `tests/test_continuity_epoch_export.py`, using installed
++`src` distributions and synthetic nonbillable providers. `ZF_CONTINUITY_MSSQL=1`
++requires `ZF_ISSUE122_OWNED_SQL` and loopback-only `ZF_SQL_*`; each test creates
++and drops a UUID-named database on an explicitly task-owned local container.
++SQLite and actual local SQL Server evidence are distinct from Azure evidence.
++The original independent Review was Not accepted (RV-001/RV-002). Authorized
++correction ONE adds only the two continuity GET route kinds to the outer staff
++allowlist and validates proposal collection completeness offline. Inner register
++access remains limited to managers, Quality Inspector and Building Safety Liaison;
++export remains manager-only. Contractor, unknown and unrelated staff denials are
++retained and exercised over actual HTTP. Correction evidence is not independent
++acceptance; the original adverse Review is unchanged.
++Coordinator-authorized correction TWO applies the existing recorded-need policy
++(`DEFAULT_REASON_ROLES`, or the configured `ZF_REASON_ROLES`) at export. A manager
++with a recorded need receives full evidence and the exact canonical ledger, still
++subject to independent completeness and external-head checks. A manager without
++that need retains HTTP export access but receives a closed, audience-limited
++summary: numeric/boolean lifetime information, known dispositions, counts and the
++recorded head. Free-text evidence, identifiers, snapshots/events, raw ledger rows
++and governance/version narratives are held rather than pattern-filtered.
++
++Limited exports say `audience.scope=limited`, `full_ledger_proof=false`,
++`ledger.full_proof=false` and `complete=false`, with an explicit nonsensitive
++reason. The verifier rejects full-proof validation, even if producer completeness
++flags and the ordinary digest are rewritten. No redacted row claims the original
++hash, and the server-side canonical evidence is unchanged. Such summaries cannot
++reconstruct task-release references or prove the full ledger; a separately
++authorized full export is required for that purpose. Original adverse Review
++and correction ONE failures remain historical evidence; correction TWO does not
++constitute independent acceptance or deployment readiness.
++
++The continuity follow-up is integrated onto the appointment-controls baseline
++`3104bb69ddc26c81e0e9d2f57000dac1d99a419a` (#397). Integration preserves
++both the existing appointment evidence projection and the two continuity GET
++allowlist entries; it introduces no additional domain behavior. The original
++continuity Review and both correction histories remain unchanged.
++
++Manual contact, resident challenge and independent hazard transactions still use
++their existing authority and safety gates during suspension. Synthetic exercise
++records do not prove genuine named authority, an authorized witnessed drill,
++an immutable externally held Azure head or an Azure SQL drill. These remain
++unmet; this is not completion or operational acceptance of #122.
++
+ ## Coordinator heatmap and lifecycle funnel (#101)
+ 
+ Original Review RV-001 exposed false403 for staff with a mixed-case stored email.
+diff --git a/src/api/pyproject.toml b/src/api/pyproject.toml
+--- a/src/api/pyproject.toml
++++ b/src/api/pyproject.toml
+@@ HUNK @@ module = [
+ ignore_errors = true
+ follow_imports = "skip"
+ 
++# Typed continuity tests reuse the existing untyped assistant and Store fixtures.
++[[tool.mypy.overrides]]
++module = ["test_continuity_epoch_export", "tests.test_continuity_epoch_export"]
++disallow_untyped_calls = false
++
+ [tool.setuptools.package-data]
+ "zava_forward.api" = ["web/*", "web/vendor/*", "web/vendor/images/*"]
+ 
+diff --git a/src/api/tests/test_continuity.py b/src/api/tests/test_continuity.py
+--- a/src/api/tests/test_continuity.py
++++ b/src/api/tests/test_continuity.py
+@@ HUNK @@ class Suspension(Base):
+ class Changes(Base):
+     def setUp(self):
+         super().setUp()
++        from test_continuity_epoch_export import complete_release_fixtures
++        complete_release_fixtures(self)
+         self.pso = self.people["Programme Support Officer"]
+ 
+     def change(self, **kw):
+@@ HUNK @@ class JsonStore(unittest.TestCase):
+             store.restart_propose(pm, dict(id=s["id"], corrective_evidence="Reviewed."))
+             store.restart_decide(pso, dict(id=s["id"], epoch=1, decision="Restart", authority_ref="Ref"))
+             self.assertFalse(store.continuity_block("priority"))
+-            bundle = json.loads(json.dumps(store.continuity_export(pm, Assistants.export(type('J', (), {'sql': False})()))))
++            service = Assistants(store, {})
++            self.addCleanup(service.stop)
++            bundle = json.loads(json.dumps(store.continuity_export(pm, service.export())))
+             self.assertTrue(continuity.verify_export(bundle)["valid"])
+             self.assertFalse(bundle["assistants"]["supported"])
+             self.assertIn("JSON store", bundle["assistants"]["note"])
++            self.assertFalse(bundle["task_releases"]["supported"])
++            self.assertEqual(bundle["task_releases"]["records"], [])
++            self.assertIn("unsupported", bundle["task_releases"]["note"])
++            self.assertTrue(continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"])
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/src/api/tests/test_continuity_epoch_export.py b/src/api/tests/test_continuity_epoch_export.py
+new file mode 100644
+--- /dev/null
++++ b/src/api/tests/test_continuity_epoch_export.py
+@@ HUNK @@
++"""Synthetic epoch lifetime and offline evidence checks; no live provider use."""
++
++import copy
++import json
++import os
++import threading
++import unittest
++import urllib.request
++import uuid
++from typing import Any
++from unittest.mock import patch
++
++import release_support  # type: ignore[import-not-found]
++from zava_forward.core import ai_tasks, continuity
++from zava_forward.core.ai import Ai
++from zava_forward.core.assistants import MSSQL_DDL, Assistants, canonical
++from zava_forward.core.sqlstore import SqlStore
++
++import test_assistants as fixtures
++from test_assistants import Base, proposal
++from test_continuity import SUSPEND
++
++
++def complete_release_fixtures(test: Any) -> None:
++    """Replace bare releases only in an isolated positive-proof test store."""
++    with test.service.transaction() as db:
++        bodies = [
++            json.loads(row[0])
++            for row in db.execute("SELECT body FROM assistant_releases").fetchall()
++        ]
++        db.execute("DELETE FROM assistant_releases")
++    test.service.approvers = {test.pm["email"]}
++    for body in bodies:
++        test.service.record_release(test.pm, dict(body, expires="2099-01-01T00:00:00Z"))
++
++
++def assert_unavailable_export(test: Any, bundle: dict[str, Any]) -> None:
++    bundle = json.loads(json.dumps(bundle))
++    head = copy.deepcopy(bundle["ledger"]["head"])
++    test.assertFalse(bundle["complete"])
++    test.assertTrue(bundle["incomplete_reasons"])
++    test.assertEqual(bundle["assistants"]["source_status"], "unavailable")
++    test.assertIsNone(bundle["assistants"]["total"])
++    test.assertFalse(continuity.verify_export(bundle, head)["valid"])
++    bundle["complete"] = True
++    bundle["incomplete_reasons"] = []
++    bundle["digest"] = continuity.sha({k: v for k, v in bundle.items() if k != "digest"})
++    verified = continuity.verify_export(bundle, head)
++    test.assertFalse(verified["valid"])
++    test.assertFalse(verified["complete"])
++    test.assertEqual(bundle["ledger"]["head"], head)
++
++
++class EpochTests(Base):
++    def cycle(self: Any, store: Any = None) -> None:
++        store = store or self.store
++        s = store.suspend(self.people["Quality Inspector"], dict(SUSPEND, synthetic=True))
++        store.restart_propose(
++            self.pm, dict(id=s["id"], corrective_evidence="Constructed offline check only.")
++        )
++        store.restart_decide(
++            self.people["Programme Support Officer"],
++            dict(
++                id=s["id"],
++                epoch=store.continuity_epoch(),
++                decision="Restart",
++                authority_ref="Constructed fixture, not genuine authority",
++            ),
++        )
++
++    def test_ready_and_accepted_history_never_revives(self) -> None:
++        ready = self.verify(self.run_ready("stock-prioritisation"))
++        accepted = self.verify(self.run_ready("assessment-preparation"))
++        accepted = self.service.review(
++            self.pm, accepted["id"], "accept", accepted["revision"], "Synthetic disposition."
++        )
++        self.cycle()
++        for p in (ready, accepted):
++            detail = self.service.detail(self.pm, p["id"])
++            self.assertEqual(detail["state"], p["state"])
++            self.assertFalse(detail["actionable"])
++            self.assertFalse(detail["epoch_current"])
++            listed = next(
++                x for x in self.service.listing(self.pm)["proposals"] if x["id"] == p["id"]
++            )
++            self.assertFalse(listed["actionable"])
++            for action in ("verify", "accept", "edit-accept"):
++                with self.assertRaises((ValueError, PermissionError)):
++                    self.service.review(
++                        self.pm,
++                        p["id"],
++                        action,
++                        p["revision"],
++                        "Must not revive.",
++                        output=proposal(p["snapshot"]),
++                        source_verified=True,
++                    )
++        exported = self.service.export()
++        self.assertTrue(all(not x["relied_on"] for x in exported["proposals"]))
++        fresh = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
++        self.assertNotEqual(fresh["id"], ready["id"])
++        self.assertTrue(self.service.execute(fresh["id"]))
++        rejected = self.service.review(
++            self.pm, ready["id"], "reject", ready["revision"], "Retain rejected history."
++        )
++        self.assertEqual(rejected["state"], "rejected")
++
++    def test_old_queued_leased_and_missing_epoch_cannot_be_claimed(self) -> None:
++        queued = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
++        leased = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
++        claim = self.service.claim(leased["id"], "old-process")
++        self.cycle()
++        other = self.other()
++        self.assertIsNone(other.claim(queued["id"], "new-process"))
++        self.assertTrue(
++            other.complete(
++                claim,
++                dict(outcome="returned", source="ai", usage=None, model="test-model"),
++                proposal(claim["snapshot"]),
++            )
++        )
++        self.assertEqual(other.detail(self.pm, leased["id"])["state"], "quarantined")
++        with other.transaction() as db:
++            attempt = db.execute(
++                "SELECT actual,reserved FROM assistant_attempts WHERE task_id=?", (leased["id"],)
++            ).fetchone()
++            self.assertIsNone(attempt[0])
++            self.assertGreater(attempt[1], 0)
++        fresh = other.invoke(self.pm, "funding-evidence", "ZF-1")
++        with other.transaction() as db:
++            body = other._row(db, fresh["id"])
++            body.pop("continuity_epoch", None)
++            body.pop("claim_epoch", None)
++            db.execute(
++                "UPDATE assistant_tasks SET body=? WHERE id=?", (canonical(body), fresh["id"])
++            )
++        self.assertIsNone(other.claim(fresh["id"], "unbound"))
++
++    def test_old_process_epoch_reads_persisted_restart(self) -> None:
++        other = self.other()
++        self.assertEqual(other.store.continuity_epoch(), 0)
++        self.cycle()
++        self.assertEqual(other.store.continuity_epoch(), 2)
++
++    def test_missing_historical_epoch_and_export_collection_race_fail_closed(self) -> None:
++        p = self.verify(self.run_ready("stock-prioritisation"))
++        self.service.review(
++            self.pm, p["id"], "accept", p["revision"], "Historical synthetic acceptance."
++        )
++        collected = self.service.export()
++        self.assertTrue(collected["proposals"][0]["relied_on"])
++        self.cycle()
++        bundle = self.store.continuity_export(self.pm, collected)
++        self.assertFalse(bundle["assistant_proposals"][0]["relied_on"])
++        fresh = self.run_ready("assessment-preparation")
++        with self.service.transaction() as db:
++            body = self.service._row(db, fresh["id"])
++            body.pop("continuity_epoch", None)
++            body.pop("claim_epoch", None)
++            db.execute(
++                "UPDATE assistant_tasks SET body=? WHERE id=?", (canonical(body), fresh["id"])
++            )
++        self.assertFalse(self.service.detail(self.pm, fresh["id"])["actionable"])
++        with self.assertRaises(PermissionError):
++            self.verify(fresh)
++
++    def test_restart_between_claim_and_dispatch_prevents_provider_call(self) -> None:
++        original = self.service.claim
++
++        def claim_then_cycle(*args: Any) -> Any:
++            result = original(*args)
++            self.cycle(self.other().store)
++            return result
++
++        pending = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
++        with patch.object(self.service, "claim", side_effect=claim_then_cycle):
++            self.service.execute(pending["id"])
++        self.assertEqual(self.provider.calls, 0)
++        self.assertEqual(self.service.detail(self.pm, pending["id"])["state"], "quarantined")
++
++    def test_proactive_scan_creates_epoch_distinct_work(self) -> None:
++        before = set(self.service.scan()["enqueued"])
++        self.assertTrue(before)
++        self.cycle()
++        after = set(self.service.scan()["enqueued"])
++        self.assertTrue(after)
++        self.assertFalse(before & after)
++
++    def test_overlapping_review_suspend_restart_retains_noncurrent_disposition(self) -> None:
++        p = self.verify(self.run_ready("stock-prioritisation"))
++        other = self.other()
++        entered, competing, release = threading.Event(), threading.Event(), threading.Event()
++        results: list[Any] = []
++        errors: list[Exception] = []
++        original = self.service._view
++
++        def held_view(*args: Any) -> Any:
++            result = original(*args)
++            entered.set()
++            self.assertTrue(competing.wait(10))
++            self.assertTrue(release.wait(10))
++            return result
++
++        def review() -> None:
++            try:
++                results.append(
++                    self.service.review(
++                        self.pm, p["id"], "accept", p["revision"], "Overlapping fixture review."
++                    )
++                )
++            except Exception as error:
++                errors.append(error)
++
++        def suspend_restart() -> None:
++            competing.set()
++            try:
++                self.cycle(other.store)
++            except Exception as error:
++                errors.append(error)
++
++        with patch.object(self.service, "_view", side_effect=held_view):
++            first = threading.Thread(target=review)
++            first.start()
++            self.assertTrue(entered.wait(10))
++            second = threading.Thread(target=suspend_restart)
++            second.start()
++            self.assertTrue(competing.wait(10))
++            release.set()
++            first.join(20)
++            second.join(20)
++        self.assertFalse(first.is_alive() or second.is_alive())
++        self.assertEqual(errors, [])
++        self.assertEqual(len(results), 1)
++        final = other.detail(self.pm, p["id"])
++        self.assertEqual(final["state"], "accepted")
++        self.assertFalse(final["actionable"])
++        self.assertFalse(other.export()["proposals"][0]["relied_on"])
++
++    def test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability(self) -> None:
++        entered, release = threading.Event(), threading.Event()
++        errors = []
++        other = self.other()
++
++        def provider(*args: Any) -> dict[str, Any]:
++            entered.set()
++            self.assertTrue(release.wait(10))
++            return dict(
++                text=canonical(proposal({})),
++                provider="local-test-double",
++                deployment="test",
++                model="test-model",
++                source="ai",
++                outcome="returned",
++                usage=None,
++            )
++
++        p = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
++
++        def execute() -> None:
++            try:
++                self.service.execute(p["id"])
++            except Exception as error:
++                errors.append(error)
++
++        with patch.object(self.service, "provider", side_effect=provider):
++            thread = threading.Thread(target=execute)
++            thread.start()
++            self.assertTrue(entered.wait(10))
++            self.cycle(other.store)
++            release.set()
++            thread.join(20)
++        self.assertFalse(thread.is_alive())
++        self.assertEqual(errors, [])
++        detail = other.detail(self.pm, p["id"])
++        self.assertEqual(detail["state"], "quarantined")
++        self.assertIsNone(detail["output"])
++        with other.transaction() as db:
++            row = db.execute(
++                "SELECT actual,reserved,outcome FROM assistant_attempts WHERE task_id=?", (p["id"],)
++            ).fetchone()
++        self.assertIsNone(row[0])
++        self.assertGreater(row[1], 0)
++        self.assertEqual(row[2], "returned")
++
++
++class LegacyTests(Base):
++    cycle = EpochTests.cycle
++
++    def prepare_ai(self: Any, store: Any) -> None:
++        store.ai = Ai()
++        store.ai.endpoint = "http://offline-script.invalid"
++        store.ai._chat = lambda *args, **kwargs: "- Fixture [[Stage: Contacting resident]]"
++        release_support.install(store)
++
++    def test_legacy_review_and_priority_reliance_do_not_revive(self) -> None:
++        self.prepare_ai(self.store)
++        output = self.store.ai_run(self.pm, "ZF-1", "summary")
++        self.cycle()
++        with self.assertRaises(PermissionError):
++            self.store.review_ai(self.pm, output["record_id"], "accept")
++        with self.assertRaises(PermissionError):
++            self.store.review_ai(self.pm, output["record_id"], "edit", "Stale", "Not current")
++        rejected = self.store.review_ai(self.pm, output["record_id"], "reject", "Stale epoch")
++        self.assertEqual(rejected["status"], "Rejected")
++
++    def test_legacy_text_document_priority_publication_race(self) -> None:
++        for task in ("summary", "read_document", "priority"):
++            with self.subTest(task=task):
++                self.prepare_ai(self.store)
++                other = self.other()
++                # Give the manager one synthetic owned case for the legacy priority route.
++                with self.store.lock:
++                    self.store._case("ZF-1").update(
++                        owner_code=self.pm["code"], owner=self.pm["name"]
++                    )
++                    self.store.save()
++                start = self.store.continuity_epoch()
++                entered, release = threading.Event(), threading.Event()
++                results: list[Any] = []
++                errors: list[Exception] = []
++                original = self.store.save
++                armed = [True]
++                existing_ids = {r["id"] for r in self.store.data["recommendations"]}
++
++                def blocked_save(
++                    armed: list[bool] = armed,
++                    entered: threading.Event = entered,
++                    release: threading.Event = release,
++                    original: Any = original,
++                    existing_ids: set[str] = existing_ids,
++                ) -> Any:
++                    if armed[0] and any(
++                        r["id"] not in existing_ids for r in self.store.data["recommendations"]
++                    ):
++                        armed[0] = False
++                        entered.set()
++                        self.assertTrue(release.wait(15))
++                    return original()
++
++                def publish(
++                    task: str = task,
++                    start: int = start,
++                    results: list[Any] = results,
++                    errors: list[Exception] = errors,
++                ) -> None:
++                    try:
++                        if task == "priority":
++                            self.store.ai._chat = lambda *a, **k: json.dumps(
++                                [
++                                    dict(
++                                        case_id="ZF-1",
++                                        reason="Fixture",
++                                        cites=["Stage: Contacting resident"],
++                                    )
++                                ]
++                            )
++                            result = self.store.ai_priority(self.pm, 1)
++                        else:
++                            # Both retained text and document routes publish through finish.
++                            result = ai_tasks.finish(
++                                self.store,
++                                self.pm,
++                                task,
++                                ["ZF-1"],
++                                dict(
++                                    text="Fixture [[Stage: Contacting resident]]",
++                                    source="ai",
++                                    model=self.store.ai.fast,
++                                    latency_ms=1,
++                                    validated=True,
++                                    release=self.store.release_context(task),
++                                ),
++                                "Manual fixture",
++                                {"ZF-1": ["Stage: Contacting resident"]},
++                                record_cites=["Stage: Contacting resident"]
++                                if task == "read_document"
++                                else None,
++                                epoch0=start,
++                            )
++                        results.append(result)
++                    except Exception as error:
++                        errors.append(error)
++
++                with patch.object(self.store, "save", side_effect=blocked_save):
++                    thread = threading.Thread(target=publish)
++                    thread.start()
++                    self.assertTrue(entered.wait(15))
++                    self.cycle(other.store)
++                    release.set()
++                    thread.join(25)
++                self.assertFalse(thread.is_alive())
++                self.assertEqual(errors, [])
++                self.assertEqual(len(results), 1)
++                with other.store.lock:
++                    records = [
++                        r
++                        for r in other.store.data["recommendations"]
++                        if r["id"] not in existing_ids
++                    ]
++                self.assertEqual(len(records), 1)
++                self.assertEqual(records[0]["status"], "Quarantined")
++                self.assertEqual(records[0]["continuity_epoch"], start)
++                self.assertIsNotNone(records[0]["ai_output"])
++                if task != "priority":
++                    self.assertEqual(results[0]["source"], "template")
++                    self.assertEqual(results[0]["text"], "Manual fixture")
++                else:
++                    self.assertFalse(results[0]["actionable"])
++                self.assertFalse(
++                    self.store.continuity_export(self.pm, self.service.export())["ai_records"][-1][
++                        "relied_on"
++                    ]
++                )
++
++    def test_legacy_priority_ready_accepted_missing_epoch_and_cache(self) -> None:
++        self.prepare_ai(self.store)
++        with self.store.lock:
++            self.store._case("ZF-1").update(owner_code=self.pm["code"], owner=self.pm["name"])
++            self.store.save()
++        calls = []
++
++        def scripted(*args: Any, **kwargs: Any) -> str:
++            calls.append(1)
++            return json.dumps(
++                [dict(case_id="ZF-1", reason="Fixture", cites=["Stage: Contacting resident"])]
++            )
++
++        self.store.ai._chat = scripted
++        ready = self.store.ai_priority(self.pm, 1)
++        self.assertEqual(ready["source"], "ai")
++        accepted = self.store.resolve_priority(self.pm, ready["id"], "accept")
++        self.assertEqual(accepted["status"], "Accepted")
++        self.cycle()
++        self.assertFalse(self.store.latest_priority(self.pm)["actionable"])
++        self.assertEqual(self.store.latest_priority(self.pm)["status"], "Accepted")
++        new = self.store.ai_priority(self.pm, 1)
++        with self.store.lock:
++            rec = next(r for r in self.store.data["recommendations"] if r["id"] == new["id"])
++            rec.pop("continuity_epoch")
++            self.store.save()
++        with self.assertRaises(PermissionError):
++            self.store.resolve_priority(self.pm, new["id"], "accept")
++        # Same process/version cache cannot outlive epoch, including external writes.
++        self.store.ai._chat = lambda *a, **k: "Fixture [[Stage: Contacting resident]]"
++        briefing = self.store.briefing(self.pm)
++        old = self.other()
++        self.cycle(old.store)
++        refreshed = self.store.briefing(self.pm)
++        self.assertNotEqual(briefing["record_id"], refreshed["record_id"])
++
++
++class OfflineTests(Base):
++    cycle = EpochTests.cycle
++
++    def setUp(self) -> None:
++        super().setUp()
++        complete_release_fixtures(self)
++
++    def bundle(self) -> tuple[dict[str, Any], str]:
++        cap = "stock-prioritisation"
++        self.service.approvers = {self.pm["email"]}
++        from zava_forward.core.assistants import runtime_binding
++
++        body = release_support.fixture(cap, runtime_binding(cap, self.store.ai))
++        body["expires"] = "2099-01-01T00:00:00Z"
++        released = self.service.record_release(self.pm, body)
++        p = self.verify(self.run_ready(cap))
++        self.service.review(self.pm, p["id"], "accept", p["revision"], "Synthetic only.")
++        self.service.change_release(self.pm, released["id"], "revoked", "Synthetic end.")
++        result = json.loads(
++            json.dumps(self.store.continuity_export(self.pm, self.service.export()))
++        )
++        self.assertTrue(continuity.verify_export(result)["valid"], result["incomplete_reasons"])
++        return result, released["id"]
++
++    def redigest(self, bundle: dict[str, Any]) -> dict[str, Any]:
++        bundle["complete"] = True
++        bundle["incomplete_reasons"] = []
++        bundle["digest"] = continuity.sha({k: v for k, v in bundle.items() if k != "digest"})
++        return dict(continuity.verify_export(bundle))
++
++    def test_constructor_migration_failure_cannot_omit_retained_sql_evidence(self) -> None:
++        before = self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0]
++        self.assertGreater(before, 0)
++        private = "SYNTHETIC-PRIVATE-SQL-DRIVER-FAILURE"
++        with patch.object(Assistants, "migrate", side_effect=RuntimeError(private)):
++            unavailable = Assistants(self.store, {})
++        self.addCleanup(unavailable.stop)
++        self.assertFalse(unavailable.sql)
++        self.assertIsNotNone(unavailable.schema_error)
++        source = unavailable.export()
++        head = self.store.ledger_head()
++        bundle = self.store.continuity_export(self.pm, source)
++        self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
++        self.assertNotIn(private, json.dumps(bundle))
++        assert_unavailable_export(self, bundle)
++        self.assertIsNone(bundle["task_releases"])
++        self.assertEqual(source["note"], unavailable.schema_error)
++        self.assertEqual(
++            self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0],
++            before,
++        )
++        self.assertIn("manually", unavailable.disabled())
++        self.assertIsInstance(self.store.continuity_view(self.pm), dict)
++
++    def test_actual_json_unsupported_and_available_sql_full_empty_sources(self) -> None:
++        from zava_forward.core.store import Store
++
++        full, _ = self.bundle()
++        self.assertEqual(full["assistants"]["source_status"], "available")
++        self.assertGreater(full["assistants"]["total"], 0)
++        self.assertTrue(continuity.verify_export(full, full["ledger"]["head"])["valid"])
++        empty_store = SqlStore(str(self.seed), str(self.root / "empty.sqlite"))
++        self.addCleanup(empty_store.db.close)
++        empty_service = Assistants(empty_store, {})
++        self.addCleanup(empty_service.stop)
++        empty = empty_store.continuity_export(self.pm, empty_service.export())
++        self.assertEqual(empty["assistants"]["source_status"], "available")
++        self.assertEqual(empty["task_releases"]["records"], [])
++        self.assertEqual(empty["assistants"]["total"], 0)
++        self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
++        json_store = Store(
++            str(self.seed),
++            live_path=str(self.root / "unsupported-live.json"),
++            audit_path=str(self.root / "unsupported-audit.jsonl"),
++        )
++        json_service = Assistants(json_store, {})
++        self.addCleanup(json_service.stop)
++        self.assertFalse(json_service.sql)
++        self.assertIsNone(json_service.schema_error)
++        unsupported = json_store.continuity_export(self.pm, json_service.export())
++        self.assertEqual(unsupported["assistants"]["source_status"], "unsupported")
++        self.assertEqual(unsupported["task_releases"]["records"], [])
++        self.assertTrue(
++            continuity.verify_export(unsupported, unsupported["ledger"]["head"])["valid"]
++        )
++
++    def test_release_snapshot_and_lifecycle_verify_offline_after_revocation(self) -> None:
++        bundle, rid = self.bundle()
++        record = next(r for r in bundle["task_releases"]["records"] if r["id"] == rid)
++        self.assertEqual(record["snapshot"]["status"], "active")
++        self.assertEqual(record["current_status"], "revoked")
++        self.assertEqual(record["revision"], 2)
++        self.assertEqual(len(record["events"]), 2)
++        self.assertTrue(
++            all(e["id"] and e["at"] and e["release_id"] == rid for e in record["events"])
++        )
++        self.assertFalse(bundle["assistant_proposals"][0]["relied_on"])
++        with patch.object(
++            self.store, "assistant_connection", side_effect=AssertionError("offline")
++        ):
++            self.assertTrue(continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"])
++        text = json.dumps(bundle)
++        for private in (
++            "PRIVATE-VULNERABILITY-REASON",
++            "PRIVATE-HANDOFF-NOTE",
++            "PRIVATE-DOCUMENT-NAME",
++        ):
++            self.assertNotIn(private, text)
++
++    def test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases(self) -> None:
++        original, rid = self.bundle()
++        for defect in (
++            "missing",
++            "snapshot",
++            "version",
++            "event",
++            "truncated",
++            "association",
++            "status",
++            "envelope",
++        ):
++            with self.subTest(defect=defect):
++                bundle = copy.deepcopy(original)
++                record = next(r for r in bundle["task_releases"]["records"] if r["id"] == rid)
++                if defect == "missing":
++                    bundle["task_releases"]["records"].remove(record)
++                elif defect == "snapshot":
++                    record["snapshot"]["impact_assessment"] = "Forged"
++                elif defect == "version":
++                    bundle["assistant_proposals"][0]["release"]["version"] = "forged"
++                elif defect == "event":
++                    record["events"].pop()
++                elif defect == "truncated":
++                    record["truncated"] = True
++                elif defect == "association":
++                    record["events"][0]["release_id"] = "wrong"
++                elif defect == "envelope":
++                    bundle["assistant_proposals"][0]["envelope"]["release"]["digest"] = "wrong"
++                else:
++                    record["current_status"] = "suspended"
++                self.assertFalse(self.redigest(bundle)["valid"])
++
++    def test_producer_marks_missing_and_bounded_release_evidence_incomplete(self) -> None:
++        _, rid = self.bundle()
++        for mode in ("missing", "events", "releases", "unavailable"):
++            with self.subTest(mode=mode):
++                part = self.service.export()
++                if mode == "missing":
++                    part["task_releases"]["records"] = [
++                        r for r in part["task_releases"]["records"] if r["id"] != rid
++                    ]
++                elif mode == "events":
++                    part = self.service.export(event_limit=1)
++                elif mode == "releases":
++                    part = self.service.export(release_limit=0)
++                else:
++                    part.pop("task_releases")
++                bundle = self.store.continuity_export(self.pm, part)
++                self.assertFalse(bundle["complete"])
++                self.assertFalse(continuity.verify_export(bundle)["valid"])
++
++    def test_legacy_top_level_release_and_collection_restart_are_retained(self) -> None:
++        LegacyTests.prepare_ai(self, self.store)
++        result = self.store.ai_run(self.pm, "ZF-1", "summary")
++        part = self.service.export()
++        self.cycle()
++        bundle = self.store.continuity_export(self.pm, part)
++        record = next(r for r in bundle["ai_records"] if r["id"] == result["record_id"])
++        self.assertEqual(record["release"], result["release"])
++        self.assertFalse(record["relied_on"])
++        self.assertFalse(record["actionable"])
++
++    def test_original_review_missing_and_truncated_proposals_with_unchanged_head(self) -> None:
++        original, _ = self.bundle()
++        head = copy.deepcopy(original["ledger"]["head"])
++        missing = copy.deepcopy(original)
++        del missing["assistant_proposals"]
++        truncated = json.loads(
++            json.dumps(self.store.continuity_export(self.pm, self.service.export(limit=0)))
++        )
++        # Use each bundle's separately retained head; neither negative rewrites its ledger.
++        for bundle in (missing, truncated):
++            with self.subTest(truncated="assistant_proposals" in bundle):
++                expected = head if bundle is missing else copy.deepcopy(bundle["ledger"]["head"])
++                self.redigest(bundle)
++                check = continuity.verify_export(bundle, expected)
++                self.assertFalse(check["valid"], check)
++                self.assertFalse(
++                    any("digest" in p or "externally held head" in p for p in check["problems"])
++                )
++
++    def test_proposal_metadata_shapes_counts_and_source_status_fail_closed(self) -> None:
++        original, _ = self.bundle()
++        changes: list[tuple[str, Any]] = [
++            ("supported", None),
++            ("supported", 1),
++            ("supported", "true"),
++            ("total", None),
++            ("total", True),
++            ("total", -1),
++            ("total", 1.0),
++            ("total", "1"),
++            ("exported", False),
++            ("exported", -1),
++            ("exported", 0),
++            ("total", 2),
++            ("truncated", 0),
++            ("truncated", "false"),
++            ("truncated", True),
++            ("source_status", "unavailable"),
++            ("source_status", "unsupported"),
++            ("source_status", None),
++        ]
++        for key, value in changes:
++            with self.subTest(key=key, value=value):
++                bundle = copy.deepcopy(original)
++                bundle["assistants"][key] = value
++                self.redigest(bundle)
++                self.assertFalse(
++                    continuity.verify_export(bundle, original["ledger"]["head"])["valid"]
++                )
++        for field, value in (
++            ("assistant_proposals", None),
++            ("assistant_proposals", {}),
++            ("assistant_proposals", [None]),
++            ("assistants", None),
++            ("assistants", []),
++        ):
++            with self.subTest(field=field, value=value):
++                bundle = copy.deepcopy(original)
++                bundle[field] = value
++                self.redigest(bundle)
++                self.assertFalse(
++                    continuity.verify_export(bundle, original["ledger"]["head"])["valid"]
++                )
++        for field in ("assistants", "assistant_proposals"):
++            bundle = copy.deepcopy(original)
++            del bundle[field]
++            self.assertFalse(self.redigest(bundle)["valid"])
++        for field in ("supported", "total", "exported", "truncated", "source_status"):
++            bundle = copy.deepcopy(original)
++            del bundle["assistants"][field]
++            self.assertFalse(self.redigest(bundle)["valid"])
++
++    def test_empty_legacy_and_explicit_unsupported_sources_are_distinct(self) -> None:
++        empty = self.store.continuity_export(self.pm, self.service.export())
++        self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
++        LegacyTests.prepare_ai(self, self.store)
++        complete_release_fixtures(self)
++        self.store.ai_run(self.pm, "ZF-1", "summary")
++        legacy = self.store.continuity_export(self.pm, self.service.export())
++        self.assertEqual(legacy["assistant_proposals"], [])
++        self.assertTrue(continuity.verify_export(legacy, legacy["ledger"]["head"])["valid"])
++        unavailable = self.store.continuity_export(self.pm)
++        self.assertFalse(unavailable["complete"])
++        self.assertFalse(self.redigest(unavailable)["valid"])
++        unsupported = copy.deepcopy(empty)
++        unsupported["assistants"] = dict(
++            supported=False,
++            total=0,
++            exported=0,
++            truncated=False,
++            source_status="unsupported",
++            note="JSON store does not hold durable proposals.",
++        )
++        self.assertTrue(self.redigest(unsupported)["valid"])
++        unsupported["assistants"]["total"] = 1
++        self.assertFalse(self.redigest(unsupported)["valid"])
++
++    def test_unreferenced_retained_release_lifecycle_is_required(self) -> None:
++        part = self.service.export()
++        self.assertEqual(part["proposals"], [])
++        original = self.store.continuity_export(self.pm, part)
++        head = copy.deepcopy(original["ledger"]["head"])
++        self.assertTrue(continuity.verify_export(original, head)["valid"])
++        for defect in ("truncated", "events", "count", "revision", "association", "task", "status"):
++            with self.subTest(defect=defect):
++                source = copy.deepcopy(part)
++                record = source["task_releases"]["records"][0]
++                if defect == "truncated":
++                    record.update(events=[], truncated=True)
++                elif defect == "events":
++                    record["events"] = []
++                elif defect == "count":
++                    record["event_total"] = True
++                elif defect == "revision":
++                    record["revision"] = True
++                elif defect == "association":
++                    record["events"][0]["release_id"] = "other"
++                elif defect == "task":
++                    record["events"][0]["body"]["task"] = "other"
++                else:
++                    record["current_status"] = "revoked"
++                bundle = self.store.continuity_export(self.pm, source)
++                self.assertFalse(bundle["complete"], defect)
++                expected = copy.deepcopy(bundle["ledger"]["head"])
++                self.redigest(bundle)
++                check = continuity.verify_export(bundle, expected)
++                self.assertFalse(check["valid"], check)
++                self.assertFalse(check["complete"], check)
++                self.assertFalse(
++                    any("digest" in p or "externally held" in p for p in check["problems"])
++                )
++        limited_events = self.store.continuity_export(self.pm, self.service.export(event_limit=0))
++        self.assertFalse(limited_events["complete"])
++        self.assertFalse(continuity.verify_export(limited_events)["valid"])
++
++    def test_unreferenced_lifecycle_transitions_and_timestamp_ties(self) -> None:
++        from zava_forward.core.assistants import runtime_binding
++
++        cap = "stock-prioritisation"
++        body = release_support.fixture(
++            cap, runtime_binding(cap, self.store.ai), expires="2099-01-01T00:00:00Z"
++        )
++        with patch.object(self.service, "now", return_value=2_000_000_000):
++            released = self.service.record_release(self.pm, body)
++            for state in ("active", "suspended", "suspended", "revoked"):
++                if state != "active":
++                    self.service.change_release(self.pm, released["id"], state, "Synthetic.")
++                bundle = self.store.continuity_export(self.pm, self.service.export())
++                record = next(
++                    r for r in bundle["task_releases"]["records"] if r["id"] == released["id"]
++                )
++                record["events"].reverse()
++                head = copy.deepcopy(bundle["ledger"]["head"])
++                self.redigest(bundle)
++                self.assertTrue(continuity.verify_export(bundle, head)["valid"])
++        for defect in (
++            "initial-late",
++            "after-revoke",
++            "duplicate-initial",
++            "duplicate-revoke",
++            "missing-initial",
++            "final",
++        ):
++            with self.subTest(defect=defect):
++                bad = copy.deepcopy(bundle)
++                record = next(
++                    r for r in bad["task_releases"]["records"] if r["id"] == released["id"]
++                )
++                recorded = next(
++                    e for e in record["events"] if e["body"]["kind"] == "release-recorded"
++                )
++                revoked = next(
++                    e for e in record["events"] if e["body"]["kind"] == "release-revoked"
++                )
++                if defect == "initial-late":
++                    recorded["at"] += 1
++                elif defect == "after-revoke":
++                    next(e for e in record["events"] if e["body"]["kind"] == "release-suspended")[
++                        "at"
++                    ] += 1
++                elif defect in ("duplicate-initial", "duplicate-revoke"):
++                    extra = copy.deepcopy(recorded if defect == "duplicate-initial" else revoked)
++                    extra["id"] = uuid.uuid4().hex
++                    record["events"].append(extra)
++                    record["revision"] += 1
++                    record["event_total"] += 1
++                elif defect == "missing-initial":
++                    record["events"].remove(recorded)
++                    record["revision"] -= 1
++                    record["event_total"] -= 1
++                else:
++                    record["current_status"] = "active"
++                self.redigest(bad)
++                self.assertFalse(continuity.verify_export(bad, head)["valid"])
++
++    def test_malformed_release_sources_fail_producer_and_verifier_without_exceptions(self) -> None:
++        part = self.service.export()
++        original = self.store.continuity_export(self.pm, part)
++        malformed_sources: tuple[Any, ...] = (None, False, [], 3, "unknown", {})
++        invalid: list[tuple[str, Any]] = [("task_releases", value) for value in malformed_sources]
++        for field, value in (
++            ("records", None),
++            ("records", [None]),
++            ("records", [{}]),
++            ("total", True),
++            ("exported", 1.0),
++            ("truncated", 0),
++            ("supported", "yes"),
++        ):
++            evidence = copy.deepcopy(part["task_releases"])
++            evidence[field] = value
++            invalid.append(("task_releases", evidence))
++        for field, value in (
++            ("id", []),
++            ("id", None),
++            ("snapshot", None),
++            ("snapshot", []),
++            ("events", None),
++            ("events", [None]),
++            ("event_total", -1),
++            ("revision", 1.0),
++            ("truncated", None),
++        ):
++            evidence = copy.deepcopy(part["task_releases"])
++            evidence["records"][0][field] = value
++            invalid.append(("task_releases", evidence))
++        for field, value in (
++            ("at", True),
++            ("at", float("nan")),
++            ("at", float("inf")),
++            ("body", None),
++            ("body", []),
++            ("id", []),
++            ("release_id", []),
++        ):
++            evidence = copy.deepcopy(part["task_releases"])
++            evidence["records"][0]["events"][0][field] = value
++            invalid.append(("task_releases", evidence))
++        for field, value in invalid:
++            with self.subTest(field=field, value=value):
++                source = copy.deepcopy(part)
++                source[field] = value
++                produced = self.store.continuity_export(self.pm, source)
++                self.assertFalse(produced["complete"])
++                self.assertTrue(produced["incomplete_reasons"])
++                bad = copy.deepcopy(original)
++                bad[field] = value
++                self.redigest(bad)
++                check = continuity.verify_export(bad, original["ledger"]["head"])
++                self.assertFalse(check["valid"])
++                self.assertFalse(check["complete"])
++                self.assertTrue(check["problems"])
++        for source in (
++            None,
++            False,
++            [],
++            3,
++            {},
++            dict(part, proposals=None),
++            dict(part, proposals=[None]),
++        ):
++            with self.subTest(source=source):
++                produced = self.store.continuity_export(self.pm, source)
++                self.assertFalse(produced["complete"])
++        for envelope, provenance in (([], []), ({}, [None]), ({}, {}), (1, [])):
++            source = copy.deepcopy(part)
++            source["proposals"] = [
++                dict(capability="stock-prioritisation", envelope=envelope, provenance=provenance)
++            ]
++            source["total"] = 1
++            produced = self.store.continuity_export(self.pm, source)
++            self.assertFalse(produced["complete"])
++            self.assertFalse(self.redigest(produced)["valid"])
++
++    def test_json_numeric_timestamps_fail_closed_without_conversion_errors(self) -> None:
++        part = self.service.export()
++        original = self.store.continuity_export(self.pm, part)
++        head = copy.deepcopy(original["ledger"]["head"])
++        self.assertTrue(continuity.verify_export(original, head)["valid"])
++        cases = (
++            (0, True),
++            (-1, True),
++            (1.25, True),
++            (-1.25, True),
++            (10**308, True),
++            (-(10**308), True),
++            (1.7976931348623157e308, True),
++            (-1.7976931348623157e308, True),
++            (10**400, False),
++            (-(10**400), False),
++            (True, False),
++            (False, False),
++            (None, False),
++            ("2000000000", False),
++            (float("nan"), False),
++            (float("inf"), False),
++            (-float("inf"), False),
++        )
++        problem = "invalid task-release event envelope"
++        for boundary in ("producer", "verifier"):
++            for at, valid in cases:
++                with self.subTest(boundary=boundary, at=at):
++                    source = copy.deepcopy(part if boundary == "producer" else original)
++                    source["task_releases"]["records"][0]["events"][0]["at"] = at
++                    source = json.loads(json.dumps(source))
++                    if boundary == "producer":
++                        bundle = self.store.continuity_export(self.pm, source)
++                        expected_head = copy.deepcopy(bundle["ledger"]["head"])
++                        self.assertEqual(bundle["complete"], valid, bundle["incomplete_reasons"])
++                        if not valid:
++                            self.assertIn(problem, bundle["incomplete_reasons"])
++                    else:
++                        bundle = source
++                        expected_head = head
++                        bundle["complete"] = True
++                        bundle["incomplete_reasons"] = []
++                        bundle["digest"] = continuity.sha(
++                            {k: v for k, v in bundle.items() if k != "digest"}
++                        )
++                    bundle = json.loads(json.dumps(bundle))
++                    check = continuity.verify_export(bundle, expected_head)
++                    self.assertEqual(check["valid"], valid, check)
++                    self.assertEqual(check["complete"], valid, check)
++                    if boundary == "verifier":
++                        self.assertEqual(bundle["ledger"], original["ledger"])
++                    self.assertEqual(bundle["ledger"]["head"], expected_head)
++                    self.assertFalse(
++                        any(
++                            "digest mismatch" in p or "externally held" in p
++                            for p in check["problems"]
++                        ),
++                        check,
++                    )
++                    if not valid:
++                        self.assertIn(problem, check["problems"])
++
++    def test_release_source_absence_and_unsupported_are_not_full_evidence(self) -> None:
++        part = self.service.export()
++        missing = copy.deepcopy(part)
++        del missing["task_releases"]
++        bundle = self.store.continuity_export(self.pm, missing)
++        self.assertFalse(bundle["complete"])
++        self.assertFalse(self.redigest(bundle)["valid"])
++        for field, value in (("supported", False), ("total", 0), ("exported", 0)):
++            bad = copy.deepcopy(part)
++            bad["task_releases"][field] = value
++            produced = self.store.continuity_export(self.pm, bad)
++            self.assertFalse(produced["complete"])
++            self.assertFalse(self.redigest(produced)["valid"])
++        # Real absence is retained as negative evidence, not repaired by an exporter.
++        with self.service.transaction() as db:
++            db.execute("DELETE FROM assistant_releases")
++        empty = self.store.continuity_export(self.pm, self.service.export())
++        self.assertEqual(empty["task_releases"]["records"], [])
++        self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
++        release_support.install(self.store)
++        bare = self.store.continuity_export(self.pm, self.service.export())
++        self.assertFalse(bare["complete"])
++        self.assertFalse(self.redigest(bare)["valid"])
++
++
++class HttpTests(fixtures.ApiTests):
++    cycle = EpochTests.cycle
++
++    def setUp(self) -> None:
++        super().setUp()
++        complete_release_fixtures(self)
++
++    def test_http_migration_failure_reports_incomplete_without_driver_details(self) -> None:
++        retained = self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0]
++        self.assertGreater(retained, 0)
++        private = "SYNTHETIC-PRIVATE-HTTP-SQL-DRIVER"
++        with patch.object(Assistants, "migrate", side_effect=RuntimeError(private)):
++            unavailable = Assistants(self.store, {})
++        self.addCleanup(unavailable.stop)
++        self.app.assistants = unavailable
++        for role, reasons in (
++            ("Retrofit Programme Manager", "Retrofit Programme Manager"),
++            ("Retrofit Programme Manager", "Building Safety Liaison"),
++            ("Programme Support Officer", "Building Safety Liaison"),
++        ):
++            with self.subTest(role=role, reasons=reasons):
++                self.user = self.people[role]
++                head = self.store.ledger_head()
++                with patch.dict(os.environ, {"ZF_REASON_ROLES": reasons}):
++                    status, bundle = self.request("/api/continuity/export")
++                self.assertEqual(status, 200, bundle)
++                self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
++                self.assertNotIn(private, json.dumps(bundle))
++                assert_unavailable_export(self, bundle)
++                self.assertEqual(self.request("/api/continuity")[0], 200)
++                if role == "Retrofit Programme Manager":
++                    self.assertEqual(self.request("/api/cases")[0], 200)
++        self.assertEqual(
++            self.store.db.execute("SELECT COUNT(*) FROM assistant_releases").fetchone()[0],
++            retained,
++        )
++
++    def test_register_recorded_need_canaries_and_canonical_nonmutation(self) -> None:
++        canary = "SYNTHETIC-REGISTER-PRIVATE-122"
++        suspended = self.store.suspend(
++            self.pm,
++            dict(
++                SUSPEND,
++                reason=canary,
++                incident_owner=canary,
++                containment=canary,
++                comms_owner=canary,
++                comms_audience=canary,
++            ),
++        )
++        changed = self.store.change_record(
++            self.pm,
++            dict(
++                kind="model",
++                subject=canary,
++                from_version=canary + "-v1",
++                to_version=canary + "-v2",
++                reason=canary,
++                evaluation="pass",
++                evaluation_ref=canary,
++            ),
++        )
++        with self.store.lock:
++            self.store._cont()["suspensions"][0]["unknown_nested"] = {"reason": canary}
++            self.store._cont()["changes"][0]["unknown_nested"] = [canary]
++            self.store.save()
++            canonical_before = copy.deepcopy(self.store._cont())
++        for need in (None, "", "Programme Support Officer,Quality Inspector"):
++            context = (
++                patch.dict(os.environ, {"ZF_REASON_ROLES": need})
++                if need is not None
++                else patch.dict(os.environ, {}, clear=False)
++            )
++            with context:
++                from zava_forward.core import projection
++
++                for role in (
++                    "Programme Support Officer",
++                    "Quality Inspector",
++                    "Retrofit Programme Manager",
++                    "Building Safety Liaison",
++                ):
++                    with self.subTest(need=need, role=role):
++                        self.user = self.people[role]
++                        status, body = self.request("/api/continuity")
++                        self.assertEqual(status, 200, body)
++                        self.assertEqual(
++                            canary in json.dumps(body), projection.can_see_reason(self.user)
++                        )
++                        self.assertEqual(body["epoch"], suspended["epoch"])
++                        self.assertEqual(body["suspensions"][0]["id"], suspended["id"])
++                        self.assertEqual(body["changes"][0]["id"], changed["id"])
++                        self.assertFalse(body["suspensions"][0]["communication"]["sent"])
++                        if projection.can_see_reason(self.user):
++                            self.assertEqual(body["suspensions"], canonical_before["suspensions"])
++                            self.assertEqual(body["changes"], canonical_before["changes"])
++        with self.store.lock:
++            self.assertEqual(self.store._cont(), canonical_before)
++
++    def test_limited_mutation_responses_preserve_human_controls_without_text(self) -> None:
++        canary = "SYNTHETIC-MUTATION-PRIVATE-122"
++        with patch.dict(os.environ, {"ZF_REASON_ROLES": "Building Safety Liaison"}):
++            self.user = self.people["Quality Inspector"]
++            status, suspended = self.request(
++                "/api/continuity/suspend", dict(SUSPEND, reason=canary)
++            )
++            self.assertEqual(status, 200, suspended)
++            sid = suspended["id"]
++            self.assertEqual(suspended["status"], "Suspended")
++            self.assertNotIn(canary, json.dumps(suspended))
++            self.assertFalse(suspended["communication"]["sent"])
++            for decision in ("Keep suspended", "Restart"):
++                self.user = self.pm
++                status, proposed = self.request(
++                    "/api/continuity/restart-propose", dict(id=sid, corrective_evidence=canary)
++                )
++                self.assertEqual(status, 200, proposed)
++                self.assertTrue(proposed["proposal"])
++                self.assertNotIn(canary, json.dumps(proposed))
++                self.user = self.people["Programme Support Officer"]
++                status, decided = self.request(
++                    "/api/continuity/restart-decide",
++                    dict(
++                        id=sid,
++                        epoch=proposed["proposal"]["epoch"],
++                        decision=decision,
++                        authority_ref=canary,
++                    ),
++                )
++                self.assertEqual(status, 200, decided)
++                self.assertNotIn(canary, json.dumps(decided))
++                self.assertEqual(
++                    decided["status"], "Restarted" if decision == "Restart" else "Suspended"
++                )
++            status, changed = self.request(
++                "/api/continuity/change",
++                dict(
++                    kind="rule",
++                    subject=canary,
++                    from_version="v1",
++                    to_version="v2",
++                    reason=canary,
++                    evaluation="pass",
++                    evaluation_ref=canary,
++                ),
++            )
++            self.assertEqual(status, 200, changed)
++            self.assertEqual(changed["status"], "Applied")
++            self.assertNotIn(canary, json.dumps(changed))
++            status, reverse = self.request(
++                "/api/continuity/change-reverse", dict(id=changed["id"], reason=canary)
++            )
++            self.assertEqual(status, 200, reverse)
++            self.assertEqual(reverse["reverses"], changed["id"])
++            self.assertNotIn(canary, json.dumps(reverse))
++        self.user = self.pm
++        _, full = self.request("/api/continuity")
++        self.assertIn(canary, json.dumps(full))
++        self.assertEqual(full["changes"][0]["status"], "Reversed")
++
++    def test_export_preserves_programme_support_reason_redaction(self) -> None:
++        canary = "SYNTHETIC-RESTRICTED-REASON-122"
++        self.store.audit(self.pm["email"], "log_contact", "ZF-1", canary)
++        self.store.save()
++        head = self.store.ledger_head()
++        self.user = self.people["Programme Support Officer"]
++        status, bundle = self.request("/api/continuity/export")
++        self.assertEqual(status, 200, bundle)
++        self.assertNotIn(canary, json.dumps(bundle))
++        self.assertEqual(bundle["audience"]["scope"], "limited")
++        self.assertFalse(bundle["complete"])
++        self.assertFalse(bundle["ledger"]["report"]["intact"])
++        self.assertFalse(continuity.verify_export(bundle)["valid"])
++        self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
++        self.assertTrue(any(canary in json.dumps(row) for row in self.store.audit_entries()))
++
++    def test_nested_evidence_projection_and_full_manager_proof(self) -> None:
++        canary = "SYNTHETIC-NESTED-PROTECTED-TEXT-122"
++        from zava_forward.core.assistants import runtime_binding
++
++        self.service.approvers = {self.pm["email"]}
++        cap = "stock-prioritisation"
++        released = self.service.record_release(
++            self.pm,
++            release_support.fixture(
++                cap,
++                runtime_binding(cap, self.store.ai),
++                expires="2099-01-01T00:00:00Z",
++                impact_assessment=canary,
++                residual_risk_note=canary,
++            ),
++        )
++        p = self.verify(self.run_ready(cap))
++        self.service.review(self.pm, p["id"], "accept", p["revision"], canary)
++        with self.service.transaction() as db:
++            self.service.event(db, p["id"], kind="synthetic-test", nested={"free_text": canary})
++        self.service.change_release(self.pm, released["id"], "revoked", canary)
++        with self.store.lock:
++            self.store.data["recommendations"].append(
++                dict(
++                    id="synthetic-legacy122",
++                    user=self.pm["email"],
++                    kind="ai_task",
++                    task="summary",
++                    source="template",
++                    status="Not reviewed",
++                    shown_output=canary,
++                    reviewer_reason=canary,
++                    envelope=dict(nested={"arbitrary": canary}),
++                    provenance=[dict(text=canary)],
++                )
++            )
++            self.store._gov()["breaches"].append(dict(note=canary, nested={"reason": canary}))
++            self.store.save()
++        self.store.suspend(
++            self.people["Quality Inspector"],
++            dict(SUSPEND, reason=canary, containment=canary, synthetic=True),
++        )
++        self.store.audit(self.pm["email"], "synthetic-nested", "ZF-1", canary)
++        self.store.save()
++        self.user = self.pm
++        head = self.store.ledger_head()
++        status, full = self.request("/api/continuity/export")
++        self.assertEqual(status, 200, full)
++        expected = dict(count=head[0], hash=head[1])
++        self.assertEqual(full["ledger"]["head"], expected)
++        self.assertTrue(
++            continuity.verify_export(full, expected)["valid"], full["incomplete_reasons"]
++        )
++        for section in (
++            "ledger",
++            "ai_records",
++            "assistant_proposals",
++            "task_releases",
++            "approvals",
++            "continuity",
++        ):
++            self.assertIn(canary, json.dumps(full[section]), section)
++        self.assertFalse(any(row["relied_on"] for row in full["assistant_proposals"]))
++        before = copy.deepcopy(full)
++        for role in ("Programme Support Officer", "Retrofit Programme Manager"):
++            with self.subTest(role=role):
++                self.user = self.people[role]
++                # Existing recorded-need override, not a policy change or authorization bypass.
++                with patch.dict(os.environ, {"ZF_REASON_ROLES": "Building Safety Liaison"}):
++                    status, limited = self.request("/api/continuity/export")
++                self.assertEqual(status, 200, limited)
++                self.assertNotIn(canary, json.dumps(limited))
++                self.assertFalse(limited["complete"])
++                self.assertFalse(limited["audience"]["full_ledger_proof"])
++                self.assertEqual(limited["assistant_proposals"][0]["state"], "accepted")
++                self.assertFalse(limited["assistant_proposals"][0]["relied_on"])
++                self.assertFalse(continuity.verify_export(limited, expected)["valid"])
++                limited["complete"] = True
++                limited["incomplete_reasons"] = []
++                limited["digest"] = continuity.sha(
++                    {key: value for key, value in limited.items() if key != "digest"}
++                )
++                verified = continuity.verify_export(limited)
++                self.assertFalse(verified["valid"])
++                self.assertFalse(verified["complete"])
++        self.assertEqual(full, before)
++        self.assertTrue(continuity.verify_export(full, expected)["valid"])
++
++    def test_continuity_http_audiences_and_offline_export(self) -> None:
++        managers = ("Retrofit Programme Manager", "Programme Support Officer")
++        viewers = (*managers, "Quality Inspector", "Building Safety Liaison")
++        for role, person in self.people.items():
++            with self.subTest(role=role):
++                self.user = person
++                status, body = self.request("/api/continuity")
++                self.assertEqual(status, 200 if role in viewers else 403, body)
++                status, body = self.request("/api/continuity/export")
++                self.assertEqual(status, 200 if role in managers else 403, body)
++                if role in managers:
++                    bundle = json.loads(json.dumps(body))
++                    valid = continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"]
++                    self.assertEqual(valid, role == "Retrofit Programme Manager")
++                    self.assertEqual(
++                        bundle["audience"]["scope"],
++                        "full" if role == "Retrofit Programme Manager" else "limited",
++                    )
++
++    def test_http_epoch_read_review_export_and_manual_actions(self) -> None:
++        with urllib.request.urlopen(self.url + "/healthz") as response:
++            self.assertEqual(response.status, 200)
++        p = self.verify(self.run_ready("stock-prioritisation"))
++        s = self.store.suspend(self.people["Quality Inspector"], dict(SUSPEND, synthetic=True))
++        # Actual case transaction, not just a continuity availability note.
++        self.assertEqual(
++            self.request(
++                "/api/cases/ZF-1/call",
++                dict(outcome="Spoke to resident", note="Synthetic manual call"),
++            )[0],
++            200,
++        )
++        liaison = self.people["Resident Liaison Officer"]
++        self.user = liaison
++        status, detail = self.request(
++            "/api/cases/ZF-1/resident",
++            dict(
++                action="service_open",
++                route="Complaint",
++                summary="Synthetic challenge",
++                desired_outcome="Independent explanation",
++                service_owner=liaison["email"],
++                redress_owner=self.pm["email"],
++                next_update="2099-01-01",
++            ),
++        )
++        self.assertEqual(status, 200, detail)
++        self.user = self.pm
++        with self.store.lock:
++            self.store._case("ZF-1")["stage"] = "Final checks before ordering"
++            self.store.save()
++        code, detail = self.request(
++            "/api/cases/ZF-1/hazard-raise",
++            dict(
++                category="Damp and mould",
++                priority="Emergency",
++                note="Synthetic hazard",
++                source="Synthetic phone report",
++                aware_at="2026-01-01T10:00:00Z",
++            ),
++        )
++        self.assertEqual(code, 200, detail)
++        safety = self.people["Building Safety Liaison"]
++        self.assertEqual(
++            self.request(
++                "/api/cases/ZF-1/hazard-refer",
++                dict(
++                    index=0, to=safety["email"], job="Synthetic job", evidence="Synthetic referral"
++                ),
++            )[0],
++            200,
++        )
++        self.user = safety
++        for action in ("hazard-receive", "hazard-accept", "hazard-repaired"):
++            code, detail = self.request(
++                "/api/cases/ZF-1/" + action,
++                dict(index=0, evidence="Synthetic " + action),
++            )
++            self.assertEqual(code, 200, detail)
++        self.assertEqual(
++            self.request(
++                "/api/cases/ZF-1/hazard-release",
++                dict(index=0, evidence="No repair", note="Must refuse"),
++            )[0],
++            403,
++        )
++        self.user = self.pm
++        self.assertEqual(self.request("/api/cases/ZF-1/advance", {})[0], 409)
++        self.assertEqual(
++            self.request("/api/assistants/proposals/" + p["id"])[1]["actionable"], False
++        )
++        self.store.restart_propose(self.pm, dict(id=s["id"], corrective_evidence="Synthetic only"))
++        self.store.restart_decide(
++            self.people["Programme Support Officer"],
++            dict(
++                id=s["id"],
++                epoch=self.store.continuity_epoch(),
++                decision="Restart",
++                authority_ref="Fixture only",
++            ),
++        )
++        for action in ("verify", "accept", "edit-accept"):
++            status, body = self.request(
++                f"/api/assistants/proposals/{p['id']}/review",
++                dict(
++                    action=action,
++                    revision=p["revision"],
++                    note="Stale",
++                    source_verified=True,
++                    output=proposal(p["snapshot"]),
++                ),
++            )
++            self.assertEqual(status, 403, body)
++        listing = self.request("/api/assistants/proposals")[1]["proposals"]
++        self.assertFalse(next(x for x in listing if x["id"] == p["id"])["actionable"])
++        status, bundle = self.request("/api/continuity/export")
++        self.assertEqual(status, 200)
++        self.assertTrue(all(not x["relied_on"] for x in bundle["assistant_proposals"]))
++        self.user = self.people["Contractor"]
++        self.assertEqual(self.request("/api/continuity/export")[0], 403)
++
++
++class OwnedMssql(Base):
++    """UUID database on an explicitly owned loopback container, never Azure."""
++
++    def setUp(self) -> None:
++        from zava_forward.core.mssqlstore import _Conn, connection_string
++
++        if os.environ.get("ZF_SQL_SERVER") != "127.0.0.1" or not os.environ.get(
++            "ZF_ISSUE122_OWNED_SQL"
++        ):
++            raise ValueError("Requires an explicitly issue-owned loopback SQL container")
++        name = "zf_continuity122_" + uuid.uuid4().hex
++        self.sql_env = dict(os.environ, ZF_SQL_DATABASE=name)
++        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
++        try:
++            master.execute("CREATE DATABASE " + name)
++        finally:
++            master.close()
++        self.addCleanup(self.drop_database, name)
++        super().setUp()
++
++    def drop_database(self, name: str) -> None:
++        from zava_forward.core.mssqlstore import _Conn, connection_string
++
++        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
++        try:
++            master.execute(f"ALTER DATABASE {name} SET SINGLE_USER WITH ROLLBACK IMMEDIATE")
++            master.execute("DROP DATABASE " + name)
++        finally:
++            master.close()
++
++    def open_store(self) -> Any:
++        from zava_forward.core.mssqlstore import MssqlStore
++
++        return MssqlStore(str(self.seed), env=self.sql_env, state_dir=str(self.root))
++
++
++@unittest.skipUnless(os.environ.get("ZF_CONTINUITY_MSSQL") == "1", "owned local MSSQL opt-in")
++class MssqlEpochTests(OwnedMssql, EpochTests):
++    pass
++
++
++@unittest.skipUnless(os.environ.get("ZF_CONTINUITY_MSSQL") == "1", "owned local MSSQL opt-in")
++class MssqlLegacyTests(OwnedMssql, LegacyTests):
++    pass
++
++
++@unittest.skipUnless(os.environ.get("ZF_CONTINUITY_MSSQL") == "1", "owned local MSSQL opt-in")
++class MssqlOfflineTests(OwnedMssql, OfflineTests):
++    def test_actual_invalid_ledger_migration_retains_unavailable_evidence(self) -> None:
++        from zava_forward.core.mssqlstore import MssqlStore, _Conn, connection_string
++
++        name = "zf_continuity122_" + uuid.uuid4().hex
++        master = _Conn(connection_string(dict(self.sql_env, ZF_SQL_DATABASE="master")))
++        try:
++            master.execute("CREATE DATABASE " + name + " WITH LEDGER=ON")
++        finally:
++            master.close()
++        self.addCleanup(self.drop_database, name)
++        store = MssqlStore(
++            str(self.seed),
++            env=dict(self.sql_env, ZF_SQL_DATABASE=name),
++            state_dir=str(self.root / "invalid-ledger"),
++        )
++        self.addCleanup(store.db.close)
++        for table in ("assistant_events", "assistant_releases"):
++            store.db.execute(next(d for d in MSSQL_DDL if d.startswith("CREATE TABLE " + table)))
++        store.db.execute(
++            "INSERT INTO assistant_events (id,task_id,at,body) VALUES ('retained','release',0,'{}')"
++        )
++        store.db.execute(
++            "INSERT INTO assistant_releases (id,capability,status,body,revision) "
++            "VALUES ('release','stock-prioritisation','active','{}',1)"
++        )
++        unavailable = Assistants(store, {})
++        self.addCleanup(unavailable.stop)
++        self.assertFalse(unavailable.sql)
++        self.assertIsNotNone(unavailable.schema_error)
++        self.assertEqual(
++            store.db.execute(
++                "SELECT ledger_type_desc FROM sys.tables WHERE name='assistant_events'"
++            ).fetchone()[0],
++            "UPDATABLE_LEDGER_TABLE",
++        )
++        head = store.ledger_head()
++        bundle = store.continuity_export(self.pm, unavailable.export())
++        self.assertEqual(bundle["ledger"]["head"], dict(count=head[0], hash=head[1]))
++        assert_unavailable_export(self, bundle)
++        self.assertIsNone(bundle["task_releases"])
++        for table in ("assistant_events", "assistant_releases"):
++            self.assertEqual(store.db.execute("SELECT COUNT(*) FROM " + table).fetchone()[0], 1)
++
++
++@unittest.skipUnless(os.environ.get("ZF_CONTINUITY_MSSQL") == "1", "owned local MSSQL opt-in")
++class MssqlHttpTests(OwnedMssql, HttpTests):
++    pass
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/src/core/src/zava_forward/core/ai_tasks.py b/src/core/src/zava_forward/core/ai_tasks.py
+--- a/src/core/src/zava_forward/core/ai_tasks.py
++++ b/src/core/src/zava_forward/core/ai_tasks.py
+@@ HUNK @@ def add_record(store, user, **fields):
+     with store.lock:
+         rec = dict(id=uuid.uuid4().hex[:12], kind="ai_task", user=user["email"], created=_now(), status=NOT_REVIEWED,
+                    prompt_version=ai_prompts.version(fields["task"]), reviewer_action=None, reviewer_reason="", override_text=None,
+-                   resolved_by=None, resolved_at=None, **fields)
++                   resolved_by=None, resolved_at=None)
++        rec.update(fields)
+         store.data["recommendations"].append(rec)
+         store.audit(user["email"], "ai_record", (rec["case_ids"] or ["-"])[0] if len(rec["case_ids"]) == 1 else "-",
+                     f"{rec['task']} {rec['id']} mode={rec['mode']} source={rec['source']} verified={rec['verified']}")
+@@ HUNK @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
+         cites = [x for x in cites if x not in bad]
+         verified = bool(cites) and not bad
+     reason = r.get("reason")
+-    late = r["source"] == "ai" and epoch0 is not None and store.continuity_epoch() != epoch0
+-    if late:  # the call began before a suspension or restart: keep it for reconstruction, never as a proposal
+-        reason, text, cites, verified = "late result quarantined after a suspension or restart", workflow_text, [], False
+     mode = "workflow-only" if reason == "workflow-only mode selected" else "ai"
+     from . import ai_registry
+     env = ai_registry.envelope(task, case_ids, {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
+                                                for cid, labels in sources.items()},
+                                dict(r, prompt_version=ai_prompts.version(task)), store.version)
+-    rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
+-                     latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=text,
+-                     fallback_reason=reason, envelope=env, release=r.get("release"), verified=verified, instruction_status="Not an instruction",
+-                     continuity_epoch=epoch0, quarantine=dict(reason=reason, at=_now()) if late else None,
+-                     provenance=dict(citation_resolved=verified, source_verified=False, human_reviewed=False,
+-                                     source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=cites, unresolved=bad, dropped_uncited=dropped)
+-    if late:
+-        with store.lock:
+-            rec["status"] = QUARANTINED
+-            store.audit(user["email"], "ai_quarantine", "-", f"{task} {rec['id']}")
+-            store.save()
+-        r = dict(r, source="template", model=None)
+-    return dict(r, text=text, citations=cites, unresolved=bad, dropped_uncited=dropped, verified=verified,
+-                approval=NOT_REVIEWED, instruction_status="Not an instruction", envelope=env, record_id=rec["id"], mode=mode, prompt_version=ai_prompts.version(task))
++    def publish(late):
++        why = "late result quarantined after a suspension or restart" if late else reason
++        shown, citations, checked = (workflow_text, [], False) if late else (text, cites, verified)
++        rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
++                         latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=shown,
++                         fallback_reason=why, envelope=env, release=r.get("release"), verified=checked, instruction_status="Not an instruction",
++                         status=QUARANTINED if late else NOT_REVIEWED,
++                         continuity_epoch=epoch0, quarantine=dict(reason=why, at=_now()) if late else None,
++                         provenance=dict(citation_resolved=checked, source_verified=False, human_reviewed=False,
++                                         source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=citations, unresolved=bad, dropped_uncited=dropped)
++        result = dict(r, source="template", model=None, reason=why) if late else r
++        return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
++                    approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
++                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task))
++    return store.continuity_publish(task, epoch0, r["source"], publish)
+ 
+ 
+ def require_registered(task):
+@@ HUNK @@ def review(store, user, rec_id, action, reason="", text=None):
+             raise ValueError("This AI output has already been reviewed.")
+         if action != "reject" and store.continuity_suspension(rec["task"]):
+             raise PermissionError(store.continuity_block(rec["task"]))
++        if action != "reject" and rec["source"] == "ai":
++            from .continuity import epoch_current
++            if not epoch_current(rec, store.continuity_epoch()):
++                raise PermissionError("AI output epoch changed or is unavailable; use fresh work or the manual route.")
++            store.continuity_fence()
+         if action != "reject" and rec["source"] == "ai" and not store.release_current(
+                 rec["task"], rec.get("release"), rec.get("model")):
+             store.audit(user["email"], "ai_release_denied", "-", f"{rec['task']} {rec_id}; use the manual route")
+diff --git a/src/core/src/zava_forward/core/assistants.py b/src/core/src/zava_forward/core/assistants.py
+--- a/src/core/src/zava_forward/core/assistants.py
++++ b/src/core/src/zava_forward/core/assistants.py
+@@ HUNK @@ class Assistants:
+                  if scope in (continuity.ALL, c)]
+         return Affected(found[:limit], total=len(found))
+ 
+-    def export(self, limit=5000):
++    def export(self, limit=5000, release_limit=5000, event_limit=5000):
+         """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""
++        if self.schema_error:
++            return dict(proposals=[], total=None, truncated=True, supported=True, source_status="unavailable",
++                        note=self.schema_error)
+         if not self.sql:
+-            return dict(proposals=[], total=0, truncated=False, supported=False,
++            return dict(proposals=[], total=0, truncated=False, supported=False, source_status="unsupported",
+                         note="Assistant proposals are durable SQL only; this JSON store holds none, so none are exported.")
+         with self.transaction() as db:
+             ids = [r[0] for r in db.execute("SELECT id FROM assistant_tasks ORDER BY id").fetchall()]
+@@ HUNK @@ class Assistants:
+                 body = self._row(db, tid)
+                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
+                 s = continuity.active(self.continuity(db), body["capability"])
+-                out.append(dict(body, provenance=events, relied_on=body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
++                current = continuity.epoch_current(body, self.continuity(db)["epoch"])
++                row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
++                stale = row is None or digest(self.snapshot(db, body["capability"], json.loads(row[0]))) != body["source_signature"]
++                out.append(dict(body, provenance=events, epoch_current=current, stale=stale, relied_on=current and not stale and body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
+                                 and body.get("release") == self.release_reference(db, body["capability"]),
+                                 suspension=s["id"] if s else None))
+-            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit)
++            releases = []
++            rows = db.execute("SELECT id,capability,status,body,revision FROM assistant_releases ORDER BY id").fetchall()
++            for rid, cap, status, raw, revision in rows[:release_limit]:
++                events = db.execute("SELECT id,at,body FROM assistant_events WHERE task_id=? ORDER BY at,id", (rid,)).fetchall()
++                releases.append(dict(id=rid, task=cap, current_status=status, revision=revision,
++                                     snapshot=dict(json.loads(raw), id=rid, status="active"),
++                                     events=[dict(id=eid, release_id=rid, at=at, body=json.loads(body))
++                                             for eid, at, body in events[:event_limit]],
++                                     event_total=len(events), truncated=len(events) > event_limit))
++            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, source_status="available", limit=limit,
++                        epoch=self.continuity(db)["epoch"],
++                        task_releases=dict(supported=True, records=releases, total=len(rows), exported=len(releases),
++                                           truncated=len(rows) > release_limit))
+ 
+     def disabled(self, db=None, capability=None):
+         l = self.limits
+@@ HUNK @@ class Assistants:
+         signature = digest(snapshot)
+         identity = proposal_identity(capability)
+         release = self.release_reference(db, capability)
+-        tid = digest([capability, VERSION, c["id"], signature, identity, release])
++        epoch = self.continuity(db)["epoch"]
++        tid = digest([capability, VERSION, c["id"], signature, identity, release, epoch])
+         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
+         if row is None:
+             reason = self.disabled(db, capability)
+             body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
+                         source_signature=signature, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
+                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
+-                        release=release, reason=reason, created_at=self.now(db))
++                        release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db))
+             state = "disabled" if reason else "pending"
+             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
+                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
+@@ HUNK @@ class Assistants:
+         body["history_count"] = total
+         body["display_state"] = "stale" if body["stale"] else body["state"]
+         held = continuity.active(self.continuity(db), body["capability"])
++        body["epoch_current"] = continuity.epoch_current(body, self.continuity(db)["epoch"])
+         body["release_denial"] = self.admission(db, body["capability"])
+         if not body["release_denial"] and body.get("release") != self.release_reference(db, body["capability"]):
+             body["release_denial"] = rel.denial("activation release changed", ["original activation release"], body["capability"])
+-        body["actionable"] = held is None and body["state"] not in ("quarantined", "disabled") and not body["release_denial"]
++        body["actionable"] = body["epoch_current"] and not body["stale"] and held is None and body["state"] in ("ready", "accepted") and not body["release_denial"]
++        body["relied_on"] = body["actionable"] and body["state"] == "accepted"
+         body["suspension"] = held["id"] if held else None
+         if held:
+             body["display_state"] = "suspended"
+         elif body["release_denial"]:
+             body["display_state"] = "release-denied"
++        elif not body["epoch_current"]:
++            body["display_state"] = "epoch-stale"
+         return body
+ 
+     def detail(self, user, tid, history_offset=0):
+@@ HUNK @@ class Assistants:
+                 self.event(db, tid, kind="exhausted", outcome="attempts-exhausted")
+                 return None
+             reason = self.disabled(db, task["capability"])
++            if not reason and not continuity.epoch_current(task, self.continuity(db)["epoch"]):
++                reason = "Proposal epoch changed or is unavailable; request fresh work or use the manual route."
+             if not reason and task.get("release") != self.release_reference(db, task["capability"]):
+                 reason = rel.denial("activation release changed", ["original activation release"], task["capability"])["reason"]
+             if reason:
+@@ HUNK @@ class Assistants:
+             epoch = self.continuity(db)["epoch"]
+             denied = self.admission(db, current["capability"])
+             binding = digest(runtime_binding(current["capability"], self.store.ai))
+-            quarantined = epoch != current.get("claim_epoch", epoch) or bool(self.suspended(db, current["capability"])) or bool(
++            quarantined = not continuity.epoch_current(current, epoch) or epoch != current.get("claim_epoch") or bool(self.suspended(db, current["capability"])) or bool(
+                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
+             if not quarantined and envelope.get("outcome") == "returned":
+                 # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
+@@ HUNK @@ class Assistants:
+                 returned.set()
+         with self.transaction() as db:
+             held = self.suspended(db, task["capability"]) or (self.admission(db, task["capability"]) or {}).get("reason")
++            if not held and not continuity.epoch_current(task, self.continuity(db)["epoch"]):
++                held = "Epoch changed before dispatch; use the manual route."
+             if not held and task.get("release") != self.release_reference(db, task["capability"]):
+                 held = "Release changed before dispatch; use the manual route."
+         if held:
+@@ HUNK @@ class Assistants:
+             if type(revision) is not int or revision != task["revision"]:
+                 raise ConflictError(tid)
+             if action != "reject":
++                if not task["epoch_current"]:
++                    raise PermissionError("Proposal epoch changed or is unavailable; request fresh work or use the manual route.")
+                 if task["suspension"]:
+                     raise PermissionError(self.suspended(db, task["capability"]))
+                 if task["release_denial"]:
+@@ HUNK @@ class Assistants:
+                 task["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
+             state = task["state"] if action == "verify" else ("rejected" if action == "reject" else "accepted")
+             task.pop("provenance", None)
+-            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial"):
++            for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial", "epoch_current", "relied_on"):
+                 task.pop(key, None)
+             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
+                              (canonical(task), state, tid, revision))
+diff --git a/src/core/src/zava_forward/core/continuity.py b/src/core/src/zava_forward/core/continuity.py
+--- a/src/core/src/zava_forward/core/continuity.py
++++ b/src/core/src/zava_forward/core/continuity.py
+@@ HUNK @@ decides, approves or restarts for anyone, and an AI assistant has no part in it.
+   unauthorised restart fails. Communication templates are records only; nothing
+   is sent to anyone. A witnessed authorised drill is an owner activity and is
+   not claimed here.
+-* Change register: a model, rule or configuration change records its version
+-  and a passing evaluation result before it takes effect, and a reversal is a
+-  new record that supersedes it. Nothing is overwritten.
++* Change register: records declared model, rule or configuration versions and
++  evaluation evidence. A reversal is another record, not a serving-configuration
++  switch. Task-bound release admission is the separate serving control.
+ * Export: a self-describing bundle with its own digest and ledger chain, so
+   evidence stays readable and verifiable with no AI supplier or live service.
+ """
+ import hashlib
+ import json
++import math
++import re
++import uuid
+ 
+ from . import controls as k
+ 
+@@ HUNK @@ def reason_text(s):
+     return f"Suspended ({s['id']}): use the manual route. {MANUAL_NOTE}"
+ 
+ 
++def epoch_current(record, epoch):
++    recorded = record.get("continuity_epoch", record.get("claim_epoch"))
++    return type(recorded) is int and recorded == epoch
++
++
+ def effective_versions(doc):
+     """Latest applied, unreversed change per kind and subject."""
+     out = {}
+@@ HUNK @@ class ContinuityMixin:
+         return c
+ 
+     def continuity_epoch(self):
+-        return self._cont()["epoch"]
++        with self.lock:
++            return self._cont()["epoch"]
++
++    def ai_epoch_current(self, record):
++        return epoch_current(record, self.continuity_epoch())
++
++    def continuity_fence(self):
++        """Make the existing optimistic SQL writer validate the observed continuity document."""
++        if hasattr(self, "assistant_connection"):
++            self._cont()["publication_fence"] = uuid.uuid4().hex
++
++    def continuity_publish(self, task, epoch, source, publish):
++        """Retry only a known rolled-back local publication, never a provider call."""
++        from .store import ConflictError
++        for attempt in range(2):
++            try:
++                with self.lock:
++                    late = source == "ai" and (
++                        type(epoch) is not int or epoch != self._cont()["epoch"]
++                        or bool(active(self._cont(), task)))
++                    if source == "ai":
++                        self.continuity_fence()
++                    return publish(late)
++            except ConflictError as error:
++                if error.args != ("continuity",) or attempt:
++                    raise
+ 
+     def continuity_suspension(self, task):
+         return active(self._cont(), task)
+@@ HUNK @@ class ContinuityMixin:
+             doc["suspensions"].append(rec)
+             self.audit(user["email"], "ai_suspend", "-", f"{rec['id']} {scope} epoch={rec['epoch']}")
+             self.save()
+-            return rec
++            return control_record(user, rec)
+ 
+     def _suspension(self, body):
+         s = next((x for x in self._cont()["suspensions"] if x["id"] == body.get("id")), None)
+@@ HUNK @@ class ContinuityMixin:
+                                  corrective_evidence=k.text(body.get("corrective_evidence"), "the corrective evidence", 600))
+             self.audit(user["email"], "ai_restart_propose", "-", s["id"])
+             self.save()
+-            return s
++            return control_record(user, s)
+ 
+     def restart_decide(self, user, body):
+         k.refuse_bulk(body)
+@@ HUNK @@ class ContinuityMixin:
+                 rec["new_epoch"] = doc["epoch"]
+             self.audit(user["email"], "ai_restart_decide", "-", f"{s['id']} {decision}")
+             self.save()
+-            return s
++            return control_record(user, s)
+ 
+     # ---- change register
+     def change_record(self, user, body):
+@@ HUNK @@ class ContinuityMixin:
+             doc["changes"].append(rec)
+             self.audit(user["email"], "change_record", "-", f"{rec['id']} {kind} {rec['subject']} {rec['status']}")
+             self.save()
+-            return rec
++            return control_record(user, rec)
+ 
+     def change_reverse(self, user, body):
+         k.refuse_bulk(body)
+@@ HUNK @@ class ContinuityMixin:
+             doc["changes"].append(rev)
+             self.audit(user["email"], "change_reverse", "-", f"{rev['id']} reverses {c['id']}")
+             self.save()
+-            return rev
++            return control_record(user, rev)
+ 
+     def continuity_view(self, user):
+         k.require_role(user, SUSPEND_ROLES, "a manager, quality inspector or building safety liaison can see the continuity register")
++        from . import projection
+         doc = self._cont()
+-        return dict(epoch=doc["epoch"], suspensions=doc["suspensions"], changes=doc["changes"], effective=effective_versions(doc),
+-                    suspended=[dict(id=s["id"], scope=s["scope"]) for s in doc["suspensions"] if s["status"] == "Suspended"], note=MANUAL_NOTE)
++        suspensions = [control_record(user, s) for s in doc["suspensions"]]
++        return dict(epoch=doc["epoch"], suspensions=suspensions,
++                    changes=[control_record(user, c) for c in doc["changes"]],
++                    effective=effective_versions(doc) if projection.can_see_reason(user) else {},
++                    suspended=[{key: s[key] for key in ("id", "scope") if key in s}
++                               for s in suspensions if s["status"] == "Suspended"], note=MANUAL_NOTE)
+ 
+     # ---- supplier-independent export
+     def continuity_export(self, user, assistants=None):
+         """Build the bundle. It says whether it is complete and never presents a truncated or unsupported part as whole."""
+         k.require_role(user, MANAGER_ROLES, "a manager can export evidence")
+-        from . import ai_registry, ledger
+-        assistants = assistants or dict(proposals=[], total=0, truncated=False, supported=False, note="No assistant source was supplied.")
++        from . import ai_registry, ledger, projection
++        source = assistants if isinstance(assistants, dict) else {}
+         with self.lock:
+             head_count, head_hash = self.ledger_head()
+             recs = [dict(r) for r in self.data["recommendations"]]
+@@ HUNK @@ class ContinuityMixin:
+             ledger_rows = list(self.audit_entries())
+             report = self.verify_ledger()
+             digests = ledger.read_digests(self.digest_dir)
+-            reasons = []
+-            if assistants.get("truncated"):
+-                reasons.append(f"assistant proposals truncated at {assistants.get('limit')} of {assistants.get('total')}")
++            reasons = [] if isinstance(assistants, dict) else ["assistant source missing or malformed"]
+             if len(ledger_rows) != head_count or (ledger_rows and ledger_rows[-1]["hash"] != head_hash):
+                 reasons.append("ledger changed or could not be read in full during export")
++            epoch = self._cont()["epoch"]
++            raw = source.get("proposals")
++            proposals = [dict(p) if isinstance(p, dict) else p for p in raw] if isinstance(raw, list) else raw
++            metadata = dict(supported=source.get("supported"), total=source.get("total"),
++                            exported=len(raw) if isinstance(raw, list) else None,
++                            truncated=source.get("truncated"), source_status=source.get("source_status"),
++                            note=source.get("note"))
++            if metadata["truncated"] is True:
++                reasons.append("assistant proposal evidence truncated")
++            reasons.extend(proposal_problems(dict(assistant_proposals=proposals, assistants=metadata)))
++            if isinstance(proposals, list):
++                for p in proposals:
++                    if isinstance(p, dict) and (
++                            not epoch_current(p, epoch) or active(self._cont(), p.get("capability"))):
++                        p.update(relied_on=False, actionable=False, epoch_current=False)
++            task_releases = source.get("task_releases")
++            if "task_releases" not in source and metadata["supported"] is False and not reasons:
++                task_releases = dict(
++                    supported=False, records=[], total=0, exported=0, truncated=False,
++                    note="Explicit unsupported durable task-release source: JSON store has no assistant release storage.")
+             bundle = dict(
+                 format=EXPORT_FORMAT, generated_by=user["email"], generated_at=k.now(), as_of=self.as_of,
+                 independence="Plain JSON with its own digest and ledger chain. Provider, deployment and model appear only as recorded data; "
+                              "reading, verifying or re-importing it needs no AI supplier or live service.",
+                 registry=ai_registry.registry(),
+                 ai_records=[self._export_record(r) for r in recs],
+-                assistant_proposals=list(assistants["proposals"]),
+-                assistants=dict(supported=assistants.get("supported", True), total=assistants["total"], exported=len(assistants["proposals"]),
+-                                truncated=bool(assistants.get("truncated")), note=assistants.get("note")),
++                assistant_proposals=proposals, task_releases=task_releases,
++                assistants=metadata,
+                 complete=not reasons, incomplete_reasons=reasons,
+                 versions=dict(effective=effective_versions(self._cont()), changes=self._cont()["changes"]),
+                 continuity=dict(epoch=self._cont()["epoch"], suspensions=self._cont()["suspensions"]),
+                 approvals=dict(protocol_versions=gov["protocol_versions"], releases=gov["releases"], breaches=gov["breaches"]),
+                 ledger=dict(entries=ledger_rows, report=report, head=dict(count=head_count, hash=head_hash), digests=digests))
++            reasons.extend(release_problems(bundle))
++            bundle["complete"] = not reasons
++            bundle["audience"] = dict(scope="full", full_ledger_proof=True)
++            if not projection.can_see_reason(user):
++                bundle = limited_export(bundle)
+         bundle["digest"] = sha({k_: v for k_, v in bundle.items() if k_ != "digest"})
+         self.audit(user["email"], "evidence_export", "-", f"digest={bundle['digest'][:16]} records={len(bundle['ai_records'])}")
+         self.save()
+         return bundle
+ 
+-    @staticmethod
+-    def _export_record(r):
++    def _export_record(self, r):
+         keep = ("id", "kind", "task", "case_ids", "created", "status", "mode", "source", "model", "prompt_version", "envelope", "provenance",
+                 "citations", "unresolved", "verified", "fallback_reason", "ai_output", "workflow_output", "shown_output", "reviewer_action",
+-                "reviewer_reason", "override_text", "resolved_by", "resolved_at", "review_evidence", "quarantine", "continuity_epoch", "user")
+-        return {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
++                "reviewer_reason", "override_text", "resolved_by", "resolved_at", "review_evidence", "quarantine", "continuity_epoch", "user", "release")
++        result = {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
++        task = r.get("task", "priority")
++        current = r.get("source") != "ai" or (
++            epoch_current(r, self._cont()["epoch"]) and not active(self._cont(), task)
++            and not r.get("quarantine") and self.release_current(task, r.get("release"), r.get("model")))
++        result.update(epoch_current=r.get("source") != "ai" or epoch_current(r, self._cont()["epoch"]),
++                      actionable=current and r["status"] in ("Not reviewed", "Proposed"),
++                      relied_on=current and r["status"] in ("Accepted", "Edited"))
++        return result
++
++
++def control_record(user, record):
++    """Project control responses without changing the canonical retained record."""
++    from . import ai_registry, projection
++    if projection.can_see_reason(user):
++        return record
++    held = projection.NOTE_HELD
++    result = dict(detail=held)
++    for key in ("id", "reverses", "superseded_by"):
++        value = record.get(key)
++        if isinstance(value, str) and re.fullmatch(r"(SUS|CHG)-[0-9]+", value):
++            result[key] = value
++    for key, choices in (
++            ("status", ("Suspended", "Restarted", "Applied", "Blocked", "Reversed")),
++            ("kind", KINDS), ("scope_kind", ("release", "task"))):
++        if record.get(key) in choices:
++            result[key] = record[key]
++    scope = record.get("scope")
++    if isinstance(scope, str) and (scope == ALL or ai_registry.get(scope)):
++        result["scope"] = scope
++    for key in ("epoch", "affected_assistant_total"):
++        if type(record.get(key)) is int:
++            result[key] = record[key]
++    if type(record.get("affected_assistant_truncated")) is bool:
++        result["affected_assistant_truncated"] = record["affected_assistant_truncated"]
++    if isinstance(record.get("affected"), list):
++        result["affected_total"] = len(record["affected"])
++    if "communication" in record:
++        result["communication"] = dict(sent=False, owner=held, audience=held, note=COMMS_NOTE)
++    for key in ("reason", "incident_owner", "containment", "subject", "from_version", "to_version"):
++        if key in record:
++            result[key] = held
++
++    def decision_summary(value):
++        summary = dict(detail=held)
++        for key in ("epoch", "new_epoch"):
++            if type(value.get(key)) is int:
++                summary[key] = value[key]
++        if value.get("decision") in ("Restart", "Keep suspended"):
++            summary["decision"] = value["decision"]
++        return summary
++
++    for key in ("proposal", "restart"):
++        if isinstance(record.get(key), dict):
++            result[key] = decision_summary(record[key])
++    if isinstance(record.get("decisions"), list):
++        result["decisions"] = [decision_summary(d) for d in record["decisions"] if isinstance(d, dict)]
++    return result
++
++
++def limited_export(bundle):
++    """Closed summaries, not rewritten ledger rows or filtered arbitrary free text."""
++    from . import projection
++    held = projection.NOTE_HELD
++
++    def summary(record):
++        result = {key: value for key in ("continuity_epoch", "claim_epoch", "epoch_current", "actionable", "relied_on", "revision")
++                  if type(value := record.get(key)) in (int, bool)}
++        for key in ("status", "state"):
++            value = record.get(key)
++            if value in ("Not reviewed", "Proposed", "Accepted", "Edited", "Rejected", "Quarantined",
++                         "pending", "leased", "ready", "accepted", "rejected", "quarantined",
++                         "Suspended", "Restarted"):
++                result[key] = value
++        return dict(result, detail=held)
++
++    reason = "Audience-limited export: protected evidence is held; the full canonical ledger cannot be verified from this bundle."
++    # Do not traverse unknown evidence fields: any free-text field can contain a reason.
++    result = {key: bundle[key] for key in ("format", "generated_by", "generated_at", "as_of", "registry")}
++    result.update(
++        independence="Plain JSON audience-limited evidence summary; not a complete ledger or task-release proof.",
++        audience=dict(scope="limited", full_ledger_proof=False, note=held),
++        complete=False, incomplete_reasons=[reason, *bundle["incomplete_reasons"]],
++        ai_records=[summary(r) for r in bundle["ai_records"]],
++        assistant_proposals=[summary(p) for p in (bundle["assistant_proposals"] or [])
++                             if isinstance(p, dict)] if isinstance(bundle["assistant_proposals"], list) else [],
++        assistants={**{key: bundle["assistants"][key] for key in ("supported", "total", "exported", "truncated")},
++                    "source_status": bundle["assistants"]["source_status"] if bundle["assistants"]["source_status"] in
++                    ("available", "unsupported", "unavailable") else "unavailable",
++                    "note": held},
++        task_releases=dict(supported=False, records=[],
++                           total=bundle["task_releases"].get("total") if isinstance(bundle["task_releases"], dict) else None,
++                           exported=0, truncated=True, note=held),
++        versions=dict(effective={}, changes=[], held_count=len(bundle["versions"]["changes"]), note=held),
++        continuity=dict(epoch=bundle["continuity"]["epoch"],
++                        suspensions=[summary(s) for s in bundle["continuity"]["suspensions"]], note=held),
++        approvals={key: [] for key in ("protocol_versions", "releases", "breaches")},
++        ledger=dict(entries=[], head=dict(bundle["ledger"]["head"]), digests=[],
++                    report=dict(intact=False, problem=reason), full_proof=False, note=held))
++    return result
++
++
++def proposal_problems(bundle):
++    """Validate serialized collection completeness independently of producer flags."""
++    problems = []
++    proposals, metadata = bundle.get("assistant_proposals"), bundle.get("assistants")
++    if not isinstance(proposals, list) or any(not isinstance(p, dict) for p in proposals):
++        problems.append("missing or malformed assistant_proposals collection")
++    if not isinstance(metadata, dict):
++        return problems + ["missing or malformed assistants source metadata"]
++    supported, truncated = metadata.get("supported"), metadata.get("truncated")
++    total, exported = metadata.get("total"), metadata.get("exported")
++    if type(supported) is not bool or type(truncated) is not bool:
++        problems.append("assistant source support/truncation flags must be booleans")
++    counts_valid = all(type(v) is int and v >= 0 for v in (total, exported))
++    if not counts_valid:
++        problems.append("assistant proposal counts must be nonnegative integers")
++    elif not isinstance(proposals, list) or exported != len(proposals) or exported != total:
++        problems.append("assistant proposal collection missing or counts inconsistent")
++    if truncated is not False:
++        problems.append("assistant proposal evidence truncated or truncation unavailable")
++    status = metadata.get("source_status")
++    if supported is True:
++        if status != "available":
++            problems.append("required assistant proposal source unavailable")
++    elif supported is False:
++        note = metadata.get("note")
++        if status != "unsupported" or not isinstance(note, str) or not note.strip():
++            problems.append("assistant source unavailable or unsupported status unexplained")
++        if not counts_valid or total != 0 or exported != 0 or proposals != []:
++            problems.append("unsupported assistant source cannot contain or omit known proposals")
++    return problems
++
++
++def release_problems(bundle):
++    """Check retained task-release relationships without a provider or store.
++
++    These checks detect missing/contradictory evidence, not wholesale rewriting of
++    unanchored release history. The application ledger does not bind these events.
++    """
++    from . import ai_registry, rai_release
++    problems, references = proposal_problems(bundle), []
++    proposals = bundle.get("assistant_proposals")
++    if not isinstance(proposals, list) or any(not isinstance(p, dict) for p in proposals):
++        return problems
++    def retain_reference(reference, task):
++        if not isinstance(reference, dict) or not isinstance(reference.get("id"), str) or not reference["id"]:
++            problems.append("malformed task-release reference")
++        else:
++            references.append((reference, task))
++
++    def envelope_reference(envelope, reference, task):
++        if envelope is None:
++            return
++        if not isinstance(envelope, dict):
++            problems.append("malformed release evidence envelope")
++            return
++        if envelope.get("release") is not None:
++            retain_reference(envelope["release"], task)
++            if envelope["release"] != reference:
++                problems.append("envelope task-release reference mismatch")
++
++    for p in proposals:
++        reference = p.get("release")
++        if reference is not None:
++            retain_reference(reference, p.get("capability"))
++        elif isinstance(p.get("envelope"), dict) and p["envelope"].get("source") == "ai":
++            problems.append("AI proposal has no retained task-release reference")
++        envelope_reference(p.get("envelope"), reference, p.get("capability"))
++        events = p.get("provenance", [])
++        if not isinstance(events, list) or any(not isinstance(e, dict) for e in events):
++            problems.append("malformed proposal provenance collection")
++            continue
++        for event in events:
++            envelope_reference(event.get("envelope"), reference, p.get("capability"))
++            if event.get("release") is not None:
++                retain_reference(event["release"], p.get("capability"))
++    records = bundle.get("ai_records")
++    if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
++        problems.append("missing or malformed AI record collection")
++        records = []
++    for r in records:
++        task = r.get("task", "priority")
++        if not isinstance(task, str):
++            problems.append("malformed legacy task")
++            continue
++        task = "legacy:" + task
++        if r.get("release") is not None:
++            retain_reference(r["release"], task)
++        elif r.get("source") == "ai":
++            problems.append("Legacy AI record has no retained task-release reference")
++        envelope_reference(r.get("envelope"), r.get("release"), task)
++    evidence = bundle.get("task_releases")
++    if not isinstance(evidence, dict):
++        return problems + ["missing or malformed task-release source"]
++    records = evidence.get("records")
++    if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
++        return problems + ["missing or malformed task-release collection"]
++    total, exported = evidence.get("total"), evidence.get("exported")
++    if any(type(n) is not int or n < 0 for n in (total, exported)) or total != exported or exported != len(records) or evidence.get("truncated") is not False:
++        problems.append("task-release evidence truncated or inconsistent")
++    supported = evidence.get("supported")
++    if supported is not True:
++        metadata = bundle.get("assistants")
++        metadata = metadata if isinstance(metadata, dict) else {}
++        note = evidence.get("note")
++        if (supported is not False or records or total != 0 or exported != 0 or references
++                or metadata.get("supported") is not False or metadata.get("source_status") != "unsupported"
++                or not isinstance(note, str) or not note.strip()):
++            problems.append("task-release source unavailable or contradictory unsupported evidence")
++    found = {}
++    for record in records:
++        rid = record.get("id")
++        task, snapshot = record.get("task"), record.get("snapshot")
++        if not isinstance(rid, str) or not rid:
++            problems.append("malformed task-release identity")
++            continue
++        if rid in found:
++            problems.append("duplicate task-release evidence")
++        found[rid] = record
++        if (not isinstance(task, str) or ai_registry.get(task.removeprefix("legacy:")) is None
++                or not isinstance(snapshot, dict) or snapshot.get("id") != rid
++                or snapshot.get("task") != task or snapshot.get("status") != "active"
++                or not isinstance(snapshot.get("release_version"), str) or not snapshot["release_version"]):
++            problems.append("malformed or contradictory task-release snapshot")
++        problems.extend(lifecycle_problems(record))
++    for reference, task in references:
++        record = found.get(reference.get("id"))
++        if record is None:
++            problems.append("missing task-release evidence")
++            continue
++        snapshot = record.get("snapshot")
++        if not isinstance(snapshot, dict) or not {"id", "release_version"} <= snapshot.keys() or snapshot.get("id") != record["id"] or snapshot.get("task") != task or record.get("task") != task or snapshot.get("status") != "active" or rai_release.reference(snapshot) != reference:
++            problems.append("task-release reference digest/version/task mismatch")
++    return list(dict.fromkeys(problems))
++
++
++def lifecycle_problems(record):
++    """Check every retained history; equal timestamps establish no UUID ordering."""
++    events, revision = record.get("events"), record.get("revision")
++    if (not isinstance(events, list) or not events or record.get("truncated") is not False
++            or type(record.get("event_total")) is not int or record["event_total"] != len(events)
++            or type(revision) is not int or revision != len(events)):
++        return ["task-release lifecycle missing or truncated"]
++    ids, times = set(), {"release-recorded": [], "release-suspended": [], "release-revoked": []}
++    for event in events:
++        if not isinstance(event, dict):
++            return ["invalid task-release event envelope"]
++        eid, at, body = event.get("id"), event.get("at"), event.get("body")
++        try:
++            finite_at = type(at) in (int, float) and math.isfinite(at)
++        except OverflowError:
++            finite_at = False
++        if (not isinstance(eid, str) or not eid or eid in ids
++                or event.get("release_id") != record["id"]
++                or not finite_at or not isinstance(body, dict)):
++            return ["invalid task-release event envelope"]
++        ids.add(eid)
++        kind = body.get("kind")
++        if not isinstance(kind, str) or kind not in times or (kind == "release-recorded" and body.get("task") != record.get("task")):
++            return ["invalid task-release event"]
++        times[kind].append(at)
++    initial, suspended, revoked = (times[k] for k in ("release-recorded", "release-suspended", "release-revoked"))
++    if len(initial) != 1 or any(at < initial[0] for at in suspended + revoked):
++        return ["contradictory task-release initial event"]
++    status = record.get("current_status")
++    if ((status == "active" and revision == 1)
++            or (status == "suspended" and suspended and not revoked)
++            or (status == "revoked" and len(revoked) == 1
++                and all(at <= revoked[0] for at in suspended))):
++        return []
++    return ["contradictory task-release lifecycle status"]
+ 
+ 
+ def verify_export(bundle, expected_head=None):
+@@ HUNK @@ def verify_export(bundle, expected_head=None):
+         problems.append("unknown format")
+     if sha(body) != bundle.get("digest"):
+         problems.append("digest mismatch")
++    limited = bundle.get("audience", {}).get("scope") == "limited" or bundle.get("ledger", {}).get("full_proof") is False
++    if limited:
++        problems.append("audience-limited evidence cannot verify the full canonical ledger")
++    problems.extend(release_problems(bundle))
+     for need in ("registry", "ai_records", "versions", "continuity", "approvals", "ledger", "complete"):
+         if need not in bundle:
+             problems.append(f"missing {need}")
+@@ HUNK @@ def verify_export(bundle, expected_head=None):
+             problems.append("ledger does not match the externally held head")
+     if bundle.get("complete") is not True:
+         problems.append("bundle is incomplete: " + "; ".join(bundle.get("incomplete_reasons") or ["not marked complete"]))
+-    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True)
++    return dict(valid=not problems, problems=problems, complete=bundle.get("complete") is True and not problems)
+diff --git a/src/core/src/zava_forward/core/projection.py b/src/core/src/zava_forward/core/projection.py
+--- a/src/core/src/zava_forward/core/projection.py
++++ b/src/core/src/zava_forward/core/projection.py
+@@ HUNK @@ STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Saf
+                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
+ FINANCE_VIEW = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
+ STAFF_GET = ("coordinator", "finance_queue", "me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
+-             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report", "assistants", "law", "retention", "chat", "building", "forms")
++             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "checklists", "ai_report", "assistants", "law", "retention", "chat", "building", "forms", "continuity", "continuity_export")
+ CONTRACTOR_GET = ("me", "cases", "case", "workorders")
+ CONTRACTOR_POST = ("logout",)
+ 
+diff --git a/src/core/src/zava_forward/core/store.py b/src/core/src/zava_forward/core/store.py
+--- a/src/core/src/zava_forward/core/store.py
++++ b/src/core/src/zava_forward/core/store.py
+@@ HUNK @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
+         off = ai_tasks.workflow_only(mode)
+         with self.lock:
+             hit = self._briefings.get((user["code"], off))
+-            if hit and hit[0] == self.version and (
++            if hit and hit[0] == self.version and (hit[1]["source"] != "ai" or
++                    self.ai_epoch_current(hit[1])) and not self.continuity_suspension("briefing") and (
+                     (hit[1]["source"] != "ai" and (off or not self.ai.configured)) or self.release_current(
+                         "briefing", hit[1].get("release"), hit[1].get("model"))):
+                 return hit[1]
+@@ HUNK @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
+                 r["cites"] = cites or []
+             return r
+         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
+-        return dict(rec, label=self.REC_LABEL, actionable=not denied, release_denied=denied,
++        current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
++        return dict(rec, label=self.REC_LABEL, actionable=current and not denied, release_denied=denied,
++                    epoch_current=current, relied_on=current and not denied and rec["status"] in ("Accepted", "Edited"),
+                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
+                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
+                     deterministic=[row(cid) for cid in rec["deterministic"]])
+@@ HUNK @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
+             items, _, err = ai_tasks.priority_items(text, n, sources)
+             return err is None and not ai_tasks.critical_misses([i["case_id"] for i in items], hazard_ids, n)
+         self.audit(user["email"], "ai_run_start", "-", f"priority_recommendation n={n}")
++        epoch0 = self.continuity_epoch()
+         r = self.ai.run("priority", sysmsg, prompt, tmpl, True, check=valid,
+                         off=ai_tasks.workflow_only(mode))
+         items, dropped = None, 0
+@@ HUNK @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
+             items, dropped, _ = ai_tasks.priority_items(r["text"], n, sources)
+         if items is None:
+             items = tmpl_items
+-        with self.lock:
++        def publish(late):
+             rec = dict(id=uuid.uuid4().hex[:12], user=user["email"], created=datetime.now().isoformat(timespec="seconds"),
+                        status="Proposed", source=r["source"], model=r["model"], validated=r["validated"], n=n,
+                        items=items, deterministic=det, policy_version=policy_version, final_items=None,
+                        resolved_by=None, resolved_at=None, reason="", workflow_items=tmpl_items, ai_output=r.get("ai_text") or (r["text"] if r["source"] == "ai" else None),
+                        fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_prompts.version("priority"),
+-                       release=r.get("release"),
++                       release=r.get("release"), continuity_epoch=epoch0,
++                       quarantine=dict(reason="Late priority result after epoch change") if late else None,
+                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
+                        case_ids=[c["id"] for c in cand], hazard_ids=hazard_ids,
+                        overlap=len({i["case_id"] for i in items} & set(det)))
++            if late:
++                rec.update(status="Quarantined", items=tmpl_items,
++                           fallback_reason="Late priority result quarantined; use the manual route.")
+             self.data["recommendations"].append(rec)
+             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
+             self.save()
+             return self._rec_view(rec)
++        return self.continuity_publish("priority", epoch0, r["source"], publish)
+ 
+     def _heuristic_priority(self, cand, n, ok=False):
+         """Template used when no model is available: a different, simpler view from the ranking policy."""
+@@ HUNK @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
+                 raise PermissionError("This suggestion was made for someone else.")
+             if rec["status"] != "Proposed":
+                 raise ValueError("This suggestion has already been answered.")
++            if action != "reject" and rec["source"] == "ai":
++                if not self.ai_epoch_current(rec) or self.continuity_suspension("priority"):
++                    raise PermissionError("AI output epoch changed or is suspended; use fresh work or the manual route.")
++                self.continuity_fence()
+             if action != "reject" and rec["source"] == "ai" and not self.release_current(
+                     "priority", rec.get("release"), rec.get("model")):
+                 self.audit(user["email"], "ai_release_denied", "-", f"priority {rec_id}; use the manual route")

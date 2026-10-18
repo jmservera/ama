@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "P06 integration and focused shared-write validation executed without conflicts or source edits. Normalized complete ninepath intent exact, README/config additive unions exact. No additional source correction or original Review.",
+      "status": "validated-integration-pending-authorized-publication",
+      "evidence": "Candidate9f930d820f4133227717dc7b319903372ad8396e on578631ac75cc8c6a7af53922c6aaae4435e7761c;2642protected upstream files/280src exact blobs+modes;73prior immutable/original27 unchanged. Fresh focused173run157pass16MSSQLopt-in skips, atomicity/role51/51, coordinator numericprivacy3/3/unavailable15/15, coreAPIquality125/58pass. Governance witness threadlocal activecontext-only/restoredfinally, existing shared-write failures and continuity suites pass; no unresolved concern to warrant SQL/image reruns. Existing boundedPass733cb491 at96099bb5 preserved separately; integration delta awaits same reviewer."
+    },
+    {
       "decision": "Owner authorizes integration ONLY after reported independent bounded Pass by SAME733cb491 reviewer at96099bb57c58e76b4afc7d278ff5f17be43f5a8d. Original adverse assessments immutable; correction TWO FINAL exhausted, no third correction/critique/second original Review. Any material source conflict/bug routes human.",
       "status": "authorized-integration-only",
       "evidence": "Owner2026-10-18T10:34 continuation; clean local/remote/PR96099bb5/base9403dc6a/draft/empty refs; fetched origin/main EXACT578631ac75cc8c6a7af53922c6aaae4435e7761c. Rebase only owned topic, sole exact96099bb5lease. Preserve PR409 protected governance/sqlstore/server/tests/config/docs, union additive README/config.73prior immutable artifacts frozen, prior80boundary hashes verified, original27 unchanged; five complete workerlogs copied/hashverified."
@@ -104,20 +109,20 @@
   "blockers": [
     {
       "id": "independent-acceptance",
-      "summary": "Coordinator full exact published-head independent review remains required; PR stays draft.",
-      "resolution": "Publish correction TWO FINAL with preserved adverse assessment/evidence, then stop for SAME reviewer to assess correction/integration delta; any remaining blocker routes human, not third correction."
+      "summary": "Prior96099bb5 correction TWO independently accepted boundedPass; new578631ac governance integration delta still needs SAME reviewer assessment. PR stays draft.",
+      "resolution": "Publish exact authorized96099bb5lease, final normal receipt/PR refresh then STOP for SAME reviewer final integration delta; any material source bug routes human, no third correction."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Owner integration ONLY from verified clean local/remote/PR96099bb57c58e76b4afc7d278ff5f17be43f5a8d/base9403dc6a to EXACT578631ac75cc8c6a7af53922c6aaae4435e7761c. Rebase only owned topic; sole authorized rewrite exact96099bb5lease. No source correction/third cycle/critique/original Review. Preserve normalized9path intent, protected upstream and73prior immutable artifacts. Then focused shared-write/quality validation, pinned publication, same-reviewer STOP."
+    "action": "P06-T04: persist separate integration-governance receipt/manifest/rawresults, commit current metadata then publish ONLY exactlease refs/heads/fix/continuity-epoch-export-122:96099bb57c58e76b4afc7d278ff5f17be43f5a8d. Unexpected topic advance stops. Keep pinned578631ac even if main moves, report. Subsequent receipt normal push, draft PR exacthead/base/emptyrefs then STOP for SAME reviewer integration delta; no further source correction."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Same independent reviewer assesses FINAL correction and integration delta",
-      "rationale": "Complete review 733cb491-5a80-4b82-8034-12671261e9d4 was Not accepted. Correction TWO addresses its blocking unavailable-SQL finding, not self-acceptance. No third source correction; any remaining blocker routes human.",
-      "evidence": "Source candidate 5fa69b3e299a9fbe16c0ae7839fb3613eaff09d0 on pinned 9403dc6a8f52f1f04c5ad910faab11a57c29ee78; correction-two receipt/manifest and verbatim independent input preserve previous complete51-path boundary, subsequent55-path integration and adverse probes."
+      "task": "Same independent reviewer assesses final governance integration delta",
+      "rationale": "Prior correction TWO accepted boundedPass733cb491 at96099bb5; complete9path patch preserved on578631ac but final integrationdelta not yet independently assessed. No new original Review or third correction; any material source bug routes human.",
+      "evidence": "Integrated9f930d820f4133227717dc7b319903372ad8396e/base578631ac75cc8c6a7af53922c6aaae4435e7761c; separate integration-governance receipt/manifest93path boundary,73prior immutable and2642protected upstream exact. Prior adverse and boundedPass payloads preserved."
     },
     {
       "rank": 2,

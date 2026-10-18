@@ -6,6 +6,19 @@ ms.date: 2026-10-18
 
 ## Task and Initial Direction
 
+P06-T02/T03 complete at9f930d820f4133227717dc7b319903372ad8396e:
+conflict-free rebase, full normalized9path patch equality, no context exemptions.
+2642entire protected upstream tree files/280src exact blobs+modes; README/config
+exact additive union,73prior immutable/original27 intact, KB exact upstream.
+Fresh173run157pass16MssqlEvidenceRegister opt-in skips; atomicity/durability/role
+51/51, unchanged coordinator numeric/privacy3/3 and unavailable15/15. Core/API
+Ruff/format/mypy pass125/58. Governance witness active only inside thread-local
+rai_evidence_write restored in finally; SqlEvidenceRegister covers precommit
+rollback/current actor, competing writer, postcommit/lock-exit/hook failures
+and pending quarantine. Continuity/assistant writes and roles pass without that
+context. Owned intent unchanged, no unresolved interaction, so no SQL/image
+rerun required; historical evidence retained as historical. Publication pending.
+
 CURRENT P06 INTEGRATION ONLY supersedes historical directions below. Owner
 reports independent bounded Pass733cb491 at96099bb5. Clean expected local/
 remote/PR96099bb57c58e76b4afc7d278ff5f17be43f5a8d, prior base9403dc6a;

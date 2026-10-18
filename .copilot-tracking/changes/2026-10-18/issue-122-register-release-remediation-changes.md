@@ -8,6 +8,26 @@ ms.date: 2026-10-18
 
 ## Current P06 Governance Integration ONLY
 
+P06-T02 rebase22commits completed without conflicts, candidate
+9f930d820f4133227717dc7b319903372ad8396e on exact578631ac. Full normalized
+nine-path patch equality (only Git index/hunk coordinates normalized), no additive
+context exemption needed. README/config exact union by removing only upstream
+insertions recovers original96099bb5 bytes; seven other owned files exact.
+All2642protected upstream files (280src) exact blobs/modes, all73immutable
+artifacts/original27 unchanged, KB exact upstream. No source edit.
+
+P06-T03 fresh focused173run157pass16skips (all MssqlEvidenceRegister opt-in);
+shared SQL-store atomicity/assistant independent-connection durability/roles
+51/51 zero skips; exact existing coordinator probes numeric/lifecycle/privacy
+3/3 and unavailable15/15. Core/API quality all pass125/58mypy files. No failed
+execution. Witness assessment: mark_committed mutates only active thread-local
+rai_evidence_write; governance restores previous context in finally. Existing
+pre/postcommit, lock exit, quarantine, competing writer and rollback tests
+pass together with continuity/assistant writes. No changed owned production
+intent or unresolved concern; localSQL/image repetition deliberately omitted,
+earlier correction evidence remains historical. Retrieved/preserved exact
+existing reviewer733cb491 boundedPass payload for96099bb5, no new review call.
+
 Owner2026-10-18T10:34 reports independent bounded Pass by SAME733cb491 at
 96099bb5 and authorizes integration ONLY, no third source correction/critique/
 original Review. Intake clean local/remote/PR96099bb57c58e76b4afc7d278ff5f17be43f5a8d

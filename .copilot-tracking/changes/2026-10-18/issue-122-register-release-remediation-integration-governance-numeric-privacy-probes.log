@@ -1,0 +1,10 @@
+HEAD 9f930d820f4133227717dc7b319903372ad8396e
+CONTINUITY /home/azureuser/source/ama-wt/issue-122/src/core/src/zava_forward/core/continuity.py 4afcabd0cfbc495dc71d6b4869f42da5c8db500909c6aab129d20194586883ad
+test_oversized_json_numbers_and_valid_controls_at_both_boundaries (__main__.IndependentControls.test_oversized_json_numbers_and_valid_controls_at_both_boundaries) ... ok
+test_real_http_register_projection_tracks_recorded_need_without_mutation (__main__.IndependentControls.test_real_http_register_projection_tracks_recorded_need_without_mutation) ... ok
+test_unreferenced_releases_cannot_hide_missing_or_misbound_lifecycle (__main__.IndependentControls.test_unreferenced_releases_cannot_hide_missing_or_misbound_lifecycle) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.694s
+
+OK

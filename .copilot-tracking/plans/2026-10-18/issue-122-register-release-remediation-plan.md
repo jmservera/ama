@@ -51,11 +51,24 @@ empty closing refs; STOP for same reviewer final integration delta assessment.
 <!-- rpi:task id=P06-T01 -->
 #### [x] P06-T01: Verify intake and freeze all prior source/evidence/logs
 <!-- rpi:task id=P06-T02 -->
-#### [ ] P06-T02: Rebase pinned baseline and verify complete intent/upstream parity
+#### [x] P06-T02: Rebase pinned baseline and verify complete intent/upstream parity
 <!-- rpi:task id=P06-T03 -->
-#### [ ] P06-T03: Focused governance/shared SQL-write/continuity/role and quality checks
+#### [x] P06-T03: Focused governance/shared SQL-write/continuity/role and quality checks
 <!-- rpi:task id=P06-T04 -->
 #### [ ] P06-T04: Exact-lease publish, draft reconciliation and same-reviewer STOP
+
+Integrated candidate9f930d820f4133227717dc7b319903372ad8396e, conflict-free.
+Complete normalized9path patch exactly equal (no normalization exceptions
+needed); seven owned paths byte/mode identical, README/config exact additive
+upstream unions. All2642protected upstream files (280src) exact blobs/modes;
+all73prior immutable artifacts/original27 unchanged, KB exact upstream.
+Fresh focused173run157pass16opt-in MSSQL skips, shared SQL atomicity/durability/
+role51/51, coordinator numeric/privacy3/3 plus unavailable15/15. Core/API quality
+passes125/58mypy files. No source edit or failed execution. New governance
+witness only affects active thread-local RAI writes, restored in finally;
+existing commit/rollback/acknowledgement tests pass alongside continuity writers.
+No unresolved concern/changed owned intent warrants SQL/image repetition.
+Historical source/SQL/image evidence remains historical. Publication pending.
 
 Shared sqlstore witness must be assessed: new mark_committed only marks active
 thread-local rai_evidence_write context; no continuity writer sets that context.
