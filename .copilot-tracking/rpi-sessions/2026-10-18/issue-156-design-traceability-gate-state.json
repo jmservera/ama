@@ -49,12 +49,17 @@
       "decision": "Accepted documentation and all actual dated RPI artifacts committed together and pushed; main-target PR400 created with Refs #156, no issue closure",
       "status": "published-awaiting-external-gates",
       "evidence": "https://github.com/jmservera/ama/pull/400; initial artifact commit e127d93c5c67e9e579f0f59f65572e742fac58eb; source/branch base 3104bb69ddc26c81e0e9d2f57000dac1d99a419a retained without rebase; observed PR main base 3bc46912684cb4d865572023a6d16da14b9b8463; initial check rollup empty, not Passed"
+    },
+    {
+      "decision": "Coordinator authorized same-session integration only: exact rebase onto 3bc46912684cb4d865572023a6d16da14b9b8463, then push only with explicit lease expecting old published 6af9dd81e0089f8998bb8d575329c6bc1d4fc110",
+      "status": "integration-complete-locally-publication-pending",
+      "evidence": "Caller continuation 2026-10-18; rebase replay head before metadata receipt 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8; changes integration receipt. Final candidate is receipt commit itself, exact published head resolved through PR400. Original documentation S/H/E pins unchanged; only log conflict, both entries retained; all 13 upstream paths and own source parity checked; original critique/Review hashes unchanged."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "PR400 published. Coordinator/owner waits for hosted checks and independently assesses exact final head; choose routed follow-up only in later work. Automatic session remains running at Follow-up; no child selected, no correction, second/amended Review, merge, rebase, issue/AC/board change or external-gate self-certification authorized."
+    "action": "Publish only coordinator-authorized integration-metadata commit with exact old-head lease to PR400 on base 3bc46912684cb4d865572023a6d16da14b9b8463; update PR current head/base receipt. Then coordinator owns independent complete integrated-head gate and hosted checks. Automatic session remains at Follow-up, task completed; no child work/correction/new or amended Review/self-pass/merge/issue-AC-board change. Original source 3104bb69ddc26c81e0e9d2f57000dac1d99a419a and Blocked design gate remain historical and unchanged."
   },
   "prioritized_follow_ups": [
     {

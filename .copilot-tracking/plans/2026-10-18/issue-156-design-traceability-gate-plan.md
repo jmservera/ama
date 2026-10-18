@@ -7,6 +7,8 @@
 * Task slug: issue-156-design-traceability-gate
 * Planning status: Ready; single independent critique Pass
 * Plan date: 2026-10-18
+* Current integration base: 3bc46912684cb4d865572023a6d16da14b9b8463
+* Historical documentation source baseline: 3104bb69ddc26c81e0e9d2f57000dac1d99a419a
 * Phase details: .copilot-tracking/details/2026-10-18/issue-156-design-traceability-gate-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-18/issue-156-design-traceability-gate-plan-critique.md
 
@@ -21,7 +23,9 @@ Update only the KB index/log alongside the complete dated RPI record.
 ### User Decisions and Requirements Highlights
 
 * Fluent 2 is owner-selected; closed #150 does not erase historical partial
-  implementation evidence. No UI/runtime edits, new prototypes or rebase.
+  implementation evidence. No UI/runtime edits or new prototypes. The original
+  no-rebase boundary was superseded only by the exact coordinator-authorized
+  integration recorded below.
 * Exactly one independent critique and original Review; no self-pass or amended
   Review. If Review is Not accepted, commit frozen evidence locally and stop.
 
@@ -41,8 +45,10 @@ explicit open register items, not invented acceptance.
 
 * Execute Research -> Plan plus one independent critique -> Implement -> one
   original Review, with actual 2026-10-18 artifacts committed together.
-* Use docs/design-traceability-gate-156 from supplied 3104bb69 base; no rebase
-  while #399 moves main, no #398 resumption.
+* Use docs/design-traceability-gate-156 from supplied 3104bb69 source base.
+  The 2026-10-18 coordinator continuation authorizes rebase only onto exact
+  3bc46912684cb4d865572023a6d16da14b9b8463, with exact old-head lease
+  6af9dd81e0089f8998bb8d575329c6bc1d4fc110. No #398 resumption.
 * Bounded documentation only; existing UX synthesis/index/log, no UI, runtime,
   workflow, configuration, agent or prompt edits.
 * Link each declared row to feature issue, exact journey section, existing
@@ -175,7 +181,30 @@ not applicable to this documentation-only slice. Hosted checks remain Pending CI
 * #150 live CLOSED; owner Fluent choice confirmed, historical partial scope retained.
 * #149 is parent, not approved acceptance. #152/#225-233 feature links are
   trace targets, not declarations that those issues are delivered.
-* #399 now merged; branch remains at supplied base until coordinator direction.
+* #399 merged; coordinator-authorized exact-base integration is recorded below.
+
+## Coordinator-authorized integration receipt (2026-10-18)
+
+Integration only, not a feature change, correction, new critique or Review.
+Original published head 6af9dd81e0089f8998bb8d575329c6bc1d4fc110 was rebased
+from 3104bb69ddc26c81e0e9d2f57000dac1d99a419a onto exact
+3bc46912684cb4d865572023a6d16da14b9b8463. Replayed head before this metadata
+commit: 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8. The metadata commit that
+contains this receipt is the final publication candidate; PR #400 identifies
+its exact published head.
+
+Only log.md conflicted: retain the entire upstream #172 prefix, then the
+unchanged original #156 append. Index merged automatically and equals upstream
+plus the original single-row replacement. Eleven other upstream files are
+byte-identical, including fixture implementation/tests, dictionary and agents
+README. Own synthesis and original critique/Review are byte-identical to old
+published head; fifteen rows, Blocked gate and historical source pins unchanged.
+Source-parity and documentation checks passed as recorded in changes.
+
+Original P01/P02 completion and original Review verdict remain historical.
+Independent complete gate on the integrated final head is still required;
+integration checks do not self-certify acceptance. No new active plan work or
+follow-up implementation is added.
 
 ## Critique Disposition
 
@@ -197,7 +226,9 @@ design stays Blocked. No second critique authorized or executed.
 
 ## Handoff
 
-Implementation P01/P02 complete; ready for one original Review after final
-documentation check refresh. Single independent critique dispositioned. Preserve original
+Implementation P01/P02 complete; original Review executed Complete / Conformant
+for the original candidate. Exact-base integration only is now complete locally,
+pending lease-protected publication and independent final-head gate.
+Single independent critique dispositioned. Preserve original
 critique and Review bytes; after original Review no implementation correction
 or rerun in this task. Coordinator later routes at most two corrections.

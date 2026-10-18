@@ -8,7 +8,8 @@
 * Related plan: .copilot-tracking/plans/2026-10-18/issue-156-design-traceability-gate-plan.md
 * Phase details: .copilot-tracking/details/2026-10-18/issue-156-design-traceability-gate-phase-details.md
 * Implementation date: 2026-10-18
-* Branch/base: docs/design-traceability-gate-156 / 3104bb69ddc26c81e0e9d2f57000dac1d99a419a
+* Branch/current integration base: docs/design-traceability-gate-156 / 3bc46912684cb4d865572023a6d16da14b9b8463
+* Original documentation source base: 3104bb69ddc26c81e0e9d2f57000dac1d99a419a
 
 ## Execution Status
 
@@ -121,3 +122,60 @@ Implementation Complete for full declared documentation plan. Ready for one
 original independent Review; no human acceptance or external gate asserted.
 If Not accepted, freeze local artifacts and stop for coordinator routing
 (at most two later corrections); do not fix/review again or open defective PR.
+
+## Coordinator-authorized integration receipt (2026-10-18)
+
+Same session 5c00f9e7-d4a4-4261-9b01-0841ed97fffd, task and PR400. Caller
+authorized exact rebase and exact old-head lease; original no-rebase instruction
+is superseded only for this integration. No feature change, correction,
+delegation, new critique/Review, source-pin refresh or self-pass.
+
+### Exact lineage and conflict resolution
+
+* Old published head: 6af9dd81e0089f8998bb8d575329c6bc1d4fc110.
+* Original source/branch base: 3104bb69ddc26c81e0e9d2f57000dac1d99a419a.
+* Fetched/authorized new integration base: 3bc46912684cb4d865572023a6d16da14b9b8463.
+* Replayed artifact commit: 63504c1e1756bfbdde558e254109a35c2f7a18eb.
+* Replayed publication-state commit: 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8.
+* Final head is the integration-metadata commit containing this receipt,
+  resolved on PR400 after push; do not confuse replayed head with final head.
+* Only docs/reference/log.md conflicted. Removed conflict markers and retained
+  upstream #172 entry first, followed by original #156 entry, byte-exact.
+  docs/reference/README.md auto-merged, retaining #172 routing plus original
+  #156 row. No other source conflict or manual source edit.
+* Fresh gh api user used for repository-local privacy-safe author/committer;
+  no global config, amend, merge or issue/AC/board change.
+
+### Actual integration validation
+
+Commands run from repository root; session checker paths below are under
+/home/azureuser/.copilot/session-state/5c00f9e7-d4a4-4261-9b01-0841ed97fffd/files/.
+
+| Command / assertion | Actual result |
+| --- | --- |
+| `git fetch origin main` plus exact local/remote/PR guards before rebase | Old head, source merge-base, target branch and new main all matched authorized SHAs |
+| `git rebase --onto 3bc46912684cb4d865572023a6d16da14b9b8463 3104bb69ddc26c81e0e9d2f57000dac1d99a419a docs/design-traceability-gate-156`; `GIT_EDITOR=true git rebase --continue` after textual log resolution | Two original commits replayed; one log conflict, index auto-merge |
+| `python3 <session-files>/check_issue156_integration.py` | All 13 upstream paths preserved: 11 byte-identical; index exact upstream plus original single-row replacement; log exact upstream prefix plus original #156 append |
+| Same parity checker, own-patch assertions | Own synthesis byte-identical to old published head; same 11 own paths, no broader additions; non-metadata artifacts unchanged; upstream is ancestor |
+| `python3 <session-files>/check_issue156_docs.py --base 3bc46912684cb4d865572023a6d16da14b9b8463` | 15 rows, 59 local link/anchor occurrences, 60 public occurrences including 37 pinned artifacts, eight tables, zero errors |
+| `git diff 3bc46912684cb4d865572023a6d16da14b9b8463 --check`; `git diff --check` | Passed; no whitespace errors |
+| Original critique SHA-256 | eaf67c15688175f5b0fe9ac9383bdcec5624b1de37bbc522988ec9de449d55d6, unchanged |
+| Original Review SHA-256 | c5fe3b125fa9c555d6062488dca6a673617e33c7ba86291a4c399a361e06941b, unchanged |
+
+The session-local documentation checker now takes an explicit comparison base;
+its prior default uncommitted-diff invocation would not assess committed
+integration changes. Same checks run against the actual integrated-base delta;
+no project tool/dependency/test modifications. Source S remains 3104bb69,
+H remains c0f7c08a, E remains 152-ia-v1 at 3104bb69. This is not a fresh design
+review. Runtime/UI/tests/browser/SQL/Azure/model/human checks are not performed
+or required for this documentation integration.
+
+### Publication and independent gate boundary
+
+Only permitted push:
+`git push --force-with-lease=refs/heads/docs/design-traceability-gate-156:6af9dd81e0089f8998bb8d575329c6bc1d4fc110 origin HEAD:refs/heads/docs/design-traceability-gate-156`.
+Stop on unexpected branch, remote head or target base; never weaken the lease.
+PR400 must report exact final head/current base. Hosted checks are observed,
+not inferred Passed from zero checks. Coordinator retains independent complete
+final-head gate. Overall design remains Blocked and RV-001/RV-002/RV-003 remain
+open; no all-feature or human acceptance, new follow-up work or correction.

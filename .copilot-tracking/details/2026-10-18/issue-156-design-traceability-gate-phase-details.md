@@ -10,7 +10,10 @@
 * Research: .copilot-tracking/research/2026-10-18/issue-156-design-traceability-gate-research.md
 * Initial direction: existing profile synthesis, finite inventory, no UI changes.
 * Initial readiness: evidence sufficient; single independent critique later Pass.
-* Current state: P01/P02 complete; original Review ready after final check refresh.
+* Current state: P01/P02 complete; original Review Complete / Conformant,
+  preserved unchanged. Coordinator-authorized integration only; no new Review.
+* Current integration base: 3bc46912684cb4d865572023a6d16da14b9b8463.
+* Documentation source baseline remains 3104bb69ddc26c81e0e9d2f57000dac1d99a419a.
 
 ## Phase Index
 
@@ -18,6 +21,23 @@
 | --- | --- | --- | --- |
 | P01 | Curate evidence and gate | Complete | P01-T01, P01-T02 |
 | P02 | Validate and reconcile | Complete | P02-T01 |
+
+## Coordinator integration boundary (2026-10-18)
+
+Same task/session/PR400; no feature/correction scope. Rebase authorized from old
+published 6af9dd81e0089f8998bb8d575329c6bc1d4fc110 onto exact current integration
+base above. Replayed head before receipt commit:
+23b2d8758cbcceedf251d6c87c79f2a01e44d9a8. Final receipt commit is the publication
+candidate, with exact head reported by PR400, not a new reviewed candidate.
+
+One append-only log conflict resolved with upstream #172 entry followed by the
+unchanged #156 entry; index auto-merge retains both routes. Validate all thirteen
+upstream files: eleven exact bytes plus exact additive index/log composition.
+Own synthesis and frozen assessment bytes must match old published head; source
+pins do not become the integration base. Documentation checker is rerun using
+an explicit base argument, preserving link/anchor/table/pin checks rather than
+testing an empty worktree diff. Actual receipts are in changes. No runtime or
+human evidence is produced. Independent integrated-head acceptance remains open.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Curate existing evidence and gate
