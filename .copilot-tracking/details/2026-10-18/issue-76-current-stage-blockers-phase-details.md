@@ -10,9 +10,21 @@ P03-T03 original Review executed Complete / Residual work, no defects; bounded
 correction Conformant. P03-T04 completed with normal push and main-target
 PR https://github.com/jmservera/ama/pull/407; issue remains OPEN. Final
 artifact-only reconciliation preserves original source candidate and Review.
-Main moved to observed 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096; no
-integration is authorized or performed. Publication preserves exact original
-base and frozen source boundary; coordinator controls any integration.
+Initial publication preserved the original base. Subsequent explicit coordinator
+authorization verified pinned main 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096
+and old head 56a8a7d700549ec4559f60a0f0406b49e9975f57, then rebased
+only this run-owned branch. Rebased candidate head:
+9067c00e20ce42cd83bfc1ffdb2c7656df6852bf. No conflicts; both README
+contracts retained, all five queue source/test files and 23 original evidence
+artifacts unchanged, all upstream task 86 non-README paths unchanged.
+Separate integration receipt and parity manifest record the full boundary:
+.copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration.md.
+Fresh combined tests: 121 run, OK, two existing skips; local SQL 15 passed,
+packaged non-root 40 passed, configured full core/API quality passed. The initial
+root-cwd resident API harness import failure is preserved separately.
+Original Review remains historical, not rebased-head acceptance. This receipt
+commit and exact old-head leased publication end at independent coordinator
+full source/test/docs and tracking review. No original phase repeated.
 Six new test methods, no removals; lifecycle SQL method also uses real child
 writers for SQLite and actual MSSQL. No production deviations or source
 correction cycles used. Evidence and historical failed attempts are in changes.
@@ -96,9 +108,16 @@ Review or claim of independent closure; maximum two source correction cycles.
 
 ### P03-T04
 
-Reconcile every plan checkbox, actual validation and state. Verify remote main,
-report movement without rebase; get gh api user and configure local noreply
+Original publication: reconcile every plan checkbox, actual validation and state.
+Verify remote main, report movement without rebase; get gh api user and configure local noreply
 email for both author/committer. Conventional Commit plus Copilot trailer.
 Commit all task artifacts only. Push topic normally, create main PR with only
 Refs #76 issue reference. Declare exact base/head, source/artifact boundary and
 unmet acceptance. Do not merge or edit issue/board; stop for coordinator review.
+
+Authorized integration continuation: the separate receipt supersedes the original
+no-rebase restriction only for the pinned base and exact leased topic push.
+Preserve original Research, adverse results, critique/Review verdicts and hashes;
+refresh current plan/details/state/publication only. No source corrections,
+new original Review, issue/board write, main push or merge. After publication,
+stop for full independent coordinator review of the exact new head.

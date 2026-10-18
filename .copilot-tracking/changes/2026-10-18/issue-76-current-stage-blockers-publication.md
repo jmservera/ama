@@ -1,10 +1,41 @@
 ---
 title: Issue 76 current-stage blockers publication receipt
-description: Original-base topic publication and coordinator-owned exact-head boundary
+description: Original publication history and authorized pinned-main integration handoff
 ms.date: 2026-10-18
 ---
 
-## Published Candidate
+## Current Authorized Integration
+
+The initial publication below is historical. Explicit subsequent coordinator
+authorization verified old local/remote/PR head
+56a8a7d700549ec4559f60a0f0406b49e9975f57 and fetched main
+9c648b2006e8b2e563823ea7d5aabdf7f1ac7096, then rebased only the run-owned
+topic. The rebased candidate head is
+9067c00e20ce42cd83bfc1ffdb2c7656df6852bf. The final receipt commit adds
+integration evidence/current metadata only; its literal hash is published in
+PR 407 and the terminal handoff, not self-embedded in its own bytes.
+
+See [integration receipt](./issue-76-current-stage-blockers-integration.md) and
+the adjacent integration parity JSON for exact old/new identities, all protected
+hashes, full path boundary, commands, real results and transport protocol.
+No conflict resolution or source correction was needed. Five queue source/test
+files are unchanged, both independent README contracts retained, 23 protected
+original artifacts unchanged and all task 86 non-README paths equal pinned main.
+Original Review remains Complete / Residual work on its historical candidate.
+
+Fresh combined tests: 121 run, OK, two existing skips; actual local SQL:
+15 passed without skips; rebuilt packaged UID 10001/read-only/no-network tests:
+40 passed. Full configured core/API Ruff, format and strict mypy passed. An
+initial root-cwd resident API import failure is preserved separately. No missing
+dependency or pip install occurred.
+
+Publication uses only the explicitly authorized old-head force-with-lease.
+PR body remains non-closing Refs only, with empty closingIssuesReferences.
+Stop after exact published-head verification for independent coordinator full
+source/test/docs and tracking review. No issue/board write, main push or merge.
+All broader acceptance gaps listed below remain unmet.
+
+## Original Published Candidate (Historical)
 
 PR: https://github.com/jmservera/ama/pull/407, OPEN, target main.
 Normal topic push, no force, merge, rebase or issue/board edits.
@@ -26,7 +57,7 @@ Original critique SHA-256:
 31e254f7de129957080e78d751f63ccac157d43f18ef2270f30cd4422e8bd1a7.
 Both originals remain unchanged. Zero source correction cycles.
 
-## Publication Verification
+## Original Publication Verification (Historical)
 
 Commands:
 
@@ -52,7 +83,7 @@ gh api user returned public account id/login; both author and committer used
 explicit commit environment. Conventional Commit includes the required Copilot
 co-author trailer. No global Git configuration changed.
 
-## Coordinator Handoff and Stop
+## Original Coordinator Handoff and Stop (Historical)
 
 Full ordered RPI executed; original Review Complete / Residual work, bounded
 offline correction Conformant, no defects. P03-T04 normal publication complete;

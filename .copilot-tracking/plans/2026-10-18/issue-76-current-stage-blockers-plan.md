@@ -5,7 +5,8 @@ ms.date: 2026-10-18
 ---
 
 Task ID: 76. Slug: issue-76-current-stage-blockers. Status: ordered loop and publication complete.
-Base: 6c1e376ff1241316272df22a5a3a6853aae9f87b.
+Original base: 6c1e376ff1241316272df22a5a3a6853aae9f87b.
+Current authorized integration base: 9c648b2006e8b2e563823ea7d5aabdf7f1ac7096.
 
 ## Executive Summary
 
@@ -27,7 +28,10 @@ C1-C7 and preserved eight-failure real-store baseline.
 
 * Execute Research, Plan with one independent critique, Implement, one original
   Review; preserve originals and hashes; maximum two source correction cycles.
-* Use exact supplied branch/base; no rebase, force-push, merge or issue edits.
+* Initial publication used the exact supplied branch/base without rewriting.
+  The subsequent explicit coordinator authorization permits only this run-owned
+  branch's rebase onto pinned main and the exact old-head leased push recorded
+  in the separate integration receipt. No merge, main push or issue edits.
 * Leave #86 resident_decisions.py, projection.py and resident tests untouched.
 * Offline synthetic-only, pip-only; no private datasets, secret environment
   files, support, cloud writes, spend, model inference or mvp feature code.
@@ -129,17 +133,27 @@ provenance is not adopted, but its safe execution recipe is.
 
 Live Entra integration, human role-policy/definition ratification and complete
 issue #76 acceptance remain owner/coordinator work, not blockers to this bounded
-offline read-model correction. Main movement requires explicit integration
-authorization, not unilateral branch rewriting.
+offline read-model correction.
 
 Original Review: execution Complete; outcome Residual work; bounded correction
 Conformant, no defects. Remote main advanced during Review to observed
-9c648b2006e8b2e563823ea7d5aabdf7f1ac7096. Retain original base; do not
-integrate. Publish the unchanged topic candidate with drift explicit, then
-wait for coordinator integration authorization and exact-head review.
+9c648b2006e8b2e563823ea7d5aabdf7f1ac7096. The initial publication retained
+the original base. Subsequent explicit authorization verified that exact main
+commit and old local/remote head, then rebased only this run-owned branch.
+Both commits replayed without conflict; all five queue source/test files and
+23 protected originals remain byte-identical, and both README contracts combine.
+Fresh combined suites ran 121 tests, OK with two existing skips; actual local SQL
+passed 15 tests and the rebuilt non-root package passed 40. Configured complete
+core/API quality checks passed. Zero source correction cycles, no repeated
+Research/critique/original Review and no task 86 edits beyond inherited upstream.
 PR https://github.com/jmservera/ama/pull/407 is OPEN, main-target, non-closing
-Refs reference only. No merge/issue edit or unilateral integration. Final
-artifact-only reconciliation does not alter the frozen seven-file candidate.
+Refs reference only. The exact authorized leased publication is followed by
+coordinator full source/test/docs plus tracking review at the exact published
+head; historical original Review does not assess that new head. No merge or
+issue/board edits. The receipt commit changes only metadata/evidence.
+
+Integration receipt:
+.copilot-tracking/changes/2026-10-18/issue-76-current-stage-blockers-integration.md.
 
 ## Handoff
 
