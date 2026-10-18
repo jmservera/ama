@@ -30,7 +30,11 @@ class GateTests(unittest.TestCase):
         self.root.mkdir()
         self.out = Path(self.temp.name) / "out"
         self.out.mkdir()
-        for name in ("tools/rpi-checks.py", "src/check-container.py"):
+        for name in (
+            "tools/rpi-checks.py",
+            "src/check-container.py",
+            *[f".github/workflows/{name}" for name in gate.WORKFLOWS],
+        ):
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("# fixture\n")
@@ -201,6 +205,66 @@ class GateTests(unittest.TestCase):
         (self.out / "receipt.sha256").write_text(gate.digest(path))
         with self.assertRaises(gate.GateError):
             gate.verify(self.root, path, self.base)
+        receipt = {
+            "schema": 1,
+            "status": "passed",
+            "identity": gate.clean_identity(self.root, self.base),
+            "tools": {},
+            "environments": {},
+            "extras": [],
+            "groups": gate.required_groups([]),
+            "commands": [
+                {"group": name, "exit_code": 0, "log": "gate.log", "sha256": "fixture"}
+                for name in gate.required_groups([])
+            ],
+            "files": {
+                "gate.log": "fixture",
+                "axe-4.10.3.min.js": "fixture",
+                "regulatory-ux-results.json": "fixture",
+                **{f"{p}-{s}.json": "fixture" for p in gate.IMAGES for s in ("gate", "all")},
+                **{f"{p}.spdx.json": "fixture" for p in gate.IMAGES},
+            },
+            "trivy_database": {},
+            "images": {
+                "mssql": "fixture",
+                **{
+                    name: {"id": "fixture", "tag": "fixture"}
+                    for name in ("logo-0600", *[f"image-{p}" for p in gate.IMAGES])
+                },
+            },
+        }
+        gate.atomic_json(path, receipt)
+        (self.out / "receipt.sha256").write_text(gate.digest(path))
+        real_digest = gate.digest
+        real_output = gate.subprocess.check_output
+
+        def output(argv: list[str], **kwargs: Any) -> Any:
+            return "fixture\n" if argv[0] == "docker" else real_output(argv, **kwargs)
+
+        with (
+            patch.object(gate, "tool_identity", return_value={}),
+            patch.object(gate, "environment_identity", return_value={}),
+            patch.object(gate, "scan_database", return_value={}),
+            patch.object(gate.subprocess, "check_output", side_effect=output),
+            patch.object(
+                gate,
+                "digest",
+                side_effect=lambda p: (
+                    real_digest(p) if p.name == "receipt.json" or p.is_file() else "fixture"
+                ),
+            ),
+        ):
+            gate.verify(self.root, path, self.base)
+            for name in ("untracked_source.py", "test_extra.py", "config.toml"):
+                (self.root / name).touch()
+                with self.assertRaises(gate.GateError):
+                    gate.verify(self.root, path, self.base)
+                (self.root / name).unlink()
+            receipt["groups"].pop()
+            gate.atomic_json(path, receipt)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            with self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base)
 
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
@@ -218,8 +282,12 @@ class GateTests(unittest.TestCase):
         )
         runner = self.runner()
         runner.snapshot = self.root
+
+        def version(argv: list[str], **kwargs: Any) -> str:
+            return "Python 3.12.3" if argv[0] == "python3" else "Version: 0.76.0"
+
         with (
-            patch.object(runner, "command", return_value=""),
+            patch.object(runner, "command", side_effect=version),
             patch.object(gate, "tool_identity", return_value={}),
         ):
             runner.preflight()

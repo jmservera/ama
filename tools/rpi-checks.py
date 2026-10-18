@@ -81,6 +81,14 @@ EXPECTED_SKIP_REASONS = {
     "requires owned loopback SQL Server",
     "Explicit isolated synthetic Azure SQL database required",
 }
+SQL_NOT_APPLICABLE = {
+    (
+        "test_json_postsave_audit_failure_reports_persisted_uncertainty "
+        "(test_mssqlstore.MssqlHazardReferral."
+        "test_json_postsave_audit_failure_reports_persisted_uncertainty)",
+        "JSON-only separate-file audit ordering",
+    )
+}
 
 
 class GateError(RuntimeError):
@@ -98,6 +106,8 @@ def git(root: Path, *args: str) -> str:
 
 
 def clean_identity(root: Path, base: str) -> dict[str, str]:
+    if any(line and not line.startswith("H ") for line in git(root, "ls-files", "-v").splitlines()):
+        raise GateError("Candidate index hides inputs with assume-unchanged/skip-worktree flags")
     if git(root, "status", "--porcelain", "--untracked-files=all"):
         raise GateError("Candidate has tracked modifications or untracked inputs")
     if git(root, "ls-files", "--others", "--ignored", "--exclude-standard"):
@@ -128,6 +138,23 @@ def tool_identity() -> dict[str, dict[str, str]]:
         if not path:
             raise GateError(f"Missing required tool: {name}")
         result[name] = {"sha256": digest(Path(path).resolve())}
+    result["docker-server"] = {
+        "version": subprocess.check_output(
+            ["docker", "version", "--format={{.Server.Version}}"], text=True
+        ).strip()
+    }
+    return result
+
+
+def environment_identity(out: Path) -> dict[str, str]:
+    result = {}
+    for name in (*PROJECTS, "namespace"):
+        python = out / "venvs" / name / "bin/python"
+        frozen = subprocess.check_output(
+            [str(python), "-m", "pip", "freeze", "--all"],
+            env={"PATH": os.defpath, "HOME": str(out / "home"), "PYTHONDONTWRITEBYTECODE": "1"},
+        )
+        result[name] = hashlib.sha256(frozen).hexdigest()
     return result
 
 
@@ -164,7 +191,9 @@ def check_skips(text: str, *, integration: bool = False) -> dict[str, Any]:
     ]
     if not counts or int(counts[-1]) == 0:
         raise GateError("Unittest command did not report an executed suite")
-    if (integration and skips) or any(s["reason"] not in EXPECTED_SKIP_REASONS for s in skips):
+    if (
+        integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
+    ) or any(s["reason"] not in EXPECTED_SKIP_REASONS for s in skips):
         raise GateError(f"Unexpected required integration/dependency skip: {skips}")
     summary = re.findall(r"(?m)^OK(?: \((.*?)\))?$", text)
     if not summary:
@@ -172,7 +201,7 @@ def check_skips(text: str, *, integration: bool = False) -> dict[str, Any]:
     declared = re.search(r"skipped=(\d+)", summary[-1])
     if (int(declared[1]) if declared else 0) != len(skips):
         raise GateError("Skip count does not match enumerated test/reason evidence")
-    return {"tests": int(counts[-1]), "skips": skips}
+    return {"tests": int(counts[-1]), "executed": int(counts[-1]) - len(skips), "skips": skips}
 
 
 def scan_database(path: Path) -> dict[str, Any]:
@@ -905,7 +934,12 @@ class Runner:
             ],
         }
         if not failure:
-            receipt["trivy_database"] = scan_database(self.out / "cache/trivy/db/metadata.json")
+            try:
+                receipt["trivy_database"] = scan_database(self.out / "cache/trivy/db/metadata.json")
+                receipt["environments"] = environment_identity(self.out)
+            except (GateError, OSError, subprocess.SubprocessError, ValueError) as error:
+                failure = self.scrub(str(error))
+                receipt.update(status="failed", failure=failure)
         receipt["files"] = {
             path.name: digest(path)
             for path in self.out.iterdir()
@@ -931,6 +965,8 @@ def verify(root: Path, path: Path, base: str) -> None:
         raise GateError("Receipt source/base/matrix/helper identity mismatch")
     if receipt["tools"] != tool_identity():
         raise GateError("Receipt tool identity mismatch")
+    if receipt["environments"] != environment_identity(path.parent):
+        raise GateError("Receipt package/environment identity mismatch")
     extras = receipt["extras"]
     for value in extras:
         extra_selector(value)
@@ -951,10 +987,23 @@ def verify(root: Path, path: Path, base: str) -> None:
             raise GateError("Receipt command log identity mismatch")
     if receipt["trivy_database"] != scan_database(path.parent / "cache/trivy/db/metadata.json"):
         raise GateError("Trivy database changed since receipt")
+    if set(receipt["images"]) != {"mssql", "logo-0600", *[f"image-{p}" for p in IMAGES]}:
+        raise GateError("Receipt image coverage is incomplete")
+    required_files = {
+        "axe-4.10.3.min.js",
+        "regulatory-ux-results.json",
+        *[f"{p}-{suffix}.json" for p in IMAGES for suffix in ("gate", "all")],
+        *[f"{p}.spdx.json" for p in IMAGES],
+    }
+    if not required_files <= set(receipt["files"]):
+        raise GateError("Required scan/browser/SBOM evidence is incomplete")
     for name, image in receipt["images"].items():
         image_id = image if name == "mssql" else image["id"]
+        reference = (
+            "mcr.microsoft.com/mssql/server:2022-latest" if name == "mssql" else image["tag"]
+        )
         current = subprocess.check_output(
-            ["docker", "image", "inspect", "--format={{.Id}}", image_id], text=True
+            ["docker", "image", "inspect", "--format={{.Id}}", reference], text=True
         ).strip()
         if current != image_id:
             raise GateError("Receipt image identity mismatch")

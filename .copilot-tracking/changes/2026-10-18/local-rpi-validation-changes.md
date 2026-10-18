@@ -91,3 +91,22 @@ Continue independent required groups after an individual gate failure to
 collect honest coverage, while blocking receipt success. Retain unfixed-inclusive
 reports and SPDX even when a fixable scan fails. These are in-scope runner
 corrections, not a new plan or critique.
+
+### P01-T02 Complete Execution with Explicit SQL Non-applicability
+
+Run02 executed every required family, including actual Chromium/verified axe,
+all four canonical images, unchanged hardening probes, separate logo0600 image,
+all scans and SPDX. Five project discoveries: core 1194/149 skipped, agents
+105/0, API 935/300, orchestrator 46/0, importer 39/0. Infra 359/0.
+The exact real MSSQL selectors reported 243 tests, one inherited JSON-only
+separate-file audit-ordering test skipped. The runner correctly refused its
+unclassified skip, preserving the adverse receipt at
+`/tmp/rpi-413-run02/receipt.json`; it is not a pass.
+
+Source inspection and actual output establish that this one precisely named
+JSON-only method is not applicable to MSSQL. Enumerate its exact ID/reason as
+SQL non-applicability; all other explicit integration skips still block.
+No test is removed or altered. Added verification of required evidence/image
+coverage and external environment package identities inside the same 12-test
+budget. Four fixable scan reports contain zero findings; each unfixed-inclusive
+report contains 63 package findings. These are observed run02 results only.
