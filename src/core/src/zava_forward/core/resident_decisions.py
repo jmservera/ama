@@ -55,6 +55,29 @@ def _identity(actor):
     return {key: actor.get(key) for key in ("email", "code", "name", "role", "oid")}
 
 
+def _identity_value(identity, key):
+    value = identity.get(key) if isinstance(identity, dict) else None
+    return value.strip().casefold() if isinstance(value, str) else ""
+
+
+def _same_person(first, second):
+    return any(_identity_value(first, key) and _identity_value(first, key) == _identity_value(second, key)
+               for key in ("email", "code", "oid"))
+
+
+def _identity_status(identity):
+    return "Known" if any(_identity_value(identity, key) for key in ("code", "oid")) else "Unknown"
+
+
+def _require_independent_reviewer(reviewer, historical):
+    if (_identity_status(historical) == "Unknown"
+            or not any(_identity_value(historical, key) and _identity_value(reviewer, key)
+                       for key in ("code", "oid"))):
+        raise PermissionError("The historical recorder identity is Unknown. Resolve the original evidence before assigning independent review.")
+    if _same_person(reviewer, historical):
+        raise PermissionError("Choose a reviewer who did not make the contested decision.")
+
+
 def _day(value):
     try:
         if not isinstance(value, str) or date.fromisoformat(value).isoformat() != value:
@@ -105,6 +128,8 @@ def _owner_rights(store, actor, identity, email=None):
 def followup_view(case):
     """Expose missing legacy provenance without mutating or inventing it."""
     for req in case.get("service_requests", []):
+        if req.get("route") == "Independent review":
+            req["reviewed_identity_status"] = _identity_status(req.get("reviewed_identity"))
         req.setdefault("status_owner", None)
         req.setdefault("status_at", None)
         req.setdefault("version", 0)
@@ -353,7 +378,9 @@ def measure_decision_view(c):
     out = []
     for measure in case_measures(c):
         context = current_context(c, measure)
-        versions = recorded.get(measure, [])
+        versions = deepcopy(recorded.get(measure, []))
+        for version in versions:
+            version["recorder_identity_status"] = _identity_status(version.get("recorder_identity"))
         answer = versions[-1] if versions else {}
         status = answer.get("status", NOT_RECORDED) if context and answer.get("context_revision") == context["revision"] else NOT_RECORDED
         out.append(dict(measure=measure, status=status, context=deepcopy(context),
@@ -398,7 +425,7 @@ class ResidentDecisionMixin:
         action = body.get("action")
         if action not in RESIDENT_ACTIONS:
             raise ValueError("Unknown step.")
-        if action in FOLLOWUP_ACTIONS:
+        if action in FOLLOWUP_ACTIONS or action == "decision_record":
             with _operation(self, user, case_id, body):
                 return
         with self.lock:
@@ -468,6 +495,7 @@ class ResidentDecisionMixin:
         return "representative task checked; nothing sent"
 
     def _res_decision_record(self, user, c, body):
+        k.require_role(user, k.RESIDENT_ROLES, "authorised resident-workflow staff")
         measure, context = require_context(c, body)
         status = k.choice(body.get("status"), DECISION_STATUSES, "what the resident said")
         by = k.choice(body.get("answered_by"), ANSWERED_BY, "who gave the answer")
@@ -485,7 +513,7 @@ class ResidentDecisionMixin:
                              context_revision=context["revision"], source=source,
                              authority_version=authority["version"] if authority else None,
                              status=status, answered_by=by, representative_ref=rep if authority else "", note=note,
-                             recorded_by_email=user["email"], review_ref=review_ref,
+                             recorded_by_email=user["email"], recorder_identity=_identity(user), review_ref=review_ref,
                              next_update=k.text(body.get("next_update"), "", 10, False), recorded_by=user["name"], at=k.now()))
         if status in ("Paused", "Withdrawn", "Declined"):
             c.setdefault("resident_reviews", {})[measure] = dict(status="Needs human review", decision_version=len(versions),
@@ -502,12 +530,10 @@ class ResidentDecisionMixin:
         for key, label in (("service_owner", "who deals with it"), ("redress_owner", "who owns the redress")):
             s = _person(self, body.get(key))
             owners.append(s)
-        if route in ("Complaint", "Independent review") and any(
-            owners[0].get(key) and str(owners[0][key]).casefold() == str(owners[1].get(key, "")).casefold()
-            for key in ("email", "code", "oid")
-        ):
+        if route in ("Complaint", "Independent review") and _same_person(owners[0], owners[1]):
             raise ValueError("A complaint or independent review needs a different redress owner.")
         subject = None
+        historical = None
         if route == "Independent review":
             review_measure = body.get("review_measure")
             if not isinstance(review_measure, str) or review_measure not in case_measures(c):
@@ -516,9 +542,12 @@ class ResidentDecisionMixin:
             version = body.get("review_decision_version")
             if type(version) is not int or not 1 <= version <= len(decisions):
                 raise ValueError("Choose the recorded measure decision version to review.")
-            subject = decisions[version - 1].get("recorded_by_email")
-            if not subject or subject.lower() == owners[1]["email"].lower():
-                raise ValueError("Choose a reviewer who did not make the contested decision.")
+            decision = decisions[version - 1]
+            if decision.get("version") != version:
+                raise ValueError("Choose the recorded measure decision version to review.")
+            historical = deepcopy(decision.get("recorder_identity"))
+            _require_independent_reviewer(owners[1], historical)
+            subject = decision.get("recorded_by_email")
         review_reference = k.text(body.get("review_reference"), "the contested decision reference", 100,
                                   required=route == "Independent review")
         codes = body.get("accessibility") or ["Unknown"]
@@ -535,7 +564,7 @@ class ResidentDecisionMixin:
                    remedy=dict(status="Open", owner=_identity(owners[1]), at=_time(),
                                opened_at=_time(), version=1, basis="Supplied desired outcome",
                                history=[]),
-                   reviewed_actor=subject, review_reference=review_reference,
+                   reviewed_actor=subject, reviewed_identity=historical, review_reference=review_reference,
                    review_measure=body.get("review_measure") if route == "Independent review" else None,
                    review_decision_version=body.get("review_decision_version") if route == "Independent review" else None,
                    history=[])
@@ -599,12 +628,11 @@ class ResidentDecisionMixin:
         if req["route"] in ("Complaint", "Independent review"):
             other_key = "redress" if key == "service" else "service"
             other = req.get(other_key + "_identity") or _person(self, req.get(other_key + "_owner_email"))
-            if any(owner.get(field) and str(owner[field]).casefold() == str(other.get(field) or "").casefold()
-                   for field in ("email", "code", "oid")):
+            if _same_person(owner, other):
                 raise PermissionError("A complaint or independent review needs different service and redress owners.")
         if key == "redress" and req["route"] == "Independent review":
-            if not req.get("reviewed_actor") or owner["email"].casefold() == req["reviewed_actor"].casefold():
-                raise PermissionError("Choose a reviewer who did not make the contested decision.")
+            # An unbound legacy ordinal may refer to history deleted and recreated since opening.
+            _require_independent_reviewer(owner, req.get("reviewed_identity"))
         note = k.text(body.get("note"), "the reason for reassigning response responsibility")
         at = _time()
         status_key = "redress" if req["status"] == "Closed" or req["route"] == "Independent review" else "service"

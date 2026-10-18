@@ -1,0 +1,6 @@
+Task-owned loopback SQL Server ready; existing UUID fixture databases only.
+----------------------------------------------------------------------
+Ran 44 tests in 201.546s
+
+OK (skipped=1)
+Task-owned SQL container removed; no idle service or volume retained.

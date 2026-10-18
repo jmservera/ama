@@ -1138,6 +1138,23 @@ statement remains recordable independently. Nothing is sent by the checker.
 Independent review is a separate service type linked to an actual recorded
 measure-decision version. Its reviewer must be neither the contested recorder
 nor the request handler; only the named reviewer updates/closes that review.
+New decision versions capture the registered server recorder's email, staff code
+and oid (when present), with name/role as recorded labels. New independent review
+requests retain that exact decision version's identity snapshot, not the latest
+answer or today's owner of its email. Opening and redress reassignment compare
+nonblank email/code/oid case-insensitively, so an email change cannot make the
+original recorder independent. Client identity fields cannot override evidence.
+Decision recording uses the existing atomic resident writer and SQL actor replay.
+Email-only or missing historical snapshots are explicitly `Unknown`; assignment
+of independent review is refused until original evidence can be resolved. Old
+records are not backfilled. A legacy request without its own bound snapshot stays
+Unknown even if a decision with the same measure/version exists: retention can
+delete and later reuse that ordinal. New bound requests preserve their original
+snapshot after resident payload deletion. This does not change retention or
+authorize historical erasure. Unrelated supplied consent, service/complaint
+requests and service-owner reassignment remain under their existing controls.
+Recorder snapshots are visible only to existing resident-view roles, not other
+staff, contractor detail, exports or model facts.
 Complaints retain separate handler/redress owners and independent closure.
 These routes remain recordable on paused or closed retrofit cases and do not
 change consent, ranking inputs, hazards, tenancy or repair state. No live formal
