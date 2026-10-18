@@ -11655,8 +11655,8 @@
         "mode": "100644"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-changes.md": {
-        "sha256": "829dafcd3787160a37e990aa030c2bfa7a261d222898b2577a67aa77ff6a52b6",
-        "bytes": 35408,
+        "sha256": "eaae30e51895dacc2b306372fd796c5e04c1dcdd7f01b6df8e47eb57042753cd",
+        "bytes": 36011,
         "mode": "100644"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-correction-one-build.log": {
@@ -11905,8 +11905,8 @@
         "mode": "100644"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-integration-governance-commands.json": {
-        "sha256": "47eb12a0c5e07b86ce1d0622760d77d71728a9ac6224111c761e34430e18d835",
-        "bytes": 91838,
+        "sha256": "183020a7f36a2717f2247e780447f05fde9a12922299f13f359c4544cd8b16da",
+        "bytes": 99285,
         "mode": "100644"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-integration-governance-coordinator-probes.py": {
@@ -11950,8 +11950,8 @@
         "self_reference": "Manifest hash verified externally after publication"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-integration-governance.md": {
-        "sha256": "6a4aa3ff4b78bc5c4da9305fbd3753f7a1c7134ea6516052cb6c8cdec74b25a6",
-        "bytes": 11211,
+        "sha256": "5a0170aed0b6d992eabba1ec19c407c53d5d5a8e902a58662b8c9795334757cf",
+        "bytes": 11776,
         "mode": "100644"
       },
       ".copilot-tracking/changes/2026-10-18/issue-122-register-release-remediation-integration.json": {
@@ -11985,8 +11985,8 @@
         "mode": "100644"
       },
       ".copilot-tracking/details/2026-10-18/issue-122-register-release-remediation-phase-details.md": {
-        "sha256": "f49bf4d080e2b6b896b1d57ff7e8399ea71f1322f95bfd11187893acc15c6853",
-        "bytes": 21208,
+        "sha256": "1c134170dfc5770bdc4b7cd55de7a61c906c6bf1669cd0f96ab46673ac817005",
+        "bytes": 21844,
         "mode": "100644"
       },
       ".copilot-tracking/plans/2026-10-18/issue-122-continuity-epoch-export-plan.md": {
@@ -11995,8 +11995,8 @@
         "mode": "100644"
       },
       ".copilot-tracking/plans/2026-10-18/issue-122-register-release-remediation-plan.md": {
-        "sha256": "db03c73e113abd9d4d9c3fe7acaa4807fa506cc58b7b5df745d94e4f935c62b7",
-        "bytes": 23795,
+        "sha256": "ed3bbc38808b5a8580dbc7b307524f7b03708c005fc11f9fc84ea2df778ddb30",
+        "bytes": 24167,
         "mode": "100644"
       },
       ".copilot-tracking/research/2026-10-18/issue-122-continuity-epoch-export-research.md": {
@@ -12040,8 +12040,8 @@
         "mode": "100644"
       },
       ".copilot-tracking/rpi-sessions/2026-10-18/issue-122-register-release-remediation-state.json": {
-        "sha256": "7fbe8292226e0cefdc46691304cd75f8b9e4113c04938fd356b2fb6b785715e2",
-        "bytes": 15679,
+        "sha256": "00abb6434dd3451548c4855218f2d759e2e2d20f1a2a6b799c11410147e4be78",
+        "bytes": 16626,
         "mode": "100644"
       },
       "src/api/README.md": {
@@ -12196,11 +12196,13 @@
     "pinned_base_even_if_main_moves": true,
     "pr": 398,
     "draft": true,
+    "initial_published_head": "ef66334f8968c16de1d64d9144ee0085937472ac",
+    "live_pr_verification": "head ef66334f/base578631ac/OPEN/draft/empty closingrefs, mainstill578631ac",
     "closingIssuesReferences": [],
     "final_head": "Resolve commit containing final receipt externally in Git/remote/PR, not self-reference",
     "final_verification": "/home/azureuser/.copilot/session-state/28a50b1e-793d-4cd3-b584-4ab290f9a34f/files/integration-governance-published-verification.json"
   },
-  "state": "Integration validated pending publication; same reviewer finaldelta acceptance pending",
+  "state": "P06 execution completed, automatic/Follow-up/completed/stopped; initial exactlease publication executed, final metadata-only normalpush/exact PRrefresh; same reviewer finaldelta acceptance pending",
   "stop": "SAME reviewer final integration delta/parity; any material source bug routes human, no further correction",
   "unmet": [
     "Actual authority/OQ017",

@@ -198,6 +198,15 @@ only its own hash to avoid self-reference; final commit/head is externally
 resolved by local/remote/PR equality and post-publication session verification.
 PR398 remains OPEN/draft with empty closing references; Refs #122 only.
 
+Exact authorized96099bb5lease publication executed at
+ef66334f8968c16de1d64d9144ee0085937472ac. Draft PR398 updated and live
+verified samehead/base578631ac75cc8c6a7af53922c6aaae4435e7761c/OPEN/
+draft=true/closingIssuesReferences=[]; main still matched pinned base. Final
+metadata-only receipt normal push and exact PRhead refresh follows, source
+unchanged. P06 execution complete, automatic Follow-up/session explicitly stopped
+for SAME reviewer. Finalhead resolved in post-publication verification, not
+impossible selfreference inside its own committed manifest.
+
 STOP for SAME independent reviewer to assess final integration delta and
 source parity. Prior bounded Pass is retained, not extended by self-claim to
 the new base. Original adverse assessments unchanged; no third correction.

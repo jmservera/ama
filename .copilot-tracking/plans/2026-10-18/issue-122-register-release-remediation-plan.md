@@ -47,7 +47,7 @@ source conflict/bug routes human. RV-002 remains separate. Keep draft/Refs-only/
 empty closing refs; STOP for same reviewer final integration delta assessment.
 
 <!-- rpi:phase id=P06 -->
-### [ ] P06: Pinned governance integration ONLY
+### [x] P06: Pinned governance integration ONLY
 <!-- rpi:task id=P06-T01 -->
 #### [x] P06-T01: Verify intake and freeze all prior source/evidence/logs
 <!-- rpi:task id=P06-T02 -->
@@ -55,7 +55,7 @@ empty closing refs; STOP for same reviewer final integration delta assessment.
 <!-- rpi:task id=P06-T03 -->
 #### [x] P06-T03: Focused governance/shared SQL-write/continuity/role and quality checks
 <!-- rpi:task id=P06-T04 -->
-#### [ ] P06-T04: Exact-lease publish, draft reconciliation and same-reviewer STOP
+#### [x] P06-T04: Exact-lease publish, draft reconciliation and same-reviewer STOP
 
 Integrated candidate9f930d820f4133227717dc7b319903372ad8396e, conflict-free.
 Complete normalized9path patch exactly equal (no normalization exceptions
@@ -68,7 +68,12 @@ passes125/58mypy files. No source edit or failed execution. New governance
 witness only affects active thread-local RAI writes, restored in finally;
 existing commit/rollback/acknowledgement tests pass alongside continuity writers.
 No unresolved concern/changed owned intent warrants SQL/image repetition.
-Historical source/SQL/image evidence remains historical. Publication pending.
+Historical source/SQL/image evidence remains historical. Exact96099bb5lease
+publication completed ef66334f8968c16de1d64d9144ee0085937472ac; PR398 same
+head/base578631ac/OPEN/draft/emptyrefs verified, mainstill pinned. Final
+metadata-only normal push/PRhead refresh follows with source unchanged. Full
+93path inventory9src84artifacts. P06 execution complete/session explicitly
+STOPPED for SAME reviewer final integrationdelta/parity, no newbase Pass.
 
 Shared sqlstore witness must be assessed: new mark_committed only marks active
 thread-local rai_evidence_write context; no continuity writer sets that context.
