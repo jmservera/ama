@@ -60,7 +60,8 @@ exist here and were not invented or installed. Existing hosted checks are
 separate and not yet observed. Public issue links resolve by membership in
 the captured live API, not a claimed 184-URL HTTP crawl.
 
-Original independent Review not yet executed. No CI success, runtime checks,
+At implementation handoff the original independent Review was not yet executed;
+the subsequent actual result is recorded below. No CI success, runtime checks,
 human design approval, WCAG conformance or user validation claimed. SQL, Docker,
 AI, Azure/Graph and browser checks not applicable to this documentation-only
 change and not run.
@@ -74,8 +75,31 @@ Review candidate SHA-256:
 
 ## P03: Publication
 
-Conditional on original Review. Not accepted requires local freeze and routing.
-Fresh GitHub privacy-safe identity and Copilot trailer required.
+Implementation candidate committed as
+`2334d0b3867c1935ce843a7a405e89cf4f130562`.
+Fresh `gh api user` returned ID 8036360 / login jmservera; repository-local
+author/committer email constructed as `8036360+jmservera@users.noreply.github.com`.
+Conventional Commit and required Copilot co-author trailer included.
+
+The one original independent Review executed **Complete / Conformant** on
+that exact candidate. Zero implementation defects; RV-001/RV-002 are Low,
+intentional non-blocking follow-ups for actual designs/human evidence and the
+eight surface choices. The Review independently inspected all 184 source
+classifications/states, complete trace membership, edge cases, exact links and
+preservation, and accepted the critique dispositions without changing the
+original Partial / Blocked verdict.
+
+Original Review SHA-256:
+`6861ccebcbedaf94ccc187a4fd6b886845601bc5b34ef0c8ea1118ebe1415994`.
+Original critique SHA above is unchanged. All three production hashes still
+equal the reviewed candidate; post-Review changes are tracking/freeze only.
+No post-Review defect correction, second/amended Review or self-Pass.
+
+Parent may now commit the original Review and final tracking, remove temporary
+source projection, and perform the authorized normal push/main PR Refs #156.
+Publication is pending at this record; actual PR/check status is a later
+tracking receipt, not an inferred success. #156 remains open/partial, AC1
+unticked; no issue/board/merge action.
 
 ## Amendments and divergences
 

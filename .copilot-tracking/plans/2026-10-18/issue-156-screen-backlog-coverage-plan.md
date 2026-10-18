@@ -85,12 +85,12 @@ punctuation, frontmatter/date, existing KB style, append-only log.
 
 * [x] P02-T01 Run independent set/count reconciliation, edge cases, local
   link/anchor/table checks, preservation and whitespace checks.
-* [ ] P02-T02 Dispatch one original independent Review; preserve its result.
+* [x] P02-T02 Dispatch one original independent Review; preserve its result.
 
 <!-- P03 -->
 ### P03: Freeze and conditional publication
 
-* [ ] P03-T01 Finalize state/changes with actual evidence and original verdict.
+* [x] P03-T01 Finalize state/changes with actual evidence and original verdict.
 * [ ] P03-T02 Commit own files with fresh GitHub identity; if accepted, normal
   push and main PR; otherwise local freeze only, coordinator routing required.
 
