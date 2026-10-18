@@ -206,6 +206,13 @@ Original record is frozen and will not be rerun or rewritten.
 
 ## Handoff
 
+2026-10-18 continuation: coordinator authorized integration only onto exact
+f91353169756dc41ebbcca944bdd3f44f7c04b89, with an exact old-published-head lease.
+Same task/session, no new critique/Review or source scope. Preserve all merged
+#401 inventory/traces and shared KB history; reconcile separately in
+.copilot-tracking/changes/2026-10-18/issue-153-chat-copy-integration.md.
+Original P01-P03 execution below remains historical; integration is pending.
+
 Implementation evidence: .copilot-tracking/changes/2026-10-18/issue-153-chat-copy-changes.md.
 P01/P02 and P03-T01 complete. One original independent Review executed Complete,
 outcome Conformant for the exact bounded candidate; no introduced scoped defects.

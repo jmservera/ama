@@ -3,9 +3,9 @@
   "task_slug": "issue-153-chat-copy",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
-  "session_status": "stopped",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-18/issue-153-chat-copy-research.md",
     "plan": ".copilot-tracking/plans/2026-10-18/issue-153-chat-copy-plan.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-18/issue-153-chat-copy-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Coordinator authorizes same-session integration only: rebase onto f91353169756dc41ebbcca944bdd3f44f7c04b89 and publish with exact lease against 003a055118e71ea54fdcc2d9218e376acca2f6e3. No new Review/source expansion.",
+      "status": "confirmed",
+      "evidence": "Explicit continuation request 2026-10-18; integration receipt records exact boundaries."
+    },
     {
       "decision": "Full ordered automatic loop and publication on the supplied branch/base; stop after publication for coordinator review.",
       "status": "confirmed",
@@ -53,8 +58,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Coordinator independently reviews final PR head and explicitly authorizes any moved-main integration; no new child work or repeated Review."
+    "phase": "Implement",
+    "action": "Resume same session for explicitly authorized integration only onto f91353169756dc41ebbcca944bdd3f44f7c04b89; preserve original critique/Review and exact old-head lease."
   },
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator exact-head review and explicit integration authorization", "rationale": "Owner-required publication handoff; main moved and must not be integrated autonomously.", "evidence": "User request and read-only remote main observation."},

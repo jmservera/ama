@@ -3,6 +3,11 @@
 
 ## Metadata
 
+Authorized continuation: integration-only rebase onto
+f91353169756dc41ebbcca944bdd3f44f7c04b89, preserving non-overlap candidate
+bytes and all #401 inventory/traces. Original phase evidence is retained;
+no new Review. Integration receipt owns current validation/publication facts.
+
 Task ID: 153. Slug: issue-153-chat-copy. Date: 2026-10-18.
 Plan: .copilot-tracking/plans/2026-10-18/issue-153-chat-copy-plan.md.
 Research: .copilot-tracking/research/2026-10-18/issue-153-chat-copy-research.md.
