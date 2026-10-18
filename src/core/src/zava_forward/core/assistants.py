@@ -524,7 +524,7 @@ class Assistants:
     def export(self, limit=5000, release_limit=5000, event_limit=5000):
         """Proposals with append-only provenance for the supplier-independent export, and whether the limit cut them off."""
         if not self.sql:
-            return dict(proposals=[], total=0, truncated=False, supported=False,
+            return dict(proposals=[], total=0, truncated=False, supported=False, source_status="unsupported",
                         note="Assistant proposals are durable SQL only; this JSON store holds none, so none are exported.")
         with self.transaction() as db:
             ids = [r[0] for r in db.execute("SELECT id FROM assistant_tasks ORDER BY id").fetchall()]
@@ -548,7 +548,7 @@ class Assistants:
                                      events=[dict(id=eid, release_id=rid, at=at, body=json.loads(body))
                                              for eid, at, body in events[:event_limit]],
                                      event_total=len(events), truncated=len(events) > event_limit))
-            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, limit=limit,
+            return dict(proposals=out, total=len(ids), truncated=len(ids) > limit, supported=True, source_status="available", limit=limit,
                         epoch=self.continuity(db)["epoch"],
                         task_releases=dict(supported=True, records=releases, total=len(rows), exported=len(releases),
                                            truncated=len(rows) > release_limit))

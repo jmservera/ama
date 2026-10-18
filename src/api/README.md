@@ -166,15 +166,34 @@ in addition to bundle digest, ledger chain and optionally an externally held hea
 Missing/unavailable/truncated referenced evidence is explicitly incomplete. No raw
 provider requests or extra sensitive input fields are added. Self-contained
 hashes cannot authenticate wholesale rewriting of unanchored task-release events.
+Proposal collection and source metadata are required even for empty collections.
+The verifier independently checks exact boolean flags, nonnegative integer
+total/exported counts and serialized list agreement. Declared truncation is
+invalid regardless of producer completeness flags or a recomputed bundle digest.
+Source status distinguishes available SQL evidence, explicitly unsupported empty
+JSON-store proposals, and unavailable evidence. Missing/unavailable source metadata
+fails closed; legitimate unsupported JSON exports remain usable. Older bundles
+without this metadata must be regenerated from retained source evidence, not
+silently certified complete.
 
 Focused regressions are in `tests/test_continuity_epoch_export.py`, using installed
 `src` distributions and synthetic nonbillable providers. `ZF_CONTINUITY_MSSQL=1`
 requires `ZF_ISSUE122_OWNED_SQL` and loopback-only `ZF_SQL_*`; each test creates
 and drops a UUID-named database on an explicitly task-owned local container.
 SQLite and actual local SQL Server evidence are distinct from Azure evidence.
-The HTTP regression intentionally exposes a remaining 403: the existing
-`projection.STAFF_GET` omits the continuity route kinds. That shared #87 file
-requires coordinator authorization and has not been changed or bypassed here.
+The original independent Review was Not accepted (RV-001/RV-002). Authorized
+correction ONE adds only the two continuity GET route kinds to the outer staff
+allowlist and validates proposal collection completeness offline. Inner register
+access remains limited to managers, Quality Inspector and Building Safety Liaison;
+export remains manager-only. Contractor, unknown and unrelated staff denials are
+retained and exercised over actual HTTP. Correction evidence is not independent
+acceptance; the original adverse Review is unchanged.
+Publication remains blocked: the existing role endpoint inventory and a focused
+host/actual-SQL/hardened-image HTTP regression expose restricted ledger text to
+the Programme Support Officer through the restored export route. The two route
+entries and collection checks do not establish audience-safe evidence export.
+Coordinator correction must reconcile role redaction with ledger integrity;
+no new acceptance or deployment readiness is claimed.
 
 Manual contact, resident challenge and independent hazard transactions still use
 their existing authority and safety gates during suspension. Synthetic exercise

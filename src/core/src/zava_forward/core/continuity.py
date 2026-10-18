@@ -269,7 +269,9 @@ class ContinuityMixin:
         """Build the bundle. It says whether it is complete and never presents a truncated or unsupported part as whole."""
         k.require_role(user, MANAGER_ROLES, "a manager can export evidence")
         from . import ai_registry, ledger
-        assistants = assistants or dict(proposals=[], total=0, truncated=False, supported=False, note="No assistant source was supplied.")
+        assistants = assistants if assistants is not None else dict(
+            proposals=[], total=0, truncated=False, supported=False, source_status="unavailable",
+            note="No assistant source was supplied.")
         with self.lock:
             head_count, head_hash = self.ledger_head()
             recs = [dict(r) for r in self.data["recommendations"]]
@@ -298,7 +300,7 @@ class ContinuityMixin:
                 ai_records=[self._export_record(r) for r in recs],
                 assistant_proposals=proposals, task_releases=task_releases,
                 assistants=dict(supported=assistants.get("supported", True), total=assistants["total"], exported=len(assistants["proposals"]),
-                                truncated=bool(assistants.get("truncated")), note=assistants.get("note")),
+                                truncated=assistants.get("truncated"), source_status=assistants.get("source_status"), note=assistants.get("note")),
                 complete=not reasons, incomplete_reasons=reasons,
                 versions=dict(effective=effective_versions(self._cont()), changes=self._cont()["changes"]),
                 continuity=dict(epoch=self._cont()["epoch"], suspensions=self._cont()["suspensions"]),
@@ -326,6 +328,38 @@ class ContinuityMixin:
         return result
 
 
+def proposal_problems(bundle):
+    """Validate serialized collection completeness independently of producer flags."""
+    problems = []
+    proposals, metadata = bundle.get("assistant_proposals"), bundle.get("assistants")
+    if not isinstance(proposals, list) or any(not isinstance(p, dict) for p in proposals):
+        problems.append("missing or malformed assistant_proposals collection")
+    if not isinstance(metadata, dict):
+        return problems + ["missing or malformed assistants source metadata"]
+    supported, truncated = metadata.get("supported"), metadata.get("truncated")
+    total, exported = metadata.get("total"), metadata.get("exported")
+    if type(supported) is not bool or type(truncated) is not bool:
+        problems.append("assistant source support/truncation flags must be booleans")
+    counts_valid = all(type(v) is int and v >= 0 for v in (total, exported))
+    if not counts_valid:
+        problems.append("assistant proposal counts must be nonnegative integers")
+    elif not isinstance(proposals, list) or exported != len(proposals) or exported != total:
+        problems.append("assistant proposal collection missing or counts inconsistent")
+    if truncated is not False:
+        problems.append("assistant proposal evidence truncated or truncation unavailable")
+    status = metadata.get("source_status")
+    if supported is True:
+        if status != "available":
+            problems.append("required assistant proposal source unavailable")
+    elif supported is False:
+        note = metadata.get("note")
+        if status != "unsupported" or not isinstance(note, str) or not note.strip():
+            problems.append("assistant source unavailable or unsupported status unexplained")
+        if not counts_valid or total != 0 or exported != 0 or proposals != []:
+            problems.append("unsupported assistant source cannot contain or omit known proposals")
+    return problems
+
+
 def release_problems(bundle):
     """Check retained task-release relationships without a provider or store.
 
@@ -333,8 +367,11 @@ def release_problems(bundle):
     unanchored release history. The application ledger does not bind these events.
     """
     from . import rai_release
-    problems, references = [], []
-    for p in bundle.get("assistant_proposals", []):
+    problems, references = proposal_problems(bundle), []
+    proposals = bundle.get("assistant_proposals")
+    if not isinstance(proposals, list) or any(not isinstance(p, dict) for p in proposals):
+        return problems
+    for p in proposals:
         reference = p.get("release")
         if reference is not None:
             references.append((reference, p.get("capability")))

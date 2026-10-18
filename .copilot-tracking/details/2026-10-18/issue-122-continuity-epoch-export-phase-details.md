@@ -5,7 +5,8 @@ ms.date: 2026-10-18
 ---
 
 Task 122, issue-122-continuity-epoch-export. Plan and research use the same dated
-slug. Initial readiness: Research Ready, critique pending.
+slug. Current phase: authorized Implement correction ONE after the frozen
+original Complete / Not accepted Review. Original critique is Complete / Revise.
 
 <!-- P01 -->
 ## P01 - Lifetime enforcement
@@ -121,3 +122,32 @@ coordinator is available to authorize overlap. The adverse regression remains
 failing on host SQLite, actual local SQL Server and hardened installed image.
 Source work is frozen for the one original Review; no worker self-Pass or PR
 publication while this material defect remains.
+
+## P04 - Authorized correction ONE current boundary
+
+Coordinator authorization permits only appending continuity and continuity_export
+to STAFF_GET in projection.py; all other #87 runtime files and projection
+semantics remain untouched. Actual loopback HTTP iterates all seven staff roles,
+Contractor and Unknown: register access only for two managers plus Quality
+Inspector/Building Safety Liaison; export only for the two managers. Existing
+manual/challenge/hazard transactions and safety/authority denials remain exercised.
+
+P04-T01 completed. Three failing-first methods yielded 28 failing subtests and
+two malformed-metadata errors before production edits. Both original RV-002
+negatives use serialized evidence, forced complete/reasons and recomputed digest
+against separately retained unchanged heads. Proposal list/source metadata now
+receive independent shape/count/boolean/truncation checks. Exact source_status
+available/unsupported/unavailable distinguishes legitimate empty JSON support
+from missing evidence; old metadata-less bundles fail closed. No consistent
+wholesale rewrite authentication claim. Legacy-only happy fixture explicitly
+adds the constructed lifecycle event omitted by direct fixture installation.
+
+P04-T02 fresh validation is recorded in the separate correction-one receipt.
+Original failures remain historical evidence, not passing correction evidence.
+No second critique/Review, amended Review or independent acceptance is requested.
+Execution is complete but publication is blocked. Existing endpoint inventory
+exposes a restricted reason through the restored Programme Support Officer export;
+the minimal focused actual HTTP regression fails on host, actual MSSQL and hardened
+image. No test relaxation, role denial change or hash-breaking redaction was
+applied. Coordinator must route correction TWO for audience-safe evidence integrity;
+the same-session correction ONE source/evidence is committed locally only.

@@ -5,7 +5,9 @@ ms.date: 2026-10-18
 ---
 
 Task ID: 122. Slug: issue-122-continuity-epoch-export.
-Status: Ready after direct dispositions of the one original Revise critique.
+Status: Authorized correction ONE source implemented; publication blocked by
+newly exposed Programme Support Officer ledger-reason disclosure. Original
+Complete / Not accepted Review remains frozen. No further critique or Review.
 
 ## Executive Summary
 
@@ -13,8 +15,9 @@ Baseline reproduction confirms stale ready proposals become actionable after
 restart, can be accepted and exported as relied-on, and fresh invocation reuses
 their IDs. Bind proposal lifetime to persisted epoch, retain old dispositions as
 non-current history, and export retained task-release evidence with lifecycle
-events and explicit gaps. Use current SQL transaction boundaries; no #87 files,
-web work, schema refactor or live-system activity.
+events and explicit gaps. Use current SQL transaction boundaries; the sole #87
+exception is the coordinator-authorized two-name STAFF_GET append. No web work,
+schema refactor or live-system activity.
 
 ## User Decisions and Requirements
 
@@ -42,8 +45,10 @@ make task-release evidence reconstructable offline without an AI provider/store.
 
 Active: assistants.py, continuity.py, ai_tasks.py, tightly coupled legacy
 store.py priority/cache surfaces, focused API tests and component documentation.
-store.py is not among the coordinator's #87 overlap files. Do not change
-appointments.py, procurement.py, sqlstore.py, server.py, projection.py or web.
+store.py is not among the coordinator's #87 overlap files. Correction ONE may
+append only continuity and continuity_export to projection.STAFF_GET. Do not
+otherwise change projection.py, appointments.py, procurement.py, sqlstore.py,
+server.py or web.
 No general reversible-serving-config machinery or operational approval system.
 
 ## Functional Requirements
@@ -98,11 +103,9 @@ source-context hardened API image run with truthful actual outcomes/skips.
   paths, existing suites/static checks and hardened Docker image.
 * [x] P03-T02 Reconcile changes/docs/evidence and submit once to original Review.
 
-Execution markers do not mean acceptance. Actual HTTP export remains 403 on
-SQLite, SQL Server and hardened image due to an existing missing route allowlist
-entry in protected shared projection.py. No bypass or shared-file edit. Validation
-and known blocker are reconciled in changes/details; original Review must assess
-the failed boundary. Coordinator authorization/correction is required.
+Execution markers do not mean acceptance. Original HTTP 403 evidence and both High
+findings remain frozen in the original Not accepted Review. Authorized correction
+ONE supplies fresh evidence; no new Review or self-acceptance is permitted.
 
 ## Test Ownership and Candidate Lock
 
@@ -138,9 +141,25 @@ reversibility and old-image deployment exclusion remain outside this source slic
 
 ## Handoff
 
+### Authorized correction ONE (2026-10-18)
+
+Original Review is Complete / Not accepted and remains frozen. Same-session
+coordinator direction authorizes only appending continuity and continuity_export
+to projection.STAFF_GET, with existing inner audience controls unchanged.
+Correction ONE implements both RV-001/RV-002 together; no new critique/Review.
+
+* [x] P04-T01 Add failing-first metadata/completeness and actual HTTP audience
+  regressions; apply only authorized route append and offline verifier corrections.
+* [x] P04-T02 Execute fresh owned MSSQL races/HTTP, host suites/static and rebuilt
+  hardened image; reconcile separate receipt. Conditional publication is blocked,
+  not performed; retain adverse regression and commit local evidence only.
+
 Implementation changes record:
 .copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-changes.md.
-Proceed only after critique findings receive explicit planner disposition.
-Critique findings were directly dispositioned. Implementation and validation
-execution are complete with the material HTTP failure retained; submit once to
-original Review, then route defects to the coordinator without self-correction.
+Original critique findings were directly dispositioned; original Review ran once.
+Coordinator authorized both routed findings as correction ONE. Fresh validation
+is complete but adverse: existing role endpoint inventory plus focused host,
+actual MSSQL and hardened-image HTTP reproduce restricted ledger-reason disclosure
+to Programme Support Officer. Commit local evidence, no push/PR, return the
+remaining correction to coordinator. Independent acceptance and unmet operational
+gates remain separate.

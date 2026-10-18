@@ -525,9 +525,139 @@ class OfflineTests(Base):
         self.assertFalse(record["relied_on"])
         self.assertFalse(record["actionable"])
 
+    def test_original_review_missing_and_truncated_proposals_with_unchanged_head(self) -> None:
+        original, _ = self.bundle()
+        head = copy.deepcopy(original["ledger"]["head"])
+        missing = copy.deepcopy(original)
+        del missing["assistant_proposals"]
+        truncated = json.loads(
+            json.dumps(self.store.continuity_export(self.pm, self.service.export(limit=0)))
+        )
+        # Use each bundle's separately retained head; neither negative rewrites its ledger.
+        for bundle in (missing, truncated):
+            with self.subTest(truncated="assistant_proposals" in bundle):
+                expected = head if bundle is missing else copy.deepcopy(bundle["ledger"]["head"])
+                self.redigest(bundle)
+                check = continuity.verify_export(bundle, expected)
+                self.assertFalse(check["valid"], check)
+                self.assertFalse(
+                    any("digest" in p or "externally held head" in p for p in check["problems"])
+                )
+
+    def test_proposal_metadata_shapes_counts_and_source_status_fail_closed(self) -> None:
+        original, _ = self.bundle()
+        changes: list[tuple[str, Any]] = [
+            ("supported", None),
+            ("supported", 1),
+            ("supported", "true"),
+            ("total", None),
+            ("total", True),
+            ("total", -1),
+            ("total", 1.0),
+            ("total", "1"),
+            ("exported", False),
+            ("exported", -1),
+            ("exported", 0),
+            ("total", 2),
+            ("truncated", 0),
+            ("truncated", "false"),
+            ("truncated", True),
+            ("source_status", "unavailable"),
+            ("source_status", "unsupported"),
+            ("source_status", None),
+        ]
+        for key, value in changes:
+            with self.subTest(key=key, value=value):
+                bundle = copy.deepcopy(original)
+                bundle["assistants"][key] = value
+                self.redigest(bundle)
+                self.assertFalse(
+                    continuity.verify_export(bundle, original["ledger"]["head"])["valid"]
+                )
+        for field, value in (
+            ("assistant_proposals", None),
+            ("assistant_proposals", {}),
+            ("assistant_proposals", [None]),
+            ("assistants", None),
+            ("assistants", []),
+        ):
+            with self.subTest(field=field, value=value):
+                bundle = copy.deepcopy(original)
+                bundle[field] = value
+                self.redigest(bundle)
+                self.assertFalse(
+                    continuity.verify_export(bundle, original["ledger"]["head"])["valid"]
+                )
+        for field in ("assistants", "assistant_proposals"):
+            bundle = copy.deepcopy(original)
+            del bundle[field]
+            self.assertFalse(self.redigest(bundle)["valid"])
+        for field in ("supported", "total", "exported", "truncated", "source_status"):
+            bundle = copy.deepcopy(original)
+            del bundle["assistants"][field]
+            self.assertFalse(self.redigest(bundle)["valid"])
+
+    def test_empty_legacy_and_explicit_unsupported_sources_are_distinct(self) -> None:
+        empty = self.store.continuity_export(self.pm, self.service.export())
+        self.assertTrue(continuity.verify_export(empty, empty["ledger"]["head"])["valid"])
+        LegacyTests.prepare_ai(self, self.store)
+        result = self.store.ai_run(self.pm, "ZF-1", "summary")
+        # Direct fixture installation omits events; explicitly retain synthetic lifecycle evidence.
+        with self.service.transaction() as db:
+            self.service.event(
+                db,
+                result["release"]["id"],
+                kind="release-recorded",
+                task="legacy:summary",
+                evidence_class="constructed-fixture",
+            )
+        legacy = self.store.continuity_export(self.pm, self.service.export())
+        self.assertEqual(legacy["assistant_proposals"], [])
+        self.assertTrue(continuity.verify_export(legacy, legacy["ledger"]["head"])["valid"])
+        unavailable = self.store.continuity_export(self.pm)
+        self.assertFalse(unavailable["complete"])
+        self.assertFalse(self.redigest(unavailable)["valid"])
+        unsupported = copy.deepcopy(empty)
+        unsupported["assistants"] = dict(
+            supported=False,
+            total=0,
+            exported=0,
+            truncated=False,
+            source_status="unsupported",
+            note="JSON store does not hold durable proposals.",
+        )
+        self.assertTrue(self.redigest(unsupported)["valid"])
+        unsupported["assistants"]["total"] = 1
+        self.assertFalse(self.redigest(unsupported)["valid"])
+
 
 class HttpTests(fixtures.ApiTests):
     cycle = EpochTests.cycle
+
+    def test_export_preserves_programme_support_reason_redaction(self) -> None:
+        canary = "SYNTHETIC-RESTRICTED-REASON-122"
+        self.store.audit(self.pm["email"], "log_contact", "ZF-1", canary)
+        self.store.save()
+        self.user = self.people["Programme Support Officer"]
+        status, bundle = self.request("/api/continuity/export")
+        self.assertEqual(status, 200, bundle)
+        self.assertNotIn(canary, json.dumps(bundle))
+
+    def test_continuity_http_audiences_and_offline_export(self) -> None:
+        managers = ("Retrofit Programme Manager", "Programme Support Officer")
+        viewers = (*managers, "Quality Inspector", "Building Safety Liaison")
+        for role, person in self.people.items():
+            with self.subTest(role=role):
+                self.user = person
+                status, body = self.request("/api/continuity")
+                self.assertEqual(status, 200 if role in viewers else 403, body)
+                status, body = self.request("/api/continuity/export")
+                self.assertEqual(status, 200 if role in managers else 403, body)
+                if role in managers:
+                    bundle = json.loads(json.dumps(body))
+                    self.assertTrue(
+                        continuity.verify_export(bundle, bundle["ledger"]["head"])["valid"]
+                    )
 
     def test_http_epoch_read_review_export_and_manual_actions(self) -> None:
         with urllib.request.urlopen(self.url + "/healthz") as response:

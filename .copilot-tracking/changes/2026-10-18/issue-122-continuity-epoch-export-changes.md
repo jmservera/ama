@@ -7,7 +7,16 @@ ms.date: 2026-10-18
 Task 122, issue-122-continuity-epoch-export. Full approved plan in scope.
 Implementation started after Research and Plan with one independent critique.
 Original critique Complete / Revise is frozen; PC-001/002 directly incorporated
-in plan/details before source editing. No original Review has yet run.
+in plan/details before source editing. Original Review subsequently ran once:
+Complete / Not accepted, RV-001/RV-002 High. Original evidence below is retained.
+Current authorized correction ONE evidence is in
+.copilot-tracking/changes/2026-10-18/issue-122-continuity-epoch-export-correction-one.md.
+It is not a new Review or independent acceptance.
+Correction ONE is blocked for publication by a newly exposed Programme Support
+Officer restricted-ledger-reason disclosure. Fresh original-finding checks pass,
+but existing role inventory and focused host/actual-SQL/image HTTP fail. Commit
+local evidence only; coordinator owns remaining correction TWO. Do not relabel
+this implementation validation result as a new Review.
 
 ## P01 - Epoch lifetime
 
@@ -133,8 +142,9 @@ Review. Submit this adverse result without suppressing the failing test.
 
 ## Amendments and Divergences
 
-No scope divergence. Tightly coupled store.py legacy priority/cache changes were
-planned; none of coordinator #87's shared files are authorized for edit.
+Original implementation had no scope divergence. Tightly coupled store.py legacy
+priority/cache changes were planned. Later correction ONE authorizes only the
+two-name projection.STAFF_GET append, documented in plan/details and receipt.
 
 ## Unmet Gates and Remaining Work
 
