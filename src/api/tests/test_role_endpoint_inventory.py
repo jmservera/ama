@@ -14,7 +14,7 @@ OUTCOME_CANARY = "OUTCOME-CANARY-reason"
 
 SERVER_SRC = (Path(server.__file__)).read_text()
 
-GET_ENDPOINTS = ["/api/me", "/api/account/photo", "/api/cases?view=all", "/api/cases?view=all&q=Quentin", "/api/cases?view=all&q=" + REASON,
+GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api/account/photo", "/api/cases?view=all", "/api/cases?view=all&q=Quentin", "/api/cases?view=all&q=" + REASON,
                  "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/ranking/policy", "/api/ranking/snapshot", "/api/ai/priority",
                  "/api/facets", "/api/stats", "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing", "/api/audit-check",
                  "/api/handoffs", "/api/packages", "/api/workorders", "/api/checklists", "/api/ai/report", "/api/finance",

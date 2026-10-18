@@ -6,6 +6,60 @@ ms.date: 2026-10-17
 ms.topic: reference
 ---
 
+## Read-only coordinator populations (#101)
+
+Original Review RV-001 exposed false denial for registered staff whose stored
+email uses mixed case. Correction ONE normalizes only the registry lookup key
+and retains exact current email/code/role checks. Failing-first JSON/SQLite
+direct/HTTP regressions pass. Original Defects found verdict remains unchanged;
+separate correction evidence is not independent coordinator acceptance.
+
+`coordinator.read(store, user, query)` composes existing synchronized Store
+filtering, queue context, closed map-field validation, Leaflet grid data and
+validated progress event readers. It does not change Store/document/provenance
+writers, event capture, schemas or the priority policy. Current registered
+staff identity/role is checked under the refresh lock; own/all open scopes match
+existing case-list access. Counts precede bounded stable-ID record pagination.
+Record rows use a closed scalar allowlist; no resident narrative, diagnoses,
+raw event actors/references or financial evidence is returned.
+
+* Denominator: current authorized open baseline and current source-filtered
+  selection are separate from group/metric drill total.
+* Heatmap: recorded area, case building ID or home type by current stage;
+  absent data forms an explicit Unknown bucket, not an inferred relationship.
+* Stopped work: an existing current-stop blocker or an explicitly paused current
+  stage. This does not stop the independent safety service or approve restart.
+* Priority: unchanged deterministic policy status/version. Draft means approved
+  priority count is null/Unknown, not zero and not AI authority.
+* Flow: distinct cases with trusted recorded transitions in inclusive UTC
+  boundaries. Entry is `to_stage`, exit is `from_stage`, return/reopen is
+  `to_stage` of that event kind. `metric_stage` never overrides the current
+  `stage` source filter. Stage/metric rows can overlap, so no additive funnel or
+  true conversion is claimed.
+* History: progress102 version/order/time/precision validation is reused.
+  Ambiguous or contradictory stage streams are unknown, not trusted events.
+  Missing initial entry/final exit does not manufacture a clock or invalidate
+  an otherwise observed transition. Untrusted audit makes observed counts
+  unavailable. Legacy absent history remains unknown; complete coverage is zero.
+* Exclusions: source-filter exclusions are current baseline minus selected
+  cases. Lifecycle exclusions, true conversion and whole-home closure outcomes
+  are unsupported/Unknown, never inferred from consent refusal or closed status.
+* Coordinates: missing, nonnumeric/nonfinite and out-of-range values remain in
+  denominator/table/drillthrough. Only valid points reach the existing map
+  field guard and cluster builder. Map total equals selected record total;
+  mapped/missing/viewport counts are explicitly independent.
+
+Pure semantic tests use the public tiny `dataset.DATA` fixture plus explicitly
+labelled event mutations, not private generated stock. From `src/core`:
+
+```bash
+../../.venv/bin/python -m unittest discover -s tests -p test_coordinator.py -q
+```
+
+The [API guide](../api/README.md#coordinator-heatmap-and-lifecycle-funnel-101)
+documents actual HTTP/browser/SQL entry points. These checks do not establish
+operational authority, complete event capture or independent acceptance.
+
 The shared domain library (`zava_forward.core`): stores (JSON, SQLite, Azure SQL), ledger, law store,
 rule cards, governance, continuity, chat storage and isolation, and the synthetic tools. It imports no
 workload. The sections below are moved unchanged from the former `mvp/README.md` (ADR 0006, issue #199,

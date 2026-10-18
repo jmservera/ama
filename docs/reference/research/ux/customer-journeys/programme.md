@@ -337,6 +337,48 @@ quality.py event/history paths overlap parallel #88 and require coordinator
 integration; no other worktree, private dataset, real staff roster, paid model
 or Azure/IAM action is involved.
 
+## Coordinator population and observed funnel boundary (2026-10-17, #101)
+
+Actual checked-out source already contained the overview, map clustering, charts,
+server-paged list, role projections and task queues. The earlier indexed backlog
+search did not prove their absence. The [coordinator API/workbench](../../../../../src/api/README.md#coordinator-heatmap-and-lifecycle-funnel-101)
+reuses those surfaces; the [read-only core contract](../../../../../src/core/README.md#read-only-coordinator-populations-101)
+defines their shared authorized current population. Dependency102 event capture
+PR394 is already merged in base ebc8dab8, alongside resident88/PR392 and
+sensor112/PR393. Parent100 is hierarchy, not an ordering dependency.
+
+Current source-filter denominator is distinct from group/metric record selection.
+An observed exit from stage A can drill to a case now in B without changing the
+meaning of the current-stage filter. Current occupancy, stopped-work counts,
+unchanged draft-versus-approved priority, observed partial history, missing group
+relationships and absent/invalid coordinates are visible. Map population totals
+include unmapped records; only mapped viewport counts change when panning.
+Native tables, keyboard links and the existing map list route remain available.
+
+Timestamped advance/return/reopen evidence uses the existing progress reader;
+ambiguous, contradictory and legacy history remains unknown. Initial entries,
+last exits, true conversion and general lifecycle exclusions are not invented.
+Source filter exclusions are not consent withdrawal, resident refusal or programme
+exclusion. Case closure is not accepted handover or financial closure. This view
+cannot rank, release, approve, send, rescan documents or change records.
+
+Fictional JSON/SQLite, actual browser and task-owned local SQL/image engineering
+receipts belong to this bounded delivery, not customer facts or independent
+coordinator/WCAG/human acceptance. No professional or resident approval is
+inferred. Issue117's document-rescan scheduler and possible Store audit integration
+are untouched. Both topics may append this KB index/log; preserve every existing
+entry on any later separately authorized integration.
+
+The one original Review subsequently found RV-001: a stored mixed-case email
+authenticates and reads existing cases but the new coordinator lookup falsely
+denied access. Coordinator-authorized correction ONE normalizes only the lookup
+key, retaining exact current identity checks and fail-closed denials.
+Failing-first JSON/SQLite direct/HTTP regressions, actual mixed-case Chromium
+and rebuilt installed-image checks provide separate engineering correction
+evidence. The original Defects found verdict remains unchanged, not replaced by
+a second Review or independent Pass. Independent coordinator acceptance remains
+pending; authoritative lifecycle exclusions are still Unknown.
+
 ## Next steps
 
 No user action required. Return to cross-role synthesis; preserve unknowns.

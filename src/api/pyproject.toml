@@ -73,6 +73,14 @@ disallow_untyped_calls = false
 module = ["test_progress_reports"]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["test_coordinator"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["test_coordinator_api", "tests.test_coordinator_api"]
+disallow_untyped_calls = false
+
 # Keep the new HTTP harness typed while calling the migrated Store/server boundary.
 [[tool.mypy.overrides]]
 module = ["test_stock_reconciliation_api", "tests.test_stock_reconciliation_api",

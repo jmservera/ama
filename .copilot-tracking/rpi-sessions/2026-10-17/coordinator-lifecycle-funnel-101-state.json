@@ -1,0 +1,71 @@
+{
+  "task_id": "101",
+  "task_slug": "coordinator-lifecycle-funnel-101",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-17/coordinator-lifecycle-funnel-101-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-17/coordinator-lifecycle-funnel-101-plan.md",
+    "details": ".copilot-tracking/details/2026-10-17/coordinator-lifecycle-funnel-101-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-17/coordinator-lifecycle-funnel-101-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-17/coordinator-lifecycle-funnel-101-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-17/coordinator-lifecycle-funnel-101-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full ordered RPI loop automatically, including Plan critique and exactly one original Review.",
+      "status": "confirmed",
+      "evidence": "User direction 2026-10-17; clean designated branch feat/coordinator-lifecycle-funnel-101 at ebc8dab87ae9bd6a33380b85e86f38be5ed9f213; no existing PR."
+    },
+    {
+      "decision": "Read-only coordinator reporting; no document/provenance writers or issue117-owned runtime paths.",
+      "status": "confirmed",
+      "evidence": "User scope; PR394, PR392, PR393 confirmed merged in supplied base. KB index/log overlap must preserve both workers' append-only entries on any later authorized integration."
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; one final-candidate critique executed Complete with original Revise verdict.",
+      "status": "completed",
+      "evidence": "Research C1-C10/W1-W4; critique path in artifact_paths. PC001 separate current-stage/metric-stage selectors, PC002 forced cluster validation, PC003 delivery gate applied directly; no second critique."
+    },
+    {
+      "decision": "Implementation local engineering gates executed; no human or independent coordinator acceptance.",
+      "status": "completed",
+      "evidence": "Changes receipt: coupled core154/API97; final core26/API18 (actual browser), loopback MSSQL6run5pass1skip, configured static gates and final hardened installed source image c4238ecd. Owned resources stopped."
+    },
+    {
+      "decision": "Exactly one original Review executed Complete; outcome Defects found. Retain original adverse verdict and all findings.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-17/coordinator-lifecycle-funnel-101-review.md; RV-001 Medium mixed-case registered email false403, bounded JSON/SQLite repro. Low map status number-format residual. No independent coordinator acceptance."
+    },
+    {
+      "decision": "Coordinator authorized correction ONE for RV-001 in the same original session, followed by normal own-branch publication. No second Review/critique or unrelated Low fix.",
+      "status": "completed",
+      "evidence": "User authorization2026-10-17; P03-C01 complete, four failing-first direct/HTTP JSON/SQLite repros corrected, modules49run41pass8skip, final30pass, actual mixed-case browser1pass and rebuilt installed image8279cbf0 pass. Original Review/critique hashes byte-identical. Actual MSSQL historical only for unchanged backend contract."
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Independent coordinator review of PR396 final remote head; P03-C01/P03-T04 complete, correction source5464f8da69bbc979171d8cffd23c4013843aeb96 plus final metadata published normally to same topic. Original Review Complete/Defects found and critique byte-exact; no merge/closure/second Review. CI status is reported live, not presumed green."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent coordinator final-head review after P03-T04 publication",
+      "rationale": "Correction ONE resolves the engineering counterexample, not independent coordinator acceptance or issue closure.",
+      "evidence": "Original Review retained; separate correction receipts in changes, same original session."
+    },
+    {
+      "rank": 2,
+      "task": "Obtain independent coordinator and human accessibility acceptance",
+      "rationale": "Required human judgement cannot be inferred from passing local engineering checks; leave owner acceptance unchecked.",
+      "evidence": "Plan AC1-AC5 and human checkbox; actual-browser limits in changes and Review."
+    },
+    {
+      "rank": 3,
+      "task": "Format coordinator map status counts consistently",
+      "rationale": "Low-risk presentation consistency with existing number helper; non-blocking and lower impact than access and human acceptance.",
+      "evidence": "Original Review web finding app.js:1053."
+    }
+  ]
+}
