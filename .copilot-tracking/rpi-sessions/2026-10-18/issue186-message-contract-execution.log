@@ -225,3 +225,76 @@ All staged targets must be six approved docs plus named issue186 evidence.
 Only normal branch push and draft PRmain are authorized, Refs186 only; no
 criteria/closure/board/merge/rebase/base change/force push. No source change
 after original Review; subsequent writes are lifecycle state/log/inventory only.
+
+Initial publication execution:
+Generated changes/2026-10-18/issue186-message-contract-inventory.txt using inline
+Python (hashlib/subprocess/Path): asserted HEAD exactbase and expectedbranch,
+exactly6tracked Markdown changes, all untracked paths named issue186 tracking;
+listed full20-file set,6doc SHA256s and2original artifact SHA256s. The inventory
+cannot contain its own final commit ID; final frozen hash belongs in PR metadata/
+body and terminal publication receipt, avoiding a self-referential commit loop.
+Shell remainder:
+git config --local user.email '8036360+jmservera@users.noreply.github.com' && git config --local user.name 'jmservera' && git add -A && git diff --cached --check && git diff --cached --stat && git diff --cached --name-only
+Result exit0:20 approved files,2042insertions/2deletions; staged exactly6docs+
+14issue186evidence files, no unrelated/private/generated fixture files.
+Shell:
+printf '%s\n' 'docs: document shared sensor contract and volume' '' 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' | GIT_AUTHOR_EMAIL=8036360+jmservera@users.noreply.github.com GIT_COMMITTER_EMAIL=8036360+jmservera@users.noreply.github.com git commit -F -
+Result exit0: commit7eefb7e5730f9f9a26494715abdf051966b3cb83,20files.
+Repository/user ConventionalCommit and required final coauthor trailer take
+precedence over optional helper formatting; unavailable helper tool fallback
+was disclosed above. No amend/rebase/history rewriting.
+Shell publication chain:
+git push --set-upstream origin docs/sensor-message-contract-186
+gh pr create --draft --base main --head docs/sensor-message-contract-186 --title 'docs: shared sensor observation contract and volume' --body [literal initial body below]
+git rev-parse HEAD
+gh pr view --json number,url,isDraft,state,baseRefName,baseRefOid,headRefName,headRefOid
+The four commands were chained with &&. Result exit0: normal new-branch push,
+upstream set; draft PR412 OPEN https://github.com/jmservera/ama/pull/412;
+base100ead1bacdb72a8ea7ce5867233db30b22b2f50,head7eefb7e5730f9f9a26494715abdf051966b3cb83.
+BEGIN literal initial PR body (single --body argument)
+## Summary
+
+Document the unchanged imported 13-field versioned observation contract, stable-key append/replay semantics, bounded receipts and DQ in the existing sensor synthesis and linked guides. Preserve three paired temperature/RH observations per home per day: N=1 and fictional N=60,000 give 3 and 180,000 records/day. One public synthetic sorted-JSON sample measures 366 bytes; sample-scaled payload accounting is not a size bound, transport choice, Hub billing or throughput measurement.
+
+Stock-derived long lowercase identifiers remain incompatible with current admission. Producer/live interoperability and all live service, privacy, AI/Azure and human gates remain separate. No runtime, schema, test, private dataset, image or UI changes.
+
+## Evidence
+
+Ordered Research, Plan/details, one independent critique with direct dispositions, Implementation and one original Review are committed under the dated issue186 artifact paths. Original Review: Complete / Conformant for bounded documentation, no substantive findings; correction count 0. The adverse critique and initial test output are retained. An execution-only temporary-root refinement was necessary for the unchanged generator output guard.
+
+Final focused selection: 80 unchanged core/API/fault tests passed on SQLite. Exact field table, public fixture, documented reproduction, 366-byte hash, arithmetic, links and append-only knowledge log checked. Runtime/image unchanged; no image/UI/Azure rerun represents this documentation delivery.
+
+Fixed base: 100ead1bacdb72a8ea7ce5867233db30b22b2f50. No base movement performed; main remained at that base at prepublication inspection. Full-PR exact-head assessment, criteria and merge remain coordinator-owned. Final frozen-head receipt follows publication.
+
+Refs #186
+END literal initial PR body
+
+Postpublication verification command:
+git status --short && git log -1 --format='%H%n%ae%n%ce%n%B' && gh pr view 412 --json number,url,isDraft,state,baseRefName,baseRefOid,headRefName,headRefOid,statusCheckRollup && git ls-remote origin refs/heads/main refs/heads/docs/sensor-message-contract-186 && git merge-base HEAD 100ead1bacdb72a8ea7ce5867233db30b22b2f50 && git diff --name-status 100ead1bacdb72a8ea7ce5867233db30b22b2f50...HEAD && sha256sum .copilot-tracking/reviews/plans/2026-10-18/issue186-message-contract-plan-critique.md .copilot-tracking/reviews/logs/2026-10-18/issue186-message-contract-review.md
+Result exit0: worktree clean; both author/committer safe noreply; final coauthor;
+draft412/main and remote topichead7eefb7e5730f9f9a26494715abdf051966b3cb83;
+remote main and merge-base remain100ead1bacdb72a8ea7ce5867233db30b22b2f50.
+Full20-file base diff matches inventory, immutable original hashes unchanged.
+Hosted image-paths and src-no-working-data SUCCESS; remaining reported MVP/source
+checks IN_PROGRESS at this initial head. Not a final-head green claim. Hosted
+automatic PR checks are distinct from local docs-only validation and not a new
+deployment or acceptance.
+Pre-stop state persisted: owner explicitly instructed Stop after publication;
+do not start any follow-up, correction, original Review, issue operation or merge.
+Post-stop state persisted: automatic session stopped, bounded task completed,
+Follow-up phase retained; pending technical final-receipt publication does not
+start a new RPI task. Fixed base and canonical/original hashes remain unchanged.
+
+Final continuation protocol (intended at this record's commit boundary; actual
+commit/push/head verification results are appended externally in PR412 body):
+1. Assert8inventory SHA256 lines (6docs+2originals) match current bytes; assert
+   only inventory/state/log differ since7eefb7e5730f9f9a26494715abdf051966b3cb83;
+   parse state completed/stopped; git diff --check and stage only those3files.
+2. Commit with ConventionalCommit docs: record issue186 publication receipt and
+   required Copilot coauthor, safe explicit author/committer email.
+3. Normal-push topic; query exact HEAD, remote topic/main and draft PR412
+   head/base; verify merge-base fixedbase and clean worktree. No further commits.
+4. Append exact immutable final head/base, file inventory, original hashes,
+   mainmovement and hosted-check status to PR412 body. PR metadata is the
+   non-self-referential final publication log for these last commands/results.
+No step above is recorded as executed until the external receipt confirms it.

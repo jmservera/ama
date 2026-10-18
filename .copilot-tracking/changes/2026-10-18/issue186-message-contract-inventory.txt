@@ -42,3 +42,12 @@ src/core/README.md
 
 Later evidence-only receipt commit is permitted; canonical-doc and original-review hashes above must remain exact.
 Remaining limits: stock/live compatibility for187/188; live Hub/identity/cost/network/credentials/privacy/AI/Azure/human gates; coordinator exact-head full-PR assessment/criteria/merge.
+
+Actual initial publication:
+Commit 7eefb7e5730f9f9a26494715abdf051966b3cb83 normal-pushed with upstream.
+Draft PR https://github.com/jmservera/ama/pull/412 OPEN, base main100ead1bacdb72a8ea7ce5867233db30b22b2f50.
+Postpublication remote-main and merge-base checks show no main movement.
+Both author and committer8036360+jmservera@users.noreply.github.com; required Copilot trailer present.
+Final receipt commit changes only this inventory plus execution state/log; full file set remains20.
+Final frozen head is recorded in remote topic ref and PR metadata/body after that evidence-only push.
+Coordinator must assess that exact whole-PR head independently; original Review did not inspect a future commit.
