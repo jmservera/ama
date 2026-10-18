@@ -2,7 +2,7 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-15"
+ms.date: "2026-10-18"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
@@ -13,7 +13,7 @@ version: "0.17.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-15"
+last_updated: "2026-10-18"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.17.0 | Last Updated: 2026-10-15
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.17.0 | Last Updated: 2026-10-18
 
 ## Executive Summary
 
@@ -1153,6 +1153,26 @@ Formal requirements review and owner acceptance of this candidate remain
 pending. Zero critical failures in a finite agreed suite is a test gate, not
 proof of zero real-world harm.
 
+#### Constructed Finding-Evidence Engineering (2026-10-18, #126)
+
+The existing governance API/store now supports append-only constructed evidence
+claims and deterministic reads of all eleven residual and eleven unassessed
+baseline checks. This is an implementation-status note, not a change to FR-051
+task activation authority, OQ-017 delegation, requirements approval or historical
+versions. The [API contract](../../src/api/README.md#constructed-rai-evidence-register-api-126)
+specifies exact caller-declared source/task/release comparison, explicit unknowns,
+server recorder/UTC/event/revision and inert bounded references. It does not
+attest the deployed source or verify supplied human acceptance.
+
+Baseline v0.14.0/source `1cb398c7b90bec05a5700008a97d0cfac494144a`, report
+2026-10-14 and planning-only acceptance 2026-10-15 remain unchanged. DOWNGRADED
+is open. Disposition completeness is not evidence adequacy or finding closure;
+even an independent-acceptance claim cannot promote acceptance from Unknown.
+Qualified current-source assessment, inline verifier evidence, owner authority,
+privacy/legal, held-out real-model, witnessed recovery, operational and current
+PRD quality/owner acceptance gates remain separate and unmet. No release,
+signature, capture, spending or live-use authority is inferred.
+
 ### Bounded-Agent Orchestration Pattern
 
 Orchestration is a deterministic, reviewable state graph, not an open-ended
@@ -2105,7 +2125,7 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-15 (FR-060 regulatory compliance assistant added, proposal only; v0.17.0 candidate adds a proposal for per-user agent chat and memory to the v0.16.0 journey/sensor and RAI controls; fresh approval required)
+* **Last Updated:** 2026-10-18 (constructed RAI finding-evidence engineering status added; FR-060 and v0.17.0 chat/memory proposals remain pending fresh approval)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
 

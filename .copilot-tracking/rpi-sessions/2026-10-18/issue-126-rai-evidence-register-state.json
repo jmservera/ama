@@ -1,0 +1,39 @@
+{
+  "task_id": "126",
+  "task_slug": "issue-126-rai-evidence-register",
+  "parent_task": {"task_id": "123", "task_slug": null},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-18/issue-126-rai-evidence-register-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-18/issue-126-rai-evidence-register-plan.md",
+    "details": ".copilot-tracking/details/2026-10-18/issue-126-rai-evidence-register-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Automatic bounded ordered RPI explicitly requested; publish then stop for coordinator", "status": "confirmed", "evidence": "Caller instruction 2026-10-18"},
+    {"decision": "Pinned base ab0613f3336109ff9b96560a16758ee842232715; existing clean topic branch", "status": "verified", "evidence": "git inspection"},
+    {"decision": "Claims only; human/live acceptance and all 22 baseline checks remain open", "status": "confirmed", "evidence": "Live issue 126 and caller"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C3-C9"},
+    {"decision": "One critique Complete / Revise; PC-001 and PC-002 applied directly; no unresolved decision", "status": "dispositioned", "evidence": "Original critique SHA256 4e24e7e0cc8cf21081c4e5823cbbfbd8fbf0d1d0a8e904220ecd5b0e3235c8bb; plan/details"},
+    {"decision": "Implement complete; local107/skip16, preservation288/skip46, actual SQL16/16, hardened image107/skip16; Ruff/mypy pass", "status": "verified engineering only", "evidence": "Changes record and raw receipts"},
+    {"decision": "Exactly one original Review executed Complete / Conformant for bounded engineering; zero RV findings; no human/live acceptance", "status": "complete", "evidence": "Source d0bb02df6a0e8ea52fe56f409b24cfcf6db2ea90; original Review SHA256 12788d8f7f81279012b54ba3902255f2eabe436d61d97fda3a0ae701bb6b6c24; correction count 0"},
+    {"decision": "Published non-closing PR 409 to main; observed PR base differs from pinned implementation base, no rebase", "status": "published original history", "evidence": "https://github.com/jmservera/ama/pull/409; closingIssuesReferences []; PR base9403dc6a8f52f1f04c5ad910faab11a57c29ee78; pinned ab0613f3336109ff9b96560a16758ee842232715"},
+    {"decision": "Coordinator explicitly authorized same-task integration-only rebase and exact old-head lease; no new RPI phases or source corrections", "status": "rebased and first exact-lease publication verified", "evidence": "Old local/remote4a23f750f1ea943bb4aaf989256e7bd019a57d12; exact target9403dc6a8f52f1f04c5ad910faab11a57c29ee78; rebased93b7450c823d80765d869e533788662f3c61f94a; publishedb38067293741c5667dd07f5e15e8b2ee39abd823; separate integration/receipt.md"},
+    {"decision": "Original30 normalized patch and six-source-path patch identical; upstream2599 paths/modes and original immutable evidence preserved", "status": "verified integration integrity, not independent Review", "evidence": "Integration parity.json and full tree manifests; one additive KB-log conflict; no source/persistence conflict"},
+    {"decision": "Fresh integration focused107/skip16 and consultation64/skip13 successful; configured Ruff/format/mypy passed; original SQL/image evidence historical", "status": "verified local integration checks only", "evidence": "Integration raw test/quality/formatter logs; four original excluded-file format exceptions retained"},
+    {"decision": "Complete846-line original CLI log read and copied byte-identically; no new critique or original Review", "status": "preserved", "evidence": "Session files/issue126-original-complete-execution.log SHA256918e07c62d006a4c4034ca16a036f540710149ad5f5af453651a6a11aa8e0072; correction count0"},
+    {"decision": "PR409 open, exact base9403dc6a, remote/PR first-publication headb3806729, empty closing references; final metadata receipt uses normal push only", "status": "publication verified; final exact-head handoff recorded externally", "evidence": "Integration publication.log, full changed inventory57 paths original30+integration27; final normal-push output retained in resumed session files"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Stop for coordinator independent full published exact-head source/artifact/log inspection of PR409; no automatic child work, source correction, second original Review or further rebase"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent coordinator exact-head source/artifact/log inspection", "rationale": "Explicit required handoff after authorized integration; no automatic child work", "evidence": "Caller integration stop instruction and sole original Review"},
+    {"rank": 2, "task": "Separately authorized qualified current-source assessment and human authority evidence", "rationale": "All 22 findings remain open; claims do not establish competent acceptance", "evidence": "Live issue 126 and original Review assurance follow-ups"},
+    {"rank": 3, "task": "Separately authorized real AI/SQL/Azure application acceptance", "rationale": "Local engineering evidence does not satisfy version-linked application delivery contract", "evidence": "Addendum mandatory real-platform boundary and original Review"}
+  ]
+}

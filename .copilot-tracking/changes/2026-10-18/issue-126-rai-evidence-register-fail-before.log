@@ -1,0 +1,547 @@
+======================================================================
+ERROR: test_append_reopen_reconcile_and_provenance (test_governance.EvidenceRegister.test_append_reopen_reconcile_and_provenance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 275, in test_append_reopen_reconcile_and_provenance
+    record = self.store.rai_evidence_record(self.pm, claim())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_complete_is_not_accepted_or_closed (test_governance.EvidenceRegister.test_complete_is_not_accepted_or_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 310, in test_complete_is_not_accepted_or_closed
+    self.store.rai_evidence_record(self.pm, claim(finding_id=fid, expected_revision=i, event_ref=f"SYN-{i}",
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_context_staleness_and_baseline_replay (test_governance.EvidenceRegister.test_context_staleness_and_baseline_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 293, in test_context_staleness_and_baseline_replay
+    self.store.rai_evidence_record(self.pm, claim())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_current_roles_forgery_removal_and_demotion (test_governance.EvidenceRegister.test_current_roles_forgery_removal_and_demotion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 350, in test_current_roles_forgery_removal_and_demotion
+    self.store.rai_evidence_record(user, claim())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_inert_limits_and_independent_acceptance_is_only_claim (test_governance.EvidenceRegister.test_inert_limits_and_independent_acceptance_is_only_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 342, in test_inert_limits_and_independent_acceptance_is_only_claim
+    self.store.rai_evidence_record(self.pm, body)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'actor': {'code': 'PM-1', 'name': 'Retrofit Programme Manager PM-1', 'email': 'pm-1@example.test', 'role': 'Retrofit Programme Manager'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'recorded_at': 'yesterday'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'approval': True})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'closure': 'Closed'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'evidence_tier': 'accepted'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'finding_id': 'UNKNOWN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'baseline_commit': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'expected_revision': True})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'expected_revision': -1})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'result': {}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'result': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': []})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x']})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': [{}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': ['xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx']})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'limitations': ''})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'decision_maker_ref': 'self appointed'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'decision_maker_status': 'Unverified reference'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'assessment': {'source_commit': 'abc', 'task_id': None, 'task_version': None, 'release_version': None, 'nonapplicability_reason': 'Constructed whole-system source inspection, not a task release'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'assessment': {'source_commit': 'ab0613f3336109ff9b96560a16758ee842232715', 'task_id': 'mixed', 'task_version': None, 'release_version': None, 'nonapplicability_reason': 'Constructed whole-system source inspection, not a task release'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'assessment': {'source_commit': 'ab0613f3336109ff9b96560a16758ee842232715', 'task_id': None, 'task_version': None, 'release_version': None, 'nonapplicability_reason': 'Constructed whole-system source inspection, not a task release', 'extra': 'bad'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Store' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.EvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 334, in test_invalid_promotions_and_primitives_leave_no_success
+    self.assertEqual(self.view()["history_record_count"], 0)
+                     ^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 255, in view
+    return self.store.governance_view(self.pm, assessment)["rai_evidence"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GovernanceMixin.governance_view() takes 2 positional arguments but 3 were given
+
+======================================================================
+ERROR: test_inventory (test_governance.EvidenceRegister.test_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 260, in test_inventory
+    v = self.view()
+        ^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 255, in view
+    return self.store.governance_view(self.pm, assessment)["rai_evidence"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GovernanceMixin.governance_view() takes 2 positional arguments but 3 were given
+
+======================================================================
+ERROR: test_append_reopen_reconcile_and_provenance (test_governance.SqlEvidenceRegister.test_append_reopen_reconcile_and_provenance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 275, in test_append_reopen_reconcile_and_provenance
+    record = self.store.rai_evidence_record(self.pm, claim())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_competing_writer_and_stale_revision (test_governance.SqlEvidenceRegister.test_competing_writer_and_stale_revision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 393, in test_competing_writer_and_stale_revision
+    self.store.rai_evidence_record(self.pm, claim())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_complete_is_not_accepted_or_closed (test_governance.SqlEvidenceRegister.test_complete_is_not_accepted_or_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 310, in test_complete_is_not_accepted_or_closed
+    self.store.rai_evidence_record(self.pm, claim(finding_id=fid, expected_revision=i, event_ref=f"SYN-{i}",
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_context_staleness_and_baseline_replay (test_governance.SqlEvidenceRegister.test_context_staleness_and_baseline_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 293, in test_context_staleness_and_baseline_replay
+    self.store.rai_evidence_record(self.pm, claim())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_current_roles_forgery_removal_and_demotion (test_governance.SqlEvidenceRegister.test_current_roles_forgery_removal_and_demotion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 350, in test_current_roles_forgery_removal_and_demotion
+    self.store.rai_evidence_record(user, claim())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_inert_limits_and_independent_acceptance_is_only_claim (test_governance.SqlEvidenceRegister.test_inert_limits_and_independent_acceptance_is_only_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 342, in test_inert_limits_and_independent_acceptance_is_only_claim
+    self.store.rai_evidence_record(self.pm, body)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'actor': {'code': 'PM-1', 'name': 'Retrofit Programme Manager PM-1', 'email': 'pm-1@example.test', 'role': 'Retrofit Programme Manager'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'recorded_at': 'yesterday'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'approval': True})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'closure': 'Closed'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'evidence_tier': 'accepted'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'finding_id': 'UNKNOWN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'baseline_commit': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'expected_revision': True})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'expected_revision': -1})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'result': {}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'result': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': []})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x']})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': [{}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'references': ['xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx']})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'limitations': ''})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'decision_maker_ref': 'self appointed'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'decision_maker_status': 'Unverified reference'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'assessment': {'source_commit': 'abc', 'task_id': None, 'task_version': None, 'release_version': None, 'nonapplicability_reason': 'Constructed whole-system source inspection, not a task release'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'assessment': {'source_commit': 'ab0613f3336109ff9b96560a16758ee842232715', 'task_id': 'mixed', 'task_version': None, 'release_version': None, 'nonapplicability_reason': 'Constructed whole-system source inspection, not a task release'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success) (changes={'assessment': {'source_commit': 'ab0613f3336109ff9b96560a16758ee842232715', 'task_id': None, 'task_version': None, 'release_version': None, 'nonapplicability_reason': 'Constructed whole-system source inspection, not a task release', 'extra': 'bad'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 333, in test_invalid_promotions_and_primitives_leave_no_success
+    self.store.rai_evidence_record(self.pm, claim(**changes))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+======================================================================
+ERROR: test_invalid_promotions_and_primitives_leave_no_success (test_governance.SqlEvidenceRegister.test_invalid_promotions_and_primitives_leave_no_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 334, in test_invalid_promotions_and_primitives_leave_no_success
+    self.assertEqual(self.view()["history_record_count"], 0)
+                     ^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 255, in view
+    return self.store.governance_view(self.pm, assessment)["rai_evidence"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GovernanceMixin.governance_view() takes 2 positional arguments but 3 were given
+
+======================================================================
+ERROR: test_inventory (test_governance.SqlEvidenceRegister.test_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 260, in test_inventory
+    v = self.view()
+        ^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 255, in view
+    return self.store.governance_view(self.pm, assessment)["rai_evidence"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GovernanceMixin.governance_view() takes 2 positional arguments but 3 were given
+
+======================================================================
+ERROR: test_postcommit_failure_requires_reload_no_duplicate_audit (test_governance.SqlEvidenceRegister.test_postcommit_failure_requires_reload_no_duplicate_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 405, in test_postcommit_failure_requires_reload_no_duplicate_audit
+    with self.assertRaises(g.GovernanceCommittedError):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'zava_forward.core.governance' has no attribute 'GovernanceCommittedError'
+
+======================================================================
+ERROR: test_transaction_actor_recheck_and_audit_rollback (test_governance.SqlEvidenceRegister.test_transaction_actor_recheck_and_audit_rollback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-126-register/src/core/tests/test_governance.py", line 372, in test_transaction_actor_recheck_and_audit_rollback
+    self.store.rai_evidence_record(self.pm, claim())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SqlStore' object has no attribute 'rai_evidence_record'
+
+----------------------------------------------------------------------
+Ran 50 tests in 6.093s
+
+FAILED (errors=59, skipped=10)

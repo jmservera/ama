@@ -1,0 +1,182 @@
+{
+  ".copilot-tracking/changes/2026-10-17/consultation-record-controls-92-changes.md": {
+    "bytes": 11740,
+    "mode": "100644",
+    "oid": "38d04caa129d9fe5fd0bc30085fda26abb238233",
+    "sha256": "83fc6f4707ce555064b111ff4b9d5d9724667a5e7fd9d9383cb56e8d01e4e0ac"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-changes.md": {
+    "bytes": 19971,
+    "mode": "100644",
+    "oid": "2d5a5b95e151c9ad7ba127f0d6df39a85bf93da5",
+    "sha256": "9110ad0dc548ad652ffec9f12ff6b9de998d1705f6a083d3415690e3f1be84a0"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-focused.log": {
+    "bytes": 7212,
+    "mode": "100644",
+    "oid": "8a639d93c97d8c725d3b6b54d6b9d003f16363e8",
+    "sha256": "e8cda12b4166c3bda7ee1f27850ae37d187a8f4579d7eb6cb77e8e866a2d098b"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-inventory.json.gz": {
+    "bytes": 254943,
+    "mode": "100644",
+    "oid": "985b2084226d6854ca3a4536200f2d8e9ce2c8f3",
+    "sha256": "6a505cc1c5d840df72d885dab71dec002d32c875fb038ddbc675a3cca945355c"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-parity.json": {
+    "bytes": 16961,
+    "mode": "100644",
+    "oid": "2fc6e4c7789639a1540967c1d3347e6bbd53717a",
+    "sha256": "367a833d769dcc54aa0bdf01c1ddb6f23b2db10b3b7c55e8bb692e4ba787afc9"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-paths.txt": {
+    "bytes": 2670,
+    "mode": "100644",
+    "oid": "832589c917e8323919634296a684e865a6373891",
+    "sha256": "c0bc03dbabdf6f118d6e6e3fb44fe4b848784313ed26eb5c22d4f6db54a066db"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-publication.log": {
+    "bytes": 270,
+    "mode": "100644",
+    "oid": "7ddc18731a0115f46afd69dc3c11bd18bf61b7b1",
+    "sha256": "134c42933e415b274d3d3582b34528808f930d978c02621e39af21b9fafa5328"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia-static.log": {
+    "bytes": 367,
+    "mode": "100644",
+    "oid": "3676e2826b3cb13d52fe0e465cab7db962fd438f",
+    "sha256": "eecc20d7602103a345c8fd65977ebaa214e600afb7da83c3d1888a10f0c09b24"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-dpia.md": {
+    "bytes": 11051,
+    "mode": "100644",
+    "oid": "6112c6ffb1bd13796c52a075449aabaa1695057a",
+    "sha256": "e58171aabf499cdafbb7690e4d93a9a0939cdae99d81c6286ee2b49328aaef8c"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-focused.txt": {
+    "bytes": 7212,
+    "mode": "100644",
+    "oid": "3f9ca5cea51c7c6f788a3336b63e36a72282dcd3",
+    "sha256": "ab3fefd80e610b4a177520dc41a7f16a2ec85f472237794b4ad0500f67e98eba"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-inventory.json.gz": {
+    "bytes": 251687,
+    "mode": "100644",
+    "oid": "0f3f61114a79c3fb624323f2a579faf42c63318e",
+    "sha256": "6e5f571595013568586436b43db321d690b7a1cd207453c5cb8325949497722c"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-parity.json": {
+    "bytes": 10427,
+    "mode": "100644",
+    "oid": "fabea57c5b696ae18879273e962f4228ef788f80",
+    "sha256": "be932dc1e3f272c064654b6373c5437df7a5445186775f578b9737ad700640fe"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration-tests.txt": {
+    "bytes": 19669,
+    "mode": "100644",
+    "oid": "70350e8163cf168d4b72085297e896f9ac1fd3e9",
+    "sha256": "9a06a11770c6672df00bc9e4b1e73458c6b9281c92df0322405f59f8893d6c15"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-92-scoped-consultation-hold-integration.md": {
+    "bytes": 8594,
+    "mode": "100644",
+    "oid": "4c82a5fb48f28a7e3ee2217be92e1a697eb65f3f",
+    "sha256": "1086432cbcad7dbe613d776d091d9ebfb8a22928a0438a8c0290906fd8bf27e8"
+  },
+  ".copilot-tracking/details/2026-10-17/consultation-record-controls-92-phase-details.md": {
+    "bytes": 6022,
+    "mode": "100644",
+    "oid": "54c1d00c80d03f75dc00e8902d092efb421416b0",
+    "sha256": "f0ebf66ae2008bf66223ec6ed0b421830902ae802fd03330dea34d12e67b929e"
+  },
+  ".copilot-tracking/details/2026-10-18/issue-92-scoped-consultation-hold-phase-details.md": {
+    "bytes": 9563,
+    "mode": "100644",
+    "oid": "1e93a1ee551278f497ce978a8265c1fe6dea2137",
+    "sha256": "b54e94c99b339d620c6d13c8471d9a2963c4e4833a29953ae6926a8bcea7a585"
+  },
+  ".copilot-tracking/plans/2026-10-17/consultation-record-controls-92-plan.md": {
+    "bytes": 8369,
+    "mode": "100644",
+    "oid": "77e52c3a7a20039c4bc5aec43cbabe648cd4b384",
+    "sha256": "059f301e633fbb010e7cde3d2dd1f5ef7028c614452d1cca4b6f525e77af757f"
+  },
+  ".copilot-tracking/plans/2026-10-18/issue-92-scoped-consultation-hold-plan.md": {
+    "bytes": 11637,
+    "mode": "100644",
+    "oid": "fda70a8f560228ca5f4145f6b16922654ea92268",
+    "sha256": "c2560e46b1a543bfca2cfad7af21aef2ec5b1e61ea5b75812fabf4f41941fe15"
+  },
+  ".copilot-tracking/research/2026-10-17/consultation-record-controls-92-research.md": {
+    "bytes": 7598,
+    "mode": "100644",
+    "oid": "bf81c1f78cda50ab5f1d1867bbe7684fe149e8b4",
+    "sha256": "f752ddb14e4b2d2c469c9a42d337587a5e7ac420d48aa78ab866dbf88f3dbb4f"
+  },
+  ".copilot-tracking/research/2026-10-18/issue-92-scoped-consultation-hold-research.md": {
+    "bytes": 8580,
+    "mode": "100644",
+    "oid": "ebbfb6fc310517f0a64ae2cb6e5bff7f136425b1",
+    "sha256": "2aba70a247d61e4504e40911ac4a810cc593004ca53b21b22bc35004df1b653e"
+  },
+  ".copilot-tracking/reviews/logs/2026-10-17/consultation-record-controls-92-review.md": {
+    "bytes": 29579,
+    "mode": "100644",
+    "oid": "6aa21908f147eabec823e46056e911e71417f786",
+    "sha256": "e4a7543ac73f1e0fdaee61ca8c093acdb1cc4f6b9b2c433b69fcb7384391a59f"
+  },
+  ".copilot-tracking/reviews/logs/2026-10-18/issue-92-scoped-consultation-hold-review.md": {
+    "bytes": 29505,
+    "mode": "100644",
+    "oid": "934da2eb53a058b9aa564173259988c15623e440",
+    "sha256": "ab5cb437f994e556b08febb57903385c337090d5f12f42b92d099de582af5573"
+  },
+  ".copilot-tracking/reviews/plans/2026-10-17/consultation-record-controls-92-plan-critique.md": {
+    "bytes": 16331,
+    "mode": "100644",
+    "oid": "ad8aee3d98b2b6e0b56db9331fa8c66a1a7a3a8a",
+    "sha256": "dc6c9bca23f55e9f80cfc9ed231547ae668b0e72cee5b538ab5b6f25ec24ce17"
+  },
+  ".copilot-tracking/reviews/plans/2026-10-18/issue-92-scoped-consultation-hold-plan-critique.md": {
+    "bytes": 12719,
+    "mode": "100644",
+    "oid": "9e739c4153ba7fc381816bf7c332e0bff18180f6",
+    "sha256": "a404f6d5381e2e5520c0a60d328a56d45bc46a5d660e5876936e51fd130818ec"
+  },
+  ".copilot-tracking/rpi-sessions/2026-10-17/consultation-record-controls-92-state.json": {
+    "bytes": 3873,
+    "mode": "100644",
+    "oid": "ff20f4a0c17fccbb057b81e1b20985615a653be3",
+    "sha256": "bc91cc85c0c0686dbced3572815d4ba3c79c33e5f4e1ad2e9ed7c6fb3274bca3"
+  },
+  ".copilot-tracking/rpi-sessions/2026-10-18/issue-92-scoped-consultation-hold-state.json": {
+    "bytes": 8227,
+    "mode": "100644",
+    "oid": "dca5cc31184a47630c4a1d89bdf714cddc1be2f5",
+    "sha256": "da2bbb18a25b77078e644cc34fca1e53f52a888d535571c5b09dad07f2568c4e"
+  },
+  "docs/reference/research/ux/zava-forward-prototype-profile-review.md": {
+    "bytes": 129115,
+    "mode": "100644",
+    "oid": "dbbfe381dee23d38ecbbb94b24be44acdf78679c",
+    "sha256": "76c71951cc149421396462aa17f2b0b590475ea67a8fda0c3eab2117fda5a840"
+  },
+  "src/api/tests/test_procurement_api.py": {
+    "bytes": 29061,
+    "mode": "100644",
+    "oid": "a5ea835bebd80bc033da13543f4d33f323d23082",
+    "sha256": "439f335f37461bc9e97514ce419d301a601c5bf06b8209aa9152b73c879ad6f8"
+  },
+  "src/core/src/zava_forward/core/procurement.py": {
+    "bytes": 38718,
+    "mode": "100644",
+    "oid": "92b23107a22f1dd2370d7b6c56aa19d0a4ca7441",
+    "sha256": "17eef0c7b2277a0a182af8befc5b204f7e8c3cf623d98f593dba34678cb36e48"
+  },
+  "src/core/tests/test_consultation_controls.py": {
+    "bytes": 20520,
+    "mode": "100644",
+    "oid": "5cd0859ef8dc3a949067a0647f2f290816609532",
+    "sha256": "fb9d61b17108ac96e7c79a4983ebe80806fc264efe240b5eb6879b6fc27c41e9"
+  }
+}

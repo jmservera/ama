@@ -1,0 +1,35 @@
+Diagnostic only: explicit stdin bypasses configured format excludes. No source is formatted.
+
+original-topic 4a23f750f1ea943bb4aaf989256e7bd019a57d12 src/core/src/zava_forward/core/governance.py
+COMMAND: cd src/core; git blob supplied on stdin to ruff format --check --stdin-filename src/zava_forward/core/governance.py -
+EXIT_STATUS: 1
+
+integrated-source 93b7450c823d80765d869e533788662f3c61f94a src/core/src/zava_forward/core/governance.py
+COMMAND: cd src/core; git blob supplied on stdin to ruff format --check --stdin-filename src/zava_forward/core/governance.py -
+EXIT_STATUS: 1
+
+original-topic 4a23f750f1ea943bb4aaf989256e7bd019a57d12 src/core/src/zava_forward/core/sqlstore.py
+COMMAND: cd src/core; git blob supplied on stdin to ruff format --check --stdin-filename src/zava_forward/core/sqlstore.py -
+EXIT_STATUS: 1
+
+integrated-source 93b7450c823d80765d869e533788662f3c61f94a src/core/src/zava_forward/core/sqlstore.py
+COMMAND: cd src/core; git blob supplied on stdin to ruff format --check --stdin-filename src/zava_forward/core/sqlstore.py -
+EXIT_STATUS: 1
+
+original-topic 4a23f750f1ea943bb4aaf989256e7bd019a57d12 src/core/tests/test_governance.py
+COMMAND: cd src/core; git blob supplied on stdin to ruff format --check --stdin-filename tests/test_governance.py -
+EXIT_STATUS: 1
+
+integrated-source 93b7450c823d80765d869e533788662f3c61f94a src/core/tests/test_governance.py
+COMMAND: cd src/core; git blob supplied on stdin to ruff format --check --stdin-filename tests/test_governance.py -
+EXIT_STATUS: 1
+
+original-topic 4a23f750f1ea943bb4aaf989256e7bd019a57d12 src/api/src/zava_forward/api/server.py
+COMMAND: cd src/api; git blob supplied on stdin to ruff format --check --stdin-filename src/zava_forward/api/server.py -
+EXIT_STATUS: 1
+
+integrated-source 93b7450c823d80765d869e533788662f3c61f94a src/api/src/zava_forward/api/server.py
+COMMAND: cd src/api; git blob supplied on stdin to ruff format --check --stdin-filename src/zava_forward/api/server.py -
+EXIT_STATUS: 1
+
+All four existing configured exclusions would reformat at both original and integrated source heads. Configured project format checks separately passed. No formatting change or new exception.

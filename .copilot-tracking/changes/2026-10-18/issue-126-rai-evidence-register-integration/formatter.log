@@ -1,0 +1,9 @@
+COMMAND: cd src/core && ../../.venv/bin/ruff format --check .
+72 files already formatted
+
+CORE_EXIT_STATUS: 0
+
+COMMAND: cd src/api && ../../.venv/bin/ruff format --check .
+25 files already formatted
+
+API_EXIT_STATUS: 0

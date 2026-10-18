@@ -18,7 +18,15 @@ person supplies. Fixtures that use it are labelled synthetic demonstration data.
   authority and a release decision for that scope. Emergency and statutory
   hazard response continues outside the pause.
 """
+import json
+import logging
+import os
+import re
+from copy import copy, deepcopy
+from datetime import UTC, datetime
+
 from . import controls as k
+from .change_provenance import _actor
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 BREACH_ROLES = MANAGER_ROLES + ("Quality Inspector", "Building Safety Liaison")
@@ -43,6 +51,136 @@ PHASES = ("Phase 0 capture", "Shadow testing", "Live pilot")
 DECISIONS = ("Release", "Withhold")
 SCOPE_KINDS = ("home", "work package", "archetype", "workstream")
 EMERGENCY_NOTE = "Emergency and statutory hazard response continues outside any pause."
+RAI_BASELINE = "1cb398c7b90bec05a5700008a97d0cfac494144a"
+RAI_RESIDUALS = (
+    "GOVERN-AUDIT-01", "GOVERN-AUDIT-02", "MAP-01", "MAP-02", "MAP-04",
+    "MEASURE-01", "MN-3.2", "MN-4.1", "MN-4.3", "T-RAI-001", "T-RAI-002",
+)
+RAI_UNASSESSED = (
+    "GOVERN-AUDIT-04", "GOVERN-AUDIT-05", "MAP-05", "MEASURE-02", "MEASURE-03",
+    "MEASURE-04", "MN-2.3", "T-RAI-005", "EU-COND-01", "EU-COND-02", "EU-COND-04",
+)
+RAI_TIERS = ("implemented/source-tested", "deployed-observed", "proposed",
+             "insufficient", "independent-acceptance")
+RAI_ASSESSMENT_FIELDS = {"source_commit", "task_id", "task_version", "release_version",
+                         "nonapplicability_reason"}
+RAI_CLAIM_FIELDS = {"finding_id", "baseline_commit", "assessment", "evidence_tier", "result",
+                    "references", "limitations", "decision_maker_status", "decision_maker_ref",
+                    "event_ref", "expected_revision"}
+
+
+class GovernanceCommittedError(RuntimeError):
+    """The governance claim committed; reload before another action."""
+
+
+def _rai_text(value, field, limit):
+    if not isinstance(value, str) or not value.strip() or len(value) > limit:
+        raise ValueError(f"Enter {field} as text from 1 to {limit} characters.")
+    return value
+
+
+def rai_assessment(value):
+    """Validate a declared comparison context, not a deployment attestation."""
+    if not isinstance(value, dict) or value.keys() != RAI_ASSESSMENT_FIELDS:
+        raise ValueError("Supply the exact source, task/version/release or nonapplicability assessment fields.")
+    source = value["source_commit"]
+    if not isinstance(source, str) or re.fullmatch("[0-9a-f]{40}", source) is None:
+        raise ValueError("Supply the full lowercase 40-hex assessed source commit.")
+    task_fields = ("task_id", "task_version", "release_version")
+    if all(value[key] is None for key in task_fields):
+        _rai_text(value["nonapplicability_reason"], "the explicit task/release nonapplicability reason", 600)
+    else:
+        for key in task_fields:
+            _rai_text(value[key], key, 200)
+        if value["nonapplicability_reason"] is not None:
+            raise ValueError("Task/release bindings and nonapplicability are mutually exclusive.")
+    return deepcopy(value)
+
+
+def _rai_claim(body):
+    if not isinstance(body, dict) or body.keys() != RAI_CLAIM_FIELDS:
+        raise ValueError("Supply only the required RAI claim fields; actor, time, approval and closure are server-controlled or unavailable.")
+    if body["finding_id"] not in RAI_RESIDUALS + RAI_UNASSESSED:
+        raise ValueError("Choose one of the 22 baseline findings.")
+    if body["baseline_commit"] != RAI_BASELINE:
+        raise ValueError("The original RAI baseline is immutable.")
+    rai_assessment(body["assessment"])
+    if body["evidence_tier"] not in RAI_TIERS:
+        raise ValueError("Choose a supported evidence claim tier.")
+    for key, limit in (("result", 2000), ("limitations", 2000), ("event_ref", 200)):
+        _rai_text(body[key], key, limit)
+    refs = body["references"]
+    if not isinstance(refs, list) or not 1 <= len(refs) <= 20:
+        raise ValueError("Supply 1 to 20 exact source/test/observation references.")
+    for ref in refs:
+        _rai_text(ref, "each inert evidence reference", 500)
+    status = body["decision_maker_status"]
+    if status not in ("Unknown", "Unappointed", "Unverified reference"):
+        raise ValueError("Decision-maker authority must remain Unknown, Unappointed or an Unverified reference.")
+    if status == "Unverified reference":
+        _rai_text(body["decision_maker_ref"], "the unverified decision-maker reference", 500)
+    elif body["decision_maker_ref"] is not None:
+        raise ValueError("Unknown or Unappointed decision-makers cannot have an asserted assignment.")
+    if type(body["expected_revision"]) is not int or body["expected_revision"] < 0:
+        raise ValueError("Supply the current nonnegative integer register revision.")
+    return deepcopy(body)
+
+
+def mark_committed(store):
+    context = getattr(store.local, "rai_evidence_write", None)
+    if context is not None:
+        context["persisted"] = True
+
+
+def _rai_view(governance, assessment):
+    context = rai_assessment(assessment) if assessment is not None else None
+    history = governance.get("rai_claims", [])
+    if not isinstance(history, list):
+        raise ValueError("Malformed RAI claim history; reload and investigate the stored register.")
+    valid, invalid = [], 0
+    for row in history:
+        try:
+            if not isinstance(row, dict):
+                raise ValueError("Malformed claim")
+            _rai_claim({key: row.get(key) for key in RAI_CLAIM_FIELDS})
+            if (row.get("schema") != "rai-evidence-claim/v1"
+                    or row.get("verification") != "unverified claim"
+                    or row.get("evidence_class") != "constructed-fixture"
+                    or type(row.get("revision")) is not int
+                    or row["revision"] != len(valid) + 1
+                    or not isinstance(row.get("recorded_by"), dict)
+                    or not isinstance(row.get("recorded_at"), str)):
+                raise ValueError("Malformed provenance")
+        except ValueError:
+            invalid += 1
+        else:
+            valid.append(row)
+    findings = []
+    for fid in RAI_RESIDUALS + RAI_UNASSESSED:
+        claims = [r for r in valid if r["finding_id"] == fid]
+        current = [r for r in claims if context is not None and r["assessment"] == context
+                   and context["source_commit"] != RAI_BASELINE]
+        residual = fid in RAI_RESIDUALS
+        findings.append(dict(
+            finding_id=fid, baseline_commit=RAI_BASELINE,
+            baseline_status="PARTIAL" if residual else "NOT_ASSESSED",
+            baseline_verdict=("CONFIRMED" if fid in ("T-RAI-001", "T-RAI-002") else
+                              "DOWNGRADED" if residual else "UNCHANGED"),
+            claims=deepcopy(claims), current_claims=deepcopy(current),
+            historical_claim_count=len(claims) - len(current),
+            disposition=current[-1]["evidence_tier"] if current else "insufficient",
+            closure="Open", acceptance="Unknown", evidence_adequacy="Not independently established"))
+    count = sum(bool(row["current_claims"]) for row in findings) if context is not None else None
+    return dict(
+        baseline=dict(commit=RAI_BASELINE, prd_version="0.14.0", report_date="2026-10-14",
+                      report_ref="rai-report-ama-20261014", accepted_date="2026-10-15",
+                      acceptance_scope="baseline-assessment-and-remediation-planning only"),
+        current_assessment=deepcopy(context), assessment_authority="Caller-declared, not deployment attestation",
+        findings=findings, revision=len(history), history_record_count=len(history),
+        invalid_history_count=invalid, current_disposition_count=count,
+        dispositions_complete=count == 22 and invalid == 0, open_count=22,
+        acceptance="Unknown", live_use="BLOCKED pending separate qualified evidence and approvals",
+        note="All supplied evidence is an unverified constructed claim, not acceptance, delegation or closure.")
 
 
 def target_verdict(target_pct, mde_pct, observed_pct=None):
@@ -72,6 +210,105 @@ def _need_manager(user, what):
 
 
 class GovernanceMixin:
+    def rai_evidence_record(self, user, body):
+        """Append one constructed claim; never accept a finding or release a task."""
+        context = dict(persisted=False)
+        try:
+            return self._rai_evidence_append(user, body, context)
+        except GovernanceCommittedError:
+            raise
+        except BaseException as error:
+            if context["persisted"]:
+                raise GovernanceCommittedError(
+                    "The RAI claim committed, but confirmation failed. Reload and reconcile its event reference before another action."
+                ) from error
+            raise
+
+    def _rai_evidence_append(self, user, body, context):
+        from .store import ConflictError
+        supplied = _rai_claim(body)
+        with self.lock:
+            actor = _actor(self, user)
+            _need_manager(actor, "record constructed RAI evidence claims")
+            identity = {key: actor.get(key) for key in ("email", "code", "name", "role", "oid")}
+            sql = hasattr(self, "db")
+            if sql:
+                self._touched()
+            prior = list(self.local.pending) if sql else []
+            validation = getattr(self.local, "change_validation", None) if sql else None
+            previous = getattr(self.local, "rai_evidence_write", None) if sql else None
+            before = deepcopy(self.data.get("governance"))
+            audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
+            audit_head = None if sql else self.last_hash
+            saving = False
+            if sql:
+                self.local.change_validation = dict(user=deepcopy(user), actor=actor)
+                self.local.rai_evidence_write = context
+            try:
+                g = self.data.get("governance", {})
+                if _rai_view(g, None)["invalid_history_count"]:
+                    raise ValueError("Malformed RAI history must be investigated before another append.")
+                history = g.get("rai_claims", [])
+                for row in history:
+                    if row["event_ref"] == supplied["event_ref"]:
+                        content = {key: row[key] for key in RAI_CLAIM_FIELDS}
+                        content.pop("expected_revision")
+                        retry = dict(supplied)
+                        retry.pop("expected_revision")
+                        if content != retry or row["recorded_by"] != identity:
+                            raise ConflictError("RAI event reference already records a different claim or actor.")
+                        return deepcopy(row)
+                if supplied["expected_revision"] != len(history):
+                    raise ConflictError("RAI register changed. Reload before appending a claim.")
+                record = dict(supplied, schema="rai-evidence-claim/v1", revision=len(history) + 1,
+                              recorded_by=identity, recorded_at=datetime.now(UTC).isoformat(timespec="microseconds"),
+                              evidence_class="constructed-fixture", verification="unverified claim")
+                self.data.setdefault("governance", {}).setdefault("rai_claims", []).append(record)
+                detail = json.dumps(record, sort_keys=True, separators=(",", ":"))
+                saving = True
+                if sql:
+                    self.audit(actor["email"], "rai_evidence_record", "-", detail)
+                    self.save()
+                else:
+                    self.save()
+                    self.audit(actor["email"], "rai_evidence_record", "-", detail)
+                context["persisted"] = True
+                return deepcopy(record)
+            except BaseException as error:
+                if sql:
+                    # Quarantine before any recovery read can fail or lock exit can flush.
+                    self.local.pending[:] = [] if context["persisted"] else prior
+                    try:
+                        with self.dblock:
+                            self._discard(self.local.pending[:])
+                    except Exception:
+                        error.add_note("RAI SQL recovery failed; reload to establish the durable outcome.")
+                        logging.getLogger(__name__).exception("RAI claim SQL recovery failed")
+                elif saving and not context["persisted"]:
+                    if before is None:
+                        self.data.pop("governance", None)
+                    else:
+                        self.data["governance"] = before
+                    try:
+                        if os.path.exists(self.audit_path):
+                            with open(self.audit_path, "r+b") as audit:
+                                audit.truncate(audit_size)
+                        self.last_hash = audit_head
+                        from .store import Store
+                        Store.save(self)
+                    except Exception:
+                        error.add_note("JSON restoration failed; durable outcome unknown. Reload before retrying.")
+                        logging.getLogger(__name__).exception("RAI claim JSON restoration failed")
+                if context["persisted"]:
+                    raise GovernanceCommittedError(
+                        "The RAI claim committed, but confirmation failed. Reload and reconcile its event reference before another action."
+                    ) from error
+                raise
+            finally:
+                if sql:
+                    self.local.change_validation = validation
+                    self.local.rai_evidence_write = previous
+
     def _gov(self):
         g = self.data.setdefault("governance", {})
         g.setdefault("protocol_versions", [])
@@ -281,9 +518,14 @@ class GovernanceMixin:
         if self.is_paused(scope_kind, scope):
             raise PermissionError(f"This {scope_kind} is paused after a guardrail breach until restart is authorised. {EMERGENCY_NOTE}")
 
-    def governance_view(self, user):
-        _need_manager(user, "see the governance register")
-        g = self._gov()
-        return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=self.benefit_verdicts(), releases=g["releases"],
-                    release_gaps=self.release_gaps(), breaches=g["breaches"], paused=self.paused_scopes(),
-                    capture_open=not self.capture_gate(), capture_blockers=self.capture_gate(), note=EMERGENCY_NOTE)
+    def governance_view(self, user, assessment=None):
+        with self.lock:
+            actor = _actor(self, user)
+            _need_manager(actor, "see the governance register")
+            detached = copy(self)
+            detached.data = dict(self.data, governance=deepcopy(self.data.get("governance", {})))
+            g = detached._gov()
+            return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=detached.benefit_verdicts(), releases=g["releases"],
+                        release_gaps=detached.release_gaps(), breaches=g["breaches"], paused=detached.paused_scopes(),
+                        capture_open=not detached.capture_gate(), capture_blockers=detached.capture_gate(), note=EMERGENCY_NOTE,
+                        rai_evidence=_rai_view(g, assessment))

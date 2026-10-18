@@ -1,0 +1,42 @@
+Integration-only publication; original source correction count0.
+Before commit: gh api user returned id8036360/login jmservera; repo-local author+committer noreply identity.
+COMMAND: git commit -m docs(governance): preserve authorized integration evidence
+COMMAND: git push --force-with-lease=refs/heads/feat/rai-evidence-register-126:4a23f750f1ea943bb4aaf989256e7bd019a57d12 origin HEAD:refs/heads/feat/rai-evidence-register-126
+[feat/rai-evidence-register-126 b3806729] docs(governance): preserve authorized integration evidence
+ 31 files changed, 9617 insertions(+), 2 deletions(-)
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/api-quality.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/before-full-tree.json.gz
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/capture.py
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/consultation-tests.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/core-quality.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/excluded-format-diagnostic.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/final-integrity.json
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/focused-tests.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/formatter.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/full-changed-inventory.txt
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/full-changed-path-hashes.json
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/immutable-original-path-hashes.json
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/integration-intent.json
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/old-base-full-tree.json.gz
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/original-30-paths.txt
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-all-after.normalized.patch
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-all-before.normalized.patch
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-source-after.normalized.patch
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-source-before.normalized.patch
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/parity.json
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/protected-upstream-path-hashes.json
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/publication.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/rebase.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/rebased-full-tree.json.gz
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/receipt.md
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/target-full-tree.json.gz
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/verify-manifest.py
+To https://github.com/jmservera/ama.git
+ + 4a23f750...b3806729 HEAD -> feat/rai-evidence-register-126 (forced update)
+
+COMMAND: git ls-remote origin topic/main; gh pr view409 after first lease publication
+b38067293741c5667dd07f5e15e8b2ee39abd823	refs/heads/feat/rai-evidence-register-126
+9403dc6a8f52f1f04c5ad910faab11a57c29ee78	refs/heads/main
+{"baseRefOid":"9403dc6a8f52f1f04c5ad910faab11a57c29ee78","closingIssuesReferences":[],"headRefOid":"b38067293741c5667dd07f5e15e8b2ee39abd823","number":409,"state":"OPEN"}
+
+Manifest repeat stopped before commit/push on absolute-versus-relative evidence paths; new integration utility normalized root, production untouched. Full failure retained in final session publication log.

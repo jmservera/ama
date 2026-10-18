@@ -1,0 +1,293 @@
+{
+  "changed_path_count": 57,
+  "integration_artifact_count": 27,
+  "original_scope_count": 30,
+  "paths": {
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-api-quality.log": {
+      "bytes": 88,
+      "mode": "100644",
+      "sha256": "511c1470e91767412ec8b7fa263bd26936fbc396931eaf420ad90ae28e709a5d"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-changes.md": {
+      "bytes": 12682,
+      "mode": "100644",
+      "sha256": "a364ad02890377e062e0e103cb757e8e00a342743e14aa19e369f6c32bbcf0c5"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-core-quality.log": {
+      "bytes": 64,
+      "mode": "100644",
+      "sha256": "424d7ebf11a25c7cc5c319252992b45f288bb9be976ab9f01ccbe0642747df3a"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-fail-before.log": {
+      "bytes": 47951,
+      "mode": "100644",
+      "sha256": "5bfcd5499267e85c023520976b001a22edca47483296b22f3dedea05e74219ca"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-image-build.log": {
+      "bytes": 72,
+      "mode": "100644",
+      "sha256": "bc3407479ec7d42b5ad29a74c830e91e783cc4e519383ce05285a4fc875af877"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-image-tests.log": {
+      "bytes": 3768,
+      "mode": "100644",
+      "sha256": "08eb7efbdefc4a580d53abc3abcbb6fe5e6fd1dff521f5d7fd32e4f31d37ab78"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/api-quality.log": {
+      "bytes": 155,
+      "mode": "100644",
+      "sha256": "7dcab16eaa53b9c8b4f7892525d24b73e66bb2419b5d6aa1e22dbec309dfb8f0"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/before-full-tree.json.gz": {
+      "bytes": 197267,
+      "mode": "100644",
+      "sha256": "44e9f41068cbb06cd4807c82f161ebc956c0785607aab960f1fe50c5a0e408ea"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/capture.py": {
+      "bytes": 7410,
+      "mode": "100644",
+      "sha256": "180a652a2199450a5ca0ab017741f1481537d9a47508d440d2cc079db978cf1f"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/consultation-tests.log": {
+      "bytes": 274,
+      "mode": "100644",
+      "sha256": "b50504356b4c0b4942cb1fd5410f13ace77119d4f95573a894ba35c74c42241a"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/core-quality.log": {
+      "bytes": 157,
+      "mode": "100644",
+      "sha256": "607acf6c2a9421bb398b542400cb889cb2c69c41e0eb30d28a6309311983bfdd"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/excluded-format-diagnostic.log": {
+      "bytes": 2174,
+      "mode": "100644",
+      "sha256": "2647668c97c2e2639a197d76eb567aed634733230fa1437789a5f6f87d8239c8"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/final-integrity.json": {
+      "bytes": 3096,
+      "mode": "100644",
+      "sha256": "b97c05b4947f6ab30a20cd77b4b9bffd5695c3c11e9223c0fdaecbe18071a94a"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/focused-tests.log": {
+      "bytes": 3873,
+      "mode": "100644",
+      "sha256": "f793830aa9eea8c763c643679406efda22231f9d4b99598d73427fcf0672e592"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/formatter.log": {
+      "bytes": 219,
+      "mode": "100644",
+      "sha256": "ac107e7900ed8678452b45321d18af8ce2d6096c44849db1b24bcf73b6452c09"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/full-changed-inventory.txt": {
+      "bytes": 4693,
+      "mode": "100644",
+      "sha256": "81a93052e182f28116f808c8b15a8eb7aac03e926fc62c05500c5d392c5c4796"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/full-changed-path-hashes.json": {
+      "mode": "100644",
+      "reason": "Self-reference excluded; exact manifest bytes are bound by published Git blob",
+      "sha256": null
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/immutable-original-path-hashes.json": {
+      "bytes": 5324,
+      "mode": "100644",
+      "sha256": "340f17e116e32814f55e989695ae7a277ebcbf41e7224d35f9691a856f5f6b33"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/integration-intent.json": {
+      "bytes": 817,
+      "mode": "100644",
+      "sha256": "766fe039bfe1c1e85877e580d512fb0759944b22b304c308a5852a0b4482b881"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/old-base-full-tree.json.gz": {
+      "bytes": 195843,
+      "mode": "100644",
+      "sha256": "42cb31e3fd6b4a64cf0a3e3310f0b9a95b7d2c3913112db8207f220733e2ba18"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/original-30-paths.txt": {
+      "bytes": 1868,
+      "mode": "100644",
+      "sha256": "eca117b9d45cbda9290b1e0b898df696c044294598ec9e89fbc9de052bef6b90"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-all-after.normalized.patch": {
+      "bytes": 227000,
+      "mode": "100644",
+      "sha256": "bb16f170463c1b3fffc075262db4b33e6f2ac8bdf63cf423792694af4e9c6548"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-all-before.normalized.patch": {
+      "bytes": 227000,
+      "mode": "100644",
+      "sha256": "bb16f170463c1b3fffc075262db4b33e6f2ac8bdf63cf423792694af4e9c6548"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-source-after.normalized.patch": {
+      "bytes": 46056,
+      "mode": "100644",
+      "sha256": "2c94988bd6b03e082cd553038beb677855bf1a3b46c1bb4f91ed6ffecbe48026"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/owned-source-before.normalized.patch": {
+      "bytes": 46056,
+      "mode": "100644",
+      "sha256": "2c94988bd6b03e082cd553038beb677855bf1a3b46c1bb4f91ed6ffecbe48026"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/parity.json": {
+      "bytes": 6410,
+      "mode": "100644",
+      "sha256": "2a75da90167b11550aebd1c8b9c0762bea9c07ba61b8e56144084e410c2c5f70"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/protected-upstream-path-hashes.json": {
+      "bytes": 8238,
+      "mode": "100644",
+      "sha256": "3e6ee40bb343c86eea56ec843ea1e57d962734cf45ee1f24cd84b1b034f906e8"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/publication.log": {
+      "bytes": 4673,
+      "mode": "100644",
+      "sha256": "fc1b14a1311deaf009682d899632a872c6631b58b010c2f61a95a785df68375a"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/rebase.log": {
+      "bytes": 2680,
+      "mode": "100644",
+      "sha256": "7a427c7d562d187dc654c6b5ec5c8babc4524cb6bcf126dd49d83f21aae98af3"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/rebased-full-tree.json.gz": {
+      "bytes": 199510,
+      "mode": "100644",
+      "sha256": "e12d472bbc0bcc70305d273019a7a014880ded743ec7443bd19d5d8cf89d1a00"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/receipt.md": {
+      "bytes": 9836,
+      "mode": "100644",
+      "sha256": "e512ae7f778b12452353cd1cb3a3a896f61742e85b4ed8802760f81ec3f05d59"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/target-full-tree.json.gz": {
+      "bytes": 198080,
+      "mode": "100644",
+      "sha256": "db7b25709d557ac03cbd34a1ac84db7f55edb3a800825f7777fc247f83751ec5"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/verify-manifest.py": {
+      "bytes": 5064,
+      "mode": "100644",
+      "sha256": "5008275f338fc8fbedddc9e167ab519361471a72032a7f433a21de51204d1414"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-inventory.txt": {
+      "bytes": 1868,
+      "mode": "100644",
+      "sha256": "eca117b9d45cbda9290b1e0b898df696c044294598ec9e89fbc9de052bef6b90"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-local-tests.log": {
+      "bytes": 3691,
+      "mode": "100644",
+      "sha256": "91053f810e2492033b40689824f744e5b05e6237799c8be6bb67205f36b10314"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-preservation-tests.log": {
+      "bytes": 12208,
+      "mode": "100644",
+      "sha256": "3d16743a3f895f6d4d14898d4bb39c8cb7d33ac577426eb53e03c5cafedb251e"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-sql-check.py": {
+      "bytes": 2577,
+      "mode": "100644",
+      "sha256": "624ee117e4d692d6f710d2b884b056e300985debd0b86f3e9b2a78bfc331c28d"
+    },
+    ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-sql.log": {
+      "bytes": 4440,
+      "mode": "100644",
+      "sha256": "d319ef2338bc4093cb957f12ad036d3901d014b9586ea1c474a6ae60bac2b943"
+    },
+    ".copilot-tracking/details/2026-10-18/issue-126-rai-evidence-register-phase-details.md": {
+      "bytes": 7166,
+      "mode": "100644",
+      "sha256": "73b3ca1c5a6877317de0e3617cf1f4c3a9dfedbe3e8eaf9ba71b5b82c0dba271"
+    },
+    ".copilot-tracking/plans/2026-10-18/issue-126-rai-evidence-register-plan.md": {
+      "bytes": 8306,
+      "mode": "100644",
+      "sha256": "1b0dce1b4a4a0aa1536d86b392d958360acb6460129d186cfe43bf30666d4272"
+    },
+    ".copilot-tracking/research/2026-10-18/issue-126-rai-evidence-register-research.md": {
+      "bytes": 6945,
+      "mode": "100644",
+      "sha256": "57cdb2706ec0bb522ebf753939e94c744488306cba22e3c06f010628c3fb1812"
+    },
+    ".copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-plan-critique.md": {
+      "bytes": 14906,
+      "mode": "100644",
+      "sha256": "4e24e7e0cc8cf21081c4e5823cbbfbd8fbf0d1d0a8e904220ecd5b0e3235c8bb"
+    },
+    ".copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-review.md": {
+      "bytes": 32820,
+      "mode": "100644",
+      "sha256": "12788d8f7f81279012b54ba3902255f2eabe436d61d97fda3a0ae701bb6b6c24"
+    },
+    ".copilot-tracking/rpi-sessions/2026-10-18/issue-126-rai-evidence-register-state.json": {
+      "bytes": 5652,
+      "mode": "100644",
+      "sha256": "f685a07b500a925776204887752c058404b80f95db85f52e47cdec48fb806690"
+    },
+    "docs/adrs/0002-pilot-readiness-architecture.md": {
+      "bytes": 68854,
+      "mode": "100644",
+      "sha256": "67f639b9854f18897e6edde5d559f6829e9c43af570a602fa97faca8296f51db"
+    },
+    "docs/case_study_48_addendum.md": {
+      "bytes": 114838,
+      "mode": "100644",
+      "sha256": "1c1559d4014abbcb396670f5dfa574e40cd00115321f8587633df05857f41319"
+    },
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": {
+      "bytes": 238696,
+      "mode": "100644",
+      "sha256": "35907b5433655f6482d2267f63a24cb44c3d18080c7201423bc9b0419112da97"
+    },
+    "docs/reference/README.md": {
+      "bytes": 87157,
+      "mode": "100644",
+      "sha256": "c718f61949497e72778bcbed8c600315177aa88bae28f8ce1952b7fee4e30cc5"
+    },
+    "docs/reference/log.md": {
+      "bytes": 429889,
+      "mode": "100644",
+      "sha256": "a87dd89cba2bbeeab7edc1c8f0e54566cffa434cf3af7d7ffa59c4159cad3322"
+    },
+    "src/api/README.md": {
+      "bytes": 156389,
+      "mode": "100644",
+      "sha256": "d6b12935571c52de1c31108b4de503fd9f8e5c72fbc1dfac2656af83fd8501f2"
+    },
+    "src/api/pyproject.toml": {
+      "bytes": 6095,
+      "mode": "100644",
+      "sha256": "724dbf2fd349267f3148d8ab081458bebd788c5d54e5328915c3d250c799c8b7"
+    },
+    "src/api/src/zava_forward/api/server.py": {
+      "bytes": 65156,
+      "mode": "100644",
+      "sha256": "8b913b9420085a75e327fadd933e37692ff0c69dc8d956e598f9d2562a040c1a"
+    },
+    "src/api/tests/test_governance_evidence_api.py": {
+      "bytes": 9360,
+      "mode": "100644",
+      "sha256": "36dac2187ed5d1859618867e1c81032d05d0113052ce361e8e0b7674b27a2a29"
+    },
+    "src/core/README.md": {
+      "bytes": 186832,
+      "mode": "100644",
+      "sha256": "637d6847c38b198d5554bd578b0b9848c1c964995e0dfc6d06d9b2bf11508efd"
+    },
+    "src/core/src/zava_forward/core/governance.py": {
+      "bytes": 29860,
+      "mode": "100644",
+      "sha256": "04db871bfdd64bbff4e1582e0fc411c1627d59b19af147ea462196f7293bb648"
+    },
+    "src/core/src/zava_forward/core/sqlstore.py": {
+      "bytes": 42022,
+      "mode": "100644",
+      "sha256": "8840b130ea168b39b205c024ab7aebb82f27c18c144e6d8a49b8c178d18872a6"
+    },
+    "src/core/tests/test_governance.py": {
+      "bytes": 27283,
+      "mode": "100644",
+      "sha256": "ed2c4d6cfcceb58d825d9318239fd7a1bdf5350bfd99bdd43392b99a447c9c42"
+    }
+  },
+  "target": "9403dc6a8f52f1f04c5ad910faab11a57c29ee78"
+}

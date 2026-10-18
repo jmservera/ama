@@ -1,0 +1,18 @@
+{
+  "authorized_remote_lease": "4a23f750f1ea943bb4aaf989256e7bd019a57d12",
+  "exact_target": "9403dc6a8f52f1f04c5ad910faab11a57c29ee78",
+  "next_action": "Rebase owned two commits; additive conflicts only",
+  "old_base": "ab0613f3336109ff9b96560a16758ee842232715",
+  "old_head": "4a23f750f1ea943bb4aaf989256e7bd019a57d12",
+  "operation": "integration-only rebase-onto",
+  "original_execution_log": {
+    "bytes": 39413,
+    "complete_read": true,
+    "session_copy": "/home/azureuser/.copilot/session-state/10f40604-edc8-40bb-9368-73353faf82a1/files/issue126-original-complete-execution.log",
+    "sha256": "918e07c62d006a4c4034ca16a036f540710149ad5f5af453651a6a11aa8e0072",
+    "source": "/tmp/rpi-126-register.log"
+  },
+  "phase": "Follow-up",
+  "task_id": "126",
+  "task_slug": "issue-126-rai-evidence-register"
+}

@@ -6,6 +6,75 @@ ms.date: 2026-10-18
 ms.topic: reference
 ---
 
+## Constructed RAI evidence register API (#126)
+
+`GET /api/governance` remains current-registered-manager only and includes
+`rai_evidence`: exactly 22 open baseline findings, explicit insufficiency,
+retained claims and separate caller-declared current assessment. The governance
+handler now reaches its existing manager guard before the generic staff
+projection; unrelated staff and contractors still cannot read the register.
+No read initializes defaults, appends audit or accepts a finding.
+
+Optional `assessment` is one URL-encoded JSON object with exactly `source_commit`,
+`task_id`, `task_version`, `release_version`, `nonapplicability_reason`. Commit is
+full lowercase 40-hex. Either the three task/release fields are nonblank strings
+up to 200 characters and reason is null, or they are all null and reason is
+nonblank text up to 600 characters. It is a declared comparison, not server-build
+or deployment attestation. Missing context is Unknown; baseline replay is history.
+Unknown/repeated parameters and malformed explicit contexts return 400.
+
+`POST /api/governance/evidence-record` accepts only this constructed claim shape:
+
+```json
+{
+  "finding_id": "MAP-01",
+  "baseline_commit": "1cb398c7b90bec05a5700008a97d0cfac494144a",
+  "assessment": {
+    "source_commit": "ab0613f3336109ff9b96560a16758ee842232715",
+    "task_id": null,
+    "task_version": null,
+    "release_version": null,
+    "nonapplicability_reason": "Constructed whole-system source inspection, not a task release"
+  },
+  "evidence_tier": "insufficient",
+  "result": "Constructed example, not an executed qualified assessment",
+  "references": ["exact source/test/observation reference"],
+  "limitations": "No qualified human or live evidence",
+  "decision_maker_status": "Unappointed",
+  "decision_maker_ref": null,
+  "event_ref": "unique-constructed-event-reference",
+  "expected_revision": 0
+}
+```
+
+Replace the example assessed commit and references with the actual claimed scope;
+the server does not attest those assertions. Result/limitations are nonblank
+strings up to 2000 characters; references are 1..20 nonblank inert strings up to
+500 characters each; event reference is up to 200. Revision is a nonnegative
+integer, not a boolean. Decision-maker status is Unknown/Unappointed with null
+reference, or Unverified reference with nonblank reference up to 500 characters.
+No supplied owner reference establishes delegation or assignment.
+
+Evidence tier is implemented/source-tested, deployed-observed, proposed,
+insufficient or independent-acceptance. All are unverified constructed claims.
+Server records authenticated identity/UTC/revision and keeps prior records.
+Same event/content/actor retries return the exact original without another write;
+conflicting event reuse or a stale new-event revision returns 409.
+Client actor/time, approval/closure promotion and unknown fields return 400.
+No acceptance or closure endpoint exists. Current manager identity is checked
+again inside SQL's existing shared-document writer transaction.
+
+HTTP 409 with `outcome: committed` means persisted but acknowledgement failed:
+reload history and reconcile the event reference before another action. This also
+covers response encoding before headers, not a guarantee after network bytes
+have been sent. JSON's documented cross-file crash boundary remains.
+See the [core contract](../core/README.md#constructed-rai-evidence-claims-2026-10-18-126)
+for inventory, completeness and local validation limits. Ten actual loopback HTTP
+cases cover JSON/SQLite login, roles, read/write, stale binding/revision, replay,
+closed schema and committed responses; no browser or web change is involved.
+No finding closure, qualified assessment, real AI/Azure delivery or operational
+acceptance follows from these local engineering results.
+
 ## Appointment control API and manual workbench (#87)
 
 `POST /api/workorders/{id}/appointment-control` accepts `offer`, `authority`,
