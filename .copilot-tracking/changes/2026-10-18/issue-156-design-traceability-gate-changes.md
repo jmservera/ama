@@ -100,7 +100,8 @@ the session workspace, not a new project tool.
 * Blockers: none for bounded documentation Review; overall design remains Blocked.
 * Follow-ups: current designs, remaining feature inventory and actual named
   accessibility/content/human/user research evidence remain outside active plan.
-* Review readiness: Ready for exactly one original independent Review.
+* Historical pre-Review readiness: was Ready for exactly one original
+  independent Review; that Review subsequently completed, unchanged.
 
 ## Blockers
 
@@ -108,8 +109,9 @@ None for this documentation slice. Overall design acceptance remains blocked.
 
 ## Remaining Work
 
-No active implementation tasks remain. Original Review and conditional
-publication are parent-owned lifecycle steps, not implementation corrections.
+No active source implementation tasks remain. Original Review and integration
+publication are complete. Coordinator-authorized correction ONE reconciles
+metadata only; external independent final-head acceptance remains pending.
 
 ## Follow-Up Items
 
@@ -118,10 +120,12 @@ screen inventory and actual accessibility/content/user-research evidence.
 
 ## Return-to-Caller State
 
-Implementation Complete for full declared documentation plan. Ready for one
-original independent Review; no human acceptance or external gate asserted.
-If Not accepted, freeze local artifacts and stop for coordinator routing
-(at most two later corrections); do not fix/review again or open defective PR.
+Implementation Complete for full declared documentation plan. Original Review
+completed Complete / Conformant for the original candidate and remains frozen.
+Integration publication completed at 4a1542b8ee9506aea2bcb92042efdf7b35155ab5;
+PR400's head metadata identifies the latest publication after metadata-only
+correction ONE. External gate remains pending; no human acceptance or
+independent correction closure asserted. No new/amended Review.
 
 ## Coordinator-authorized integration receipt (2026-10-18)
 
@@ -137,8 +141,9 @@ delegation, new critique/Review, source-pin refresh or self-pass.
 * Fetched/authorized new integration base: 3bc46912684cb4d865572023a6d16da14b9b8463.
 * Replayed artifact commit: 63504c1e1756bfbdde558e254109a35c2f7a18eb.
 * Replayed publication-state commit: 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8.
-* Final head is the integration-metadata commit containing this receipt,
-  resolved on PR400 after push; do not confuse replayed head with final head.
+* Published integration head: 4a1542b8ee9506aea2bcb92042efdf7b35155ab5,
+  verified on PR400 after the completed lease-protected push. Replayed head
+  above is historical; PR400 head metadata identifies later correction commits.
 * Only docs/reference/log.md conflicted. Removed conflict markers and retained
   upstream #172 entry first, followed by original #156 entry, byte-exact.
   docs/reference/README.md auto-merged, retaining #172 routing plus original
@@ -170,12 +175,55 @@ H remains c0f7c08a, E remains 152-ia-v1 at 3104bb69. This is not a fresh design
 review. Runtime/UI/tests/browser/SQL/Azure/model/human checks are not performed
 or required for this documentation integration.
 
-### Publication and independent gate boundary
+### Historical completed integration push and current independent gate boundary
 
-Only permitted push:
+The integration push authorized and completed at that time was:
 `git push --force-with-lease=refs/heads/docs/design-traceability-gate-156:6af9dd81e0089f8998bb8d575329c6bc1d4fc110 origin HEAD:refs/heads/docs/design-traceability-gate-156`.
-Stop on unexpected branch, remote head or target base; never weaken the lease.
-PR400 must report exact final head/current base. Hosted checks are observed,
+That old-head lease is consumed, not current execution guidance. No further
+rebase or force-push is authorized. PR400 reports the latest head/current base.
+Hosted checks are observed,
 not inferred Passed from zero checks. Coordinator retains independent complete
 final-head gate. Overall design remains Blocked and RV-001/RV-002/RV-003 remain
-open; no all-feature or human acceptance, new follow-up work or correction.
+open; no all-feature or human acceptance or new follow-up work. Correction ONE
+below is metadata only, not a source correction or a replacement Review.
+
+## Correction ONE: publication handoff metadata (2026-10-18)
+
+Coordinator supplied independent full eleven-file/eight-artifact reviewer
+8c47ce3f's single Medium defect: state/plan still directed publication using a
+consumed lease after integration was published. Caller reports delivery and
+parity checks passed with no other finding. This receipt records implementation
+of that authorized metadata correction, not independent closure or a new Review.
+
+Source anchor verified before edits: PR400/local HEAD
+4a1542b8ee9506aea2bcb92042efdf7b35155ab5, base
+3bc46912684cb4d865572023a6d16da14b9b8463. Four metadata artifacts only:
+plan, details, changes and state. All current handoffs now say integration
+publication complete and external final-head gate pending. Old rebase/lease and
+pre-Review instructions are explicitly historical completed receipts. PR400
+metadata supplies the exact latest published head after normal push; no artifact
+predicts the hash of the commit containing itself or reintroduces pending
+integration publication.
+
+Validation for this correction: parse state JSON; rerun session-local
+check_issue156_docs.py with exact current base and check_issue156_integration.py;
+check metadata-only diff and assert every other tracked file is byte-identical
+to source anchor, including delivery docs and frozen research/session/critique/
+Review; git diff --check. Actual results:
+
+| Correction check | Result |
+| --- | --- |
+| Live PR400/local source guard | Exact head 4a1542b8ee9506aea2bcb92042efdf7b35155ab5 and base 3bc46912684cb4d865572023a6d16da14b9b8463 matched before correction |
+| State JSON parse and handoff assertions | Passed; publication-complete status and external-gate next action; consumed lease is not an executable next action |
+| `python3 <session-files>/check_issue156_integration.py` | Passed; all thirteen upstream paths preserved, eleven byte-identical and two exact additive overlaps; own synthesis and original assessments unchanged |
+| `python3 <session-files>/check_issue156_docs.py --base 3bc46912684cb4d865572023a6d16da14b9b8463` | Passed; fifteen rows, 59 local links/anchors, 60 public occurrences including 37 pinned artifacts, eight tables, zero errors |
+| Exact four-file metadata allowlist against correction source anchor | Passed; every other tracked file byte-identical, including all delivery docs and frozen receipts; no untracked additions |
+| `git diff --check` and integrated-base whitespace check | Passed |
+
+Session-files denotes the existing session workspace checker directory in the
+integration receipt above. Original critique remains SHA-256
+eaf67c15688175f5b0fe9ac9383bdcec5624b1de37bbc522988ec9de449d55d6; original
+Review remains c5fe3b125fa9c555d6062488dca6a673617e33c7ba86291a4c399a361e06941b.
+These are implementation checks, not independent finding closure.
+No runtime/browser/tests/dependencies, new Review, rebase, force-push, issue/AC/
+board/merge or product acceptance is authorized. Product design remains Blocked.

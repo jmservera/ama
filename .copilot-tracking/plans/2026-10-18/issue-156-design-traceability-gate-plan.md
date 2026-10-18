@@ -5,7 +5,7 @@
 
 * Task ID: 156
 * Task slug: issue-156-design-traceability-gate
-* Planning status: Ready; single independent critique Pass
+* Planning status: Implemented and published; original critique Pass; external final-head gate pending
 * Plan date: 2026-10-18
 * Current integration base: 3bc46912684cb4d865572023a6d16da14b9b8463
 * Historical documentation source baseline: 3104bb69ddc26c81e0e9d2f57000dac1d99a419a
@@ -19,6 +19,12 @@ Record eleven PRD profile rows and four shared core-flow rows with exact journey
 existing task-flow, versioned artifact, check and missing-evidence ownership.
 Add a compact decision register and an actual blocked design-review record.
 Update only the KB index/log alongside the complete dated RPI record.
+
+Current handoff: integration publication completed at source anchor
+4a1542b8ee9506aea2bcb92042efdf7b35155ab5 on base
+3bc46912684cb4d865572023a6d16da14b9b8463. Coordinator-authorized correction
+ONE reconciles metadata only; PR400 supplies the exact latest published head.
+External final-head acceptance remains pending, not integration publication.
 
 ### User Decisions and Requirements Highlights
 
@@ -189,9 +195,10 @@ Integration only, not a feature change, correction, new critique or Review.
 Original published head 6af9dd81e0089f8998bb8d575329c6bc1d4fc110 was rebased
 from 3104bb69ddc26c81e0e9d2f57000dac1d99a419a onto exact
 3bc46912684cb4d865572023a6d16da14b9b8463. Replayed head before this metadata
-commit: 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8. The metadata commit that
-contains this receipt is the final publication candidate; PR #400 identifies
-its exact published head.
+commit: 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8. Integration was published at
+4a1542b8ee9506aea2bcb92042efdf7b35155ab5; those replay/push instructions are
+historical completed actions. PR400 identifies the latest published head,
+including later metadata-only correction commits, not a new reviewed candidate.
 
 Only log.md conflicted: retain the entire upstream #172 prefix, then the
 unchanged original #156 append. Index merged automatically and equals upstream
@@ -227,8 +234,11 @@ design stays Blocked. No second critique authorized or executed.
 ## Handoff
 
 Implementation P01/P02 complete; original Review executed Complete / Conformant
-for the original candidate. Exact-base integration only is now complete locally,
-pending lease-protected publication and independent final-head gate.
-Single independent critique dispositioned. Preserve original
-critique and Review bytes; after original Review no implementation correction
-or rerun in this task. Coordinator later routes at most two corrections.
+for the original candidate. Exact-base integration publication completed at
+4a1542b8ee9506aea2bcb92042efdf7b35155ab5. Correction ONE, authorized from
+independent reviewer 8c47ce3f's single Medium metadata finding, reconciles the
+stale publication-pending handoff only. PR400's live head is the exact latest
+publication pointer; no final commit's own hash is predicted in this artifact.
+External independent acceptance remains pending. Preserve original critique
+and Review bytes; no new/amended Review or self-pass. Coordinator owns later
+gates and any remaining correction authorization, within the maximum of two.

@@ -32,7 +32,7 @@
     },
     {
       "decision": "Implementation P01/P02 complete; documentation checks pass; original critique hash unchanged",
-      "status": "ready-for-original-review",
+      "status": "historical-pre-review-readiness",
       "evidence": ".copilot-tracking/changes/2026-10-18/issue-156-design-traceability-gate-changes.md"
     },
     {
@@ -52,14 +52,19 @@
     },
     {
       "decision": "Coordinator authorized same-session integration only: exact rebase onto 3bc46912684cb4d865572023a6d16da14b9b8463, then push only with explicit lease expecting old published 6af9dd81e0089f8998bb8d575329c6bc1d4fc110",
-      "status": "integration-complete-locally-publication-pending",
-      "evidence": "Caller continuation 2026-10-18; rebase replay head before metadata receipt 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8; changes integration receipt. Final candidate is receipt commit itself, exact published head resolved through PR400. Original documentation S/H/E pins unchanged; only log conflict, both entries retained; all 13 upstream paths and own source parity checked; original critique/Review hashes unchanged."
+      "status": "integration-publication-complete-external-gate-pending",
+      "evidence": "Integration published and verified on PR400 at 4a1542b8ee9506aea2bcb92042efdf7b35155ab5, base 3bc46912684cb4d865572023a6d16da14b9b8463. Old-head lease authorization was consumed by that completed push and is historical, not a next action. Replayed head 23b2d8758cbcceedf251d6c87c79f2a01e44d9a8 is historical. Original S/H/E pins and critique/Review bytes unchanged; changes receipt records exact parity."
+    },
+    {
+      "decision": "Coordinator authorized correction ONE for the single Medium metadata finding reported by independent reviewer 8c47ce3f; reconcile publication-complete handoffs only",
+      "status": "metadata-reconciled-external-gate-pending",
+      "evidence": "Caller 2026-10-18: full 11-file/eight-artifact assessment found stale state/plan publication instructions, with delivery/parity checks passing and no other finding. Source anchor is published integration 4a1542b8ee9506aea2bcb92042efdf7b35155ab5 on base 3bc46912684cb4d865572023a6d16da14b9b8463. PR400 metadata identifies the exact latest correction head after normal push; no self-referential commit hash is asserted here. No new Review or independent acceptance claim."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish only coordinator-authorized integration-metadata commit with exact old-head lease to PR400 on base 3bc46912684cb4d865572023a6d16da14b9b8463; update PR current head/base receipt. Then coordinator owns independent complete integrated-head gate and hosted checks. Automatic session remains at Follow-up, task completed; no child work/correction/new or amended Review/self-pass/merge/issue-AC-board change. Original source 3104bb69ddc26c81e0e9d2f57000dac1d99a419a and Blocked design gate remain historical and unchanged."
+    "action": "Integration publication is complete on PR400, anchored at 4a1542b8ee9506aea2bcb92042efdf7b35155ab5 on base 3bc46912684cb4d865572023a6d16da14b9b8463. Correction ONE reconciles metadata only; PR400 head metadata is the authoritative latest publication pointer after normal push. Remaining action is coordinator-owned independent final-head acceptance and hosted checks, not re-publication with the consumed lease. Automatic session remains Follow-up, task completed; no child work, new/amended Review, self-pass, rebase, force-push, merge or issue/AC/board change. Original source pins and Blocked design gate remain unchanged."
   },
   "prioritized_follow_ups": [
     {
