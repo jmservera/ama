@@ -188,6 +188,18 @@ P05 implementation and fresh validation execution complete. No known source
 failure remains in the bounded checks; publication is permitted by the coordinator,
 but independent acceptance remains pending and original Review stays Not accepted.
 
+## Publication Receipt
+
+Final tested source commit: 0067f2a1cacf2bd7f821ea13988566b8b4af0b71.
+Normal push to the same branch succeeded; main PR:
+https://github.com/jmservera/ama/pull/398, body uses Refs #122 without closing
+keywords. PR includes all original phase artifacts and both separate correction
+receipts. This subsequent receipt/state update is documentation only, not another
+source cycle or Review. Privacy-safe author/committer resolved freshly through
+gh api user, local email 8036360+jmservera@users.noreply.github.com; required
+Copilot trailer included. No amend, force push, rebase, issue/board edits or merge.
+Coordinator independent acceptance and required PR checks remain separate gates.
+
 ## Residuals
 
 Genuine OQ-017 authority, witnessed authorized drill, immutable externally held

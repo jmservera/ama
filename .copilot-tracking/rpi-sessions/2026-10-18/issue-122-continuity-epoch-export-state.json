@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Authorized branch normally pushed and main PR #398 opened with Refs #122, all phase artifacts and original adverse verdict",
+      "status": "published, not independently accepted or merged",
+      "evidence": "https://github.com/jmservera/ama/pull/398; tested final source0067f2a1cacf2bd7f821ea13988566b8b4af0b71; base99056cae7bc679d2ace3e42c75f28577cfce8887; correction-two publication receipt"
+    },
+    {
       "decision": "Correction TWO final source cycle complete; no known source failures remain in bounded validation, publication permitted but independent acceptance pending",
       "status": "implementation and validation complete, not self-accepted",
       "evidence": "Correction-two receipt: host245/49skips, existing163, actual owned MSSQL72, hardened installed image44, static checks and original hashes all verified"
@@ -69,7 +74,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish authorized bounded Refs #122 PR with frozen adverse Review and final correction evidence; coordinator owns independent acceptance and unmet operational gates"
+    "action": "Coordinator assesses PR #398 and required checks without another worker source cycle or amended Review; independent acceptance and human/Azure/deployment gates remain pending"
   },
   "prioritized_follow_ups": [
     {
