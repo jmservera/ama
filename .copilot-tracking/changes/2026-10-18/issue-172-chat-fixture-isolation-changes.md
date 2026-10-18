@@ -13,7 +13,8 @@
 
 Completed implementation: P01/P02 and parent P03 original independent Review.
 Completed markers: P01, P01-T01, P01-T02, P02, P02-T01, P03, P03-T01.
-Publication gate accepted; remote commit/push/PR receipt still pending.
+Publication gate accepted; normal branch push and main PR #399 created. Final
+receipt commit contains only tracking reconciliation, no source correction.
 Approved source boundary: public helper/test and directly related docs only.
 First execution boundary: tests before helper. No engineering blocker.
 
@@ -77,6 +78,23 @@ compared exact-base generation across four seeds (all eight other payloads and
 probes. New isolation total is 127. Original critique and Review remain unedited.
 No corrections or repeat Review. Publication allowed, not whole-issue closure.
 
+### Publication receipt
+
+PR: https://github.com/jmservera/ama/pull/399, OPEN, base main. GitHub reports base
+`3104bb69ddc26c81e0e9d2f57000dac1d99a419a`, initial published evidence head
+`9ec14d3512b412881551bfeb1aa6b0e5b07ed9f1`, and no closing issue references.
+Source remains exactly the reviewed `39f6ec16c0fd3bd18f64f31d6e8116045a059a4d`
+for both changed Python files and all four changed documentation files. Further
+receipt commit changes only this record, phase details and state. Branch was
+normal-pushed, with no merge, rebase, force push, issue/board/AC edit or paid
+workflow dispatch. Both source and evidence commits use the fresh authenticated
+account's repository-local privacy-safe author/committer address and Copilot
+trailer. All seven dated phase/state artifacts are in the same PR.
+
+At PR creation the check rollup was empty, not a hosted-CI pass. Coordinator owns
+the independent post-publication gate and subsequent merge decision. No second
+Review, correction or child work item was selected or started.
+
 ## Implementation-Time Plan and Detail Updates
 
 None. No requirement or scope change, amendment or significant divergence.
@@ -124,7 +142,8 @@ None for bounded engineering. Human policy/scope decisions remain separate.
 
 ## Remaining Work
 
-Parent normal publication receipt, then coordinator independent gate.
+Coordinator independent publication gate for PR #399. Hosted CI/merge outcomes
+are not asserted; SN-08 actual scope/volume and human/runtime evidence stay open.
 
 ## Follow-Up Items
 
@@ -135,5 +154,5 @@ outside this fixture-only task, owned by owner/coordinator.
 
 Implement P01/P02 and original Review complete. Original critique Pass and
 independent Review Conformant preserved; no amendment/divergence. Parent proceeds
-to authorized publication, then coordinator independent gate. Session remains
+to completed authorized publication, then coordinator independent gate. Session remains
 running in Follow-up; no child work selected or started.
