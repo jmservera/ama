@@ -1,0 +1,7 @@
+COMMAND: PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests .venv/bin/python -m unittest test_consultation_controls test_procurement_api -q
+----------------------------------------------------------------------
+Ran 64 tests in 38.363s
+
+OK (skipped=13)
+
+EXIT_STATUS: 0

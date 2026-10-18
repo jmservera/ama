@@ -115,3 +115,25 @@ Resolve gh authenticated id/login and repo-local noreply email. Conventional com
 with required Copilot trailer. Normal push, main PR containing Refs #126 only.
 Verify closingIssuesReferences empty, head/base and full changed inventory.
 No issue updates, merge, rebase, board or acceptance checks.
+
+## Same-Task Authorized Integration
+
+The P03 publication constraints above describe the original loop. Subsequent
+explicit coordinator authority permits only owned-topic rebase onto exact
+`9403dc6a8f52f1f04c5ad910faab11a57c29ee78` and the specified old-head lease.
+Integration is bookkeeping/validation, not another P01/P02/P03 or assessment.
+Correction count stays 0. Original adverse critique and sole original Review
+are byte-identical; no new assessment is substituted for either.
+
+Full original30 patch parity, six-source-path parity, all nonowned upstream
+bytes/modes and exact server/log additive unions were checked. No persistence
+conflict or intent change. Fresh local tests cover governance JSON/SQLite,
+ten actual HTTP cases, assistant release and consultation/procurement controls.
+Configured formatter passes with existing exclusions; explicit excluded-file
+diagnostics retain drift at both original and integrated source heads.
+No generic formatting or exception changes. No SQL/image broad rerun; original
+16 actual SQL cases and hardened image 107/16 skips remain historical.
+
+Commands, raw outputs, hashes, full inventories and publication boundary:
+.copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/receipt.md.
+No human/live approval, role grant, closing action, issue/board or merge operation.

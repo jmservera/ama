@@ -1,0 +1,33 @@
+Rebasing (1/2)Auto-merging docs/reference/README.md
+Auto-merging docs/reference/log.md
+CONFLICT (content): Merge conflict in docs/reference/log.md
+Auto-merging src/api/README.md
+Auto-merging src/api/src/zava_forward/api/server.py
+Auto-merging src/core/README.md
+error: could not apply d0bb02df... feat(governance): record constructed RAI evidence claims
+hint: Resolve all conflicts manually, mark them as resolved with
+hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+hint: You can instead skip this commit: run "git rebase --skip".
+hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+Recorded preimage for 'docs/reference/log.md'
+Could not apply d0bb02df... feat(governance): record constructed RAI evidence claims
+Recorded resolution for 'docs/reference/log.md'.
+[detached HEAD c3c8ce2e] feat(governance): record constructed RAI evidence claims
+ 28 files changed, 2725 insertions(+), 20 deletions(-)
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-api-quality.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-changes.md
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-core-quality.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-fail-before.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-image-build.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-image-tests.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-local-tests.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-preservation-tests.log
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-sql-check.py
+ create mode 100644 .copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-sql.log
+ create mode 100644 .copilot-tracking/details/2026-10-18/issue-126-rai-evidence-register-phase-details.md
+ create mode 100644 .copilot-tracking/plans/2026-10-18/issue-126-rai-evidence-register-plan.md
+ create mode 100644 .copilot-tracking/research/2026-10-18/issue-126-rai-evidence-register-research.md
+ create mode 100644 .copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-plan-critique.md
+ create mode 100644 .copilot-tracking/rpi-sessions/2026-10-18/issue-126-rai-evidence-register-state.json
+ create mode 100644 src/api/tests/test_governance_evidence_api.py
+Rebasing (2/2)[KSuccessfully rebased and updated refs/heads/feat/rai-evidence-register-126.

@@ -1,0 +1,5 @@
+COMMAND: cd src/core && ../../.venv/bin/ruff check . && ../../.venv/bin/mypy
+All checks passed!
+Success: no issues found in 125 source files
+
+EXIT_STATUS: 0

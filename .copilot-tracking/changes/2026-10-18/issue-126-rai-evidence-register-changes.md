@@ -130,3 +130,52 @@ test oracle corrected, not a source authority change.
 
 Caller-declared assessment context, not server build attestation, is an
 explicit planned limitation; no additional config or authority fabricated.
+
+## Authorized Same-Task Integration-Only Continuation
+
+The original publication/no-rebase statements above remain historical. Coordinator
+subsequently authorized exact owned-topic rebase from original base ab0613f3 and
+head `4a23f750f1ea943bb4aaf989256e7bd019a57d12` onto exact
+`9403dc6a8f52f1f04c5ad910faab11a57c29ee78`, PR #389 consultation merge.
+Expected clean local/remote heads were verified before mutation. Rebase replayed
+the two owned commits; only manual conflict was the append-only KB log. Its exact
+upstream prefix and original issue-126 addition were retained in that order.
+
+Rebased original source/handoff head:
+`93b7450c823d80765d869e533788662f3c61f94a`. All original 30-path normalized
+patches match, SHA256
+`bb16f170463c1b3fffc075262db4b33e6f2ac8bdf63cf423792694af4e9c6548`.
+Six-source/config/test patch SHA256
+`2c94988bd6b03e082cd553038beb677855bf1a3b46c1bb4f91ed6ffecbe48026`.
+Every nonowned target file/mode (2599 paths), consultation route, procurement/
+tests, UX links, additive README/index content and original immutable evidence
+were preserved. Only current plan/details/changes/state receive descriptive
+bookkeeping; research, adverse critique, original Review and prior logs do not.
+Original inventory remains 30 paths; separate integration additions are inventoried.
+
+Fresh integration checks, not another Review:
+
+* Governance/actual local HTTP/assistant release: 107 run, 91 passes, 16 explicit
+  MSSQL opt-in skips. Expected injected failure traces are retained in raw output.
+* Consultation controls and procurement/API: 64 run, 51 passes, 13 explicit skips.
+* Configured core/API Ruff and mypy pass, 125/57 source files.
+* Configured formatter checks pass, 72 core/25 API files. Existing exclusions
+  cover governance/sqlstore/test_governance/server; explicit stdin diagnostics
+  show those four would reformat both before and after integration. No bulk
+  formatting, new exception or source correction was performed.
+
+The complete actual original CLI log (846 lines, 39413 bytes) was read and copied
+byte-identically to the resumed session's files directory; SHA256
+`918e07c62d006a4c4034ca16a036f540710149ad5f5af453651a6a11aa8e0072`.
+This supports the actual ordered phase history, together with original detailed
+raw receipts; artifact presence alone is not execution evidence.
+
+Separate integration receipt, commands, raw logs and full path/hash manifests:
+issue-126-rai-evidence-register-integration/receipt.md.
+Original SQL16/16 and hardened image107/skip16 are historical, not freshly repeated.
+No persistence/packaging conflict or production intent change justified a broad
+rerun in this integration-only scope. Original critique/Review hashes unchanged;
+source correction count 0, additional critiques 0, additional original Reviews 0.
+Publish with the exact authorized lease only, subsequent receipts normal; preserve
+Refs #126 and empty closing issue references. All human/live acceptance remains
+unmet. Stop for independent coordinator full exact-head source/artifact/log inspection.

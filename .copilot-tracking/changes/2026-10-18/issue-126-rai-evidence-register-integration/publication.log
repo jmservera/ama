@@ -1,0 +1,4 @@
+Integration-only publication; original source correction count0.
+Before commit: gh api user returned id8036360/login jmservera; repo-local author+committer noreply identity.
+COMMAND: git commit -m docs(governance): preserve authorized integration evidence
+COMMAND: git push --force-with-lease=refs/heads/feat/rai-evidence-register-126:4a23f750f1ea943bb4aaf989256e7bd019a57d12 origin HEAD:refs/heads/feat/rai-evidence-register-126

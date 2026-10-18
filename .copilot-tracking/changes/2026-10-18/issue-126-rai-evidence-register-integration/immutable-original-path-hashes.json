@@ -1,0 +1,122 @@
+{
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-api-quality.log": {
+    "bytes": 88,
+    "mode": "100644",
+    "oid": "54886f377e0dc50d7947933b382c57679156bb92",
+    "sha256": "511c1470e91767412ec8b7fa263bd26936fbc396931eaf420ad90ae28e709a5d"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-changes.md": {
+    "bytes": 8586,
+    "mode": "100644",
+    "oid": "0b471311d405b978cf01282e612ce28a6cd84dff",
+    "sha256": "66e2b409615157e85ccee579e214b5159ec902bcc08738dd4fb808516bed7195"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-core-quality.log": {
+    "bytes": 64,
+    "mode": "100644",
+    "oid": "8639f93be94ad1ed78b9613b5612d0bb0d159ea7",
+    "sha256": "424d7ebf11a25c7cc5c319252992b45f288bb9be976ab9f01ccbe0642747df3a"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-fail-before.log": {
+    "bytes": 47951,
+    "mode": "100644",
+    "oid": "78601ad93746201fba05e49a0a478a0f2d4d9870",
+    "sha256": "5bfcd5499267e85c023520976b001a22edca47483296b22f3dedea05e74219ca"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-image-build.log": {
+    "bytes": 72,
+    "mode": "100644",
+    "oid": "777b7e70acaad60c00b8d13e7c8065d315d02550",
+    "sha256": "bc3407479ec7d42b5ad29a74c830e91e783cc4e519383ce05285a4fc875af877"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-image-tests.log": {
+    "bytes": 3768,
+    "mode": "100644",
+    "oid": "8fc33e73decf61ebe5a6dbd0c69ce3ea8f73c496",
+    "sha256": "08eb7efbdefc4a580d53abc3abcbb6fe5e6fd1dff521f5d7fd32e4f31d37ab78"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-inventory.txt": {
+    "bytes": 1868,
+    "mode": "100644",
+    "oid": "8ad0aa3d9315c29a25b36298e34414ad171c6c61",
+    "sha256": "eca117b9d45cbda9290b1e0b898df696c044294598ec9e89fbc9de052bef6b90"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-local-tests.log": {
+    "bytes": 3691,
+    "mode": "100644",
+    "oid": "3a6aef70befd06a0416b2f09d842c1f17fd6b84e",
+    "sha256": "91053f810e2492033b40689824f744e5b05e6237799c8be6bb67205f36b10314"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-preservation-tests.log": {
+    "bytes": 12208,
+    "mode": "100644",
+    "oid": "c3945f93d6266fd8705e89bfa1f6d999211ed1d7",
+    "sha256": "3d16743a3f895f6d4d14898d4bb39c8cb7d33ac577426eb53e03c5cafedb251e"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-sql-check.py": {
+    "bytes": 2577,
+    "mode": "100644",
+    "oid": "89c22e2fdf78d967f910a979f36cc7f43679bd09",
+    "sha256": "624ee117e4d692d6f710d2b884b056e300985debd0b86f3e9b2a78bfc331c28d"
+  },
+  ".copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-sql.log": {
+    "bytes": 4440,
+    "mode": "100644",
+    "oid": "64650ebf709780136d1dc48d80bb87c766fddeac",
+    "sha256": "d319ef2338bc4093cb957f12ad036d3901d014b9586ea1c474a6ae60bac2b943"
+  },
+  ".copilot-tracking/details/2026-10-18/issue-126-rai-evidence-register-phase-details.md": {
+    "bytes": 5820,
+    "mode": "100644",
+    "oid": "1124e02855434c772bf97f429da4198b6a2cb5c7",
+    "sha256": "61f339153407d55e87851e9ad294e5b4c6c1300068d61320f8c529f159756bc1"
+  },
+  ".copilot-tracking/plans/2026-10-18/issue-126-rai-evidence-register-plan.md": {
+    "bytes": 6928,
+    "mode": "100644",
+    "oid": "6aa7be5a52c49f005e14276529f0dc7675cb9498",
+    "sha256": "73aa98a8692a3703caa74b693a905fb40c10c5237a6f728e72b21b6294abe817"
+  },
+  ".copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md": {
+    "bytes": 75110,
+    "mode": "100644",
+    "oid": "c578d69a68805a2362026a77d4eb6b18b076ed19",
+    "sha256": "15134ff64d335b57954967c7b84a13c5f6d15f7119c453814534f1403c3cd84a"
+  },
+  ".copilot-tracking/research/2026-10-18/issue-126-rai-evidence-register-research.md": {
+    "bytes": 6945,
+    "mode": "100644",
+    "oid": "d33ac3ce7a7d4368b41ed58e405690818b0aa4b0",
+    "sha256": "57cdb2706ec0bb522ebf753939e94c744488306cba22e3c06f010628c3fb1812"
+  },
+  ".copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-plan-critique.md": {
+    "bytes": 14906,
+    "mode": "100644",
+    "oid": "0179f92a326ba0032da70e1b70bee8936519ca9e",
+    "sha256": "4e24e7e0cc8cf21081c4e5823cbbfbd8fbf0d1d0a8e904220ecd5b0e3235c8bb"
+  },
+  ".copilot-tracking/reviews/2026-10-18/issue-126-rai-evidence-register-review.md": {
+    "bytes": 32820,
+    "mode": "100644",
+    "oid": "94cf33d25496180e9daa91297344960fc3b313c6",
+    "sha256": "12788d8f7f81279012b54ba3902255f2eabe436d61d97fda3a0ae701bb6b6c24"
+  },
+  ".copilot-tracking/rpi-sessions/2026-10-18/issue-126-rai-evidence-register-state.json": {
+    "bytes": 3691,
+    "mode": "100644",
+    "oid": "693539d9118a2be482a78ce5179447e05886a5b9",
+    "sha256": "bbc0c0179d3b7ed7b9f0db72557b6b5a464a2fa0ca203dd21c174f70dd06c046"
+  },
+  "docs/case_study_48_original.md": {
+    "bytes": 3513,
+    "mode": "100644",
+    "oid": "0aec2d8070117a647574b1fadc8cfbdd2af68598",
+    "sha256": "bf8f4462c41b58c8c92c40dd3ebeeba49eacae59b379daa67ee465ee51fcaadd"
+  },
+  "docs/reference/memory.md": {
+    "bytes": 2611,
+    "mode": "100644",
+    "oid": "e1268db9a452b5db1ca0796f32ccae00b0b418dd",
+    "sha256": "6c7d56639cf17a42842efc15a81e412d07adfba5dabe430eb21de9fda8988f43"
+  }
+}

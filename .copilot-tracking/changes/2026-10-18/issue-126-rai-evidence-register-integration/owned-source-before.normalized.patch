@@ -1,0 +1,857 @@
+diff --git a/src/api/pyproject.toml b/src/api/pyproject.toml
+--- a/src/api/pyproject.toml
++++ b/src/api/pyproject.toml
+@@
++          "test_governance_evidence_api", "tests.test_governance_evidence_api",
+diff --git a/src/api/src/zava_forward/api/server.py b/src/api/src/zava_forward/api/server.py
+--- a/src/api/src/zava_forward/api/server.py
++++ b/src/api/src/zava_forward/api/server.py
+@@
+-                      "benefits-approve": "benefits_approve", "release": "release_record", "breach": "breach_record", "restart": "breach_restart"}
++                      "benefits-approve": "benefits_approve", "release": "release_record", "breach": "breach_record", "restart": "breach_restart",
++                      "evidence-record": "rai_evidence_record"}
+@@
++            if url.path == "/api/governance":
++                try:
++                    result = s.governance_view(u)
++                    values = parse_qs(url.query, keep_blank_values=True)
++                    if values.keys() - {"assessment"} or any(len(v) != 1 for v in values.values()):
++                        raise ValueError("Supply only one optional declared assessment parameter.")
++                    if "assessment" in values:
++                        assessment = json.loads(values["assessment"][0])
++                        if assessment is None:
++                            raise ValueError("An explicit assessment must be an object, not null.")
++                        result = s.governance_view(u, assessment)
++                    return self._json(200, result)
++                except PermissionError as e:
++                    return self._json(403, {"error": str(e)})
++                except ValueError as e:
++                    return self._json(400, {"error": str(e)})
+@@
+-            if url.path == "/api/governance":
+-                try:
+-                    return self._json(200, s.governance_view(u))
+-                except PermissionError as e:
+-                    return self._json(403, {"error": str(e)})
+@@
++                    if parts[2] == "evidence-record":
++                        from zava_forward.core.governance import GovernanceCommittedError
++                        try:
++                            result = s.rai_evidence_record(u, body)
++                        except GovernanceCommittedError as error:
++                            return self._json(409, {"error": str(error), "outcome": "committed"})
++                        try:
++                            encoded = json.dumps(result)
++                        except Exception:
++                            logging.getLogger(__name__).exception("RAI claim persisted; response encoding failed")
++                            return self._json(409, {"error": "The claim was recorded. Reload and reconcile its event reference before another action.",
++                                                    "outcome": "committed"})
++                        return self._send(200, encoded)
+diff --git a/src/api/tests/test_governance_evidence_api.py b/src/api/tests/test_governance_evidence_api.py
+new file mode 100644
+--- /dev/null
++++ b/src/api/tests/test_governance_evidence_api.py
+@@
++"""Actual local HTTP exercise of constructed governance claims, never live acceptance."""
++
++import copy
++import importlib
++import json
++import threading
++import unittest
++from http.server import ThreadingHTTPServer
++from typing import Any
++from unittest.mock import patch
++from urllib.error import HTTPError
++from urllib.parse import urlencode
++from urllib.request import Request, urlopen
++
++from zava_forward.core.governance import GovernanceCommittedError
++
++from zava_forward.api.server import App, make_handler
++
++fixtures = importlib.import_module("test_governance")
++
++
++class GovernanceEvidenceApi(unittest.TestCase):
++    def setUp(self) -> None:
++        self.fixture: Any = fixtures.SqlEvidenceRegister()
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        self.store: Any = self.fixture.store
++        self.app: Any = App(self.store, "constructed-126-only")
++        self.http = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
++        self.thread = threading.Thread(target=self.http.serve_forever, daemon=True)
++        self.thread.start()
++        self.addCleanup(self.shutdown)
++        self.base = f"http://127.0.0.1:{self.http.server_address[1]}"
++        self.cookies: dict[str, str] = {}
++
++    def shutdown(self) -> None:
++        self.http.shutdown()
++        self.http.server_close()
++        self.thread.join(timeout=5)
++
++    def call(self, path: str, actor: str = "pm-1", body: object = None) -> tuple[int, Any]:
++        if actor and actor not in self.cookies:
++            req = Request(
++                self.base + "/api/login",
++                json.dumps(
++                    {"email": f"{actor}@example.test", "password": "constructed-126-only"}
++                ).encode(),
++            )
++            with urlopen(req, timeout=10) as response:
++                self.cookies[actor] = response.headers["Set-Cookie"].split(";")[0]
++        req = Request(
++            self.base + path,
++            data=json.dumps(body).encode() if body is not None else None,
++            headers={"Cookie": self.cookies.get(actor, ""), "Content-Type": "application/json"},
++        )
++        try:
++            with urlopen(req, timeout=10) as response:
++                return response.status, json.loads(response.read())
++        except HTTPError as error:
++            return error.code, json.loads(error.read())
++
++    def test_http_inventory_append_exact_context_and_replay(self) -> None:
++        self.assertEqual(self.call("/api/governance", "")[0], 401)
++        status, view = self.call("/api/governance")
++        self.assertEqual(status, 200)
++        self.assertEqual(len(view["rai_evidence"]["findings"]), 22)
++        self.assertIsNone(view["rai_evidence"]["current_assessment"])
++        status, record = self.call("/api/governance/evidence-record", body=fixtures.claim())
++        self.assertEqual(status, 200, record)
++        self.assertEqual(record["recorded_by"]["email"], "pm-1@example.test")
++        query = urlencode({"assessment": json.dumps(fixtures.ASSESSMENT)})
++        status, view = self.call("/api/governance?" + query)
++        self.assertEqual(status, 200)
++        self.assertEqual(view["rai_evidence"]["current_disposition_count"], 1)
++        self.assertEqual(view["rai_evidence"]["findings"][2]["claims"], [record])
++        self.assertEqual(
++            self.call("/api/governance/evidence-record", body=fixtures.claim())[1], record
++        )
++        changed = dict(fixtures.ASSESSMENT, source_commit="f" * 40)
++        query = urlencode({"assessment": json.dumps(changed)})
++        self.assertEqual(
++            self.call("/api/governance?" + query)[1]["rai_evidence"]["current_disposition_count"],
++            0,
++        )
++        self.assertEqual(
++            self.call(
++                "/api/governance/evidence-record",
++                body=fixtures.claim(event_ref="different", expected_revision=0),
++            )[0],
++            409,
++        )
++        for path in ("/api/governance/accept", "/api/governance/close"):
++            self.assertEqual(self.call(path, body={})[0], 404)
++
++    def test_http_role_denial_and_current_demotion(self) -> None:
++        for actor in ("rlo-1", "con-1"):
++            self.assertEqual(self.call("/api/governance", actor)[0], 403)
++            self.assertEqual(
++                self.call("/api/governance/evidence-record", actor, fixtures.claim())[0], 403
++            )
++        self.assertEqual(self.call("/api/governance")[0], 200)
++        self.store.db.execute(
++            "UPDATE staff SET body=? WHERE email=?",
++            (
++                json.dumps(dict(self.fixture.pm, role="Resident Liaison Officer")),
++                self.fixture.pm["email"],
++            ),
++        )
++        self.assertEqual(self.call("/api/governance")[0], 403)
++        self.assertEqual(
++            self.call("/api/governance/evidence-record", body=fixtures.claim())[0], 403
++        )
++
++    def test_http_closed_schema_and_no_write_get(self) -> None:
++        before = copy.deepcopy(self.store.data)
++        audit = list(self.store.audit_entries())
++        for query in (
++            "unknown=x",
++            "assessment=null",
++            "assessment=%7B",
++            "assessment=1",
++            "assessment=%7B%7D&assessment=%7B%7D",
++        ):
++            self.assertEqual(self.call("/api/governance?" + query)[0], 400)
++        extras: list[dict[str, Any]] = [
++            {"actor": {}},
++            {"recorded_at": "yesterday"},
++            {"status": "Closed"},
++            {"approval": True},
++            {"expected_revision": True},
++            {"references": [{}]},
++        ]
++        for extra in extras:
++            self.assertEqual(
++                self.call("/api/governance/evidence-record", body=fixtures.claim(**extra))[0],
++                400,
++            )
++        self.assertEqual(before, self.store.data)
++        # Ordinary access audit may exist; no claim success audit may exist.
++        self.assertEqual(
++            [e for e in self.store.audit_entries() if e["action"] == "rai_evidence_record"],
++            [e for e in audit if e["action"] == "rai_evidence_record"],
++        )
++
++    def test_http_committed_reload_response(self) -> None:
++        original = self.store.save
++
++        def fail_ack() -> None:
++            original()
++            raise RuntimeError("constructed acknowledgement failure")
++
++        with patch.object(self.store, "save", side_effect=fail_ack):
++            status, result = self.call("/api/governance/evidence-record", body=fixtures.claim())
++        self.assertEqual((status, result["outcome"]), (409, "committed"))
++        self.assertEqual(self.call("/api/governance")[1]["rai_evidence"]["history_record_count"], 1)
++        self.assertEqual(
++            self.call("/api/governance/evidence-record", body=fixtures.claim())[0], 200
++        )
++        with patch.object(
++            self.store, "rai_evidence_record", side_effect=GovernanceCommittedError("Reload")
++        ):
++            self.assertEqual(
++                self.call("/api/governance/evidence-record", body=fixtures.claim())[0], 409
++            )
++
++    def test_http_response_encoding_failure_is_committed(self) -> None:
++        original = self.store.rai_evidence_record
++
++        def unencodable(user: Any, body: Any) -> Any:
++            result = original(user, body)
++            result["constructed_transport_failure"] = object()
++            return result
++
++        with patch.object(self.store, "rai_evidence_record", side_effect=unencodable):
++            status, result = self.call("/api/governance/evidence-record", body=fixtures.claim())
++        self.assertEqual((status, result["outcome"]), (409, "committed"))
++        self.assertEqual(self.call("/api/governance")[1]["rai_evidence"]["history_record_count"], 1)
++
++
++class JsonGovernanceEvidenceApi(GovernanceEvidenceApi):
++    def setUp(self) -> None:
++        self.fixture = fixtures.EvidenceRegister()
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        self.store = self.fixture.store
++        self.app = App(self.store, "constructed-126-only")
++        self.http = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
++        self.thread = threading.Thread(target=self.http.serve_forever, daemon=True)
++        self.thread.start()
++        self.addCleanup(self.shutdown)
++        self.base = f"http://127.0.0.1:{self.http.server_address[1]}"
++        self.cookies = {}
++
++    def test_http_role_denial_and_current_demotion(self) -> None:
++        for actor in ("rlo-1", "con-1"):
++            self.assertEqual(self.call("/api/governance", actor)[0], 403)
++            self.assertEqual(
++                self.call("/api/governance/evidence-record", actor, fixtures.claim())[0], 403
++            )
++        self.assertEqual(self.call("/api/governance")[0], 200)
++        del self.store.staff[self.fixture.pm["email"]]
++        self.assertEqual(self.call("/api/governance")[0], 401)
++        self.assertEqual(
++            self.call("/api/governance/evidence-record", body=fixtures.claim())[0], 401
++        )
++
++    def test_http_committed_reload_response(self) -> None:
++        # JSON has no SQL commit witness; exercise the explicit core outcome instead.
++        with patch.object(
++            self.store, "rai_evidence_record", side_effect=GovernanceCommittedError("Reload")
++        ):
++            self.assertEqual(
++                self.call("/api/governance/evidence-record", body=fixtures.claim())[0], 409
++            )
+diff --git a/src/core/src/zava_forward/core/governance.py b/src/core/src/zava_forward/core/governance.py
+--- a/src/core/src/zava_forward/core/governance.py
++++ b/src/core/src/zava_forward/core/governance.py
+@@
++import json
++import logging
++import os
++import re
++from copy import copy, deepcopy
++from datetime import UTC, datetime
++
+@@
++from .change_provenance import _actor
+@@
++RAI_BASELINE = "1cb398c7b90bec05a5700008a97d0cfac494144a"
++RAI_RESIDUALS = (
++    "GOVERN-AUDIT-01", "GOVERN-AUDIT-02", "MAP-01", "MAP-02", "MAP-04",
++    "MEASURE-01", "MN-3.2", "MN-4.1", "MN-4.3", "T-RAI-001", "T-RAI-002",
++)
++RAI_UNASSESSED = (
++    "GOVERN-AUDIT-04", "GOVERN-AUDIT-05", "MAP-05", "MEASURE-02", "MEASURE-03",
++    "MEASURE-04", "MN-2.3", "T-RAI-005", "EU-COND-01", "EU-COND-02", "EU-COND-04",
++)
++RAI_TIERS = ("implemented/source-tested", "deployed-observed", "proposed",
++             "insufficient", "independent-acceptance")
++RAI_ASSESSMENT_FIELDS = {"source_commit", "task_id", "task_version", "release_version",
++                         "nonapplicability_reason"}
++RAI_CLAIM_FIELDS = {"finding_id", "baseline_commit", "assessment", "evidence_tier", "result",
++                    "references", "limitations", "decision_maker_status", "decision_maker_ref",
++                    "event_ref", "expected_revision"}
++
++
++class GovernanceCommittedError(RuntimeError):
++    """The governance claim committed; reload before another action."""
++
++
++def _rai_text(value, field, limit):
++    if not isinstance(value, str) or not value.strip() or len(value) > limit:
++        raise ValueError(f"Enter {field} as text from 1 to {limit} characters.")
++    return value
++
++
++def rai_assessment(value):
++    """Validate a declared comparison context, not a deployment attestation."""
++    if not isinstance(value, dict) or value.keys() != RAI_ASSESSMENT_FIELDS:
++        raise ValueError("Supply the exact source, task/version/release or nonapplicability assessment fields.")
++    source = value["source_commit"]
++    if not isinstance(source, str) or re.fullmatch("[0-9a-f]{40}", source) is None:
++        raise ValueError("Supply the full lowercase 40-hex assessed source commit.")
++    task_fields = ("task_id", "task_version", "release_version")
++    if all(value[key] is None for key in task_fields):
++        _rai_text(value["nonapplicability_reason"], "the explicit task/release nonapplicability reason", 600)
++    else:
++        for key in task_fields:
++            _rai_text(value[key], key, 200)
++        if value["nonapplicability_reason"] is not None:
++            raise ValueError("Task/release bindings and nonapplicability are mutually exclusive.")
++    return deepcopy(value)
++
++
++def _rai_claim(body):
++    if not isinstance(body, dict) or body.keys() != RAI_CLAIM_FIELDS:
++        raise ValueError("Supply only the required RAI claim fields; actor, time, approval and closure are server-controlled or unavailable.")
++    if body["finding_id"] not in RAI_RESIDUALS + RAI_UNASSESSED:
++        raise ValueError("Choose one of the 22 baseline findings.")
++    if body["baseline_commit"] != RAI_BASELINE:
++        raise ValueError("The original RAI baseline is immutable.")
++    rai_assessment(body["assessment"])
++    if body["evidence_tier"] not in RAI_TIERS:
++        raise ValueError("Choose a supported evidence claim tier.")
++    for key, limit in (("result", 2000), ("limitations", 2000), ("event_ref", 200)):
++        _rai_text(body[key], key, limit)
++    refs = body["references"]
++    if not isinstance(refs, list) or not 1 <= len(refs) <= 20:
++        raise ValueError("Supply 1 to 20 exact source/test/observation references.")
++    for ref in refs:
++        _rai_text(ref, "each inert evidence reference", 500)
++    status = body["decision_maker_status"]
++    if status not in ("Unknown", "Unappointed", "Unverified reference"):
++        raise ValueError("Decision-maker authority must remain Unknown, Unappointed or an Unverified reference.")
++    if status == "Unverified reference":
++        _rai_text(body["decision_maker_ref"], "the unverified decision-maker reference", 500)
++    elif body["decision_maker_ref"] is not None:
++        raise ValueError("Unknown or Unappointed decision-makers cannot have an asserted assignment.")
++    if type(body["expected_revision"]) is not int or body["expected_revision"] < 0:
++        raise ValueError("Supply the current nonnegative integer register revision.")
++    return deepcopy(body)
++
++
++def mark_committed(store):
++    context = getattr(store.local, "rai_evidence_write", None)
++    if context is not None:
++        context["persisted"] = True
++
++
++def _rai_view(governance, assessment):
++    context = rai_assessment(assessment) if assessment is not None else None
++    history = governance.get("rai_claims", [])
++    if not isinstance(history, list):
++        raise ValueError("Malformed RAI claim history; reload and investigate the stored register.")
++    valid, invalid = [], 0
++    for row in history:
++        try:
++            if not isinstance(row, dict):
++                raise ValueError("Malformed claim")
++            _rai_claim({key: row.get(key) for key in RAI_CLAIM_FIELDS})
++            if (row.get("schema") != "rai-evidence-claim/v1"
++                    or row.get("verification") != "unverified claim"
++                    or row.get("evidence_class") != "constructed-fixture"
++                    or type(row.get("revision")) is not int
++                    or row["revision"] != len(valid) + 1
++                    or not isinstance(row.get("recorded_by"), dict)
++                    or not isinstance(row.get("recorded_at"), str)):
++                raise ValueError("Malformed provenance")
++        except ValueError:
++            invalid += 1
++        else:
++            valid.append(row)
++    findings = []
++    for fid in RAI_RESIDUALS + RAI_UNASSESSED:
++        claims = [r for r in valid if r["finding_id"] == fid]
++        current = [r for r in claims if context is not None and r["assessment"] == context
++                   and context["source_commit"] != RAI_BASELINE]
++        residual = fid in RAI_RESIDUALS
++        findings.append(dict(
++            finding_id=fid, baseline_commit=RAI_BASELINE,
++            baseline_status="PARTIAL" if residual else "NOT_ASSESSED",
++            baseline_verdict=("CONFIRMED" if fid in ("T-RAI-001", "T-RAI-002") else
++                              "DOWNGRADED" if residual else "UNCHANGED"),
++            claims=deepcopy(claims), current_claims=deepcopy(current),
++            historical_claim_count=len(claims) - len(current),
++            disposition=current[-1]["evidence_tier"] if current else "insufficient",
++            closure="Open", acceptance="Unknown", evidence_adequacy="Not independently established"))
++    count = sum(bool(row["current_claims"]) for row in findings) if context is not None else None
++    return dict(
++        baseline=dict(commit=RAI_BASELINE, prd_version="0.14.0", report_date="2026-10-14",
++                      report_ref="rai-report-ama-20261014", accepted_date="2026-10-15",
++                      acceptance_scope="baseline-assessment-and-remediation-planning only"),
++        current_assessment=deepcopy(context), assessment_authority="Caller-declared, not deployment attestation",
++        findings=findings, revision=len(history), history_record_count=len(history),
++        invalid_history_count=invalid, current_disposition_count=count,
++        dispositions_complete=count == 22 and invalid == 0, open_count=22,
++        acceptance="Unknown", live_use="BLOCKED pending separate qualified evidence and approvals",
++        note="All supplied evidence is an unverified constructed claim, not acceptance, delegation or closure.")
+@@
++    def rai_evidence_record(self, user, body):
++        """Append one constructed claim; never accept a finding or release a task."""
++        context = dict(persisted=False)
++        try:
++            return self._rai_evidence_append(user, body, context)
++        except GovernanceCommittedError:
++            raise
++        except BaseException as error:
++            if context["persisted"]:
++                raise GovernanceCommittedError(
++                    "The RAI claim committed, but confirmation failed. Reload and reconcile its event reference before another action."
++                ) from error
++            raise
++
++    def _rai_evidence_append(self, user, body, context):
++        from .store import ConflictError
++        supplied = _rai_claim(body)
++        with self.lock:
++            actor = _actor(self, user)
++            _need_manager(actor, "record constructed RAI evidence claims")
++            identity = {key: actor.get(key) for key in ("email", "code", "name", "role", "oid")}
++            sql = hasattr(self, "db")
++            if sql:
++                self._touched()
++            prior = list(self.local.pending) if sql else []
++            validation = getattr(self.local, "change_validation", None) if sql else None
++            previous = getattr(self.local, "rai_evidence_write", None) if sql else None
++            before = deepcopy(self.data.get("governance"))
++            audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
++            audit_head = None if sql else self.last_hash
++            saving = False
++            if sql:
++                self.local.change_validation = dict(user=deepcopy(user), actor=actor)
++                self.local.rai_evidence_write = context
++            try:
++                g = self.data.get("governance", {})
++                if _rai_view(g, None)["invalid_history_count"]:
++                    raise ValueError("Malformed RAI history must be investigated before another append.")
++                history = g.get("rai_claims", [])
++                for row in history:
++                    if row["event_ref"] == supplied["event_ref"]:
++                        content = {key: row[key] for key in RAI_CLAIM_FIELDS}
++                        content.pop("expected_revision")
++                        retry = dict(supplied)
++                        retry.pop("expected_revision")
++                        if content != retry or row["recorded_by"] != identity:
++                            raise ConflictError("RAI event reference already records a different claim or actor.")
++                        return deepcopy(row)
++                if supplied["expected_revision"] != len(history):
++                    raise ConflictError("RAI register changed. Reload before appending a claim.")
++                record = dict(supplied, schema="rai-evidence-claim/v1", revision=len(history) + 1,
++                              recorded_by=identity, recorded_at=datetime.now(UTC).isoformat(timespec="microseconds"),
++                              evidence_class="constructed-fixture", verification="unverified claim")
++                self.data.setdefault("governance", {}).setdefault("rai_claims", []).append(record)
++                detail = json.dumps(record, sort_keys=True, separators=(",", ":"))
++                saving = True
++                if sql:
++                    self.audit(actor["email"], "rai_evidence_record", "-", detail)
++                    self.save()
++                else:
++                    self.save()
++                    self.audit(actor["email"], "rai_evidence_record", "-", detail)
++                context["persisted"] = True
++                return deepcopy(record)
++            except BaseException as error:
++                if sql:
++                    # Quarantine before any recovery read can fail or lock exit can flush.
++                    self.local.pending[:] = [] if context["persisted"] else prior
++                    try:
++                        with self.dblock:
++                            self._discard(self.local.pending[:])
++                    except Exception:
++                        error.add_note("RAI SQL recovery failed; reload to establish the durable outcome.")
++                        logging.getLogger(__name__).exception("RAI claim SQL recovery failed")
++                elif saving and not context["persisted"]:
++                    if before is None:
++                        self.data.pop("governance", None)
++                    else:
++                        self.data["governance"] = before
++                    try:
++                        if os.path.exists(self.audit_path):
++                            with open(self.audit_path, "r+b") as audit:
++                                audit.truncate(audit_size)
++                        self.last_hash = audit_head
++                        from .store import Store
++                        Store.save(self)
++                    except Exception:
++                        error.add_note("JSON restoration failed; durable outcome unknown. Reload before retrying.")
++                        logging.getLogger(__name__).exception("RAI claim JSON restoration failed")
++                if context["persisted"]:
++                    raise GovernanceCommittedError(
++                        "The RAI claim committed, but confirmation failed. Reload and reconcile its event reference before another action."
++                    ) from error
++                raise
++            finally:
++                if sql:
++                    self.local.change_validation = validation
++                    self.local.rai_evidence_write = previous
++
+@@
+-    def governance_view(self, user):
+-        _need_manager(user, "see the governance register")
+-        g = self._gov()
+-        return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=self.benefit_verdicts(), releases=g["releases"],
+-                    release_gaps=self.release_gaps(), breaches=g["breaches"], paused=self.paused_scopes(),
+-                    capture_open=not self.capture_gate(), capture_blockers=self.capture_gate(), note=EMERGENCY_NOTE)
++    def governance_view(self, user, assessment=None):
++        with self.lock:
++            actor = _actor(self, user)
++            _need_manager(actor, "see the governance register")
++            detached = copy(self)
++            detached.data = dict(self.data, governance=deepcopy(self.data.get("governance", {})))
++            g = detached._gov()
++            return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=detached.benefit_verdicts(), releases=g["releases"],
++                        release_gaps=detached.release_gaps(), breaches=g["breaches"], paused=detached.paused_scopes(),
++                        capture_open=not detached.capture_gate(), capture_blockers=detached.capture_gate(), note=EMERGENCY_NOTE,
++                        rai_evidence=_rai_view(g, assessment))
+diff --git a/src/core/src/zava_forward/core/sqlstore.py b/src/core/src/zava_forward/core/sqlstore.py
+--- a/src/core/src/zava_forward/core/sqlstore.py
++++ b/src/core/src/zava_forward/core/sqlstore.py
+@@
++                from .governance import mark_committed as governance_committed
++                governance_committed(self)
+@@
++                if (getattr(self.local, "rai_evidence_write", None) or {}).get("persisted"):
++                    raise
+@@
+-                if not context or not context.get("persisted"):
++                rai = getattr(self.local, "rai_evidence_write", None)
++                if not (context and context.get("persisted") or rai and rai.get("persisted")):
+diff --git a/src/core/tests/test_governance.py b/src/core/tests/test_governance.py
+--- a/src/core/tests/test_governance.py
++++ b/src/core/tests/test_governance.py
+@@
++import uuid
+@@
++from unittest.mock import patch
+@@
++FINDINGS = (
++    "GOVERN-AUDIT-01", "GOVERN-AUDIT-02", "MAP-01", "MAP-02", "MAP-04",
++    "MEASURE-01", "MN-3.2", "MN-4.1", "MN-4.3", "T-RAI-001", "T-RAI-002",
++    "GOVERN-AUDIT-04", "GOVERN-AUDIT-05", "MAP-05", "MEASURE-02", "MEASURE-03",
++    "MEASURE-04", "MN-2.3", "T-RAI-005", "EU-COND-01", "EU-COND-02", "EU-COND-04",
++)
++BASELINE = "1cb398c7b90bec05a5700008a97d0cfac494144a"
++ASSESSMENT = dict(source_commit="ab0613f3336109ff9b96560a16758ee842232715",
++                  task_id=None, task_version=None, release_version=None,
++                  nonapplicability_reason="Constructed whole-system source inspection, not a task release")
++
++
++def claim(**changes):
++    body = dict(finding_id="MAP-01", baseline_commit=BASELINE, assessment=copy.deepcopy(ASSESSMENT),
++                evidence_tier="implemented/source-tested", result="Constructed source test only",
++                references=["src/core/tests/test_governance.py::test_inventory"],
++                limitations="No qualified human or live evidence", decision_maker_status="Unappointed",
++                decision_maker_ref=None, event_ref="SYN-126-1", expected_revision=0)
++    return dict(body, **changes)
++
++
++class EvidenceRegister(unittest.TestCase):
++    backend = "json"
++
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.tmp.cleanup)
++        self.path = Path(self.tmp.name) / "constructed.json"
++        data = copy.deepcopy(tf.dataset.DATA)
++        data["staff"] = copy.deepcopy(tf.STAFF)
++        self.path.write_text(json.dumps(data))
++        self.pm = data["staff"][1]
++        if self.backend == "mssql":
++            from zava_forward.core.mssqlstore import _Conn, connection_string
++            if os.environ.get("ZF_SQL_SERVER") not in ("127.0.0.1", "localhost"):
++                raise RuntimeError("Task-owned loopback SQL Server only.")
++            env = patch.dict(os.environ, ZF_SQL_DATABASE="master")
++            env.start()
++            self.addCleanup(env.stop)
++            self.admin = _Conn(connection_string())
++            self.addCleanup(self.admin.close)
++            self.database = "zf_rai126_" + uuid.uuid4().hex
++            self.admin.execute(f"CREATE DATABASE [{self.database}]")
++            self.addCleanup(self.drop_database)
++            os.environ["ZF_SQL_DATABASE"] = self.database
++        self.store = self.reopen()
++
++    def drop_database(self):
++        self.admin.execute(f"ALTER DATABASE [{self.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE")
++        self.admin.execute(f"DROP DATABASE [{self.database}]")
++
++    def reopen(self):
++        if self.backend == "mssql":
++            from zava_forward.core.mssqlstore import MssqlStore
++            s = MssqlStore(str(self.path), state_dir=self.tmp.name)
++        elif self.backend == "sqlite":
++            s = SqlStore(str(self.path), str(self.path.with_suffix(".sqlite")))
++        else:
++            return Store(str(self.path))
++        self.addCleanup(s.db.close)
++        return s
++
++    def view(self, assessment=ASSESSMENT):
++        return self.store.governance_view(self.pm, assessment)["rai_evidence"]
++
++    def test_inventory(self):
++        before, audit = copy.deepcopy(self.store.data), list(self.store.audit_entries())
++        disk = self.path.read_bytes()
++        v = self.view()
++        self.assertEqual([r["finding_id"] for r in v["findings"]], list(FINDINGS))
++        self.assertEqual(len(set(FINDINGS)), 22)
++        self.assertEqual(v["current_disposition_count"], 0)
++        self.assertEqual(v["baseline"]["commit"], BASELINE)
++        for row in v["findings"]:
++            self.assertEqual((row["closure"], row["acceptance"], row["disposition"]),
++                             ("Open", "Unknown", "insufficient"))
++        v["findings"][0]["claims"].append("mutated")
++        self.assertEqual(self.view()["findings"][0]["claims"], [])
++        self.assertEqual(before, self.store.data)
++        self.assertEqual(audit, list(self.store.audit_entries()))
++        self.assertEqual(disk, self.path.read_bytes())
++
++    def test_append_reopen_reconcile_and_provenance(self):
++        record = self.store.rai_evidence_record(self.pm, claim())
++        self.assertEqual(record["recorded_by"]["email"], self.pm["email"])
++        self.assertTrue(record["recorded_at"].endswith("+00:00"))
++        self.assertEqual(record["revision"], 1)
++        self.assertEqual(record["verification"], "unverified claim")
++        self.assertEqual(record["evidence_class"], "constructed-fixture")
++        audits = list(self.store.audit_entries())
++        self.assertEqual(self.store.rai_evidence_record(self.pm, claim()), record)
++        self.assertEqual(audits, list(self.store.audit_entries()))
++        with self.assertRaises(Exception):
++            self.store.rai_evidence_record(self.pm, claim(result="conflicting event"))
++        self.store = self.reopen()
++        self.assertEqual(self.view()["findings"][2]["claims"], [record])
++        self.store.rai_evidence_record(self.pm, claim(event_ref="SYN-2", expected_revision=1))
++        self.assertEqual(len(self.view()["findings"][2]["claims"]), 2)
++        self.assertEqual(self.view()["current_disposition_count"], 1)
++
++    def test_context_staleness_and_baseline_replay(self):
++        self.store.rai_evidence_record(self.pm, claim())
++        self.assertEqual(self.view()["current_disposition_count"], 1)
++        self.assertIsNone(self.view(None)["current_disposition_count"])
++        changed = dict(ASSESSMENT, source_commit="f" * 40)
++        self.assertEqual(self.view(changed)["current_disposition_count"], 0)
++        task = dict(source_commit=ASSESSMENT["source_commit"], task_id="task", task_version="1",
++                    release_version="r1", nonapplicability_reason=None)
++        self.store.rai_evidence_record(self.pm, claim(assessment=task, expected_revision=1, event_ref="SYN-TASK"))
++        for key in ("source_commit", "task_id", "task_version", "release_version"):
++            altered = dict(task, **{key: "e" * 40 if key == "source_commit" else "changed"})
++            self.assertEqual(self.view(altered)["current_disposition_count"], 0)
++        historical = dict(ASSESSMENT, source_commit=BASELINE)
++        self.store.rai_evidence_record(self.pm, claim(assessment=historical, expected_revision=2, event_ref="SYN-BASE"))
++        self.assertEqual(self.view(historical)["current_disposition_count"], 0)
++
++    def test_complete_is_not_accepted_or_closed(self):
++        for i, fid in enumerate(FINDINGS):
++            self.store.rai_evidence_record(self.pm, claim(finding_id=fid, expected_revision=i, event_ref=f"SYN-{i}",
++                                                        evidence_tier="insufficient"))
++        v = self.view()
++        self.assertEqual(v["current_disposition_count"], 22)
++        self.assertTrue(v["dispositions_complete"])
++        self.assertEqual(v["open_count"], 22)
++        self.assertTrue(all(r["acceptance"] == "Unknown" for r in v["findings"]))
++
++    def test_invalid_promotions_and_primitives_leave_no_success(self):
++        bad = [
++            {"actor": self.pm}, {"recorded_at": "yesterday"}, {"approval": True}, {"closure": "Closed"},
++            {"evidence_tier": "accepted"}, {"finding_id": "UNKNOWN"}, {"baseline_commit": "a" * 40},
++            {"expected_revision": True}, {"expected_revision": -1}, {"result": {}}, {"result": "x" * 2001},
++            {"references": []}, {"references": ["x"] * 21}, {"references": [{}]}, {"references": ["x" * 501]},
++            {"limitations": ""}, {"decision_maker_ref": "self appointed"},
++            {"decision_maker_status": "Unverified reference"},
++            {"assessment": dict(ASSESSMENT, source_commit="abc")},
++            {"assessment": dict(ASSESSMENT, task_id="mixed")},
++            {"assessment": dict(ASSESSMENT, extra="bad")},
++        ]
++        for changes in bad:
++            with self.subTest(changes=changes):
++                with self.assertRaises(ValueError):
++                    self.store.rai_evidence_record(self.pm, claim(**changes))
++        self.assertEqual(self.view()["history_record_count"], 0)
++        self.assertFalse([a for a in self.store.audit_entries() if a["action"] == "rai_evidence_record"])
++
++    def test_inert_limits_and_independent_acceptance_is_only_claim(self):
++        body = claim(result="x" * 2000, limitations="x" * 2000, references=["https://127.0.0.1/no-fetch"] + ["x" * 500] * 19,
++                     event_ref="x" * 200, decision_maker_status="Unverified reference",
++                     decision_maker_ref="x" * 500, evidence_tier="independent-acceptance")
++        with patch("urllib.request.urlopen", side_effect=AssertionError("must not fetch")):
++            self.store.rai_evidence_record(self.pm, body)
++        row = self.view()["findings"][2]
++        self.assertEqual((row["closure"], row["acceptance"]), ("Open", "Unknown"))
++
++    def test_all_tiers_and_explicit_owner_unknown_are_claims(self):
++        for i, tier in enumerate(g.RAI_TIERS):
++            self.store.rai_evidence_record(self.pm, claim(evidence_tier=tier, expected_revision=i,
++                                                        event_ref=f"TIER-{i}", decision_maker_status="Unknown"))
++        row = self.view()["findings"][2]
++        self.assertEqual([r["evidence_tier"] for r in row["claims"]], list(g.RAI_TIERS))
++        self.assertEqual((row["closure"], row["acceptance"]), ("Open", "Unknown"))
++
++    def test_schema_boundaries_and_legacy_insufficiency(self):
++        for changes in (
++            {"limitations": "x" * 2001}, {"event_ref": "x" * 201},
++            {"decision_maker_status": "Unverified reference", "decision_maker_ref": "x" * 501},
++            {"assessment": dict(ASSESSMENT, nonapplicability_reason="x" * 601)},
++            {"assessment": dict(ASSESSMENT, source_commit="A" * 40)},
++            {"assessment": dict(ASSESSMENT, task_id="task", task_version="v", release_version="r")},
++            {"references": "not a list"}, {"expected_revision": 1.0},
++        ):
++            with self.subTest(changes=changes):
++                with self.assertRaises(ValueError):
++                    self.store.rai_evidence_record(self.pm, claim(**changes))
++        binding = dict(source_commit="f" * 40, task_id="t" * 200, task_version="v" * 200,
++                       release_version="r" * 200, nonapplicability_reason=None)
++        for key in ("task_id", "task_version", "release_version"):
++            with self.assertRaises(ValueError):
++                self.store.rai_evidence_record(self.pm, claim(assessment=dict(binding, **{key: "x" * 201})))
++        self.store.rai_evidence_record(self.pm, claim(assessment=binding))
++        self.assertEqual(self.view(binding)["current_disposition_count"], 1)
++        self.store.rai_evidence_record(self.pm, claim(assessment=dict(ASSESSMENT, nonapplicability_reason="x" * 600),
++                                                    expected_revision=1, event_ref="MAX-REASON"))
++        # Legacy unproven history must not be credited or silently repaired.
++        with self.store.lock:
++            self.store.data["governance"]["rai_claims"].append({"finding_id": "MAP-01", "status": "accepted"})
++            self.store.save()
++        v = self.view()
++        self.assertEqual(v["invalid_history_count"], 1)
++        self.assertFalse(v["dispositions_complete"])
++        self.assertEqual(v["findings"][2]["acceptance"], "Unknown")
++
++    def test_in_process_save_failure_does_not_leave_claim(self):
++        with patch.object(self.store, "save", side_effect=RuntimeError("constructed save failure")):
++            with self.assertRaisesRegex(RuntimeError, "save failure"):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.store = self.reopen()
++        self.assertEqual(self.view()["history_record_count"], 0)
++        self.assertFalse([a for a in self.store.audit_entries() if a["action"] == "rai_evidence_record"])
++
++    def test_current_roles_forgery_removal_and_demotion(self):
++        for user in (tf.U["RLO-1"], tf.U["CON-1"], dict(self.pm, name="forged"),
++                     dict(self.pm, email="unknown@example.test"), dict(tf.U["CON-1"], role=self.pm["role"])):
++            with self.assertRaises(PermissionError):
++                self.store.rai_evidence_record(user, claim())
++            with self.assertRaises(PermissionError):
++                self.store.governance_view(user)
++        if hasattr(self.store, "db"):
++            self.store.db.execute("DELETE FROM staff WHERE email=?", (self.pm["email"],))
++        else:
++            del self.store.staff[self.pm["email"]]
++        with self.assertRaises(PermissionError):
++            self.store.rai_evidence_record(self.pm, claim())
++
++
++class SqlEvidenceRegister(EvidenceRegister):
++    backend = "sqlite"
++
++    def test_transaction_actor_recheck_and_audit_rollback(self):
++        original = self.store.save
++        def demote():
++            user = dict(self.pm, role="Resident Liaison Officer")
++            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(user), self.pm["email"]))
++            original()
++        with patch.object(self.store, "save", side_effect=demote):
++            with self.assertRaises(PermissionError):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(self.pm), self.pm["email"]))
++        append = self.store._append_audit
++        def failure(entries):
++            append(entries)
++            raise RuntimeError("constructed precommit failure")
++        with patch.object(self.store, "_append_audit", side_effect=failure):
++            with self.assertRaisesRegex(RuntimeError, "precommit"):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.assertEqual(self.view()["history_record_count"], 0)
++        self.assertFalse([a for a in self.store.audit_entries() if a["action"] == "rai_evidence_record"])
++
++    def test_competing_writer_and_stale_revision(self):
++        from zava_forward.core.store import ConflictError
++        other = self.reopen()
++        original = self.store.save
++        def compete():
++            other.rai_evidence_record(self.pm, claim(event_ref="WINNER"))
++            original()
++        with patch.object(self.store, "save", side_effect=compete):
++            with self.assertRaises(ConflictError):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.assertEqual(self.view()["history_record_count"], 1)
++        self.assertEqual(self.view()["findings"][2]["claims"][0]["event_ref"], "WINNER")
++        with self.assertRaises(ConflictError):
++            self.store.rai_evidence_record(self.pm, claim())
++
++    def test_postcommit_failure_requires_reload_no_duplicate_audit(self):
++        original = self.store.save
++        def ack_failure():
++            original()
++            raise RuntimeError("constructed acknowledgement failure")
++        with patch.object(self.store, "save", side_effect=ack_failure):
++            with self.assertRaises(g.GovernanceCommittedError):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.store = self.reopen()
++        self.assertEqual(self.view()["history_record_count"], 1)
++        self.store.rai_evidence_record(self.pm, claim())
++        self.assertEqual(len([a for a in self.store.audit_entries() if a["action"] == "rai_evidence_record"]), 1)
++
++    def test_immediate_postcommit_hook_failure_has_witness(self):
++        with patch("zava_forward.core.appointments.mark_committed", side_effect=RuntimeError("after COMMIT")):
++            with self.assertRaises(g.GovernanceCommittedError):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.store = self.reopen()
++        self.assertEqual(self.view()["history_record_count"], 1)
++        self.assertEqual(len([a for a in self.store.audit_entries() if a["action"] == "rai_evidence_record"]), 1)
++
++    def test_lock_exit_acknowledgement_failure_reports_committed(self):
++        finish = self.store._finish
++        def fail_exit():
++            finish()
++            raise RuntimeError("constructed lock exit failure")
++        with patch.object(self.store, "_finish", side_effect=fail_exit):
++            with self.assertRaises(g.GovernanceCommittedError):
++                self.store.rai_evidence_record(self.pm, claim())
++        self.store = self.reopen()
++        self.assertEqual(self.view()["history_record_count"], 1)
++
++    def test_failed_recovery_quarantines_success_and_preserves_pending_prefix(self):
++        with self.store.lock:
++            self.store.audit(self.pm["email"], "SYN_prior_pending", "-", "Constructed prefix")
++            prior = list(self.store.local.pending)
++            with patch.object(self.store, "_proc_sync", side_effect=RuntimeError("recovery unavailable")), \
++                 patch.object(self.store, "_append_audit", side_effect=RuntimeError("precommit unavailable")):
++                with self.assertRaisesRegex(RuntimeError, "precommit"):
++                    self.store.rai_evidence_record(self.pm, claim())
++            self.assertEqual(self.store.local.pending, prior)
++        self.store = self.reopen()
++        self.assertEqual(self.view()["history_record_count"], 0)
++        actions = [a["action"] for a in self.store.audit_entries()]
++        self.assertIn("SYN_prior_pending", actions)
++        self.assertNotIn("rai_evidence_record", actions)
++
++
++@unittest.skipUnless(os.environ.get("ZF_RAI126_MSSQL") == "1", "opt-in task-owned loopback SQL")
++class MssqlEvidenceRegister(SqlEvidenceRegister):
++    backend = "mssql"
++
++

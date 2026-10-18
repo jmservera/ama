@@ -137,3 +137,25 @@ No unresolved engineering authority; claim-only manager roles already exist.
 Published PR #409 targets main; no source edits after the original Review.
 Final handoff metadata is not a replacement assessment. Correction count 0.
 Caller requires Stop for coordinator independent exact-head source/artifact/log review.
+
+## Authorized Integration-Only Continuation
+
+The initial no-rebase decision above describes the original publication. The
+coordinator subsequently explicitly authorized this same task's owned-topic
+rebase onto exact `9403dc6a8f52f1f04c5ad910faab11a57c29ee78`, with old local/remote
+head `4a23f750f1ea943bb4aaf989256e7bd019a57d12` as the sole authorized first-push
+lease. No new phase markers, source correction, critique or original Review.
+
+Rebase completed; only the obvious additive KB log conflict required resolution.
+All 30 original-path normalized patches and all six source/config/test patches
+match byte-for-byte before/after normalization. Upstream protected files/modes
+and original research, assessments and prior logs remain unchanged. Fresh focused
+checks: 107 run/16 skips; consultation/API checks: 64 run/13 skips, both successful.
+Configured core/API Ruff, formatter and mypy pass. Four existing excluded source
+files retain their original formatting drift; no formatting was applied.
+Historical actual SQL/image evidence is not represented as fresh integration work.
+
+Separate receipt and full hash manifests:
+.copilot-tracking/changes/2026-10-18/issue-126-rai-evidence-register-integration/receipt.md.
+Publication uses only the authorized lease, then normal receipt pushes. Preserve
+all unmet human/live gates and Stop for coordinator exact-head inspection.
