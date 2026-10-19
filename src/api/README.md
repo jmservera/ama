@@ -2598,3 +2598,43 @@ claimed.
 No issue checkboxes are changed by this implementation. Real delegates,
 verified applicable sources, operational acceptance and the ADR 0005 measured
 chat-value ship test remain open.
+
+### Affected-person challenge API and workbench (#220)
+
+`POST /api/cases/{id}/resident` reuses the existing authenticated resident action
+route for `challenge_open` and `challenge_resolve`. See the
+[core field and version contract](../core/README.md#version-bound-affected-person-challenges-220).
+The permitted case response includes `challenge_targets` and retained
+`affected_challenges`; neither is exposed without both existing resident-view
+and recorded-reason entitlements. Client actor/time overrides are rejected.
+SQL validates current identities, target/human-decision tokens and correction
+dependencies again at writer time. A saved operation whose acknowledgement
+cannot be projected/encoded is explicitly reported as HTTP 409 with
+`outcome: "committed"`; do not blindly retry it.
+
+The case workbench uses labelled native forms for supplied Digital or
+staff-recorded Phone/Letter/In person evidence, a named human owner, explanation,
+manual route, next update and terminal supplied resolution. It preserves unsaved
+drafts and their original version bindings across unrelated case refreshes,
+warns on navigation and confirms correction recording. Stale suggestions and
+historical human reviews have explicit text rather than colour-only status.
+No resident consent, refusal, sanction, remedy outcome, unrelated closure or
+safety-clock change is inferred; urgent safety intake must not wait for a
+challenge.
+
+The issue-specific browser check runs the actual app against an isolated public
+synthetic SQLite fixture, with loopback-only traffic and no model call:
+
+```bash
+PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 \
+  src/api/checks/challenge_browser_check.py \
+  --axe /path/to/verified-axe-4.10.3.min.js --out /tmp/challenge-browser.json
+```
+
+The pinned axe content hash is checked against the existing regulatory browser
+harness. Checks cover keyboard entry/error focus, cancelled navigation and
+correction, unrelated-refresh draft retention, permitted/denied views, expanded
+forms at 320/390/1280px, target sizes and reduced motion. Automated checks are
+scoped engineering evidence, not comprehensive WCAG, screen-reader, resident or
+human acceptance. The unchanged full gate's native SQL selectors are general
+regression, not issue-specific native SQL challenge acceptance.

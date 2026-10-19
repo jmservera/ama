@@ -188,8 +188,12 @@ def add_record(store, user, **fields):
 def source_hashes(store, user, case_ids):
     """Current per-case source hashes as seen by this user; the same function stamps and rechecks a record."""
     ok = projection.can_see_reason(user)
-    return {cid: hashlib.sha256("\n".join(sorted(source_labels(store._case(cid), ok))).encode()).hexdigest()[:16]
-            for cid in case_ids}
+    return source_snapshot_hashes({cid: source_labels(store._case(cid), ok) for cid in case_ids})
+
+
+def source_snapshot_hashes(sources):
+    return {cid: hashlib.sha256("\n".join(sorted(labels)).encode()).hexdigest()[:16]
+            for cid, labels in sources.items()}
 
 
 def finish(store, user, task, case_ids, r, workflow_text, sources, template_cites=None, bullets=False, record_cites=None, epoch0=None):

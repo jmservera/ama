@@ -137,6 +137,13 @@ also records the final authorized responsibility-clock correction: shared servic
 redress identity never lets a non-owning reassignment alter status owner/date.
 Existing resident routing below remains unchanged.
 
+For issue #220, the [affected-person challenge boundary](./research/ux/customer-journeys/residents.md#affected-person-challenge-engineering-boundary-2026-10-19-220)
+records supplied digital/non-digital challenges against retained priority
+proposal/source/policy versions, current human ownership and selective stale
+reviews. Creation-time citation snapshots are not universal document versions.
+Other assistants/forms, whole-system AC-071 and qualified/resident acceptance
+remain open; no new legal or redress authority is inferred.
+
 1. Read this index first and pick the rows in
    [Task Routing](#task-routing) that match the task.
 2. Read the [Project Memory](./memory.md) for owner context and preferences.

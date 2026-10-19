@@ -9,6 +9,7 @@ named redress owner. Contact needs are held as short coded entries so only the
 minimum necessary is shown.
 """
 import json
+import hashlib
 import logging
 import os
 from contextlib import contextmanager
@@ -25,7 +26,8 @@ REQUEST_STATUSES = ("Open", "In progress", "Resolved")
 ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language", "Interpreter", "Representative contact", "Safe route needed")
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
-                    "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update")
+                    "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
+                    "challenge_open", "challenge_resolve")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -35,7 +37,7 @@ RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_autho
                    "resident_safe_contact", "resident_contact_history", "resident_reviews")
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
-                    "update_record", "remedy_confirm", "remedy_update")
+                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve")
 
 
 class ResidentCommittedError(RuntimeError):
@@ -173,6 +175,141 @@ def mark_committed(store):
     context = getattr(store.local, "resident_validation", None)
     if context is not None:
         context["persisted"] = True
+    mark_priority_committed(store)
+
+
+def _digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def priority_binding(rec):
+    """Bind original suggestion inputs separately from the retained human disposition."""
+    original = {key: rec.get(key) for key in (
+        "id", "created", "source", "model", "prompt_version", "policy_version",
+        "source_versions", "case_ids", "items", "workflow_items", "ai_output", "release",
+    )}
+    decision = {key: deepcopy(rec.get(key)) for key in (
+        "status", "resolved_by", "resolved_at", "reason", "final_items",
+    )}
+    return _digest(original), _digest(decision), decision
+
+
+def _priority_record(store, rec_id):
+    if not isinstance(rec_id, str) or not rec_id or len(rec_id) > 64:
+        raise ValueError("Choose a recorded priority suggestion for this case.")
+    if hasattr(store, "db"):
+        with store.dblock:
+            row = store.db.execute("SELECT body FROM recommendations WHERE id=?", (rec_id,)).fetchone()
+        rec = json.loads(row[0]) if row else None
+    else:
+        rec = next((r for r in store.data["recommendations"] if r["id"] == rec_id), None)
+    if not rec or rec.get("kind") == "ai_task":
+        raise ValueError("Choose a recorded priority suggestion for this case.")
+    return rec
+
+
+def _dependency(rec, kind, case_id):
+    if kind == "proposal":
+        return dict(kind=kind, id=rec["id"], version=priority_binding(rec)[0])
+    if kind == "source":
+        version = (rec.get("source_versions") or {}).get(case_id)
+        if not version:
+            raise ValueError("This older suggestion has no recorded source version. Challenge the suggestion instead.")
+        return dict(kind=kind, id=case_id, version=version)
+    if kind == "policy":
+        if not rec.get("policy_version"):
+            raise ValueError("This suggestion has no recorded policy version. Challenge the suggestion instead.")
+        return dict(kind=kind, id="priority-ranking", version=rec["policy_version"])
+    raise ValueError("Choose proposal, source or policy.")
+
+
+def priority_challenge_state(store, rec, sql_current=False):
+    """Derive correction effects without rewriting original proposals or human decisions."""
+    if rec.get("kind") == "ai_task":
+        return dict(stale=False, review_stale=False, challenge_ids=[])
+    dependencies = [_dependency(rec, "proposal", None)]
+    dependencies += [dict(kind="source", id=cid, version=version)
+                     for cid, version in (rec.get("source_versions") or {}).items()]
+    if rec.get("policy_version"):
+        dependencies.append(_dependency(rec, "policy", None))
+    cases = (json.loads(r[0]) for r in store.db.execute("SELECT body FROM cases").fetchall()) if sql_current else store.cases.values()
+    causes = [f"{case['id']}/{record['id']}" for case in cases
+              for record in case.get("affected_challenges", [])
+              if (record.get("resolution") or {}).get("outcome") == "Correction recorded"
+              and record["target"] in dependencies]
+    return dict(stale=bool(causes), review_stale=bool(causes and rec.get("resolved_by")),
+                challenge_ids=sorted(causes))
+
+
+def challenge_catalog(store, case_id):
+    out = []
+    for rec in store.data["recommendations"]:
+        if rec.get("kind") == "ai_task" or case_id not in rec.get("case_ids", []):
+            continue
+        original, decision_version, decision = priority_binding(rec)
+        out.append(dict(proposal_id=rec["id"], proposal_version=original,
+                        decision_version=decision_version, human_decision=decision,
+                        source_version=(rec.get("source_versions") or {}).get(case_id),
+                        policy_version=rec.get("policy_version"), model=rec.get("model"),
+                        prompt_version=rec.get("prompt_version"), source=rec.get("source"),
+                        **priority_challenge_state(store, rec)))
+    return out
+
+
+def validate_priority_sql(store):
+    context = getattr(store.local, "priority_challenge_validation", None)
+    if context is not None:
+        _actor(store, context["actor"])
+        if context["action"] != "reject" and priority_challenge_state(store, context["record"], sql_current=True)["stale"]:
+            raise PermissionError("A supplied correction affects this suggestion. Owner: its reviewer. Create a fresh suggestion or use the manual route.")
+
+
+def mark_priority_committed(store):
+    holder = getattr(store, "local", store)
+    context = getattr(holder, "priority_challenge_validation", None)
+    if context is not None:
+        context["persisted"] = True
+
+
+@contextmanager
+def priority_review(store, user, rec_id, action):
+    """Fence the reverse race: a correction may commit while a reviewer is saving."""
+    actor = _actor(store, user)
+    rec = next((r for r in store.data["recommendations"] if r["id"] == rec_id), None)
+    if not rec:
+        raise KeyError(rec_id)
+    if action != "reject" and priority_challenge_state(store, rec)["stale"]:
+        raise PermissionError("A supplied correction affects this suggestion. Owner: its reviewer. Create a fresh suggestion or use the manual route.")
+    holder = getattr(store, "local", store)
+    previous = getattr(holder, "priority_challenge_validation", None)
+    context = dict(actor=actor, record=deepcopy(rec), action=action, persisted=False)
+    holder.priority_challenge_validation = context
+    before = deepcopy(rec)
+    sql = hasattr(store, "db")
+    pending = list(store.local.pending) if sql else []
+    audit_size = None if sql else (os.path.getsize(store.audit_path) if os.path.exists(store.audit_path) else 0)
+    audit_head = None if sql else store.last_hash
+    try:
+        yield
+    except BaseException as error:
+        if context["persisted"]:
+            logging.getLogger(__name__).exception("Priority review committed; acknowledgement failed")
+            raise ResidentCommittedError("The draft review was recorded, but confirmation failed. Reload its history before another action.") from error
+        if sql:
+            with store.dblock:
+                store._discard(pending)
+        else:
+            rec.clear()
+            rec.update(before)
+            if os.path.exists(store.audit_path):
+                with open(store.audit_path, "r+b") as audit:
+                    audit.truncate(audit_size)
+            store.last_hash = audit_head
+            from .store import Store
+            Store.save(store)
+        raise
+    finally:
+        holder.priority_challenge_validation = previous
 
 
 @contextmanager
@@ -434,6 +571,57 @@ class ResidentDecisionMixin:
             detail = getattr(self, "_res_" + action)(user, c, body)
             self.audit(user["email"], f"resident_{action}", case_id, detail)
             self.save()
+
+    def _res_challenge_open(self, user, c, body):
+        from . import projection
+        if not projection.appointment_evidence_visible(user):
+            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        fields = {"action", "proposal_id", "proposal_version", "decision_version", "target_kind",
+                  "channel", "source", "request", "explanation", "owner", "non_digital_route", "next_update"}
+        if set(body) != fields:
+            raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
+        rec = _priority_record(self, body.get("proposal_id"))
+        if c["id"] not in rec.get("case_ids", []):
+            raise ValueError("Choose a priority suggestion that includes this case.")
+        original, decision_version, decision = priority_binding(rec)
+        if body["proposal_version"] != original or body["decision_version"] != decision_version:
+            raise ValueError("The suggestion or its human review changed. Reload before recording the challenge.")
+        target = _dependency(rec, body["target_kind"], c["id"])
+        owner = _person(self, body["owner"])
+        if not projection.appointment_evidence_visible(owner):
+            raise ValueError("Choose a named owner with resident-workflow and recorded-reason rights.")
+        record = dict(id=k.next_id(c.get("affected_challenges", []), "CH"),
+                      version=1, status="Open", target=target, proposal_id=rec["id"],
+                      proposal_version=original, human_decision=decision,
+                      decision_version=decision_version, owner=_identity(owner),
+                      channel=k.choice(body["channel"], ("Digital", "Phone", "Letter", "In person"), "the supplied challenge channel"),
+                      source=k.text(body["source"], "the supplied challenge reference", 300),
+                      request=k.text(body["request"], "the person's supplied request", 300),
+                      explanation=k.text(body["explanation"], "the permitted plain-language explanation", 300),
+                      non_digital_route=k.text(body["non_digital_route"], "an accessible phone, letter or in-person route", 300),
+                      next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time(),
+                      ai_details={key: deepcopy(rec.get(key)) for key in ("source", "model", "prompt_version", "policy_version", "source_versions")},
+                      resolution=None)
+        c.setdefault("affected_challenges", []).append(record)
+        return f"{record['id']} supplied challenge recorded"
+
+    def _res_challenge_resolve(self, user, c, body):
+        from . import projection
+        if not projection.appointment_evidence_visible(user):
+            raise PermissionError("Challenge records need current resident-workflow and recorded-reason rights.")
+        if set(body) != {"action", "id", "expected_version", "resolution", "resolution_ref", "explanation", "next_update"}:
+            raise ValueError("Supply only the resolution fields. A person must supply the resolution evidence.")
+        record = k.find(c.get("affected_challenges", []), body["id"], "challenge")
+        _version(body, record)
+        if record["status"] != "Open":
+            raise ValueError("This challenge already has its recorded resolution. Its evidence cannot be replaced.")
+        _owner_rights(self, user, record["owner"])
+        resolution = dict(outcome=k.choice(body["resolution"], ("Correction recorded", "Explanation recorded"), "the supplied resolution"),
+                          reference=k.text(body["resolution_ref"], "the supplied human resolution evidence", 300),
+                          explanation=k.text(body["explanation"], "the permitted resolution explanation", 300),
+                          next_update=_day(body["next_update"]), recorded_by=_identity(user), at=_time())
+        record.update(status="Resolved", version=2, resolution=resolution)
+        return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):
         measure = body.get("measure")

@@ -6552,3 +6552,19 @@ metadata when the knowledge base was created.
   #358 remains open for coordinator judgement; no push/PR/merge/status/settings
   action. Frozen full local gate/receipt and coordinator assessment remain
   separate publication requirements.
+
+## [2026-10-19] query | Version-bound affected-person challenge boundary (#220)
+
+* Updated the existing [resident journey synthesis](./research/ux/customer-journeys/residents.md#affected-person-challenge-engineering-boundary-2026-10-19-220),
+  index and core/API component guides with the retained-priority engineering
+  slice. Reused current resident independent-review/remedy and server recorder
+  controls; no owner memory or immutable regulatory snapshot was changed.
+* Supplied Digital/Phone/Letter/In person evidence binds the original proposal,
+  captured case citation snapshot or recorded ranking-policy version and human
+  disposition. A terminal supplied correction invalidates only exact dependency
+  matches; historical decisions and independent safety/manual paths remain.
+* Source hashes describe audience-filtered citation labels, not universal
+  documents. Legacy absent hashes stay Unknown. Other assistant/form paths,
+  whole-system AC-071, issue-specific native SQL and qualified/resident
+  acceptance remain open. Local constructed tests make no new legal,
+  accessibility-conformance, live-model or operational-approval claim.

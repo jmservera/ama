@@ -567,6 +567,8 @@ class SqlStore(Store):
                 validate_finance(self)
                 from .resident_decisions import validate_sql as validate_resident
                 validate_resident(self)
+                from .resident_decisions import validate_priority_sql
+                validate_priority_sql(self)
                 from .procurement import validate_sql as validate_procurement
                 validate_procurement(self)
                 self._validate_safety_clear()

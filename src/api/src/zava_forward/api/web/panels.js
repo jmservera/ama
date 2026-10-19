@@ -236,6 +236,132 @@ function residentPanel(c, id, refresh) {
     ] : null);
 }
 
+function captureChallengeDrafts(caseId) {
+  return [...document.querySelectorAll("form[data-challenge-case][data-unsaved=true]")]
+    .filter((form) => form.dataset.challengeCase === caseId)
+    .map((form) => ({ form, details: form.parentElement, open: form.parentElement.open }));
+}
+
+function restoreChallengeDrafts(drafts) {
+  for (const draft of drafts) {
+    const replacement = document.getElementById(draft.form.id);
+    if (replacement) {
+      replacement.parentElement.open = draft.open;
+      replacement.replaceWith(draft.form);
+    } else {
+      document.getElementById("affected-challenges")?.append(draft.details);
+    }
+  }
+}
+
+function affectedChallengePanel(c, id, refresh) {
+  if (!c.challenge_targets) return null;
+  const targets = c.challenge_targets;
+  const records = c.affected_challenges || [];
+  const named = (person) => person?.name || "Unknown";
+  const formFor = (key, title, fields, build, correction = false) => {
+    const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
+    const inputs = fields.map(([name, label, options]) => {
+      const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id };
+      const input = options ? h("select", attrs, options.map((option) => h("option", { value: option }, option)))
+        : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300 });
+      return { name, label, input };
+    });
+    const button = h("button", { type: "submit" }, title);
+    const form = h("form", { id: key, "data-challenge-case": id, novalidate: true,
+      oninput: () => { form.dataset.unsaved = "true"; },
+      onreset: (event) => {
+        if (!window.confirm("Discard only this unsaved challenge draft?")) { event.preventDefault(); return; }
+        delete form.dataset.unsaved;
+        inputs.forEach(({ input }) => input.removeAttribute("aria-invalid"));
+        status.textContent = "";
+      },
+      onsubmit: async (event) => {
+        event.preventDefault();
+        for (const { input, label } of inputs) {
+          input.removeAttribute("aria-invalid");
+          if (!input.value.trim() || !input.validity.valid) {
+            input.setAttribute("aria-invalid", "true");
+            status.textContent = `Enter ${label.toLowerCase()} before recording this challenge.`;
+            input.focus();
+            return;
+          }
+        }
+        const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
+        if (correction && body.resolution === "Correction recorded"
+            && !window.confirm("Record this supplied human correction? Only suggestions and reviews that use the challenged version will need a fresh review. No works choice or safety response changes.")) return;
+        button.disabled = true;
+        button.setAttribute("aria-busy", "true");
+        status.textContent = "Recording the supplied evidence.";
+        let dispatched = false;
+        try {
+          const payload = JSON.stringify(build(body));
+          dispatched = true;
+          const response = await fetch(`/api/cases/${encodeURIComponent(id)}/resident`, {
+            method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: payload
+          });
+          const result = await response.json();
+          if (!response.ok) {
+            status.textContent = result.error || "Could not record this challenge. Reload and check its history.";
+            if (result.outcome !== "committed") button.disabled = false;
+            status.focus();
+            return;
+          }
+          delete form.dataset.unsaved;
+          await refresh(async () => {});
+        } catch (error) {
+          status.textContent = dispatched
+            ? "Confirmation is unavailable. Reload and check the history before recording another action."
+            : error.message;
+          if (!dispatched) button.disabled = false;
+          status.focus();
+        } finally {
+          button.removeAttribute("aria-busy");
+        }
+      } },
+    inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]),
+    status, button, h("button", { type: "reset", class: "alt" }, "Discard challenge draft"));
+    return h("details", {}, h("summary", {}, title), form);
+  };
+  const staff = (me.staff || []).filter((person) => [
+    "Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"
+  ].includes(person.role));
+  const targetRows = targets.slice(-50);
+  return h("section", { id: "affected-challenges", class: "card" },
+    h("h2", {}, "Challenge a suggestion or ask for a correction"),
+    h("p", {}, "Record only what the person supplied, including digital, phone, letter or in-person requests. A person owns the response. Nothing is sent here. Ask the named officer for accessible human help without using this screen. Urgent hazard response continues separately."),
+    h("p", {}, "A challenge never means consent, refusal or a sanction. It does not close another request, change priority or delay safety work. A recorded human correction makes only suggestions and reviews that used that version need a fresh review. It does not change source information or policy automatically."),
+    h("h3", {}, "Suggestion details"),
+    h("p", {}, `Showing ${targetRows.length} of ${targets.length} recorded priority suggestions. Older suggestions without a source version can still be challenged by suggestion reference.`),
+    targetRows.map((target) => h("details", {}, h("summary", {}, `Suggestion ${target.proposal_id}: ${target.stale ? "Needs a fresh review" : "No recorded correction"}`),
+      h("p", {}, `Written by ${target.source === "ai" ? "AI" : "rules or template"}. Model: ${target.model || "Unknown"}. Prompt version: ${target.prompt_version || "Unknown"}. Source version for this case: ${target.source_version || "Unknown"}. Policy version: ${target.policy_version || "Unknown"}.`),
+      h("p", {}, `Human draft decision: ${target.human_decision?.status || "Unknown"}. Recorded by ${target.human_decision?.resolved_by || "Unknown"}. ${target.review_stale ? "Historical decision only; needs a fresh review." : "Not a works, consent or safety approval."}`))),
+    targets.length ? formFor("challenge-open", "Record supplied challenge", [
+      ["proposal_id", "Suggestion reference", ["", ...targetRows.map((target) => target.proposal_id)]],
+      ["target_kind", "Challenged information", ["", "proposal", "source", "policy"]],
+      ["channel", "Supplied challenge channel", ["", "Digital", "Phone", "Letter", "In person"]],
+      ["source", "Supplied challenge evidence reference"], ["request", "The person's supplied request"],
+      ["explanation", "Permitted plain-language explanation"], ["owner", "Named challenge owner", ["", ...staff.map((person) => person.email)]],
+      ["non_digital_route", "Accessible phone, letter or in-person route"], ["next_update", "Challenge next update date"]
+    ], (body) => {
+      const target = targets.find((item) => item.proposal_id === body.proposal_id);
+      return { action: "challenge_open", ...body, proposal_version: target.proposal_version,
+        decision_version: target.decision_version };
+    }) : h("p", {}, "No recorded priority suggestion for this case. Ordinary human review and complaints remain available through the named officer."),
+    h("h3", {}, "Recorded challenges and resolutions"),
+    records.length ? records.slice(-50).map((record) => h("div", {},
+      h("p", {}, `${record.id}: ${record.status}. ${record.channel}. ${record.request}`),
+      h("p", {}, `Explanation: ${record.explanation}. Owner: ${named(record.owner)}. Manual route: ${record.non_digital_route}. Next update: ${fmtDate(record.next_update)}.`),
+      h("p", {}, `Challenged ${record.target.kind}: ${record.target.id}, version ${record.target.version}. Supplied reference: ${record.source}. Human draft decision at opening: ${record.human_decision?.status || "Unknown"}.`),
+      record.resolution ? h("p", {}, `${record.resolution.outcome}: ${record.resolution.explanation}. Evidence: ${record.resolution.reference}. Recorded by ${named(record.resolution.recorded_by)}. Next update: ${fmtDate(record.resolution.next_update)}.`)
+        : formFor(`challenge-resolve-${record.id}`, `Record supplied resolution for ${record.id}`, [
+          ["resolution", "Supplied human resolution", ["", "Explanation recorded", "Correction recorded"]],
+          ["resolution_ref", "Human resolution evidence reference"], ["explanation", "Permitted resolution explanation"],
+          ["next_update", "Resolution next update date"]
+        ], (body) => ({ action: "challenge_resolve", ...body, id: record.id, expected_version: record.version }), true)
+    )) : h("p", {}, "No challenges recorded."));
+}
+
 async function financeQueueView() {
   let rows;
   try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }

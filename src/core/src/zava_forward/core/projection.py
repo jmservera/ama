@@ -179,6 +179,9 @@ def redact_staff_detail(user, d):
             "Unknown" if adjustment in (None, "", "Unknown") else
             REDACTED if adjustment != "None" else "None")
     d.update(resident_data)
+    if not appointment_evidence_visible(user):
+        d.pop("affected_challenges", None)
+        d.pop("challenge_targets", None)
     if user.get("role") not in FINANCE_VIEW:
         d.pop("finance", None)
         d.pop("grants", None)

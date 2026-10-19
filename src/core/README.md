@@ -2876,3 +2876,52 @@ PYTHONPATH="$PWD/src/core/tests" python3 -m unittest \
   test_regulatory_chat test_chat_panel test_chatthreads test_rule_engine \
   test_rulecards test_source_monitor -q
 ```
+
+### Version-bound affected-person challenges (#220)
+
+The existing resident operation records supplied challenges against retained
+priority suggestions (`kind != "ai_task"`). It does not replace measure-decision
+independent review or complaint/remedy controls. Both resident-information and
+recorded-reason permissions are required to read or write the new fields.
+`Store.detail` supplies `challenge_targets` with immutable proposal and separate
+human-decision version tokens; callers must echo both when opening a challenge.
+The registered server actor and current named owner remain authoritative.
+
+`challenge_open` requires `proposal_id`, `proposal_version`, `decision_version`,
+`target_kind` (`proposal`, `source` or `policy`), supplied `channel`, `source`,
+`request`, `explanation`, `owner`, `non_digital_route` and `next_update`.
+Digital means staff recording supplied digital evidence, not resident
+self-authentication. Phone, Letter and In person use the same controlled path.
+`challenge_resolve` requires `id`, `expected_version`, `resolution`,
+`resolution_ref`, `explanation` and `next_update`. The named owner or an existing
+authorised manager can record one terminal resolution, either
+`Correction recorded` or `Explanation recorded`. Opening evidence and the
+original human decision are retained; terminal corrections cannot be erased by
+a later resolution. These are human-supplied records, not automated redress.
+
+New priority generation hashes the actual audience-filtered case citation labels
+at input capture, before generation. These are citation-snapshot versions, not
+universal raw-document versions. Legacy missing hashes stay Unknown; their
+proposal or recorded policy may still be challenged. Source/policy publication,
+law applicability and approval authority are not changed.
+
+A supplied correction derives stale state only for the exact proposal, case/hash
+or recorded ranking-policy version. A policy correction can affect matching
+suggestions on other cases. Original proposal content and accepted/edited human
+dispositions stay historical; `stale`, `review_stale` and `challenge_ids` explain
+why reliance is disabled. Accept/edit is fenced again inside the SQL writer;
+reject, manual work and independent hazard intake remain available.
+Continuity export includes derived stale metadata, not challenge narrative.
+Audit records contain action/record IDs, not the supplied free text.
+
+Focused synthetic JSON/SQLite proof, with installed editable distributions:
+
+```bash
+PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 -m unittest \
+  test_resident_decisions.JsonResidentDecisions \
+  test_resident_decisions.SqlResidentDecisions test_resident_api -k challenge -q
+```
+
+This is a bounded retained-priority slice, not whole-system AC-071 acceptance.
+Other assistant/form paths, issue-specific native SQL Server acceptance,
+qualified legal/RAI review and resident comprehension remain unproven.

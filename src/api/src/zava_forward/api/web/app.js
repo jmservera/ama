@@ -262,6 +262,7 @@ function priorityPanel() {
       h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion, not approved, is advice only: it never changes the ranking, owners, stages or queues.")];
     if (msg) kids.push(h("p", { role: "alert" }, msg));
     if (rec && rec.release_denied) kids.push(h("p", { role: "status" }, "This suggestion's release is no longer valid. Use the ordinary case controls or request a new suggestion. The release owner must review the missing evidence."));
+    if (rec?.stale) kids.push(h("p", { role: "status" }, "A supplied human correction affects this suggestion. It and any recorded draft review need a fresh review. Use ordinary case work or request a new suggestion."));
     if (!rec) {
       kids.push(h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
     } else {
@@ -475,6 +476,7 @@ async function caseView(id) {
     h("ul", { class: "list" }, c.suggestions.map((x) => h("li", {},
       h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
       canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));
+  const challengeDrafts = captureChallengeDrafts(id);
   show(
     h("a", { class: "back", href: queueHref() }, "Back to the list"),
     c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) :
@@ -535,12 +537,14 @@ async function caseView(id) {
     assistantPanel,
     chatCasePanel(id),
     financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
+    affectedChallengePanel(c, id, refresh),
     msg,
     h("section", { class: "card" }, h("h2", {}, "History"),
       h("p", {}, "Current task context below; event-time owners and reasons in the history remain unchanged."),
       workSummary(c.work),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
         h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
+  restoreChallengeDrafts(challengeDrafts);
 }
 
 async function buildingView(id) {

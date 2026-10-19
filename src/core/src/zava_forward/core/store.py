@@ -367,6 +367,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             d = json.loads(json.dumps(c))
             from .resident_decisions import followup_view
             followup_view(d)
+            if user and projection.appointment_evidence_visible(user):
+                from .resident_decisions import challenge_catalog
+                d["challenge_targets"] = challenge_catalog(self, case_id)
             d.pop("form_staging", None)
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
@@ -752,6 +755,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     REC_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 
     def _rec_view(self, rec):
+        from .resident_decisions import priority_challenge_state
+        challenge = priority_challenge_state(self, rec)
         ranks = self._ranking()
         def row(cid, reason=None, cites=None):
             c = self.cases[cid]
@@ -763,8 +768,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return r
         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
         current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
-        return dict(rec, label=self.REC_LABEL, actionable=current and not denied, release_denied=denied,
-                    epoch_current=current, relied_on=current and not denied and rec["status"] in ("Accepted", "Edited"),
+        return dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
+                    **challenge,
+                    epoch_current=current, relied_on=current and not denied and not challenge["stale"] and rec["status"] in ("Accepted", "Edited"),
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
@@ -783,6 +789,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             ok = projection.can_see_reason(user)
             facts = "\n".join(f"{c['id']}: {self._facts(c, ok)}" for c in cand)
             sources = {c["id"]: ai_tasks.source_labels(c, ok) for c in cand}
+            captured_sources = ai_tasks.source_snapshot_hashes(sources)
             hazard_ids = [c["id"] for c in cand if any(not h["released"] for h in c["hazards"])]
             tmpl_items = self._heuristic_priority(cand, n, ok)
             policy_version = ranking.CURRENT["version"]
@@ -810,7 +817,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                        release=r.get("release"), continuity_epoch=epoch0,
                        quarantine=dict(reason="Late priority result after epoch change") if late else None,
                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
-                       case_ids=[c["id"] for c in cand], hazard_ids=hazard_ids,
+                       case_ids=list(captured_sources), source_versions=captured_sources, hazard_ids=hazard_ids,
                        overlap=len({i["case_id"] for i in items} & set(det)))
             if late:
                 rec.update(status="Quarantined", items=tmpl_items,
@@ -854,7 +861,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         reason = (reason or "").strip()[:300]
         if action in ("edit", "reject") and not reason:
             raise ValueError("Say why.")
-        with self.lock:
+        from .resident_decisions import priority_review, mark_priority_committed
+        with self.lock, priority_review(self, user, rec_id, action):
             rec = next((r for r in self.data["recommendations"] if r["id"] == rec_id and r.get("kind") != "ai_task"), None)
             if not rec:
                 raise KeyError(rec_id)
@@ -888,6 +896,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             ids = ",".join(i["case_id"] for i in final) if final else "-"
             self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
             self.save()
+            mark_priority_committed(self)
             return self._rec_view(rec)
 
     # ---- funding: a person approves and submits; the system never does

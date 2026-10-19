@@ -116,6 +116,240 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(self.store.cases["ZF-1"], before)
         self.assertEqual(list(self.store.audit_entries()), audit)
 
+    def priority_fixture(self, reviewed: str | None = None) -> dict[str, Any]:
+        result = self.store.ai_priority(self.sam, mode="workflow-only")
+        if reviewed:
+            self.store.resolve_priority(
+                self.sam,
+                result["id"],
+                reviewed,
+                "SYN supplied draft review",
+                [dict(case_id="ZF-1", reason="SYN human edit")],
+            )
+        return dict(result)
+
+    def challenge_body(
+        self, proposal: dict[str, Any], kind: str = "proposal", channel: str = "Digital"
+    ) -> dict[str, Any]:
+        target = next(
+            item
+            for item in self.store.detail("ZF-1", self.sam)["challenge_targets"]
+            if item["proposal_id"] == proposal["id"]
+        )
+        return dict(
+            action="challenge_open",
+            proposal_id=proposal["id"],
+            proposal_version=target["proposal_version"],
+            decision_version=target["decision_version"],
+            target_kind=kind,
+            channel=channel,
+            source="SYN supplied challenge reference",
+            request="SYN Please check the information used.",
+            explanation="SYN The suggestion uses the recorded case information and rules.",
+            owner=self.sam["email"],
+            non_digital_route="SYN Ask Sam by phone or letter.",
+            next_update="2099-01-01",
+        )
+
+    def resolve_challenge(self, cid: str = "CH-1", correction: bool = True) -> None:
+        self.action(
+            "challenge_resolve",
+            id=cid,
+            expected_version=1,
+            resolution="Correction recorded" if correction else "Explanation recorded",
+            resolution_ref="SYN supplied human resolution evidence",
+            explanation="SYN A person checked the information; use a fresh suggestion.",
+            next_update="2099-01-02",
+        )
+
+    def stale_sets(self) -> tuple[set[str], set[str]]:
+        views = [
+            self.store._rec_view(r)
+            for r in self.store.data["recommendations"]
+            if r.get("kind") != "ai_task"
+        ]
+        return (
+            {r["id"] for r in views if r["stale"]},
+            {r["id"] for r in views if r["review_stale"]},
+        )
+
+    def test_challenge_channels_explanation_and_negative_boundaries(self) -> None:
+        proposal = self.priority_fixture("accept")
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        ranking = self.store._ranking()
+        original = copy.deepcopy(self.store.data["recommendations"])
+        for channel in ("Digital", "Phone", "Letter", "In person"):
+            self.store.resident_action(
+                self.sam, "ZF-1", self.challenge_body(proposal, channel=channel)
+            )
+        self.resolve_challenge(correction=False)
+        again = self.open_store()
+        records = again.detail("ZF-1", self.sam)["affected_challenges"]
+        self.assertEqual(
+            [r["channel"] for r in records], ["Digital", "Phone", "Letter", "In person"]
+        )
+        self.assertEqual(records[0]["human_decision"]["status"], "Accepted")
+        self.assertEqual(records[0]["recorded_by"]["code"], self.sam["code"])
+        self.assertEqual(records[0]["owner"]["email"], self.sam["email"])
+        self.assertEqual(
+            records[0]["resolution"]["reference"], "SYN supplied human resolution evidence"
+        )
+        self.assertEqual(self.stale_sets(), (set(), set()))
+        after = copy.deepcopy(again.cases["ZF-1"])
+        after.pop("affected_challenges")
+        self.assertEqual(after, before)
+        self.assertEqual(self.store._ranking(), ranking)
+        self.assertEqual(again.data["recommendations"], original)
+        self.assertTrue(again.verify_audit())
+
+    def test_challenge_proposal_identity_and_terminal_resolution(self) -> None:
+        first, second = self.priority_fixture("accept"), self.priority_fixture("edit")
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(first))
+        self.resolve_challenge()
+        self.assertEqual(self.stale_sets(), ({first["id"]}, {first["id"]}))
+        with self.assertRaises(ValueError):
+            self.action(
+                "challenge_resolve",
+                id="CH-1",
+                expected_version=2,
+                resolution="Explanation recorded",
+                resolution_ref="SYN cannot erase correction",
+                explanation="SYN",
+                next_update="2099-01-03",
+            )
+        self.assertNotIn(second["id"], self.stale_sets()[0])
+        self.assertEqual(self.open_store().cases["ZF-1"]["affected_challenges"][0]["version"], 2)
+
+    def test_challenge_source_exact_dependency_manifest_and_original_reviews(self) -> None:
+        first, second = self.priority_fixture("accept"), self.priority_fixture("edit")
+        original = copy.deepcopy(self.store.data["recommendations"])
+        body = self.challenge_body(first, "source")
+        with self.store.lock:
+            self.store._case("ZF-1")["home"]["epc"] = "B"
+            self.store.save()
+        fresh = self.priority_fixture()
+        self.store.resident_action(self.sam, "ZF-1", body)
+        self.resolve_challenge()
+        self.assertEqual(
+            self.stale_sets(), ({first["id"], second["id"]}, {first["id"], second["id"]})
+        )
+        self.assertNotIn(fresh["id"], self.stale_sets()[0])
+        self.assertEqual(self.store.data["recommendations"][:2], original)
+        self.assertEqual(self.open_store().latest_priority(self.sam)["stale"], False)
+
+    def test_challenge_policy_cross_case_and_other_version_manifest(self) -> None:
+        first = self.priority_fixture("accept")
+        with self.store.lock:
+            self.store._case("ZF-5")["owner_code"] = self.rae["code"]
+            self.store.save()
+        other_case = self.store.ai_priority(self.rae, mode="workflow-only")
+        self.store.resolve_priority(self.rae, other_case["id"], "accept")
+        distinct = self.priority_fixture()
+        with self.store.lock:
+            record = self.store.data["recommendations"][-1]
+            record["policy_version"] = "SYN-different-policy-version"
+            self.store.save()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(first, "policy"))
+        self.resolve_challenge()
+        expected = {first["id"], other_case["id"]}
+        self.assertEqual(self.stale_sets(), (expected, expected))
+        self.assertNotIn(distinct["id"], expected)
+        self.assertFalse(self.store.latest_priority(self.rae)["actionable"])
+        self.assertFalse(self.store.latest_priority(self.rae)["relied_on"])
+
+    def test_challenge_unknown_legacy_source_and_closed_input(self) -> None:
+        proposal = self.priority_fixture()
+        with self.store.lock:
+            self.store.data["recommendations"][-1].pop("source_versions", None)
+            self.store.save()
+        for body in (
+            self.challenge_body(proposal, "source"),
+            dict(self.challenge_body(proposal), recorded_by=self.pam),
+            dict(self.challenge_body(proposal), owner=self.kim["email"]),
+            dict(self.challenge_body(proposal), proposal_version="stale"),
+        ):
+
+            def attempt(body: dict[str, Any] = body) -> None:
+                self.store.resident_action(self.sam, "ZF-1", body)
+
+            self.unchanged_failure(attempt)
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))
+        self.resolve_challenge()
+        with self.assertRaises(PermissionError):
+            self.store.resolve_priority(self.sam, proposal["id"], "accept")
+        with self.assertRaises(PermissionError):
+            self.store.resolve_priority(
+                self.sam, proposal["id"], "edit", "SYN", [dict(case_id="ZF-1", reason="SYN")]
+            )
+        self.assertEqual(
+            self.store.resolve_priority(self.sam, proposal["id"], "reject", "SYN")["status"],
+            "Rejected",
+        )
+        self.store.log_call(self.sam, "ZF-1", "SYN manual", "SYN unrelated manual work")
+        self.assertTrue(self.store.cases["ZF-1"]["contacts"])
+        hazards = copy.deepcopy(self.store.cases["ZF-1"]["hazards"])
+        idx = self.store.raise_hazard(
+            self.sam,
+            "ZF-1",
+            "Damp and mould",
+            "Emergency",
+            "SYN immediate human intake",
+            dict(source="SYN independent hazard", aware_at="2026-01-01T10:00:00+01:00"),
+        )
+        after = self.open_store().cases["ZF-1"]["hazards"]
+        self.assertEqual(after[:idx], hazards)
+        self.assertEqual(after[idx]["source"], "SYN independent hazard")
+        self.assertEqual(after[idx]["aware_at"], "2026-01-01T09:00+00:00")
+        self.assertEqual(after[idx]["hold"]["status"], "Active")
+
+    def test_challenge_source_capture_precedes_generation(self) -> None:
+        before = ai_tasks.source_hashes(self.store, self.sam, ["ZF-1"])
+        run = self.store.ai.run
+
+        def change_during_generation(*args: Any, **kwargs: Any) -> Any:
+            with self.store.lock:
+                self.store._case("ZF-1")["home"]["epc"] = "B"
+                self.store.save()
+            return run(*args, **kwargs)
+
+        with patch.object(self.store.ai, "run", side_effect=change_during_generation):
+            self.priority_fixture()
+        self.assertEqual(
+            self.store.data["recommendations"][-1]["source_versions"]["ZF-1"], before["ZF-1"]
+        )
+        self.priority_fixture()
+        self.assertNotEqual(
+            self.store.data["recommendations"][-1]["source_versions"]["ZF-1"], before["ZF-1"]
+        )
+
+    def test_challenge_multiple_causes_source_case_isolation_and_export(self) -> None:
+        first, second = self.priority_fixture("accept"), self.priority_fixture("edit")
+        with self.store.lock:
+            self.store._case("ZF-5")["owner_code"] = self.rae["code"]
+            self.store.save()
+        other = self.store.ai_priority(self.rae, mode="workflow-only")
+        # Deliberately identical hash on a distinct case tests the namespace boundary.
+        with self.store.lock:
+            self.store.data["recommendations"][-1]["source_versions"]["ZF-5"] = self.store.data[
+                "recommendations"
+            ][0]["source_versions"]["ZF-1"]
+            self.store.save()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(first, "source"))
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(second, "proposal"))
+        self.resolve_challenge("CH-1")
+        self.resolve_challenge("CH-2")
+        self.assertEqual(
+            self.stale_sets(), ({first["id"], second["id"]}, {first["id"], second["id"]})
+        )
+        self.assertNotIn(other["id"], self.stale_sets()[0])
+        bundle = self.store.continuity_export(self.pam)
+        exported = next(r for r in bundle["ai_records"] if r["id"] == second["id"])
+        self.assertTrue(exported["review_stale"])
+        self.assertEqual(exported["status"], "Edited")
+        self.assertFalse(exported["relied_on"])
+        self.assertEqual(len(exported["challenge_ids"]), 2)
+        self.assertNotIn("SYN Please check", json.dumps(bundle))
+
     def test_first_contact_retention_withdrawn_expired_and_purge(self) -> None:
         from datetime import date
 
@@ -1917,6 +2151,120 @@ class AzureResidentDecisions(unittest.TestCase):
 class SqlResidentDecisions(JsonResidentDecisions):
     sql = True
     store: SqlStore
+
+    def test_challenge_accept_edit_writer_race_refuses_after_other_store_correction(self) -> None:
+        for action in ("accept", "edit"):
+            proposal = self.priority_fixture()
+            self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))
+            record_id = self.store.cases["ZF-1"]["affected_challenges"][-1]["id"]
+            other = self.open_store()
+            save = self.store.save
+
+            def correct_before_save(
+                other: Any = other,
+                record_id: str = record_id,
+                save: Callable[[], None] = save,
+            ) -> None:
+                other.resident_action(
+                    self.sam,
+                    "ZF-1",
+                    dict(
+                        action="challenge_resolve",
+                        id=record_id,
+                        expected_version=1,
+                        resolution="Correction recorded",
+                        resolution_ref="SYN competing human correction",
+                        explanation="SYN",
+                        next_update="2099-01-02",
+                    ),
+                )
+                save()
+
+            with patch.object(self.store, "save", side_effect=correct_before_save):
+                with self.assertRaises(PermissionError):
+                    self.store.resolve_priority(
+                        self.sam,
+                        proposal["id"],
+                        action,
+                        "SYN",
+                        [dict(case_id="ZF-1", reason="SYN")],
+                    )
+            reopened = self.open_store()
+            rec = next(r for r in reopened.data["recommendations"] if r["id"] == proposal["id"])
+            self.assertEqual(rec["status"], "Proposed")
+            self.assertFalse(
+                any(
+                    e["action"] == "ai_priority_" + action and proposal["id"] in e["detail"]
+                    for e in reopened.audit_entries()
+                )
+            )
+            self.assertTrue(reopened._rec_view(rec)["stale"])
+            self.assertEqual(
+                self.store.resolve_priority(self.sam, proposal["id"], "reject", "SYN")["status"],
+                "Rejected",
+            )
+
+    def test_challenge_open_rechecks_decision_and_owner_in_writer(self) -> None:
+        proposal = self.priority_fixture()
+        body = self.challenge_body(proposal)
+        other = self.open_store()
+        assert isinstance(other, SqlStore)
+        save = self.store.save
+
+        def review_before_save() -> None:
+            other.resolve_priority(self.sam, proposal["id"], "accept")
+            save()
+
+        with patch.object(self.store, "save", side_effect=review_before_save):
+            with self.assertRaises(ValueError):
+                self.store.resident_action(self.sam, "ZF-1", body)
+        self.assertNotIn("affected_challenges", self.open_store().cases["ZF-1"])
+        body = self.challenge_body(proposal)
+
+        def revoke_before_save() -> None:
+            other.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(dict(self.sam, code="SYN-revoked")), self.sam["email"]),
+            )
+            save()
+
+        with patch.object(self.store, "save", side_effect=revoke_before_save):
+            with self.assertRaises(PermissionError):
+                self.store.resident_action(self.sam, "ZF-1", body)
+        self.assertNotIn("affected_challenges", self.open_store().cases["ZF-1"])
+
+    def test_challenge_cross_case_policy_writer_fence(self) -> None:
+        first = self.priority_fixture()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(first, "policy"))
+        with self.store.lock:
+            self.store._case("ZF-5")["owner_code"] = self.rae["code"]
+            self.store.save()
+        other_proposal = self.store.ai_priority(self.rae, mode="workflow-only")
+        other = self.open_store()
+        save = self.store.save
+
+        def correct_policy() -> None:
+            other.resident_action(
+                self.sam,
+                "ZF-1",
+                dict(
+                    action="challenge_resolve",
+                    id="CH-1",
+                    expected_version=1,
+                    resolution="Correction recorded",
+                    resolution_ref="SYN other-case policy",
+                    explanation="SYN",
+                    next_update="2099-01-02",
+                ),
+            )
+            save()
+
+        with patch.object(self.store, "save", side_effect=correct_policy):
+            with self.assertRaises(PermissionError):
+                self.store.resolve_priority(self.rae, other_proposal["id"], "accept")
+        reopened = self.open_store()
+        self.assertEqual(reopened.latest_priority(self.rae)["status"], "Proposed")
+        self.assertTrue(reopened.latest_priority(self.rae)["stale"])
 
     def test_decision_snapshot_rechecks_registered_actor_in_writer_transaction(self) -> None:
         self.scope()
