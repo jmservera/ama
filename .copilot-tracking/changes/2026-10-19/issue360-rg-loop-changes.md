@@ -115,3 +115,86 @@ Final clean commit/full17gate remain mandatory after this record is frozen.
 Authoritative receipt and full command log will stay in a fresh external
 directory, not committed here. This record intentionally cannot contain the
 later self-referential final HEAD or claim a not-yet-executed gate pass.
+
+## P01-T04: Coordinator-Selected RV-001 Continuation (Correction Cycle1)
+
+The original process exited0 and returned frozen clean HEAD
+8f996e6ffc0a7e6a4953fff4523d1cbe01190522 before this continuation started.
+Coordinator explicitly routes RV-001 to Implement in this same task; this
+supersedes only the prior no-source-correction handoff direction, not its
+historical adverse assessment. No new research, critique or Review.
+Starting boundary: existing compiled test module, exact guard/refusal and
+resource connections, with bounded actual negative mutations before/after.
+Plan/details/state updated before source edits. No Bicep/guard/parser/matrix
+change, Azure attempt, publication, tenant or operational approval.
+Both provider capacity failures and RV-002/003 remain actual blockers.
+
+Original Review SHA256:
+686fd0bed206e904e32b985b8f9945116b44ef54e7ed53ff52c7223d3063d2ba.
+Original critique SHA256:
+9c6c3a32e97746bb688e21bec5a3fa85a4ee3634a8d811bb84760c09ba48726a.
+These will be checked unchanged before the frozen handoff.
+
+### P01-T04 Implementation and Concrete Mutation Results
+
+Only infra/tests/test_private_proof_publisher.py changed outside these current
+RPI artifacts. Replaced substring/nonempty dependency checks with exact compiled
+guard expression (both name and case-normalized exact ID, successful actual
+scope and empty refusal), nested string/minLength1, and exact guard dependencies.
+Asserted actual NSG attachment, existing-VNet child target, NIC subnet/public-IP,
+VM NIC and each dependency chain. Original Bicep, guard, parser and IAM matrix
+remain unchanged.
+
+The fifth test exercises16 deep-copied compiled negative fixtures against the
+same positive assertions. An independent external harness actually compiled
+the unchanged Bicep, loaded original tests from frozen8f996e6f and current tests,
+then ran each four-test baseline suite on identical mutated compiled ARM.
+This is executed failure evidence, not an assertion-only claim of sensitivity.
+
+| Compiled mutation | Original four tests | Corrected four tests |
+| --- | --- | --- |
+| Detached NSG attachment | Passed incorrectly | Failed attachment assertion |
+| Wrong NSG resource ID | Passed incorrectly | Failed attachment assertion |
+| Wrong existing-VNet child name | Passed incorrectly | Failed exact child target |
+| Wrong NIC subnet ID | Passed incorrectly | Failed exact NIC subnet |
+| Wrong NIC public-IP ID | Passed incorrectly | Failed exact public-IP reference |
+| Wrong VM NIC ID | Passed incorrectly | Failed exact VM NIC |
+| Unrelated NSG dependency instead of guard | Passed incorrectly | Failed exact guard dependency |
+| Unrelated public-IP dependency instead of guard | Passed incorrectly | Failed exact guard dependency |
+| Missing subnet dependency | Passed incorrectly | Failed NSG prerequisite |
+| Missing NIC dependencies | Passed incorrectly | Failed subnet/public-IP prerequisites |
+| Missing VM dependency | Passed incorrectly | Failed NIC prerequisite |
+| Accept refused scope instead of empty branch | Passed incorrectly | Failed exact refusal expression |
+| Wrong approved scope branch | Passed incorrectly | Failed exact approval expression |
+| Empty scope allowed by nested minLength0 | Passed incorrectly | Failed nonempty guard input |
+| Missing RG-name check | Failed already | Failed, retained protection |
+| Missing exact RG-ID check | Failed already | Failed, retained protection |
+
+Both unmutated baselines passed4/4. Original14/16 mutants survived; corrected
+0/16 survived,16/16 rejected by real assertion failures, no errors or skips.
+Detailed cases, failed test IDs and before/after logs:
+/tmp/issue360-rg-correction1/mutation-evidence.json,
+/tmp/issue360-rg-correction1/before-<mutation>.log and
+/tmp/issue360-rg-correction1/after-<mutation>.log.
+Reproduction harness and exact compiled fixtures are beside that evidence.
+No credential environment inherited; heavy work used /tmp/ama-rpi-heavy.lock.
+
+Five focused tests pass (16 negative subtests); complete infra discovery
+passes364 tests, zero skips. Logs: /tmp/issue360-rg-correction1/focused.log and
+/tmp/issue360-rg-correction1/infra-all.log. git diff --check passes.
+P01-T04 checked with this completion evidence; historical P01-T01 and original
+Review findings are preserved, not retroactively converted to acceptance.
+No new research/critique/Review, cloud writes or provider attempts; both original
+capacity failures, no-allocation receipt and RV-002/003 remain unchanged.
+Assertions/mutations do not prove cloud security, machine-checked live preview,
+runtime assignment, publication/pin, browser/tenant/SQL/AI or human approval.
+
+### Frozen-Candidate Preparation and Remaining Gate
+
+Authenticated gh api user returned id8036360/login jmservera. Repository-local
+author/committer email is8036360+jmservera@users.noreply.github.com.
+Fresh origin/main remains reviewed634a024d97d2da7168b8a7d5f343ab26e6108cf3.
+The corrected candidate and this evidence will be committed before running all17
+groups with caller PATH, fresh external output and fixed heavy lock.
+Final exact HEAD/receipt/group totals and post-freeze state must stay external;
+no later commit, push, PR, repeated Review or live acceptance is authorized.

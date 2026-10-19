@@ -9,9 +9,39 @@ Current implementation disposition: candidate source/tests/docs delivered;
 both actual provider preflights failed capacity before allocation. P01-T02
 and dependent P02 publication/pin remain blocked. The task expectations below
 retain their preimplementation design, not a claim those operations ran.
-233 focused and363 complete infra tests pass, zero skips; original failed
-missing-dependency/compile attempts retained externally. Ready for one original
-bounded-evidence Review, not live release acceptance or publication.
+Original233 focused/363 complete infra tests passed, zero skips; original failed
+missing-dependency/compile attempts retained externally. The one original
+bounded-evidence Review is Complete / Not accepted and immutable.
+The coordinator-selected RV-001 continuation adds five focused/364 complete
+infra passes, zero skips; no live release acceptance or publication.
+
+## Coordinator-Selected RV-001 Continuation (Correction Cycle1)
+
+P01-T04 is the only new active implementation boundary, after original
+process exit0 and frozen HEAD 8f996e6ffc0a7e6a4953fff4523d1cbe01190522.
+Extend only infra/tests/test_private_proof_publisher.py and associated current
+plan/changes/state. Compare original tests and corrected tests on real compiled
+ARM mutations: detached NSG, wrong VNet/subnet/NIC/public-IP, absent/unrelated
+guard dependencies and weakened refusal expression/minLength.
+Assertions protect source regressions, not actual cloud enforcement.
+External preview/assignment checks remain operator-owned and unexecuted.
+No cloud writes/attempts or new operational/human approval. Both capacity
+failures and tenant/live blockers persist. Original critique and Review are
+immutable and are not repeated.
+
+<!-- rpi:task id=P01-T04 -->
+### P01-T04 Completion Evidence
+
+Existing module now asserts the complete compiled approval/refusal expression,
+nonempty nested guard input, exact guard dependency IDs and the connected
+NSG -> existing-VNet child subnet -> NIC -> VM path, plus explicit public-IP
+reference and prerequisite dependencies. All16 negative fixtures reject.
+Actual external before/after runs of the four baseline contracts reproduce
+14 escaped mutants before and zero after, with two preexisting guard-condition
+rejections retained. Both unmutated baselines pass4/4; zero errors/skips.
+Five focused tests and364 complete infra tests pass. Logs and compiled fixture
+bytes: /tmp/issue360-rg-correction1/. No template or guard source change.
+No cloud command/attempt or claim of operational enforcement.
 
 ## Applied Original Critique Corrections
 

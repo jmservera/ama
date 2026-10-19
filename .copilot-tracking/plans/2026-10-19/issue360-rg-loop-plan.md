@@ -19,6 +19,9 @@ Status: implementation executed with provider-capacity blocker after direct
 critique dispositions (original verdict Revise retained, not overwritten).
 The actual B2als_v2 and D2as_v5 preflights both failed capacity restriction.
 No resources allocated; dependent image publication and pin remain unexecuted.
+Coordinator-selected RV-001 continuation now implements compiled boundary
+regressions with actual offline mutation evidence. Original critique/Review
+remain unchanged; this is not acceptance of the blocked live objective.
 
 ## Sources
 
@@ -107,6 +110,11 @@ Full gate adds all existing SQL/browser/images/scans without claiming live appro
 ### P01: Validate publisher and allocate bounded resources
 
 * [x] P01-T01: Implement template/safety tests and run focused tests/Bicep.
+<!-- rpi:task id=P01-T04 -->
+* [x] P01-T04: Implement RV-001 compiled boundary regressions and before/after
+  mutation evidence. Five focused/364 complete infra tests pass, zero skips;
+  original tests accept14/16 mutants, corrected tests reject16/16.
+  Fresh final commit/full local gate evidence remains external and pending.
 * [ ] P01-T02: BLOCKED: private plan/inventory generated, both exact provider
   preflights refused capacity; allocation/assignment/watchdog not executed.
 
@@ -147,10 +155,27 @@ coverage by the static all-Bicep parser. No test removal/parser exclusion.
 
 ## Follow-Up Items
 
-Review RV-001: strengthen exact compiled resource-relationship and negative
-guard tests in a later rpi-implement invocation. Current template was inspected
-as correctly wired, but test coverage is incomplete. Original Review is not
-overwritten or rerun; this task makes no post-Review source correction.
+Review RV-001 is now explicitly selected by the coordinator for bounded
+rpi-implement continuation of this same task (correction cycle1).
+Only the existing test module and current RPI planning/state/changes artifacts
+may change. Assert compiled guard/refusal semantics, exact guard dependencies,
+existing-VNet child subnet, NSG attachment, NIC subnet/public-IP and VM NIC
+connections. Run actual bounded compiled mutations against original and
+corrected tests and retain concrete before/after results externally.
+Do not change the correctly wired Bicep, guards, IAM parser or matrix.
+Original critique and Not accepted Review remain byte-identical; no repeated
+Research, critique or Review. No Azure attempt, size/region escalation,
+publication/pin/browser/tenant success or new approval is authorized.
+
+P01-T04 implementation is complete with 16 concrete compiled mutations:
+14 escaped the original four tests, none escape the corrected four checks;
+both original and corrected baselines pass. Two original guard-condition
+checks already rejected the missing-name/ID mutants and remain protected.
+The added fifth test persistently exercises all16 negative fixtures.
+Evidence: /tmp/issue360-rg-correction1/mutation-evidence.json and per-case logs.
+No actual cloud-security proof, preview validator or role-assignment validation
+is claimed. Original Review remains Not accepted; coordinator assessment pending.
+
 Review RV-002/003 preserve publication/live-acceptance blockers below.
 Actual UK South publisher capacity remains the primary technical blocker;
 fresh provider-preflight success or an existing verified private publisher is
@@ -162,8 +187,10 @@ failed application-read probe. #358 real KV preservation round-trip follows.
 
 ## Handoff
 
-Bounded implementation evidence is ready for its one original Review.
-P01-T02/P02-T01/P02-T02 remain blocked, not complete. Review must assess source
-and actual failed-preflight evidence without inventing live completion.
-Final commit/full17gate remain after Review. Changes path:
+The one original Review is complete / Not accepted and unchanged.
+Coordinator-selected RV-001 source-test correction is implemented; no repeated
+Review. P01-T02/P02-T01/P02-T02 remain blocked, not complete.
+Final corrected commit/full17gate remain to run; authoritative receipt and
+post-freeze state stay external. Coordinator independently assesses exact
+HEAD/base/receipt and primary evidence before publication. Changes path:
 .copilot-tracking/changes/2026-10-19/issue360-rg-loop-changes.md.
