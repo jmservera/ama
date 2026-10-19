@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-16T14:46:25+00:00",
-  "commit": "b1fd9042e007ebafcd3974b5fd0c8971e78aef16",
+  "scored_at": "2026-10-19T10:37:26+00:00",
+  "commit": "e87967580520f421e6181dff546b478bf5c02f1a",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38917059258",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39237980947",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
-    "prd": "3b6b9a783b413c3e44d57b81fd669f8c4d3adf3b5b623ac0d398d3f8c653192c",
-    "adr": "d5924c3033c45b516706214434257c24be01996d7ff84445af1b311d27d8ca90",
-    "solution-code": "bfdb8146ba717b013779dafac249ad66645bbe03b2caa3ad87b38f7a182585a6",
-    "infrastructure": "f38e43dda897bd125fe77f9547295c999ad4a07c5a4c74c254a27c0fb6481de6",
+    "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
+    "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
+    "solution-code": "e3d9d470ef217d40492fb0e5d52ba4b27fb0944195f8ee370f4d45d28784834d",
+    "infrastructure": "8ac9f155e642c4b8e84f86fd534ccd213846c644408317d7f8cad4c94dfb7c58",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 48,
@@ -61,12 +61,12 @@
         "infra/main.bicep:494,521",
         "infra/tests/test_bicep_policy.py:368-382"
       ],
-      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema (ContainerAppConsoleLogs_CL/Log_s) that could never fire. Diff corrects to resource-specific schema with a test asserting it; observability now functions, but still no measured cost/perf evidence."
+      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema that could never fire. Diff corrects to resource-specific schema with a test asserting it; observability now functions, but still no measured cost/perf evidence. The new private-proof-publisher.bicep addendum i..."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a governance/admission-control feature, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a governance/admission-control feature plus an undeployed infra provisioning experiment, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
@@ -106,7 +106,7 @@
       "evidence": [
         "mvp/README.md:866-880"
       ],
-      "rationale": "README documents the new release-admission feature clearly with concrete API/behaviour detail, well-integrated into existing capstone documentation prose. Still capped at Good(4): capstone deck itself remains thin and this is solution-code documentation, not deck content."
+      "rationale": "README documents the new release-admission feature clearly with concrete API/behaviour detail, well-integrated into existing capstone documentation prose. The ADR 0002 and infra/README.md additions in this diff are dense, heavily-hedged operational-log prose describing a failed/undeployed provisi..."
     },
     "B7": {
       "score": 3,
