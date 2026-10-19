@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-19T13:38:09+00:00",
-  "commit": "1b4cbeef7aa98dec77fc33293b80a671925289f3",
+  "scored_at": "2026-10-19T16:01:06+00:00",
+  "commit": "a97314e1a9ea1716229c8923d20c4a5ec7d43db0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39260535932",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39280688591",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
     "solution-code": "e3d9d470ef217d40492fb0e5d52ba4b27fb0944195f8ee370f4d45d28784834d",
-    "infrastructure": "8ac9f155e642c4b8e84f86fd534ccd213846c644408317d7f8cad4c94dfb7c58",
+    "infrastructure": "7211eab15e6fc6befa4cda343b85c26a799f1924503bd670cdb185a514d0ce64",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 48,
@@ -44,7 +44,7 @@
         "mvp/zavaforward_mvp/assistant_release.py:1-124",
         "mvp/tests/test_assistant_release.py:32-45,127-150"
       ],
-      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch when absent/expired/revoked, and quarantining/suspending drift."
+      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch when absent/expired/revoked, and quarantining/suspending drift. The changed infra/R..."
     },
     "A4": {
       "score": 5,
@@ -61,7 +61,7 @@
         "infra/main.bicep:494,521",
         "infra/tests/test_bicep_policy.py:368-382"
       ],
-      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema that could never fire, now corrected with an asserting test. Diff's new NSG outbound-restriction additions are security-adjacent, not operations evidence; no measured cost/perf added."
+      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema that could never fire, now corrected with an asserting test. The changed infra/README.md this run adds dense narrative describing a one-off manual synthetic-secret roundtrip investigation (GETs, PATCH, cleanup)..."
     },
     "A6": {
       "score": 3,

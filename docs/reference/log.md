@@ -6495,3 +6495,60 @@ metadata when the knowledge base was created.
   with 331 passing and no skips after restoring the pinned missing runtime.
   Compiler-generated lock and native actionlint/ShellCheck pass. Full 17-group
   frozen-candidate gate and coordinator assessment are separate required steps.
+
+## [2026-10-19] ingest | Issue358 actual existing-resource preservation preflight
+
+* Read complete live issue/comments and merged374, then traced the unchanged
+  production helper/payload. Isolated preservation reconciliation/ARM PATCH
+  does not intrinsically need image publication or Graph; full credential/setup
+  mutation remains broader and was not invoked.
+* Actual production Azure.rest GET at2025-07-01 confirms explicit null secrets,
+  zero KV pairs and env/init/scale/registry secret bindings on all three
+  existing ama apps. Both APIs have no auth secret ref/token store binding;
+  agents auth read failed, not silently treated as a successful empty result.
+  App-scoped permission metadata includes write/listSecrets, not provider proof.
+* Demo labels are nonproduction intent, not guarded profile proof: unchanged
+  require_demo refuses unknown/malformed deployment evidence. The primary
+  live blocker is no populated existing target. Empty PATCH, clone and new
+  sentinel state cannot replace literal preservation acceptance.
+* Updated [existing runbook](../../infra/README.md#existing-resource-preservation-preflight-2026-10-19),
+  [dated evidence](../architecture/cutover-evidence-pack.md#existing-resource-preservation-preflight-2026-10-19)
+  and index. Final readback retains null/count/revision/lock state. Zero cloud
+  writes/listSecrets/secret-value reads; no source/test defect/change or new
+  offline substitute. No rollback/deletion needed; owned bytecode removed,
+  only sanitized external0700/0600 summaries retained. Original evidence,
+  log entries and owner memory remain unchanged; #358 and whole demo acceptance
+  are not claimed. No review-ready publication candidate/full-gate receipt is
+  created for this explicitly no-heavy-gate blocked disposition.
+
+## [2026-10-19] update | Issue358 isolated real synthetic preservation evidence
+
+* Later explicit owner direction selected a separately reviewed temporary
+  synthetic baseline, not modification of existing running apps. Supplemental
+  research and amended lifecycle plan/details/changes preceded all allocations;
+  one independent new-material safety assessment directly read primary metadata.
+  Original critique and original Partial / Residual Review remain byte-identical.
+* Native secureString ARM deployment created exactly one synthetic vault secret
+  after a new private synthetic-only cleanup job proved its exact absent-name
+  metadata route. Dedicated MI grants were secret-scoped Secrets Officer and
+  registry-scoped AcrPull only; no existing identity/workload/job was changed.
+* Real baseline Succeeded before unchanged production preserve_app_secrets and
+  Azure.rest configuration-only PATCH. Actual InProgress/Succeeded readback and
+  private comparisons preserve KV URL/identity, known resolved synthetic KV
+  value, unrelated value, unused binding, configuration/template/MI/tags/revision.
+  All eight exact comparisons pass; no source defect/fix or offline substitute.
+* App, active/soft-deleted secret, deployment history, job/executions, MI and
+  final role pair were removed by15:09:10Z. All ten role IDs across earlier
+  cleaned operator-correction incarnations were re-read absent; all11 old
+  workload snapshots, RG membership and existing backing hashes match.
+  One temporary app replica was observed despite min0; no zero-runtime/settled
+  zero-cost claim. Four private job executions were bounded to120seconds/retries0.
+* Updated [evidence/cleanup table](../architecture/cutover-evidence-pack.md#real-temporary-synthetic-preservation-roundtrip-2026-10-19),
+  [existing runbook](../../infra/README.md#real-temporary-synthetic-preservation-2026-10-19)
+  and index. Sanitized primary observations are included in candidate execution
+  evidence for in-worktree access; exact IDs/comparison hashes remain external0600.
+  This is real temporary synthetic component proof, not originally populated
+  deployed-app/full credential setup, profile/browser/SQL/AI/human acceptance.
+  #358 remains open for coordinator judgement; no push/PR/merge/status/settings
+  action. Frozen full local gate/receipt and coordinator assessment remain
+  separate publication requirements.

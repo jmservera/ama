@@ -1,0 +1,105 @@
+{
+  "task_id": "issue-358-live-preservation",
+  "task_slug": "live-keyvault-preservation-358",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-19/live-keyvault-preservation-358-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-19/live-keyvault-preservation-358-plan.md",
+    "details": ".copilot-tracking/details/2026-10-19/live-keyvault-preservation-358-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-19/live-keyvault-preservation-358-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-19/live-keyvault-preservation-358-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-19/live-keyvault-preservation-358-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Real temporary synthetic component preservation passed and exact cleanup verified",
+      "status": "P02/P03/P04-T01 complete; original populated-app acceptance not relabeled",
+      "evidence": ".copilot-tracking/changes/2026-10-19/live-keyvault-preservation-358-synthetic-summary.json; 2026-10-19T15:07:08Z eight exact comparisons; cleanup15:09:10Z; all10 historical role IDs absent; all11 existing workloads and RG/backing hashes match; no source defect/change"
+    },
+    {
+      "decision": "Freeze candidate before full gate; post-freeze operational state remains external",
+      "status": "gate pending as of source freeze; no receipt pass anticipated",
+      "evidence": "P04-T02; /tmp/issue358-rpi-final-20261019-1520/receipt.json and /tmp/issue-358-synthetic-20261019-1450/final-state.json own actual post-commit gate outcome without tracked writes invalidating HEAD. Coordinator exact-head review is still required before publication."
+    },
+    {
+      "decision": "Supplemental lifecycle safety assessment executed once on new scope",
+      "status": "Suitable with limits; F1-F5 directly resolved before writes",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-19/live-keyvault-preservation-358-synthetic-safety.md; primary external evidence directly inspected; original critique/Review hashes unchanged"
+    },
+    {
+      "decision": "Same-task supplemental synthetic lifecycle research and execution",
+      "status": "owner-directed automatic continuation",
+      "evidence": "2026-10-19 owner selects least-impact isolated temporary synthetic Container App in existing ama environment; no existing workload/identity modification, no RG deletion, no publication before coordinator exact-head assessment. Original critique and Partial/Residual Review immutable."
+    },
+    {
+      "decision": "Run ordered full RPI loop automatically",
+      "status": "owner-directed",
+      "evidence": "2026-10-19 user explicitly requests research, original critiqued plan, implement and original review"
+    },
+    {
+      "decision": "Existing RG ama resource operations only, never delete RG; no publication before coordinator assessment",
+      "status": "confirmed",
+      "evidence": "2026-10-19 task direction; branch test/live-keyvault-preservation-358 at supplied base with initially clean worktree"
+    },
+    {
+      "decision": "Research executed; Ready only for no-write evidence disposition, literal live criterion blocked",
+      "status": "complete",
+      "evidence": "Original research C1-C5/W1-W5; actual production ARM GET inventory all3 apps null; actual require_demo refusal separately qualified"
+    },
+    {
+      "decision": "One original final-candidate plan critique executed",
+      "status": "Complete / Pass for no-write disposition only",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-19/live-keyvault-preservation-358-plan-critique.md; zero findings; no live approval inferred"
+    },
+    {
+      "decision": "P01 no-write implementation completed; no publishable candidate created",
+      "status": "complete",
+      "evidence": "Final production GET2026-10-19T14:24:58Z stable; source/tests unchanged;4 Markdown deltas plus7 current RPI artifacts local/uncommitted; HEAD equals base; no commit/gate/receipt/publication"
+    },
+    {
+      "decision": "One original independent Review executed; original outcome retained without repeat",
+      "status": "Partial / Residual work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-19/live-keyvault-preservation-358-review.md; RV-001 Medium target baseline, RV-002 Low roster profile, RV-003 Medium primary-summary access limitation. Reviewer chose not to open supplied external files; no OS access denial demonstrated"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B1",
+      "summary": "Originally populated deployed-app criterion remains distinct from the now-passed real temporary synthetic baseline component",
+      "resolution": "Coordinator assesses sanitized primary evidence/receipt and decides whether original criterion requires a genuinely originally populated target; keep issue open and do not relabel original Review"
+    },
+    {
+      "id": "P04-T02",
+      "summary": "Frozen exact-HEAD full17-group gate and coordinator independent assessment remain pending at source freeze",
+      "resolution": "Commit clean candidate, run full gate and verify external receipt, persist external final-state.json; no source writes or publication after gate"
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Freeze clean candidate with gh-derived noreply author/committer and Copilot trailer; run full17-group gate at supplied/current main base using fixed lock, scrubbed credentials and preserved Node PATH. Authoritative post-freeze continuation is /tmp/issue-358-synthetic-20261019-1450/final-state.json; external receipt /tmp/issue358-rpi-final-20261019-1520/receipt.json. No push/PR until coordinator exact-head assessment."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator independent exact-head and receipt assessment",
+      "rationale": "Highest immediate value: evaluate real synthetic preservation and cleanup with directly readable in-worktree primary summary; publication remains prohibited",
+      "evidence": "P04-T02 and sanitized synthetic-summary.json; original RV-003 access gap addressed prospectively, original Partial Review unchanged"
+    },
+    {
+      "rank": 2,
+      "task": "Disposition original populated deployed-app criterion after synthetic evidence assessment",
+      "rationale": "Avoid unnecessary further cloud work: coordinator first decides whether genuinely pre-populated deployed-app evidence remains required; no automatic target mutation",
+      "evidence": "RV-001; successful representative synthetic baseline differs from originally populated deployed-app/token-store case"
+    },
+    {
+      "rank": 3,
+      "task": "Resolve resource-bound profile evidence before future automatic roster generation",
+      "rationale": "Separate lower-priority roster eligibility uncertainty; not a prerequisite imposed on the preservation-only component",
+      "evidence": "RV-002; actual unchanged require_demo probe refused unknown/malformed deployment template/parameters"
+    }
+  ]
+}
