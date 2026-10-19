@@ -141,6 +141,8 @@ For issue #220, the [affected-person challenge boundary](./research/ux/customer-
 records supplied digital/non-digital challenges against retained priority
 proposal/source/policy versions, current human ownership and selective stale
 reviews. Creation-time citation snapshots are not universal document versions.
+Bounded history controls and exact reference entry restore access to targets,
+open resolution actions and resolved explanations beyond the newest 50 records.
 Other assistants/forms, whole-system AC-071 and qualified/resident acceptance
 remain open; no new legal or redress authority is inferred.
 

@@ -126,6 +126,13 @@ There is no automatic redress decision, consent, refusal, sanction, complaint
 closure, retaliation, safety-clock change or wait for challenge resolution
 before independent hazard intake.
 
+The workbench retains access beyond the newest 50 records using bounded
+Older/Newer history controls, an exact suggestion-reference input and
+URL-bound page state. Older open challenges can still receive a supplied
+resolution; older resolved explanations remain readable. Paging preserves an
+opening draft and asks before discarding an unsaved resolution on another page.
+This corrects a reproduced historical action cutoff, not a new retention policy.
+
 Creation-time source hashes describe audience-filtered citation labels, not
 universal document versions. Historical missing versions stay Unknown. Other
 assistant/form contracts, whole-system AC-071, issue-specific native SQL

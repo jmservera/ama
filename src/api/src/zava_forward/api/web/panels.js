@@ -259,12 +259,52 @@ function affectedChallengePanel(c, id, refresh) {
   const targets = c.challenge_targets;
   const records = c.affected_challenges || [];
   const named = (person) => person?.name || "Unknown";
+  const targetOptions = h("datalist", { id: "challenge-target-options" });
+  const historyFor = (key, label, rows, render, empty) => {
+    const params = new URLSearchParams(location.hash.split("?")[1] || "");
+    const lastPage = Math.max(0, Math.ceil(rows.length / 50) - 1);
+    const supplied = Number(params.get(key) || 0);
+    let page = Number.isSafeInteger(supplied) && supplied >= 0 ? Math.min(supplied, lastPage) : 0;
+    const content = h("div", {});
+    const status = h("p", { role: "status", "aria-live": "polite", tabindex: -1 });
+    const move = (delta) => {
+      if (content.querySelector('form[data-unsaved="true"]')
+          && !window.confirm("Discard the unsaved resolution draft on this page?")) return;
+      page += delta;
+      const query = new URLSearchParams(location.hash.split("?")[1] || "");
+      query.set(key, String(page));
+      history.replaceState(null, "", `#/case/${encodeURIComponent(id)}?${query}`);
+      displayedHash = location.hash;
+      draw();
+      status.focus();
+    };
+    const newer = h("button", { type: "button", onclick: () => move(-1) }, `Newer ${label}`);
+    const older = h("button", { type: "button", onclick: () => move(1) }, `Older ${label}`);
+    const draw = () => {
+      const end = Math.max(0, rows.length - page * 50);
+      const start = Math.max(0, end - 50);
+      const visible = rows.slice(start, end);
+      content.replaceChildren(...(visible.length ? visible.map(render) : [h("p", {}, empty)]));
+      if (key === "challenge-target-history") {
+        targetOptions.replaceChildren(...visible.map((target) => h("option", { value: target.proposal_id })));
+      }
+      status.textContent = rows.length
+        ? `Showing ${start + 1} to ${end} of ${rows.length} ${label}.`
+        : `No ${label} recorded.`;
+      newer.disabled = page === 0;
+      older.disabled = page === lastPage;
+    };
+    draw();
+    return h("section", { id: key, "aria-label": `${label} history` }, status,
+      h("div", { class: "row" }, newer, older), content);
+  };
   const formFor = (key, title, fields, build, correction = false) => {
     const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
     const inputs = fields.map(([name, label, options]) => {
       const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id };
       const input = options ? h("select", attrs, options.map((option) => h("option", { value: option }, option)))
-        : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300 });
+        : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300,
+          ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}) });
       return { name, label, input };
     });
     const button = h("button", { type: "submit" }, title);
@@ -326,18 +366,19 @@ function affectedChallengePanel(c, id, refresh) {
   const staff = (me.staff || []).filter((person) => [
     "Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"
   ].includes(person.role));
-  const targetRows = targets.slice(-50);
   return h("section", { id: "affected-challenges", class: "card" },
     h("h2", {}, "Challenge a suggestion or ask for a correction"),
     h("p", {}, "Record only what the person supplied, including digital, phone, letter or in-person requests. A person owns the response. Nothing is sent here. Ask the named officer for accessible human help without using this screen. Urgent hazard response continues separately."),
     h("p", {}, "A challenge never means consent, refusal or a sanction. It does not close another request, change priority or delay safety work. A recorded human correction makes only suggestions and reviews that used that version need a fresh review. It does not change source information or policy automatically."),
     h("h3", {}, "Suggestion details"),
-    h("p", {}, `Showing ${targetRows.length} of ${targets.length} recorded priority suggestions. Older suggestions without a source version can still be challenged by suggestion reference.`),
-    targetRows.map((target) => h("details", {}, h("summary", {}, `Suggestion ${target.proposal_id}: ${target.stale ? "Needs a fresh review" : "No recorded correction"}`),
+    h("p", {}, "Browse older suggestions or enter an exact recorded suggestion reference. Suggestions without a source version can still be challenged by suggestion reference."),
+    historyFor("challenge-target-history", "suggestions", targets, (target) => h("details", {}, h("summary", {}, `Suggestion ${target.proposal_id}: ${target.stale ? "Needs a fresh review" : "No recorded correction"}`),
       h("p", {}, `Written by ${target.source === "ai" ? "AI" : "rules or template"}. Model: ${target.model || "Unknown"}. Prompt version: ${target.prompt_version || "Unknown"}. Source version for this case: ${target.source_version || "Unknown"}. Policy version: ${target.policy_version || "Unknown"}.`),
-      h("p", {}, `Human draft decision: ${target.human_decision?.status || "Unknown"}. Recorded by ${target.human_decision?.resolved_by || "Unknown"}. ${target.review_stale ? "Historical decision only; needs a fresh review." : "Not a works, consent or safety approval."}`))),
+      h("p", {}, `Human draft decision: ${target.human_decision?.status || "Unknown"}. Recorded by ${target.human_decision?.resolved_by || "Unknown"}. ${target.review_stale ? "Historical decision only; needs a fresh review." : "Not a works, consent or safety approval."}`)),
+    "No recorded priority suggestions."),
+    targetOptions,
     targets.length ? formFor("challenge-open", "Record supplied challenge", [
-      ["proposal_id", "Suggestion reference", ["", ...targetRows.map((target) => target.proposal_id)]],
+      ["proposal_id", "Suggestion reference"],
       ["target_kind", "Challenged information", ["", "proposal", "source", "policy"]],
       ["channel", "Supplied challenge channel", ["", "Digital", "Phone", "Letter", "In person"]],
       ["source", "Supplied challenge evidence reference"], ["request", "The person's supplied request"],
@@ -345,11 +386,12 @@ function affectedChallengePanel(c, id, refresh) {
       ["non_digital_route", "Accessible phone, letter or in-person route"], ["next_update", "Challenge next update date"]
     ], (body) => {
       const target = targets.find((item) => item.proposal_id === body.proposal_id);
+      if (!target) throw new Error("Enter an exact recorded suggestion reference from the suggestion history.");
       return { action: "challenge_open", ...body, proposal_version: target.proposal_version,
         decision_version: target.decision_version };
     }) : h("p", {}, "No recorded priority suggestion for this case. Ordinary human review and complaints remain available through the named officer."),
     h("h3", {}, "Recorded challenges and resolutions"),
-    records.length ? records.slice(-50).map((record) => h("div", {},
+    historyFor("challenge-record-history", "challenges", records, (record) => h("div", {},
       h("p", {}, `${record.id}: ${record.status}. ${record.channel}. ${record.request}`),
       h("p", {}, `Explanation: ${record.explanation}. Owner: ${named(record.owner)}. Manual route: ${record.non_digital_route}. Next update: ${fmtDate(record.next_update)}.`),
       h("p", {}, `Challenged ${record.target.kind}: ${record.target.id}, version ${record.target.version}. Supplied reference: ${record.source}. Human draft decision at opening: ${record.human_decision?.status || "Unknown"}.`),
@@ -359,7 +401,7 @@ function affectedChallengePanel(c, id, refresh) {
           ["resolution_ref", "Human resolution evidence reference"], ["explanation", "Permitted resolution explanation"],
           ["next_update", "Resolution next update date"]
         ], (body) => ({ action: "challenge_resolve", ...body, id: record.id, expected_version: record.version }), true)
-    )) : h("p", {}, "No challenges recorded."));
+    ), "No challenges recorded."));
 }
 
 async function financeQueueView() {

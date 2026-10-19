@@ -17,6 +17,7 @@
 | P02 | Core/HTTP/workbench | Complete; retained-priority slice | P02-T01, P02-T02 |
 | P03 | Validation/documentation | Complete; scoped proof and explicit limitations | P03-T01 |
 | P04 | Review/frozen gate | Original Review Partial / Not accepted; frozen external gate pending | P04-T01 |
+| P05 | Selected correction | Active; history/evidence, bounded assessment, corrected freeze/gate | P05-T01, P05-T02, P05-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Establish executable behavior proof
@@ -126,6 +127,54 @@ mutation. Coordinator independent exact-head assessment and owner
 human/tenant/qualified approvals remain outstanding regardless of local pass.
 
 ## Original Critique Direct Amendments
+
+## Selected Finding Continuation (P05, 2026-10-19)
+
+The current user and coordinator explicitly authorize RV-001/RV-002 implementation
+on the existing topic. First prove history actions fail beyond 50, then add
+bounded history access without changing core authorization, version bindings or
+selective invalidation. Extend the existing browser owner, not a new framework.
+Retain fresh permitted primary evidence in the current session review bundle;
+content exclusions prohibit relocation or reconstruction of excluded evidence.
+Obtain one bounded independent finding disposition, never a replacement Review.
+Freeze a corrected commit and run all17 local groups using the unchanged shared
+heavy lock and reviewed fetched main. No issue360 infra/operator edits or push.
+Original Review/critique bytes and Partial / Not accepted / Revise remain intact.
+
+P05-T01 complete: actual 52-target/52-challenge failure on uncorrected source;
+corrected bounded paging, exact reference entry, URL reload and draft guards.
+Actual history browser creates CH-53 against the oldest suggestion, resolves
+CH-1, reads CH-2's prior explanation and asserts only that exact proposal stale.
+Fresh original browser also passes; seven combined scoped axe scans have zero
+violations/incomplete at 320/390/1280px. Fresh core/HTTP challenge run: 19 tests
+OK, no skips. API Ruff/format/mypy and JS syntax pass.
+Substantive fresh primary outputs, source/output hashes and command manifest
+are in the current session `files/issue220-evidence/` review bundle. These are
+not relocated excluded logs. P05-T02 independent disposition pending;
+P05-T03 corrected commit/all17 receipt pending.
+
+Coordinator updated the same directive with the original all17 result: 16 pass,
+project-api failed with nine TaskReleaseRecord identity errors. P05-T04 is
+directly coupled prerequisite before freeze. Fresh actual TaskReleaseRecord
+reproduction: 16 tests, nine errors, at the current registered identity guard.
+Those fixtures replaced the actor code with an unrelated original case-owner
+code. Fix only synthetic work ownership to the unchanged registered coordinator;
+keep production identity/admission checks intact. Add explicit forged
+identity/no-write proof, run release and challenge cases together, and obtain
+a narrow independent disposition without redoing the history assessment.
+
+P05-T04 complete: test-only ownership helper replaces five forged identity
+constructions; production guard/admission bytes unchanged. Combined actual
+release/resident run: 139 tests, 137 passed, two skips exactly: SQLite JSON file
+rollback only and existing opt-in local browser commitment/reassignment.
+All 17 TaskReleaseRecord methods pass, including 30 forged identity/action/store
+combinations and valid rejection control. Independent narrow identity report
+finds corrected fixture contract with no introduced defect; current test SHA256
+504ee94de7ee745a2059f58eb1a1c8fd824124b9b5c9eac279ecce7427b113b0.
+Separate history/evidence and identity dispositions are not replacement Reviews.
+P05-T03 is the only remaining selected implementation task at this freeze:
+corrected commit, all17 against reviewed fetched main, external verified receipt
+and coordinator handoff. No further source/evidence commit after that gate.
 
 PC-001: priority accept/edit needs a dedicated context validated inside existing
 SQL writer, reading current case-held corrections including other-case policy

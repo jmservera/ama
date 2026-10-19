@@ -154,7 +154,7 @@ async function route() {
   clearTimeout(searchTimer);
   const signal = routeController.signal;
   const hash = location.hash || "#/";
-  const m = location.hash.match(/^#\/case\/(.+)$/);
+  const m = location.hash.match(/^#\/case\/([^?]+)(?:\?.*)?$/);
   const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : hash;
   document.querySelectorAll("#nav a").forEach((link) => {
     if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");

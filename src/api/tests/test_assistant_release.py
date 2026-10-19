@@ -244,6 +244,36 @@ class TaskReleaseRecord(Base):
         super().setUp()
         self.service.approvers = {self.pm["email"].lower()}
 
+    def priority_user(self, store):
+        """Assign synthetic work to the registered coordinator without forging identity."""
+        user = self.people[assistants.RC]
+        with store.lock:
+            old_owner = store._case("ZF-1")["owner_code"]
+            for case in store.cases.values():
+                if case["owner_code"] == old_owner:
+                    case.update(owner_code=user["code"], owner=user["name"], owner_role=user["role"])
+            store.save()
+        return user
+
+    def test_priority_review_refuses_forged_identity_without_writes(self):
+        from zava_forward.core.store import Store
+        json_store = Store(str(self.seed), str(self.root / "identity-live.json"),
+                           str(self.root / "identity-audit.jsonl"))
+        for store in (self.store, json_store):
+            store.ai = Ai()
+            user = self.priority_user(store)
+            out = store.ai_priority(user, 1, mode="workflow-only")
+            before = json.dumps(store.data, sort_keys=True)
+            for field in ("code", "email", "name", "role", "oid"):
+                for action in ("accept", "edit", "reject"):
+                    with self.subTest(store=type(store).__name__, field=field, action=action):
+                        with self.assertRaisesRegex(PermissionError, "Current registered named staff"):
+                            store.resolve_priority(dict(user, **{field: "forged"}), out["id"],
+                                                   action, "Review", out["items"])
+                        self.assertEqual(json.dumps(store.data, sort_keys=True), before)
+            self.assertEqual(store.resolve_priority(user, out["id"], "reject", "Manual route")["status"],
+                             "Rejected")
+
     def test_contract_fields_required_on_authenticated_record_route(self):
         for key in ("release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
                     "accountable_owner", "impact_assessment", "material_change_triggers", "evaluation_decision"):
@@ -338,9 +368,7 @@ class TaskReleaseRecord(Base):
 
     def test_cached_briefing_and_both_legacy_review_paths_recheck_release(self):
         ai = self.legacy()
-        user = self.people[assistants.RC]
-        # The synthetic case owner is from the original fixture, not the substituted staff roster.
-        user = dict(user, code=self.store._case("ZF-1")["owner_code"])
+        user = self.priority_user(self.store)
         ai._chat = lambda *a, **k: "- Fact [[Stage: Contacting resident]]"
         ordinary = self.store.ai_run(user, "ZF-1", "summary")
         briefing = self.store.briefing(user)
@@ -432,7 +460,7 @@ class TaskReleaseRecord(Base):
         self.store.ai = Ai()
         for store in (self.store, json_store):
             store.ai.endpoint = ""
-            user = dict(self.people[assistants.RC], code=store._case("ZF-1")["owner_code"])
+            user = self.priority_user(store)
             for source in ("ai", "template"):
                 for action in ("accept", "edit", "reject"):
                     with self.subTest(store=type(store).__name__, source=source, action=action):
@@ -485,7 +513,7 @@ class TaskReleaseRecord(Base):
 
     def test_fast_route_change_invalidates_cached_briefing_with_zero_new_calls(self):
         ai = self.legacy()
-        user = dict(self.people[assistants.RC], code=self.store._case("ZF-1")["owner_code"])
+        user = self.priority_user(self.store)
         calls = []
         ai._chat = lambda *a, **k: calls.append(1) or "- Fact [[ZF-1: Stage: Contacting resident]]"
         first = self.store.briefing(user)
@@ -499,7 +527,7 @@ class TaskReleaseRecord(Base):
 
     def test_strong_route_change_invalidates_priority_view_and_reviews(self):
         ai = self.legacy()
-        user = dict(self.people[assistants.RC], code=self.store._case("ZF-1")["owner_code"])
+        user = self.priority_user(self.store)
         ai._chat = lambda *a, **k: json.dumps([dict(case_id="ZF-4", reason="Safety", cites=["Open safety issues: 1"])])
         out = self.store.ai_priority(user, 1)
         self.assertEqual(out["source"], "ai")
@@ -514,7 +542,7 @@ class TaskReleaseRecord(Base):
     def test_denied_briefing_recovers_after_recording_release_without_case_edit(self):
         from zava_forward.core import ai_registry
         ai = self.legacy()
-        user = dict(self.people[assistants.RC], code=self.store._case("ZF-1")["owner_code"])
+        user = self.priority_user(self.store)
         calls = []
         ai._chat = lambda *a, **k: calls.append(1) or "- Fact [[ZF-1: Stage: Contacting resident]]"
         with self.service.transaction() as db:

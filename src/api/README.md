@@ -2622,6 +2622,14 @@ No resident consent, refusal, sanction, remedy outcome, unrelated closure or
 safety-clock change is inferred; urgent safety intake must not wait for a
 challenge.
 
+History is paged in bounded windows of 50 with keyboard-operable Older/Newer
+controls and URL-bound page state. Every retained target and open or resolved
+challenge remains reachable; the window is not a retention or action cutoff.
+The suggestion-reference field accepts an exact retained reference, with
+suggestions from the visible page. Browsing suggestions preserves the opening
+draft and its original binding; leaving a page with an unsaved resolution asks
+before discarding it.
+
 The issue-specific browser check runs the actual app against an isolated public
 synthetic SQLite fixture, with loopback-only traffic and no model call:
 
@@ -2638,3 +2646,9 @@ forms at 320/390/1280px, target sizes and reduced motion. Automated checks are
 scoped engineering evidence, not comprehensive WCAG, screen-reader, resident or
 human acceptance. The unchanged full gate's native SQL selectors are general
 regression, not issue-specific native SQL challenge acceptance.
+
+Add `--history` to the same browser command for the historical regression. It
+creates 52 actual workflow-only targets and 52 HTTP-recorded challenges, then
+opens a new challenge against the oldest target, resolves the oldest open
+challenge, reads an older resolved explanation, checks exact selective
+invalidation and denied projections, and reloads the URL-bound bounded pages.

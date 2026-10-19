@@ -164,3 +164,93 @@ independent exact-head assessment before any future publication, and flag owner
 qualified/resident review needs. Tenant setup remains separately interactive.
 No source fix, second critique, second Review or issue checkbox change follows
 the original adverse Review in this task.
+
+## Selected Finding Continuation (2026-10-19)
+
+Current user/coordinator direction selects RV-001/RV-002 for later ordinary
+implementation in the same worktree and stable identity. This explicitly
+supersedes the historical no-fix routing above, not the original Review.
+P05 is active: failing-before actual historical-browser action, bounded history
+correction, focused fresh evidence in the permitted session review bundle,
+bounded independent finding disposition, then corrected freeze/all17 gate.
+No original critique/Review change, repeated Review, content-exclusion bypass,
+issue360 operator edits or source publication is authorized.
+
+### P05-T01: Actual historical action correction
+
+Extended the existing browser owner with `--history`; actual HTTP records and
+workflow-only targets expose the former missing Older suggestions control at
+52 records before production edits. The new history controls render at most 50
+records with older/newer access, URL-bound reload and focused status. Exact
+reference entry accepts any retained authorized target; suggestions come from
+the visible bounded page. The opener retains its draft/binding across target
+paging; leaving an unsaved resolution page asks first. Core authority, version
+binding, manual/hazard and selective invalidation implementations are unchanged.
+
+Final actual browser proof: 52 targets, new CH-53 against oldest target, terminal
+CH-1 correction and CH-2 historical resolution visible; only the independently
+expected oldest proposal is stale and its original review is byte-identical.
+Invalid typed reference does not write; three denied role projections remain
+stripped. Actual negative-state comparisons preserve decisions/service/hazards.
+Original small browser flow also passes. Seven combined pinned axe 4.10.3 scoped
+scans report zero violations/incomplete, not full accessibility acceptance.
+Fresh focused core/HTTP: 19 OK, no skips; API Ruff/format/mypy 62 sources and
+changed JS syntax/whitespace pass.
+
+Fresh permitted substantive evidence is retained at
+`/home/azureuser/.copilot/session-state/bc713866-d9c3-479b-acc9-bb5780f2ebcd/files/issue220-evidence/`.
+It includes manifest, failing-before log, final core/HTTP/browser/static outputs,
+browser JSON scans and SHA256 bindings. No excluded historical log was copied
+or reconstructed; original reviewer's historical access gap is not rewritten.
+The initial new fixture used a nonexistent recommendations attribute; corrected
+to actual data collection before meaningful failing-before proof. Subsequent
+locator ambiguity between summary/submit was retained in history-after.log,
+fixed with the existing first-match disclosure pattern and rerun successfully.
+No product failure is hidden as a successful initial run.
+
+### P05-T02: Bounded independent history/evidence disposition
+
+Independent assessor inspected actual three-file correction, fresh permitted
+raw outputs/JSON and source/result hashes. Disposition: RV-001 corrected within
+the retained-priority boundary; RV-002 fresh primary evidence accessible, with
+original historical exclusion limits preserved. No introduced defect found.
+Report: reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-findings.md.
+This is not a repeat original Review or publication/whole-issue approval.
+
+### P05-T04: Directly coupled full-gate regression
+
+The coordinator added the historical all17 outcome to the same directive:
+16 passed, project-api failed with nine TaskReleaseRecord identity errors.
+Before another expensive gate, actual fresh API reproduction ran 16 existing
+TaskReleaseRecord tests and reproduced all nine errors. The new guard correctly
+rejects a fixture that changes a registered actor's code to an unrelated
+original case owner's code. Correct the fixture's synthetic case ownership
+instead; production current-identity and release guards remain byte-unchanged.
+Added a JSON/SQLite forged-field/action no-write regression with a valid
+registered rejection positive control. Fresh combined release/challenge run
+and narrow independent identity disposition are pending. The historical failed
+receipt is immutable and never presented as passing.
+
+### P05-T04 completion and corrected freeze readiness
+
+Combined fresh actual `test_assistant_release` plus JSON/SQLite resident and
+HTTP resident suites: 139 tests, 137 pass, two explicit skips (SQLite JSON
+file rollback only; existing opt-in local browser commitment/reassignment).
+All 17 TaskReleaseRecord methods pass. No existing assertions were removed;
+template acceptance/edit/rejection and revoked/changed-release denials remain.
+Independent narrow identity disposition inspects source/primary evidence and
+finds fixture correction justified, with no production authorization weakening:
+reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-identity-findings.md.
+Production core files are unchanged from the original candidate.
+
+P05-T01/T02/T04 complete. Current scope is ready to freeze, not accepted as a
+whole issue. Both bounded reports preserve original Partial / Not accepted
+Review and Revise critique. Original historical gate's 16-pass/one-failure
+outcome remains failed; no receipt is reused. P05-T03 all17/verification/handoff
+must follow the corrected commit. Current fetched/reviewed base is unchanged
+eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. Final results/state/receipt and exact
+commit/base hashes will be external, with no subsequent commit or publication.
+
+P05-T01 checked; P05-T02 independent bounded assessment and P05-T03 corrected
+freeze/full gate remain. Original Review/critique hashes still match the
+immutable values above; no second Review or critique was run.

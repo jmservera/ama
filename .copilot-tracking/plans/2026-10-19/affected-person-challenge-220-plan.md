@@ -185,8 +185,50 @@ immutable artifact. No second critique. All corrections are planner-owned.
 
 * Extend challenge bindings to other assistant/form paths only in separately reviewed scope; this bounded slice does not establish whole-system AC-071.
 * Owner: qualified human/legal/RAI and accessible resident comprehension acceptance; no local synthetic substitute.
-* Original Review RV-001: later rpi-implement restores reachability for older targets/open resolution forms without unbounded rendering; not repaired in this one-Review task.
-* Original Review RV-002: eligible independent evidence verifier inspects original temporary-path logs/results; reviewer restriction does not establish a parent failure or a pass.
+* Original Review RV-001/RV-002 are selected for the explicitly authorized continuation below; their original findings and verdict remain immutable.
+
+<!-- rpi:phase id=P05 -->
+## [ ] P05: Selected historical reachability and evidence correction
+
+<!-- rpi:task id=P05-T01 -->
+### [x] P05-T01: Restore bounded access beyond the last 50
+
+Preserve the latest-first initial window, version tokens, authorization and
+manual/hazard routes. Add reachable bounded history for targets and challenges,
+with unsaved draft protection. Prove an older target can be challenged and an
+older open challenge resolved through actual browser/HTTP persistence, including
+an older resolved explanation. First capture the actual failure on current source.
+
+<!-- rpi:task id=P05-T02 -->
+### [x] P05-T02: Permitted evidence and bounded independent disposition
+
+Retain fresh sanitized substantive outputs under the current session's
+`files/issue220-evidence/` for independent access. Never relocate or reconstruct
+content-excluded evidence. Assess only actual corrections and accessible primary
+evidence, not the original Review again. Preserve RV-003/RV-004 acceptance limits.
+
+<!-- rpi:task id=P05-T04 -->
+### [x] P05-T04: Resolve directly coupled TaskReleaseRecord identity regression
+
+The coordinator's updated directive reports nine project-api gate errors.
+Actual focused reproduction confirms fixtures substitute a case-owner code
+into an otherwise registered identity. Preserve the trusted current-identity
+guard. Align synthetic case ownership with the unchanged registered coordinator,
+retain release-denial assertions and add forged-identity no-write proof.
+Run the existing API release tests together with focused challenge tests, retain
+fresh permitted evidence and obtain a separate narrow identity disposition.
+This is directly coupled regression work, not an expansion into issue360.
+
+<!-- rpi:task id=P05-T03 -->
+### [ ] P05-T03: Corrected exact-head freeze and complete gate handoff
+
+Dependencies: P05-T01, P05-T02, P05-T04.
+
+Commit corrected source and reconciled dated artifacts, then execute all 17
+groups against fetched reviewed current main, with the existing shared heavy
+lock. Preserve failures/skips. Keep receipt and final handoff external, make no
+later commit and do not push. P04's historical frozen receipt is not closure of
+RV-001. No new critique or Review.
 
 ## Handoff
 
@@ -194,6 +236,19 @@ P01-P03 complete and reconciled with changes/details. One independent original
 Review executed Partial / Not accepted; RV-001..004 remain routed, with no repair
 or repeat Review. Candidate freeze and external exact-head gate follow.
 Original critique remains Revise; applied dispositions are not a rewritten Pass.
+The 2026-10-19 user/coordinator selected P05 as ordinary later implementation
+of findings. P05 supersedes the prior no-repair instruction for those findings
+only. No replacement or repeat original Review is authorized.
+
+Current correction handoff: P05-T01/T02/T04 complete, independently bounded
+dispositions retained separately; P05-T03 corrected commit/all17 remains pending
+at freeze. Original historical all17 attempted 17, passed 16, failed project-api;
+that failed receipt remains historical and cannot close any finding. The
+test-only ownership correction has fresh combined 139-test evidence, 137 pass
+and two explicit skips (SQLite JSON-only rollback and opt-in local browser).
+Current reviewed main remains eeb6c3aba5d07244ae3cc0e53d839617fd928e3b.
+Post-freeze gate result, exact commit/base/receipt hashes and coordinator handoff
+must be external so no later tracking commit invalidates the corrected gate.
 P04 remains unchecked until its actual Review/freeze/gate obligations execute;
 the external handoff, not a speculative committed pass, records post-freeze results.
 Review defect does not erase executed implementation evidence or justify claiming

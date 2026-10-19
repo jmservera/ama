@@ -3,8 +3,8 @@
   "task_slug": "affected-person-challenge-220",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-19/affected-person-challenge-220-research.md",
@@ -15,6 +15,21 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-19/affected-person-challenge-220-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "RV-001 corrected and RV-002 fresh permitted evidence independently dispositioned; historical original log exclusion remains, not bypassed.",
+      "status": "bounded-independent-disposition",
+      "evidence": ".copilot-tracking/reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-findings.md; three source SHA256 values, fresh 19 tests and seven actual scoped browser scans inspected; no replacement Review."
+    },
+    {
+      "decision": "Coordinator-updated directive requires resolving original project-api nine TaskReleaseRecord identity errors before another full gate.",
+      "status": "implemented-independently-dispositioned",
+      "evidence": "Fresh 16-test/nine-error reproduction. Test-only ownership helper preserves unchanged registered actor and production guard; combined 139 release/resident tests OK, two explicit skips (JSON rollback-only and opt-in local browser). New forged-identity no-write regression passes. Independent narrow report: .copilot-tracking/reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-identity-findings.md."
+    },
+    {
+      "decision": "Implement the selected RV-001/RV-002 continuation in this existing branch; original Review and critique remain immutable. Bounded independent finding disposition is not another Review.",
+      "status": "user-authorized",
+      "evidence": "2026-10-19 current user request and coordinator disposition at 19:21Z. Content exclusions are binding; use independently available permitted evidence only. Do not edit issue360 infra/operator files or push."
+    },
     {
       "decision": "Execute the full ordered Research, Plan with original critique, Implement, original Review.",
       "status": "user-authorized",
@@ -48,14 +63,9 @@
   ],
   "blockers": [
     {
-      "id": "RV-001",
-      "summary": "Workbench hides older retained targets/open resolution forms after 50 records; bounded slice not accepted.",
-      "resolution": "Later user-selected rpi-implement for accessible historical reachability. Do not repair or re-Review in this completed task."
-    },
-    {
-      "id": "RV-002",
-      "summary": "Independent reviewer could not inspect original external logs under its executor restrictions.",
-      "resolution": "Coordinator or eligible evidence-verification follow-up inspects supplied raw logs/results; parent observed actual commands. Original Partial verdict remains unchanged."
+      "id": "corrected-full-gate",
+      "summary": "Corrected exact-HEAD all17 gate and external receipt verification are pending at this freeze snapshot.",
+      "resolution": "Freeze corrected source and dated evidence, execute all17 groups with existing shared lock against reviewed fetched eeb6c3aba5d07244ae3cc0e53d839617fd928e3b, preserve actual failures/skips and retain final state/receipt/handoff externally without later commit."
     },
     {
       "id": "publication",
@@ -64,30 +74,18 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Parent performs requested P04 frozen commit/full external gate; final receipt/handoff outside checkout. Then coordinator independent exact-head assessment and owner follow-up selection. No publication or automatic child work."
+    "phase": "Implement",
+    "action": "Freeze reconciled corrected source/evidence commit, run all17 groups against reviewed current main, verify receipt and send coordinator exact-head handoff without push. Final post-freeze state/evidence remains external in session files/issue220-evidence to avoid invalidating the receipt."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Make all retained priority targets and older open/resolved challenge records reachable.",
-      "rationale": "Highest immediate value: independently reproduced bounded-workbench defect; accessible paging/reference lookup preserves simple version-bound design.",
-      "evidence": "Original Review RV-001; later rpi-implement, not current-task repair."
-    },
-    {
-      "rank": 2,
-      "task": "Verify and bind original execution logs/results in an eligible independent context.",
-      "rationale": "Low-cost evidence gap; supports coordinator exact-head judgement without replacing original Review.",
-      "evidence": "Original Review RV-002; focused/regression/static/browser/failing-first external paths in changes."
-    },
-    {
-      "rank": 3,
       "task": "Define the next bounded assistant/form challenge dependency contract.",
       "rationale": "Extends whole-system coverage only after product scope approval; avoid generic graph or duplicate existing release controls.",
       "evidence": "Research/plan Follow-Up Items and original Review RV-003."
     },
     {
-      "rank": 4,
+      "rank": 2,
       "task": "Arrange owner-qualified, resident/accessibility and authorized live/native-specific acceptance.",
       "rationale": "Essential before operational claims, but requires named human owners and separate authorization rather than more synthetic tests.",
       "evidence": "Original Review RV-004; existing exercise/legal/RAI boundaries."

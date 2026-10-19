@@ -6568,3 +6568,16 @@ metadata when the knowledge base was created.
   whole-system AC-071, issue-specific native SQL and qualified/resident
   acceptance remain open. Local constructed tests make no new legal,
   accessibility-conformance, live-model or operational-approval claim.
+
+## [2026-10-19] query | Restore historical challenge actions (#220)
+
+* Updated the existing resident journey, KB index and API guide after reproducing
+  the last-50 cutoff on actual public synthetic SQLite/HTTP/browser data.
+  Bounded Older/Newer controls and exact reference entry make older retained
+  targets, open resolution actions and resolved explanations reachable.
+* URL-bound pages reload, opening drafts retain bindings while browsing, and
+  unsaved resolution drafts require confirmation before page disposal.
+  No core authority, selective dependency, resident choice or safety route
+  changes. Original Partial / Not accepted Review and Revise critique remain
+  unchanged; a separate bounded finding disposition and corrected exact-head
+  local gate are required, not whole-issue acceptance.
