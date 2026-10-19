@@ -108,6 +108,109 @@ Graph403/direct403 and all tenant/privacy/human gates remain unchanged.
 Original Research, critique and Not accepted Review remain immutable; later
 source/mutation evidence does not retroactively accept that original outcome.
 
+## Existing-Resource Preservation Preflight (2026-10-19)
+
+This section records the14:19-14:24Z no-write window. The later separately
+authorized [synthetic roundtrip](#real-temporary-synthetic-preservation-roundtrip-2026-10-19)
+adds real-provider component evidence without rewriting this result or its
+original Partial / Residual Review.
+
+Refs #358, base `7f96d9957b28cb174aa759c842376f24087d71a3`.
+This is a new actual read-only investigation, not a rerun or replacement of
+the original offline delivery or adverse reviews. The owner authorizes
+operations within existing ama except RG deletion; this supplies no Graph
+authority and does not justify changing credentials, bindings or runtime just
+to obtain a preservation result.
+
+| Actual observation | Result and limit |
+| --- | --- |
+| Production source path | `preserve_app_secrets` plus existing configuration/`Azure.rest` ARM PATCH has no intrinsic image/Graph dependency; full `secret_reference` mutation creates a Graph password and full setup has broader effects |
+| Exact-version existing app GET | At14:19:11Z, actual production `Azure.rest`, API2025-07-01: demo API, old API and agents all explicitly `secrets: null`; zero KV URL/identity pairs, env/init, scale-auth and registry-password secret bindings |
+| API auth metadata | Both APIs: zero client-secret refs; token store disabled, no SAS binding. Agents auth GET returned sanitized request error, not a successful empty inventory |
+| Exact app-scoped permissions metadata | Read/write/listSecrets actions allowed in metadata; no actual listSecrets/PATCH, policy/deny/provider success not proven |
+| Nonproduction qualification | All three have test/non-production-demonstrator/constructed-non-identifying labels; actual demo `require_demo` refuses unknown/malformed deployment template/parameters. No guard bypass or positive guarded profile claim |
+| Final management read | At14:24:58Z all compared null/count/latest/ready/lock/handoff fields equal initial observations; all apps Succeeded and latest==latestReady |
+| Literal live criterion | **Blocked / Not run**: no actual pre-existing KV pairs, unrelated secrets or app secretRef bindings to preserve. Empty rebuild/clone/new sentinel state is not substituted |
+
+The current primary blocker is **absent populated existing target state**, not
+an established image/Graph prerequisite or tested ARM permission denial.
+The profile-guard refusal is independently retained as roster-setup evidence,
+not a universal preservation prerequisite. Full setup, its guards and #374
+source/tests are unchanged. No source defect was demonstrated.
+
+All reads captured CLI output privately and emitted only reference/count/state
+summaries. Qualified external session records are retained in directory0700,
+files0600: initial management summary, profile-guard summary and final
+management summary. No raw app payload, IDs, token, plaintext secret, private
+roster/dataset or `.env` was saved or published. A first local projection
+failed on null initContainers before summary generation; the corrected
+production-boundary read supplied the actual evidence.
+
+No listSecrets, preserve-helper live round-trip, Graph/password, SQL write,
+deployment/PATCH, image publication, restart/traffic/identity mutation,
+network/policy/bypass change, resource creation or deletion occurred. Thus no
+cloud rollback/cleanup was needed; ama and Front Door were untouched.
+Four run-generated local bytecode files were removed individually; no secret
+request/backup files or cloud locks were created.
+
+See the [runbook safety boundary](../../infra/README.md#existing-resource-preservation-preflight-2026-10-19):
+ordinary secret edits do not create revisions, but versionless KV refresh may
+restart env-secretRef revisions and PATCH may be asynchronous. No such update
+was tested here. A later actually populated eligible target requires fresh
+exact-target plan/critique and comparison, or separately scoped approval for
+representative-state preparation; do not fabricate literal existing-state proof.
+
+This blocked no-source/no-cloud-change result has no review-ready publication
+candidate or full-gate receipt. The owner's no-heavy-gate exception applies
+only to this local blocked disposition; later publication retains all normal
+frozen-candidate/gate/coordinator requirements. #358 remains unmet; no whole
+#360/demo, browser/role/SQL/AI, retirement or human acceptance is claimed.
+
+## Real Temporary Synthetic Preservation Roundtrip (2026-10-19)
+
+Refs #358. Later owner direction selected an isolated temporary synthetic
+baseline in the existing internal/private Consumption environment, not changes
+to any running app. Supplemental research, amended lifecycle plan and one
+independent new-material safety assessment preceded resource writes. Original
+critique and original **Partial / Residual** Review remain byte-identical.
+
+| Actual primary observation | Result and boundary |
+| --- | --- |
+| Private lifecycle prerequisite | Local authenticated vault metadata was network-denied and existing private-endpoint TCP timed out. A new synthetic-only private manual job successfully read exact absent-name metadata (versions200/empty, deleted404) before any vault secret allocation; no existing job/exec was reused |
+| Minimal authority | Dedicated temporary MI; Secrets Officer only over the single new synthetic secret, AcrPull only over the existing private registry. No existing identity or subscription/tenant grant changed |
+| Baseline established | SecureString incremental ARM deployment what-if proved exactly one owned-secret Create; deployment Succeeded and supplied an actual versioned URI. New no-ingress app Succeeded at15:06:41Z with one KV reference pair, one unrelated random local secret and one unused env secretRef to that local secret |
+| Production boundary exercised | Fresh actual GET/listSecrets, unchanged `preserve_app_secrets`, then unchanged `Azure.rest` PATCH of `properties.configuration` only at15:06:42Z; no `secret_reference`, addPassword or full setup |
+| Async completion and exact comparison | Actual GET observed InProgress through15:07:04Z, then Succeeded at15:07:07Z. Fresh GET/listSecrets matched exact KV URL/identity, known random resolved KV value, unrelated random value, configuration, template/unused binding, identity, tags and latest/ready revision; all eight comparisons passed |
+| Runtime/cost qualification | Existing private image reused by digest, benign Python sleep command,0.25vCPU/0.5GiB, no ingress/rules, min0/max1. One replica was actually present at readback; min0 was not zero execution. Four total preflight/cleanup executions across operator corrections used timeout120/retries0; no premium service, new environment/vault/network or settled zero-cost claim |
+| Exact cleanup | App, synthetic secret (active AND soft-deleted states), secure deployment history, private job/executions, MI and both final role assignments removed by15:09:10Z. All ten exact role UUIDs across earlier cleaned incarnations independently re-read RoleAssignmentNotFound |
+| Existing-resource preservation | All11 existing app/job configuration/template/identity/tag/readiness/active-revision snapshots match; full RG resource-ID membership and top-level existing environment/vault/registry hashes match. No existing workload, real secret, private dataset, Graph, network/public-access/policy or RG deletion |
+
+The temporary names were `ca-issue358-synth-20261019-1450`,
+`job-issue358-synth-20261019-1450`, `id-issue358-synth-20261019-1450` and
+`issue358-synth-20261019-1450` for the vault secret/deployment. Exact resource
+and role IDs, ownership/absence/lifetime journal and comparison hashes remain
+external0700/0600; synthetic values/tokens were never logged or committed.
+Sanitized primary observations are also included in the candidate's dated
+execution evidence for reviewer access, rather than requiring external-only
+summary reads or claiming a replacement independent Review.
+
+Operator-only corrections are retained: exact not-found classification, an
+HTTP400 unsupported job-start `volumes` field, log framing and the metadata
+API's valid200-empty absence shape. The exact-owned-execution Log Analytics
+query was denied `InsufficientAccessError`; direct owned console capture
+provided the actual subsequent evidence. These were not production helper
+defects. Every failed allocation attempt was cleaned before continuing.
+
+**Passed: real temporary synthetic baseline component roundtrip.** It was a
+real resource populated before preservation, not a mocked PATCH, but it was
+created for this exercise. It is not the originally described populated
+deployed-app/token-store case, full credential rebuild, runtime token usability,
+roster-profile repair, browser/SQL/AI/human or whole-demo acceptance. #358 stays
+open pending coordinator judgement of this bounded evidence and any remaining
+original criterion. Frozen exact-HEAD full local gate/receipt and coordinator
+assessment remain separate publication gates; no push/PR/merge/status change
+is authorized here. See the [runbook qualification](../../infra/README.md#real-temporary-synthetic-preservation-2026-10-19).
+
 ## Credential Preservation Offline Follow-Up (2026-10-17)
 
 Refs #358. This is a focused continuation of merged #356/#352, based on

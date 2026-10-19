@@ -1,0 +1,416 @@
+{
+  "baseline": {
+    "actualReplicasAtReadback": 1,
+    "applicationCommand": "stdlib Python sleep60; no API/worker/data processing",
+    "configuredCPU": 0.25,
+    "configuredMemoryGiB": 0.5,
+    "ingress": null,
+    "keyVaultReferencePairs": 1,
+    "maxReplicas": 1,
+    "minReplicas": 0,
+    "pinnedExistingPrivateImage": true,
+    "privateExistingConsumptionEnvironment": true,
+    "realResourceEstablishedBeforePATCH": true,
+    "resolvedSyntheticKVValueMatchedKnownRandomInput": true,
+    "traffic": false,
+    "unrelatedSyntheticValueSecrets": 1,
+    "unusedEnvironmentSecretRefBindings": 1,
+    "versionedKVUri": true,
+    "zeroRuntimeClaim": false
+  },
+  "cleanup": {
+    "allIncarnationRoleAssignmentsVerified404": 10,
+    "existingRGDeleted": false,
+    "oldWorkloadsCompared": 11,
+    "ownedJobExecutionsDeletedWithParent": true,
+    "ownedSecretSoftDeleteAndPurgeVerified": true,
+    "privateCleanupJob": {
+      "name": "job-issue358-synth-20261019-1450",
+      "result": "verified-absent"
+    },
+    "remainingOwnedResources": 0,
+    "secureDeployment": {
+      "name": "issue358-synth-20261019-1450",
+      "result": "verified-absent"
+    },
+    "successfulRunRoleAssignments": 2,
+    "syntheticApp": {
+      "name": "ca-issue358-synth-20261019-1450",
+      "result": "verified-absent"
+    },
+    "syntheticVaultSecret": {
+      "name": "issue358-synth-20261019-1450",
+      "result": "active-and-deleted-absent-private-worker"
+    },
+    "temporaryIdentity": {
+      "name": "id-issue358-synth-20261019-1450",
+      "result": "verified-absent"
+    }
+  },
+  "costAndLifetime": {
+    "cleanupBefore1600UTC": true,
+    "earlierFailedPreflightExecutions": 2,
+    "incrementalBilledCost": "not yet settled/queried; nonzero replica and operation usage acknowledged, no zero-cost claim",
+    "jobCPU": 0.25,
+    "jobMemoryGiB": 0.5,
+    "jobRetryLimit": 0,
+    "jobTimeoutSeconds": 120,
+    "newEnvironmentsOrVaultsOrNetworks": 0,
+    "newPremiumServices": 0,
+    "successfulJobExecutions": 2,
+    "successfulLifecycleSeconds": 267.405319
+  },
+  "kind": "real temporary synthetic baseline roundtrip, not originally populated deployed-app/full setup acceptance",
+  "limitations": [
+    "Original Partial/Residual Review immutable; supplemental safety assessment is not a replacement Review",
+    "Synthetic baseline was created for this exercise, not an originally populated deployed application",
+    "No full secret_reference/password creation, token-store SAS/auth consumption, browser/SQL/AI or human acceptance",
+    "Exact-head coordinator review and complete local gate remain publication prerequisites",
+    "No push, PR, merge, issue/status/settings changes"
+  ],
+  "operatorCorrections": [
+    "No-write exact RoleAssignmentNotFound classification corrected externally",
+    "Owned start rejected HTTP400 unsupported volumes; reduced only new-job start body to containers",
+    "One failed preflight had unreadable local log framing; exact Log Analytics query denied InsufficientAccessError",
+    "Owned private versions metadata returns HTTP200 empty list, not necessarily404; fail-closed absence parser corrected",
+    "Earlier created incarnations fully cleaned; all historical exact role UUIDs rechecked404"
+  ],
+  "operatorScriptSHA256": {
+    "issue358_lifecycle.py": "21301ad66b3326bdd01a81b49770897e81604b7dd22cdc50e96fe8dc99d093b1",
+    "issue358_preflight.py": "d62b641186bef2d3c5921ba27fd0aed4283c1298d4b46a4e97a4ce9b65b3b033",
+    "issue358_worker.py": "ff107b40657f8ac36481e02b4d0d7f32b818b61e6870549378fd6eb1cd0f602a"
+  },
+  "originalCritique": {
+    "sha256": "c4e1e226080ba9210ee0b7daac32d34e61bb50533874203b4415ffa805aea121"
+  },
+  "originalReadOnlyPrimaryEvidence": {
+    "agentsAuthRead": "request error, not empty successful inventory",
+    "allFinalComparedFieldsStable": true,
+    "allKVAndBindingsZero": true,
+    "allSecretsExplicitNull": true,
+    "appCount": 3,
+    "demoProfile": "actual require_demo refusal: unknown/malformed deployment template/parameters",
+    "finalObservedAt": "2026-10-19T14:24:58.576195+00:00",
+    "initialObservedAt": "2026-10-19T14:19:11.406170+00:00",
+    "listSecrets": 0,
+    "mutations": 0,
+    "primarySummarySHA256": {
+      "evidence-validation.json": "45aebecd2887212add767d02e16dc02b32ff6f41a231b78e34a6de92a1a6963d",
+      "final-management-summary.json": "8e32b0d3a41003ce99bba36052b716a04fc2397b4cb134554d0a713b28077335",
+      "profile-summary.json": "747e0bb38ecc73077d5c3fb3c6658bef8f3a6ba9c627fff88df1250d88e148e6",
+      "research-management-summary.json": "671b95e576ad7a8b8fc8ea4cd68e961a725b0f3d44d7ae898f4500597ac980c0"
+    }
+  },
+  "originalReview": {
+    "execution": "Partial",
+    "outcome": "Residual work",
+    "sha256": "5fb39b9ef7b3aac4cbef810019eb1db23d6890b3c74d0baaf98059c75f9df41b"
+  },
+  "privatePreflight": {
+    "deletedNameHttpStatus": 404,
+    "existingJobsStartedOrModified": 0,
+    "localExistingPrivateEndpointTCP443": "timeout",
+    "localVaultMetadata": "Forbidden network policy",
+    "newOwnedPrivateJobPreflight": "passed",
+    "secretScopeRoleProviderAcceptedBeforeSecretExistence": true,
+    "vaultMetadataHttpStatus": 200,
+    "versions": 0
+  },
+  "schema": 1,
+  "sourceBase": "7f96d9957b28cb174aa759c842376f24087d71a3",
+  "sourceBoundary": {
+    "apiVersion": "2025-07-01",
+    "graphCalls": 0,
+    "helper": "infra/scripts/setup-entra.py:preserve_app_secrets",
+    "helperSourceChanged": false,
+    "patchBodyTopLevel": [
+      "properties"
+    ],
+    "patchProperties": [
+      "configuration"
+    ],
+    "realSecretReads": 0,
+    "secret_referenceCalls": 0,
+    "sourceFileSHA256": "f1579774ae790e56130a80c5377945294021471ff682a9c481583f755076f25d",
+    "syntheticAppListSecretsCalls": 2,
+    "transport": "infra/scripts/setup-entra.py:Azure.rest"
+  },
+  "successfulExecution": {
+    "backingResourcesUnchanged": {
+      "Microsoft.App": true,
+      "Microsoft.ContainerRegistry": true,
+      "Microsoft.KeyVault": true
+    },
+    "cleanupFailures": [],
+    "comparisons": {
+      "configurationExact": true,
+      "identityExact": true,
+      "referencePairExact": true,
+      "resolvedSyntheticKVExact": true,
+      "revisionExact": true,
+      "tagsExact": true,
+      "templateAndBindingExact": true,
+      "unrelatedValueExact": true
+    },
+    "existingWorkloadsUnchanged": true,
+    "finishedAt": "2026-10-19T15:09:10.356580+00:00",
+    "originalHashesUnchanged": true,
+    "preservation": "passed",
+    "preservationCompletedAt": "2026-10-19T15:07:08.248964+00:00",
+    "providerStateReadbacks": [
+      {
+        "observedAt": "2026-10-19T15:05:11.890329+00:00",
+        "state": "InProgress",
+        "target": "job"
+      },
+      {
+        "observedAt": "2026-10-19T15:05:15.276229+00:00",
+        "state": "InProgress",
+        "target": "job"
+      },
+      {
+        "observedAt": "2026-10-19T15:05:18.665214+00:00",
+        "state": "Succeeded",
+        "target": "job"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:18.041225+00:00",
+        "state": "Running",
+        "target": "deployment"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:21.474113+00:00",
+        "state": "Succeeded",
+        "target": "deployment"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:24.809814+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:28.182698+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:31.569397+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:34.974258+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:38.380593+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:41.760615+00:00",
+        "state": "Succeeded",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:43.699243+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:47.076318+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:50.457924+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:53.835305+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:06:57.226644+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:07:00.642216+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:07:04.042163+00:00",
+        "state": "InProgress",
+        "target": "app"
+      },
+      {
+        "observedAt": "2026-10-19T15:07:07.433300+00:00",
+        "state": "Succeeded",
+        "target": "app"
+      }
+    ],
+    "rgResourceInventoryUnchanged": true,
+    "startedAt": "2026-10-19T15:04:42.951261+00:00",
+    "whatIf": "exactly-one-owned-secret-Create"
+  },
+  "successfulExecutionOperations": [
+    {
+      "method": "PUT",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:05:02.322624+00:00",
+      "target": "identity"
+    },
+    {
+      "method": "PUT",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:05:04.886316+00:00",
+      "target": "kvRole"
+    },
+    {
+      "method": "PUT",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:05:07.241973+00:00",
+      "target": "acrRole"
+    },
+    {
+      "method": "PUT",
+      "outcome": "response-received",
+      "responseProvisioningState": "InProgress",
+      "startedAt": "2026-10-19T15:05:09.378173+00:00",
+      "target": "job"
+    },
+    {
+      "method": "POST",
+      "outcome": "response-received",
+      "startedAt": "2026-10-19T15:05:19.057839+00:00",
+      "target": "job"
+    },
+    {
+      "method": "PUT",
+      "outcome": "response-received",
+      "responseProvisioningState": "Accepted",
+      "startedAt": "2026-10-19T15:06:16.243343+00:00",
+      "target": "deployment"
+    },
+    {
+      "method": "PUT",
+      "outcome": "response-received",
+      "responseProvisioningState": "InProgress",
+      "startedAt": "2026-10-19T15:06:21.891509+00:00",
+      "target": "app"
+    },
+    {
+      "method": "PATCH",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:06:42.753593+00:00",
+      "target": "app"
+    },
+    {
+      "method": "DELETE",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:07:09.933261+00:00",
+      "target": "app"
+    },
+    {
+      "method": "POST",
+      "outcome": "response-received",
+      "startedAt": "2026-10-19T15:07:46.068173+00:00",
+      "target": "job"
+    },
+    {
+      "method": "DELETE",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:08:25.923060+00:00",
+      "target": "deployment"
+    },
+    {
+      "method": "DELETE",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:08:29.517653+00:00",
+      "target": "job"
+    },
+    {
+      "method": "DELETE",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:08:48.794098+00:00",
+      "target": "kvRole"
+    },
+    {
+      "method": "DELETE",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:08:52.100851+00:00",
+      "target": "acrRole"
+    },
+    {
+      "method": "DELETE",
+      "outcome": "response-received",
+      "responseProvisioningState": null,
+      "startedAt": "2026-10-19T15:08:55.149110+00:00",
+      "target": "identity"
+    }
+  ],
+  "successfulPrivateJobResults": [
+    {
+      "action": "preflight",
+      "endTime": "2026-10-19T15:05:53+00:00",
+      "frames": [
+        {
+          "action": "preflight",
+          "code": "SecretNotFound",
+          "innerCode": null,
+          "method": "GET",
+          "status": 404
+        },
+        {
+          "action": "preflight",
+          "activeAbsent": true,
+          "deletedAbsent": true,
+          "metadataHttpStatus": 200,
+          "metadataVersionCount": 0,
+          "result": "passed"
+        }
+      ],
+      "logExit": 0,
+      "startTime": "2026-10-19T15:05:20+00:00",
+      "status": "Succeeded"
+    },
+    {
+      "action": "cleanup",
+      "endTime": "2026-10-19T15:08:20+00:00",
+      "frames": [
+        {
+          "action": "cleanup",
+          "code": "SecretNotFound",
+          "innerCode": null,
+          "method": "GET",
+          "status": 404
+        },
+        {
+          "action": "cleanup",
+          "activeAbsent": true,
+          "deletedAbsent": true,
+          "result": "passed"
+        }
+      ],
+      "logExit": 0,
+      "startTime": "2026-10-19T15:07:46+00:00",
+      "status": "Succeeded"
+    }
+  ],
+  "taskId": "issue-358-live-preservation",
+  "taskSlug": "live-keyvault-preservation-358"
+}

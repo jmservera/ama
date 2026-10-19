@@ -21,6 +21,27 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For the later owner-selected issue #358 continuation, the
+[real temporary synthetic roundtrip](../architecture/cutover-evidence-pack.md#real-temporary-synthetic-preservation-roundtrip-2026-10-19)
+and [runbook qualification](../../infra/README.md#real-temporary-synthetic-preservation-2026-10-19)
+record successful actual production helper/ARM preservation of a valid KV pair,
+resolved synthetic value, unrelated value and unused binding, with terminal
+readback and complete exact-owned cleanup. All11 existing workloads remain
+unchanged. The baseline was a separately created real temporary resource, not
+an originally populated deployed app; original Partial / Residual Review,
+profile uncertainty and wider acceptance remain. No zero-runtime/cost claim,
+source defect, issue closure or publication approval is inferred.
+
+For issue #358, the [actual existing-resource preflight](../architecture/cutover-evidence-pack.md#existing-resource-preservation-preflight-2026-10-19)
+and [runbook boundary](../../infra/README.md#existing-resource-preservation-preflight-2026-10-19)
+correct the overbroad image/Graph dependency: the isolated production
+reconciliation/ARM configuration operation is independent, but all three
+existing ama apps actually have null secrets and zero KV/reference bindings.
+No populated baseline exists, so the literal round-trip remains Blocked /
+Not run, with zero writes/listSecrets and no new mock-only delivery. The
+demo's real profile guard separately refuses unknown/malformed deployment
+evidence; labels alone do not pass it. Prior offline evidence remains unchanged.
+
 For issue #360 / PR #416 rubric recovery, the
 [post-push visibility and exact-head sequence](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)
 distinguishes the actual 48-vs-48 deterministic pass from the failed publication

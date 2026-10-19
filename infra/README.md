@@ -1619,7 +1619,9 @@ the tag to bypass the check, delete real secrets, or print/export values.
 This tag is a recovery guard, not an Azure-enforced concurrency lock or proof
 of a successful secret/token exchange.
 
-The #358 evidence is **offline only**: 313 infra tests pass (including 101 setup
+The 2026-10-17 #358 evidence below is **offline only**; the later
+[real temporary synthetic roundtrip](#real-temporary-synthetic-preservation-2026-10-19)
+is separately qualified, not retroactive acceptance. 313 infra tests pass (including 101 setup
 tests and seven killed expiry/preservation/recovery mutations). The legacy
 delegating CLI remains unchanged. **Actual non-production preservation is
 UNMET / Not run**: no existing resources were exercised, no Azure/Graph writes
@@ -1735,6 +1737,93 @@ edge host without that exact Custom proxy configuration. Standard also trusts
 client RFC Forwarded input and is rejected for this edge callback. It still requires a real
 registration and an authorized tenant profile; it cannot repair the #349
 missing-registration prerequisite.
+
+### Existing-resource preservation preflight (2026-10-19)
+
+This is the historical14:19-14:24Z no-write window; the later
+[separately authorized synthetic execution](#real-temporary-synthetic-preservation-2026-10-19)
+does not rewrite its original Partial / Residual Review.
+
+Refs #358. The later read-only investigation corrects the assumption that this narrow
+criterion necessarily waits for image publication or Graph. The unchanged
+`preserve_app_secrets` helper and a same-configuration `Azure.rest` PATCH use
+only ARM. In contrast, the mutating `secret_reference` rebuild creates a Graph
+password before its PATCH; full setup also reconciles directory/runtime/SQL
+and restart state. Neither full path was invoked or bypassed for this check.
+
+Actual production `Azure.rest` GET at its `2025-07-01` API version found
+explicit `configuration.secrets: null` on `ca-cutover-test-demo-api`,
+`ca-cutover-test-api` and `ca-cutover-test-agents`. All three have zero KV
+reference pairs and environment/init-container, scale-auth or registry-password
+secret bindings. Both APIs also have no auth client-secret setting and disabled
+token stores/no SAS binding; the agents auth GET failed with sanitized
+request-error classification and is not reported as an empty successful read.
+App-scoped permission metadata includes read/write/listSecrets, but no write
+or listSecrets was attempted: provider/policy acceptance is unproven.
+
+The demo has test/non-production/constructed-data labels, not proof of a
+verified development profile. Its actual read-only `require_demo` guard refused
+unknown/malformed deployment template/parameters. This is a separate roster
+eligibility uncertainty, not an invented universal ARM-PATCH prerequisite.
+
+**Literal preservation remains Blocked / Not run:** there is no populated
+existing KV/reference/secret-binding baseline. An empty PATCH cannot prove
+that actual `keyVaultUrl`/`identity`, unrelated secrets and `secretRef` bindings
+survive. No sentinel secrets, bindings, clone or credential were created to
+manufacture that baseline. No source defect was demonstrated; #374 remains
+unchanged and its offline coverage was not repeated.
+
+The [dated evidence delta](../docs/architecture/cutover-evidence-pack.md#existing-resource-preservation-preflight-2026-10-19)
+records stable final metadata and zero writes. A later populated-target plan
+must re-establish exact payload, concurrency, private value handling and
+rollback before any operation. Official [secret management guidance](https://learn.microsoft.com/en-us/azure/container-apps/manage-secrets),
+checked2026-10-19, says secret edits do not create revisions, but versionless
+KV updates can automatically restart active revisions with env secretRefs.
+No-value-change is not a guarantee against all provider update work; do not
+change a template, restart or alter traffic merely to complete this check.
+The [2025-07-01 PATCH schema](https://github.com/Azure/azure-rest-api-specs/blob/main/specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2025-07-01/ContainerApps.json)
+also permits an asynchronous202 response.
+
+### Real temporary synthetic preservation (2026-10-19)
+
+Refs #358. A later explicitly authorized isolated synthetic baseline passed
+the actual production reconciliation/configuration-PATCH boundary in the
+existing internal/private environment. No existing app/identity/template,
+ingress/traffic, private-service policy or real secret was changed.
+
+A new temporary MI received Secrets Officer at only the exact new synthetic
+vault-secret scope (including cleanup rights) and AcrPull at the existing
+private registry. A new synthetic-only manual job first proved private
+metadata access and active/deleted-name absence. No existing job was started,
+overridden or used for arbitrary secret-reading payloads. A secureString
+incremental deployment then created one expiring tagged synthetic KV secret;
+the exact one-Create what-if and actual versioned URI were verified.
+
+The new app contained that real reference, one unrelated random local value
+and an unused env secretRef to that value. Its private digest-pinned image
+used only a harmless Python sleep override, no API/data work. Fresh actual
+GET/listSecrets -> unchanged `preserve_app_secrets` -> unchanged `Azure.rest`
+configuration-only PATCH -> InProgress/Succeeded readback preserved exact
+reference metadata, both known synthetic values, configuration, template/
+binding, identity, tags and latest/ready revision. No Graph password or
+`secret_reference` call was made. No helper defect/source fix was demonstrated.
+
+No ingress/rules, min0/max1 and0.25vCPU/0.5GiB bounded allocation, but one
+replica was observed during provisioning/readback: zero steady-state target
+is not zero execution or a settled zero bill. No new premium service,
+environment, vault or network was created. All owned resources and the active/
+soft-deleted synthetic secret were removed by15:09:10Z; all ten role IDs across
+operator-correction incarnations were separately checked absent. All11 old
+workload snapshots, RG membership and existing backing hashes match.
+
+The [actual evidence and cleanup table](../docs/architecture/cutover-evidence-pack.md#real-temporary-synthetic-preservation-roundtrip-2026-10-19)
+retains corrections and timestamps. Private IDs/journal/comparison hashes stay
+external0600; sanitized primary evidence is included in the frozen candidate
+for review access. This proves a real temporary synthetic baseline roundtrip,
+not the originally populated deployed-app/token-store/full-setup case.
+Original Partial / Residual Review and roster-profile refusal remain unchanged.
+Issue closure/acceptance belongs to the coordinator; exact-head full local
+gate/receipt and independent assessment are required before any publication.
 
 ### Tenant staff and application-role initialization
 
