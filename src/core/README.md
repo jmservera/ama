@@ -2914,6 +2914,20 @@ reject, manual work and independent hazard intake remain available.
 Continuity export includes derived stale metadata, not challenge narrative.
 Audit records contain action/record IDs, not the supplied free text.
 
+Challenge references in priority generation, latest and review responses require
+both resident-information and recorded-reason rights on the current registered
+reader. Without those rights, stale/actionable/reliance flags remain accurate
+but `challenge_ids` is empty, including corrections recorded on another case.
+Release/model-route denial audit survives a failed accept/edit; failed human
+disposition changes and their acceptance/edit audit entries are rolled back.
+
+Catalog and continuity reads build one correction-dependency lookup per read,
+not one case scan per retained proposal. Writer revalidation obtains only
+correction IDs and targets through SQLite JSON extraction or SQL Server
+`OPENJSON`, under the existing serialized transaction. It does not fetch/decode
+every full case body or cache a pretransaction lookup. Cross-case policy
+dependencies and concurrent-correction fencing are unchanged.
+
 Focused synthetic JSON/SQLite proof, with installed editable distributions:
 
 ```bash
@@ -2923,5 +2937,8 @@ PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 -m unit
 ```
 
 This is a bounded retained-priority slice, not whole-system AC-071 acceptance.
-Other assistant/form paths, issue-specific native SQL Server acceptance,
-qualified legal/RAI review and resident comprehension remain unproven.
+Other assistant/form paths, operational native SQL Server acceptance, qualified
+legal/RAI review and resident comprehension remain unproven. Seven constructed
+native SQL Server correction-race, dependency, entitlement and rollback
+regressions supplement the JSON/SQLite checks, not operational acceptance or a
+native 60,000-home load claim.

@@ -251,7 +251,8 @@ class TaskReleaseRecord(Base):
             old_owner = store._case("ZF-1")["owner_code"]
             for case in store.cases.values():
                 if case["owner_code"] == old_owner:
-                    case.update(owner_code=user["code"], owner=user["name"], owner_role=user["role"])
+                    store._case(case["id"]).update(
+                        owner_code=user["code"], owner=user["name"], owner_role=user["role"])
             store.save()
         return user
 
@@ -273,6 +274,32 @@ class TaskReleaseRecord(Base):
                         self.assertEqual(json.dumps(store.data, sort_keys=True), before)
             self.assertEqual(store.resolve_priority(user, out["id"], "reject", "Manual route")["status"],
                              "Rejected")
+
+    def test_priority_fixture_ownership_survives_reopen_for_every_matching_case(self):
+        from zava_forward.core.sqlstore import SqlStore
+        from zava_forward.core.store import Store
+        json_store = Store(str(self.seed), str(self.root / "ownership-live.json"),
+                           str(self.root / "ownership-audit.jsonl"))
+        for store in (self.store, json_store):
+            with store.lock:
+                old_owner = store.cases["ZF-1"]["owner_code"]
+                expected = {c["id"] for c in store.cases.values() if c["owner_code"] == old_owner}
+            self.assertGreater(len(expected), 1)
+            user = self.priority_user(store)
+            if isinstance(store, SqlStore):
+                reopened = SqlStore(str(self.seed), str(store.db_path))
+                self.addCleanup(reopened.db.close)
+            else:
+                reopened = Store(str(self.seed), store.live_path, store.audit_path)
+            for cid in expected:
+                self.assertEqual(
+                    {key: reopened.cases[cid][key] for key in ("owner_code", "owner", "owner_role")},
+                    dict(owner_code=user["code"], owner=user["name"], owner_role=user["role"]),
+                )
+            before = store.ai_priority(user, 10, mode="workflow-only")
+            after = reopened.ai_priority(user, 10, mode="workflow-only")
+            self.assertEqual(before["case_ids"], after["case_ids"])
+            self.assertEqual(before["deterministic"], after["deterministic"])
 
     def test_contract_fields_required_on_authenticated_record_route(self):
         for key in ("release_version", "intended_use", "prohibited_uses", "affected_stakeholders",
@@ -381,8 +408,13 @@ class TaskReleaseRecord(Base):
         for action in ("accept", "edit"):
             with self.assertRaises(PermissionError):
                 self.store.review_ai(user, ordinary["record_id"], action, "Review", "Edited")
+            audit_before = len(list(self.store.audit_entries()))
             with self.assertRaises(PermissionError):
                 self.store.resolve_priority(user, priority["id"], action, "Review", [])
+            self.assertEqual(
+                [e["action"] for e in list(self.store.audit_entries())[audit_before:]],
+                ["ai_release_denied"],
+            )
         self.assertTrue(briefing["release"])
 
     def test_json_store_has_no_configured_provider_bypass(self):
@@ -473,8 +505,24 @@ class TaskReleaseRecord(Base):
                         view = store.latest_priority(user)
                         self.assertEqual(view["actionable"], source != "ai")
                         if source == "ai" and action != "reject":
+                            audit_before = len(list(store.audit_entries()))
+                            before = json.loads(json.dumps(rec))
                             with self.assertRaises(PermissionError):
                                 store.resolve_priority(user, rec["id"], action, "Review", out["items"])
+                            new_events = list(store.audit_entries())[audit_before:]
+                            self.assertEqual([e["action"] for e in new_events], ["ai_release_denied"])
+                            self.assertIn(rec["id"], new_events[0]["detail"])
+                            self.assertEqual(rec, before)
+                            self.assertTrue(store.verify_audit())
+                            if hasattr(store, "db"):
+                                persisted = json.loads(store.db.execute(
+                                    "SELECT body FROM recommendations WHERE id=?", (rec["id"],)
+                                ).fetchone()[0])
+                            else:
+                                with open(store.live_path, encoding="utf-8") as stream:
+                                    persisted = next(r for r in json.load(stream)["recommendations"]
+                                                     if r["id"] == rec["id"])
+                            self.assertEqual(persisted, before)
                         else:
                             self.assertEqual(store.resolve_priority(user, rec["id"], action, "Review", out["items"])["status"],
                                              store.REC_ACTIONS[action])
@@ -535,8 +583,14 @@ class TaskReleaseRecord(Base):
         ai.strong = "changed-strong"
         self.assertFalse(self.store.latest_priority(user)["actionable"])
         for action in ("accept", "edit"):
+            audit_before = len(list(self.store.audit_entries()))
             with self.assertRaises(PermissionError):
                 self.store.resolve_priority(user, out["id"], action, "Review", out["items"])
+            self.assertEqual(
+                [e["action"] for e in list(self.store.audit_entries())[audit_before:]],
+                ["ai_release_denied"],
+            )
+            self.assertEqual(self.store.latest_priority(user)["status"], "Proposed")
         self.assertEqual(self.store.resolve_priority(user, out["id"], "reject", "Old route")["status"], "Rejected")
 
     def test_denied_briefing_recovers_after_recording_release_without_case_edit(self):

@@ -133,11 +133,21 @@ resolution; older resolved explanations remain readable. Paging preserves an
 opening draft and asks before discarding an unsaved resolution on another page.
 This corrects a reproduced historical action cutoff, not a new retention policy.
 
+A delayed acknowledgement of a committed challenge does not return staff to
+the previous case after confirmed navigation; the write is not cancelled or
+retried. Priority responses withhold correction references without the current
+reader's dual resident/reason entitlement, while preserving accurate stale
+flags. Read operations index correction dependencies once, and serialized SQL
+writer validation reads only correction targets rather than decoding full case
+bodies. Release-denial audit remains durable without retaining failed human
+acceptance/edit side effects. Constructed JSON/SQLite, HTTP, Chromium and seven
+owned loopback SQL Server regressions support these engineering corrections.
+
 Creation-time source hashes describe audience-filtered citation labels, not
 universal document versions. Historical missing versions stay Unknown. Other
-assistant/form contracts, whole-system AC-071, issue-specific native SQL
+assistant/form contracts, whole-system AC-071, operational/native load
 acceptance, qualified legal/RAI review and resident comprehension remain open.
-Constructed JSON/SQLite, HTTP and browser evidence is not operational or
+Constructed store, HTTP and browser evidence is not operational or
 accessibility acceptance and introduces no new legal interpretation.
 
 ### Appointment control engineering boundary (2026-10-18, #87)

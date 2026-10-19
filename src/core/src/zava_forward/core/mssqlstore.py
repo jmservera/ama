@@ -12,6 +12,7 @@ Authentication is Microsoft Entra. ZF_SQL_AUTH=msi uses the app's managed identi
 default uses the developer's Azure login; token takes a bearer token for one-off operator tasks such as the first seed; password is for the CI SQL Server container only.
 The driver is mssql-python (pinned in requirements.txt); it is imported only when this store is chosen.
 """
+import json
 import os
 import re
 import struct
@@ -186,6 +187,18 @@ class _Conn:
 
 
 class MssqlStore(SqlStore):
+    def _priority_correction_rows(self):
+        rows = self.db.execute("""
+            SELECT c.id, ch.id, ch.target
+            FROM cases AS c
+            CROSS APPLY OPENJSON(c.body, '$.affected_challenges')
+            WITH (id NVARCHAR(64) '$.id',
+                  target NVARCHAR(MAX) '$.target' AS JSON,
+                  outcome NVARCHAR(64) '$.resolution.outcome') AS ch
+            WHERE ch.outcome COLLATE Latin1_General_100_BIN2 = 'Correction recorded'
+        """).fetchall()
+        return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
+
     def __init__(self, data_path, env=None, state_dir=None, **kw):
         self._env = os.environ if env is None else env
         super().__init__(data_path, os.path.join(state_dir or self._env.get("ZF_STATE") or ".", "mssql"), **kw)

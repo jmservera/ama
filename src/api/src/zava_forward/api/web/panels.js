@@ -334,6 +334,7 @@ function affectedChallengePanel(c, id, refresh) {
         button.setAttribute("aria-busy", "true");
         status.textContent = "Recording the supplied evidence.";
         let dispatched = false;
+        const dispatchSignal = routeController.signal;
         try {
           const payload = JSON.stringify(build(body));
           dispatched = true;
@@ -348,6 +349,7 @@ function affectedChallengePanel(c, id, refresh) {
             return;
           }
           delete form.dataset.unsaved;
+          if (dispatchSignal.aborted) return;
           await refresh(async () => {});
         } catch (error) {
           status.textContent = dispatched

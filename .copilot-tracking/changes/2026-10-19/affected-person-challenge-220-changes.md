@@ -13,7 +13,9 @@
 ## Execution Status
 
 P01-P03 complete; original implementation Review executed Partial / Not accepted.
-Frozen-head gate pending at this committed evidence snapshot.
+P04/P05 source d3dfd82a subsequently passed its historical all17 gate and was
+published before this continuation. P06 five-comment implementation is complete;
+its new frozen-head gate is pending at this committed evidence snapshot.
 Original critique executed once with Revise and seven planner-owned dispositions;
 original unchanged.
 Approved writes: existing core/API/workbench/test owners, one browser harness,
@@ -254,3 +256,91 @@ commit/base hashes will be external, with no subsequent commit or publication.
 P05-T01 checked; P05-T02 independent bounded assessment and P05-T03 corrected
 freeze/full gate remain. Original Review/critique hashes still match the
 immutable values above; no second Review or critique was run.
+
+## P06: New PR findings intake and implementation (2026-10-19)
+
+Read existing state, plan/details, prior changes/dispositions and original Review.
+Fetched actual five comments from PR #418. Verified bot commit 63f5b057 has only
+rubric latest.json changes, attributed to github-actions[bot], recording source
+d3dfd82a and successful rubric workflow 39321399922. Fast-forwarded clean topic
+only; no amend/rebase/force. PR is OPEN with empty closingIssuesReferences.
+Scope is five coupled fixes and focused JSON/SQLite/generated/browser proof,
+then a frozen commit/new all17 external receipt, not publication or another
+original Review. Original failures and adverse outcomes remain historical.
+No concurrent worker was used.
+
+### P06-T01: Five actual comment dispositions
+
+* 4318714670: capture the challenge POST's dispatch signal and skip only its
+  stale-route refresh. Actual Chromium delays committed acknowledgements across
+  confirmed navigation to ZF-5 and the case list: two persisted writes, zero
+  stale-case GETs, zero cancelled/retried writes, no page errors.
+* 4318714784: fixture ownership edits call `_case` for every matching case.
+  New JSON/SQLite reopen proof checks every persisted owner code/name/role and
+  identical generated candidate/deterministic sets. Existing forged-identity
+  no-write test remains unchanged and production actor authorization is intact.
+* 4318714876: index corrections once per catalog/export read, with exact typed
+  proposal/source/policy keys. Generated 52-proposal/60,000-home reads each build
+  one index. A SQLite query over 60,000 uncorrected generated case bodies and one
+  corrected body returns/decodes one target, not full bodies. SQL Server uses
+  OPENJSON under the same current serialized transaction. Native cross-case
+  policy and competing-correction/owner/decision races pass.
+* 4318714963: generation/latest/review and continuity projections recheck current
+  registry identity plus resident/reason entitlement before exposing references.
+  Core and actual HTTP cross-case policy regressions retain stale/actionable
+  flags while withholding references from a non-entitled coordinator. Runtime
+  reason-right removal and current registry role downgrade also withhold IDs.
+* 4318715035: release/model-route denial audit is outside disposition rollback;
+  mutation, save and acceptance/edit audit remain inside. JSON/SQLite missing
+  release plus actual SQL revoked/changed-model tests retain denial audit.
+  Injected failed accept/edit saves leave proposal and audit unchanged after
+  reopen; native SQL rollback and competing-correction tests also pass.
+
+The HTTP priority-review regression additionally exposed a coupled request-thread
+initialization defect: priority_review assumed SQL thread-local pending existed.
+Initialize through existing `_touched` before taking the rollback snapshot, as
+the resident operation already does. No actor/release/race guard is weakened.
+
+### P06-T01: Validation and preserved local failures
+
+Final focused run: 148 tests, 146 passed, two explicit existing skips (SQLite
+JSON-file-only rollback and opt-in local browser). Complete configured core/API
+Ruff/format/mypy pass (128/62 typed files); panels.js Node syntax passes.
+Seven final-source task-owned loopback SQL Server tests pass with no skips.
+Actual browser navigation/current/history journeys pass; seven pinned axe scopes
+have zero violations/incomplete findings, retaining 320/390/1280 reflow, draft,
+keyboard, confirmation, denied projection and reduced-motion proof.
+No screen-reader/human/operational/native-load acceptance is claimed.
+
+Retain unsuccessful local outputs as evidence, not successful first attempts:
+initial format/type checks required fixture typing/format fixes; browser harness
+needed committed-response and destination synchronization; the actual challenge
+handler still lacked the signal guard when browser-03 reproduced stale-case
+replacement (the first narrow insertion hit the adjacent resident helper and
+was reverted). Final source changes only the intended challenge handler.
+The first final combined run had one real HTTP error from uninitialized SQL
+thread-local pending, corrected through `_touched`; its log remains failed.
+Final successful focused output is focused-final-02, not focused-final.
+Historical original gate failures and original adverse Review are unchanged.
+
+Primary fresh logs and browser JSON are retained externally in the current
+session files/issue220-pr418-findings-evidence directory with SHA256 manifest.
+Separate report:
+reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-pr418-findings.md.
+This is implementation-owned disposition, not independent exact-head acceptance
+or a replacement original Review. Refreshed source-guideline review found no new
+web guideline violation in the two-line lifecycle change; existing unrelated
+form/list issues remain outside this bounded correction.
+
+### P06-T02: Freeze snapshot and external gate handoff
+
+P06-T01 complete. Reconciled plan/details record historical d3dfd82a all17
+success separately from the new candidate's pending gate. Original research,
+critique and Review remain byte-identical; Review SHA256
+eec22d64aea801d63ae007c5c8b6e4b69709099d70f4e3a7c9b8f4dc2744fc8e;
+critique SHA256 1a37cbb8f57d8e673eac17d86b81b983ec6244a09eb104d7c157109ac16ffaf0.
+Fetch main, commit source/tracking with authenticated noreply identity, freeze
+and run unchanged all17 externally with its own existing shared heavy lock.
+Receipt verification, final HEAD/base/hash/tests/skips and current post-freeze
+state belong in external handoff; no later source/tracking commit, push,
+rescoring action or repeated original Review is authorized.

@@ -219,6 +219,43 @@ class ResidentApi(unittest.TestCase):
         self.assertEqual(code, 409)
         self.assertEqual(result["outcome"], "committed")
 
+    def test_http_priority_hides_cross_case_correction_references_from_coordinator(self) -> None:
+        payload = dict(self.challenge_payload(), target_kind="policy")
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 200)
+        self.assertEqual(
+            self.action(
+                "challenge_resolve",
+                id="CH-1",
+                expected_version=1,
+                resolution="Correction recorded",
+                resolution_ref="SYN policy correction",
+                explanation="SYN checked by a person",
+                next_update="2099-01-02",
+            )[0],
+            200,
+        )
+        with self.store.lock:
+            self.store._case("ZF-5")["owner_code"] = "RC-1"
+            self.store.save()
+        code, generated = self.call("/api/ai/priority", "rex", dict(mode="workflow-only"))
+        self.assertEqual(code, 200, generated)
+        code, latest = self.call("/api/ai/priority", "rex")
+        self.assertEqual(code, 200, latest)
+        code, reviewed = self.call(
+            f"/api/ai/priority/{generated['id']}/reject", "rex", dict(reason="SYN manual")
+        )
+        self.assertEqual(code, 200, reviewed)
+        for result in (generated, latest["recommendation"], reviewed):
+            self.assertTrue(result["stale"])
+            self.assertFalse(result["actionable"])
+            self.assertFalse(result["relied_on"])
+            self.assertEqual(result["challenge_ids"], [])
+            self.assertNotIn("ZF-1/CH-1", json.dumps(result))
+        self.assertEqual(
+            self.call("/api/ai/priority", "sam")[1]["recommendation"]["challenge_ids"],
+            ["ZF-1/CH-1"],
+        )
+
     def test_http_commitment_and_independent_closure_restart(self) -> None:
         self.assertEqual(self.commitment(basis="")[0], 400)
         self.assertEqual(self.commitment(owner="kim@example.test")[0], 400)

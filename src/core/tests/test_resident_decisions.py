@@ -3,6 +3,7 @@
 import copy
 import json
 import os
+import sqlite3
 import tempfile
 import unittest
 import uuid
@@ -16,13 +17,62 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
-from zava_forward.core import ai_tasks, controls, projection
+from zava_forward.core import ai_tasks, controls, projection, resident_decisions
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError, Store
 
 MEASURES = ("Loft insulation", "Cavity wall")
+
+
+class PriorityCorrectionQuery(unittest.TestCase):
+    def test_writer_decodes_only_corrections_from_60000_generated_case_bodies(self) -> None:
+        with sqlite3.connect(":memory:") as db:
+            db.execute("CREATE TABLE cases (id TEXT, body TEXT)")
+            target = dict(kind="policy", id="priority-ranking", version="SYN-policy")
+            body = json.dumps(
+                dict(
+                    unrelated_body="SYN-generated-" * 100,
+                    affected_challenges=[dict(id="CH-OPEN", target=target)],
+                )
+            )
+            db.executemany(
+                "INSERT INTO cases VALUES (?, ?)", ((f"SYN-{i}", body) for i in range(60000))
+            )
+            db.execute(
+                "INSERT INTO cases VALUES (?, ?)",
+                (
+                    "SYN-CORRECTED",
+                    json.dumps(
+                        dict(
+                            affected_challenges=[
+                                dict(
+                                    id="CH-1",
+                                    target=target,
+                                    resolution=dict(outcome="Correction recorded"),
+                                ),
+                                dict(
+                                    id="CH-2",
+                                    target=target,
+                                    resolution=dict(outcome="Explanation recorded"),
+                                ),
+                            ]
+                        )
+                    ),
+                ),
+            )
+            statements: list[str] = []
+            db.set_trace_callback(statements.append)
+            store = SqlStore.__new__(SqlStore)
+            store.db = db
+            with patch.object(json, "loads", wraps=json.loads) as decodes:
+                rows = store._priority_correction_rows()
+            self.assertEqual(rows, [("SYN-CORRECTED", "CH-1", target)])
+            self.assertEqual(decodes.call_count, 1)
+            self.assertEqual(len(statements), 1)
+            self.assertIn("json_each", statements[0])
+            self.assertNotIn("SELECT body FROM cases", statements[0])
 
 
 class JsonResidentDecisions(unittest.TestCase):
@@ -349,6 +399,106 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertFalse(exported["relied_on"])
         self.assertEqual(len(exported["challenge_ids"]), 2)
         self.assertNotIn("SYN Please check", json.dumps(bundle))
+
+    def test_challenge_priority_responses_use_current_dual_entitlement(self) -> None:
+        proposal = self.priority_fixture()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal, "policy"))
+        self.resolve_challenge()
+        with self.store.lock:
+            self.store._case("ZF-5")["owner_code"] = self.rex["code"]
+            self.store.save()
+        generated = self.store.ai_priority(self.rex, mode="workflow-only")
+        for result in (
+            generated,
+            self.store.latest_priority(self.rex),
+            self.store.resolve_priority(self.rex, generated["id"], "reject", "SYN manual"),
+        ):
+            self.assertTrue(result["stale"])
+            self.assertFalse(result["actionable"])
+            self.assertFalse(result["relied_on"])
+            self.assertEqual(result["challenge_ids"], [])
+            self.assertNotIn("ZF-1/CH-1", json.dumps(result))
+        self.assertEqual(self.store.latest_priority(self.sam)["challenge_ids"], ["ZF-1/CH-1"])
+        with patch.dict(os.environ, ZF_REASON_ROLES="Retrofit Programme Manager"):
+            self.assertTrue(self.store.latest_priority(self.sam)["stale"])
+            self.assertEqual(self.store.latest_priority(self.sam)["challenge_ids"], [])
+        downgraded = dict(self.sam, role="Retrofit Coordinator")
+        if self.sql:
+            assert isinstance(self.store, SqlStore)
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(downgraded), self.sam["email"]),
+            )
+        else:
+            self.store.staff[self.sam["email"]] = downgraded
+        self.assertTrue(self.store.latest_priority(self.sam)["stale"])
+        self.assertEqual(self.store.latest_priority(self.sam)["challenge_ids"], [])
+        reopened = self.open_store() if self.sql else self.store
+        self.assertEqual(reopened.latest_priority(downgraded)["challenge_ids"], [])
+
+    def test_failed_priority_accept_edit_remove_disposition_and_audit(self) -> None:
+        for action in ("accept", "edit"):
+            proposal = self.priority_fixture()
+            before = copy.deepcopy(self.store.data["recommendations"])
+            audit = list(self.store.audit_entries())
+            with (
+                patch.object(self.store, "save", side_effect=RuntimeError("SYN before commit")),
+                self.assertRaisesRegex(RuntimeError, "SYN before commit"),
+            ):
+                self.store.resolve_priority(
+                    self.sam,
+                    proposal["id"],
+                    action,
+                    "SYN",
+                    [dict(case_id="ZF-1", reason="SYN human edit")],
+                )
+            self.assertEqual(self.store.data["recommendations"], before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+            self.assertEqual(self.open_store().data["recommendations"], before)
+            self.assertTrue(self.store.verify_audit())
+
+    def test_challenge_lookup_is_once_per_read_for_60000_generated_homes(self) -> None:
+        proposal = self.priority_fixture()
+        rec = self.store.data["recommendations"][-1]
+        records = [dict(copy.deepcopy(rec), id=f"SYN-{i}") for i in range(52)]
+        generated: dict[str, dict[str, Any]] = {
+            f"SYN-HOME-{i}": dict(id=f"SYN-HOME-{i}") for i in range(60000)
+        }
+        generated["SYN-HOME-59999"]["affected_challenges"] = [
+            dict(
+                id="CH-1",
+                target=dict(kind="policy", id="priority-ranking", version=rec["policy_version"]),
+                resolution=dict(outcome="Correction recorded"),
+            ),
+            dict(
+                id="CH-2",
+                target=dict(kind="policy", id="priority-ranking", version="SYN-other-version"),
+                resolution=dict(outcome="Correction recorded"),
+            ),
+            dict(
+                id="CH-3",
+                target=dict(kind="policy", id="priority-ranking", version=rec["policy_version"]),
+                resolution=dict(outcome="Explanation recorded"),
+            ),
+        ]
+        lookup = resident_decisions.priority_correction_lookup
+        with (
+            patch.object(self.store, "cases", generated),
+            patch.dict(self.store.data, recommendations=records),
+            patch.object(resident_decisions, "priority_correction_lookup", wraps=lookup) as calls,
+        ):
+            catalog = resident_decisions.challenge_catalog(self.store, "ZF-1")
+            self.assertEqual(calls.call_count, 1)
+            self.assertEqual(len(catalog), 52)
+            for row in catalog:
+                self.assertTrue(row["stale"])
+                self.assertEqual(row["challenge_ids"], ["SYN-HOME-59999/CH-1"])
+            calls.reset_mock()
+            bundle = self.store.continuity_export(self.pam)
+            self.assertEqual(calls.call_count, 1)
+            self.assertEqual(len(bundle["ai_records"]), 52)
+            self.assertTrue(all(row["stale"] for row in bundle["ai_records"]))
+        self.assertEqual(proposal["stale"], False)
 
     def test_first_contact_retention_withdrawn_expired_and_purge(self) -> None:
         from datetime import date

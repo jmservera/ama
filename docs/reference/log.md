@@ -6581,3 +6581,17 @@ metadata when the knowledge base was created.
   changes. Original Partial / Not accepted Review and Revise critique remain
   unchanged; a separate bounded finding disposition and corrected exact-head
   local gate are required, not whole-issue acceptance.
+
+## [2026-10-19] query | Bounded challenge PR finding corrections (#220)
+
+* Updated the existing [resident journey boundary](./research/ux/customer-journeys/residents.md#affected-person-challenge-engineering-boundary-2026-10-19-220),
+  index and core/API guides for five actual PR #418 findings: stale-route refresh,
+  synthetic ownership persistence, repeated correction scans, priority-reference
+  disclosure without current dual entitlement and lost release-denial audit.
+* Generated 60,000-home/52-proposal read checks, correction-only SQLite query
+  checks, JSON/SQLite/HTTP regressions and actual Chromium journeys support the
+  bounded fixes. Seven task-owned loopback SQL Server regressions verify current
+  correction races, cross-case policy matching, entitlement and rollback.
+* Original research, Revise critique, Partial / Not accepted Review and historical
+  failures remain unchanged. No replacement Review, whole-issue acceptance,
+  native-scale/load acceptance, human approval or publication is inferred.

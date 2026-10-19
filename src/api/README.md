@@ -2652,3 +2652,12 @@ creates 52 actual workflow-only targets and 52 HTTP-recorded challenges, then
 opens a new challenge against the oldest target, resolves the oldest open
 challenge, reads an older resolved explanation, checks exact selective
 invalidation and denied projections, and reloads the URL-bound bounded pages.
+
+Add `--navigation` instead to delay a committed challenge POST acknowledgement
+while confirming navigation to another case and to the list. The write is
+neither cancelled nor retried. The form captures its dispatch route signal and
+does not refresh the old case after that route is aborted.
+Priority generation, latest and review responses retain correct stale/actionable
+flags but withhold `challenge_ids` unless the requesting reader currently has
+both resident-information and recorded-reason rights, even for policy corrections
+on another case.

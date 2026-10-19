@@ -39,7 +39,7 @@ tenant setup and publication authority remain separate owner gates.
 * Demonstrate both supplied digital and staff-recorded non-digital challenges, permitted explanations, owner, next update, manual route, resolution and selective invalidation.
 * Never infer consent, refusal, sanctions, retaliation, unrelated closure or altered/delayed hazard response.
 * No real inference, cloud writes, private data, framework/workflow changes or remote publication.
-* Commit dated original evidence and candidate, then run actual full 17-group clean frozen-head gate using the exact supplied base and external receipt.
+* Commit dated original evidence and candidate, then run actual full 17-group clean frozen-head gate using fresh origin/main and an external receipt; stop before publication for independent exact-head disposition.
 
 ## Goals
 
@@ -138,12 +138,12 @@ Update existing core/API docs, KB index and append-only log. Do not change memor
 Record results and limitations in changes artifact.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Original Review and frozen gate handoff
+### [x] P04: Original Review and frozen gate handoff
 
 Dependencies: P03.
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Execute independent original Review, freeze commit and actual local gate
+#### [x] P04-T01: Execute independent original Review, freeze commit and actual local gate
 
 Original Review is immutable, including adverse findings; no repair/re-Review
 loop. Commit candidate+all artifacts with current gh user noreply author and
@@ -159,6 +159,7 @@ with external output only and no later commit. Do not publish.
 * Semantic proof: independent exact dependency manifests and negative-state comparisons; actual workflow-only priority generation, real stores/HTTP/browser, not mocked entire acceptance.
 * Regression: preserve #86/#88/#406 tests; run existing surrounding component cases.
 * Validation evidence: failing-first output in changes; focused runs and actual browser; full local runner external receipt after commit. Any opt-in SQL selector uses only gate-owned local disposable SQL.
+* P06 authorized supplemental regression owners: four core methods (including one isolated correction-query class), one API release fixture method and one HTTP method; extend the same browser harness. These are five-finding proof, not an expansion of the original slice or a replacement test framework.
 
 ## Dependencies
 
@@ -183,12 +184,17 @@ immutable artifact. No second critique. All corrections are planner-owned.
 
 ## Follow-Up Items
 
+* Fresh guideline review observed the unchanged adjacent resident helper also
+  lacks delayed-write route fencing, and unchanged commitment rendering is
+  unbounded above 50. These are outside the requested challenge-handler write
+  boundary; retain for separately authorized UX work, not P06 acceptance.
+
 * Extend challenge bindings to other assistant/form paths only in separately reviewed scope; this bounded slice does not establish whole-system AC-071.
 * Owner: qualified human/legal/RAI and accessible resident comprehension acceptance; no local synthetic substitute.
 * Original Review RV-001/RV-002 are selected for the explicitly authorized continuation below; their original findings and verdict remain immutable.
 
 <!-- rpi:phase id=P05 -->
-## [ ] P05: Selected historical reachability and evidence correction
+## [x] P05: Selected historical reachability and evidence correction
 
 <!-- rpi:task id=P05-T01 -->
 ### [x] P05-T01: Restore bounded access beyond the last 50
@@ -220,7 +226,7 @@ fresh permitted evidence and obtain a separate narrow identity disposition.
 This is directly coupled regression work, not an expansion into issue360.
 
 <!-- rpi:task id=P05-T03 -->
-### [ ] P05-T03: Corrected exact-head freeze and complete gate handoff
+### [x] P05-T03: Corrected exact-head freeze and complete gate handoff
 
 Dependencies: P05-T01, P05-T02, P05-T04.
 
@@ -232,24 +238,62 @@ RV-001. No new critique or Review.
 
 ## Handoff
 
+### Current bounded PR #418 continuation
+
+The 2026-10-19 owner authorizes implementation of actual advisory comments
+4318714670, 4318714784, 4318714876, 4318714963 and 4318715035.
+Remote bot commit 63f5b057aac4b115c580b124e0fc6d75ae9a1bd7 changes only the
+genuine workflow rubric receipt (48, baseline 48, successful run 39321399922);
+the clean local topic was fast-forwarded before corrections.
+Historical d3dfd82a all17 success is not evidence for this new candidate.
+
+<!-- rpi:phase id=P06 -->
+### [ ] P06: Bounded new PR finding implementation
+
+<!-- rpi:task id=P06-T01 -->
+#### [x] P06-T01: Correct five PR findings and prove focused behavior
+
+Capture dispatch route ownership without cancelling a committed POST; persist
+every synthetic fixture ownership edit through `_case`; build one correction
+dependency index per read and a current correction-only SQL writer lookup;
+filter challenge references by current dual entitlement on every priority
+response; preserve release-denial-only audit outside failed disposition rollback.
+Allowed writes are those coupled core/API sources, existing regression owners,
+component documentation and issue-owned tracking. No UI redesign, private data,
+cloud operation, authorization weakening, replacement critique or Review.
+Generated-data scan bounds and JSON/SQLite/browser regressions are required.
+
+<!-- rpi:task id=P06-T02 -->
+#### [ ] P06-T02: Freeze and execute new all17 local gate without publication
+
+Dependencies: P06-T01. Reconcile descriptive plan/details, append changes and
+write separate five-comment dispositions preserving all original outcomes and
+failures. Commit source/tracking with authenticated noreply identity; fetch
+main and run the unchanged complete gate on the frozen commit, external output,
+shared heavy lock. Verify receipt against fresh main. Final evidence remains
+external. Stop before push for coordinator independent exact-head disposition.
+
 P01-P03 complete and reconciled with changes/details. One independent original
 Review executed Partial / Not accepted; RV-001..004 remain routed, with no repair
-or repeat Review. Candidate freeze and external exact-head gate follow.
+or repeat Review inside the original task. Original candidate gate failed
+project-api (16 groups passed); the historical failure remains. Subsequent
+authorized P05 source d3dfd82a passed all17 and was published by the coordinator.
 Original critique remains Revise; applied dispositions are not a rewritten Pass.
 The 2026-10-19 user/coordinator selected P05 as ordinary later implementation
 of findings. P05 supersedes the prior no-repair instruction for those findings
 only. No replacement or repeat original Review is authorized.
 
-Current correction handoff: P05-T01/T02/T04 complete, independently bounded
-dispositions retained separately; P05-T03 corrected commit/all17 remains pending
-at freeze. Original historical all17 attempted 17, passed 16, failed project-api;
-that failed receipt remains historical and cannot close any finding. The
-test-only ownership correction has fresh combined 139-test evidence, 137 pass
-and two explicit skips (SQLite JSON-only rollback and opt-in local browser).
-Current reviewed main remains eeb6c3aba5d07244ae3cc0e53d839617fd928e3b.
-Post-freeze gate result, exact commit/base/receipt hashes and coordinator handoff
-must be external so no later tracking commit invalidates the corrected gate.
-P04 remains unchecked until its actual Review/freeze/gate obligations execute;
-the external handoff, not a speculative committed pass, records post-freeze results.
+Current correction handoff: historical P04/P05 execution is complete, including
+the external all17 receipt for d3dfd82a; that receipt is invalid for bot or P06
+HEAD. Five actual PR comments are implemented under P06-T01, supported by 148
+focused tests (146 pass, two existing skips), seven native SQL tests, three
+browser journeys and core/API static checks. Coupled request-thread rollback
+initialization is also proven through real HTTP. P06-T02 remains pending at this
+freeze snapshot: commit, new all17 and fresh-base receipt verification, followed
+by coordinator independent exact-head disposition. No push is authorized.
+Current fetched main is eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. Record the new
+gate, exact HEAD/base/receipt hashes and post-freeze state externally so no later
+tracking commit invalidates the receipt. Original failure and adverse outcomes
+are historical, never superseded by a claim of whole-issue acceptance.
 Review defect does not erase executed implementation evidence or justify claiming
 acceptance. Its unchanged original hash is recorded in changes and state.

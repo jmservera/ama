@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Bounded implementation of five actual PR418 comments on verified fast-forwarded bot HEAD; stop before publication and preserve original Review.",
+      "status": "implemented-focused-validated-awaiting-frozen-gate",
+      "evidence": "2026-10-19 user directive; actual comments 4318714670/4784/4876/4963/5035. Five separate implementation-owned dispositions, 148 focused tests (146 pass/two existing skips), seven native SQL tests, three Chromium journeys and core/API static checks. P06 plan/details own scope. Historical d3dfd82a all17 receipt is not reusable; original Review and critique bytes preserved."
+    },
+    {
       "decision": "RV-001 corrected and RV-002 fresh permitted evidence independently dispositioned; historical original log exclusion remains, not bypassed.",
       "status": "bounded-independent-disposition",
       "evidence": ".copilot-tracking/reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-findings.md; three source SHA256 values, fresh 19 tests and seven actual scoped browser scans inspected; no replacement Review."
@@ -64,8 +69,8 @@
   "blockers": [
     {
       "id": "corrected-full-gate",
-      "summary": "Corrected exact-HEAD all17 gate and external receipt verification are pending at this freeze snapshot.",
-      "resolution": "Freeze corrected source and dated evidence, execute all17 groups with existing shared lock against reviewed fetched eeb6c3aba5d07244ae3cc0e53d839617fd928e3b, preserve actual failures/skips and retain final state/receipt/handoff externally without later commit."
+      "summary": "P06-T01 implemented and focused-validated; new frozen-head all17 gate remains pending at this committed snapshot.",
+      "resolution": "Freeze reconciled source/tracking, run unchanged all17 with its own shared lock against fresh origin/main, verify receipt externally and stop before publication."
     },
     {
       "id": "publication",
@@ -75,7 +80,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Freeze reconciled corrected source/evidence commit, run all17 groups against reviewed current main, verify receipt and send coordinator exact-head handoff without push. Final post-freeze state/evidence remains external in session files/issue220-evidence to avoid invalidating the receipt."
+    "action": "P06-T02: freeze source/tracking and execute all17 with a fresh external output directory; verify receipt against freshly fetched main and send coordinator exact-head evidence without push. Final post-freeze state/receipt/handoff stays external, with original Review never repeated."
   },
   "prioritized_follow_ups": [
     {

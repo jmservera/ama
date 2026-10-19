@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from playwright.sync_api import expect, sync_playwright
+from playwright.sync_api import APIResponse, Route, expect, sync_playwright
 from test_resident_api import ResidentApi
 
 from checks.regulatory_ux_check import AXE_SHA256, scan
@@ -318,13 +318,102 @@ def run_history(axe_path: Path) -> dict[str, Any]:
         fixture.doCleanups()
 
 
+def run_navigation() -> dict[str, Any]:
+    """Delay a committed POST acknowledgement across confirmed route navigation."""
+    fixture = ResidentApi("test_http_challenge_both_routes_resolution_and_denied_reads")
+    fixture.setUp()
+    try:
+        payload = fixture.challenge_payload()
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch()
+            page = browser.new_page(reduced_motion="reduce")
+            page.route(
+                "**/*",
+                lambda route: route.continue_()
+                if route.request.url.startswith(fixture.base + "/") else route.abort(),
+            )
+            page.goto(fixture.base + "/app")
+            page.locator("#email").fill("sam@example.test")
+            page.locator("#pw").fill("synthetic-only")
+            page.locator("button[type=submit]").click()
+            page.locator("#nav").wait_for(state="visible")
+            pending: list[tuple[Route, APIResponse]] = []
+            writes: list[str] = []
+            old_case_reads: list[str] = []
+            errors: list[str] = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+
+            def hold_acknowledgement(route: Route) -> None:
+                writes.append(route.request.url)
+                response = route.fetch()
+                assert response.ok
+                pending.append((route, response))
+                page.evaluate("(count) => { window.challengeCommitted = count; }", len(pending))
+
+            page.route("**/api/cases/ZF-1/resident", hold_acknowledgement)
+            for index, destination in enumerate(("#/case/ZF-5", "#/"), start=1):
+                page.goto(fixture.base + "/app#/case/ZF-1")
+                page.locator("#affected-challenges").wait_for()
+                page.get_by_text("Record supplied challenge", exact=True).first.click()
+                page.locator("#challenge-open-proposal_id").fill(payload["proposal_id"])
+                for name in ("target_kind", "channel", "owner"):
+                    page.locator("#challenge-open-" + name).select_option(payload[name])
+                for name in ("source", "request", "explanation", "non_digital_route", "next_update"):
+                    page.locator("#challenge-open-" + name).fill(payload[name])
+                with page.expect_request("**/api/cases/ZF-1/resident"):
+                    page.locator("#challenge-open-next_update").press("Enter")
+                expect(page.locator("#challenge-open button[type=submit]")).to_be_disabled()
+                page.wait_for_function("(count) => window.challengeCommitted === count", arg=index)
+                assert len(pending) == index
+                code, detail = fixture.call("/api/cases/ZF-1", "sam")
+                assert code == 200 and len(detail["affected_challenges"]) == index
+                # A normal hash change exercises the real unsaved-draft confirmation.
+                page.once("dialog", lambda dialog: dialog.accept())
+                page.evaluate("(destination) => { location.hash = destination; }", destination)
+                page.wait_for_url("**/app" + destination)
+                if destination.endswith("ZF-5"):
+                    expect(page.get_by_text("Reference ZF-5", exact=True)).to_be_visible()
+                else:
+                    expect(page.get_by_role("link", name="See all cases", exact=True)).to_be_visible()
+                destination_heading = page.locator("main h1").inner_text()
+                old_case_reads.clear()
+
+                def record_read(request: Any) -> None:
+                    if request.method == "GET" and request.url == fixture.base + "/api/cases/ZF-1":
+                        old_case_reads.append(request.url)
+
+                page.on("request", record_read)
+                route, response = pending[-1]
+                route.fulfill(response=response)
+                page.wait_for_load_state("networkidle")
+                assert page.url.endswith("/app" + destination), page.url
+                expect(page.locator("main h1")).to_have_text(destination_heading)
+                if destination.endswith("ZF-5"):
+                    expect(page.get_by_text("Reference ZF-5", exact=True)).to_be_visible()
+                assert not old_case_reads, old_case_reads
+                assert len(writes) == index, "A committed write must not be cancelled or retried"
+                page.remove_listener("request", record_read)
+            assert not errors, errors
+            version = browser.version
+            browser.close()
+        code, detail = fixture.call("/api/cases/ZF-1", "sam")
+        assert code == 200 and len(detail["affected_challenges"]) == 2
+        return dict(outcome="passed", browser=version, committed_writes=2,
+                    destinations=["case ZF-5", "case list"], stale_refresh_reads=0,
+                    cancelled_or_retried_writes=0, page_errors=errors)
+    finally:
+        fixture.doCleanups()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--axe", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--history", action="store_true")
+    parser.add_argument("--navigation", action="store_true")
     args = parser.parse_args()
-    result = run_history(args.axe) if args.history else run(args.axe)
+    result = (run_navigation() if args.navigation else
+              run_history(args.axe) if args.history else run(args.axe))
     args.out.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result))
 

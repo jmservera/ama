@@ -143,6 +143,9 @@ proposal/source/policy versions, current human ownership and selective stale
 reviews. Creation-time citation snapshots are not universal document versions.
 Bounded history controls and exact reference entry restore access to targets,
 open resolution actions and resolved explanations beyond the newest 50 records.
+Subsequent bounded PR corrections protect post-write navigation and current
+dual-entitlement references, bound correction lookups and preserve denial audit;
+constructed loopback SQL proof does not establish operational/native load acceptance.
 Other assistants/forms, whole-system AC-071 and qualified/resident acceptance
 remain open; no new legal or redress authority is inferred.
 

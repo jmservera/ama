@@ -278,8 +278,15 @@ class ContinuityMixin:
         source = assistants if isinstance(assistants, dict) else {}
         with self.lock:
             head_count, head_hash = self.ledger_head()
-            from .resident_decisions import priority_challenge_state
-            recs = [dict(r, **priority_challenge_state(self, r)) for r in self.data["recommendations"]]
+            from .resident_decisions import priority_challenge_state, priority_correction_lookup, challenge_references_visible
+            corrections = priority_correction_lookup(self)
+            references_visible = challenge_references_visible(self, user)
+            recs = []
+            for r in self.data["recommendations"]:
+                challenge = priority_challenge_state(self, r, corrections)
+                if not references_visible:
+                    challenge["challenge_ids"] = []
+                recs.append(dict(r, **challenge))
             gov = self._gov()
             ledger_rows = list(self.audit_entries())
             report = self.verify_ledger()

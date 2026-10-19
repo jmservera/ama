@@ -16,8 +16,37 @@
 | P01 | Failing-first proof | Complete; actual missing-feature failures | P01-T01 |
 | P02 | Core/HTTP/workbench | Complete; retained-priority slice | P02-T01, P02-T02 |
 | P03 | Validation/documentation | Complete; scoped proof and explicit limitations | P03-T01 |
-| P04 | Review/frozen gate | Original Review Partial / Not accepted; frozen external gate pending | P04-T01 |
-| P05 | Selected correction | Active; history/evidence, bounded assessment, corrected freeze/gate | P05-T01, P05-T02, P05-T03 |
+| P04 | Review/frozen gate | Executed; original Review Partial / Not accepted and historical failed gate preserved | P04-T01 |
+| P05 | Selected correction | Complete; source d3dfd82a historical all17 passed and published; receipt not reusable | P05-T01, P05-T02, P05-T03, P05-T04 |
+| P06 | New PR findings | T01 complete; T02 new frozen gate pending; no push | P06-T01, P06-T02 |
+
+## Current P06 execution boundary
+
+Continue the same automatic task after published source d3dfd82a and genuine
+rubric-only bot 63f5b057. P05 gate succeeded historically; committed pending
+language is its freeze snapshot, not a present failure or a reusable receipt.
+Implement only PR #418 comments 4318714670/4784/4876/4963/5035 in dependency-ready
+order, preserving original research, Revise critique and Partial / Not accepted
+Review byte-for-byte. Current source authorization, Fluent 2 semantics, drafts,
+reduced motion, manual approval and cross-case correction races stay binding.
+Use existing regression owners with generated public synthetic inputs; no
+private datasets. Current web guidelines were retrieved successfully.
+One coherent correction batch precedes focused checks, privacy-safe commit and
+fresh exact-head all17. No original Review is rerun. Coordinator owns independent
+exact-head disposition and any later push authorization; whole issue stays open.
+
+P06-T01 completion: capture dispatch route lifetime; `_case` every fixture owner;
+reuse one correction index per read and transaction-current correction-only
+SQLite/SQL Server queries; check current registered dual entitlement for
+priority/export references; audit release denial before disposition rollback.
+Real HTTP additionally required initializing thread-local rollback state through
+existing `_touched`. Four supplemental core methods, one release fixture method
+and one HTTP method extend the existing owners, plus the existing browser check.
+148 focused tests (146 pass/two existing skips), seven native SQL tests, current/
+history/navigation Chromium journeys and full core/API Ruff/format/mypy pass.
+Unsuccessful harness/type/HTTP runs are retained in changes and external logs.
+P06-T02 commit/all17/verification remains pending at freeze; independent
+exact-head disposition and publication authority are still outstanding.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Establish executable behavior proof

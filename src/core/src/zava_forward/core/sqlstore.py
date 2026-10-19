@@ -551,6 +551,14 @@ class SqlStore(Store):
             pending.clear()
 
     # ---- writes
+    def _priority_correction_rows(self):
+        rows = self.db.execute("""
+            SELECT c.id, json_extract(ch.value, '$.id'), json_extract(ch.value, '$.target')
+            FROM cases AS c, json_each(c.body, '$.affected_challenges') AS ch
+            WHERE json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
+        """).fetchall()
+        return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
+
     def save(self):
         touched, pending = self._touched(), self.local.pending
         with self.dblock:

@@ -223,7 +223,41 @@ def _dependency(rec, kind, case_id):
     raise ValueError("Choose proposal, source or policy.")
 
 
-def priority_challenge_state(store, rec, sql_current=False):
+def priority_correction_lookup(store, sql_current=False):
+    """Index correction dependencies once, without loading SQL case bodies in a writer."""
+    if sql_current:
+        rows = store._priority_correction_rows()
+    else:
+        rows = ((case["id"], record["id"], record["target"])
+                for case in store.cases.values()
+                for record in case.get("affected_challenges", [])
+                if (record.get("resolution") or {}).get("outcome") == "Correction recorded")
+    lookup = {}
+    for case_id, record_id, target in rows:
+        key = (target["kind"], target["id"], target["version"])
+        lookup.setdefault(key, set()).add(f"{case_id}/{record_id}")
+    return lookup
+
+
+def challenge_references_visible(store, user):
+    """Recheck both evidence rights against the current registered reader."""
+    from . import projection
+    if not user:
+        return False
+    email = user.get("email")
+    if not isinstance(email, str):
+        return False
+    if hasattr(store, "db"):
+        with store.dblock:
+            row = store.db.execute("SELECT body FROM staff WHERE email=?", (email.lower(),)).fetchone()
+        current = json.loads(row[0]) if row else {}
+    else:
+        current = store.staff.get(email.lower(), {})
+    return (projection.appointment_evidence_visible(current)
+            and all(current.get(key) == user.get(key) for key in ("email", "code", "name", "role", "oid")))
+
+
+def priority_challenge_state(store, rec, corrections=None):
     """Derive correction effects without rewriting original proposals or human decisions."""
     if rec.get("kind") == "ai_task":
         return dict(stale=False, review_stale=False, challenge_ids=[])
@@ -232,17 +266,17 @@ def priority_challenge_state(store, rec, sql_current=False):
                      for cid, version in (rec.get("source_versions") or {}).items()]
     if rec.get("policy_version"):
         dependencies.append(_dependency(rec, "policy", None))
-    cases = (json.loads(r[0]) for r in store.db.execute("SELECT body FROM cases").fetchall()) if sql_current else store.cases.values()
-    causes = [f"{case['id']}/{record['id']}" for case in cases
-              for record in case.get("affected_challenges", [])
-              if (record.get("resolution") or {}).get("outcome") == "Correction recorded"
-              and record["target"] in dependencies]
+    if corrections is None:
+        corrections = priority_correction_lookup(store)
+    causes = set().union(*(corrections.get((d["kind"], d["id"], d["version"]), set())
+                           for d in dependencies))
     return dict(stale=bool(causes), review_stale=bool(causes and rec.get("resolved_by")),
                 challenge_ids=sorted(causes))
 
 
 def challenge_catalog(store, case_id):
     out = []
+    corrections = priority_correction_lookup(store)
     for rec in store.data["recommendations"]:
         if rec.get("kind") == "ai_task" or case_id not in rec.get("case_ids", []):
             continue
@@ -252,7 +286,7 @@ def challenge_catalog(store, case_id):
                         source_version=(rec.get("source_versions") or {}).get(case_id),
                         policy_version=rec.get("policy_version"), model=rec.get("model"),
                         prompt_version=rec.get("prompt_version"), source=rec.get("source"),
-                        **priority_challenge_state(store, rec)))
+                        **priority_challenge_state(store, rec, corrections)))
     return out
 
 
@@ -260,7 +294,8 @@ def validate_priority_sql(store):
     context = getattr(store.local, "priority_challenge_validation", None)
     if context is not None:
         _actor(store, context["actor"])
-        if context["action"] != "reject" and priority_challenge_state(store, context["record"], sql_current=True)["stale"]:
+        if context["action"] != "reject" and priority_challenge_state(
+                store, context["record"], priority_correction_lookup(store, sql_current=True))["stale"]:
             raise PermissionError("A supplied correction affects this suggestion. Owner: its reviewer. Create a fresh suggestion or use the manual route.")
 
 
@@ -286,6 +321,8 @@ def priority_review(store, user, rec_id, action):
     holder.priority_challenge_validation = context
     before = deepcopy(rec)
     sql = hasattr(store, "db")
+    if sql:
+        store._touched()
     pending = list(store.local.pending) if sql else []
     audit_size = None if sql else (os.path.getsize(store.audit_path) if os.path.exists(store.audit_path) else 0)
     audit_head = None if sql else store.last_hash
