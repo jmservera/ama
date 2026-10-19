@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-19T20:47:34+00:00",
-  "commit": "d3dfd82aee6a654dfd10a3b92152970e5f15f89c",
+  "scored_at": "2026-10-19T21:50:54+00:00",
+  "commit": "1291355aeef23a387a67dd094c14917ff42c0181",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39321399922",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39329871089",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "2b3ce8d11ea9641fe1f2ee97012fd4a1049062dcd7de423c2f150b39aa310008",
+    "solution-code": "33d30fc523e34c8200c799a90af270d2dab086b465fc44f1de29327af6fc2ebb",
     "infrastructure": "7211eab15e6fc6befa4cda343b85c26a799f1924503bd670cdb185a514d0ce64",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -27,9 +27,9 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_decisions.py:226-243"
+        "docs/adrs/0002-pilot-readiness-architecture.md:21-53"
       ],
-      "rationale": "New challenge-staleness module (priority_challenge_state, challenge_catalog) is cleanly decoupled with defined dependency contracts, consistent with existing modular baseline. No material change to overall architecture scope or scaling evidence."
+      "rationale": "ADR0002 delta and new infra/private-proof-publisher.bicep add a bounded, decoupled temporary-VM module with explicit resource guard, consistent with the modular baseline. Undeployed/capacity-blocked; no material change to existing architecture scope."
     },
     "A2": {
       "score": 5,
@@ -41,37 +41,39 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_decisions.py:275-325",
-        "src/core/src/zava_forward/core/sqlstore.py:567-570",
-        "src/core/tests/test_resident_decisions.py:2155-2210"
+        "src/core/src/zava_forward/core/resident_decisions.py:178-350",
+        "src/core/tests/test_resident_decisions.py:166-320"
       ],
-      "rationale": "Diff adds a real, tested RAI/reliance control: version-bound suggestion challenges that mark AI priority output stale on a recorded human correction, with writer-time re-validation and race-condition fencing against concurrent corrections (SQL and JSON). Already at ceiling (5); no change needed, ..."
+      "rationale": "PR #\u200b220 adds a version-bound affected-person challenge control (permission-gated read/write, staleness propagation, no inference of consent/refusal/sanction) consistent with existing RAI ceiling. No material change to scope beyond prior release-admission gate already at 5."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/panels.js:239-406",
-        "src/core/src/zava_forward/core/resident_decisions.py:605-657",
-        "src/api/tests/test_resident_api.py:135-225"
+        "src/core/src/zava_forward/core/store.py:860-907",
+        "src/api/tests/test_assistant_release.py:247-305"
       ],
-      "rationale": "End-to-end working capability: UI forms, API route, SQL/JSON persistence, pagination, and passing tests across layers. Already at ceiling (5); this diff is additional completed capability, not a gap-filler, so no change beyond existing ceiling."
+      "rationale": "Challenge feature and release-gate audit/rollback hardening (priority_review context manager, forged-identity and persisted-but-failed-response tests) are real, tested, end-to-end. Already at ceiling (5); consistent with prior assessment."
     },
     "A5": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Unchanged baseline: this diff is a correctness/governance feature (challenge/staleness fencing), not new observability, reliability or cost instrumentation; no monitoring or cost evidence added."
+      "evidence": [
+        "src/core/src/zava_forward/core/sqlstore.py:554-561",
+        "src/core/tests/test_resident_decisions.py:27-73"
+      ],
+      "rationale": "New bounded correction-dependency lookup avoids per-case SQL scans (60,000-row synthetic test asserts a single query and single json.loads decode), a real operational/performance improvement consistent with existing Good(4) level; not materially different from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a reliance/governance control on AI suggestion staleness, not a model-choice justification or evaluation harness; no new evaluation evidence."
+      "rationale": "Unchanged baseline: this diff is a governance/permission and data-integrity feature set (affected-person challenges, release-admission rollback), not an AI model-selection or evaluation-harness change; no new evidence for A6."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "src/core/src/zava_forward/core/store.py:860-863,899"
+        "src/core/src/zava_forward/core/store.py:883-907",
+        "src/core/src/zava_forward/core/continuity.py:281-293"
       ],
-      "rationale": "Adds a guardrail that fences AI-priority review actions against stale suggestions mid-transaction. Strengthens existing guardrails but introduces no new orchestration or handoff pattern; no change."
+      "rationale": "Adds a guardrail making stale AI suggestions (affected by a recorded correction) non-actionable/non-reliable, and fences the priority-review action against a correction committing mid-review. Strengthens existing orchestration guardrails without a new orchestration pattern; consistent with prior ..."
     },
     "B1": {
       "score": 3,
@@ -101,10 +103,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/core/README.md:2879-2927",
-        "src/api/README.md:2601-2654"
+        "src/core/README.md:2879-2944",
+        "src/api/README.md:2601-2663"
       ],
-      "rationale": "README additions document the affected-person challenge feature clearly with concrete API/behaviour detail, well-integrated into capstone documentation prose, matching prior Good(4) standard. No change from baseline."
+      "rationale": "New README sections document the affected-person challenge feature clearly with concrete API/behaviour detail, well-integrated into capstone documentation prose, consistent with prior Good(4); capstone-deck artifact is present so no cap applies."
     },
     "B7": {
       "score": 3,
