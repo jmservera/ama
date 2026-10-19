@@ -6595,3 +6595,19 @@ metadata when the knowledge base was created.
 * Original research, Revise critique, Partial / Not accepted Review and historical
   failures remain unchanged. No replacement Review, whole-issue acceptance,
   native-scale/load acceptance, human approval or publication is inferred.
+
+## [2026-10-19] query | Current challenge detail authority and indexed writer evidence (#220)
+
+* Updated the existing resident journey, index and core guide for actual cached
+  reader downgrade/removal denial across case challenge narratives and targets,
+  preserving ordinary case detail and trusted internal reads.
+* Reused derived case-column/filtered-index prior art for a transactionally
+  maintained correction-presence flag with atomic migration and rollback.
+  Actual owned native generated60,000-case plans show one flagged row/JSON
+  evaluation rather than a full scan; bounded latency and competing unrelated
+  writer measurements are sparse warm-cache query evidence, not an SLA or
+  production/native whole-workflow acceptance.
+* Actual latest review adds an off-page draft duplicate-form finding outside
+  the selected backend scope. It remains unresolved; platform advisory/resolved
+  labels do not establish technical closure. Original research, critique,
+  Review and prior finding dispositions remain immutable. Whole issue stays open.

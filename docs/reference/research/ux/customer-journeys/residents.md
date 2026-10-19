@@ -143,6 +143,19 @@ bodies. Release-denial audit remains durable without retaining failed human
 acceptance/edit side effects. Constructed JSON/SQLite, HTTP, Chromium and seven
 owned loopback SQL Server regressions support these engineering corrections.
 
+Subsequent case-detail reads also check current registered dual entitlement,
+not a cached cookie role: downgrade/removal withholds both challenge narratives
+and targets while preserving ordinary case detail and trusted internal reads.
+The SQL writer now uses a transactionally maintained, filtered correction flag,
+following existing derived case-column/index conventions. A generated 60,000-case
+native query experiment confirmed one indexed case lookup/JSON evaluation
+instead of 60,000, with retained actual plans and unrelated-writer lock evidence.
+Sparse warm-cache timings are not operational throughput or dense-correction
+capacity; see the core contract for measured values and limitations. The actual
+latest PR review additionally reports duplicate resolution forms after an
+off-page draft refresh; this remains an unresolved web finding, not covered
+by the bounded backend correction or a claim that all paging behavior is fixed.
+
 Creation-time source hashes describe audience-filtered citation labels, not
 universal document versions. Historical missing versions stay Unknown. Other
 assistant/form contracts, whole-system AC-071, operational/native load

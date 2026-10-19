@@ -29,7 +29,11 @@ MEASURES = ("Loft insulation", "Cavity wall")
 class PriorityCorrectionQuery(unittest.TestCase):
     def test_writer_decodes_only_corrections_from_60000_generated_case_bodies(self) -> None:
         with sqlite3.connect(":memory:") as db:
-            db.execute("CREATE TABLE cases (id TEXT, body TEXT)")
+            db.execute("CREATE TABLE cases (id TEXT, body TEXT, priority_correction INTEGER)")
+            db.execute(
+                "CREATE INDEX ix_cases_priority_correction ON cases (priority_correction, id)"
+                " WHERE priority_correction=1"
+            )
             target = dict(kind="policy", id="priority-ranking", version="SYN-policy")
             body = json.dumps(
                 dict(
@@ -38,10 +42,10 @@ class PriorityCorrectionQuery(unittest.TestCase):
                 )
             )
             db.executemany(
-                "INSERT INTO cases VALUES (?, ?)", ((f"SYN-{i}", body) for i in range(60000))
+                "INSERT INTO cases VALUES (?, ?, 0)", ((f"SYN-{i}", body) for i in range(60000))
             )
             db.execute(
-                "INSERT INTO cases VALUES (?, ?)",
+                "INSERT INTO cases VALUES (?, ?, 1)",
                 (
                     "SYN-CORRECTED",
                     json.dumps(
@@ -73,6 +77,8 @@ class PriorityCorrectionQuery(unittest.TestCase):
             self.assertEqual(len(statements), 1)
             self.assertIn("json_each", statements[0])
             self.assertNotIn("SELECT body FROM cases", statements[0])
+            plan = db.execute("EXPLAIN QUERY PLAN " + statements[0]).fetchall()
+            self.assertTrue(any("ix_cases_priority_correction" in row[3] for row in plan), plan)
 
 
 class JsonResidentDecisions(unittest.TestCase):
@@ -435,6 +441,62 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(self.store.latest_priority(self.sam)["challenge_ids"], [])
         reopened = self.open_store() if self.sql else self.store
         self.assertEqual(reopened.latest_priority(downgraded)["challenge_ids"], [])
+
+    def test_challenge_detail_cached_reader_registry_downgrade_and_removal(self) -> None:
+        proposal = self.priority_fixture("accept")
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))
+        cached = copy.deepcopy(self.sam)
+        expected = self.store.detail("ZF-1", cached)
+        self.assertEqual(
+            expected["affected_challenges"][0]["request"], "SYN Please check the information used."
+        )
+        self.assertEqual(expected["challenge_targets"][0]["proposal_id"], proposal["id"])
+        for registered in (dict(self.sam, role="Retrofit Coordinator"), None):
+            with self.subTest(registry=registered):
+                if self.sql:
+                    assert isinstance(self.store, SqlStore)
+                    if registered is None:
+                        self.store.db.execute(
+                            "DELETE FROM staff WHERE email=?", (self.sam["email"],)
+                        )
+                    else:
+                        self.store.db.execute(
+                            "UPDATE staff SET body=? WHERE email=?",
+                            (json.dumps(registered), self.sam["email"]),
+                        )
+                    self.assertEqual(self.store.staff[self.sam["email"]], cached)
+                elif registered is None:
+                    self.store.staff.pop(self.sam["email"])
+                else:
+                    self.store.staff[self.sam["email"]] = registered
+                denied = self.store.detail("ZF-1", cached)
+                self.assertEqual(denied["id"], "ZF-1")
+                self.assertEqual(denied["home"], expected["home"])
+                self.assertNotIn("affected_challenges", denied)
+                self.assertNotIn("challenge_targets", denied)
+                self.assertNotIn("SYN Please check", json.dumps(denied))
+                self.assertEqual(
+                    self.store.detail("ZF-1", self.pam)["affected_challenges"],
+                    expected["affected_challenges"],
+                )
+                self.assertEqual(
+                    self.store.detail("ZF-1")["affected_challenges"],
+                    expected["affected_challenges"],
+                )
+                self.assertNotIn("challenge_targets", self.store.detail("ZF-1"))
+        if self.sql:
+            assert isinstance(self.store, SqlStore)
+            self.store.db.execute(
+                "INSERT INTO staff (email, body) VALUES (?, ?)",
+                (self.sam["email"], json.dumps(cached)),
+            )
+        else:
+            self.store.staff[self.sam["email"]] = cached
+        self.assertEqual(self.store.detail("ZF-1", cached), expected)
+        with patch.dict(os.environ, ZF_REASON_ROLES="Retrofit Programme Manager"):
+            self.assertNotIn("affected_challenges", self.store.detail("ZF-1", cached))
+            self.assertNotIn("challenge_targets", self.store.detail("ZF-1", cached))
+        self.assertIsNone(self.store.detail("SYN-MISSING", cached))
 
     def test_failed_priority_accept_edit_remove_disposition_and_audit(self) -> None:
         for action in ("accept", "edit"):
@@ -2301,6 +2363,121 @@ class AzureResidentDecisions(unittest.TestCase):
 class SqlResidentDecisions(JsonResidentDecisions):
     sql = True
     store: SqlStore
+
+    def test_challenge_adjacent_release_denial_is_persisted_without_disposition(self) -> None:
+        for action in ("accept", "edit"):
+            proposal = self.priority_fixture()
+            with self.store.lock:
+                record = next(
+                    r for r in self.store.data["recommendations"] if r["id"] == proposal["id"]
+                )
+                record.update(source="ai", model=self.store.ai.strong)
+                record.pop("release", None)
+                self.store.save()
+            before = copy.deepcopy(record)
+            audit = list(self.store.audit_entries())
+            with self.assertRaises(PermissionError):
+                self.store.resolve_priority(
+                    self.sam, proposal["id"], action, "SYN", proposal["items"]
+                )
+            reopened = self.open_store()
+            events = list(reopened.audit_entries())[len(audit) :]
+            self.assertEqual([entry["action"] for entry in events], ["ai_release_denied"])
+            self.assertIn(proposal["id"], events[0]["detail"])
+            self.assertEqual(
+                next(r for r in reopened.data["recommendations"] if r["id"] == proposal["id"]),
+                before,
+            )
+            self.assertTrue(reopened.verify_audit())
+
+    def test_challenge_correction_flag_tracks_committed_resolution_and_rollback(self) -> None:
+        proposal = self.priority_fixture()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))
+        self.resolve_challenge(correction=False)
+        self.assertEqual(
+            self.store.db.execute(
+                "SELECT priority_correction FROM cases WHERE id='ZF-1'"
+            ).fetchone()[0],
+            0,
+        )
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal, "policy"))
+        append = self.store._append_audit
+        with patch.object(self.store, "_append_audit", side_effect=RuntimeError("SYN rollback")):
+            with self.assertRaisesRegex(RuntimeError, "SYN rollback"):
+                self.resolve_challenge("CH-2")
+        self.assertEqual(
+            self.store.db.execute(
+                "SELECT priority_correction FROM cases WHERE id='ZF-1'"
+            ).fetchone()[0],
+            0,
+        )
+        self.assertEqual(self.store._priority_correction_rows(), [])
+        self.assertEqual(self.store._append_audit, append)
+        self.resolve_challenge("CH-2")
+        reopened = self.open_store()
+        assert isinstance(reopened, SqlStore)
+        self.assertEqual(
+            reopened.db.execute("SELECT priority_correction FROM cases WHERE id='ZF-1'").fetchone()[
+                0
+            ],
+            1,
+        )
+        self.assertEqual(
+            reopened._priority_correction_rows(),
+            [
+                (
+                    "ZF-1",
+                    "CH-2",
+                    dict(kind="policy", id="priority-ranking", version=proposal["policy_version"]),
+                )
+            ],
+        )
+
+    def test_challenge_correction_flag_migrates_existing_cases(self) -> None:
+        proposal = self.priority_fixture()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))
+        self.resolve_challenge()
+        if type(self.store) is SqlStore:
+            self.store.db.execute("DROP INDEX ix_cases_priority_correction")
+        else:
+            self.store.db.execute("DROP INDEX ix_cases_priority_correction ON cases")
+            constraint = self.store.db.execute("""
+                SELECT d.name FROM sys.default_constraints AS d
+                JOIN sys.columns AS c ON c.object_id=d.parent_object_id
+                    AND c.column_id=d.parent_column_id
+                WHERE d.parent_object_id=OBJECT_ID(N'cases') AND c.name='priority_correction'
+            """).fetchone()
+            self.assertIsNotNone(constraint)
+            self.store.db.execute(f"ALTER TABLE cases DROP CONSTRAINT [{constraint[0]}]")
+        self.store.db.execute("ALTER TABLE cases DROP COLUMN priority_correction")
+        before = self.store.db.execute(
+            "SELECT id, rowversion, seq, body FROM cases ORDER BY id"
+        ).fetchall()
+        with patch.object(type(self.store), "_row", side_effect=RuntimeError("SYN backfill")):
+            with self.assertRaisesRegex(RuntimeError, "SYN backfill"):
+                self.open_store()
+        self.assertNotIn("priority_correction", self.store._columns())
+        self.assertEqual(
+            self.store.db.execute(
+                "SELECT id, rowversion, seq, body FROM cases ORDER BY id"
+            ).fetchall(),
+            before,
+        )
+        reopened = self.open_store()
+        assert isinstance(reopened, SqlStore)
+        self.assertEqual(
+            reopened.db.execute(
+                "SELECT id, rowversion, seq, body FROM cases ORDER BY id"
+            ).fetchall(),
+            before,
+        )
+        self.assertEqual(
+            reopened.db.execute("SELECT priority_correction FROM cases WHERE id='ZF-1'").fetchone()[
+                0
+            ],
+            1,
+        )
+        self.assertEqual(len(reopened._priority_correction_rows()), 1)
 
     def test_challenge_accept_edit_writer_race_refuses_after_other_store_correction(self) -> None:
         for action in ("accept", "edit"):

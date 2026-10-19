@@ -70,6 +70,9 @@ staff recording of supplied digital evidence, not resident self-authentication.
 * Reuse `_operation` for rollback, SQL current owner/actor/target validation and committed acknowledgement error; no new persistence schema/service.
 * Preserve independent request, remedy, source, policy, ranking, human decision and hazard history byte-for-byte except the new challenge collection.
 * Native labelled keyboard forms, focused inline status, explicit textual stale state, unsaved-draft guard and cancellable correction confirmation; Fluent tokens/reduced motion preserved.
+* P07 user direction permits the smallest existing derived SQL case-column/index
+  pattern, not a new domain persistence schema/service. Native sparse generated
+  60000-case measurements and explicit dense/operational limits are required.
 * Existing component Ruff/mypy/build/test gates remain; no new broad exemptions, skip token or scanner suppression.
 
 ## Acceptance Criteria
@@ -184,6 +187,12 @@ immutable artifact. No second critique. All corrections are planner-owned.
 
 ## Follow-Up Items
 
+* Latest actual review 5578292301 reports duplicate resolution forms after a
+  dirty off-page CH-1 draft survives a 50-to-51 record refresh and is rendered
+  again by history. Outside P07's selected backend boundary; coordinator-owned
+  concrete merge blocker requiring a separately selected bounded web fix and
+  browser regression, not an automatic third correction or replacement Review.
+
 * Fresh guideline review observed the unchanged adjacent resident helper also
   lacks delayed-write route fencing, and unchanged commitment rendering is
   unbounded above 50. These are outside the requested challenge-handler write
@@ -238,6 +247,49 @@ RV-001. No new critique or Review.
 
 ## Handoff
 
+### Current second PR finding correction boundary (P07)
+
+The prerequisite final-bot gate process has exited; its external receipt records
+all17 success for b4cd1c160f74f906282d238ebfcc2ea49fbb83de. This is historical
+P06-T02 completion, not validation of subsequent edits. The clean supplied
+branch and OPEN PR #418 with empty closing references are verified.
+
+<!-- rpi:phase id=P07 -->
+### [ ] P07: Second bounded PR finding correction and exact-head handoff
+
+<!-- rpi:task id=P07-T01 -->
+#### [x] P07-T01: Current case-detail reader and native correction lookup evidence
+
+Use the existing registered dual-entitlement helper for copied challenge
+records and target catalog, preserving trusted `user=None`. Prove cached-reader
+downgrade/removal on JSON, SQLite, real HTTP cookies and owned native SQL.
+Investigate existing derived indexed case-column prior art; only a small
+transactionally maintained correction-presence flag is eligible, not a new
+dependency schema/service. Measure actual generated 60,000-case native plan,
+latency, serialized lock interval and competing unrelated write once per
+candidate, with bounded repetitions. Preserve current actor/owner/rowversion
+and cross-case correction races. Material schema expansion is a blocker.
+Record all actual latest review findings, including those outside this bounded
+backend directive, without silently dismissing them.
+
+Completed: current-reader case detail and indexed correction flag using existing
+derived-column/filtered-index hooks; atomic upgrade/retry and save rollback.
+138 focused tests (136 pass/two existing skips), nine native pass/no skips,
+core/API type and changed-file style checks pass. Actual native60000 plans and
+three bounded samples per SQL variant confirm 60000 -> 1 JSON evaluations.
+Query latency 1.458-1.533 s -> 0.792-0.889 ms; explicit sparse/warm-cache and
+writer rendezvous limitations remain. Separate cycle2 dispositions preserve all
+original outcomes and the unresolved reported web blocker.
+
+<!-- rpi:task id=P07-T02 -->
+#### [ ] P07-T02: Freeze, unchanged all17 and coordinator handoff without push
+
+Dependencies: P07-T01. Record bounded dispositions and concrete residual blockers,
+preserve original research/critique/Review and earlier dispositions unchanged,
+commit privacy-safe identity, fetch main, run fresh external unchanged all17
+and verify. No replacement Review, push, new PR, rescore or merge. Post-freeze
+results remain external. Refs #220 only; whole issue remains open.
+
 ### Current bounded PR #418 continuation
 
 The 2026-10-19 owner authorizes implementation of actual advisory comments
@@ -248,7 +300,7 @@ the clean local topic was fast-forwarded before corrections.
 Historical d3dfd82a all17 success is not evidence for this new candidate.
 
 <!-- rpi:phase id=P06 -->
-### [ ] P06: Bounded new PR finding implementation
+### [x] P06: Bounded new PR finding implementation (historical)
 
 <!-- rpi:task id=P06-T01 -->
 #### [x] P06-T01: Correct five PR findings and prove focused behavior
@@ -264,7 +316,7 @@ cloud operation, authorization weakening, replacement critique or Review.
 Generated-data scan bounds and JSON/SQLite/browser regressions are required.
 
 <!-- rpi:task id=P06-T02 -->
-#### [ ] P06-T02: Freeze and execute new all17 local gate without publication
+#### [x] P06-T02: Freeze and execute new all17 local gate without publication
 
 Dependencies: P06-T01. Reconcile descriptive plan/details, append changes and
 write separate five-comment dispositions preserving all original outcomes and
@@ -283,7 +335,7 @@ The 2026-10-19 user/coordinator selected P05 as ordinary later implementation
 of findings. P05 supersedes the prior no-repair instruction for those findings
 only. No replacement or repeat original Review is authorized.
 
-Current correction handoff: historical P04/P05 execution is complete, including
+Historical P06 freeze handoff (superseded by active P07 above): P04/P05 execution is complete, including
 the external all17 receipt for d3dfd82a; that receipt is invalid for bot or P06
 HEAD. Five actual PR comments are implemented under P06-T01, supported by 148
 focused tests (146 pass, two existing skips), seven native SQL tests, three

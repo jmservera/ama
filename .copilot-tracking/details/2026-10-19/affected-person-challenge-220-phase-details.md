@@ -18,9 +18,40 @@
 | P03 | Validation/documentation | Complete; scoped proof and explicit limitations | P03-T01 |
 | P04 | Review/frozen gate | Executed; original Review Partial / Not accepted and historical failed gate preserved | P04-T01 |
 | P05 | Selected correction | Complete; source d3dfd82a historical all17 passed and published; receipt not reusable | P05-T01, P05-T02, P05-T03, P05-T04 |
-| P06 | New PR findings | T01 complete; T02 new frozen gate pending; no push | P06-T01, P06-T02 |
+| P06 | New PR findings | Complete historically at b4cd1c1; external all17 receipt, not reusable | P06-T01, P06-T02 |
+| P07 | Second bounded finding correction | T01 complete; T02 freeze/new all17 pending; unresolved reported web defect retained | P07-T01, P07-T02 |
 
-## Current P06 execution boundary
+## Current P07 execution boundary
+
+P07-T01 completed under the explicit
+second correction directive. P06-T02 actually completed at supplied final-bot
+HEAD, external receipt SHA256
+23b950652437d53c7af724347143ac39326c61a523f23f08916da490c4a7470f;
+its process exited before this continuation. Original artifact bytes remain
+unchanged. Allowed writes: core reader, SQL derived-lookup hooks, directly
+related resident/core/HTTP/native tests, component documentation and current
+issue-owned tracking. No web changes are authorized by this bounded backend
+directive. Actual newest review 5578292301 at b4cd1c1 additionally identifies an
+off-page draft duplicate-form defect; retain it for coordinator disposition,
+not a silent resolved claim or scope expansion. Native generated public-only
+60000-case measurements and focused checks precede one fresh frozen all17 gate.
+
+Actual current-reader denial now removes BOTH copied narratives and targets,
+with unchanged internal reads and positive permitted case controls. The existing
+case derived-column pipeline maintains one correction flag and filtered index;
+atomic migration plus dialect ADD hook handles old SQLite/native schemas and
+failed-backfill retries. SQL writer retains transaction-current dependencies,
+current actor/owner/decision/rowversion fences and persisted denial-only audit.
+Final focused 138 tests: 136 pass/two existing declared skips. Native nine pass,
+no skips; core/API mypy 128/62 files and changed Python Ruff/format pass.
+Actual native60000 baseline scan/60000 OPENJSON executions becomes filtered
+seek/one execution; three bounded samples per variant and actual application
+lock WAIT evidence are retained externally. Sparse timings are not dense/load
+acceptance. P07-T02 remains pending at freeze; final gate/receipt/state stays
+external. No replacement Review or push. Reported web duplicate forms remain
+a coordinator-owned concrete blocker, not a prompt for another automatic loop.
+
+## Historical P06 execution boundary
 
 Continue the same automatic task after published source d3dfd82a and genuine
 rubric-only bot 63f5b057. P05 gate succeeded historically; committed pending

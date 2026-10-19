@@ -202,6 +202,39 @@ class ResidentApi(unittest.TestCase):
         self.assertEqual(again.cases["ZF-1"]["affected_challenges"][0]["version"], 2)
         self.assertTrue(again.verify_audit())
 
+    def test_http_challenge_cached_cookie_after_registered_downgrade_and_removal(self) -> None:
+        payload = self.challenge_payload()
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 200)
+        cached = copy.deepcopy(self.store.staff["sam@example.test"])
+        cookie = self.cookies["sam"]
+        for registered in (dict(cached, role="Retrofit Coordinator"), None):
+            if registered is None:
+                self.store.db.execute("DELETE FROM staff WHERE email=?", (cached["email"],))
+            else:
+                self.store.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(registered), cached["email"]),
+                )
+            code, denied = self.call("/api/cases/ZF-1", "sam")
+            self.assertEqual(code, 200, denied)
+            self.assertEqual(self.cookies["sam"], cookie)
+            self.assertEqual(self.store.staff[cached["email"]], cached)
+            self.assertEqual(denied["id"], "ZF-1")
+            self.assertNotIn("affected_challenges", denied)
+            self.assertNotIn("challenge_targets", denied)
+            self.assertNotIn("SYN-CHALLENGE", json.dumps(denied))
+            code, allowed = self.call("/api/cases/ZF-1", "pam")
+            self.assertEqual(code, 200, allowed)
+            self.assertEqual(allowed["affected_challenges"][0]["request"], payload["request"])
+            self.assertTrue(allowed["challenge_targets"])
+        self.store.db.execute(
+            "INSERT INTO staff (email, body) VALUES (?, ?)", (cached["email"], json.dumps(cached))
+        )
+        code, restored = self.call("/api/cases/ZF-1", "sam")
+        self.assertEqual(code, 200, restored)
+        self.assertEqual(restored["affected_challenges"][0]["request"], payload["request"])
+        self.assertTrue(restored["challenge_targets"])
+
     def test_http_challenge_closed_schema_and_stale_target_no_write(self) -> None:
         payload = self.challenge_payload()
         for patch_body in (

@@ -145,7 +145,11 @@ Bounded history controls and exact reference entry restore access to targets,
 open resolution actions and resolved explanations beyond the newest 50 records.
 Subsequent bounded PR corrections protect post-write navigation and current
 dual-entitlement references, bound correction lookups and preserve denial audit;
-constructed loopback SQL proof does not establish operational/native load acceptance.
+case detail also denies cached readers after registered downgrade/removal.
+An indexed derived correction flag removes the full-case JSON writer scan in
+bounded native generated60,000-case measurements; operational/dense-load
+acceptance remains unproven. The latest reported off-page draft duplicate-form
+defect is unresolved outside that backend correction scope.
 Other assistants/forms, whole-system AC-071 and qualified/resident acceptance
 remain open; no new legal or redress authority is inferred.
 

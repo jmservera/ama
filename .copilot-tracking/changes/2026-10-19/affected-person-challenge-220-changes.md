@@ -332,7 +332,83 @@ or a replacement original Review. Refreshed source-guideline review found no new
 web guideline violation in the two-line lifecycle change; existing unrelated
 form/list issues remain outside this bounded correction.
 
-### P06-T02: Freeze snapshot and external gate handoff
+## P07: Second bounded PR finding correction intake (2026-10-19)
+
+Verified clean b4cd1c160f74f906282d238ebfcc2ea49fbb83de, existing topic and
+OPEN PR #418, empty closing references. The prerequisite tmux gate session
+and rpi-checks process have exited. External final-bot handoff records all17
+success and verified receipt SHA256
+23b950652437d53c7af724347143ac39326c61a523f23f08916da490c4a7470f.
+This reconciles historical P06-T02 without rewriting its frozen snapshot.
+
+Preserved actual paginated reviews/comments in current session
+files/issue220-cycle2. Latest completed review is 5578292301 at b4cd1c1,
+not source1291355a: it labels SQL scanning resolved but reports cached-detail
+authority and duplicate off-page draft forms as previously missed. Earlier
+review evidence and user-directed SQL investigation remain binding; platform
+COMMENTED/resolved labels are not engineering dispositions.
+
+P07-T01 scope is surgical backend reader correction, directly related registry
+and HTTP/native regressions, investigation of existing indexed derived-column
+prior art and bounded generated60000 native measurements. If a small existing
+pattern cannot remove the scan without broad architecture/schema work, retain
+a concrete blocker. No web edits, repeated Review, publication or live/private
+operations. P07-T02 is a new frozen commit/all17/verified external handoff.
+Original research/critique/Review and prior finding dispositions stay immutable.
+
+### P07-T01: Completed backend corrections and bounded evidence
+
+Case detail now reuses the registered dual-entitlement reader used by priority
+responses. On denial BOTH copied affected_challenges and challenge_targets are
+removed; internal None and valid ordinary detail remain. Actual cached-reader
+JSON/SQLite/native registry downgrade/removal and same-cookie HTTP tests pass.
+
+The retained correction-only SQL query still scanned every case, confirmed by
+an actual generated60000 native plan (60000 case rows/OPENJSON executions).
+Reused CASE_COLS/_row/_migrate and filtered-index prior art for one derived
+correction flag maintained with body/rowversion. No new table/service/graph.
+The final native plan seeks one flagged row, OPENJSON once, identical target.
+Three query samples: baseline1.458-1.533s, indexed0.792-0.889ms. Application
+lock interval1.491-1.566s versus33.260-33.821ms; competing unrelated writer
+wait1.489-1.565s versus32.083-32.442ms. Lock/wait includes deliberate25ms
+rendezvous/driver/DMV overhead. Public seed174 bodies total74566390bytes.
+Dense corrections, larger narratives, cold I/O, full workflow throughput,
+migration downtime and operational capacity remain unmeasured.
+
+Made derived-column addition/rebuild atomic under existing serialized writer,
+with a small ADD COLUMN/ADD dialect hook. Injected failed backfill leaves no
+new default-zero column, retry migrates unchanged cases correctly. Native and
+SQLite flag save/rollback/reopen proof and prior cross-case/current-actor/
+owner/rowversion race guards pass. Added native-specific denial audit persisted
+after reopen for failed accept/edit, without retained disposition side effects.
+
+Final focused run138tests:136pass/two existing declared skips; native9pass/no
+skips. Core/API mypy128/62files, changed-file Ruff/format pass. Final native
+regression rerun followed atomic migration refinement, without repeating the
+successful60000-case benchmark; final SQL constant matches retained measured SQL.
+Retain initial four-test/six-failure reproduction, initial style/type failures,
+and benchmark-fixture missing-funding error. Reused actually seeded public case
+defaults to correct that harness; final measurement succeeded once.
+
+Separate implementation-owned dispositions:
+reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-pr418-cycle2.md.
+Actual latest review5578292301 also reports off-page duplicate forms; no web
+source changed, and this remains an unresolved coordinator-owned merge blocker.
+Original research, critique, Review and prior dispositions match b4cd1c1 bytes.
+No replacement Review, acceptance or publication claim.
+
+### P07-T02: Freeze boundary
+
+P07-T01 checked immediately after final proof. Commit source and descriptive
+tracking with authenticated noreply identity; fresh fetched main remains
+eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. Run unchanged all17 under its own
+shared lock with fresh external receipt/logs, then fetch main and verify receipt.
+Gate tools/workflows unchanged. Post-freeze results belong exclusively in the
+external handoff so no evidence commit invalidates the new receipt.
+Stop before push for coordinator exact-head assessment; no third correction
+loop, rescore or inferred web-finding closure. Whole issue remains OPEN.
+
+### P06-T02: Historical freeze snapshot and external gate handoff
 
 P06-T01 complete. Reconciled plan/details record historical d3dfd82a all17
 success separately from the new candidate's pending gate. Original research,

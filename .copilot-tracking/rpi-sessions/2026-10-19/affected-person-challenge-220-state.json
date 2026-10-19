@@ -16,8 +16,13 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Second bounded PR418 finding correction authorized after prerequisite final-bot gate exited; no replacement Review or push.",
+      "status": "P07-T01-complete-P07-T02-freeze-pending",
+      "evidence": "Clean supplied b4cd1c1 verified after prerequisite session/process exit. Actual payloads and native60000 plans/timings in current session files/issue220-cycle2. Both selected backend defects corrected; 138 focused (136 pass/two existing skips), nine native/no skips, static pass. Separate cycle2 dispositions preserve original outcomes. Latest 5578292301 off-page duplicate forms remain unresolved outside backend scope."
+    },
+    {
       "decision": "Bounded implementation of five actual PR418 comments on verified fast-forwarded bot HEAD; stop before publication and preserve original Review.",
-      "status": "implemented-focused-validated-awaiting-frozen-gate",
+      "status": "historically-implemented-and-all17-passed-at-b4cd1c1",
       "evidence": "2026-10-19 user directive; actual comments 4318714670/4784/4876/4963/5035. Five separate implementation-owned dispositions, 148 focused tests (146 pass/two existing skips), seven native SQL tests, three Chromium journeys and core/API static checks. P06 plan/details own scope. Historical d3dfd82a all17 receipt is not reusable; original Review and critique bytes preserved."
     },
     {
@@ -68,9 +73,14 @@
   ],
   "blockers": [
     {
+      "id": "PR418-off-page-duplicate-forms",
+      "summary": "Latest actual review 5578292301 reports duplicate CH-1 resolution forms/IDs after a dirty draft survives 50-to-51 refresh then history navigation. Not independently reproduced or corrected in selected backend scope.",
+      "resolution": "Coordinator selects bounded web correction and actual refresh/paging regression before merge; no automatic third correction or replacement Review."
+    },
+    {
       "id": "corrected-full-gate",
-      "summary": "P06-T01 implemented and focused-validated; new frozen-head all17 gate remains pending at this committed snapshot.",
-      "resolution": "Freeze reconciled source/tracking, run unchanged all17 with its own shared lock against fresh origin/main, verify receipt externally and stop before publication."
+      "summary": "P06-T02 passed historically at b4cd1c1; P07 corrections require a new frozen-head all17 receipt.",
+      "resolution": "Finish bounded backend correction/evidence, freeze reconciled source/tracking and run unchanged all17 against fresh main with external verification."
     },
     {
       "id": "publication",
@@ -80,17 +90,23 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P06-T02: freeze source/tracking and execute all17 with a fresh external output directory; verify receipt against freshly fetched main and send coordinator exact-head evidence without push. Final post-freeze state/receipt/handoff stays external, with original Review never repeated."
+    "action": "P07-T02: freeze and commit selected corrections/evidence, run unchanged all17 on fresh main with fresh external receipt, verify and stop before push for coordinator exact-head assessment. Retain unresolved reported web blocker; all final state/results external."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Resolve reported off-page draft duplicate forms through a separately selected bounded web correction.",
+      "rationale": "Concrete latest-review merge blocker; higher immediate value than further challenge scope. No third automatic loop is authorized.",
+      "evidence": "Actual latest review 5578292301 at b4cd1c1 and separate PR418 cycle2 disposition."
+    },
+    {
+      "rank": 2,
       "task": "Define the next bounded assistant/form challenge dependency contract.",
       "rationale": "Extends whole-system coverage only after product scope approval; avoid generic graph or duplicate existing release controls.",
       "evidence": "Research/plan Follow-Up Items and original Review RV-003."
     },
     {
-      "rank": 2,
+      "rank": 3,
       "task": "Arrange owner-qualified, resident/accessibility and authorized live/native-specific acceptance.",
       "rationale": "Essential before operational claims, but requires named human owners and separate authorization rather than more synthetic tests.",
       "evidence": "Original Review RV-004; existing exercise/legal/RAI boundaries."

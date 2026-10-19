@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS cases (
   contractor TEXT NOT NULL DEFAULT '', search TEXT NOT NULL DEFAULT '', search_c TEXT NOT NULL DEFAULT '',
   surname TEXT NOT NULL DEFAULT '', last_contact TEXT NOT NULL DEFAULT '0000', next_visit TEXT NOT NULL DEFAULT '9999',
   decision TEXT NOT NULL DEFAULT '', fstatus TEXT NOT NULL DEFAULT '',
+  priority_correction INTEGER NOT NULL DEFAULT 0,
   queue_new INTEGER NOT NULL DEFAULT 0, queue_priority INTEGER NOT NULL DEFAULT 0,
   queue_stale INTEGER NOT NULL DEFAULT 0, queue_blocked INTEGER NOT NULL DEFAULT 0,
   queue_overdue INTEGER NOT NULL DEFAULT 0, queue_unowned INTEGER NOT NULL DEFAULT 0);
@@ -63,6 +64,7 @@ CREATE INDEX IF NOT EXISTS ix_cases_contractor_rkey ON cases (contractor, closed
 CREATE INDEX IF NOT EXISTS ix_cases_stage_rkey ON cases (closed, stage, rkey);
 CREATE INDEX IF NOT EXISTS ix_cases_days ON cases (closed, days DESC, rkey);
 CREATE INDEX IF NOT EXISTS ix_cases_open_hazard ON cases (id) WHERE hazard = 1 AND closed = 0;
+CREATE INDEX IF NOT EXISTS ix_cases_priority_correction ON cases (priority_correction, id) WHERE priority_correction = 1;
 CREATE INDEX IF NOT EXISTS ix_cases_seq ON cases (seq);
 CREATE INDEX IF NOT EXISTS ix_cases_postcode ON cases (postcode);
 CREATE INDEX IF NOT EXISTS ix_cases_address ON cases (address);
@@ -81,7 +83,7 @@ CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit BEGIN SELECT
 
 
 CASE_COLS = ("stage", "area", "wave", "owner_code", "closed", "hazard", "postcode", "address", "body", "support", "days", "rkey",
-             "contractor", "search", "search_c", "surname", "last_contact", "next_visit", "decision", "fstatus")
+             "contractor", "search", "search_c", "surname", "last_contact", "next_visit", "decision", "fstatus", "priority_correction")
 
 SORT_SQL = {"urgent": "rkey", "waiting": "days DESC, rkey", "contact": "last_contact, rkey", "name": "surname, rkey", "visit": "next_visit, rkey"}
 FLAG_SQL = {"hazard": "hazard=1", "support": "support=1", "long": f"days>={insights.LONG_WAIT}",
@@ -187,6 +189,7 @@ class SqlStore(Store):
     # ---- dialect hooks (SQLite here; MssqlStore overrides them for Azure SQL)
     dberror = sqlite3.Error
     _epoch_sql = "SELECT (julianday('now')-2440587.5)*86400.0"
+    _add_column = "ADD COLUMN"
 
     def _open(self, db_path):
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
@@ -267,28 +270,28 @@ class SqlStore(Store):
     # ---- derived columns
     def _migrate(self):
         """Add derived columns to a database made by an earlier slice and rebuild them when missing or when the ranking policy changed."""
-        have = self._columns()
-        for col in CASE_COLS:
-            if col not in have:
-                defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0"}
-                self.db.execute(f"ALTER TABLE cases ADD COLUMN {col} {'INTEGER' if col in ('support', 'days') else 'TEXT'} NOT NULL DEFAULT {defaults.get(col, chr(39) * 2)}")
-        want = ranking.CURRENT["version"]
-        row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
-        encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
-        stale = ((row[0] if row else None) != want or (not have >= set(CASE_COLS))
-                 or (encoding[0] if encoding else None) != stock.SUPPORT_ENCODING)
-        if stale and self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
-            self.db.execute("BEGIN IMMEDIATE")
-            try:
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            have = self._columns()
+            for col in CASE_COLS:
+                if col not in have:
+                    defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0", "priority_correction": "0"}
+                    self.db.execute(f"ALTER TABLE cases {self._add_column} {col} {'INTEGER' if col in ('support', 'days', 'priority_correction') else 'TEXT'} NOT NULL DEFAULT {defaults.get(col, chr(39) * 2)}")
+            want = ranking.CURRENT["version"]
+            row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
+            encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
+            stale = ((row[0] if row else None) != want or (not have >= set(CASE_COLS))
+                     or (encoding[0] if encoding else None) != stock.SUPPORT_ENCODING)
+            if stale and self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
                 for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall():
                     r = self._row(json.loads(body))
                     self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
                 self._meta_set("rank_policy", want)
                 self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
-                self.db.execute("COMMIT")
-            except BaseException:
-                self.db.execute("ROLLBACK")
-                raise
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
 
     # ---- load and sync
     def _migrate_queues(self):
@@ -437,7 +440,9 @@ class SqlStore(Store):
                 int(ranking._support(c)), int(c["days_in_stage"]), ranking.sql_key(c), c["contractor"]["name"],
                 " ".join([name, home["address"], home["postcode"], c["id"]]).lower(), " ".join([home["address"], home["postcode"], c["id"]]).lower(),
                 name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",
-                resident_status(c), c["funding"]["status"])
+                resident_status(c), c["funding"]["status"],
+                int(any((record.get("resolution") or {}).get("outcome") == "Correction recorded"
+                        for record in c.get("affected_challenges", []))))
 
     def _db_seq(self):
         row = self.db.execute("SELECT value FROM meta WHERE key='seq'").fetchone()
@@ -555,7 +560,8 @@ class SqlStore(Store):
         rows = self.db.execute("""
             SELECT c.id, json_extract(ch.value, '$.id'), json_extract(ch.value, '$.target')
             FROM cases AS c, json_each(c.body, '$.affected_challenges') AS ch
-            WHERE json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
+            WHERE c.priority_correction = 1
+              AND json_extract(ch.value, '$.resolution.outcome') = 'Correction recorded'
         """).fetchall()
         return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
 

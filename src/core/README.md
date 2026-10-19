@@ -2918,15 +2918,39 @@ Challenge references in priority generation, latest and review responses require
 both resident-information and recorded-reason rights on the current registered
 reader. Without those rights, stale/actionable/reliance flags remain accurate
 but `challenge_ids` is empty, including corrections recorded on another case.
+Case detail applies the same current-reader check to both challenge narratives
+and the target catalog, including when a cookie or populated store cache still
+holds a downgraded or removed staff identity. Denial removes both fields without
+removing the ordinary case card; trusted internal `user=None` remains unchanged.
 Release/model-route denial audit survives a failed accept/edit; failed human
 disposition changes and their acceptance/edit audit entries are rolled back.
 
 Catalog and continuity reads build one correction-dependency lookup per read,
 not one case scan per retained proposal. Writer revalidation obtains only
 correction IDs and targets through SQLite JSON extraction or SQL Server
-`OPENJSON`, under the existing serialized transaction. It does not fetch/decode
-every full case body or cache a pretransaction lookup. Cross-case policy
-dependencies and concurrent-correction fencing are unchanged.
+`OPENJSON`, under the existing serialized transaction. The derived
+`priority_correction` case flag and filtered `ix_cases_priority_correction`
+index follow the existing derived case-column pattern. Seed/save maintains the
+flag in the same row update as the challenge; an existing database is backfilled
+with column addition and rebuild in one serialized transaction. A failed rebuild
+rolls back the column too, so restart cannot mistake default-zero rows for a
+completed migration. SQL Server uses its existing dialect hook boundary for
+`ALTER TABLE ... ADD`. No dependency table, service or pretransaction authority
+cache is introduced. Only flagged case bodies reach JSON extraction; matching
+still uses exact proposal/source/policy versions and current writer checks.
+
+On 2026-10-19, an owned local SQL Server 2022 container (2 CPUs, 3 GiB limit)
+measured exactly 60,000 generated public case bodies (74,566,390 UTF-8 bytes)
+with one corrected case. The actual baseline plan scanned 60,000 rows and
+executed `OPENJSON` 60,000 times; the filtered plan sought one flagged row and
+executed it once. Three warm-cache query samples fell from 1.458-1.533 seconds
+to 0.792-0.889 milliseconds. A competing unrelated writer using the same
+application lock waited 1.489-1.565 seconds versus 32.083-32.442 milliseconds;
+that wait and the measured lock interval include a deliberate 25 ms rendezvous,
+not just query time. These are bounded sparse-correction engineering observations,
+not an SLA, full application throughput or production capacity result. Dense
+corrections, larger narratives, cold I/O and operational concurrency remain
+unmeasured; the lookup still scales with flagged case/challenge count.
 
 Focused synthetic JSON/SQLite proof, with installed editable distributions:
 
@@ -2940,5 +2964,7 @@ This is a bounded retained-priority slice, not whole-system AC-071 acceptance.
 Other assistant/form paths, operational native SQL Server acceptance, qualified
 legal/RAI review and resident comprehension remain unproven. Seven constructed
 native SQL Server correction-race, dependency, entitlement and rollback
-regressions supplement the JSON/SQLite checks, not operational acceptance or a
-native 60,000-home load claim.
+regressions supplement the JSON/SQLite checks. Subsequent native cached-reader,
+atomic migration/restart, correction-flag rollback and persisted denial-audit
+regressions add focused coverage, not operational acceptance. The bounded
+60,000-case query measurement above is not a whole-workflow load claim.
