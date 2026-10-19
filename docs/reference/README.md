@@ -21,6 +21,15 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #360 / PR #416 rubric recovery, the
+[post-push visibility and exact-head sequence](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)
+distinguishes the actual 48-vs-48 deterministic pass from the failed publication
+head comparison. Bounded old-source-head visibility retries still require the
+exact pushed score commit; failures and genuine movement remain denied.
+One legitimate score append must be followed by final-remote-head local gate,
+independent assessment and retained hosted checks, without repeated score pushes.
+Original research/adverse Review and all live issue360 acceptance blockers remain.
+
 For issue #360 cycle2, the
 [private publisher outbound policy](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2)
 and [later evidence disposition](../architecture/cutover-evidence-pack.md#later-outbound-source-restriction-2026-10-19-cycle2)
@@ -296,6 +305,7 @@ or infra acceptance claimed.
 | Inspect building shared systems, dependencies, stopped works and costs | [Core building model](../../src/core/README.md#building-shared-context-issue-75) | [Staff API/view](../../src/api/README.md#building-shared-context-issue-75); #75 adds explicit home/package scopes, read-only source assertions and Finance-only amounts. Home consent, approvals, evidence and allocations stay independent; real register, governed updates and live platform/human acceptance remain open |
 | Plan or review the move of `mvp/` and `prototype/` into `src/` | [Parity matrix and migration order](../architecture/mvp-to-src-parity-matrix.md) | Per-file outcomes, reopen list, group order for #199 (M1 to M5 done; the synthetic-data pack paths now point at `src/`); R1 first slice (agents dispatch worker, #107) done; `prototype/` retired in #202 step 1 |
 | Configure or troubleshoot rubric scoring authentication | [Capstone Rubric Gate](../../.github/rubric/README.md#owner-setup) | Built-in Actions token, job-scoped permissions and Copilot inference eligibility; compilation and a passing score do not establish product acceptance |
+| Complete exact-head validation after a rubric score append | [Rubric publication lifecycle](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion) | Bounded visibility wait, exact resulting SHA, failed-push/concurrent-movement denial; final-head receipt and independent/hosted checks without recursive scoring |
 | Design a looped agent goal | [Capstone Deliverables and Storage Map](../capstone/README.md) | Where each capstone asset (deck, pitch transcripts, thought leadership artifact, code) must be stored for the rubric gate, and which criteria score 0 until it exists |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |

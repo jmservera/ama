@@ -369,23 +369,39 @@ safe-outputs:
               const fs = require('fs');
               const { owner, repo } = context.repo;
               const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+              const expectedHead = process.env.NEW_SHA || process.env.SCORED_SHA;
+              const pushFailed = process.env.PUSH_FAILED === 'true' || process.env.RECORD_OUTCOME === 'failure';
+              const selfRecorded = /^[0-9a-f]{40}$/.test(process.env.NEW_SHA || '') &&
+                process.env.NEW_SHA !== process.env.SCORED_SHA && !pushFailed &&
+                process.env.RECORD_OUTCOME === 'success' &&
+                process.env.RECORD_HEAD_OUTCOME === 'success' &&
+                process.env.RECORD_HEAD_STATE === 'eligible' && process.env.MOVED !== 'true' &&
+                process.env.VERIFY_OUTCOME === 'success' && process.env.GATE_OUTCOME === 'success';
               let currentHead;
+              let visibilityPending = false;
               if (process.env.PR_NUMBER) {
                 if (process.env.RECORD_HEAD_STATE === 'obsolete') {
                   core.notice('Rubric run is obsolete; no verdict will be published.');
                   return;
                 }
-                const { data: pr } = await github.rest.pulls.get({
-                  owner, repo, pull_number: Number(process.env.PR_NUMBER),
-                });
-                if (pr?.state === 'closed') {
-                  core.notice('Rubric run is obsolete: the pull request closed before publication.');
-                  return;
+                const attempts = selfRecorded ? 5 : 1;
+                for (let attempt = 0; attempt < attempts; attempt++) {
+                  const { data: pr } = await github.rest.pulls.get({
+                    owner, repo, pull_number: Number(process.env.PR_NUMBER),
+                  });
+                  if (pr?.state === 'closed') {
+                    core.notice('Rubric run is obsolete: the pull request closed before publication.');
+                    return;
+                  }
+                  if (pr?.state !== 'open' || typeof pr.head?.sha !== 'string' || !/^[0-9a-f]{40}$/.test(pr.head.sha)) {
+                    throw new Error('Could not verify the current pull request head');
+                  }
+                  currentHead = pr.head.sha;
+                  core.info(`Rubric publication head ${currentHead}; expected ${expectedHead}; attempt ${attempt + 1}/${attempts}`);
+                  visibilityPending = selfRecorded && currentHead === process.env.SCORED_SHA;
+                  if (!visibilityPending || attempt === attempts - 1) break;
+                  await new Promise(resolve => setTimeout(resolve, 1000 * 2 ** attempt));
                 }
-                if (pr?.state !== 'open' || typeof pr.head?.sha !== 'string' || !/^[0-9a-f]{40}$/.test(pr.head.sha)) {
-                  throw new Error('Could not verify the current pull request head');
-                }
-                currentHead = pr.head.sha;
               }
               let decision = { valid: false };
               let report = `<!-- rubric-score -->\n## Rubric score: FAILED\n\nThe gate did not produce a decision. [Workflow run](${runUrl})\n`;
@@ -393,10 +409,8 @@ safe-outputs:
                 decision = JSON.parse(fs.readFileSync('/tmp/rubric-out/decision.json', 'utf8'));
                 report = fs.readFileSync('/tmp/rubric-out/report.md', 'utf8');
               }
-              const expectedHead = process.env.NEW_SHA || process.env.SCORED_SHA;
               const moved = process.env.MOVED === 'true' || process.env.RECORD_HEAD_STATE === 'moved' ||
                 (currentHead !== undefined && currentHead !== expectedHead);
-              const pushFailed = process.env.PUSH_FAILED === 'true' || process.env.RECORD_OUTCOME === 'failure';
               const lifecycleFailed = process.env.PR_NUMBER && (
                 process.env.RECORD_HEAD_OUTCOME !== 'success' ||
                 !['eligible', 'moved'].includes(process.env.RECORD_HEAD_STATE) ||
@@ -406,6 +420,7 @@ safe-outputs:
               const passed = decision.valid && decision.passed && !blocked;
               let description;
               if (!decision.valid) description = 'Scoring failed; see the workflow run';
+              else if (visibilityPending) description = 'Recorded score head not visible on the pull request; see the workflow run';
               else if (moved) description = 'Branch moved during scoring; push again to rescore';
               else if (pushFailed) description = 'Could not record the score on the branch; see the workflow run';
               else if (blocked) description = 'Could not verify score recording; see the workflow run';

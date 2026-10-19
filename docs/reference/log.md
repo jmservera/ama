@@ -6471,3 +6471,27 @@ metadata when the knowledge base was created.
   No Azure write/deploy/what-if/capacity attempt, allocation, image publication,
   tenant/data operation or human approval occurred. Both original SKU failures
   and original Research/critique/Not accepted Review remain unchanged.
+
+## [2026-10-19] change | Issue360 PR416 rubric publication lifecycle recovery
+
+* Inspected actual current-main source/compiled workflow and run 39237980947
+  record-job logs: gate 48/100 vs 48 PASS, successful score-only append and correct
+  NEW_SHA, but immediate publication API head mismatch produced a failed status.
+  The original returned SHA was not logged; reproduced old-source visibility
+  is an explanation, not invented telemetry or proven concurrent movement.
+* Added bounded post-successful-push visibility reads while the API returns only
+  the original source SHA; exact bot HEAD remains required. True movement,
+  failed score push, invalid/error responses, closure and retry exhaustion do
+  not become passes. Trusted baseline/scoring/provenance, guarded non-force
+  writes and retained checks/protection remain unchanged.
+* Updated the [rubric guide](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)
+  and index with one-score-append/final-head local gate/independent assessment/
+  retained hosted-check sequence. No hosted scoring, push/PR update, cloud,
+  model or tenant write was used for diagnosis. Original issue360 live acceptance
+  remains unmet; original research/critique/adverse Review remain immutable.
+* Focused source/compiled lifecycle plus pinned real MCP/schema checks pass 219
+  cases; baseline reproduction fails 24 visibility cases before repair. The
+  full rubric suite retains the same 21 pre-existing failure IDs as bot HEAD,
+  with 331 passing and no skips after restoring the pinned missing runtime.
+  Compiler-generated lock and native actionlint/ShellCheck pass. Full 17-group
+  frozen-candidate gate and coordinator assessment are separate required steps.

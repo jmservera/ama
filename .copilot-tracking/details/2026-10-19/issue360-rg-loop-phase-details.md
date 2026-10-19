@@ -5,6 +5,68 @@ ms.date: 2026-10-19
 ---
 
 Task 360 / issue360-rg-loop. Plan and research are same-date/same-slug siblings.
+Active additional recovery P04 is owner-authorized on2026-10-19; no coordinator
+implementation. Supplemental research:
+.copilot-tracking/research/2026-10-19/issue360-rubric-lifecycle-recovery-research.md.
+Same-task original evidence remains immutable, including the adverse Review.
+
+<!-- rpi:task id=P04-T01 -->
+## P04-T01: Rubric publication consistency
+
+Starting head7e810dc9c9ac520e4e7717b4604dc08fbbc8e311 was authorized
+fast-forward from e879 after clean ancestry/latest.json-only verification.
+Current trusted base634a024d contains the exact source/lock/scripts inspected.
+Actual record log has successful score push, NEW_SHA populated and all lifecycle
+outcomes success; only immediate pulls.get head mismatch explains moved failure.
+The exact returned head is unknown. Reproduce old-source visibility separately
+from actual concurrent movement; do not invent API telemetry.
+
+Add no more than six test functions to existing test_record_workflow.py, preserving
+all existing cases. Exercise source and compiler-generated steps. Simulate
+sequential API responses and capture retry delays without real sleeps. Integrate
+actual shell step outputs from temporary bare Git repositories into publication,
+including real movement/deletion/rejected push. Verify no main changes.
+Limit retry to successful self-append plus old scored SHA; five reads,15 seconds
+maximum, exact resulting SHA still mandatory. Distinct exhausted diagnostic.
+No scoring/gate/prepare/latest.json/model/protection/credential semantic change.
+Compile using existing gh-aw v0.89.21; no hand edits to lock. Preserve original
+failure evidence and baseline159 passing lifecycle cases externally.
+
+P04-T01 completed: six new parameterized test functions plus integrated
+push/publication assertions in the existing race test. Initial reproduction
+against unchanged source/lock:24 failed/179 passed. After correction207 lifecycle
+cases pass, including real gate.evaluate equality/regression through publication.
+Pinned runtime missing on first wider run was restored from official immutable
+gh-aw-actions924af5fdc64061cfbf66fb584c8b07e2ac230c60; ten exercised source
+blob hashes verified by existing test. Actual stdio/HTTP runtime and generated
+schema checks:12 passed (12 unrelated trigger expectations deselected).
+Combined focused219 passed. Full rubric331 pass/21 fail/no skips; exact21
+failure IDs match untouched7e810dc9 baseline276 pass/21 fail/7 runtime skips.
+No failure suppressed or unrelated fixture repaired. Native emitted compilation
+with actionlint1.7.12 and actual ShellCheck passes. Earlier no-emit compilation
+did not invoke scanners; direct old1.7.7 could not parse existing platform
+features. Both failed/partial attempts retained, not treated as passing lint.
+Logs: /tmp/issue360-rubric-recovery-20261019/.
+
+<!-- rpi:task id=P04-T02 -->
+## P04-T02: Frozen exact-head handoff
+
+Document finite one-score-append lifecycle and required separate final-head
+full local gate/independent review. Existing src-ci workflow_dispatch selects
+branch; verify actual dispatched run head equals frozen remote head before
+trusting retained check names. No dispatch here, no manually set status or
+review dismissal. A second rubric rescore is not required just to validate
+the appended metadata commit and would move HEAD again.
+
+Update only appropriate rubric guide, KB routing/log and tracking. Resolve
+gh api user-derived repository-local noreply for author and committer, Conventional
+Commit plus Copilot trailer. Full gate uses /tmp/rpi-413-tools plus existing host
+Node PATH, isolated credentials, pip, shared lock and16GB Docker memory limits.
+Run explicit focused rubric commands in addition to all17 groups. Commit all
+changes before final gate, external fresh output only. Fetch main and verify
+receipt; do not postgate commit/push/update PR. Coordinator must independently
+assess final exact HEAD/base/receipt/source/RPI/primary evidence first.
+
 Current implementation disposition: candidate source/tests/docs delivered;
 both actual provider preflights failed capacity before allocation. P01-T02
 and dependent P02 publication/pin remain blocked. The task expectations below

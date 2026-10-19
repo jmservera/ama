@@ -5,10 +5,14 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import gate  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[3]
 SHA = "a" * 40
@@ -30,17 +34,21 @@ def step(steps, name):
     return next(item for item in steps if item.get("name") == name)
 
 
-def run_js(script, *, response=None, error=None, env=None, pr=True, decision=True):
+def run_js(script, *, response=None, responses=None, error=None, env=None, pr=True, decision=True, score_passed=True, gate_decision=None):
     payload = {
         "script": script,
         "response": response,
+        "responses": responses,
         "error": error,
         "pr": pr,
         "decision": decision,
+        "score_passed": score_passed,
+        "gate_decision": gate_decision,
     }
     harness = r"""
 const input = JSON.parse(require('fs').readFileSync(0, 'utf8'));
-const result = {outputs: {}, calls: [], notices: []};
+const result = {outputs: {}, calls: [], notices: [], delays: []};
+let responseIndex = 0;
 const context = {
   repo: {owner: 'test', repo: 'test'}, payload: input.pr ? {pull_request: {number: 206}} : {},
   serverUrl: 'https://example.test', runId: 1, ref: process.env.TEST_REF || 'refs/heads/main',
@@ -49,6 +57,7 @@ const core = {
   setOutput: (key, value) => {result.outputs[key] = value;},
   notice: message => result.notices.push(message),
   warning: message => result.notices.push(message),
+  info: message => result.notices.push(message),
 };
 const endpoint = name => async args => {result.calls.push({name, args}); return {data: {}};};
 const github = {rest: {
@@ -56,7 +65,9 @@ const github = {rest: {
     get: async args => {
       result.calls.push({name: 'get', args});
       if (input.error) throw new Error(input.error);
-      return {data: input.response};
+      const response = input.responses ?
+        input.responses[Math.min(responseIndex++, input.responses.length - 1)] : input.response;
+      return {data: response};
     },
     createReview: endpoint('review'),
   },
@@ -67,14 +78,17 @@ const github = {rest: {
 const fakeFs = {
   existsSync: () => input.decision,
   readFileSync: path => path.endsWith('decision.json') ?
-    JSON.stringify({valid: true, passed: true, total: 66, baseline_total: 66}) : 'report',
+    JSON.stringify(input.gate_decision || {valid: true, passed: input.score_passed, total: input.score_passed ? 66 : 65, baseline_total: 66}) : 'report',
 };
 const customRequire = name => name === 'fs' ? fakeFs : require(name);
 (async () => {
   try {
     await new (Object.getPrototypeOf(async function(){}).constructor)(
-      'github', 'context', 'core', 'require', input.script
-    )(github, context, core, customRequire);
+      'github', 'context', 'core', 'require', 'setTimeout', input.script
+    )(github, context, core, customRequire, (resolve, delay) => {
+      result.delays.push(delay);
+      resolve();
+    });
   } catch (error) {result.error = error.message;}
   console.log(JSON.stringify(result));
 })();
@@ -172,6 +186,110 @@ def test_publication_requires_valid_checks_and_exact_resulting_head(steps, env, 
     reviews = [call["args"] for call in result["calls"] if call["name"] == "review"]
     assert reviews[0]["event"] == ("APPROVE" if passed else "REQUEST_CHANGES")
     assert reviews[0]["commit_id"] == env.get("NEW_SHA", SHA)
+
+
+@pytest.mark.parametrize(("heads", "passed", "delays"), [
+    ([NEW_SHA], True, []),
+    ([SHA, NEW_SHA], True, [1000]),
+    ([SHA, SHA, NEW_SHA], True, [1000, 2000]),
+    ([SHA, SHA, SHA, SHA, NEW_SHA], True, [1000, 2000, 4000, 8000]),
+    ([SHA], False, [1000, 2000, 4000, 8000]),
+    ([OTHER_SHA, NEW_SHA], False, []),
+    ([SHA, OTHER_SHA, NEW_SHA], False, [1000]),
+])
+def test_self_commit_visibility_is_bounded_and_requires_exact_result(steps, heads, passed, delays):
+    result = run_js(
+        script(steps, "Publish verdict"),
+        responses=[{"state": "open", "head": {"sha": head}} for head in heads],
+        env={"NEW_SHA": NEW_SHA},
+    )
+    assert "error" not in result
+    assert result["delays"] == delays
+    assert len([call for call in result["calls"] if call["name"] == "get"]) == len(delays) + 1
+    statuses = [call["args"] for call in result["calls"] if call["name"] == "status"]
+    assert [status["sha"] for status in statuses] == [SHA, NEW_SHA]
+    assert all(status["state"] == ("success" if passed else "failure") for status in statuses)
+    if heads == [SHA]:
+        assert all("not visible" in status["description"] for status in statuses)
+    if delays:
+        assert any(SHA in notice and NEW_SHA in notice for notice in result["notices"])
+
+
+@pytest.mark.parametrize("env", [
+    {}, {"PUSH_FAILED": "true"}, {"RECORD_OUTCOME": "failure"},
+    {"RECORD_OUTCOME": "skipped"}, {"MOVED": "true"},
+    {"RECORD_HEAD_STATE": "moved"}, {"RECORD_HEAD_OUTCOME": "failure"},
+    {"VERIFY_OUTCOME": "failure"}, {"GATE_OUTCOME": "failure"},
+])
+def test_visibility_wait_is_not_a_failed_record_or_movement_fallback(steps, env):
+    result = run_js(
+        script(steps, "Publish verdict"),
+        responses=[{"state": "open", "head": {"sha": SHA}}, {"state": "open", "head": {"sha": NEW_SHA}}],
+        env={**({"NEW_SHA": NEW_SHA} if env else {}), **env},
+    )
+    assert result["delays"] == []
+    statuses = [call["args"] for call in result["calls"] if call["name"] == "status"]
+    assert statuses
+    assert all(status["state"] == ("success" if not env else "failure") for status in statuses)
+
+
+@pytest.mark.parametrize("response", [
+    {"state": "closed"}, None, {}, {"state": "open", "head": {"sha": "short"}},
+])
+def test_visibility_wait_retains_closed_and_malformed_denial(steps, response):
+    result = run_js(
+        script(steps, "Publish verdict"),
+        responses=[{"state": "open", "head": {"sha": SHA}}, response],
+        env={"NEW_SHA": NEW_SHA},
+    )
+    assert result["delays"] == [1000]
+    assert all(call["name"] == "get" for call in result["calls"])
+    if response == {"state": "closed"}:
+        assert "error" not in result
+    else:
+        assert result["error"] == "Could not verify the current pull request head"
+
+
+def test_settled_self_commit_does_not_turn_score_regression_into_pass(steps):
+    result = run_js(
+        script(steps, "Publish verdict"),
+        responses=[{"state": "open", "head": {"sha": SHA}}, {"state": "open", "head": {"sha": NEW_SHA}}],
+        env={"NEW_SHA": NEW_SHA}, score_passed=False,
+    )
+    statuses = [call["args"] for call in result["calls"] if call["name"] == "status"]
+    assert statuses and all(status["state"] == "failure" for status in statuses)
+    reviews = [call["args"] for call in result["calls"] if call["name"] == "review"]
+    assert reviews[0]["event"] == "REQUEST_CHANGES"
+    assert "65/100 vs baseline 66/100" in reviews[0]["body"]
+
+
+@pytest.mark.parametrize("score", [2, 3])
+def test_real_deterministic_comparison_survives_publication_retry(steps, score):
+    rubric = json.loads((ROOT / ".github/rubric/rubric.json").read_text())
+    ids = [criterion["id"] for criterion in rubric["criteria"]]
+    evidence = "docs/brds/agentic-retrofit-programme-brd.md"
+    baseline = {"total": 60, "criteria": {
+        cid: {"score": 3, "evidence": [], "rationale": "baseline"} for cid in ids
+    }}
+    proposed = {cid: {
+        "score": score if cid == "A1" else 3,
+        "evidence": [f"{evidence}:1"], "rationale": "fixture", "change_reason": "changed evidence",
+    } for cid in ids}
+    decision = gate.evaluate(
+        rubric, baseline, False, ids, [evidence],
+        [{"type": gate.TOOL_TYPE, "scorecard": {"criteria": proposed}}],
+        "success", "success",
+    )
+    assert decision["valid"] and decision["passed"] == (score == 3)
+    result = run_js(
+        script(steps, "Publish verdict"),
+        responses=[{"state": "open", "head": {"sha": SHA}}, {"state": "open", "head": {"sha": NEW_SHA}}],
+        env={"NEW_SHA": NEW_SHA}, gate_decision=decision,
+    )
+    statuses = [call["args"] for call in result["calls"] if call["name"] == "status"]
+    assert len(statuses) == 2
+    assert all(status["state"] == ("success" if score == 3 else "failure") for status in statuses)
+    assert result["delays"] == [1000]
 
 
 @pytest.mark.parametrize("env", [{}, {"NEW_SHA": NEW_SHA}, {"RECORD_HEAD_STATE": "obsolete"}])
@@ -275,6 +393,52 @@ def test_real_record_push_never_recreates_or_overwrites_moved_head(steps, tmp_pa
             assert git(root, "--git-dir", str(remote), "rev-parse", "refs/heads/topic") == destination
         else:
             assert subprocess.run(["git", "--git-dir", str(remote), "show-ref", "--verify", "refs/heads/topic"], capture_output=True).returncode != 0
+    record_outputs = dict(line.split("=", 1) for line in outputs.splitlines())
+    new = record_outputs.get("new_sha", "")
+    publication = run_js(
+        script(steps, "Publish verdict"),
+        responses=[
+            {"state": "open", "head": {"sha": scored}},
+            {"state": "open", "head": {"sha": new or destination or scored}},
+        ],
+        env={"SCORED_SHA": scored, "NEW_SHA": new, "PUSH_FAILED": record_outputs.get("push_failed", "")},
+    )
+    assert "error" not in publication
+    statuses = [call["args"] for call in publication["calls"] if call["name"] == "status"]
+    assert statuses and all(status["state"] == ("success" if movement == "unchanged" else "failure") for status in statuses)
+    assert publication["delays"] == ([1000] if movement == "unchanged" else [])
+    assert git(root, "--git-dir", str(remote), "rev-parse", "refs/heads/main") == base
+
+
+def test_real_server_push_rejection_never_publishes_success(steps, tmp_path):
+    root, remote, out, base, scored = recording_repo(tmp_path)
+    hook = remote / "hooks/pre-receive"
+    hook.write_text("#!/bin/sh\nexit 1\n")
+    hook.chmod(0o700)
+    output = tmp_path / "outputs"
+    record = step(steps, "Record score on the pull request branch")["run"].replace("/tmp/rubric-out", str(out))
+    result = subprocess.run(
+        ["bash", "-e", "-c", record], cwd=root, text=True, capture_output=True,
+        env={
+            **os.environ, "HEAD_REF": "topic", "SCORED_SHA": scored,
+            "PUSH_TOKEN": "dummy", "GITHUB_SERVER_URL": "https://example.test",
+            "GITHUB_REPOSITORY": "test/repo", "RUNNER_TEMP": str(tmp_path),
+            "GITHUB_OUTPUT": str(output),
+        },
+    )
+    assert result.returncode == 0, result.stderr
+    assert output.read_text() == "push_failed=true\n"
+    assert git(root, "--git-dir", str(remote), "rev-parse", "refs/heads/topic") == scored
+    assert git(root, "--git-dir", str(remote), "rev-parse", "refs/heads/main") == base
+    publication = run_js(
+        script(steps, "Publish verdict"),
+        response={"state": "open", "head": {"sha": scored}},
+        env={"SCORED_SHA": scored, "PUSH_FAILED": "true"},
+    )
+    assert publication["delays"] == []
+    statuses = [call["args"] for call in publication["calls"] if call["name"] == "status"]
+    assert len(statuses) == 1 and statuses[0]["state"] == "failure"
+    assert "Could not record" in statuses[0]["description"]
 
 
 @pytest.mark.parametrize("has_decision", [False, True])

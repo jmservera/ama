@@ -8,6 +8,15 @@ Task: 360 / issue360-rg-loop. Base: 634a024d97d2da7168b8a7d5f343ab26e6108cf3.
 
 ## Executive Summary
 
+2026-10-19 additional owner-authorized recovery: P04 repairs only the rubric
+publication lifecycle on existing PR416. Source scoring and original issue360
+acceptance stay separate. Supplemental research shows the gate actually passed
+48/100 against48, but publication denied an immediate post-push API head mismatch.
+The response SHA was not logged; stale visibility must be reproduced, not
+asserted as observed fact. Add bounded old-source-head visibility retries only
+after a successful score push; never accept a mismatched final head.
+No repeat original critique/Review or publication before coordinator assessment.
+
 Publish the reviewed proof layer through one ephemeral same-VNet x64 VM, then
 pin only the existing initializer image after actual digest pull/run verification.
 Research rules out an existing standalone publisher, unsupported UK South ACR
@@ -33,6 +42,10 @@ Live #360/#349/#358 body/comments retrieved 2026-10-19.
 
 ## User Decisions and Requirements
 
+* Owner explicitly authorizes additional bounded rubric lifecycle recovery on
+  the same branch, preserving original artifacts and prior adverse evidence.
+* No push/PR update, paid hosted scoring, cloud/model/tenant writes or coordinator
+  implementation. Frozen candidate/full17group receipt goes to coordinator first.
 * Run Research, Plan with one original critique, Implement, one Review in order.
 * Preserve existing ama, private backing, production defaults and historical evidence.
 * Necessary RG-contained resource/network/publication operations are authorized.
@@ -46,11 +59,18 @@ Live #360/#349/#358 body/comments retrieved 2026-10-19.
 
 ## Goals
 
+Restore reliable exact-result-head rubric publication without weakening the
+nondecreasing comparison or authorizing arbitrary score-file trust.
+
 Prove fresh source-bound publication and safe image-only initializer activation,
 or record exact technical blockers without success substitution. Execute available
 HTTPS/SQL/AI checks only within the supplied credential/data/approval boundaries.
 
 ## Scope and Non-Goals
+
+P04 adds only rubric workflow publication retry logic, its existing source/lock
+regression harness, compiler-generated lock, related rubric guide/KB routing
+and same-task tracking. No gate/prepare scoring semantics or scores edits.
 
 Add narrowly bounded infrastructure template and its safety tests if needed.
 Use existing proof Dockerfile/context and scripts unchanged. Update existing
@@ -59,6 +79,14 @@ No new app feature, web edit, public backing/bypass, tenant change, private data
 Front Door retirement, subscription scheduling resource or broad IAM.
 
 ## Functional Requirements
+
+For P04, retry only a verified old scored SHA when NEW_SHA exists after a
+successful recording step, no push failure or pre-record movement occurred,
+and the deterministic gate succeeded. At most five API reads and15 seconds
+of delays (1/2/4/8). A new unrelated SHA, closed PR, malformed response or API
+error terminates the wait. Success still requires the exact NEW_SHA.
+Exhaustion fails with a distinct visibility diagnostic; no green fallback.
+Log only public commit IDs/attempts, not response bodies or credentials.
 
 New resources: uniquely named owned VM (system MI), OS disk, NIC, NSG, public IP,
 dedicated subnet and one registry-scoped AcrPush assignment. No other assignment.
@@ -89,6 +117,11 @@ Never claim write-only secret equality from GET.
 
 ## Non-Functional Requirements
 
+Existing guarded non-force push, immutable event checkout, trusted main tools,
+status names, model, baseline, review policy and main write prohibition remain
+unchanged. Preserve original research/critique/Review hashes. Additional rubric
+commands must run explicitly because the complete matrix omits this workflow.
+
 External private files mode0600, directories0700; no credentials/raw response
 payload in source/evidence. MI tokens obtained only inside the temporary VM,
 never in arguments/logs. Fresh readback confirms all backing public access stays
@@ -98,6 +131,18 @@ not an invoice. No allocation or new resource charge was observed.
 No concurrent heavy commands outside /tmp/ama-rpi-heavy.lock on shared host.
 
 ## Acceptance Criteria
+
+9. Source and compiled tests reproduce immediate old-head publication denial,
+   recover only when the exact pushed SHA becomes visible, reject persistent
+   old-head/unrelated movement/push failure and retain closed/error protections.
+10. Integrate real temporary-Git push outputs with publication regression:
+    unchanged ref self-append succeeds after visibility settles; concurrent
+    move/deletion and remote push rejection cannot pass or write main.
+11. Generate lock with installed gh-aw v0.89.21; run focused existing rubric
+    regressions, available pinned runtime, compiler and native workflow lint.
+12. Document one score append followed by final-remote-head full local gate,
+    independent assessment and retained hosted checks on that head without
+    another source push/rescore. Persistent publication failure is a blocker.
 
 1. Focused template/proof/setup tests pass before cloud writes; exact preview
    is limited to owned Creates and one dedicated new subnet.
@@ -160,7 +205,30 @@ Full gate adds all existing SQL/browser/images/scans without claiming live appro
   routed below. Remaining commit/full gate/receipt verification occurs after
   this artifact is frozen; authoritative completion evidence stays external.
 
+<!-- rpi:phase id=P04 -->
+### P04: Owner-selected rubric lifecycle recovery
+
+<!-- rpi:task id=P04-T01 -->
+* [x] P04-T01: Reproduced post-push visibility mismatch, implemented bounded
+  exact-head retry with real push/publication cases, compiled lock and ran
+  focused lifecycle/runtime/compiler/lint evidence. 219 focused cases pass;
+  full rubric331 pass/21 unchanged pre-existing failures, zero skips.
+<!-- rpi:task id=P04-T02 -->
+* [ ] P04-T02: Finite publication guide, KB routing/log and tracking reconciled;
+  clean frozen commit/full actual17group gate and external receipt verification
+  remain post-freeze steps for coordinator. No push or PR update.
+
+P04 test ownership: existing test_record_workflow.py only; no test removal or
+new module. Six new test functions, parameterized. Generated
+target rubric-score.lock.yml only via compiler; canonical rubric-score.md.
+Behavioral coverage, real temporary Git races and pinned MCP runtime
+remain distinct from hosted API acceptance.
+
 ## Critique Disposition
+
+P04 reuses the one historical critique and does not rerun or overwrite it,
+as explicitly required by the owner. Supplemental focused plan is ready for
+implementation from research C1-C5/W1-W2; original five dispositions remain.
 
 Original executed once: .copilot-tracking/reviews/2026-10-19/issue360-rg-loop-plan-critique.md.
 Verdict Revise. All five corrections are compatible with owner direction:
@@ -220,6 +288,14 @@ failed application-read probe. #358 real KV preservation round-trip follows.
 #350 parity and model/human approvals are outside this bounded loop.
 
 ## Handoff
+
+Current P04 supplemental recovery implementation is complete; focused cases
+and generated/native lint pass. Final frozen commit/full gate are still pending,
+not inferred from earlier receipts. Exact-head independent coordinator review
+follows externally, without another original Review or any push here. Persistent
+visibility failure and unsupported exact-head hosted checks remain blockers,
+not permission for repeated paid scoring. Full rubric has21 independently
+reproduced pre-existing failures, not a claimed complete rubric-suite pass.
 
 The one original Review is complete / Not accepted and unchanged.
 Cycle2 P01-T05 outbound source correction is implemented; no repeated

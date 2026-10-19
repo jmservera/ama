@@ -6,6 +6,103 @@ ms.date: 2026-10-19
 
 ## Implementation Scope and Opening
 
+## P04 Opening: Additional Owner-Authorized Rubric Recovery
+
+Owner2026-10-19 explicitly lifts the previous two-cycle stop for this bounded
+rubric-only recovery. Original research/critique/Review unchanged; active scope
+is supplemental P04, not blocked publisher/cloud/tenant work. Clean branch was
+fast-forwarded from e879 to7e810dc9 after exact ancestry and score-only diff.
+Fresh main remains634a024d. Actual failed record log and report retained:
+/tmp/issue360-rubric-original-record.log and
+/tmp/issue360-rubric-original-report.md. Report shows48 vs48 PASS; lifecycle
+status nevertheless failed. Do not inflate score or equate workflow success
+with gate acceptance.
+
+Supplemental focused research C1-C5/W1-W2 and plan/details recorded before
+source changes. Root predicate established from actual NEW_SHA, empty MOVED,
+eligible record recheck and success outcomes: immediate publication API head
+did not equal known pushed SHA. Its exact returned SHA was not logged.
+Reproduce old-source visibility and distinguish true movement before correction.
+Baseline existing lifecycle suite:159 passed. Only existing rubric harness and
+canonical workflow publication will change; lock generated with gh-aw.
+No original critique or Review repeated, no remote/cloud/model write.
+
+### P04-T01 Reproduction, Repair and Coverage
+
+Actual sticky report verifies48/100 against baseline48/100 PASS. No numeric
+regression established. Given actual record-job inputs, the only true moved
+predicate was current API head != successful pushed NEW_SHA. The prior API
+response is unavailable; stale scored-head visibility is reproduced, not
+invented as an observed response.
+
+New harness cases against unchanged source/compiled code fail24 cases with179
+passing. Corrected source/lock retry at most five reads with1/2/4/8-second
+delays only after successful guarded self-append, only while API returns scored
+source SHA. Final head must equal NEW_SHA; unrelated movement stops immediately.
+Closed PR, malformed/error responses, prior movement, failed/skipped record,
+gate/verification failure and exhausted visibility cannot pass.
+Safe diagnostic prints only public SHA and attempt counts. No change to
+scoring, baseline, provenance, main writes, credential or push semantics.
+
+Six added parameterized tests plus integrated real Git race assertions exercise
+transient/persistent old head, first/last permitted retry, true movement,
+closure/malformed response, valid regression denial, actual gate.evaluate
+comparison, and real failed score push. Existing before/after advertised-ref
+movement/deletion checks remain. No original test or module removed.
+
+| Actual command boundary | Result and external evidence |
+| --- | --- |
+| Original lifecycle baseline |159 passed; original suite before source changes |
+| New reproduction against unchanged source/lock |24 failed/179 passed, before.log |
+| Corrected lifecycle including real deterministic comparison |207 passed, focused-final.log combined below |
+| Actual pinned MCP stdio/HTTP, blob hashes and compiled schema |12 passed/12 unrelated trigger cases deselected, pinned-runtime.log |
+| Combined corrected lifecycle plus runtime/schema |219 passed/12 unrelated trigger cases deselected, focused-final.log |
+| Full wider suite before runtime restoration |21 failed/320 passed/7 runtime skips, rubric-all.log |
+| Untouched7e810dc9 archived rubric/workflow baseline |21 failed/276 passed/7 runtime skips, baseline-all.log |
+| Current full suite after restoring pinned runtime |21 failed/331 passed/no skips, rubric-all-final.log |
+| Exact pre-existing failure-ID comparison |Identical21 IDs, preexisting-failure-comparison-normalized.diff empty |
+| gh aw compile rubric-score --actionlint --shellcheck --no-check-update |Pass; actual emitted scanner execution, compile-native-scanners.log |
+| git diff --check |Pass |
+
+All named files are under /tmp/issue360-rubric-recovery-20261019/.
+Runtime restored only after existing harness reported missing runtime, from
+official immutable gh-aw-actions924af5fdc64061cfbf66fb584c8b07e2ac230c60.
+Existing test validates ten pinned source blob hashes; no runtime code fork,
+model call or package install needed. Wider21 failures are inherited hardcoded
+seed/adapter assumptions and outdated trigger expectations, not new failures.
+They remain visible and are not fixed/suppressed in this bounded recovery.
+
+Partial/failed tooling attempts retained: gh aw lint initially received a
+workflow ID instead of a lock path; corrected native path passes. A no-emit
+compile with scanner flags did not actually invoke them; final emitted command
+does. Direct PATH actionlint1.7.7 rejected pre-existing ubuntu-slim/copilot/
+queue syntax; compiler-provided1.7.12 with ShellCheck checks the full lock and
+passes without ignored findings. Gate's mandated PATH/tool identities remain.
+
+### P04-T02 Documentation and Frozen-Candidate Preparation
+
+Prior cycle2 final e879 full17group/187-command pass and independent bounded
+source assessment by84baed3f-578f-4ab8-9a61-3da35b0efc69 are historical evidence:
+/tmp/ama-issue360-correction2-final-20261019-e8796758/receipt.json.
+That receipt does not cover appended7e810dc9 or this recovery candidate.
+Original live360 acceptance and the original adverse Review remain unmet.
+
+Existing rubric guide now documents actual versus inferred failure evidence,
+bounded retry limitations and finite one-append/final-head validation sequence.
+KB index routes there and log is append-only. Existing src-ci dispatch supports
+all image checks; workflow_run infra-plan rejects dispatch events, so this
+mechanism is non-deploying and does not authorize Azure activity. Required
+PR-only/protected checks, permissions, reviews and owner merge remain separate.
+No dispatch performed here, no manually green context or review dismissal.
+
+Every later bot commit invalidates this candidate's receipt: coordinator must
+fast-forward final remote head, run full gate in fresh external output and
+independently assess that exact final head without another source push.
+Persistent publication failure stops; no paid rerun loop or empty commit.
+Current 19th-October recovery must freeze/commit source and all tracking before
+actual17group gate. Authoritative final receipt and post-freeze state remain
+external to avoid self-reference. No postgate commit/push/PR update authorized.
+
 Full approved plan issue360-rg-loop P01-P03. Research executed first, Plan then
 one original independent critique Revise, five direct dispositions recorded
 before implementation. No prior adverse/historical artifact overwritten.
