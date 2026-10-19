@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-19T16:01:06+00:00",
-  "commit": "a97314e1a9ea1716229c8923d20c4a5ec7d43db0",
+  "scored_at": "2026-10-19T20:47:34+00:00",
+  "commit": "d3dfd82aee6a654dfd10a3b92152970e5f15f89c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39280688591",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39321399922",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "e3d9d470ef217d40492fb0e5d52ba4b27fb0944195f8ee370f4d45d28784834d",
+    "solution-code": "2b3ce8d11ea9641fe1f2ee97012fd4a1049062dcd7de423c2f150b39aa310008",
     "infrastructure": "7211eab15e6fc6befa4cda343b85c26a799f1924503bd670cdb185a514d0ce64",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -27,9 +27,9 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:21-53"
+        "src/core/src/zava_forward/core/resident_decisions.py:226-243"
       ],
-      "rationale": "ADR0002 delta and new infra/private-proof-publisher.bicep add a bounded, decoupled temporary-VM module with explicit resource guard, consistent with the modular baseline. Undeployed/capacity-blocked; no material change to existing architecture scope."
+      "rationale": "New challenge-staleness module (priority_challenge_state, challenge_catalog) is cleanly decoupled with defined dependency contracts, consistent with existing modular baseline. No material change to overall architecture scope or scaling evidence."
     },
     "A2": {
       "score": 5,
@@ -41,40 +41,37 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistant_release.py:1-124",
-        "mvp/tests/test_assistant_release.py:32-45,127-150"
+        "src/core/src/zava_forward/core/resident_decisions.py:275-325",
+        "src/core/src/zava_forward/core/sqlstore.py:567-570",
+        "src/core/tests/test_resident_decisions.py:2155-2210"
       ],
-      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch when absent/expired/revoked, and quarantining/suspending drift. The changed infra/R..."
+      "rationale": "Diff adds a real, tested RAI/reliance control: version-bound suggestion challenges that mark AI priority output stale on a recorded human correction, with writer-time re-validation and race-condition fencing against concurrent corrections (SQL and JSON). Already at ceiling (5); no change needed, ..."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistant_release.py:1-124",
-        "mvp/zavaforward_mvp/assistants.py:285-310,441-446",
-        "mvp/zavaforward_mvp/server.py:477-481"
+        "src/api/src/zava_forward/api/web/panels.js:239-406",
+        "src/core/src/zava_forward/core/resident_decisions.py:605-657",
+        "src/api/tests/test_resident_api.py:135-225"
       ],
-      "rationale": "Release admission is a real, working, end-to-end capability (record/suspend/revoke endpoints, SQL DDL, gating wired into invoke/claim/complete/review, passing tests), not just fixtures. Already at ceiling (5); this diff's new VM template is separately undeployed/unused."
+      "rationale": "End-to-end working capability: UI forms, API route, SQL/JSON persistence, pagination, and passing tests across layers. Already at ceiling (5); this diff is additional completed capability, not a gap-filler, so no change beyond existing ceiling."
     },
     "A5": {
       "score": 4,
-      "evidence": [
-        "infra/main.bicep:494,521",
-        "infra/tests/test_bicep_policy.py:368-382"
-      ],
-      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema that could never fire, now corrected with an asserting test. The changed infra/README.md this run adds dense narrative describing a one-off manual synthetic-secret roundtrip investigation (GETs, PATCH, cleanup)..."
+      "evidence": [],
+      "rationale": "Unchanged baseline: this diff is a correctness/governance feature (challenge/staleness fencing), not new observability, reliability or cost instrumentation; no monitoring or cost evidence added."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a governance/admission-control and infra-capacity-attempt feature set, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a reliance/governance control on AI suggestion staleness, not a model-choice justification or evaluation harness; no new evaluation evidence."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:441-446",
-        "mvp/zavaforward_mvp/assistants.py:767-785"
+        "src/core/src/zava_forward/core/store.py:860-863,899"
       ],
-      "rationale": "Adds a guardrail blocking autonomous dispatch/claim/completion without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. Strengthens existing guardrails but adds no new orchestration pattern."
+      "rationale": "Adds a guardrail that fences AI-priority review actions against stale suggestions mid-transaction. Strengthens existing guardrails but introduces no new orchestration or handoff pattern; no change."
     },
     "B1": {
       "score": 3,
@@ -104,9 +101,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "mvp/README.md:866-880"
+        "src/core/README.md:2879-2927",
+        "src/api/README.md:2601-2654"
       ],
-      "rationale": "README documents the release-admission feature clearly with concrete API/behaviour detail, well-integrated into capstone documentation prose. New infra README additions are dense operational narrative, not deck-quality prose; capped at Good(4)."
+      "rationale": "README additions document the affected-person challenge feature clearly with concrete API/behaviour detail, well-integrated into capstone documentation prose, matching prior Good(4) standard. No change from baseline."
     },
     "B7": {
       "score": 3,
