@@ -897,6 +897,27 @@ blocked/unrun rows below are not the current #65 status; see the later delta.
 | Finance, grants, technical sign-offs and resident decisions (FR-013, FR-014, FR-018, FR-019) | Done (API and screens) | Record-only finance with separate approvers and no bulk path; constructed data, proposed role mapping, exact-match comparison, screens not run in a browser |
 | Azure provisioning, replicas, region, load test (decision 6) | Partial | Dev app `ca-properwarm-mvp` on Azure SQL and Blob with a managed identity, min 2 and max 4 replicas, restart persistence checked (2026-10-09); the app is not yet in Bicep, Entra built-in authentication is blocked on an app registration, no load test, region and private networking for the pilot not decided |
 
+### Pilot Region and Capability Evidence Delta (2026-10-18, Refs #137)
+
+The [owner's 2026-10-15 comment](https://github.com/jmservera/ama/issues/137#issuecomment-6192754703),
+retrieved and verified live on 2026-10-18 and 2026-10-19, selects pilot region `uksouth` and
+subscription owner @jmservera. It does not select the separate SQL region or
+approve zone redundancy, sizing, cost, deployment or access. The historical
+2026-10-08/09 table above is unchanged and does not represent today's decisions.
+
+The [dated management-plane evidence](../../infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137)
+records exact catalog matches, empty quotas, a denied Container Apps location
+query and failed IoT usage queries. Approved subscription binding, complete
+quota/zone evidence and named human review remain unavailable. This is not
+reserved capacity, fresh deployability, approval of the whole-stack proposal
+in decision 6, or issue acceptance. The unchanged pilot example and reviewed
+reference gates remain non-deployable.
+The identical GET reproduction on 2026-10-19 matched the reported fields and
+failure categories; it neither replaces the dated first observations nor
+resolves their unknowns. The issue's later historical delivery comment still
+calls region/ownership open without a replacement owner decision; that
+contradiction is explicitly retained in the infrastructure evidence.
+
 ### Current Exercise Delivery Delta (2026-10-13)
 
 | Area | Later evidence | Remaining boundary |

@@ -6394,3 +6394,42 @@ metadata when the knowledge base was created.
   transport/identity/cost/network/privacy/real AI/Azure/human gates remain open.
   No private stock, original-case or memory changes, new data approvals,
   operational rules, tasks, priorities or resident communications.
+
+## [2026-10-18] query | Issue 137 read-only pilot capability and quota evidence
+
+* Added [dated infrastructure evidence](../../infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137)
+  for exact unchanged template configurations, management GET command shapes,
+  scope/units, support facts and explicit empty/denied/failed quota surfaces.
+* Verified the actual 2026-10-15 owner comment selecting pilot `uksouth` and
+  subscription owner @jmservera. Withdrew the unsupported current README claim
+  of a superseding undecided direction. Added an
+  [ADR dated delta](../adrs/0002-pilot-readiness-architecture.md#pilot-region-and-capability-evidence-delta-2026-10-18-refs-137)
+  without changing its 2026-10-08/09 historical table; updated index routing.
+* No template/example, runtime, dependencies, private data, original case or
+  memory changes. The unchanged example's stale comment is explained, not
+  treated as owner authority. SQL-region selection, quota/zone gaps, approved
+  account binding, cost/deployment/access authority and named human review
+  remain unresolved. No resource changes, data-plane calls, reservations,
+  quota approval or issue closure; region/quota criterion remains unticked.
+
+## [2026-10-19] query | Issue 137 preserved-task reproduction and authority reconciliation
+
+* Reproduced all seventeen original read-only management GETs with identical
+  command shapes and bounded timeouts; selected fields and adverse categories
+  matched the retained 2026-10-18 receipts. Corrected the premature same-day
+  reproduction wording in the uncommitted evidence; no historical query was
+  redated. Confirmed all eight referenced configuration files byte-identical
+  at original base 612cbed78a35a4ab426571aa7d2aeb0ae6d691dd and approved
+  main fa659cfd021100f7c64f8ec73bbff76c03adf234.
+* Reverified the actual 2026-10-15 owner comment. Explicitly retained the
+  contradictory 2026-10-16 historical delivery comment as a contradiction,
+  not a replacement owner decision. Updated the existing
+  [infrastructure evidence](../../infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137),
+  [ADR delta](../adrs/0002-pilot-readiness-architecture.md#pilot-region-and-capability-evidence-delta-2026-10-18-refs-137)
+  and index. Scope/unknowns/approval boundaries remain unchanged.
+* Continued the preserved RPI task without repeating critique. The owner
+  superseded documentation-only validation and publication permission:
+  full canonical local gate is mandatory, and independent coordinator
+  source/RPI/primary-evidence review plus a final matrix receipt precede any
+  later push/PR decision. No cloud writes, private dataset access, original
+  case or memory changes, issue mutation or publication.

@@ -21,6 +21,17 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #137, the [dated pilot capability and quota evidence](../../infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137)
+records 2026-10-18 management-plane checks and their 2026-10-19 identical-query
+reproduction, bound to byte-identical template requests at both recorded bases.
+The verified 2026-10-15 owner comment selects pilot `uksouth` and subscription
+owner @jmservera only. Empty SQL/Foundry quotas, missing Container Apps
+environment-core/zone evidence and failed IoT usage remain explicit unknowns/
+blockers, not zero quota or deployment approval. The
+[ADR dated delta](../adrs/0002-pilot-readiness-architecture.md#pilot-region-and-capability-evidence-delta-2026-10-18-refs-137)
+preserves its historical table. Pilot examples, human review and remaining
+authority gates stay unchanged; the issue's remaining criterion stays unticked.
+
 For issue #186, the [shared observation contract and volume reference](./research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
 documents the unchanged imported 13-field consumer schema, stable-key replay and
 three paired observations/home/day. Declared N=1/60,000 gives 3/180,000 records/
