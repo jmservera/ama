@@ -11,7 +11,7 @@ Research: .copilot-tracking/research/2026-10-18/issue137-pilot-capability-resear
 | --- | --- | --- |
 | P01 | Publish exact bounded evidence | Completed; README table/legend, dated ADR delta and index/log |
 | P02 | Reproduce and validate documentation | Completed; 2026-10-19 identical GET reproduction and both-base byte comparison |
-| P03 | Preserve original Review and deliver | In progress; commit/rebase then original Review, final commit and external full gate |
+| P03 | Preserve original Review and deliver | Original Review complete, Residual work; final commit and external full gate pending in this frozen pre-gate snapshot |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Publish bounded evidence
@@ -95,3 +95,16 @@ the allowlist. Public handles, source hashes and required noreply attribution
 are allowed. Any later staged-content change requires rerunning this gate.
 Failure stops commit/push and routes to coordinator without modifying the
 original Review or launching another Review.
+
+### Frozen pre-gate handoff
+
+Source batch committed and clean rebase completed without conflict; original
+Review executed once at
+.copilot-tracking/reviews/logs/2026-10-18/issue137-pilot-capability-review.md.
+Outcome Residual work, RV-001/RV-002 retained. No source corrections or further
+Review. Only parent administrative artifact reconciliation follows.
+P03 stays unchecked in the committed snapshot to avoid fabricating execution:
+the final artifact commit precedes the full matrix/receipt, and no commit may
+follow that gate. Actual completion/failure belongs to the external receipt
+and handoff; planned output /tmp/rpi-137-capability-final-20261019-01 is not a
+claim of success. No independent coordinator or named human approval performed.

@@ -121,12 +121,12 @@ The historical doc-only exemption is superseded: full application/SQL/browser/
 Docker/scanner matrix is mandatory after the final commit.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Original Review and delivery
+### [ ] P03: Original Review and delivery (post-commit external gate pending)
 
 Dependencies: P02.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Execute one Review, preserve and deliver
+#### [ ] P03-T01: Execute one Review, preserve and deliver (Review complete; final gate pending)
 
 Activate rpi-review once after implementation. Findings route forward, not
 corrections or another Review. Commit inspected scope plus all phase evidence
@@ -181,6 +181,17 @@ No user decision required; neither correction changes scope. No second critique.
 Implementation record: .copilot-tracking/changes/2026-10-18/issue137-pilot-capability-changes.md.
 P01/P02 complete on 2026-10-19: all seventeen identical GETs reproduced;
 allowlisted values/categories match; exact source bytes match both bases.
-Changes record owns validation evidence. P03 next: coherent batch commit,
-authorized clean rebase, one original Review, final artifacts/commit, full
-external gate. Original critique remains immutable; no new loop authorized.
+Coherent source/artifact batch committed and authorized clean rebase completed
+without conflict. One original Review executed completely, outcome Residual work:
+.copilot-tracking/reviews/logs/2026-10-18/issue137-pilot-capability-review.md.
+No source correction or second Review follows. Parent administrative closeout
+preserves RV-001/RV-002 and records actual delivery gates without claiming approval.
+
+This is the frozen pre-gate plan snapshot. P03 intentionally remains unchecked
+here because final artifact commit/full exact-head matrix/receipt must follow
+and the owner prohibits commits after that gate. The external authoritative
+receipt at /tmp/rpi-137-capability-final-20261019-01/receipt.json and final
+handoff report actual completion or failure; do not infer success from this path.
+Task state completed means the original RPI loop reached its one Review,
+not that unexecuted gates passed or the issue is accepted. Coordinator owns
+independent exact-head evidence review and any later publication decision.
