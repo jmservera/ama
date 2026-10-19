@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-17
+ms.date: 2026-10-19
 ms.topic: reference
 ---
 
@@ -32,6 +32,81 @@ The canonical policy is [ADR 0006](../adrs/0006-src-layout-and-cutover.md).
 | [#322 comment](https://github.com/jmservera/ama/issues/322), 2026-10-16 | Deploy-script resolution: existing job image, else newest registry tag, else visibly reported placeholder. Implemented by #337 and integrated here; explicit digest used for this evidence run |
 | [#323 comment](https://github.com/jmservera/ama/issues/323), 2026-10-16 | Rulesets warn, not enforce; owner says no protection change needed; src-ci already validates source |
 | Owner task direction, 2026-10-16 | Providers registered, ama costs acceptable, RG ownership available; SQL public access stays Disabled, no policy/tag/firewall bypass or peering; all private data-plane probes run inside the ama VNet |
+
+## Bounded RG Publication Continuation (2026-10-19)
+
+Refs #360, #349 and sequenced #358. Original base:
+`634a024d97d2da7168b8a7d5f343ab26e6108cf3`. This is a new bounded RPI loop,
+not a rewritten verdict for #375/#379/#381/#385/#391. Research, one original
+plan critique, implementation and one later original Review are separate dated
+tracking evidence. The new RG resource authority removes the former missing
+publication-route authorization only. It does not supply technical acceptance,
+tenant/Graph rights, resident data permission or human release approvals.
+
+| #360 criterion | New evidence | Disposition |
+| --- | --- | --- |
+| a/b | Prior merged private-backing/direct-ingress source retained;233 focused publisher/proof/IAM/setup/staff/auth tests pass, zero skips | Source evidence only; no new setup completion |
+| c | Owner explicitly permits necessary operations within ama, excluding RG deletion; minimum publisher/cost/rollback researched | Resource authority resolved; technical route not verified |
+| d | Direct four-route probes each403; existing Graph application-read failed; both exact VM provider preflights failed capacity | **UNMET**; no health200, real session/roles, SQL persistence or real task-bound AI acceptance |
+| e | Existing Front Door and old stack retained; no deletion | **UNMET**, verification-before-retirement still applies |
+| f | Dated runbook/ADR/evidence/KB update preserves historical failures and new contradictions | Bounded documentation delivered, not whole issue closure |
+
+Current ACR is Premium/UK South, Disabled public access/bypass None, no agent
+pool/VM publisher. Initializer remains on old proof digest `ef0058f8...`,
+demo API on `111b2622...`; neither was updated or started. The
+[tested allocation candidate](../../infra/private-proof-publisher.bicep) isolates
+the temporary VM in a dedicated subnet, denies all inbound and adds no IAM or
+backing-service resources. Actual B2als_v2 and then D2as_v5 exact preflights
+returned `InvalidTemplateDeployment / SkuNotAvailable` for capacity. Unrestricted
+SKU metadata/quota were therefore insufficient. No successful what-if, create,
+temporary resource, AcrPush assignment, source upload, build, push, digest
+pull/run or image pin occurred.
+
+No unchanged historical host endpoint or default-pool publication attempt was
+repeated. The [runbook](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360)
+records researched pricing, conditional recovery and explicit fresh-capacity
+requirements; no guest watchdog or billing-bound claim is made without an
+allocation. Exact private operator inventory and failed responses remain
+external/mode0600, without committed IDs, tokens, roster or raw app payload.
+Unused task-owned SSH keys were removed. Final management readback found zero
+owned resources/no deployment record, unchanged subnet objects and registry
+public/bypass/policies, all six backing services private, Front Door and `ama`
+retained. No cloud cleanup deletion was needed.
+
+The authorized tenant operator must still establish real single-tenant app,
+provisioning permissions/consent, private vault credential and staff bindings,
+then execute real browser/role/SQL/AI checks. Existing token acquisition without
+Graph roles/scopes does not satisfy them. #358's live Key Vault-reference
+preservation round-trip remains separately sequenced. Local SQL/browser/image
+engineering checks and later complete local gate are not live acceptance, full
+WCAG conformance, vulnerability-free certification or human approval.
+
+### Later outbound source restriction (2026-10-19, cycle2)
+
+The independent exacthead assessment closed the earlier resource-relationship
+test gap but found unrestricted outbound defaults in the unused VM template.
+The later source correction permits TCP443 only to recorded private ACR
+`10.40.4.20/.21`, Azure DNS TCP/UDP53, WireServer TCP80/32526 and IMDS TCP80;
+explicit remaining platform-service denials and deny-all outbound precede NSG
+defaults. No backing service, inbound allowance, exact-RG guard, resource
+relationship or IAM resource changed. The retained public IP is not permission
+for Internet/package traffic. See the
+[enforced policy and limitations](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2).
+
+Package bootstrap is intentionally blocked: no verified offline Docker/tool
+route exists for the stock pinned Ubuntu image. This is not an approved
+deployable publisher. NSGs do not provide package FQDN, DNS-payload or registry
+content filtering; WireServer guest-agent traffic is NSG-exempt. Supported
+agent redirection of extensions is documented, not observed here. Exact
+private endpoint identities/IPs and VNet DNS need future independent
+revalidation before allocation. Broad Internet/Storage/AzureCloud access is
+not an accepted workaround.
+
+No Azure write/deploy/what-if/new capacity attempt ran in cycle2. Both original
+UK South `SkuNotAvailable` results, zero allocations, old image digests,
+Graph403/direct403 and all tenant/privacy/human gates remain unchanged.
+Original Research, critique and Not accepted Review remain immutable; later
+source/mutation evidence does not retroactively accept that original outcome.
 
 ## Credential Preservation Offline Follow-Up (2026-10-17)
 

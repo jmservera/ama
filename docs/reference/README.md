@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-18
+ms.date: 2026-10-19
 ms.topic: overview
 ---
 
@@ -20,6 +20,24 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For issue #360 / PR #416 rubric recovery, the
+[post-push visibility and exact-head sequence](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)
+distinguishes the actual 48-vs-48 deterministic pass from the failed publication
+head comparison. Bounded old-source-head visibility retries still require the
+exact pushed score commit; failures and genuine movement remain denied.
+One legitimate score append must be followed by final-remote-head local gate,
+independent assessment and retained hosted checks, without repeated score pushes.
+Original research/adverse Review and all live issue360 acceptance blockers remain.
+
+For issue #360 cycle2, the
+[private publisher outbound policy](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2)
+and [later evidence disposition](../architecture/cutover-evidence-pack.md#later-outbound-source-restriction-2026-10-19-cycle2)
+record explicit private-ACR/platform egress followed by outbound denial.
+NSGs do not filter package FQDNs or DNS/registry payloads; platform exceptions
+remain documented. Package bootstrap is intentionally blocked rather than
+allowing broad Internet/Storage traffic. No Azure attempt, allocation,
+publication or live/human acceptance is inferred; original evidence is retained.
 
 For issue #137, the [dated pilot capability and quota evidence](../../infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137)
 records 2026-10-18 management-plane checks and their 2026-10-19 identical-query
@@ -124,6 +142,16 @@ Existing resident routing below remains unchanged.
 | Project documents | [docs/](../) outside this folder | Problem specification and deliverables, governed by the repository instructions |
 
 ## Task Routing
+
+The new #360 bounded RG loop records [actual publisher capacity refusals](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360)
+and the [dated acceptance delta](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19).
+Owner RG-resource authority is resolved, but unrestricted SKU GET/quota did
+not predict successful B2als_v2 or D2as_v5 provider preflight. No allocation,
+grant, image publication/pin or cloud deletion occurred; current direct routes
+remain403 and all backing private. The tested VM allocation template is
+capacity-blocked, not a working publisher. #349 tenant/browser/role/SQL/AI and
+#358 live secret round-trip remain separate; #360d/e and retirement stay unmet.
+Prior adverse/historical evidence is preserved, not re-adjudicated.
 
 The #360 profile-evidence continuation integrates merged quality #387 on main
 3f544fb9 with the exact original infra source/test patch and original critique/
@@ -277,6 +305,7 @@ or infra acceptance claimed.
 | Inspect building shared systems, dependencies, stopped works and costs | [Core building model](../../src/core/README.md#building-shared-context-issue-75) | [Staff API/view](../../src/api/README.md#building-shared-context-issue-75); #75 adds explicit home/package scopes, read-only source assertions and Finance-only amounts. Home consent, approvals, evidence and allocations stay independent; real register, governed updates and live platform/human acceptance remain open |
 | Plan or review the move of `mvp/` and `prototype/` into `src/` | [Parity matrix and migration order](../architecture/mvp-to-src-parity-matrix.md) | Per-file outcomes, reopen list, group order for #199 (M1 to M5 done; the synthetic-data pack paths now point at `src/`); R1 first slice (agents dispatch worker, #107) done; `prototype/` retired in #202 step 1 |
 | Configure or troubleshoot rubric scoring authentication | [Capstone Rubric Gate](../../.github/rubric/README.md#owner-setup) | Built-in Actions token, job-scoped permissions and Copilot inference eligibility; compilation and a passing score do not establish product acceptance |
+| Complete exact-head validation after a rubric score append | [Rubric publication lifecycle](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion) | Bounded visibility wait, exact resulting SHA, failed-push/concurrent-movement denial; final-head receipt and independent/hosted checks without recursive scoring |
 | Design a looped agent goal | [Capstone Deliverables and Storage Map](../capstone/README.md) | Where each capstone asset (deck, pitch transcripts, thought leadership artifact, code) must be stored for the rubric gate, and which criteria score 0 until it exists |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |

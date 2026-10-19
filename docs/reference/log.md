@@ -6433,3 +6433,65 @@ metadata when the knowledge base was created.
   source/RPI/primary-evidence review plus a final matrix receipt precede any
   later push/PR decision. No cloud writes, private dataset access, original
   case or memory changes, issue mutation or publication.
+
+## [2026-10-19] query | Issue360 bounded RG publication capacity evidence
+
+* Read complete live #360/#349/#358 and fresh secret-free management state.
+  New owner RG-resource authority supersedes missing publication-route
+  permission only; no tenant, data, public-backing or human approval inference.
+* Actual exact provider preflights for B2als_v2 and D2as_v5 both failed UK South
+  capacity despite unrestricted SKU GETs and available quota. No resource,
+  grant, source upload, image build/push/pin or cloud deletion occurred.
+  The tested isolated VM allocation candidate is undeployed, not allocatable
+  proof. Preserve this contradiction and all earlier adverse/historical evidence.
+* Updated [infra runbook](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360),
+  [ADR0002 delta](../adrs/0002-pilot-readiness-architecture.md#private-publisher-capacity-delta-2026-10-19-refs-360),
+  [evidence pack](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19)
+  and KB index. Fresh HTTPS four-route403 and Graph discovery failure are
+  restrictions/blockers, not actual health/browser/role/SQL/AI acceptance.
+  #360d/e stay unmet, Front Door/old stack/ama retained, #358 follows separately.
+  No original case, owner memory or private dataset change.
+
+## [2026-10-19] change | Issue360 cycle2 explicit publisher outbound boundary
+
+* Rejected the unused publisher template's unrestricted default outbound policy.
+  Added exact private-ACR HTTPS and Azure platform DNS/agent/IMDS exceptions,
+  explicit remaining platform-service denials and deny-all outbound before
+  default VNet/Internet rules. Existing inbound, private backing, exact-RG and
+  connected-resource guards remain unchanged.
+* Updated the [runbook policy](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2),
+  [evidence disposition](../architecture/cutover-evidence-pack.md#later-outbound-source-restriction-2026-10-19-cycle2),
+  ADR0002 and index. Stock-image package bootstrap is intentionally blocked;
+  NSGs cannot filter package FQDNs or DNS/registry content. Platform exceptions
+  and unsupported live/security claims remain explicit.
+* Eight focused and367 complete infra tests pass without skips. External
+  compiled before/after evidence reproduces acceptance of the unsafe original
+  and rejection by the new policy checks; all18 outbound mutants reject.
+  These are local engineering results, not live NSG or release acceptance.
+  No Azure write/deploy/what-if/capacity attempt, allocation, image publication,
+  tenant/data operation or human approval occurred. Both original SKU failures
+  and original Research/critique/Not accepted Review remain unchanged.
+
+## [2026-10-19] change | Issue360 PR416 rubric publication lifecycle recovery
+
+* Inspected actual current-main source/compiled workflow and run 39237980947
+  record-job logs: gate 48/100 vs 48 PASS, successful score-only append and correct
+  NEW_SHA, but immediate publication API head mismatch produced a failed status.
+  The original returned SHA was not logged; reproduced old-source visibility
+  is an explanation, not invented telemetry or proven concurrent movement.
+* Added bounded post-successful-push visibility reads while the API returns only
+  the original source SHA; exact bot HEAD remains required. True movement,
+  failed score push, invalid/error responses, closure and retry exhaustion do
+  not become passes. Trusted baseline/scoring/provenance, guarded non-force
+  writes and retained checks/protection remain unchanged.
+* Updated the [rubric guide](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)
+  and index with one-score-append/final-head local gate/independent assessment/
+  retained hosted-check sequence. No hosted scoring, push/PR update, cloud,
+  model or tenant write was used for diagnosis. Original issue360 live acceptance
+  remains unmet; original research/critique/adverse Review remain immutable.
+* Focused source/compiled lifecycle plus pinned real MCP/schema checks pass 219
+  cases; baseline reproduction fails 24 visibility cases before repair. The
+  full rubric suite retains the same 21 pre-existing failure IDs as bot HEAD,
+  with 331 passing and no skips after restoring the pinned missing runtime.
+  Compiler-generated lock and native actionlint/ShellCheck pass. Full 17-group
+  frozen-candidate gate and coordinator assessment are separate required steps.

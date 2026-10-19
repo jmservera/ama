@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-17
+ms.date: 2026-10-19
 ms.topic: how-to
 ---
 
@@ -177,6 +177,75 @@ without dispatching the scorer:
 ```bash
 python3 -m pytest .github/rubric/scripts/test_record_workflow.py -q
 ```
+
+### Post-Push Visibility and Exact-Head Completion
+
+PR #416's [run 39237980947](https://github.com/jmservera/ama/actions/runs/39237980947)
+recorded 48/100 against baseline 48/100 and successfully appended score commit
+`7e810dc9c9ac520e4e7717b4604dc08fbbc8e311` to scored commit
+`e87967580520f421e6181dff546b478bf5c02f1a`. Nevertheless publication reported
+branch movement. Its actual inputs show the new SHA and successful gate,
+recording and lifecycle outcomes: the immediate PR API head comparison caused
+the denial. The original response SHA was not logged, so old-head visibility
+is a reproduced explanation, not an observed response value or proof of a race.
+The workflow's successful conclusion did not make its failed status a pass.
+
+After a successful guarded score push, publication now makes at most five
+PR-head reads, waiting 1/2/4/8 seconds only while the API still returns the
+original scored SHA. It still requires the exact newly pushed SHA before
+publishing success. An unrelated head, prior movement, failed push, API error,
+invalid response or closed PR is not eligible for this wait. Exhaustion fails
+with a distinct visibility message. Diagnostics record public SHAs/attempts
+only. Scoring, trusted baseline tools, push protections and review requirements
+are unchanged. Movement after the last API read remains a non-atomic limitation.
+
+A finite publication sequence separates scoring from final-head validation:
+
+1. Obtain the required independent source/RPI/full-receipt assessment and
+   publication authority for a clean frozen candidate before pushing it.
+   One ordinary source push triggers legitimate scoring; do not dispatch paid
+   scoring merely to diagnose this lifecycle.
+2. Let that run complete its one score append and verdict. Verify live PR state,
+   resulting head, score commit's parent and score-only diff. A real numeric
+   regression or failed publication remains blocked. Do not edit the recorded
+   score's `commit`: it names the scored source, not the metadata commit.
+3. Fetch and fast-forward the clean local topic to that final remote head.
+   Every earlier receipt/review is insufficient for this new exact HEAD.
+   Run the [complete local gate](../../src/README.md#local-rpi-gate) in a fresh
+   external directory, verify against freshly fetched main, and obtain independent
+   exact-head assessment again. No new commit is needed to validate this head;
+   keep its receipt external.
+4. Run required hosted checks on that same final head using their existing
+   supported mechanism, not a source/empty commit or a rubric rescore. For the
+   existing non-deploying Source CI workflow, an authorized operator can use
+   `gh workflow run src-ci.yml --ref fix/demo-private-publisher-360`, then verify
+   the resulting run's `headSha` equals the frozen PR head. Dispatch selects all
+   four image checks when no base is supplied. Its downstream infrastructure
+   workflow requires a `pull_request` event, so a dispatch does not authorize
+   or execute Azure what-if. This does not substitute for any separately
+   required PR-only/protected-environment checks: if their supported exact-head
+   execution is unavailable, stop for that concrete permission/mechanism blocker.
+5. Update the PR's external evidence pointers only after the required assessment
+   and authority. Recheck head/base before the owner's merge decision.
+   Do not push again merely to refresh evidence or manually set green statuses,
+   dismiss reviews, disable checks or bypass protection.
+
+GITHUB_TOKEN's suppression of recursive workflows is intentional; the one
+rubric status on both exact source/bot SHAs is not a Source CI result.
+If the visibility wait is exhausted after a successful append, stop and retain
+the failed run. Rerunning the original scoring event after its head moved can
+legitimately hit the stale-head guard; repeated pushes/rescores are not a
+recovery strategy. A further authorized repair would be needed, not an
+unbounded retry loop or trust in an arbitrary candidate score file.
+
+Local source/compiled lifecycle regressions include transient and persistent
+old-head visibility, true concurrent movement/deletion before and after Git
+advertisement, actual remote score-push rejection, and the real deterministic
+nondecreasing comparison. These tests simulate API responses, not hosted API
+latency or product acceptance. The wider rubric suite retains 21 pre-existing
+failures (seed/adapter assumptions and retired trigger expectations), reproduced
+unchanged at the pre-recovery head; they are not silently suppressed or repaired
+by this bounded lifecycle change.
 
 ## Adding an Artifact Type
 

@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-16T14:46:25+00:00",
-  "commit": "b1fd9042e007ebafcd3974b5fd0c8971e78aef16",
+  "scored_at": "2026-10-19T13:38:09+00:00",
+  "commit": "1b4cbeef7aa98dec77fc33293b80a671925289f3",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/38917059258",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39260535932",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
-    "prd": "3b6b9a783b413c3e44d57b81fd669f8c4d3adf3b5b623ac0d398d3f8c653192c",
-    "adr": "d5924c3033c45b516706214434257c24be01996d7ff84445af1b311d27d8ca90",
-    "solution-code": "bfdb8146ba717b013779dafac249ad66645bbe03b2caa3ad87b38f7a182585a6",
-    "infrastructure": "f38e43dda897bd125fe77f9547295c999ad4a07c5a4c74c254a27c0fb6481de6",
+    "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
+    "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
+    "solution-code": "e3d9d470ef217d40492fb0e5d52ba4b27fb0944195f8ee370f4d45d28784834d",
+    "infrastructure": "8ac9f155e642c4b8e84f86fd534ccd213846c644408317d7f8cad4c94dfb7c58",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 48,
@@ -27,16 +27,16 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0005-regulatory-compliance-assistant.md:46-70"
+        "docs/adrs/0002-pilot-readiness-architecture.md:21-53"
       ],
-      "rationale": "ADR 0005 reuses existing runtime components with a bounded architecture, consistent with the existing modular baseline. New assistant_release.py module is cleanly decoupled but doesn't change the design-proposal status; no material change to this criterion."
+      "rationale": "ADR0002 delta and new infra/private-proof-publisher.bicep add a bounded, decoupled temporary-VM module with explicit resource guard, consistent with the modular baseline. Undeployed/capacity-blocked; no material change to existing architecture scope."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0005 names three rejected alternatives with explicit reasons. Diff adds no new trade-off reasoning text. Already at ceiling; no change."
+      "rationale": "ADR 0005 names three rejected alternatives with explicit reasons. Diff adds no new trade-off reasoning text relevant to this criterion. Already at ceiling; no change."
     },
     "A3": {
       "score": 5,
@@ -44,7 +44,7 @@
         "mvp/zavaforward_mvp/assistant_release.py:1-124",
         "mvp/tests/test_assistant_release.py:32-45,127-150"
       ],
-      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch with zero provider calls when absent/expired/revoked, and quarantining plus suspend..."
+      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch when absent/expired/revoked, and quarantining/suspending drift."
     },
     "A4": {
       "score": 5,
@@ -53,7 +53,7 @@
         "mvp/zavaforward_mvp/assistants.py:285-310,441-446",
         "mvp/zavaforward_mvp/server.py:477-481"
       ],
-      "rationale": "Release admission is a real, working, end-to-end capability (record/suspend/revoke API endpoints, SQL DDL, gating wired into invoke/claim/complete/review, passing test suite), not just fixtures. Already at ceiling (5); stays."
+      "rationale": "Release admission is a real, working, end-to-end capability (record/suspend/revoke endpoints, SQL DDL, gating wired into invoke/claim/complete/review, passing tests), not just fixtures. Already at ceiling (5); this diff's new VM template is separately undeployed/unused."
     },
     "A5": {
       "score": 4,
@@ -61,12 +61,12 @@
         "infra/main.bicep:494,521",
         "infra/tests/test_bicep_policy.py:368-382"
       ],
-      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema (ContainerAppConsoleLogs_CL/Log_s) that could never fire. Diff corrects to resource-specific schema with a test asserting it; observability now functions, but still no measured cost/perf evidence."
+      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema that could never fire, now corrected with an asserting test. Diff's new NSG outbound-restriction additions are security-adjacent, not operations evidence; no measured cost/perf added."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a governance/admission-control feature, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a governance/admission-control and infra-capacity-attempt feature set, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
@@ -74,7 +74,7 @@
         "mvp/zavaforward_mvp/assistants.py:441-446",
         "mvp/zavaforward_mvp/assistants.py:767-785"
       ],
-      "rationale": "Adds a guardrail that blocks autonomous dispatch/claim/completion reliance without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. This strengthens guardrail enforcement around existing autonomous scan/dispatch but does not add n..."
+      "rationale": "Adds a guardrail blocking autonomous dispatch/claim/completion without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. Strengthens existing guardrails but adds no new orchestration pattern."
     },
     "B1": {
       "score": 3,
@@ -106,12 +106,12 @@
       "evidence": [
         "mvp/README.md:866-880"
       ],
-      "rationale": "README documents the new release-admission feature clearly with concrete API/behaviour detail, well-integrated into existing capstone documentation prose. Still capped at Good(4): capstone deck itself remains thin and this is solution-code documentation, not deck content."
+      "rationale": "README documents the release-admission feature clearly with concrete API/behaviour detail, well-integrated into capstone documentation prose. New infra README additions are dense operational narrative, not deck-quality prose; capped at Good(4)."
     },
     "B7": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: not affected by CI-tooling-only diff."
+      "rationale": "Unchanged baseline: not affected by this infra/ADR/governance-focused diff."
     },
     "C1": {
       "score": 5,

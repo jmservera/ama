@@ -1,0 +1,41 @@
+{
+  "task_id": "360",
+  "task_slug": "issue360-rg-loop",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-19/issue360-rg-loop-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-19/issue360-rg-loop-plan.md",
+    "details": ".copilot-tracking/details/2026-10-19/issue360-rg-loop-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-19/issue360-rg-loop-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-19/issue360-rg-loop-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-19/issue360-rg-loop-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run the full ordered RPI loop automatically on the owner-named branch/base", "status": "confirmed", "evidence": "2026-10-19 caller instruction"},
+    {"decision": "RG ama resource operations authorized, never delete RG or weaken private backing services", "status": "confirmed", "evidence": "2026-10-19 owner direction"},
+    {"decision": "Research executed, Planning Readiness Ready; one original critique executed Revise, five direct dispositions applied without repeat", "status": "ready", "evidence": ".copilot-tracking/plans/2026-10-19/issue360-rg-loop-plan.md Critique Disposition"},
+    {"decision": "One original postimplementation Review executed Complete; outcome Not accepted, implementation Partial. RV-001 Medium safety-test gap; RV-002/003 High publication and live acceptance residuals. Reviewer did not inspect external primary files; coordinator must do so", "status": "not-accepted", "evidence": ".copilot-tracking/reviews/logs/2026-10-19/issue360-rg-loop-review.md"},
+    {"decision": "Coordinator explicitly selects RV-001 for same-task Implement continuation, correction cycle1, after original process exit0/frozen handoff. Existing test module only plus correction artifacts; no Azure attempts, no repeated critique/Review, no publication before independent exacthead review", "status": "confirmed", "evidence": "2026-10-19 corrective user brief; /tmp/rpi-360-rg-loop.log exit=0; original HEAD 8f996e6ffc0a7e6a4953fff4523d1cbe01190522"},
+    {"decision": "RV-001 P01-T04 implemented: exact compiled connections/guard refusal, five focused and364 infra tests pass with zero skips; actual original14/16 mutant escapes become0/16, both baselines4/4. Not independent acceptance or cloud-security proof; original Not accepted Review remains", "status": "implemented-awaiting-coordinator", "evidence": "/tmp/issue360-rg-correction1/mutation-evidence.json; focused.log; infra-all.log"},
+    {"decision": "Original Review SHA256 686fd0bed206e904e32b985b8f9945116b44ef54e7ed53ff52c7223d3063d2ba and critique SHA256 9c6c3a32e97746bb688e21bec5a3fa85a4ee3634a8d811bb84760c09ba48726a retained; no new research/critique/Review or Azure attempt", "status": "preserved", "evidence": ".copilot-tracking/changes/2026-10-19/issue360-rg-loop-changes.md"},
+    {"decision": "Coordinator selects cycle2 P01-T05 after independent reviewer84baed3f-578f-4ab8-9a61-3da35b0efc69 closed RV-001 and verified prior receipt but found Medium unrestricted outbound. Explicit private-registry/platform egress and deny remainder; blocked package bootstrap preferable to broad allows. No repeated original phases or Azure attempts", "status": "confirmed", "evidence": "2026-10-19 cycle2 user brief; starting HEAD9f552eda3efd83443e36384febfda4cf538df023"},
+    {"decision": "P01-T05 historical e879 bounded-source pass independently assessed by84baed3f; actual full17group/187-command gate passed. Later7e810dc9 bot score append invalidates that exact-head receipt. Package bootstrap and original360 acceptance remain blocked; original adverse Review retained", "status": "historical-bounded-source-pass", "evidence": "/tmp/ama-issue360-correction2-final-20261019-e8796758/receipt.json; /tmp/issue360-rg-correction2/mutation-evidence.json; current owner recovery brief"},
+    {"decision": "Owner2026-10-19 authorizes additional bounded rubric lifecycle recovery P04, explicitly superseding two-cycle stop. Supplemental focused research and plan/details ready; original research/critique/Review remain immutable. Clean authorized ff to7e810dc9 preserved bot score; no push/PR update before independent coordinator exacthead/base/fullreceipt assessment", "status": "confirmed", "evidence": "Current owner prompt; .copilot-tracking/research/2026-10-19/issue360-rubric-lifecycle-recovery-research.md"},
+    {"decision": "P04-T01 complete: bounded post-push visibility wait still requires exact resulting SHA; 219 focused checks and native compiler/actionlint/ShellCheck pass. Wider suite331 pass/21 inherited failures/no skips, failure IDs reproduced at untouched bot HEAD. P04-T02 docs and evidence reconciled, final commit/full gate external handoff remain", "status": "implemented-awaiting-frozen-gate-and-coordinator", "evidence": "/tmp/issue360-rubric-recovery-20261019/focused-final.log; rubric-all-final.log; baseline-all.log; compile-native-scanners.log; .copilot-tracking/changes/2026-10-19/issue360-rg-loop-changes.md"}
+  ],
+  "blockers": [
+    {"id": "publisher-capacity", "summary": "Both actual UK South B2als_v2 and D2as_v5 preflights failed SkuNotAvailable despite SKU/quota metadata", "resolution": "Require actual provider capacity or identified verified existing private publisher; no speculative allocation"},
+    {"id": "tenant-acceptance", "summary": "Existing Graph credential has no roles/scopes and application-read failed; no authorized interactive session", "resolution": "Authorized tenant operator supplies registration/permissions/consent/private credential/staff; real browser-role-SQL-AI acceptance remains separate"},
+    {"id": "private-tool-bootstrap", "summary": "Pinned stock Ubuntu has no verified private/offline Docker/build-tool bootstrap; explicit policy intentionally denies Internet/package egress", "resolution": "Separately review and prove a private/offline tool-delivery route or identify an existing prepared private publisher; do not allow broad Internet/Storage or claim NSG package FQDN filtering"}
+  ],
+  "next_action": {"phase": "Implement", "action": "P04-T01 implemented: 219 focused lifecycle/runtime/schema pass, native compiler/actionlint/ShellCheck pass, full rubric331 pass/21 reproduced pre-existing failures/no skips. P04-T02 docs/tracking reconciled. Freeze clean commit then actual17group gate/verify external receipt and post-freeze state for coordinator. No postgate commit, push, PR update or repeated original Review."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "RV-002 resolve actual capacity plus private/offline tool bootstrap or identify existing prepared connected publisher", "rationale": "Direct prerequisites for source-bound proof publication and safe initializer pin; no working route proven and package Internet access forbidden; no new attempts authorized by correction brief", "evidence": ".copilot-tracking/changes/2026-10-19/issue360-rg-loop-live-receipt.json; infra/README.md explicit outbound restriction"},
+    {"rank": 2, "task": "RV-003 complete issue349 tenant prerequisites and genuine direct-demo acceptance", "rationale": "Independent tenant/human boundary remains after RG authorization", "evidence": "Live issue349 and actual failed Graph read / direct403"},
+    {"rank": 3, "task": "Sequence issue358 real Key Vault preservation round-trip", "rationale": "Shared setup path follows this branch; offline mocks do not satisfy actual round-trip", "evidence": "Live issue358 remaining criterion"}
+  ]
+}

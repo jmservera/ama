@@ -1,0 +1,30 @@
+{
+  "observed_at": "2026-10-19T08:22:24.081659+00:00",
+  "source_base": "634a024d97d2da7168b8a7d5f343ab26e6108cf3",
+  "scope": "Existing ama; sanitized resource/configuration observations only",
+  "actual_provider_preflights": [
+    {"size": "Standard_B2als_v2", "region": "uksouth", "result": "InvalidTemplateDeployment / SkuNotAvailable / capacity restriction"},
+    {"size": "Standard_D2as_v5", "region": "uksouth", "result": "InvalidTemplateDeployment / SkuNotAvailable / capacity restriction"}
+  ],
+  "successful_what_if": false,
+  "deployment_create_invoked": false,
+  "owned_temporary_resources_found": [],
+  "role_assignments_created": [],
+  "publisher_watchdog_armed": false,
+  "image_published": false,
+  "digest_pull_run_verified": false,
+  "initializer_updated_or_started": false,
+  "initializer_digest": "sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+  "api_digest": "sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+  "subnets_equal_prewrite_baseline": true,
+  "registry_policy_equal_prewrite_baseline": true,
+  "public_network_access": {"registry": "Disabled", "sql": "Disabled", "vault": "Disabled", "storage": "Disabled", "foundry": "Disabled", "iot": "Disabled"},
+  "registry_bypass": "None",
+  "https_no_redirect_follow": {"/": 403, "/healthz": 403, "/api/me": 403, "/app": 403},
+  "graph_permission_hints": {"credential_type": "application", "roles": [], "delegated_scopes": []},
+  "graph_application_read": "Failed; no directory data returned",
+  "real_browser_role_sql_ai_acceptance": "Not run",
+  "frontdoor_retired": false,
+  "resource_group_preserved": true,
+  "cloud_deletion_executed": false
+}
