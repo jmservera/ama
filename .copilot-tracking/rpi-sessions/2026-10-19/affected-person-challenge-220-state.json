@@ -16,8 +16,18 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Owner at 2026-10-19T23:08:41Z authorizes ONE bounded UI correction of duplicate off-page forms; no publication or replacement Review.",
+      "status": "P08-T01-complete-P08-T02-freeze-pending",
+      "evidence": "Current user directive; clean unpushed 12800a69 and published PR418 b4cd1c1 verified. Actual review 5578292301 retrieved. Actual failing-first duplicate forms/labels; four Chromium journeys/nine scoped scans pass; three HTTP pass/no skips; JS and browser style pass. Separate UI disposition, original outcomes immutable. Fresh all17 pending at freeze; final state external."
+    },
+    {
+      "decision": "P07 backend frozen all17 and independent assessment completed.",
+      "status": "historical-pass-at-12800a69",
+      "evidence": "/tmp/ama-220-rpi-20261019-cycle2-01/receipt.json SHA256 60c13080a5f58775b00dbcd1bb1b267319f1a5792ed97287d1069d2a23cb8d7d; base eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. External b9cc4727-b806-4e0f-a2cf-c5010d92428c/files/issue220-pr418-cycle2-backend-assessment.md Pass; not reusable for UI HEAD."
+    },
+    {
       "decision": "Second bounded PR418 finding correction authorized after prerequisite final-bot gate exited; no replacement Review or push.",
-      "status": "P07-T01-complete-P07-T02-freeze-pending",
+      "status": "historically-completed-at-12800a69",
       "evidence": "Clean supplied b4cd1c1 verified after prerequisite session/process exit. Actual payloads and native60000 plans/timings in current session files/issue220-cycle2. Both selected backend defects corrected; 138 focused (136 pass/two existing skips), nine native/no skips, static pass. Separate cycle2 dispositions preserve original outcomes. Latest 5578292301 off-page duplicate forms remain unresolved outside backend scope."
     },
     {
@@ -74,13 +84,13 @@
   "blockers": [
     {
       "id": "PR418-off-page-duplicate-forms",
-      "summary": "Latest actual review 5578292301 reports duplicate CH-1 resolution forms/IDs after a dirty draft survives 50-to-51 refresh then history navigation. Not independently reproduced or corrected in selected backend scope.",
-      "resolution": "Coordinator selects bounded web correction and actual refresh/paging regression before merge; no automatic third correction or replacement Review."
+      "summary": "P08 duplicate-form correction implemented and focused-validated; independent exact-head incremental assessment pending.",
+      "resolution": "Coordinator assesses frozen P08 head with fresh verified all17 receipt; no further cycle, replacement Review or push."
     },
     {
       "id": "corrected-full-gate",
-      "summary": "P06-T02 passed historically at b4cd1c1; P07 corrections require a new frozen-head all17 receipt.",
-      "resolution": "Finish bounded backend correction/evidence, freeze reconciled source/tracking and run unchanged all17 against fresh main with external verification."
+      "summary": "P07 passed at 12800a69; P08 UI changes require a new frozen-head all17 receipt.",
+      "resolution": "Complete P08 focused proof, freeze reconciled source/tracking and run unchanged all17 against fresh main with external verification."
     },
     {
       "id": "publication",
@@ -90,14 +100,14 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P07-T02: freeze and commit selected corrections/evidence, run unchanged all17 on fresh main with fresh external receipt, verify and stop before push for coordinator exact-head assessment. Retain unresolved reported web blocker; all final state/results external."
+    "action": "P08-T02: privacy-safe freeze commit, unchanged fresh all17/receipt verification and external exact-head handoff; stop before push for coordinator independent incremental assessment. No replacement Review or further correction cycle."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Resolve reported off-page draft duplicate forms through a separately selected bounded web correction.",
-      "rationale": "Concrete latest-review merge blocker; higher immediate value than further challenge scope. No third automatic loop is authorized.",
-      "evidence": "Actual latest review 5578292301 at b4cd1c1 and separate PR418 cycle2 disposition."
+      "task": "Coordinator independent exact-head incremental assessment after selected P08 correction and fresh all17.",
+      "rationale": "Mandatory next handoff; owner selected one bounded UI correction, not another Review, push or merge.",
+      "evidence": "Current 23:08:41Z direction and actual review 5578292301; P08 plan/details."
     },
     {
       "rank": 2,

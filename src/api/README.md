@@ -2628,7 +2628,11 @@ challenge remains reachable; the window is not a retention or action cutoff.
 The suggestion-reference field accepts an exact retained reference, with
 suggestions from the visible page. Browsing suggestions preserves the opening
 draft and its original binding; leaving a page with an unsaved resolution asks
-before discarding it.
+before discarding it. A refresh can move a dirty resolution outside the current
+50-record window; its original form stays inside guarded challenge history,
+with its values and version binding intact. Cancelled paging preserves it.
+Confirmed paging discards it before drawing the destination page, so a record
+never has two resolution forms or competing label targets.
 
 The issue-specific browser check runs the actual app against an isolated public
 synthetic SQLite fixture, with loopback-only traffic and no model call:
@@ -2657,6 +2661,13 @@ Add `--navigation` instead to delay a committed challenge POST acknowledgement
 while confirming navigation to another case and to the list. The write is
 neither cancelled nor retried. The form captures its dispatch route signal and
 does not refresh the old case after that route is aborted.
+
+Add `--refresh-draft` instead for the 50-to-51 refresh/paging regression. It
+retains the actual dirty CH-1 form across a newly recorded challenge, checks
+unique form/input IDs and native label targets, cancels the guarded page change,
+then explicitly confirms discard and navigates older/newer history. Only the
+new opening writes; paging never resolves or retries a challenge.
+
 Priority generation, latest and review responses retain correct stale/actionable
 flags but withhold `challenge_ids` unless the requesting reader currently has
 both resident-information and recorded-reason rights, even for policy corrections

@@ -249,7 +249,9 @@ function restoreChallengeDrafts(drafts) {
       replacement.parentElement.open = draft.open;
       replacement.replaceWith(draft.form);
     } else {
-      document.getElementById("affected-challenges")?.append(draft.details);
+      const containerId = draft.form.id.startsWith("challenge-resolve-")
+        ? "challenge-record-history-content" : "affected-challenges";
+      document.getElementById(containerId)?.append(draft.details);
     }
   }
 }
@@ -265,7 +267,7 @@ function affectedChallengePanel(c, id, refresh) {
     const lastPage = Math.max(0, Math.ceil(rows.length / 50) - 1);
     const supplied = Number(params.get(key) || 0);
     let page = Number.isSafeInteger(supplied) && supplied >= 0 ? Math.min(supplied, lastPage) : 0;
-    const content = h("div", {});
+    const content = h("div", { id: `${key}-content` });
     const status = h("p", { role: "status", "aria-live": "polite", tabindex: -1 });
     const move = (delta) => {
       if (content.querySelector('form[data-unsaved="true"]')

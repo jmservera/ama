@@ -34,6 +34,8 @@ tenant setup and publication authority remain separate owner gates.
 
 ## User Decisions and Requirements
 
+* Owner direction at 2026-10-19T23:08:41Z authorizes one additional bounded
+  off-page draft correction (P08), not unlimited cycles or publication.
 * Execute actual Research, Plan with original critique, Implement, original Review in that order.
 * Reuse current source and preserve #86/#406 server identity, existing resident choices and supplied human decisions.
 * Demonstrate both supplied digital and staff-recorded non-digital challenges, permitted explanations, owner, next update, manual route, resolution and selective invalidation.
@@ -187,11 +189,9 @@ immutable artifact. No second critique. All corrections are planner-owned.
 
 ## Follow-Up Items
 
-* Latest actual review 5578292301 reports duplicate resolution forms after a
-  dirty off-page CH-1 draft survives a 50-to-51 record refresh and is rendered
-  again by history. Outside P07's selected backend boundary; coordinator-owned
-  concrete merge blocker requiring a separately selected bounded web fix and
-  browser regression, not an automatic third correction or replacement Review.
+* Latest actual review 5578292301's duplicate off-page resolution forms are
+  selected for P08 by the explicit 23:08:41Z owner direction. Independent
+  exact-head assessment remains coordinator-owned; no replacement Review.
 
 * Fresh guideline review observed the unchanged adjacent resident helper also
   lacks delayed-write route fencing, and unchanged commitment rendering is
@@ -247,7 +247,54 @@ RV-001. No new critique or Review.
 
 ## Handoff
 
-### Current second PR finding correction boundary (P07)
+### Current bounded UI correction boundary (P08)
+
+P07-T02 completed at unpushed backend HEAD
+12800a69f04158cc2c7b85f35e7bcbaa4c26f1b5: all17 receipt
+`/tmp/ama-220-rpi-20261019-cycle2-01/receipt.json`, SHA256
+60c13080a5f58775b00dbcd1bb1b267319f1a5792ed97287d1069d2a23cb8d7d,
+base eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. Independent backend Pass:
+external session b9cc4727-b806-4e0f-a2cf-c5010d92428c,
+`files/issue220-pr418-cycle2-backend-assessment.md`. These are historical
+backend evidence, invalid for the forthcoming UI HEAD. Preserve published
+b4cd1c1 and unpushed 12800a69 ancestry; no reset/rebase/amend/force/push.
+
+<!-- rpi:phase id=P08 -->
+### [ ] P08: Bounded off-page draft correction and exact-head handoff
+
+<!-- rpi:task id=P08-T01 -->
+#### [x] P08-T01: Reconcile resolution drafts within guarded history
+
+Dependencies: P07-T02. Surgical panels.js correction, same browser owner and
+direct component documentation only. First reproduce actual Chromium 50-to-51
+refresh/paging defect; preserve draft values and bindings, one form per record,
+unique IDs/correct labels, guarded paging, no accidental write/retry. Preserve
+existing current/history/navigation paths, native Fluent semantics and human
+confirmation. Fetch current web guidelines before edits and review. No overhaul,
+backend expansion, replacement critique or Review.
+
+Completed: actual Chromium failing-first reproduced two CH-1 forms/inputs and
+incorrect native label targets with one opening write. Stable history content
+ID and resolution-only fallback restore keep the original DOM draft inside the
+existing paging guard and redraw owner. Cancelled paging preserves all values;
+explicitly confirmed discard removes it before rendering the destination.
+Four actual Chromium journeys pass, nine pinned scoped axe scans have zero
+violations/incomplete, three real HTTP tests pass/no skips, changed JS syntax
+and browser Ruff/format pass. Separate UI disposition records provenance,
+intermediate failures and acceptance limits; independent assessment pending.
+
+<!-- rpi:task id=P08-T02 -->
+#### [ ] P08-T02: Freeze, fresh all17 and stop before publication
+
+Dependencies: P08-T01. Reconcile current evidence and separate finding
+disposition, preserving all original outcomes and failures. Privacy-safe
+conventional commit with Copilot trailer; unchanged all17 at fresh fetched base
+and fresh external `/tmp/ama-220-rpi-20261019-ui-draft-01`. Verify receipt and
+handoff exact HEAD/base/SHA/primary logs externally. Stop for coordinator
+independent incremental assessment; no push/PR/status/settings/rescore/merge.
+Refs #220 only, empty closing references, whole issue OPEN/partial.
+
+### Historical second PR finding correction boundary (P07)
 
 The prerequisite final-bot gate process has exited; its external receipt records
 all17 success for b4cd1c160f74f906282d238ebfcc2ea49fbb83de. This is historical
@@ -255,7 +302,7 @@ P06-T02 completion, not validation of subsequent edits. The clean supplied
 branch and OPEN PR #418 with empty closing references are verified.
 
 <!-- rpi:phase id=P07 -->
-### [ ] P07: Second bounded PR finding correction and exact-head handoff
+### [x] P07: Second bounded PR finding correction and exact-head handoff
 
 <!-- rpi:task id=P07-T01 -->
 #### [x] P07-T01: Current case-detail reader and native correction lookup evidence
@@ -282,7 +329,7 @@ writer rendezvous limitations remain. Separate cycle2 dispositions preserve all
 original outcomes and the unresolved reported web blocker.
 
 <!-- rpi:task id=P07-T02 -->
-#### [ ] P07-T02: Freeze, unchanged all17 and coordinator handoff without push
+#### [x] P07-T02: Freeze, unchanged all17 and coordinator handoff without push
 
 Dependencies: P07-T01. Record bounded dispositions and concrete residual blockers,
 preserve original research/critique/Review and earlier dispositions unchanged,
@@ -290,7 +337,7 @@ commit privacy-safe identity, fetch main, run fresh external unchanged all17
 and verify. No replacement Review, push, new PR, rescore or merge. Post-freeze
 results remain external. Refs #220 only; whole issue remains open.
 
-### Current bounded PR #418 continuation
+### Historical bounded PR #418 continuation (P06)
 
 The 2026-10-19 owner authorizes implementation of actual advisory comments
 4318714670, 4318714784, 4318714876, 4318714963 and 4318715035.

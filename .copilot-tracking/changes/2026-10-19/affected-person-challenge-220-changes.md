@@ -12,6 +12,14 @@
 
 ## Execution Status
 
+Current P08: owner direction at 2026-10-19T23:08:41Z authorizes one bounded
+off-page UI correction. P07 all17 at 12800a69 and external independent backend
+Pass completed; previous pending statements below are historical freeze
+snapshots, not current failures. Published b4cd1c1 and clean unpushed 12800a69
+ancestry verified. P08 source/focused evidence precedes fresh commit/all17;
+no push or replacement Review. P08-T01 now complete; P08-T02 commit/all17
+pending at this freeze snapshot. Post-freeze result/state are external only.
+
 P01-P03 complete; original implementation Review executed Partial / Not accepted.
 P04/P05 source d3dfd82a subsequently passed its historical all17 gate and was
 published before this continuation. P06 five-comment implementation is complete;
@@ -28,6 +36,84 @@ actual failing-before behavior tests, then implement identity/version/dependency
 controls, browser and docs; original Review precedes frozen commit/full gate.
 
 ## Completed Work
+
+### P08 intake and immediately relevant plan reconciliation
+
+Selected actual review 5578292301's panels.js duplicate off-page form finding.
+Primary review retrieved directly with `gh api` at intake, timestamp 22:00:13Z,
+commit b4cd1c160f74f906282d238ebfcc2ea49fbb83de; comment pagination found no
+inline comment for this review, so the review body is the actual source.
+Current guidelines source retrieved successfully before web edits.
+P08 owns panels.js, same Chromium harness, API guide and issue tracking only.
+P07 checklist reconciled from supplied verified receipt and external backend
+Pass; previous disposition and original research/critique/Review stay untouched.
+First execution boundary: failing-first 50-to-51 refresh/paging regression.
+Receipt, primary logs and final state after freeze stay external.
+
+### P08-T01: Guarded off-page resolution draft reconciliation
+
+Actual failing-first Chromium on unchanged 12800a69 web source reproduced the
+reported 50-to-51 refresh: CH-1 draft lies outside history, Older challenges
+creates two forms/two resolution-reference inputs and preserved labels target
+the new empty form. Exactly one opening write, no resolution write. Primary:
+current session `files/issue220-ui-draft/failing-first-04.log`.
+Earlier `failing-first.log` and `failing-first-02.log` are harness-only strict
+locator failures; `failing-first-03.log` reaches missing guarded-draft assertion.
+All remain historical, not reclassified as passing feature proof.
+
+`panels.js` gives each history content a stable ID and restores off-page
+resolution details specifically inside challenge history content. Existing
+paging confirmation sees the original dirty DOM form; existing replaceChildren
+removes it only after explicit discard before rendering the destination.
+Opening fallback and all handlers/version closures remain unchanged.
+No registry/service/refactoring, CSS/Fluent overhaul or backend change.
+API guide documents the exact cancel/confirmed-discard behavior.
+
+Existing browser owner gains `--refresh-draft` with fifty real HTTP openings,
+the fifty-first actual UI opening, preserved DOM identity/all values, unique
+IDs, native label ownership and click focus, cancelled then confirmed paging,
+older/newer paths and exact write counts. Existing current/history/navigation
+paths run unchanged except normal formatter output. No test removal.
+
+Final focused evidence in current session `files/issue220-ui-draft/`:
+`browser-final.log` and four `*-final.json` results: Chromium 156.0.8078.4,
+all four journeys pass, nine pinned axe scopes zero violations/incomplete.
+`http-focused.log`: three tests pass/no skips. `static-final.log`: changed JS
+syntax and isolated existing browser Ruff E/F/I/B/UP plus format pass.
+First strict style command reported prior and new line-length/import formatting;
+normal formatter/import organizer and directly related wrapping resolve them.
+The actual SQLite fixture logs law-store-unavailable diagnostics; these are
+not regulatory acceptance and remain unsuppressed in all browser/HTTP logs.
+No screen reader/resident/legal/live acceptance performed.
+
+Fresh guidelines retrieved before scoped review, read changed restoration and
+history/forms against all applicable rules. No new scoped finding; native
+label/guard defect corrected. Existing plain ASCII/sentence-case project
+standard takes precedence over generic typography/title-case guidance.
+Fifty history records plus bounded preserved drafts are not unbounded retention;
+no virtualized-library addition is justified by this surgical correction.
+Broader adjacent UI findings remain follow-up-only as already recorded in plan.
+
+Original research/critique/Review and all previous finding dispositions have
+zero diff from 12800a69. SHA256: research
+7a4dc049ba4de04cd6cf9d2ccc06656d7dd36526e3e1304d1c370339a9f0778a;
+critique 1a37cbb8f57d8e673eac17d86b81b983ec6244a09eb104d7c157109ac16ffaf0;
+Review eec22d64aea801d63ae007c5c8b6e4b69709099d70f4e3a7c9b8f4dc2744fc8e.
+P08 plan/details/state reconciled before freeze; original Revise and
+Partial / Not accepted stay immutable. No replacement Review.
+
+### P08-T02: Freeze boundary and external handoff intent
+
+Fetch main confirmed eeb6c3aba5d07244ae3cc0e53d839617fd928e3b before freeze.
+Commit source and current evidence, then unchanged all17 at fresh external
+`/tmp/ama-220-rpi-20261019-ui-draft-01`, with runner-owned shared lock (no outer
+nested lock), qualified native tools/pip/nvm Node PATH and scrubbed credentials.
+Receipt binds final HEAD/base and all command logs; verification and actual
+post-freeze task state remain external to avoid invalidating the receipt.
+STOP before push for coordinator independent exact-head incremental assessment.
+Refs #220, empty closing references; issue OPEN/partial. Backend sparse/dense/
+native and human limits remain exactly as in the preserved cycle2 disposition.
+
 
 ### P01-T01: Actual missing-feature proof
 

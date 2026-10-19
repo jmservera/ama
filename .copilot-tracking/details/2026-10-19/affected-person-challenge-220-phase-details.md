@@ -19,9 +19,45 @@
 | P04 | Review/frozen gate | Executed; original Review Partial / Not accepted and historical failed gate preserved | P04-T01 |
 | P05 | Selected correction | Complete; source d3dfd82a historical all17 passed and published; receipt not reusable | P05-T01, P05-T02, P05-T03, P05-T04 |
 | P06 | New PR findings | Complete historically at b4cd1c1; external all17 receipt, not reusable | P06-T01, P06-T02 |
-| P07 | Second bounded finding correction | T01 complete; T02 freeze/new all17 pending; unresolved reported web defect retained | P07-T01, P07-T02 |
+| P07 | Second bounded finding correction | Complete at 12800a69; all17 and independent backend Pass, historical | P07-T01, P07-T02 |
+| P08 | Bounded off-page draft correction | T01 complete; T02 frozen commit/new all17 pending | P08-T01, P08-T02 |
 
-## Current P07 execution boundary
+## Current P08 execution boundary
+
+Owner directive at 2026-10-19T23:08:41Z selects one additional bounded UI
+correction of actual review 5578292301 at published b4cd1c1. Clean unpushed
+12800a69 backend commit and published ancestry remain intact. P07 all17 receipt
+and independent backend Pass are historical evidence recorded in the current
+plan, not reusable for P08. Allowed writes: panels.js, existing challenge browser
+harness, direct API documentation and current issue tracking/separate disposition.
+First reproduce actual 50-to-51 refresh with dirty CH-1; then reconcile drafts
+inside guarded history, prove unique forms/IDs, correct native label targets,
+preserved values/bindings, cancelled and confirmed paging, no write/retry.
+Rerun existing current/history/navigation browser paths, scoped guidelines,
+JS syntax and existing Python checks. No backend expansion or UI overhaul.
+Serialize heavy checks with one shared lock; qualified native tools, pip/no uv,
+nvm Node PATH and credential-scrubbed generated public fixtures only.
+
+P08-T01 complete: failing-first actual browser reproduced two forms/two
+reference inputs and preserved labels targeting the other form. Three-line
+functional change gives history content a stable ID and restores off-page
+resolution details into it. Existing guard covers the draft; existing redraw
+owns its removal after explicit discard. No changed handler, version binding,
+backend, CSS, resident approval or navigation semantics. Same actual DOM form
+survives refresh and cancelled paging; labels/IDs are unique. Four Chromium
+156.0.8078.4 journeys pass, nine pinned axe scopes zero violations/incomplete.
+Three selected actual HTTP tests pass/no skips; JS syntax and browser Ruff/
+format pass. Intermediate strict locator/style failures and law-store
+unavailable diagnostics remain in external logs, not suppressed.
+Separate UI disposition is implementation-owned, not independent acceptance.
+
+P08-T02 requires privacy-safe commit, unchanged all17 at fresh base/external
+directory, fresh verification and external exact-head handoff. Stop before push
+for coordinator assessment. Original research, Revise critique, Partial / Not
+accepted Review and previous dispositions are immutable. No new Review, human/
+WCAG/live/native-specific operational acceptance or whole-issue closure.
+
+## Historical P07 execution boundary
 
 P07-T01 completed under the explicit
 second correction directive. P06-T02 actually completed at supplied final-bot
