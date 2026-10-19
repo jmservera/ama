@@ -114,6 +114,38 @@ STOP before push for coordinator independent exact-head incremental assessment.
 Refs #220, empty closing references; issue OPEN/partial. Backend sparse/dense/
 native and human limits remain exactly as in the preserved cycle2 disposition.
 
+### P08-T02: Directly coupled browser callback type correction
+
+First frozen candidate 28945896499c17ed494db6fe5c28f21d1174a9fa ran all17:
+sixteen groups passed, project-api failed configured mypy at the NEW request
+event lambda in challenge_browser_check.py. No runtime/UI/backend failure was
+reported. Failed receipt is retained unchanged at
+`/tmp/ama-220-rpi-20261019-ui-draft-01/receipt.json`, SHA256
+b3bbb1fb888ef7d4f783713cd065e3f47687fdfa7e3e89fa4642f76bad673de7;
+primary type error `0033-project-api.log`. Nonzero dependency probes and SQL
+startup retries are expected runner diagnostics, not additional failed groups.
+
+This is safe, directly coupled regression-harness typing, not a new domain
+correction cycle. Replace only the conditional request lambda with an explicit
+Playwright Request callback returning None. Run configured API mypy and focused
+browser/style checks before another substantive commit. Preserve first frozen
+commit and receipt; no amend/reset/rebase, no runtime or approval changes.
+Any new HEAD invalidates the first receipt regardless of the small type fix.
+Final unchanged all17 uses fresh sibling
+`/tmp/ama-220-rpi-20261019-ui-draft-02`; never overwrite requested 01 or borrow
+its sixteen passed groups. Final result/state still external; no publication.
+
+Completed direct harness typing repair: explicit Request callback returning
+None and an asserted dictionary-shaped parsed JSON body. First configured
+check then exposed the optional body type at append; `typed-final.log` preserves
+that failure. Final `typed-final-02.log`: full configured API Ruff/format and
+strict mypy pass (62 files); actual Chromium 50-to-51 case passes again with
+two clean pinned axe scopes, exact one opening/zero resolution writes.
+`refresh-draft-typed-final-02.json` is final-harness primary evidence.
+No runtime source changed after 28945896, no test removed or exemption added.
+Refreeze by substantive test/evidence commit, then fresh all17 02. The original
+01 gate failure and every earlier adverse result remain immutable.
+
 
 ### P01-T01: Actual missing-feature proof
 

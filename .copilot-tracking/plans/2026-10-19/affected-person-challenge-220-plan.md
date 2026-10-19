@@ -294,6 +294,22 @@ handoff exact HEAD/base/SHA/primary logs externally. Stop for coordinator
 independent incremental assessment; no push/PR/status/settings/rescore/merge.
 Refs #220 only, empty closing references, whole issue OPEN/partial.
 
+First frozen 28945896 attempted all17 at requested `ui-draft-01`: sixteen
+groups passed; API mypy found the new browser request lambda's overload
+inference error. Preserve failed receipt SHA256
+b3bbb1fb888ef7d4f783713cd065e3f47687fdfa7e3e89fa4642f76bad673de7.
+Safe explicit Request callback typing remains directly coupled P08 harness
+work, not a new domain correction cycle or Review. Run configured API checks,
+refreeze by new substantive commit and rerun all17 in fresh `ui-draft-02`;
+no partial receipt reuse, overwritten 01, amendment or publication.
+
+Coupled harness repair complete: explicit Playwright Request callback plus
+dictionary shape assertion; configured full API Ruff/format and strict mypy
+pass (62 files). Actual typed refresh/paging Chromium case passes again with
+two zero-violation/incomplete axe scopes. Intermediate optional-body type error
+is preserved externally. Runtime source is byte-identical to first UI freeze.
+Final refreeze/all17 at fresh 02 remains pending at this snapshot.
+
 ### Historical second PR finding correction boundary (P07)
 
 The prerequisite final-bot gate process has exited; its external receipt records

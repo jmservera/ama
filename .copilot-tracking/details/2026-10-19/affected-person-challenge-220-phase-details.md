@@ -51,6 +51,20 @@ format pass. Intermediate strict locator/style failures and law-store
 unavailable diagnostics remain in external logs, not suppressed.
 Separate UI disposition is implementation-owned, not independent acceptance.
 
+P08-T02 first frozen candidate 28945896 failed only configured API mypy on the
+new request callback lambda overload inference; other sixteen groups passed.
+Original requested output `ui-draft-01` and its failed receipt remain immutable.
+Explicit typed Playwright Request callback is directly coupled harness repair
+inside P08, not another domain correction cycle or Review. Configured API
+checks precede refreeze; final full gate requires fresh `ui-draft-02`, with
+all seventeen groups rerun rather than reusing partial results.
+Explicit Request callback now asserts parsed JSON object shape before recording
+it. Configured full API Ruff/format and strict mypy pass (62 files); actual
+Chromium refresh/paging case passes again, two clean axe scopes. The first
+typed callback attempt's optional JSON-body type error is retained, not hidden.
+No runtime/source behavior changed after initial UI freeze. Final refreeze and
+fresh all17 are pending; final results remain external.
+
 P08-T02 requires privacy-safe commit, unchanged all17 at fresh base/external
 directory, fresh verification and external exact-head handoff. Stop before push
 for coordinator assessment. Original research, Revise critique, Partial / Not

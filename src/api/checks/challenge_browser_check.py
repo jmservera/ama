@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from checks.regulatory_ux_check import AXE_SHA256, scan
-from playwright.sync_api import APIResponse, Route, expect, sync_playwright
+from playwright.sync_api import APIResponse, Request, Route, expect, sync_playwright
 from test_resident_api import ResidentApi
 
 
@@ -351,15 +351,16 @@ def run_refresh_draft(axe_path: Path) -> dict[str, Any]:
             writes: list[dict[str, Any]] = []
             dialogs: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
-            page.on(
-                "request",
-                lambda request: (
-                    writes.append(request.post_data_json)
-                    if request.method == "POST"
+            def record_write(request: Request) -> None:
+                if (
+                    request.method == "POST"
                     and request.url == fixture.base + "/api/cases/ZF-1/resident"
-                    else None
-                ),
-            )
+                ):
+                    body = request.post_data_json
+                    assert isinstance(body, dict), "Challenge POST must contain a JSON object"
+                    writes.append(body)
+
+            page.on("request", record_write)
             page.goto(fixture.base + "/app")
             page.locator("#email").fill("sam@example.test")
             page.locator("#pw").fill("synthetic-only")

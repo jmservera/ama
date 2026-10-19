@@ -17,8 +17,8 @@
   "confirmed_decisions": [
     {
       "decision": "Owner at 2026-10-19T23:08:41Z authorizes ONE bounded UI correction of duplicate off-page forms; no publication or replacement Review.",
-      "status": "P08-T01-complete-P08-T02-freeze-pending",
-      "evidence": "Current user directive; clean unpushed 12800a69 and published PR418 b4cd1c1 verified. Actual review 5578292301 retrieved. Actual failing-first duplicate forms/labels; four Chromium journeys/nine scoped scans pass; three HTTP pass/no skips; JS and browser style pass. Separate UI disposition, original outcomes immutable. Fresh all17 pending at freeze; final state external."
+      "status": "P08-T01-complete-P08-T02-refreeze-pending",
+      "evidence": "First frozen 28945896 all17: sixteen groups pass; API mypy failed new request lambda. Failed 01 receipt SHA256 b3bbb1fb888ef7d4f783713cd065e3f47687fdfa7e3e89fa4642f76bad673de7 preserved. Same P08 harness now has explicit Request callback and JSON object assertion; configured full API Ruff/format/mypy pass 62 files and actual Chromium refresh case passes again. No runtime source change or replacement Review. Final fresh full17 at 02 pending; post-freeze state external."
     },
     {
       "decision": "P07 backend frozen all17 and independent assessment completed.",
@@ -100,7 +100,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P08-T02: privacy-safe freeze commit, unchanged fresh all17/receipt verification and external exact-head handoff; stop before push for coordinator independent incremental assessment. No replacement Review or further correction cycle."
+    "action": "P08-T02: complete directly coupled callback typing, configured API checks, substantive refreeze and fresh unchanged all17 in ui-draft-02; preserve failed ui-draft-01 receipt and original outcomes. Stop before push for coordinator independent incremental assessment."
   },
   "prioritized_follow_ups": [
     {

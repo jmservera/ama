@@ -103,3 +103,27 @@ No replacement Review, new PR, remote status/settings/rescore/empty commit,
 merge or further cycle. Refs #220 only; empty closing references, whole issue
 OPEN/partial. Local checks do not establish full WCAG, human, tenant or
 operational acceptance.
+
+## Directly coupled harness typing and preserved first gate failure
+
+First frozen UI 28945896499c17ed494db6fe5c28f21d1174a9fa ran the requested
+all17 at `ui-draft-01`. Sixteen groups passed; project-api configured strict
+mypy failed the new request lambda's overloaded event inference, primary
+`0033-project-api.log`. Failed receipt remains unchanged, SHA256
+b3bbb1fb888ef7d4f783713cd065e3f47687fdfa7e3e89fa4642f76bad673de7.
+This is not a passing publication receipt.
+
+Safe repair inside the same P08 regression harness uses explicit Playwright
+Request typing and asserts the parsed POST body is a dictionary before recording
+it. No runtime code/backend/UI design change, new domain correction cycle,
+Review, exemption or test removal. The intermediate optional-body type failure
+is preserved in `typed-final.log`.
+
+`typed-final-02.log` and `refresh-draft-typed-final-02.json` prove the final
+harness: configured full API Ruff/format and strict mypy pass (62 files);
+actual Chromium refresh/paging passes again, two zero-violation/incomplete
+pinned scopes and unchanged exact write counts. Refreeze by new substantive
+commit, not amend. Full final all17 must rerun in fresh external
+`/tmp/ama-220-rpi-20261019-ui-draft-02`, preserving 01 and its failure;
+no reuse of sixteen partial groups. Final gate/verification/state stay external.
+Publication and independent exact-head assessment remain pending.
