@@ -39,6 +39,18 @@ real SQL/AI/browser/role evidence remain unmet. Existing Front Door and `ama`
 are retained. Historical observations/proposals below remain dated history,
 not silently revalidated live outcomes or authorization for another allocation.
 
+Later cycle2 source disposition: the template's original unrestricted outbound
+defaults were rejected. Explicit private-ACR/platform exceptions and deny-all
+outbound now replace that policy, without changing inbound/private-backing or
+exact-RG/resource guards. See the
+[runbook policy](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2)
+for exact addresses/ports and Azure platform exceptions. No package Internet
+access, broad service-tag allow or FQDN-filtering claim is permitted. The stock
+image has no proven private/offline build-tool bootstrap, so this remains a
+capacity- and bootstrap-blocked source design, not an approved deployable
+publisher. No new infrastructure, allocation, preflight, image/pin or live
+acceptance occurred. Original adverse evidence remains unchanged.
+
 ### Source-Grounded Architecture Views (2026-10-14)
 
 [Executive and technical Excalidraw diagrams](../architecture/README.md)

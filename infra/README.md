@@ -69,7 +69,8 @@ No source-bound fresh worker image or initializer activation was achieved.
 | Direct `/`, `/healthz`, `/api/me`, `/app` | Each403 with TLS validation and no redirect following; deny-all restriction, not health/auth acceptance |
 
 The new [allocation candidate](./private-proof-publisher.bicep) is an
-**undeployed, capacity-blocked template**, not a working publisher or one-command
+**undeployed, capacity- and bootstrap-blocked template**, not an approved
+deployable publisher or one-command
 setup. It creates only an exact-group-guarded temporary D2as_v5 VM,32GiB
 StandardSSD OS disk, NIC, outbound-use Standard public IP, deny-all-inbound NSG
 and dedicated `10.40.8.0/28` child subnet in existing `vnet-cutover-test`.
@@ -77,6 +78,52 @@ There is no public inbound allow, backing-service mutation, IAM resource,
 runtime/default-profile change or new credential in the template.
 `test_private_proof_publisher.py` checks the compiled resource/security boundary;
 the precloud focused proof/IAM/setup/staff/auth run passed233tests, zero skips.
+
+#### Explicit outbound restriction (2026-10-19, cycle2)
+
+Independent assessment found that the original template's private-subnet flag
+and inbound denial did not restrict outbound Internet access with a public IP.
+The later source correction keeps the existing resource/guard relationships
+but adds this explicit outbound policy before Azure's default NSG rules:
+
+| Destination | Allowed protocol/port | Purpose and limit |
+| --- | --- | --- |
+| `10.40.4.20/32`, `10.40.4.21/32` | TCP443 | Recorded UK South ACR data/login private endpoints only; not the whole private-endpoint subnet |
+| `AzurePlatformDNS` | TCP/UDP53 | Azure-provided DNS only; no arbitrary public DNS resolver, no DNS QNAME/FQDN content filtering |
+| `168.63.129.16/32` | TCP80/32526 | WireServer/guest agent; Azure exempts this agent communication from NSGs, so this rule documents required traffic rather than proving its isolation |
+| `AzurePlatformIMDS` | TCP80 | Local instance metadata/managed-identity token acquisition, not general ARM/Entra Internet access |
+| Remaining platform DNS/IMDS traffic | Deny all | Explicit service-tag denial after allowed ports, since platform services have special default handling |
+| All remaining outbound destinations/protocols/ports | Deny all | Priority200 overrides default VNet/Internet allows; retained public IP does not override the NSG |
+
+No `Internet`, `AzureCloud`, `Storage` or package-host allow is present.
+NSG service tags cannot filter Ubuntu/Docker package FQDNs. Stock Ubuntu has
+no demonstrated offline Docker/build-tool bootstrap; apt/package downloads are
+intentionally blocked. **Do not allocate/apply this template as a working
+publisher until a separately reviewed private/offline tool-delivery route
+exists**, as well as actual capacity. Do not reopen broad outbound access to
+make bootstrap work. No new firewall, proxy, custom image or package mirror was
+created or validated in this correction.
+
+An operator must independently revalidate the existing VNet's Azure-provided
+DNS configuration and both exact private endpoint IP/resource/DNS relationships
+before any later deployment. Address changes require a reviewed source/test
+update, not wildcard widening or a hosts override. Supported Azure Linux Agent
+versions can redirect extension-package/status traffic through WireServer;
+that behavior and Run Command have not been demonstrated on this pinned image.
+Direct public blob/extension downloads are not allowed as a fallback.
+DNS payloads and permitted registry writes are not content-filtered: these
+rules are a restricted network boundary, not prevention of all exfiltration or
+misuse of a later `AcrPush` grant. Least-privilege grant, reviewed source,
+attended lifetime and independent release approval remain necessary.
+
+Compiled contract and bounded first-match/negative-mutation tests cover the
+intended rule precedence and allowed/denied flows; they do not emulate Azure's
+platform exceptions or prove live network behavior. Cycle2 executed no Azure
+write, deployment, what-if or capacity retry. Both original `SkuNotAvailable`
+results and no-allocation status are unchanged.
+Official sources checked2026-10-19:
+[WireServer and platform DNS exceptions](https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16)
+and [Linux Agent extension network requirements](https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/features-linux).
 
 Do not apply it unchanged on the strength of SKU GET or quota. An authorized
 operator must first re-establish actual capacity with exact provider preflight,
@@ -88,7 +135,7 @@ delta or wrong target must stop apply.
 
 The intended attended lifetime is at most two hours, with reserved cleanup
 time, explicit operator deallocation/deletion on every failure and a verified
-guest poweroff watchdog before package/build work. **Neither expiry tags nor
+guest poweroff watchdog before any future approved offline build work. **Neither expiry tags nor
 guest poweroff guarantee Azure deallocation or stop billing.** No timer was
 armed here because no VM was allocated. Future actual MI creation would require
 one separately checked `AcrPush` assignment only at the existing registry;
@@ -110,8 +157,9 @@ and [Retail Prices API](https://prices.azure.com/api/retail/prices).
 Final readback found zero owned resources; original subnet objects and registry
 public/bypass/policy settings equal the prewrite baseline. SQL, vault, Storage,
 Foundry and IoT public access remain Disabled. No cloud deletion was necessary.
-The private image route is still unresolved; actual capacity or an identified
-existing private publisher is the smallest next technical prerequisite.
+The private image route is still unresolved; actual capacity plus a reviewed
+private/offline build-tool route, or an identified existing prepared private
+publisher, are technical prerequisites.
 #349 still requires an authorized tenant operator's real registration,
 permissions/consent, private credential, staff binding and browser session.
 #358's live secret-preservation round-trip follows this branch. #360d/e remain

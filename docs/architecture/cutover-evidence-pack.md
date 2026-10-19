@@ -81,6 +81,33 @@ preservation round-trip remains separately sequenced. Local SQL/browser/image
 engineering checks and later complete local gate are not live acceptance, full
 WCAG conformance, vulnerability-free certification or human approval.
 
+### Later outbound source restriction (2026-10-19, cycle2)
+
+The independent exacthead assessment closed the earlier resource-relationship
+test gap but found unrestricted outbound defaults in the unused VM template.
+The later source correction permits TCP443 only to recorded private ACR
+`10.40.4.20/.21`, Azure DNS TCP/UDP53, WireServer TCP80/32526 and IMDS TCP80;
+explicit remaining platform-service denials and deny-all outbound precede NSG
+defaults. No backing service, inbound allowance, exact-RG guard, resource
+relationship or IAM resource changed. The retained public IP is not permission
+for Internet/package traffic. See the
+[enforced policy and limitations](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2).
+
+Package bootstrap is intentionally blocked: no verified offline Docker/tool
+route exists for the stock pinned Ubuntu image. This is not an approved
+deployable publisher. NSGs do not provide package FQDN, DNS-payload or registry
+content filtering; WireServer guest-agent traffic is NSG-exempt. Supported
+agent redirection of extensions is documented, not observed here. Exact
+private endpoint identities/IPs and VNet DNS need future independent
+revalidation before allocation. Broad Internet/Storage/AzureCloud access is
+not an accepted workaround.
+
+No Azure write/deploy/what-if/new capacity attempt ran in cycle2. Both original
+UK South `SkuNotAvailable` results, zero allocations, old image digests,
+Graph403/direct403 and all tenant/privacy/human gates remain unchanged.
+Original Research, critique and Not accepted Review remain immutable; later
+source/mutation evidence does not retroactively accept that original outcome.
+
 ## Credential Preservation Offline Follow-Up (2026-10-17)
 
 Refs #358. This is a focused continuation of merged #356/#352, based on

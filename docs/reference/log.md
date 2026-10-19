@@ -6451,3 +6451,23 @@ metadata when the knowledge base was created.
   restrictions/blockers, not actual health/browser/role/SQL/AI acceptance.
   #360d/e stay unmet, Front Door/old stack/ama retained, #358 follows separately.
   No original case, owner memory or private dataset change.
+
+## [2026-10-19] change | Issue360 cycle2 explicit publisher outbound boundary
+
+* Rejected the unused publisher template's unrestricted default outbound policy.
+  Added exact private-ACR HTTPS and Azure platform DNS/agent/IMDS exceptions,
+  explicit remaining platform-service denials and deny-all outbound before
+  default VNet/Internet rules. Existing inbound, private backing, exact-RG and
+  connected-resource guards remain unchanged.
+* Updated the [runbook policy](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2),
+  [evidence disposition](../architecture/cutover-evidence-pack.md#later-outbound-source-restriction-2026-10-19-cycle2),
+  ADR0002 and index. Stock-image package bootstrap is intentionally blocked;
+  NSGs cannot filter package FQDNs or DNS/registry content. Platform exceptions
+  and unsupported live/security claims remain explicit.
+* Eight focused and367 complete infra tests pass without skips. External
+  compiled before/after evidence reproduces acceptance of the unsafe original
+  and rejection by the new policy checks; all18 outbound mutants reject.
+  These are local engineering results, not live NSG or release acceptance.
+  No Azure write/deploy/what-if/capacity attempt, allocation, image publication,
+  tenant/data operation or human approval occurred. Both original SKU failures
+  and original Research/critique/Not accepted Review remain unchanged.

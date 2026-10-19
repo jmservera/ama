@@ -21,6 +21,15 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For issue #360 cycle2, the
+[private publisher outbound policy](../../infra/README.md#explicit-outbound-restriction-2026-10-19-cycle2)
+and [later evidence disposition](../architecture/cutover-evidence-pack.md#later-outbound-source-restriction-2026-10-19-cycle2)
+record explicit private-ACR/platform egress followed by outbound denial.
+NSGs do not filter package FQDNs or DNS/registry payloads; platform exceptions
+remain documented. Package bootstrap is intentionally blocked rather than
+allowing broad Internet/Storage traffic. No Azure attempt, allocation,
+publication or live/human acceptance is inferred; original evidence is retained.
+
 For issue #137, the [dated pilot capability and quota evidence](../../infra/README.md#read-only-pilot-capability-and-quota-evidence-2026-10-18-refs-137)
 records 2026-10-18 management-plane checks and their 2026-10-19 identical-query
 reproduction, bound to byte-identical template requests at both recorded bases.

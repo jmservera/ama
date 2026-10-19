@@ -198,3 +198,87 @@ The corrected candidate and this evidence will be committed before running all17
 groups with caller PATH, fresh external output and fixed heavy lock.
 Final exact HEAD/receipt/group totals and post-freeze state must stay external;
 no later commit, push, PR, repeated Review or live acceptance is authorized.
+
+## P01-T05: Coordinator-Selected Outbound Continuation (Cycle2)
+
+Starting clean HEAD9f552eda3efd83443e36384febfda4cf538df023 and freshly fetched
+unchanged base634a024d97d2da7168b8a7d5f343ab26e6108cf3. Original/cycle1
+processes exited; no concurrent implementation. Independent exacthead reviewer
+84baed3f-578f-4ab8-9a61-3da35b0efc69 verified RV-001 closed and actual prior
+full receipt, then found a new Medium blocker: no explicit outbound restrictions.
+This later disposition does not rewrite the original Not accepted Review.
+
+Plan/details reconciled before source changes. Approved boundary is the
+publisher Bicep, existing compiled test module, directly related documentation
+and current RPI artifacts. First execution is explicit private-ACR/platform
+egress plus deny-all, without changing exact-RG/relationship guards.
+No safe package FQDN enforcement exists in NSGs; retain blocked package
+bootstrap rather than broad Internet/Storage/AzureCloud access or new complex
+infrastructure. Retain public-IP relationship but deny general Internet use.
+Planned validation: compiled flow contracts and actual before/after mutations,
+focused/full infra externally, then frozen commit and fresh isolated17group gate.
+Previous receipt becomes historical/invalid for changed source. No Azure
+writes/deploy/what-if/capacity attempts or new Review. Original capacity/Graph/
+live403/tenant/privacy/human boundaries persist.
+
+Immutable Research SHA256:
+379ec0676976abe5b4ee52aa24e4d334ee747ebeeefb5411e58e8fe29038c315.
+Original critique/Review hashes above remain authoritative and unchanged.
+
+### P01-T05 Implemented Boundary and Actual Mutation Evidence
+
+Bicep now permits only TCP443 to recorded private ACR10.40.4.20/.21,
+AzurePlatformDNS TCP/UDP53, WireServer TCP80/32526 and AzurePlatformIMDS TCP80.
+Explicit platform DNS/IMDS denials and priority200 deny-all outbound precede
+default VNet/Internet allows. No public package/Storage/AzureCloud/ARM/Entra
+allow. Existing exact-RG guard, all resource connections, inbound denial and
+private backing remain intact. Retained PIP cannot override the deny.
+
+Relevant current-state clarification preserves the coordinator's approved
+intent: NSGs cannot filter package FQDNs; package/bootstrap is blocked pending
+a separately reviewed private/offline tool route. No new firewall/proxy/image
+service is justified or created. Supported-agent WireServer redirection is
+officially documented but unverified here, and agent WireServer traffic is
+NSG-exempt. DNS/registry payloads and authorized push misuse are not filtered.
+Runbook/ADR/evidence/index/log explicitly retain those limitations and future
+private endpoint/DNS identity revalidation. Original adverse history retained.
+
+Actual source compilation before/after:
+
+| Executed boundary | Result |
+| --- | --- |
+| Original9f552eda template with its original suite | 5/5 pass, reproducing inadequate outbound protection |
+| Original template with new2 policy/flow checks | Both reject,18 assertion failures including flow subtests; no runner errors/skips |
+| Corrected compiled template with full corrected suite | 8/8 pass, including original16 guard/relationship and new18 outbound mutation subtests |
+| Same compiled remove-all-outbound mutant | Original5 tests pass; corrected policy2 checks reject |
+| All18 corrected compiled outbound mutants | 18 rejected,0 survivors,0 errors/skips |
+| Focused infra / complete infra discovery | 8 /367 tests pass,0 skips, shared fixed heavy lock |
+
+Mutations cover absent/late/allow/TCP-only/wrong-target/wrong-source deny,
+whole-subnet/Internet registry widening, wildcard ports/protocols, arbitrary
+DNS/agent/IMDS endpoints, missing explicit platform denials/registry permit,
+all outbound rules removed and inserted Internet allow. Tests inspect compiled
+rules and bounded first-match flows including default65000/65001 allows,
+private lateral access, public80/443/53/22/UDP, IPv6, exact ACR/platform ports
+and wrong source. This is not an Azure platform emulator or live security proof.
+
+Concrete compiled fixtures, original source bytes, individual assertion logs
+and reproduction harness are external:
+/tmp/issue360-rg-correction2/mutation-evidence.json and mutation-evidence.py.
+Focused/full logs: focused.log and infra-all.log in that directory.
+P01-T05 checked with this evidence. Original Research/critique/Review SHA256
+rechecked unchanged. P01-T02/P02-T01/P02-T02 remain blocked; both actual
+SkuNotAvailable preflights/no allocations, Graph403/direct403 and human gates
+are unchanged. No cloud attempt, no repeated critique/Review or acceptance.
+
+### Cycle2 Frozen-Candidate Preparation
+
+Authenticated gh api user resolved id8036360/login jmservera for repository-local
+noreply author and committer. Fresh main must remain reviewed634a024d before
+commit/gate and on final receipt verification; stop for coordinator if changed.
+Commit this source and dated evidence, then run actual17group gate in a new
+external output with env credential isolation, full host Node PATH plus
+/tmp/rpi-413-tools first, pip/no uv and /tmp/ama-rpi-heavy.lock. No outside
+heavy concurrency. No postgate source/commit, push/PR/merge/settings/issue
+change. Final receipt, matrix counts/limits and post-freeze state stay external
+to avoid self-reference. Earlier gate is not valid for this corrected source.

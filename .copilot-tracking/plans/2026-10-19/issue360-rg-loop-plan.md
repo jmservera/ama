@@ -12,15 +12,18 @@ Publish the reviewed proof layer through one ephemeral same-VNet x64 VM, then
 pin only the existing initializer image after actual digest pull/run verification.
 Research rules out an existing standalone publisher, unsupported UK South ACR
 pool and restricted B2s; available B2als_v2 has quota and retail pricing.
-Use a dedicated subnet/deny-inbound NSG and public IP for outbound only.
+Use a dedicated subnet/deny-inbound NSG with explicit private-registry and
+platform outbound rules followed by deny-all outbound. No package Internet
+egress is permitted; the retained public IP does not authorize Internet access.
 No public backing-service changes, tenant writes or historical SQL initialize.
 Real tenant/role/browser/AI acceptance may remain blocked and edge must remain.
 Status: implementation executed with provider-capacity blocker after direct
 critique dispositions (original verdict Revise retained, not overwritten).
 The actual B2als_v2 and D2as_v5 preflights both failed capacity restriction.
 No resources allocated; dependent image publication and pin remain unexecuted.
-Coordinator-selected RV-001 continuation now implements compiled boundary
-regressions with actual offline mutation evidence. Original critique/Review
+Coordinator-selected cycle2 now restricts outbound source policy and adds
+compiled egress regressions with actual offline mutation evidence. Package
+bootstrap remains blocked, not a deployable/working publisher. Original critique/Review
 remain unchanged; this is not acceptance of the blocked live objective.
 
 ## Sources
@@ -36,6 +39,9 @@ Live #360/#349/#358 body/comments retrieved 2026-10-19.
 * Prefer existing publisher; new temporary infrastructure needs availability,
   pricing, bounded lifetime, minimal grants and exact owned cleanup.
 * No push/PR: coordinator independently assesses frozen HEAD/base/full receipt.
+* Cycle2 explicitly rejects unrestricted outbound; no Azure writes, what-if or
+  capacity attempts. Prefer blocked package bootstrap over broad service-tag
+  Internet access or unjustified new filtering infrastructure.
 * #349 tenant/human gates persist; #358 follows this branch without shared edits.
 
 ## Goals
@@ -57,6 +63,14 @@ Front Door retirement, subscription scheduling resource or broad IAM.
 New resources: uniquely named owned VM (system MI), OS disk, NIC, NSG, public IP,
 dedicated subnet and one registry-scoped AcrPush assignment. No other assignment.
 NSG denies all inbound (including SSH); Run Command is management transport.
+Outbound permits TCP443 only to recorded ACR private endpoints10.40.4.20/.21,
+Azure platform DNS TCP/UDP53, WireServer TCP80/32526 and IMDS TCP80. Explicit
+platform DNS/IMDS deny rules and final deny-all override ordinary defaults.
+NSGs cannot filter package FQDNs or WireServer guest-agent traffic; platform
+exceptions and DNS/registry misuse remain explicit limitations. No apt,
+Docker/package download or general ARM/Entra/Storage/AzureCloud allow exists.
+The pinned stock image has no proven offline build-tool bootstrap: P01-T02 and
+P02-T01 remain blocked pending a separately reviewed private/offline tool route.
 Use pinned Ubuntu image, researched fallback D2as_v5, 32GiB StandardSSD,
 existing VNet/registry. Both actual preflights are now capacity-blocked.
 Provision a two-hour guest poweroff watchdog before package/network operations;
@@ -93,6 +107,9 @@ No concurrent heavy commands outside /tmp/ama-rpi-heavy.lock on shared host.
 5. Owned resource/assignment deletion and ama/old stack preservation verified.
 6. Honest #360 criterion table separates source, owner authority and live outcomes.
 7. One original Review retained; clean commit and all17group gate external receipt.
+8. Explicit compiled outbound allowlist/deny precedence and behavioral negative
+   cases reject Internet/general-VNet/public-Storage/package destinations.
+   This is source-contract evidence, not live NSG, DNS-content or package proof.
 
 ## Test Ownership and Locked Targets
 
@@ -115,6 +132,12 @@ Full gate adds all existing SQL/browser/images/scans without claiming live appro
   mutation evidence. Five focused/364 complete infra tests pass, zero skips;
   original tests accept14/16 mutants, corrected tests reject16/16.
   Fresh final commit/full local gate evidence remains external and pending.
+<!-- rpi:task id=P01-T05 -->
+* [x] P01-T05: Cycle2 restrict outbound, document blocked package bootstrap,
+  preserve existing guards/relationships, capture compiled mutation evidence
+  and focused infra results externally. Eight focused/367 infra pass, no skips;
+  all18 outbound mutants reject, unsafe original passes old5 tests but fails
+  new policy checks. Final clean commit/fresh full gate remain external.
 * [ ] P01-T02: BLOCKED: private plan/inventory generated, both exact provider
   preflights refused capacity; allocation/assignment/watchdog not executed.
 
@@ -155,6 +178,17 @@ coverage by the static all-Bicep parser. No test removal/parser exclusion.
 
 ## Follow-Up Items
 
+Cycle2 supersedes cycle1's test-only write boundary for P01-T05 only.
+Authorized targets: publisher Bicep, its existing test module, directly related
+runbook/ADR/evidence/KB routing and current plan/details/changes/state.
+Independent exacthead reviewer84baed3f-578f-4ab8-9a61-3da35b0efc69 verified
+RV-001 closed and the prior full receipt, but found a new Medium blocking
+unrestricted outbound source policy. No repeated Research, critique or Review.
+The previous receipt is invalidated by this correction. Existing P01-T04
+completion evidence and original adverse artifacts remain historical.
+No live package route is approved: keep bootstrap blocked rather than allow
+Internet, AzureCloud, Storage service tags or pretend NSGs filter FQDNs.
+
 Review RV-001 is now explicitly selected by the coordinator for bounded
 rpi-implement continuation of this same task (correction cycle1).
 Only the existing test module and current RPI planning/state/changes artifacts
@@ -188,9 +222,11 @@ failed application-read probe. #358 real KV preservation round-trip follows.
 ## Handoff
 
 The one original Review is complete / Not accepted and unchanged.
-Coordinator-selected RV-001 source-test correction is implemented; no repeated
-Review. P01-T02/P02-T01/P02-T02 remain blocked, not complete.
-Final corrected commit/full17gate remain to run; authoritative receipt and
+Cycle2 P01-T05 outbound source correction is implemented; no repeated
+Review. P01-T02/P02-T01/P02-T02 remain blocked by actual capacity and unproven
+private/offline build-tool bootstrap, not complete. No approved deployable
+publisher or live security acceptance is claimed.
+Final cycle2 commit/full17gate remain to run; authoritative receipt and
 post-freeze state stay external. Coordinator independently assesses exact
 HEAD/base/receipt and primary evidence before publication. Changes path:
 .copilot-tracking/changes/2026-10-19/issue360-rg-loop-changes.md.

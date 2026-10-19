@@ -15,6 +15,45 @@ bounded-evidence Review is Complete / Not accepted and immutable.
 The coordinator-selected RV-001 continuation adds five focused/364 complete
 infra passes, zero skips; no live release acceptance or publication.
 
+## Coordinator-Selected Outbound Continuation (Cycle2)
+
+<!-- rpi:task id=P01-T05 -->
+P01-T05 starts from clean9f552eda3efd83443e36384febfda4cf538df023,
+base634a024d97d2da7168b8a7d5f343ab26e6108cf3, after prior process exit.
+Reviewer84baed3f-578f-4ab8-9a61-3da35b0efc69 closed RV-001 but identified
+unrestricted default outbound with public IP. Change only publisher Bicep/tests,
+directly related current documentation and RPI artifacts. Preserve original
+research/critique/Review bytes and existing guards/resource relationships.
+
+Enforce TCP443 to historical private ACR10.40.4.20/.21 only, platform DNS53
+TCP/UDP, WireServer TCP80/32526 and IMDS TCP80, then explicit platform
+DNS/IMDS denials and deny-all outbound before default NSG rules. Private IP
+identity/DNS/VNet DNS configuration must be independently revalidated before
+any future deployment; fixed addresses are not endpoint discovery or attestation.
+WireServer is NSG-exempt; DNS tag rules are port/IP policy, not QNAME filtering.
+No public package, Storage, AzureCloud, ARM or Entra service-tag allow.
+Run Command agent redirection depends on supported guest-agent behavior and
+is unverified on the pinned image. Stock Ubuntu Docker/package bootstrap is
+blocked until a separately reviewed private/offline route exists. No new
+firewall/proxy/image service is introduced or implied to work.
+
+Validation: actual compiled contract, first-match outbound flow cases, bounded
+negative mutations compared before/after externally, focused plus full infra.
+Then clean commit and fresh actual17group gate with credential isolation, full
+host PATH and /tmp/rpi-413-tools first, pip/no uv, shared fixed heavy lock.
+No Azure command, what-if, provider attempt, push/PR/merge or repeated Review.
+
+P01-T05 implementation complete: eight focused tests and367 complete infra
+tests pass, zero skips. Existing16 relationship/guard mutants stay protected;
+18 additional outbound mutants reject. Actual original compiled template
+passes original5 tests while both new policy checks reject it (18 assertion
+failures including unsafe flow subtests, zero runner errors/skips). The
+same remove-all-outbound compiled mutant passes original5 and fails corrected
+policy checks. Corrected complete baseline passes8. Evidence and reproduction:
+/tmp/issue360-rg-correction2/mutation-evidence.json and mutation-evidence.py;
+focused.log and infra-all.log. No live network enforcement is claimed.
+Clean commit and fresh17group gate/receipt remain external post-freeze steps.
+
 ## Coordinator-Selected RV-001 Continuation (Correction Cycle1)
 
 P01-T04 is the only new active implementation boundary, after original
@@ -99,8 +138,10 @@ Basv2 quota0/100. Actual provider preflight refused capacity, as did separately
 researched D2as_v5 (2CPU/8GiB/x64, DASv5 quota0/100). Final undeployed template
 fixes D2as_v5; no actual allocation availability is claimed.
 Pinned Ubuntu Jammy version 22.04.202610170. Dedicated new 10.40.8.0/28 within
-existing 10.40.0.0/16, no existing overlap. Public IP enables outbound apt/agent
-only, no NSG inbound allow. Preview must not change old subnets/resources,
+existing 10.40.0.0/16, no existing overlap. Retained public IP does not bypass
+explicit deny-all outbound. Apt/package Internet access is forbidden; platform
+and private ACR flows alone are allowed. Bootstrap remains blocked, not proven
+ready by the pinned stock image. No NSG inbound allow. Preview must not change old subnets/resources,
 backing settings or default profile. Reject Deletes/Modifies outside the new
 subnet and exact owned resources. Do not deploy if allocation/cost remains unknown.
 Write exact created IDs to private inventory immediately; partial apply still

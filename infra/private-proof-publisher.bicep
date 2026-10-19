@@ -56,6 +56,110 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
           destinationPortRange: '*'
         }
       }
+      {
+        name: 'allow-private-acr-https'
+        properties: {
+          priority: 100
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '10.40.8.0/28'
+          sourcePortRange: '*'
+          destinationAddressPrefixes: ['10.40.4.20/32', '10.40.4.21/32']
+          destinationPortRange: '443'
+        }
+      }
+      {
+        name: 'allow-platform-dns-tcp'
+        properties: {
+          priority: 110
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '10.40.8.0/28'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzurePlatformDNS'
+          destinationPortRange: '53'
+        }
+      }
+      {
+        name: 'allow-platform-dns-udp'
+        properties: {
+          priority: 120
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Udp'
+          sourceAddressPrefix: '10.40.8.0/28'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzurePlatformDNS'
+          destinationPortRange: '53'
+        }
+      }
+      {
+        name: 'allow-wireserver-agent'
+        properties: {
+          priority: 130
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '10.40.8.0/28'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '168.63.129.16/32'
+          destinationPortRanges: ['80', '32526']
+        }
+      }
+      {
+        name: 'allow-platform-imds-http'
+        properties: {
+          priority: 140
+          direction: 'Outbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '10.40.8.0/28'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzurePlatformIMDS'
+          destinationPortRange: '80'
+        }
+      }
+      {
+        name: 'deny-other-platform-dns'
+        properties: {
+          priority: 150
+          direction: 'Outbound'
+          access: 'Deny'
+          protocol: '*'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzurePlatformDNS'
+          destinationPortRange: '*'
+        }
+      }
+      {
+        name: 'deny-other-platform-imds'
+        properties: {
+          priority: 160
+          direction: 'Outbound'
+          access: 'Deny'
+          protocol: '*'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: 'AzurePlatformIMDS'
+          destinationPortRange: '*'
+        }
+      }
+      {
+        name: 'deny-all-outbound'
+        properties: {
+          priority: 200
+          direction: 'Outbound'
+          access: 'Deny'
+          protocol: '*'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '*'
+        }
+      }
     ]
   }
 }

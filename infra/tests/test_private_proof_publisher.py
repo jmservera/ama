@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import unittest
 from copy import deepcopy
+from ipaddress import ip_address, ip_network
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,8 +76,9 @@ class PrivatePublisherTests(unittest.TestCase):
         self.assertEqual(subnet["properties"]["addressPrefix"], "10.40.8.0/28")
         self.assertFalse(subnet["properties"]["defaultOutboundAccess"])
         rules = self.resource("Microsoft.Network/networkSecurityGroups")["properties"]["securityRules"]
-        self.assertEqual(len(rules), 1)
-        self.assertEqual(rules[0]["properties"], {
+        inbound = [rule for rule in rules if rule["properties"]["direction"] == "Inbound"]
+        self.assertEqual(len(inbound), 1)
+        self.assertEqual(inbound[0]["properties"], {
             "priority": 100, "direction": "Inbound", "access": "Deny", "protocol": "*",
             "sourceAddressPrefix": "*", "sourcePortRange": "*",
             "destinationAddressPrefix": "*", "destinationPortRange": "*",
@@ -94,6 +96,143 @@ class PrivatePublisherTests(unittest.TestCase):
         self.assertEqual(public_ip["name"], "[format('{0}-ip', variables('stem'))]")
         self.assertEqual(public_ip["sku"]["name"], "Standard")
         self.assertEqual(public_ip["properties"]["publicIPAllocationMethod"], "Static")
+
+    def test_outbound_contract_has_only_private_acr_and_platform_exceptions(self):
+        rules = self.resource("Microsoft.Network/networkSecurityGroups")["properties"]["securityRules"]
+        expected = [
+            ("allow-private-acr-https", 100, "Allow", "Tcp",
+             {"destinationAddressPrefixes": ["10.40.4.20/32", "10.40.4.21/32"]},
+             {"destinationPortRange": "443"}),
+            ("allow-platform-dns-tcp", 110, "Allow", "Tcp",
+             {"destinationAddressPrefix": "AzurePlatformDNS"}, {"destinationPortRange": "53"}),
+            ("allow-platform-dns-udp", 120, "Allow", "Udp",
+             {"destinationAddressPrefix": "AzurePlatformDNS"}, {"destinationPortRange": "53"}),
+            ("allow-wireserver-agent", 130, "Allow", "Tcp",
+             {"destinationAddressPrefix": "168.63.129.16/32"},
+             {"destinationPortRanges": ["80", "32526"]}),
+            ("allow-platform-imds-http", 140, "Allow", "Tcp",
+             {"destinationAddressPrefix": "AzurePlatformIMDS"}, {"destinationPortRange": "80"}),
+            ("deny-other-platform-dns", 150, "Deny", "*",
+             {"destinationAddressPrefix": "AzurePlatformDNS"}, {"destinationPortRange": "*"}),
+            ("deny-other-platform-imds", 160, "Deny", "*",
+             {"destinationAddressPrefix": "AzurePlatformIMDS"}, {"destinationPortRange": "*"}),
+            ("deny-all-outbound", 200, "Deny", "*",
+             {"destinationAddressPrefix": "*"}, {"destinationPortRange": "*"}),
+        ]
+        outbound = {rule["name"]: rule["properties"] for rule in rules
+                    if rule["properties"]["direction"] == "Outbound"}
+        self.assertEqual(len(rules), 9)
+        self.assertCountEqual(outbound, [row[0] for row in expected])
+        for name, priority, access, protocol, destination, ports in expected:
+            with self.subTest(rule=name):
+                self.assertEqual(outbound[name], {
+                    "priority": priority, "direction": "Outbound", "access": access,
+                    "protocol": protocol,
+                    "sourceAddressPrefix": "10.40.8.0/28" if access == "Allow" else "*",
+                    "sourcePortRange": "*", **destination, **ports,
+                })
+
+    def outbound_decision(self, destination, port, protocol="Tcp", source="10.40.8.4"):
+        """Bounded first-match model, not an Azure platform/NSG emulator."""
+        rules = [rule["properties"] for rule in
+                 self.resource("Microsoft.Network/networkSecurityGroups")["properties"]["securityRules"]
+                 if rule["properties"]["direction"] == "Outbound"]
+        for priority, destination_prefix, access in (
+            (65000, "VirtualNetwork", "Allow"), (65001, "Internet", "Allow"),
+            (65500, "*", "Deny"),
+        ):
+            rules.append({
+                "priority": priority, "destinationAddressPrefix": destination_prefix,
+                "access": access, "protocol": "*", "sourceAddressPrefix": "*",
+                "destinationPortRange": "*",
+            })
+
+        def matches(prefix, address):
+            if prefix == "*":
+                return True
+            if prefix == "Internet":
+                return ip_address(address).is_global
+            tags = {"AzurePlatformDNS": "168.63.129.16/32",
+                    "AzurePlatformIMDS": "169.254.169.254/32",
+                    "VirtualNetwork": "10.40.0.0/16"}
+            return ip_address(address) in ip_network(tags.get(prefix, prefix))
+
+        for rule in sorted(rules, key=lambda rule: rule["priority"]):
+            destinations = rule.get("destinationAddressPrefixes", [rule.get("destinationAddressPrefix")])
+            ports = rule.get("destinationPortRanges", [rule.get("destinationPortRange")])
+            if (rule["protocol"] in ("*", protocol)
+                    and matches(rule["sourceAddressPrefix"], source)
+                    and any(matches(prefix, destination) for prefix in destinations)
+                    and any(value in ("*", str(port)) for value in ports)):
+                return rule["access"]
+        self.fail("Missing terminal outbound policy")
+
+    def test_outbound_first_match_denies_public_packages_and_other_private_services(self):
+        allowed = [
+            ("10.40.4.20", 443, "Tcp"), ("10.40.4.21", 443, "Tcp"),
+            ("168.63.129.16", 53, "Tcp"), ("168.63.129.16", 53, "Udp"),
+            ("168.63.129.16", 80, "Tcp"), ("168.63.129.16", 32526, "Tcp"),
+            ("169.254.169.254", 80, "Tcp"),
+        ]
+        denied = [
+            ("1.1.1.1", 443, "Tcp"), ("1.1.1.1", 80, "Tcp"),
+            ("1.1.1.1", 53, "Udp"), ("1.1.1.1", 22, "Tcp"),
+            ("1.1.1.1", 443, "Udp"), ("20.60.1.1", 443, "Tcp"),
+            ("10.40.4.25", 1433, "Tcp"), ("10.40.4.22", 443, "Tcp"),
+            ("10.40.8.5", 22, "Tcp"), ("10.40.4.20", 80, "Tcp"),
+            ("10.40.4.21", 443, "Udp"), ("10.40.4.21", 444, "Tcp"),
+            ("168.63.129.16", 443, "Tcp"), ("168.63.129.16", 54, "Udp"),
+            ("169.254.169.254", 443, "Tcp"), ("169.254.169.254", 80, "Udp"),
+            ("2001:4860:4860::8888", 443, "Tcp"),
+        ]
+        for expected, cases in (("Allow", allowed), ("Deny", denied)):
+            for destination, port, protocol in cases:
+                with self.subTest(destination=destination, port=port, protocol=protocol):
+                    self.assertEqual(self.outbound_decision(destination, port, protocol), expected)
+        self.assertEqual(self.outbound_decision("10.40.4.20", 443, source="10.40.6.4"), "Deny")
+
+    def test_weakened_compiled_outbound_variants_fail(self):
+        mutations = [
+            ("missing-terminal-deny", "deny-all-outbound", None, None),
+            ("terminal-deny-after-defaults", "deny-all-outbound", "priority", 65500),
+            ("terminal-allow", "deny-all-outbound", "access", "Allow"),
+            ("terminal-tcp-only", "deny-all-outbound", "protocol", "Tcp"),
+            ("terminal-internet-only", "deny-all-outbound", "destinationAddressPrefix", "Internet"),
+            ("terminal-wrong-source", "deny-all-outbound", "sourceAddressPrefix", "10.40.6.0/23"),
+            ("broad-registry-destination", "allow-private-acr-https", "destinationAddressPrefixes", ["0.0.0.0/0"]),
+            ("whole-private-subnet", "allow-private-acr-https", "destinationAddressPrefixes", ["10.40.4.0/24"]),
+            ("wildcard-registry-port", "allow-private-acr-https", "destinationPortRange", "*"),
+            ("wildcard-registry-protocol", "allow-private-acr-https", "protocol", "*"),
+            ("arbitrary-dns", "allow-platform-dns-udp", "destinationAddressPrefix", "*"),
+            ("arbitrary-agent", "allow-wireserver-agent", "destinationAddressPrefix", "*"),
+            ("arbitrary-imds", "allow-platform-imds-http", "destinationAddressPrefix", "*"),
+            ("missing-platform-dns-deny", "deny-other-platform-dns", None, None),
+            ("missing-platform-imds-deny", "deny-other-platform-imds", None, None),
+            ("missing-registry-allow", "allow-private-acr-https", None, None),
+            ("remove-all-outbound", None, None, None),
+            ("insert-internet-allow", None, None, None),
+        ]
+        for name, rule_name, key, value in mutations:
+            with self.subTest(mutation=name):
+                probe = type(self)("test_outbound_contract_has_only_private_acr_and_platform_exceptions")
+                probe.template = deepcopy(self.template)
+                probe.resources = probe.template["resources"]
+                rules = probe.resource("Microsoft.Network/networkSecurityGroups")["properties"]["securityRules"]
+                if name == "remove-all-outbound":
+                    rules[:] = [rule for rule in rules if rule["properties"]["direction"] != "Outbound"]
+                elif name == "insert-internet-allow":
+                    rule = deepcopy(next(rule for rule in rules if rule["name"] == "deny-all-outbound"))
+                    rule["name"] = "unsafe-internet"
+                    rule["properties"].update(priority=190, access="Allow", destinationAddressPrefix="Internet")
+                    rules.append(rule)
+                else:
+                    target = next(rule for rule in rules if rule["name"] == rule_name)
+                    if key is None:
+                        rules.remove(target)
+                    else:
+                        target["properties"][key] = value
+                with self.assertRaises(AssertionError):
+                    probe.test_outbound_contract_has_only_private_acr_and_platform_exceptions()
 
     def test_vm_minimal_pinned_no_password_or_external_identity(self):
         vm = self.resource("Microsoft.Compute/virtualMachines")
