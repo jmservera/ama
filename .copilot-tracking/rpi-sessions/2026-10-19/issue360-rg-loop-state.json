@@ -1,0 +1,34 @@
+{
+  "task_id": "360",
+  "task_slug": "issue360-rg-loop",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-19/issue360-rg-loop-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-19/issue360-rg-loop-plan.md",
+    "details": ".copilot-tracking/details/2026-10-19/issue360-rg-loop-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-19/issue360-rg-loop-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-19/issue360-rg-loop-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-19/issue360-rg-loop-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run the full ordered RPI loop automatically on the owner-named branch/base", "status": "confirmed", "evidence": "2026-10-19 caller instruction"},
+    {"decision": "RG ama resource operations authorized, never delete RG or weaken private backing services", "status": "confirmed", "evidence": "2026-10-19 owner direction"},
+    {"decision": "Research executed, Planning Readiness Ready; one original critique executed Revise, five direct dispositions applied without repeat", "status": "ready", "evidence": ".copilot-tracking/plans/2026-10-19/issue360-rg-loop-plan.md Critique Disposition"},
+    {"decision": "One original postimplementation Review executed Complete; outcome Not accepted, implementation Partial. RV-001 Medium safety-test gap; RV-002/003 High publication and live acceptance residuals. Reviewer did not inspect external primary files; coordinator must do so", "status": "not-accepted", "evidence": ".copilot-tracking/reviews/logs/2026-10-19/issue360-rg-loop-review.md"}
+  ],
+  "blockers": [
+    {"id": "publisher-capacity", "summary": "Both actual UK South B2als_v2 and D2as_v5 preflights failed SkuNotAvailable despite SKU/quota metadata", "resolution": "Require actual provider capacity or identified verified existing private publisher; no speculative allocation"},
+    {"id": "tenant-acceptance", "summary": "Existing Graph credential has no roles/scopes and application-read failed; no authorized interactive session", "resolution": "Authorized tenant operator supplies registration/permissions/consent/private credential/staff; real browser-role-SQL-AI acceptance remains separate"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Preserve original Not accepted Review; freeze bounded candidate and execute full17gate, then coordinator assesses exacthead/base/receipt/primary evidence. No source correction or repeat Review in this task"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "RV-001 strengthen compiled resource-connection/guard negative tests in a later rpi-implement invocation", "rationale": "Small bounded source-test defect with high safety-regression leverage; current template inspected as correctly wired, but passing tests do not assert enforcement connections", "evidence": ".copilot-tracking/reviews/logs/2026-10-19/issue360-rg-loop-review.md RV-001"},
+    {"rank": 2, "task": "RV-002 resolve actual private publisher capacity or identify existing connected publisher", "rationale": "Direct prerequisite for source-bound proof publication and safe initializer pin; no working route proven", "evidence": ".copilot-tracking/changes/2026-10-19/issue360-rg-loop-live-receipt.json"},
+    {"rank": 3, "task": "RV-003 complete issue349 tenant prerequisites and genuine direct-demo acceptance", "rationale": "Independent tenant/human boundary remains after RG authorization", "evidence": "Live issue349 and actual failed Graph read / direct403"},
+    {"rank": 4, "task": "Sequence issue358 real Key Vault preservation round-trip", "rationale": "Shared setup path follows this branch; offline mocks do not satisfy actual round-trip", "evidence": "Live issue358 remaining criterion"}
+  ]
+}

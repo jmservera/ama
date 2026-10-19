@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-19
 ms.topic: how-to
 ---
 
@@ -38,6 +38,85 @@ private production profile. They do not authorize deployment.
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
 ## Deploy
+
+### Bounded Private Publisher Capacity Attempt (2026-10-19, Refs #360)
+
+The owner now authorizes necessary resource operations inside existing `ama`,
+except deletion of the group itself. This supersedes the earlier missing
+publication-route resource authority, **not** the earlier failures or remaining
+technical/human gates. Production defaults and private backing constraints
+remain unchanged. The complete current issue/comments and #349/#358 were read;
+their earlier deliveries were not repeated.
+
+Fresh management reads found Premium ACR in UK South, public access Disabled,
+bypass None, dedicated data endpoint enabled, no agent pool and no existing
+publisher VM in `ama`. The initializer still uses old proof digest
+`ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72`;
+demo API still uses
+`111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d`.
+No source-bound fresh worker image or initializer activation was achieved.
+
+| Actual check on 2026-10-19 | Result and limit |
+| --- | --- |
+| Private ACR task pool support | Official preview region list omits UK South; no pool created or unsupported cross-region subnet assumed |
+| B2s current SKU | `NotAvailableForSubscription`; nominal quota/legacy size listing is not deployability |
+| B2als_v2 and D2as_v5 SKU/quota | Both unrestricted in SKU GET; respective family usage0/limit100; image Ubuntu Jammy x64 Gen2 `22.04.202610170` available |
+| Exact B2als_v2 provider preflight | `InvalidTemplateDeployment / SkuNotAvailable`, capacity restriction |
+| Exact D2as_v5 provider preflight | Same capacity restriction; neither yielded a successful what-if change list |
+| Resource allocation/assignment | Not attempted after preflight refusals; zero owned resources and no deployment record found |
+| Publish/pull/run/pin | Not run; no stale image was republished or pinned |
+| Existing Graph credential | Application token has no roles/delegated scopes; application-read probe failed, no directory data returned |
+| Direct `/`, `/healthz`, `/api/me`, `/app` | Each403 with TLS validation and no redirect following; deny-all restriction, not health/auth acceptance |
+
+The new [allocation candidate](./private-proof-publisher.bicep) is an
+**undeployed, capacity-blocked template**, not a working publisher or one-command
+setup. It creates only an exact-group-guarded temporary D2as_v5 VM,32GiB
+StandardSSD OS disk, NIC, outbound-use Standard public IP, deny-all-inbound NSG
+and dedicated `10.40.8.0/28` child subnet in existing `vnet-cutover-test`.
+There is no public inbound allow, backing-service mutation, IAM resource,
+runtime/default-profile change or new credential in the template.
+`test_private_proof_publisher.py` checks the compiled resource/security boundary;
+the precloud focused proof/IAM/setup/staff/auth run passed233tests, zero skips.
+
+Do not apply it unchanged on the strength of SKU GET or quota. An authorized
+operator must first re-establish actual capacity with exact provider preflight,
+current cost, unique-name absence, exact subscription/group/VNet/registry IDs,
+unchanged subnet/policy baselines and a successful owned-only Incremental
+what-if. Preserve the exact input hashes and recovery inventory privately
+before writes. An unexpected parent VNet modification, unresolved actionable
+delta or wrong target must stop apply.
+
+The intended attended lifetime is at most two hours, with reserved cleanup
+time, explicit operator deallocation/deletion on every failure and a verified
+guest poweroff watchdog before package/build work. **Neither expiry tags nor
+guest poweroff guarantee Azure deallocation or stop billing.** No timer was
+armed here because no VM was allocated. Future actual MI creation would require
+one separately checked `AcrPush` assignment only at the existing registry;
+none was created. Exact owned cleanup must remove that assignment, VM/OS disk,
+NIC, IP, NSG and child subnet, never existing VNet/identities/data or `ama`.
+Run Command must carry only the reviewed seven-file proof context, not the
+repository, operator token or private roster.
+
+Retail estimates retrieved2026-10-19: Linux B2als_v2 USD0.0425/hour, D2as_v5
+USD0.10/hour, Standard IPv4 IP USD0.005/hour, E4 LRS32GiB disk USD2.64/month plus
+USD0.002/10K operations. Two hours D2as_v5/IP/prorated disk is about USD0.217
+before disk operations, transfer and tax. These are retail estimates, not the
+account's effective bill, hard cap or observed spend. No new resource allocation
+or charge is claimed. Official sources: [agent pools](https://learn.microsoft.com/en-us/azure/container-registry/tasks-agent-pools),
+[explicit outbound](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access),
+[Run Command](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/run-command)
+and [Retail Prices API](https://prices.azure.com/api/retail/prices).
+
+Final readback found zero owned resources; original subnet objects and registry
+public/bypass/policy settings equal the prewrite baseline. SQL, vault, Storage,
+Foundry and IoT public access remain Disabled. No cloud deletion was necessary.
+The private image route is still unresolved; actual capacity or an identified
+existing private publisher is the smallest next technical prerequisite.
+#349 still requires an authorized tenant operator's real registration,
+permissions/consent, private credential, staff binding and browser session.
+#358's live secret-preservation round-trip follows this branch. #360d/e remain
+**UNMET**: no real browser/role/SQL/AI acceptance or Front Door retirement.
+See the [dated evidence delta](../docs/architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19).
 
 ```bash
 python3 infra/scripts/deploy.py --resource-group ama --registry <registry-name> \

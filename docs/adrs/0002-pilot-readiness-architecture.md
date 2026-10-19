@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-19
 ms.topic: reference
 ---
 
@@ -17,6 +17,27 @@ until the open items in [Open items](#open-items) are closed (DH-002, DH-006).
 This ADR amends [ADR 0001](./0001-azure-architecture.md) for the MVP. It does
 not replace the ADR 0001 demonstrator design for the agent, orchestrator and
 import workloads, which remain deferred.
+
+### Private Publisher Capacity Delta (2026-10-19, Refs #360)
+
+The new owner direction authorizes necessary resource operations inside existing
+`ama`, never deletion of the group, public backing access or tenant authority.
+The [bounded runbook](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360)
+and [evidence delta](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19)
+record fresh exact provider preflight refusals for both B2als_v2 and D2as_v5 in
+UK South. Their unrestricted SKU GET and available quota did not establish
+capacity; no publisher was allocated. The private-pool preview region list
+does not establish UK South support. The tested temporary VM allocation
+template is an undeployed candidate, not a new accepted production architecture.
+
+No image was published/pulled/run/pinned, no initializer/settings/identity change
+or secret-preservation round-trip occurred, and no SQL/application/private data
+was read. Current direct HTTPS routes remain deny-all403. Existing application
+credentials lack Graph permission hints and failed bounded application
+discovery, so #349 tenant/interactive acceptance remains separate. #360d/e and
+real SQL/AI/browser/role evidence remain unmet. Existing Front Door and `ama`
+are retained. Historical observations/proposals below remain dated history,
+not silently revalidated live outcomes or authorization for another allocation.
 
 ### Source-Grounded Architecture Views (2026-10-14)
 

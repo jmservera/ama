@@ -6433,3 +6433,21 @@ metadata when the knowledge base was created.
   source/RPI/primary-evidence review plus a final matrix receipt precede any
   later push/PR decision. No cloud writes, private dataset access, original
   case or memory changes, issue mutation or publication.
+
+## [2026-10-19] query | Issue360 bounded RG publication capacity evidence
+
+* Read complete live #360/#349/#358 and fresh secret-free management state.
+  New owner RG-resource authority supersedes missing publication-route
+  permission only; no tenant, data, public-backing or human approval inference.
+* Actual exact provider preflights for B2als_v2 and D2as_v5 both failed UK South
+  capacity despite unrestricted SKU GETs and available quota. No resource,
+  grant, source upload, image build/push/pin or cloud deletion occurred.
+  The tested isolated VM allocation candidate is undeployed, not allocatable
+  proof. Preserve this contradiction and all earlier adverse/historical evidence.
+* Updated [infra runbook](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360),
+  [ADR0002 delta](../adrs/0002-pilot-readiness-architecture.md#private-publisher-capacity-delta-2026-10-19-refs-360),
+  [evidence pack](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19)
+  and KB index. Fresh HTTPS four-route403 and Graph discovery failure are
+  restrictions/blockers, not actual health/browser/role/SQL/AI acceptance.
+  #360d/e stay unmet, Front Door/old stack/ama retained, #358 follows separately.
+  No original case, owner memory or private dataset change.

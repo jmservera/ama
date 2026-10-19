@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-18
+ms.date: 2026-10-19
 ms.topic: overview
 ---
 
@@ -124,6 +124,16 @@ Existing resident routing below remains unchanged.
 | Project documents | [docs/](../) outside this folder | Problem specification and deliverables, governed by the repository instructions |
 
 ## Task Routing
+
+The new #360 bounded RG loop records [actual publisher capacity refusals](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360)
+and the [dated acceptance delta](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19).
+Owner RG-resource authority is resolved, but unrestricted SKU GET/quota did
+not predict successful B2als_v2 or D2as_v5 provider preflight. No allocation,
+grant, image publication/pin or cloud deletion occurred; current direct routes
+remain403 and all backing private. The tested VM allocation template is
+capacity-blocked, not a working publisher. #349 tenant/browser/role/SQL/AI and
+#358 live secret round-trip remain separate; #360d/e and retirement stay unmet.
+Prior adverse/historical evidence is preserved, not re-adjudicated.
 
 The #360 profile-evidence continuation integrates merged quality #387 on main
 3f544fb9 with the exact original infra source/test patch and original critique/
