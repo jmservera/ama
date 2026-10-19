@@ -251,7 +251,7 @@ checks; private identity-backed acceptance remains separate.
 | --- | --- |
 | Per-environment OIDC | Wired with job-local id-token write, no stored pipeline secrets; actual federation/RBAC unverified |
 | Infra PR what-if attached | Trusted trigger and sanitized artifact wired/tested; no live PR what-if executed |
-| Approval and environment parameter sets | Same template/examples, environment configuration guard and approval boundaries implemented; actual reviewer rules/approval and pilot ownership/region unverified |
+| Approval and environment parameter sets | Same template/examples, environment configuration guard and approval boundaries implemented; pilot region `uksouth` and subscription owner @jmservera selected on 2026-10-15; actual reviewer rules/approval, service choices and approved subscription binding remain unverified |
 | Versioned image push and deployment reference | Four image/scan/artifact/digest path implemented/tested; no live build/push/deploy or quarantine release observed |
 | Automatic post-deployment checks | Local HTTP negative/positive tests and fake-command orchestration; live ingress/authentication/SQL/model/restart acceptance unmet |
 | No secret values in logs/repository | Pinned workflows, no stored-secret inputs, captured command output and canary regression checks; end-to-end live log audit not performed |
@@ -773,11 +773,21 @@ untracked parameter file kept alongside `main.bicep` so its relative `using`
 path resolves; never commit the completed file. Do not store secrets there:
 secure inputs use the approved secret-management path.
 
-Current owner direction (2026-10-16) leaves pilot region and subscription
-ownership **open**. It supersedes the 2026-10-15 issue comment for this task;
-no previous region or ownership claim is deployment authority. Pilot locations
-are empty placeholders, not `uksouth` defaults. The `ownerTag` default identifies
-the synthetic exercise resource contact, not the pilot subscription owner.
+The [owner's 2026-10-15 comment](https://github.com/jmservera/ama/issues/137#issuecomment-6192754703),
+verified live on 2026-10-18 and again on 2026-10-19, selects pilot region `uksouth` and subscription
+owner @jmservera. The earlier claim here of a 2026-10-16 superseding decision
+was unsupported and is withdrawn. The live issue's 2026-10-16 delivery comment
+still calls these decisions open, contradicting the earlier owner selection
+without recording a replacement owner decision. That historical comment and
+the issue's stale summary/dependencies are not new owner approval or revocation.
+This selection is not SQL-region,
+zone-redundancy, sizing, cost, deployment or access approval, nor proof that the
+signed-in account is bound to the approved pilot subscription. Pilot locations
+and check references remain empty in the non-deployable example; its comment
+calling all region/ownership choices open is stale, not a later owner decision.
+The example is unchanged. Complete a private copy only after the remaining
+values and real reviewed records exist. The `ownerTag` default remains an
+exercise resource contact, not evidence of subscription authority.
 
 All permitted deployments stay inside the existing resource group `ama`;
 never create or delete a group, deploy subscription governance, change a
@@ -797,9 +807,9 @@ remain an owner design decision, not an executable instruction here.
 | `enableLocks` | `false` | `false` | `true` |
 | `zoneRedundant` (storage ZRS, SQL zone, registry and Container Apps) | `false` | `false` | `false` PLACEHOLDER pending selected-region support and owner decision |
 | Service SKUs | IoT Hub `B1`/1 unit; SQL `GP_S_Gen5`/2 max vCores; Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption | same | same; not a pilot sizing approval |
-| Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults, unverified until region/subscription selected |
+| Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults; catalog checked below, quota and approved subscription binding unknown |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
-| `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs, owner decisions |
+| `location` and `sqlLocation` | `uksouth` candidate, recheck | `uksouth` candidate, recheck | empty PLACEHOLDERs retained; pilot `uksouth` selected, separate SQL region unselected |
 | `regionCheckReference`, `quotaCheckReference` | empty PLACEHOLDERs | empty PLACEHOLDERs | empty PLACEHOLDERs |
 | Deployable as committed | No: complete placeholders/checks privately | No: complete placeholders/checks privately | No: additionally requires pilot decisions |
 
@@ -827,22 +837,105 @@ Recorded region and quota checks (re-run before each deployment; a check in anot
 | Container Apps environment in `swedencentral` | `AKSCapacityHeavyUsage` | 2026-10-08 |
 | Azure SQL in `northeurope` | Not accepting new servers | 2026-10-08 |
 | Model `gpt-4.1-mini` and `gpt-4.1`, `GlobalStandard`, capacity 30 in `uksouth` | Deployed | 2026-10-11 |
-| Zone redundancy support and quota in the owner-selected pilot regions/subscription | Not yet checked: open decisions | none |
-| Pilot subscription quota for Container Apps cores and model capacity | Not yet checked: open item | none |
 
-Historical rows above are discovery evidence, not current checks for another
-subscription or configuration. No fresh Azure check was run for this offline
-change. Before what-if/apply, the owner records a dated result/reference for:
-Container Apps regional/zone availability and managed-environment core quota
-(`az containerapp list-usages --location <region>`); SQL regional provisioning,
-the selected SKU and zone support; IoT SKU/units; and each model/version,
-deployment SKU and capacity (`az cognitiveservices model list --location
-<region>` and `az cognitiveservices usage list --location <region>`).
-Use the relevant provider's capability/quota surfaces, not VM SKU results as
-proof for these services. Record requested/available quantities, zone support,
-reviewer, date and pass/blocked outcome with the exact configuration. Keep
-actual identifiers and raw account output private. Cost authorization and
-pilot subscription ownership remain human decisions, not agent approvals.
+Historical rows above remain discovery evidence, not present capacity.
+
+### Read-only pilot capability and quota evidence (2026-10-18, Refs #137)
+
+Requested source: `612cbed78a35a4ab426571aa7d2aeb0ae6d691dd`,
+unchanged [main.bicep](./main.bicep) (SHA-256
+`daea1e37adc95f704fba7673883e0b4b6c7b65ab00179b59d8473654ab71f42a`),
+the [pilot example](./main.pilot.example.bicepparam) and the
+[Container Apps](./modules/containerapps.bicep), [SQL](./modules/sql.bicep),
+[IoT](./modules/iothub.bicep), [Foundry](./modules/foundry.bicep),
+[storage](./modules/storage.bicep) and [registry](./modules/registry.bicep)
+modules. These request Consumption/internal VNet; SQL `GP_S_Gen5`, maximum
+2 vCores, minimum 0.5, auto-pause 60 minutes; IoT `B1`, one unit; Foundry
+`AIServices`/`S0`, OpenAI `gpt-4.1-mini` and `gpt-4.1`, each version
+`2025-04-14`, `GlobalStandard`, capacity 30; StorageV2 LRS (ZRS if selected);
+registry Premium. These are template requests, not approved pilot sizing.
+
+Initial queries ran on 2026-10-18 with Azure CLI 2.91.0; identical commands
+were reproduced on 2026-10-19 at 06:43 UTC. The table below records the
+2026-10-18 observations; all selected fields and failure categories matched on
+reproduction. No same-day reproduction is claimed. All eight referenced
+source files are byte-identical at the original base above and at the later
+reviewed base `fa659cfd021100f7c64f8ec73bbff76c03adf234`; this byte comparison
+does not redate historical queries or turn them into a new-base deployment.
+The current signed-in default subscription matched the initial query binding and its
+account state was `Enabled`; this does not establish approved pilot subscription
+binding or verify the named owner's permissions. Identifiers and raw results
+remain private. Every remote command had a 55-second timeout and
+`AZURE_EXTENSION_USE_DYNAMIC_INSTALL=no`; no extensions were installed.
+Only management-plane GET/list/show operations ran, without resource enumeration
+or data-plane access. Pass below means only the stated catalog fact, never
+quota approval, reserved capacity, fresh deployability or operational acceptance.
+Unknown is absent/incomplete evidence; Blocked is a failed query.
+
+| Requested region/configuration | Query | Returned support or usage/limit, scope and unit | Result and limitation |
+| --- | --- | --- | --- |
+| `uksouth` Container Apps managed environment, Consumption | R1, R12 | Provider lists UK South; Consumption profile `cores=4`, `memoryGiB=8` | Pass regional/profile listing only. Profile cores are not environment quota or spare cores |
+| Same, zone support | R1, R3 | No UK South zoneMappings returned; location GET `AuthorizationFailed` | Unknown zone support; Blocked detail query, not unsupported/false |
+| Same, environment-core quota | R2 | Subscription/uksouth `ManagedEnvironmentCount`: currentValue=2, usage=2, limit=50; no unit field. No managed-environment Consumption-core metric returned | Unknown core quota. Count is not cores. Other returned metrics listed below are not substitutes |
+| Candidate `uksouth` SQL `GP_S_Gen5`/2 vCores | R4 | Region Available; server 12.0 / GeneralPurpose / `GP_S_Gen5_2`: Available, Serverless, capacity 2, performanceLevel 2 `VCores`; minCapacity 0.5 Default; auto-pause default 60 `Minutes`; `zoneRedundant=true`, `supportedZones=[]`, `zonePinning=false` | Pass exact catalog SKU/zone flag only, not server admission, named-zone availability or separate SQL-region selection |
+| Same, SQL regional quota | R5, R16 | Both subscription/uksouth usage collections `value=[]`; no metric, unit, use or limit | Unknown, not zero quota |
+| `uksouth` IoT Hub `B1`, one unit | R6, R13 | IoT SKU collection `value=[]`; IotHubs provider lists UK South, no UK South zoneMappings | Pass resource-type regional listing only; Unknown exact B1/unit/zone support |
+| Same, IoT regional quota | R7, R14 | Both API versions failed `Bad Gateway` (exit 1) | Blocked; no quota/use/limit/unit established |
+| `uksouth` AIServices S0, both exact models/versions, GlobalStandard/30 each | R8 | Both inference catalog entries present, lifecycle `Legacy`; each SKU capacity default 10, maximum 1000000, minimum/step null; model-level `maxCapacity=3`; rateLimits counts 1 and 1000, each renewalPeriod 60, rules null | Pass catalog match only. Model-level and SKU capacity semantics/units not established; no capacity-30 admission claim or TPM/RPM conversion |
+| Same, separate model-family regional quota | R9, R15 | CLI `[]`; REST `value=[]`. Inference usageNames `OpenAI.GlobalStandard.gpt4.1-mini` and `OpenAI.GlobalStandard.gpt4.1` have no returned usage row/unit | Unknown current use/limit. Do not sum families, use fine-tuning entries, or treat deployment capacity as subscription quota |
+| `uksouth` StorageV2 `Standard_LRS` / optional `Standard_ZRS` | R10 | Exact kind/SKU entries list uksouth, restrictions `[]` | Pass regional SKU listing; not storage quota, redundancy selection or admission |
+| `uksouth` registry Premium | R11, R17 | SKU collection `value=[]`; registries provider lists UK South, no UK South zoneMappings | Pass resource-type listing only; Unknown Premium-specific SKU/zone/quota support |
+
+R2 also returned currentValue/limit (and identical usage):
+`SubscriptionDedicatedNCA100Gpus` 0/0, `SessionPools` 0/50,
+`ExpressEnvironmentCount` 0/500 and `SandboxCores` 0/20000, all with no unit
+field. None establishes the requested managed-environment Consumption-core quota.
+R8's same-name GlobalStandard fine-tuning entries were excluded by inference
+`usageName`. Existing deployments/current use are not available new capacity;
+no existing deployments or per-environment resources were enumerated.
+
+Reproduction command shapes (secret-free; substitute identifiers privately):
+`S=https://management.azure.com/subscriptions/<subscription-id>`.
+For REST rows run `az rest --method get --url "$S/<path>?api-version=<version>"`;
+for all commands use `--only-show-errors -o json` and a 55-second timeout,
+with stdout/stderr redirected to private files, not a public terminal/log.
+CLI subscription-scoped calls below use `--subscription <subscription-id>`;
+provider metadata uses the same current default account.
+
+| Query | Exact command or REST path and version |
+| --- | --- |
+| R1 | `az provider show -n Microsoft.App` |
+| R2 | `az containerapp list-usages --location uksouth --subscription <subscription-id>` |
+| R3 | `providers/Microsoft.App/locations/uksouth?api-version=2025-07-01` |
+| R4 | `providers/Microsoft.Sql/locations/uksouth/capabilities?api-version=2023-08-01` |
+| R5 | `providers/Microsoft.Sql/locations/uksouth/usages?api-version=2023-08-01` |
+| R6 | `providers/Microsoft.Devices/skus?api-version=2023-06-30` |
+| R7 | `providers/Microsoft.Devices/locations/uksouth/usages?api-version=2023-06-30` |
+| R8 | `az cognitiveservices model list --location uksouth --subscription <subscription-id>` |
+| R9 | `az cognitiveservices usage list --location uksouth --subscription <subscription-id>` |
+| R10 | `az storage sku list --subscription <subscription-id>` |
+| R11 | `providers/Microsoft.ContainerRegistry/skus?api-version=2025-04-01` |
+| R12 | `providers/Microsoft.App/locations/uksouth/availableManagedEnvironmentsWorkloadProfileTypes?api-version=2025-07-01` |
+| R13 | `az provider show -n Microsoft.Devices` |
+| R14 | `providers/Microsoft.Devices/locations/uksouth/usages?api-version=2021-07-02` |
+| R15 | `providers/Microsoft.CognitiveServices/locations/uksouth/usages?api-version=2025-06-01` |
+| R16 | `providers/Microsoft.Sql/locations/uksouth/usages?api-version=2021-11-01` |
+| R17 | `az provider show -n Microsoft.ContainerRegistry` |
+
+R3/R7/R14 exited 1; all other listed queries exited 0, including empty
+collections. Missing surfaces received at most two distinct approaches; no
+permission changes, registration, quota requests or tool installs followed.
+Key Vault, monitoring, networking, identity and optional edge capabilities/quota
+were not checked by these receipts. This is not an all-services check.
+
+Human review remains required and unperformed. The pilot example stays
+non-deployable; no real reviewed reference was created or inserted. SQL region,
+redundancy, remaining tier/sizing/network/credential ownership choices and cost/
+deployment/access authorization remain open. No billable inference, device
+creation, deployment/what-if, resource change or data access was performed.
+Issue #137 stays open with its literal remaining criterion unticked; the
+coordinator decides acceptance after review. Rerun checks before any separately
+authorized deployment; a catalog listing or repeat query is not a reservation.
 
 Supply the record references in the private parameter file or with
 `--parameter regionCheckReference=<reviewed-record>` and
@@ -966,10 +1059,11 @@ The Container Registry export policy is set to `enabled` in this mode because AC
 ## Governance controls
 
 Governance as code for issue #147 (ADR 0002 decision 6). For this synthetic
-exercise Juan Manuel Servera is the Legal, Compliance and DPO owner. Current
-direction (2026-10-16) leaves pilot region and subscription ownership open,
-superseding the older selection; resource contacts below do not settle those
-decisions. Agents retrieve, compare, summarize and flag only. Rule activation,
+exercise Juan Manuel Servera is the Legal, Compliance and DPO owner. The
+[verified pilot decision](#environments) selects `uksouth` and subscription
+owner @jmservera only; resource contacts and read-only capability checks do not
+establish subscription binding, deployment or spending authority.
+Agents retrieve, compare, summarize and flag only. Rule activation,
 consent, safety, legal interpretation and financial commitments require named
 human approval; ADR 0005 is accepted for synthetic development only, with real
 owners and sources still a gap before operational reliance.
