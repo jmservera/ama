@@ -6701,3 +6701,14 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+## [2026-10-20] query | Map tile provider licence, cost and privacy options (#119)
+
+* Added the [options review](./research/ux/map-tile-provider-options.md) and a
+  dated ADR 0002 decision 5 delta, and extended the WCAG baseline manual check
+  record with a map list screen-reader protocol.
+* Sources are public vendor and policy pages read 2026-10-20 with no private
+  coordinates. Azure Maps paid rate, Microsoft and OS processor terms, OS plan
+  prices and MapTiler commercial terms could not be verified and are listed.
+* No provider was selected, bought, configured or approved. No screen reader was
+  available on the host, so no screen-reader run is claimed and the human or
+  assistive-technology gate remains unmet. No UI file changed.

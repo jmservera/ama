@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench WCAG 2.2 Conformance Baseline
 description: Proposed target level and scope, first audit, automated check coverage, manual check record template and accessibility statement draft for the workbench (issue #151)
-ms.date: 2026-10-15
+ms.date: 2026-10-20
 ms.topic: reference
 ---
 
@@ -102,6 +102,48 @@ at 320, 390 and 1280 px and 200% text size.
 
 Release rule (proposed, O-3): a release that changes a screen needs the
 affected rows re-run and any new failure recorded or fixed.
+
+### Map list alternative screen-reader check (#119)
+
+Status at 2026-10-20: Not run. The unmet gate is a human or assistive-technology
+run of the map list alternative; it stays open and is not met by any engineering
+check below.
+
+Tools found on the 2026-10-20 local host (Linux, no display, no audio device):
+no screen reader is installed (no NVDA, Orca, VoiceOver, JAWS, eSpeak or
+speech-dispatcher); `at-spi2-core` is present only as a library. Chromium is
+available through Playwright for engineering checks. No axe-core package is
+installed. Installing a desktop screen reader on the shared headless host was
+judged outside scope, so no screen-reader run was attempted and none is claimed.
+
+Existing engineering evidence is not a screen-reader run. In `src/api`,
+`test_charts_and_map_have_accessible_equivalents` only checks that the text
+"Show the map areas as a list" is in the script, and `test_status_regions_exist`
+only checks that status and alert roles and `aria-live` appear in the page
+source. The opt-in real-browser test documented in the API guide for the
+coordinator map list exercises a keyboard route through the list. None of
+these shows what a screen reader announces, and none establishes accessible
+names, focus order after refresh or live-region behaviour.
+
+Protocol for the human run (tester records name, date, tool and browser
+versions, and result in the table above or an attached record):
+
+* Use NVDA with Firefox on Windows or VoiceOver with Safari on macOS, with a
+  synthetic-data session only, at 1280 px and 320 px and 200 percent text.
+* Open Overview, find the map region, then the "Show the map areas as a list"
+  disclosure. Check that it is discoverable by heading, landmark or form
+  navigation, that its name is announced, and that it opens and closes with
+  Enter or Space.
+* At low zoom, check each cluster button announces count and safety count and
+  "Zoom in to this area", that activating it moves the view, and that focus
+  returns to the disclosure summary as designed.
+* At high zoom, check each home link announces name and the non-colour signal
+  label and opens the case.
+* Check the polite status line announces results after a filter or pan, and
+  the alert is announced when the map is unavailable, including with tiles
+  blocked.
+* Record anything unclear, such as focus loss after the list refreshes, as a
+  finding, and do not treat a pass as WCAG conformance.
 
 ## Accessibility statement (draft)
 

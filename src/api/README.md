@@ -2364,7 +2364,9 @@ records the tested/deployed image and identity initialization.
   template result alone is not real-inference acceptance. Nothing is
   sent; there is no live integration with housing or repairs systems.
 * In development the map loads tiles from tile.openstreetmap.org unless
-  `ZF_TILE_URL` is set. No licensed provider has been chosen or tested.
+  `ZF_TILE_URL` is set. No licensed provider has been chosen or tested. See the
+  [tile provider options review](../../docs/reference/research/ux/map-tile-provider-options.md)
+  (#119) for dated, unverified-where-stated licence, cost and privacy options.
 * Local development defaults to local state/documents; Azure selects the
   SQL/Blob backends through configuration. Do not apply local-disk durability
   claims to that deployment or infer tested Blob restoration/erasure from
