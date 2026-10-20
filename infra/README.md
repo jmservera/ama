@@ -2841,6 +2841,17 @@ cleanup. T1 adds no new Azure resource, so its additional cost is the existing
 temporary job and ARM calls; no price is asserted here and the current
 official pricing must be cited in the approved plan.
 
+**Spending gate (correction 2026-10-20, from independent assessment).** Before
+ANY paid start the owner-approved limit is an all-in USD 500 TOTAL for the
+October calendar month, not a generic monthly budget. A start requires accrued
+AND forecast charges and liabilities across the `ama` resource group and all
+other scopes, each recorded with timestamp, scope and source, without double
+counting, and a known, bounded headroom. Current headroom is unknown, and the
+provisional unchanged RG-only projection of USD 535.41 is above the cap. Unknown
+other spend must not be assumed zero, and estimated savings or retirements are
+not authorized. A separate finite costed execution-plan approval remains
+required (expiry 2026-10-25T16:02Z). No cost query was made for this design.
+
 Decisions needed (not resolved here): DN1 privacy/security approval of
 ciphertext and metadata in tags, covering classification, leakage, retention,
 export and log surfaces, readers and policy compliance; DN2 real position count
@@ -2867,7 +2878,7 @@ make no success claim.
 | 6 | Relay RBAC evidence: effective read, write and delete paths on the relay job at RG, resource, inherited and privileged levels, exported before and after a run | Tenant administrator and IAM operator | Unexpected writer, unreviewed grant |
 | 7 | Relay identifiers recorded privately: exact job resource ID, worker identity, expected immutable image digest with verified provenance, tag count below capacity | Operator | Digest unpinned, provenance missing, capacity short |
 | 8 | DN1 privacy/security approval recorded, including Activity Log, diagnostic, cost and export surfaces assessed | Security reviewer | Not approved |
-| 9 | Finite cost and execution plan approved separately (resources, runtime, expiry, cleanup, liabilities within the monthly budget) | Owner | No approval |
+| 9 | Finite cost and execution plan approved separately (resources, runtime, expiry, cleanup) with accrued AND forecast charges and liabilities across `ama` and other scopes recorded (timestamp, scope, source), known bounded headroom under the all-in USD 500 TOTAL October gate, no assumed-zero unknowns, no double counting; expiry 2026-10-25T16:02Z | Owner | No approval, headroom unknown or over cap |
 | 10 | SQL: private-only access verified, apply and verified serving-replica restart on every traffic-serving revision, then a fresh `--check` exits 0 | Operator on a private-connected host | Public SQL, no restart evidence, check not 0 |
 | 11 | Direct HTTPS: welcome and health 200, anonymous protected API denied, native 401, browser sign-in redirect, production profile and the six private backing-service settings unchanged | Operator, probe JSON lines | Any mismatch, setting changed |
 | 12 | Browser role tests with real people: one staff role each, Contractor cannot read staff-wide statistics, unknown or wrong role denied, sign out and in for fresh claims | Real users, screenshots without claims | Role not enforced |

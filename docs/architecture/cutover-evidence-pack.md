@@ -182,7 +182,7 @@ tenant-administrator checklist.
 | Parser relaxed, ciphertext decrypted, cloud state changed, secret or private data read | No |
 | Relay carried a result live | Never observed; 2026-10-17 grant readback only |
 | Worker/image binding | Unresolved gap: self-asserted by the worker until independent provenance exists |
-| Cost and execution plan | Separate later approval; not a dependency of this design |
+| Cost and execution plan | Separate later approval; not a dependency. Spending gate: all-in USD 500 TOTAL October, accrued plus forecast across all scopes, headroom unknown, RG-only projection USD 535.41 above cap |
 | #360 c, d, e | Unproved and unchanged |
 
 Process disclosure (2026-10-20): the first draft of this entry and the runbook

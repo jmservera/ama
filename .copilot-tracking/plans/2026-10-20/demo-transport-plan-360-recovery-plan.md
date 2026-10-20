@@ -180,3 +180,7 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 * Implementation artifact: .copilot-tracking/changes/2026-10-20/demo-transport-plan-360-recovery-changes.md
 * Ready phase or task: P01-T01
 * Remaining provisional question or blocker: none
+
+## Dated Correction 2026-10-20
+
+Post-assessment correction (bounded, no redesign): the design's cost precondition now names the all-in USD 500 TOTAL October gate with accrued and forecast charges across all scopes and unknown bounded headroom. See the changes record. Critique and Review are not rerun.
