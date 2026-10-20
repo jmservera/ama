@@ -6625,3 +6625,17 @@ metadata when the knowledge base was created.
   actual corrective-test acceptance, named human appointment, human-witnessed
   drill, live application acceptance or whole-issue closure. Original #219
   adverse and later correction evidence is retained.
+
+## [2026-10-20] update | Finite costed execution plan options for an unfinished Azure demo (#126)
+
+* Added a subsection to the existing Case Study 48 addendum and one index
+  row. It gives dated, USD, resource-group-scope October accrued cost (189.94
+  for 1-20 Oct, estimated and partial), current burn, existing liabilities and
+  a no-change projection of 535.41 against the owner's USD 500 total.
+* Offers owner-decision options (Front Door retirement, SQL idle) and bounded
+  tranches T0 to T4 with approval fields, finite call and token bounds,
+  thresholds, expiry gate, cleanup and recreation. Subscription-scope spend,
+  prices for several meters, quota, private bootstrap and human gates stay
+  unresolved and block execution.
+* Proposals for separate owner approval only. No Azure change, approval of a
+  manifest, issue acceptance or operational release follows.

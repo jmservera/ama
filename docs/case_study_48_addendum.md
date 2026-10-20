@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-18
+ms.date: 2026-10-20
 ms.topic: reference
 ---
 
@@ -322,6 +322,145 @@ authority follows; BRD v0.16.0 stays unchanged. The v0.13.2 intermediate PRD
 recorded evidence only; the current v0.14.0 candidate adds the five-assistant
 requirements without inheriting approval. Retirement and product/pilot/
 production acceptance are distinct.
+
+### Finite Costed Execution Plan Options for an Unfinished Azure Demo (2026-10-20, #126)
+
+This is a set of proposals for separate owner approval. It executes, approves
+and accepts nothing: no deployment, inference, permission, tenant action,
+manifest approval, issue acceptance or operational release follows. It extends
+the EXA-012 budget row; the owner's USD 500 total for this calendar month
+(including charges already accrued) governs this scope and the earlier
+450/360/405 figures remain history. Authorization expires 2026-10-25T16:02Z.
+
+Evidence class and limits. Currency is USD. Charges are Azure Cost Management
+actual cost for resource group `ama` only, retrieved read-only on 2026-10-20 at
+about 21:20Z. They are estimates until invoiced, exclude credits and support, can
+lag, and 20 October was a partial day. Subscription-scope and other-resource-group
+charges could not be read (access denied), so that spend is unknown. List prices are the
+public Azure retail prices retrieved 2026-10-20, not agreement prices; no public
+numeric rate exists for SQL serverless or Front Door Premium, so those figures
+come from observed meters. Identifiers and private bindings are omitted.
+
+| Item | Value (USD) |
+| --- | --- |
+| Accrued 1-20 Oct (partial 20 Oct) | 189.94 |
+| Complete days 1-19 | 172.47 |
+| Daily burn before 17 Oct | about 14 to 16 |
+| Daily burn 17-19 Oct (run rate used, two-day sample) | 30.245 |
+| SQL serverless compute (about 10.66 per day) plus 1.55 storage | 90.36 accrued plus 1.55 |
+| Front Door Premium base fee (about 10.64 per day) | 41.25 accrued |
+| Eight private endpoints | 16.39 accrued |
+| Premium container registry | 14.55 accrued |
+| Container Apps (idle and active) | 21.84 accrued |
+| Log Analytics, IoT Hub B1, DNS, monitor, model usage, others | about 4 together |
+
+Existing liabilities (all recurring daily meters, no commitments seen): 94
+resources in `ama`, including a Front Door Premium profile with endpoint and
+firewall policy, one SQL serverless database (2 vCore maximum, 0.5 minimum, 60
+minute auto-pause, never paused so far), a Premium registry, IoT Hub B1, eight
+private endpoints, two Container Apps environments, three apps (two with two
+minimum replicas), eight jobs including a five-minute orchestrator schedule that
+may keep SQL awake (inferred, not proven), an AI Foundry account with no model
+deployments, storage, vault, workspace and five user-assigned identities.
+
+Projected month end with no change is 172.47 + 12 x 30.245 = 535.41, so
+headroom is negative 35.41 before any new work. USD 500 must not be assumed
+available.
+
+| Option | Month-end projection (RG `ama`) | Status |
+| --- | --- | --- |
+| S0 no change | 535.41 | Blocked (over cap) |
+| S1 retire Front Door effective 21 Oct | 418.37; add 10.64 for each day of delay | Owner decision; needs a separate retirement approval |
+| S2 S1 plus SQL idle after 25 Oct | 384.79 only if the 50 percent illustration holds; the true saving is 0 to about 10.66 per day, unmeasured | Illustration only; never used for eligibility |
+
+Front Door retirement means the approved profile, endpoint, firewall policy and
+managed Private Link only, after an inventory, following the retirement rules in
+[the infrastructure rollback guidance](../infra/README.md); it can be recreated
+with `infra/public-edge-existing.bicep`. The network, SQL, registry, vault,
+storage and AI account stay, resource group `ama` is never deleted and identities
+are preserved. SQL idling means suspending the five-minute orchestrator schedule
+and measuring whether auto-pause then occurs.
+
+Gating rules (one set of numbers, two uses):
+
+* Approval envelope E = option projection + U + approved tranche ceilings +
+  reserve R, and E must be at most 475. U is the owner-supplied other-scope
+  spend (subscription-scope accrued total less the RG figure, with timestamp);
+  it is unrecorded today, so every paid tranche is blocked. R = 30 is an
+  unevidenced assumption the owner may replace; a larger R shrinks what is admissible.
+* Live projection L = accrued + remaining days x measured run rate + unspent
+  ceilings + U (no reserve). Review at 400, pause new starts at 450, stop and
+  clean up at 475; the reserve sits between L and the 500 cap.
+* Unknown spend, unknown price, an unapproved tranche or a start after the
+  tranche's latest start blocks it. Do not retry known capacity failures to
+  obtain options.
+* With R = 30 and U assumed 0 (illustrative): under S1, T1 plus T2 (18) gives
+  466.37 and adding T3 (15) gives 481.37, so T3 is not admissible under S1.
+  Under S2, T1 to T3 gives 447.79 only after a measured saving at least equal to
+  the illustration.
+
+| Tranche | Purpose | Bill of materials (count, SKU, region, lifetime) | Finite bounds | Ceiling |
+| --- | --- | --- | --- | --- |
+| T0 | Owner prerequisites | None; zero spend | Subscription-scope cost query with timestamp; choice of S1 or S2 | 0 |
+| T1 | First deployment tranche: usable sign-in on the existing demo API | No new billable resource types; existing demo app and SQL; 4 hour window; UK South | Synthetic data only | 8 |
+| T2 | Actual-model evaluation (#108, #222, #223) | 2 AI deployments, gpt-4.1-mini and gpt-4.1 version 2025-04-14 (Legacy, inference retirement 2027-04-14), global standard capacity 10 each, UK South; 6 hours, then deleted | At most 300 mini and 100 gpt-4.1 calls; 12,000 input characters and 600 output tokens per call; worst case 4.61 at list price; existing non-held-out fixtures only; first capacity or quota error stops T2 with no retry | 10 |
+| T3 | Azure validation (#117, #122, #358, #360) | Temporary synthetic vault, storage account (Standard LRS) and smallest serverless database, one each, UK South, 8 hours with cleanup inside the window | Not approvable until the owner names the commands (the #358 secret-lifecycle, #117 rescan and #122 continuity/export paths) and records dated unit prices; the ceiling is an owner-set placeholder and retention liabilities (vault soft-delete, immutable storage) count against the cap until they expire | 15 |
+| T4 | Sizing (#137, #360) | None; analysis from this evidence only | No allocation | 0 |
+
+Latest start for each tranche is 2026-10-25T16:02Z minus its duration minus six
+hours: T1 06:00Z, T2 04:00Z and T3 02:00Z on 25 October, which is a Sunday, so
+owner availability is not assumed and earlier approval is advised. A tranche
+that cannot finish and clean up before expiry is not started. Anything left at
+expiry is recorded as a liability, not silently kept.
+
+T1 approval fields (all required before any start): approver, approval time,
+tranche and exact resource list, cost envelope and ceiling with E and the
+inputs used, start time and latest start, identity changes (none or listed),
+the mutations below with a rollback for each, the evidence to capture and the
+stop thresholds. T1 may need three mutations, each separately approved: tenant
+registration and consent by a tenant operator
+(`python3 infra/scripts/setup-entra.py --run-in-azure --secret-store keyvault --yes`),
+roster initialization by an authorized private-connected executor
+(`initialize-workbench-staff.py --check`, then `--apply --restart`) and
+replacing the deny-all ingress restriction. Known preconditions, all open: the
+managed-identity client sentinel is invalid, no tenant registration, roster or
+roles evidence exists, and the private image publication route is blocked by
+known capacity failures that are not retried. A transport design is referenced
+generically as the owner-selected private transport; no unmerged transport
+work is a dependency.
+
+T1 expected checks and pass or fail evidence:
+
+* Browser: pass only on an authenticated 200 for the application page by a named
+  synthetic tenant user. A redirect to a sign-in page, 401 or 403 is a fail or
+  not yet signed in, never sign-in.
+* Roles: the authenticated identity response shows the expected synthetic role.
+* SQL: the staff check reports the expected synthetic rows through the private path.
+* AI: no model deployments exist, so this reports not available, not pass, unless
+  T2 is separately approved.
+
+Local-first versus Azure-only. Stage 0 of every tranche is free: a local
+synthetic run (`ZF_AUTH=password`, SQLite, `python3 -m zava_forward.api`) rehearses
+scripts and checks. It cannot show real sign-in, roles, private SQL or actual-model
+behaviour, which are the Azure-only needs of CON-007 and AC-086.
+
+What the owner can already test, with real evidence only: the local synthetic
+run, and read-only cost and resource views. The existing demo API currently
+returns 403 by design (deny-all); that is not a successful sign-in and must not
+be presented as one.
+
+Monitoring, cleanup and recreation. Query RG `ama` cost daily and add U; recompute
+L every day; stop at the thresholds above. Cleanup deletes only resources
+created by an approved tranche, never `ama`, identities or the retained
+estate. Recreate any removed item with the named script or template using
+synthetic data only; no private dataset is read.
+
+Unresolved before any execution: subscription-scope spend, credits and billing
+latency; the SQL pause saving; whether the orchestrator job keeps SQL awake; model
+quota (still Unknown from 2026-10-18); reserve size; the private bootstrap,
+tenant registration, roster and in-network executor; held-out manifest approval;
+human review, legal and privacy gates; and owner approval of any option. Evidence
+and rationale are in the dated research record for this task; the issue stays open.
 
 ## Zava Forward at Zava North Homes
 
