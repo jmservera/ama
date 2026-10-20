@@ -34,6 +34,10 @@ tenant setup and publication authority remain separate owner gates.
 
 ## User Decisions and Requirements
 
+* Owner renewed automatic completion at 2026-10-20T01:05:11Z and coordinator
+  authorizes ONE bounded P09 correction of actual review 5579457923: pending
+  POST draft loss and edited-in case challenge eligibility. No additional
+  correction cycle, replacement Review or publication.
 * Owner direction at 2026-10-19T23:08:41Z authorizes one additional bounded
   off-page draft correction (P08), not unlimited cycles or publication.
 * Execute actual Research, Plan with original critique, Implement, original Review in that order.
@@ -247,7 +251,64 @@ RV-001. No new critique or Review.
 
 ## Handoff
 
-### Current bounded UI correction boundary (P08)
+### Current bounded two-finding correction boundary (P09)
+
+Clean local/remote PR418 HEAD ec70836c246c6abd84e48090f7a1362f4461f36c and
+fresh origin/main eeb6c3aba5d07244ae3cc0e53d839617fd928e3b verified. P08 and
+later final all17/independent backend/UI/typed/score evidence are historical:
+`/tmp/ama-220-rpi-20261020-final-01/receipt.json`, SHA256
+2013378a7a75b1e41ae037acd6d31fbee4b2bce199ccd6f1067e01a275d4b2fe.
+No prior receipt certifies a new HEAD. Actual review body, despite its
+"No open issues" banner, explicitly reports both previously missed issues.
+
+<!-- rpi:phase id=P09 -->
+### [ ] P09: Bounded pending-draft and edited-case correction
+
+<!-- rpi:task id=P09-T01 -->
+#### [x] P09-T01: Preserve post-dispatch edits and include retained edited cases
+
+Dependencies: P08-T02. Allowed writes: panels.js, resident_decisions.py,
+existing browser/core regression owners, directly related component guides
+and dated tracking/separate finding disposition. First reproduce delayed
+Chromium opening/resolution loss and generate40/edit-in eligibility failure.
+Preserve the actual dirty form and report only the submitted snapshot recorded;
+keep submit disabled against duplicate writes, including synthetic submit,
+without cancellation/retry of committed writes or changed navigation abort.
+Include final_items case IDs in both catalog/direct eligibility only. Never
+alter original case_ids/source hashes/proposal binding, current entitlement
+or ownership. Missing hashes stay unknown; source challenge remains refused.
+Wrong tokens, unauthorized actors, manual/human controls stay enforced.
+
+Completed: actual Chromium on unchanged source reproduced later Letter/text
+values replaced by an empty opening form after successful delayed response.
+JSON/SQLite both generated exactly 40 candidates, edited in an outside owned
+case and failed at missing catalog target before the fix. Shared membership
+helper now includes final_items without touching original inputs/hashes/tokens.
+Snapshot/current-value comparison retains dirty DOM drafts and submitted-only
+feedback; submit handler rejects duplicate pending/acknowledged submits.
+31 focused tests pass/no skips; five actual Chromium journeys pass with eleven
+pinned axe scopes, zero violations/incomplete; full configured core/API
+Ruff/format/mypy and JS syntax pass. Earlier fixture/CSP/dialog harness failures
+remain external and explicitly qualified in the separate P09 disposition.
+No replacement Review; P09-T02 exact-head gate/independent assessment pending.
+
+<!-- rpi:task id=P09-T02 -->
+#### [ ] P09-T02: Freeze, unchanged fresh all17 and external handoff
+
+Dependencies: P09-T01. Focused actual browser/backend/static proof and scoped
+fresh guidelines review precede privacy-safe conventional substantive commit.
+Reconcile plan/details/changes/state; preserve Research, Revise critique and
+Partial / Not accepted Review and every historical failure. Run unchanged
+all17 with qualified native CLI/pip/nvm Node PATH, scrubbed credentials and
+runner-owned shared heavy lock, never nested. Fresh output:
+`/tmp/ama-220-rpi-20261020-draft-edited-case-01`. Fetch main and verify final
+receipt, then STOP before publication for coordinator independent incremental
+assessment. No push/new PR/merge/amend/rebase/force/settings/status/rescore/
+empty commit. Refs #220, closing references empty, whole issue OPEN/partial.
+Final receipt/result/state are external so no post-freeze commit invalidates it.
+Live, qualified human, resident/WCAG and dense-performance limits remain.
+
+### Historical bounded UI correction boundary (P08)
 
 P07-T02 completed at unpushed backend HEAD
 12800a69f04158cc2c7b85f35e7bcbaa4c26f1b5: all17 receipt
@@ -260,7 +321,7 @@ backend evidence, invalid for the forthcoming UI HEAD. Preserve published
 b4cd1c1 and unpushed 12800a69 ancestry; no reset/rebase/amend/force/push.
 
 <!-- rpi:phase id=P08 -->
-### [ ] P08: Bounded off-page draft correction and exact-head handoff
+### [x] P08: Bounded off-page draft correction and exact-head handoff
 
 <!-- rpi:task id=P08-T01 -->
 #### [x] P08-T01: Reconcile resolution drafts within guarded history
@@ -284,7 +345,7 @@ and browser Ruff/format pass. Separate UI disposition records provenance,
 intermediate failures and acceptance limits; independent assessment pending.
 
 <!-- rpi:task id=P08-T02 -->
-#### [ ] P08-T02: Freeze, fresh all17 and stop before publication
+#### [x] P08-T02: Freeze, fresh all17 and stop before publication
 
 Dependencies: P08-T01. Reconcile current evidence and separate finding
 disposition, preserving all original outcomes and failures. Privacy-safe
@@ -309,6 +370,10 @@ pass (62 files). Actual typed refresh/paging Chromium case passes again with
 two zero-violation/incomplete axe scopes. Intermediate optional-body type error
 is preserved externally. Runtime source is byte-identical to first UI freeze.
 Final refreeze/all17 at fresh 02 remains pending at this snapshot.
+
+Historical snapshot above superseded descriptively at P09 intake: supplied
+final ec70836c all17 receipt and independent assessments completed before the
+current continuation. Preserve earlier failed gates and their exact identities.
 
 ### Historical second PR finding correction boundary (P07)
 

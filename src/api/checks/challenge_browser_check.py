@@ -351,6 +351,7 @@ def run_refresh_draft(axe_path: Path) -> dict[str, Any]:
             writes: list[dict[str, Any]] = []
             dialogs: list[str] = []
             page.on("pageerror", lambda error: errors.append(str(error)))
+
             def record_write(request: Request) -> None:
                 if (
                     request.method == "POST"
@@ -513,6 +514,203 @@ def run_refresh_draft(axe_path: Path) -> dict[str, Any]:
         fixture.doCleanups()
 
 
+def run_pending_draft(axe_path: Path) -> dict[str, Any]:
+    """Edit actual opening/resolution forms after commit but before acknowledgement."""
+    raw = axe_path.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == AXE_SHA256, "Unexpected axe 4.10.3 content"
+    fixture = ResidentApi("test_http_challenge_both_routes_resolution_and_denied_reads")
+    fixture.setUp()
+    reports: list[dict[str, Any]] = []
+    results: list[dict[str, Any]] = []
+    try:
+        payload = fixture.challenge_payload()
+        before = json.loads(json.dumps(fixture.store.cases["ZF-1"]))
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch()
+            page = browser.new_page(reduced_motion="reduce")
+            page.route(
+                "**/*",
+                lambda route: (
+                    route.continue_()
+                    if route.request.url.startswith(fixture.base + "/")
+                    else route.abort()
+                ),
+            )
+            errors: list[str] = []
+            writes: list[dict[str, Any]] = []
+            pending: list[tuple[Route, APIResponse]] = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(fixture.base + "/app")
+            page.locator("#email").fill("sam@example.test")
+            page.locator("#pw").fill("synthetic-only")
+            page.locator("button[type=submit]").click()
+            page.locator("#nav").wait_for(state="visible")
+            for action in ("challenge_open", "challenge_resolve"):
+                page.goto(fixture.base + "/app#/case/ZF-1")
+                page.locator("#affected-challenges").wait_for()
+                opening = action == "challenge_open"
+                key = "challenge-open" if opening else "challenge-resolve-CH-1"
+                title = (
+                    "Record supplied challenge"
+                    if opening
+                    else "Record supplied resolution for CH-1"
+                )
+                page.get_by_text(title, exact=True).first.click()
+                values = (
+                    {
+                        name: payload[name]
+                        for name in (
+                            "proposal_id",
+                            "target_kind",
+                            "channel",
+                            "source",
+                            "request",
+                            "explanation",
+                            "owner",
+                            "non_digital_route",
+                            "next_update",
+                        )
+                    }
+                    if opening
+                    else dict(
+                        resolution="Explanation recorded",
+                        resolution_ref="SYN submitted resolution reference",
+                        explanation="SYN submitted resolution explanation",
+                        next_update="2099-01-02",
+                    )
+                )
+                for name, value in values.items():
+                    control = page.locator(f"#{key}-{name}")
+                    if name in ("target_kind", "channel", "owner", "resolution"):
+                        control.select_option(value)
+                    else:
+                        control.fill(value)
+                page.evaluate(
+                    "(key) => { window.savedChallengeDraft = document.getElementById(key); }",
+                    key,
+                )
+
+                def hold_acknowledgement(route: Route) -> None:
+                    body = route.request.post_data_json
+                    assert isinstance(body, dict)
+                    writes.append(body)
+                    response = route.fetch()
+                    assert response.ok
+                    pending.append((route, response))
+                    page.evaluate("window.challengeCommitted = true")
+
+                page.route("**/api/cases/ZF-1/resident", hold_acknowledgement)
+                page.evaluate("window.challengeCommitted = false")
+                with page.expect_request("**/api/cases/ZF-1/resident"):
+                    page.locator(f"#{key} button[type=submit]").click()
+                page.wait_for_function("() => window.challengeCommitted === true")
+                expect(page.locator(f"#{key} button[type=submit]")).to_be_disabled()
+                for name, value in values.items():
+                    assert writes[-1][name] == value, name
+                draft = (
+                    dict(
+                        channel="Letter",
+                        source="SYN later source",
+                        request="SYN later request",
+                        explanation="SYN later opening explanation",
+                        non_digital_route="SYN later manual route",
+                        next_update="2099-02-03",
+                    )
+                    if opening
+                    else dict(
+                        resolution="Correction recorded",
+                        resolution_ref="SYN later resolution reference",
+                        explanation="SYN later resolution explanation",
+                        next_update="2099-02-03",
+                    )
+                )
+                for name, value in draft.items():
+                    control = page.locator(f"#{key}-{name}")
+                    expect(control).to_be_enabled()
+                    if name in ("channel", "resolution"):
+                        control.select_option(value)
+                    else:
+                        control.fill(value)
+                # Enter is a real implicit submission attempt while the button is disabled.
+                page.locator(f"#{key}-next_update").press("Enter")
+                page.locator(f"#{key}").evaluate("(form) => form.requestSubmit()")
+                assert len(writes) == len(results) + 1
+                with page.expect_request(fixture.base + "/api/cases/ZF-1"):
+                    route, response = pending[-1]
+                    route.fulfill(response=response)
+                page.wait_for_load_state("networkidle")
+                for name, value in draft.items():
+                    expect(page.locator(f"#{key}-{name}")).to_have_value(value)
+                assert page.evaluate(
+                    "(key) => document.getElementById(key) === window.savedChallengeDraft", key
+                ), "Keep the actual form and its original tokens"
+                expect(page.locator(f"#{key}")).to_have_attribute("data-unsaved", "true")
+                expect(page.locator(f"#{key}-feedback")).to_contain_text(
+                    "Only the submitted values were recorded"
+                )
+                expect(page.locator(f"#{key} button[type=submit]")).to_be_disabled()
+                # Even programmatic submission must not write the acknowledged action again.
+                page.locator(f"#{key}").evaluate("(form) => form.requestSubmit()")
+                page.wait_for_load_state("networkidle")
+                assert len(writes) == len(results) + 1
+                code, detail = fixture.call("/api/cases/ZF-1", "sam")
+                assert code == 200 and len(detail["affected_challenges"]) == 1
+                record = detail["affected_challenges"][0]
+                persisted = record if opening else record["resolution"]
+                for name, value in values.items():
+                    if name in ("proposal_id", "target_kind", "owner"):
+                        continue
+                    field = (
+                        "outcome"
+                        if name == "resolution"
+                        else "reference"
+                        if name == "resolution_ref"
+                        else name
+                    )
+                    assert persisted[field] == value, name
+                scan(
+                    page,
+                    raw.decode("utf-8"),
+                    reports,
+                    action + "-pending-draft",
+                    "#affected-challenges",
+                )
+                page.evaluate("window.challengeNavigationCancelled = false")
+
+                def cancel_navigation(dialog: Any) -> None:
+                    assert "unsaved" in dialog.message
+                    dialog.dismiss()
+                    page.evaluate("window.challengeNavigationCancelled = true")
+
+                page.once("dialog", cancel_navigation)
+                page.get_by_role("link", name="Back to the list", exact=True).click()
+                page.wait_for_function("() => window.challengeNavigationCancelled === true")
+                expect(page).to_have_url(fixture.base + "/app#/case/ZF-1")
+                expect(page.locator(f"#{key}-explanation")).to_have_value(draft["explanation"])
+                page.once("dialog", lambda dialog: dialog.accept())
+                page.locator(f"#{key} button[type=reset]").click()
+                page.unroute("**/api/cases/ZF-1/resident", hold_acknowledgement)
+                results.append(dict(action=action, submitted=values, unsent_draft=draft))
+            assert not errors, errors
+            version = browser.version
+            browser.close()
+        after = fixture.store.cases["ZF-1"]
+        for field in ("decision", "measure_decisions", "hazards", "closed", "service_requests"):
+            assert after.get(field) == before.get(field), field
+        return dict(
+            outcome="passed",
+            browser=version,
+            journeys=results,
+            committed_writes=len(writes),
+            cancelled_or_retried_writes=0,
+            scans=reports,
+            page_errors=errors,
+            scope="Constructed delayed-acknowledgement Chromium; no human/WCAG acceptance",
+        )
+    finally:
+        fixture.doCleanups()
+
+
 def run_navigation() -> dict[str, Any]:
     """Delay a committed POST acknowledgement across confirmed route navigation."""
     fixture = ResidentApi("test_http_challenge_both_routes_resolution_and_denied_reads")
@@ -624,9 +822,12 @@ def main() -> None:
     parser.add_argument("--history", action="store_true")
     parser.add_argument("--navigation", action="store_true")
     parser.add_argument("--refresh-draft", action="store_true")
+    parser.add_argument("--pending-draft", action="store_true")
     args = parser.parse_args()
     result = (
-        run_refresh_draft(args.axe)
+        run_pending_draft(args.axe)
+        if args.pending_draft
+        else run_refresh_draft(args.axe)
         if args.refresh_draft
         else run_navigation()
         if args.navigation

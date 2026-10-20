@@ -2886,6 +2886,12 @@ recorded-reason permissions are required to read or write the new fields.
 `Store.detail` supplies `challenge_targets` with immutable proposal and separate
 human-decision version tokens; callers must echo both when opening a challenge.
 The registered server actor and current named owner remain authoritative.
+Eligibility includes both original generation candidates and cases retained in
+the human decision's `final_items`. A person may edit in an owned open case
+outside the original 40 candidates. That case can challenge the retained
+proposal/decision without changing the original generation `case_ids`, source
+hashes or proposal version. Its missing source hash stays Unknown; a source
+challenge is refused rather than inventing generation evidence.
 
 `challenge_open` requires `proposal_id`, `proposal_version`, `decision_version`,
 `target_kind` (`proposal`, `source` or `policy`), supplied `channel`, `source`,

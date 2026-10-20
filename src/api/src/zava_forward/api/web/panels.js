@@ -320,6 +320,7 @@ function affectedChallengePanel(c, id, refresh) {
       },
       onsubmit: async (event) => {
         event.preventDefault();
+        if (button.disabled) return;
         for (const { input, label } of inputs) {
           input.removeAttribute("aria-invalid");
           if (!input.value.trim() || !input.validity.valid) {
@@ -350,7 +351,13 @@ function affectedChallengePanel(c, id, refresh) {
             status.focus();
             return;
           }
-          delete form.dataset.unsaved;
+          const changed = inputs.some(({ name, input }) => input.value !== body[name]);
+          if (changed) {
+            form.dataset.unsaved = "true";
+            status.textContent = "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.";
+          } else {
+            delete form.dataset.unsaved;
+          }
           if (dispatchSignal.aborted) return;
           await refresh(async () => {});
         } catch (error) {

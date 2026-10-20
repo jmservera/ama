@@ -274,11 +274,16 @@ def priority_challenge_state(store, rec, corrections=None):
                 challenge_ids=sorted(causes))
 
 
+def _priority_includes_case(rec, case_id):
+    return (case_id in rec.get("case_ids", [])
+            or any(item["case_id"] == case_id for item in rec.get("final_items") or []))
+
+
 def challenge_catalog(store, case_id):
     out = []
     corrections = priority_correction_lookup(store)
     for rec in store.data["recommendations"]:
-        if rec.get("kind") == "ai_task" or case_id not in rec.get("case_ids", []):
+        if rec.get("kind") == "ai_task" or not _priority_includes_case(rec, case_id):
             continue
         original, decision_version, decision = priority_binding(rec)
         out.append(dict(proposal_id=rec["id"], proposal_version=original,
@@ -618,7 +623,7 @@ class ResidentDecisionMixin:
         if set(body) != fields:
             raise ValueError("Supply only the challenge fields. Identity, time, decisions and dependencies are recorded by the server.")
         rec = _priority_record(self, body.get("proposal_id"))
-        if c["id"] not in rec.get("case_ids", []):
+        if not _priority_includes_case(rec, c["id"]):
             raise ValueError("Choose a priority suggestion that includes this case.")
         original, decision_version, decision = priority_binding(rec)
         if body["proposal_version"] != original or body["decision_version"] != decision_version:

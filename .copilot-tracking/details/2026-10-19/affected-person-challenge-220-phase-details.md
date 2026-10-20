@@ -20,9 +20,55 @@
 | P05 | Selected correction | Complete; source d3dfd82a historical all17 passed and published; receipt not reusable | P05-T01, P05-T02, P05-T03, P05-T04 |
 | P06 | New PR findings | Complete historically at b4cd1c1; external all17 receipt, not reusable | P06-T01, P06-T02 |
 | P07 | Second bounded finding correction | Complete at 12800a69; all17 and independent backend Pass, historical | P07-T01, P07-T02 |
-| P08 | Bounded off-page draft correction | T01 complete; T02 frozen commit/new all17 pending | P08-T01, P08-T02 |
+| P08 | Bounded off-page draft correction | Complete historically; final ec70836c all17, receipt not reusable | P08-T01, P08-T02 |
+| P09 | Bounded pending-draft and edited-case correction | T01 complete/focused-validated; T02 commit/all17 pending | P09-T01, P09-T02 |
 
-## Current P08 execution boundary
+## Current P09 execution boundary
+
+Renewed owner direction at 2026-10-20T01:05:11Z and coordinator authorize ONE
+bounded correction of actual review 5579457923 at clean local/remote ec70836c.
+Fresh base eeb6c3aba5d07244ae3cc0e53d839617fd928e3b verified. Actual payload
+preserved externally in current session files/pr418-review-5579457923.json.
+P09-T01 first reproduces actual delayed-response Chromium opening/resolution
+draft loss and a 40-candidate generation edited to include an outside owned
+case. Preserve post-dispatch current values and original DOM/token binding,
+truthful submitted-only feedback, disabled submit/no duplicates and confirmed
+navigation abort. Include final_items IDs only for catalog/direct membership;
+original input/source hashes/proposal fingerprint stay untouched. Missing
+source hash is not invented; current entitlement/ownership and token checks
+remain. No redesign, new architecture or cloud/private-data operations.
+
+Writes limited to existing web/core owners and regression harness/tests,
+direct component documentation and dated issue tracking/separate disposition.
+Current web guidelines retrieved successfully before web edit. Focused
+behavior/static checks precede P09-T02 privacy-safe substantive commit and
+fresh unchanged all17 at /tmp/ama-220-rpi-20261020-draft-edited-case-01 with
+runner-owned shared lock, pip/native qualified tools/nvm Node and credential
+scrubbing. Fetch/verify final receipt then stop before publication for
+coordinator independent incremental assessment. Original evidence immutable,
+no replacement Review or further cycle. Refs #220, closing references empty;
+whole issue OPEN/partial and human/live/WCAG/dense-performance limits remain.
+
+P09-T01 complete: same snapshot/current comparison handles opening/resolution
+forms. Actual later edits survive delayed success in the same DOM form with
+dirty guard, explicit submitted-only feedback and disabled duplicate submit.
+No committed write cancellation/retry and no changed route abort behavior.
+Shared eligibility helper unions original case_ids with retained final_items
+for catalog and direct operation only. New JSON/SQLite test generates exactly
+40 candidates, edits an outside owned open case into final_items, checks
+catalog/proposal opening/restart and unchanged original source/binding data.
+Wrong proposal/decision tokens, source with no hash and unauthorized actors
+fail without case/audit change. Existing reader downgrade/ownership tests pass.
+31 focused tests pass/no skips; five actual Chromium journeys pass, eleven axe
+scopes zero violations/incomplete. Configured core/API Ruff/format/mypy pass
+128/62 files; JS syntax passes. Intermediate fixture, CSP predicate and
+navigation-dialog synchronization failures retained, not counted as clean
+feature passes. Final logs contain no callback exceptions. Law-store-unavailable
+diagnostics are existing synthetic-fixture limitations, not regulatory evidence.
+Current guidelines retrieved again before changed-web-file review: no new
+in-scope finding; native labels/live status/guards/motion and Fluent unchanged.
+
+## Historical P08 execution boundary
 
 Owner directive at 2026-10-19T23:08:41Z selects one additional bounded UI
 correction of actual review 5578292301 at published b4cd1c1. Clean unpushed

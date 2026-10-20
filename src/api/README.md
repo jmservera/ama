@@ -2662,6 +2662,17 @@ while confirming navigation to another case and to the list. The write is
 neither cancelled nor retried. The form captures its dispatch route signal and
 does not refresh the old case after that route is aborted.
 
+Fields remain editable during a pending challenge opening or resolution POST.
+Success compares their current values with the submitted snapshot. Later edits
+remain in the original guarded draft with explicit feedback that only submitted
+values were recorded. The submit button stays disabled, and even an implicit
+or programmatic submit cannot duplicate the pending or acknowledged write.
+Neither cancellation nor automatic retry is used for a committed write.
+Add `--pending-draft` to the same browser command for delayed-acknowledgement
+opening and resolution regressions: compare submitted versus retained values,
+actual persisted evidence, live feedback, navigation guard and exact write
+counts. This is synthetic browser evidence, not human acceptance.
+
 Add `--refresh-draft` instead for the 50-to-51 refresh/paging regression. It
 retains the actual dirty CH-1 form across a newly recorded challenge, checks
 unique form/input IDs and native label targets, cancels the guarded page change,

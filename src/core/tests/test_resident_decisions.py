@@ -358,6 +358,89 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(after[idx]["aware_at"], "2026-01-01T09:00+00:00")
         self.assertEqual(after[idx]["hold"]["status"], "Active")
 
+    def test_challenge_edited_in_case_outside_generation_candidates(self) -> None:
+        data = copy.deepcopy(DATA)
+        data["staff"] = copy.deepcopy(self.store.data["staff"])
+        for index in range(41):
+            case = copy.deepcopy(self.store.cases["ZF-1"])
+            case["id"] = f"SYN-EDIT-{index:02}"
+            data["cases"].append(case)
+        self.path = Path(self.tmp.name) / "edited-in" / "synthetic.json"
+        self.path.parent.mkdir()
+        self.path.write_text(json.dumps(data))
+        self.store = self.open_store()
+        proposal = self.priority_fixture()
+        original = copy.deepcopy(self.store.data["recommendations"][-1])
+        self.assertEqual(len(original["case_ids"]), 40)
+        outside = next(
+            c["id"]
+            for c in self.store.cases.values()
+            if c["owner_code"] == self.sam["code"]
+            and not c["closed"]
+            and c["id"] not in original["case_ids"]
+        )
+        original_version = resident_decisions.priority_binding(original)[0]
+        self.store.resolve_priority(
+            self.sam,
+            proposal["id"],
+            "edit",
+            "SYN supplied outside-candidate human edit",
+            [dict(case_id=outside, reason="SYN human-selected case")],
+        )
+        retained = copy.deepcopy(self.store.data["recommendations"][-1])
+        target = next(
+            t
+            for t in self.store.detail(outside, self.sam)["challenge_targets"]
+            if t["proposal_id"] == proposal["id"]
+        )
+        self.assertEqual(target["proposal_version"], original_version)
+        self.assertIsNone(target["source_version"])
+        self.assertEqual(target["human_decision"]["status"], "Edited")
+        self.assertEqual(target["human_decision"]["final_items"], retained["final_items"])
+        body = dict(
+            action="challenge_open",
+            proposal_id=proposal["id"],
+            proposal_version=target["proposal_version"],
+            decision_version=target["decision_version"],
+            target_kind="proposal",
+            channel="Phone",
+            source="SYN supplied edited-case challenge",
+            request="SYN Please check the retained human edit.",
+            explanation="SYN The case was selected by a person after generation.",
+            owner=self.sam["email"],
+            non_digital_route="SYN Ask Sam by phone or letter.",
+            next_update="2099-01-01",
+        )
+        before = copy.deepcopy(self.store.cases[outside])
+        audit = list(self.store.audit_entries())
+        for actor, invalid in (
+            (self.sam, dict(body, proposal_version="wrong")),
+            (self.sam, dict(body, decision_version="wrong")),
+            (self.sam, dict(body, target_kind="source")),
+            (self.rex, body),
+            (self.kim, body),
+        ):
+            with self.subTest(actor=actor["email"], target=invalid["target_kind"]):
+                with self.assertRaises((ValueError, PermissionError)):
+                    self.store.resident_action(actor, outside, invalid)
+                self.assertEqual(self.store.cases[outside], before)
+                self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertNotIn("challenge_targets", self.store.detail(outside, self.rex))
+        self.assertNotIn("challenge_targets", self.store.detail(outside, self.kim))
+        self.store.resident_action(self.sam, outside, body)
+        reopened = self.open_store()
+        record = reopened.detail(outside, self.sam)["affected_challenges"][0]
+        self.assertEqual(
+            record["target"], dict(kind="proposal", id=proposal["id"], version=original_version)
+        )
+        self.assertEqual(record["human_decision"], target["human_decision"])
+        saved = next(r for r in reopened.data["recommendations"] if r["id"] == proposal["id"])
+        self.assertEqual(saved, retained)
+        for key in ("case_ids", "source_versions", "items", "workflow_items"):
+            self.assertEqual(saved[key], original[key])
+        self.assertNotIn(outside, saved["source_versions"])
+        self.assertNotIn(outside, saved["case_ids"])
+
     def test_challenge_source_capture_precedes_generation(self) -> None:
         before = ai_tasks.source_hashes(self.store, self.sam, ["ZF-1"])
         run = self.store.ai.run

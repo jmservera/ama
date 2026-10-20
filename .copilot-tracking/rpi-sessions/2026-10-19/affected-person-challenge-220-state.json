@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Renewed owner automatic completion at 2026-10-20T01:05:11Z; coordinator authorizes ONE bounded P09 correction of pending POST draft loss and edited-in final_items challenge eligibility.",
+      "status": "P09-T01-complete-P09-T02-freeze-pending",
+      "evidence": "Clean local/remote PR418 ec70836c and fresh origin/main eeb6c3ab verified. Actual review 5579457923 preserved in current session files/pr418-review-5579457923.json. Failing-first actual Chromium and exact40 JSON/SQLite catalogs reproduced. 31 focused tests/no skips; five actual Chromium journeys/eleven clean axe scopes; configured core/API static pass 128/62 files. Final primary evidence p09-*-final logs/JSON in current session files. Prior final all17 receipt SHA256 2013378a7a75b1e41ae037acd6d31fbee4b2bce199ccd6f1067e01a275d4b2fe historical. No new Review or publication."
+    },
+    {
       "decision": "Owner at 2026-10-19T23:08:41Z authorizes ONE bounded UI correction of duplicate off-page forms; no publication or replacement Review.",
       "status": "P08-T01-complete-P08-T02-refreeze-pending",
       "evidence": "First frozen 28945896 all17: sixteen groups pass; API mypy failed new request lambda. Failed 01 receipt SHA256 b3bbb1fb888ef7d4f783713cd065e3f47687fdfa7e3e89fa4642f76bad673de7 preserved. Same P08 harness now has explicit Request callback and JSON object assertion; configured full API Ruff/format/mypy pass 62 files and actual Chromium refresh case passes again. No runtime source change or replacement Review. Final fresh full17 at 02 pending; post-freeze state external."
@@ -83,14 +88,14 @@
   ],
   "blockers": [
     {
-      "id": "PR418-off-page-duplicate-forms",
-      "summary": "P08 duplicate-form correction implemented and focused-validated; independent exact-head incremental assessment pending.",
-      "resolution": "Coordinator assesses frozen P08 head with fresh verified all17 receipt; no further cycle, replacement Review or push."
+      "id": "PR418-pending-draft-edited-case",
+      "summary": "Both selected review 5579457923 defects corrected and focused-validated; independent exact-head assessment remains pending.",
+      "resolution": "Freeze reconciled P09 source/evidence, run fresh unchanged all17 and hand off external receipt/evidence for coordinator independent incremental assessment."
     },
     {
       "id": "corrected-full-gate",
-      "summary": "P07 passed at 12800a69; P08 UI changes require a new frozen-head all17 receipt.",
-      "resolution": "Complete P08 focused proof, freeze reconciled source/tracking and run unchanged all17 against fresh main with external verification."
+      "summary": "Prior final all17 passed at ec70836c; P09 changes require a new frozen-head all17 receipt.",
+      "resolution": "Complete P09 focused proof, freeze reconciled source/tracking and run unchanged all17 at requested draft-edited-case-01 against fresh main with external verification."
     },
     {
       "id": "publication",
@@ -100,14 +105,14 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P08-T02: complete directly coupled callback typing, configured API checks, substantive refreeze and fresh unchanged all17 in ui-draft-02; preserve failed ui-draft-01 receipt and original outcomes. Stop before push for coordinator independent incremental assessment."
+    "action": "P09-T02: privacy-safe substantive commit then unchanged all17 in fresh draft-edited-case-01; fetch main/verify receipt and retain final state externally. Stop before publication for coordinator independent incremental assessment; no next cycle or replacement Review."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Coordinator independent exact-head incremental assessment after selected P08 correction and fresh all17.",
-      "rationale": "Mandatory next handoff; owner selected one bounded UI correction, not another Review, push or merge.",
-      "evidence": "Current 23:08:41Z direction and actual review 5578292301; P08 plan/details."
+      "task": "Coordinator independent exact-head incremental assessment after selected P09 correction and fresh all17.",
+      "rationale": "Mandatory next handoff; ONE bounded two-finding correction, not another Review, push or merge.",
+      "evidence": "Renewed 2026-10-20T01:05:11Z direction and actual review 5579457923; P09 plan/details."
     },
     {
       "rank": 2,

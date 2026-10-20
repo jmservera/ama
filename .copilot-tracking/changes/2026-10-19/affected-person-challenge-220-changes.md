@@ -12,6 +12,18 @@
 
 ## Execution Status
 
+Current P09: renewed owner instruction at 2026-10-20T01:05:11Z and coordinator
+authorize ONE bounded two-finding correction, not unlimited cycles or waiver.
+Clean local/remote ec70836c and fresh base eeb6c3ab verified; actual review
+5579457923 retrieved, not inferred from its misleading no-open-issues banner.
+P09 owns pending POST drafts and edited-in final_items membership only.
+Prior final all17 receipt /tmp/ama-220-rpi-20261020-final-01/receipt.json SHA256
+2013378a7a75b1e41ae037acd6d31fbee4b2bce199ccd6f1067e01a275d4b2fe and supplied
+independent backend/UI/typed/score Pass are historical, not a new HEAD gate.
+P08 completion reconciled descriptively; no old evidence or outcome rewritten.
+P09-T01 complete/focused-validated; P09-T02 commit/fresh all17 then stop before push.
+Original Research, Revise critique and Partial / Not accepted Review immutable.
+
 Current P08: owner direction at 2026-10-19T23:08:41Z authorizes one bounded
 off-page UI correction. P07 all17 at 12800a69 and external independent backend
 Pass completed; previous pending statements below are historical freeze
@@ -36,6 +48,86 @@ actual failing-before behavior tests, then implement identity/version/dependency
 controls, browser and docs; original Review precedes frozen commit/full gate.
 
 ## Completed Work
+
+### P09 intake and immediately relevant plan reconciliation
+
+Actual review 5579457923 on ec70836c contains both previously missed issues:
+editable fields lose post-dispatch changes on success; retained edited-in
+cases outside case_ids disappear from catalog and fail direct opening.
+Original review payload is external current-session
+files/pr418-review-5579457923.json. Fresh guidelines retrieved before edits.
+Plan/details now own P09 boundary, regression intent and final output path.
+P08 final gate and independent results are reconciled from supplied evidence,
+not rerun or claimed for new source. No replacement critique or Review.
+
+### P09-T01: Pending snapshots and edited-in retained decisions
+
+On unchanged production source, actual delayed-response Chromium reproduced
+opening form loss: submitted Digital value persisted but staff's later Letter
+selection/text disappeared into new empty fields. Primary
+`p09-browser-before-02.log`. Initial `p09-browser-before.log` instead failed at
+a harness string predicate forbidden by existing CSP; switched to a function
+predicate, never weakened CSP. JSON/SQLite exact40 generation/edit-in tests
+then both reached missing catalog target in `p09-backend-before-03.log`.
+Earlier before/02 backend logs preserve fixture mistakes: SQL data has no
+cases list, and JSON default live.json reused prior small fixture; corrected
+with a fresh public fixture directory, not a product workaround.
+
+`panels.js` compares current uncontrolled input values with the dispatch body
+after successful acknowledgement. Changed values retain the original actual
+DOM form/version closure and dirty navigation guard. Live status explicitly
+says only submitted values were recorded and later edits were not submitted.
+Disabled button remains disabled; handler now also refuses implicit/
+programmatic submit while pending or acknowledged. No abort/retry of writes,
+changed route signal, CSS/framework or human confirmation semantics.
+
+`resident_decisions.py` shares the same eligibility predicate across catalog
+and direct opening: original case_ids OR retained final_items membership.
+Generation inputs/hashes and proposal/decision fingerprint contracts do not
+change. Outside edited-in source hash remains None; source challenge refuses.
+New regression on JSON/SQLite generates exactly 40 candidates, performs a real
+owned edit, sees the target/human final_items, records proposal challenge and
+reopens it. Wrong proposal/decision tokens, source-without-hash and unauthorized
+staff/contractor fail with unchanged case/audit; unauthorized catalog omitted.
+Recommendation bytes, original case_ids/source_versions/items/workflow_items
+remain unchanged by challenge.
+
+Final external evidence root:
+`/home/azureuser/.copilot/session-state/74e6936a-969f-4083-b943-f158c5c5759c/files/`.
+`p09-focused-final.log`: 31 tests pass/no skips, JSON/SQLite/current-reader/
+writer/HTTP controls. `p09-static-final.log`: complete configured core/API
+Ruff/format/mypy pass (128/62 sources) and JS syntax. Five
+`p09-{pending-draft,navigation,refresh-draft,history,current}-final.json` and
+matching logs: Chromium 156.0.8078.4 all pass; eleven pinned axe scopes zero
+violations/incomplete. Delayed opening/resolution each commits exactly its
+submitted snapshot and keeps later unsent fields; implicit/programmatic submit
+before/after acknowledgement produces no duplicate. Existing committed route
+navigation still makes no stale read/cancel/retry. Earlier browser-after.log
+exposed a harness dialog callback synchronization error despite JSON "passed";
+not accepted as final evidence. Explicit wait for actual cancelled navigation
+dialog fixes the harness; final logs checked for callback exceptions, none.
+Existing law-store-unavailable diagnostics remain unsuppressed.
+
+Fresh guidelines source retrieved before edit and again before review; changed
+web file read against applicable rules, no new scoped finding. Native semantics,
+labels/live feedback, guarded drafts, URL history, focus/motion/Fluent unchanged.
+Project plain ASCII/sentence-case overrides generic typography/style advice.
+Original Research/Revise critique/Partial Not accepted Review SHA256 unchanged;
+all previous dispositions immutable. Separate P09 finding disposition is
+implementation-owned, not independent approval or replacement Review.
+
+### P09-T02: Freeze and external result boundary
+
+P09-T01 markers/details/state reconciled before freeze. Commit substantive
+source/regressions/component guides/dated evidence under authenticated GitHub
+user-derived noreply email and conventional message with Copilot trailer.
+Then unchanged all17, fresh fetched main and new external
+`/tmp/ama-220-rpi-20261020-draft-edited-case-01`, runner owns shared heavy lock.
+No nested lock, private/cloud inputs, uv, gate alteration or partial reuse.
+Final receipt, verification and authoritative post-freeze state stay external.
+Stop for coordinator independent exact-head incremental assessment before
+publication; no second Review or unauthorized next correction cycle.
+All17/independent assessment pending at this committed evidence snapshot.
 
 ### P08 intake and immediately relevant plan reconciliation
 
