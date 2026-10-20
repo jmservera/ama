@@ -2665,7 +2665,16 @@ tenant-administrator checklist ([#360 comment](https://github.com/jmservera/ama/
 No cloud allocation, deployment, Graph write, secret access, private dataset
 access, billing run, live retry, parser relaxation or decryption occurred.
 Whole #360 criteria c, d and e remain **unproved**; a design is not
-acceptance. Research and plan artifacts: `.copilot-tracking/*/2026-10-20/demo-transport-plan-360-*`.
+acceptance.
+
+**Process disclosure (2026-10-20).** The first version of this section was
+written without activating the research, plan, implement and review skills.
+That version's critique and review were not genuine RPI outcomes. A recovery
+cycle re-ran research, planning with one critique, implementation and one
+review, re-verified the evidence and corrected two statements below (the shared
+decoder and the unverified prefix counting). Independent verification by the
+coordinator and human reviewers is still pending; this section is not an
+accepted outcome.
 
 #### Preserved evidence (unchanged)
 
@@ -2698,7 +2707,7 @@ acceptance. Research and plan artifacts: `.copilot-tracking/*/2026-10-20/demo-tr
 | Confidentiality | AES-GCM ciphertext only in tags | Tags are plain text (official warning below); metadata exposure remains |
 | Integrity and completeness | Contiguous index and count, AEAD over the whole value, frame and length bounds, terminal Succeeded required | Single accepted snapshot rule and concurrent-mutation tests |
 | Freshness | Fresh per-run key and run, bounded deadline | No explicit not-after value in associated data |
-| Fail-closed parsing | Structured tag records, not a byte stream; invalid frame, duplicate or tamper refuses | Strict tag-name grammar and extra-key refusal tests |
+| Fail-closed parsing | Tag values are rebuilt as log-style lines and read by the same console-line decoder; invalid frame, duplicate or tamper refuses, but a non-frame value under the run prefix is skipped | Strict tag-name grammar and extra-key refusal tests (S2) |
 
 #### Options considered
 
@@ -2707,7 +2716,7 @@ exhaustive guarantees.
 
 | Option | Why | Verdict |
 | --- | --- | --- |
-| T1 ARM tag relay of AEAD frames, plus binding extension | Documented ARM tags API; Entra/RBAC; reachable from the operator without a private route; structured records; no new resource; grant already activated on the existing job | **Proposed minimal option** |
+| T1 ARM tag relay of AEAD frames, plus binding extension | Documented ARM tags API; Entra/RBAC; reachable from the operator without a private route; named records that need a strict grammar (see S2); no new resource; grant already activated on the existing job | **Proposed minimal option** |
 | T2 Blob result written by the worker identity | [Blob data access uses Entra RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory), but needs a private-endpoint route the operator lacks, the same route that is capacity blocked | Decision-needed fallback if T1 capacity is exceeded |
 | T3 Log Analytics query | [Records arrive after several minutes' delay](https://learn.microsoft.com/en-us/azure/container-apps/log-options); query access is Disabled in the private profile; no completeness contract | Not suitable as primary |
 | T4 Deployment script outputs | [Creates and bills a storage account and container instance](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deployment-script-bicep); outputs live in deployment history | Rejected |
@@ -2756,7 +2765,9 @@ Threat model for tag-capable principals:
 | Holder of tags/write or write on the relay job | Delete, replace, collide with or exhaust frames: denial of service; cannot forge valid ciphertext without the key | Fail closed; effective-writer inventory before and after; stop on an unexpected writer; keep tag and Activity Log evidence; never treat as generic transport failure |
 | Reader of tags, cost, history, export or logs | Sees run identifier, frame count and ciphertext length, timing and retained ciphertext | Privacy/security approval gate DN1; delete owned tags after the run and confirm |
 | Eventual-consistency delay | Late frame looks like a withheld result | Bounded deadline, then refuse as ambiguous; a longer wait is a new, separately authorized run, never a hidden retry |
-| Stale frames from another run | Misread as current | Run-prefixed names plus per-run key; other prefixes ignored but counted |
+| Another tag writer overwrites or deletes an owned frame name | The worker refuses name collisions when it writes, but the [tags API Merge operation](https://learn.microsoft.com/en-us/rest/api/resources/tags/update-at-scope?view=rest-resources-2021-04-01) updates existing names, so a later overwrite is detected only by AEAD and causes refusal, never a repaired result | Fail closed; effective-writer inventory; treat as denial of service |
+| Activity Log or other audit surface records the write | [Activity Log keeps management events for 90 days](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log); whether tag values are recorded was not verified | Assume possible exposure of ciphertext until the DN1 review checks it |
+| Stale frames from another run | Misread as current | Run-prefixed names plus per-run key; other prefixes are not read; a check that counts and reports them is proposed for S2 |
 
 Fail-closed acceptance rules (all must hold, evaluated on one snapshot):
 exact named execution terminally Succeeded; expected image digest unchanged;
