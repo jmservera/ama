@@ -95,6 +95,17 @@
    "contains_real_data": false
   },
   {
+   "id": "fictional-form-review-pack",
+   "path": "src/core/evals/fictional_form_review_pack.json",
+   "version": "fictional-form-review-pack-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "FICTIONAL synthetic form/template review pack for #97: field contract, authority, freshness and stale-trigger proposals, with Finance decision fields FD-01..FD-14 unresolved. Not an approved template; no submission, payment, grant terms or Finance signature.",
+   "used_by": [
+    "src/core/tests/test_form_review_pack.py"
+   ],
+   "contains_real_data": false
+  },
+  {
    "id": "document-control-fixtures",
    "path": "src/core/evals/document_control_fixtures.json",
    "version": "document-control-fixtures-v1",
