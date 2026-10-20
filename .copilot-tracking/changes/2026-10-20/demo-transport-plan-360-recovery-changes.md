@@ -89,3 +89,14 @@ Applied targeted corrections and a process disclosure to the runbook design sect
 * Follow-up items: none
 * Review readiness or no-handoff reason: ready_for_review
 * Continuation owner: confirmed automatic RPI Agent parent
+
+## Dated Correction 2026-10-20 (post-assessment spending gate)
+
+### Spending gate made explicit
+
+* Related phase or task: P01-T01 (runbook design), checklist row 9
+* Files: infra/README.md, docs/architecture/cutover-evidence-pack.md, docs/reference/log.md
+* What changed and why: independent exact-head assessor (Defects, Medium, candidate dfde54d7) found "monthly budget" wording omitted the all-in USD 500 TOTAL October gate. Added a spending gate paragraph and rewrote row 9: accrued and forecast across all scopes, bounded headroom, no assumed-zero, no double counting, USD 535.41 RG-only provisional projection above cap, plan approval expiry 2026-10-25T16:02Z.
+* Completion evidence: git diff +26/-2, ASCII check clean.
+* Validation: focused doc checks only. The prior full-gate receipt (/tmp/ama-serial-2150-360/receipt.json) is HISTORICAL for dfde54d7; a fresh gate is owned by the coordinator. No Review rerun; the original Review and critique are unchanged.
+* Status: still review-only design; DN1-DN5, provenance, tenant authority, paid-plan approval and operational acceptance UNMET.

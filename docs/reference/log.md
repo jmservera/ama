@@ -6684,3 +6684,16 @@ metadata when the knowledge base was created.
   line decoder, and non-run-prefix tags are not counted by current code.
 * Still design for review only; independent verification and decisions DN1 to
   DN5 are pending. #360 c, d, e stay unproved.
+
+## [2026-10-20] correction | Transport design spending gate (#360)
+
+* Files touched: `infra/README.md` (spending gate paragraph and checklist
+  row 9), `docs/architecture/cutover-evidence-pack.md` (status row).
+* Independent assessment of dfde54d7 found the generic "monthly budget"
+  wording omitted the all-in USD 500 TOTAL October gate. The design now
+  requires accrued and forecast charges across all scopes with bounded
+  headroom before any paid start; headroom is unknown and the provisional
+  RG-only projection of USD 535.41 exceeds the cap. Separate costed plan
+  approval remains required (expiry 2026-10-25T16:02Z).
+* No cost query or execution. Review-only; DN1 to DN5 and #360 c, d, e remain
+  open. Refs #360, never closes.

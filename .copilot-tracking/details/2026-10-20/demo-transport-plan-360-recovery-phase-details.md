@@ -268,3 +268,7 @@ Frozen candidate.
 #### Unresolved Items
 
 * None
+
+## Dated Correction 2026-10-20
+
+P01-T01 scope extended only by the spending-gate wording in infra/README.md and the evidence pack row; no new tasks.
