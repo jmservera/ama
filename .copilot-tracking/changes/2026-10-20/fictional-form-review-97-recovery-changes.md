@@ -38,3 +38,10 @@ Implementation began from an unverified pre-RPI draft (uncommitted pack, test, r
 
 * Plan markers P01-P03 checked; critique PC-001..PC-007 applied; no divergence from plan.
 * Remaining human gates: actual Finance authority and binding (FD-01..FD-14), criterion 1 unmet, no approved-template status. Criterion 2 delivered by PR 377.
+
+## Correction after failed local gate (rpi-implement continuation 2026-10-20)
+
+* Trigger: the complete local gate failed at 106fbc96 in the agents test test_eval_registry (test_every_eval_file_is_registered_with_matching_version): the new eval file was absent from the evaluation registry. Failed receipt /tmp/ama-serial-2150-97/receipt.json and log 0021-project-agents.log are retained unchanged. Classified as a directly coupled fixture integration defect, not waived.
+* Fix: registered fictional-form-review-pack in src/agents/evals/registry.json (contains_real_data false, owner unassigned, purpose states fictional and not approved) and added the top-level version key fictional-form-review-pack-v1 to the pack so the registry version invariant holds. The invariant and runtime are unchanged. No Finance approval is implied; FD-01..FD-14 stay null.
+* Validation: test_eval_registry 8 tests OK; test_form_review_pack and test_synthetic_provenance 20 tests OK. Full gate not run here; coordinator reruns serially.
+* Original Review, critique and process-defect disclosure are unchanged; no new Review.
