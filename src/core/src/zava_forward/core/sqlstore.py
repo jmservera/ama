@@ -572,6 +572,7 @@ class SqlStore(Store):
             try:
                 from .change_provenance import validate_sql as validate_change
                 validate_change(self)
+                continuity.validate_sql(self)
                 from .bulk_edits import validate_sql
                 validate_sql(self)
                 stock.validate_sql(self)
@@ -623,6 +624,7 @@ class SqlStore(Store):
                 self._append_audit(pending)
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
                 self.db.execute("COMMIT")
+                continuity.mark_committed(self)
                 from .governance import mark_committed as governance_committed
                 governance_committed(self)
                 from .appointments import mark_committed as appointment_committed

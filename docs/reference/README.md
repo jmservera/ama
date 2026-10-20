@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-19
+ms.date: 2026-10-20
 ms.topic: overview
 ---
 
@@ -20,6 +20,15 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For issue #221, the [core incident boundary](../../src/core/README.md#operator-incidents-and-constructed-restart-221)
+and [API contract](../../src/api/README.md#incident-and-restart-contract-221)
+describe task/version-bound suspension and constructed corrective-test/restart
+records. Actual OD-35/RULE-020 restart remains unavailable and persistently
+held; synthetic permission fixtures do not establish appointment, approved
+thresholds, actual corrective-test acceptance or a human-witnessed drill.
+Manual/emergency/statutory hazard routes remain independent. Whole-issue and
+live acceptance are not inferred.
 
 For the later owner-selected issue #358 continuation, the
 [real temporary synthetic roundtrip](../architecture/cutover-evidence-pack.md#real-temporary-synthetic-preservation-roundtrip-2026-10-19)

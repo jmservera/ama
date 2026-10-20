@@ -1,0 +1,55 @@
+{
+  "task_id": "221",
+  "task_slug": "operator-suspension-221",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-20/operator-suspension-221-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-20/operator-suspension-221-plan.md",
+    "details": ".copilot-tracking/details/2026-10-20/operator-suspension-221-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-20/operator-suspension-221-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Complete ordered RPI loop autonomously within bounded synthetic engineering scope; stop before push/PR.",
+      "status": "confirmed",
+      "evidence": "Explicit user instruction 2026-10-20."
+    },
+    {
+      "decision": "Research executed/Ready for bounded engineering; critique executed once, Revise. PC001-006 directly resolved in frozen details; PC007 rejected as contrary to explicit caller /tmp direction.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-10-20/operator-suspension-221-plan-critique.md"
+    },
+    {
+      "decision": "Original independent Review executed once: Complete / Not accepted. Four Medium defects RV001-004 remain open; no post-Review source fixes or replacement Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "original-review-defects",
+      "summary": "RV001 legacy impacted completeness, RV002 malformed history, RV003 early denial audit and RV004 constructed export parity remain open.",
+      "resolution": "Coordinator selects a later bounded rpi-implement task; preserve original Not accepted Review."
+    },
+    {
+      "id": "actual-human-authority",
+      "summary": "Actual OD-35/RULE-020 restart authority, monitoring thresholds, competent corrective acceptance and human-witnessed drill unavailable.",
+      "resolution": "Building Safety and Sponsor with Digital/task/control owners appoint named authority and approve actual evidence/protocol; no live activation here."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Original Review Complete / Not accepted. Preserve RV001-004 for later implementation; parent freezes candidate, runs full17 and hands off without publication."
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Correct complete impacted-set and malformed-history contracts (RV001/RV002)", "rationale": "Highest integrity leverage for reconstruction and fail-closed reliance; bounded existing-contract changes.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"},
+    {"rank": 2, "task": "Persist early denial audit (RV003)", "rationale": "Makes authenticated stale/untrusted restart attempts reconstructible without granting authority.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"},
+    {"rank": 3, "task": "Align constructed export/runtime parity (RV004)", "rationale": "Restores consistent synthetic evidence while retaining actual-use hold.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"}
+  ]
+}

@@ -12,9 +12,10 @@ decides, approves or restarts for anyone, and an AI assistant has no part in it.
 * Epoch: each suspend and restart increments one counter. A provider call that
   started under an older epoch may finish and stays charged, but its result is
   quarantined: kept for reconstruction, never actionable, never a proposal.
-* Restart: a proposer records corrective evidence; a different manager with an
-  authority reference decides. A replayed, stale, self-approved or
-  unauthorised restart fails. Communication templates are records only; nothing
+* Restart: structured corrective claims and a distinct OID-bound manager with
+  a separate trusted capability permit only a constructed drill. Actual
+  OD-35/RULE-020 restart remains unavailable. Replayed, stale or self-approved
+  decisions fail. Communication templates are records only; nothing
   is sent to anyone. A witnessed authorised drill is an owner activity and is
   not claimed here.
 * Change register: records declared model, rule or configuration versions and
@@ -26,10 +27,14 @@ decides, approves or restarts for anyone, and an AI assistant has no part in it.
 import hashlib
 import json
 import math
+import os
 import re
 import uuid
+from copy import deepcopy
+from functools import wraps
 
 from . import controls as k
+from .change_provenance import _actor
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 SUSPEND_ROLES = MANAGER_ROLES + ("Quality Inspector", "Building Safety Liaison")
@@ -40,6 +45,16 @@ ALL = "all"
 MANUAL_NOTE = ("Manual case work, resident challenge and hazard response continue outside any suspension; "
                "emergency and statutory hazard duties are never paused.")
 COMMS_NOTE = "Constructed communication record only: nothing is sent and no resident is contacted automatically."
+
+
+class IncidentCommittedError(RuntimeError):
+    """An incident action committed but its acknowledgement failed."""
+
+
+def mark_committed(store):
+    context = getattr(store.local, "incident_validation", None)
+    if context is not None:
+        context["persisted"] = True
 
 
 def blank():
@@ -54,10 +69,10 @@ def load(raw):
     return doc
 
 
-def active(doc, task):
+def active(doc, task, constructed=False):
     """The open suspension that covers this task, or None."""
     for s in doc["suspensions"]:
-        if s["status"] == "Suspended" and s["scope"] in (ALL, task):
+        if (s["status"] == "Suspended" or (s.get("actual_hold", True) and not constructed)) and s["scope"] in (ALL, task.removeprefix("legacy:")):
             return s
     return None
 
@@ -72,6 +87,29 @@ def reason_text(s):
 
 def epoch_current(record, epoch):
     recorded = record.get("continuity_epoch", record.get("claim_epoch"))
+    if isinstance(epoch, dict):
+        doc = epoch
+        current = doc.get("epoch")
+        task = record.get("capability", record.get("task", "priority"))
+        if not isinstance(task, str) or type(current) is not int or type(recorded) is not int or not 0 <= recorded <= current:
+            return False
+        task = task.removeprefix("legacy:")
+        history = doc.get("suspensions")
+        if not isinstance(history, list):
+            return False
+        boundaries = []
+        for s in history:
+            if not isinstance(s, dict) or type(s.get("epoch")) is not int or not isinstance(s.get("scope"), str):
+                return False
+            if s.get("restart") is not None and not isinstance(s["restart"], dict):
+                return False
+            end = (s.get("restart") or {}).get("new_epoch", s["epoch"])
+            if type(end) is not int or not 0 < s["epoch"] <= end <= current:
+                return False
+            boundaries.append(end)
+            if s["scope"] in (ALL, task) and end > recorded:
+                return False
+        return current == max(boundaries, default=0)
     return type(recorded) is int and recorded == epoch
 
 
@@ -82,6 +120,138 @@ def effective_versions(doc):
         if c["status"] == "Applied":
             out[f"{c['kind']}:{c['subject']}"] = dict(version=c["to_version"], change=c["id"])
     return out
+
+
+def candidate(store, db, scope):
+    """Server-derived current serving candidate; not an evaluation or approval."""
+    from . import ai_registry, assistant_release as rel, assistants, rai_release
+    if db is None:
+        return dict(complete=False, reason="JSON has no SQL-owned release evidence.", versions=[])
+    if not _table(store, db, "assistant_releases"):
+        return dict(complete=False, reason="SQL-owned release store unavailable.", versions=[])
+    versions = []
+    tasks = ai_registry.tasks() if scope == ALL else {scope: ai_registry.get(scope)}
+    for task in sorted(tasks):
+        legacy = task in ai_registry.LEGACY
+        key = f"legacy:{task}" if legacy else task
+        binding = (ai_registry.legacy_binding(task, store.ai, getattr(store.ai, ai_registry.LEGACY[task]["route"], store.ai.fast))
+                   if legacy else assistants.runtime_binding(task, store.ai))
+        now = float(db.execute(store._epoch_sql).fetchone()[0])
+        selected, denied = rel.assessment(db, key, binding, now, live=False)
+        versions.append(dict(task=task, binding=binding,
+                             release=rai_release.reference(selected) if selected else None,
+                             missing=denied["missing"] if denied else []))
+    return dict(complete=all(v["release"] for v in versions), versions=versions)
+
+
+def _table(store, db, name):
+    query = ("SELECT name FROM sys.tables WHERE name=?" if hasattr(store, "_env")
+             else "SELECT name FROM sqlite_master WHERE type='table' AND name=?")
+    return db.execute(query, (name,)).fetchone() is not None
+
+
+def validate_sql(store):
+    """Use the existing writer transaction for incident capture and restart fencing."""
+    context = getattr(store.local, "incident_validation", None)
+    if context is None:
+        return
+    s = store._suspension(context["body"])
+    action = context["action"]
+    if action == "suspend":
+        s["incident_versions"] = candidate(store, store.db, s["scope"])
+        available = _table(store, store.db, "assistant_tasks")
+        rows = store.db.execute("SELECT id,capability,state,body FROM assistant_tasks WHERE state IN ('pending','leased','ready') ORDER BY id").fetchall() if available else []
+        s["affected_assistant_tasks"] = []
+        from . import assistant_release as rel
+        for i, cap, state, raw in rows:
+            if s["scope"] not in (ALL, cap):
+                continue
+            task = json.loads(raw)
+            ref = task.get("release")
+            record = store.db.execute("SELECT body FROM assistant_releases WHERE id=?", (ref["id"],)).fetchone() if ref and _table(store, store.db, "assistant_releases") else None
+            binding = {key: json.loads(record[0]).get(key) for key in rel.BOUND} if record else None
+            s["affected_assistant_tasks"].append(dict(id=i, task=cap, state=state,
+                version=task.get("version"), release=ref, binding=binding))
+        s["affected_assistant_total"] = len(s["affected_assistant_tasks"])
+        s["affected_assistant_truncated"] = False
+        s["snapshot_complete"] = bool(available and s["incident_versions"]["complete"] and
+                                     all(r["binding"] for r in s["affected_assistant_tasks"]))
+        s["affected"] = []
+        for row in store.db.execute("SELECT body FROM recommendations").fetchall():
+            rec = json.loads(row[0])
+            task = rec.get("task", "priority")
+            if rec.get("source") == "ai" and rec.get("status") in ("Not reviewed", "Proposed") and s["scope"] in (ALL, task):
+                s["affected"].append(dict(id=rec["id"], task=task, state=rec["status"],
+                    version=(rec.get("envelope") or {}).get("task_version"),
+                    release=rec.get("release"), envelope=rec.get("envelope"),
+                    prompt_version=rec.get("prompt_version")))
+        store.audit(s["recorded_by"], "ai_incident_snapshot", "-", json.dumps(s, sort_keys=True))
+    elif action in ("restart_propose", "restart_decide"):
+        if action == "restart_decide" and context["body"].get("decision") == "Keep suspended":
+            return
+        p = s["proposal"]
+        current = candidate(store, store.db, s["scope"])
+        if not current["complete"]:
+            raise PermissionError("Restart needs complete SQL-owned version and release evidence.")
+        if action == "restart_propose":
+            p["candidate"] = current
+            p["digest"] = sha({key: value for key, value in p.items() if key != "digest"})
+            store.audit(p["by"], "ai_corrective_test_claim", "-", json.dumps(p, sort_keys=True))
+        elif current != p["candidate"]:
+            raise PermissionError("Corrective candidate changed; record fresh corrective tests.")
+
+
+def _incident_action(method):
+    @wraps(method)
+    def call(self, user, body, *args, **kwargs):
+        sql = hasattr(self, "db")
+        with self.lock:
+            actor = _actor(self, user)
+            if actor.get("disabled") or actor.get("active") is False:
+                raise PermissionError("Current staff authority is inactive.")
+            before = deepcopy(self._cont())
+            if sql:
+                self._touched()
+            validation = getattr(self.local, "change_validation", None) if sql else None
+            incident = getattr(self.local, "incident_validation", None) if sql else None
+            prior = list(self.local.pending) if sql else []
+            audit_size = None if sql else (os.path.getsize(self.audit_path) if os.path.exists(self.audit_path) else 0)
+            audit_head = None if sql else self.last_hash
+            holder = self.local if sql else self
+            previous = getattr(holder, "incident_validation", None)
+            context = dict(action=method.__name__, body=body, persisted=False)
+            try:
+                holder.incident_validation = context
+                if sql:
+                    self.local.change_validation = dict(user=deepcopy(user), actor=actor)
+                return method(self, user, body, *args, **kwargs)
+            except BaseException as error:
+                if context["persisted"]:
+                    raise IncidentCommittedError("The incident action committed; reload its record before retrying.") from error
+                if sql:
+                    self.local.pending[:] = prior
+                    with self.dblock:
+                        self._discard(prior)
+                else:
+                    self.data["continuity"] = before
+                    if os.path.exists(self.audit_path):
+                        with open(self.audit_path, "r+b") as audit:
+                            audit.truncate(audit_size)
+                    self.last_hash = audit_head
+                if isinstance(error, (ValueError, PermissionError)):
+                    self.audit(actor["email"], "ai_" + method.__name__ + "_denied", "-", str(error))
+                    if sql:
+                        self.local.incident_validation = None
+                        self.local.change_validation = None
+                        self.save()
+                raise
+            finally:
+                if sql:
+                    self.local.change_validation = validation
+                    self.local.incident_validation = incident
+                else:
+                    holder.incident_validation = previous
+    return call
 
 
 class ContinuityMixin:
@@ -96,7 +266,8 @@ class ContinuityMixin:
             return self._cont()["epoch"]
 
     def ai_epoch_current(self, record):
-        return epoch_current(record, self.continuity_epoch())
+        with self.lock:
+            return epoch_current(record, self._cont())
 
     def continuity_fence(self):
         """Make the existing optimistic SQL writer validate the observed continuity document."""
@@ -110,7 +281,7 @@ class ContinuityMixin:
             try:
                 with self.lock:
                     late = source == "ai" and (
-                        type(epoch) is not int or epoch != self._cont()["epoch"]
+                        not epoch_current(dict(task=task, continuity_epoch=epoch), self._cont())
                         or bool(active(self._cont(), task)))
                     if source == "ai":
                         self.continuity_fence()
@@ -128,6 +299,7 @@ class ContinuityMixin:
         return reason_text(s) if s else None
 
     # ---- suspension and restart
+    @_incident_action
     def suspend(self, user, body, assistant_affected=None):
         k.refuse_bulk(body)
         k.require_role(user, SUSPEND_ROLES, "a manager, quality inspector or building safety liaison can suspend AI work")
@@ -145,11 +317,22 @@ class ContinuityMixin:
                    in_flight_note="A provider call already in flight may complete and stay charged or unknown; its result is quarantined. "
                                   "Remote cancellation and exactly-once billing are not claimed.",
                    synthetic=bool(body.get("synthetic")))
+        rec.update(trigger=k.choice(body.get("trigger", "critical incident"), ("critical incident", "guardrail breach"), "the incident trigger"),
+                   evidence=k.text(body.get("evidence", "Unavailable"), "incident evidence", 600),
+                   resident_impact=k.text(body.get("resident_impact", "Unavailable"), "resident impact", 400),
+                   remediation=k.text(body.get("remediation", "Unavailable"), "remediation", 400),
+                   restart_authority=k.text(body.get("restart_authority", "Unavailable: OD-35 authority unappointed"), "restart authority", 200),
+                   actor={key: user.get(key) for key in ("email", "code", "oid")},
+                   actual_authority="Unavailable: OD-35 and RULE-020 acceptance not established.",
+                   actual_hold=True, proposals=[], snapshot_complete=False,
+                   incident_versions=dict(complete=False, reason="SQL snapshot unavailable.", versions=[]))
         with self.lock:
             doc = self._cont()
-            if active(doc, scope) and active(doc, scope)["scope"] == scope:
+            if active(doc, scope, constructed=True) and active(doc, scope, constructed=True)["scope"] == scope:
                 raise ValueError("This scope is already suspended.")
             rec["id"] = k.next_id(doc["suspensions"], "SUS")
+            if hasattr(self, "db"):
+                self.local.incident_validation["body"] = dict(id=rec["id"])
             rec["epoch"] = doc["epoch"] + 1
             rec["affected"] = [dict(id=r["id"], task=r["task"], version=(r.get("envelope") or {}).get("task_version"), state=r["status"])
                                for r in self.data["recommendations"]
@@ -161,6 +344,7 @@ class ContinuityMixin:
             doc["suspensions"].append(rec)
             self.audit(user["email"], "ai_suspend", "-", f"{rec['id']} {scope} epoch={rec['epoch']}")
             self.save()
+            (self.local if hasattr(self, "db") else self).incident_validation["persisted"] = True
             return control_record(user, rec)
 
     def _suspension(self, body):
@@ -169,6 +353,7 @@ class ContinuityMixin:
             raise ValueError("Choose one of the suspensions.")
         return s
 
+    @_incident_action
     def restart_propose(self, user, body):
         k.refuse_bulk(body)
         k.require_role(user, MANAGER_ROLES, "a manager can propose a restart")
@@ -176,12 +361,26 @@ class ContinuityMixin:
             s = self._suspension(body)
             if s["status"] != "Suspended":
                 raise ValueError("This suspension is not open.")
-            s["proposal"] = dict(by=user["email"], at=k.now(), epoch=self._cont()["epoch"],
-                                 corrective_evidence=k.text(body.get("corrective_evidence"), "the corrective evidence", 600))
+            if body.get("evidence_class") != "constructed-fixture" or body.get("result") != "Pass":
+                raise PermissionError("Only explicitly constructed passing test claims are supported; actual restart authority is unavailable.")
+            if not hasattr(self, "db"):
+                raise PermissionError("Restart needs complete SQL-owned version and release evidence; JSON remains manual.")
+            if not s.get("snapshot_complete") or any(
+                    not isinstance(s.get(key), str) or s[key].startswith("Unavailable")
+                    for key in ("evidence", "resident_impact", "remediation", "restart_authority")):
+                raise PermissionError("Incident evidence, impacted versions and restart authority are incomplete; keep the affected scope suspended.")
+            s["proposal"] = dict(by=user["email"], actor={key: user.get(key) for key in ("email", "code", "oid")},
+                                 at=k.now(), epoch=self._cont()["epoch"], incident=s["id"], scope=s["scope"],
+                                 corrective_evidence=k.text(body.get("corrective_evidence"), "the corrective evidence", 600),
+                                 test_id=k.text(body.get("test_id"), "the corrective test identifier", 200),
+                                 evidence_class="constructed-fixture", result="Pass")
+            s.setdefault("proposals", []).append(s["proposal"])
             self.audit(user["email"], "ai_restart_propose", "-", s["id"])
             self.save()
+            self.local.incident_validation["persisted"] = True
             return control_record(user, s)
 
+    @_incident_action
     def restart_decide(self, user, body):
         k.refuse_bulk(body)
         k.require_role(user, MANAGER_ROLES, "a manager can decide a restart")
@@ -195,12 +394,23 @@ class ContinuityMixin:
                 raise PermissionError("Restart needs corrective evidence proposed first. Owner: programme manager.")
             if body.get("epoch") != doc["epoch"] or p["epoch"] != doc["epoch"]:
                 raise PermissionError("This restart decision is stale: the suspension epoch has changed.")
+            if body.get("proposal_digest") != p.get("digest") or p.get("digest") != sha({key: value for key, value in p.items() if key != "digest"}):
+                raise PermissionError("Corrective evidence is missing or changed; record fresh tests.")
             k.different_person(user, s["recorded_by"], "decide the restart")
             k.different_person(user, p["by"], "decide the restart")
+            if (user.get("auth_provider") != "trusted-proxy" or not user.get("oid")
+                    or "ai_restart" not in user.get("rule_roles", [])):
+                raise PermissionError("A separately provisioned OID-bound trusted AI restart capability is required; OD-35 remains unappointed.")
+            for prior in (s.get("actor", {}), p.get("actor", {})):
+                if any(user.get(key) and user.get(key) == prior.get(key) for key in ("code", "oid")):
+                    raise PermissionError("A distinct registered human must decide the restart.")
             decision = k.choice(body.get("decision"), ("Restart", "Keep suspended"), "the decision")
+            authority = k.text(body.get("authority_ref"), "the named restart authority reference", 200)
+            if authority != s.get("restart_authority") or authority.startswith("Unavailable"):
+                raise PermissionError("The declared restart authority is unavailable or mismatched; actual OD-35 authority is not established.")
             rec = dict(decision=decision, by=user["email"], at=k.now(), epoch=doc["epoch"], proposal=p,
-                       authority_ref=k.text(body.get("authority_ref"), "the named restart authority reference", 200),
-                       note="Operator identity alone is not authority; the reference is recorded, not verified here.")
+                       authority_ref=authority, evidence_class="constructed-fixture",
+                       note="Constructed permission/test drill only; actual OD-35/RULE-020 restart remains blocked.")
             if decision == "Keep suspended":
                 s.setdefault("decisions", []).append(rec)
                 s.pop("proposal", None)
@@ -211,6 +421,7 @@ class ContinuityMixin:
                 rec["new_epoch"] = doc["epoch"]
             self.audit(user["email"], "ai_restart_decide", "-", f"{s['id']} {decision}")
             self.save()
+            self.local.incident_validation["persisted"] = True
             return control_record(user, s)
 
     # ---- change register
@@ -268,7 +479,7 @@ class ContinuityMixin:
                     changes=[control_record(user, c) for c in doc["changes"]],
                     effective=effective_versions(doc) if projection.can_see_reason(user) else {},
                     suspended=[{key: s[key] for key in ("id", "scope") if key in s}
-                               for s in suspensions if s["status"] == "Suspended"], note=MANUAL_NOTE)
+                               for s in suspensions if s["status"] == "Suspended" or s.get("actual_hold", True)], note=MANUAL_NOTE)
 
     # ---- supplier-independent export
     def continuity_export(self, user, assistants=None):
@@ -307,7 +518,7 @@ class ContinuityMixin:
             if isinstance(proposals, list):
                 for p in proposals:
                     if isinstance(p, dict) and (
-                            not epoch_current(p, epoch) or active(self._cont(), p.get("capability"))):
+                            not epoch_current(p, self._cont()) or active(self._cont(), p.get("capability"))):
                         p.update(relied_on=False, actionable=False, epoch_current=False)
             task_releases = source.get("task_releases")
             if "task_releases" not in source and metadata["supported"] is False and not reasons:
@@ -344,10 +555,10 @@ class ContinuityMixin:
         result = {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
         task = r.get("task", "priority")
         current = r.get("source") != "ai" or (
-            epoch_current(r, self._cont()["epoch"]) and not active(self._cont(), task)
+            epoch_current(r, self._cont()) and not active(self._cont(), task)
             and not r.get("quarantine") and self.release_current(task, r.get("release"), r.get("model")))
         current = current and not r.get("stale", False)
-        result.update(epoch_current=r.get("source") != "ai" or epoch_current(r, self._cont()["epoch"]),
+        result.update(epoch_current=r.get("source") != "ai" or epoch_current(r, self._cont()),
                       actionable=current and r["status"] in ("Not reviewed", "Proposed"),
                       relied_on=current and r["status"] in ("Accepted", "Edited"))
         return result
@@ -377,6 +588,8 @@ def control_record(user, record):
             result[key] = record[key]
     if type(record.get("affected_assistant_truncated")) is bool:
         result["affected_assistant_truncated"] = record["affected_assistant_truncated"]
+    result["actual_hold"] = record.get("actual_hold", True)
+    result["actual_authority"] = "Unavailable: actual OD-35/RULE-020 restart remains blocked."
     if isinstance(record.get("affected"), list):
         result["affected_total"] = len(record["affected"])
     if "communication" in record:

@@ -54,19 +54,10 @@ def assert_unavailable_export(test: Any, bundle: dict[str, Any]) -> None:
 class EpochTests(Base):
     def cycle(self: Any, store: Any = None) -> None:
         store = store or self.store
+        store.ai = self.store.ai
         s = store.suspend(self.people["Quality Inspector"], dict(SUSPEND, synthetic=True))
-        store.restart_propose(
-            self.pm, dict(id=s["id"], corrective_evidence="Constructed offline check only.")
-        )
-        store.restart_decide(
-            self.people["Programme Support Officer"],
-            dict(
-                id=s["id"],
-                epoch=store.continuity_epoch(),
-                decision="Restart",
-                authority_ref="Constructed fixture, not genuine authority",
-            ),
-        )
+        from test_operator_suspension import restart
+        restart(self, s, store)
 
     def test_ready_and_accepted_history_never_revives(self) -> None:
         ready = self.verify(self.run_ready("stock-prioritisation"))
@@ -430,9 +421,6 @@ class LegacyTests(Base):
         self.assertEqual(ready["source"], "ai")
         accepted = self.store.resolve_priority(self.pm, ready["id"], "accept")
         self.assertEqual(accepted["status"], "Accepted")
-        self.cycle()
-        self.assertFalse(self.store.latest_priority(self.pm)["actionable"])
-        self.assertEqual(self.store.latest_priority(self.pm)["status"], "Accepted")
         new = self.store.ai_priority(self.pm, 1)
         with self.store.lock:
             rec = next(r for r in self.store.data["recommendations"] if r["id"] == new["id"])
@@ -440,13 +428,16 @@ class LegacyTests(Base):
             self.store.save()
         with self.assertRaises(PermissionError):
             self.store.resolve_priority(self.pm, new["id"], "accept")
-        # Same process/version cache cannot outlive epoch, including external writes.
+        # Same process/version cache cannot outlive an incident; actual restart remains denied.
         self.store.ai._chat = lambda *a, **k: "Fixture [[Stage: Contacting resident]]"
         briefing = self.store.briefing(self.pm)
         old = self.other()
         self.cycle(old.store)
+        self.assertFalse(self.store.latest_priority(self.pm)["actionable"])
+        self.assertEqual(self.store.latest_priority(self.pm)["status"], "Proposed")
         refreshed = self.store.briefing(self.pm)
         self.assertNotEqual(briefing["record_id"], refreshed["record_id"])
+        self.assertEqual(refreshed["source"], "template")
 
 
 class OfflineTests(Base):
@@ -1086,7 +1077,7 @@ class HttpTests(fixtures.ApiTests):
         with patch.dict(os.environ, {"ZF_REASON_ROLES": "Building Safety Liaison"}):
             self.user = self.people["Quality Inspector"]
             status, suspended = self.request(
-                "/api/continuity/suspend", dict(SUSPEND, reason=canary)
+                "/api/continuity/suspend", dict(SUSPEND, reason=canary, restart_authority=canary)
             )
             self.assertEqual(status, 200, suspended)
             sid = suspended["id"]
@@ -1096,7 +1087,9 @@ class HttpTests(fixtures.ApiTests):
             for decision in ("Keep suspended", "Restart"):
                 self.user = self.pm
                 status, proposed = self.request(
-                    "/api/continuity/restart-propose", dict(id=sid, corrective_evidence=canary)
+                    "/api/continuity/restart-propose", dict(id=sid, corrective_evidence=canary,
+                                                          test_id="constructed", result="Pass",
+                                                          evidence_class="constructed-fixture")
                 )
                 self.assertEqual(status, 200, proposed)
                 self.assertTrue(proposed["proposal"])
@@ -1111,11 +1104,9 @@ class HttpTests(fixtures.ApiTests):
                         authority_ref=canary,
                     ),
                 )
-                self.assertEqual(status, 200, decided)
+                self.assertEqual(status, 403, decided)
                 self.assertNotIn(canary, json.dumps(decided))
-                self.assertEqual(
-                    decided["status"], "Restarted" if decision == "Restart" else "Suspended"
-                )
+                self.assertIn("error", decided)
             status, changed = self.request(
                 "/api/continuity/change",
                 dict(
@@ -1337,16 +1328,8 @@ class HttpTests(fixtures.ApiTests):
         self.assertEqual(
             self.request("/api/assistants/proposals/" + p["id"])[1]["actionable"], False
         )
-        self.store.restart_propose(self.pm, dict(id=s["id"], corrective_evidence="Synthetic only"))
-        self.store.restart_decide(
-            self.people["Programme Support Officer"],
-            dict(
-                id=s["id"],
-                epoch=self.store.continuity_epoch(),
-                decision="Restart",
-                authority_ref="Fixture only",
-            ),
-        )
+        from test_operator_suspension import restart
+        restart(self, s)
         for action in ("verify", "accept", "edit-accept"):
             status, body = self.request(
                 f"/api/assistants/proposals/{p['id']}/review",

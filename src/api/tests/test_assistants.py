@@ -1178,7 +1178,9 @@ class MssqlReviewTests(MssqlFixture, ReviewTests):
 
 @unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlDurabilityTests(MssqlFixture, DurabilityTests):
-    pass
+    def test_operator_incident_drill(self):
+        from test_operator_suspension import drill
+        drill(self)
 
 
 @unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")

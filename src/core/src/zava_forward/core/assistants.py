@@ -481,7 +481,7 @@ class Assistants:
         return continuity.load(row[0] if row else None)
 
     def suspended(self, db, capability):
-        s = continuity.active(self.continuity(db), capability)
+        s = continuity.active(self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai))
         return continuity.reason_text(s) if s else None
 
     def admission(self, db, capability):
@@ -535,8 +535,8 @@ class Assistants:
             for tid in ids[:limit]:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
-                s = continuity.active(self.continuity(db), body["capability"])
-                current = continuity.epoch_current(body, self.continuity(db)["epoch"])
+                s = continuity.active(self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai))
+                current = continuity.epoch_current(body, self.continuity(db))
                 row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
                 stale = row is None or digest(self.snapshot(db, body["capability"], json.loads(row[0]))) != body["source_signature"]
                 out.append(dict(body, provenance=events, epoch_current=current, stale=stale, relied_on=current and not stale and body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
@@ -677,8 +677,8 @@ class Assistants:
         body["history_next_offset"] = history_offset + history_limit if total > history_offset + history_limit else None
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
-        held = continuity.active(self.continuity(db), body["capability"])
-        body["epoch_current"] = continuity.epoch_current(body, self.continuity(db)["epoch"])
+        held = continuity.active(self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai))
+        body["epoch_current"] = continuity.epoch_current(body, self.continuity(db))
         body["release_denial"] = self.admission(db, body["capability"])
         if not body["release_denial"] and body.get("release") != self.release_reference(db, body["capability"]):
             body["release_denial"] = rel.denial("activation release changed", ["original activation release"], body["capability"])
@@ -793,7 +793,7 @@ class Assistants:
                 self.event(db, tid, kind="exhausted", outcome="attempts-exhausted")
                 return None
             reason = self.disabled(db, task["capability"])
-            if not reason and not continuity.epoch_current(task, self.continuity(db)["epoch"]):
+            if not reason and not continuity.epoch_current(task, self.continuity(db)):
                 reason = "Proposal epoch changed or is unavailable; request fresh work or use the manual route."
             if not reason and task.get("release") != self.release_reference(db, task["capability"]):
                 reason = rel.denial("activation release changed", ["original activation release"], task["capability"])["reason"]
@@ -868,7 +868,8 @@ class Assistants:
             epoch = self.continuity(db)["epoch"]
             denied = self.admission(db, current["capability"])
             binding = digest(runtime_binding(current["capability"], self.store.ai))
-            quarantined = not continuity.epoch_current(current, epoch) or epoch != current.get("claim_epoch") or bool(self.suspended(db, current["capability"])) or bool(
+            quarantined = not continuity.epoch_current(current, self.continuity(db)) or not continuity.epoch_current(
+                dict(capability=current["capability"], continuity_epoch=current.get("claim_epoch")), self.continuity(db)) or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
             if not quarantined and envelope.get("outcome") == "returned":
                 # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
@@ -956,7 +957,7 @@ class Assistants:
                 returned.set()
         with self.transaction() as db:
             held = self.suspended(db, task["capability"]) or (self.admission(db, task["capability"]) or {}).get("reason")
-            if not held and not continuity.epoch_current(task, self.continuity(db)["epoch"]):
+            if not held and not continuity.epoch_current(task, self.continuity(db)):
                 held = "Epoch changed before dispatch; use the manual route."
             if not held and task.get("release") != self.release_reference(db, task["capability"]):
                 held = "Release changed before dispatch; use the manual route."
