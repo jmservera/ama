@@ -3,8 +3,8 @@
   "task_slug": "operator-suspension-221",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-20/operator-suspension-221-research.md",
@@ -26,16 +26,26 @@
       "evidence": ".copilot-tracking/reviews/2026-10-20/operator-suspension-221-plan-critique.md"
     },
     {
-      "decision": "Original independent Review executed once: Complete / Not accepted. Four Medium defects RV001-004 remain open; no post-Review source fixes or replacement Review.",
+      "decision": "Original independent Review executed once: Complete / Not accepted. Four Medium defects were retained at that original boundary; original Review is immutable and no replacement Review is authorized.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"
+    },
+    {
+      "decision": "Owner selected one later P03 implementation cycle for RV001-004 and GATE001-002; preserve original phases/receipt and stop before push/PR for separate coordinator-owned assessment.",
+      "status": "confirmed",
+      "evidence": "Explicit continuation 2026-10-20; /tmp/ama-221-handoff-20261020-01.json"
+    },
+    {
+      "decision": "Later P03-T01/T02 source and focused behavior complete; P03-T03 configured core/API static and 367 infra tests passed. Implementation-owned dispositions do not change original adverse Review or infer independent/human acceptance.",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json"
     }
   ],
   "blockers": [
     {
-      "id": "original-review-defects",
-      "summary": "RV001 legacy impacted completeness, RV002 malformed history, RV003 early denial audit and RV004 constructed export parity remain open.",
-      "resolution": "Coordinator selects a later bounded rpi-implement task; preserve original Not accepted Review."
+      "id": "independent-assessment-and-gate",
+      "summary": "Later source/focused corrections are implementation evidence only; fresh committed all17/verification and separate independent bounded assessment remain pending.",
+      "resolution": "Finish P03-T03/T04, freeze and execute new external complete gate, then return without publication to the coordinator."
     },
     {
       "id": "actual-human-authority",
@@ -44,12 +54,11 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Original Review Complete / Not accepted. Preserve RV001-004 for later implementation; parent freezes candidate, runs full17 and hands off without publication."
+    "phase": "Implement",
+    "action": "P03-T04: freeze clean committed candidate, run all17 at fresh main/new external directory, verify externally and return for coordinator assessment without publication. Final gate result/state remains external."
   },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Correct complete impacted-set and malformed-history contracts (RV001/RV002)", "rationale": "Highest integrity leverage for reconstruction and fail-closed reliance; bounded existing-contract changes.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"},
-    {"rank": 2, "task": "Persist early denial audit (RV003)", "rationale": "Makes authenticated stale/untrusted restart attempts reconstructible without granting authority.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"},
-    {"rank": 3, "task": "Align constructed export/runtime parity (RV004)", "rationale": "Restores consistent synthetic evidence while retaining actual-use hold.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"}
+    {"rank": 1, "task": "Coordinator independently verifies and assesses the later frozen bounded candidate", "rationale": "Required before ordinary publication; implementation dispositions are not independent approval.", "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json"},
+    {"rank": 2, "task": "Named human owners resolve actual authority, thresholds, competent evidence and witnessed drill", "rationale": "Required whole-issue acceptance remains outside synthetic engineering and cannot be granted by fixtures.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"}
   ]
 }

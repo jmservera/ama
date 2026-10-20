@@ -71,10 +71,85 @@ def load(raw):
 
 def active(doc, task, constructed=False):
     """The open suspension that covers this task, or None."""
+    task = ALL if task == ALL else record_task(dict(task=task))
+    if task is None or not history_valid(doc):
+        return dict(id="unavailable", scope=ALL, status="Suspended", invalid_history=True)
     for s in doc["suspensions"]:
-        if (s["status"] == "Suspended" or (s.get("actual_hold", True) and not constructed)) and s["scope"] in (ALL, task.removeprefix("legacy:")):
+        if (s["status"] == "Suspended" or (s.get("actual_hold", True) and not constructed)) and s["scope"] in (ALL, task):
             return s
     return None
+
+
+def record_task(record):
+    """Recognize registered identities, including the retained pre-envelope priority shape."""
+    from . import ai_registry
+    if not isinstance(record, dict):
+        return None
+    task = record.get("capability") if "capability" in record else record.get("task")
+    if "capability" in record and "task" in record and (
+            not isinstance(record["task"], str) or not isinstance(task, str)
+            or record["task"].removeprefix("legacy:") != task.removeprefix("legacy:")):
+        return None
+    if "capability" not in record and "task" not in record and record.get("kind") in (None, "priority") and (
+            isinstance(record.get("items"), list) and isinstance(record.get("deterministic"), list)
+            and isinstance(record.get("policy_version"), str)):
+        task = "priority"
+    if not isinstance(task, str):
+        return None
+    task = task.removeprefix("legacy:")
+    return task if ai_registry.get(task) else None
+
+
+def history_valid(doc):
+    """Every event epoch must occur once in a coherent registered-scope history."""
+    from . import ai_registry
+    current, history = doc.get("epoch"), doc.get("suspensions")
+    if type(current) is not int or current < 0 or not isinstance(history, list):
+        return False
+    events = {}
+    starts = []
+    identifiers = set()
+    for s in history:
+        if not isinstance(s, dict):
+            return False
+        start, scope = s.get("epoch"), s.get("scope")
+        identifier = s.get("id")
+        if (not isinstance(identifier, str) or not re.fullmatch(r"SUS-[0-9]+", identifier)
+                or identifier in identifiers or type(start) is not int or not 0 < start <= current or start in events
+                or not isinstance(scope, str) or scope not in {ALL, *ai_registry.tasks()}):
+            return False
+        identifiers.add(identifier)
+        starts.append(start)
+        events[start] = ("suspend", scope)
+        restart = s.get("restart")
+        if s.get("status") == "Suspended":
+            if restart is not None:
+                return False
+        elif s.get("status") == "Restarted":
+            if not isinstance(restart, dict) or restart.get("decision") != "Restart":
+                return False
+            end = restart.get("new_epoch")
+            if (type(end) is not int or not start < end <= current or end in events
+                    or type(restart.get("epoch")) is not int or restart["epoch"] != end - 1):
+                return False
+            events[end] = ("restart", scope)
+        else:
+            return False
+    if starts != sorted(starts) or len(events) != current:
+        return False
+    open_scopes = set()
+    for expected, (epoch, (action, scope)) in enumerate(sorted(events.items()), 1):
+        if epoch != expected:
+            return False
+        if action == "suspend":
+            if scope in open_scopes:
+                return False
+            open_scopes.add(scope)
+        elif scope not in open_scopes:
+            return False
+        else:
+            open_scopes.remove(scope)
+    return True
 
 
 def sha(value):
@@ -82,35 +157,27 @@ def sha(value):
 
 
 def reason_text(s):
+    if s.get("invalid_history"):
+        return f"Continuity task or event history is unavailable or malformed; use the manual route. {MANUAL_NOTE}"
     return f"Suspended ({s['id']}): use the manual route. {MANUAL_NOTE}"
 
 
 def epoch_current(record, epoch):
+    if not isinstance(record, dict):
+        return False
     recorded = record.get("continuity_epoch", record.get("claim_epoch"))
     if isinstance(epoch, dict):
         doc = epoch
         current = doc.get("epoch")
-        task = record.get("capability", record.get("task", "priority"))
-        if not isinstance(task, str) or type(current) is not int or type(recorded) is not int or not 0 <= recorded <= current:
+        task = record_task(record)
+        if task is None or not history_valid(doc) or type(recorded) is not int or not 0 <= recorded <= current:
             return False
-        task = task.removeprefix("legacy:")
-        history = doc.get("suspensions")
-        if not isinstance(history, list):
-            return False
-        boundaries = []
-        for s in history:
-            if not isinstance(s, dict) or type(s.get("epoch")) is not int or not isinstance(s.get("scope"), str):
-                return False
-            if s.get("restart") is not None and not isinstance(s["restart"], dict):
-                return False
-            end = (s.get("restart") or {}).get("new_epoch", s["epoch"])
-            if type(end) is not int or not 0 < s["epoch"] <= end <= current:
-                return False
-            boundaries.append(end)
+        for s in doc["suspensions"]:
+            end = s["restart"]["new_epoch"] if s["status"] == "Restarted" else s["epoch"]
             if s["scope"] in (ALL, task) and end > recorded:
                 return False
-        return current == max(boundaries, default=0)
-    return type(recorded) is int and recorded == epoch
+        return True
+    return False
 
 
 def effective_versions(doc):
@@ -150,6 +217,23 @@ def _table(store, db, name):
     return db.execute(query, (name,)).fetchone() is not None
 
 
+def retained_release(store, db, ref, task):
+    """Resolve the exact retained release, never substitute today's selected release."""
+    from . import assistant_release as rel, rai_release
+    if not isinstance(ref, dict) or not isinstance(ref.get("id"), str) or not _table(store, db, "assistant_releases"):
+        return None, None
+    row = db.execute("SELECT capability,status,body FROM assistant_releases WHERE id=?", (ref["id"],)).fetchone()
+    if row is None or row[0] != task:
+        return None, None
+    raw = json.loads(row[2])
+    # References bind the original active release, even after suspension/revocation.
+    snapshot = dict(raw, id=ref["id"], status="active")
+    if (not isinstance(snapshot.get("release_version"), str) or rai_release.reference(snapshot) != ref
+            or any(not isinstance(snapshot.get(key), str) or not snapshot[key] for key in rel.BOUND)):
+        return None, None
+    return snapshot, {key: snapshot[key] for key in rel.BOUND}
+
+
 def validate_sql(store):
     """Use the existing writer transaction for incident capture and restart fencing."""
     context = getattr(store.local, "incident_validation", None)
@@ -162,29 +246,35 @@ def validate_sql(store):
         available = _table(store, store.db, "assistant_tasks")
         rows = store.db.execute("SELECT id,capability,state,body FROM assistant_tasks WHERE state IN ('pending','leased','ready') ORDER BY id").fetchall() if available else []
         s["affected_assistant_tasks"] = []
-        from . import assistant_release as rel
         for i, cap, state, raw in rows:
             if s["scope"] not in (ALL, cap):
                 continue
             task = json.loads(raw)
             ref = task.get("release")
-            record = store.db.execute("SELECT body FROM assistant_releases WHERE id=?", (ref["id"],)).fetchone() if ref and _table(store, store.db, "assistant_releases") else None
-            binding = {key: json.loads(record[0]).get(key) for key in rel.BOUND} if record else None
+            snapshot, binding = retained_release(store, store.db, ref, cap)
             s["affected_assistant_tasks"].append(dict(id=i, task=cap, state=state,
-                version=task.get("version"), release=ref, binding=binding))
+                version=task.get("version"), release=ref, binding=binding, release_snapshot=snapshot))
         s["affected_assistant_total"] = len(s["affected_assistant_tasks"])
         s["affected_assistant_truncated"] = False
-        s["snapshot_complete"] = bool(available and s["incident_versions"]["complete"] and
-                                     all(r["binding"] for r in s["affected_assistant_tasks"]))
         s["affected"] = []
         for row in store.db.execute("SELECT body FROM recommendations").fetchall():
             rec = json.loads(row[0])
-            task = rec.get("task", "priority")
-            if rec.get("source") == "ai" and rec.get("status") in ("Not reviewed", "Proposed") and s["scope"] in (ALL, task):
+            task = record_task(rec)
+            if rec.get("source") == "ai" and rec.get("status") in ("Not reviewed", "Proposed", "Accepted", "Edited") and (task is None or s["scope"] in (ALL, task)):
+                snapshot, binding = retained_release(store, store.db, rec.get("release"), f"legacy:{task}")
+                envelope = rec.get("envelope")
+                version = envelope.get("task_version") if isinstance(envelope, dict) else None
+                prompt = rec.get("prompt_version")
+                complete = bool(task and binding and isinstance(version, str) and version
+                                and isinstance(prompt, str) and prompt == binding["prompt_version"]
+                                and envelope.get("task") == task and envelope.get("release") == rec.get("release"))
                 s["affected"].append(dict(id=rec["id"], task=task, state=rec["status"],
-                    version=(rec.get("envelope") or {}).get("task_version"),
-                    release=rec.get("release"), envelope=rec.get("envelope"),
-                    prompt_version=rec.get("prompt_version")))
+                    version=version, release=rec.get("release"), envelope=envelope,
+                    prompt_version=prompt, binding=binding, release_snapshot=snapshot,
+                    complete=complete))
+        s["snapshot_complete"] = bool(available and s["incident_versions"]["complete"] and
+                                     all(r["binding"] and r["version"] for r in s["affected_assistant_tasks"]) and
+                                     all(r["complete"] for r in s["affected"]))
         store.audit(s["recorded_by"], "ai_incident_snapshot", "-", json.dumps(s, sort_keys=True))
     elif action in ("restart_propose", "restart_decide"):
         if action == "restart_decide" and context["body"].get("decision") == "Keep suspended":
@@ -206,9 +296,7 @@ def _incident_action(method):
     def call(self, user, body, *args, **kwargs):
         sql = hasattr(self, "db")
         with self.lock:
-            actor = _actor(self, user)
-            if actor.get("disabled") or actor.get("active") is False:
-                raise PermissionError("Current staff authority is inactive.")
+            actor = None
             before = deepcopy(self._cont())
             if sql:
                 self._touched()
@@ -222,6 +310,10 @@ def _incident_action(method):
             context = dict(action=method.__name__, body=body, persisted=False)
             try:
                 holder.incident_validation = context
+                current = _actor(self, user)
+                if current.get("disabled") or current.get("active") is False:
+                    raise PermissionError("Current staff authority is inactive.")
+                actor = current
                 if sql:
                     self.local.change_validation = dict(user=deepcopy(user), actor=actor)
                 return method(self, user, body, *args, **kwargs)
@@ -239,11 +331,20 @@ def _incident_action(method):
                             audit.truncate(audit_size)
                     self.last_hash = audit_head
                 if isinstance(error, (ValueError, PermissionError)):
-                    self.audit(actor["email"], "ai_" + method.__name__ + "_denied", "-", str(error))
                     if sql:
                         self.local.incident_validation = None
                         self.local.change_validation = None
-                        self.save()
+                    detail = dict(reason=str(error)[:400], identity_verified=actor is not None,
+                                  authority_verified=False,
+                                  claimed_identity_digest=sha({key: str(user.get(key, ""))[:200] for key in ("email", "code", "oid")}),
+                                  incident=body.get("id") if isinstance(body.get("id"), str) and len(body["id"]) <= 64 else None)
+                    who = actor["email"] if actor else "unverified"
+                    action = "ai_" + method.__name__ + "_denied"
+                    detail = json.dumps(detail, sort_keys=True)
+                    if sql:
+                        self._audit_immediate((who, action, "-", detail, k.now()))
+                    else:
+                        self.audit(who, action, "-", detail)
                 raise
             finally:
                 if sql:
@@ -358,6 +459,8 @@ class ContinuityMixin:
         k.refuse_bulk(body)
         k.require_role(user, MANAGER_ROLES, "a manager can propose a restart")
         with self.lock:
+            if not history_valid(self._cont()):
+                raise PermissionError("Continuity history is incomplete or malformed; keep the affected scope suspended.")
             s = self._suspension(body)
             if s["status"] != "Suspended":
                 raise ValueError("This suspension is not open.")
@@ -381,11 +484,15 @@ class ContinuityMixin:
             return control_record(user, s)
 
     @_incident_action
-    def restart_decide(self, user, body):
+    def restart_decide(self, user, body, *, trusted_route=None):
         k.refuse_bulk(body)
+        if trusted_route is False:
+            raise PermissionError("Restart decisions need the OID-bound trusted sign-in route.")
         k.require_role(user, MANAGER_ROLES, "a manager can decide a restart")
         with self.lock:
             doc = self._cont()
+            if not history_valid(doc):
+                raise PermissionError("Continuity history is incomplete or malformed; keep the affected scope suspended.")
             s = self._suspension(body)
             if s["status"] != "Suspended":
                 raise ValueError("This suspension is not open; a replayed restart is refused.")
@@ -475,17 +582,18 @@ class ContinuityMixin:
         from . import projection
         doc = self._cont()
         suspensions = [control_record(user, s) for s in doc["suspensions"]]
-        return dict(epoch=doc["epoch"], suspensions=suspensions,
+        return dict(epoch=doc["epoch"], suspensions=suspensions, history_valid=history_valid(doc),
                     changes=[control_record(user, c) for c in doc["changes"]],
                     effective=effective_versions(doc) if projection.can_see_reason(user) else {},
                     suspended=[{key: s[key] for key in ("id", "scope") if key in s}
-                               for s in suspensions if s["status"] == "Suspended" or s.get("actual_hold", True)], note=MANUAL_NOTE)
+                               for s in suspensions if s.get("status") == "Suspended" or s.get("actual_hold", True)], note=MANUAL_NOTE)
 
     # ---- supplier-independent export
     def continuity_export(self, user, assistants=None):
         """Build the bundle. It says whether it is complete and never presents a truncated or unsupported part as whole."""
         k.require_role(user, MANAGER_ROLES, "a manager can export evidence")
         from . import ai_registry, ledger, projection
+        from .ai import Ai
         source = assistants if isinstance(assistants, dict) else {}
         with self.lock:
             head_count, head_hash = self.ledger_head()
@@ -517,9 +625,13 @@ class ContinuityMixin:
             reasons.extend(proposal_problems(dict(assistant_proposals=proposals, assistants=metadata)))
             if isinstance(proposals, list):
                 for p in proposals:
-                    if isinstance(p, dict) and (
-                            not epoch_current(p, self._cont()) or active(self._cont(), p.get("capability"))):
-                        p.update(relied_on=False, actionable=False, epoch_current=False)
+                    if isinstance(p, dict):
+                        current = epoch_current(p, self._cont())
+                        held = active(self._cont(), p.get("capability"), constructed=not isinstance(self.ai, Ai))
+                        p["epoch_current"] = current
+                        p["suspension"] = held["id"] if held else None
+                        if not current or held:
+                            p.update(relied_on=False, actionable=False)
             task_releases = source.get("task_releases")
             if "task_releases" not in source and metadata["supported"] is False and not reasons:
                 task_releases = dict(
@@ -553,7 +665,12 @@ class ContinuityMixin:
                 "citations", "unresolved", "verified", "fallback_reason", "ai_output", "workflow_output", "shown_output", "reviewer_action",
                 "reviewer_reason", "override_text", "resolved_by", "resolved_at", "review_evidence", "quarantine", "continuity_epoch", "user", "release")
         result = {key: r[key] for key in keep if key in r} if r.get("kind") == "ai_task" else dict(r, kind=r.get("kind", "priority"))
-        task = r.get("task", "priority")
+        task = record_task(r)
+        result["task"] = task
+        envelope = r.get("envelope")
+        result["historical_unknowns"] = [key for key, value in (
+            ("task", task), ("release", r.get("release")), ("prompt_version", r.get("prompt_version")),
+            ("task_version", envelope.get("task_version") if isinstance(envelope, dict) else None)) if value is None]
         current = r.get("source") != "ai" or (
             epoch_current(r, self._cont()) and not active(self._cont(), task)
             and not r.get("quarantine") and self.release_current(task, r.get("release"), r.get("model")))
@@ -567,6 +684,8 @@ class ContinuityMixin:
 def control_record(user, record):
     """Project control responses without changing the canonical retained record."""
     from . import ai_registry, projection
+    if not isinstance(record, dict):
+        return dict(status="Unavailable", detail="Malformed retained control evidence.")
     if projection.can_see_reason(user):
         return record
     held = projection.NOTE_HELD
@@ -621,6 +740,8 @@ def limited_export(bundle):
     held = projection.NOTE_HELD
 
     def summary(record):
+        if not isinstance(record, dict):
+            return dict(detail=held)
         result = {key: value for key in ("continuity_epoch", "claim_epoch", "epoch_current", "actionable", "relied_on", "revision")
                   if type(value := record.get(key)) in (int, bool)}
         for key in ("status", "state"):

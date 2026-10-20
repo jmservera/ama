@@ -4,7 +4,41 @@ description: Evidence-based task context and completion criteria
 ms.date: 2026-10-20
 ---
 
-Task 221 / operator-suspension-221; implemented bounded details, ready for original Review.
+Task 221 / operator-suspension-221; later selected P03 implementation active.
+
+## P03: Later Selected Finding Work
+
+RV001 includes every affected legacy record, exact retained prior-release
+reference and binding, and explicit unknowns. Containment never waits for
+complete evidence; incomplete legacy evidence denies constructed restart.
+RV002 validates registered tasks/scopes and complete coherent epoch coverage,
+and exercises runtime/export consumers without inventing legacy task identity.
+RV003 persists one bounded denial for early invalid identity and authenticated
+password restart attempts, without verified attribution or incident mutation;
+rollback must not remove the denial.
+RV004 reprojects using trusted current store provider/release state, not caller
+flags; fresh constructed ready/accepted source/list/detail/bundle agree while
+actual providers retain the hold across switch/reopen.
+GATE001 uses the existing formatter. GATE002 reconciles all directly dependent
+capability definitions, never grants them to ordinary staff or seeds.
+
+P03-T01 and P03-T02 now have source and focused completion evidence. Existing owning files host new regression
+subcases where practical; preserve original tests and failed logs. Focused
+credential-scrubbed checks precede commit and fresh all17 at
+/tmp/ama-221-rpi-20261020-correction-01 with runner-owned heavy lock.
+No new Review/critique. Original receipt and Review hashes are immutable.
+Actual authority, thresholds, competent acceptance and witnessed drill stay
+open under the original owners. #222 interface is not frozen.
+
+Later test allocation adds four methods to the original ten issue methods,
+plus expanded subcases in existing methods and the shared native drill:
+15 methods including the original native bridge, below the plan ceiling 18.
+The earlier 12-method allocation described only the original invocation.
+No test method was removed. P03-T03 covers final configured API/core static
+checks, 367 offline infra tests and exact migration tests. P03-T04 remains
+pending until committed freeze and the new external complete gate/verification.
+Committed state records the pre-gate boundary; final gate evidence/state stays
+external to avoid invalidating the frozen candidate.
 
 ## Frozen Critique Corrections
 
@@ -144,7 +178,7 @@ regulatory snapshots. Distinguish source-tested from human/live approval.
 <!-- rpi:task id=P02-T02 -->
 ### P02-T02
 
-Invoke rpi-review once after implementation reconciliation. Original findings
+Original invocation: invoke rpi-review once after implementation reconciliation. Original findings
 are immutable and routed to later work; do not quietly repeat or relabel.
 Before commit use gh api user, local privacy-safe identity and required trailer.
 Commit all original issue artifacts then run existing runner all17 at fresh

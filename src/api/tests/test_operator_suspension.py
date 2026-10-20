@@ -4,6 +4,7 @@ import copy
 import json
 import threading
 import unittest
+import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
 from typing import Any
@@ -13,6 +14,7 @@ from zava_forward.core import assistant_release, assistants, continuity
 from zava_forward.core.ai import Ai
 from zava_forward.core.store import ConflictError
 
+import test_continuity_epoch_export as epoch_fixtures
 from test_assistants import Base
 
 CAP = "stock-prioritisation"
@@ -89,6 +91,18 @@ def transaction_failures(test: Any, s: dict[str, Any], actor: dict[str, Any]) ->
         with test.assertRaises(RuntimeError):
             test.store.restart_decide(actor, decision(s))
     test.assertEqual(test.other().store.continuity_view(test.pm), before)
+    denials = sum(row["action"] == "ai_restart_decide_denied" for row in test.store.audit_entries())
+    with patch.object(
+        test.store, "_proc_write", side_effect=PermissionError("constructed writer refusal")
+    ):
+        with test.assertRaises(PermissionError):
+            test.store.restart_decide(actor, decision(s))
+    reopened = test.other().store
+    test.assertEqual(
+        sum(row["action"] == "ai_restart_decide_denied" for row in reopened.audit_entries()),
+        denials + 1,
+    )
+    test.assertEqual(reopened.continuity_view(test.pm), before)
     original = test.store.save
     other = test.other()
 
@@ -153,6 +167,8 @@ def drill(test: Any) -> None:
     actor = provision(test)
     p = propose(test, s)
     with test.assertRaises(PermissionError):
+        test.store.restart_decide(dict(actor, oid="forged"), decision(p))
+    with test.assertRaises(PermissionError):
         test.store.restart_decide(dict(actor, rule_roles=[]), decision(p))
     test.assertTrue(
         any(row["action"] == "ai_restart_decide_denied" for row in test.store.audit_entries())
@@ -163,6 +179,10 @@ def drill(test: Any) -> None:
     test.assertFalse(test.service.detail(test.pm, ready["id"])["actionable"])
     fresh = test.service.invoke(test.pm, CAP, "ZF-1")
     test.assertTrue(test.service.execute(fresh["id"]))
+    bundle = test.store.continuity_export(test.pm, test.service.export())
+    exported = next(p for p in bundle["assistant_proposals"] if p["id"] == fresh["id"])
+    test.assertTrue(exported["epoch_current"])
+    test.assertTrue(exported["actionable"])
     reopened = test.other()
     test.assertEqual(
         reopened.store.continuity_view(test.pm)["suspensions"][0]["status"], "Restarted"
@@ -174,6 +194,226 @@ def drill(test: Any) -> None:
 
 
 class OperatorIncident(Base):
+    def test_legacy_prior_release_snapshot_and_reopen(self) -> None:
+        epoch_fixtures.LegacyTests.prepare_ai(self, self.store)
+        output = self.store.ai_run(self.pm, "ZF-1", "summary")
+        self.store.review_ai(self.pm, output["record_id"], "accept")
+        retained = next(
+            r for r in self.store.data["recommendations"] if r["id"] == output["record_id"]
+        )
+        original = copy.deepcopy(retained)
+        rid = retained["release"]["id"]
+        with self.service.transaction() as db:
+            raw = db.execute(
+                "SELECT capability,body FROM assistant_releases WHERE id=?", (rid,)
+            ).fetchone()
+            updated = dict(json.loads(raw[1]), release_version="later-v2")
+            db.execute(
+                "INSERT INTO assistant_releases (id,capability,status,body,revision) "
+                "VALUES (?,?,'active',?,1)",
+                ("later-summary", raw[0], json.dumps(updated)),
+            )
+        self.store.suspend(self.people["Quality Inspector"], incident("summary"))
+        s = self.other().store.continuity_view(self.pm)["suspensions"][-1]
+        self.assertTrue(s["snapshot_complete"])
+        self.assertEqual(len(s["affected"]), 1)
+        affected = s["affected"][0]
+        self.assertEqual(affected["state"], "Accepted")
+        self.assertEqual(affected["release"], original["release"])
+        self.assertEqual(affected["release_snapshot"]["release_version"], "fixture-v1")
+        self.assertEqual(
+            affected["binding"], {key: json.loads(raw[1])[key] for key in assistant_release.BOUND}
+        )
+        self.assertNotEqual(affected["release"], s["incident_versions"]["versions"][0]["release"])
+        propose(self, s)
+
+    def test_incomplete_legacy_snapshot_contains_but_denies_restart(self) -> None:
+        epoch_fixtures.LegacyTests.prepare_ai(self, self.store)
+        output = self.store.ai_run(self.pm, "ZF-1", "summary")
+        with self.store.lock:
+            original = next(
+                r for r in self.store.data["recommendations"] if r["id"] == output["record_id"]
+            )
+            for field, value in (
+                ("release", None),
+                ("release", dict(original["release"], id="missing-reference")),
+                ("release", dict(original["release"], digest="altered")),
+                ("envelope", None),
+                ("prompt_version", None),
+            ):
+                rec = copy.deepcopy(original)
+                rec.update(id=f"unknown-{len(self.store.data['recommendations'])}")
+                rec[field] = value
+                self.store.data["recommendations"].append(rec)
+            self.store.save()
+        self.store.suspend(self.people["Quality Inspector"], incident("summary"))
+        reopened = self.other().store
+        s = reopened.continuity_view(self.pm)["suspensions"][-1]
+        self.assertEqual(len(s["affected"]), 6)
+        self.assertFalse(s["snapshot_complete"])
+        self.assertTrue(reopened.continuity_block("summary"))
+        with self.assertRaises(PermissionError):
+            propose(self, s, reopened)
+        self.assertEqual(
+            reopened.continuity_view(self.pm)["suspensions"][-1]["status"], "Suspended"
+        )
+
+    def test_malformed_history_runtime_and_generic_export(self) -> None:
+        ready = self.run_ready(CAP)
+        pending = self.service.invoke(self.pm, CAP, "ZF-2")
+        s = self.store.suspend(self.people["Quality Inspector"], incident("quality-evidence"))
+        restart(self, s)
+        valid = copy.deepcopy(self.store._cont())
+        self.assertTrue(self.service.detail(self.pm, ready["id"])["actionable"])
+        malformed = []
+        bad = copy.deepcopy(valid)
+        bad["suspensions"][0]["scope"] = "not-registered"
+        malformed.append(bad)
+        bad = copy.deepcopy(valid)
+        bad["suspensions"][0]["restart"] = {}
+        malformed.append(bad)
+        bad = copy.deepcopy(valid)
+        bad["epoch"] = 4
+        bad["suspensions"][0]["restart"]["new_epoch"] = 4
+        malformed.append(bad)
+        bad = copy.deepcopy(valid)
+        bad["suspensions"][0]["status"] = "unknown"
+        malformed.append(bad)
+        malformed_entries: tuple[Any, ...] = (None, [], {}, "unknown")
+        for value in malformed_entries:
+            bad = copy.deepcopy(valid)
+            bad["suspensions"][0] = value
+            malformed.append(bad)
+        bad = copy.deepcopy(valid)
+        bad["suspensions"][0].pop("id")
+        malformed.append(bad)
+        for index, bad in enumerate(malformed):
+            with self.subTest(history=index), self.store.lock:
+                self.store.data["continuity"] = bad
+                self.store.save()
+                self.assertFalse(self.store.continuity_view(self.pm)["history_valid"])
+                with self.assertRaises(PermissionError):
+                    propose(self, s)
+                self.assertFalse(self.service.detail(self.pm, ready["id"])["actionable"])
+                self.assertIsNone(self.service.claim(pending["id"], "invalid-history"))
+                self.assertFalse(self.service.export()["proposals"][0]["relied_on"])
+                source = self.service.export()
+                source["proposals"] = [dict(id="generic", continuity_epoch=bad["epoch"])]
+                bundle = self.store.continuity_export(self.pm, source)
+                generic = bundle["assistant_proposals"][0]
+                self.assertFalse(generic["epoch_current"])
+                self.assertFalse(generic["actionable"])
+        with self.store.lock:
+            self.store.data["continuity"] = valid
+            self.store.save()
+        for record in (
+            dict(id="generic", continuity_epoch=2),
+            dict(task="unknown", continuity_epoch=2),
+            dict(capability=None, continuity_epoch=2),
+            dict(capability=CAP, task="quality-evidence", continuity_epoch=2),
+            None,
+        ):
+            self.assertFalse(self.store.ai_epoch_current(record))
+        self.assertFalse(continuity.epoch_current(dict(task=CAP, continuity_epoch=0), 0))
+        source = self.service.export()
+        source["proposals"] = [dict(id="generic", continuity_epoch=2)]
+        generic = self.store.continuity_export(self.pm, source)["assistant_proposals"][0]
+        self.assertFalse(generic["epoch_current"])
+        self.assertFalse(generic["relied_on"])
+        with self.service.transaction() as db:
+            body = self.service._row(db, ready["id"])
+            body.pop("capability")
+            db.execute(
+                "UPDATE assistant_tasks SET body=? WHERE id=?",
+                (json.dumps(body), ready["id"]),
+            )
+        exported_generic = next(
+            p for p in self.service.export()["proposals"] if p["id"] == ready["id"]
+        )
+        self.assertFalse(exported_generic["epoch_current"])
+        self.assertFalse(exported_generic["actionable"])
+        legacy = dict(
+            id="old-priority",
+            source="ai",
+            status="Proposed",
+            items=[],
+            deterministic=[],
+            policy_version="unknown",
+            continuity_epoch=0,
+        )
+        self.assertTrue(self.store.ai_epoch_current(legacy))
+        exported = self.store._export_record(legacy)
+        self.assertEqual(exported["task"], "priority")
+        self.assertFalse(exported["actionable"])
+        self.assertIn("release", exported["historical_unknowns"])
+
+    def test_early_denials_are_durable_once_without_verified_attribution(self) -> None:
+        s = self.store.suspend(self.people["Quality Inspector"], incident())
+        actor = provision(self)
+        s = propose(self, s)
+        before = copy.deepcopy(self.store.continuity_view(self.pm))
+        for bad in (
+            dict(actor, oid="forged"),
+            dict(actor, email="missing@example.test"),
+            dict(actor, role="Quality Inspector"),
+        ):
+            count = sum(
+                r["action"] == "ai_restart_decide_denied" for r in self.store.audit_entries()
+            )
+            with self.assertRaises(PermissionError):
+                self.store.restart_decide(bad, decision(s))
+            reopened = self.other().store
+            denials = [
+                r for r in reopened.audit_entries() if r["action"] == "ai_restart_decide_denied"
+            ]
+            self.assertEqual(len(denials), count + 1)
+            self.assertEqual(denials[-1]["who"], "unverified")
+            self.assertFalse(json.loads(denials[-1]["detail"])["identity_verified"])
+            self.assertEqual(reopened.continuity_view(self.pm), before)
+        with self.store.dblock:
+            current = dict(self.people["Programme Support Officer"], disabled=True)
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(current), actor["email"])
+            )
+        with self.assertRaises(PermissionError):
+            self.store.restart_decide(actor, decision(s))
+        last = list(self.other().store.audit_entries())[-1]
+        self.assertEqual(last["action"], "ai_restart_decide_denied")
+        self.assertEqual(last["who"], "unverified")
+        with self.store.dblock:
+            current.pop("disabled")
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(current), actor["email"])
+            )
+        count = sum(r["action"] == "ai_restart_decide_denied" for r in self.store.audit_entries())
+        with patch.object(
+            self.store, "_proc_write", side_effect=PermissionError("constructed writer refusal")
+        ):
+            with self.assertRaises(PermissionError):
+                self.store.restart_decide(actor, decision(s))
+        reopened = self.other().store
+        denials = [r for r in reopened.audit_entries() if r["action"] == "ai_restart_decide_denied"]
+        self.assertEqual(len(denials), count + 1)
+        self.assertTrue(json.loads(denials[-1]["detail"])["identity_verified"])
+        self.assertFalse(json.loads(denials[-1]["detail"])["authority_verified"])
+        self.assertEqual(reopened.continuity_view(self.pm), before)
+        from zava_forward.core.store import Store
+
+        live, audit = str(self.root / "denial.json"), str(self.root / "denial-audit.jsonl")
+        store = Store(str(self.seed), live, audit)
+        store.suspend(self.people["Quality Inspector"], incident())
+        with self.assertRaises(PermissionError):
+            store.restart_decide(dict(actor, oid="forged"), decision(s))
+        reopened_json = Store(str(self.seed), live, audit)
+        denials = [
+            r for r in reopened_json.audit_entries() if r["action"] == "ai_restart_decide_denied"
+        ]
+        self.assertEqual(len(denials), 1)
+        self.assertEqual(denials[0]["who"], "unverified")
+        self.assertEqual(
+            reopened_json.continuity_view(self.pm)["suspensions"][0]["status"], "Suspended"
+        )
+
     def test_incident_snapshot_and_reopen(self) -> None:
         drill(self)
         from zava_forward.core.store import Store
@@ -264,6 +504,27 @@ class OperatorIncident(Base):
     def test_constructed_restart_actual_hold(self) -> None:
         s = self.store.suspend(self.people["Quality Inspector"], incident())
         restart(self, s)
+        ready = self.verify(self.run_ready(CAP))
+        for accepted in (False, True):
+            if accepted:
+                ready = self.service.review(
+                    self.pm, ready["id"], "accept", ready["revision"], "Fixture review"
+                )
+            source = self.service.export()
+            bundle = self.store.continuity_export(self.pm, source)
+            projections = (
+                self.service.detail(self.pm, ready["id"]),
+                next(
+                    p for p in self.service.listing(self.pm)["proposals"] if p["id"] == ready["id"]
+                ),
+                next(p for p in source["proposals"] if p["id"] == ready["id"]),
+                next(p for p in bundle["assistant_proposals"] if p["id"] == ready["id"]),
+            )
+            for p in projections:
+                self.assertTrue(p["epoch_current"])
+                self.assertTrue(p["actionable"])
+                self.assertEqual(p["relied_on"], accepted)
+        collected = self.service.export()
         ai = Ai()
         ai.endpoint, ai.fast, ai.model_version = "https://synthetic.invalid", "test", "test-model"
         calls = []
@@ -276,6 +537,15 @@ class OperatorIncident(Base):
         self.assertEqual(p["state"], "disabled")
         self.assertFalse(self.service.execute(p["id"]))
         self.assertEqual(calls, [])
+        for service in (self.service, self.other()):
+            service.store.ai = ai
+            collected["constructed"] = True
+            bundle = service.store.continuity_export(self.pm, collected)
+            p = next(p for p in bundle["assistant_proposals"] if p["id"] == ready["id"])
+            self.assertTrue(p["epoch_current"])
+            self.assertFalse(p["actionable"])
+            self.assertFalse(p["relied_on"])
+            self.assertFalse(service.detail(self.pm, ready["id"])["actionable"])
         self.assertIn(
             "OD-35", self.store.continuity_view(self.pm)["suspensions"][0]["actual_authority"]
         )
@@ -358,28 +628,51 @@ class OperatorIncident(Base):
         self.assertEqual(seeded["rule_roles"], [])
         with self.assertRaises(PermissionError):
             self.store.restart_decide(seeded, decision(s))
-        app = App(self.store, provider=provider)
-        server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
-        thread = threading.Thread(target=server.serve_forever)
-        thread.start()
-        try:
-            request = urllib.request.Request(
-                f"http://127.0.0.1:{server.server_port}/api/continuity/restart-decide",
-                data=json.dumps(decision(s)).encode(),
-                headers={
-                    "Content-Type": "application/json",
-                    "X-ZF-CSRF": "1",
-                    "X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=actor["oid"]),
-                },
+        for route in (password, provider):
+            app = App(self.store, provider=route)
+            server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+            thread = threading.Thread(target=server.serve_forever)
+            thread.start()
+            before = copy.deepcopy(self.store.continuity_view(self.pm))
+            count = sum(
+                r["action"] == "ai_restart_decide_denied" for r in self.store.audit_entries()
             )
-            with urllib.request.urlopen(request, timeout=10) as response:
-                self.assertEqual(response.status, 200)
-                self.assertTrue(json.load(response)["actual_hold"])
-        finally:
-            server.shutdown()
-            server.server_close()
-            thread.join(10)
-            app.assistants.stop()
+            try:
+                request = urllib.request.Request(
+                    f"http://127.0.0.1:{server.server_port}/api/continuity/restart-decide",
+                    data=json.dumps(decision(s)).encode(),
+                    headers={
+                        "Content-Type": "application/json",
+                        "X-ZF-CSRF": "1",
+                        "Cookie": f"zf_session={cookie}",
+                        "X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=actor["oid"]),
+                    },
+                )
+                if route is password:
+                    with self.assertRaises(urllib.error.HTTPError) as refused:
+                        urllib.request.urlopen(request, timeout=10)
+                    self.assertEqual(refused.exception.code, 403)
+                    refused.exception.close()
+                    reopened = self.other().store
+                    denials = [
+                        r
+                        for r in reopened.audit_entries()
+                        if r["action"] == "ai_restart_decide_denied"
+                    ]
+                    self.assertEqual(len(denials), count + 1)
+                    detail = json.loads(denials[-1]["detail"])
+                    self.assertTrue(detail["identity_verified"])
+                    self.assertFalse(detail["authority_verified"])
+                    self.assertEqual(reopened.continuity_view(self.pm), before)
+                else:
+                    with urllib.request.urlopen(request, timeout=10) as response:
+                        self.assertEqual(response.status, 200)
+                        self.assertTrue(json.load(response)["actual_hold"])
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(10)
+                app.assistants.stop()
 
     def test_authority_revalidation(self) -> None:
         s = self.store.suspend(self.people["Quality Inspector"], incident())

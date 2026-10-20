@@ -1571,6 +1571,9 @@ incident/version evidence refuses restart. Proposal history is retained.
 `decision` (`Restart` or `Keep suspended`) and matching `authority_ref`.
 Missing, failed, altered, stale, self-approved, untrusted and version-drifted
 evidence is refused and audited.
+Legacy impact completeness includes exact prior-release references/bindings and
+retained version evidence; missing historical references deny constructed
+restart, not immediate containment.
 
 The decision endpoint requires the trusted-proxy route and the separately
 provisioned `ZavaForward.AIRestart` claim, mapped through the existing uniquely
@@ -1579,6 +1582,10 @@ the suspender and proposer. Password login and email fallback cannot supply
 this capability; stored staff capability fields are not sign-in grants.
 No actual holder is provisioned by this change. Local SQL revalidation cannot
 prove remote claim revocation or professional appointment.
+Authenticated password-route attempts reach the same denial wrapper and retain
+one bounded denial, while invalid/stale/inactive identity claims are labelled
+unverified rather than attributed as verified staff. Denials do not mutate the
+incident and survive document rollback/reopen.
 
 A successful `Restart` is constructed-only: the record exposes `actual_hold:
 true` and the missing actual authority. It never restores actual-provider
@@ -1587,6 +1594,10 @@ JSON can contain incidents and preserve manual work but cannot qualify AI
 restart. Committed actions with failed acknowledgement return 409 and
 `outcome: committed`; reload before retrying. Ordinary denials remain 400/403
 under existing API conventions. No new UI or live activation is introduced.
+Fresh constructed ready/accepted list, detail, source export and bundle export
+share eligibility semantics. Bundle projection uses the current trusted provider,
+not caller flags; provider switches/reopen preserve actual holds. Invalid task/
+scope/event history stays noncurrent without breaking generic evidence export.
 
 The issue's synthetic drill is `test_operator_suspension`; the already selected
 native SQL gate runs

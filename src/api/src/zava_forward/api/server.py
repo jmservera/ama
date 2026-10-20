@@ -858,11 +858,12 @@ def make_handler(app):
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                     return self._json(200, result)
                 if parts[:2] == ["api", "continuity"] and len(parts) == 3 and parts[2] in CONTINUITY_ACTIONS:
-                    if parts[2] == "restart-decide" and app.provider.name != "trusted-proxy":
-                        raise PermissionError("Restart decisions need the OID-bound trusted sign-in route.")
                     from zava_forward.core.continuity import IncidentCommittedError
                     try:
-                        result = getattr(s, CONTINUITY_ACTIONS[parts[2]])(u, body)
+                        if parts[2] == "restart-decide":
+                            result = s.restart_decide(u, body, trusted_route=app.provider.name == "trusted-proxy")
+                        else:
+                            result = getattr(s, CONTINUITY_ACTIONS[parts[2]])(u, body)
                     except IncidentCommittedError as error:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                     return self._json(200, result)

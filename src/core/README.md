@@ -1553,11 +1553,22 @@ Legacy output snapshots and append-only incident/corrective-claim audit evidence
 are retained. JSON supports durable containment/manual work but has no qualified
 release snapshot and cannot restart AI.
 
+Completeness includes every affected proposed or accepted/edited legacy output,
+not just current releases and assistant rows. Each impact retains its original
+release ID/version/digest, exact retained release snapshot and binding, envelope,
+task version and prompt version. A prior release is not replaced by today's
+candidate. Missing, inconsistent or unresolved historical evidence remains
+explicitly incomplete and denies constructed restart without delaying containment.
+
 The global epoch remains event ordering, but historical validity now uses
 task/all-scope suspension and restart boundaries. Unaffected ready, accepted
 and in-flight proposals remain eligible under their independent release and
 source checks. Affected historical work never revives; a fresh activation is
 required after a constructed restart. Missing/future/malformed history denies.
+Every epoch must appear exactly once in coherent registered-scope suspension/
+restart history. Generic missing-task records are noncurrent; recognized old
+priority shapes retain their task identity and explicit historical unknowns,
+without manufacturing missing release or task-version evidence.
 
 Corrective proposals retain a test ID/reference, explicit constructed Pass
 claim, recorder/time, incident/epoch, full server-derived current candidate and
@@ -1569,6 +1580,11 @@ capability. Email, staff code and OID independence are checked. SQL repeats
 local identity and candidate checks within its existing atomic writer and
 optimistic continuity-document fence. Denied restart attempts are audited
 separately; rolled-back actions cannot leak a partial restart.
+Early invalid/inactive identities are recorded as unverified claims, not named
+verified actors. SQL denial events use the existing atomic audit-only writer
+after action rollback, so document-writer failure cannot discard the denial.
+Source and bundle export use the trusted current store provider for constructed
+versus actual holds; caller-supplied fixture flags cannot relax actual use.
 
 Only a constructed restart drill is implemented. The separate permission
 proves an engineering authorization boundary, not OD-35 appointment or

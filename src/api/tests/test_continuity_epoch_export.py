@@ -57,6 +57,7 @@ class EpochTests(Base):
         store.ai = self.store.ai
         s = store.suspend(self.people["Quality Inspector"], dict(SUSPEND, synthetic=True))
         from test_operator_suspension import restart
+
         restart(self, s, store)
 
     def test_ready_and_accepted_history_never_revives(self) -> None:
@@ -432,7 +433,10 @@ class LegacyTests(Base):
         self.store.ai._chat = lambda *a, **k: "Fixture [[Stage: Contacting resident]]"
         briefing = self.store.briefing(self.pm)
         old = self.other()
-        self.cycle(old.store)
+        # The retained pre-envelope priority output has unknown task-version evidence.
+        # Containment succeeds, but that historical gap must prevent constructed restart.
+        with self.assertRaises(PermissionError):
+            self.cycle(old.store)
         self.assertFalse(self.store.latest_priority(self.pm)["actionable"])
         self.assertEqual(self.store.latest_priority(self.pm)["status"], "Proposed")
         refreshed = self.store.briefing(self.pm)
@@ -1087,9 +1091,14 @@ class HttpTests(fixtures.ApiTests):
             for decision in ("Keep suspended", "Restart"):
                 self.user = self.pm
                 status, proposed = self.request(
-                    "/api/continuity/restart-propose", dict(id=sid, corrective_evidence=canary,
-                                                          test_id="constructed", result="Pass",
-                                                          evidence_class="constructed-fixture")
+                    "/api/continuity/restart-propose",
+                    dict(
+                        id=sid,
+                        corrective_evidence=canary,
+                        test_id="constructed",
+                        result="Pass",
+                        evidence_class="constructed-fixture",
+                    ),
                 )
                 self.assertEqual(status, 200, proposed)
                 self.assertTrue(proposed["proposal"])
@@ -1329,6 +1338,7 @@ class HttpTests(fixtures.ApiTests):
             self.request("/api/assistants/proposals/" + p["id"])[1]["actionable"], False
         )
         from test_operator_suspension import restart
+
         restart(self, s)
         for action in ("verify", "accept", "edit-accept"):
             status, body = self.request(

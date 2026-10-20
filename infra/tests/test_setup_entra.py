@@ -498,7 +498,19 @@ class SetupTests(unittest.TestCase):
         self.assertIn({"name": "ZF_TRUSTED_PROXY", "value": "1"},
                       self.fake.app["properties"]["template"]["containers"][0]["env"])
         self.assertTrue(self.fake.sp["appRoleAssignmentRequired"])
-        self.assertEqual(len(self.fake.reg["appRoles"]), 8)
+        manifest = json.loads(SETUP.MANIFEST.read_text())
+        definitions = [*manifest["appRoles"], *manifest["capabilityRoles"]]
+        self.assertEqual(
+            {r["value"] for r in self.fake.reg["appRoles"]},
+            {f"ZavaForward.{r['key']}" for r in definitions},
+        )
+        restart_role = next(
+            r for r in self.fake.reg["appRoles"] if r["value"] == "ZavaForward.AIRestart"
+        )
+        self.assertNotIn(
+            restart_role["id"], {a["appRoleId"] for a in self.fake.assignments}
+        )
+        self.assertNotIn("AIRestart", {r["key"] for r in manifest["appRoles"]})
         callbacks = self.fake.reg["web"]["redirectUris"]
         self.assertIn(f"https://{FQDN}/.auth/login/aad/callback", callbacks)
         self.assertIn(f"https://{EDGE}/.auth/login/aad/callback", callbacks)

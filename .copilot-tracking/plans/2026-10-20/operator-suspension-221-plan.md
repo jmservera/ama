@@ -4,7 +4,32 @@ description: Bounded synthetic incident and restart engineering plan
 ms.date: 2026-10-20
 ---
 
-Task ID: 221. Slug: operator-suspension-221. Status: Ready, critique corrections applied.
+Task ID: 221. Slug: operator-suspension-221. Status: P03 source complete; freeze/gate pending.
+
+## Current Later Invocation
+
+The owner selected one later implementation cycle for RV001-RV004 and
+GATE001-GATE002 at clean a61d634a709b029b45cd9d5479bc3195d85f8731.
+Original Research, Revise critique and Complete / Not accepted Review remain
+immutable. No replacement Review. Implementation dispositions are separate
+evidence, followed by coordinator-owned independent bounded assessment.
+
+<!-- rpi:phase id=P03 -->
+### P03: Selected retained findings
+
+* [x] P03-T01: Complete legacy snapshots and fail-closed registered epoch history
+  (RV001/RV002), with failing-before runtime/export/reopen regressions.
+* [x] P03-T02: Persist early denial audit and align trusted current export
+  projection (RV003/RV004), with rollback/HTTP/provider-switch regressions.
+* [x] P03-T03: Reconcile capability registration without grants; format touched
+  code and run owning core/API/infra/static checks (GATE001/GATE002).
+* [ ] P03-T04: Reconcile descriptive evidence and separate dispositions, commit
+  clean candidate, run all17 in new external directory and verify receipt.
+
+Write boundary: existing continuity/auth/server consumers, directly dependent
+registration contracts, existing owning tests, component guides and current
+plan/details/changes/state plus separate finding dispositions. No new authority,
+ordinary role grants, #222 implementation, #360 work or publication.
 
 ## Executive Summary
 
@@ -69,9 +94,9 @@ No credentials, private fixture input or external services in tests.
 ## Acceptance Criteria
 
 * [x] AC1 seeded incident/breach denies dispatch and pending/ready reliance (synthetic).
-* [ ] AC2 impacted versions/scope/owner/evidence/containment/impact/remediation persisted (RV001 legacy completeness unresolved).
+* [ ] AC2 impacted versions/scope/owner/evidence/containment/impact/remediation persisted (RV001 later source/focused correction supplied; independent/human acceptance not inferred).
 * [x] AC3 actual manual case mutation and hazard intake work during suspension (synthetic).
-* [ ] AC4 missing/wrong/stale/replayed/changed-version/self/untrusted restart denied (enforcement tests pass; RV002/RV003 historical integrity/audit unresolved).
+* [ ] AC4 missing/wrong/stale/replayed/changed-version/self/untrusted restart denied (RV002/RV003 later source/focused corrections supplied; actual authority remains unavailable).
 * [x] AC5 named restart authority or explicit unavailable status, no default approval.
 * [x] AC6 deterministic synthetic drill with constructed distinct trusted approver.
 * [ ] SQL/JSON reopen and SQL native transactions/races/rollback/denial evidence.
@@ -123,11 +148,12 @@ No second critique. No human authority decision is inferred.
 
 Original Review Complete / Not accepted:
 .copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md.
-RV001-RV004 are distinct later rpi-implement work, not fixes in this original
-task. P01 markers describe implementation delivered, not Review acceptance.
-RV001 legacy completeness, RV002 malformed/generic history, RV003 early denial
-audit and RV004 constructed export parity remain unresolved. Do not replace
-the original Review or infer closure from the later local gate.
+RV001-RV004 are the owner-selected later P03 implementation work, distinct from
+the completed original Review. P01 markers describe implementation delivered,
+not Review acceptance. Later implementation-owned dispositions are in
+.copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json.
+They do not rewrite the original adverse verdict or constitute independent
+assessment. Coordinator assessment and full17 remain pending at freeze.
 
 Actual OD-35 appointment and evidence protocol: Building Safety and Sponsor
 under RULE-020, with Digital/task/control owners. Actual monitoring thresholds
@@ -136,8 +162,12 @@ These remain human-blocked; #222 cohort evaluation is separately owned.
 
 ## Handoff
 
-Original Review executed once, Complete / Not accepted; four Medium defects
-retained. P01 and P02-T01 delivered; P02-T02 remains parent-owned for commit,
-native/full gate and external handoff, not source changes. Changes record:
+Original Review executed once, Complete / Not accepted; unchanged. P01 and
+P02-T01 delivered. Original P02-T02 aggregate remains unchecked because its
+full gate failed (15/17); the adverse receipt is preserved. P03-T01/T02 have
+source and focused evidence. P03-T03 configured static/infra checks passed.
+P03-T04 freeze/fresh all17 is current implementation work, intentionally pending
+in committed pre-gate state; final receipt and state remain external.
+No replacement Review. Changes record:
 .copilot-tracking/changes/2026-10-20/operator-suspension-221-changes.md.
 No human acceptance marker is checked by these engineering ticks.

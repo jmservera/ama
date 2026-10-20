@@ -12,6 +12,25 @@ PC-001 through PC-006 directly incorporated; PC-007 rejected because caller
 explicitly authorizes /tmp runner evidence and lock. No second critique.
 Implementation begins with P01-T01; no production changes preceded this record.
 
+## Later Selected Implementation Opening: P03
+
+Explicit owner continuation authorizes exactly one later bounded cycle for
+RV001-RV004 and GATE001-GATE002, starting clean on the supplied topic at
+a61d634a709b029b45cd9d5479bc3195d85f8731. Original Review read in full;
+SHA-256 d23e129f6349a5399eb6f0e4a730ff8c44afe9ac07ebb76896009bbbfb7f3338.
+Original Research and Revise critique are preserved, not repeated.
+Failed handoff /tmp/ama-221-handoff-20261020-01.json and acceptance read.
+Original all17: 15 PASS / 2 FAIL; receipt SHA-256
+e926c95b058b205a8e2a32754c6acc5059ec8320b7a5763aab4aa49060cf2c81,
+official verifier correctly rejected. Native SQL 244 tests / one unrelated
+JSON skip included a passing issue drill. None of this is a green gate.
+
+Current plan/details add only P03 with existing source/test and dependent
+registration boundary. Starting P03-T01; then audit/projection, registration/
+static/focused checks, clean committed candidate and new external full17.
+Finding dispositions will be separate implementation evidence, not an amended
+Review or human acceptance. Stop before push/PR and independent assessment.
+
 ## P01: Mechanism and Semantic Tests
 
 P01-T01 and P01-T02 delivered. Reused continuity meta document, release BOUND
@@ -108,3 +127,104 @@ Post-commit full17 is planned at /tmp/ama-221-rpi-20261020-01. Its actual
 result/receipt and exact-head handoff must remain external to avoid invalidating
 the candidate. This committed record deliberately stops at the pre-gate
 boundary and never substitutes a planned run for a pass.
+
+## P03-T01: Complete Legacy Impacts and Coherent History
+
+Later implementation resolves exact original Review inputs without modifying
+Research, critique or Review. Legacy proposed and accepted/edited AI impacts
+participate in snapshot completeness alongside assistant rows. The exact
+retained release ID/version/digest is resolved and checked, with its original
+active snapshot and BOUND fields retained rather than substituted from the
+current candidate. Missing reference/envelope/prompt/task-version evidence
+remains explicit and refuses constructed restart; containment still commits.
+
+Registered task identity is explicit. Only recognizable pre-envelope priority
+shapes retain the supported old identity, with unknown release/task-version/
+prompt evidence exposed in export. Generic or conflicting task identity,
+unknown scope, malformed suspension, empty restart, duplicate/missing event
+epochs, invalid IDs/status or numeric-only history never establish currentness.
+The same checks gate actual assistant claim/detail/export and restart routes;
+invalid history reports unavailable/manual state without generic-export errors.
+
+Four new issue methods plus existing subcases exercise prior-release accepted
+legacy snapshot/reopen, six-row incomplete history, malformed runtime/export,
+and early denial persistence. The original maximum 18 is preserved: 14 issue
+methods plus one existing native bridge, total 15. P03-T01 complete by focused
+regressions; no whole-issue acceptance marker is newly checked.
+
+## P03-T02: Early Denials and Trusted Projection
+
+Current-actor lookup/inactive rejection now occurs inside the incident
+rollback wrapper. Authenticated password-route restart denial reaches that
+same wrapper before any incident mutation. One bounded audit event records
+identity verification separately from authority (never established by denial).
+Invalid identities are attributed to `unverified`, with only a bounded claimed-
+identity digest, bounded reason and incident reference. SQL reuses the existing
+atomic append writer as an audit-only transaction after document rollback,
+rather than trying the failed document writer again. JSON retains its existing
+append-only audit policy. Persistence failures surface instead of fake success.
+
+Assistant source export now explicitly projects actionable/relied-on parity.
+Bundle projection derives constructed versus actual from the trusted current
+store provider, never a caller flag, and preserves epoch currentness separately
+from actual-use holds. Fresh ready/accepted detail/list/source/bundle projections
+agree; actual provider switches/reopen still deny reliance and dispatch.
+The shared drill now also checks invalid-identity denial, denied writer rollback
+and fresh constructed export, so the existing selected native bridge exercises
+these DB-sensitive paths without changing the runner or selector.
+
+## P03-T03: Registration, Formatting and Focused Validation
+
+AIRestart is a separate manifest capability and historical shell definition.
+The current setup helper now defines all manifest capabilities as well as staff
+roles, while roster/default assignment remains staff-only. The existing setup
+test asserts complete definition parity, no AIRestart default assignment and
+idempotent re-execution. This is a definition, not tenant write, assignment,
+consent or actual OD-35 appointment. Existing auth tests retain password/email-
+fallback denial. Component/infra guides describe the exact boundary.
+
+Applied existing Ruff formatter to both touched typed API test files; no new
+tool or production-format exemption. Core/API configured Ruff, format and
+mypy used existing project commands. A final typed malformed-entry tuple
+needed an explicit annotation; the adverse mypy log is preserved.
+
+| Run | Result | External log |
+| --- | --- | --- |
+| New five-test failing-before regression selector | 5 run, 6 failing subcases and 2 errors; reproduced missing snapshot, incomplete flag, permissive history, absent denial and source export shape | /tmp/ama-221-correction-before.log |
+| First expanded owning suites | 169 run, 2 failures/2 errors/36 skips; identified missing global scan context and intentional incomplete old-priority restart refusal; duplicate imported TestCase discovery removed | /tmp/ama-221-correction-focused-01.log |
+| Owning suites after corrections | 166 run, OK/36 opt-in skips | /tmp/ama-221-correction-focused-02.log |
+| Final complete focused behavior batch | 166 run, OK/36 opt-in skips; includes all later malformed-history cases | /tmp/ama-221-correction-focused-final2.log |
+| Core writer/identity/governance | 96 run, OK/16 native opt-in skips; expected injected recovery-failure logs retained | /tmp/ama-221-correction-core-final.log |
+| First complete infra | 340 run, error importing missing test-only PyYAML | /tmp/ama-221-correction-infra-final.log |
+| Complete infra after pip restoration of documented PyYAML 6.0.3 | 367 run, OK; no tenant operations | /tmp/ama-221-correction-infra-final2.log |
+| Migration discovery invocation | 0 run, exit 5; wrong invocation, not a pass | /tmp/ama-221-correction-migration.log |
+| Documented migration command | 25 run, 7 missing-dependency errors (Pillow/python-pptx) | /tmp/ama-221-correction-migration-final.log |
+| Migration after pip restoration from existing tool requirements | 25 run, OK | /tmp/ama-221-correction-migration-final2.log |
+| Final core static | Ruff/format passed; mypy 128 files passed | /tmp/ama-221-correction-static-core-final.log |
+| API static before final tuple annotation | Ruff/format passed; mypy one test annotation error | /tmp/ama-221-correction-static-api-final.log |
+| Final API configured static after annotation | Ruff/format passed; mypy 63 files passed | /tmp/ama-221-correction-static-api-final2.log |
+| Final exact issue suite after annotation | 14 methods, OK | /tmp/ama-221-correction-issue-final.log |
+| Changed historical registration helper | ShellCheck passed | /tmp/ama-221-correction-shellcheck.log |
+
+All synthetic commands scrub inherited credentials with env -i, retain nvm
+Node PATH and disable bytecode. Existing isolated installed distributions were
+available; no manifest changes, uv, PYTHONPATH=mvp, private data, cloud or model
+calls. Later logs do not overwrite any earlier failed log or receipt.
+P03-T03 complete; GATE001/GATE002 have focused correction evidence, not a
+fabricated replacement full-gate outcome.
+
+## P03-T04: Freeze and External Gate Boundary
+
+Fresh fetched origin/main remains 7e95f0224bfb7a8a62990a1de162fbcfa68db539.
+Authenticated id/login reconfirmed with gh api user and repository-local email
+set to the privacy-safe noreply form for both author/committer. Commit follows
+final focused/static reconciliation and cleanup of only locally generated Ruff
+caches. No amend, rebase, force-push or publication.
+
+New all17 output is /tmp/ama-221-rpi-20261020-correction-01, not the original
+failed receipt directory. The complete runner owns the heavy lock. Gate result,
+receipt SHA, official verification, frozen HEAD/base and final state/handoff
+must remain external after commit; this record does not invent their outcome.
+Original Review/critique/Research and original failed receipt hashes remain
+unchanged. Coordinator must independently verify and separately assess the
+bounded exact-head source/evidence; no replacement Review is run here.

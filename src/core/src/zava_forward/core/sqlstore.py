@@ -760,6 +760,10 @@ class SqlStore(Store):
             self._touched()
             self.local.pending.append(item)
             return
+        self._audit_immediate(item)
+
+    def _audit_immediate(self, item):
+        """Commit one audit-only event independently of a rolled-back document action."""
         with self.dblock:
             self.db.execute("BEGIN IMMEDIATE")
             try:

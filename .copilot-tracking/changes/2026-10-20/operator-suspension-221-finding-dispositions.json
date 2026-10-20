@@ -1,0 +1,107 @@
+{
+  "task_id": "221",
+  "task_slug": "operator-suspension-221",
+  "evidence_kind": "later implementation-owned finding dispositions; not a Review or independent assessment",
+  "starting_head": "a61d634a709b029b45cd9d5479bc3195d85f8731",
+  "base": "7e95f0224bfb7a8a62990a1de162fbcfa68db539",
+  "original_review": {
+    "path": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md",
+    "execution": "Complete",
+    "outcome": "Not accepted",
+    "sha256": "d23e129f6349a5399eb6f0e4a730ff8c44afe9ac07ebb76896009bbbfb7f3338",
+    "unchanged": true,
+    "replacement_review": false
+  },
+  "original_failed_gate": {
+    "receipt": "/tmp/ama-221-rpi-20261020-01/receipt.json",
+    "sha256": "e926c95b058b205a8e2a32754c6acc5059ec8320b7a5763aab4aa49060cf2c81",
+    "passed_groups": 15,
+    "failed_groups": 2,
+    "official_verification": "Rejected: Receipt does not establish a complete passing run",
+    "unchanged": true
+  },
+  "findings": [
+    {
+      "id": "RV001",
+      "disposition": "Implemented and focused-tested; independent exact-head assessment pending",
+      "change": "Complete affected legacy proposed/accepted/edited set participates in snapshot completeness; exact retained prior release reference, original snapshot and BOUND fields retained. Missing/inconsistent historical evidence remains unknown and denies constructed restart without preventing containment.",
+      "tests": [
+        "test_operator_suspension.OperatorIncident.test_legacy_prior_release_snapshot_and_reopen",
+        "test_operator_suspension.OperatorIncident.test_incomplete_legacy_snapshot_contains_but_denies_restart",
+        "test_continuity_epoch_export.LegacyTests.test_legacy_priority_ready_accepted_missing_epoch_and_cache"
+      ]
+    },
+    {
+      "id": "RV002",
+      "disposition": "Implemented and focused-tested; independent exact-head assessment pending",
+      "change": "Registered/nonconflicting task identity and complete coherent unique suspension/restart epoch history are required. Malformed entries, scopes, IDs/status, skipped epochs, empty restarts and generic missing tasks fail closed in runtime and export. Recognized old priority shape retains identity plus explicit unknown historical evidence.",
+      "tests": [
+        "test_operator_suspension.OperatorIncident.test_malformed_history_runtime_and_generic_export",
+        "test_operator_suspension.OperatorIncident.test_relevant_history_failclosed",
+        "test_continuity_epoch_export.EpochTests"
+      ]
+    },
+    {
+      "id": "RV003",
+      "disposition": "Implemented and focused-tested; native/full gate and independent assessment pending",
+      "change": "Early actor lookup/inactive and authenticated password-route denial use the incident wrapper. One bounded denial has separate identity/authority verification, unverified attribution for invalid identities, and SQL audit-only persistence independent of rolled-back document save. No incident mutation or claimed authority.",
+      "tests": [
+        "test_operator_suspension.OperatorIncident.test_early_denials_are_durable_once_without_verified_attribution",
+        "test_operator_suspension.OperatorIncident.test_trusted_capability",
+        "test_operator_suspension.OperatorIncident.test_authority_revalidation",
+        "test_operator_suspension.OperatorIncident.test_rollback_and_conflict",
+        "test_assistants.MssqlDurabilityTests.test_operator_incident_drill"
+      ]
+    },
+    {
+      "id": "RV004",
+      "disposition": "Implemented and focused-tested; native/full gate and independent assessment pending",
+      "change": "Source export includes actionable eligibility; bundle uses trusted current store provider for constructed/actual holds and does not conflate actual hold with epoch validity. Fresh ready/accepted detail/list/source/bundle parity and actual provider switch/reopen denial covered; caller fixture flag ignored.",
+      "tests": [
+        "test_operator_suspension.OperatorIncident.test_constructed_restart_actual_hold",
+        "test_operator_suspension.OperatorIncident.test_incident_snapshot_and_reopen",
+        "test_assistants.MssqlDurabilityTests.test_operator_incident_drill"
+      ]
+    },
+    {
+      "id": "GATE001",
+      "disposition": "Existing formatter applied; configured focused check passed; fresh full gate pending",
+      "change": "Both touched typed continuity/incident API test files use existing Ruff formatting, with no new exemption."
+    },
+    {
+      "id": "GATE002",
+      "disposition": "Implemented; complete 367-test offline infra suite passed; fresh full gate pending",
+      "change": "AIRestart capability definition reconciled across runtime map, manifest, historical shell helper and current setup helper. All capability definitions remain separate from staff roster/default assignments. Existing setup regression verifies definition parity, no AIRestart grant and idempotence.",
+      "tests": [
+        "test_identity_rbac.EntraRegistrationTests.test_manifest_matches_script_and_mvp_role_map",
+        "test_setup_entra.SetupTests.test_tag_discovery_managed_identity_creation_and_idempotent_rerun",
+        "test_operator_suspension.OperatorIncident.test_trusted_capability",
+        "test_auth"
+      ]
+    }
+  ],
+  "failing_before_log": "/tmp/ama-221-correction-before.log",
+  "failing_before_sha256": "fe52706b43aaf8eb9737aa9d8054fed6b7e5e770a334f103929da9b7927f7b55",
+  "focused_behavior_log": "/tmp/ama-221-correction-focused-final2.log",
+  "focused_behavior_result": "166 tests, OK, 36 existing opt-in skips; not native SQL evidence",
+  "new_gate": {
+    "out": "/tmp/ama-221-rpi-20261020-correction-01",
+    "status_at_commit": "Not run; frozen exact-head result must remain external",
+    "verification_at_commit": "Not run"
+  },
+  "remaining_gaps": [
+    "Coordinator separately verifies receipt and independently assesses bounded exact-head source/evidence before any publication authorization",
+    "Actual OD-35/RULE-020 authority remains unappointed",
+    "Approved actual monitoring thresholds and competent corrective-evidence acceptance remain unavailable",
+    "Human-witnessed actual drill and operational acceptance remain unavailable",
+    "Whole issue 221 remains open; fixtures and engineering results are not human approvals",
+    "Issue 222 is not implemented and shared interface is not frozen",
+    "Issue 360 remains paused; no transport research, relaxation, decryption or live attempt"
+  ],
+  "publication": {
+    "push": false,
+    "pull_request": false,
+    "merge": false,
+    "authorized": false
+  }
+}

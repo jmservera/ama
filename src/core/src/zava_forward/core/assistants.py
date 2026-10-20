@@ -535,12 +535,14 @@ class Assistants:
             for tid in ids[:limit]:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
-                s = continuity.active(self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai))
+                capability = body.get("capability")
+                s = continuity.active(self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai))
                 current = continuity.epoch_current(body, self.continuity(db))
                 row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
-                stale = row is None or digest(self.snapshot(db, body["capability"], json.loads(row[0]))) != body["source_signature"]
-                out.append(dict(body, provenance=events, epoch_current=current, stale=stale, relied_on=current and not stale and body["state"] == "accepted" and not s and not self.admission(db, body["capability"])
-                                and body.get("release") == self.release_reference(db, body["capability"]),
+                stale = capability not in REGISTRY or row is None or digest(self.snapshot(db, capability, json.loads(row[0]))) != body["source_signature"]
+                actionable = current and not stale and body["state"] in ("ready", "accepted") and not s and not self.admission(db, body["capability"]) and body.get("release") == self.release_reference(db, body["capability"])
+                out.append(dict(body, provenance=events, epoch_current=current, stale=stale, actionable=bool(actionable),
+                                relied_on=bool(actionable and body["state"] == "accepted"),
                                 suspension=s["id"] if s else None))
             releases = []
             rows = db.execute("SELECT id,capability,status,body,revision FROM assistant_releases ORDER BY id").fetchall()
@@ -564,7 +566,7 @@ class Assistants:
             return "Durable SQL is required; use the ordinary case/manual route."
         if not l.valid:
             return l.error
-        if db is not None and (held := self.suspended(db, capability)):
+        if db is not None and (held := self.suspended(db, continuity.ALL if capability is None else capability)):
             return held
         if db is not None and capability and (denied := self.admission(db, capability)):
             return denied["reason"]

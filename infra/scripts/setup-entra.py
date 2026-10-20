@@ -1257,7 +1257,7 @@ def desired_registration(current: dict[str, Any], urls: list[str], manifest: dic
     if current.get("signInAudience") != "AzureADMyOrg":
         raise SetupError("Registration is not single-tenant; review ownership/audience before changing it.")
     roles = list(current.get("appRoles", []))
-    for spec in manifest["appRoles"]:
+    for spec in [*manifest["appRoles"], *manifest["capabilityRoles"]]:
         value = f"ZavaForward.{spec['key']}"
         existing = [r for r in roles if r.get("value") == value]
         if existing:

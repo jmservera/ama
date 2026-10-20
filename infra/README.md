@@ -1289,8 +1289,12 @@ Open items:
 
 The Entra registration manifest keeps auxiliary `capabilityRoles` separate from
 the mutually exclusive staff `appRoles`. The registration script declares all
-three: `ZavaForward.RuleAuthor`, `ZavaForward.RuleOwner` and
-`ZavaForward.RegulatoryChat`. These supplement, never replace, one staff role.
+four: `ZavaForward.RuleAuthor`, `ZavaForward.RuleOwner`,
+`ZavaForward.RegulatoryChat` and the constructed-only `ZavaForward.AIRestart`
+capability (#221). Both setup and the historical shell helper define these
+capabilities, but ordinary staff roster/default assignment remains limited to
+staff `appRoles`. A capability definition is not an assignment, consent or
+actual OD-35 appointment. These supplement, never replace, one staff role.
 The API grants them only from a trusted claim bound to a uniquely provisioned
 principal; a local staff field or email fallback does not grant authority.
 Holding multiple capabilities never permits author self-approval.
