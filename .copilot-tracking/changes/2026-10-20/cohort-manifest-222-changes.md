@@ -71,6 +71,13 @@ The single Review (`.copilot-tracking/reviews/logs/2026-10-20/cohort-manifest-22
 * RV-005: the review pack's #223 authorisation reference was reworded to name only #108 and a separate owner authorisation.
 * RV-001, RV-002, RV-004, RV-006: not changed in this slice; routed to the follow-ups below. RV-002 is already disclosed in the CM-A03 justification.
 
+## Gate-Found Corrections (first gate run, external dir /tmp/ama-222-rpi-20261020-manifest-01, failed receipt retained)
+
+* project-core: the privacy checker requires every public eval payload to be registered; added dataset DS-COHORT-MANIFEST-DRAFT (root_label) to `docs/reference/research/retrofit-synthetic-data/provenance-register.json`. `test_synthetic_provenance` now passes (12 tests).
+* project-agents: strict mypy required `-> None` on the six test methods; added.
+* browser: Playwright timeout on `#wf-mode`, outside the changed files; to be re-observed on the fresh gate rather than assumed flaky.
+* The first gate also needed ignored scratch caches (ruff, pycache) removed from the checkout.
+
 ## Follow-Up Items
 
 * Before manifest-dependent execution: bind deterministic expectations to `rank()` and define "same relative rank" (RV-001); add the `ai_eval.py` hazards-exceed-top-k exception to CM-C01 (RV-004); separate contact need from `adjustment` once a field exists (RV-002); strengthen the APPROVED test guard (RV-006).

@@ -251,6 +251,16 @@
       "personal_data": "Synthetic questions, expected/actual outcomes, metrics and fixture fingerprints."
     },
     {
+      "id": "DS-COHORT-MANIFEST-DRAFT",
+      "name": "Draft paired-scenario cohort evaluation manifest (unapproved, not executed)",
+      "visibility": "public",
+      "location": "src/agents/evals/cohort_manifest_draft.json",
+      "validation": {"root_label": true},
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; wholly fictional paired scenarios, agent-authored proposals, not approved labels or fairness evidence"
+    },
+    {
       "id": "DS-EVAL-REGISTRY",
       "name": "Evaluation dataset metadata registry",
       "visibility": "public",
