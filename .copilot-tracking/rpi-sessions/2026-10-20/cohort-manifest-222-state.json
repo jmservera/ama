@@ -39,12 +39,17 @@
       "decision": "Review executed once: Complete; outcome Defects found, no High/Critical; RV-005 reworded, rest routed",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-20/cohort-manifest-222-review.md"
+    },
+    {
+      "decision": "Owner-authorised correction continuation v0.2.0 (no second original Review); manifest returned for owner approval before evaluator work; reviewer/adjudicator/custodian UNFILLED",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/cohort-manifest-222-correction-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Local gate then stop; independent exact-head assessment before any push/PR (Refs #222)"
+    "action": "Frozen local handoff; independent exact-head assessment, then owner approval of the revised manifest before any evaluator work (Refs #222)"
   },
   "prioritized_follow_ups": [
     {

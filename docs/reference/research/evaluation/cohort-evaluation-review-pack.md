@@ -6,18 +6,41 @@ ms.topic: reference
 ---
 
 > [!WARNING]
-> DRAFT, UNAPPROVED, NOT EXECUTED. Everything here is an agent-authored proposal
-> for owner review under issue #222 (owner decision 2026-10-20). Nothing is an
+> DRAFT, UNAPPROVED, NOT EXECUTED. Revision v0.2.0 (owner-authorised correction,
+> 2026-10-20) is returned for owner approval BEFORE any evaluator work. Everything
+> here is an agent-authored proposal under issue #222. Nothing is an
 > approved label, a held-out set, a measured result, an operational threshold or
 > fairness evidence. No participant, study, model run or live data is authorised.
-> All six #222 acceptance criteria remain unmet.
+> The independent reviewer, second reviewer, adjudicator and custodian are
+> UNFILLED. All six #222 acceptance criteria remain unmet.
+
+## Revision v0.2.0 (correction, not a new Review)
+
+Owner decisions 2026-10-20 retained the three factor families (sensor or source
+completeness, accessibility or contact need, appointment history).
+
+| Change | Effect |
+| --- | --- |
+| CM-A03 split | CM-A03 now varies only a separate contact field and is `representation_pending` (ranking has no contact input); CM-A04 covers an accessibility adjustment recorded as text, which feeds support status (RV-002) |
+| CM-C01 split | CM-C01 varies sensor data only; new CM-C02 varies the source record only |
+| Ranking binding | Each deterministic expectation names a `ranking_binding` that the structural test checks against the unchanged `rank()` (RV-001); the comparison basis is the same case id ranked twice in a fixed neighbour set |
+| Open safety wording | An open safety case ranks ahead of every case without one, behind only older open safety cases; the AI top-k exception of `ai_eval.py` is stated (RV-004) |
+| Unknown support | PP-01 is a POLICY PROPOSAL with three options; ranking is not changed |
+| Sample and error options | SO-1 to SO-3, ED-1 to ED-3 and uncertainty methods replace the arbitrary 30 and 10 percent |
+| Review burden | Defined over eligible cases, with zero eligible not computable |
+| Held-out | Fresh, unexposed scenarios with new IDs; none drafted; all roles UNFILLED |
+| Structural test | The support exemption applies to `support_state` pairs only, with a regression proving an unrelated support change is rejected |
+
+RV-006 (claims without persisted output) stays a note: the fresh gate receipt
+is the persisted evidence. The original Review findings are not rewritten; see
+the correction record under `.copilot-tracking/changes/`.
 
 ## Purpose and boundaries
 
 The owner asked for a versioned synthetic manifest and a human evaluation
 protocol to be prepared for review before any implementation. This pack
 describes the [draft manifest](../../../../src/agents/evals/cohort_manifest_draft.json)
-(`cohort-manifest-draft-v0.1.0`, registered in the
+(`cohort-manifest-draft-v0.2.0`, registered in the
 [eval registry](../../../../src/agents/evals/registry.json)) and proposes how a
 later, separately authorised evaluation could use it.
 
@@ -34,10 +57,10 @@ later, separately authorised evaluation could use it.
 | --- | --- |
 | Status | `DRAFT`, `UNAPPROVED`, `NOT EXECUTED`, synthetic, `fairness_evidence` false, `dataset_role` development draft, never held-out |
 | Source versions | PRD 0.17.0, ranking policy 1.0.0 (unsigned draft), registry 2026-10-16, golden set 2026-10-09, fixture 1.2.0 seed 174; no model or prompt run |
-| Scenarios | 12 stable IDs (CM-S01 to CM-T01) across the three factor families; 8 pairs differing in one factor and 4 sample or aggregation cases |
-| Defect seeds | SD-01 to SD-06, including one critical seed (open safety case dropped) and one unconfirmed candidate (SD-01) |
+| Scenarios | 14 stable IDs (CM-S01 to CM-T01) across the three factor families; 10 pairs differing in one factor (CM-A03 representation pending) and 4 sample or aggregation cases |
+| Defect seeds | SD-01 to SD-06, including one critical seed (open safety case dropped, CM-C01 and CM-C02) and one unconfirmed candidate (SD-01) |
 | Reconciliation | Four illustrative arm templates with an arithmetic identity per arm |
-| Proposals | Three labelled illustrative values, each needing named approval |
+| Proposals | Sample-size, error-rule and uncertainty options, a proposed zero critical-miss tolerance and one Unknown-support policy proposal, each needing named approval |
 | Acceptance trace | AC1 to AC6 each marked Not met with what would meet it |
 
 Arms are neutral placeholders (ARM-A, ARM-B). They do not propose cohorts.
@@ -53,18 +76,43 @@ preference), so most pairs can only test invariance.
 * Candidate defect SD-01: `support_status` can return Unknown, but the ranking
   `support` key treats only Yes as priority, so Unknown sorts with No while the
   case carries a human-review reason code. This is an observation of current
-  code, not a verified production finding. The draft records two proposed
-  expectations and assigns no pass or fail until the policy owner decides.
+  code, not a verified production finding. The test now asserts this current
+  behaviour; any change is the separate policy proposal PP-01 and is not made here.
 * The #108 harness has no cohort field and lists "no independently labelled
   held-out split, approved thresholds or cohort sample sizes" as open.
 * The draft is committed in the open and written by an agent, so it cannot be a
-  held-out set or an independent oracle. Pairs CM-A03 and CM-C01 may change more
-  than one underlying field; the reviewer should confirm or split them.
+  held-out set or an independent oracle. The earlier multi-factor pairs were
+  split (see Revision v0.2.0).
 * The 60,000-home fixture carries tenancy and consent states but no cohort
   labels, so counts from it would not reconcile to approved labels.
-* Illustrative values (minimum arm size 30, error rate 0.10, critical miss 0)
-  are invented or taken from existing harness behaviour, not from a statistical
-  or regulatory source.
+* The earlier illustrative values (30, 0.10) had no statistical basis and are
+  replaced by the options below. Zero critical misses is retained as a
+  proposal, not an activated threshold.
+
+## Sample-size, error-rule and uncertainty options
+
+Proposal only; the owner chooses. With zero errors in n evaluated cases the exact
+one-sided 95 percent upper bound on the error rate is 1 - 0.05^(1/n), so the
+smallest n reaching a target t is ceil(ln 0.05 / ln(1 - t)).
+
+| Option | Target upper bound | Minimum evaluated | Note |
+| --- | --- | --- | --- |
+| SO-1 | 10 percent | 29 | Cheapest; weak assurance |
+| SO-2 | 5 percent | 59 | Middle |
+| SO-3 | 2 percent | 149 | Strictest; small arms stay insufficient |
+
+* Error rules: ED-1 breach on observed rate above target; ED-2 breach only when the exact lower bound exceeds target; ED-3 block when the exact upper bound exceeds target (precautionary).
+* Uncertainty methods: UM-1 Clopper-Pearson exact (proposed default for small n), UM-2 Wilson score, UM-3 rule of three (quick check only).
+* Cases from one scenario are not independent, so these are lower bounds on evidence, not a representativeness claim.
+* Zero critical misses stays PROPOSED. Zero observed in n does not prove a zero rate (upper bound about 3/n), so reports state n and the bound. The existing harness exception applies: not critical when open safety cases outnumber k and every pick is one.
+* The reconciliation templates use SO-1 and ED-1 only for arithmetic, not as a recommendation.
+
+## Unknown-support policy proposal (PP-01)
+
+POLICY PROPOSAL ONLY; no ranking change. Options: A keep current behaviour (Unknown
+ties with No); B add an extra review priority for Unknown through a new signed-off
+policy version; C leave order alone and add a separate review-queue flag. Needs a named
+policy owner, Resident Engagement and DPO, and a separate authorisation.
 
 ## Proposed held-out split and custody
 
@@ -74,8 +122,13 @@ Proposal only. A held-out split does not exist (`held_out_split.status` is
 * Create the split only after the owner approves cohorts, fields and the
   manifest structure. A named custodian who does not write prompts, rules or
   tuning data holds it.
-* The custodian, not the implementer, selects which scenario IDs are held out,
-  fixed before any model or rule change is tested against them.
+* The custodian, not the implementer, selects which fresh scenarios are held out,
+  fixed before any model or rule change is tested against them. Held-out
+  scenarios must be newly authored from a separate, unexposed source with NEW IDs
+  and NEW inputs. No CM- ID, input or proposed answer in this manifest may be
+  moved, relabelled or reused as held-out, because its exposure cannot be
+  undone. None is drafted here, and all roles (independent reviewer, second
+  reviewer, adjudicator, custodian) are UNFILLED.
 * Held-out inputs and expected outcomes are stored outside the repository and
   outside prompt, retrieval and tuning paths. Only IDs and content hashes are
   recorded in the evaluation record.
@@ -119,10 +172,14 @@ Proposal only. A held-out split does not exist (`held_out_split.status` is
 * Per arm report eligible, evaluated, excluded with reason, not evaluable,
   errors and review required, with the identity
   eligible = evaluated + excluded + not evaluable.
-* Report review required as a count and as a share of evaluated cases; an
-  unmeasured burden is Not run, not green.
-* Report an interval for every rate or state insufficient. The interval method
-  is an owner decision; none is computed in this draft.
+* Review burden is review required divided by eligible, because review required
+  includes eligible cases that were not evaluated (for example the unassigned
+  bucket in RC-M03, 5 of 5). Counts stay visible. Zero eligible is
+  not computable, never 0 percent; an unmeasured burden is Not run, not green.
+  A separate evaluated-only review count may be added but never shares the
+  eligible numerator.
+* Report an interval for every rate or state insufficient. The method is an
+  owner decision from the options above; none is computed in this draft.
 
 ## Traceability to issue acceptance criteria
 
@@ -139,8 +196,8 @@ Proposal only. A held-out split does not exist (`held_out_split.status` is
 
 * [ ] Confirm or replace the factor families and the neutral arms; decide the cohort set and lawful analysis fields (OQ-018, with DPO and Resident Engagement).
 * [ ] Decide whether SD-01 (Unknown support treated as No) is a defect or accepted policy behaviour, and whether the ranking policy is to be approved first.
-* [ ] Confirm the scenario inventory or ask for splits, notably CM-A03 and CM-C01.
-* [ ] Replace or approve each proposal (PR-01 to PR-03), with the named approver role.
+* [ ] Confirm the revised scenario inventory (CM-A03 and CM-C01 now split into CM-A03, CM-A04, CM-C01, CM-C02) or ask for further splits, and decide the contact-field representation for CM-A03.
+* [ ] Choose among PR-01 to PR-03 options (SO, ED, uncertainty methods, zero critical misses as proposed), with the named approver role, and decide PP-01.
 * [ ] Name the independent labeller, second reviewer, adjudicator and held-out custodian.
 * [ ] Approve or change the held-out custody, leakage and adjudication rules above.
 * [ ] Choose the uncertainty method and the observation window.
@@ -157,6 +214,9 @@ Proposal only. A held-out split does not exist (`held_out_split.status` is
 ## Evidence and validation
 
 The structural test `src/agents/tests/test_cohort_manifest_draft.py` checks only
-that the draft stays labelled unapproved, seed-to-scenario links are consistent, the
-illustrative arithmetic is consistent and each AC is Not met. It is not an
+that the draft stays labelled unapproved, seed-to-scenario links and pair isolation
+are consistent (the support exemption is limited to `support_state` pairs), the
+ranking-bound expectations still hold against the unchanged `zava_forward.core`
+`rank()`, the sample arithmetic and review-burden fractions are consistent, all
+held-out roles stay UNFILLED and each AC is Not met. It is not an
 evaluation and does not read this page.
