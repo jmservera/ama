@@ -6701,3 +6701,17 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+## [2026-10-20] query | Fictional form template and Finance decision review pack (#97)
+
+* Added a registered fictional versioned form/template pack and reviewer guide
+  over the existing form schema contract, with field type, unit, requirement,
+  authority, evidence, freshness and lineage, proposed preparer/reviewer
+  separation and stale propagation, and fourteen unresolved Finance
+  authority/binding decision fields. Indexed it, the dictionary subsection and
+  the core guide pointer. No runtime, API or schema engine changed.
+* The pack is not an approved template, with no submission, payment, grant term
+  or Finance signature. Issue #97 criterion 1 (actual authority and binding)
+  stays unmet pending a named human authority; criterion 2 was delivered earlier.
+* Process note: an earlier uncommitted draft was hand-authored before the RPI
+  skills were activated. It is preserved with a dated disclosure and was
+  re-verified through the executed research, plan, implement and review skills.
