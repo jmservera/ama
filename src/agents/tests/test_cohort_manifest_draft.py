@@ -17,7 +17,7 @@ REG = json.loads((ROOT / "src/agents/evals/registry.json").read_text(encoding="u
 
 
 class CohortManifestDraftTests(unittest.TestCase):
-    def test_status_literals_and_registry_agree(self):
+    def test_status_literals_and_registry_agree(self) -> None:
         self.assertEqual(
             (M["status"], M["approval"], M["execution"]), ("DRAFT", "UNAPPROVED", "NOT EXECUTED")
         )
@@ -29,7 +29,7 @@ class CohortManifestDraftTests(unittest.TestCase):
         for word in ("DRAFT", "UNAPPROVED", "NOT EXECUTED", "not held-out"):
             self.assertIn(word, entry["purpose"])
 
-    def test_wording_and_characters(self):
+    def test_wording_and_characters(self) -> None:
         TEXT.encode("ascii")
         self.assertNotIn("\u2014", TEXT)
         for pattern in (r"\boracle\b", r"\bgold\b", r"ground truth", r"\bAPPROVED\b"):
@@ -41,7 +41,7 @@ class CohortManifestDraftTests(unittest.TestCase):
             re.search(r"\b[A-Z]{1,2}\d{1,2} ?\d[A-Z]{2}\b", TEXT), "postcode-like text"
         )
 
-    def test_scenarios_pairs_and_links(self):
+    def test_scenarios_pairs_and_links(self) -> None:
         ids = [s["id"] for s in M["scenarios"]]
         self.assertEqual(len(ids), len(set(ids)))
         self.assertTrue(all(re.fullmatch(r"CM-[A-Z]\d\d", i) for i in ids))
@@ -72,7 +72,7 @@ class CohortManifestDraftTests(unittest.TestCase):
         self.assertTrue(any(d["critical"] for d in M["defect_seeds"]))
         self.assertEqual(seeds["SD-01"]["status"], "candidate_unconfirmed")
 
-    def test_reconciliation_arithmetic_and_threshold_states(self):
+    def test_reconciliation_arithmetic_and_threshold_states(self) -> None:
         props = {p["name"]: p for p in M["proposals"]["items"]}
         min_n, max_rate = (
             props["minimum_arm_denominator"]["value"],
@@ -99,13 +99,13 @@ class CohortManifestDraftTests(unittest.TestCase):
                 self.assertLessEqual(pooled_errors / pooled_n, max_rate)
                 self.assertIn("breach", r["expected_state"].values())
 
-    def test_proposals_are_labelled_and_need_approval(self):
+    def test_proposals_are_labelled_and_need_approval(self) -> None:
         for p in M["proposals"]["items"]:
             for k in ("value", "rationale", "basis", "requires_approval", "approver_role"):
                 self.assertIn(k, p)
             self.assertIs(p["requires_approval"], True)
 
-    def test_every_acceptance_criterion_is_not_met(self):
+    def test_every_acceptance_criterion_is_not_met(self) -> None:
         self.assertEqual([a["ac"] for a in M["acceptance_trace"]], [f"AC{n}" for n in range(1, 7)])
         for a in M["acceptance_trace"]:
             self.assertEqual(a["status"], "Not met")
