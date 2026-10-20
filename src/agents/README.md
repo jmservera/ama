@@ -290,9 +290,10 @@ them that start with `cd src/api` run from the api project.
   confirmation in the chosen region, authorised live calls, held-out split and
   thresholds, human protocol, Finance validation). Any critical miss fails the
   run.
-* Issue #222 adds `evals/cohort_manifest_draft.json`, a DRAFT, UNAPPROVED, NOT
+* Issue #222 adds `evals/cohort_manifest_draft.json` (v0.2.0 after an owner-authorised correction), a DRAFT, UNAPPROVED, NOT
   EXECUTED synthetic paired-scenario manifest for owner review. No harness code
-  reads it and it is a development draft, not a held-out set. The review pack in
+  reads it and it is a development draft, not a held-out set. Its structural test
+  checks proposed deterministic expectations against the unchanged `rank()`. The review pack in
   `docs/reference/research/evaluation/cohort-evaluation-review-pack.md` holds the
   proposed protocol; the per-cohort reporting, approved thresholds and fairness
   evidence remain unmet.

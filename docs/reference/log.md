@@ -7873,3 +7873,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * No evaluator, model run, participant, live data, threshold approval or
   fairness evidence. All six #222 criteria and the #108 actual-model and human
   results remain unmet.
+
+## [2026-10-20] query | Cohort manifest correction v0.2.0 returned for owner approval (#222)
+
+* Owner-authorised correction of the draft [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  and manifest (v0.2.0): split the multi-factor pairs, bound deterministic
+  expectations to the unchanged `rank()` through the structural test, replaced the
+  arbitrary 30 and 10 percent with sample-size, error-rule and uncertainty options,
+  kept zero critical misses as a proposal, made Unknown-support review priority a
+  policy proposal only, defined review burden over eligible cases, required fresh
+  held-out scenarios with new IDs and limited the test support exemption to
+  `support_state` pairs.
+* Reviewer, adjudicator and custodian roles remain unfilled. No ranking change,
+  evaluator, run, participant, data, approval or fairness evidence. All six #222
+  criteria remain unmet; the manifest is returned for owner approval before any
+  evaluator work.
