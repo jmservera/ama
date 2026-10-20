@@ -50,9 +50,20 @@ def denial(reason, missing, task):
                 authority_gap=rai_release.AUTHORITY_GAP)
 
 
+def release_body(raw):
+    """Decode a retained release object without coercing invalid JSON shapes."""
+    try:
+        body = json.loads(raw)
+    except json.JSONDecodeError:
+        raise ValueError("Release body contains malformed JSON.") from None
+    if not isinstance(body, dict):
+        raise ValueError("Release body must be a JSON object.")
+    return body
+
+
 def releases(db, task):
     rows = db.execute("SELECT id,status,body FROM assistant_releases WHERE capability=? ORDER BY id", (task,)).fetchall()
-    return [dict(json.loads(b), id=i, status=s) for i, s, b in rows]
+    return [dict(release_body(b), id=i, status=s) for i, s, b in rows]
 
 
 def assessment(db, task, binding, now, live=False):

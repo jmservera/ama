@@ -6611,3 +6611,17 @@ metadata when the knowledge base was created.
   the selected backend scope. It remains unresolved; platform advisory/resolved
   labels do not establish technical closure. Original research, critique,
   Review and prior finding dispositions remain immutable. Whole issue stays open.
+
+## [2026-10-20] query | Task-bound operator suspension and constructed restart (#221)
+
+* Indexed the existing core/API guides for persisted incident/version capture,
+  task-aware dispatch/reliance fences, separately provisioned trusted restart
+  permission and immutable constructed corrective-candidate claims.
+* Actual OD-35/RULE-020 restart remains unavailable, including after a
+  constructed drill, provider switch, reopen or replacement release.
+  Missing evidence remains explicit and fail-closed; manual/hazard response
+  is not routed through the AI hold.
+* This is a bounded engineering boundary, not approved monitoring thresholds,
+  actual corrective-test acceptance, named human appointment, human-witnessed
+  drill, live application acceptance or whole-issue closure. Original #219
+  adverse and later correction evidence is retained.

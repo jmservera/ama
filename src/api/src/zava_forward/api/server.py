@@ -851,9 +851,22 @@ def make_handler(app):
                         raise PermissionError("Only a manager can write a ledger digest.")
                     return self._json(200, {"written": os.path.basename(s.write_digest()), "report": s.verify_ledger()})
                 if parts[:2] == ["api", "continuity"] and len(parts) == 3 and parts[2] == "suspend":
-                    return self._json(200, s.suspend(u, body, app.assistants.affected(body.get("scope"))))
+                    from zava_forward.core.continuity import IncidentCommittedError
+                    try:
+                        result = s.suspend(u, body)
+                    except IncidentCommittedError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
+                    return self._json(200, result)
                 if parts[:2] == ["api", "continuity"] and len(parts) == 3 and parts[2] in CONTINUITY_ACTIONS:
-                    return self._json(200, getattr(s, CONTINUITY_ACTIONS[parts[2]])(u, body))
+                    from zava_forward.core.continuity import IncidentCommittedError
+                    try:
+                        if parts[2] == "restart-decide":
+                            result = s.restart_decide(u, body, trusted_route=app.provider.name == "trusted-proxy")
+                        else:
+                            result = getattr(s, CONTINUITY_ACTIONS[parts[2]])(u, body)
+                    except IncidentCommittedError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
+                    return self._json(200, result)
                 if parts[:2] == ["api", "governance"] and len(parts) == 3 and parts[2] in GOVERNANCE_ACTIONS:
                     if parts[2] == "evidence-record":
                         from zava_forward.core.governance import GovernanceCommittedError

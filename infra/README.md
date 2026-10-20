@@ -1289,8 +1289,12 @@ Open items:
 
 The Entra registration manifest keeps auxiliary `capabilityRoles` separate from
 the mutually exclusive staff `appRoles`. The registration script declares all
-three: `ZavaForward.RuleAuthor`, `ZavaForward.RuleOwner` and
-`ZavaForward.RegulatoryChat`. These supplement, never replace, one staff role.
+four: `ZavaForward.RuleAuthor`, `ZavaForward.RuleOwner`,
+`ZavaForward.RegulatoryChat` and the constructed-only `ZavaForward.AIRestart`
+capability (#221). Both setup and the historical shell helper define these
+capabilities, but ordinary staff roster/default assignment remains limited to
+staff `appRoles`. A capability definition is not an assignment, consent or
+actual OD-35 appointment. These supplement, never replace, one staff role.
 The API grants them only from a trusted claim bound to a uniquely provisioned
 principal; a local staff field or email fallback does not grant authority.
 Holding multiple capabilities never permits author self-approval.
@@ -2932,6 +2936,13 @@ Juan Manuel Servera's exercise Legal, Compliance and DPO role is not tenant
 authority, resident consent, safety approval or operational rule activation.
 ADR 0005 remains accepted for synthetic development only; real owners and
 sources are still a gap before operational reliance.
+
+Roster reruns preserve enabled user-assignable supplemental capabilities
+registered in the manifest, including `ZavaForward.AIRestart`, independently
+of the one mutually exclusive staff role. Conflicting staff roles and unknown
+or incompatible assignments still block reconciliation. Setup never assigns
+these capabilities from the staff roster; retaining an existing permission is
+not appointment of an actual restart authority or operational approval.
 
 Offline evidence: `python3 -m unittest discover -s infra/tests -p
 test_setup_entra.py -q` covers fake-az discovery, ambiguity, creation/reruns,

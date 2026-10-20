@@ -1554,6 +1554,57 @@ SQL Server/Azure and human acceptance remain unmet; no private data or new
 deployment is used. Docker build/run depends on CI when local daemon access is
 denied.
 
+## Incident and restart contract (#221)
+
+Existing `POST /api/continuity/suspend` records a seeded `critical incident`
+or `guardrail breach` in `trigger`, plus `scope`, `reason`, `incident_owner`,
+`containment`, `comms_owner`, `comms_audience`, `evidence`, `resident_impact`,
+`remediation` and `restart_authority`. Missing new fields are visibly unavailable
+so incomplete reports never prevent immediate containment. Impacts and versions
+are derived inside the SQL write, not trusted from an HTTP preview.
+
+`restart-propose` takes `id`, `corrective_evidence`, `test_id`, `result: Pass`
+and `evidence_class: constructed-fixture`. This is explicitly a recorded
+constructed claim, not a server-run test or actual acceptance. Incomplete
+incident/version evidence refuses restart. Proposal history is retained.
+`restart-decide` takes `id`, current `epoch`, exact `proposal_digest`,
+`decision` (`Restart` or `Keep suspended`) and matching `authority_ref`.
+Missing, failed, altered, stale, self-approved, untrusted and version-drifted
+evidence is refused and audited.
+Legacy impact completeness includes exact prior-release references/bindings and
+retained version evidence; missing historical references deny constructed
+restart, not immediate containment.
+
+The decision endpoint requires the trusted-proxy route and the separately
+provisioned `ZavaForward.AIRestart` claim, mapped through the existing uniquely
+OID-bound capability helper, plus a current registered manager distinct from
+the suspender and proposer. Password login and email fallback cannot supply
+this capability; stored staff capability fields are not sign-in grants.
+No actual holder is provisioned by this change. Local SQL revalidation cannot
+prove remote claim revocation or professional appointment.
+Authenticated password-route attempts reach the same denial wrapper and retain
+one bounded denial, while invalid/stale/inactive identity claims are labelled
+unverified rather than attributed as verified staff. Denials do not mutate the
+incident and survive document rollback/reopen.
+
+A successful `Restart` is constructed-only: the record exposes `actual_hold:
+true` and the missing actual authority. It never restores actual-provider
+dispatch or reliance, even after release replacement/provider switch/reopen.
+JSON can contain incidents and preserve manual work but cannot qualify AI
+restart. Committed actions with failed acknowledgement return 409 and
+`outcome: committed`; reload before retrying. Ordinary denials remain 400/403
+under existing API conventions. No new UI or live activation is introduced.
+Fresh constructed ready/accepted list, detail, source export and bundle export
+share eligibility semantics. Bundle projection uses the current trusted provider,
+not caller flags; provider switches/reopen preserve actual holds. Invalid task/
+scope/event history stays noncurrent without breaking generic evidence export.
+
+The issue's synthetic drill is `test_operator_suspension`; the already selected
+native SQL gate runs
+`test_assistants.MssqlDurabilityTests.test_operator_incident_drill` against its
+owned disposable database. These are engineering checks, not actual OD-35
+authority, threshold approval, competent evaluation or human drill acceptance.
+
 ## RAI task release API (#219)
 
 `GET /api/assistants` now includes role-filtered `registered_tasks` for the
@@ -1571,7 +1622,8 @@ fields, `task` (assistant ID or `legacy:<retained-task>`), `evidence_class`,
 the authenticated approver, never a client-supplied approver identity. Posting
 a replacement revokes previous active records for that task across endpoints
 and deployments; it does not overwrite historical proposals. Suspend/revoke
-routes are unchanged; restart requires a newly recorded release.
+release routes are unchanged. Replacing a release does not clear the independent
+incident hold; actual restart remains blocked as described above.
 
 Denials expose missing evidence, the unappointed authority/project contact and
 manual route, and persist in assistant events or the legacy audit/comparison

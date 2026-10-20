@@ -498,7 +498,19 @@ class SetupTests(unittest.TestCase):
         self.assertIn({"name": "ZF_TRUSTED_PROXY", "value": "1"},
                       self.fake.app["properties"]["template"]["containers"][0]["env"])
         self.assertTrue(self.fake.sp["appRoleAssignmentRequired"])
-        self.assertEqual(len(self.fake.reg["appRoles"]), 8)
+        manifest = json.loads(SETUP.MANIFEST.read_text())
+        definitions = [*manifest["appRoles"], *manifest["capabilityRoles"]]
+        self.assertEqual(
+            {r["value"] for r in self.fake.reg["appRoles"]},
+            {f"ZavaForward.{r['key']}" for r in definitions},
+        )
+        restart_role = next(
+            r for r in self.fake.reg["appRoles"] if r["value"] == "ZavaForward.AIRestart"
+        )
+        self.assertNotIn(
+            restart_role["id"], {a["appRoleId"] for a in self.fake.assignments}
+        )
+        self.assertNotIn("AIRestart", {r["key"] for r in manifest["appRoles"]})
         callbacks = self.fake.reg["web"]["redirectUris"]
         self.assertIn(f"https://{FQDN}/.auth/login/aad/callback", callbacks)
         self.assertIn(f"https://{EDGE}/.auth/login/aad/callback", callbacks)
@@ -1814,6 +1826,31 @@ class SetupTests(unittest.TestCase):
         count = len(self.fake.writes)
         self.assertEqual(self.invoke(), 1)
         self.assertEqual(len(self.fake.writes), count)
+
+    def test_provisioned_capabilities_survive_roster_reruns_but_unsafe_roles_fail(self):
+        self.bootstrap()
+        manifest = json.loads(SETUP.MANIFEST.read_text())
+        for capability in manifest["capabilityRoles"]:
+            role = next(r for r in self.fake.sp["appRoles"]
+                        if r["value"] == "ZavaForward." + capability["key"])
+            self.fake.assignments.append(
+                {"principalId": GROUP, "resourceId": SP, "appRoleId": role["id"]})
+        self.fake.memberships = [GROUP]
+        retained = copy.deepcopy(self.fake.assignments)
+        writes = len(self.fake.writes)
+        for mode in ((), ("--check",), ("--dry-run",)):
+            with self.subTest(mode=mode):
+                self.assertEqual(self.invoke(*mode), 0, self.output.getvalue())
+                self.assertEqual(self.fake.assignments, retained)
+                self.assertEqual(len(self.fake.writes), writes)
+        for unsafe in ("SupportOfficer", "unknown-assignment"):
+            with self.subTest(unsafe=unsafe):
+                self.fake.assignments = retained + [{
+                    "principalId": GROUP, "resourceId": SP,
+                    "appRoleId": str(uuid.uuid5(SETUP.ROLE_NAMESPACE, unsafe)),
+                }]
+                self.assertEqual(self.invoke(), 1)
+                self.assertEqual(len(self.fake.writes), writes)
 
     def test_disabled_user_and_nonsecurity_group_rejected(self):
         self.bootstrap()

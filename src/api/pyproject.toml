@@ -64,7 +64,8 @@ follow_imports = "skip"
 
 # Typed continuity tests reuse the existing untyped assistant and Store fixtures.
 [[tool.mypy.overrides]]
-module = ["test_continuity_epoch_export", "tests.test_continuity_epoch_export"]
+module = ["test_continuity_epoch_export", "tests.test_continuity_epoch_export",
+          "test_operator_suspension", "tests.test_operator_suspension"]
 disallow_untyped_calls = false
 
 [tool.setuptools.package-data]

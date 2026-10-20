@@ -1,0 +1,94 @@
+{
+  "task_id": "221",
+  "task_slug": "operator-suspension-221",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-20/operator-suspension-221-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-20/operator-suspension-221-plan.md",
+    "details": ".copilot-tracking/details/2026-10-20/operator-suspension-221-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-20/operator-suspension-221-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Second P05 full17 expanded native drill passed; four following tests exposed retained/current fixture IDs outside the existing fx- cleanup namespace. Local reinstall/all-task-candidate assertion reproduced failure. Reuse existing fx- namespace with bounded IDs; production and runner unchanged. Preserve both failed receipts; same P05 fixture scope.",
+      "status": "fixture-reconciliation",
+      "evidence": "/tmp/ama-221-pr419-fixture-reuse-before.log; /tmp/ama-221-rpi-20261020-pr419-findings-02/0158-mssql.log"
+    },
+    {
+      "decision": "First P05 full17 at 9aa1c609 ran 16/17 groups successfully; native SQL failed only on a newly prefixed fixture release ID exceeding VARCHAR(64). Preserve -01 receipt and log. Digest-bound both new fixture IDs with <=64 assertions; no production or runner changes. Same bounded P05 scope, not a new cycle.",
+      "status": "fixture-correction",
+      "evidence": "/tmp/ama-221-rpi-20261020-pr419-findings-01/0158-mssql.log"
+    },
+    {
+      "decision": "P05-T01/T02 source/focused complete: five actual findings have separate implementation dispositions, 46-case persisted matrix and expanded existing native drill. Final owning 235 tests and infra 368 tests pass; configured core/API/infra Ruff/format/mypy pass. No independent acceptance inferred.",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-pr419-five-finding-dispositions.json"
+    },
+    {
+      "decision": "Owner renewed one additional bounded P05 implementation cycle for exactly five PR419 comments 4321739315, 4321739367, 4321739400, 4321739431, 4321739469 at clean local/remote a136982ad25d8165e1ce9f2eb60c0397025a559a. No concurrent workers or replacement Review; stop before push/comment.",
+      "status": "confirmed",
+      "evidence": "Explicit owner continuation 2026-10-20T05:52:28Z; actual comments retrieved through gh api."
+    },
+    {
+      "decision": "P04-T01/T02 source/focused complete: retained failing-before four source/HTTP errors; final 166-test owning batch and 14-method issue suite pass, configured core/API Ruff/format/mypy pass. Separate implementation-owned disposition, no independent/human approval.",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-correction02-disposition.json"
+    },
+    {
+      "decision": "Second bounded continuation only for C221-C01-001 residual RV002; first worker finished and its clean exact-head full17 receipt verified. First independent assessment remains Not Pass; no replacement Review or further loop.",
+      "status": "confirmed",
+      "evidence": "Owner continuation 2026-10-20; /tmp/ama-221-correction-handoff-20261020-01.json; /tmp/ama-221-correction02-prior-verification.log; retained issue221-correction01-assessment.md"
+    },
+    {
+      "decision": "Complete ordered RPI loop autonomously within bounded synthetic engineering scope; stop before push/PR.",
+      "status": "confirmed",
+      "evidence": "Explicit user instruction 2026-10-20."
+    },
+    {
+      "decision": "Research executed/Ready for bounded engineering; critique executed once, Revise. PC001-006 directly resolved in frozen details; PC007 rejected as contrary to explicit caller /tmp direction.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-10-20/operator-suspension-221-plan-critique.md"
+    },
+    {
+      "decision": "Original independent Review executed once: Complete / Not accepted. Four Medium defects were retained at that original boundary; original Review is immutable and no replacement Review is authorized.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"
+    },
+    {
+      "decision": "Owner selected one later P03 implementation cycle for RV001-004 and GATE001-002; preserve original phases/receipt and stop before push/PR for separate coordinator-owned assessment.",
+      "status": "confirmed",
+      "evidence": "Explicit continuation 2026-10-20; /tmp/ama-221-handoff-20261020-01.json"
+    },
+    {
+      "decision": "Later P03-T01/T02 source and focused behavior complete; P03-T03 configured core/API static and 367 infra tests passed. Implementation-owned dispositions do not change original adverse Review or infer independent/human acceptance.",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "independent-assessment-and-gate",
+      "summary": "Prior full17/CI success does not waive five actual PR419 findings. New exact-head gate and independent bounded assessment remain pending.",
+      "resolution": "Complete only P05 then return external handoff to coordinator; no publication until independent receipt verification and retained assessor bounded Pass."
+    },
+    {
+      "id": "actual-human-authority",
+      "summary": "Actual OD-35/RULE-020 restart authority, monitoring thresholds, competent corrective acceptance and human-witnessed drill unavailable.",
+      "resolution": "Building Safety and Sponsor with Digital/task/control owners appoint named authority and approve actual evidence/protocol; no live activation here."
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "P05-T03: validate fixture namespace/reuse correction, commit clean follow-up without amend, run unchanged full17 with fresh origin/main at /tmp/ama-221-rpi-20261020-pr419-findings-03. Preserve failed -01/-02. Keep actual result/receipt/native evidence/acceptance matrix/handoff external. Stop before push/comment for coordinator verification and retained assessor bounded Pass."
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator independently verifies and assesses the later frozen bounded candidate", "rationale": "Required before ordinary publication; implementation dispositions are not independent approval.", "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json"},
+    {"rank": 2, "task": "Named human owners resolve actual authority, thresholds, competent evidence and witnessed drill", "rationale": "Required whole-issue acceptance remains outside synthetic engineering and cannot be granted by fixtures.", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/operator-suspension-221-review.md"}
+  ]
+}

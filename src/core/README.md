@@ -1540,6 +1540,78 @@ the staff endpoint, rendered synthetic check and remaining acceptance gates.
 Deployed SQL Server/Azure, real model use, source authority, competent human review
 and direct user acceptance are not established by these local tests.
 
+## Operator incidents and constructed restart (#221)
+
+The existing `continuity` document is the incident authority for AI containment,
+not a second release system. Suspension immediately blocks the affected task's
+dispatch, completion and pending/ready reliance. Its SQL writer transaction
+captures impacted proposals, exact release references and existing serving
+bindings without the earlier 500-row preview truncation. Evidence, owner,
+containment, resident impact, remediation and declared restart authority are
+retained; absent information is explicitly `Unavailable`, never approval.
+Legacy output snapshots and append-only incident/corrective-claim audit evidence
+are retained. JSON supports durable containment/manual work but has no qualified
+release snapshot and cannot restart AI.
+
+Completeness includes every affected pending, leased, ready or accepted
+assistant proposal and proposed or accepted/edited legacy output, not just
+current releases. Each impact retains its original
+release ID/version/digest, exact retained release snapshot and binding, envelope,
+task version and prompt version. A prior release is not replaced by today's
+candidate. Missing, inconsistent or unresolved historical evidence remains
+explicitly incomplete and denies constructed restart without delaying containment.
+Both assistant versions and legacy envelope task versions must equal the
+original retained release binding's `registry_version`, not today's registry.
+Malformed JSON and non-object release bodies deny current admission and are
+retained verbatim in the impacted snapshot with explicit incomplete diagnostics.
+They cannot roll back containment or qualify a constructed restart.
+
+The global epoch remains event ordering, but historical validity now uses
+task/all-scope suspension and restart boundaries. Unaffected ready, accepted
+and in-flight proposals remain eligible under their independent release and
+source checks. Affected historical work never revives; a fresh activation is
+required after a constructed restart. Missing/future/malformed history denies.
+Every epoch must appear exactly once in coherent registered-scope suspension/
+restart history. Generic missing-task records are noncurrent; recognized old
+priority shapes retain their task identity and explicit historical unknowns,
+without manufacturing missing release or task-version evidence.
+Suspension validates existing history before appending and rejects every
+duplicate exact open scope. A whole-release incident and distinct task
+incidents may legitimately overlap; the former cannot hide a duplicate task.
+Source export validates and normalizes retained task identity before registry,
+snapshot or release checks. Missing, array or object capabilities remain in
+historical source and HTTP bundle evidence, explicitly noncurrent, stale and
+nonactionable with no reliance; they neither abort export nor acquire a grant.
+
+Corrective proposals retain a test ID/reference, explicit constructed Pass
+claim, recorder/time, incident/epoch, full server-derived current candidate and
+its digest. Replacement releases or model/prompt/policy/data/permission drift
+require freshly proposed evidence, without overwriting incident-time versions
+or earlier proposals. Decisions need the exact proposal digest and a distinct
+current registered OID-bound manager with the separate trusted `ai_restart`
+capability. Email, staff code and OID independence are checked. SQL repeats
+local identity and candidate checks within its existing atomic writer and
+optimistic continuity-document fence. Denied restart attempts are audited
+separately; rolled-back actions cannot leak a partial restart.
+Early invalid/inactive identities are recorded as unverified claims, not named
+verified actors. SQL denial events use the existing atomic audit-only writer
+after action rollback, so document-writer failure cannot discard the denial.
+Source and bundle export use the trusted current store provider for constructed
+versus actual holds; caller-supplied fixture flags cannot relax actual use.
+
+Only a constructed restart drill is implemented. The separate permission
+proves an engineering authorization boundary, not OD-35 appointment or
+acceptance of corrective tests. `actual_hold` stays true, including after
+reopen, provider switching and replacement release approval; actual `Ai`
+dispatch and reliance stay blocked. Older restarted incidents without this
+field also remain held for actual use. There is no actual restart approval
+route while OD-35/RULE-020 evidence is unavailable. No fixture, text reference,
+seeded role, model response or synthetic result appoints an actual approver.
+Approved monitoring thresholds, competent test acceptance and the
+human-witnessed drill remain unmet; this mechanism does not close the issue.
+Manual casework, resident challenge, emergency and statutory hazard response
+remain independent. No monitor threshold or live model is activated here.
+
 ## Task-bound RAI release records (#219)
 
 `assistant_release.py` reuses the migrated `assistant_releases` and

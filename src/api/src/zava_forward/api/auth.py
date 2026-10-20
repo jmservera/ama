@@ -44,6 +44,7 @@ RULE_ROLE_MAP = {
     "ZavaForward.RuleAuthor": "rule_author",
     "ZavaForward.RuleOwner": "rule_owner",
     "ZavaForward.RegulatoryChat": "regulatory_chat",
+    "ZavaForward.AIRestart": "ai_restart",
 }
 
 
@@ -84,7 +85,7 @@ class PasswordProvider:
         except (ValueError, binascii.Error):
             return None
         u = self.store.staff.get(d.get("e", ""))
-        return dict(u) if u and d.get("x", 0) > time.time() else None
+        return dict(u, auth_provider=self.name, rule_roles=[]) if u and d.get("x", 0) > time.time() else None
 
     def account(self, headers, user):
         return {"name": user["name"], "email": user["email"], "provider": self.name}

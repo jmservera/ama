@@ -12,7 +12,9 @@ from zava_forward.core.assistants import Assistants
 from zava_forward.core.store import Store
 
 SUSPEND = dict(scope="all", reason="Suspect output quality", incident_owner="Programme manager",
-               containment="Stop all AI work", comms_owner="Programme manager", comms_audience="Staff only")
+               containment="Stop all AI work", comms_owner="Programme manager", comms_audience="Staff only",
+               restart_authority="Delegation ref D-1", evidence="Constructed incident evidence",
+               resident_impact="Constructed impact assessment", remediation="Constructed corrective work")
 
 
 class Suspension(Base):
@@ -26,9 +28,8 @@ class Suspension(Base):
         return self.store.suspend(self.qi, dict(SUSPEND, **kw), self.service.affected(kw.get("scope", "all")))
 
     def restart(self, s):
-        self.store.restart_propose(self.pm, dict(id=s["id"], corrective_evidence="Re-evaluated on synthetic cases."))
-        return self.store.restart_decide(self.pso, dict(id=s["id"], epoch=self.store.continuity_epoch(),
-                                                        decision="Restart", authority_ref="Delegation ref D-1"))
+        from test_operator_suspension import restart
+        return restart(self, s)
 
     def test_roles_and_required_fields(self):
         with self.assertRaises(PermissionError):
@@ -68,7 +69,7 @@ class Suspension(Base):
         self.assertTrue(self.service.affected("all", limit=0).truncated)
         self.assertFalse(self.service.affected("all").truncated)
         s = self.store.suspend(self.qi, dict(SUSPEND), self.service.affected("all", limit=0))
-        self.assertTrue(s["affected_assistant_truncated"])
+        self.assertFalse(s["affected_assistant_truncated"])
         self.assertEqual(s["affected_assistant_total"], len(queued))
         self.assertTrue(fresh.ai.gate("priority"))
         r = fresh.ai.run("priority", "s", "u", "template", False)
@@ -114,16 +115,19 @@ class Suspension(Base):
             self.store.restart_decide(self.pso, body)
         with self.assertRaises(PermissionError):
             self.store.restart_propose(self.liaison, dict(id=s["id"], corrective_evidence="x"))
-        self.store.restart_propose(self.pm, dict(id=s["id"], corrective_evidence="Re-evaluated."))
+        from test_operator_suspension import decision, propose, provision
+        actor = provision(self)
+        s = propose(self, s)
+        body = decision(s)
         with self.assertRaises(PermissionError):
             self.store.restart_decide(self.pm, body)
         with self.assertRaises(PermissionError):
-            self.store.restart_decide(self.pso, dict(body, epoch=99))
+            self.store.restart_decide(actor, dict(body, epoch=99))
         with self.assertRaises(ValueError):
-            self.store.restart_decide(self.pso, dict(body, authority_ref=""))
-        self.store.restart_decide(self.pso, body)
+            self.store.restart_decide(actor, dict(body, authority_ref=""))
+        self.store.restart_decide(actor, body)
         with self.assertRaises((ValueError, PermissionError)):
-            self.store.restart_decide(self.pso, body)
+            self.store.restart_decide(actor, body)
         self.assertEqual(self.store.continuity_epoch(), 2)
 
     def test_manual_fallback_and_hazard_work_continue(self):
@@ -239,9 +243,12 @@ class JsonStore(unittest.TestCase):
             qi, pm, pso = staff
             s = store.suspend(qi, SUSPEND)
             self.assertTrue(store.continuity_block("priority"))
-            store.restart_propose(pm, dict(id=s["id"], corrective_evidence="Reviewed."))
-            store.restart_decide(pso, dict(id=s["id"], epoch=1, decision="Restart", authority_ref="Ref"))
-            self.assertFalse(store.continuity_block("priority"))
+            with self.assertRaises(PermissionError):
+                store.restart_propose(pm, dict(id=s["id"], corrective_evidence="Reviewed.",
+                                              result="Pass", test_id="constructed", evidence_class="constructed-fixture"))
+            with self.assertRaises(PermissionError):
+                store.restart_decide(pso, dict(id=s["id"], epoch=1, decision="Restart", authority_ref="Ref"))
+            self.assertTrue(store.continuity_block("priority"))
             service = Assistants(store, {})
             self.addCleanup(service.stop)
             bundle = json.loads(json.dumps(store.continuity_export(pm, service.export())))

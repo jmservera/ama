@@ -284,8 +284,7 @@ def review(store, user, rec_id, action, reason="", text=None):
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
         if action != "reject" and rec["source"] == "ai":
-            from .continuity import epoch_current
-            if not epoch_current(rec, store.continuity_epoch()):
+            if not store.ai_epoch_current(rec):
                 raise PermissionError("AI output epoch changed or is unavailable; use fresh work or the manual route.")
             store.continuity_fence()
         if action != "reject" and rec["source"] == "ai" and not store.release_current(
