@@ -127,3 +127,12 @@ Critique executed once: Revise (3 High, 5 Medium, 2 Low). All ten were direct pl
 ## Handoff
 
 Implement P01 to P04 in order; the changes record is .copilot-tracking/changes/2026-10-20/cohort-manifest-222-changes.md.
+
+## Correction Continuation (2026-10-20, appended; original plan and critique unchanged)
+
+Owner decisions 2026-10-20 (issue comment 6295248053; PR comment 6295248627) authorised correction only, returned for owner approval before any evaluator work. This is an ordinary later `rpi-implement` invocation, not a second critique or Review.
+
+* <!-- rpi:phase id=P05 --> P05 Correction scope (declared: full P05)
+  * <!-- rpi:task id=P05-T01 --> [x] P05-T01 Split confounded pairs, bind expectations to unchanged `rank()`, add Unknown-support policy proposal (PP-01), fresh held-out ID rule with unfilled roles
+  * <!-- rpi:task id=P05-T02 --> [x] P05-T02 Replace arbitrary sample and error values with justified options and uncertainty methods; define review burden over eligible; restrict test support exemption with regression
+  * <!-- rpi:task id=P05-T03 --> [ ] P05-T03 Reconcile PR inline findings and RV-001/002/004/006 dispositions; full local gate; frozen local handoff

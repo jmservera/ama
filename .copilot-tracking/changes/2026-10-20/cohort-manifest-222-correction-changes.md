@@ -8,6 +8,10 @@
 * Authority: owner comment 6295248053 and PR421 comment 6295248627 (2026-10-20): correction only, return the revised manifest for owner approval before evaluator work
 * Base: reviewed main 993a7b88c03f5240f1e7a4c7c7afa7c064281622; starting head 2027f7260583117a20bf8cea8b3186c2b2d1dc59 (bot score commit). The earlier ba989bb0 receipt is historical and invalid for the current head.
 
+## Process disclosure (coordinator intervention, 2026-10-20)
+
+The first correction edits (manifest, test, review pack, README, log, this record, state, commit 073d37de) were authored directly BEFORE the `rpi-implement` skill was activated. A coordinator audit found this. They are retained, unrewritten, as an UNVERIFIED correction draft. `rpi-implement` was then actually invoked in this continuation (plan section P05 appended) and the draft reconciled against the plan below. Gate run manifest-03 was BLOCKED by an ignored ruff cache (removed, exact path); run manifest-04 started on the draft head and is superseded by any later commit. The original research, plan, critique, changes and single Review are untouched; no second original Review exists.
+
 ## Disposition of PR inline findings and original Review findings
 
 | Finding | Disposition |
