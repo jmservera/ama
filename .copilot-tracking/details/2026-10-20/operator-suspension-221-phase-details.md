@@ -27,7 +27,7 @@ all open exact scopes after validating history. Existing actor/actual-hold,
 manual/hazard and distinct approval contracts remain unchanged.
 P05-T03 records separate implementation dispositions, configured core/API/
 infra checks, privacy-safe clean commit and unchanged full17 runner at
-/tmp/ama-221-rpi-20261020-pr419-findings-02 with fresh origin/main and
+/tmp/ama-221-rpi-20261020-pr419-findings-03 with fresh origin/main and
 runner-owned heavy lock. No outer lock, uv, private inputs or cloud/model calls.
 Final receipt, hash, logs, acceptance matrix and handoff stay external.
 STOP before push/comment for coordinator verification and retained assessor.
@@ -61,6 +61,19 @@ P05-T03 remains pending; use a new clean commit and
 Fixture correction validation passed all16 issue methods and configured API
 Ruff/format/mypy (63 files). Failed -01 receipt SHA-256:
 34a2b86e8bed8fc41a066778aabe185d5a13c2c6561f33f8930b123e5f69eb13.
+
+Second gate -02 expanded native drill passed, but four subsequent tests failed
+because new retained/current release fixtures survived existing `fx-` cleanup.
+Failed receipt SHA-256:
+1f6057f97cfe946d278bd729ccfcda735db452aa5ffbd85a49cb6b9c52bc65ea.
+Official verification refused the incomplete run. Existing shared drill now
+also asserts successful standard fixture reinstall/all-task candidate
+completeness. This failed locally before prefix correction; both new IDs now
+remain digest-bounded under the existing `fx-` namespace. No production or
+runner change, no new scope or Review. Next clean follow-up gate uses -03.
+Fixture reuse passed all16 issue methods; configured API Ruff/format/mypy
+passed again after automatic import ordering. Both failed full gates remain
+negative evidence; only the new exact-head full17 can establish completion.
 
 ## P04: Second Bounded Malformed-Capability Export Correction
 

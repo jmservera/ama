@@ -440,3 +440,37 @@ Failed -01 receipt SHA-256 is
 Fresh fetched main remains 7e95f0224bfb7a8a62990a1de162fbcfa68db539.
 Only fixture and current implementation evidence change in the next commit;
 production delta and original Review remain unchanged.
+
+## P05-T03: Shared Native Fixture Namespace Reconciliation
+
+The second unchanged all17 at c0ac45cf57bcd0f66223e2512dc29072f97d5d59
+again passed 16/17 groups. The expanded incident native drill passed; four
+subsequent native tests failed (three failures/one error). Their log contains
+repeated malformed-release denial after the incident drill:
+/tmp/ama-221-rpi-20261020-pr419-findings-02/0158-mssql.log.
+The existing installer clears only its `fx-` synthetic release namespace,
+whereas the new retained/current fixture IDs used other prefixes and survived
+between shared native tests. The four failures are not dismissed as unrelated
+or flaky; they are coupled fixture contamination caused by this extension.
+The failed receipt SHA-256 is
+1f6057f97cfe946d278bd729ccfcda735db452aa5ffbd85a49cb6b9c52bc65ea.
+Official verification correctly refused it:
+/tmp/ama-221-pr419-verify-02.log.
+
+Added a fixture-reuse assertion to the existing shared drill: reinstall the
+standard synthetic releases, then require complete all-task candidate evidence.
+This reproduced failure locally without production edits:
+/tmp/ama-221-pr419-fixture-reuse-before.log. The only correction is to put
+both new digest-bounded IDs under the existing `fx-` namespace; this reuses
+the existing cleanup contract rather than adding record repair, generic
+deletion, production fallback or runner changes. All original evidence stays
+unchanged. Same bounded P05 fixture work; no new assessment/RPI cycle.
+Fresh exact-head full17 must use -03, preserving both adverse attempts.
+
+Fixture-reuse correction passed all16 issue methods including the added
+reinstall assertion: /tmp/ama-221-pr419-fixture-reuse-after.log.
+Initial API import-order lint failed and is retained at
+/tmp/ama-221-pr419-fixture-reuse-static.log. Existing Ruff auto-fix ordered
+the test fixture import; final API Ruff/format/mypy passed (63 files):
+/tmp/ama-221-pr419-fixture-reuse-static-final.log. No production, runner or
+original evidence changes. Next clean commit/gate -03 is the same P05 scope.

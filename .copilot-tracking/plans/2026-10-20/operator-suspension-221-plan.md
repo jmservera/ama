@@ -240,3 +240,9 @@ Only the tightly coupled fixture IDs are now digest-bounded, with explicit
 length assertions. This is the same P05 scope, not another correction cycle
 or production change. Preserve the failed -01 receipt. Fresh unchanged full17
 must use /tmp/ama-221-rpi-20261020-pr419-findings-02 after a new clean commit.
+The second gate's expanded native drill passed but poisoned four subsequent
+tests: new release fixture IDs were outside the existing installer's `fx-`
+cleanup namespace. Local fixture-reuse assertion reproduced it; both IDs now
+use that namespace without production changes. Preserve -02 failure and run
+fresh -03 after focused/static checks and a clean follow-up commit. This is
+directly coupled fixture reconciliation within P05, not a new workstream.

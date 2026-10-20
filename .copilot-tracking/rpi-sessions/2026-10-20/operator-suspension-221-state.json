@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Second P05 full17 expanded native drill passed; four following tests exposed retained/current fixture IDs outside the existing fx- cleanup namespace. Local reinstall/all-task-candidate assertion reproduced failure. Reuse existing fx- namespace with bounded IDs; production and runner unchanged. Preserve both failed receipts; same P05 fixture scope.",
+      "status": "fixture-reconciliation",
+      "evidence": "/tmp/ama-221-pr419-fixture-reuse-before.log; /tmp/ama-221-rpi-20261020-pr419-findings-02/0158-mssql.log"
+    },
+    {
       "decision": "First P05 full17 at 9aa1c609 ran 16/17 groups successfully; native SQL failed only on a newly prefixed fixture release ID exceeding VARCHAR(64). Preserve -01 receipt and log. Digest-bound both new fixture IDs with <=64 assertions; no production or runner changes. Same bounded P05 scope, not a new cycle.",
       "status": "fixture-correction",
       "evidence": "/tmp/ama-221-rpi-20261020-pr419-findings-01/0158-mssql.log"
@@ -80,7 +85,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P05-T03: validate local digest-bounded fixture-ID correction, commit clean follow-up without amend, run unchanged full17 with fresh origin/main at /tmp/ama-221-rpi-20261020-pr419-findings-02. Preserve failed -01. Keep actual result/receipt/native evidence/acceptance matrix/handoff external. Stop before push/comment for coordinator verification and retained assessor bounded Pass."
+    "action": "P05-T03: validate fixture namespace/reuse correction, commit clean follow-up without amend, run unchanged full17 with fresh origin/main at /tmp/ama-221-rpi-20261020-pr419-findings-03. Preserve failed -01/-02. Keep actual result/receipt/native evidence/acceptance matrix/handoff external. Stop before push/comment for coordinator verification and retained assessor bounded Pass."
   },
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator independently verifies and assesses the later frozen bounded candidate", "rationale": "Required before ordinary publication; implementation dispositions are not independent approval.", "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json"},

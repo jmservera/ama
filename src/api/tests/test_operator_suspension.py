@@ -10,6 +10,7 @@ from http.server import ThreadingHTTPServer
 from typing import Any
 from unittest.mock import patch
 
+import release_support
 from zava_forward.core import assistant_release, assistants, continuity, rai_release
 from zava_forward.core.ai import Ai
 from zava_forward.core.store import ConflictError
@@ -166,8 +167,8 @@ def retained_snapshot(test: Any, kind: str, variant: str, scope: str | None = No
         if not current_only:
             assert source is not None
             release_key = continuity.sha(source["id"])[:32]
-            current_id = "zz-current-" + release_key
-            rid = "retained-" + release_key
+            current_id = "fx-zz-current-" + release_key
+            rid = "fx-retained-" + release_key
             test.assertLessEqual(len(current_id), 64)
             test.assertLessEqual(len(rid), 64)
             db.execute(
@@ -366,6 +367,9 @@ def drill(test: Any) -> None:
     retained_snapshot(test, "legacy", "mismatch")
     retained_snapshot(test, "assistant", "current-json", "funding-evidence")
     duplicate_scope(test, "assessment-preparation")
+    release_support.install(test.store)
+    with test.service.transaction() as db:
+        test.assertTrue(continuity.candidate(test.store, db, "all")["complete"])
 
 
 class OperatorIncident(Base):
