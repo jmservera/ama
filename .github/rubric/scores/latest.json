@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-20T05:21:23+00:00",
-  "commit": "678b8b84caac8a5577683be97a54b0963a864845",
+  "scored_at": "2026-10-20T08:00:24+00:00",
+  "commit": "332101ede08153925022f7f886b0c1abbabdb2d5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39373895047",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39388242418",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "c955f461bc6fa8caaab2b18611ef75eafe0770169960e961b9ae67bf64584fae",
-    "infrastructure": "cab34d62088896b9cc7748f510c938daedfcf20355ffc20ccc1301a9d29f31f2",
+    "solution-code": "f3279b43df06f0f33275727da6310bb8af2845b453d7008ee628ea073eb66c25",
+    "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 48,
@@ -27,10 +27,10 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_decisions.py:1-120",
-        "src/api/src/zava_forward/api/web/panels.js:239-255"
+        "src/core/src/zava_forward/core/continuity.py:50-260",
+        "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "Diff adds a version-bound challenge feature cleanly layered on existing resident-action route, store dialect hooks and projection redaction; decoupled via existing contracts (ResidentCommittedError, dialect hooks). Consistent modular baseline; no new scaling evidence beyond existing ceiling."
+      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts (_incident_action, IncidentCommittedError, dialect-agnostic _table helper). Decoupled from core store, consistent with prior modular baseline. No new scaling-path evidence introduced beyond existing ceiling."
     },
     "A2": {
       "score": 5,
@@ -42,38 +42,38 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/projection.py:179-188",
-        "src/core/src/zava_forward/core/resident_decisions.py:605-660"
+        "src/core/src/zava_forward/core/continuity.py:380-560",
+        "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff adds dual-entitlement redaction (resident-information + recorded-reason) for new challenge fields, cached-reader downgrade handling, and SQL-writer revalidation of versions/owners, consistent with existing core controls. Core access controls in place; no stated adversarial threat model for t..."
+      "rationale": "Diff adds extensive fail-closed security hardening: OID-bound capability checks, distinct-actor enforcement, replay/self-approval/stale-digest rejection, audit durability under rollback, and unverified-identity labelling. Reinforces existing threat-model coverage already at ceiling; no higher lev..."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/tests/test_resident_decisions.py:232-316",
-        "src/api/src/zava_forward/api/server.py:890-995"
+        "src/api/tests/test_operator_suspension.py:376-941",
+        "src/core/src/zava_forward/core/continuity.py:189-380"
       ],
-      "rationale": "Challenge-open/resolve end-to-end wired through server, store (SQLite+SQL Server dialects), UI panel and ~17 targeted tests covering channels, versions, cross-case policy, rollback and migration. Working capability with disclosed scope limits (bounded 60k-case measurement, not whole-workflow load)."
+      "rationale": "16 new tests cover version-matrix integrity, rollback/conflict, snapshot completeness, manual hazard fallback and trusted-capability revalidation end to end. Already at ceiling (ends-to-end working with disclosed scope limits); no higher level available."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "src/core/README.md:2929-2941",
-        "src/core/src/zava_forward/core/mssqlstore.py:188-200"
+        "src/api/tests/test_operator_suspension.py:614-665",
+        "src/core/src/zava_forward/core/sqlstore.py:572-630"
       ],
-      "rationale": "Adds a measured before/after query-plan comparison (1.5s to <1ms) on an owned local SQL Server container with stated CPU/memory bounds and explicit caveats that it is not an SLA or production capacity result. Cost/perf evidenced narrowly for one path; not both cost and performance modelled broadly."
+      "rationale": "Adds resilience evidence (rollback on committed-action fault, ConflictError on concurrent save, audit-only writer surviving document rollback) but no new cost or performance measurement. Still only one dimension (resilience) evidenced, not both cost and performance; unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a resident-challenge/data-integrity and incident-governance feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is an incident/restart containment feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "src/api/src/zava_forward/api/web/panels.js:260-310"
+        "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "Feature is human-recorded challenge/incident workflow (staff entering supplied evidence), not agentic; AI role is limited to existing priority-suggestion staleness flagging unaffected by this diff. No new orchestration or autonomy pattern introduced; unchanged from baseline assessment basis."
+      "rationale": "Restart decision remains a human-gated engineering drill requiring a distinct OID-bound manager and separate capability; no agentic orchestration, handoff or autonomous action is introduced. Unchanged from baseline assessment basis."
     },
     "B1": {
       "score": 3,
@@ -103,10 +103,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/core/README.md:2879-2941",
-        "src/api/README.md:2601-2640"
+        "src/core/README.md:1543-1615",
+        "src/api/README.md:1557-1606"
       ],
-      "rationale": "Both READMEs document the incident/restart feature with concrete API/behaviour detail, scope caveats and verification commands, consistent with prior documentation quality. Dense operational narrative in places; capped at Good(4), unchanged from baseline."
+      "rationale": "Both READMEs gained a new dense operational section documenting the incident/restart contract with concrete API detail and caveats, consistent with prior documentation style. Still dense operational narrative in places; capped at Good(4), unchanged from baseline."
     },
     "B7": {
       "score": 3,
