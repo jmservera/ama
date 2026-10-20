@@ -9,6 +9,7 @@ import math
 import re
 import unittest
 from pathlib import Path
+from typing import Any
 
 from zava_forward.core import ranking
 
@@ -23,7 +24,7 @@ REG = json.loads((ROOT / "src/agents/evals/registry.json").read_text(encoding="u
 SUPPORT_STATE_EXTRAS = {"support", "adjustment"}
 
 
-def isolation_violations(scenario: dict) -> set:
+def isolation_violations(scenario: dict[str, Any]) -> set[str]:
     """Fields that differ in a pair beyond its declared varied factor."""
     base, var = scenario["baseline"], scenario["variant"]
     differing = {k for k in set(base) | set(var) if k != "id" and base.get(k) != var.get(k)}
@@ -33,8 +34,12 @@ def isolation_violations(scenario: dict) -> set:
 
 
 def _case(
-    case_id: str, days: int, support_state: str = "No", hazard: bool = False, adjustment=None
-) -> dict:
+    case_id: str,
+    days: int,
+    support_state: str = "No",
+    hazard: bool = False,
+    adjustment: str | None = None,
+) -> dict[str, Any]:
     resident = {
         "Yes": {
             "priority_support": adjustment in (None, "None"),
@@ -52,7 +57,7 @@ def _case(
     }
 
 
-def _from_inputs(case_id: str, inputs: dict) -> dict:
+def _from_inputs(case_id: str, inputs: dict[str, Any]) -> dict[str, Any]:
     state = inputs.get("support_state") or ("Yes" if inputs.get("support") else "No")
     adjustment = inputs.get("adjustment")
     return _case(case_id, inputs["days"], state, inputs.get("hazard", False), adjustment)
@@ -66,8 +71,8 @@ NEIGHBOURS = [
 ]
 
 
-def _rank_pair(scenario: dict):
-    runs = []
+def _rank_pair(scenario: dict[str, Any]) -> list[dict[str, Any]]:
+    runs: list[dict[str, Any]] = []
     for side in ("baseline", "variant"):
         cases = [*NEIGHBOURS, _from_inputs("UNDER-TEST", scenario[side])]
         entry = next(e for e in ranking.rank(cases) if e["id"] == "UNDER-TEST")

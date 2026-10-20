@@ -12,6 +12,13 @@
 
 The first correction edits (manifest, test, review pack, README, log, this record, state, commit 073d37de) were authored directly BEFORE the `rpi-implement` skill was activated. A coordinator audit found this. They are retained, unrewritten, as an UNVERIFIED correction draft. `rpi-implement` was then actually invoked in this continuation (plan section P05 appended) and the draft reconciled against the plan below. Gate run manifest-03 was BLOCKED by an ignored ruff cache (removed, exact path); run manifest-04 started on the draft head and is superseded by any later commit. The original research, plan, critique, changes and single Review are untouched; no second original Review exists.
 
+## Gate history (adverse receipts retained, external)
+
+* manifest-03: BLOCKED, ignored ruff cache from my own run (exact path removed).
+* manifest-04: interrupted by the coordinator intervention (signal 15); failed receipt retained.
+* manifest-05 (head 382c13fb): FAILED in project-agents strict mypy, seven type-annotation errors in the new test. Fixed with typed signatures; mypy strict, ruff and 9 tests pass locally.
+* P05-T03 stays unchecked in the plan: the final receipt is external and cannot be committed after the gate, so it is reported in the handoff.
+
 ## Disposition of PR inline findings and original Review findings
 
 | Finding | Disposition |
