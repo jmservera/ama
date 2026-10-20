@@ -6712,3 +6712,13 @@ metadata when the knowledge base was created.
 * No provider was selected, bought, configured or approved. No screen reader was
   available on the host, so no screen-reader run is claimed and the human or
   assistive-technology gate remains unmet. No UI file changed.
+
+## [2026-10-20] correction | Map options provenance clarification (#119)
+
+* The map tile options review and screen-reader protocol logged above were first
+  drafted before the RPI skills ran, then re-checked through recovery research,
+  plan, critique, implement and review. The re-read evidence (OSM tile policy,
+  Azure Maps pricing page, code and tool availability) was confirmed, and an
+  inconsistent secondary Ordnance Survey rate was labelled unverified.
+* Conclusions are unchanged: no provider selected or bought, no screen-reader
+  run, human gate unmet.
