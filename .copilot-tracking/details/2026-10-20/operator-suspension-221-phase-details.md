@@ -4,7 +4,44 @@ description: Evidence-based task context and completion criteria
 ms.date: 2026-10-20
 ---
 
-Task 221 / operator-suspension-221; later selected P03 implementation active.
+Task 221 / operator-suspension-221; later selected P04 implementation active.
+
+## P04: Second Bounded Malformed-Capability Export Correction
+
+Only C221-C01-001, residual RV002, is active. First correction worker has
+finished; no concurrent worker exists. Clean starting HEAD and completed
+handoff match e6ea877b109f8dbed3dbd3ac2148ed3fc1cc9433. Its all17 receipt
+SHA-256 is d4af901f941fca9a40691d1e7f81815a03b33479157a472be5cd478205299f92;
+official verification repeated successfully before any second-cycle edits.
+The retained independent assessment remains Not Pass, not overwritten.
+
+P04-T01 extends test_malformed_history_runtime_and_generic_export with persisted
+list/object capability bodies, real source SQL export and actual loopback HTTP
+bundle, preserving missing-capability and valid legacy/actual-hold controls.
+Historical capability and provenance must survive, with explicit noncurrent,
+stale, nonactionable and no reliance. No production monkeypatch bypass.
+P04-T02 reuses canonical record_task validation before registry membership,
+snapshot and admission; no broader malformed-record repair or caller flag.
+P04-T03 freezes only after focused/static success and records a separate
+implementation disposition. Fresh all17 output:
+/tmp/ama-221-rpi-20261020-correction-02. Runner owns heavy lock; credentials
+scrubbed, nvm PATH retained, pip only, no cloud/model/transport/private input.
+Final gate/receipt/state/handoff stay external after commit.
+
+P04-T01/T02 complete: initial exact method failed in four array/object source/
+HTTP subcases; the full owning behavior batch subsequently passed 166 tests
+with 36 existing opt-in skips. Final exact issue suite passed 14 methods.
+Configured core/API Ruff, format and mypy passed (128/63 files respectively).
+Initial missing test tuple annotation failure remains in its original log.
+P04-T03 remains pending at the committed pre-gate boundary.
+
+Original research, critique and Review are immutable; original Review hash
+d23e129f6349a5399eb6f0e4a730ff8c44afe9ac07ebb76896009bbbfb7f3338.
+No new critique/Review, publication or human-approval claim. Coordinator
+verifies and retained assessor assesses only the new delta before publication.
+Second-cycle blocking findings end correction work for human disposition.
+Actual authority, approved thresholds, competent acceptance and witnessed
+drill remain unavailable; #222 waits.
 
 ## P03: Later Selected Finding Work
 
@@ -35,8 +72,8 @@ plus expanded subcases in existing methods and the shared native drill:
 15 methods including the original native bridge, below the plan ceiling 18.
 The earlier 12-method allocation described only the original invocation.
 No test method was removed. P03-T03 covers final configured API/core static
-checks, 367 offline infra tests and exact migration tests. P03-T04 remains
-pending until committed freeze and the new external complete gate/verification.
+checks, 367 offline infra tests and exact migration tests. P03-T04 completed
+with first-correction all17 and official verification in the external handoff.
 Committed state records the pre-gate boundary; final gate evidence/state stays
 external to avoid invalidating the frozen candidate.
 

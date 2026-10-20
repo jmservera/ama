@@ -228,3 +228,93 @@ must remain external after commit; this record does not invent their outcome.
 Original Review/critique/Research and original failed receipt hashes remain
 unchanged. Coordinator must independently verify and separately assess the
 bounded exact-head source/evidence; no replacement Review is run here.
+
+## P04 Opening: Second Bounded Source Export Correction
+
+Owner selected only C221-C01-001 (residual RV002). Verified prior worker
+finished its gate/handoff and no concurrent correction worker remains.
+Clean HEAD e6ea877b109f8dbed3dbd3ac2148ed3fc1cc9433 matches supplied handoff.
+First correction all17 passed; receipt SHA-256
+d4af901f941fca9a40691d1e7f81815a03b33479157a472be5cd478205299f92.
+Repeated official verification succeeded at fresh origin/main
+7e95f0224bfb7a8a62990a1de162fbcfa68db539, retained at
+/tmp/ama-221-correction02-prior-verification.log. That receipt will not qualify
+the next commit. Prior failed and passing receipts are untouched.
+
+Independent first-correction assessment remains Not Pass at
+/home/azureuser/.copilot/session-state/b9cc4727-b806-4e0f-a2cf-c5010d92428c/files/issue221-correction01-assessment.md.
+It establishes TypeError for persisted list/object capability in source export,
+not an authority/dispatch bypass. P04 plan/details now own exactly its
+correction: regression first, canonical identity validation before unsafe
+membership/snapshot/admission, explicit historical ineligibility without
+dropping evidence, focused/static checks and new frozen external all17.
+No research/critique/Review replacement or whole-AC/human acceptance claim.
+First execution boundary is the existing malformed-history semantic test.
+Implementation disposition is separate from all immutable assessment evidence.
+
+## P04-T01: Persisted Source and HTTP Failing-Before Evidence
+
+Extended the existing malformed-history regression, not a new test method.
+Missing/list/object capabilities are persisted into the real SQL task body;
+both Assistants.export and actual authenticated loopback HTTP continuity
+bundle export are exercised separately. Row count, raw malformed identity,
+provenance, unchanged stored body and zero provider calls are asserted.
+Both projections must explicitly report noncurrent/stale/nonactionable/no
+reliance with unavailable suspension identity.
+
+Before source correction, the exact method ran once with four errors:
+array/object each raise TypeError in real source export and disconnect the
+HTTP response when the actual handler evaluates that source exporter.
+Missing-capability control passes. Full initial output is retained at
+/tmp/ama-221-correction02-before.log, not replaced by a later pass.
+P04-T01 complete; P04-T02 now reuses canonical record_task validation and
+passes only its safe normalized identity to registry/snapshot/admission.
+
+## P04-T02: Canonical Identity Guard and Focused Validation
+
+Assistants.export now derives a local normalized capability using the existing
+continuity.record_task validator, before registry membership, snapshot or
+release admission/reference. It does not rewrite retained bodies or infer
+capability from caller flags. Invalid identities yield unavailable suspension,
+noncurrent/stale/nonactionable/no reliance; original rows/provenance remain.
+The component guide documents this direct export contract only.
+
+Owning behavior batch passed 166 tests with 36 existing native opt-in skips,
+including real SQL-source/HTTP malformed subcases, supported old-priority and
+actual-provider hold controls. Log: /tmp/ama-221-correction02-focused.log.
+Core configured Ruff/format/mypy passed (128 files), log
+/tmp/ama-221-correction02-static-core.log.
+Initial API configured Ruff/format passed; mypy reported one missing tuple
+element annotation in the added regression. Its failed log is retained at
+/tmp/ama-221-correction02-static-api.log. The tuple now explicitly uses the
+existing Any test-fixture convention; final exact checks remain to run.
+
+Final configured API Ruff/format/mypy passed (63 files):
+/tmp/ama-221-correction02-static-api-final.log. Final exact issue suite passed
+all 14 methods, no skips: /tmp/ama-221-correction02-issue-final.log.
+P04-T02 complete. No methods added/removed; original 15-method issue/native
+allocation and 18-method ceiling are unchanged. No dependency installation,
+source-path workaround, caller-constructed grant or actual provider call.
+The only production-code change is canonical local identity and its reuse
+by release admission/reference; other checks and trusted provider hold remain.
+
+## P04-T03: Second Freeze and External Gate Boundary
+
+Separate implementation disposition:
+.copilot-tracking/changes/2026-10-20/operator-suspension-221-correction02-disposition.json.
+This is source/focused evidence, not an independent Pass or replacement Review.
+Current plan/details reconcile P03 completion with its preserved first gate,
+and P04-T01/T02 with exact failure/pass logs. Original P02-T02 aggregate and
+whole-issue human criteria remain unchecked; only this bounded scope can finish.
+
+GitHub identity reconfirmed id 8036360 / login jmservera. Set repository-local
+privacy-safe author/committer email before Conventional Commit with Copilot
+trailer. Clean tracked/untracked/ignored freeze is mandatory before new all17.
+Fresh main at freeze is 7e95f0224bfb7a8a62990a1de162fbcfa68db539.
+New output /tmp/ama-221-rpi-20261020-correction-02, runner-owned heavy lock,
+credential-scrubbed environment with nvm PATH, no uv/cloud fallback.
+Post-commit gate/receipt/verification and completed scope state must remain
+external to avoid invalidating the frozen commit. All previous receipts,
+Research, critique, original adverse Review and first independent Not Pass
+assessment remain immutable. Coordinator and retained assessor own the next
+exact-delta assessment; no push/PR and no third correction loop.

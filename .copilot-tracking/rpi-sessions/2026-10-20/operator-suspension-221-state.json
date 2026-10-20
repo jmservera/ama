@@ -16,6 +16,16 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "P04-T01/T02 source/focused complete: retained failing-before four source/HTTP errors; final 166-test owning batch and 14-method issue suite pass, configured core/API Ruff/format/mypy pass. Separate implementation-owned disposition, no independent/human approval.",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-correction02-disposition.json"
+    },
+    {
+      "decision": "Second bounded continuation only for C221-C01-001 residual RV002; first worker finished and its clean exact-head full17 receipt verified. First independent assessment remains Not Pass; no replacement Review or further loop.",
+      "status": "confirmed",
+      "evidence": "Owner continuation 2026-10-20; /tmp/ama-221-correction-handoff-20261020-01.json; /tmp/ama-221-correction02-prior-verification.log; retained issue221-correction01-assessment.md"
+    },
+    {
       "decision": "Complete ordered RPI loop autonomously within bounded synthetic engineering scope; stop before push/PR.",
       "status": "confirmed",
       "evidence": "Explicit user instruction 2026-10-20."
@@ -44,8 +54,8 @@
   "blockers": [
     {
       "id": "independent-assessment-and-gate",
-      "summary": "Later source/focused corrections are implementation evidence only; fresh committed all17/verification and separate independent bounded assessment remain pending.",
-      "resolution": "Finish P03-T03/T04, freeze and execute new external complete gate, then return without publication to the coordinator."
+      "summary": "First full17 passed but independent correction01 assessment remains Not Pass. Second source/focused correction is not independent approval; new frozen all17/verification and retained assessor remain pending.",
+      "resolution": "Complete only P04-T03 then return external handoff to coordinator; stop before publication and stop for human if second cycle retains blockers."
     },
     {
       "id": "actual-human-authority",
@@ -55,7 +65,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P03-T04: freeze clean committed candidate, run all17 at fresh main/new external directory, verify externally and return for coordinator assessment without publication. Final gate result/state remains external."
+    "action": "P04-T03: freeze new clean commit, run full17 with fresh main at /tmp/ama-221-rpi-20261020-correction-02, verify receipt and seal external completion state/handoff for coordinator plus retained assessor. No new Review/publication."
   },
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator independently verifies and assesses the later frozen bounded candidate", "rationale": "Required before ordinary publication; implementation dispositions are not independent approval.", "evidence": ".copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json"},

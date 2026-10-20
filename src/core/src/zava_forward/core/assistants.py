@@ -535,12 +535,12 @@ class Assistants:
             for tid in ids[:limit]:
                 body = self._row(db, tid)
                 events = [json.loads(r[0]) for r in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id", (tid,)).fetchall()]
-                capability = body.get("capability")
+                capability = continuity.record_task(body)
                 s = continuity.active(self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai))
                 current = continuity.epoch_current(body, self.continuity(db))
                 row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
                 stale = capability not in REGISTRY or row is None or digest(self.snapshot(db, capability, json.loads(row[0]))) != body["source_signature"]
-                actionable = current and not stale and body["state"] in ("ready", "accepted") and not s and not self.admission(db, body["capability"]) and body.get("release") == self.release_reference(db, body["capability"])
+                actionable = current and not stale and body["state"] in ("ready", "accepted") and not s and not self.admission(db, capability) and body.get("release") == self.release_reference(db, capability)
                 out.append(dict(body, provenance=events, epoch_current=current, stale=stale, actionable=bool(actionable),
                                 relied_on=bool(actionable and body["state"] == "accepted"),
                                 suspension=s["id"] if s else None))

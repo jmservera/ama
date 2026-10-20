@@ -320,18 +320,64 @@ class OperatorIncident(Base):
         generic = self.store.continuity_export(self.pm, source)["assistant_proposals"][0]
         self.assertFalse(generic["epoch_current"])
         self.assertFalse(generic["relied_on"])
-        with self.service.transaction() as db:
-            body = self.service._row(db, ready["id"])
-            body.pop("capability")
-            db.execute(
-                "UPDATE assistant_tasks SET body=? WHERE id=?",
-                (json.dumps(body), ready["id"]),
-            )
-        exported_generic = next(
-            p for p in self.service.export()["proposals"] if p["id"] == ready["id"]
-        )
-        self.assertFalse(exported_generic["epoch_current"])
-        self.assertFalse(exported_generic["actionable"])
+        from zava_forward.api.auth import PasswordProvider
+        from zava_forward.api.server import App, make_handler
+
+        password = PasswordProvider(self.store, "synthetic-export-password")
+        cookie = password.login(self.pm["email"], "synthetic-export-password")
+        app = App(self.store, provider=password)
+        server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=server.serve_forever)
+        thread.start()
+        original_source = self.service.export()
+        original_row = next(p for p in original_source["proposals"] if p["id"] == ready["id"])
+        calls = self.provider.calls
+        try:
+            capabilities: tuple[Any, ...] = (None, [], {})
+            for capability in capabilities:
+                with self.service.transaction() as db:
+                    body = self.service._row(db, ready["id"])
+                    if capability is None:
+                        body.pop("capability", None)
+                    else:
+                        body["capability"] = capability
+                    db.execute(
+                        "UPDATE assistant_tasks SET body=? WHERE id=?",
+                        (json.dumps(body), ready["id"]),
+                    )
+                for path in ("source", "http"):
+                    with self.subTest(capability=capability, export=path):
+                        if path == "source":
+                            source = self.service.export()
+                            rows = source["proposals"]
+                            self.assertEqual(source["total"], original_source["total"])
+                        else:
+                            request = urllib.request.Request(
+                                f"http://127.0.0.1:{server.server_port}/api/continuity/export",
+                                headers={"Cookie": f"zf_session={cookie}"},
+                            )
+                            with urllib.request.urlopen(request, timeout=10) as response:
+                                self.assertEqual(response.status, 200)
+                                rows = json.load(response)["assistant_proposals"]
+                        self.assertEqual(len(rows), len(original_source["proposals"]))
+                        exported_generic = next(p for p in rows if p["id"] == ready["id"])
+                        self.assertEqual(exported_generic["provenance"], original_row["provenance"])
+                        self.assertEqual(exported_generic.get("capability"), body.get("capability"))
+                        if capability is None:
+                            self.assertNotIn("capability", exported_generic)
+                        self.assertFalse(exported_generic["epoch_current"])
+                        self.assertTrue(exported_generic["stale"])
+                        self.assertFalse(exported_generic["actionable"])
+                        self.assertFalse(exported_generic["relied_on"])
+                        self.assertEqual(exported_generic["suspension"], "unavailable")
+                        with self.service.transaction() as db:
+                            self.assertEqual(self.service._row(db, ready["id"]), body)
+                        self.assertEqual(self.provider.calls, calls)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(10)
+            app.assistants.stop()
         legacy = dict(
             id="old-priority",
             source="ai",

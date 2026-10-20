@@ -1,0 +1,64 @@
+{
+  "task_id": "221",
+  "task_slug": "operator-suspension-221",
+  "evidence_kind": "Second bounded implementation-owned finding disposition; not independent assessment or Review",
+  "starting_head": "e6ea877b109f8dbed3dbd3ac2148ed3fc1cc9433",
+  "base_at_freeze": "7e95f0224bfb7a8a62990a1de162fbcfa68db539",
+  "finding": {
+    "id": "C221-C01-001",
+    "residual": "RV002",
+    "severity": "Medium",
+    "disposition": "Implemented and focused-tested; new frozen gate and retained independent assessor pending",
+    "change": "Source export validates and normalizes task identity with existing record_task before registry membership, snapshot and release admission/reference. Raw missing/list/object capability and append-only provenance remain exported and stored unchanged, explicitly noncurrent/stale/nonactionable/no reliance with unavailable suspension. No broad record repair, evidence dropping or caller flag grant.",
+    "test": "test_operator_suspension.OperatorIncident.test_malformed_history_runtime_and_generic_export",
+    "failing_before": {
+      "log": "/tmp/ama-221-correction02-before.log",
+      "sha256": "f13a96dea82dc183051c5b2dd2b2d038343c1e7ab0156db2394d22dbbed20334",
+      "result": "1 method, 4 errors: persisted array/object each fail real SQL source export and actual authenticated loopback HTTP bundle; missing-capability control passes"
+    },
+    "focused_behavior": {
+      "log": "/tmp/ama-221-correction02-focused.log",
+      "result": "166 tests, OK, 36 existing native opt-in skips; valid supported legacy and actual-provider hold controls retained"
+    },
+    "exact_final_issue": {
+      "log": "/tmp/ama-221-correction02-issue-final.log",
+      "result": "14 methods, OK, no skips; includes persisted malformed capabilities through real source SQL and HTTP bundle, preserved counts/provenance/body and zero provider calls"
+    },
+    "configured_static": {
+      "core": "/tmp/ama-221-correction02-static-core.log",
+      "api_initial_failure": "/tmp/ama-221-correction02-static-api.log",
+      "api_final": "/tmp/ama-221-correction02-static-api-final.log",
+      "result": "Core/API Ruff and format passed, mypy 128/63 files passed; initial API missing tuple annotation failure retained"
+    }
+  },
+  "immutable_evidence": {
+    "original_research_sha256": "4f99c8182ba792aedda13c2eef283783e95681a93f715bb586748074a2aa2519",
+    "original_critique_sha256": "eabdfb52f57f0f528731e219eea1fed81cc621fdde57f3d72fa200e05e16f2e0",
+    "original_critique_outcome": "Revise",
+    "original_review_sha256": "d23e129f6349a5399eb6f0e4a730ff8c44afe9ac07ebb76896009bbbfb7f3338",
+    "original_review_outcome": "Complete / Not accepted",
+    "correction01_assessment_path": "/home/azureuser/.copilot/session-state/b9cc4727-b806-4e0f-a2cf-c5010d92428c/files/issue221-correction01-assessment.md",
+    "correction01_assessment_sha256": "9dbcf1377066c9ad642530683566ca56a0fe25c373390aad255b3ec923f77706",
+    "correction01_assessment_outcome": "Not Pass",
+    "original_failed_receipt_sha256": "e926c95b058b205a8e2a32754c6acc5059ec8320b7a5763aab4aa49060cf2c81",
+    "correction01_passed_receipt_sha256": "d4af901f941fca9a40691d1e7f81815a03b33479157a472be5cd478205299f92",
+    "correction01_receipt_reverification": "/tmp/ama-221-correction02-prior-verification.log",
+    "replacement_review": false
+  },
+  "new_gate": {
+    "out": "/tmp/ama-221-rpi-20261020-correction-02",
+    "status_at_commit": "Not run; post-commit exact-head outcome and receipt stay external"
+  },
+  "remaining_boundaries": [
+    "Coordinator receipt verification and retained assessor assessment of only new delta required before publication",
+    "If second cycle still has blocking findings, stop for human disposition; no further correction loop",
+    "Actual OD-35/RULE-020 authority remains unavailable",
+    "Approved monitoring thresholds, competent corrective acceptance and human-witnessed drill remain unmet",
+    "No whole-issue or human acceptance claim; issue 222 waits"
+  ],
+  "publication": {
+    "push": false,
+    "pull_request": false,
+    "authorized": false
+  }
+}

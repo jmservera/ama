@@ -4,9 +4,33 @@ description: Bounded synthetic incident and restart engineering plan
 ms.date: 2026-10-20
 ---
 
-Task ID: 221. Slug: operator-suspension-221. Status: P03 source complete; freeze/gate pending.
+Task ID: 221. Slug: operator-suspension-221. Status: P04 source/focused complete; freeze/gate pending.
 
 ## Current Later Invocation
+
+The second owner-selected bounded invocation addresses only C221-C01-001
+(residual RV002): retained array/object capabilities abort source export.
+Starting clean HEAD is e6ea877b109f8dbed3dbd3ac2148ed3fc1cc9433.
+First correction full17 and official receipt verification completed successfully;
+its separate independent assessment remains Not Pass and immutable.
+Original Research, Revise critique and Not accepted Review remain unchanged.
+
+<!-- rpi:phase id=P04 -->
+### P04: Validate retained task identity before export eligibility
+
+* [x] P04-T01: Extend the existing semantic regression with persisted malformed
+  capabilities through real SQL source export and HTTP bundle; retain initial
+  failure evidence, preserve historical rows and valid/actual-hold controls.
+* [x] P04-T02: Validate/normalize identity before registry/snapshot/admission;
+  pass focused behavior and configured static/format checks.
+* [ ] P04-T03: Reconcile separate implementation disposition and artifacts,
+  commit clean frozen candidate, run fresh all17 and official verification
+  externally; stop before push/PR for coordinator and retained assessor.
+
+P04 write boundary: assistants.py export, existing owning semantic test and
+directly related component guide, current plan/details/changes/state and a
+separate implementation-owned finding disposition. No generic record repair,
+silent evidence dropping, new Review, authority grant or #222 work.
 
 The owner selected one later implementation cycle for RV001-RV004 and
 GATE001-GATE002 at clean a61d634a709b029b45cd9d5479bc3195d85f8731.
@@ -23,7 +47,7 @@ evidence, followed by coordinator-owned independent bounded assessment.
   projection (RV003/RV004), with rollback/HTTP/provider-switch regressions.
 * [x] P03-T03: Reconcile capability registration without grants; format touched
   code and run owning core/API/infra/static checks (GATE001/GATE002).
-* [ ] P03-T04: Reconcile descriptive evidence and separate dispositions, commit
+* [x] P03-T04: Reconcile descriptive evidence and separate dispositions, commit
   clean candidate, run all17 in new external directory and verify receipt.
 
 Write boundary: existing continuity/auth/server consumers, directly dependent
@@ -153,7 +177,9 @@ the completed original Review. P01 markers describe implementation delivered,
 not Review acceptance. Later implementation-owned dispositions are in
 .copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json.
 They do not rewrite the original adverse verdict or constitute independent
-assessment. Coordinator assessment and full17 remain pending at freeze.
+assessment. First correction full17 passed at its frozen HEAD; the independent
+assessment identified C221-C01-001 and remains Not Pass. P04 is the only current
+implementation scope. No further correction loop is authorized if it blocks.
 
 Actual OD-35 appointment and evidence protocol: Building Safety and Sponsor
 under RULE-020, with Digital/task/control owners. Actual monitoring thresholds
@@ -166,8 +192,11 @@ Original Review executed once, Complete / Not accepted; unchanged. P01 and
 P02-T01 delivered. Original P02-T02 aggregate remains unchecked because its
 full gate failed (15/17); the adverse receipt is preserved. P03-T01/T02 have
 source and focused evidence. P03-T03 configured static/infra checks passed.
-P03-T04 freeze/fresh all17 is current implementation work, intentionally pending
-in committed pre-gate state; final receipt and state remain external.
+P03-T04 completed with all17 and verified receipt externally. P04-T01/T02
+have failing-before and passing real source/HTTP evidence, configured static/
+format success and separate implementation disposition. P04-T03 is the new
+freeze/gate boundary, pending externally at commit.
+Final receipt and state remain external.
 No replacement Review. Changes record:
 .copilot-tracking/changes/2026-10-20/operator-suspension-221-changes.md.
 No human acceptance marker is checked by these engineering ticks.

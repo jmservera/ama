@@ -1569,6 +1569,10 @@ Every epoch must appear exactly once in coherent registered-scope suspension/
 restart history. Generic missing-task records are noncurrent; recognized old
 priority shapes retain their task identity and explicit historical unknowns,
 without manufacturing missing release or task-version evidence.
+Source export validates and normalizes retained task identity before registry,
+snapshot or release checks. Missing, array or object capabilities remain in
+historical source and HTTP bundle evidence, explicitly noncurrent, stale and
+nonactionable with no reliance; they neither abort export nor acquire a grant.
 
 Corrective proposals retain a test ID/reference, explicit constructed Pass
 claim, recorder/time, incident/epoch, full server-derived current candidate and
