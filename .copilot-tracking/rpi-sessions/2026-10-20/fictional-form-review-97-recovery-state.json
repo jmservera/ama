@@ -42,12 +42,17 @@
       "decision": "Review executed once via rpi-review: execution Complete, outcome Residual work, no defects (RV-001 Low, RV-002 Medium routed to follow-up).",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-20/fictional-form-review-97-recovery-review.md"
+    },
+    {
+      "decision": "Full local gate FAILED at 106fbc96 (agents test_eval_registry: pack unregistered). Corrected at 295df5a0 by registry entry and pack version key; focused registry 8 and form/provenance 20 tests OK. Failed receipt retained; NEW gate pending, not passed. Original Review preserved, no second Review.",
+      "status": "recorded",
+      "evidence": "/tmp/ama-serial-2150-97/receipt.json; .copilot-tracking/changes/2026-10-20/fictional-form-review-97-recovery-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Review",
-    "action": "Commit, run full local gate to external out dir, verify receipt, hand off locally; no push"
+    "action": "Coordinator runs fresh serial full gate on the frozen head; Finance FD-01..FD-14 authority remains a human gate"
   },
   "prioritized_follow_ups": null
 }

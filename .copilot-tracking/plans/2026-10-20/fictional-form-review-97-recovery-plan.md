@@ -198,5 +198,11 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 ## Handoff
 
 * Implementation artifact: .copilot-tracking/changes/2026-10-20/fictional-form-review-97-recovery-changes.md
-* Ready phase or task: P01-T01
-* Remaining provisional question or blocker: none
+* Ready phase or task: none; P01-P03 complete, original Review recorded (Residual work), registry correction applied after the failed local gate
+* Validation state: the first full gate failed at 106fbc96 (receipt /tmp/ama-serial-2150-97/receipt.json retained); a NEW full gate is pending and is not passed
+* Remaining provisional question or blocker: none; actual Finance authority FD-01..FD-14 stays unapproved (Refs #97 only)
+
+## Correction Update 2026-10-20 (implementation-time, current state)
+
+* Affected area: P01-T02 registration. The full gate failed in agents test_eval_registry because the pack was absent from src/agents/evals/registry.json and had no top-level version key.
+* Reconciliation: registry entry fictional-form-review-pack added and version fictional-form-review-pack-v1 added to the pack. Focused evidence: test_eval_registry 8 tests OK; test_form_review_pack and test_synthetic_provenance 20 tests OK. Approved intent and scope unchanged; no re-critique or second Review.
