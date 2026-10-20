@@ -25,3 +25,10 @@ Execution: rpi-implement skill actually invoked in the coordinator-intervention 
 ## Divergences and follow-ups
 
 * No plan divergence. Follow-ups: human screen-reader run; owner-approved vendor term and price verification; owner provider decision.
+
+## P04 budget wording correction (rpi-implement, 2026-10-20)
+
+* Independent assessor returned Defects on e69a2ed5: the options doc called USD500 a monthly budget and gated only account creation. Corrected in docs/reference/research/ux/map-tile-provider-options.md (total October cap, accrued and forecast, across ama and other scopes, separate finite costed plan before any paid execution, no spend authorised, unknown headroom blocks).
+* Appended a dated correction entry to docs/reference/log.md. Index unchanged.
+* Original review, critique and adverse receipt preserved. The e69a2ed5 receipt is historical; the full gate is pending a fresh coordinator run on the new head.
+* Not claimed: provider selection, purchase, Legal or DPO approval, UI change, screen-reader acceptance (not run); rates, terms and DPA unverified. Refs #119, not closing.

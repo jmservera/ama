@@ -21,3 +21,9 @@ Plan: .copilot-tracking/plans/2026-10-20/issue-119-map-options-recovery-plan.md
 
 * P03-T01: git diff --check; non-ASCII scan of added lines; `tests.test_accessibility_baseline` from src/api.
 * P03-T02: commit with repo-local noreply identity and Co-authored-by trailer; fetch origin main; run tools/rpi-checks.py --all with a new external out directory; verify receipt. No later commits.
+
+## P04 Budget wording correction (2026-10-20)
+
+* P04-T01: replace the "costed plan before paid account" sentence in the cost method with the total-cap, accrued-and-forecast, multi-scope, no-spend and unknown-headroom-blocks wording.
+* P04-T02: append a dated log entry; index needs no change (no file added or moved).
+* P04-T03: reconcile plan, changes and state. Validation: git diff --check, ASCII scan. No heavy gate run here.
