@@ -2598,3 +2598,88 @@ claimed.
 No issue checkboxes are changed by this implementation. Real delegates,
 verified applicable sources, operational acceptance and the ADR 0005 measured
 chat-value ship test remain open.
+
+### Affected-person challenge API and workbench (#220)
+
+`POST /api/cases/{id}/resident` reuses the existing authenticated resident action
+route for `challenge_open` and `challenge_resolve`. See the
+[core field and version contract](../core/README.md#version-bound-affected-person-challenges-220).
+The permitted case response includes `challenge_targets` and retained
+`affected_challenges`; neither is exposed without both existing resident-view
+and recorded-reason entitlements. Client actor/time overrides are rejected.
+SQL validates current identities, target/human-decision tokens and correction
+dependencies again at writer time. A saved operation whose acknowledgement
+cannot be projected/encoded is explicitly reported as HTTP 409 with
+`outcome: "committed"`; do not blindly retry it.
+
+The case workbench uses labelled native forms for supplied Digital or
+staff-recorded Phone/Letter/In person evidence, a named human owner, explanation,
+manual route, next update and terminal supplied resolution. It preserves unsaved
+drafts and their original version bindings across unrelated case refreshes,
+warns on navigation and confirms correction recording. Stale suggestions and
+historical human reviews have explicit text rather than colour-only status.
+No resident consent, refusal, sanction, remedy outcome, unrelated closure or
+safety-clock change is inferred; urgent safety intake must not wait for a
+challenge.
+
+History is paged in bounded windows of 50 with keyboard-operable Older/Newer
+controls and URL-bound page state. Every retained target and open or resolved
+challenge remains reachable; the window is not a retention or action cutoff.
+The suggestion-reference field accepts an exact retained reference, with
+suggestions from the visible page. Browsing suggestions preserves the opening
+draft and its original binding; leaving a page with an unsaved resolution asks
+before discarding it. A refresh can move a dirty resolution outside the current
+50-record window; its original form stays inside guarded challenge history,
+with its values and version binding intact. Cancelled paging preserves it.
+Confirmed paging discards it before drawing the destination page, so a record
+never has two resolution forms or competing label targets.
+
+The issue-specific browser check runs the actual app against an isolated public
+synthetic SQLite fixture, with loopback-only traffic and no model call:
+
+```bash
+PYTHONPATH=src/core/tests:src/agents/tests:src/api/tests:src/api python3 \
+  src/api/checks/challenge_browser_check.py \
+  --axe /path/to/verified-axe-4.10.3.min.js --out /tmp/challenge-browser.json
+```
+
+The pinned axe content hash is checked against the existing regulatory browser
+harness. Checks cover keyboard entry/error focus, cancelled navigation and
+correction, unrelated-refresh draft retention, permitted/denied views, expanded
+forms at 320/390/1280px, target sizes and reduced motion. Automated checks are
+scoped engineering evidence, not comprehensive WCAG, screen-reader, resident or
+human acceptance. The unchanged full gate's native SQL selectors are general
+regression, not issue-specific native SQL challenge acceptance.
+
+Add `--history` to the same browser command for the historical regression. It
+creates 52 actual workflow-only targets and 52 HTTP-recorded challenges, then
+opens a new challenge against the oldest target, resolves the oldest open
+challenge, reads an older resolved explanation, checks exact selective
+invalidation and denied projections, and reloads the URL-bound bounded pages.
+
+Add `--navigation` instead to delay a committed challenge POST acknowledgement
+while confirming navigation to another case and to the list. The write is
+neither cancelled nor retried. The form captures its dispatch route signal and
+does not refresh the old case after that route is aborted.
+
+Fields remain editable during a pending challenge opening or resolution POST.
+Success compares their current values with the submitted snapshot. Later edits
+remain in the original guarded draft with explicit feedback that only submitted
+values were recorded. The submit button stays disabled, and even an implicit
+or programmatic submit cannot duplicate the pending or acknowledged write.
+Neither cancellation nor automatic retry is used for a committed write.
+Add `--pending-draft` to the same browser command for delayed-acknowledgement
+opening and resolution regressions: compare submitted versus retained values,
+actual persisted evidence, live feedback, navigation guard and exact write
+counts. This is synthetic browser evidence, not human acceptance.
+
+Add `--refresh-draft` instead for the 50-to-51 refresh/paging regression. It
+retains the actual dirty CH-1 form across a newly recorded challenge, checks
+unique form/input IDs and native label targets, cancels the guarded page change,
+then explicitly confirms discard and navigates older/newer history. Only the
+new opening writes; paging never resolves or retries a challenge.
+
+Priority generation, latest and review responses retain correct stale/actionable
+flags but withhold `challenge_ids` unless the requesting reader currently has
+both resident-information and recorded-reason rights, even for policy corrections
+on another case.

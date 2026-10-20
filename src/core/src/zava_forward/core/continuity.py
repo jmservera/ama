@@ -278,7 +278,15 @@ class ContinuityMixin:
         source = assistants if isinstance(assistants, dict) else {}
         with self.lock:
             head_count, head_hash = self.ledger_head()
-            recs = [dict(r) for r in self.data["recommendations"]]
+            from .resident_decisions import priority_challenge_state, priority_correction_lookup, challenge_references_visible
+            corrections = priority_correction_lookup(self)
+            references_visible = challenge_references_visible(self, user)
+            recs = []
+            for r in self.data["recommendations"]:
+                challenge = priority_challenge_state(self, r, corrections)
+                if not references_visible:
+                    challenge["challenge_ids"] = []
+                recs.append(dict(r, **challenge))
             gov = self._gov()
             ledger_rows = list(self.audit_entries())
             report = self.verify_ledger()
@@ -338,6 +346,7 @@ class ContinuityMixin:
         current = r.get("source") != "ai" or (
             epoch_current(r, self._cont()["epoch"]) and not active(self._cont(), task)
             and not r.get("quarantine") and self.release_current(task, r.get("release"), r.get("model")))
+        current = current and not r.get("stale", False)
         result.update(epoch_current=r.get("source") != "ai" or epoch_current(r, self._cont()["epoch"]),
                       actionable=current and r["status"] in ("Not reviewed", "Proposed"),
                       relied_on=current and r["status"] in ("Accepted", "Edited"))

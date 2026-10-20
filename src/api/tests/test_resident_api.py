@@ -46,6 +46,12 @@ class ResidentApi(unittest.TestCase):
                     email="rex@example.test",
                     role="Retrofit Coordinator",
                 ),
+                dict(
+                    code="BSL-1",
+                    name="Bea Safety",
+                    email="bea@example.test",
+                    role="Building Safety Liaison",
+                ),
             ]
         )
         self.path.write_text(json.dumps(data))
@@ -124,6 +130,163 @@ class ResidentApi(unittest.TestCase):
                 ),
                 **kw,
             ),
+        )
+
+    def challenge_payload(self) -> dict[str, Any]:
+        proposal = self.store.ai_priority(
+            self.store.staff["sam@example.test"], mode="workflow-only"
+        )
+        self.store.resolve_priority(self.store.staff["sam@example.test"], proposal["id"], "accept")
+        target = next(
+            r
+            for r in self.call("/api/cases/ZF-1", "sam")[1]["challenge_targets"]
+            if r["proposal_id"] == proposal["id"]
+        )
+        return dict(
+            action="challenge_open",
+            proposal_id=proposal["id"],
+            proposal_version=target["proposal_version"],
+            decision_version=target["decision_version"],
+            target_kind="source",
+            channel="Digital",
+            source="SYN-CHALLENGE-SOURCE-CANARY",
+            request="SYN-CHALLENGE-REQUEST-CANARY",
+            explanation="SYN-CHALLENGE-EXPLANATION-CANARY",
+            owner="sam@example.test",
+            non_digital_route="SYN Phone Sam or send a letter.",
+            next_update="2099-01-01",
+        )
+
+    def test_http_challenge_both_routes_resolution_and_denied_reads(self) -> None:
+        payload = self.challenge_payload()
+        for channel in ("Digital", "Phone"):
+            code, detail = self.call(
+                "/api/cases/ZF-1/resident", "sam", dict(payload, channel=channel)
+            )
+            self.assertEqual(code, 200, detail)
+        code, detail = self.action(
+            "challenge_resolve",
+            id="CH-1",
+            expected_version=1,
+            resolution="Correction recorded",
+            resolution_ref="SYN supplied human correction",
+            explanation="SYN checked by a person",
+            next_update="2099-01-02",
+        )
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(detail["affected_challenges"][0]["human_decision"]["status"], "Accepted")
+        self.assertEqual(detail["challenge_targets"][0]["review_stale"], True)
+        self.assertEqual(
+            self.action(
+                "challenge_resolve",
+                id="CH-1",
+                expected_version=2,
+                resolution="Explanation recorded",
+                resolution_ref="SYN",
+                explanation="SYN",
+                next_update="2099-01-03",
+            )[0],
+            400,
+        )
+        for actor in ("rex", "bea", "kim"):
+            code, denied = self.call("/api/cases/ZF-1", actor)
+            self.assertEqual(code, 200)
+            self.assertNotIn("affected_challenges", denied)
+            self.assertNotIn("challenge_targets", denied)
+            self.assertNotIn("SYN-CHALLENGE", json.dumps(denied))
+            self.assertEqual(self.call("/api/cases/ZF-1/resident", actor, payload)[0], 403)
+        with patch.dict(os.environ, ZF_REASON_ROLES="Building Safety Liaison"):
+            self.assertNotIn("affected_challenges", self.call("/api/cases/ZF-1", "sam")[1])
+        again = SqlStore(str(self.path), str(self.path.with_suffix(".sqlite")))
+        self.addCleanup(again.db.close)
+        self.assertEqual(again.cases["ZF-1"]["affected_challenges"][0]["version"], 2)
+        self.assertTrue(again.verify_audit())
+
+    def test_http_challenge_cached_cookie_after_registered_downgrade_and_removal(self) -> None:
+        payload = self.challenge_payload()
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 200)
+        cached = copy.deepcopy(self.store.staff["sam@example.test"])
+        cookie = self.cookies["sam"]
+        for registered in (dict(cached, role="Retrofit Coordinator"), None):
+            if registered is None:
+                self.store.db.execute("DELETE FROM staff WHERE email=?", (cached["email"],))
+            else:
+                self.store.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(registered), cached["email"]),
+                )
+            code, denied = self.call("/api/cases/ZF-1", "sam")
+            self.assertEqual(code, 200, denied)
+            self.assertEqual(self.cookies["sam"], cookie)
+            self.assertEqual(self.store.staff[cached["email"]], cached)
+            self.assertEqual(denied["id"], "ZF-1")
+            self.assertNotIn("affected_challenges", denied)
+            self.assertNotIn("challenge_targets", denied)
+            self.assertNotIn("SYN-CHALLENGE", json.dumps(denied))
+            code, allowed = self.call("/api/cases/ZF-1", "pam")
+            self.assertEqual(code, 200, allowed)
+            self.assertEqual(allowed["affected_challenges"][0]["request"], payload["request"])
+            self.assertTrue(allowed["challenge_targets"])
+        self.store.db.execute(
+            "INSERT INTO staff (email, body) VALUES (?, ?)", (cached["email"], json.dumps(cached))
+        )
+        code, restored = self.call("/api/cases/ZF-1", "sam")
+        self.assertEqual(code, 200, restored)
+        self.assertEqual(restored["affected_challenges"][0]["request"], payload["request"])
+        self.assertTrue(restored["challenge_targets"])
+
+    def test_http_challenge_closed_schema_and_stale_target_no_write(self) -> None:
+        payload = self.challenge_payload()
+        for patch_body in (
+            dict(payload, recorded_by="forged"),
+            dict(payload, proposal_version="old"),
+            dict(payload, next_update="not-a-date"),
+        ):
+            self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", patch_body)[0], 400)
+            self.assertNotIn("affected_challenges", self.store.cases["ZF-1"])
+        with (
+            patch.object(self.store, "detail", side_effect=OSError("SYN projection")),
+            self.assertLogs("zava_forward.api.server", level="ERROR"),
+        ):
+            code, result = self.call("/api/cases/ZF-1/resident", "sam", payload)
+        self.assertEqual(code, 409)
+        self.assertEqual(result["outcome"], "committed")
+
+    def test_http_priority_hides_cross_case_correction_references_from_coordinator(self) -> None:
+        payload = dict(self.challenge_payload(), target_kind="policy")
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 200)
+        self.assertEqual(
+            self.action(
+                "challenge_resolve",
+                id="CH-1",
+                expected_version=1,
+                resolution="Correction recorded",
+                resolution_ref="SYN policy correction",
+                explanation="SYN checked by a person",
+                next_update="2099-01-02",
+            )[0],
+            200,
+        )
+        with self.store.lock:
+            self.store._case("ZF-5")["owner_code"] = "RC-1"
+            self.store.save()
+        code, generated = self.call("/api/ai/priority", "rex", dict(mode="workflow-only"))
+        self.assertEqual(code, 200, generated)
+        code, latest = self.call("/api/ai/priority", "rex")
+        self.assertEqual(code, 200, latest)
+        code, reviewed = self.call(
+            f"/api/ai/priority/{generated['id']}/reject", "rex", dict(reason="SYN manual")
+        )
+        self.assertEqual(code, 200, reviewed)
+        for result in (generated, latest["recommendation"], reviewed):
+            self.assertTrue(result["stale"])
+            self.assertFalse(result["actionable"])
+            self.assertFalse(result["relied_on"])
+            self.assertEqual(result["challenge_ids"], [])
+            self.assertNotIn("ZF-1/CH-1", json.dumps(result))
+        self.assertEqual(
+            self.call("/api/ai/priority", "sam")[1]["recommendation"]["challenge_ids"],
+            ["ZF-1/CH-1"],
         )
 
     def test_http_commitment_and_independent_closure_restart(self) -> None:

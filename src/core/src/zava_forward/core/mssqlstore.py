@@ -12,6 +12,7 @@ Authentication is Microsoft Entra. ZF_SQL_AUTH=msi uses the app's managed identi
 default uses the developer's Azure login; token takes a bearer token for one-off operator tasks such as the first seed; password is for the CI SQL Server container only.
 The driver is mssql-python (pinned in requirements.txt); it is imported only when this store is chosen.
 """
+import json
 import os
 import re
 import struct
@@ -37,6 +38,7 @@ TABLES = {
   contractor {_t(200)} DEFAULT '', search NVARCHAR(MAX) {COLLATE} NOT NULL DEFAULT '', search_c NVARCHAR(MAX) {COLLATE} NOT NULL DEFAULT '',
   surname {_t(200)} DEFAULT '', last_contact {_t(40)} DEFAULT '0000', next_visit {_t(40)} DEFAULT '9999',
   decision {_t(40)} DEFAULT '', fstatus {_t(40)} DEFAULT '',
+  priority_correction INT NOT NULL DEFAULT 0,
   queue_new INT NOT NULL DEFAULT 0, queue_priority INT NOT NULL DEFAULT 0,
   queue_stale INT NOT NULL DEFAULT 0, queue_blocked INT NOT NULL DEFAULT 0,
   queue_overdue INT NOT NULL DEFAULT 0, queue_unowned INT NOT NULL DEFAULT 0)""",
@@ -186,6 +188,19 @@ class _Conn:
 
 
 class MssqlStore(SqlStore):
+    def _priority_correction_rows(self):
+        rows = self.db.execute("""
+            SELECT c.id, ch.id, ch.target
+            FROM cases AS c
+            CROSS APPLY OPENJSON(c.body, '$.affected_challenges')
+            WITH (id NVARCHAR(64) '$.id',
+                  target NVARCHAR(MAX) '$.target' AS JSON,
+                  outcome NVARCHAR(64) '$.resolution.outcome') AS ch
+            WHERE c.priority_correction = 1
+              AND ch.outcome COLLATE Latin1_General_100_BIN2 = 'Correction recorded'
+        """).fetchall()
+        return [(cid, rid, json.loads(target)) for cid, rid, target in rows]
+
     def __init__(self, data_path, env=None, state_dir=None, **kw):
         self._env = os.environ if env is None else env
         super().__init__(data_path, os.path.join(state_dir or self._env.get("ZF_STATE") or ".", "mssql"), **kw)
@@ -199,6 +214,7 @@ class MssqlStore(SqlStore):
         self.db = _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
 
     _epoch_sql = "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
+    _add_column = "ADD"
 
     def assistant_connection(self):
         return _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))

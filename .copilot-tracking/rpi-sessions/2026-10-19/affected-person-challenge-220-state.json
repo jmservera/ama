@@ -1,0 +1,130 @@
+{
+  "task_id": "220",
+  "task_slug": "affected-person-challenge-220",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-19/affected-person-challenge-220-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-19/affected-person-challenge-220-plan.md",
+    "details": ".copilot-tracking/details/2026-10-19/affected-person-challenge-220-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-19/affected-person-challenge-220-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-19/affected-person-challenge-220-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-19/affected-person-challenge-220-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Renewed owner automatic completion at 2026-10-20T01:05:11Z; coordinator authorizes ONE bounded P09 correction of pending POST draft loss and edited-in final_items challenge eligibility.",
+      "status": "P09-T01-complete-P09-T02-freeze-pending",
+      "evidence": "Clean local/remote PR418 ec70836c and fresh origin/main eeb6c3ab verified. Actual review 5579457923 preserved in current session files/pr418-review-5579457923.json. Failing-first actual Chromium and exact40 JSON/SQLite catalogs reproduced. 31 focused tests/no skips; five actual Chromium journeys/eleven clean axe scopes; configured core/API static pass 128/62 files. Final primary evidence p09-*-final logs/JSON in current session files. Prior final all17 receipt SHA256 2013378a7a75b1e41ae037acd6d31fbee4b2bce199ccd6f1067e01a275d4b2fe historical. No new Review or publication."
+    },
+    {
+      "decision": "Owner at 2026-10-19T23:08:41Z authorizes ONE bounded UI correction of duplicate off-page forms; no publication or replacement Review.",
+      "status": "P08-T01-complete-P08-T02-refreeze-pending",
+      "evidence": "First frozen 28945896 all17: sixteen groups pass; API mypy failed new request lambda. Failed 01 receipt SHA256 b3bbb1fb888ef7d4f783713cd065e3f47687fdfa7e3e89fa4642f76bad673de7 preserved. Same P08 harness now has explicit Request callback and JSON object assertion; configured full API Ruff/format/mypy pass 62 files and actual Chromium refresh case passes again. No runtime source change or replacement Review. Final fresh full17 at 02 pending; post-freeze state external."
+    },
+    {
+      "decision": "P07 backend frozen all17 and independent assessment completed.",
+      "status": "historical-pass-at-12800a69",
+      "evidence": "/tmp/ama-220-rpi-20261019-cycle2-01/receipt.json SHA256 60c13080a5f58775b00dbcd1bb1b267319f1a5792ed97287d1069d2a23cb8d7d; base eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. External b9cc4727-b806-4e0f-a2cf-c5010d92428c/files/issue220-pr418-cycle2-backend-assessment.md Pass; not reusable for UI HEAD."
+    },
+    {
+      "decision": "Second bounded PR418 finding correction authorized after prerequisite final-bot gate exited; no replacement Review or push.",
+      "status": "historically-completed-at-12800a69",
+      "evidence": "Clean supplied b4cd1c1 verified after prerequisite session/process exit. Actual payloads and native60000 plans/timings in current session files/issue220-cycle2. Both selected backend defects corrected; 138 focused (136 pass/two existing skips), nine native/no skips, static pass. Separate cycle2 dispositions preserve original outcomes. Latest 5578292301 off-page duplicate forms remain unresolved outside backend scope."
+    },
+    {
+      "decision": "Bounded implementation of five actual PR418 comments on verified fast-forwarded bot HEAD; stop before publication and preserve original Review.",
+      "status": "historically-implemented-and-all17-passed-at-b4cd1c1",
+      "evidence": "2026-10-19 user directive; actual comments 4318714670/4784/4876/4963/5035. Five separate implementation-owned dispositions, 148 focused tests (146 pass/two existing skips), seven native SQL tests, three Chromium journeys and core/API static checks. P06 plan/details own scope. Historical d3dfd82a all17 receipt is not reusable; original Review and critique bytes preserved."
+    },
+    {
+      "decision": "RV-001 corrected and RV-002 fresh permitted evidence independently dispositioned; historical original log exclusion remains, not bypassed.",
+      "status": "bounded-independent-disposition",
+      "evidence": ".copilot-tracking/reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-findings.md; three source SHA256 values, fresh 19 tests and seven actual scoped browser scans inspected; no replacement Review."
+    },
+    {
+      "decision": "Coordinator-updated directive requires resolving original project-api nine TaskReleaseRecord identity errors before another full gate.",
+      "status": "implemented-independently-dispositioned",
+      "evidence": "Fresh 16-test/nine-error reproduction. Test-only ownership helper preserves unchanged registered actor and production guard; combined 139 release/resident tests OK, two explicit skips (JSON rollback-only and opt-in local browser). New forged-identity no-write regression passes. Independent narrow report: .copilot-tracking/reviews/finding-dispositions/2026-10-19/affected-person-challenge-220-identity-findings.md."
+    },
+    {
+      "decision": "Implement the selected RV-001/RV-002 continuation in this existing branch; original Review and critique remain immutable. Bounded independent finding disposition is not another Review.",
+      "status": "user-authorized",
+      "evidence": "2026-10-19 current user request and coordinator disposition at 19:21Z. Content exclusions are binding; use independently available permitted evidence only. Do not edit issue360 infra/operator files or push."
+    },
+    {
+      "decision": "Execute the full ordered Research, Plan with original critique, Implement, original Review.",
+      "status": "user-authorized",
+      "evidence": "2026-10-19 explicit current user instruction; automatic intake, no manual-to-automatic inference."
+    },
+    {
+      "decision": "Reuse clean supplied branch feat/affected-person-challenge-220 and fixed base eeb6c3aba5d07244ae3cc0e53d839617fd928e3b. Do not publish.",
+      "status": "confirmed",
+      "evidence": "git status empty; branch/head and gh pr list verified at intake."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; bounded retained-priority slice reuses existing resident/review/remedy controls.",
+      "status": "executed-ready",
+      "evidence": ".copilot-tracking/research/2026-10-19/affected-person-challenge-220-research.md; C1-C9/W1-W2."
+    },
+    {
+      "decision": "Original plan critique executed once, verdict Revise; PC-001..007 directly dispositioned without rewriting original.",
+      "status": "executed-revise-dispositioned",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-19/affected-person-challenge-220-plan-critique.md and plan Critique Disposition."
+    },
+    {
+      "decision": "Implement P01-P03 complete; 19 focused pass, actual browser and static pass; surrounding 238 tests OK with 38 opt-in skips.",
+      "status": "executed-bounded",
+      "evidence": ".copilot-tracking/changes/2026-10-19/affected-person-challenge-220-changes.md; no native SQL or human acceptance claim."
+    },
+    {
+      "decision": "Original independent Review executed once: Partial / Not accepted; retain all four Medium findings and immutable original.",
+      "status": "executed-partial-not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-19/affected-person-challenge-220-review.md SHA256 eec22d64aea801d63ae007c5c8b6e4b69709099d70f4e3a7c9b8f4dc2744fc8e. Assessed complete retained-priority candidate; RV-001 independently reproduced last-50 action cutoff; RV-002 external-log access gap; RV-003/004 declared integration/acceptance limits."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "PR418-pending-draft-edited-case",
+      "summary": "Both selected review 5579457923 defects corrected and focused-validated; independent exact-head assessment remains pending.",
+      "resolution": "Freeze reconciled P09 source/evidence, run fresh unchanged all17 and hand off external receipt/evidence for coordinator independent incremental assessment."
+    },
+    {
+      "id": "corrected-full-gate",
+      "summary": "Prior final all17 passed at ec70836c; P09 changes require a new frozen-head all17 receipt.",
+      "resolution": "Complete P09 focused proof, freeze reconciled source/tracking and run unchanged all17 at requested draft-edited-case-01 against fresh main with external verification."
+    },
+    {
+      "id": "publication",
+      "summary": "No publication authorized; independent exact-head assessment and owner-qualified/resident acceptance remain required.",
+      "resolution": "Freeze candidate, perform external exact-head gate, hand off receipt and adverse findings without push/PR/merge. Tenant setup remains separate owner work."
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "P09-T02: privacy-safe substantive commit then unchanged all17 in fresh draft-edited-case-01; fetch main/verify receipt and retain final state externally. Stop before publication for coordinator independent incremental assessment; no next cycle or replacement Review."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator independent exact-head incremental assessment after selected P09 correction and fresh all17.",
+      "rationale": "Mandatory next handoff; ONE bounded two-finding correction, not another Review, push or merge.",
+      "evidence": "Renewed 2026-10-20T01:05:11Z direction and actual review 5579457923; P09 plan/details."
+    },
+    {
+      "rank": 2,
+      "task": "Define the next bounded assistant/form challenge dependency contract.",
+      "rationale": "Extends whole-system coverage only after product scope approval; avoid generic graph or duplicate existing release controls.",
+      "evidence": "Research/plan Follow-Up Items and original Review RV-003."
+    },
+    {
+      "rank": 3,
+      "task": "Arrange owner-qualified, resident/accessibility and authorized live/native-specific acceptance.",
+      "rationale": "Essential before operational claims, but requires named human owners and separate authorization rather than more synthetic tests.",
+      "evidence": "Original Review RV-004; existing exercise/legal/RAI boundaries."
+    }
+  ]
+}

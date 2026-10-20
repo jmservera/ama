@@ -5,7 +5,7 @@ perspective: "Resident Engagement and Insight"
 status: "Research hypotheses; not resident validation or operational approval"
 scope: "Rented households; shared owners/leaseholders; representatives; support workers"
 evidence_boundary: "Local sources only; no new legal claims"
-ms.date: 2026-10-18
+ms.date: 2026-10-19
 ms.topic: reference
 ---
 
@@ -104,6 +104,64 @@ Exploratory hypotheses, usable through an officer on phone/home visits; no porta
 | "Show what our feedback changed." | Draft sourced feedback-to-decision ledger; flag unanswered themes. | Minimised themes/decisions; no invented testimony. | Engagement approves publication/safeguards; directors decide. | Remove unsupported links; resident-panel review. | Traceable changes/equity; paper/meeting 'you said, we did' register. |
 
 ## Research and decision tensions
+
+### Affected-person challenge engineering boundary (2026-10-19, #220)
+
+The [core version contract](../../../../../src/core/README.md#version-bound-affected-person-challenges-220)
+and [existing workbench](../../../../../src/api/README.md#affected-person-challenge-api-and-workbench-220)
+add a bounded supplied-challenge route for retained priority suggestions.
+Existing measure-decision independent review and complaint/remedy ownership are
+reused, not replaced. Synthetic staff recording supports supplied digital
+evidence as well as phone/letter/in-person evidence; it establishes neither
+resident self-authentication nor actual resident testimony.
+
+The record binds a proposal, its creation-time case citation snapshot or its
+recorded ranking-policy version, and retains the observed human decision.
+Permitted staff see a supplied explanation, current named owner, non-digital
+route, next update and one terminal supplied resolution. A human-recorded
+correction makes only exactly dependent suggestions/reviews stale, including
+cross-case dependencies on the same policy version. Original reviews remain
+historical. An explanation-only resolution does not invalidate proposals.
+There is no automatic redress decision, consent, refusal, sanction, complaint
+closure, retaliation, safety-clock change or wait for challenge resolution
+before independent hazard intake.
+
+The workbench retains access beyond the newest 50 records using bounded
+Older/Newer history controls, an exact suggestion-reference input and
+URL-bound page state. Older open challenges can still receive a supplied
+resolution; older resolved explanations remain readable. Paging preserves an
+opening draft and asks before discarding an unsaved resolution on another page.
+This corrects a reproduced historical action cutoff, not a new retention policy.
+
+A delayed acknowledgement of a committed challenge does not return staff to
+the previous case after confirmed navigation; the write is not cancelled or
+retried. Priority responses withhold correction references without the current
+reader's dual resident/reason entitlement, while preserving accurate stale
+flags. Read operations index correction dependencies once, and serialized SQL
+writer validation reads only correction targets rather than decoding full case
+bodies. Release-denial audit remains durable without retaining failed human
+acceptance/edit side effects. Constructed JSON/SQLite, HTTP, Chromium and seven
+owned loopback SQL Server regressions support these engineering corrections.
+
+Subsequent case-detail reads also check current registered dual entitlement,
+not a cached cookie role: downgrade/removal withholds both challenge narratives
+and targets while preserving ordinary case detail and trusted internal reads.
+The SQL writer now uses a transactionally maintained, filtered correction flag,
+following existing derived case-column/index conventions. A generated 60,000-case
+native query experiment confirmed one indexed case lookup/JSON evaluation
+instead of 60,000, with retained actual plans and unrelated-writer lock evidence.
+Sparse warm-cache timings are not operational throughput or dense-correction
+capacity; see the core contract for measured values and limitations. The actual
+latest PR review additionally reports duplicate resolution forms after an
+off-page draft refresh; this remains an unresolved web finding, not covered
+by the bounded backend correction or a claim that all paging behavior is fixed.
+
+Creation-time source hashes describe audience-filtered citation labels, not
+universal document versions. Historical missing versions stay Unknown. Other
+assistant/form contracts, whole-system AC-071, operational/native load
+acceptance, qualified legal/RAI review and resident comprehension remain open.
+Constructed store, HTTP and browser evidence is not operational or
+accessibility acceptance and introduces no new legal interpretation.
 
 ### Appointment control engineering boundary (2026-10-18, #87)
 

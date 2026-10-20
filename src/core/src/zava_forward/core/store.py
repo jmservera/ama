@@ -365,8 +365,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
-            from .resident_decisions import followup_view
+            from .resident_decisions import followup_view, challenge_references_visible
             followup_view(d)
+            if user is not None and challenge_references_visible(self, user):
+                from .resident_decisions import challenge_catalog
+                d["challenge_targets"] = challenge_catalog(self, case_id)
+            elif user is not None:
+                d.pop("affected_challenges", None)
+                d.pop("challenge_targets", None)
             d.pop("form_staging", None)
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
@@ -751,7 +757,11 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     REC_LABEL = "AI suggestion, not approved"
     REC_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 
-    def _rec_view(self, rec):
+    def _rec_view(self, rec, user=None):
+        from .resident_decisions import priority_challenge_state, challenge_references_visible
+        challenge = priority_challenge_state(self, rec)
+        if not challenge_references_visible(self, user):
+            challenge["challenge_ids"] = []
         ranks = self._ranking()
         def row(cid, reason=None, cites=None):
             c = self.cases[cid]
@@ -763,8 +773,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return r
         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
         current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
-        return dict(rec, label=self.REC_LABEL, actionable=current and not denied, release_denied=denied,
-                    epoch_current=current, relied_on=current and not denied and rec["status"] in ("Accepted", "Edited"),
+        return dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
+                    **challenge,
+                    epoch_current=current, relied_on=current and not denied and not challenge["stale"] and rec["status"] in ("Accepted", "Edited"),
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
@@ -783,6 +794,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             ok = projection.can_see_reason(user)
             facts = "\n".join(f"{c['id']}: {self._facts(c, ok)}" for c in cand)
             sources = {c["id"]: ai_tasks.source_labels(c, ok) for c in cand}
+            captured_sources = ai_tasks.source_snapshot_hashes(sources)
             hazard_ids = [c["id"] for c in cand if any(not h["released"] for h in c["hazards"])]
             tmpl_items = self._heuristic_priority(cand, n, ok)
             policy_version = ranking.CURRENT["version"]
@@ -810,7 +822,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                        release=r.get("release"), continuity_epoch=epoch0,
                        quarantine=dict(reason="Late priority result after epoch change") if late else None,
                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
-                       case_ids=[c["id"] for c in cand], hazard_ids=hazard_ids,
+                       case_ids=list(captured_sources), source_versions=captured_sources, hazard_ids=hazard_ids,
                        overlap=len({i["case_id"] for i in items} & set(det)))
             if late:
                 rec.update(status="Quarantined", items=tmpl_items,
@@ -818,7 +830,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.data["recommendations"].append(rec)
             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
             self.save()
-            return self._rec_view(rec)
+            return self._rec_view(rec, user)
         return self.continuity_publish("priority", epoch0, r["source"], publish)
 
     def _heuristic_priority(self, cand, n, ok=False):
@@ -846,7 +858,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def latest_priority(self, user):
         with self.lock:
             mine = [r for r in self.data["recommendations"] if r["user"] == user["email"] and r.get("kind") != "ai_task"]
-            return self._rec_view(mine[-1]) if mine else None
+            return self._rec_view(mine[-1], user) if mine else None
 
     def resolve_priority(self, user, rec_id, action, reason="", items=None):
         if action not in self.REC_ACTIONS:
@@ -854,7 +866,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         reason = (reason or "").strip()[:300]
         if action in ("edit", "reject") and not reason:
             raise ValueError("Say why.")
+        from .resident_decisions import priority_review, mark_priority_committed, _actor
         with self.lock:
+            _actor(self, user)
             rec = next((r for r in self.data["recommendations"] if r["id"] == rec_id and r.get("kind") != "ai_task"), None)
             if not rec:
                 raise KeyError(rec_id)
@@ -870,25 +884,27 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     "priority", rec.get("release"), rec.get("model")):
                 self.audit(user["email"], "ai_release_denied", "-", f"priority {rec_id}; use the manual route")
                 raise PermissionError("Release changed; use the ordinary case controls.")
-            final = None
-            if action == "accept":
-                final = rec["items"]
-            elif action == "edit":
-                mine = {c["id"] for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]}
-                final = []
-                for i in items or []:
-                    cid = i.get("case_id") if isinstance(i, dict) else None
-                    if cid not in mine or any(f["case_id"] == cid for f in final):
-                        raise ValueError("Choose each of your own open cases at most once.")
-                    final.append(dict(case_id=cid, reason=str(i.get("reason", ""))[:300]))
-                if not final or len(final) > 10:
-                    raise ValueError("Keep between 1 and 10 cases.")
-            rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
-                       resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
-            ids = ",".join(i["case_id"] for i in final) if final else "-"
-            self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
-            self.save()
-            return self._rec_view(rec)
+            with priority_review(self, user, rec_id, action):
+                final = None
+                if action == "accept":
+                    final = rec["items"]
+                elif action == "edit":
+                    mine = {c["id"] for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]}
+                    final = []
+                    for i in items or []:
+                        cid = i.get("case_id") if isinstance(i, dict) else None
+                        if cid not in mine or any(f["case_id"] == cid for f in final):
+                            raise ValueError("Choose each of your own open cases at most once.")
+                        final.append(dict(case_id=cid, reason=str(i.get("reason", ""))[:300]))
+                    if not final or len(final) > 10:
+                        raise ValueError("Keep between 1 and 10 cases.")
+                rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
+                           resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
+                ids = ",".join(i["case_id"] for i in final) if final else "-"
+                self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
+                self.save()
+                mark_priority_committed(self)
+                return self._rec_view(rec, user)
 
     # ---- funding: a person approves and submits; the system never does
     FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")

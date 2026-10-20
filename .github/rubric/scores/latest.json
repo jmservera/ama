@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-19T16:01:06+00:00",
-  "commit": "a97314e1a9ea1716229c8923d20c4a5ec7d43db0",
+  "scored_at": "2026-10-20T01:54:47+00:00",
+  "commit": "54a1e7b5bd3e037a124e16c73d3251baf4c77747",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39280688591",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39355368888",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "e3d9d470ef217d40492fb0e5d52ba4b27fb0944195f8ee370f4d45d28784834d",
+    "solution-code": "a0a928baa9af4e9c3debe7803db30bf8fcb8d0dc1c7768eec6177bc3c81daa95",
     "infrastructure": "7211eab15e6fc6befa4cda343b85c26a799f1924503bd670cdb185a514d0ce64",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -27,9 +27,10 @@
     "A1": {
       "score": 4,
       "evidence": [
-        "docs/adrs/0002-pilot-readiness-architecture.md:21-53"
+        "src/core/src/zava_forward/core/resident_decisions.py:1-120",
+        "src/api/src/zava_forward/api/web/panels.js:239-255"
       ],
-      "rationale": "ADR0002 delta and new infra/private-proof-publisher.bicep add a bounded, decoupled temporary-VM module with explicit resource guard, consistent with the modular baseline. Undeployed/capacity-blocked; no material change to existing architecture scope."
+      "rationale": "Diff adds a version-bound challenge feature cleanly layered on existing resident-action route, store dialect hooks and projection redaction; decoupled via existing contracts (ResidentCommittedError, dialect hooks). Consistent modular baseline; no new scaling evidence beyond existing ceiling."
     },
     "A2": {
       "score": 5,
@@ -41,40 +42,38 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistant_release.py:1-124",
-        "mvp/tests/test_assistant_release.py:32-45,127-150"
+        "src/core/src/zava_forward/core/projection.py:179-188",
+        "src/core/src/zava_forward/core/resident_decisions.py:605-660"
       ],
-      "rationale": "Diff implements a concrete, tested RAI control: a release-admission gate binding provider/endpoint/deployment/prompt/policy/data/permission versions to a named approver and residual-risk decision, denying dispatch when absent/expired/revoked, and quarantining/suspending drift. The changed infra/R..."
+      "rationale": "Diff adds dual-entitlement redaction (resident-information + recorded-reason) for new challenge fields, cached-reader downgrade handling, and SQL-writer revalidation of versions/owners, consistent with existing core controls. Core access controls in place; no stated adversarial threat model for t..."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "mvp/zavaforward_mvp/assistant_release.py:1-124",
-        "mvp/zavaforward_mvp/assistants.py:285-310,441-446",
-        "mvp/zavaforward_mvp/server.py:477-481"
+        "src/core/tests/test_resident_decisions.py:232-316",
+        "src/api/src/zava_forward/api/server.py:890-995"
       ],
-      "rationale": "Release admission is a real, working, end-to-end capability (record/suspend/revoke endpoints, SQL DDL, gating wired into invoke/claim/complete/review, passing tests), not just fixtures. Already at ceiling (5); this diff's new VM template is separately undeployed/unused."
+      "rationale": "Challenge-open/resolve end-to-end wired through server, store (SQLite+SQL Server dialects), UI panel and ~17 targeted tests covering channels, versions, cross-case policy, rollback and migration. Working capability with disclosed scope limits (bounded 60k-case measurement, not whole-workflow load)."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "infra/main.bicep:494,521",
-        "infra/tests/test_bicep_policy.py:368-382"
+        "src/core/README.md:2929-2941",
+        "src/core/src/zava_forward/core/mssqlstore.py:188-200"
       ],
-      "rationale": "Fixes a real monitoring defect: ledger alert KQL used a non-existent custom-log schema that could never fire, now corrected with an asserting test. The changed infra/README.md this run adds dense narrative describing a one-off manual synthetic-secret roundtrip investigation (GETs, PATCH, cleanup)..."
+      "rationale": "Adds a measured before/after query-plan comparison (1.5s to <1ms) on an owned local SQL Server container with stated CPU/memory bounds and explicit caveats that it is not an SLA or production capacity result. Cost/perf evidenced narrowly for one path; not both cost and performance modelled broadl..."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a governance/admission-control and infra-capacity-attempt feature set, not an AI model choice or evaluation harness; no justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a resident-challenge/data-integrity feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "mvp/zavaforward_mvp/assistants.py:441-446",
-        "mvp/zavaforward_mvp/assistants.py:767-785"
+        "src/api/src/zava_forward/api/web/panels.js:260-310"
       ],
-      "rationale": "Adds a guardrail blocking autonomous dispatch/claim/completion without a matching named-approver release, and quarantines completions when the binding or serving model drifts mid-flight. Strengthens existing guardrails but adds no new orchestration pattern."
+      "rationale": "Feature is human-recorded challenge workflow (staff entering supplied evidence), not agentic; AI role is limited to existing priority-suggestion staleness flagging unaffected by this diff. No new orchestration or autonomy pattern introduced; unchanged from baseline assessment basis."
     },
     "B1": {
       "score": 3,
@@ -104,9 +103,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "mvp/README.md:866-880"
+        "src/core/README.md:2879-2941",
+        "src/api/README.md:2601-2640"
       ],
-      "rationale": "README documents the release-admission feature clearly with concrete API/behaviour detail, well-integrated into capstone documentation prose. New infra README additions are dense operational narrative, not deck-quality prose; capped at Good(4)."
+      "rationale": "Both READMEs document the challenge feature with concrete API/behaviour detail, scope caveats and verification commands, consistent with prior documentation quality. Dense operational narrative in places; capped at Good(4), unchanged from baseline."
     },
     "B7": {
       "score": 3,

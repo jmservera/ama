@@ -890,7 +890,11 @@ def make_handler(app):
                         })
                     return self._send(200, raw)
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
-                    return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
+                    from zava_forward.core.resident_decisions import ResidentCommittedError
+                    try:
+                        return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
+                    except ResidentCommittedError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
                     with s.lock:
@@ -975,7 +979,15 @@ def make_handler(app):
                                 "error": "The resident change was recorded, but confirmation failed. Reload and reconcile its history before another action.",
                                 "outcome": "committed",
                             })
-                        return self._json(200, detail)
+                        try:
+                            raw = json.dumps(detail).encode("utf-8")
+                        except Exception:
+                            logging.getLogger(__name__).exception("Resident record persisted; response encoding failed")
+                            return self._json(409, {
+                                "error": "The resident change was recorded, but confirmation failed. Reload its history before another action.",
+                                "outcome": "committed",
+                            })
+                        return self._send(200, raw)
                     elif act in ("finance", "grant", "technical"):
                         getattr(s, {"finance": "finance_action", "grant": "grant_action", "technical": "technical_action",
                                     "resident": "resident_action"}[act])(u, cid, body)

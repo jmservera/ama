@@ -6552,3 +6552,62 @@ metadata when the knowledge base was created.
   #358 remains open for coordinator judgement; no push/PR/merge/status/settings
   action. Frozen full local gate/receipt and coordinator assessment remain
   separate publication requirements.
+
+## [2026-10-19] query | Version-bound affected-person challenge boundary (#220)
+
+* Updated the existing [resident journey synthesis](./research/ux/customer-journeys/residents.md#affected-person-challenge-engineering-boundary-2026-10-19-220),
+  index and core/API component guides with the retained-priority engineering
+  slice. Reused current resident independent-review/remedy and server recorder
+  controls; no owner memory or immutable regulatory snapshot was changed.
+* Supplied Digital/Phone/Letter/In person evidence binds the original proposal,
+  captured case citation snapshot or recorded ranking-policy version and human
+  disposition. A terminal supplied correction invalidates only exact dependency
+  matches; historical decisions and independent safety/manual paths remain.
+* Source hashes describe audience-filtered citation labels, not universal
+  documents. Legacy absent hashes stay Unknown. Other assistant/form paths,
+  whole-system AC-071, issue-specific native SQL and qualified/resident
+  acceptance remain open. Local constructed tests make no new legal,
+  accessibility-conformance, live-model or operational-approval claim.
+
+## [2026-10-19] query | Restore historical challenge actions (#220)
+
+* Updated the existing resident journey, KB index and API guide after reproducing
+  the last-50 cutoff on actual public synthetic SQLite/HTTP/browser data.
+  Bounded Older/Newer controls and exact reference entry make older retained
+  targets, open resolution actions and resolved explanations reachable.
+* URL-bound pages reload, opening drafts retain bindings while browsing, and
+  unsaved resolution drafts require confirmation before page disposal.
+  No core authority, selective dependency, resident choice or safety route
+  changes. Original Partial / Not accepted Review and Revise critique remain
+  unchanged; a separate bounded finding disposition and corrected exact-head
+  local gate are required, not whole-issue acceptance.
+
+## [2026-10-19] query | Bounded challenge PR finding corrections (#220)
+
+* Updated the existing [resident journey boundary](./research/ux/customer-journeys/residents.md#affected-person-challenge-engineering-boundary-2026-10-19-220),
+  index and core/API guides for five actual PR #418 findings: stale-route refresh,
+  synthetic ownership persistence, repeated correction scans, priority-reference
+  disclosure without current dual entitlement and lost release-denial audit.
+* Generated 60,000-home/52-proposal read checks, correction-only SQLite query
+  checks, JSON/SQLite/HTTP regressions and actual Chromium journeys support the
+  bounded fixes. Seven task-owned loopback SQL Server regressions verify current
+  correction races, cross-case policy matching, entitlement and rollback.
+* Original research, Revise critique, Partial / Not accepted Review and historical
+  failures remain unchanged. No replacement Review, whole-issue acceptance,
+  native-scale/load acceptance, human approval or publication is inferred.
+
+## [2026-10-19] query | Current challenge detail authority and indexed writer evidence (#220)
+
+* Updated the existing resident journey, index and core guide for actual cached
+  reader downgrade/removal denial across case challenge narratives and targets,
+  preserving ordinary case detail and trusted internal reads.
+* Reused derived case-column/filtered-index prior art for a transactionally
+  maintained correction-presence flag with atomic migration and rollback.
+  Actual owned native generated60,000-case plans show one flagged row/JSON
+  evaluation rather than a full scan; bounded latency and competing unrelated
+  writer measurements are sparse warm-cache query evidence, not an SLA or
+  production/native whole-workflow acceptance.
+* Actual latest review adds an off-page draft duplicate-form finding outside
+  the selected backend scope. It remains unresolved; platform advisory/resolved
+  labels do not establish technical closure. Original research, critique,
+  Review and prior finding dispositions remain immutable. Whole issue stays open.
