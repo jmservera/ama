@@ -7736,3 +7736,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Insufficient or NOT RUN, never Pass.
 * No exercise, evaluator, outcome or approval was added. OQ-017 stays open and
   all five #223 criteria stay unmet. The earlier entry is unchanged.
+## [2026-10-20] query | Map tile provider licence, cost and privacy options (#119)
+
+* Added the [options review](./research/ux/map-tile-provider-options.md) and a
+  dated ADR 0002 decision 5 delta, and extended the WCAG baseline manual check
+  record with a map list screen-reader protocol.
+* Sources are public vendor and policy pages read 2026-10-20 with no private
+  coordinates. Azure Maps paid rate, Microsoft and OS processor terms, OS plan
+  prices and MapTiler commercial terms could not be verified and are listed.
+* No provider was selected, bought, configured or approved. No screen reader was
+  available on the host, so no screen-reader run is claimed and the human or
+  assistive-technology gate remains unmet. No UI file changed.

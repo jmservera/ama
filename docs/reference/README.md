@@ -92,6 +92,13 @@ benchmark at17383ms; three focused repeats passed but do not repair its failed
 receipt. Native policy-host discovery remains Deferred. No total-product pass,
 new confirmed code defect, acceptance tick, cloud/real-AI approval, final
 publication receipt or PR is implied. Independent local lanes can continue.
+For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
+records dated licence, attribution, coverage, cost, processor and privacy
+evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
+self-hosted tiles, and what cannot yet be verified. It is a proposal for owner
+review, not a provider selection or purchase. The
+[screen-reader protocol and unmet gate](./research/ux/wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119)
+record that no screen reader was available, so no run is claimed.
 
 For issue #221, the [core incident boundary](../../src/core/README.md#operator-incidents-and-constructed-restart-221)
 and [API contract](../../src/api/README.md#incident-and-restart-contract-221)
