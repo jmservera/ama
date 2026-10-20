@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-20T01:54:47+00:00",
-  "commit": "54a1e7b5bd3e037a124e16c73d3251baf4c77747",
+  "scored_at": "2026-10-20T05:21:23+00:00",
+  "commit": "678b8b84caac8a5577683be97a54b0963a864845",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39355368888",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39373895047",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "a0a928baa9af4e9c3debe7803db30bf8fcb8d0dc1c7768eec6177bc3c81daa95",
-    "infrastructure": "7211eab15e6fc6befa4cda343b85c26a799f1924503bd670cdb185a514d0ce64",
+    "solution-code": "c955f461bc6fa8caaab2b18611ef75eafe0770169960e961b9ae67bf64584fae",
+    "infrastructure": "cab34d62088896b9cc7748f510c938daedfcf20355ffc20ccc1301a9d29f31f2",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
   "total": 48,
@@ -61,19 +61,19 @@
         "src/core/README.md:2929-2941",
         "src/core/src/zava_forward/core/mssqlstore.py:188-200"
       ],
-      "rationale": "Adds a measured before/after query-plan comparison (1.5s to <1ms) on an owned local SQL Server container with stated CPU/memory bounds and explicit caveats that it is not an SLA or production capacity result. Cost/perf evidenced narrowly for one path; not both cost and performance modelled broadl..."
+      "rationale": "Adds a measured before/after query-plan comparison (1.5s to <1ms) on an owned local SQL Server container with stated CPU/memory bounds and explicit caveats that it is not an SLA or production capacity result. Cost/perf evidenced narrowly for one path; not both cost and performance modelled broadly."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a resident-challenge/data-integrity feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a resident-challenge/data-integrity and incident-governance feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/api/src/zava_forward/api/web/panels.js:260-310"
       ],
-      "rationale": "Feature is human-recorded challenge workflow (staff entering supplied evidence), not agentic; AI role is limited to existing priority-suggestion staleness flagging unaffected by this diff. No new orchestration or autonomy pattern introduced; unchanged from baseline assessment basis."
+      "rationale": "Feature is human-recorded challenge/incident workflow (staff entering supplied evidence), not agentic; AI role is limited to existing priority-suggestion staleness flagging unaffected by this diff. No new orchestration or autonomy pattern introduced; unchanged from baseline assessment basis."
     },
     "B1": {
       "score": 3,
@@ -106,7 +106,7 @@
         "src/core/README.md:2879-2941",
         "src/api/README.md:2601-2640"
       ],
-      "rationale": "Both READMEs document the challenge feature with concrete API/behaviour detail, scope caveats and verification commands, consistent with prior documentation quality. Dense operational narrative in places; capped at Good(4), unchanged from baseline."
+      "rationale": "Both READMEs document the incident/restart feature with concrete API/behaviour detail, scope caveats and verification commands, consistent with prior documentation quality. Dense operational narrative in places; capped at Good(4), unchanged from baseline."
     },
     "B7": {
       "score": 3,
