@@ -185,6 +185,11 @@ tenant-administrator checklist.
 | Cost and execution plan | Separate later approval; not a dependency of this design |
 | #360 c, d, e | Unproved and unchanged |
 
+Process disclosure (2026-10-20): the first draft of this entry and the runbook
+design was written without activating the RPI skills; its critique and review
+were not genuine RPI outcomes. A recovery cycle re-verified the evidence and
+corrected two statements. Independent verification is pending.
+
 ## Real Temporary Synthetic Preservation Roundtrip (2026-10-19)
 
 Refs #358. Later owner direction selected an isolated temporary synthetic

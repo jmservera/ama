@@ -7554,3 +7554,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Contradiction flagged: merged code reads results from ARM tags since #375
   while the 2026-10-19 attempt note describes console decoding; the executed
   path is unresolved (DN3).
+
+## [2026-10-20] correction | Authenticated roster transport design verification (#360)
+
+* Files touched: `infra/README.md` (process disclosure, two corrected
+  statements, two threat rows), `docs/architecture/cutover-evidence-pack.md`
+  (disclosure note).
+* The earlier entry above stands as history. Its first draft was written
+  without the RPI skills; a recovery cycle re-verified Microsoft Learn tag,
+  tags REST, Activity Log, Container Apps and Blob pages (retrieved
+  2026-10-20) and the relay code. Corrections: tag values share the console
+  line decoder, and non-run-prefix tags are not counted by current code.
+* Still design for review only; independent verification and decisions DN1 to
+  DN5 are pending. #360 c, d, e stay unproved.
