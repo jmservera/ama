@@ -1,0 +1,66 @@
+{
+  "task_id": "221",
+  "phase": "P05",
+  "boundary": "One renewed implementation cycle for five PR419 comments only",
+  "starting_head": "a136982ad25d8165e1ce9f2eb60c0397025a559a",
+  "original_review_sha256": "d23e129f6349a5399eb6f0e4a730ff8c44afe9ac07ebb76896009bbbfb7f3338",
+  "classification": "Implementation-owned source and focused evidence, not independent assessment or operational approval",
+  "findings": [
+    {
+      "comment_id": 4321739315,
+      "status": "source-and-focused-complete",
+      "files": ["infra/scripts/setup-entra.py", "infra/tests/test_setup_entra.py"],
+      "disposition": "Registered enabled user-assignable supplemental capability IDs are excluded from staff-role conflicts. Existing capabilities survive apply/check/dry-run; other staff roles and unknown assignments remain rejected. No capability assignment is created.",
+      "regression": "test_setup_entra.SetupTests.test_provisioned_capabilities_survive_roster_reruns_but_unsafe_roles_fail",
+      "before": "/tmp/ama-221-pr419-before-infra.log",
+      "after": "/tmp/ama-221-pr419-infra-final.log"
+    },
+    {
+      "comment_id": 4321739367,
+      "status": "source-and-focused-complete",
+      "files": ["src/core/src/zava_forward/core/assistant_release.py", "src/core/src/zava_forward/core/continuity.py", "src/api/tests/test_operator_suspension.py"],
+      "disposition": "Shared object-only JSON decoding explicitly denies malformed current releases. Retained lookup preserves invalid raw bodies and explicit incomplete diagnostics. Containment and audit persist across reopen, while corrective restart stays denied. No release data is repaired, coerced or dropped.",
+      "regression": "test_operator_suspension.OperatorIncident.test_retained_release_shape_and_version_matrix; shared drill for native SQL",
+      "before": "/tmp/ama-221-pr419-before-api-02.log",
+      "after": "/tmp/ama-221-pr419-focused-final.log"
+    },
+    {
+      "comment_id": 4321739400,
+      "status": "source-and-focused-complete",
+      "files": ["src/core/src/zava_forward/core/continuity.py", "src/api/tests/test_operator_suspension.py"],
+      "disposition": "Accepted assistant tasks participate in impacted snapshots, retaining original references, versions and bindings. Accepted-only missing-release fixtures are incomplete and cannot propose restart; valid old releases remain reconstructible.",
+      "regression": "test_operator_suspension.OperatorIncident.test_retained_release_shape_and_version_matrix; shared native drill accepted prior release",
+      "before": "/tmp/ama-221-pr419-before-api-02.log",
+      "after": "/tmp/ama-221-pr419-focused-final.log"
+    },
+    {
+      "comment_id": 4321739431,
+      "status": "source-and-focused-complete",
+      "files": ["src/core/src/zava_forward/core/continuity.py", "src/api/tests/test_operator_suspension.py"],
+      "disposition": "Legacy envelope task_version and assistant task version must be strings equal to the exact retained original release binding registry_version. Valid historical versions differing from current registry pass; mismatches and null/number/object/array/bool versions persist as incomplete and deny restart.",
+      "regression": "test_operator_suspension.OperatorIncident.test_retained_release_shape_and_version_matrix; shared native drill",
+      "before": "/tmp/ama-221-pr419-before-api-02.log",
+      "after": "/tmp/ama-221-pr419-focused-final.log"
+    },
+    {
+      "comment_id": 4321739469,
+      "status": "source-and-focused-complete",
+      "files": ["src/core/src/zava_forward/core/continuity.py", "src/api/tests/test_operator_suspension.py"],
+      "disposition": "Validate history before append and inspect all open exact scopes. Whole-release/task overlap remains valid; repeated exact task scope is refused without epoch or incident changes, with only the standard denial audit. Existing invalid history cannot gain another incident.",
+      "regression": "test_operator_suspension.OperatorIncident.test_all_scope_does_not_hide_duplicate_task_scope; shared native drill",
+      "before": "/tmp/ama-221-pr419-before-api-02.log",
+      "after": "/tmp/ama-221-pr419-focused-final.log"
+    }
+  ],
+  "validation": {
+    "focused": "235 tests passed; 86 existing opt-in skips, not native execution",
+    "infra": "368 tests passed with REQUIRE_AZ_BICEP=1",
+    "core": "Configured Ruff/format/mypy passed, 128 files",
+    "api": "Configured Ruff/format/mypy passed, 63 files",
+    "infra_static": "Existing runner RUFF_GROUPS and TYPE_GROUPS all passed",
+    "native_sql": "Expanded shared drill is selected by unchanged full17; execution pending frozen gate",
+    "full17": "Pending new clean exact-head gate; prior receipts are not reused"
+  },
+  "publication": "STOP before push or PR comment until coordinator independently verifies receipt and retained assessor gives bounded Pass",
+  "human_blockers": ["Actual OD-35 appointment", "Approved monitoring thresholds", "Competent corrective-test acceptance", "Human-witnessed drill"]
+}

@@ -10,7 +10,7 @@ from http.server import ThreadingHTTPServer
 from typing import Any
 from unittest.mock import patch
 
-from zava_forward.core import assistant_release, assistants, continuity
+from zava_forward.core import assistant_release, assistants, continuity, rai_release
 from zava_forward.core.ai import Ai
 from zava_forward.core.store import ConflictError
 
@@ -116,6 +116,171 @@ def transaction_failures(test: Any, s: dict[str, Any], actor: dict[str, Any]) ->
     test.assertEqual(test.store.continuity_view(test.pm)["suspensions"][0]["status"], "Suspended")
 
 
+def retained_snapshot(test: Any, kind: str, variant: str, scope: str | None = None) -> None:
+    """Exercise persisted current/retained evidence through the real incident writer."""
+    legacy = kind == "legacy"
+    scope = scope or ("summary" if legacy else CAP)
+    current_only = variant.startswith("current-")
+    if legacy:
+        epoch_fixtures.LegacyTests.prepare_ai(test, test.store)
+    source = None
+    if not current_only:
+        if legacy:
+            output = test.store.ai_run(test.pm, "ZF-1", scope)
+            test.store.review_ai(test.pm, output["record_id"], "accept")
+            source = copy.deepcopy(
+                next(
+                    r for r in test.store.data["recommendations"] if r["id"] == output["record_id"]
+                )
+            )
+        else:
+            queued = test.service.invoke(test.pm, scope, "ZF-1")
+            ready = test.service.detail(test.pm, queued["id"])
+            if ready["state"] == "pending":
+                test.assertTrue(test.service.execute(ready["id"]))
+                ready = test.service.detail(test.pm, ready["id"])
+            ready = test.verify(ready)
+            source = test.service.review(
+                test.pm, ready["id"], "accept", ready["revision"], "Constructed review"
+            )
+    key = f"legacy:{scope}" if legacy else scope
+    malformed = {
+        "json": "{broken",
+        "null": "null",
+        "array": "[]",
+        "pairs": '[["registry_version","unsafe"]]',
+        "number": "17",
+        "string": '"not an object"',
+        "object": "{}",
+    }
+    with test.service.transaction() as db:
+        if source:
+            rid = source["release"]["id"]
+            raw = db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0]
+        else:
+            rid, raw = db.execute(
+                "SELECT id,body FROM assistant_releases WHERE capability=? ORDER BY id",
+                (key,),
+            ).fetchall()[-1]
+        original = json.loads(raw)
+        if not current_only:
+            assert source is not None
+            db.execute(
+                "INSERT INTO assistant_releases (id,capability,status,body,revision) "
+                "VALUES (?,?,'active',?,1)",
+                (
+                    "zz-current-" + source["id"],
+                    key,
+                    json.dumps(dict(original, release_version="new")),
+                ),
+            )
+            rid = "retained-" + source["id"]
+            db.execute(
+                "INSERT INTO assistant_releases (id,capability,status,body,revision) "
+                "VALUES (?,?,'revoked',?,1)",
+                (rid, key, raw),
+            )
+            source["release"] = rai_release.reference(dict(original, id=rid, status="active"))
+            if legacy:
+                source["envelope"]["release"] = source["release"]
+        stored = raw
+        if variant.startswith(("current-", "historical-")):
+            stored = malformed[variant.split("-", 1)[1]]
+        elif variant in ("prior", "mismatch"):
+            assert source is not None
+            retained = dict(original, registry_version="retained-prior-registry")
+            stored = json.dumps(retained)
+            source["release"] = rai_release.reference(dict(retained, id=rid, status="active"))
+            version = "wrong-version" if variant == "mismatch" else retained["registry_version"]
+            if legacy:
+                source["envelope"]["task_version"] = version
+                source["envelope"]["release"] = source["release"]
+            else:
+                source["version"] = version
+        elif variant == "missing":
+            assert source is not None
+            source["release"] = None
+        elif variant.startswith("version-"):
+            assert source is not None
+            invalid_versions: dict[str, Any] = {
+                "version-null": None,
+                "version-number": 17,
+                "version-object": {"version": original["registry_version"]},
+                "version-array": [original["registry_version"]],
+                "version-bool": True,
+            }
+            if legacy:
+                source["envelope"]["task_version"] = invalid_versions[variant]
+            else:
+                source["version"] = invalid_versions[variant]
+        db.execute("UPDATE assistant_releases SET body=? WHERE id=?", (stored, rid))
+        if source:
+            table = "recommendations" if legacy else "assistant_tasks"
+            db.execute(f"UPDATE {table} SET body=? WHERE id=?", (json.dumps(source), source["id"]))
+    if legacy and source:
+        with test.store.lock:
+            retained = next(
+                r for r in test.store.data["recommendations"] if r["id"] == source["id"]
+            )
+            retained.update(source)
+            test.store.save()
+    test.store.suspend(test.people["Quality Inspector"], incident(scope))
+    reopened = test.other().store
+    reopened.ai = test.store.ai
+    s = reopened.continuity_view(test.pm)["suspensions"][-1]
+    complete = variant in ("valid", "prior")
+    test.assertEqual(s["snapshot_complete"], complete)
+    test.assertTrue(reopened.continuity_block(scope))
+    with test.service.transaction() as db:
+        test.assertEqual(
+            db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0],
+            stored,
+        )
+    if source:
+        affected = s["affected"] if legacy else s["affected_assistant_tasks"]
+        impact = next(r for r in affected if r["id"] == source["id"])
+        test.assertEqual(impact["state"], "Accepted" if legacy else "accepted")
+        test.assertEqual(impact["release"], source["release"])
+        test.assertEqual(impact["complete"], complete)
+        if variant in ("prior", "mismatch"):
+            test.assertEqual(impact["binding"]["registry_version"], "retained-prior-registry")
+            test.assertEqual(impact["release_snapshot"]["id"], rid)
+            test.assertNotEqual(
+                impact["binding"]["registry_version"],
+                s["incident_versions"]["versions"][0]["binding"]["registry_version"],
+            )
+        if not complete:
+            test.assertTrue(impact["incomplete"])
+        if variant.startswith("historical-") and variant != "historical-object":
+            test.assertEqual(impact["release_snapshot"]["raw_body"], stored)
+    if current_only:
+        test.assertFalse(s["incident_versions"]["complete"])
+        test.assertTrue(s["incident_versions"]["versions"][0]["missing"])
+    if complete:
+        propose(test, s, reopened)
+    else:
+        with test.assertRaises(PermissionError):
+            propose(test, s, reopened)
+        test.assertEqual(
+            reopened.continuity_view(test.pm)["suspensions"][-1]["status"], "Suspended"
+        )
+
+
+def duplicate_scope(test: Any, scope: str = CAP) -> None:
+    test.store.suspend(test.people["Quality Inspector"], incident("all"))
+    test.store.suspend(test.people["Quality Inspector"], incident(scope))
+    before = copy.deepcopy(test.store.continuity_view(test.pm))
+    audit = list(test.store.audit_entries())
+    with test.assertRaisesRegex(ValueError, "already suspended"):
+        test.store.suspend(test.people["Quality Inspector"], incident(scope))
+    reopened = test.other().store
+    test.assertEqual(reopened.continuity_view(test.pm), before)
+    test.assertTrue(continuity.history_valid(reopened._cont()))
+    after = list(reopened.audit_entries())
+    test.assertEqual(len(after), len(audit) + 1)
+    test.assertEqual(after[-1]["action"], "ai_suspend_denied")
+
+
 def drill(test: Any) -> None:
     ready = test.run_ready(CAP)
     pending = test.service.invoke(test.pm, CAP, "ZF-2")
@@ -191,9 +356,54 @@ def drill(test: Any) -> None:
     with reopened.transaction() as db:
         test.assertIsNotNone(reopened.suspended(db, CAP))
     test.assertFalse(reopened.detail(test.pm, fresh["id"])["actionable"])
+    retained_snapshot(test, "assistant", "prior")
+    restart(test, test.store.continuity_view(test.pm)["suspensions"][-1])
+    retained_snapshot(test, "assistant", "historical-null")
+    retained_snapshot(test, "legacy", "mismatch")
+    retained_snapshot(test, "assistant", "current-json", "funding-evidence")
+    duplicate_scope(test, "assessment-preparation")
 
 
 class OperatorIncident(Base):
+    def test_retained_release_shape_and_version_matrix(self) -> None:
+        variants = (
+            "valid",
+            "prior",
+            "mismatch",
+            "missing",
+            "version-null",
+            "version-number",
+            "version-object",
+            "version-array",
+            "version-bool",
+        ) + tuple(
+            f"{path}-{shape}"
+            for path in ("current", "historical")
+            for shape in ("json", "null", "array", "pairs", "number", "string", "object")
+        )
+        for kind in ("assistant", "legacy"):
+            for variant in variants:
+                with self.subTest(kind=kind, variant=variant):
+                    fixture = Base()
+                    fixture.setUp()
+                    try:
+                        retained_snapshot(fixture, kind, variant)
+                    finally:
+                        fixture.tearDown()
+                        fixture.doCleanups()
+
+    def test_all_scope_does_not_hide_duplicate_task_scope(self) -> None:
+        duplicate_scope(self)
+        with self.service.transaction() as db:
+            malformed = copy.deepcopy(self.store._cont())
+            malformed["epoch"] += 1
+            db.execute("UPDATE meta SET value=? WHERE key='continuity'", (json.dumps(malformed),))
+        reopened = self.other().store
+        before = copy.deepcopy(reopened._cont())
+        with self.assertRaisesRegex(PermissionError, "history"):
+            reopened.suspend(self.people["Quality Inspector"], incident("funding-evidence"))
+        self.assertEqual(self.other().store._cont(), before)
+
     def test_legacy_prior_release_snapshot_and_reopen(self) -> None:
         epoch_fixtures.LegacyTests.prepare_ai(self, self.store)
         output = self.store.ai_run(self.pm, "ZF-1", "summary")

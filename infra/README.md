@@ -2937,6 +2937,13 @@ authority, resident consent, safety approval or operational rule activation.
 ADR 0005 remains accepted for synthetic development only; real owners and
 sources are still a gap before operational reliance.
 
+Roster reruns preserve enabled user-assignable supplemental capabilities
+registered in the manifest, including `ZavaForward.AIRestart`, independently
+of the one mutually exclusive staff role. Conflicting staff roles and unknown
+or incompatible assignments still block reconciliation. Setup never assigns
+these capabilities from the staff roster; retaining an existing permission is
+not appointment of an actual restart authority or operational approval.
+
 Offline evidence: `python3 -m unittest discover -s infra/tests -p
 test_setup_entra.py -q` covers fake-az discovery, ambiguity, creation/reruns,
 drift, private roster, edge matching, secret redaction and failure recovery.

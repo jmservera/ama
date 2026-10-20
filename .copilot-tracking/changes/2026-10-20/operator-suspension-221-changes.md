@@ -318,3 +318,97 @@ external to avoid invalidating the frozen commit. All previous receipts,
 Research, critique, original adverse Review and first independent Not Pass
 assessment remain immutable. Coordinator and retained assessor own the next
 exact-delta assessment; no push/PR and no third correction loop.
+
+## P05 Opening: Renewed Bounded Five-Finding Implementation
+
+Owner renewed direction at 2026-10-20T05:52:28Z authorizes exactly one
+additional correction for five actual PR419 comments, not unlimited cycles.
+Clean branch/lifecycle/head verified: feat/operator-suspension-221, OPEN,
+local and remote a136982ad25d8165e1ce9f2eb60c0397025a559a.
+Actual comments retrieved: 4321739315 (supplemental role reconciliation),
+4321739367 (malformed current/historical release containment), 4321739400
+(accepted proposals), 4321739431 (exact original version), 4321739469
+(duplicate exact scope hidden by all). P05 plan/details own only this scope.
+No concurrent workers. Prior Research/Revise critique/Not accepted Review,
+failed attempts, passing receipts and independent assessments remain immutable.
+First execution is regression reproduction in existing owning tests, then
+smallest contract-preserving corrections, focused/static/native validation,
+clean commit and unchanged external full17. No publication before coordinator
+verification plus retained assessor bounded Pass. Actual approval remains blocked.
+
+## P05-T01: Five-Finding Reproduction and Bounded Source Correction
+
+Existing setup regression failed in all three rerun modes with provisioned
+manifest capabilities: /tmp/ama-221-pr419-before-infra.log. Existing operator
+test file now owns the persisted 46-case assistant/legacy release/version
+matrix and all/task/same-task duplicate case. First fixture attempt also
+reported a nonexistent load helper; that failed log is preserved at
+/tmp/ama-221-pr419-before-api.log. After correcting only the fixture write,
+the uncorrected source ran two methods with six failing subcases and 15 errors:
+/tmp/ama-221-pr419-before-api-02.log. The failures expose accepted exclusion,
+version mismatch and duplicate history; errors expose malformed historical
+release rollback and missing explicit impact diagnostics. Some malformed
+current bodies were already admission-denied; pair arrays were still coerced.
+
+P05-T01 complete. Setup now separates registered enabled user-assignable
+supplemental capability IDs from mutually exclusive/unknown assignments,
+without assigning any capability. A shared object-only release decoder keeps
+current assessment fail-closed; historical lookup preserves malformed raw body
+and typed incomplete diagnostics instead of aborting containment. Accepted
+assistant rows join the snapshot, and both record kinds compare task version
+to the exact retained original release registry_version. Suspension validates
+history and scans every open exact scope before append. No authority or
+actual-hold behavior changed.
+
+Issue suite now has 16 methods plus its existing native bridge (17 total,
+within ceiling 18). Its shared native SQL drill includes accepted original
+prior-version evidence, malformed historical null, legacy mismatch, malformed
+current JSON and all/task duplicate rejection. The broader matrix includes
+malformed JSON, null, array/pairs, number, string and incomplete object release
+bodies plus null/number/object/array/bool task versions, missing release and
+valid current/prior version controls. No methods were removed.
+
+## P05-T02: Focused Validation Progress
+
+Initial post-source issue run exposed a fixture's reopened provider mismatch
+for valid legacy cases; /tmp/ama-221-pr419-after-api-01.log retained. Offline
+setup passed all 124 tests: /tmp/ama-221-pr419-after-infra-01.log.
+Expanded owning batch ran 235 tests with one drill fixture duplicate-ready
+execution failure and 86 existing opt-in skips:
+/tmp/ama-221-pr419-focused-02.log. Reuse of the actual ready task fixed that
+fixture; issue suite then passed all16, including shared drill logic, and
+again after expansion to 46 matrix subcases:
+/tmp/ama-221-pr419-focused-03.log and /tmp/ama-221-pr419-issue-final.log.
+
+Configured core Ruff/format/mypy passed (128 files):
+/tmp/ama-221-pr419-static-core.log. Configured API Ruff/format passed but mypy
+reported 11 fixture optional-source narrowing errors:
+/tmp/ama-221-pr419-static-api.log. Explicit fixture assertions now narrow those
+known-present branches; final rerun pending. Complete configured offline
+infrastructure passed 368 tests with REQUIRE_AZ_BICEP=1:
+/tmp/ama-221-pr419-infra-final.log. All commands use credential-scrubbed env,
+nvm PATH and pip-only isolated current distributions. No live transport.
+
+Final consolidated owning batch passed 235 tests with 86 existing opt-in
+skips: /tmp/ama-221-pr419-focused-final.log. Final API configured Ruff/format/
+mypy passed 63 files: /tmp/ama-221-pr419-static-api-final.log. All unchanged
+runner-configured infrastructure Ruff/format/mypy groups passed:
+/tmp/ama-221-pr419-static-infra.log. These configured groups do not format
+the pre-existing legacy setup helper; its owning 124 tests and full offline
+368-test infra batch passed. No unrelated reformat was applied.
+P05-T02 complete; separate five-finding dispositions are implementation-owned,
+not independent Pass. Native execution remains for frozen full17.
+
+## P05-T03: New Frozen Candidate Boundary
+
+Fresh origin/main is 7e95f0224bfb7a8a62990a1de162fbcfa68db539.
+Authenticated gh account id/login verified for repository-local privacy-safe
+author and committer; no amend/rebase/force. Only generated local Ruff caches
+and pip editable metadata will be removed before clean tracked/untracked/
+ignored freeze. The unchanged full17 runner owns /tmp/ama-rpi-heavy.lock,
+with fresh output /tmp/ama-221-rpi-20261020-pr419-findings-01. No outer lock.
+Final result, receipt/hash/verification, native SQL evidence, acceptance
+matrix and exact-head handoff remain external after commit so they cannot
+invalidate the candidate. Stop before push/comment for coordinator's receipt
+verification and retained assessor's bounded Pass. Actual authority and other
+human acceptance stay blocked; no whole-issue closing claim.

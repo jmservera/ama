@@ -1351,6 +1351,12 @@ def assign_roster(graph: Azure, sp: dict[str, Any], resolved: list[tuple[dict[st
     assignments = graph.pages(path)
     roles = {r["value"]: r for r in sp.get("appRoles", []) if r.get("isEnabled") is True
              and "User" in r.get("allowedMemberTypes", [])}
+    manifest = json.loads(MANIFEST.read_text())
+    supplemental = {
+        object_id(roles[value]["id"])
+        for spec in manifest["capabilityRoles"]
+        if (value := "ZavaForward." + spec["key"]) in roles
+    }
     pending = []
     unresolved = 0
     for row, principals in resolved:
@@ -1363,7 +1369,7 @@ def assign_roster(graph: Azure, sp: dict[str, Any], resolved: list[tuple[dict[st
         rid = object_id(wanted["id"])
         actual = {a["appRoleId"] for a in assignments if a.get("principalId") in principals
                   and a.get("appRoleId") != "00000000-0000-0000-0000-000000000000"}
-        if actual - {rid}:
+        if actual - {rid} - supplemental:
             raise SetupError("A roster principal has conflicting effective app roles; review Users and groups in Entra.")
         if rid not in actual:
             pending.append({"principalId": row["id"], "resourceId": resource, "appRoleId": rid})

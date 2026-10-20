@@ -4,11 +4,37 @@ description: Bounded synthetic incident and restart engineering plan
 ms.date: 2026-10-20
 ---
 
-Task ID: 221. Slug: operator-suspension-221. Status: P04 source/focused complete; freeze/gate pending.
+Task ID: 221. Slug: operator-suspension-221. Status: P05 source/focused complete; new frozen gate pending.
+
+## P05: Owner-Renewed Five-Finding Scope
+
+Owner renewed autonomous completion at 2026-10-20T05:52:28Z for exactly one
+additional bounded cycle, starting clean a136982ad25d8165e1ce9f2eb60c0397025a559a
+on the open matching PR419. This supersedes the earlier no-further-cycle
+direction only for comments 4321739315, 4321739367, 4321739400, 4321739431
+and 4321739469. No concurrent workers, new Research, critique or Review.
+
+<!-- rpi:phase id=P05 -->
+### P05: Five retained PR findings
+
+* [x] P05-T01: Reproduce all five findings in existing owning regressions,
+  extend the shared native SQL drill and preserve failure logs.
+* [x] P05-T02: Correct supplemental capability reconciliation, malformed
+  retained release evidence, accepted impacted rows, exact original version
+  binding and duplicate exact open scopes; pass focused/configured checks.
+* [ ] P05-T03: Reconcile separate five-finding dispositions and current
+  artifacts; commit a clean candidate and run unchanged all17 externally.
+
+Write boundary: setup-entra.py, continuity.py, tightly coupled release loader,
+existing owning tests and relevant component guides; current plan/details/
+changes/state plus separate five-finding dispositions. No grants, operational
+acceptance, UI, #222, cloud or publication. Coordinator verifies the external
+receipt and retained assessor supplies bounded Pass before any push/comment.
+First execution boundary: existing offline setup and operator incident tests.
 
 ## Current Later Invocation
 
-The second owner-selected bounded invocation addresses only C221-C01-001
+The prior second owner-selected bounded invocation addressed only C221-C01-001
 (residual RV002): retained array/object capabilities abort source export.
 Starting clean HEAD is e6ea877b109f8dbed3dbd3ac2148ed3fc1cc9433.
 First correction full17 and official receipt verification completed successfully;
@@ -23,7 +49,7 @@ Original Research, Revise critique and Not accepted Review remain unchanged.
   failure evidence, preserve historical rows and valid/actual-hold controls.
 * [x] P04-T02: Validate/normalize identity before registry/snapshot/admission;
   pass focused behavior and configured static/format checks.
-* [ ] P04-T03: Reconcile separate implementation disposition and artifacts,
+* [x] P04-T03: Reconcile separate implementation disposition and artifacts,
   commit clean frozen candidate, run fresh all17 and official verification
   externally; stop before push/PR for coordinator and retained assessor.
 
@@ -178,8 +204,8 @@ not Review acceptance. Later implementation-owned dispositions are in
 .copilot-tracking/changes/2026-10-20/operator-suspension-221-finding-dispositions.json.
 They do not rewrite the original adverse verdict or constitute independent
 assessment. First correction full17 passed at its frozen HEAD; the independent
-assessment identified C221-C01-001 and remains Not Pass. P04 is the only current
-implementation scope. No further correction loop is authorized if it blocks.
+assessment identified C221-C01-001 and remains Not Pass. P04 was the prior implementation scope. The renewed owner direction now
+authorizes only P05; no further cycle beyond its five findings is inferred.
 
 Actual OD-35 appointment and evidence protocol: Building Safety and Sponsor
 under RULE-020, with Digital/task/control owners. Actual monitoring thresholds
@@ -194,9 +220,17 @@ full gate failed (15/17); the adverse receipt is preserved. P03-T01/T02 have
 source and focused evidence. P03-T03 configured static/infra checks passed.
 P03-T04 completed with all17 and verified receipt externally. P04-T01/T02
 have failing-before and passing real source/HTTP evidence, configured static/
-format success and separate implementation disposition. P04-T03 is the new
-freeze/gate boundary, pending externally at commit.
+format success and separate implementation disposition. P04-T03 completed at a136982ad25d8165e1ce9f2eb60c0397025a559a,
+with the supplied full17 receipt hash independently preserved in P05 details.
+P05 is the current bounded implementation and new freeze/gate boundary.
 Final receipt and state remain external.
 No replacement Review. Changes record:
 .copilot-tracking/changes/2026-10-20/operator-suspension-221-changes.md.
 No human acceptance marker is checked by these engineering ticks.
+
+P05-T01/T02 have failure-before and final 235-test behavior/368-test infra
+evidence plus configured core/API/infra static success. Separate dispositions:
+.copilot-tracking/changes/2026-10-20/operator-suspension-221-pr419-five-finding-dispositions.json.
+P05-T03 is the current pre-commit frozen gate boundary. Its completion state
+must remain external after commit, with receipt SHA, native SQL execution and
+acceptance matrix. No new critique/Review, push/comment or #222 scope.

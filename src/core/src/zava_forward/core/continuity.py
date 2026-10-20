@@ -221,17 +221,20 @@ def retained_release(store, db, ref, task):
     """Resolve the exact retained release, never substitute today's selected release."""
     from . import assistant_release as rel, rai_release
     if not isinstance(ref, dict) or not isinstance(ref.get("id"), str) or not _table(store, db, "assistant_releases"):
-        return None, None
+        return None, None, ["Original release reference or store is unavailable."]
     row = db.execute("SELECT capability,status,body FROM assistant_releases WHERE id=?", (ref["id"],)).fetchone()
     if row is None or row[0] != task:
-        return None, None
-    raw = json.loads(row[2])
+        return None, None, ["Original release is missing or belongs to another task."]
+    try:
+        raw = rel.release_body(row[2])
+    except ValueError as error:
+        return dict(id=ref["id"], status=row[1], raw_body=row[2]), None, [str(error)]
     # References bind the original active release, even after suspension/revocation.
     snapshot = dict(raw, id=ref["id"], status="active")
     if (not isinstance(snapshot.get("release_version"), str) or rai_release.reference(snapshot) != ref
             or any(not isinstance(snapshot.get(key), str) or not snapshot[key] for key in rel.BOUND)):
-        return None, None
-    return snapshot, {key: snapshot[key] for key in rel.BOUND}
+        return snapshot, None, ["Original release reference or serving binding is inconsistent."]
+    return snapshot, {key: snapshot[key] for key in rel.BOUND}, []
 
 
 def validate_sql(store):
@@ -244,16 +247,19 @@ def validate_sql(store):
     if action == "suspend":
         s["incident_versions"] = candidate(store, store.db, s["scope"])
         available = _table(store, store.db, "assistant_tasks")
-        rows = store.db.execute("SELECT id,capability,state,body FROM assistant_tasks WHERE state IN ('pending','leased','ready') ORDER BY id").fetchall() if available else []
+        rows = store.db.execute("SELECT id,capability,state,body FROM assistant_tasks WHERE state IN ('pending','leased','ready','accepted') ORDER BY id").fetchall() if available else []
         s["affected_assistant_tasks"] = []
         for i, cap, state, raw in rows:
             if s["scope"] not in (ALL, cap):
                 continue
             task = json.loads(raw)
             ref = task.get("release")
-            snapshot, binding = retained_release(store, store.db, ref, cap)
+            snapshot, binding, incomplete = retained_release(store, store.db, ref, cap)
+            if not isinstance(task.get("version"), str) or not binding or task["version"] != binding["registry_version"]:
+                incomplete.append("Task version does not match the original release registry_version.")
             s["affected_assistant_tasks"].append(dict(id=i, task=cap, state=state,
-                version=task.get("version"), release=ref, binding=binding, release_snapshot=snapshot))
+                version=task.get("version"), release=ref, binding=binding, release_snapshot=snapshot,
+                complete=not incomplete, incomplete=incomplete))
         s["affected_assistant_total"] = len(s["affected_assistant_tasks"])
         s["affected_assistant_truncated"] = False
         s["affected"] = []
@@ -261,19 +267,23 @@ def validate_sql(store):
             rec = json.loads(row[0])
             task = record_task(rec)
             if rec.get("source") == "ai" and rec.get("status") in ("Not reviewed", "Proposed", "Accepted", "Edited") and (task is None or s["scope"] in (ALL, task)):
-                snapshot, binding = retained_release(store, store.db, rec.get("release"), f"legacy:{task}")
+                snapshot, binding, incomplete = retained_release(store, store.db, rec.get("release"), f"legacy:{task}")
                 envelope = rec.get("envelope")
                 version = envelope.get("task_version") if isinstance(envelope, dict) else None
                 prompt = rec.get("prompt_version")
-                complete = bool(task and binding and isinstance(version, str) and version
+                if not isinstance(version, str) or not binding or version != binding["registry_version"]:
+                    incomplete.append("Task version does not match the original release registry_version.")
+                complete = bool(task and binding and isinstance(version, str) and version == binding["registry_version"]
                                 and isinstance(prompt, str) and prompt == binding["prompt_version"]
                                 and envelope.get("task") == task and envelope.get("release") == rec.get("release"))
+                if not complete and not incomplete:
+                    incomplete.append("Original task envelope or prompt binding is inconsistent.")
                 s["affected"].append(dict(id=rec["id"], task=task, state=rec["status"],
                     version=version, release=rec.get("release"), envelope=envelope,
                     prompt_version=prompt, binding=binding, release_snapshot=snapshot,
-                    complete=complete))
+                    complete=complete, incomplete=incomplete))
         s["snapshot_complete"] = bool(available and s["incident_versions"]["complete"] and
-                                     all(r["binding"] and r["version"] for r in s["affected_assistant_tasks"]) and
+                                     all(r["complete"] for r in s["affected_assistant_tasks"]) and
                                      all(r["complete"] for r in s["affected"]))
         store.audit(s["recorded_by"], "ai_incident_snapshot", "-", json.dumps(s, sort_keys=True))
     elif action in ("restart_propose", "restart_decide"):
@@ -429,7 +439,9 @@ class ContinuityMixin:
                    incident_versions=dict(complete=False, reason="SQL snapshot unavailable.", versions=[]))
         with self.lock:
             doc = self._cont()
-            if active(doc, scope, constructed=True) and active(doc, scope, constructed=True)["scope"] == scope:
+            if not history_valid(doc):
+                raise PermissionError("Continuity history is incomplete or malformed; no incident was appended.")
+            if any(s["status"] == "Suspended" and s["scope"] == scope for s in doc["suspensions"]):
                 raise ValueError("This scope is already suspended.")
             rec["id"] = k.next_id(doc["suspensions"], "SUS")
             if hasattr(self, "db"):

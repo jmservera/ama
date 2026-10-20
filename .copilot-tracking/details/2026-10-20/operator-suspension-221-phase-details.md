@@ -4,7 +4,49 @@ description: Evidence-based task context and completion criteria
 ms.date: 2026-10-20
 ---
 
-Task 221 / operator-suspension-221; later selected P04 implementation active.
+Task 221 / operator-suspension-221; later selected P05 implementation active.
+
+## P05: Renewed Bounded PR419 Five-Finding Implementation
+
+Owner direction 2026-10-20T05:52:28Z authorizes one additional cycle for
+4321739315/9367/9400/9431/9469 only. Verified clean local and remote
+a136982ad25d8165e1ce9f2eb60c0397025a559a, matching open PR419/main.
+Read actual five comments through GitHub API. Preserve all prior evidence.
+Original Review SHA-256 remains
+d23e129f6349a5399eb6f0e4a730ff8c44afe9ac07ebb76896009bbbfb7f3338.
+
+P05-T01 extends existing offline setup tests and semantic incident tests with
+fail-before cases: provisioned supplemental capability rerun; malformed JSON,
+null and other invalid current/historical release bodies; accepted-only missing
+release and valid old release; both record kinds' exact original versions;
+all/task/same-task duplicate without epoch/state mutation. Extend existing
+native SQL shared drill to capture changed paths. No new test framework.
+P05-T02 preserves raw evidence, commits containment with explicit incomplete
+diagnostics, denies restart, uses exact original registry version and checks
+all open exact scopes after validating history. Existing actor/actual-hold,
+manual/hazard and distinct approval contracts remain unchanged.
+P05-T03 records separate implementation dispositions, configured core/API/
+infra checks, privacy-safe clean commit and unchanged full17 runner at
+/tmp/ama-221-rpi-20261020-pr419-findings-01 with fresh origin/main and
+runner-owned heavy lock. No outer lock, uv, private inputs or cloud/model calls.
+Final receipt, hash, logs, acceptance matrix and handoff stay external.
+STOP before push/comment for coordinator verification and retained assessor.
+
+P05-T01 complete: five actual findings reproduced before production edits.
+P05-T02 complete; exact issue suite passed 16 methods/46 matrix
+subcases, offline setup 124 and full configured infra 368 tests. Core configured
+lint/format/mypy passed. Final API lint/format/mypy passed 63 files after
+retained fixture narrowing failure. Final consolidated behavior batch passed
+235 tests with 86 existing opt-in skips. All existing runner-configured infra
+Ruff/format and mypy groups passed. No opt-in skip is native execution.
+The existing shared native drill is expanded, with actual SQL execution owned
+by unchanged full17. Prior all17 receipt SHA-256 is
+8750a2967545b1df2a566adac73aa02d9e7e097d707ac11ed70abc7ad7b16d9f;
+its prior success is not a waiver of findings or a receipt for this new delta.
+P05-T03 remains the clean commit/fresh all17 boundary. New post-commit
+completion state and actual gate outcome stay external, not retroactively
+claimed in this pre-gate record. Coordinator plus retained assessor own
+independent verification/assessment before any publication.
 
 ## P04: Second Bounded Malformed-Capability Export Correction
 
