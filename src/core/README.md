@@ -942,6 +942,13 @@ approved form/template or delegated authority was supplied for this slice.
 It cannot prepare an approved form; real recorded version-specific authority
 and binding remain unmet. Synthetic fixtures demonstrate mechanics only.
 
+A separate fictional review pack, `src/core/evals/fictional_form_review_pack.json`
+(registered `DS-FICT-FORM-REVIEW-PACK`; [reviewer guide](../../docs/reference/research/retrofit-synthetic-data/form-review-pack-97.md)),
+supplies a concrete versioned template, per-field authority, evidence, freshness
+and lineage, proposed role separation and stale propagation, and fourteen null
+Finance decision fields for human review. It registers through this path as
+`Unapproved`, is not an approved template, and criterion 1 stays unmet.
+
 Candidate collection copies the existing case-owned document ID,
 `content_sha256`, version and upload date. Original bytes must match the stored
 hash; generated placeholders, foreign documents and unclean sources are not

@@ -7839,3 +7839,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Report statistics, raw fixtures and source selection are unchanged. Licence,
   reuse, human owner/legal decisions, production precision and regional coverage
   remain unresolved; no issue acceptance criterion is ticked.
+## [2026-10-20] query | Fictional form template and Finance decision review pack (#97)
+
+* Added a registered fictional versioned form/template pack and reviewer guide
+  over the existing form schema contract, with field type, unit, requirement,
+  authority, evidence, freshness and lineage, proposed preparer/reviewer
+  separation and stale propagation, and fourteen unresolved Finance
+  authority/binding decision fields. Indexed it, the dictionary subsection and
+  the core guide pointer. No runtime, API or schema engine changed.
+* The pack is not an approved template, with no submission, payment, grant term
+  or Finance signature. Issue #97 criterion 1 (actual authority and binding)
+  stays unmet pending a named human authority; criterion 2 was delivered earlier.
+* Process note: an earlier uncommitted draft was hand-authored before the RPI
+  skills were activated. It is preserved with a dated disclosure and was
+  re-verified through the executed research, plan, implement and review skills.

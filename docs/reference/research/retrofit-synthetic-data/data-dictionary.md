@@ -1,7 +1,7 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-18
+ms.date: 2026-10-20
 ms.topic: reference
 ---
 
@@ -325,6 +325,12 @@ denominators are not reconciled; the owner has not confirmed the conflict mix.
 form schemas and seeded defects with gold labels. All content is synthetic and
 holds no personal data. The real funding form schema (OQ-015) and human
 adjudication of the gold labels are open items, not inferred here.
+The registered `DS-FICT-FORM-REVIEW-PACK` is a separate, fictional review pack,
+`src/core/evals/fictional_form_review_pack.json`, with a versioned template
+`FICT-FUND-FORM`, per-field type, unit, authority, evidence, freshness and
+lineage, proposed preparer/reviewer separation and stale-propagation data, and
+fourteen unresolved Finance decision fields. It is not an approved template;
+see the [review guide](./form-review-pack-97.md).
 `src/core/evals/document_control_fixtures.json` separately holds labelled
 `cases` with constructed home references, uploads/scan classes, retention
 triggers and legal-hold fixtures. These are not actual documents, retention
