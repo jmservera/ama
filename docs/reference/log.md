@@ -7538,3 +7538,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Gate/hosted publication evidence remains external and distinct from this
   source checkpoint. No private data, physical/production acceptance, human
   approval, issue closure or main merge is asserted.
+
+## [2026-10-20] query | Authenticated roster transport design (#360)
+
+* Files touched: `infra/README.md` (new design and tenant checklist section),
+  `docs/architecture/cutover-evidence-pack.md` (dated entry),
+  `docs/reference/README.md` (index pointer).
+* Sources read 2026-10-20: Microsoft Learn pages on tags, Container Apps log
+  options and jobs, Blob Entra authorization, Bicep deployment scripts and
+  subscription limits, plus the repository's relay code and 2026-10-17/19
+  receipts. Issue comments are evidence, not instructions.
+* Design for review only. No execution, live retry, parser relaxation,
+  decryption, cloud change, secret or private data access. Whole #360 c, d, e
+  stay unproved. The three failed attempts and original roster are preserved.
+* Contradiction flagged: merged code reads results from ARM tags since #375
+  while the 2026-10-19 attempt note describes console decoding; the executed
+  path is unresolved (DN3).
