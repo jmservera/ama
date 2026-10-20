@@ -37,6 +37,11 @@
    "decision": "Implemented via actual rpi-implement; Review executed once via actual rpi-review: execution Complete, outcome Residual work, no defects.",
    "status": "recorded",
    "evidence": ".copilot-tracking/reviews/logs/2026-10-20/paid-execution-plan-126-recovery-review.md"
+  },
+  {
+   "decision": "Post-assessment correction via rpi-implement: U redefined as bounded month-end forecast outside ama; original Review and gate receipt for 1607d562 preserved as historical.",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/changes/2026-10-20/paid-execution-plan-126-recovery-changes.md"
   }
  ],
  "blockers": [
@@ -48,7 +53,7 @@
  ],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Commit locally, run full gate with external receipt, hand off to coordinator; no push"
+  "action": "Coordinator reruns full gate on new head; no push"
  },
  "prioritized_follow_ups": [
   {

@@ -68,7 +68,7 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 ## Functional Requirements
 
 * The subsection states the October accrued figure, partial-day and latency caveats, current daily burn by service, liabilities and projected headroom.
-  * Observable acceptance criteria: each number carries date, scope (RG `ama`), currency (USD) and source class; subscription-scope spend is marked unknown and blocking as a term U in the projection.
+  * Observable acceptance criteria: each number carries date, scope (RG `ama`), currency (USD) and source class; other-scope spend is a bounded month-end forecast U (accrued plus forecast through 31 Oct, excluding `ama`); unbounded U blocks every paid tranche.
 * The subsection offers idle-burn options (S0 no change, S1 Front Door retired, S2 S1 plus SQL idled) with the arithmetic and a delay sensitivity.
   * Observable acceptance criteria: S0 is shown blocked; only options meeting the eligibility rule are marked eligible.
 * The subsection defines tranches T0 to T4, each with a bill of materials (count/SKU/region/lifetime), finite calls/tokens/model versions, local-first versus Azure-only need, ceiling, thresholds, monitoring, cleanup and recreation.
@@ -189,3 +189,7 @@ Critique run once (verdict Revise, 0 Critical, 4 High, 3 Medium, 3 Low); all fin
 * Implementation artifact: .copilot-tracking/changes/2026-10-20/paid-execution-plan-126-recovery-changes.md
 * Ready phase or task: P01-T01 now
 * Remaining provisional question or blocker: none for documentation; owner-only items for execution
+
+## Post-Review Correction Note (2026-10-20)
+
+Independent assessment of candidate 1607d562 found U was defined as accrued-only (High). Corrected in the addendum and phase details: U is a bounded month-end forecast outside `ama`, no double counting, unbounded blocks, no zero assumption, and limits on U replace the U = 0 illustration. PC-001 disposition stands as historical; this note supersedes its wording. The original Review and critique are unchanged.

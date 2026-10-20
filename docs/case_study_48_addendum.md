@@ -383,21 +383,32 @@ and measuring whether auto-pause then occurs.
 
 Gating rules (one set of numbers, two uses):
 
-* Approval envelope E = option projection + U + approved tranche ceilings +
-  reserve R, and E must be at most 475. U is the owner-supplied other-scope
-  spend (subscription-scope accrued total less the RG figure, with timestamp);
-  it is unrecorded today, so every paid tranche is blocked. R = 30 is an
-  unevidenced assumption the owner may replace; a larger R shrinks what is admissible.
-* Live projection L = accrued + remaining days x measured run rate + unspent
-  ceilings + U (no reserve). Review at 400, pause new starts at 450, stop and
-  clean up at 475; the reserve sits between L and the 500 cap.
-* Unknown spend, unknown price, an unapproved tranche or a start after the
-  tranche's latest start blocks it. Do not retry known capacity failures to
-  obtain options.
-* With R = 30 and U assumed 0 (illustrative): under S1, T1 plus T2 (18) gives
-  466.37 and adding T3 (15) gives 481.37, so T3 is not admissible under S1.
-  Under S2, T1 to T3 gives 447.79 only after a measured saving at least equal to
-  the illustration.
+* U is the bounded month-end forecast of all charges and liabilities OUTSIDE
+  resource group `ama` for this calendar month: other-scope charges accrued to
+  a stated timestamp plus a forecast through 31 October (including recurring
+  meters, commitments and liabilities that apply, and late-billing allowance),
+  with its scope, source, timestamp and currency recorded by the owner. The
+  option projections above cover RG `ama` only, so U excludes `ama` and nothing
+  is counted twice. Accrued-only spend is not U. If the forecast cannot be
+  bounded, U is unknown and every paid tranche stays blocked; zero is never
+  assumed and the cap is never raised to make room.
+* Approval envelope E = option projection (RG `ama`) + U + approved tranche
+  ceilings + reserve R, and E must be at most 475. R = 30 is an unevidenced
+  allowance for late billing and concurrent work, not a bound on omitted costs;
+  the owner may replace it, and a larger R shrinks what is admissible.
+* Live projection L = RG `ama` accrued + remaining days x measured run rate +
+  unspent ceilings + U refreshed at each check (no reserve). Review at 400,
+  pause new starts at 450, stop and clean up at 475; the reserve sits between
+  L and the 500 cap. L at start is at most 445 when E is at most 475.
+* Unknown spend, unbounded U, unknown price, an unapproved tranche or a start
+  after the tranche's latest start blocks it. Do not retry known capacity
+  failures to obtain options.
+* Maximum admissible U with R = 30 (475 less option projection, ceilings and
+  R; a negative or zero value means blocked whatever U is): S1 with T1 and T2
+  (18) allows U of at most 8.63; S1 with T1 to T3 (33) is already
+  over by 6.37 and is blocked; S2 with T1 to T3 allows at most 27.21 only after a
+  measured saving at least equal to the illustration; S0 is blocked. These are
+  limits on U, not assumed values, and U is unknown today.
 
 | Tranche | Purpose | Bill of materials (count, SKU, region, lifetime) | Finite bounds | Ceiling |
 | --- | --- | --- | --- | --- |

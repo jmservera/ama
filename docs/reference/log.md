@@ -6639,3 +6639,7 @@ metadata when the knowledge base was created.
   unresolved and block execution.
 * Proposals for separate owner approval only. No Azure change, approval of a
   manifest, issue acceptance or operational release follows.
+
+## [2026-10-20] update | Corrected unknown-spend term in costed plan options (#126)
+
+* Corrected the gating rule in the existing addendum subsection: the other-scope term U is a bounded month-end forecast of non-resource-group-`ama` charges and liabilities, not accrued-only. Unbounded U blocks every paid tranche; no zero is assumed and the cap is not raised. Earlier entry retained.

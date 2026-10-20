@@ -96,3 +96,12 @@ Added one subsection to docs/case_study_48_addendum.md (ms.date updated), one in
 ## Post-Validation Correction (before Review)
 
 * Re-queried per-service cost on 2026-10-20 after drafting. The addendum table was corrected to Container Apps 21.84, registry 14.55, SQL 90.36 plus 1.55 storage and others about 4, which now sum to the 189.94 total. The earlier research row C1 carried rounded figures (Container Apps about 23, registry 14.41); this is a local-judgment correction with no change to totals, projections or gates. The research artifact is not rewritten.
+
+## Independent Finding Correction (2026-10-20, after candidate 1607d562)
+
+* Related phase or task: P01-T01 (gating rules)
+* Files: docs/case_study_48_addendum.md, docs/reference/log.md, plan and phase details (current-state wording)
+* What changed and why: assessor finding (High): U was accrued-only, so E and L omitted forecast non-`ama` charges and liabilities. U is now a bounded month-end forecast outside `ama` with scope/source/timestamp, excluded from the RG projection (no double count); unbounded U blocks all paid tranches; the U = 0 illustration is replaced by maximum admissible U (S1+T1,T2 8.63; S1+T1-T3 blocked at -6.37; S2+T1-T3 27.21; S0 blocked). R stays an unevidenced allowance, stated as not bounding omitted costs. No budget increase, no assumed zero.
+* Completion evidence: addendum gating rules; edge checks below.
+* Validation: edge-case arithmetic passed (accrued-only vs forecast: accrued-only U would admit S1+T1,T2 for U up to 8.63 while a forecast with 20 further days of other-scope burn exceeds it; unknown U blocks; U excludes ama).
+* Original Review, critique, pre-RPI disclosure and the gate receipt for 1607d562 are unchanged; that receipt becomes historical with the new commit. Full gate must be rerun by the coordinator.

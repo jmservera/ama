@@ -58,7 +58,7 @@ One subsection that lets the owner choose, approve fields, and see exact gates.
 
 Basis (USD, RG `ama`, ActualCost, retrieved 2026-10-20, estimated): accrued 1-20 Oct 189.94; complete days 1-19 172.47; partial 20 Oct 17.47; run rate 30.245/day (18-19 Oct mean; two-day sample). Meters: SQL vCore about 10.66/day, Front Door Premium base about 10.64/day, old-environment private endpoint 2.4, registry 1.67, remainder small. 94 resources inventoried.
 
-Projection formula: P_RG = 172.47 (complete days 1-19) + 12 days from 20 Oct at the run rate in force. U is the owner-supplied other-scope spend (subscription-scope accrued total minus the RG figure, with its timestamp); U is unrecorded today, so every paid tranche is blocked.
+Projection formula: P_RG = 172.47 (complete days 1-19) + 12 days from 20 Oct at the run rate in force. U is the owner-supplied bounded MONTH-END FORECAST of charges and liabilities outside RG `ama` (accrued to a timestamp plus forecast to 31 Oct, incl. applicable liabilities and late billing; scope, source, timestamp, currency recorded). It excludes `ama`, so P_RG and U never double count. Accrued-only is not U. Unbounded or unrecorded U blocks every paid tranche; zero is never assumed. (Corrected 2026-10-20 after independent finding; earlier text defined U as accrued-only.)
 
 * S0 no change: 172.47 + 12 x 30.245 = 535.41; headroom -35.41; blocked.
 * S1 Front Door retired effective 21 Oct: 172.47 + 30.245 (20 Oct) + 11 x (30.245 - 10.64) = 418.37. Each day of delay beyond 21 Oct adds 10.64, so the owner recomputes from the actual effective date. Rollback or recreation of the edge adds its own cost and is not included.
@@ -69,7 +69,7 @@ Two distinct rules use one set of numbers:
 * Approval envelope E = P_option + U + sum of approved tranche ceilings + reserve R, and E must be at or below 475. R = 30 is an assumption without evidence of latency; the owner may replace it, and a larger R shrinks the admissible tranches.
 * Live monitoring projection L = accrued + remaining days x measured run rate + unspent ceilings + U, with no reserve. Review at L of 400, pause new starts at 450, stop and clean up at 475; the reserve sits between L and the 500 cap.
 
-With R = 30 and U = 0 (illustrative only, U is unknown): S1 admits T1 plus T2 (18), E = 466.37; T3 (15) gives 481.37 and is not admissible under S1. S2 with T1 to T3 gives 447.79 only if a measured saving at least equals the 50 percent illustration. E at or below 475 implies L at most 445 at start, so the 450 pause is consistent. T0 costs nothing.
+Maximum admissible U = 475 - P_option - ceilings - R (R = 30): S1+T1,T2 8.63; S1+T1-T3 -6.37 (blocked); S2+T1-T3 27.21 only if the saving is measured at least equal to the illustration; S0 blocked. These are limits, not assumed values. E at or below 475 implies L at most 445 at start, so the 450 pause is consistent. T0 costs nothing.
 
 #### Intent
 
