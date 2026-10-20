@@ -57,6 +57,17 @@
    "contains_real_data": false
   },
   {
+   "id": "cohort-manifest-draft",
+   "path": "src/agents/evals/cohort_manifest_draft.json",
+   "version": "cohort-manifest-draft-v0.1.0",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired cohort and missing-data scenario manifest for owner review (#222). Development draft, not held-out: agent-authored proposals, no approved labels, thresholds or fairness evidence. Not read by any evaluator.",
+   "used_by": [
+    "src/agents/tests/test_cohort_manifest_draft.py"
+   ],
+   "contains_real_data": false
+  },
+  {
    "id": "stock-scale-fixture",
    "path": "ZF_DATA/scale-fixture/ (generated, not committed, outside the repository)",
    "generator": "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
