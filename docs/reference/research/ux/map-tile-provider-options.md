@@ -108,10 +108,16 @@ The OS Premium plan reportedly bills per 15-tile view, but that rests on the
 unverified secondary summary above and is not an established rule. Real usage
 is unknown: the
 pilot user count, session length and tile cache hit rate are not evidenced, so
-no monthly figure is given. A costed plan, once usage is measured on synthetic
-sessions, needs separate owner approval before any paid account is created.
-Any provider charge counts against the USD500 monthly budget already shared
-with Azure and inference charges.
+no monthly figure is given. A finite costed execution plan, once usage is measured on synthetic sessions,
+needs separate owner approval before any paid execution, not only before a paid
+account is created. This proposal authorises no spend. The owner budget is
+USD500 in total for the October 2026 calendar month (expiry 2026-10-25T16:02Z),
+and it includes accrued and forecast costs and liabilities across resource group
+`ama` and other scopes, so any provider charge competes with existing Azure and
+inference costs. Aggregate headroom is not known here, and unknown or unbounded
+headroom blocks all paid execution. The cap is not a new allocation, unknown
+costs must not be assumed zero or double counted, and nothing here authorises
+retiring a resource.
 
 ## Cannot yet be verified
 

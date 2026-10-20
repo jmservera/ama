@@ -7757,3 +7757,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   inconsistent secondary Ordnance Survey rate was labelled unverified.
 * Conclusions are unchanged: no provider selected or bought, no screen-reader
   run, human gate unmet.
+
+## [2026-10-20] correction | Map options budget wording (#119)
+
+* Corrected the cost wording in the [options review](./research/ux/map-tile-provider-options.md):
+  the owner budget is USD500 in total for the October 2026 calendar month,
+  including accrued and forecast costs across resource group `ama` and other
+  scopes. A separate finite costed execution plan must be approved before any
+  paid execution, not only before account creation. The proposal authorises no
+  spend, and unknown headroom blocks paid execution.
+* Prompted by an independent assessment that returned Defects on the earlier
+  head. No provider selection, purchase, legal or DPO approval, UI change or
+  screen-reader run is claimed; the screen-reader gate and vendor rates, terms
+  and DPA positions stay unverified.
