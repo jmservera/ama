@@ -7859,3 +7859,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Files touched: the fictional form review guide, the core guide paragraph on the review pack, and this log (`ms.date`).
 * Contradiction found by independent full-diff review (FIN-001): both documents said the public fictional schema registers unchanged, but `register_schema` refuses its placeholder reviewer, and the focused test expects that refusal before registering a derived copy with a registered reviewer substituted.
 * Corrected both statements: the public file is refused as published; only a copy differing in `reviewer`, set to an existing registered person, registers, as `Unapproved`, recording no approval. No runtime, test, fixture, index, dictionary or provenance change; Finance FD-01..FD-14, template authority and OQ-015 stay unresolved and criterion 1 unmet. Earlier entries retained.
+## [2026-10-20] query | Cohort and missing-data evaluation manifest preparation (#222)
+
+* Added a DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired-scenario
+  manifest to the existing eval registry and an owner [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  with proposed held-out custody, independent reviewer, small-sample,
+  critical-error, review-burden and uncertainty handling and an AC1 to AC6
+  traceability table. Owner decision 2026-10-20 authorised preparation only.
+* Retained adverse evidence: ranking policy 1.0.0 is an unsigned draft, and
+  support Unknown currently sorts with No (candidate defect, owner decision
+  pending). The manifest is a development draft, not a held-out set; expected
+  outcomes are agent-authored proposals and numeric values are illustrative.
+* No evaluator, model run, participant, live data, threshold approval or
+  fairness evidence. All six #222 criteria and the #108 actual-model and human
+  results remain unmet.
