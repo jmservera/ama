@@ -1,0 +1,30 @@
+{
+  "task_id": "119",
+  "task_slug": "issue-119-map-options-recovery",
+  "parent_task": {"task_id": "119", "task_slug": "issue-119-map-options"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-20/issue-119-map-options-recovery-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-20/issue-119-map-options-recovery-plan.md",
+    "details": ".copilot-tracking/details/2026-10-20/issue-119-map-options-recovery-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-20/issue-119-map-options-recovery-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-20/issue-119-map-options-recovery-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-20/issue-119-map-options-recovery-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Original issue-119-map-options artifacts are pre-RPI unverified draft (commit 69fa487a), preserved with appended clarifications", "status": "confirmed by coordinator intervention", "evidence": "coordinator message 2026-10-20T21:25Z"},
+    {"decision": "Recovery critique executed once via rpi-plan-critique; verdict Revise; dispositions applied", "status": "complete", "evidence": ".copilot-tracking/reviews/2026-10-20/issue-119-map-options-recovery-plan-critique.md"},
+    {"decision": "Recovery Review executed once; outcome Residual work", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-20/issue-119-map-options-recovery-review.md"}
+  ],
+  "blockers": [
+    {"id": "sr-gate", "summary": "No screen reader on host; actual screen-reader test unmet", "resolution": "Human or assistive-technology run per WCAG baseline protocol"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Commit, run full local gate with external receipt, freeze for independent assessment"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Human screen-reader run of the map list", "rationale": "Closes issue criterion 2", "evidence": "RV-001"},
+    {"rank": 2, "task": "Verify provider paid rates, terms and DPAs", "rationale": "Closes unverified list", "evidence": "RV-002"}
+  ]
+}
