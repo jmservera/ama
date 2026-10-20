@@ -165,16 +165,20 @@ def retained_snapshot(test: Any, kind: str, variant: str, scope: str | None = No
         original = json.loads(raw)
         if not current_only:
             assert source is not None
+            release_key = continuity.sha(source["id"])[:32]
+            current_id = "zz-current-" + release_key
+            rid = "retained-" + release_key
+            test.assertLessEqual(len(current_id), 64)
+            test.assertLessEqual(len(rid), 64)
             db.execute(
                 "INSERT INTO assistant_releases (id,capability,status,body,revision) "
                 "VALUES (?,?,'active',?,1)",
                 (
-                    "zz-current-" + source["id"],
+                    current_id,
                     key,
                     json.dumps(dict(original, release_version="new")),
                 ),
             )
-            rid = "retained-" + source["id"]
             db.execute(
                 "INSERT INTO assistant_releases (id,capability,status,body,revision) "
                 "VALUES (?,?,'revoked',?,1)",

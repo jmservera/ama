@@ -4,7 +4,7 @@ description: Bounded synthetic incident and restart engineering plan
 ms.date: 2026-10-20
 ---
 
-Task ID: 221. Slug: operator-suspension-221. Status: P05 source/focused complete; new frozen gate pending.
+Task ID: 221. Slug: operator-suspension-221. Status: P05 gate fixture-ID correction; fresh frozen gate pending.
 
 ## P05: Owner-Renewed Five-Finding Scope
 
@@ -234,3 +234,9 @@ evidence plus configured core/API/infra static success. Separate dispositions:
 P05-T03 is the current pre-commit frozen gate boundary. Its completion state
 must remain external after commit, with receipt SHA, native SQL execution and
 acceptance matrix. No new critique/Review, push/comment or #222 scope.
+First P05 full17 at 9aa1c609 completed 16/17 groups; the native drill failed
+because its prefixed synthetic release ID exceeded SQL's 64-character bound.
+Only the tightly coupled fixture IDs are now digest-bounded, with explicit
+length assertions. This is the same P05 scope, not another correction cycle
+or production change. Preserve the failed -01 receipt. Fresh unchanged full17
+must use /tmp/ama-221-rpi-20261020-pr419-findings-02 after a new clean commit.

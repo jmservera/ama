@@ -58,8 +58,10 @@
     "core": "Configured Ruff/format/mypy passed, 128 files",
     "api": "Configured Ruff/format/mypy passed, 63 files",
     "infra_static": "Existing runner RUFF_GROUPS and TYPE_GROUPS all passed",
-    "native_sql": "Expanded shared drill is selected by unchanged full17; execution pending frozen gate",
-    "full17": "Pending new clean exact-head gate; prior receipts are not reused"
+    "native_sql": "First new frozen gate ran SQL but extended drill failed on fixture release ID >64. Both new IDs are now digest-bounded with <=64 assertions; exact issue16 and API configured static reruns passed. Fresh native execution pending.",
+    "full17": "First new gate 16/17 at 9aa1c609; failed -01 receipt retained. Fresh clean fixture-only follow-up gate pending at -02; no prior receipt reused",
+    "failed_receipt_sha256": "34a2b86e8bed8fc41a066778aabe185d5a13c2c6561f33f8930b123e5f69eb13",
+    "fixture_validation_logs": ["/tmp/ama-221-pr419-fixture-issue-final.log", "/tmp/ama-221-pr419-fixture-static-api.log"]
   },
   "publication": "STOP before push or PR comment until coordinator independently verifies receipt and retained assessor gives bounded Pass",
   "human_blockers": ["Actual OD-35 appointment", "Approved monitoring thresholds", "Competent corrective-test acceptance", "Human-witnessed drill"]

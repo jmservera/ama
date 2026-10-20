@@ -27,7 +27,7 @@ all open exact scopes after validating history. Existing actor/actual-hold,
 manual/hazard and distinct approval contracts remain unchanged.
 P05-T03 records separate implementation dispositions, configured core/API/
 infra checks, privacy-safe clean commit and unchanged full17 runner at
-/tmp/ama-221-rpi-20261020-pr419-findings-01 with fresh origin/main and
+/tmp/ama-221-rpi-20261020-pr419-findings-02 with fresh origin/main and
 runner-owned heavy lock. No outer lock, uv, private inputs or cloud/model calls.
 Final receipt, hash, logs, acceptance matrix and handoff stay external.
 STOP before push/comment for coordinator verification and retained assessor.
@@ -47,6 +47,20 @@ P05-T03 remains the clean commit/fresh all17 boundary. New post-commit
 completion state and actual gate outcome stay external, not retroactively
 claimed in this pre-gate record. Coordinator plus retained assessor own
 independent verification/assessment before any publication.
+
+First P05 frozen full17 ran at 9aa1c6099adb5c3660014bcb79d279a929229b4b:
+16/17 groups passed, native SQL ran 244 tests with one expected skip and
+one error in the newly extended incident fixture. Assistant IDs are 64
+characters; prefixing the full ID exceeded assistant_releases.id VARCHAR(64).
+Failure log /tmp/ama-221-rpi-20261020-pr419-findings-01/0158-mssql.log and
+failed receipt remain immutable. The fixture now hashes the source ID to 32
+characters before adding prefixes, and asserts both exact lengths <=64.
+No production fix, new decision, runner change or scope expansion is needed.
+P05-T03 remains pending; use a new clean commit and
+/tmp/ama-221-rpi-20261020-pr419-findings-02, never overwrite -01.
+Fixture correction validation passed all16 issue methods and configured API
+Ruff/format/mypy (63 files). Failed -01 receipt SHA-256:
+34a2b86e8bed8fc41a066778aabe185d5a13c2c6561f33f8930b123e5f69eb13.
 
 ## P04: Second Bounded Malformed-Capability Export Correction
 

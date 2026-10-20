@@ -412,3 +412,31 @@ matrix and exact-head handoff remain external after commit so they cannot
 invalidate the candidate. Stop before push/comment for coordinator's receipt
 verification and retained assessor's bounded Pass. Actual authority and other
 human acceptance stay blocked; no whole-issue closing claim.
+
+## P05-T03: Retained Native Fixture Failure and Local Correction
+
+Unchanged full17 at 9aa1c6099adb5c3660014bcb79d279a929229b4b completed
+16/17 groups. Native SQL executed 244 tests with one expected inherited skip,
+but the extended incident drill failed before its new assertions: synthetic
+release ID "zz-current-" plus a 64-character assistant ID exceeded the existing
+VARCHAR(64) release ID contract. Actual driver error and receipt are preserved:
+/tmp/ama-221-rpi-20261020-pr419-findings-01/0158-mssql.log and receipt.json.
+No pass or native coverage is inferred from that failed drill.
+
+This is an ordinary tightly coupled fixture correction within the same
+authorized five-finding P05 cycle, not a new production issue or another
+assessment/research/correction loop. Both new release IDs now use a 32-character
+digest of the actual source ID plus prefix, with explicit <=64 assertions.
+The production delta and unchanged runner remain untouched. Focused/static
+checks precede a new clean follow-up commit (no amend); a fresh all17 uses
+/tmp/ama-221-rpi-20261020-pr419-findings-02, preserving -01. Any unresolvable
+new significant blocker still stops this bounded cycle without publication.
+
+Digest-bounded fixture validation passed all16 issue methods:
+/tmp/ama-221-pr419-fixture-issue-final.log. Configured API Ruff/format/mypy
+passed again (63 files): /tmp/ama-221-pr419-fixture-static-api.log.
+Failed -01 receipt SHA-256 is
+34a2b86e8bed8fc41a066778aabe185d5a13c2c6561f33f8930b123e5f69eb13.
+Fresh fetched main remains 7e95f0224bfb7a8a62990a1de162fbcfa68db539.
+Only fixture and current implementation evidence change in the next commit;
+production delta and original Review remain unchanged.
