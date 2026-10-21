@@ -6625,3 +6625,19 @@ metadata when the knowledge base was created.
   actual corrective-test acceptance, named human appointment, human-witnessed
   drill, live application acceptance or whole-issue closure. Original #219
   adverse and later correction evidence is retained.
+
+## [2026-10-21] query | Cut-over soak evidence preparation (Refs #201)
+
+* Added to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#soak-and-cut-over-evidence-preparation-2026-10-21)
+  a dated map of all 11 #201 acceptance criteria (all remain UNMET), dated
+  corrections, a proposed soak evidence specification and pending owner
+  decisions D1 to D16, plus one unchecked checklist item.
+* Files touched: `docs/architecture/cutover-evidence-pack.md`,
+  `docs/adrs/0006-src-layout-and-cutover.md` (dated note only), `docs/reference/README.md`
+  (one row) and this log.
+* Contradictions raised: the 2026-10-15 owner decision of no minimum soak
+  versus the open soak item in the #201 body and the 2026-10-20 proposal
+  request (not resolved, decision D1); the pack statement of no available rubric
+  comparison versus later snapshots 47 then 48 (no candidate-commit score).
+* Preparation only, per the owner direction of 2026-10-20. No soak, duration,
+  sign-off, tag, deletion, Azure or budget action; minimum duration stays open.
