@@ -29,6 +29,11 @@
    "decision": "C02 Pass preconditions for competence/authority/approvals",
    "status": "applied, pending independent re-assessment and gate",
    "evidence": "changes record C02"
+  },
+  {
+   "decision": "Integration I01 rebase onto origin/main ca4baf75; certifi from PR420 preserved",
+   "status": "applied; prior gate evidence historical",
+   "evidence": "changes record I01"
   }
  ],
  "blockers": [
@@ -40,7 +45,7 @@
  ],
  "next_action": {
   "phase": "Implement",
-  "action": "Coordinator reruns complete gate and same-assessor follow-up on final head"
+  "action": "Coordinator reruns complete gate and independent assessment on the new head after I01"
  },
  "prioritized_follow_ups": null
 }
