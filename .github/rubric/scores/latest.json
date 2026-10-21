@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-21T05:47:12+00:00",
-  "commit": "2f5e1b788d3275779486767ca428cd90decbac81",
+  "scored_at": "2026-10-21T10:44:11+00:00",
+  "commit": "7ef5abeea946df5ceeeeb90cf31a917c10852911",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39551123157",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39586231948",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
-    "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
+    "adr": "a28f944314ec7ea628bf3072be950b1fe542921e3afd7e555232c753a668825e",
     "solution-code": "40ad3b66b6ff850020dd4b1096473059f8c1939034727d153bf618ae092de306",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
@@ -30,14 +30,14 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts (_incident_action, IncidentCommittedError, dialect-agnostic _table helper). Decoupled from core store, consistent with prior modular baseline. No new scaling-path evidence introduced beyond existing ceiling."
+      "rationale": "New incident/restart feature layered via existing mixin/decorator contracts. Decoupled from core store, consistent with prior modular baseline. No new scaling-path evidence beyond existing ceiling."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0005 names three rejected alternatives with explicit reasons. Diff adds no new trade-off reasoning text relevant to this criterion. Already at ceiling; no change."
+      "rationale": "ADR 0005 names three rejected alternatives with explicit reasons. The ADR 0006 diff only adds a short soak-conflict disclosure note, not trade-off reasoning. Already at ceiling; no change."
     },
     "A3": {
       "score": 5,
@@ -45,7 +45,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff adds extensive fail-closed security hardening: OID-bound capability checks, distinct-actor enforcement, replay/self-approval/stale-digest rejection, audit durability under rollback, and unverified-identity labelling. Reinforces existing threat-model coverage already at ceiling; no higher lev..."
+      "rationale": "Diff adds fail-closed security hardening: OID-bound capability checks, distinct-actor enforcement, replay/self-approval/stale-digest rejection. ADR 0006 change is a governance note, not security evidence. Unchanged at ceiling."
     },
     "A4": {
       "score": 5,
@@ -106,7 +106,7 @@
         "src/core/README.md:1543-1615",
         "src/api/README.md:1557-1606"
       ],
-      "rationale": "Both READMEs gained a new dense operational section documenting the incident/restart contract with concrete API detail and caveats, consistent with prior documentation style. Still dense operational narrative in places; capped at Good(4), unchanged from baseline."
+      "rationale": "READMEs gained a dense operational section on incident/restart contract. The ADR 0006 soak-note addition is short and clear but doesn't offset existing density concerns elsewhere. Capped at Good(4), unchanged from baseline."
     },
     "B7": {
       "score": 3,

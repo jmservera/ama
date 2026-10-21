@@ -368,6 +368,16 @@ Deployment is on Azure only; non-Azure services exist solely in local tests.
   one pull request (#200), so required checks keep matching.
 * The archive tag `v<BRD version>` is accompanied by a GitHub release (#202).
 
+### Soak reconciliation note (2026-10-21)
+
+The 2026-10-15 answer above is unchanged and not superseded. The #201 body
+still lists the minimum soak period as an open decision and the owner asked on
+2026-10-20 for a soak proposal for review, so the conflict is pending owner
+decision D1 in the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#pending-owner-decisions).
+This note does not change the Status or the cut-over gate and records no soak,
+sign-off or deletion.
+
 ## Related
 
 [ADR 0001](./0001-azure-architecture.md), [ADR 0002](./0002-pilot-readiness-architecture.md),
