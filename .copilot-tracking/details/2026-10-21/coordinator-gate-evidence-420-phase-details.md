@@ -172,3 +172,18 @@ Clean frozen head, gate left to coordinator.
 #### Completion Evidence
 
 * HEAD SHA in the final report.
+
+<!-- rpi:phase id=P03 -->
+## P03: Gate-failure dependency correction
+
+### Intent
+
+Clear certifi advisory GHSA-6q48-6c7w-9gw2 with only the four lockfile files from shared commit a3257c71; no tracking or map edits from that commit.
+
+<!-- rpi:task id=P03-T01 -->
+### P03-T01: Reuse four requirements lockfiles from a3257c71
+
+* Boundaries: only the four requirements.txt files; no other pins, scans or controls; src/agents has no certifi pin and is unchanged.
+* Validation: byte comparison to a3257c71, pin/hash consistency check, grep for old pin, pip --require-hashes download of the pinned wheel, git diff --check. No build or full gate.
+* Completion evidence: changes record P03-T01.
+

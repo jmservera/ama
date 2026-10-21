@@ -123,6 +123,19 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 * Expected result: focused checks (git diff --check, tracked-source diff, grep confirming the gate appears only as not run and separately mandatory), fetch of origin/main with base SHA recorded, noreply email from gh api user set locally, one Conventional Commit with Copilot trailer, no amend, clean frozen head, no gate run.
 * Detail section: P02-T01 in .copilot-tracking/details/2026-10-21/coordinator-gate-evidence-420-phase-details.md
 
+<!-- rpi:phase id=P03 -->
+### [x] P03: Gate-failure dependency correction (appended 2026-10-21 after exact-head gate failure at 474454d1)
+
+* Intent: clear the only scanner failure, CRITICAL GHSA-6q48-6c7w-9gw2 in certifi 2026.7.22 (fixed 2026.10.19) reported for api, importer and orchestrator images, by reusing only the four lockfile changes from shared commit a3257c71.
+* Dependencies: P01, P02; original critique and Review preserved, not repeated.
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Reuse four requirements lockfiles from a3257c71
+
+* Requirement and evidence: failed receipt /tmp/ama-coordinator-followon-0105-420/receipt.json and per-image gate JSON; no other pins or controls change.
+* Expected result: src/{core,api,importer,orchestrator}/requirements.txt byte-identical to a3257c71; certifi 2026.10.19 with two hashes; no certifi 2026.7.22 remains. Reuse is provisional until own complete gate and independent assessment.
+* Detail section: P03-T01 in .copilot-tracking/details/2026-10-21/coordinator-gate-evidence-420-phase-details.md
+
 ## Dependencies
 
 * P02 depends on P01: checks apply to the final wording.

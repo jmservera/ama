@@ -35,3 +35,11 @@
 * hve-builder was activated in `validate` mode. A Low-profile validation subagent (claude-haiku-4.5, per the Low profile list) ran local nonmutating checks and wrote `.copilot-tracking/hve-builder/2026-10-21/coordinator-sonnet-55-validation-03.md`: mechanical Pass only, all listed checks Passed.
 * Appended an HVE lifecycle disclosure to validation-02. No source, plan, critique or original Review artifact changed; no second Review reconstructed.
 * Not run: complete local RPI gate (coordinator-owned), HVE behavior execution (Medium skip unchanged), CI lanes, authoritative CLI README fetch.
+
+## P03-T01 gate-failure dependency correction (after 474454d1)
+
+* Complete exact-head gate failed 2026-10-21T03:12:14Z; the failed receipt and logs at /tmp/ama-coordinator-followon-0105-420 are preserved and not edited. api, importer and orchestrator image gates each show only CRITICAL GHSA-6q48-6c7w-9gw2, certifi 2026.7.22, fixed 2026.10.19. Container controls and negative probes passed. Not publication approval.
+* Reused only src/core, src/api, src/importer and src/orchestrator requirements.txt from native issue119 commit a3257c71f4963d98a88c501d040b3d07eada4392 (certifi 2026.7.22 to 2026.10.19, two new hashes each). No tracking/map edits cherry-picked; no other worktree touched.
+* Focused checks: all four files identical to a3257c71 (git diff --quiet); each lists certifi==2026.10.19 with two sha256 hashes; zero remaining certifi==2026.7.22 under src; pip download --no-deps --require-hashes of the pinned wheel succeeded (index hash match); git diff --check rc 0.
+* Not run: full gate, image builds, scanners, tests; Review not repeated, no second original Review. hve-builder was activated only after the original correction (see the earlier amendment); this change adds no HVE behavior claim and the HVE Pass remains mechanical only.
+* Residual: reuse is provisional; own complete exact-head gate and independent assessment are still required.

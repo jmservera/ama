@@ -39,12 +39,17 @@
       "decision": "hve-builder activated in validate mode after f79be1d4; mechanical Pass only (validation-03); behavior and full gate not run",
       "status": "complete",
       "evidence": ".copilot-tracking/hve-builder/2026-10-21/coordinator-sonnet-55-validation-03.md"
+    },
+    {
+      "decision": "Exact-head gate at 474454d1 failed (certifi advisory only); reuse four lockfiles from a3257c71 provisionally; own gate and independent review pending",
+      "status": "source-corrected-focused-checked",
+      "evidence": ".copilot-tracking/changes/2026-10-21/coordinator-gate-evidence-420-changes.md; /tmp/ama-coordinator-followon-0105-420/receipt.json"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator runs full gate on frozen head, verifies receipt, independent exact-head assessment, then publishes"
+    "action": "Coordinator reruns complete gate on new frozen head, then independent exact-head assessment"
   },
   "prioritized_follow_ups": [
     {
