@@ -27,3 +27,10 @@ Plan: .copilot-tracking/plans/2026-10-20/issue-119-map-options-recovery-plan.md
 * P04-T01: replace the "costed plan before paid account" sentence in the cost method with the total-cap, accrued-and-forecast, multi-scope, no-spend and unknown-headroom-blocks wording.
 * P04-T02: append a dated log entry; index needs no change (no file added or moved).
 * P04-T03: reconcile plan, changes and state. Validation: git diff --check, ASCII scan. No heavy gate run here.
+
+## P05 certifi lock correction (2026-10-21)
+
+* Root cause: certifi is a transitive dependency of requests, pinned with hashes in the pip-compile lockfiles at 2026.7.22, which the fixed advisory supersedes in 2026.10.19. The Dockerfiles install the lockfiles with --require-hashes, so images inherited the pin.
+* P05-T01: replace only the certifi pin and its two hashes (wheel and sdist from PyPI JSON for 2026.10.19) in src/core, src/api, src/importer and src/orchestrator requirements.txt. requirements.in files do not name certifi and are unchanged. Digest pins, non-root user and other pins are untouched.
+* P05-T02: install src/api/requirements.txt with --require-hashes in a scratch venv; build the three images; run Trivy 0.76.0 with the gate flags (src/trivy.yaml, vuln, HIGH,CRITICAL, ignore-unfixed, exit-code 1) using an external cache.
+* P05-T03: reconcile plan, changes and state.
