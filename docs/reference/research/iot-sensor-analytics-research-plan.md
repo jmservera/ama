@@ -570,6 +570,30 @@ live-platform, legal or operational acceptance follows. The next human actions
 are dataset-specific reuse/access review and, if authorized, provision of the
 exact paired source/station/QC packet; not invention of missing bounds.
 
+## Paired historical climate access check (2026-10-21, Refs #178)
+
+A bounded continuation tested whether official paired North-East temperature
+and humidity records can be retrieved without an account. Retrievals occurred
+on 2026-10-21 UTC (not a publication or approval date). Evidence:
+[access-blocker record](./climate-paired-source-blocker-178.json).
+
+* MIDAS Open (OGL stated on its CEDA catalogue page) exposes anonymous
+  directory listings, including North-East stations, but every file fetched
+  (data licence README, station metadata, station capability) required a CEDA
+  login. Account creation or credential use is outside this task, so no
+  hourly temperature or relative humidity records were obtained.
+* Environment Agency Hydrology (OGL 3) carries no humidity or dew-point
+  property; its temperature measures are not atmospheric paired data.
+* No bounds, thresholds or replay limits are derived. The Durham monthly
+  temperature statistics remain temperature-only, and no synthetic value
+  stands in for observed records. Synthetic data stays permitted only when
+  clearly labelled synthetic and cannot fulfil record-derived bounds.
+* Owner action: an authorised human with their own CEDA account supplies
+  selected MIDAS qc-version-1 files and licence text and records reuse and
+  station approval, or the owner approves another public no-login source.
+  Source selection and licence/reuse remain UNMET. #179 stays sequenced behind
+  grounded paired input.
+
 ## Historical outdoor climate source decision (2026-10-16, Refs #178)
 
 Historical offline audit, retained for provenance. For the current evidence
