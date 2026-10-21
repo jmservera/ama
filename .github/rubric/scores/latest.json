@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-20T08:00:24+00:00",
-  "commit": "332101ede08153925022f7f886b0c1abbabdb2d5",
+  "scored_at": "2026-10-21T05:47:12+00:00",
+  "commit": "2f5e1b788d3275779486767ca428cd90decbac81",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39388242418",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39551123157",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "f3279b43df06f0f33275727da6310bb8af2845b453d7008ee628ea073eb66c25",
+    "solution-code": "40ad3b66b6ff850020dd4b1096473059f8c1939034727d153bf618ae092de306",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -66,7 +66,7 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is an incident/restart containment feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a certifi dependency pin bump plus prior incident/restart feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
     },
     "A7": {
       "score": 4,

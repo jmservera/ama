@@ -164,7 +164,14 @@ treated as delivery failure.
    worktree inside its own named tmux session, with the agent and the issue
    brief passed as parameters. Write the brief to
    `/tmp/brief-{number}.md`, then run:
-   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "copilot --agent hve-core-all:rpi-agent --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}.md)\" 2>&1 | tee /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
+   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}.md)\" 2>&1 | tee /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
+   Use Sonnet 5.5 for all coordinator-launched RPI issue sessions, including
+   retries, corrections and validation continuations, by passing
+   `--model claude-sonnet-5.5` on every launch. The coordinator's own session
+   stays on Automatic; this does not change independent reviewer selection.
+   If the requested model or launch tool is unavailable, report the specific
+   model/tool blocker for the affected loop only; do not silently fall back
+   to another model.
    Check `command -v tmux` first; when tmux is missing, that is a missing tool
    blocker. The agent name must be the qualified `hve-core-all:rpi-agent`; the
    bare `rpi-agent` does not resolve. This tmux plus Copilot CLI route is the

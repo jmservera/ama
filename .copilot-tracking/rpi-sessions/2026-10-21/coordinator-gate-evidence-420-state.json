@@ -1,0 +1,62 @@
+{
+  "task_id": "420-gate-evidence",
+  "task_slug": "coordinator-gate-evidence-420",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-21/coordinator-gate-evidence-420-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-21/coordinator-gate-evidence-420-plan.md",
+    "details": ".copilot-tracking/details/2026-10-21/coordinator-gate-evidence-420-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-21/coordinator-gate-evidence-420-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-21/coordinator-gate-evidence-420-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-21/coordinator-gate-evidence-420-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed, focused, Planning Readiness Ready",
+      "status": "complete",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise, PC-001 to PC-003 applied directly",
+      "status": "complete",
+      "evidence": "critique artifact; plan Critique Disposition"
+    },
+    {
+      "decision": "Review executed once, outcome Conformant, residual RV-001",
+      "status": "complete",
+      "evidence": "review artifact"
+    },
+    {
+      "decision": "Launch clarification: complete local gate not run by this worker; coordinator owns it; no push",
+      "status": "confirmed",
+      "evidence": "owner/coordinator launch message 2026-10-21"
+    },
+    {
+      "decision": "hve-builder activated in validate mode after f79be1d4; mechanical Pass only (validation-03); behavior and full gate not run",
+      "status": "complete",
+      "evidence": ".copilot-tracking/hve-builder/2026-10-21/coordinator-sonnet-55-validation-03.md"
+    },
+    {
+      "decision": "Exact-head gate at 474454d1 failed (certifi advisory only); reuse four lockfiles from a3257c71 provisionally; own gate and independent review pending",
+      "status": "source-corrected-focused-checked",
+      "evidence": ".copilot-tracking/changes/2026-10-21/coordinator-gate-evidence-420-changes.md; /tmp/ama-coordinator-followon-0105-420/receipt.json"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator reruns complete gate on new frozen head, then independent exact-head assessment"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator complete local RPI gate and exact-head assessment",
+      "rationale": "mandatory before publication",
+      "evidence": "review RV-001"
+    }
+  ]
+}
