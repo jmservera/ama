@@ -7888,3 +7888,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   evaluator, run, participant, data, approval or fairness evidence. All six #222
   criteria remain unmet; the manifest is returned for owner approval before any
   evaluator work.
+
+## [2026-10-21] query | Cohort manifest correction after independent assessment (#222)
+
+* Corrected the draft [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  and manifest wording: inside an open safety case the ranking order is support,
+  then waiting days, then stage, then case id, not "behind only older open
+  safety cases". The structural test now carries the sensor, source and
+  appointment fields to the ranker input and proves a missing-data exclusion or
+  appointment penalty fails the binding check. The contact_need pair stays
+  representation pending because ranking has no contact input.
+* Ranking, runtime and the unapproved status are unchanged. All six #222
+  criteria remain unmet.

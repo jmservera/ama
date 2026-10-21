@@ -24,7 +24,7 @@ completeness, accessibility or contact need, appointment history).
 | CM-A03 split | CM-A03 now varies only a separate contact field and is `representation_pending` (ranking has no contact input); CM-A04 covers an accessibility adjustment recorded as text, which feeds support status (RV-002) |
 | CM-C01 split | CM-C01 varies sensor data only; new CM-C02 varies the source record only |
 | Ranking binding | Each deterministic expectation names a `ranking_binding` that the structural test checks against the unchanged `rank()` (RV-001); the comparison basis is the same case id ranked twice in a fixed neighbour set |
-| Open safety wording | An open safety case ranks ahead of every case without one, behind only older open safety cases; the AI top-k exception of `ai_eval.py` is stated (RV-004) |
+| Open safety wording | An open safety case ranks ahead of every case without one. Inside open safety the order is support, then waiting days, then stage, then case id, so a supported case waiting 1 day outranks an unsupported one waiting 10 days (RV-004; corrected 2026-10-21 after independent assessment). Rank 2 in the CM-C01 test is specific to its fixed neighbours; the AI top-k exception of `ai_eval.py` is stated |
 | Unknown support | PP-01 is a POLICY PROPOSAL with three options; ranking is not changed |
 | Sample and error options | SO-1 to SO-3, ED-1 to ED-3 and uncertainty methods replace the arbitrary 30 and 10 percent |
 | Review burden | Defined over eligible cases, with zero eligible not computable |
@@ -216,7 +216,7 @@ Proposal only. A held-out split does not exist (`held_out_split.status` is
 The structural test `src/agents/tests/test_cohort_manifest_draft.py` checks only
 that the draft stays labelled unapproved, seed-to-scenario links and pair isolation
 are consistent (the support exemption is limited to `support_state` pairs), the
-ranking-bound expectations still hold against the unchanged `zava_forward.core`
+ranking-bound expectations (the sensor, source and appointment fields are carried on each case and a missing-data exclusion or appointment penalty is shown to fail the check) still hold against the unchanged `zava_forward.core`
 `rank()`, the sample arithmetic and review-burden fractions are consistent, all
 held-out roles stay UNFILLED and each AC is Not met. It is not an
 evaluation and does not read this page.

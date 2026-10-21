@@ -48,3 +48,13 @@ The first correction edits (manifest, test, review pack, README, log, this recor
 
 * Focused: 9 structural tests pass against core on PYTHONPATH; ruff check and format clean. Full gate receipt is external and recorded in the handoff.
 * No runtime, ranking, evaluator, paid, live, participant or approval activity. All six #222 criteria remain unmet.
+
+## Independent assessment correction (2026-10-21, P06)
+
+Assessor f9636e1f on 93cb2bba found (1) the test conversion dropped sensor, source and appointment fields so six pairs reached `rank()` identically and an exclusion wrapper still passed, and (2) the wording "behind only older open safety cases" is wrong because policy 1.0.0 compares support before waiting days inside open safety. Both accepted; ranking and runtime unchanged. The gate receipt at /tmp/ama-followon-2240-222/receipt.json (SHA256 447cb4ea...) becomes HISTORICAL after the next commit. Details below are added as work completes.
+
+### P06-T01 and P06-T02 completed
+
+* Test: case conversion now carries sensor_data, source_record, appointment_history and contact_need; converted pairs are asserted to differ in the declared factor; new regression shows an exclusion wrapper (sensor or source missing or stale) and an appointment-penalty wrapper fail `check_binding` for CM-S01/S02/C01/C02 and CM-H01/H02, while the unchanged `rank()` passes. Representability limit: rank() has no sensor, source, appointment or contact input, so these bindings prove invariance of the unchanged ranker and detect wrappers; CM-A03 stays representation_pending.
+* Ordering: manifest and review pack wording corrected; new test shows a supported open-safety case waiting 1 day outranks an unsupported one waiting 10 days, and rank 2 is fixture-specific.
+* Validation: ruff check and format, strict mypy on the test, 24 tests (manifest and ai_eval) and the registry test pass locally. No heavy gate run (coordinator-owned).
