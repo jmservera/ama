@@ -42,6 +42,11 @@
       "decision": "P05 certifi lock bump for discovered gate regression",
       "status": "implemented; focused image scans clean; full gate pending coordinator",
       "evidence": ".copilot-tracking/changes/2026-10-20/issue-119-map-options-recovery-changes.md"
+    },
+    {
+      "decision": "P06 budget wording adds known RG-only forecast above cap",
+      "status": "implemented; full gate pending coordinator",
+      "evidence": ".copilot-tracking/changes/2026-10-20/issue-119-map-options-recovery-changes.md"
     }
   ],
   "blockers": [
@@ -53,7 +58,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator runs fresh full gate on final head; reuse fix for PR 424"
+    "action": "Coordinator runs fresh full gate on final head and reassesses"
   },
   "prioritized_follow_ups": [
     {

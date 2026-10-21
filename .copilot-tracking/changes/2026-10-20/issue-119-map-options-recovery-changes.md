@@ -42,3 +42,8 @@ Discovered cross-cutting security gate regression, attributed honestly; not part
 * No Trivy ignore, baseline, severity change or skip token. Temporary venv and local image tags were removed.
 * Not run: the full heavy gate (coordinator serialises it on the final head); the old receipt stays historical.
 * Map findings are unchanged: screen-reader NOT RUN, rates, terms and DPA unverified, no provider selected. Refs #119.
+
+## P06 budget evidence wording (rpi-implement, 2026-10-21)
+
+* docs/reference/research/ux/map-tile-provider-options.md cost paragraph now states the provisional RG-only forecast USD 535.41 (coordinator-supplied, 2026-10-21, not live, no in-repo source; a repository search found no copy) already exceeds the USD500 total October cap before unknown non-RG liabilities; no zero or approval inference.
+* Validation: git diff --check, non-ASCII scan. Original reviews, critiques and failed receipts preserved; the a3257c71 pass receipt is historical. No dependency edits. Screen-reader NOT RUN; rates, terms, DPA unverified; no provider selected. Refs #119.
