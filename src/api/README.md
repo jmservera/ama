@@ -2555,6 +2555,12 @@ disclosure summaries: at least 24px width/height, preserving the cited-lookup
 summary's stronger shipped 44px height. Citation links now have a 24px
 inline-block target rather than an 18px inline text box. The supplier guidance
 is static and has no interactive targets.
+Two further cited-answer states (`cited-answer-fade-35pct` and `-50pct`) re-enable
+the lookup button, freeze its transitions part-way and scan it, because a
+disabled-to-enabled background fade with an instant text colour change produced
+a transient 4.29:1 `color-contrast` failure on hosted runners (#151, refs only).
+Buttons now transition only `border-color`; `--motion` and its reduced-motion
+override are unchanged. This covers the lookup button, not every control.
 The test also checks persisted doubt/history, missing sources, retained risk
 after source change, service outage, disabled lookup, staff guidance and
 contractor denial. It is an engineering check, not a complete WCAG conformance

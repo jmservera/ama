@@ -188,7 +188,8 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .status-line.ok{border-color:var(--ok);background:var(--ok-bg)}
 .status-line.ok:before{content:"\2713\00a0";font-weight:700}
 .status-line.wait:before{content:"\23F3\00a0"}
-button,.btn,.item,.tile{transition:background-color var(--motion),border-color var(--motion)}
+button,.btn{transition:border-color var(--motion)}
+.item,.tile{transition:background-color var(--motion),border-color var(--motion)}
 button:disabled,button[aria-disabled=true],.btn[aria-disabled=true]{background:var(--disabled-bg);border-color:var(--field-line);color:var(--disabled-ink);cursor:not-allowed}
 button[aria-busy=true]:after,.loading:after{content:" (loading)"}
 input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{border:2px solid var(--warn)}
