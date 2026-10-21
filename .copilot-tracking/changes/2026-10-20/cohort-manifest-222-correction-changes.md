@@ -58,3 +58,8 @@ Assessor f9636e1f on 93cb2bba found (1) the test conversion dropped sensor, sour
 * Test: case conversion now carries sensor_data, source_record, appointment_history and contact_need; converted pairs are asserted to differ in the declared factor; new regression shows an exclusion wrapper (sensor or source missing or stale) and an appointment-penalty wrapper fail `check_binding` for CM-S01/S02/C01/C02 and CM-H01/H02, while the unchanged `rank()` passes. Representability limit: rank() has no sensor, source, appointment or contact input, so these bindings prove invariance of the unchanged ranker and detect wrappers; CM-A03 stays representation_pending.
 * Ordering: manifest and review pack wording corrected; new test shows a supported open-safety case waiting 1 day outranks an unsupported one waiting 10 days, and rank 2 is fixture-specific.
 * Validation: ruff check and format, strict mypy on the test, 24 tests (manifest and ai_eval) and the registry test pass locally. No heavy gate run (coordinator-owned).
+
+## Dependency advisory integration (2026-10-21, P07)
+
+* Trigger: local gate /tmp/ama-cohort-followon-0037-222 failed at 02:44:00; GHSA-6q48-6c7w-9gw2 on certifi 2026.7.22 (fixed 2026.10.19) in api, importer and orchestrator scans. Receipt and log retained.
+* Reuse: only the four requirements.txt files from shared commit a3257c71 (native issue 119 correction), taken by path-limited checkout; its tracking and map edits not taken. Provisional until this issue's own full gate and independent assessment.

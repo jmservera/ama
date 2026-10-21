@@ -145,3 +145,11 @@ Assessor f9636e1f returned Defects on 93cb2bba (original Review verdict and earl
   * <!-- rpi:task id=P06-T01 --> [x] P06-T01 Preserve sensor_data, source_record, appointment_history in the test case conversion; assert converted pairs differ in the declared factor; add regression where a missing-data exclusion or appointment penalty fails the binding check
   * <!-- rpi:task id=P06-T02 --> [x] P06-T02 Correct the open-safety ordering wording (open safety first; within it support, waiting days, stage, case id) in manifest and review pack; add supported open-safety neighbour test showing rank 2 is fixture-specific
   * <!-- rpi:task id=P06-T03 --> [ ] P06-T03 Focused tests, ruff, mypy; KB index/log; commit and freeze clean (full gate is coordinator-owned)
+
+### P07 Dependency advisory integration (2026-10-21, appended)
+
+Local gate /tmp/ama-cohort-followon-0037-222 failed at 02:44:00 (receipt and log retained): scans of api, importer and orchestrator report GHSA-6q48-6c7w-9gw2 for certifi 2026.7.22, fixed in 2026.10.19. Ordinary later `rpi-implement`; no second Review or critique. Reuse is provisional.
+
+* <!-- rpi:phase id=P07 --> P07 Reuse shared certifi lock correction (declared: full P07)
+  * <!-- rpi:task id=P07-T01 --> [x] P07-T01 Reuse only the four requirements.txt changes from shared commit a3257c71 (issue 119 correction); verify exact diff, hashes and consistent pins
+  * <!-- rpi:task id=P07-T02 --> [x] P07-T02 Focused checks, commit and freeze clean; full gate and independent assessment remain pending
