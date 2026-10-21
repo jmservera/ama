@@ -99,6 +99,51 @@ def scan(
     assert not result["violations"], json.dumps(result["violations"], indent=2)
 
 
+def scan_mid_fade(page: Page, axe: str | None, reports: list[dict[str, Any]], state: str) -> None:
+    """Scan the cited lookup button while a disabled-to-enabled fade is frozen mid-way."""
+    selector = "#regulatory-chat > form > button[type=submit]"
+    for percent in (35, 50):
+        frozen: dict[str, Any] = page.evaluate(
+            """async ([selector, fraction]) => {
+              const button = document.querySelector(selector);
+              const field = document.querySelector('#regulatory-question');
+              button.disabled = true;
+              await new Promise(resolve => setTimeout(resolve, 200));
+              button.disabled = false;
+              await new Promise(resolve => requestAnimationFrame(
+                () => requestAnimationFrame(resolve)));
+              const animations = button.getAnimations();
+              for (const animation of animations) {
+                animation.pause();
+                animation.currentTime = fraction * animation.effect.getComputedTiming().duration;
+              }
+              return {
+                background: getComputedStyle(button).backgroundColor,
+                properties: animations.map(animation => animation.transitionProperty)
+              };
+            }""",
+            [selector, percent / 100],
+        )
+        try:
+            assert frozen["background"] == "rgb(11, 93, 107)", (
+                f"Re-enabled lookup button background is {frozen['background']} "
+                f"at {percent}% of its fade; expected the brand colour "
+                f"(animated: {frozen['properties']})"
+            )
+            assert "background-color" not in frozen["properties"], frozen["properties"]
+            scan(page, axe, reports, f"{state}-{percent}pct")
+        finally:
+            page.evaluate(
+                """selector => {
+                  for (const animation of document.querySelector(selector).getAnimations()) {
+                    animation.cancel();
+                  }
+                  document.querySelector('#regulatory-question').focus();
+                }""",
+                selector,
+            )
+
+
 def open_home(page: Page, base: str) -> None:
     from playwright.sync_api import expect
 
@@ -307,6 +352,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 "href", "/api/law/provisions/synthetic%40v2%230001"
             )
             scan(page, axe, reports, "cited-answer")
+            scan_mid_fade(page, axe, reports, "cited-answer-fade")
             doubt = chat.locator(".regulatory-turn button").first
             doubt.focus()
             page.keyboard.press("Enter")

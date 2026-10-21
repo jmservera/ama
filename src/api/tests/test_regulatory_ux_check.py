@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 import unittest
@@ -64,6 +65,26 @@ assert callable(run) and callable(target_sizes)
         self.assertEqual(target_sizes(page, "#regulatory-supplier"), [])
         with self.assertRaisesRegex(AssertionError, "No interactive targets"):
             target_sizes(page, "#regulatory-chat")
+
+    def test_button_background_is_not_animated(self) -> None:
+        css = (
+            Path(__file__).parents[1] / "src" / "zava_forward" / "api" / "web" / "style.css"
+        ).read_text()
+        animated: list[str] = []
+        for selectors, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
+            names = {name.strip() for name in selectors.split(",")}
+            if not names & {"button", ".btn"}:
+                continue
+            for value in re.findall(r"transition(?:-property)?\s*:\s*([^;]+)", body):
+                animated.extend(re.findall(r"(?<![\w-])(background-color|background|all)\b", value))
+                animated.extend(re.findall(r"(border-color)\b", value))
+        self.assertIn("border-color", animated, "Button transition rule was not found")
+        forbidden = [name for name in animated if name != "border-color"]
+        self.assertEqual(
+            forbidden,
+            [],
+            "Buttons must not fade their background while text colour changes instantly",
+        )
 
     def test_untrusted_axe_fails_before_application_start(self) -> None:
         with TemporaryDirectory() as folder:
