@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-21T05:47:12+00:00",
-  "commit": "2f5e1b788d3275779486767ca428cd90decbac81",
+  "scored_at": "2026-10-21T09:25:05+00:00",
+  "commit": "f521b7baf476a47c9e6f0a013cf6c8b1446d53fc",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39551123157",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39575923101",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "40ad3b66b6ff850020dd4b1096473059f8c1939034727d153bf618ae092de306",
+    "solution-code": "232ce98a312a3f5f900f3e75d68c757c77091156e7eb56338a5b506f8f38a2aa",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -30,7 +30,7 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts (_incident_action, IncidentCommittedError, dialect-agnostic _table helper). Decoupled from core store, consistent with prior modular baseline. No new scaling-path evidence introduced beyond existing ceiling."
+      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts. Decoupled from core store, consistent with prior modular baseline. No new scaling-path evidence beyond existing ceiling."
     },
     "A2": {
       "score": 5,
@@ -45,15 +45,15 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff adds extensive fail-closed security hardening: OID-bound capability checks, distinct-actor enforcement, replay/self-approval/stale-digest rejection, audit durability under rollback, and unverified-identity labelling. Reinforces existing threat-model coverage already at ceiling; no higher lev..."
+      "rationale": "Diff is a UI color-contrast/animation bug fix and test, unrelated to security controls or AI risk mitigation. Baseline fail-closed hardening evidence unaffected; no change."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_operator_suspension.py:376-941",
-        "src/core/src/zava_forward/core/continuity.py:189-380"
+        "src/api/checks/regulatory_ux_check.py:102-146",
+        "src/api/tests/test_regulatory_ux_check.py:69-88"
       ],
-      "rationale": "16 new tests cover version-matrix integrity, rollback/conflict, snapshot completeness, manual hazard fallback and trusted-capability revalidation end to end. Already at ceiling (ends-to-end working with disclosed scope limits); no higher level available."
+      "rationale": "Diff fixes a narrow accessibility defect (mid-fade contrast failure) with a new scan helper and unit test, disclosed as covering only the lookup button. Reinforces existing disclosed-gaps pattern already at ceiling; no change."
     },
     "A5": {
       "score": 4,
@@ -61,19 +61,19 @@
         "src/api/tests/test_operator_suspension.py:614-665",
         "src/core/src/zava_forward/core/sqlstore.py:572-630"
       ],
-      "rationale": "Adds resilience evidence (rollback on committed-action fault, ConflictError on concurrent save, audit-only writer surviving document rollback) but no new cost or performance measurement. Still only one dimension (resilience) evidenced, not both cost and performance; unchanged from baseline."
+      "rationale": "No new cost or performance measurement in this diff; it is a frontend accessibility/animation fix. Still only resilience evidenced, not both cost and performance; unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a certifi dependency pin bump plus prior incident/restart feature, not an AI model choice or evaluation harness; no new justification or harness evidence added for A6."
+      "rationale": "Unchanged baseline: diff is a CSS transition/contrast bug fix plus supporting test, not an AI model choice or evaluation harness change."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "Restart decision remains a human-gated engineering drill requiring a distinct OID-bound manager and separate capability; no agentic orchestration, handoff or autonomous action is introduced. Unchanged from baseline assessment basis."
+      "rationale": "Restart decision remains a human-gated engineering drill; no agentic orchestration change introduced by this UI fix. Unchanged from baseline assessment basis."
     },
     "B1": {
       "score": 3,
@@ -103,10 +103,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/core/README.md:1543-1615",
-        "src/api/README.md:1557-1606"
+        "src/api/README.md:2555-2561"
       ],
-      "rationale": "Both READMEs gained a new dense operational section documenting the incident/restart contract with concrete API detail and caveats, consistent with prior documentation style. Still dense operational narrative in places; capped at Good(4), unchanged from baseline."
+      "rationale": "README gained a short, well-scoped explanation of the contrast-fix fade/transition change with disclosed limits (covers lookup button only), consistent with prior dense operational documentation style. Still capped at Good(4); no higher level warranted."
     },
     "B7": {
       "score": 3,
