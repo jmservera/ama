@@ -39,12 +39,17 @@
       "decision": "Review executed once; outcome Residual work; no material defects; implementation commit 55f3f333",
       "status": "confirmed",
       "evidence": "review record Outcome"
+    },
+    {
+      "decision": "Integration continuation: rebased locally onto origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 without conflicts; no new Review; not pushed",
+      "status": "confirmed",
+      "evidence": "changes record Integration Continuation"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator runs complete gate and independent exact-head assessment; coordinator selects follow-up"
+    "action": "Coordinator runs complete gate on the rebased head and independent exact-head assessment; prior gate evidence is historical"
   },
   "prioritized_follow_ups": [
     {

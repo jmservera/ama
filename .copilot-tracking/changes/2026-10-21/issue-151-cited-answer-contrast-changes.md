@@ -74,3 +74,13 @@ Not performed: complete local RPI gate (`tools/rpi-checks.py --all`), Docker/SQL
 
 * Divergence: the committed red state fails on the helper's colour assertion rather than directly on axe (disclosed above).
 * No follow-up items. The `.alt` hover item was dropped after observation.
+
+## Integration Continuation (2026-10-21)
+
+* New base: origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 (includes merged PR #420).
+* Run-owned branch fix/regulatory-contrast-151 rebased locally without conflicts. Not pushed. The rebase dropped the four certifi requirements restores because main already carries certifi 2026.10.19 from PR #420 (verified in all four files); the issue-specific CSS, helper, test, README and RPI evidence are preserved.
+* The earlier P03-T01 requirements evidence above is historical; the final branch diff no longer touches the requirements files.
+* The single original Review is unchanged and still stands as the historical verdict. Prior exact-head gate evidence is historical, not current acceptance.
+* Focused validation on the rebased tree: `unittest tests.test_regulatory_ux_check` Ran 5, OK; `regulatory_ux_check.py` PASS 19 browser states, axe executed. Same unrecorded local venv with PYTHONPATH as above.
+* Not run: complete local RPI gate, hosted CI, Docker, Azure. The coordinator serializes the complete gate on the new head.
+* Residual work unchanged: RV-001 optional cleanup, RV-002 optional guard, RV-003 complete gate and hosted check, RV-004 environment reproducibility.
