@@ -85,3 +85,8 @@ Critique: .copilot-tracking/reviews/2026-10-20/issue-119-map-options-recovery-pl
 
 <!-- P04 -->
 * [x] P04: Correct the budget wording after independent assessment (Defects on e69a2ed5). P04-T01 options doc cost paragraph; P04-T02 append log entry; P04-T03 align details, changes and state. AC7: the doc states the USD500 total calendar-month cap including accrued and forecast cost across `ama` and other scopes, requires separate finite costed plan approval before any paid execution, authorises no spend and treats unknown headroom as blocking. The earlier receipt for e69a2ed5 (SHA256 9ece9317...a959) is historical after this commit; a fresh full gate is queued by the coordinator.
+
+## Security gate regression continuation 2026-10-21 (P05, rpi-implement)
+
+<!-- P05 -->
+* [x] P05: Discovered cross-cutting gate regression, not a map-domain defect. The final-head gate image scans reported fixed CRITICAL GHSA-6q48-6c7w-9gw2 (certifi 2026.7.22, fixed 2026.10.19) in the API, importer and orchestrator images. P05-T01 bump the transitive hash-locked certifi pin in the four requirements.txt lockfiles (core, api, importer, orchestrator); P05-T02 focused reproduction; P05-T03 align tracking. No ignore file, baseline, severity change or skip. The coordinator reuses this fix for hosted PR 424 and runs the fresh full gate. The old gate receipt is historical.

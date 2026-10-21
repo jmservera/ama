@@ -32,3 +32,13 @@ Execution: rpi-implement skill actually invoked in the coordinator-intervention 
 * Appended a dated correction entry to docs/reference/log.md. Index unchanged.
 * Original review, critique and adverse receipt preserved. The e69a2ed5 receipt is historical; the full gate is pending a fresh coordinator run on the new head.
 * Not claimed: provider selection, purchase, Legal or DPO approval, UI change, screen-reader acceptance (not run); rates, terms and DPA unverified. Refs #119, not closing.
+
+## P05 certifi lock correction (rpi-implement, 2026-10-21)
+
+Discovered cross-cutting security gate regression, attributed honestly; not part of the map-domain findings.
+
+* Files: src/core/requirements.txt, src/api/requirements.txt, src/importer/requirements.txt, src/orchestrator/requirements.txt (certifi 2026.7.22 to 2026.10.19, hashes 035c1e85...a1ae and 42d35340...0e1b from PyPI JSON).
+* Evidence in /tmp/ama-119-certifi-repro (kept external): pip install --require-hashes of the api lockfile succeeded and pip check was clean; docker build of src/api, src/importer and src/orchestrator Dockerfiles succeeded; trivy 0.76.0 image with the gate flags returned exit 0 and zero HIGH or CRITICAL fixable findings for all three images (trivy-*.json).
+* No Trivy ignore, baseline, severity change or skip token. Temporary venv and local image tags were removed.
+* Not run: the full heavy gate (coordinator serialises it on the final head); the old receipt stays historical.
+* Map findings are unchanged: screen-reader NOT RUN, rates, terms and DPA unverified, no provider selected. Refs #119.
