@@ -22,3 +22,10 @@ Plan: .copilot-tracking/plans/2026-10-21/issue-223-human-review-protocol-plan.md
 ## Remaining and follow-ups
 
 All #223 criteria unmet and untouched. Open: thresholds/samples/panel approvals, OQ-017 holders, #108, #222 manifest, consent/privacy, costed plan, Finance, identity retention decision.
+
+## Corrective change C01 (after failed complete gate; does not alter original evidence)
+
+* Trigger: gate failure 2026-10-21T04:08:41Z at head 78bdb8ac9e30f8ec09e13bd6b38e5c63c32f64dd, sole finding CRITICAL GHSA-6q48-6c7w-9gw2 certifi 2026.7.22 (fixed 2026.10.19). Receipt /tmp/ama-review-protocol-followon-0210-223/receipt.json and adverse logs preserved untouched.
+* Change: four requirements.txt files taken verbatim from a3257c71f4963d98a88c501d040b3d07eada4392 (12 lines changed: certifi pin and its two hashes each). Provisional shared reuse.
+* Focused checks (no gate, no builds): per-file diff versus a3257c71 empty; only certifi/hash lines differ from prior head; all four show certifi==2026.10.19 with 2 hashes and no 2026.7.22; the two hashes verified by `pip download --no-deps --require-hashes` of certifi 2026.10.19 into a temporary directory (removed). 
+* Not done: complete gate, independent assessment, push, PR. No second original Review; protocol text unchanged; all #223 criteria unmet; #108, OQ-017, consent/privacy/accessibility remain dependencies.
