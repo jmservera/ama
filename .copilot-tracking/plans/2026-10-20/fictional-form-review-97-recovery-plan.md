@@ -206,3 +206,7 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 
 * Affected area: P01-T02 registration. The full gate failed in agents test_eval_registry because the pack was absent from src/agents/evals/registry.json and had no top-level version key.
 * Reconciliation: registry entry fictional-form-review-pack added and version fictional-form-review-pack-v1 added to the pack. Focused evidence: test_eval_registry 8 tests OK; test_form_review_pack and test_synthetic_provenance 20 tests OK. Approved intent and scope unchanged; no re-critique or second Review.
+
+## Correction Update 2026-10-21 (hosted advisory)
+
+Hosted Source CI failed on fixable GHSA-6q48-6c7w-9gw2 (certifi). The four lockfile blobs from the existing #119 correction a3257c71 were applied unchanged; see the changes record. Scope, approved intent and the single critique and Review are unchanged. Open: fresh full gate, hosted rerun, and the separate rubric exactly-20-criterion-IDs blocker (not edited here). Finance authority remains unresolved.
