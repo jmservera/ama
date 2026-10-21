@@ -53,3 +53,10 @@ Implementation began from an unverified pre-RPI draft (uncommitted pack, test, r
 * Validation: blob equality and hash-line comparison only; no heavy gate or build here. A fresh full gate and hosted rerun are pending the coordinator.
 * Separate unresolved hosted blocker: the external rubric/score check fails (details must contain exactly 20 criterion IDs) although workflow 39529698552 overall succeeded. Not fixed here: no manual scores, no rubric change, no bypass, no paid scorer. Coordinator requests fresh hosted scoring after verified publication.
 * Unchanged: original Review (Residual work), critique, disclosures, failed and passed gate evidence. Finance FD-01..FD-14, template authority, binding and OQ-015 stay unresolved; no approved schema or Finance activation; Refs #97 only, no closure.
+
+## Integration rebase onto main (rpi-implement continuation 2026-10-21)
+
+* Trigger: main advanced to ca4baf75837de57c99718f7423716d5dc0b0e244 (merged PR 420). The run-owned branch was rebased onto it with no conflicts; nothing was pushed.
+* Certifi: main already carries certifi 2026.10.19 in the lockfiles, so the earlier #119 lockfile correction commit became redundant. The branch has no requirements.txt diff against main and PR 420's reviewed correction is preserved unchanged.
+* Validation: git diff against origin/main for requirements.txt files is empty; focused tests listed in the handoff only. Every earlier gate receipt, including be31f2b8 and the failed 106fbc96 receipt, is historical and not current acceptance. The coordinator runs a fresh serialized full gate on the frozen head.
+* Unchanged: original Review (Residual work, RV-001, RV-002), critique, disclosures, Finance FD-01..FD-14 unresolved, rubric hosted blocker unresolved. No new Review; Refs #97 only.

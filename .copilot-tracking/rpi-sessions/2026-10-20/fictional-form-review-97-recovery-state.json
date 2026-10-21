@@ -52,6 +52,11 @@
       "decision": "Hosted Source CI 39529698651 failed fixable CRITICAL GHSA-6q48-6c7w-9gw2 (certifi). Applied the exact four lockfile blobs of existing #119 correction a3257c71; no other change. Prior be31 gate Pass is historical. Rubric exactly-20-criterion-IDs failure recorded as separate unresolved hosted blocker; not edited.",
       "status": "recorded",
       "evidence": "/tmp/ama-pr424-trivy-0157; /tmp/ama-pr424-trivy-api-0159; /tmp/ama-map-fixed-followon-0223-119/receipt.json"
+    },
+    {
+      "decision": "Rebased onto origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 without conflicts; certifi 2026.10.19 from PR 420 preserved and the redundant lockfile commit dropped. Earlier gate receipts are historical; fresh serialized gate pending. Original Review unchanged, no push.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-20/fictional-form-review-97-recovery-changes.md"
     }
   ],
   "blockers": [
