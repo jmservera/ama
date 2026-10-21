@@ -7791,3 +7791,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Documentation only. No provider is selected or bought, no terms, DPA, rate,
   licence or processor decision is made, no web retrieval was done, the screen
   reader remains not run, and both original issue criteria remain unmet.
+## [2026-10-21] query | Paired historical climate access check (#178)
+
+* Tested anonymous retrieval of official paired North-East temperature and
+  humidity records. MIDAS Open files require a CEDA login and EA Hydrology
+  has no humidity or dew point, so no records were retrieved and no bounds
+  were derived.
+* Added the access-blocker record, a synthesis section and index row. The
+  owner action is an authorised human supplying MIDAS files from their own
+  account with reuse approval, or approval of another source.
+* Source selection and licence/reuse remain UNMET, synthetic data is not
+  substituted for observations, and the issue criteria stay unticked.
