@@ -6625,3 +6625,15 @@ metadata when the knowledge base was created.
   actual corrective-test acceptance, named human appointment, human-witnessed
   drill, live application acceptance or whole-issue closure. Original #219
   adverse and later correction evidence is retained.
+
+## [2026-10-21] query | Meaningful human-review protocol preparation (#223)
+
+* Added a proposed, Not run protocol section to the existing agents README
+  evaluation area and indexed it: seeded wrong/stale/unsupported/incomplete/
+  valid-citation-error case classes, baseline and automation-bias controls,
+  retention fields, OQ-017 authority evidence, denominators and full-effort
+  comparators.
+* Prepared under the owner's 2026-10-20 preparation direction. All thresholds,
+  samples, roles and approvals are PROPOSED or UNFILLED; no participants,
+  model calls or execution. #108 remains open and the #222 manifest is an
+  unapproved external prerequisite. No #223 criterion is met.
