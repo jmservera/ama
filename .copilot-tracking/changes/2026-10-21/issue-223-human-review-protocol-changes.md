@@ -35,3 +35,10 @@ All #223 criteria unmet and untouched. Open: thresholds/samples/panel approvals,
 * Edited the protocol as above plus an appended log entry. No exercise, evaluator, outcome, approval or participant invented; OQ-017 open; #108, #222 manifest, consent/privacy/accessibility/Finance unresolved; five criteria unmet.
 * Focused checks: added-line non-ASCII scan, anchor present, lockfiles diff versus 80a51264 empty, git diff reviewed (docs and tracking only).
 * Not done: complete gate (prior 80a gate receipt historical after commit), independent re-assessment, push, PR.
+
+## Integration I01 (rebase onto merged PR420; original Review not rewritten and did not review this integration)
+
+* Rebased the three run-owned commits onto origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 (includes merged PR420) with no conflicts. New local heads: 3f3bda0f, db1f702e, then the tip. Prior gate receipts and exact-head assessments are historical, not current acceptance.
+* certifi: main already carries the reviewed certifi==2026.10.19 correction; the four C01 lockfiles are now identical to origin/main (empty diff), preserving PR420's version.
+* Focused checks: lockfile diff versus origin/main empty; test_ai_eval.py 13 tests passed; added-line non-ASCII scan none. No gate, Docker, Azure or push.
+* Residual (unchanged): complete gate on the new head, independent assessment and push/PR owned by coordinator; all #223 criteria unmet; #108, OQ-017, consent/privacy/accessibility, Finance dependencies open. No second Review.
