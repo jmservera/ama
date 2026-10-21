@@ -26,10 +26,13 @@ Scope: final mechanical validation only, local and nonmutating.
 | Behavior verdict | n/a | Not applicable |
 | Fidelity | n/a | Not applicable: launch model selection within the existing route changes no actions, authority or gates, and no frontmatter capability changes |
 | Repo-specific artifact distribution wiring | n/a | Not applicable |
-| Repo-wide doc lint/build, application gates, network/CI/model calls | n/a | Not run (none exist or required) |
+| Repo-wide doc lint/build, network/CI/model calls | n/a | Not run (no general repository documentation lint or build command exists) |
+| Complete local RPI gate (`tools/rpi-checks.py --all`) | n/a | Not run in this mechanical stage; remains separately mandatory before publication on the final exact head, including for documentation-only work. The Medium behavior skip above does not waive it. |
 
-Verdict: Pass. No source edits, commit, push, PR or delegation performed.
+Verdict: Pass for this mechanical validation stage only; not a complete-gate pass or publication approval. No source edits, commit, push, PR or delegation performed.
 
 Parent conformance closure: added repository-required YAML frontmatter to this
 new evidence report and clarified tracked-source versus new evidence scope.
 These editorial changes do not alter the validated coordinator source.
+
+Correction 2026-10-21: the application-gate row originally read "Repo-wide doc lint/build, application gates, network/CI/model calls | n/a | Not run (none exist or required)", which wrongly implied the complete local RPI gate was not required. It is corrected above without claiming any earlier execution; see `.copilot-tracking/hve-builder/2026-10-21/coordinator-sonnet-55-validation-02.md`.
