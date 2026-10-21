@@ -2864,37 +2864,41 @@ change register and a supplier-independent evidence export. Synthetic demonstrat
 ### Non-operative custody, recovery and witness preparation (#122, 2026-10-21)
 
 Preparation only. This subsection describes what an owner-approved drill would need to show. It is not a drill,
-an appointment of any authority, legal or privacy compliance, or release acceptance. The controls above and the
+an appointment of any authority, legal or privacy compliance, or release acceptance. Every bullet below is a
+proposed expectation, not an existing control. The controls above and the
 constructed restart in [Operator incidents and constructed restart (#221)](#operator-incidents-and-constructed-restart-221)
 are not proof of an actual authorised, witnessed drill. This repository holds no actual decision, participant,
 Azure immutable storage or Azure SQL drill evidence. Every #122 acceptance criterion and the #221 restart
 criteria stay unticked until reviewed actual evidence exists.
 
-* Custody and verification expectations. An export is relied on only when `verify_export` passes with an
-  `expected_head` taken from a copy held outside the application, `complete` is true and sealed year digests
-  (see [issue #114](#per-year-ledger-digests-load-check-and-recovery-drill-issue-114)) agree. Record the head, who
-  took the external copy, when, and where. An incomplete, truncated or self-recorded-head bundle is not evidence.
-  The immutable external Azure head container and its retention policy are UNAPPROVED and not configured.
-  Pre-gate (legacy) images are not shown to be excluded from serving; that exclusion is not enforced or evidenced.
+* Custody and verification expectations. `verify_export` checks the bundle digest, ledger chain, recorded head,
+  an optional `expected_head` and completeness. An export is relied on only when it passes with an
+  `expected_head` taken from a copy held outside the application. Sealed-year digest checks
+  (`--by-year`, see [issue #114](#per-year-ledger-digests-load-check-and-recovery-drill-issue-114)) are a separate
+  step. Record the head, who took the external copy, when, and where. An incomplete, truncated or
+  self-recorded-head bundle is not evidence. The immutable external Azure head container and its retention policy
+  are UNAPPROVED and not configured. No repository source shows that pre-gate (legacy) images are excluded from
+  serving, so that exclusion is treated as not enforced or evidenced.
 * Decision rights (roles only; no person, delegation or approval is recorded here):
 
   | Decision | Role | Status |
   | --- | --- | --- |
-  | Suspend AI for a release or task | Incident owner named on the suspension record | UNASSIGNED for actual use (OQ-017) |
-  | Restart AI after an incident | Actual restart authority, distinct from the proposer | UNASSIGNED (OQ-017, OD-35, RULE-020) |
-  | Accept corrective evidence | Competent reviewer | UNASSIGNED |
-  | Authorise a drill and its witness | Programme sponsor with DPO or Legal and Safety input | UNAPPROVED |
-  | Custody of the external head copy | Platform owner | UNASSIGNED |
+  | Suspend AI for a release or task | Incident owner recorded as text on the suspension | UNASSIGNED for actual use (OQ-017); recorded text is not verified authority |
+  | Restart AI after an incident | Actual restart authority, distinct from the proposer | UNASSIGNED (OQ-017, RULE-020); OD-35 names Building Safety and Sponsor as owners of override authority and restart evidence, which supplies evidence and does not hold or delegate authority |
+  | Accept corrective evidence | Competent reviewer | UNASSIGNED (OQ-017) |
+  | Authorise a drill and its witness | Not named by any source | UNASSIGNED and UNAPPROVED |
+  | Custody of the external head copy | Not named by any source | UNASSIGNED |
   | Resident, safety, professional and Finance decisions | Their existing human owners | Unchanged; AI and this protocol take none |
 
   Operator identity, the recorded authority reference, a seeded role or a model output never establishes authority.
-* Witness. A drill needs a witness who is authorised in writing, is not the incident owner, proposer or restart
-  decider, and records what they observed. Until one is approved, no run counts as witnessed.
-* Sequence for an approved drill: (1) confirm written authorisation, scope and a non-live data set; (2) take and
-  record the external head; (3) suspend and confirm epoch enforcement and manual fallback; (4) preserve
-  reconstructable history and export; (5) verify the export offline against the external head; (6) corrective
-  evidence, then a distinct authorised restart decision; (7) record outcome and residuals. A failed step stops
-  the drill and leaves AI suspended.
+* Witness (proposed; no source defines a witness role). A drill would need a witness who is authorised in
+  writing, is not the incident owner, proposer or restart decider, and records what they observed. Until one is
+  approved, no run counts as witnessed.
+* Sequence for an approved drill (proposed): (1) confirm written authorisation, scope and a non-live data set;
+  (2) take and record the external head; (3) suspend and confirm epoch enforcement and manual fallback;
+  (4) preserve reconstructable history and export; (5) verify the export offline against the external head;
+  (6) corrective evidence, then a distinct authorised restart decision; (7) record outcome and residuals. A
+  failed step stops the drill and leaves AI suspended.
 * Communication. Owner and audience are UNASSIGNED. Notices stay constructed templates; nothing contacts residents,
   staff or suppliers automatically, and a real notice is a separate human decision.
 * Stop conditions. Stop and keep AI suspended if authority or witness is unclear, the data is not constructed, the
@@ -2903,6 +2907,7 @@ criteria stay unticked until reviewed actual evidence exists.
 * Not evidence: this text, constructed fixtures, earlier tests, the recorded authority reference, a template
   notice, or a green CI run. Evidence needed: named approvals, the witness record, the external head custody
   record, Azure SQL drill output and an enforced pre-gate-image exclusion, each independently reviewed.
+
 ## Synthetic home-specific cited chat (#214)
 
 `regulatory_chat.RegulatoryChat` is the API-owned offline retrieval and storage

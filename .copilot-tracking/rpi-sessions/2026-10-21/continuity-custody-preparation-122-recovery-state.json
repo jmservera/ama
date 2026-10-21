@@ -1,0 +1,30 @@
+{
+  "task_id": "continuity-custody-preparation-122-recovery",
+  "task_slug": "continuity-custody-preparation-122-recovery",
+  "parent_task": {"task_id": "continuity-custody-preparation-122", "task_slug": "continuity-custody-preparation-122"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-21/continuity-custody-preparation-122-recovery-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-21/continuity-custody-preparation-122-recovery-plan.md",
+    "details": ".copilot-tracking/details/2026-10-21/continuity-custody-preparation-122-recovery-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-21/continuity-custody-preparation-122-recovery-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-21/continuity-custody-preparation-122-recovery-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-21/continuity-custody-preparation-122-recovery-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Earlier c9f65c48 files and state JSON preserved unchanged as adverse direct-authored history; not phase evidence", "status": "confirmed", "evidence": "recovery brief; coordinator events.jsonl audit"},
+    {"decision": "Model correction: session selectedModel is claude-sonnet-5.5, not an unspecified default", "status": "confirmed", "evidence": "events.jsonl session.start"},
+    {"decision": "Skill invocations (events.jsonl skill.invoked): rpi-research 09:57:08.147Z, rpi-plan 09:58:39.703Z, rpi-plan-critique 09:59:32.374Z (worker), rpi-implement 10:01:48.899Z, rpi-review 10:02:37.041Z, all 2026-10-21", "status": "recorded", "evidence": "events.jsonl lines 189, 308, 379, 594, 656"},
+    {"decision": "Critique executed once; verdict Revise; PC-001 to PC-006 applied directly", "status": "recorded", "evidence": ".copilot-tracking/reviews/plans/2026-10-21/continuity-custody-preparation-122-recovery-plan-critique.md"},
+    {"decision": "Review executed once: execution Complete, outcome Residual work", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-21/continuity-custody-preparation-122-recovery-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator runs full exact-head gate and independent assessment; no push from this run"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator exact-head local gate and independent assessment", "rationale": "Required before publication", "evidence": "repository RPI gate rules"},
+    {"rank": 2, "task": "Named human owners decide authority, witness and drill", "rationale": "All #122 criteria remain open", "evidence": "README subsection; OQ-017"}
+  ]
+}
