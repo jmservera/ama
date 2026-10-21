@@ -83,3 +83,11 @@ Plan markers P01 to P03 are checked except P03-T01 final commit evidence, which 
 ## Return-to-Caller State
 
 * Ready for Review.
+
+## Integration Continuation (2026-10-21)
+
+* Rebased the run-owned branch `docs/cutover-soak-review-201` onto `origin/main` at `ca4baf75837de57c99718f7423716d5dc0b0e244` (merged PR #420). No conflicts; no file content changed beyond the rebase. The log entry remains appended after main's last entry.
+* `certifi==2026.10.19` from PR #420 is present in the `src/*/requirements.txt` files; this branch does not touch them.
+* The single original Review (`.copilot-tracking/reviews/2026-10-21/cutover-soak-review-201-review.md`) is unchanged and no second Review was run; its verdict and residual items stand as recorded.
+* Prior exact-head gate evidence belongs to the old base and is historical, not current acceptance. No current full gate is claimed; the coordinator serializes it after handoff.
+* Validation: git status clean before rebase, rebase clean, diff scoped to the 11 issue files. No Docker, Azure or full gate.
