@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-18
+ms.date: 2026-10-20
 ms.topic: reference
 ---
 
@@ -6625,3 +6625,45 @@ metadata when the knowledge base was created.
   actual corrective-test acceptance, named human appointment, human-witnessed
   drill, live application acceptance or whole-issue closure. Original #219
   adverse and later correction evidence is retained.
+
+## [2026-10-20] query | Cohort and missing-data evaluation manifest preparation (#222)
+
+* Added a DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired-scenario
+  manifest to the existing eval registry and an owner [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  with proposed held-out custody, independent reviewer, small-sample,
+  critical-error, review-burden and uncertainty handling and an AC1 to AC6
+  traceability table. Owner decision 2026-10-20 authorised preparation only.
+* Retained adverse evidence: ranking policy 1.0.0 is an unsigned draft, and
+  support Unknown currently sorts with No (candidate defect, owner decision
+  pending). The manifest is a development draft, not a held-out set; expected
+  outcomes are agent-authored proposals and numeric values are illustrative.
+* No evaluator, model run, participant, live data, threshold approval or
+  fairness evidence. All six #222 criteria and the #108 actual-model and human
+  results remain unmet.
+
+## [2026-10-20] query | Cohort manifest correction v0.2.0 returned for owner approval (#222)
+
+* Owner-authorised correction of the draft [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  and manifest (v0.2.0): split the multi-factor pairs, bound deterministic
+  expectations to the unchanged `rank()` through the structural test, replaced the
+  arbitrary 30 and 10 percent with sample-size, error-rule and uncertainty options,
+  kept zero critical misses as a proposal, made Unknown-support review priority a
+  policy proposal only, defined review burden over eligible cases, required fresh
+  held-out scenarios with new IDs and limited the test support exemption to
+  `support_state` pairs.
+* Reviewer, adjudicator and custodian roles remain unfilled. No ranking change,
+  evaluator, run, participant, data, approval or fairness evidence. All six #222
+  criteria remain unmet; the manifest is returned for owner approval before any
+  evaluator work.
+
+## [2026-10-21] query | Cohort manifest correction after independent assessment (#222)
+
+* Corrected the draft [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  and manifest wording: inside an open safety case the ranking order is support,
+  then waiting days, then stage, then case id, not "behind only older open
+  safety cases". The structural test now carries the sensor, source and
+  appointment fields to the ranker input and proves a missing-data exclusion or
+  appointment penalty fails the binding check. The contact_need pair stays
+  representation pending because ranking has no contact input.
+* Ranking, runtime and the unapproved status are unchanged. All six #222
+  criteria remain unmet.
