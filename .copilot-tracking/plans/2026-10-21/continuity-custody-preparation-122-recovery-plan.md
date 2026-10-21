@@ -145,6 +145,19 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 * Expected result: repo-local noreply identity set, one Conventional Commit with the Co-authored-by trailer, empty `git status --short --ignored`, head and base SHAs and actual skill invocations recorded; gate and push left to the coordinator.
 * Detail section: P02-T03 in .copilot-tracking/details/2026-10-21/continuity-custody-preparation-122-recovery-phase-details.md
 
+<!-- rpi:phase id=P03 -->
+### [x] P03: Resolve PUB-001 (publication correction cycle 1)
+
+* Intent: make the proposed custody sequence consistent with exact-head `verify_export` semantics. Added after the single Review by coordinator direction; the Review is retained unchanged and not rerun.
+* Dependencies: P01
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Separate baseline head from snapshot head in the README sequence
+
+* Requirement and evidence: PUB-001; continuity.py suspend/continuity_export/verify_export, store.py and sqlstore.py ledger_head (read-only).
+* Expected result: baseline recorded before suspension and never used as expected_head; snapshot head read after suspension with writers frozen and recorded outside the application; export verified against the snapshot head; baseline checked separately as a proposed prefix check; authority stays UNASSIGNED and the protocol proposed.
+* Detail: README sequence bullet only; no source, test or other file changes.
+
 ## Dependencies
 
 * Locked before critique: test ownership none (docs only, no tests added or removed); exact removals: the unsupported role rows and over-broad verify wording in the README subsection; maximum additions: about 15 README lines net versus pre-edit HEAD c9f65c48; canonical target src/core/README.md, no generated targets; semantic coverage via source comparison, regression coverage via anchor/ASCII/diff scope checks; validation evidence is the changes record.

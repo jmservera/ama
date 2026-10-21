@@ -2894,11 +2894,21 @@ criteria stay unticked until reviewed actual evidence exists.
 * Witness (proposed; no source defines a witness role). A drill would need a witness who is authorised in
   writing, is not the incident owner, proposer or restart decider, and records what they observed. Until one is
   approved, no run counts as witnessed.
-* Sequence for an approved drill (proposed): (1) confirm written authorisation, scope and a non-live data set;
-  (2) take and record the external head; (3) suspend and confirm epoch enforcement and manual fallback;
-  (4) preserve reconstructable history and export; (5) verify the export offline against the external head;
-  (6) corrective evidence, then a distinct authorised restart decision; (7) record outcome and residuals. A
-  failed step stops the drill and leaves AI suspended.
+* Sequence for an approved drill (proposed). Suspension and export each append audit entries, so the head moves.
+  Two heads are therefore kept apart: a pre-suspension baseline and the exact snapshot head of the export.
+  (1) Confirm written authorisation, scope and a non-live data set. (2) Record the baseline head (n0, h0) outside
+  the application; it is never the `expected_head` for a later export. (3) Suspend (this appends audit entries, such as `ai_suspend`) and
+  confirm epoch enforcement and manual fallback. (4) Freeze other writers, then read the live head with the
+  read-only `ledger_head()` (it writes no audit entry) and have the held-copy keeper record it outside the
+  application as the snapshot head (ns, hs). (5) Export. `continuity_export` captures the head and entries before
+  it appends its own `evidence_export` entry, so the bundle ends exactly at (ns, hs) while the live head then moves
+  on; any later export needs a fresh step 4. (6) Run `verify_export(bundle, expected_head=(ns, hs))`; the head
+  recorded inside the bundle is not independent custody. (7) Check the baseline separately: in the verified
+  bundle, entry n0 has hash h0 and the entries after it are only the expected suspension entries. `verify_export`
+  does not do this prefix check, so it is a proposed manual or tooling step. (8) Corrective evidence, then a
+  distinct authorised restart decision. (9) Record outcome and residuals. A failed step, including any head
+  mismatch from a write between steps 4 and 5, stops the drill and leaves AI suspended; whether to retry is a
+  human decision.
 * Communication. Owner and audience are UNASSIGNED. Notices stay constructed templates; nothing contacts residents,
   staff or suppliers automatically, and a real notice is a separate human decision.
 * Stop conditions. Stop and keep AI suspended if authority or witness is unclear, the data is not constructed, the

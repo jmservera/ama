@@ -115,3 +115,35 @@ The c9f65c48 README subsection was corrected in place: unsupported role implicat
 * Follow-up items: none
 * Review readiness or no-handoff reason: ready for the single Review
 * Continuation owner: confirmed automatic RPI Agent parent
+
+## Publication Correction Cycle 1 (PUB-001)
+
+Invoked via rpi-implement for P03 only, after the single Review (execution Complete, outcome Residual work), which is retained unchanged. No second Review ran. The independent publication assessment found that the proposed sequence recorded an external head before suspension and later verified the export against it, which exact-head `verify_export` must reject because suspension and export append audit entries.
+
+### Custody sequence corrected in README
+
+* Related phase or task: P03, P03-T01
+* Files: src/core/README.md
+* What changed and why: sequence now keeps a pre-suspension baseline (n0, h0) apart from the snapshot head (ns, hs) read with read-only `ledger_head()` after suspension with writers frozen and recorded outside the application. `continuity_export` captures head and entries before its own `evidence_export` audit, so the bundle ends at the snapshot head; `verify_export` runs against that head. Baseline is checked separately as a proposed prefix check (entry n0 hash equals h0, later entries are the expected suspension entries), which `verify_export` does not perform. Exact-head verification is unweakened; the bundle's own head is not custody; no custodian is named; authority stays UNASSIGNED; all #122 criteria stay open.
+* Completion evidence: README diff; source-grounded demonstration below.
+* Validation: see table.
+
+### Implementation-time plan update
+
+* Affected plan area or markers: new P03, P03-T01; plan Handoff unchanged otherwise
+* What changed: added P03 after the Review by coordinator direction.
+* Why: decision tied to PUB-001; scope limited to the README sequence.
+* Triggering evidence: publication assessment PUB-001.
+* User answer or decision: coordinator instruction for correction cycle 1; no new critique, no second Review.
+* Reconciliation performed: plan markers, changes record and recovery state updated; original plan critique and Review untouched.
+* Planning and critique state: current; PC-001 to PC-006 historical.
+
+### Validation (cycle 1)
+
+| Check | Status | Evidence |
+|---|---|---|
+| Throwaway demonstration using existing test fixtures, deleted afterwards (suspend, `ledger_head()`, `continuity_export`, `verify_export`) | Passed | snapshot head: no externally-held-head problem; baseline head as expected_head: "ledger does not match the externally held head"; bundle head equalled snapshot head (2); live head moved to 3 after export; entry n0 prefix check held; suspension appended `ai_suspend` and `ai_incident_snapshot` |
+| Anchors, ASCII, whitespace, diff scope | see final report | run before commit |
+| Full gate, Azure, drill, push | Skipped | prohibited; prior bdfeb49b gate and receipt are historical |
+
+PUB-002 (receipt verification) is the coordinator's and is not addressed here.
