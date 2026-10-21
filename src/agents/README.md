@@ -321,6 +321,124 @@ still includes the text-task check result. These are constructed offline control
 checks, not actual-model or human effectiveness, calibrated benefit, release
 approval, provider usage or real AI/SQL/Azure acceptance.
 
+### Meaningful human-review protocol (#223; proposed, Not run)
+
+Status: PROPOSED preparation for owner review, written 2026-10-21 under the
+owner's 2026-10-20 preparation direction on #126 (held-out labels, critical
+errors, cohorts, reviewer protocol and quality thresholds for #108/#222/#223;
+no participants or execution). Nothing here is run, approved or evidence of
+human effectiveness. Every number below is PROPOSED, every role, sample size,
+name and approval is UNFILLED, and every outcome is NOT RUN. No code, fixture,
+evaluator, model call, participant or consent exists for it. This extends the
+existing review record and harness evidence; it adds no service or harness.
+
+Dependencies, unchanged by this text:
+
+* #108 is OPEN. PR #405 delivered offline scripted accounting only; no #108
+  criterion is ticked, so the held-out split, thresholds and actual-model
+  evidence this exercise needs remain open. #106 is closed but delivered
+  accept/edit/reject with reason only in part.
+* #222 cohort and expected-outcome manifest: an unapproved external
+  prerequisite. This protocol sets no label, cohort or threshold for it and
+  reads no unmerged manifest. Scenarios are drawn from the approved manifest
+  once it exists, and the same scenarios feed the workflow-only comparator.
+* OQ-017 (who holds competent-review authority and what evidence makes
+  oversight meaningful) is unanswered. Participation needs separate
+  consent, accessibility and privacy authorisation; actual calls need a
+  separately approved finite costed plan. Scripted providers and role agents
+  are not participant substitutes and add no human-effectiveness benefit.
+
+Mapping of the five #223 criteria to this protocol (all remain unmet):
+
+| #223 criterion | Protocol part | Status |
+| --- | --- | --- |
+| Seeded critical defects detected and prevented from satisfying a controlled gate | Case classes, decision rules | NOT RUN |
+| Reviewer, source and reason retained | Retention fields | Partly in existing record; gaps listed; NOT RUN |
+| Detection, corrections and total review effort against the same workflow-only scenarios | Denominators, effort and comparators | NOT RUN |
+| Default acceptance and citation validity alone cannot pass | Baseline arms and decision rules | NOT RUN |
+| Automation-bias test; reviewer authority and evidence (OQ-017) | Automation-bias design, authority evidence | NOT RUN; holders UNFILLED |
+
+Seeded critical-error case classes (PROPOSED definitions; a seed must be
+labelled by someone other than its author against a frozen answer key before
+any reviewer sees it; labels come from the approved manifest, not from here):
+
+| Class | Seeded defect | Expected disposition | Gate effect |
+| --- | --- | --- | --- |
+| E1 wrong | Plausible proposal that contradicts the cited case field (for example the wrong measure or owner) | Reject or edit with source-grounded reason | Must not satisfy the controlled gate |
+| E2 stale | Proposal correct against an older source version; the cited source has since changed | Reject or edit, naming the newer version | Same |
+| E3 unsupported | Claim with no source that supports it, including an unsupported declaration, consent or funding fact | Reject, naming the missing support | Same |
+| E4 incomplete | Omits a mandatory exception, hazard, vulnerability or required field, including an unflagged critical field | Edit or reject, naming the omission | Same |
+| E5 valid-citation error | Citation resolves and the schema is valid, but the content does not follow from the source | Reject or edit with a claim-level reason | Same; structural validity cannot rescue it |
+| E6 unsafe or override advice | Advice that could delay hazard response or override resident choice | Reject, route to the manual path | Same |
+| C0 correct control | Proposal that is right and fully supported | Accept | A false block is counted |
+
+Decision rules (PROPOSED, owner approval UNFILLED):
+
+* A defect counts as detected only when the reviewer rejects or edits it with
+  a reason that names the source and the specific defect, scored by two
+  independent scorers against the frozen key (disagreements reconciled with
+  reasons). A bare rejection, a tick, or a reason that restates the proposal
+  does not count.
+* PROPOSED gate: zero undetected seeded critical defects (E1 to E6) and a
+  false-block rate on C0 at or below an UNFILLED owner-approved limit. Report
+  every seeded defect and every control, never an average. A zero-miss
+  result on a finite sample bounds the demonstrated detection rate only; it
+  does not prove zero real-world risk, so report the sample and its interval.
+* Samples per class, reviewer count and prevalence are UNFILLED; a smaller or
+  incomplete sample is insufficient, not a pass.
+* Baseline arms must run and must fail: an always-accept arm and a
+  citation-validity-only arm (accept whenever the citation resolves and the
+  schema validates) each have to miss at least the E5 and E3 seeds. If either
+  baseline passes, the seed set is invalid and the run does not count.
+* A seeded defect that is accepted, or that reaches a task, draft or controlled
+  state without a recorded source-grounded block, fails the run for that task
+  and the AI path stays blocked while the workflow-only path remains available.
+
+Automation-bias design (PROPOSED): each reviewer sees the same cases in an
+independent counterbalanced order, with the seeded defects mixed among C0
+controls at an UNFILLED prevalence so acceptance is not the rational default.
+Arms vary presentation only: confident versus hedged wording, accept action
+first versus reject first, with or without a visible "validated citation"
+indicator, and a high-volume late block to test fatigue. Compare detection and
+time to decision between arms and report any default-acceptance streak. A
+reviewer who accepts a run of items without opening the source is recorded as
+a default-acceptance observation, not a pass. Reviewers receive no hint that
+seeds exist beyond the approved consent wording.
+
+Retention fields. The existing proposal review record already holds the
+reviewer action, reviewer reason, override text, source hashes, model and
+prompt version. A later approved exercise must additionally retain, with gaps
+reported as gaps rather than filled: case and seed ID, source version viewed,
+whether the source was opened, source-grounded reason text, decision time,
+effort components below, and scorer result. Whether a reviewer is retained by
+identity or anonymous study code is UNFILLED (owner and privacy decision); the
+staff comprehension protocol uses anonymous codes and this one does not
+override that.
+
+Reviewer authority and competence evidence (OQ-017; all UNFILLED). Record,
+per defect class and task, who is authorised to review, the evidence of
+competence for that class (qualification, role, delegation), conflicts,
+independence from the proposal author and from the scorers, role separation
+between reviewer, scorer and approver, and the approving owner. A fixture
+role is not evidence of professional competence or delegation. Named holders,
+approvals and the delegation are UNFILLED.
+
+Denominators and effort (PROPOSED definitions). Report per task and class:
+seeded defects, controls, reviewers, reviews, detected, missed, false blocks,
+edits and corrections, and re-reviews. Effort is the sum of preparation,
+checking, correction, re-review, coordination, resident and support time and
+cost, measured on one clock definition per component with start and stop
+events fixed before the run. The comparators are the same scenarios, sources and
+acceptance conditions handled workflow-only, plus manual/template and
+parser-plus-rules handling where they exist, in counterbalanced order with
+equal reviewer competence. Saved minutes are capacity, not cash savings;
+Finance validation of any incremental-benefit reading is UNFILLED.
+
+Outcomes: Pass, Fail, Insufficient or NOT RUN, with negative and inconclusive
+results retained. No benefit, human-effectiveness or release claim follows
+from this text. Whole #223 acceptance, the approved thresholds and the
+actual evaluation remain open.
+
 ## Validation record
 
 ### Five retrofit assistants (2026-10-13 implementation)
