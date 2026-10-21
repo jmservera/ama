@@ -29,3 +29,9 @@
 ## Remaining work
 
 * Coordinator: full gate on the frozen head, receipt verification, independent exact-head assessment, publication.
+
+## Amendment: hve-builder activation (after f79be1d4)
+
+* hve-builder was activated in `validate` mode. A Low-profile validation subagent (claude-haiku-4.5, per the Low profile list) ran local nonmutating checks and wrote `.copilot-tracking/hve-builder/2026-10-21/coordinator-sonnet-55-validation-03.md`: mechanical Pass only, all listed checks Passed.
+* Appended an HVE lifecycle disclosure to validation-02. No source, plan, critique or original Review artifact changed; no second Review reconstructed.
+* Not run: complete local RPI gate (coordinator-owned), HVE behavior execution (Medium skip unchanged), CI lanes, authoritative CLI README fetch.

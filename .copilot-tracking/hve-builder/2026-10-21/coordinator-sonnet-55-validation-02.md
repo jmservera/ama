@@ -38,3 +38,7 @@ Results are appended below after execution.
 | Network/CI/model/Azure calls | n/a | Not run |
 
 Verdict: Pass for this mechanical correction stage only; not a complete-gate pass, independent assessment or publication approval.
+
+## HVE lifecycle disclosure (added after HEAD f79be1d4)
+
+This record and the validation-01 correction were written by the RPI implementation stage before the hve-builder skill was activated in this session; the checks above are parent-run focused checks, not an HVE validation-stage dispatch. hve-builder was activated afterwards in `validate` mode (narrowest mode: source artifact unchanged, evidence records only). Its generic Low-profile validation stage is recorded in `coordinator-sonnet-55-validation-03.md` (mechanical Pass only). No static review or behavior test was required or run for this route: the agent source is unchanged, the Medium behavior skip from the original mutation is unaffected, and no behavior execution is claimed. The original static review (review-01) and validation-01 history is not rewritten.

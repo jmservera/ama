@@ -15,14 +15,43 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-21/coordinator-gate-evidence-420-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "Research executed, focused, Planning Readiness Ready", "status": "complete", "evidence": "research artifact"},
-    {"decision": "Critique executed once, verdict Revise, PC-001 to PC-003 applied directly", "status": "complete", "evidence": "critique artifact; plan Critique Disposition"},
-    {"decision": "Review executed once, outcome Conformant, residual RV-001", "status": "complete", "evidence": "review artifact"},
-    {"decision": "Launch clarification: complete local gate not run by this worker; coordinator owns it; no push", "status": "confirmed", "evidence": "owner/coordinator launch message 2026-10-21"}
+    {
+      "decision": "Research executed, focused, Planning Readiness Ready",
+      "status": "complete",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise, PC-001 to PC-003 applied directly",
+      "status": "complete",
+      "evidence": "critique artifact; plan Critique Disposition"
+    },
+    {
+      "decision": "Review executed once, outcome Conformant, residual RV-001",
+      "status": "complete",
+      "evidence": "review artifact"
+    },
+    {
+      "decision": "Launch clarification: complete local gate not run by this worker; coordinator owns it; no push",
+      "status": "confirmed",
+      "evidence": "owner/coordinator launch message 2026-10-21"
+    },
+    {
+      "decision": "hve-builder activated in validate mode after f79be1d4; mechanical Pass only (validation-03); behavior and full gate not run",
+      "status": "complete",
+      "evidence": ".copilot-tracking/hve-builder/2026-10-21/coordinator-sonnet-55-validation-03.md"
+    }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Coordinator runs full gate on frozen head, verifies receipt, independent exact-head assessment, then publishes"},
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator runs full gate on frozen head, verifies receipt, independent exact-head assessment, then publishes"
+  },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator complete local RPI gate and exact-head assessment", "rationale": "mandatory before publication", "evidence": "review RV-001"}
+    {
+      "rank": 1,
+      "task": "Coordinator complete local RPI gate and exact-head assessment",
+      "rationale": "mandatory before publication",
+      "evidence": "review RV-001"
+    }
   ]
 }
