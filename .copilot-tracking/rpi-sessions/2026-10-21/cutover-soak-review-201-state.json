@@ -39,6 +39,11 @@
       "decision": "Review executed once: execution Complete, outcome Residual work; RV-001..004 (no defects), all routed as follow-ups",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-21/cutover-soak-review-201-review.md"
+    },
+    {
+      "decision": "Integration continuation: rebased onto origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 (PR #420), no conflicts, not pushed",
+      "status": "completed",
+      "evidence": "changes artifact, Integration Continuation section; old-base gate receipts historical; no current gate claimed"
     }
   ],
   "blockers": [],
