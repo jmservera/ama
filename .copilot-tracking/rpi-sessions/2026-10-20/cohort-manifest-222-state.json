@@ -49,12 +49,17 @@
       "decision": "Independent assessor f9636e1f Defects on 93cb2bba accepted; P06 correction via rpi-implement, no second original Review; prior receipt historical after commit",
       "status": "source-tested",
       "evidence": ".copilot-tracking/changes/2026-10-20/cohort-manifest-222-correction-changes.md"
+    },
+    {
+      "decision": "Reuse certifi lock correction from a3257c71 (four requirements.txt only)",
+      "status": "applied, provisional",
+      "evidence": "gate 0037 failure GHSA-6q48-6c7w-9gw2"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Frozen local handoff; coordinator serial full gate and same-assessor re-check before any publication (Refs #222)"
+    "action": "Frozen local handoff; coordinator serial full gate and independent assessment (Refs #222)"
   },
   "prioritized_follow_ups": [
     {
