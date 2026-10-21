@@ -47,3 +47,11 @@ Discovered cross-cutting security gate regression, attributed honestly; not part
 
 * docs/reference/research/ux/map-tile-provider-options.md cost paragraph now states the provisional RG-only forecast USD 535.41 (coordinator-supplied, 2026-10-21, not live, no in-repo source; a repository search found no copy) already exceeds the USD500 total October cap before unknown non-RG liabilities; no zero or approval inference.
 * Validation: git diff --check, non-ASCII scan. Original reviews, critiques and failed receipts preserved; the a3257c71 pass receipt is historical. No dependency edits. Screen-reader NOT RUN; rates, terms, DPA unverified; no provider selected. Refs #119.
+
+## P07 integration onto main ca4baf75 (rpi-implement, 2026-10-21)
+
+* Fast-forwarded to origin/docs/map-provider-options-119 c184df61 (bot commit "chore(rubric): record score 48/100", only .github/rubric/scores/latest.json, scored source head 24fa0f67), then rebased onto origin/main ca4baf75 (merged PR #420).
+* c184df61 conflicted only in .github/rubric/scores/latest.json against main's generated score (commit 2f5e1b78). Owner decision: "Skip the stale bot score commit and regenerate through the workflow". It was skipped with git rebase --skip; main's file is unchanged and no score was edited by hand. The old bot SHA c184df61 and source head 24fa0f67 remain in the remote branch history and are not a current score. A new score must come from the workflow after a validated publication.
+* The certifi 2026.10.19 pins already on main from PR #420 are retained; no issue-specific requirement diff remains.
+* Focused validation: git diff --check and non-ASCII scan only. No heavy gate, Docker or Azure. Earlier exact-head receipts are historical, not current acceptance.
+* Original Review, critiques and adverse receipts are unchanged. Both acceptance criteria stay unmet and the PR a proposal: screen reader NOT RUN, rates, terms and DPA unverified, no provider selected, no paid execution approved; provisional coordinator-supplied RG-only forecast USD 535.41 exceeds the USD500 October cap (expiry 2026-10-25T16:02Z), no headroom. Refs #119.

@@ -47,6 +47,11 @@
       "decision": "P06 budget wording adds known RG-only forecast above cap",
       "status": "implemented; full gate pending coordinator",
       "evidence": ".copilot-tracking/changes/2026-10-20/issue-119-map-options-recovery-changes.md"
+    },
+    {
+      "decision": "Skip stale bot score commit c184df61 (source head 24fa0f67) during rebase onto main ca4baf75; regenerate score via workflow",
+      "status": "confirmed by owner 2026-10-21",
+      "evidence": ".copilot-tracking/changes/2026-10-20/issue-119-map-options-recovery-changes.md P07"
     }
   ],
   "blockers": [
