@@ -322,3 +322,7 @@ Run and record results; write the changes record.
 #### Correction Update 2026-10-20
 
 P01-T02 registration also requires an entry in src/agents/evals/registry.json and a top-level version key in the pack, found by the failed full gate (agents test_eval_registry). Applied; focused registry (8) and form/provenance (20) tests OK. A new full gate is pending; the failed receipt is retained.
+
+#### Correction Update 2026-10-21
+
+Dependency-only correction outside the pack files: certifi lock bump in four requirements files, copied from #119 commit a3257c71. No pack, test or registry change. Hosted rubric blocker recorded separately and unresolved.
