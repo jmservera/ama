@@ -7416,3 +7416,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   site-usability claim, legal/DPO/pilot/production approval or #126 acceptance.
   OD-51 remains open without an invented denominator, quality floor or
   production economics. Earlier log entries are unchanged.
+
+## [2026-10-21] query | Cut-over soak evidence preparation (Refs #201)
+
+* Added to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#soak-and-cut-over-evidence-preparation-2026-10-21)
+  a dated map of all 11 #201 acceptance criteria (all remain UNMET), dated
+  corrections, a proposed soak evidence specification and pending owner
+  decisions D1 to D16, plus one unchecked checklist item.
+* Files touched: `docs/architecture/cutover-evidence-pack.md`,
+  `docs/adrs/0006-src-layout-and-cutover.md` (dated note only), `docs/reference/README.md`
+  (one row) and this log.
+* Contradictions raised: the 2026-10-15 owner decision of no minimum soak
+  versus the open soak item in the #201 body and the 2026-10-20 proposal
+  request (not resolved, decision D1); the pack statement of no available rubric
+  comparison versus later snapshots 47 then 48 (no candidate-commit score).
+* Preparation only, per the owner direction of 2026-10-20. No soak, duration,
+  sign-off, tag, deletion, Azure or budget action; minimum duration stays open.
