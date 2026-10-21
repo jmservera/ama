@@ -75,3 +75,9 @@ Critique (executed once, verdict Revise, 9 findings, all direct planner correcti
 
 * Reviewer identity retention versus anonymous codes: owner/privacy decision UNFILLED. #108 open (PR #405 offline accounting only; no criterion ticked). Fetch origin/main before commit.
 * Owner approval of thresholds/samples/panel; OQ-017 holders; #108 closure; #222 manifest publication and approval; consent/accessibility/privacy authorisation; separate finite costed plan; Finance validation; actual execution.
+
+## Corrective Addendum (2026-10-21, gate failure; original plan, critique and Review unchanged)
+
+Exact-head complete gate at 78bdb8ac failed 2026-10-21T04:08:41Z; three gate JSON reports each show only CRITICAL GHSA-6q48-6c7w-9gw2 (certifi 2026.7.22, fixed 2026.10.19). Receipt and logs preserved externally at /tmp/ama-review-protocol-followon-0210-223/. Owner-directed correction: reuse only the four requirements.txt changes of native #119 commit a3257c71f4963d98a88c501d040b3d07eada4392 (provisional until own complete gate and independent assessment).
+
+* [x] C01 Apply the exact four lockfile files from a3257c71 and verify pin/hash consistency. No protocol semantics, evaluator, #222 or other pin changes.

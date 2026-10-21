@@ -17,3 +17,7 @@
 * P03-T01 git diff review, link check of new anchors, ASCII/em-dash grep; run focused existing agents ai_eval tests to confirm unaffected (docs only).
 * P03-T02 Resolve gh api user, set local email, commit with Conventional Commit plus trailer. No amend, push, gate.
 * Test ownership: none added; removals none; generated targets none.
+
+## C01 Corrective lockfile reuse
+
+* Files: src/core, src/api, src/importer, src/orchestrator requirements.txt only; byte-identical to a3257c71 (git diff --cached against that commit empty per file). Tracking files of that commit deliberately not imported.
