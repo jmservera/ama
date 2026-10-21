@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-21T05:47:12+00:00",
-  "commit": "2f5e1b788d3275779486767ca428cd90decbac81",
+  "scored_at": "2026-10-21T10:18:30+00:00",
+  "commit": "f8c0e8c2d1cb6bd6139eced38245040f2a5369df",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39551123157",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39582761581",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "40ad3b66b6ff850020dd4b1096473059f8c1939034727d153bf618ae092de306",
+    "solution-code": "3f94189dfd036ce9fb806dc3b0ac10642d3dd885cb6a754c2cf428a69bed27a1",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -45,7 +45,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff adds extensive fail-closed security hardening: OID-bound capability checks, distinct-actor enforcement, replay/self-approval/stale-digest rejection, audit durability under rollback, and unverified-identity labelling. Reinforces existing threat-model coverage already at ceiling; no higher lev..."
+      "rationale": "Diff adds fail-closed security hardening: OID-bound capability checks, distinct-actor enforcement, replay/self-approval/stale-digest rejection, audit durability under rollback. Reinforces existing threat-model coverage already at ceiling; no higher level available."
     },
     "A4": {
       "score": 5,
