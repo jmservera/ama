@@ -44,12 +44,17 @@
       "decision": "Owner-authorised correction continuation v0.2.0 (no second original Review); manifest returned for owner approval before evaluator work; reviewer/adjudicator/custodian UNFILLED",
       "status": "source-tested",
       "evidence": ".copilot-tracking/changes/2026-10-20/cohort-manifest-222-correction-changes.md"
+    },
+    {
+      "decision": "Independent assessor f9636e1f Defects on 93cb2bba accepted; P06 correction via rpi-implement, no second original Review; prior receipt historical after commit",
+      "status": "source-tested",
+      "evidence": ".copilot-tracking/changes/2026-10-20/cohort-manifest-222-correction-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Frozen local handoff; independent exact-head assessment, then owner approval of the revised manifest before any evaluator work (Refs #222)"
+    "action": "Frozen local handoff; coordinator serial full gate and same-assessor re-check before any publication (Refs #222)"
   },
   "prioritized_follow_ups": [
     {

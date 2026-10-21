@@ -8,6 +8,7 @@ import json
 import math
 import re
 import unittest
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,8 @@ REG = json.loads((ROOT / "src/agents/evals/registry.json").read_text(encoding="u
 # The support exemption exists only because a support_state pair changes the derived support
 # flag and the adjustment text that feed it; no other factor may change them.
 SUPPORT_STATE_EXTRAS = {"support", "adjustment"}
+# Varied factors that rank() has no input for. They are preserved on each case, not erased.
+PASSTHROUGH_FIELDS = ("sensor_data", "source_record", "appointment_history", "contact_need")
 
 
 def isolation_violations(scenario: dict[str, Any]) -> set[str]:
@@ -60,7 +63,10 @@ def _case(
 def _from_inputs(case_id: str, inputs: dict[str, Any]) -> dict[str, Any]:
     state = inputs.get("support_state") or ("Yes" if inputs.get("support") else "No")
     adjustment = inputs.get("adjustment")
-    return _case(case_id, inputs["days"], state, inputs.get("hazard", False), adjustment)
+    case = _case(case_id, inputs["days"], state, inputs.get("hazard", False), adjustment)
+    # Carried so a ranker or wrapper that reads them is exercised; rank() ignores unknown keys.
+    case.update({k: inputs[k] for k in PASSTHROUGH_FIELDS if k in inputs})
+    return case
 
 
 NEIGHBOURS = [
@@ -71,13 +77,43 @@ NEIGHBOURS = [
 ]
 
 
-def _rank_pair(scenario: dict[str, Any]) -> list[dict[str, Any]]:
+NEIGHBOURS_NON_HAZARD_RANK = 3  # first non-hazard neighbour in the fixed set below
+
+
+def _rank_pair(
+    scenario: dict[str, Any],
+    rank_fn: Callable[[list[dict[str, Any]]], list[dict[str, Any]]] | None = None,
+) -> list[dict[str, Any]]:
+    rank_fn = rank_fn or ranking.rank
     runs: list[dict[str, Any]] = []
     for side in ("baseline", "variant"):
         cases = [*NEIGHBOURS, _from_inputs("UNDER-TEST", scenario[side])]
-        entry = next(e for e in ranking.rank(cases) if e["id"] == "UNDER-TEST")
+        entry = next((e for e in rank_fn(cases) if e["id"] == "UNDER-TEST"), None)
+        assert entry is not None, f"{scenario['id']} {side} case missing from the ranking"
         runs.append(entry)
     return runs
+
+
+def check_binding(
+    scenario: dict[str, Any],
+    rank_fn: Callable[[list[dict[str, Any]]], list[dict[str, Any]]] | None = None,
+) -> None:
+    """Raise AssertionError when the claimed ranking binding does not hold for the pair."""
+    binding = scenario["deterministic_expected"]["ranking_binding"]
+    base, var = _rank_pair(scenario, rank_fn)
+    same = base["rank"] == var["rank"] and base["reason_codes"] == var["reason_codes"]
+    if binding in ("same_position_same_reason_codes", "hazard_ahead_of_non_hazard"):
+        assert same, scenario["id"]
+        if binding == "hazard_ahead_of_non_hazard":
+            assert "safety_open" in var["reason_codes"], scenario["id"]
+            assert var["rank"] < NEIGHBOURS_NON_HAZARD_RANK, scenario["id"]
+    elif binding == "variant_ranks_ahead":
+        assert var["rank"] < base["rank"], scenario["id"]
+    elif binding == "ties_with_no_adds_support_unknown_reason":
+        assert base["rank"] == var["rank"], scenario["id"]
+        assert set(var["reason_codes"]) - set(base["reason_codes"]) == {"support_unknown"}
+    else:
+        raise AssertionError(f"unknown binding {binding}")
 
 
 class CohortManifestDraftTests(unittest.TestCase):
@@ -204,25 +240,62 @@ class CohortManifestDraftTests(unittest.TestCase):
             if binding == "none_no_contact_input":
                 self.assertEqual(s["deterministic_expected"]["type"], "representation_pending")
                 continue
-            base, var = _rank_pair(s)
-            if binding == "same_position_same_reason_codes":
-                self.assertEqual(base["rank"], var["rank"], s["id"])
-                self.assertEqual(base["reason_codes"], var["reason_codes"], s["id"])
-            elif binding == "variant_ranks_ahead":
-                self.assertLess(var["rank"], base["rank"], s["id"])
-            elif binding == "hazard_ahead_of_non_hazard":
-                self.assertEqual(base["rank"], var["rank"], s["id"])
-                self.assertEqual(base["reason_codes"], var["reason_codes"], s["id"])
-                self.assertEqual(base["rank"], 2, s["id"])  # behind only the older open safety case
-                self.assertIn("safety_open", var["reason_codes"], s["id"])
-            elif binding == "ties_with_no_adds_support_unknown_reason":
-                self.assertEqual(base["rank"], var["rank"], s["id"])
-                self.assertEqual(
-                    set(var["reason_codes"]) - set(base["reason_codes"]), {"support_unknown"}
-                )
+            check_binding(s)
+            factors = set(s["varied_factor"].split("_and_"))
+            base_case = _from_inputs("X", s["baseline"])
+            var_case = _from_inputs("X", s["variant"])
+            if factors <= set(PASSTHROUGH_FIELDS) | {"sensor_data", "source_record"}:
+                self.assertTrue(all(base_case.get(f) != var_case.get(f) for f in factors), s["id"])
             else:
-                self.fail(f"unknown binding {binding}")
+                self.assertNotEqual(base_case, var_case, s["id"])
         self.assertEqual(len(checked), 5)
+
+    def test_binding_check_rejects_missing_data_exclusion_and_appointment_penalty(self) -> None:
+        by_id = {s["id"]: s for s in M["scenarios"]}
+        for sid in ("CM-S01", "CM-S02", "CM-H01", "CM-H02", "CM-C01", "CM-C02"):
+            base, var = (
+                _from_inputs("X", by_id[sid]["baseline"]),
+                _from_inputs("X", by_id[sid]["variant"]),
+            )
+            self.assertNotEqual(base, var, sid)
+
+        def exclude_missing(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
+            kept = [
+                c
+                for c in cases
+                if {c.get("sensor_data"), c.get("source_record")}.isdisjoint({"missing", "stale"})
+            ]
+            return list(ranking.rank(kept))
+
+        def penalise_appointments(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
+            bad = {"prior_no_access", "rescheduled_by_resident"}
+            good = [c for c in cases if c.get("appointment_history") not in bad]
+            tail = [c for c in cases if c.get("appointment_history") in bad]
+            out = list(ranking.rank(good))
+            return out + [dict(e, rank=len(out) + i) for i, e in enumerate(ranking.rank(tail), 1)]
+
+        for sid in ("CM-S01", "CM-S02", "CM-C01", "CM-C02"):
+            with self.assertRaises(AssertionError, msg=sid):
+                check_binding(by_id[sid], exclude_missing)
+        for sid in ("CM-H01", "CM-H02"):
+            with self.assertRaises(AssertionError, msg=sid):
+                check_binding(by_id[sid], penalise_appointments)
+        for sid in ("CM-S01", "CM-H01", "CM-C01"):
+            check_binding(by_id[sid])
+
+    def test_open_safety_order_support_before_waiting_days(self) -> None:
+        cases = [
+            _case("A", 10, hazard=True),
+            _case("B", 1, "Yes", hazard=True),
+            _case("C", 99),
+            _case("D", 50, "Yes"),
+        ]
+        order = [e["id"] for e in ranking.rank(cases)]
+        self.assertEqual(order, ["B", "A", "D", "C"])
+        # Rank 2 for the CM-C01 case is specific to the fixed neighbours, not a policy rule.
+        with_supported = [*NEIGHBOURS, _case("S", 1, "Yes", hazard=True)]
+        entry = next(e for e in ranking.rank(with_supported) if e["id"] == "N-1")
+        self.assertEqual(entry["rank"], 2)
 
     def test_isolation_check_rejects_unrelated_support_change(self) -> None:
         s = json.loads(json.dumps(next(x for x in M["scenarios"] if x["id"] == "CM-S01")))

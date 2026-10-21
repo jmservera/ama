@@ -136,3 +136,12 @@ Owner decisions 2026-10-20 (issue comment 6295248053; PR comment 6295248627) aut
   * <!-- rpi:task id=P05-T01 --> [x] P05-T01 Split confounded pairs, bind expectations to unchanged `rank()`, add Unknown-support policy proposal (PP-01), fresh held-out ID rule with unfilled roles
   * <!-- rpi:task id=P05-T02 --> [x] P05-T02 Replace arbitrary sample and error values with justified options and uncertainty methods; define review burden over eligible; restrict test support exemption with regression
   * <!-- rpi:task id=P05-T03 --> [ ] P05-T03 Reconcile PR inline findings and RV-001/002/004/006 dispositions; full local gate; frozen local handoff
+
+### P06 Independent exact-head assessment correction (2026-10-21, appended)
+
+Assessor f9636e1f returned Defects on 93cb2bba (original Review verdict and earlier gate history unchanged). Ordinary later `rpi-implement`; no second Review or critique.
+
+* <!-- rpi:phase id=P06 --> P06 Correct assessor findings 1 and 2 (declared: full P06)
+  * <!-- rpi:task id=P06-T01 --> [x] P06-T01 Preserve sensor_data, source_record, appointment_history in the test case conversion; assert converted pairs differ in the declared factor; add regression where a missing-data exclusion or appointment penalty fails the binding check
+  * <!-- rpi:task id=P06-T02 --> [x] P06-T02 Correct the open-safety ordering wording (open safety first; within it support, waiting days, stage, case id) in manifest and review pack; add supported open-safety neighbour test showing rank 2 is fixture-specific
+  * <!-- rpi:task id=P06-T03 --> [ ] P06-T03 Focused tests, ruff, mypy; KB index/log; commit and freeze clean (full gate is coordinator-owned)
