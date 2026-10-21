@@ -352,7 +352,7 @@ Mapping of the five #223 criteria to this protocol (all remain unmet):
 
 | #223 criterion | Protocol part | Status |
 | --- | --- | --- |
-| Seeded critical defects detected and prevented from satisfying a controlled gate | Case classes, decision rules | NOT RUN |
+| Seeded critical defects detected and prevented from satisfying a controlled gate | Case classes, decision rules, execution and Pass preconditions | NOT RUN |
 | Reviewer, source and reason retained | Retention fields | Partly in existing record; gaps listed; NOT RUN |
 | Detection, corrections and total review effort against the same workflow-only scenarios | Denominators, effort and comparators | NOT RUN |
 | Default acceptance and citation validity alone cannot pass | Baseline arms and decision rules | NOT RUN |
@@ -374,6 +374,15 @@ any reviewer sees it; labels come from the approved manifest, not from here):
 
 Decision rules (PROPOSED, owner approval UNFILLED):
 
+* Preconditions for execution AND for any Pass (PROPOSED, all currently
+  unmet): for every defect class and task, documented reviewer competence and
+  authority evidence (below) with resolved OQ-017 decisions; owner-approved
+  thresholds, samples and manifest (#108, #222); and the separately required
+  participant consent, accessibility, privacy and Finance approvals. Missing,
+  partial, unapproved or unresolved evidence for any class or task makes that
+  class or task Insufficient (or NOT RUN if not executed), never Pass. A
+  numerical seed result never establishes meaningful oversight by a reviewer
+  who is not documented as competent and authorised for that class and task.
 * A defect counts as detected only when the reviewer rejects or edits it with
   a reason that names the source and the specific defect, scored by two
   independent scorers against the frozen key (disagreements reconciled with
@@ -421,7 +430,11 @@ competence for that class (qualification, role, delegation), conflicts,
 independence from the proposal author and from the scorers, role separation
 between reviewer, scorer and approver, and the approving owner. A fixture
 role is not evidence of professional competence or delegation. Named holders,
-approvals and the delegation are UNFILLED.
+approvals and the delegation are UNFILLED, and OQ-017 stays OPEN until the
+owners record actual decisions. This evidence is a precondition for execution
+and Pass for every class and task, not an optional annotation; a reviewer
+without it for a class or task contributes no Pass evidence for that class or
+task.
 
 Denominators and effort (PROPOSED definitions). Report per task and class:
 seeded defects, controls, reviewers, reviews, detected, missed, false blocks,
@@ -435,7 +448,9 @@ equal reviewer competence. Saved minutes are capacity, not cash savings;
 Finance validation of any incremental-benefit reading is UNFILLED.
 
 Outcomes: Pass, Fail, Insufficient or NOT RUN, with negative and inconclusive
-results retained. No benefit, human-effectiveness or release claim follows
+results retained. Pass is available only when every precondition above is met
+and evidenced for the class and task; otherwise the outcome is Insufficient
+or NOT RUN. All five #223 criteria stay unmet. No benefit, human-effectiveness or release claim follows
 from this text. Whole #223 acceptance, the approved thresholds and the
 actual evaluation remain open.
 

@@ -29,3 +29,9 @@ All #223 criteria unmet and untouched. Open: thresholds/samples/panel approvals,
 * Change: four requirements.txt files taken verbatim from a3257c71f4963d98a88c501d040b3d07eada4392 (12 lines changed: certifi pin and its two hashes each). Provisional shared reuse.
 * Focused checks (no gate, no builds): per-file diff versus a3257c71 empty; only certifi/hash lines differ from prior head; all four show certifi==2026.10.19 with 2 hashes and no 2026.7.22; the two hashes verified by `pip download --no-deps --require-hashes` of certifi 2026.10.19 into a temporary directory (removed). 
 * Not done: complete gate, independent assessment, push, PR. No second original Review; protocol text unchanged; all #223 criteria unmet; #108, OQ-017, consent/privacy/accessibility remain dependencies.
+
+## Corrective change C02 (assessment finding on 80a51264; original Review not rewritten and did not review this correction)
+
+* Edited the protocol as above plus an appended log entry. No exercise, evaluator, outcome, approval or participant invented; OQ-017 open; #108, #222 manifest, consent/privacy/accessibility/Finance unresolved; five criteria unmet.
+* Focused checks: added-line non-ASCII scan, anchor present, lockfiles diff versus 80a51264 empty, git diff reviewed (docs and tracking only).
+* Not done: complete gate (prior 80a gate receipt historical after commit), independent re-assessment, push, PR.

@@ -21,3 +21,7 @@
 ## C01 Corrective lockfile reuse
 
 * Files: src/core, src/api, src/importer, src/orchestrator requirements.txt only; byte-identical to a3257c71 (git diff --cached against that commit empty per file). Tracking files of that commit deliberately not imported.
+
+## C02 Pass preconditions
+
+* src/agents/README.md protocol: new precondition bullet in decision rules, strengthened authority paragraph, criterion-map row, and Outcomes sentence. No semantics otherwise changed; lockfiles untouched.

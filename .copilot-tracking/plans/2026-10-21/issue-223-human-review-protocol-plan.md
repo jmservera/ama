@@ -81,3 +81,9 @@ Critique (executed once, verdict Revise, 9 findings, all direct planner correcti
 Exact-head complete gate at 78bdb8ac failed 2026-10-21T04:08:41Z; three gate JSON reports each show only CRITICAL GHSA-6q48-6c7w-9gw2 (certifi 2026.7.22, fixed 2026.10.19). Receipt and logs preserved externally at /tmp/ama-review-protocol-followon-0210-223/. Owner-directed correction: reuse only the four requirements.txt changes of native #119 commit a3257c71f4963d98a88c501d040b3d07eada4392 (provisional until own complete gate and independent assessment).
 
 * [x] C01 Apply the exact four lockfile files from a3257c71 and verify pin/hash consistency. No protocol semantics, evaluator, #222 or other pin changes.
+
+## Corrective Addendum 2 (2026-10-21, independent assessment finding on 80a51264; original plan, critique, Review and addendum 1 unchanged)
+
+Finding: protocol proposed numerical Pass rules while authority/competence/approvals were only listed UNFILLED, so a seed success could appear to establish oversight by unqualified reviewers. The exact-80a complete gate passed (receipt /tmp/ama-protocol-fixed-followon-0412-223/receipt.json, SHA 7348eb749ac3c7f53d84e42ee8e03dfb12fb554c3f98aa369d33fd486591890f) and becomes historical after this commit.
+
+* [x] C02 Make competence/authority per class and task, resolved OQ-017 and required approvals explicit preconditions for execution and Pass; missing evidence is Insufficient or NOT RUN. Minimal text; index unchanged (row already states dependencies); append-only log entry added.

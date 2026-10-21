@@ -6637,3 +6637,13 @@ metadata when the knowledge base was created.
   samples, roles and approvals are PROPOSED or UNFILLED; no participants,
   model calls or execution. #108 remains open and the #222 manifest is an
   unapproved external prerequisite. No #223 criterion is met.
+
+## [2026-10-21] update | Human-review protocol Pass preconditions (#223)
+
+* Corrected the proposed, Not run protocol after an independent publication
+  assessment: documented per-class and per-task reviewer competence and
+  authority, resolved OQ-017 decisions and the required approvals are now
+  explicit preconditions for execution and for any Pass. Missing evidence means
+  Insufficient or NOT RUN, never Pass.
+* No exercise, evaluator, outcome or approval was added. OQ-017 stays open and
+  all five #223 criteria stay unmet. The earlier entry is unchanged.
