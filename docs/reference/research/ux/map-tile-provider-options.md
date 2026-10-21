@@ -115,7 +115,14 @@ USD500 in total for the October 2026 calendar month (expiry 2026-10-25T16:02Z),
 and it includes accrued and forecast costs and liabilities across resource group
 `ama` and other scopes, so any provider charge competes with existing Azure and
 inference costs. Aggregate headroom is not known here, and unknown or unbounded
-headroom blocks all paid execution. The cap is not a new allocation, unknown
+headroom blocks all paid execution. A coordinator-supplied provisional
+resource-group-only projection of USD 535.41 for October 2026 (reported
+2026-10-21; a forecast, not a live or invoiced figure, and the cost plan source
+is not in this repository) already exceeds the USD500 total before any
+unknown accrued or forecast liability in other scopes is added, so no headroom
+may be inferred and no paid execution is approved by this proposal. Any
+provider spend would first need a separate, affordable, finite costed plan
+approved by the owner. The cap is not a new allocation, unknown
 costs must not be assumed zero or double counted, and nothing here authorises
 retiring a resource.
 

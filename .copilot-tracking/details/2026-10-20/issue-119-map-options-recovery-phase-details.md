@@ -34,3 +34,7 @@ Plan: .copilot-tracking/plans/2026-10-20/issue-119-map-options-recovery-plan.md
 * P05-T01: replace only the certifi pin and its two hashes (wheel and sdist from PyPI JSON for 2026.10.19) in src/core, src/api, src/importer and src/orchestrator requirements.txt. requirements.in files do not name certifi and are unchanged. Digest pins, non-root user and other pins are untouched.
 * P05-T02: install src/api/requirements.txt with --require-hashes in a scratch venv; build the three images; run Trivy 0.76.0 with the gate flags (src/trivy.yaml, vuln, HIGH,CRITICAL, ignore-unfixed, exit-code 1) using an external cache.
 * P05-T03: reconcile plan, changes and state.
+
+## P06 Budget evidence wording (2026-10-21)
+
+* Replace the "headroom not known" sentence with one that adds the coordinator-reported provisional RG-only USD 535.41 forecast above the cap, labels it a forecast with no repository source, keeps unknown non-RG liabilities, and requires a separate affordable finite costed plan before any paid execution. No cost measurement invented. Certifi lockfiles untouched.

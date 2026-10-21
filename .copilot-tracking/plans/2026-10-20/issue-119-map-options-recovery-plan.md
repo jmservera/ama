@@ -90,3 +90,8 @@ Critique: .copilot-tracking/reviews/2026-10-20/issue-119-map-options-recovery-pl
 
 <!-- P05 -->
 * [x] P05: Discovered cross-cutting gate regression, not a map-domain defect. The final-head gate image scans reported fixed CRITICAL GHSA-6q48-6c7w-9gw2 (certifi 2026.7.22, fixed 2026.10.19) in the API, importer and orchestrator images. P05-T01 bump the transitive hash-locked certifi pin in the four requirements.txt lockfiles (core, api, importer, orchestrator); P05-T02 focused reproduction; P05-T03 align tracking. No ignore file, baseline, severity change or skip. The coordinator reuses this fix for hosted PR 424 and runs the fresh full gate. The old gate receipt is historical.
+
+## Budget evidence continuation 2026-10-21 (P06, rpi-implement)
+
+<!-- P06 -->
+* [x] P06: Independent assessment (Needs work at a3257c71) found the cost paragraph omitted the known resource-group-only provisional forecast USD 535.41, already above the USD500 total October cap, plus unknown non-RG liabilities. Reworded minimally, labelled a coordinator-supplied forecast with no in-repo source and not live. The a3257c71 gate receipt is historical.
