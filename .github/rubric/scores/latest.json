@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-20T15:34:34+00:00",
-  "commit": "ba989bb08e5f9357328e194fa03551f7afd914c9",
+  "scored_at": "2026-10-21T05:17:00+00:00",
+  "commit": "005128a875465d339f3916819c4307eb40a8d2de",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39448763424",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39548063997",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "f8da7f9f16e6c3393eb938b0cf5a2f25528cd728903aacb4488d103ca3f93da2",
+    "solution-code": "c8da5c4e4ad86e8bd9038672e4558959ed808c2759c72543328fd59e9aa2e338",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -26,11 +26,8 @@
   "criteria": {
     "A1": {
       "score": 4,
-      "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:50-260",
-        "src/api/src/zava_forward/api/server.py:851-875"
-      ],
-      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts; decoupled from core store, consistent with prior modular baseline. This PR's cohort-manifest-draft diff (src/agents/) is unrelated to this architecture area."
+      "evidence": [],
+      "rationale": "Diff is a certifi hash bump, a new DRAFT eval manifest, its structural test, and a README note. No architecture, modularity or scaling-path change. Unchanged from baseline ceiling."
     },
     "A2": {
       "score": 5,
@@ -45,7 +42,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Prior diff adds fail-closed security hardening already at ceiling. This PR's cohort-manifest-draft is explicitly non-executing, synthetic-only, fairness_evidence:false, and not read by any evaluator, so it adds no new security/responsible-AI evidence."
+      "rationale": "Diff adds an unapproved, unexecuted synthetic fairness-scenario manifest (dataset_role: development draft, not held-out) and ascii/PII-pattern guard tests, but no new mitigated AI risk or security control is delivered. Already at ceiling; unchanged."
     },
     "A4": {
       "score": 5,
@@ -53,7 +50,7 @@
         "src/api/tests/test_operator_suspension.py:376-941",
         "src/core/src/zava_forward/core/continuity.py:189-380"
       ],
-      "rationale": "16 new tests cover version-matrix integrity, rollback/conflict, snapshot completeness end to end; already at ceiling. The new src/agents/tests/test_cohort_manifest_draft.py only checks the draft JSON's internal consistency, not an implemented capability, so no change."
+      "rationale": "New test_cohort_manifest_draft.py only checks internal consistency of a static, unexecuted planning JSON; it exercises no AI capability end to end. Already at ceiling; unchanged."
     },
     "A5": {
       "score": 4,
@@ -61,22 +58,22 @@
         "src/api/tests/test_operator_suspension.py:614-665",
         "src/core/src/zava_forward/core/sqlstore.py:572-630"
       ],
-      "rationale": "Adds resilience evidence but no new cost or performance measurement; still only one dimension evidenced. Unaffected by this PR's diff."
+      "rationale": "Diff only bumps certifi hashes in requirements.txt files; no new instrumentation, resilience or cost evidence. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [
-        "src/agents/evals/cohort_manifest_draft.json:1-10",
-        "src/agents/README.md:293-298"
+        "src/agents/evals/cohort_manifest_draft.json",
+        "src/agents/tests/test_cohort_manifest_draft.py"
       ],
-      "rationale": "New cohort_manifest_draft.json is explicitly DRAFT, UNAPPROVED, NOT EXECUTED, fairness_evidence:false, and 'no harness code reads it.' It is a proposed scenario template, not an evaluation harness with measured results or documented failure modes, so it does not raise A6 above the Satisfactory ba..."
+      "rationale": "Diff adds a fairness/cohort evaluation manifest, but it is explicitly DRAFT, UNAPPROVED, NOT EXECUTED, read by no harness, and its own acceptance_trace marks all 6 acceptance criteria Not met. This is planning, not a delivered evaluation harness with measured results; per scoring rules intentions..."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "Restart decision remains a human-gated engineering drill requiring a distinct OID-bound manager; no agentic orchestration introduced. This PR's manifest draft proposes no new agent orchestration behaviour."
+      "rationale": "Diff does not touch agentic orchestration or autonomy; eval-manifest and dependency changes are unrelated. Unchanged from baseline."
     },
     "B1": {
       "score": 3,
@@ -106,10 +103,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/core/README.md:1543-1615",
-        "src/api/README.md:1557-1606"
+        "src/agents/README.md:293-299"
       ],
-      "rationale": "Both READMEs gained a dense operational section on the incident/restart contract, consistent with prior style; capped at Good(4). This PR's src/agents/README.md addition is a short, clearly labelled disclosure note, not a structural change to documentation quality."
+      "rationale": "README gains a concise, well-integrated paragraph describing the new draft manifest, consistent with existing documentation style and clarity. Does not remove the existing cap from dense operational narrative elsewhere; unchanged at Good(4)."
     },
     "B7": {
       "score": 3,
