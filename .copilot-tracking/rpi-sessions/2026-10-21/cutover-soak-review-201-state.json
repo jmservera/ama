@@ -3,8 +3,8 @@
   "task_slug": "cutover-soak-review-201",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-21/cutover-soak-review-201-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-21/cutover-soak-review-201-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-21/cutover-soak-review-201-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-21/cutover-soak-review-201-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-21/cutover-soak-review-201-review.md"
   },
   "confirmed_decisions": [
     {
@@ -34,12 +34,36 @@
       "decision": "Implementation complete for preparation scope: pack section (11 AC all UNMET, soak spec proposal, D1-D16), ADR note, index row, log; focused checks passed; full gate not performed (coordinator).",
       "status": "implemented",
       "evidence": ".copilot-tracking/changes/2026-10-21/cutover-soak-review-201-changes.md"
+    },
+    {
+      "decision": "Review executed once: execution Complete, outcome Residual work; RV-001..004 (no defects), all routed as follow-ups",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-21/cutover-soak-review-201-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Commit 1, then activate rpi-review once"
+    "phase": "Follow-up",
+    "action": "Coordinator runs full gate and independent assessment, then DRAFT PR Refs #201; owner answers D1-D16"
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner decisions D1-D16 in #201 (soak need and duration OPEN)",
+      "rationale": "Unblocks every deployed-evidence step",
+      "evidence": "pack section Pending Owner Decisions"
+    },
+    {
+      "rank": 2,
+      "task": "Coordinator external gate, independent assessment, draft PR Refs #201",
+      "rationale": "Existing gate not waived for docs-only",
+      "evidence": "repo instructions"
+    },
+    {
+      "rank": 3,
+      "task": "Refresh pack ms.date after PR 423 merges",
+      "rationale": "RV-002",
+      "evidence": "review RV-002"
+    }
+  ]
 }
