@@ -14,3 +14,7 @@ Task context: evidence-only blocker delivery. Evidence: research W1-W5.
 
 * Insert subsection after the 2026-10-17 climate section in docs/reference/research/iot-sensor-analytics-research-plan.md; update README row 307; append log entry; do not edit earlier entries.
 * Validation: link review, git diff, focused test, tools tests for climate bounds still pass.
+
+## Corrective C01 (2026-10-21)
+
+Checkout of src/{core,api,importer,orchestrator}/requirements.txt from a3257c71; zero diff versus that commit. Focused checks: no certifi 2026.7.22 or old hashes remain; same two certifi hashes in all four; only certifi lines differ from prior head. No other pins or controls touched.

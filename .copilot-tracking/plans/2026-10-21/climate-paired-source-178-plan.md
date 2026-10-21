@@ -74,3 +74,10 @@ Anonymous retrieval of official paired North-East temperature/humidity records i
 ## Critique Disposition
 
 Critique executed once (verdict Revise, PC-001..PC-007, all direct planner corrections): PC-001 applied (catalogue licence retrieved today, FR4); PC-002 applied (FR4 dispositions); PC-003 applied (AC1 recursive numeric scan); PC-004 applied (P01 unchecked, this section); PC-005 applied (AC2); PC-006 applied (FR4 method/retest); PC-007 applied (FR3). No user decision required, no second critique.
+
+## Corrective Plan Addendum (2026-10-21, after failed complete gate)
+
+Original research, critique, plan and Review remain unchanged; no second original Review. Gate failed 2026-10-21T03:40:37Z with only CRITICAL GHSA-6q48-6c7w-9gw2 (certifi 2026.7.22, fixed 2026.10.19). Scope: reuse the four requirements files from shared commit a3257c71 only, provisional until own complete gate and independent assessment.
+
+* [x] C01-T01: Apply the exact four requirements files and verify pin/hash consistency.
+* Climate source semantics, blocker status and all #178 criteria unchanged (unmet).

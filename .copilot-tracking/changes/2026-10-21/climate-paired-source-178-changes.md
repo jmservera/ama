@@ -22,3 +22,9 @@ Plan: .copilot-tracking/plans/2026-10-21/climate-paired-source-178-plan.md. Scop
 ## Divergences, discoveries, follow-ups
 
 * No divergence. Follow-up: authenticated MIDAS file supply and hash-pinned adapter (new task).
+
+## Corrective C01: certifi advisory (2026-10-21)
+
+* Reused four requirements files from shared commit a3257c71 (certifi 2026.7.22 to 2026.10.19, new hashes); git diff versus that commit is empty for the four paths.
+* Focused checks: grep finds no old pin/hash; certifi block identical across files; 12-line diff is certifi only.
+* Adverse gate receipt and logs at /tmp/ama-climate-followon-0127-178 preserved. No full gate or builds run; reuse provisional pending own complete gate and independent assessment.
