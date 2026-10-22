@@ -6650,3 +6650,8 @@ metadata when the knowledge base was created.
 * Recorded fresh read-only evidence for resource group `ama` (USD, retrieved 2026-10-22): 242.36 observed, 535.33 forecast with no change, reconciled against the 2026-10-20 read. Subscription-scope cost remains unreadable, so the outside-group term is unknown and every paid tranche stays blocked.
 * Added finite private-Blob options (B1 ceiling 5) with envelope cap 655, review 560, pause 630 and stop 665. Retirement options are not offered because none is authorized. Screen-reader acceptance and signed source/image attestation are recorded as unverified production follow-ups.
 * Proposal only: no Azure change, approval, issue acceptance or release follows; #126 stays open. Earlier entries retained.
+
+## [2026-10-22] update | Corrected pre-change forecast labelling in costed plan (#126)
+
+* Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
+* No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.

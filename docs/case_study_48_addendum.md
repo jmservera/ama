@@ -342,16 +342,21 @@ total, its 400/450/475 thresholds and the 535.41 projection are 2026-10-20
 history. No extension was granted: authorization still expires
 2026-10-25T16:02Z. The owner prefers a private Blob route with managed identity
 and no resource tags carrying results; private backing services stay private.
-Front Door or other resource retirement, deletion of resource group `ama`,
-identity loss and any access or role-assignment change are not authorized, so
-the retirement options S1 and S2 below are not offered in this revision. This
-is a demonstrator: screen-reader acceptance and independent signed
+This proposal authorizes no Front Door or other resource retirement, no deletion
+of resource group `ama`, no identity loss and no access or role-assignment
+change, so the retirement options S1 and S2 below are not offered. (A separate,
+owner-authorized deletion of the cutover-test Front Door Premium profile and
+its web application firewall policy, and a scale-down of the cutover-test demo
+API app to zero replicas, were later completed and verified at about 14:16Z on
+2026-10-22 outside this proposal; the coordinator reported the authorization and
+read-only inventory corroborates the result. See the post-change note below.)
+This is a demonstrator: screen-reader acceptance and independent signed
 source/image attestation are unverified production follow-ups, not passed, and
 no real personal data or human pilot capture is authorized. Original #126
 criteria stay open where unproved; this proposal approves and executes nothing.
 
-Current evidence (USD, read-only, retrieved 2026-10-22 between about 13:57Z and
-14:00Z). Source: Azure Cost Management actual cost, resource group `ama` only;
+Evidence read before the infrastructure change (USD, read-only, retrieved
+2026-10-22 between about 13:57Z and 14:00Z). Source: Azure Cost Management actual cost, resource group `ama` only;
 estimates until invoiced, excluding credits, subject to lag. Subscription-scope
 and other-resource-group cost remains unreadable (authorization denied), so
 the outside-group term U is still unknown and is not assumed to be zero.
@@ -361,17 +366,41 @@ the outside-group term U is still unknown and is not assumed to be zero.
 | Observed accrued 11-22 Oct, resource group `ama` (22 Oct partial to about 14:00Z) | 242.36 |
 | Complete days 11-21 Oct | 232.93 |
 | Daily cost 18-21 Oct (run rate used) | about 30.24 |
-| Forecast, no change: 232.93 + 10 days x 30.24 | 535.33 |
-| Headroom to the 700 ceiling before U, tranches and reserve | 164.67 |
+| PRE-CHANGE scenario forecast: 232.93 + 10 days x 30.24 | 535.33 |
+| PRE-CHANGE headroom to the 700 ceiling before U, tranches and reserve | 164.67 |
 
 Observed and forecast are different things: 242.36 has been incurred, 535.33 is
-a projection that assumes the run rate holds (it rose from about 15 to about 30
+a PRE-CHANGE scenario that assumes the run rate before the deletion and
+scale-down holds (it rose from about 15 to about 30
 per day on 17 October, so a further step would raise it; each extra 1 per day adds 10 to the forecast). The 2026-10-20 read
 (189.94 including a partial 20 October; 172.47 for complete days) overlaps this
 read; complete days 11-19 October sum to 172.46 in both, so the figures must
-not be added. No cost appears before 11 October in this scope. The inventory
-was unchanged on read-only inspection (94 resources, eight private endpoints).
-S0 (no change) is the only current baseline.
+not be added. No cost appears before 11 October in this scope. At that
+read the inventory showed 94 resources and eight private endpoints.
+
+Post-change note (read-only, about 14:53Z, 2026-10-22). Inventory now shows 91
+resources in `ama`; no Front Door profile and no Front Door web application
+firewall policy remain; the cutover-test demo API app has minimum and running
+replicas of zero; 61 resource names still contain "cutover-test", so related
+resources (for example environments, jobs, endpoints) remain and may still
+accrue charges. The cost read at this time was identical to the one above (242.36
+observed; 22 October partial 9.43), so cost data has not yet caught up and holds
+no post-change meter evidence. The 535.33 scenario is therefore pre-change: it
+credits no unmeasured saving, is not an upper bound (new or remaining charges
+are not excluded) and is not the current forecast. No saving is stated and no
+residual charge, billing lag or lingering resource cost is assumed to be zero.
+The earlier statement that S0 (no change) is the only current baseline is
+withdrawn: no post-change forecast exists yet.
+
+Refresh gate. Before any tranche is activated, a refreshed post-change forecast
+must be recorded with a fresh inventory, a read timestamp, currency and at least
+one complete post-change day of cost data (the first is 23 October), with the run
+rate measured from complete days after the change. E, the live projection L and
+the admissible U below are then recomputed from that forecast. Until then the
+figures below are limits under the pre-change scenario only and permit nothing.
+This gate is not waived by headroom arithmetic; because the first complete day is
+23 October and authorization expires 2026-10-25T16:02Z, a tranche before expiry
+is unlikely.
 
 Envelope and thresholds on the 700 ceiling. E = RG `ama` projection + U +
 approved tranche ceilings + reserve R, with R = 30 (an unevidenced allowance, not
@@ -384,16 +413,17 @@ unapproved tranche or a start after its latest start blocks a tranche; the
 ceiling is never raised to make room. The 700 ceiling is a limit, not a
 spending authority: only a separately approved finite tranche can spend.
 
-Maximum admissible U (655 less 535.33, less 30, less ceilings): 89.67 with no
+Maximum admissible U under the PRE-CHANGE scenario (655 less 535.33, less 30, less
+ceilings): 89.67 with no
 tranche; B1 alone 84.67; B1 with T2 74.67; B1 with T1 and T2 66.67. These are
-limits on U, not assumed values. U is unknown today, so every paid tranche
-remains blocked.
+limits on U, not assumed values, and they are superseded by the refresh gate. U
+is unknown today, so every paid tranche remains blocked.
 
 | Option | Purpose | Finite bounds | Ceiling (USD) | Blocked until |
 | --- | --- | --- | --- | --- |
 | B0 | Local synthetic rehearsal | None; no Azure spend | 0 | Nothing |
 | B1 | Private Blob result store for demo outputs, in the existing storage account | One container, at most 1 GB, 100,000 writes and 1,000,000 other operations over the window; managed identity only, no shared key, no tags carrying results, synthetic data only; list-price cost about 1.08, plus an allowance for the unpriced private-link data and retention meters | 5 | U bounded; an existing managed-identity data role confirmed (none is granted here); owner approval |
-| T1 | Usable sign-in on the existing demo API (2026-10-20 definition) | Unchanged bounds, 4 hour window | 8 | Its three separately approved mutations and preconditions; B1 does not authorize them |
+| T1 | Usable sign-in on the existing demo API (2026-10-20 definition; the app now has zero replicas, so T1 also needs its restoration separately approved) | Unchanged bounds, 4 hour window | 8 | Its three separately approved mutations and preconditions; B1 does not authorize them |
 | T2 | Actual-model evaluation (2026-10-20 definition) | Unchanged call and token bounds, 6 hour window, deleted after | 10 | Quota evidence, held-out manifest and owner approval |
 | T3 | Azure validation | Not approvable until commands and dated prices are named | 15 placeholder | Owner naming of commands and prices |
 
@@ -455,7 +485,7 @@ available.
 | Option | Month-end projection (RG `ama`) | Status |
 | --- | --- | --- |
 | S0 no change | 535.41 | Blocked (over cap) |
-| S1 retire Front Door effective 21 Oct | 418.37; add 10.64 for each day of delay | Owner decision; needs a separate retirement approval |
+| S1 retire Front Door effective 21 Oct | 418.37; add 10.64 for each day of delay | History: a cutover-test Front Door deletion was later done on 22 Oct under a separate owner authorization, and this figure was not measured against it |
 | S2 S1 plus SQL idle after 25 Oct | 384.79 only if the 50 percent illustration holds; the true saving is 0 to about 10.66 per day, unmeasured | Illustration only; never used for eligibility |
 
 Front Door retirement means the approved profile, endpoint, firewall policy and
@@ -541,8 +571,8 @@ scripts and checks. It cannot show real sign-in, roles, private SQL or actual-mo
 behaviour, which are the Azure-only needs of CON-007 and AC-086.
 
 What the owner can already test, with real evidence only: the local synthetic
-run, and read-only cost and resource views. The existing demo API currently
-returns 403 by design (deny-all); that is not a successful sign-in and must not
+run, and read-only cost and resource views. As of the 2026-10-20 read, the existing demo API
+returned 403 by design (deny-all), and on 2026-10-22 its cutover-test app has zero replicas; that is not a successful sign-in and must not
 be presented as one.
 
 Monitoring, cleanup and recreation. Query RG `ama` cost daily and add U; recompute
