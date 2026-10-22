@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-20
+ms.date: 2026-10-22
 ms.topic: reference
 ---
 
@@ -328,9 +328,94 @@ production acceptance are distinct.
 This is a set of proposals for separate owner approval. It executes, approves
 and accepts nothing: no deployment, inference, permission, tenant action,
 manifest approval, issue acceptance or operational release follows. It extends
-the EXA-012 budget row; the owner's USD 500 total for this calendar month
-(including charges already accrued) governs this scope and the earlier
-450/360/405 figures remain history. Authorization expires 2026-10-25T16:02Z.
+the EXA-012 budget row. The current budget decision is the owner's revision of
+2026-10-22 in the next subsection; the 2026-10-20 text after it is dated
+history on a USD 500 basis and does not govern where it conflicts.
+
+#### Revised owner budget decision (2026-10-22)
+
+Owner decisions, 2026-10-22: "spend approved", then "limit to $700 forecast".
+USD 700 is the replacement all-in forecast ceiling for this calendar month
+(charges already accrued, outside-group spend, approved tranche ceilings and
+reserve all count inside it); it is not 700 additional. The earlier USD 500
+total, its 400/450/475 thresholds and the 535.41 projection are 2026-10-20
+history. No extension was granted: authorization still expires
+2026-10-25T16:02Z. The owner prefers a private Blob route with managed identity
+and no resource tags carrying results; private backing services stay private.
+Front Door or other resource retirement, deletion of resource group `ama`,
+identity loss and any access or role-assignment change are not authorized, so
+the retirement options S1 and S2 below are not offered in this revision. This
+is a demonstrator: screen-reader acceptance and independent signed
+source/image attestation are unverified production follow-ups, not passed, and
+no real personal data or human pilot capture is authorized. Original #126
+criteria stay open where unproved; this proposal approves and executes nothing.
+
+Current evidence (USD, read-only, retrieved 2026-10-22 between about 13:57Z and
+14:00Z). Source: Azure Cost Management actual cost, resource group `ama` only;
+estimates until invoiced, excluding credits, subject to lag. Subscription-scope
+and other-resource-group cost remains unreadable (authorization denied), so
+the outside-group term U is still unknown and is not assumed to be zero.
+
+| Item | Value (USD) |
+| --- | --- |
+| Observed accrued 11-22 Oct, resource group `ama` (22 Oct partial to about 14:00Z) | 242.36 |
+| Complete days 11-21 Oct | 232.93 |
+| Daily cost 18-21 Oct (run rate used) | about 30.24 |
+| Forecast, no change: 232.93 + 10 days x 30.24 | 535.33 |
+| Headroom to the 700 ceiling before U, tranches and reserve | 164.67 |
+
+Observed and forecast are different things: 242.36 has been incurred, 535.33 is
+a projection that assumes the run rate holds (it rose from about 15 to about 30
+per day on 17 October, so a further step would raise it; each extra 1 per day adds 10 to the forecast). The 2026-10-20 read
+(189.94 including a partial 20 October; 172.47 for complete days) overlaps this
+read; complete days 11-19 October sum to 172.46 in both, so the figures must
+not be added. No cost appears before 11 October in this scope. The inventory
+was unchanged on read-only inspection (94 resources, eight private endpoints).
+S0 (no change) is the only current baseline.
+
+Envelope and thresholds on the 700 ceiling. E = RG `ama` projection + U +
+approved tranche ceilings + reserve R, with R = 30 (an unevidenced allowance, not
+a bound on omitted costs) and E at most 655, which is the 665 stop line less a
+margin of 10 that keeps the starting live projection L = E less R at most 625,
+below the pause line. Thresholds apply to the refreshed live projection L (no
+reserve): review at 560, pause new starts at 630, stop and clean up at 665 (80,
+90 and 95 percent of 700). Unknown spend, an unbounded U, an unknown price, an
+unapproved tranche or a start after its latest start blocks a tranche; the
+ceiling is never raised to make room. The 700 ceiling is a limit, not a
+spending authority: only a separately approved finite tranche can spend.
+
+Maximum admissible U (655 less 535.33, less 30, less ceilings): 89.67 with no
+tranche; B1 alone 84.67; B1 with T2 74.67; B1 with T1 and T2 66.67. These are
+limits on U, not assumed values. U is unknown today, so every paid tranche
+remains blocked.
+
+| Option | Purpose | Finite bounds | Ceiling (USD) | Blocked until |
+| --- | --- | --- | --- | --- |
+| B0 | Local synthetic rehearsal | None; no Azure spend | 0 | Nothing |
+| B1 | Private Blob result store for demo outputs, in the existing storage account | One container, at most 1 GB, 100,000 writes and 1,000,000 other operations over the window; managed identity only, no shared key, no tags carrying results, synthetic data only; list-price cost about 1.08, plus an allowance for the unpriced private-link data and retention meters | 5 | U bounded; an existing managed-identity data role confirmed (none is granted here); owner approval |
+| T1 | Usable sign-in on the existing demo API (2026-10-20 definition) | Unchanged bounds, 4 hour window | 8 | Its three separately approved mutations and preconditions; B1 does not authorize them |
+| T2 | Actual-model evaluation (2026-10-20 definition) | Unchanged call and token bounds, 6 hour window, deleted after | 10 | Quota evidence, held-out manifest and owner approval |
+| T3 | Azure validation | Not approvable until commands and dated prices are named | 15 placeholder | Owner naming of commands and prices |
+
+B1 cleanup removes only its own container and contents; account-level
+soft-delete or version retention that keeps bytes counts against the ceiling
+until it expires and is not read in this revision. The existing storage account
+is Standard LRS with public network access disabled and shared-key access
+disabled, with a blob private endpoint present (read-only inspection).
+
+Precise remaining blockers. Cost Management read access above resource-group
+scope (subscription scope returned an authorization denial; one earlier attempt
+was throttled) is needed to bound U. Also open: whether the managed-identity
+Blob data role exists (no role change is authorized here), private-link data and
+retention meters, agreement prices, model quota, held-out manifest, human, legal
+and privacy gates, and owner approval of any option. Nothing in this revision
+is verified as passed, deployed or accepted.
+
+#### History: 2026-10-20 proposal on a USD 500 basis (superseded)
+
+The owner's USD 500 total then governed this scope and the earlier 450/360/405
+figures were already history. Authorization expired 2026-10-25T16:02Z (this
+expiry is retained).
 
 Evidence class and limits. Currency is USD. Charges are Azure Cost Management
 actual cost for resource group `ama` only, retrieved read-only on 2026-10-20 at

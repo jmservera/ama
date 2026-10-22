@@ -6643,3 +6643,10 @@ metadata when the knowledge base was created.
 ## [2026-10-20] update | Corrected unknown-spend term in costed plan options (#126)
 
 * Corrected the gating rule in the existing addendum subsection: the other-scope term U is a bounded month-end forecast of non-resource-group-`ama` charges and liabilities, not accrued-only. Unbounded U blocks every paid tranche; no zero is assumed and the cap is not raised. Earlier entry retained.
+
+## [2026-10-22] update | Revised USD 700 ceiling and private-Blob demo options in costed plan (#126)
+
+* Revised the existing addendum subsection and index row for the owner decision of 2026-10-22: USD 700 is the replacement all-in October forecast ceiling (not additional), expiry 2026-10-25T16:02Z unchanged. The USD 500 wording, its thresholds and 535.41 projection are kept as dated 2026-10-20 history.
+* Recorded fresh read-only evidence for resource group `ama` (USD, retrieved 2026-10-22): 242.36 observed, 535.33 forecast with no change, reconciled against the 2026-10-20 read. Subscription-scope cost remains unreadable, so the outside-group term is unknown and every paid tranche stays blocked.
+* Added finite private-Blob options (B1 ceiling 5) with envelope cap 655, review 560, pause 630 and stop 665. Retirement options are not offered because none is authorized. Screen-reader acceptance and signed source/image attestation are recorded as unverified production follow-ups.
+* Proposal only: no Azure change, approval, issue acceptance or release follows; #126 stays open. Earlier entries retained.
