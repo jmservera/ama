@@ -75,6 +75,13 @@ class OpenMeteoRejectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, text):
             parse_om(payload, **override)
 
+    def test_malformed_hourly_units_raise_value_error(self):
+        for bad in ([], [1], "text", 5, None):
+            payload = om_payload()
+            payload["hourly_units"] = bad
+            with self.subTest(bad=bad):
+                self.assertRejected(payload, "hourly_units must be a JSON object")
+
     def test_accepts_consistent_series(self):
         series = parse_om(om_payload())
         self.assertEqual(len(series["times"]), 6)
@@ -137,6 +144,29 @@ class OpenMeteoRejectionTests(unittest.TestCase):
 
 
 class PowerRejectionTests(unittest.TestCase):
+    def test_malformed_containers_raise_value_error(self):
+        paths = [("header",), ("parameters",), ("parameters", "T2M"),
+                 ("parameters", "RH2M"), ("properties",),
+                 ("properties", "parameter"), ("geometry",)]
+        for path in paths:
+            for bad in ([], [1], "text", 5, None):
+                payload = power_payload()
+                node = payload
+                for key in path[:-1]:
+                    node = node[key]
+                node[path[-1]] = bad
+                with self.subTest(path=path, bad=bad):
+                    with self.assertRaisesRegex(ValueError, "must be a JSON object"):
+                        parse_pw(payload)
+
+    def test_malformed_coordinates_raise_value_error(self):
+        for bad in ("x", {}, [1, 2], None, 7):
+            payload = power_payload()
+            payload.setdefault("geometry", {})["coordinates"] = bad
+            with self.subTest(bad=bad):
+                with self.assertRaisesRegex(ValueError, "coordinates"):
+                    parse_pw(payload)
+
     def test_accepts_and_parses(self):
         series = parse_pw(power_payload())
         self.assertEqual(series["rh"][0], 90.0)
