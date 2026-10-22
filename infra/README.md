@@ -2936,6 +2936,23 @@ Residual risk: principals with account-wide data or management rights, such as
 subscription Contributors or Owners, can overwrite or delete blobs. The
 authenticated encryption turns that into a refusal, not a false success.
 
+#### Correction 1 (2026-10-22): operator context and operation budget
+
+* The controller reads Blob with a credential bound to the selected operator
+  profile: `az account get-access-token --resource https://storage.azure.com/`
+  runs through the same `Azure` wrapper and `AZURE_CONFIG_DIR` as every ARM
+  call, including the isolated tenant-profile fallback. There is no ambient
+  `DefaultAzureCredential` chain. The token is primed under a bounded deadline
+  before preflight, cached in memory and never printed.
+* The Blob client sets explicit socket and retry limits (connect 5 s, read
+  15 s, two retries) and every list or download carries a server timeout. An
+  overall budget (45 s for preflight, 45 s per read, capped by the job
+  deadline) is enforced by abandoning the read-only call on expiry, because a
+  per-socket timeout alone is not an overall deadline. Preflight expiry means
+  no job was created; read expiry means the outcome is unverified, and the
+  job and roster secret are still cleaned up. Offline tests only; live
+  behaviour stays NOT RUN.
+
 #### Live prerequisites (all NOT RUN)
 
 1. Coordinator release of a verified affordable finite execution plan within the USD 700 replacement all-in October forecast ceiling (expiry 2026-10-25T16:02Z). No Azure charge, deployment or role write before that.

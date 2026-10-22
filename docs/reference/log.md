@@ -7592,3 +7592,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Offline fake-client tests only. Live routing, deployment, role grants,
   spend, signed attestation and screen-reader acceptance are NOT RUN. #360 c,
   d, e remain unproved. Refs #360, never closes.
+
+## [2026-10-22] query | Private Blob transport correction 1 (#360)
+
+* Files touched: `infra/README.md`, `docs/architecture/cutover-evidence-pack.md`,
+  `infra/scripts` and `infra/tests` (offline).
+* An independent review required the Blob read to use the same selected
+  operator profile as ARM and an explicit overall time budget. Both are
+  implemented and tested offline. Live routing, token acquisition, deployment,
+  role grants and spend remain NOT RUN. Refs #360, never closes.
