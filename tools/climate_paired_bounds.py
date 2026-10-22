@@ -230,11 +230,28 @@ def _extreme(series: dict, key: str, other: str, pick) -> dict:
     }
 
 
+def _monthly_extremes(series: dict, key: str, other: str) -> dict:
+    indices: dict[str, list[int]] = {}
+    for i, t in enumerate(series["times"]):
+        indices.setdefault(t.strftime("%Y-%m"), []).append(i)
+
+    def pick(idx: list[int], chooser) -> dict:
+        target = chooser(series[key][i] for i in idx)
+        return {
+            "value": target,
+            "occurrences": [
+                {"time": _stamp(series["times"][i]),
+                 f"paired_{other}": series[other][i]}
+                for i in idx if series[key][i] == target
+            ],
+        }
+
+    return {m: {"minimum": pick(idx, min), "maximum": pick(idx, max)}
+            for m, idx in sorted(indices.items())}
+
+
 def _summary(series: dict, key: str, other: str, unit: str) -> dict:
     values = series[key]
-    monthly: dict[str, list[float]] = {}
-    for t, v in zip(series["times"], values):
-        monthly.setdefault(t.strftime("%Y-%m"), []).append(v)
     return {
         "unit": unit,
         "count": len(values),
@@ -242,8 +259,7 @@ def _summary(series: dict, key: str, other: str, unit: str) -> dict:
         "maximum": _extreme(series, key, other, max),
         "mean": round(sum(values) / len(values), 3),
         **{f"p{p:02d}": round(percentile(values, p), 3) for p in PERCENTILES},
-        "monthly": {m: {"minimum": min(v), "maximum": max(v)}
-                    for m, v in sorted(monthly.items())},
+        "monthly": _monthly_extremes(series, key, other),
     }
 
 
