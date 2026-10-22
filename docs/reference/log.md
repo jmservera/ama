@@ -7580,3 +7580,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   approval remains required (expiry 2026-10-25T16:02Z).
 * No cost query or execution. Review-only; DN1 to DN5 and #360 c, d, e remain
   open. Refs #360, never closes.
+
+## [2026-10-22] query | Private Blob result transport (#360)
+
+* Files touched: `infra/README.md` (superseded note, new Private Blob Result
+  Transport section), `docs/architecture/cutover-evidence-pack.md` (status
+  entry), `infra/scripts` and Bicep (offline implementation).
+* Owner decisions DN1 to DN5 replaced the ARM tag relay with a private Blob
+  container written by the managed identity and read with Entra credentials
+  from a private-connected host. Earlier entries and negative evidence stand.
+* Offline fake-client tests only. Live routing, deployment, role grants,
+  spend, signed attestation and screen-reader acceptance are NOT RUN. #360 c,
+  d, e remain unproved. Refs #360, never closes.

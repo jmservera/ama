@@ -120,18 +120,19 @@ class RoleMatrixTests(unittest.TestCase):
         self.assertIn("notActions: []", text)
         self.assertIn("dataActions: []", text)
         self.assertIn("notDataActions: []", text)
-        relay = MATRIX["customRoles"][1]
-        relay_block = re.search(r"resource relayRole .*?^}", text, re.S | re.M).group(0)
-        relay_actions = re.search(r"actions: \[(.*?)\]", relay_block, re.S).group(1)
-        self.assertEqual(re.findall(r"'([^']+)'", relay_actions), relay["actions"])
-        self.assertEqual(relay["actions"], [
-            "Microsoft.Resources/tags/read", "Microsoft.Resources/tags/write"])
-        self.assertIn("scope: relay", relay_assignment)
-        self.assertIn("roleDefinitionId: relayRole.id", relay_assignment)
-        self.assertNotIn("Microsoft.App/jobs/write", relay_block)
-        self.assertIn("param includeResultRelay bool = true", text)
-        self.assertIn("= if (includeResultRelay) {", relay_block)
-        self.assertIn("= if (includeResultRelay) {", relay_assignment)
+        blob = MATRIX["customRoles"][1]
+        blob_block = re.search(r"resource resultRole .*?^}", text, re.S | re.M).group(0)
+        data = re.search(r"dataActions: \[(.*?)\]", blob_block, re.S).group(1)
+        self.assertEqual(re.findall(r"'([^']+)'", data), blob["dataActions"])
+        self.assertEqual(blob["actions"], [])
+        self.assertIn("actions: []", blob_block)
+        self.assertFalse(any("delete" in a or "read" in a for a in blob["dataActions"]))
+        self.assertIn("scope: resultContainer", relay_assignment)
+        self.assertIn("roleDefinitionId: resultRole.id", relay_assignment)
+        self.assertIn("param includeResultBlob bool = false", text)
+        self.assertIn("= if (includeResultBlob) {", blob_block)
+        self.assertIn("= if (includeResultBlob) {", relay_assignment)
+        self.assertNotIn("Microsoft.Resources/tags", text)
 
     def test_iot_hub_grants_receiver_only_to_api(self) -> None:
         self.assertEqual([(r["identity"], r["roleId"]) for r in self.rows("iotHub")],

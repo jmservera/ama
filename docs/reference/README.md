@@ -2,6 +2,7 @@
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
 ms.date: 2026-10-27
+ms.topic: overview
 ---
 
 ## Purpose
@@ -243,6 +244,11 @@ and [evidence-pack entry](../architecture/cutover-evidence-pack.md#authenticated
 propose a documented ARM tag relay with five decisions needed and a tenant-administrator
 checklist. Design for review only: no execution, retry, parser relaxation or
 cloud change; whole #360 c, d, e stay unproved.
+
+The 2026-10-22 [private Blob result transport](../../infra/README.md#private-blob-result-transport-2026-10-22-refs-360)
+supersedes that tag relay under owner decisions DN1 to DN5: offline
+implementation and fake-client tests only; live routing, deployment, role
+grants and spend are NOT RUN, and whole #360 c, d, e stay unproved.
 
 The #360 profile-evidence continuation integrates merged quality #387 on main
 3f544fb9 with the exact original infra source/test patch and original critique/

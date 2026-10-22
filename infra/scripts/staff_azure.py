@@ -1,136 +1,35 @@
-"""Private, bounded Container Apps job transport for SQL staff initialization."""
+"""Private, bounded Container Apps job transport for SQL staff initialization.
+
+Results return only through the private Blob container in ``staff_blob``.
+"""
 
 from __future__ import annotations
 
 import base64
 import hashlib
 import json
-import os
 import re
 import time
 import uuid
 from typing import Any
 
+import staff_blob
+from staff_blob import StaffJobError
+
 ARM = "https://management.azure.com"
 VERSION = "2025-07-01"
+STORAGE_VERSION = "2024-01-01"
 MAX_INPUT = 12 * 1024
-CHUNK = 200
-MAX_CHUNKS = 40
-TAG_VERSION = "2021-04-01"
 
 
-def result_prefix(request: dict[str, Any]) -> str:
-    return f"zfstaff-{request['run']}-"
+def default_container(url: str) -> Any:
+    """Entra-authenticated client; it works only from a host with private-endpoint routing."""
+    from azure.identity import DefaultAzureCredential
+    from azure.storage.blob import ContainerClient
 
-
-def tags_url(resource_id: str) -> str:
-    return resource_url(resource_id + "/providers/Microsoft.Resources/tags/default", TAG_VERSION)
-
-
-def result_tags(request: dict[str, Any], result: dict[str, Any]) -> dict[str, str]:
-    return {
-        result_prefix(request) + str(i): frame
-        for i, frame in enumerate(encode_result(request, result))
-    }
-
-
-def read_result(cli: Any, relay: str, request: dict[str, Any]) -> dict[str, Any] | None:
-    tags = cli.rest(tags_url(relay))["properties"].get("tags") or {}
-    frames = [v for k, v in tags.items() if k.startswith(result_prefix(request))]
-    if len(frames) > MAX_CHUNKS or any(not isinstance(v, str) or len(v) > 256 for v in frames):
-        raise StaffJobError("Azure staff result tags exceed the bounded response size.")
-    return decode_result(request, "\n".join(json.dumps({"Log": v}) for v in frames))
-
-
-def clear_result(cli: Any, relay: str, request: dict[str, Any]) -> None:
-    tags = cli.rest(tags_url(relay))["properties"].get("tags") or {}
-    owned = {k: v for k, v in tags.items() if k.startswith(result_prefix(request))}
-    if owned:
-        cli.rest(
-            tags_url(relay),
-            method="PATCH",
-            body={"operation": "Delete", "properties": {"tags": owned}},
-        )
-    remaining = cli.rest(tags_url(relay))["properties"].get("tags") or {}
-    if any(k.startswith(result_prefix(request)) for k in remaining):
-        raise StaffJobError("Azure staff result cleanup was not confirmed.")
-
-
-class StaffJobError(Exception):
-    """Sanitized job failure, including uncertain SQL or cleanup outcomes."""
-
-
-def aad(request: dict[str, Any]) -> bytes:
-    return json.dumps(
-        [1, request["run"], request["operation"], request["digest"]], separators=(",", ":")
-    ).encode()
-
-
-def encode_result(request: dict[str, Any], result: dict[str, Any]) -> list[str]:
-    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-
-    nonce = os.urandom(12)
-    encrypted = AESGCM(base64.b64decode(request["key"], validate=True)).encrypt(
-        nonce, json.dumps(result).encode(), aad(request)
+    return ContainerClient(
+        staff_blob.account_url(url), staff_blob.CONTAINER, credential=DefaultAzureCredential()
     )
-    value = base64.b64encode(nonce + encrypted).decode()
-    count = (len(value) + CHUNK - 1) // CHUNK
-    if count > MAX_CHUNKS:
-        raise StaffJobError("Azure staff result is too large; no result was disclosed.")
-    return [
-        f"ZFSTAFF:{request['run']}:{i}:{count}:{value[i * CHUNK : (i + 1) * CHUNK]}"
-        for i in range(count)
-    ]
-
-
-def decode_result(request: dict[str, Any], output: str) -> dict[str, Any] | None:
-    from cryptography.exceptions import InvalidTag
-    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-
-    if len(output) > 512 * 1024:
-        raise StaffJobError("Azure staff logs exceeded the bounded response size.")
-    chunks: dict[int, str] = {}
-    total = None
-    for line in output.splitlines():
-        try:
-            record = json.loads(line)
-        except ValueError:
-            continue  # CLI connection/status lines are not worker records.
-        message = record.get("Log", "") if isinstance(record, dict) else ""
-        if not isinstance(message, str) or not message.startswith("ZFSTAFF:"):
-            continue
-        parts = message.split(":", 4)
-        try:
-            if len(parts) != 5 or parts[1] != request["run"]:
-                raise ValueError
-            index, count = int(parts[2]), int(parts[3])
-            if not 0 <= index < count <= MAX_CHUNKS or len(parts[4]) > CHUNK:
-                raise ValueError
-            if index in chunks or (total is not None and total != count):
-                raise ValueError
-            total = count
-            chunks[index] = parts[4]
-        except ValueError:
-            raise StaffJobError("Azure staff result framing is invalid.") from None
-    if total is None or len(chunks) != total:
-        return None
-    try:
-        encrypted = base64.b64decode("".join(chunks[i] for i in range(total)), validate=True)
-        clear = AESGCM(base64.b64decode(request["key"], validate=True)).decrypt(
-            encrypted[:12], encrypted[12:], aad(request)
-        )
-        value = json.loads(clear)
-        if (
-            not isinstance(value, dict)
-            or type(value.get("version")) is not int
-            or value["version"] != 1
-        ):
-            raise ValueError
-        if value.get("operation") != request["operation"] or value.get("run") != request["run"]:
-            raise ValueError
-        return value
-    except (ValueError, KeyError, InvalidTag):
-        raise StaffJobError("Azure staff result could not be authenticated.") from None
 
 
 def resource_url(resource_id: str, version: str = VERSION) -> str:
@@ -220,12 +119,6 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
                 )
             ):
                 raise ValueError
-        relay_tags = cli.rest(tags_url(source_id))["properties"].get("tags") or {}
-        if len(relay_tags) > 50 - MAX_CHUNKS:
-            raise StaffJobError(
-                "Initializer result relay has insufficient tag capacity; inspect owned "
-                "stale runs in the serialized operator window before retrying."
-            )
         identities = source["identity"]["userAssignedIdentities"]
         if source["identity"]["type"] != "UserAssigned" or {i.lower() for i in identities} != {
             identity_id.lower()
@@ -282,9 +175,27 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
         found_database = cli.rest(resource_url(database_id, "2023-08-01"))
         if found_database["id"].lower() != database_id.lower():
             raise ValueError
+        blob_url = staff_blob.account_url(env.get("ZF_BLOB_ACCOUNT_URL"))
+        account_name = blob_url.removeprefix("https://").split(".")[0]
+        storage_id = root + "/providers/Microsoft.Storage/storageAccounts/" + account_name
+        storage = cli.rest(resource_url(storage_id, STORAGE_VERSION))
+        container = cli.rest(
+            resource_url(
+                storage_id + "/blobServices/default/containers/" + staff_blob.CONTAINER,
+                STORAGE_VERSION,
+            )
+        )
+        stored = storage["properties"]
+        if (
+            storage["id"].lower() != storage_id.lower()
+            or stored["publicNetworkAccess"] != "Disabled"
+            or stored["allowSharedKeyAccess"] is not False
+            or stored["allowBlobPublicAccess"] is not False
+            or container["properties"].get("publicAccess") != "None"
+        ):
+            raise ValueError
         return {
             "root": root,
-            "relay": source_id,
             "environment": environment_id,
             "identity": identity_id,
             "client": identity["properties"]["clientId"],
@@ -295,6 +206,7 @@ def discover(cli: Any, app: dict[str, Any], source_name: str | None) -> dict[str
             "location": source["location"],
             "app": app_id,
             "tags": source.get("tags", {}),
+            "blob": blob_url,
         }
     except (KeyError, TypeError, ValueError, AttributeError):
         raise StaffJobError(
@@ -311,6 +223,7 @@ def execute(
     *,
     source_name: str | None = None,
     seconds: int = 600,
+    container: Any = None,
 ) -> dict[str, Any]:
     """Run exactly once; remove the owned job/secret before returning any result."""
     try:
@@ -323,7 +236,7 @@ def execute(
         raise StaffJobError("Unsupported Azure staff operation.")
     target = discover(cli, app, source_name)
     content = json.dumps(
-        {**payload, "target": target["app"], "relay": target["relay"]}, sort_keys=True
+        {**payload, "target": target["app"], "blob": target["blob"]}, sort_keys=True
     )
     if len(content.encode()) > MAX_INPUT:
         raise StaffJobError("Private roster exceeds the bounded job-secret size.")
@@ -332,9 +245,13 @@ def execute(
         "run": uuid.uuid4().hex,
         "operation": operation,
         "digest": hashlib.sha256(content.encode()).hexdigest(),
+        "image": target["image"].rsplit(":", 1)[-1],
         "key": base64.b64encode(AESGCM.generate_key(bit_length=256)).decode(),
         "payload": json.loads(content),
     }
+    if container is None:
+        container = default_container(target["blob"])
+    staff_blob.preflight(container, request)
     name = "job-staff-" + request["run"][:20]
     job_id = target["root"] + "/providers/Microsoft.App/jobs/" + name
     url = resource_url(job_id)
@@ -352,7 +269,7 @@ def execute(
         "ZF_SQL_SERVER": target["server"],
         "ZF_SQL_DATABASE": target["database"],
         "ZF_STAFF_TARGET": target["app"],
-        "ZF_STAFF_RELAY": target["relay"],
+        "ZF_STAFF_BLOB": target["blob"],
     }
     body = {
         "location": target["location"],
@@ -415,12 +332,14 @@ def execute(
             ]
             if status in {"Failed", "Stopped", "Canceled", "Degraded"}:
                 raise StaffJobError("Azure staff job failed; SQL/restart outcome is unverified.")
-            if result_value is None:
-                result_value = read_result(cli, target["relay"], request)
             if status == "Succeeded":
+                drifted = cli.rest(url)["properties"]["template"]["containers"][0]["image"]
+                if drifted != target["image"]:
+                    raise StaffJobError("Azure staff job image changed; result refused.")
+                result_value = staff_blob.read_result(container, request)
                 if result_value is None:
                     time.sleep(2)
-                    continue  # ARM tag readback may lag terminal execution status.
+                    continue  # Result pages are written before the worker exits; recheck.
                 completed = True
                 break
             time.sleep(2)
@@ -478,12 +397,11 @@ def execute(
                     time.sleep(2)
                 else:
                     raise StaffJobError("Job deletion was not confirmed.")
-                clear_result(cli, target["relay"], request)
             except Exception:
                 cli.deadline = previous_deadline
                 raise StaffJobError(
                     f"Azure staff cleanup NOT confirmed. Stop/delete only owned job {name} in ama "
-                    "(see runbook); its roster secret or encrypted relay tags may remain. "
+                    "(see runbook); its roster secret may remain. "
                     "SQL/restart outcome is unverified."
                 ) from None
         cli.deadline = previous_deadline

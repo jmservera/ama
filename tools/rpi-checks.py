@@ -42,6 +42,7 @@ RUFF_GROUPS = (
     ("infra/scripts/pipeline.py", "infra/tests/test_pipeline.py"),
     (
         "infra/scripts/staff_azure.py",
+        "infra/scripts/staff_blob.py",
         "infra/scripts/staff-azure-worker.py",
         "infra/scripts/credential_arm.py",
         "infra/tests/test_staff_azure.py",
@@ -100,6 +101,7 @@ TYPE_GROUPS = (
         "--follow-imports=silent",
         "--ignore-missing-imports",
         "infra/scripts/staff_azure.py",
+        "infra/scripts/staff_blob.py",
         "infra/scripts/staff-azure-worker.py",
         "infra/scripts/credential_arm.py",
     ),
