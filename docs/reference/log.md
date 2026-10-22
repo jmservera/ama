@@ -6650,3 +6650,25 @@ metadata when the knowledge base was created.
   already stale and is corrected to 61/61.
 * Not done: the 24-slide deck is unchanged (placement is an owner decision), no
   rehearsal, no price retrieved, no spend authorised, no score claimed.
+
+## [2026-10-22] query | Backlog review after the Tokenomics amendment
+
+* Backlog Manager review of the open GitHub backlog (about 141 issues) with the
+  parent applying the executor operations, because the delegated agents had no
+  write tools. Not every issue body was read; targeted queries and named issues
+  only.
+* Created #435 (capstone pitch preparation, under #104). Linked #432 and #435
+  under #104 and #344 under #195. Added Tokenomics delta sections to #164, #216
+  and #217 (unticked criteria). Added missing Dependencies sections to #349,
+  #350 and #358. Removed the contradictory `status:not-started` label from #75,
+  #92, #97, #110, #126, #172 and #178 (each also carries
+  `status:partially-delivered`); the stale "not started" sentences in some
+  bodies were left for the owner. Added `status:not-started` to #432.
+* Board: `tools/backlog-sync.py --apply` moved nine open issues between Todo and
+  In Progress from PR and worktree evidence. It did not tick any criterion. #432,
+  #434 and #435 still report as missing from its item list although #432 and
+  #435 were added to project 7.
+* Left for the owner: automated rubric-failure issues #10, #33, #46 to #49 look
+  expired and closable as not planned (not done), #38 needs a check of the latest
+  scorer run, #6 and #434 are auto-managed and stay open, #430 stays open, and
+  #349, #350, #358, #360 still lack type, area and status labels and parents.
