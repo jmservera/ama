@@ -8,7 +8,7 @@
 ## Preflight (2026-10-22)
 
 * Worktree run-owned; starting tree clean; branch docs/paid-execution-plan-126; PR #422 open, draft, base main, mergeable.
-* origin/main fetched: 9e55a392b95c90730c6410b9a4db4ad3a5ae70ce; the branch already contains it (merge-base check passed), so no rebase and no force update were needed.
+* origin/main fetched: 9e55a392b95c90730c6410b9a4db4ad3a5ae70ce. Correction: the first note here claimed the branch already contained it; that was wrong (the check printed nothing). The full gate reported "does not descend from the reviewed main base"; the branch was two unrelated commits behind (no overlap with edited files). It was rebased in this run-owned worktree onto that SHA with no conflicts; the published branch will therefore need a force-with-lease update, reported in the PR.
 * Repository-local author email matched the privacy-safe form from the authenticated account lookup.
 
 ## Read-only Azure evidence (P01-T01)
