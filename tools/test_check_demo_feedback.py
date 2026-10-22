@@ -364,6 +364,27 @@ class CaseWriteReload(unittest.TestCase):
         case["after"]["body"]["contacts"][-1]["by"] = "Someone else"
         self.assertEqual(self.status(case), "fail")
 
+    def test_note_mismatch_with_matching_snapshots_fails(self):
+        case = case_write()
+        case["request"]["note"] = "Asked to call back"
+        self.assertEqual(self.status(case), "fail")
+
+    def test_matching_note_is_compared_and_truncated_like_runtime(self):
+        case = case_write()
+        case["request"]["note"] = "n" * 600
+        for name in ("write", "after"):
+            case[name]["body"]["contacts"][-1]["note"] = "n" * 500
+        self.assertEqual(self.status(case), "blocked")
+        case["after"]["body"]["contacts"][-1]["note"] = "n" * 600
+        self.assertEqual(self.status(case), "fail")
+
+    def test_held_note_is_blocked(self):
+        case = case_write()
+        case["request"]["note"] = "x"
+        for name in ("write", "after"):
+            case[name]["body"]["contacts"][-1]["note"] = projection.NOTE_HELD
+        self.assertEqual(self.status(case), "blocked")
+
     def test_held_write_response_is_blocked(self):
         case = case_write()
         case["write"]["body"]["contacts"][-1]["outcome"] = projection.NOTE_HELD
