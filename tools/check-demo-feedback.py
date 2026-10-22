@@ -312,6 +312,10 @@ def check_case_write(evidence, runtime):
             FAIL,
             "The reloaded case does not retain the contact count from the write response.",
         )
+    note = request.get("note", "")
+    if not isinstance(note, str):
+        raise Verdict(BLOCKED, "case_write.request.note must be a string when given.")
+    expected_note = note[:500]
     sent = need_dict(written[-1], "write response last contact")
     if sent.get("outcome") == runtime.projection.NOTE_HELD:
         raise Verdict(
@@ -326,6 +330,17 @@ def check_case_write(evidence, runtime):
             FAIL,
             "The write response last contact does not match the submitted outcome and channel.",
         )
+    for label, contact_ in (("write response", sent), ("reloaded", final)):
+        if contact_.get("note") == runtime.projection.NOTE_HELD:
+            raise Verdict(
+                BLOCKED,
+                f"The {label} note is held for this role, so the submitted note cannot be compared from this role's view.",
+            )
+        if contact_.get("note") != expected_note:
+            raise Verdict(
+                FAIL,
+                f"The {label} last contact note does not match the submitted note (stored as written, at most 500 characters).",
+            )
     if final.get("outcome") == runtime.projection.NOTE_HELD:
         raise Verdict(
             BLOCKED,

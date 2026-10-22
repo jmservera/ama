@@ -20,7 +20,7 @@
 ### Write response comparison
 
 * Files: tools/check-demo-feedback.py
-* What changed and why: last write-response contact compared with the request and with the reloaded contact on every field; held write outcome is blocked; addresses finding 2.
+* What changed and why: last write-response contact compared with the request outcome and channel only (the submitted note was not compared; corrected in correction 2) and with the reloaded contact on every field; held write outcome is blocked; addresses finding 2.
 
 ### Tests
 
@@ -42,3 +42,7 @@
 ## Remaining Work
 
 * P03-T01
+
+## Correction note
+
+The earlier wording implied request comparison covered every persisted field. It covered outcome and channel only; the note comparison was added in correction 2.
