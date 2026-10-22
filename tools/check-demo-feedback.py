@@ -312,6 +312,20 @@ def check_case_write(evidence, runtime):
             FAIL,
             "The reloaded case does not retain the contact count from the write response.",
         )
+    sent = need_dict(written[-1], "write response last contact")
+    if sent.get("outcome") == runtime.projection.NOTE_HELD:
+        raise Verdict(
+            BLOCKED,
+            "The write response outcome is held for this role, so the write cannot be compared from this role's view.",
+        )
+    if (
+        sent.get("outcome") != expected_outcome
+        or sent.get("channel") != request["channel"]
+    ):
+        raise Verdict(
+            FAIL,
+            "The write response last contact does not match the submitted outcome and channel.",
+        )
     if final.get("outcome") == runtime.projection.NOTE_HELD:
         raise Verdict(
             BLOCKED,
@@ -347,9 +361,13 @@ def check_case_write(evidence, runtime):
             BLOCKED,
             "No restart between write and reload is declared, so persistence is not shown (a fresh read is not durability).",
         )
-    return (
-        PASS,
-        "Write, restart and reload retained the contact and extended an intact ledger; the restart marker is self-declared.",
+    if any(sent.get(k) != final.get(k) for k in set(sent) | set(final)):
+        raise Verdict(
+            FAIL, "The write response last contact differs from the reloaded contact."
+        )
+    raise Verdict(
+        BLOCKED,
+        "Supplied snapshots are response-shape consistent, but SQL backing, a real restart and persistence cannot be verified offline from self-supplied responses; durability stays blocked until independently verifiable deployed evidence exists (#349, #360).",
     )
 
 
