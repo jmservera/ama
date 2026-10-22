@@ -2,24 +2,24 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-22T17:51:03+00:00",
-  "commit": "62849a4be7616c19cac756b1250bd94bf0abb470",
+  "scored_at": "2026-10-22T18:19:58+00:00",
+  "commit": "2dad2a60a36d27812291b70c964270d8a2503636",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39822948020",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39826974282",
   "fingerprints": {
-    "brd": "d3e020efc70fcbbc116419cd66cdc41340b57a7da4b4f659eb3088204df7fd65",
+    "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "5d3831f1da50a37c1732fd7e467c2f7721f4b570f55e9c97c8a440bdb67aed3a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
-    "pitch": "220ef74dc2be742b608f8e16677790afdf391cf51053bc9f7f2c85aa6476e752"
+    "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
   },
-  "total": 59,
+  "total": 54,
   "sections": {
     "A": 30,
-    "B": 19,
-    "C": 10,
+    "B": 16,
+    "C": 8,
     "D": 0
   },
   "floors_met": false,
@@ -31,14 +31,14 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "New incident/restart feature layered via existing mixin/decorator contracts. This diff (BRD/PRD/pitch brief) adds no architecture change; unchanged."
+      "rationale": "New incident/restart feature layered via existing mixin/decorator contracts. This diff is BRD/PRD proposal text and a new pitch brief; no architecture or code change."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0005 names rejected alternatives with reasons. Diff adds no new trade-off reasoning text; unchanged."
+      "rationale": "ADR 0005 names rejected alternatives with reasons. Already at ceiling; diff is a BRD/PRD/pitch-brief proposal, no new trade-off reasoning text relevant to this criterion."
     },
     "A3": {
       "score": 5,
@@ -46,7 +46,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff is BRD/PRD/pitch documentation about AI cost economics, not a security or responsible-AI control change; unchanged."
+      "rationale": "Diff is proposal/documentation only (Tokenomics BRD rows, pitch brief); no new security control or AI risk mitigation evidence."
     },
     "A4": {
       "score": 5,
@@ -54,94 +54,91 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "Diff proposes new requirements (FR-061, NFR-017) but adds no implementation; proactive-disclosure pattern already at ceiling, unchanged."
+      "rationale": "Unchanged; the diff proposes new requirements (NFR-012, FR-052) and a pitch brief but implements no new capability."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1696-1731",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
+        "src/api/tests/test_operator_suspension.py:614-665",
+        "src/core/src/zava_forward/core/sqlstore.py:572-630"
       ],
-      "rationale": "Diff adds proposed NFR-012/NFR-017 metering, limit and cost-reporting requirements and an OD-51 decision gate, but these remain Not-run proposals with no measured cost or performance evidence yet. Still only resilience evidenced in code; cost modelling is a stated intent, not measured. Unchanged."
+      "rationale": "The BRD/PRD add proposed metering and Total-Cost-of-AI reporting requirements (NFR-012, FR-052, NFR-017) but these are unimplemented proposals with no price source or measured cost; no code change. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "The pitch brief cites an existing smallest-model-that-meets-thresholds rule (PRD AC-108) but adds no new evaluation harness or cost/latency/quality comparison; unchanged."
+      "rationale": "Unchanged: diff proposes AI cost/evaluation requirements in the BRD/PRD (NFR-012, FR-052) and a pitch brief discussing a 'smallest-model-that-meets-thresholds' rule, but adds no new model-choice justification or evaluation harness change in code."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "No new agentic orchestration introduced by this diff; the new NFR-017 proposes call/depth bounds but remains Not run. Unchanged."
+      "rationale": "Unchanged; no new agentic orchestration code in this diff."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; the pitch brief is a planning document, not a rehearsed narrative delivery. No demonstrated argument delivery evidence. Baseline readiness score retained."
+      "rationale": "Live-scored; this diff adds a pitch-brief planning document, not a rehearsed narrative delivery or updated deck. Baseline readiness score retained."
     },
     "B2": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no evidence of actual audience calibration during delivery. Baseline readiness score retained."
+      "rationale": "Live-scored; no new deck or rehearsal evidence of register calibration in this diff. Baseline readiness score retained."
     },
     "B3": {
       "score": 1,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:43-48"
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
       ],
-      "rationale": "Pitch artifact now committed, but it only proposes placement options for a slide insert; it contains no demo plan, no executive hook content and no evidence of a rehearsed or recoverable demo. Minimal readiness only."
+      "rationale": "The required pitch artifact is now committed, so the 0 'not demonstrable' floor no longer applies. The brief itself states the deck is 'unchanged' and the material 'has not been rehearsed'; no demo script, timing or recovery evidence exists, so readiness is Needs Improvement."
     },
     "B4": {
-      "score": 2,
+      "score": 1,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:95-101"
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:97-104"
       ],
-      "rationale": "Executive Questions table gives prepared answer stems for CFO/CIO/CEO challenge questions, showing some Q&A preparation, but there is no rehearsal or live-delivery evidence of composure under pressure."
+      "rationale": "The brief drafts executive Q&A answer stems (CFO/CIO/CEO questions) but these are prepared text, not a demonstrated live exchange under challenge; no transcript or rehearsal exists."
     },
     "B5": {
-      "score": 2,
+      "score": 1,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:69-78"
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:13"
       ],
-      "rationale": "Draft speaker notes with an estimated word count and timing exist, but the document explicitly states the material 'has not been rehearsed'; no pacing or time-discipline evidence."
+      "rationale": "The brief explicitly states the '795-second main route has not been rehearsed against this material' and recommends rehearsing 'the 20 seconds ... aloud' later; no pace, timing or presence evidence exists yet."
     },
     "B6": {
       "score": 4,
       "evidence": [
         "src/api/README.md:2555-2561"
       ],
-      "rationale": "Deck itself is unchanged per the pitch brief's own Status section; capstone documentation remains dense but organised. No change to deck/documentation craft."
+      "rationale": "Unchanged; this diff does not touch the capstone deck or src READMEs. The new pitch brief is a separate document, not deck/documentation content scored under B6."
     },
     "B7": {
-      "score": 4,
-      "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:82-88"
-      ],
-      "rationale": "The Numbers to Bring table attaches an explicit evidence class and limit to every figure (6,884 tokens/5 runs, USD 450 ceiling, Unknown cost-per-outcome), a stronger evidence-labeling discipline than the prior baseline's qualitative evidence."
+      "score": 3,
+      "evidence": [],
+      "rationale": "Unchanged: the new pitch brief contains labelled figures (measured vs unknown) but is explicitly a proposal not yet placed in the deck or delivered pitch ('not a change to the deck'), so it does not yet constitute delivered evidence/data storytelling."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
       ],
-      "rationale": "No material change to stakeholder naming or quantified success measures; BRD's new economics rows remain proposals without stated figures. Already at ceiling; unchanged."
+      "rationale": "Already at ceiling from prior BRD stakeholder/target framing; the Tokenomics rows add further quantified cost-reporting requirements but do not raise an already-maximal score."
     },
     "C2": {
-      "score": 2,
-      "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:95-101"
-      ],
-      "rationale": "Live-scored. Executive Questions table shows prepared, non-dismissive answer stems to anticipated disagreement (e.g. 'Can the bill run away?'), minimal readiness evidence but no demonstrated live listening or concession behaviour."
+      "score": 0,
+      "evidence": [],
+      "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
     },
     "C3": {
       "score": 3,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:18-25",
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:103-109"
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:21-26",
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:99",
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:106-116"
       ],
-      "rationale": "Brief recommends option A, defends it, surfaces the cost gap unprompted, and lists a Claims-to-Keep-Out section against overclaiming -- strong honesty discipline, though a planning document, not a delivered defense."
+      "rationale": "C3 is not live-scored; pitch artifact now committed. Brief defends a recommendation (Option A), surfaces risk unprompted ('Claims to Keep Out'), includes 'I will not estimate one' stem. Written prep, not a live exchange, so short of ceiling."
     },
     "D1": {
       "score": 0,
