@@ -375,14 +375,18 @@ def run(
         else:
             add("api-audience", "mismatch", "audience-invalid")
         if client:
-            allowed = {a.strip().lower() for a in auth.get("audiences") or [] if isinstance(a, str)}
-            ok = client in allowed or f"api://{client}" in allowed
-            add(
-                "api-audience-allowed",
-                "ready" if ok else "mismatch",
-                "audience-allowed" if ok else "audience-not-allowed",
-                count=len(allowed),
-            )
+            audiences = auth.get("audiences")
+            if audiences is not None and not isinstance(audiences, list):
+                add("api-audience-allowed", "unknown", "malformed-response")
+            else:
+                allowed = {a.strip().lower() for a in audiences or [] if isinstance(a, str)}
+                ok = client in allowed or f"api://{client}" in allowed
+                add(
+                    "api-audience-allowed",
+                    "ready" if ok else "mismatch",
+                    "audience-allowed" if ok else "audience-not-allowed",
+                    count=len(allowed),
+                )
         else:
             add("api-audience-allowed", "unknown", "blocked-by-api-audience")
         if auth.get("secretSet") is True:
@@ -494,15 +498,18 @@ def run(
         "ready" if ok else "mismatch",
         "single-tenant" if ok else "not-single-tenant",
     )
-    ok = f"api://{client}" in [
-        u.lower() for u in registration.get("identifierUris") or [] if isinstance(u, str)
-    ]
-    add(
-        "graph-identifier-uri",
-        "ready" if ok else "mismatch",
-        "identifier-uri-present" if ok else "identifier-uri-missing",
-    )
-    api = registration.get("api") if isinstance(registration.get("api"), dict) else {}
+    identifier_uris = registration.get("identifierUris")
+    if identifier_uris is not None and not isinstance(identifier_uris, list):
+        add("graph-identifier-uri", "unknown", "malformed-response")
+    else:
+        ok = f"api://{client}" in [u.lower() for u in identifier_uris or [] if isinstance(u, str)]
+        add(
+            "graph-identifier-uri",
+            "ready" if ok else "mismatch",
+            "identifier-uri-present" if ok else "identifier-uri-missing",
+        )
+    api = registration.get("api")
+    api = api if isinstance(api, dict) else {}
     ok = api.get("requestedAccessTokenVersion") == contract["token_version"]
     add(
         "graph-token-version",
@@ -511,11 +518,15 @@ def run(
     )
     finding = role_contract(registration.get("appRoles"), contract["roles"])
     out.append(finding)
-    web = registration.get("web") if isinstance(registration.get("web"), dict) else {}
-    redirects = [r for r in web.get("redirectUris") or [] if isinstance(r, str)]
+    web = registration.get("web")
+    web = web if isinstance(web, dict) else {}
+    redirect_uris = web.get("redirectUris")
     if callback is None:
         add("graph-callback", "unknown", "blocked-by-callback-target")
+    elif redirect_uris is not None and not isinstance(redirect_uris, list):
+        add("graph-callback", "unknown", "malformed-response")
     else:
+        redirects = [r for r in redirect_uris or [] if isinstance(r, str)]
         present = callback in redirects
         add(
             "graph-callback",
