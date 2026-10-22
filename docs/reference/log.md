@@ -7802,3 +7802,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   account with reuse approval, or approval of another source.
 * Source selection and licence/reuse remain UNMET, synthetic data is not
   substituted for observations, and the issue criteria stay unticked.
+
+## [2026-10-22] query | Modelled paired historical climate source (#178)
+
+* Following the owner decision of 2026-10-22, retrieved a fixed anonymous
+  hourly Durham 2023 sample from Open-Meteo (ERA5) with a NASA POWER
+  cross-check, hash-pinned under the climate sample folder, and derived
+  temperature and humidity sample bounds with a validating adapter that
+  rejects gaps, misalignment and inconsistent humidity.
+* The source is labelled modelled, not observed. The two modelled sources
+  differ (about 1 degC and 8 humidity points mean absolute), so accuracy is
+  demonstrator level only. Production precision, licence and commercial-use
+  confirmation, underlying C3S terms and regional representativeness remain
+  pending and no approval is asserted.
+* The 2026-10-21 MIDAS blocker and the Durham temperature-only report are
+  unchanged. Issue criteria stay unticked.
