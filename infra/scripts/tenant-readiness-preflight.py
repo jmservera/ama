@@ -35,6 +35,7 @@ import uuid
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 MANIFEST = Path(__file__).resolve().parents[1] / "entra" / "app-registration.json"
 GRAPH = "https://graph.microsoft.com/v1.0"
@@ -189,7 +190,6 @@ def valid_host(host: str) -> bool:
 
 
 def public_host(url: str) -> str | None:
-    from urllib.parse import urlsplit
 
     try:
         parsed = urlsplit(url)
@@ -208,6 +208,31 @@ def public_host(url: str) -> str | None:
     ):
         return None
     return host
+
+
+def issuer_tenant_id(issuer: str) -> str | None:
+    """Return the tenant UUID only for https://login.microsoftonline.com/<uuid>/v2.0."""
+    try:
+        parts = urlsplit(issuer)
+        port = parts.port
+    except ValueError:
+        return None
+    if (
+        parts.scheme != "https"
+        or parts.hostname != "login.microsoftonline.com"
+        or parts.username is not None
+        or parts.password is not None
+        or port is not None
+        or parts.query
+        or parts.fragment
+    ):
+        return None
+    segments = parts.path.split("/")
+    if len(segments) not in (3, 4) or segments[0] != "" or segments[2] != "v2.0":
+        return None
+    if len(segments) == 4 and segments[3] != "":
+        return None
+    return as_uuid(segments[1])
 
 
 def as_uuid(value: object) -> str | None:
@@ -367,8 +392,10 @@ def run(
         issuer = auth.get("issuer")
         issuer_tenant = None
         if isinstance(issuer, str):
-            found = re.search(r"login\.microsoftonline\.com/([0-9a-fA-F-]{36})/", issuer)
-            issuer_tenant = as_uuid(found.group(1)) if found else None
+            issuer_tenant = issuer_tenant_id(issuer)
+            if issuer_tenant is None:
+                add("api-issuer-tenant", "mismatch", "issuer-not-expected-authority")
+                issuer = None
         if tenant and issuer_tenant:
             same = tenant == issuer_tenant
             add(
@@ -378,7 +405,7 @@ def run(
                 if same
                 else "issuer-differs-from-signed-in-tenant",
             )
-        else:
+        elif issuer is not None or not isinstance(auth.get("issuer"), str):
             add("api-issuer-tenant", "unknown", "issuer-or-tenant-unreadable")
 
     host = public_host(public_url) if public_url else fqdn
