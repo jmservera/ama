@@ -111,11 +111,17 @@ def _parse_json(raw: bytes) -> dict:
     return data
 
 
+def _object(value, label: str) -> dict:
+    if not isinstance(value, dict):
+        raise ValueError(f"{label} must be a JSON object")
+    return value
+
+
 def parse_open_meteo(raw: bytes, *, source_url: str, retrieved_on: str,
                      expected_sha256: str) -> dict:
     digest = _check_inputs(raw, expected_sha256, source_url, retrieved_on)
     data = _parse_json(raw)
-    units = data.get("hourly_units", {})
+    units = _object(data.get("hourly_units", {}), "hourly_units")
     expected_units = {"temperature_2m": "°C", "relative_humidity_2m": "%",
                       "dew_point_2m": "°C"}
     for key, unit in expected_units.items():
@@ -167,15 +173,17 @@ def parse_power(raw: bytes, *, source_url: str, retrieved_on: str,
                 expected_sha256: str) -> dict:
     digest = _check_inputs(raw, expected_sha256, source_url, retrieved_on)
     data = _parse_json(raw)
-    header = data.get("header", {})
+    header = _object(data.get("header", {}), "header")
     if header.get("time_standard") != "UTC":
         raise ValueError("NASA POWER response is not UTC")
     fill = header.get("fill_value")
-    units = data.get("parameters", {})
-    if units.get("T2M", {}).get("units") != "C" or units.get("RH2M", {}).get(
-            "units") != "%":
+    units = _object(data.get("parameters", {}), "parameters")
+    t_units = _object(units.get("T2M", {}), "parameters.T2M")
+    h_units = _object(units.get("RH2M", {}), "parameters.RH2M")
+    if t_units.get("units") != "C" or h_units.get("units") != "%":
         raise ValueError("Unexpected NASA POWER units")
-    parameter = data.get("properties", {}).get("parameter", {})
+    properties = _object(data.get("properties", {}), "properties")
+    parameter = _object(properties.get("parameter", {}), "properties.parameter")
     t_map, h_map = parameter.get("T2M"), parameter.get("RH2M")
     if not isinstance(t_map, dict) or not isinstance(h_map, dict):
         raise ValueError("Missing T2M or RH2M series")
@@ -196,7 +204,10 @@ def parse_power(raw: bytes, *, source_url: str, retrieved_on: str,
                 raise ValueError(f"Fill value in {label} at index {i}")
             target.append(value)
     _check_rh(rh)
-    coordinates = data.get("geometry", {}).get("coordinates", [None] * 3)
+    geometry = _object(data.get("geometry", {}), "geometry")
+    coordinates = geometry.get("coordinates", [None] * 3)
+    if not isinstance(coordinates, list) or len(coordinates) < 3:
+        raise ValueError("geometry.coordinates must be a list of three values")
     return {
         "name": "nasa_power_merra2", "times": times, "temperature": temperature,
         "rh": rh, "sha256": digest, "bytes": len(raw), "source_url": source_url,
