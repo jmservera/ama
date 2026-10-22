@@ -3,15 +3,15 @@
   "task_slug": "issue-350-demo-feedback-harness",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Research",
+  "active_phase": "Implement",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-22/issue-350-demo-feedback-harness-research.md",
-    "plan": null,
-    "details": null,
-    "critique": null,
-    "changes": null,
+    "plan": ".copilot-tracking/plans/2026-10-22/issue-350-demo-feedback-harness-plan.md",
+    "details": ".copilot-tracking/details/2026-10-22/issue-350-demo-feedback-harness-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-22/issue-350-demo-feedback-harness-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-22/issue-350-demo-feedback-harness-changes.md",
     "review": null
   },
   "confirmed_decisions": [
@@ -34,12 +34,17 @@
       "decision": "Research executed; Planning Readiness Ready; build new standalone checker importing installed runtime modules",
       "status": "confirmed",
       "evidence": "research artifact C1-C16, W1, W2"
+    },
+    {
+      "decision": "Plan critique executed once, verdict Revise, 7 findings (PC-001..007) applied directly; no user decision needed; plan ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-22/issue-350-demo-feedback-harness-plan-critique.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Plan",
-    "action": "Activate rpi-plan"
+    "phase": "Implement",
+    "action": "Activate rpi-implement P01"
   },
   "prioritized_follow_ups": null
 }
