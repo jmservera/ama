@@ -121,33 +121,33 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Implement the checker
+### [x] P01: Implement the checker
 
 * Intent: deterministic offline checker with the contract above.
 * Dependencies: installed `src/core` and `src/api` packages in a venv.
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Evidence loading, report model and CLI
+#### [x] P01-T01: Evidence loading, report model and CLI
 
 * Requirement and evidence: Functional requirements 1-2; NFR input safety; C15.
 * Expected result: bounded loader, four-state report, exit codes, JSON/text output.
 * Detail section: P01-T01 in .copilot-tracking/details/2026-10-22/issue-350-demo-feedback-harness-phase-details.md
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Image, `/api/me`, case write/reload, AI and baseline checks
+#### [x] P01-T02: Image, `/api/me`, case write/reload, AI and baseline checks
 
 * Requirement and evidence: Functional requirements 3-8; C5-C14, W1, W2.
 * Expected result: each check follows the plan's state rules and imports runtime constants and builders.
 * Detail section: P01-T02 in .copilot-tracking/details/2026-10-22/issue-350-demo-feedback-harness-phase-details.md
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Focused tests
+### [x] P02: Focused tests
 
 * Intent: prove every state and the fixture cap using runtime-built fixtures.
 * Dependencies: P01
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Unittest module with synthetic fixtures
+#### [x] P02-T01: Unittest module with synthetic fixtures
 
 * Requirement and evidence: Acceptance criteria 1-3.
 * Expected result: `tools/test_check_demo_feedback.py` passes under the installed packages; no network or credentials.

@@ -3,7 +3,7 @@
   "task_slug": "issue-350-demo-feedback-harness",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -39,12 +39,17 @@
       "decision": "Plan critique executed once, verdict Revise, 7 findings (PC-001..007) applied directly; no user decision needed; plan ready",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/plans/2026-10-22/issue-350-demo-feedback-harness-plan-critique.md"
+    },
+    {
+      "decision": "Implementation P01/P02 complete; 45 focused tests and targeted Ruff pass",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-22/issue-350-demo-feedback-harness-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Activate rpi-implement P01"
+    "phase": "Review",
+    "action": "Activate rpi-review once"
   },
   "prioritized_follow_ups": null
 }
