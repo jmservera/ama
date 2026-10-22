@@ -2,18 +2,18 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-18"
+ms.date: "2026-10-22"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.17.0"
+version: "0.18.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-18"
+last_updated: "2026-10-22"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.17.0 | Last Updated: 2026-10-18
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.18.0 | Last Updated: 2026-10-22
 
 ## Executive Summary
 
@@ -823,6 +823,8 @@ All proposed criteria are Not run and are inactive until BRD OD-44.
 | FR-060 | BRD FR-051, AC-099, OD-50; ADR 0005 |
 | NFR-015 | BRD NFR-010, AC-097 |
 | NFR-016 | BRD NFR-011, RULE-026, AC-096, AC-098 |
+| FR-061 | BRD FR-052, AC-102, AC-103, OD-51 |
+| NFR-017 | BRD NFR-012, AC-100, AC-101, OD-51 |
 
 Open questions OQ-020 to OQ-025 below map to BRD OD-44 to OD-49.
 
@@ -887,6 +889,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-052 | The product shall record an affected person's supplied challenge or correction request against the relevant source, policy/proposal version and human decision, with a permitted plain-language explanation, human owner, accessible/non-digital route, next-update commitment and resolution evidence. | Authorized staff record a constructed challenge or correction | AC-071 | GOAL-001, GOAL-002 |
 | FR-053 | An authorized operator shall be able to suspend an affected AI task and record its incident, impacted proposal/version set, accountable owner and restart decision, preserving permitted history and independent manual and hazard routes. | RAI incident or threshold breach | AC-072 | GOAL-002, GOAL-004 |
 | FR-054 | The product shall retain a versioned evaluation record for deterministic prioritisation and AI tasks with declared cohort definitions, denominators, missing-data treatment, subgroup error/exclusion/review-burden results, uncertainty, approved thresholds and human disparity disposition. | Release evaluation or material policy/model/data change | AC-073 | GOAL-002, GOAL-004 |
+| FR-061 | The product shall report AI consumption economics for the exercise: for each registered AI task, calls, input, output and cached tokens, retries, failures and outcome joined to the audit scenario record and the human review outcome, with the Total Cost of AI components and the cost per accepted proposal shown beside the quality floor met. It shall state no cost that it cannot tie to a dated price source and a billing record. | Finance, Digital or Product views AI economics, or an evaluation run completes | AC-107, AC-108 | GOAL-004 |
 
 ## Non-Functional Requirements
 
@@ -985,6 +988,16 @@ interoperability (008), portability (010), plus integrity and AI controls.
   evidence until re-evaluation; unmeasured indicators cannot be reported green.
   Verify through AC-069/AC-072/AC-073. Live thresholds require human approval.
 
+* **NFR-017 AI consumption bounds and metering:** Each registered AI task shall
+  have finite call, token, budget and expiry limits, a maximum number of model
+  calls and agent depth per request and a hard termination, so consumption
+  cannot grow with usage unseen. A reached limit, missing price source or
+  unknown liability shall degrade the task to the workflow-only path, raise an
+  owned alert and never delay hazard response. Metered usage shall reconcile to
+  Azure cost records, with the billing record as the financial source. Verify
+  through AC-109 and AC-110. Live budgets, owners and price sources require
+  human approval (BRD OD-51).
+
 ### Observability and SLO Measurement Method
 
 This is a proposed measurement contract for NFR-004, NFR-006, NFR-009 and
@@ -1013,7 +1026,8 @@ names or unbounded metric dimensions.
   rate from failed or explicitly escalated runs divided by started runs over
   the same window; document treatment of cancelled, retried and incomplete
   scenarios. Attribute model/provider usage cost to the protected audit
-  scenario record rather than a high-cardinality metric dimension.
+  scenario record rather than a high-cardinality metric dimension. NFR-017 and
+  FR-061 add the limits, reconciliation and reporting that use this record.
 * Use the approved exercise workload, recovery and spending thresholds below;
   record observations and method, not SLO attainment, until actually measured.
   Production availability windows/error budgets remain out of scope.
@@ -1537,6 +1551,10 @@ technical, control and user representatives before acceptance.
 | AC-071 | Given an affected person's constructed challenge through digital and staff-recorded non-digital routes, when the information is reviewed/corrected, then permitted AI/source/policy explanations, owner, next update and resolution are visible, only dependent proposals/reviews become stale, and no consent, refusal, sanction, unrelated closure or hazard-clock change is inferred. | FR-052, FR-043 | Not run |
 | AC-072 | Given a seeded critical harm incident or approved monitoring threshold breach, when the operator suspends the affected task, then new dispatch and reliance on its pending/ready proposals are blocked, impacted versions and owner are recorded, manual case work and hazard response remain available, and restart is denied until corrective tests and distinct authorized human approval are recorded. | FR-053, FR-028 | Not run |
 | AC-073 | Given paired constructed cohorts differing in sensor/source completeness, accessibility/contact need or appointment history and an approved expected-outcome manifest, when deterministic and AI evaluation runs, then all seeded unjustified exclusion/deprioritisation defects are detected, per-cohort counts/errors/review burden and uncertainty reconcile, small or missing samples remain insufficient, and exceeded or unapproved thresholds block task activation pending human disposition rather than being averaged away. | FR-054, FR-012 | Not run |
+| AC-107 | Given the registered AI tasks, a completed evaluation run and a call that fails, retries or is refused, when AI economics are reported, then each task shows calls, input, output and cached tokens, retries, failures and outcome joined to the protected audit scenario record and the reviewer decision; token cost is shown separately from review, correction, re-review, hosting, diagnostics and support effort; the denominator (per run or per accepted proposal) is named; and a missing, undated or unversioned price source yields Unknown, never an estimate. | FR-061 | Not run |
+| AC-108 | Given a cheaper candidate or cache setting that lowers cost per invocation but raises a critical miss, unsupported-claim, override or reopened-case rate on the same held-out scenarios, when results are compared, then the change is reported as a failure, not a saving; time released is reported as capacity, not cash, unless Finance confirms a booked destination; and no token-cost benefit is claimed. | FR-061, FR-027 | Not run |
+| AC-109 | Given a registered task with limits, a request built to loop or fan out beyond its approved call count or agent depth, a reached token or budget limit, an unknown price and an expired authority, when each occurs, then dispatch stops with a recorded outcome, no further provider call is made, the case continues on the workflow-only path, an owned alert names the limit reached, and hazard response and statutory clocks are unaffected. | NFR-017, FR-044 | Not run |
+| AC-110 | Given a period of metered usage and the Azure cost record, when Finance reconciles them, then variance above the owner-set tolerance is reported, the billing record is the financial source, the price source is dated and versioned, and usage by task, case type and release can be reconstructed without raw case content in telemetry. | NFR-017 | Not run |
 
 ### Independently reportable review checks
 
@@ -1651,8 +1669,10 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-060 | AC-104, AC-105, AC-106 | Linked |
 | NFR-015 | AC-102 | Linked |
 | NFR-016 | AC-103 | Linked |
+| FR-061 | AC-107, AC-108 | Linked |
+| NFR-017 | AC-109, AC-110 | Linked |
 
-Link coverage: 59/59 FRs (including five proposed) and both proposed NFRs linked to at least one criterion (100%); this matrix
+Link coverage: 61/61 FRs (including those proposed) and the proposed NFR-015 to NFR-017 linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
 Not run. Links and named subchecks are not proof that every behavior has
 been implemented or tested.
@@ -1667,7 +1687,7 @@ been implemented or tested.
 | FR-048 to FR-060 | GOAL-002 |
 | FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
-| FR-051, FR-053, FR-054, FR-055 to FR-059 | GOAL-004 |
+| FR-051, FR-053, FR-054, FR-055 to FR-059, FR-061 | GOAL-004 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
 
@@ -1911,6 +1931,7 @@ unavailable-feature label is transparent scope, not evidence of full delivery.
 | AI incremental task value | Paired quality, review time, unsupported claims, overrides and missed critical exceptions versus workflow-only | No measured product result | Thresholds approved before test; zero undetected critical error accepted | Product, Safety and Assurance |
 | Form field accuracy and abstention | Correct supplied-candidate/normalized values divided by evaluated fields; missing/conflicting/no-match outcomes and source-lineage correctness reported by field type, including manual/parser errors | No evaluated form set | 100% source-bound proposals and zero unsupported critical values in the agreed suite; exact-match/calibration/coverage thresholds approved before testing | Finance, Data and Product |
 | Application/claim preparation effort | Staff minutes for source gathering, draft creation, validation, full review, correction and re-review on the same complete pack versus manual/template and parser/rules alternatives | No measured pack baseline | Positive incremental value demonstrated under owner-approved quality/review budgets; no token-cost or vendor-speed benefit assumed | Finance and Programme |
+| AI economics (Tokenomics) | Metered usage, Total Cost of AI components and cost per accepted proposal for each registered task, beside the quality floor met and any booked value destination | No price source, accepted-proposal count or measured product result | Reported as Unknown until a dated price source and a human-accepted outcome count exist; zero cost stated without a billing record; no token-cost saving counted if a quality measure worsens | Finance and Product |
 | Reviewed-pack fidelity | Exported field IDs/values and attachment references matching the approved schema/input/review manifest | No constructed export result | 100% match on the agreed fixture; stale or unmet mandatory conditions never yield a reviewed pack | Finance and Quality |
 | Safety/resident/quality/finance guardrails | Critical negative tests and outcome measures by applicable cohort | Company baselines unknown | Zero prohibited controlled approvals in the test suite; live guardrail targets require named owners | Relevant control owners |
 
@@ -2045,6 +2066,7 @@ dependency and cannot be assumed away.
 | OQ-024 | Is memory in scope or only thread history, and which content classes may be remembered? (BRD OD-48) | Owner, DPO, Digital | Blocks FR-057 |
 | OQ-025 | What grounding, abstention and injection thresholds apply, and who is the accountable reviewer? (BRD OD-49) | Accountable AI reviewer, Data and Performance Lead | Blocks activation of any conversational task |
 | OQ-026 | Which regulatory duties, sources and delegations apply to Zava North Homes, who approves rule cards and interprets sources, what alert and chat audiences and alert-fatigue tolerance are acceptable, and does chat add value over deterministic rule cards with provision links? (BRD OD-50) | Legal, compliance, DPO, Building Safety, Assets, Digital | Blocks live use of FR-060 and any compliance claim; the synthetic exercise may proceed with fixture cards |
+| OQ-027 | What cost denominator, quality floor, finite budgets, alert owners, Total Cost of AI components and dated price source apply to each AI task? (BRD OD-51) | Finance and Grants Lead, Digital, Data and Performance Lead, Executive Director of Assets | Blocks any AI cost per accepted proposal statement (FR-061) and any production limit change (NFR-017); the synthetic exercise and metering may proceed |
 
 ## Sign-Off and Handoff Readiness
 
@@ -2125,7 +2147,7 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-18 (constructed RAI finding-evidence engineering status added; FR-060 and v0.17.0 chat/memory proposals remain pending fresh approval)
+* **Last Updated:** 2026-10-22 (AI Tokenomics proposals FR-061 and NFR-017 added; 2026-10-18 constructed RAI finding-evidence engineering status retained; FR-060 and v0.17.0 chat/memory proposals remain pending fresh approval)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
 
@@ -2133,6 +2155,7 @@ human user research and live-use approval remain future operational gates.
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 0.18.0 | 2026-10-22 | Proposal: AI Tokenomics (FR-061, NFR-017, AC-107 to AC-110, OQ-027) mapped to BRD v0.19.0 FR-052, NFR-012, AC-100 to AC-103 and OD-51; no existing ID renumbered; no price, budget or cost figure added |
 | 0.17.0 | 2026-10-15 | Proposal: per-user agent chat and memory (FR-055 to FR-059, NFR-015, NFR-016, AC-091 to AC-103, OQ-020 to OQ-025) with a journey, agent and UI mapping; renumbered after the RAI controls took FR-051 to FR-054, NFR-014, AC-069 to AC-073 and OQ-017 to OQ-019; inactive until BRD OD-44 |
 | 0.16.0 | 2026-10-15 | Journey and sensor requirements reconciled with proposed RAI release and oversight controls |
 | 0.15.0 | 2026-10-14 | BRD v0.17.0 journey amendment: FR-048, FR-049, FR-050 and AC-062 to AC-068 |
