@@ -12,6 +12,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import re
 
 RH_TOLERANCE = 1.0
 PERCENTILE_RULE = (
@@ -39,8 +40,6 @@ LICENCE = {
                            "(https://power.larc.nasa.gov/docs/referencing/, read "
                            "2026-10-22). No licence text was retrieved: the NASA "
                            "data information policy page returned HTTP 403.",
-        "attribution": "The data was obtained from the POWER Project's Hourly "
-                       "2.x.x version on the retrieval date.",
         "licence_verified": False,
     },
     "approval_statement": "No approval of demonstrator, downstream or production "
@@ -208,10 +207,17 @@ def parse_power(raw: bytes, *, source_url: str, retrieved_on: str,
     coordinates = geometry.get("coordinates", [None] * 3)
     if not isinstance(coordinates, list) or len(coordinates) < 3:
         raise ValueError("geometry.coordinates must be a list of three values")
+    api = header.get("api")
+    if not isinstance(api, dict):
+        api = {}
+    api = {key: api.get(key) for key in ("name", "version")}
+    for key, value in api.items():
+        if not isinstance(value, str) or not value.strip():
+            api[key] = None
     return {
         "name": "nasa_power_merra2", "times": times, "temperature": temperature,
         "rh": rh, "sha256": digest, "bytes": len(raw), "source_url": source_url,
-        "retrieved_on": retrieved_on,
+        "retrieved_on": retrieved_on, "api": api,
         "grid": {"longitude": coordinates[0], "latitude": coordinates[1],
                  "elevation_m": coordinates[2]},
     }
@@ -313,6 +319,20 @@ def _source_block(series: dict, request: dict) -> dict:
 
 
 def build_report(primary: dict, secondary: dict, request: dict) -> dict:
+    api = secondary["api"]
+    if api["name"] and api["version"] and re.fullmatch(r"v?[0-9]+\.[0-9]+\.[0-9]+",
+                                                     api["version"]):
+        attribution = (
+            f"The data was obtained from the POWER Project's {api['name']} "
+            f"{api['version']}, retrieved on {secondary['retrieved_on']}; "
+            "API identity and version are from the retained source metadata."
+        )
+    else:
+        attribution = (
+            "UNVERIFIED: NASA POWER API identity or precise version is unavailable "
+            "in the retained source metadata; "
+            f"retrieved on {secondary['retrieved_on']}. No version is inferred."
+        )
     return {
         "analysis_version": "paired-modelled-hourly-bounds-v1",
         "classification": "MODELLED reanalysis demonstrator sample; not station "
@@ -321,9 +341,12 @@ def build_report(primary: dict, secondary: dict, request: dict) -> dict:
         "selected_demo_source": "open_meteo_era5",
         "sources": {
             "open_meteo_era5": _source_block(primary, request),
-            "nasa_power_merra2": _source_block(secondary, request),
+            "nasa_power_merra2": {**_source_block(secondary, request), "api": api},
         },
-        "licence_and_attribution": LICENCE,
+        "licence_and_attribution": {
+            **LICENCE,
+            "nasa_power": {**LICENCE["nasa_power"], "attribution": attribution},
+        },
         "validation": {
             "rejects": ["hash mismatch", "non-HTTPS URL", "unit mismatch",
                         "non-UTC response", "null, non-numeric or fill value",

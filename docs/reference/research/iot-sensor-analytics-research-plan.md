@@ -755,6 +755,13 @@ Durham (54.768 N, -1.585 E) over 2023-01-01 to 2023-12-31, hourly, UTC. The raw
 responses are pinned by SHA-256 in
 [climate-paired-sample-178/](./climate-paired-sample-178/).
 
+The NASA response identifies `header.api.name` as `POWER Hourly API` and
+`header.api.version` as `v2.10.3`. The adapter carries these retained metadata
+fields into the report's source provenance and attribution with retrieval date
+2026-10-22; it marks attribution `UNVERIFIED` if identity or a precise version
+cannot be carried through. This records source metadata, not independent API
+verification, licence/reuse approval or the human owner/legal decision.
+
 | Source | Read on 2026-10-22 | Result |
 | --- | --- | --- |
 | [Open-Meteo Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api) (ERA5, 0.25 degrees) | [Terms](https://open-meteo.com/en/terms): free API for non-commercial use; [licence](https://open-meteo.com/en/licence): CC BY 4.0 with attribution; underlying Copernicus C3S material has its own licence | **Selected demonstrator source (modelled).** 8,760 paired hours, no gaps; grid cell 54.75 N, -1.5 E, 98 m |

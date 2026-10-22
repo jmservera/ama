@@ -765,7 +765,7 @@
   "licence_and_attribution": {
     "approval_statement": "No approval of demonstrator, downstream or production reuse is asserted; owner and legal confirmation remain pending.",
     "nasa_power": {
-      "attribution": "The data was obtained from the POWER Project's Hourly 2.x.x version on the retrieval date.",
+      "attribution": "The data was obtained from the POWER Project's POWER Hourly API v2.10.3, retrieved on 2026-10-22; API identity and version are from the retained source metadata.",
       "licence_verified": false,
       "published_terms": "Referencing guide asks for the POWER data reference with service, version and access date (https://power.larc.nasa.gov/docs/referencing/, read 2026-10-22). No licence text was retrieved: the NASA data information policy page returned HTTP 403."
     },
@@ -6309,6 +6309,10 @@
   "selected_demo_source": "open_meteo_era5",
   "sources": {
     "nasa_power_merra2": {
+      "api": {
+        "name": "POWER Hourly API",
+        "version": "v2.10.3"
+      },
       "bytes": 327067,
       "period": {
         "end": "2023-12-31T23:00Z",
