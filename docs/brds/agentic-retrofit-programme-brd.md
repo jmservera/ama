@@ -1717,16 +1717,22 @@ Three rules apply to every AI cost or value claim:
   denominator is used, and do not compare figures that use different ones.
 * A cheaper model or a cache hit is a saving only if critical misses,
   unsupported claims, overrides and reopened cases do not worsen. Human review,
-  correction and re-review are likely to cost more than the tokens and are
-  already measured under RULE-019.
+  correction and re-review are likely to cost more than the tokens, and the
+  RULE-019 measurement design includes them; its capture prerequisites (OD-18,
+  OD-36) remain open, so nothing has been measured yet.
 * Time released is capacity, not cash, until a budget owner confirms where the
   spend falls (RULE-016). A booked claim names one destination: revenue won,
   revenue retained, spend removed, spend avoided or capital freed.
 
-The programme already bounds model calls with finite limits and records token
-usage on each call. It does not yet hold a price table, a defined denominator
-or a measured accepted-outcome volume, so it states no AI cost per accepted
-outcome. OD-51 records what the owners must decide first.
+The five-assistant service already validates and retains token counts where the
+provider supplies them, and its call and token allowances are finite per
+authority reference. Coverage is partial: legacy draft and image paths discard
+provider usage, usage can remain unknown for an assistant call, and the
+allowances are not a currency guarantee or independent task and period budgets.
+The programme also holds no price table, defined denominator or measured
+accepted-outcome volume, so it states no AI cost per accepted outcome. NFR-012
+requires the complete metering and monetary limits that do not yet exist. OD-51
+records what the owners must decide first.
 
 ### Unvalidated Value Claims
 

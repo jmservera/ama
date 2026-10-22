@@ -1389,8 +1389,11 @@ a value claim needs a booked destination.
 
 For Zava Forward this changes the question from "what do tokens cost" to "what
 does each accepted proposal cost, beside the quality it must clear". The
-programme already records token usage on each model call and bounds calls with
-finite limits, but it states no cost per accepted outcome because it holds no
+programme validates and retains token counts for five-assistant calls where the
+provider supplies them, and bounds those calls with finite call and token
+allowances. Coverage is partial: the legacy draft and image paths discard
+provider usage and assistant usage can remain unknown. It states no cost per
+accepted outcome because it holds no
 dated price source, no defined denominator and no measured accepted-outcome
 volume (ADR 0001 records this as an explicit gap). The proposals are BRD NFR-012
 and FR-052 and PRD NFR-017 and FR-061, with owner decisions in BRD OD-51. See the

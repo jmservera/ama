@@ -70,15 +70,22 @@ The rubric already asks for this, in different words.
 
 Evidence class: repository observation, not a benchmark.
 
-* Every model call returns a validated usage envelope of prompt, completion and
-  total tokens, kept with the append-only ledger event
-  ([core `ai.py`](../../../src/core/src/zava_forward/core/ai.py) and
-  [assistants](../../../src/core/src/zava_forward/core/assistants.py)).
-* Operator-authorised exercises carry finite call, token, budget and expiry
-  limits, and proactive generation is off by default
-  ([ADR 0002](../../adrs/0002-pilot-readiness-architecture.md)). In Big-T terms
-  the design already bounds k (calls per request) and a (agent depth) and
-  forbids unbounded loops.
+* The five-assistant path validates prompt, completion and total tokens and keeps
+  them with the append-only ledger event when the provider supplies them
+  ([assistants](../../../src/core/src/zava_forward/core/assistants.py)). This is
+  partial coverage: the legacy `Ai.run()` and `look_at()` paths use `_chat()`,
+  which returns text only and discards usage
+  ([core `ai.py`](../../../src/core/src/zava_forward/core/ai.py)), and usage can
+  remain unknown for an assistant call, in which case the reservation is
+  retained. Complete per-call metering is what NFR-012 proposes.
+* Operator-authorised exercises carry finite call and token allowances and an
+  expiry per authority reference, and proactive generation is off by default
+  ([ADR 0002](../../adrs/0002-pilot-readiness-architecture.md),
+  [agents README](../../../src/agents/README.md)). The README states that token
+  allowances are not a currency guarantee and that the operator derives limits
+  from deployment pricing. Independent task and period budgets, and per-request
+  call and agent-depth bounds, are proposals (NFR-012, AC-100, AC-109), not
+  current controls. The assistant design does avoid open-ended agent loops.
 * One renewed QA exercise ran five assistant tasks on Azure OpenAI
   `gpt-4.1-mini-2025-04-14` using 6,884 tokens in five attempts, an arithmetic
   mean of about 1,377 tokens per proposal. This is a five-sample operational
