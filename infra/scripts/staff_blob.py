@@ -11,6 +11,7 @@ import base64
 import json
 import os
 import re
+import threading
 import time
 from typing import Any
 
@@ -41,8 +42,41 @@ HEADER = {
 }
 
 
+PREFLIGHT_BUDGET = 45.0
+READ_BUDGET = 45.0
+LIST_TIMEOUT = 20
+BLOB_TIMEOUT = 20
+
+
 class StaffJobError(Exception):
     """Sanitized job failure, including uncertain SQL or cleanup outcomes."""
+
+
+def _bounded(call: Any, deadline: float, message: str) -> Any:
+    """Enforce an overall deadline on a blocking SDK call.
+
+    The synchronous SDK cannot be interrupted, so the call runs in a daemon thread that is
+    abandoned on expiry. Only read-only calls are run this way and their late result is discarded.
+    """
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise StaffJobError(message)
+    box: dict[str, Any] = {}
+
+    def run() -> None:
+        try:
+            box["value"] = call()
+        except BaseException as error:  # noqa: BLE001 - re-raised in the caller below
+            box["error"] = error
+
+    worker = threading.Thread(target=run, daemon=True)
+    worker.start()
+    worker.join(remaining)
+    if worker.is_alive():
+        raise StaffJobError(message)
+    if "error" in box:
+        raise box["error"]
+    return box["value"]
 
 
 def account_url(value: Any) -> str:
@@ -140,7 +174,7 @@ def write_result(container: Any, request: dict[str, Any], result: dict[str, Any]
 def _list(container: Any, run: str) -> dict[int, int]:
     pattern = re.compile(re.escape(run) + r"/page-(\d{3})\.json")
     found: dict[int, int] = {}
-    for blob in container.list_blobs(name_starts_with=run + "/"):
+    for blob in container.list_blobs(name_starts_with=run + "/", timeout=LIST_TIMEOUT):
         name = blob["name"] if isinstance(blob, dict) else blob.name
         size = blob["size"] if isinstance(blob, dict) else blob.size
         match = pattern.fullmatch(name)
@@ -152,10 +186,17 @@ def _list(container: Any, run: str) -> dict[int, int]:
     return found
 
 
-def preflight(container: Any, request: dict[str, Any]) -> None:
+def preflight(container: Any, request: dict[str, Any], deadline: float | None = None) -> None:
     """Prove the private route and an empty run prefix before any secret leaves the host."""
+    limit = time.monotonic() + PREFLIGHT_BUDGET
+    limit = limit if deadline is None else min(limit, deadline)
     try:
-        existing = _list(container, request["run"])
+        existing = _bounded(
+            lambda: _list(container, request["run"]),
+            limit,
+            "Private result Blob did not answer within the time budget. Use an authorized "
+            "private-connected host; no job was created and no fallback exists.",
+        )
     except StaffJobError:
         raise
     except Exception:
@@ -168,15 +209,21 @@ def preflight(container: Any, request: dict[str, Any]) -> None:
 
 
 def read_result(
-    container: Any, request: dict[str, Any], now: float | None = None
+    container: Any,
+    request: dict[str, Any],
+    now: float | None = None,
+    deadline: float | None = None,
 ) -> dict[str, Any] | None:
     """Return None only when no page exists; anything partial or inconsistent is refused."""
     from cryptography.exceptions import InvalidTag
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
     clock = time.time() if now is None else now
+    limit = time.monotonic() + READ_BUDGET
+    limit = limit if deadline is None else min(limit, deadline)
+    expired = "Private result Blob read exceeded its time budget; outcome is unverified."
     try:
-        found = _list(container, request["run"])
+        found = _bounded(lambda: _list(container, request["run"]), limit, expired)
     except StaffJobError:
         raise
     except Exception:
@@ -193,7 +240,12 @@ def read_result(
     first: dict[str, Any] | None = None
     try:
         for index in range(count):
-            raw = container.download_blob(blob_name(request["run"], index)).readall()
+            name = blob_name(request["run"], index)
+            raw = _bounded(
+                lambda name=name: container.download_blob(name, timeout=BLOB_TIMEOUT).readall(),
+                limit,
+                expired,
+            )
             if len(raw) != found[index]:
                 raise ValueError
             record = json.loads(raw)

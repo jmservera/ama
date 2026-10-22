@@ -12,9 +12,11 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -58,8 +60,14 @@ class FakeContainer:
         self.blobs = {}
         self.unreachable = False
         self.uploads = []
+        self.stall_list = None
+        self.stall_download = None
+        self.timeouts = []
 
-    def list_blobs(self, name_starts_with=""):
+    def list_blobs(self, name_starts_with="", timeout=None):
+        self.timeouts.append(timeout)
+        if self.stall_list is not None:
+            self.stall_list.wait(10)
         if self.unreachable:
             raise OSError("unreachable")
         return [
@@ -68,7 +76,10 @@ class FakeContainer:
             if name.startswith(name_starts_with)
         ]
 
-    def download_blob(self, name):
+    def download_blob(self, name, timeout=None):
+        self.timeouts.append(timeout)
+        if self.stall_download is not None:
+            self.stall_download.wait(10)
         if self.unreachable:
             raise OSError("unreachable")
         return Mock(readall=lambda: self.blobs[name])
@@ -635,6 +646,84 @@ class TransportTests(unittest.TestCase):
             self.execute(payload={"oversize": "x" * JOB.MAX_INPUT})
         self.assertFalse(self.fake.requests)
 
+    def release(self):
+        for event in (self.fake.container.stall_list, self.fake.container.stall_download):
+            if event is not None:
+                event.set()
+
+    def test_stalled_preflight_list_stops_before_any_job(self):
+        self.fake.container.stall_list = threading.Event()
+        self.addCleanup(self.release)
+        started = time.monotonic()
+        with (
+            patch.object(BLOB, "PREFLIGHT_BUDGET", 0.2),
+            self.assertRaisesRegex(JOB.StaffJobError, "no job was created"),
+        ):
+            self.execute()
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertFalse(self.fake.requests)
+        self.assertFalse(self.fake.jobs)
+
+    def test_stalled_download_is_unverified_and_job_secret_is_cleaned_up(self):
+        self.fake.container.stall_download = threading.Event()
+        self.addCleanup(self.release)
+        started = time.monotonic()
+        with (
+            patch.object(BLOB, "READ_BUDGET", 0.2),
+            self.assertRaisesRegex(JOB.StaffJobError, "unverified"),
+        ):
+            self.execute()
+        self.assertLess(time.monotonic() - started, 30)
+        self.assertFalse(self.fake.jobs)
+
+    def test_stalled_list_during_read_is_unverified_and_cleaned_up(self):
+        self.addCleanup(self.release)
+        original = self.fake.container.list_blobs
+        calls = []
+
+        def list_blobs(name_starts_with="", timeout=None):
+            calls.append(1)
+            if len(calls) > 1:
+                self.fake.container.stall_list = threading.Event()
+            return original(name_starts_with, timeout)
+
+        self.fake.container.list_blobs = list_blobs
+        with (
+            patch.object(BLOB, "READ_BUDGET", 0.2),
+            self.assertRaisesRegex(JOB.StaffJobError, "unverified"),
+        ):
+            self.execute()
+        self.assertFalse(self.fake.jobs)
+
+    def test_failing_download_is_unverified_and_cleaned_up(self):
+        original = self.fake.container.download_blob
+
+        def failing(name, timeout=None):
+            raise OSError("reset")
+
+        self.fake.container.download_blob = failing
+        with self.assertRaisesRegex(JOB.StaffJobError, "unverified"):
+            self.execute()
+        self.fake.container.download_blob = original
+        self.assertFalse(self.fake.jobs)
+
+    def test_exhausted_deadline_refuses_without_calling_the_sdk(self):
+        self.fake.container.blobs.clear()
+        request = {"run": "a" * 32}
+        with self.assertRaisesRegex(JOB.StaffJobError, "time budget"):
+            BLOB.read_result(self.fake.container, request, deadline=time.monotonic() - 1)
+        self.assertEqual(self.fake.container.timeouts, [])
+
+    def test_sdk_calls_carry_explicit_server_timeouts(self):
+        self.execute()
+        self.assertTrue(self.fake.container.timeouts)
+        self.assertTrue(all(isinstance(t, int) and t > 0 for t in self.fake.container.timeouts))
+
+    def test_execute_binds_blob_client_to_the_transport(self):
+        with patch.object(JOB, "default_container", return_value=self.fake.container) as make:
+            JOB.execute(self.cli, self.fake.app, "candidates", {})
+        self.assertIs(make.call_args.args[1], self.cli)
+
 
 class BlobCodecTests(unittest.TestCase):
     def request(self):
@@ -755,7 +844,9 @@ class SetupAzureTests(unittest.TestCase):
         setup_fixture.SetupTests.setUp(self)
         self.fake = FakeJobs()
         SETUP.subprocess.run.side_effect = self.fake.run
-        patch.object(JOB, "default_container", side_effect=lambda url: self.fake.container).start()
+        patch.object(
+            JOB, "default_container", side_effect=lambda url, cli: self.fake.container
+        ).start()
 
     def test_explicit_azure_and_automatic_sql_preflight_fallback_finish_restart(self):
         for explicit in (True, False):
@@ -1445,6 +1536,89 @@ class WorkerTests(unittest.TestCase):
         self.assertNotIn("'*'", role)
         self.assertNotIn("Contributor", role)
         self.assertIn("Microsoft.App/containerApps/revisions/restart/action", role)
+
+
+class ProfileCredentialTests(unittest.TestCase):
+    URL = "https://zavastorage.blob.core.windows.net"
+
+    def cli(self, stdout, code=0):
+        self.profile = Path(tempfile.mkdtemp()) / "fallback-profile"
+        self.addCleanup(lambda: __import__("shutil").rmtree(self.profile.parent, True))
+        run = patch.object(
+            SETUP.subprocess,
+            "run",
+            return_value=subprocess.CompletedProcess([], code, stdout, "AADSTS tok-secret"),
+        )
+        self.run = run.start()
+        self.addCleanup(run.stop)
+        return SETUP.Azure(self.profile)
+
+    def token_json(self, **extra):
+        return json.dumps(
+            {"accessToken": "tok-secret", "expires_on": int(time.time()) + 3600, **extra}
+        )
+
+    def test_real_client_uses_selected_fallback_profile_not_ambient_chain(self):
+        cli = self.cli(self.token_json())
+        with patch("azure.identity.DefaultAzureCredential", side_effect=AssertionError("ambient")):
+            client = JOB.default_container(self.URL, cli)
+        self.assertIsInstance(client.credential, JOB.ProfileCredential)
+        args, kwargs = next(c for c in self.run.call_args_list if "get-access-token" in c.args[0])
+        self.assertEqual(
+            args[0][:5], ["az", "account", "get-access-token", "--resource", JOB.STORAGE_RESOURCE]
+        )
+        self.assertEqual(kwargs["env"]["AZURE_CONFIG_DIR"], str(self.profile))
+        token = client.credential.get_token(JOB.STORAGE_RESOURCE + ".default")
+        self.assertEqual(token.token, "tok-secret")
+        self.assertEqual(self.run.call_count, 1)
+
+    def test_client_has_explicit_socket_and_retry_limits(self):
+        cli = self.cli(self.token_json())
+        with patch("azure.storage.blob.ContainerClient") as client:
+            JOB.default_container(self.URL, cli)
+        limits = client.call_args.kwargs
+        self.assertEqual(
+            (limits["connection_timeout"], limits["read_timeout"], limits["retry_total"]),
+            (5, 15, 2),
+        )
+
+    def test_token_failures_fail_closed_without_leaking_detail(self):
+        for stdout, code in (
+            ("", 1),
+            ("not json", 0),
+            (json.dumps({"accessToken": "", "expires_on": int(time.time()) + 99}), 0),
+            (json.dumps({"accessToken": "tok-secret", "expires_on": 1}), 0),
+            (json.dumps({"accessToken": "tok-secret", "expiresOn": "garbage"}), 0),
+            (json.dumps({"accessToken": "tok-secret"}), 0),
+        ):
+            with self.subTest(stdout=stdout[:20], code=code):
+                cli = self.cli(stdout, code)
+                with self.assertRaises(JOB.StaffJobError) as raised:
+                    JOB.ProfileCredential(cli).get_token(JOB.STORAGE_RESOURCE + ".default")
+                self.assertNotIn("tok-secret", str(raised.exception))
+                self.assertNotIn("AADSTS", str(raised.exception))
+                self.assertIsNone(raised.exception.__cause__)
+
+    def test_naive_local_expires_on_and_unexpected_scope(self):
+        later = datetime.now() + timedelta(hours=1)
+        cli = self.cli(json.dumps({"accessToken": "tok-secret", "expiresOn": later.isoformat()}))
+        credential = JOB.ProfileCredential(cli)
+        self.assertAlmostEqual(
+            credential.get_token(JOB.STORAGE_RESOURCE + ".default").expires_on,
+            later.timestamp(),
+            delta=2,
+        )
+        with self.assertRaises(JOB.StaffJobError):
+            credential.get_token("https://management.azure.com/.default")
+
+    def test_priming_is_bounded_and_restores_the_shared_deadline(self):
+        cli = self.cli(self.token_json())
+        cli.deadline = None
+        JOB.default_container(self.URL, cli)
+        self.assertIsNone(cli.deadline)
+        token_call = next(c for c in self.run.call_args_list if "get-access-token" in c.args[0])
+        timeout = token_call.kwargs["timeout"]
+        self.assertLessEqual(timeout, BLOB.PREFLIGHT_BUDGET)
 
 
 class StorageContractTests(unittest.TestCase):

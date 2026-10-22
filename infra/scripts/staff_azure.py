@@ -11,6 +11,7 @@ import json
 import re
 import time
 import uuid
+from datetime import datetime
 from typing import Any
 
 import staff_blob
@@ -22,13 +23,66 @@ STORAGE_VERSION = "2024-01-01"
 MAX_INPUT = 12 * 1024
 
 
-def default_container(url: str) -> Any:
-    """Entra-authenticated client; it works only from a host with private-endpoint routing."""
-    from azure.identity import DefaultAzureCredential
+STORAGE_RESOURCE = "https://storage.azure.com/"
+TOKEN_REFRESH_SKEW = 120
+
+
+class ProfileCredential:
+    """Blob credential bound to the selected operator profile, never an ambient chain.
+
+    Tokens come only from ``cli.call``, so they use the same AZURE_CONFIG_DIR (including the
+    isolated fallback profile) as every ARM call. The token is cached in memory and never logged.
+    """
+
+    def __init__(self, cli: Any) -> None:
+        self.cli = cli
+        self.cached: tuple[str, int] | None = None
+
+    def get_token(self, *scopes: str, **_: Any) -> Any:
+        from azure.core.credentials import AccessToken
+
+        if scopes and any(s != STORAGE_RESOURCE + ".default" for s in scopes):
+            raise StaffJobError("Private result Blob credential refused an unexpected scope.")
+        if self.cached is None or self.cached[1] - TOKEN_REFRESH_SKEW <= time.time():
+            self.cached = self.fetch()
+        return AccessToken(*self.cached)
+
+    def fetch(self) -> tuple[str, int]:
+        failure = "Operator profile could not provide a storage token; run az login, then retry."
+        try:
+            value = self.cli.call(["account", "get-access-token", "--resource", STORAGE_RESOURCE])
+            token = value["accessToken"]
+            if "expires_on" in value:
+                expires = int(value["expires_on"])
+            else:
+                expires = int(datetime.fromisoformat(value["expiresOn"]).timestamp())
+            if not isinstance(token, str) or not token or expires <= time.time():
+                raise ValueError
+        except Exception:
+            raise StaffJobError(failure) from None
+        return token, expires
+
+
+def default_container(url: str, cli: Any) -> Any:
+    """Entra client on the selected operator profile; needs private-endpoint routing."""
     from azure.storage.blob import ContainerClient
 
+    credential = ProfileCredential(cli)
+    # Prime the token under a bounded deadline so no unbounded subprocess runs inside preflight.
+    saved = cli.deadline
+    cli.deadline = time.monotonic() + staff_blob.PREFLIGHT_BUDGET
+    try:
+        credential.get_token(STORAGE_RESOURCE + ".default")
+    finally:
+        cli.deadline = saved
     return ContainerClient(
-        staff_blob.account_url(url), staff_blob.CONTAINER, credential=DefaultAzureCredential()
+        staff_blob.account_url(url),
+        staff_blob.CONTAINER,
+        credential=credential,
+        connection_timeout=5,
+        read_timeout=15,
+        retry_total=2,
+        retry_backoff_factor=1,
     )
 
 
@@ -250,7 +304,7 @@ def execute(
         "payload": json.loads(content),
     }
     if container is None:
-        container = default_container(target["blob"])
+        container = default_container(target["blob"], cli)
     staff_blob.preflight(container, request)
     name = "job-staff-" + request["run"][:20]
     job_id = target["root"] + "/providers/Microsoft.App/jobs/" + name
@@ -336,7 +390,7 @@ def execute(
                 drifted = cli.rest(url)["properties"]["template"]["containers"][0]["image"]
                 if drifted != target["image"]:
                     raise StaffJobError("Azure staff job image changed; result refused.")
-                result_value = staff_blob.read_result(container, request)
+                result_value = staff_blob.read_result(container, request, deadline=deadline)
                 if result_value is None:
                     time.sleep(2)
                     continue  # Result pages are written before the worker exits; recheck.

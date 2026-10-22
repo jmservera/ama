@@ -204,6 +204,7 @@ dated history.
 | Live private routing, managed-identity write, operator read, real job | NOT RUN |
 | Deployment, role grants, Azure spend | NOT RUN, awaiting coordinator release of a finite plan |
 | Historical failures | Unknown transport failures; root cause is production follow-up |
+| Correction 1: Blob read bound to the selected operator profile, explicit timeouts and overall budget with cleanup | Implemented offline (fake clients); live NOT RUN |
 | Signed source or image attestation | Unverified, deferred (DN5) |
 | Demo screen-reader acceptance | Unverified production follow-up |
 | #360 c, d, e | Unproved and unchanged |
