@@ -100,14 +100,14 @@ def contact(outcome, channel="Phone"):
 
 
 def case_write(outcome="Left voicemail", restart=True):
-    old = [contact("Earlier")]
-    new = old + [contact(outcome[:80])]
+    old = [contact("Earlier two"), contact("Earlier one")]
+    new = [contact(outcome[:80])] + old
     return dict(
         synthetic=True,
         case_id="ZF-1",
         request=dict(outcome=outcome, note="", channel="Phone"),
         before=dict(status=200, body=dict(id="ZF-1", contacts=old)),
-        write=dict(status=200, body=dict(id="ZF-1", contacts=new)),
+        write=dict(status=200, body=dict(id="ZF-1", contacts=copy.deepcopy(new))),
         after=dict(status=200, body=dict(id="ZF-1", contacts=copy.deepcopy(new))),
         audit_before=ledger_report(2),
         audit_after=ledger_report(3),
@@ -352,16 +352,16 @@ class CaseWriteReload(unittest.TestCase):
 
     def test_mismatched_write_response_with_matching_reload_fails(self):
         case = case_write()
-        case["write"]["body"]["contacts"][-1]["outcome"] = "Different"
-        case["after"]["body"]["contacts"][-1]["outcome"] = "Different"
+        case["write"]["body"]["contacts"][0]["outcome"] = "Different"
+        case["after"]["body"]["contacts"][0]["outcome"] = "Different"
         self.assertEqual(self.status(case), "fail")
         case = case_write()
-        case["write"]["body"]["contacts"][-1]["channel"] = "Email"
+        case["write"]["body"]["contacts"][0]["channel"] = "Email"
         self.assertEqual(self.status(case), "fail")
 
     def test_write_response_differing_from_reload_in_any_field_fails(self):
         case = copy.deepcopy(case_write())
-        case["after"]["body"]["contacts"][-1]["by"] = "Someone else"
+        case["after"]["body"]["contacts"][0]["by"] = "Someone else"
         self.assertEqual(self.status(case), "fail")
 
     def test_note_mismatch_with_matching_snapshots_fails(self):
@@ -373,28 +373,57 @@ class CaseWriteReload(unittest.TestCase):
         case = case_write()
         case["request"]["note"] = "n" * 600
         for name in ("write", "after"):
-            case[name]["body"]["contacts"][-1]["note"] = "n" * 500
+            case[name]["body"]["contacts"][0]["note"] = "n" * 500
         self.assertEqual(self.status(case), "blocked")
-        case["after"]["body"]["contacts"][-1]["note"] = "n" * 600
+        case["after"]["body"]["contacts"][0]["note"] = "n" * 600
+        self.assertEqual(self.status(case), "fail")
+
+    def test_existing_contacts_are_newest_first(self):
+        case = case_write()
+        self.assertEqual(
+            case["write"]["body"]["contacts"][0]["outcome"], "Left voicemail"
+        )
+        self.assertEqual(self.status(case), "blocked")
+        oldest_first = case_write()
+        for name in ("write", "after"):
+            oldest_first[name]["body"]["contacts"].reverse()
+        self.assertEqual(self.status(oldest_first), "fail")
+
+    def test_older_contacts_must_match_before_detail(self):
+        case = case_write()
+        case["write"]["body"]["contacts"][1]["outcome"] = "Altered"
+        self.assertEqual(self.status(case), "fail")
+
+    def test_capped_response_keeps_forty_newest(self):
+        old = [contact(f"Earlier {n}") for n in range(40)]
+        new = [contact("Left voicemail")] + old[:39]
+        case = case_write()
+        case["before"]["body"]["contacts"] = old
+        for name in ("write", "after"):
+            case[name]["body"]["contacts"] = copy.deepcopy(new)
+        self.assertEqual(self.status(case), "blocked")
+        case["write"]["body"]["contacts"] = [contact("Left voicemail")] + copy.deepcopy(
+            old
+        )
         self.assertEqual(self.status(case), "fail")
 
     def test_held_note_is_blocked(self):
         case = case_write()
         case["request"]["note"] = "x"
         for name in ("write", "after"):
-            case[name]["body"]["contacts"][-1]["note"] = projection.NOTE_HELD
+            case[name]["body"]["contacts"][0]["note"] = projection.NOTE_HELD
         self.assertEqual(self.status(case), "blocked")
 
     def test_held_write_response_is_blocked(self):
         case = case_write()
-        case["write"]["body"]["contacts"][-1]["outcome"] = projection.NOTE_HELD
+        case["write"]["body"]["contacts"][0]["outcome"] = projection.NOTE_HELD
         self.assertEqual(self.status(case), "blocked")
 
     def test_long_outcome_matches_stored_truncation(self):
         self.assertEqual(self.status(case_write("x" * 120)), "blocked")
         case = case_write("x" * 120)
-        case["after"]["body"]["contacts"][-1]["outcome"] = "x" * 120
-        case["write"]["body"]["contacts"][-1]["outcome"] = "x" * 120
+        case["after"]["body"]["contacts"][0]["outcome"] = "x" * 120
+        case["write"]["body"]["contacts"][0]["outcome"] = "x" * 120
         self.assertEqual(self.status(case), "fail")
 
     def test_missing_restart_is_blocked(self):
@@ -407,7 +436,7 @@ class CaseWriteReload(unittest.TestCase):
 
     def test_held_outcome_is_blocked(self):
         case = case_write()
-        case["after"]["body"]["contacts"][-1]["outcome"] = projection.NOTE_HELD
+        case["after"]["body"]["contacts"][0]["outcome"] = projection.NOTE_HELD
         self.assertEqual(self.status(case), "blocked")
 
     def test_lost_write_fails(self):
@@ -417,7 +446,7 @@ class CaseWriteReload(unittest.TestCase):
 
     def test_wrong_outcome_fails(self):
         case = case_write()
-        case["after"]["body"]["contacts"][-1]["outcome"] = "Different"
+        case["after"]["body"]["contacts"][0]["outcome"] = "Different"
         self.assertEqual(self.status(case), "fail")
 
     def test_denied_write_fails(self):
@@ -486,6 +515,26 @@ class AiEvidence(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertEqual(self.status(record), "fail")
 
+    def test_negative_or_non_numeric_latency_fails(self):
+        for value in (-1, True, "812", 10**400 * -1):
+            record = ai_record()
+            record["body"]["latency_ms"] = value
+            with self.subTest(value=value):
+                self.assertEqual(self.status(record), "fail")
+
+    def test_huge_integer_latency_is_accepted_without_crashing(self):
+        record = ai_record()
+        record["body"]["latency_ms"] = 10**400
+        self.assertEqual(self.status(record), "pass")
+
+    def test_in_memory_non_finite_latency_fails(self):
+        for value in (float("nan"), float("inf")):
+            record = ai_record()
+            record["body"]["latency_ms"] = value
+            with self.assertRaises(cdf.Verdict) as caught:
+                cdf.check_ai({"ai": record}, cdf.load_runtime())
+            self.assertEqual(caught.exception.status, "fail")
+
     def test_denial_is_not_ai_success(self):
         self.assertEqual(self.status(dict(status=403, body={})), "fail")
 
@@ -534,6 +583,15 @@ class InputSafety(unittest.TestCase):
         ):
             with self.subTest(content=content[:12]):
                 self.blocked_reason(content)
+
+    def test_non_standard_json_constants_are_blocked(self):
+        for constant in ("NaN", "Infinity", "-Infinity"):
+            raw = json.dumps(bundle()).replace(
+                '"latency_ms": 812', f'"latency_ms": {constant}'
+            )
+            self.assertIn(constant, raw)
+            with self.subTest(constant=constant):
+                self.blocked_reason(raw.encode())
 
     def test_missing_file_is_blocked(self):
         report = cdf.build_report("/nonexistent/evidence.json", OPTIONS)

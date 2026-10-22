@@ -14,6 +14,7 @@ fixed-administrator evidence have no runtime field and stay not-run.
 
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -21,6 +22,7 @@ from types import SimpleNamespace
 
 SCHEMA_VERSION = 1
 MAX_EVIDENCE_BYTES = 1 << 20
+CONTACT_CAP = 40
 DEFAULT_PROGRAMME_CASES = 980
 STOCK_HOMES = 60000
 PASS, FAIL, BLOCKED, NOT_RUN = "pass", "fail", "blocked", "not-run"
@@ -76,6 +78,10 @@ def load_runtime():
     )
 
 
+def reject_constant(name):
+    raise ValueError(f"non-standard JSON constant {name}")
+
+
 def load_evidence(path):
     target = Path(path)
     if not target.is_file():
@@ -88,17 +94,15 @@ def load_evidence(path):
                 f"Evidence file is {size} bytes; the limit is {MAX_EVIDENCE_BYTES}.",
             )
         text = target.read_bytes().decode("utf-8")
-        data = json.loads(text)
+        data = json.loads(text, parse_constant=reject_constant)
     except OSError as error:
         raise Verdict(
             BLOCKED, f"Evidence file cannot be read: {error.strerror}."
         ) from error
     except UnicodeDecodeError as error:
         raise Verdict(BLOCKED, "Evidence file is not valid UTF-8.") from error
-    except json.JSONDecodeError as error:
-        raise Verdict(
-            BLOCKED, f"Evidence file is not valid JSON: {error.msg}."
-        ) from error
+    except ValueError as error:
+        raise Verdict(BLOCKED, f"Evidence file is not valid JSON: {error}.") from error
     if not isinstance(data, dict):
         raise Verdict(BLOCKED, "Evidence must be a JSON object.")
     if data.get("schema_version") != SCHEMA_VERSION:
@@ -303,10 +307,21 @@ def check_case_write(evidence, runtime):
     for name in ("before", "write", "after"):
         if bodies[name].get("id") != case_id:
             raise Verdict(FAIL, f"case_write.{name} is not case {case_id}.")
-    if len(written) != len(before) + 1:
-        raise Verdict(FAIL, "The write response did not add exactly one contact.")
+    if len(before) > CONTACT_CAP or len(written) > CONTACT_CAP:
+        raise Verdict(
+            FAIL, f"Case detail returns at most {CONTACT_CAP} contacts, newest first."
+        )
+    if len(written) != min(len(before) + 1, CONTACT_CAP):
+        raise Verdict(
+            FAIL,
+            "The write response did not add exactly one contact to the newest-first list (capped).",
+        )
+    if written[1:] != before[: len(written) - 1]:
+        raise Verdict(
+            FAIL, "The write response older contacts differ from the before detail."
+        )
     expected_outcome = stored_outcome(request["outcome"])
-    final = need_dict(after[-1], "reloaded last contact") if after else None
+    final = need_dict(after[0], "reloaded newest contact") if after else None
     if final is None or len(after) != len(written):
         raise Verdict(
             FAIL,
@@ -316,7 +331,7 @@ def check_case_write(evidence, runtime):
     if not isinstance(note, str):
         raise Verdict(BLOCKED, "case_write.request.note must be a string when given.")
     expected_note = note[:500]
-    sent = need_dict(written[-1], "write response last contact")
+    sent = need_dict(written[0], "write response newest contact")
     if sent.get("outcome") == runtime.projection.NOTE_HELD:
         raise Verdict(
             BLOCKED,
@@ -417,8 +432,12 @@ def check_ai(evidence, runtime):
         nonempty_str(release.get(k)) for k in ("id", "version", "digest")
     ):
         problems.append("release id/version/digest")
-    if isinstance(body.get("latency_ms"), bool) or not isinstance(
-        body.get("latency_ms"), (int, float)
+    latency = body.get("latency_ms")
+    if (
+        isinstance(latency, bool)
+        or not isinstance(latency, (int, float))
+        or (isinstance(latency, float) and not math.isfinite(latency))
+        or latency < 0
     ):
         problems.append("latency_ms")
     if body.get("status") != "Proposed":
