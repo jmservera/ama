@@ -442,6 +442,115 @@ class CliTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("Acceptance: not established", text)
 
+    def test_malformed_collection_shapes_are_sanitized_blockers(self) -> None:
+        fields = (
+            ("audiences", "api-audience-allowed"),
+            ("identifierUris", "graph-identifier-uri"),
+            ("redirectUris", "graph-callback"),
+        )
+        for field, check in fields:
+            for value in (
+                0,
+                7,
+                0.0,
+                2.5,
+                False,
+                True,
+                "",
+                SECRET,
+                {},
+                {f"api://{CLIENT}": SECRET, CALLBACK: UPN},
+            ):
+                for as_json in (False, True):
+                    with self.subTest(field=field, value=value, as_json=as_json):
+                        fake = Fake()
+                        target = (
+                            fake.auth
+                            if field == "audiences"
+                            else fake.registration
+                            if field == "identifierUris"
+                            else fake.registration["web"]  # type: ignore[index]
+                        )
+                        assert isinstance(target, dict)
+                        target[field] = value
+                        findings = report(fake)
+                        finding = findings[check]
+                        self.assertEqual(
+                            (finding.status, finding.reason, finding.facts),
+                            ("unknown", "malformed-response", {}),
+                        )
+                        self.assertEqual(PRE.overall(list(findings.values())), "blocked")
+                        stderr = io.StringIO()
+                        with contextlib.redirect_stderr(stderr):
+                            code, text = self.invoke(fake, *(["--json"] if as_json else []))
+                        self.assertEqual((code, stderr.getvalue()), (1, ""))
+                        if as_json:
+                            payload = json.loads(text)
+                            self.assertEqual(payload["overall"], "blocked")
+                            self.assertFalse(payload["acceptanceEstablished"])
+                            rendered = next(c for c in payload["checks"] if c["check"] == check)
+                            self.assertEqual(
+                                (rendered["status"], rendered["reason"], rendered["facts"]),
+                                ("unknown", "malformed-response", {}),
+                            )
+                        else:
+                            self.assertIn("Overall: blocked", text)
+                            self.assertIn("malformed-response", text)
+                        for sentinel in (TENANT, CLIENT, OBJECT, UPN, SECRET, FQDN):
+                            self.assertNotIn(sentinel.lower(), text.lower())
+
+    def test_missing_null_and_empty_collections_keep_existing_results(self) -> None:
+        for field, check, status, reason, facts in (
+            (
+                "audiences",
+                "api-audience-allowed",
+                "mismatch",
+                "audience-not-allowed",
+                {"count": 0},
+            ),
+            ("identifierUris", "graph-identifier-uri", "mismatch", "identifier-uri-missing", {}),
+            ("redirectUris", "graph-callback", "absent", "callback-missing", {"registered": 0}),
+        ):
+            for shape in ("missing", "null", "empty"):
+                with self.subTest(field=field, shape=shape):
+                    fake = Fake()
+                    target = (
+                        fake.auth
+                        if field == "audiences"
+                        else fake.registration
+                        if field == "identifierUris"
+                        else fake.registration["web"]  # type: ignore[index]
+                    )
+                    assert isinstance(target, dict)
+                    if shape == "missing":
+                        target.pop(field)
+                    else:
+                        target[field] = None if shape == "null" else []
+                    result = report(fake)
+                    finding = result[check]
+                    self.assertEqual(
+                        (finding.status, finding.reason, finding.facts), (status, reason, facts)
+                    )
+                    self.assertEqual(PRE.overall(list(result.values())), "blocked")
+
+    def test_collection_lists_and_callback_dependency_keep_existing_behavior(self) -> None:
+        fake = Fake()
+        fake.auth["audiences"] = [f" API://{CLIENT.upper()} ", None, 7, {}]  # type: ignore[index]
+        fake.registration["identifierUris"] = [f"API://{CLIENT.upper()}", None, 7, {}]  # type: ignore[index]
+        fake.registration["web"] = {"redirectUris": [CALLBACK, None, 7, {}]}  # type: ignore[index]
+        result = report(fake)
+        self.assertEqual(PRE.overall(list(result.values())), "ready")
+        self.assertEqual(result["api-audience-allowed"].facts, {"count": 1})
+        self.assertEqual(result["graph-identifier-uri"].reason, "identifier-uri-present")
+        self.assertEqual(result["graph-callback"].facts, {"registered": 1})
+        fake.fqdn = {"fqdn": None}
+        fake.registration["web"] = {"redirectUris": 7}  # type: ignore[index]
+        finding = report(fake)["graph-callback"]
+        self.assertEqual(
+            (finding.status, finding.reason, finding.facts),
+            ("unknown", "blocked-by-callback-target", {}),
+        )
+
     def test_usage_errors_and_help(self) -> None:
         with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as cm:
             PRE.main(["-g", "bad name", "-n", "api"])
