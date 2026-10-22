@@ -190,6 +190,24 @@ design was written without activating the RPI skills; its critique and review
 were not genuine RPI outcomes. A recovery cycle re-verified the evidence and
 corrected two statements. Independent verification is pending.
 
+## Private Blob Result Transport (2026-10-22)
+
+Refs #360. Owner decisions DN1 to DN5 (2026-10-22) superseded the ARM tag
+relay above. The [runbook design](../../infra/README.md#private-blob-result-transport-2026-10-22-refs-360)
+records the private-Blob design, the offline implementation and the live
+prerequisites. The 2026-10-20 entry and the three failed attempts stay as
+dated history.
+
+| Item | Status |
+| --- | --- |
+| Offline code, Bicep and fake-client tests | Implemented |
+| Live private routing, managed-identity write, operator read, real job | NOT RUN |
+| Deployment, role grants, Azure spend | NOT RUN, awaiting coordinator release of a finite plan |
+| Historical failures | Unknown transport failures; root cause is production follow-up |
+| Signed source or image attestation | Unverified, deferred (DN5) |
+| Demo screen-reader acceptance | Unverified production follow-up |
+| #360 c, d, e | Unproved and unchanged |
+
 ## Real Temporary Synthetic Preservation Roundtrip (2026-10-19)
 
 Refs #358. Later owner direction selected an isolated temporary synthetic

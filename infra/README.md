@@ -2109,17 +2109,16 @@ After SQL success but restart failure, the result remains incomplete.
 
 Job logs contain only generic failure messages, never candidates, people,
 codes, roster, keys, credentials or SQL exceptions. Results are authenticated
-AES-GCM ciphertext bound to this run/operation/input. The existing initializer's
-tags carry at most 40 frames of 200 ciphertext characters, each complete tag
-value below 256 characters (roughly 5.7 KiB of clear result capacity, depending
-on envelope size). The key remains in the temporary request secret/operator
-memory, never in tags. More than ten existing relay tags blocks transfer;
-oversized candidate results fail explicitly. No larger fallback store is made.
-Only per-run names are merged; unrelated tags and source configuration remain.
-The client polls ARM tags and job status, decrypts only in memory, and requires
-both authenticated output and terminal Succeeded. Missing/tampered/oversized
-results or a deadline failure cannot be mistaken for success; no live replica
-hold or private console endpoint is needed.
+AES-GCM ciphertext bound to this run, operation, input and image digest.
+(Superseded 2026-10-22: the ARM tag frames described in earlier revisions are
+retired.) The worker writes complete, bounded pages to the private
+`staff-results` Blob container with its managed identity, and the client reads
+them with Entra credentials from a private-connected host after terminal
+Succeeded; see [Private Blob result transport](#private-blob-result-transport-2026-10-22-refs-360).
+The key remains in the temporary request secret and operator memory. Missing,
+extra, tampered, oversized, expired or mismatched pages, an unreachable Blob,
+or a deadline failure cannot be mistaken for success, and there is no tag,
+console or local fallback.
 
 Setup stops uncertain/failed executions and deletes only its owned temporary
 job, including the roster secret; it polls for confirmed absence and then
@@ -2447,8 +2446,8 @@ is superseded only by the [subsequent explicit relay delta](#approved-existing-j
 The owner explicitly approved only reviewed API read/restart and temporary
 staff-job lifecycle permissions in `ama` on 2026-10-17 (boolean true).
 The existing-job tag relay is not temporary-job lifecycle: its
-`Microsoft.Resources/tags/read` and `Microsoft.Resources/tags/write` remain
-**unapproved and unapplied**. The template does not grant temporary-job
+tag read/write permissions remain **unapproved and unapplied**, and the relay
+itself was retired on 2026-10-22 (see the Private Blob result transport). The template does not grant temporary-job
 lifecycle to the initializer MI. Those operations belong to the setup
 operator; no new operator role or temporary job was created.
 
@@ -2658,6 +2657,11 @@ require the person to sign out and sign in again for fresh role claims.
 
 ### Authenticated Roster Result Transport Design (2026-10-20, Refs #360)
 
+> **Superseded for the result path (2026-10-22):** owner decision DN1 rejected
+> the ARM-tag relay proposed below. See
+> [Private Blob result transport](#private-blob-result-transport-2026-10-22-refs-360).
+> The text below is preserved as dated history, including its negative evidence.
+
 **Status: design for review only. Nothing here was executed.** The owner
 directed a documented authenticated alternative transport and a
 tenant-administrator checklist ([#360 comment](https://github.com/jmservera/ama/issues/360#issuecomment-6290697080),
@@ -2849,6 +2853,66 @@ the roster can be recovered, that sign-in, Graph authority, deployed SQL or AI
 work, or that #360 criteria c, d or e are met. No cloud state was read for this
 design; the 2026-10-17 and 2026-10-19 receipts above remain dated evidence and
 need a fresh read-only recheck before use.
+
+### Private Blob Result Transport (2026-10-22, Refs #360)
+
+**Status: implemented and tested offline with fake clients only. Nothing was
+deployed, no role was granted and no Azure resource or tenant was touched.**
+Whole #360 criteria c, d and e remain unproved. This section supersedes the
+tag relay of the 2026-10-20 design above and records owner decisions DN1 to DN5
+(2026-10-22).
+
+| Decision | Effect in the design |
+| --- | --- |
+| DN1 | Results travel through a private Blob container with managed identity. No resource tags, public Blob, SAS or shared key. Backing services stay private. |
+| DN2 | Complete results, measured size, bounded paging. Over-bound results are refused, never truncated or reduced. |
+| DN3 | The three earlier failures stay unknown historical transport failures. Old tag/console result code is retired; the Blob path is validated independently. Root-cause analysis is production follow-up, not claimed solved. This is not permission to delete Front Door or any Azure resource. |
+| DN4 | Production roles are assigned manually through the Entra Enterprise App. The demo may match roles from available evidence, else random demo assignment. The admin-prefixed account stays Zava Forward administrator (ProgrammeManager). No directory roles are granted and immutable staff bindings or history are never overwritten. App roles remain the authorization source; a role is not professional competence or real authority. No roster contents are recorded in this repository. Existing role-assignment behaviour (#363) is unchanged by this work. |
+| DN5 | A controlled demo worker with expected image, run identity, integrity and completeness checks is accepted. Independent signed source or image attestation is **unverified and deferred**, not established. |
+
+#### Design
+
+1. The worker runs in the private VNet with the existing user-assigned identity. It writes AES-GCM pages to the `staff-results` container (`<run>/page-NNN.json`, no overwrite). The header (run, operation, payload digest, image digest, schema, index, count, item and byte totals, creation and expiry) is the authenticated associated data.
+2. The per-run key exists only in the job secret and the controller's memory. Blobs left behind cannot be decrypted later.
+3. The controller needs ARM for job control (works from anywhere) and Entra data-plane access to the private Blob endpoint (needs private-connected routing: Bastion/jump host, VPN or an equivalent). There is no operator IP firewall exception.
+4. Before any job is created the controller calls `preflight`: the route must work and the run prefix must be empty. If the Blob cannot be reached it refuses and creates nothing.
+5. The result is read only after the execution reports `Succeeded` and the job image digest still matches discovery. Anything else is refused: a missing, extra, duplicated, swapped, tampered, oversized, expired, future-dated or mismatched page; a total mismatch; a wrong run, operation, digest or image. There is no console, tag or local fallback and no parser relaxation.
+6. If the read fails after the job ran, the outcome is **unverified** (SQL and restart may have happened). Recovery is a new, separately authorized run after reading the live state; never a blind reapply.
+7. Discovery verifies through ARM that the storage account named by `ZF_BLOB_ACCOUNT_URL` has public network access Disabled, shared key and anonymous Blob access off, and that the `staff-results` container has no public access. The URL must be an exact public-cloud `*.blob.core.windows.net` account.
+8. Bounds: 48 KiB plaintext per page, 128 KiB per blob, 64 pages, 900 s validity with 60 s skew. A result over the bound fails with an explicit error. The real result size has not been measured; that is a live prerequisite.
+
+#### Code and infrastructure
+
+| Area | Change |
+| --- | --- |
+| `scripts/staff_blob.py` | New codec, `preflight`, write and read validation, shared `StaffJobError` |
+| `scripts/staff_azure.py` | Tag and chunk transport removed; Blob discovery checks, preflight, post-success read, image-drift check |
+| `scripts/staff-azure-worker.py` | Writes pages with `ManagedIdentityCredential`; never logs detail |
+| `modules/storage.bicep` | `staff-results` container appended last (existing index references stay valid) and a lifecycle rule that deletes blobs and versions after one day. Soft delete keeps 30 days |
+| `staff-initializer-rbac.bicep` | `includeResultBlob` (default false). Custom role with only `blobs/write` and `blobs/add/action` at the container scope; no read, list or delete |
+| Image and checks | `staff_blob.py` added to the Dockerfile, `.dockerignore`, `tools/rpi-checks.py` and CI lint lists |
+
+Residual risk: principals with account-wide data or management rights, such as
+subscription Contributors or Owners, can overwrite or delete blobs. The
+authenticated encryption turns that into a refusal, not a false success.
+
+#### Live prerequisites (all NOT RUN)
+
+1. Coordinator release of a verified affordable finite execution plan within the USD 700 replacement all-in October forecast ceiling (expiry 2026-10-25T16:02Z). No Azure charge, deployment or role write before that.
+2. Deploy the storage change so the `staff-results` container and lifecycle rule exist, then deploy the RBAC template with `includeResultBlob=true` and `storageAccountName`, container first, role second. A deployer with `Microsoft.Authorization/roleAssignments/write` and role definition write at the resource group is needed; resource group ownership does not prove Microsoft Graph permissions.
+3. Operator identity: `Storage Blob Data Reader` (or an equivalent list/read data role) on the `staff-results` container, ARM read on the job, storage account, containers and the API app, and a private-connected host that resolves and reaches the Blob private endpoint.
+4. Microsoft Graph application permissions required by the existing setup are separate and must be named by the tenant administrator; they are not inferred from resource group ownership.
+5. `ZF_BLOB_ACCOUNT_URL` set on the API app (already wired in `containerapps.bicep`) and the cutover-proof image rebuilt with `staff_blob.py` and pinned by digest.
+6. Measure the real position count and result size on a dry or check run, then confirm it fits the page bound. Over-bound is a design change, not a silent reduction.
+7. Prove private routing, the managed-identity write and the Entra read in a controlled run. Record receipts without names, UPNs, object IDs, roster contents or secrets.
+
+#### Not run and not claimed
+
+Live private routing, managed-identity Blob write, operator Entra read, a real
+job, deployment of the Bicep, Entra or browser acceptance, role acceptance with
+real users, AI behaviour, signed source or image attestation (DN5, deferred),
+and demo screen-reader acceptance (documented unverified production follow-up).
+Local tests use fake clients and prove only the offline contract.
 
 ### Public welcome and Microsoft account photos
 
