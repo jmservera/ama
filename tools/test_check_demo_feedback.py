@@ -108,7 +108,7 @@ def case_write(outcome="Left voicemail", restart=True):
         request=dict(outcome=outcome, note="", channel="Phone"),
         before=dict(status=200, body=dict(id="ZF-1", contacts=old)),
         write=dict(status=200, body=dict(id="ZF-1", contacts=new)),
-        after=dict(status=200, body=dict(id="ZF-1", contacts=new)),
+        after=dict(status=200, body=dict(id="ZF-1", contacts=copy.deepcopy(new))),
         audit_before=ledger_report(2),
         audit_after=ledger_report(3),
         restart_between_write_and_read=restart,
@@ -176,11 +176,12 @@ def statuses(report):
 
 
 class CheckStates(unittest.TestCase):
-    def test_all_valid_fixture_passes_checks_but_overall_is_blocked(self):
+    def test_valid_fixture_never_passes_sql_durability_and_overall_is_blocked(self):
         report = report_for(bundle())
+        expected = {k: "pass" for k in cdf.CHECKS}
+        expected["case_write_reload"] = "blocked"
         self.assertEqual(
-            {k: v for k, v in statuses(report).items() if k in cdf.CHECKS},
-            {k: "pass" for k in cdf.CHECKS},
+            {k: v for k, v in statuses(report).items() if k in cdf.CHECKS}, expected
         )
         self.assertEqual(statuses(report)["spend_bound"], "not-run")
         self.assertEqual(statuses(report)["admin_account"], "not-run")
@@ -341,11 +342,39 @@ class CaseWriteReload(unittest.TestCase):
     def status(self, case):
         return statuses(report_for(bundle(case_write=case)))["case_write_reload"]
 
-    def test_valid_write_reload_passes(self):
-        self.assertEqual(self.status(case_write()), "pass")
+    def test_consistent_write_reload_is_blocked_not_passed(self):
+        self.assertEqual(self.status(case_write()), "blocked")
+        report = report_for(bundle())
+        reason = next(
+            c["reason"] for c in report["checks"] if c["id"] == "case_write_reload"
+        )
+        self.assertIn("cannot be verified offline", reason)
+
+    def test_mismatched_write_response_with_matching_reload_fails(self):
+        case = case_write()
+        case["write"]["body"]["contacts"][-1]["outcome"] = "Different"
+        case["after"]["body"]["contacts"][-1]["outcome"] = "Different"
+        self.assertEqual(self.status(case), "fail")
+        case = case_write()
+        case["write"]["body"]["contacts"][-1]["channel"] = "Email"
+        self.assertEqual(self.status(case), "fail")
+
+    def test_write_response_differing_from_reload_in_any_field_fails(self):
+        case = copy.deepcopy(case_write())
+        case["after"]["body"]["contacts"][-1]["by"] = "Someone else"
+        self.assertEqual(self.status(case), "fail")
+
+    def test_held_write_response_is_blocked(self):
+        case = case_write()
+        case["write"]["body"]["contacts"][-1]["outcome"] = projection.NOTE_HELD
+        self.assertEqual(self.status(case), "blocked")
 
     def test_long_outcome_matches_stored_truncation(self):
-        self.assertEqual(self.status(case_write("x" * 120)), "pass")
+        self.assertEqual(self.status(case_write("x" * 120)), "blocked")
+        case = case_write("x" * 120)
+        case["after"]["body"]["contacts"][-1]["outcome"] = "x" * 120
+        case["write"]["body"]["contacts"][-1]["outcome"] = "x" * 120
+        self.assertEqual(self.status(case), "fail")
 
     def test_missing_restart_is_blocked(self):
         self.assertEqual(self.status(case_write(restart=False)), "blocked")
