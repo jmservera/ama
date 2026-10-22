@@ -224,6 +224,27 @@ class AudienceTests(unittest.TestCase):
         fake.auth["secretSet"] = False  # type: ignore[index]
         self.assertEqual(report(fake)["api-credential-setting"].status, "absent")
 
+    def test_issuer_must_be_exact_authority_and_tenant_path(self) -> None:
+        bad = [
+            f"https://attacker.invalid/login.microsoftonline.com/{TENANT}/v2.0",
+            f"http://login.microsoftonline.com/{TENANT}/v2.0",
+            f"https://user@login.microsoftonline.com/{TENANT}/v2.0",
+            f"https://login.microsoftonline.com:444/{TENANT}/v2.0",
+            f"https://login.microsoftonline.com/{TENANT}/v2.0?x=1",
+            f"https://login.microsoftonline.com/{TENANT}/v2.0#x",
+            f"https://login.microsoftonline.com.attacker.invalid/{TENANT}/v2.0",
+            f"https://login.microsoftonline.com/{TENANT}/v2.0/extra",
+            f"https://login.microsoftonline.com/x/{TENANT}/v2.0",
+        ]
+        for issuer in bad:
+            with self.subTest(issuer=issuer):
+                fake = Fake()
+                fake.auth["issuer"] = issuer  # type: ignore[index]
+                self.assertNotEqual(report(fake)["api-issuer-tenant"].status, "ready")
+        fake = Fake()
+        fake.auth["issuer"] = f"https://login.microsoftonline.com/{TENANT}/v2.0/"  # type: ignore[index]
+        self.assertEqual(report(fake)["api-issuer-tenant"].status, "ready")
+
     def test_issuer_tenant_mismatch(self) -> None:
         fake = Fake()
         fake.auth["issuer"] = f"https://login.microsoftonline.com/{OBJECT}/v2.0"  # type: ignore[index]
