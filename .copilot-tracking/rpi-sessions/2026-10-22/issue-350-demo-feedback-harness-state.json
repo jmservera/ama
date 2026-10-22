@@ -1,0 +1,45 @@
+{
+  "task_id": "issue-350-demo-feedback-harness",
+  "task_slug": "issue-350-demo-feedback-harness",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Research",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-22/issue-350-demo-feedback-harness-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic single-task run; owner prompt directs research, plan, implement, review in order",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-22"
+    },
+    {
+      "decision": "Offline only; no Azure, tenant, RBAC, paid inference or credentials; #349/#360 not claimed complete",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-22"
+    },
+    {
+      "decision": "Ownership limited to tools/check-demo-feedback.py, tools/test_check_demo_feedback.py and own .copilot-tracking files",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-22"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; build new standalone checker importing installed runtime modules",
+      "status": "confirmed",
+      "evidence": "research artifact C1-C16, W1, W2"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Plan",
+    "action": "Activate rpi-plan"
+  },
+  "prioritized_follow_ups": null
+}
