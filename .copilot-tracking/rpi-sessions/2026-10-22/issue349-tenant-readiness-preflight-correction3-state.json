@@ -1,0 +1,29 @@
+{
+  "task_id": "349-correction3",
+  "task_slug": "issue349-tenant-readiness-preflight-correction3",
+  "parent_task": {"task_id": "349", "task_slug": "issue349-tenant-readiness-preflight"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-22/issue349-tenant-readiness-preflight-correction3-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-22/issue349-tenant-readiness-preflight-correction3-plan.md",
+    "details": ".copilot-tracking/details/2026-10-22/issue349-tenant-readiness-preflight-correction3-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-22/issue349-tenant-readiness-preflight-correction3-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-22/issue349-tenant-readiness-preflight-correction3-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-22/issue349-tenant-readiness-preflight-correction3-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Owner explicitly requested one ordered Research, Plan/critique, Implement, Review correction loop, one local commit and one full gate; no push.", "status": "confirmed", "evidence": "2026-10-22 user request"},
+    {"decision": "Research executed, Ready; property-level provider projection confirmed.", "status": "complete", "evidence": "research C1-C5/W1-W2"},
+    {"decision": "One critique executed; original verdict Revise. PC-001/PC-002 rejected because no parent /tmp restriction exists and explicit user direction requires /tmp. Plan Ready.", "status": "disposed", "evidence": ".copilot-tracking/plans/2026-10-22/issue349-tenant-readiness-preflight-correction3-plan.md#critique-disposition"},
+    {"decision": "Review execution Complete; outcome Conformant for bounded pre-commit correction. No technical defects. RV-001 parent continuation; RV-002/RV-003 distinct follow-ups.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-22/issue349-tenant-readiness-preflight-correction3-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Pre-commit snapshot: execute authorized P02-T02 one local commit, one full gate against fixed base and receipt verification; no push. Authoritative post-commit status is external and reported in final handoff; do not mutate gated repository inputs."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent coordinator exact-head assessment", "rationale": "Required delivery boundary after successful local gate; not satisfied by pre-commit Review.", "evidence": "Review RV-002"},
+    {"rank": 2, "task": "Retained hosted and authorized human/tenant acceptance", "rationale": "Local engineering results do not establish sign-in or whole-issue acceptance; no publication authorized here.", "evidence": "Review RV-003"}
+  ]
+}
