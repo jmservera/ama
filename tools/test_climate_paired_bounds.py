@@ -3,6 +3,7 @@ import hashlib
 import json
 import sys
 import unittest
+from datetime import timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -200,9 +201,34 @@ class DerivationTests(unittest.TestCase):
                          series["rh"][4])
         self.assertEqual(temp["maximum"]["value"], 7.5)
         self.assertAlmostEqual(temp["mean"], round(sum(series["temperature"]) / 6, 3))
-        self.assertEqual(temp["monthly"], {"2023-01": {"minimum": -1.0, "maximum": 7.5}})
+        jan = temp["monthly"]["2023-01"]
+        self.assertEqual(list(temp["monthly"]), ["2023-01"])
+        self.assertEqual(jan["minimum"]["value"], -1.0)
+        self.assertEqual(jan["minimum"]["occurrences"],
+                         [{"time": "2023-01-01T04:00Z", "paired_rh": series["rh"][4]}])
+        self.assertEqual(jan["maximum"]["value"], 7.5)
+        self.assertEqual(jan["maximum"]["occurrences"][0]["time"], "2023-01-01T02:00Z")
         rh = derived["relative_humidity"]
         self.assertEqual(rh["maximum"]["value"], max(series["rh"]))
+
+    def test_monthly_extremes_split_months_and_list_ties(self):
+        series = parse_om(om_payload())
+        series["times"] = [t + (timedelta(days=31) if i >= 3 else timedelta(0))
+                           for i, t in enumerate(series["times"])]
+        series["temperature"][5] = series["temperature"][4]
+        monthly = cpb.derive(series)["temperature"]["monthly"]
+        self.assertEqual(list(monthly), ["2023-01", "2023-02"])
+        feb = monthly["2023-02"]
+        low = min(series["temperature"][3:])
+        expected = [i for i in (3, 4, 5) if series["temperature"][i] == low]
+        self.assertGreater(len(expected), 1)
+        self.assertEqual(feb["minimum"]["value"], min(series["temperature"][3:]))
+        self.assertEqual([o["time"] for o in feb["minimum"]["occurrences"]],
+                         [cpb._stamp(series["times"][i]) for i in expected])
+        for o, i in zip(feb["minimum"]["occurrences"], expected):
+            self.assertEqual(o["paired_rh"], series["rh"][i])
+        self.assertEqual(monthly["2023-01"]["maximum"]["value"],
+                         max(series["temperature"][:3]))
 
     def test_tied_extremum_lists_every_hour(self):
         payload = om_payload()
@@ -259,6 +285,20 @@ class CommittedSampleTests(unittest.TestCase):
         rebuilt = json.loads(json.dumps(
             cpb.build_report(primary, secondary, request), ensure_ascii=False))
         self.assertEqual(rebuilt, report)
+
+    def test_committed_monthly_extremes_reconcile_with_annual(self):
+        report = json.loads(REPORT.read_text(encoding="utf-8"))
+        for name in ("temperature", "relative_humidity"):
+            block = report["bounds"][name]
+            self.assertEqual(len(block["monthly"]), 12)
+            for kind, chooser in (("minimum", min), ("maximum", max)):
+                monthly = [m[kind] for m in block["monthly"].values()]
+                self.assertEqual(chooser(m["value"] for m in monthly),
+                                 block[kind]["value"])
+                annual_times = {o["time"] for o in block[kind]["occurrences"]}
+                found = {o["time"] for m in monthly if m["value"] == block[kind]["value"]
+                         for o in m["occurrences"]}
+                self.assertEqual(found, annual_times)
 
     def test_fixture_properties_and_labels(self):
         report, primary, secondary = self.build()

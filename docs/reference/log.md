@@ -6728,3 +6728,14 @@ metadata when the knowledge base was created.
   pending and no approval is asserted.
 * The 2026-10-21 MIDAS blocker and the Durham temperature-only report are
   unchanged. Issue criteria stay unticked.
+
+## 2026-10-22 climate paired source: monthly timestamp correction (Refs #178)
+
+* Corrected the modelled paired climate report after independent review: monthly
+  minimum and maximum now carry every tied UTC timestamp and the paired value,
+  regenerated from the same retained Open-Meteo records with tests for ties,
+  provenance and reconciliation with the annual extremes.
+* Earlier entries and the first gate receipt are preserved as historical. The
+  source stays modelled, not observed; licence and reuse confirmation, production
+  precision and representativeness remain pending, and issue criteria stay
+  unmet. No legal approval is inferred.

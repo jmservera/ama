@@ -628,6 +628,11 @@ design extremes or safety thresholds:
 | Temperature (degC) | -5.5 (2023-12-02 04:00Z, RH 95) | -1.4 | 10.3 | 22.5 | 26.7 (2023-09-09 14:00Z, RH 63) |
 | Relative humidity (%) | 36 (2023-06-14 13:00Z, 22.4 degC) | 50 | 81.0 | 97 | 100 |
 
+The report also lists, for each calendar month, the minimum and maximum of each
+variable with every UTC timestamp at which that value occurs (ties are all
+listed in chronological order) and the paired value of the other variable at
+that hour. These are taken from the retained Open-Meteo records, never filled.
+
 The adapter rejects hash mismatch, unit or timezone mismatch, nulls, fill
 values, gaps, duplicate or reordered hours, unequal series, humidity outside
 0..100, dew point above temperature, and humidity that disagrees with the
