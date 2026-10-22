@@ -50,6 +50,7 @@ ACCOUNT_ARGV = ["account", "show", "--query", "{tenantId:tenantId}"]
 FQDN_QUERY = "{fqdn:properties.configuration.ingress.fqdn}"
 AUTH_QUERY = (
     "{enabled:platform.enabled,"
+    "providerEnabled:identityProviders.azureActiveDirectory.enabled,"
     "clientId:identityProviders.azureActiveDirectory.registration.clientId,"
     "issuer:identityProviders.azureActiveDirectory.registration.openIdIssuer,"
     "secretSet:identityProviders.azureActiveDirectory.registration.clientSecretSettingName!=null,"
@@ -358,7 +359,7 @@ def run(
         ):
             failed(check, auth_call)
     else:
-        enabled = auth.get("enabled") is True
+        enabled = auth.get("enabled") is True and auth.get("providerEnabled") is True
         add(
             "api-auth-enabled",
             "ready" if enabled else "mismatch",

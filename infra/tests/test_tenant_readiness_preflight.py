@@ -47,6 +47,7 @@ class Fake:
         self.fqdn: object = {"fqdn": FQDN}
         self.auth: object = {
             "enabled": True,
+            "providerEnabled": True,
             "clientId": CLIENT,
             "issuer": f"https://login.microsoftonline.com/{TENANT}/v2.0",
             "secretSet": True,
@@ -169,6 +170,42 @@ class GuardTests(unittest.TestCase):
 
 
 class AudienceTests(unittest.TestCase):
+    def test_auth_query_projects_platform_and_provider_enabled(self) -> None:
+        self.assertIn("enabled:platform.enabled,", PRE.AUTH_QUERY)
+        self.assertIn(
+            "providerEnabled:identityProviders.azureActiveDirectory.enabled,", PRE.AUTH_QUERY
+        )
+
+    def test_auth_requires_both_flags_to_be_strictly_true(self) -> None:
+        for field in ("enabled", "providerEnabled"):
+            for shape in ("missing", False, None, "true", SECRET, 0, 1, 1.0, {}, {"x": True}, []):
+                with self.subTest(field=field, shape=shape):
+                    fake = Fake()
+                    assert isinstance(fake.auth, dict)
+                    if shape == "missing":
+                        fake.auth.pop(field)
+                    else:
+                        fake.auth[field] = shape
+                    result = report(fake)
+                    finding = result["api-auth-enabled"]
+                    self.assertEqual(
+                        (finding.status, finding.reason, finding.facts),
+                        ("mismatch", "auth-disabled", {}),
+                    )
+                    self.assertEqual(PRE.overall(list(result.values())), "blocked")
+        for enabled in (False, True):
+            with self.subTest(both_flags=enabled):
+                fake = Fake()
+                assert isinstance(fake.auth, dict)
+                fake.auth.update(enabled=enabled, providerEnabled=enabled)
+                result = report(fake)
+                self.assertEqual(
+                    result["api-auth-enabled"].status, "ready" if enabled else "mismatch"
+                )
+                self.assertEqual(
+                    PRE.overall(list(result.values())), "ready" if enabled else "blocked"
+                )
+
     def audience(self, value: object) -> PRE.Finding:
         fake = Fake()
         fake.auth["clientId"] = value  # type: ignore[index]
@@ -441,6 +478,39 @@ class CliTests(unittest.TestCase):
         code, text = self.invoke(fake)
         self.assertEqual(code, 1)
         self.assertIn("Acceptance: not established", text)
+
+    def test_disabled_missing_malformed_provider_blocks_sanitized_cli(self) -> None:
+        for value in (False, None, "true", SECRET, 1, 1.0, {}, {"secret": SECRET}, []):
+            for as_json in (False, True):
+                with self.subTest(value=value, as_json=as_json):
+                    fake = Fake()
+                    assert isinstance(fake.auth, dict)
+                    if value is None:
+                        fake.auth.pop("providerEnabled")
+                    else:
+                        fake.auth["providerEnabled"] = value
+                    code, text = self.invoke(fake, *(["--json"] if as_json else []))
+                    self.assertEqual(code, 1)
+                    if as_json:
+                        payload = json.loads(text)
+                        self.assertEqual(payload["overall"], "blocked")
+                        self.assertTrue(payload["readOnly"])
+                        self.assertFalse(payload["acceptanceEstablished"])
+                        finding = next(
+                            c for c in payload["checks"] if c["check"] == "api-auth-enabled"
+                        )
+                        self.assertEqual(
+                            (finding["status"], finding["reason"], finding["facts"]),
+                            ("mismatch", "auth-disabled", {}),
+                        )
+                    else:
+                        self.assertIn("Overall: blocked", text)
+                        self.assertIn("auth-disabled", text)
+                        self.assertIn("Acceptance: not established", text)
+                    for sentinel in (TENANT, CLIENT, OBJECT, UPN, SECRET, FQDN):
+                        self.assertNotIn(sentinel.lower(), text.lower())
+                    for argv in fake.calls:
+                        PRE.guard(argv)
 
     def test_malformed_collection_shapes_are_sanitized_blockers(self) -> None:
         fields = (
