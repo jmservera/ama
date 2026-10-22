@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-20
+ms.date: 2026-10-22
 ms.topic: overview
 ---
 
@@ -198,6 +198,17 @@ remain403 and all backing private. The tested VM allocation template is
 capacity-blocked, not a working publisher. #349 tenant/browser/role/SQL/AI and
 #358 live secret round-trip remain separate; #360d/e and retirement stay unmet.
 Prior adverse/historical evidence is preserved, not re-adjudicated.
+
+For issue #360, the [authenticated roster result transport design](../../infra/README.md#authenticated-roster-result-transport-design-2026-10-20-refs-360)
+and [evidence-pack entry](../architecture/cutover-evidence-pack.md#authenticated-roster-transport-design-2026-10-20)
+propose a documented ARM tag relay with five decisions needed and a tenant-administrator
+checklist. Design for review only: no execution, retry, parser relaxation or
+cloud change; whole #360 c, d, e stay unproved.
+
+The 2026-10-22 [private Blob result transport](../../infra/README.md#private-blob-result-transport-2026-10-22-refs-360)
+supersedes that tag relay under owner decisions DN1 to DN5: offline
+implementation and fake-client tests only; live routing, deployment, role
+grants and spend are NOT RUN, and whole #360 c, d, e stay unproved.
 
 The #360 profile-evidence continuation integrates merged quality #387 on main
 3f544fb9 with the exact original infra source/test patch and original critique/

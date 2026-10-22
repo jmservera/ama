@@ -2,21 +2,21 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-21T16:28:01+00:00",
-  "commit": "217b58a6550b0b20eb36a8469b97444725aa43b7",
+  "scored_at": "2026-10-22T20:24:28+00:00",
+  "commit": "f30d958313e6bff051e300f290e7853203bb8067",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39634055748",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39844103759",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
-    "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
+    "infrastructure": "64e444dab329d80958219b775779ba27120e1ab42f8d42b5319829a739af963a",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
-  "total": 48,
+  "total": 49,
   "sections": {
-    "A": 30,
+    "A": 31,
     "B": 13,
     "C": 5,
     "D": 0
@@ -25,12 +25,13 @@
   "outcome": "Incomplete (thought leadership artifact not submitted)",
   "criteria": {
     "A1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:50-260",
-        "src/api/src/zava_forward/api/server.py:851-875"
+        "infra/scripts/staff_blob.py:1-120",
+        "infra/scripts/staff_azure.py:1-60",
+        "infra/tests/test_staff_azure.py:531-560"
       ],
-      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts. Decoupled from core store, consistent with prior modular baseline. The diff only adds a README subsection documenting a non-operative, unapproved drill preparation; no architectural change."
+      "rationale": "New staff_blob.py module decouples the private result transport via preflight/write_result/read_result contracts, replacing the ARM-tag relay. Bounded pages, explicit failure domains (unreachable, dirty prefix, image drift, timeout) and stated scaling bounds are now explicit and tested."
     },
     "A2": {
       "score": 5,
@@ -42,10 +43,11 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:380-560",
-        "src/api/tests/test_operator_suspension.py:614-680"
+        "infra/scripts/staff_blob.py:260-323",
+        "infra/staff-initializer-rbac.bicep:8-96",
+        "infra/tests/test_staff_azure.py:614-700"
       ],
-      "rationale": "Diff adds a README subsection (src/core/README.md:2860-2920) describing a proposed, explicitly UNAPPROVED and UNASSIGNED custody/witness/recovery process for a future drill. It is documentation of intent, not a new security control or mitigation, so it does not add new evidence of implemented con..."
+      "rationale": "Already at ceiling(5); reinforced: least-privilege default-off RBAC scoped to container write/add only (no read/list/delete), private-storage checks (no public access/shared key), scoped storage-only credential, image-digest drift refusal, fail-closed AEAD with tamper/oversize/expiry tests."
     },
     "A4": {
       "score": 5,
@@ -58,10 +60,11 @@
     "A5": {
       "score": 4,
       "evidence": [
-        "src/api/tests/test_operator_suspension.py:614-665",
-        "src/core/src/zava_forward/core/sqlstore.py:572-630"
+        "infra/scripts/staff_blob.py:40-70",
+        "infra/modules/storage.bicep:84-105",
+        "infra/scripts/staff_azure.py:200-230"
       ],
-      "rationale": "No new cost or performance measurement in this diff; it is a documentation-only addition about drill preparation. Still only resilience evidenced, not both cost and performance; unchanged from baseline."
+      "rationale": "Resilience extended: bounded deadlines, connect/read timeouts, retries, fail-closed on expiry, lifecycle auto-deletion of blobs after 1 day (Good/4). No new structured logging/metrics/traces or combined cost-and-performance measurement added, so still short of ceiling."
     },
     "A6": {
       "score": 3,

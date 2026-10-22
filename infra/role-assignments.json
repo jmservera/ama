@@ -51,14 +51,15 @@
       ]
     },
     {
-      "name": "staff-initializer-result-tags",
+      "name": "staff-initializer-result-blob-write",
       "identity": "existing SQL administrator id-<prefix>-init",
-      "scope": "existing initializer job only, ama",
+      "scope": "staff-results container only, private storage account in ama",
       "bicep": "staff-initializer-rbac.bicep",
-      "status": "Offline definition; explicit permission activation blocked",
-      "actions": [
-        "Microsoft.Resources/tags/read",
-        "Microsoft.Resources/tags/write"
+      "status": "Offline definition; default off (includeResultBlob=false); explicit permission activation blocked",
+      "actions": [],
+      "dataActions": [
+        "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write",
+        "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/add/action"
       ]
     }
   ],

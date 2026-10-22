@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-19
+ms.date: 2026-10-20
 ms.topic: reference
 ---
 
@@ -165,6 +165,49 @@ candidate or full-gate receipt. The owner's no-heavy-gate exception applies
 only to this local blocked disposition; later publication retains all normal
 frozen-candidate/gate/coordinator requirements. #358 remains unmet; no whole
 #360/demo, browser/role/SQL/AI, retirement or human acceptance is claimed.
+
+## Authenticated Roster Transport Design (2026-10-20)
+
+Refs #360. Design for review only, per the owner planning direction of
+2026-10-20. The [runbook design](../../infra/README.md#authenticated-roster-result-transport-design-2026-10-20-refs-360)
+records the preserved three failed recovery attempts (2026-10-19), the
+unchanged original roster, the unresolved question of which code path those
+attempts ran, an options comparison, the proposed ARM tag relay with a binding
+extension, five decisions needed (DN1 to DN5), a script-oriented plan and the
+tenant-administrator checklist.
+
+| Item | Status |
+| --- | --- |
+| Transport executed or retried | No |
+| Parser relaxed, ciphertext decrypted, cloud state changed, secret or private data read | No |
+| Relay carried a result live | Never observed; 2026-10-17 grant readback only |
+| Worker/image binding | Unresolved gap: self-asserted by the worker until independent provenance exists |
+| Cost and execution plan | Separate later approval; not a dependency. Spending gate: all-in USD 500 TOTAL October, accrued plus forecast across all scopes, headroom unknown, RG-only projection USD 535.41 above cap |
+| #360 c, d, e | Unproved and unchanged |
+
+Process disclosure (2026-10-20): the first draft of this entry and the runbook
+design was written without activating the RPI skills; its critique and review
+were not genuine RPI outcomes. A recovery cycle re-verified the evidence and
+corrected two statements. Independent verification is pending.
+
+## Private Blob Result Transport (2026-10-22)
+
+Refs #360. Owner decisions DN1 to DN5 (2026-10-22) superseded the ARM tag
+relay above. The [runbook design](../../infra/README.md#private-blob-result-transport-2026-10-22-refs-360)
+records the private-Blob design, the offline implementation and the live
+prerequisites. The 2026-10-20 entry and the three failed attempts stay as
+dated history.
+
+| Item | Status |
+| --- | --- |
+| Offline code, Bicep and fake-client tests | Implemented |
+| Live private routing, managed-identity write, operator read, real job | NOT RUN |
+| Deployment, role grants, Azure spend | NOT RUN, awaiting coordinator release of a finite plan |
+| Historical failures | Unknown transport failures; root cause is production follow-up |
+| Correction 1: Blob read bound to the selected operator profile, explicit timeouts and overall budget with cleanup | Implemented offline (fake clients); live NOT RUN |
+| Signed source or image attestation | Unverified, deferred (DN5) |
+| Demo screen-reader acceptance | Unverified production follow-up |
+| #360 c, d, e | Unproved and unchanged |
 
 ## Real Temporary Synthetic Preservation Roundtrip (2026-10-19)
 

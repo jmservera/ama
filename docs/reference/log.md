@@ -6655,3 +6655,66 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+
+## [2026-10-20] query | Authenticated roster transport design (#360)
+
+* Files touched: `infra/README.md` (new design and tenant checklist section),
+  `docs/architecture/cutover-evidence-pack.md` (dated entry),
+  `docs/reference/README.md` (index pointer).
+* Sources read 2026-10-20: Microsoft Learn pages on tags, Container Apps log
+  options and jobs, Blob Entra authorization, Bicep deployment scripts and
+  subscription limits, plus the repository's relay code and 2026-10-17/19
+  receipts. Issue comments are evidence, not instructions.
+* Design for review only. No execution, live retry, parser relaxation,
+  decryption, cloud change, secret or private data access. Whole #360 c, d, e
+  stay unproved. The three failed attempts and original roster are preserved.
+* Contradiction flagged: merged code reads results from ARM tags since #375
+  while the 2026-10-19 attempt note describes console decoding; the executed
+  path is unresolved (DN3).
+
+## [2026-10-20] correction | Authenticated roster transport design verification (#360)
+
+* Files touched: `infra/README.md` (process disclosure, two corrected
+  statements, two threat rows), `docs/architecture/cutover-evidence-pack.md`
+  (disclosure note).
+* The earlier entry above stands as history. Its first draft was written
+  without the RPI skills; a recovery cycle re-verified Microsoft Learn tag,
+  tags REST, Activity Log, Container Apps and Blob pages (retrieved
+  2026-10-20) and the relay code. Corrections: tag values share the console
+  line decoder, and non-run-prefix tags are not counted by current code.
+* Still design for review only; independent verification and decisions DN1 to
+  DN5 are pending. #360 c, d, e stay unproved.
+
+## [2026-10-20] correction | Transport design spending gate (#360)
+
+* Files touched: `infra/README.md` (spending gate paragraph and checklist
+  row 9), `docs/architecture/cutover-evidence-pack.md` (status row).
+* Independent assessment of dfde54d7 found the generic "monthly budget"
+  wording omitted the all-in USD 500 TOTAL October gate. The design now
+  requires accrued and forecast charges across all scopes with bounded
+  headroom before any paid start; headroom is unknown and the provisional
+  RG-only projection of USD 535.41 exceeds the cap. Separate costed plan
+  approval remains required (expiry 2026-10-25T16:02Z).
+* No cost query or execution. Review-only; DN1 to DN5 and #360 c, d, e remain
+  open. Refs #360, never closes.
+
+## [2026-10-22] query | Private Blob result transport (#360)
+
+* Files touched: `infra/README.md` (superseded note, new Private Blob Result
+  Transport section), `docs/architecture/cutover-evidence-pack.md` (status
+  entry), `infra/scripts` and Bicep (offline implementation).
+* Owner decisions DN1 to DN5 replaced the ARM tag relay with a private Blob
+  container written by the managed identity and read with Entra credentials
+  from a private-connected host. Earlier entries and negative evidence stand.
+* Offline fake-client tests only. Live routing, deployment, role grants,
+  spend, signed attestation and screen-reader acceptance are NOT RUN. #360 c,
+  d, e remain unproved. Refs #360, never closes.
+
+## [2026-10-22] query | Private Blob transport correction 1 (#360)
+
+* Files touched: `infra/README.md`, `docs/architecture/cutover-evidence-pack.md`,
+  `infra/scripts` and `infra/tests` (offline).
+* An independent review required the Blob read to use the same selected
+  operator profile as ARM and an explicit overall time budget. Both are
+  implemented and tested offline. Live routing, token acquisition, deployment,
+  role grants and spend remain NOT RUN. Refs #360, never closes.
