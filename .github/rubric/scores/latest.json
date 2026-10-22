@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-21T09:25:05+00:00",
-  "commit": "f521b7baf476a47c9e6f0a013cf6c8b1446d53fc",
+  "scored_at": "2026-10-21T16:28:01+00:00",
+  "commit": "217b58a6550b0b20eb36a8469b97444725aa43b7",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39575923101",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39634055748",
   "fingerprints": {
     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "232ce98a312a3f5f900f3e75d68c757c77091156e7eb56338a5b506f8f38a2aa",
+    "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
   },
@@ -30,7 +30,7 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts. Decoupled from core store, consistent with prior modular baseline. No new scaling-path evidence beyond existing ceiling."
+      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts. Decoupled from core store, consistent with prior modular baseline. The diff only adds a README subsection documenting a non-operative, unapproved drill preparation; no architectural change."
     },
     "A2": {
       "score": 5,
@@ -45,15 +45,15 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff is a UI color-contrast/animation bug fix and test, unrelated to security controls or AI risk mitigation. Baseline fail-closed hardening evidence unaffected; no change."
+      "rationale": "Diff adds a README subsection (src/core/README.md:2860-2920) describing a proposed, explicitly UNAPPROVED and UNASSIGNED custody/witness/recovery process for a future drill. It is documentation of intent, not a new security control or mitigation, so it does not add new evidence of implemented con..."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/checks/regulatory_ux_check.py:102-146",
-        "src/api/tests/test_regulatory_ux_check.py:69-88"
+        "src/core/README.md:2860-2920",
+        "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "Diff fixes a narrow accessibility defect (mid-fade contrast failure) with a new scan helper and unit test, disclosed as covering only the lookup button. Reinforces existing disclosed-gaps pattern already at ceiling; no change."
+      "rationale": "The new subsection extensively discloses open gaps (UNASSIGNED roles, UNAPPROVED external head custody, unticked acceptance criteria) consistent with the proactive-disclosure pattern already at ceiling (5). It reinforces rather than changes this already-maximal score."
     },
     "A5": {
       "score": 4,
@@ -61,19 +61,19 @@
         "src/api/tests/test_operator_suspension.py:614-665",
         "src/core/src/zava_forward/core/sqlstore.py:572-630"
       ],
-      "rationale": "No new cost or performance measurement in this diff; it is a frontend accessibility/animation fix. Still only resilience evidenced, not both cost and performance; unchanged from baseline."
+      "rationale": "No new cost or performance measurement in this diff; it is a documentation-only addition about drill preparation. Still only resilience evidenced, not both cost and performance; unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a CSS transition/contrast bug fix plus supporting test, not an AI model choice or evaluation harness change."
+      "rationale": "Unchanged baseline: diff is a README documentation addition about a non-operative custody/witness drill, not an AI model choice or evaluation harness change."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "Restart decision remains a human-gated engineering drill; no agentic orchestration change introduced by this UI fix. Unchanged from baseline assessment basis."
+      "rationale": "Restart decision remains a human-gated engineering drill; the new README text proposes additional human decision rights (witness, custody) for a future drill but introduces no new agentic orchestration. Unchanged from baseline assessment basis."
     },
     "B1": {
       "score": 3,
@@ -105,7 +105,7 @@
       "evidence": [
         "src/api/README.md:2555-2561"
       ],
-      "rationale": "README gained a short, well-scoped explanation of the contrast-fix fade/transition change with disclosed limits (covers lookup button only), consistent with prior dense operational documentation style. Still capped at Good(4); no higher level warranted."
+      "rationale": "src/core/README.md gained a well-organised but dense subsection (tables, numbered sequence) on custody/witness preparation, consistent with the existing dense operational-documentation style already noted as thin-in-places elsewhere. Still capped at Good(4); no higher level warranted."
     },
     "B7": {
       "score": 3,
