@@ -6625,3 +6625,33 @@ metadata when the knowledge base was created.
   actual corrective-test acceptance, named human appointment, human-witnessed
   drill, live application acceptance or whole-issue closure. Original #219
   adverse and later correction evidence is retained.
+
+## [2026-10-20] update | Finite costed execution plan options for an unfinished Azure demo (#126)
+
+* Added a subsection to the existing Case Study 48 addendum and one index
+  row. It gives dated, USD, resource-group-scope October accrued cost (189.94
+  for 1-20 Oct, estimated and partial), current burn, existing liabilities and
+  a no-change projection of 535.41 against the owner's USD 500 total.
+* Offers owner-decision options (Front Door retirement, SQL idle) and bounded
+  tranches T0 to T4 with approval fields, finite call and token bounds,
+  thresholds, expiry gate, cleanup and recreation. Subscription-scope spend,
+  prices for several meters, quota, private bootstrap and human gates stay
+  unresolved and block execution.
+* Proposals for separate owner approval only. No Azure change, approval of a
+  manifest, issue acceptance or operational release follows.
+
+## [2026-10-20] update | Corrected unknown-spend term in costed plan options (#126)
+
+* Corrected the gating rule in the existing addendum subsection: the other-scope term U is a bounded month-end forecast of non-resource-group-`ama` charges and liabilities, not accrued-only. Unbounded U blocks every paid tranche; no zero is assumed and the cap is not raised. Earlier entry retained.
+
+## [2026-10-22] update | Revised USD 700 ceiling and private-Blob demo options in costed plan (#126)
+
+* Revised the existing addendum subsection and index row for the owner decision of 2026-10-22: USD 700 is the replacement all-in October forecast ceiling (not additional), expiry 2026-10-25T16:02Z unchanged. The USD 500 wording, its thresholds and 535.41 projection are kept as dated 2026-10-20 history.
+* Recorded fresh read-only evidence for resource group `ama` (USD, retrieved 2026-10-22): 242.36 observed, 535.33 forecast with no change, reconciled against the 2026-10-20 read. Subscription-scope cost remains unreadable, so the outside-group term is unknown and every paid tranche stays blocked.
+* Added finite private-Blob options (B1 ceiling 5) with envelope cap 655, review 560, pause 630 and stop 665. Retirement options are not offered because none is authorized. Screen-reader acceptance and signed source/image attestation are recorded as unverified production follow-ups.
+* Proposal only: no Azure change, approval, issue acceptance or release follows; #126 stays open. Earlier entries retained.
+
+## [2026-10-22] update | Corrected pre-change forecast labelling in costed plan (#126)
+
+* Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
+* No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
