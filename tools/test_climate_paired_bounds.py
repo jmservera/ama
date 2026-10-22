@@ -271,6 +271,55 @@ class DerivationTests(unittest.TestCase):
 
 
 class CrossSourceTests(unittest.TestCase):
+    def test_power_attribution_uses_source_metadata_and_date_without_shared_state(self):
+        original_licence = copy.deepcopy(cpb.LICENCE)
+        reports = []
+        for name, version, retrieved_on in (
+                ("POWER Hourly API", "v2.10.3", "2026-10-22"),
+                ("Constructed Hourly API", "v9.8.7", "2026-10-21")):
+            payload = power_payload()
+            payload["header"]["api"] = {"name": name, "version": version}
+            secondary = parse_pw(payload, retrieved_on=retrieved_on)
+            report = cpb.build_report(parse_om(om_payload()), secondary, {})
+            reports.append(report)
+            self.assertEqual(secondary["api"], {"name": name, "version": version})
+            self.assertEqual(report["sources"]["nasa_power_merra2"]["api"],
+                             secondary["api"])
+            attribution = report["licence_and_attribution"]["nasa_power"]["attribution"]
+            self.assertIn(f"{name} {version}", attribution)
+            self.assertIn(f"retrieved on {retrieved_on}", attribution)
+            self.assertNotIn("UNVERIFIED", attribution)
+            self.assertIs(report["licence_and_attribution"]["nasa_power"]
+                          ["licence_verified"], False)
+        missing = cpb.build_report(parse_om(om_payload()), parse_pw(power_payload()), {})
+        self.assertIn("UNVERIFIED",
+                      missing["licence_and_attribution"]["nasa_power"]["attribution"])
+        self.assertIn("POWER Hourly API v2.10.3",
+                      reports[0]["licence_and_attribution"]["nasa_power"]["attribution"])
+        self.assertEqual(cpb.LICENCE, original_licence)
+
+    def test_power_optional_metadata_uncertainty_is_explicit_not_data_rejection(self):
+        cases = [None, [], "text", 5, {}, {"name": "POWER Hourly API"},
+                 {"version": "v2.10.3"}, {"name": "", "version": "v2.10.3"},
+                 {"name": " ", "version": "v2.10.3"},
+                 {"name": 5, "version": "v2.10.3"},
+                 {"name": [], "version": "v2.10.3"}]
+        cases += [{"name": "POWER Hourly API", "version": version}
+                  for version in (None, [], 5, "", " ", "2.x.x", "v2.10", "unknown")]
+        for api in cases:
+            with self.subTest(api=api):
+                payload = power_payload()
+                payload["header"]["api"] = api
+                secondary = parse_pw(payload)
+                self.assertEqual(len(secondary["times"]), 6)
+                report = cpb.build_report(parse_om(om_payload()), secondary, {})
+                attribution = report["licence_and_attribution"]["nasa_power"]["attribution"]
+                self.assertIn("UNVERIFIED", attribution)
+                self.assertIn("retrieved on 2026-10-22", attribution)
+                self.assertNotIn("v2.10.3", attribution)
+                self.assertIs(report["licence_and_attribution"]["nasa_power"]
+                              ["licence_verified"], False)
+
     def test_compare_by_timestamp(self):
         result = cpb.compare(parse_om(om_payload()), parse_pw(power_payload()))
         self.assertEqual(result["common_hour_count"], 6)
@@ -315,6 +364,20 @@ class CommittedSampleTests(unittest.TestCase):
         rebuilt = json.loads(json.dumps(
             cpb.build_report(primary, secondary, request), ensure_ascii=False))
         self.assertEqual(rebuilt, report)
+
+    def test_committed_power_provenance_matches_retained_header(self):
+        report, _, secondary = self.build()
+        api = json.loads(self.PW_FILE.read_bytes())["header"]["api"]
+        self.assertEqual(api, {"name": "POWER Hourly API", "version": "v2.10.3"})
+        self.assertEqual(secondary["api"], api)
+        source = report["sources"]["nasa_power_merra2"]
+        self.assertEqual(source["api"], api)
+        attribution = report["licence_and_attribution"]["nasa_power"]["attribution"]
+        self.assertIn("POWER Hourly API v2.10.3", attribution)
+        self.assertIn(f"retrieved on {source['retrieved_on']}", attribution)
+        self.assertNotIn("2.x.x", attribution)
+        self.assertIs(report["licence_and_attribution"]["nasa_power"]
+                      ["licence_verified"], False)
 
     def test_committed_monthly_extremes_reconcile_with_annual(self):
         report = json.loads(REPORT.read_text(encoding="utf-8"))

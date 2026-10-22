@@ -6739,3 +6739,14 @@ metadata when the knowledge base was created.
   source stays modelled, not observed; licence and reuse confirmation, production
   precision and representativeness remain pending, and issue criteria stay
   unmet. No legal approval is inferred.
+
+## 2026-10-22 climate paired source: precise NASA attribution (Refs #178)
+
+* Corrected generated NASA attribution to carry `POWER Hourly API` version
+  `v2.10.3` from the hash-pinned retained response and its retrieval date
+  2026-10-22, rather than static wildcard text. Missing or imprecise optional
+  API metadata yields explicit `UNVERIFIED` attribution without changing
+  climate-input rejection behavior.
+* Report statistics, raw fixtures and source selection are unchanged. Licence,
+  reuse, human owner/legal decisions, production precision and regional coverage
+  remain unresolved; no issue acceptance criterion is ticked.
