@@ -6735,3 +6735,24 @@ metadata when the knowledge base was created.
   head. No provider selection, purchase, legal or DPO approval, UI change or
   screen-reader run is claimed; the screen-reader gate and vendor rates, terms
   and DPA positions stay unverified.
+
+## [2026-10-23] correction | Map options evidence labels and budget currency (#119)
+
+* An independent review of the options proposal found two defects. First, the
+  cost paragraph in the [options review](./research/ux/map-tile-provider-options.md)
+  still presented USD500 as the owner ceiling and USD 535.41 as governing
+  evidence. It now states them as dated superseded history, records the
+  replacement USD 700 all-in ceiling, the unchanged 2026-10-25T16:02Z expiry and
+  Unknown all-in headroom, and links the
+  [addendum budget decision](../case_study_48_addendum.md#revised-owner-budget-decision-2026-10-22).
+  This supersedes the budget and verification wording of the two 2026-10-20
+  entries above; they are retained unchanged.
+* Second, vendor statements that the recovery research recorded as not re-read
+  were written as established. The options review and the ADR 0002 map delta now
+  label them draft, unverified, or secondary, unverified, and only the OSM tile
+  policy and the Azure Maps pricing page free allowance are marked re-read. The
+  earlier recovery completion claim that these labels were applied was not
+  borne out; this is an honest correction, not a new verification.
+* Documentation only. No provider is selected or bought, no terms, DPA, rate,
+  licence or processor decision is made, no web retrieval was done, the screen
+  reader remains not run, and both original issue criteria remain unmet.
