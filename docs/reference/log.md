@@ -6701,3 +6701,23 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+
+## [2026-10-23] query | Current scoped cost and minimum development demo refresh (#126)
+
+* Updated the existing Case Study 48 addendum cost proposal and index row with
+  sanitized read-only evidence retrieved about 10:55-10:56Z: USD 261.82 reported
+  RG `ama` actual and USD 457.34 conditional RG service-derived month-end total.
+  Subscription actual/forecast reads failed; no retry or all-in completeness
+  inference from the 91 visible resources, all currently in `ama`.
+* All-in actual/forecast and comparable USD 700 headroom remain Unknown. Exact
+  ingestion lag and complete post-change-day evidence remain unverified; no
+  Front Door/WAF accrued charge was subtracted, and historical evidence stays.
+* Proposed one shared two-hour existing-resource development window, public
+  welcome distinct from signed-in feedback, minimal SQL/private Blob/bootstrap
+  and one bounded real AI coordination draft. Exact incremental prices,
+  cost-complete owner export, operator/technical readiness and separate finite
+  approval block activation; expiry remains 2026-10-25T16:02Z.
+* No Azure mutation, paid/data-plane call, private data/roster/secret read,
+  site-usability claim, legal/DPO/pilot/production approval or #126 acceptance.
+  OD-51 remains open without an invented denominator, quality floor or
+  production economics. Earlier log entries are unchanged.
