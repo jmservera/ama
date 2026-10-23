@@ -46,6 +46,7 @@
       "title": "Final capstone presentation deck",
       "status": "active",
       "extractor": "pptx",
+      "max_file_bytes": 20000000,
       "include": ["docs/capstone/deck/*.pptx"],
       "exclude": [],
       "criteria": ["B1", "B2", "B3", "B5", "B6", "B7"]
