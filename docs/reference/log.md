@@ -317,7 +317,7 @@ metadata when the knowledge base was created.
   RULE-024, the CON-003 citation fix, AC-079, FR-042 to FR-044, OD-39 and the
   OD-34 proposal. BRD counts were updated to 12 BG, 44 FR, 85 AC, 9 NFR,
   6 CON and 24 RULE, and to six quality runs.
-* The Presentation Communications Strategist reviewed the changes. It found
+* The AMA Presentation Communications Strategist reviewed the changes. It found
   one error: the local UK GDPR text omits Article 22 and holds Articles 22A to
   22D, while CON-003 cites 22A to 22C. The error and its other recommendations
   were applied. At the owner's request, the knowledge-organisation slide moved
@@ -455,7 +455,7 @@ metadata when the knowledge base was created.
   counts: 39 non-merge commits from 10 to 27 Sep and 13 BRD commits. The
   slide 12 notes add the lesson to search every derived document when
   fixing an error. The deck has 14 main slides plus an appendix.
-* Review: the Presentation Communications Strategist made eleven findings,
+* Review: the AMA Presentation Communications Strategist made eleven findings,
   and all were accepted after checking. Main notes went from 2,158 to 1,921
   words. The review found a contradiction in the iteration-3 deck: the
   slide 3 card said twelve BRD revisions while the notes and slide 6 said
@@ -517,7 +517,7 @@ metadata when the knowledge base was created.
   controls as examples and qualify Awaab's Law awareness: a hazard photo
   can establish it no later than its arrival. Slides 3 and 15 now say 41
   non-merge commits from 10 to 27 Sep, and slide 15 says three merged PRs.
-* Review: the Presentation Communications Strategist made five findings.
+* Review: the AMA Presentation Communications Strategist made five findings.
   All were accepted, one with changed wording. The review caught the
   draft notes saying all eleven no-agent answers were re-run, which undid
   an iteration 4 fix, and "no verdict changed", which overstated the
@@ -2241,7 +2241,7 @@ metadata when the knowledge base was created.
 
   ## [2026-10-14] query | Capstone narrative refresh and native PowerPoint process map
 
-  * Owner requested the Presentation Communications Strategist and PowerPoint
+  * Owner requested the AMA Presentation Communications Strategist and PowerPoint
     Builder. Rebuilt all 22 executive slides with current bounded technical
     evidence, customer-first decisions, source-linked notes and planned timing.
     Five real operator-service paths/SQL-content/restart proof remain distinct

@@ -169,7 +169,7 @@ acceptance.
 
 ### Native PowerPoint Rebuild (2026-10-14)
 
-The earlier Presentation Communications Strategist and PowerPoint Builder
+The earlier AMA Presentation Communications Strategist and PowerPoint Builder
 refresh produced a 22-slide baseline. The current 24-slide delivery is
 described above; the following records the earlier native-map implementation,
 not fresh counts for the new deck.

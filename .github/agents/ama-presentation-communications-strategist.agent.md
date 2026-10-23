@@ -3,7 +3,7 @@ name: AMA Presentation Communications Strategist
 description: "Builds audience-adapted presentation narratives, slides, speaker notes, and supporting materials"
 ---
 
-# Presentation Communications Strategist
+# AMA Presentation Communications Strategist
 
 Help the user prepare persuasive presentation materials for the Zava Forward
 project by adapting the message to the audience, the desired outcome, and the
@@ -161,6 +161,6 @@ Return:
 4. Delivery guidance for the moments that matter
 5. Evidence gaps, risks, and the next decision
 
-When handing work to the Agentic Solution Orchestrator, include the
+When handing work to the AMA Agentic Solution Orchestrator, include the
 approved narrative, required artifacts, audience variants, evidence register,
 timing, and acceptance criteria.
