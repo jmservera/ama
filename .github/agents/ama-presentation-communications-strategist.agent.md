@@ -1,5 +1,5 @@
 ---
-name: Presentation Communications Strategist
+name: AMA Presentation Communications Strategist
 description: "Builds audience-adapted presentation narratives, slides, speaker notes, and supporting materials"
 ---
 

@@ -29,11 +29,21 @@ the [Capstone Assessment Guide](../reference/method/ama-capstone-assessment-guid
 Recordings (video or audio) are not read by the scorer. Commit the transcript
 or written notes next to the recording and link the recording from them.
 
+The owner selected the [Cowork v2 presentation](./deck/cowork-generated/README.md)
+as the capstone scoring candidate on 2026-10-23. Its generated PDFs, contact
+sheets, preview archives, protected source PPTX and both build handoffs are
+retained there. The selected scoring path is
+`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`; an approved unencrypted
+v2 export is now supplied at that path. The scorer's actual extractor reads
+54 slides and 54 speaker-note blocks, including the final slide-39 wording
+recorded by Cowork. The earlier protected source is retained as history.
+The registry does not fall back to the old deck or treat PDF slides as notes.
+
 The [Zava Forward council proposal](./deck/zava-forward-executive-draft.pptx)
-is the executive capstone artifact. The owner retired its duplicate in
-`docs/presentations/` on 2026-10-11; that folder still holds the separate
-mentor presentation. The filename retains its draft status: production
-approval, measured benefits and live pitch evidence remain separate gates.
+is now historical, not the selected presentation. The owner retired its
+duplicate in `docs/presentations/` on 2026-10-11; that folder still holds the
+separate mentor presentation. All decks remain drafts: production approval,
+measured benefits and live pitch evidence are separate gates.
 
 The deck was detected in PR #61, but the scorer's `:slideN` references did not
 match the deterministic gate's text-only anchor parser. This discarded its
@@ -62,9 +72,19 @@ visual, not a screenshot of GitHub's website or accepted delivery.
 This route supersedes the old 15-minute limit only for the new authoring
 job. It incorporates merged Tokenomics PR #433, separates the owner-set
 October USD 700 ceiling from blocked execution gates, and labels unmeasured
-benefits and outstanding human acceptance. It does not replace the existing
-PPTX, constitute rehearsal/live acceptance or establish a new rubric score.
-Publish the eventual validated executive deck only under `docs/capstone/deck/`.
+benefits and outstanding human acceptance.
+
+Cowork subsequently generated a v1 presentation and a revised v2 story.
+The [imported output index](./deck/cowork-generated/README.md) distinguishes
+the current 54-page v2 PDF and handoff from historical v1 exports and the
+original 18-slide authoring contract. The owner selected v2 for scoring and
+confirmed repository clearance, but its saved PPTX is protected and its
+reported OneDrive save failure is retained as historical evidence. A later
+owner-supplied public v2 export is now installed at the selected scoring path;
+local extraction verifies all 54 slides/notes and the final-save marker.
+Full source/notes parity, review, native-viewer checks and publication gates
+remain outstanding; no fresh rubric score or rehearsal is claimed. Keep the
+eventual validated executive delivery under `docs/capstone/deck/`.
 
 ## Tokenomics Pitch Preparation (2026-10-22)
 

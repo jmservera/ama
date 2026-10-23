@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-22
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -6728,3 +6728,71 @@ metadata when the knowledge base was created.
   original case study and owner memory remain unchanged. Final PowerPoint
   authoring, native-viewer checks, human acceptance, actual rehearsal and
   fresh live-demo preflight remain outstanding.
+
+## [2026-10-23] ingest | Index retrofit, damp and mould statistics report
+
+* Added the supplied [Retrofit, Damp and Mould Statistics Report](./research/sector/uk-social-housing-retrofit-damp-stats-report.md)
+  to the [reference index](./README.md), in benchmark task routing and the
+  research syntheses catalog.
+* Retained the report's national-versus-company distinction, differing
+  statistical bases, separate Scottish case counts and unconfirmed pricing
+  caveats in the index summary and routing.
+* Left the supplied report unchanged. Indexing does not independently verify
+  its figures, citations or regulatory currentness.
+
+## [2026-10-23] ingest | Cowork outputs and owner-selected v2 scoring candidate
+
+* Imported nine generated outputs under
+  [Cowork presentation outputs](../capstone/deck/cowork-generated/README.md):
+  both handoffs, the protected source PPTX, v1/v2 PDFs, contact sheets and
+  preview archives. Compared every imported file with its source; the existing
+  statistics report is identical and remains canonical rather than duplicated.
+  Added frontmatter and normalized v2 handoff Markdown formatting only.
+* The owner selected v2 for capstone scoring and explicitly confirmed public
+  repository clearance despite the Microsoft Confidential marking. Historical
+  v1 exports and the old executive deck remain separate from current selection.
+* The source PPTX is an encrypted CDFV2 container and cannot be read by the
+  scorer. The owner chose to supply an approved unencrypted v2 export rather
+  than substitute PDF text. Cowork's save-retry report, saved-v2 parity and
+  speaker-note verification remain unresolved; no deck extraction is claimed.
+* Changed the proposed registry to select only the future readable v2 path
+  and added a 20,000,000-byte deck-only allowance with boundary and selection
+  regressions. Other artifacts retain 2,000,000 bytes. Trusted base tooling
+  must receive these changes before hosted scoring can use them; no workflow
+  dispatch, score update, commit, push or acceptance is inferred.
+* Updated the capstone/reference indexes and rubric guide. Reported Cowork
+  checks remain source claims; desktop, accessibility, rehearsal, full rubric,
+  independent review and publication gates are not promoted to passed.
+
+## [2026-10-23] ingest | Public Cowork v2 scoring deck and extraction verification
+
+* The owner supplied a public, unencrypted PPTX after the protected-source
+  blocker. Imported it as the sole registry-selected
+  [v2 scoring deck](../capstone/deck/zava-forward-cowork-v2-draft.pptx),
+  preserving the original encrypted source and historical v1 exports.
+* The actual scorer extractor reads 54 slides and 54 speaker-note blocks;
+  OOXML archive integrity passes and slide 39 contains the final-save wording
+  recorded in Cowork's handoff. The file is 2,632,502 bytes; its SHA-256 is
+  `ebccfee35890332ca7aebd4f14f80141996747a4086c9ea03fda2dda5b53d860`.
+* Updated current capstone/reference routing and the rubric guide. Original
+  import blockers and Cowork's failed-save report remain as dated history,
+  not current claims that the public export is unreadable.
+* Local extraction does not establish complete source/PDF/notes parity,
+  native rendering, accessibility, rehearsal, accepted forecasts or a rubric
+  score. Trusted-base activation, independent review and publication gates
+  remain separate; no commit, push or paid workflow dispatch is inferred.
+
+## [2026-10-23] lint | Cowork import integrity and focused scorer checks
+
+* Verified the v1/v2 PDFs parse as 46/54 pages and the preview ZIPs contain
+  46/54 images with member integrity passing. The v2 PDF also contains the
+  final slide-39 save marker. The parser ignores one invalid object pointer
+  per PDF; strict PDF structure, visual review and semantic parity are not
+  claimed. All binary imports remain unchanged.
+* The complete prepare suite reports 54 passes and one deleted-file scoring
+  fixture failure (`KeyError: 'total'`). The failure reproduces with the
+  original HEAD prepare implementation. All six new deck-selection and
+  size-boundary cases pass; no unrelated fixture repair is included.
+* New output-index and imported-handoff Markdown checks pass. Existing
+  rubric/index/log diagnostics remain outside this import's scope. The full
+  publication gate, independent assessment and hosted scoring were not run.

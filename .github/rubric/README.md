@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-19
+ms.date: 2026-10-23
 ms.topic: how-to
 ---
 
@@ -23,6 +23,32 @@ record-rubric-score (gate)       validates, carries forward unaffected criteria,
 The pass or fail decision is made by [gate.py](scripts/gate.py), never by the model. A pull request passes when its total is greater than or equal to the baseline total on `main`. Criterion drops are listed as warnings. When the pull request merges, its committed `latest.json` becomes the new baseline on `main`.
 
 A criterion can only move when an artifact that informs it changes, and every move must cite a changed file. Deleting a scored file, renaming it outside the registry globs or letting it grow past `max_file_bytes` counts as a change: the scorer can lower the affected criteria by citing the removed path, but a removed path never justifies a higher score.
+
+### Owner-Selected Cowork v2 Deck (2026-10-23)
+
+The registry selects only
+`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` for `capstone-deck`.
+The older executive deck and the
+[imported Cowork source and historical exports](../../docs/capstone/deck/cowork-generated/README.md)
+are not alternate scored decks. The imported source PPTX is encrypted;
+the later owner-supplied public v2 export is installed at the selected path.
+Local verification with the actual extractor reads 54 slides and 54
+speaker-note blocks and confirms Cowork's final slide-39 save marker.
+PDFs and handoff claims do not substitute for extracted notes. These local
+checks are not a fresh hosted assessment or a full content/accessibility review.
+
+`prepare.py` supports an optional artifact-level `max_file_bytes` override.
+Only `capstone-deck` raises this limit to 20,000,000 bytes; other artifacts
+retain the 2,000,000-byte registry default. Files above their effective limit
+are still excluded, and the 200,000,000-byte PPTX decompression guard remains.
+The regression checks cover the exact size boundary, unchanged non-deck
+limit and exclusion of historical/protected deck paths.
+
+These are pending branch changes, not an activated hosted score. PR scoring
+loads its trusted registry and tooling from base `main`. They must reach
+that trusted base before a fresh v2 assessment can use the new selection
+and allowance. Do not edit `scores/latest.json`, fall back to the historical
+deck, or claim a v2 pass while readable slide-and-notes evidence is missing.
 
 ### PPTX Slide Citation Repair
 
