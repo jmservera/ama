@@ -6,7 +6,7 @@ environment credentials, submits no writes and never activates AI. Evidence
 is shaped like the real runtime responses; runtime schemas are imported from
 the installed zava_forward packages rather than copied.
 
-Captured AI items require nonempty string case IDs, reasons and citations.
+Captured AI items require unique, nonempty string case IDs, reasons and citations.
 Their shape is checked offline, not their source resolution or provenance.
 
 This is an offline harness, not deployed acceptance. A redirect, an auth
@@ -475,6 +475,8 @@ def check_ai(evidence, runtime):
         )
     ):
         problems.append("cited items")
+    elif len({i["case_id"] for i in items}) != len(items):
+        problems.append("duplicate case IDs")
     if problems:
         raise Verdict(
             FAIL,

@@ -584,6 +584,48 @@ class AiEvidence(unittest.TestCase):
     def test_runtime_shaped_capture_passes(self):
         self.assertEqual(self.status(ai_record()), "pass")
 
+    def test_duplicate_case_ids_fail(self):
+        item = ai_record()["body"]["items"][0]
+        other = dict(item, case_id="ZF-2")
+        repeated = dict(item, reason="Another reason.", cites=["Stage: T"])
+        for origin in cdf.ORIGINS:
+            for items in (
+                [item, copy.deepcopy(item)],
+                [item, repeated],
+                [item, other, repeated],
+            ):
+                with self.subTest(origin=origin, items=items):
+                    record = ai_record()
+                    record["body"]["items"] = items
+                    report = report_for(bundle(ai=record, origin=origin))
+                    check = next(
+                        c for c in report["checks"] if c["id"] == "ai_evidence"
+                    )
+                    self.assertEqual(check["status"], "fail")
+                    self.assertIn("duplicate case IDs", check["reason"])
+                    self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_distinct_case_ids_preserve_offline_boundaries(self):
+        item = ai_record()["body"]["items"][0]
+        for origin in cdf.ORIGINS:
+            for case_ids in (
+                ("ZF-1", "ZF-2"),
+                ("ZF-1", "zf-1"),
+                ("ZF-1", " ZF-1 "),
+            ):
+                with self.subTest(origin=origin, case_ids=case_ids):
+                    record = ai_record()
+                    record["body"]["items"] = [
+                        dict(item, case_id=case_id) for case_id in case_ids
+                    ]
+                    report = report_for(bundle(ai=record, origin=origin))
+                    self.assertEqual(statuses(report)["ai_evidence"], "pass")
+                    self.assertEqual(statuses(report)["case_write_reload"], "blocked")
+                    self.assertEqual(statuses(report)["spend_bound"], "not-run")
+                    self.assertEqual(statuses(report)["admin_account"], "not-run")
+                    self.assertEqual(report["overall"], "blocked")
+                    self.assertEqual(report["acceptance"], "not-accepted")
+
     def test_missing_item_fields_fail(self):
         for field in ("case_id", "reason", "cites"):
             with self.subTest(field=field):
