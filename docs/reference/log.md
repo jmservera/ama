@@ -6701,3 +6701,52 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+
+## [2026-10-21] query | Paired historical climate access check (#178)
+
+* Tested anonymous retrieval of official paired North-East temperature and
+  humidity records. MIDAS Open files require a CEDA login and EA Hydrology
+  has no humidity or dew point, so no records were retrieved and no bounds
+  were derived.
+* Added the access-blocker record, a synthesis section and index row. The
+  owner action is an authorised human supplying MIDAS files from their own
+  account with reuse approval, or approval of another source.
+* Source selection and licence/reuse remain UNMET, synthetic data is not
+  substituted for observations, and the issue criteria stay unticked.
+
+## [2026-10-22] query | Modelled paired historical climate source (#178)
+
+* Following the owner decision of 2026-10-22, retrieved a fixed anonymous
+  hourly Durham 2023 sample from Open-Meteo (ERA5) with a NASA POWER
+  cross-check, hash-pinned under the climate sample folder, and derived
+  temperature and humidity sample bounds with a validating adapter that
+  rejects gaps, misalignment and inconsistent humidity.
+* The source is labelled modelled, not observed. The two modelled sources
+  differ (about 1 degC and 8 humidity points mean absolute), so accuracy is
+  demonstrator level only. Production precision, licence and commercial-use
+  confirmation, underlying C3S terms and regional representativeness remain
+  pending and no approval is asserted.
+* The 2026-10-21 MIDAS blocker and the Durham temperature-only report are
+  unchanged. Issue criteria stay unticked.
+
+## 2026-10-22 climate paired source: monthly timestamp correction (Refs #178)
+
+* Corrected the modelled paired climate report after independent review: monthly
+  minimum and maximum now carry every tied UTC timestamp and the paired value,
+  regenerated from the same retained Open-Meteo records with tests for ties,
+  provenance and reconciliation with the annual extremes.
+* Earlier entries and the first gate receipt are preserved as historical. The
+  source stays modelled, not observed; licence and reuse confirmation, production
+  precision and representativeness remain pending, and issue criteria stay
+  unmet. No legal approval is inferred.
+
+## 2026-10-22 climate paired source: precise NASA attribution (Refs #178)
+
+* Corrected generated NASA attribution to carry `POWER Hourly API` version
+  `v2.10.3` from the hash-pinned retained response and its retrieval date
+  2026-10-22, rather than static wildcard text. Missing or imprecise optional
+  API metadata yields explicit `UNVERIFIED` attribution without changing
+  climate-input rejection behavior.
+* Report statistics, raw fixtures and source selection are unchanged. Licence,
+  reuse, human owner/legal decisions, production precision and regional coverage
+  remain unresolved; no issue acceptance criterion is ticked.
