@@ -2,7 +2,7 @@
 title: Capstone Deliverables and Storage Map
 description: Where every capstone asset must be stored so the rubric gate can find and score it, and what scores 0 until it exists
 author: AMA programme
-ms.date: 2026-10-22
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -41,6 +41,30 @@ proposed B1, B2, B6 and B7 changes and left misleading missing-deck baseline
 rationales in the comment. See the
 [gate repair and activation boundary](../../.github/rubric/README.md).
 Do not treat a saved-scorecard replay as a fresh score for the revised deck.
+
+## Main Presentation Cowork Handoff (2026-10-23)
+
+The [complete Cowork authoring package](./pitch/cowork-main-presentation/README.md)
+provides the owner-requested top-down 30-minute presentation plus a separate
+10-minute demo. Give Cowork the entire folder and start with its
+[authoring brief](./pitch/cowork-main-presentation/COWORK-BRIEF.md).
+It includes 18 main slides, 27 CXO backups, full speaker notes, interruption
+routes, a preflight-gated demo, seven progressive slide-sized Excalidraw
+diagrams with official Azure icons, Tokenomics and cost evidence, and the
+HVE/design-thinking/prototype-to-backlog delivery story.
+
+The original "around 180" is an approximate issue count, including epics and
+stories, not agents or stories alone. A read-only AMA Plan project snapshot
+retrieved on 2026-10-23 has 189 items across epics, features, stories and other
+issues. Its included board image is an explicitly labelled API-derived
+visual, not a screenshot of GitHub's website or accepted delivery.
+
+This route supersedes the old 15-minute limit only for the new authoring
+job. It incorporates merged Tokenomics PR #433, separates the owner-set
+October USD 700 ceiling from blocked execution gates, and labels unmeasured
+benefits and outstanding human acceptance. It does not replace the existing
+PPTX, constitute rehearsal/live acceptance or establish a new rubric score.
+Publish the eventual validated executive deck only under `docs/capstone/deck/`.
 
 ## Tokenomics Pitch Preparation (2026-10-22)
 

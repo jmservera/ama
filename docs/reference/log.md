@@ -6701,3 +6701,30 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+
+## [2026-10-23] add | Executive-first capstone Cowork authoring package
+
+* Added `docs/capstone/pitch/cowork-main-presentation/`: 18 main-slide
+  content contracts with full notes, 27 CXO question-led backups, a separate
+  ten-minute demo with live/evidence/recovery routes, audience guidance and
+  a complete Cowork brief. The requested 30-minute presentation allocates
+  24 minutes to narration and six to interruptions, not an observed rehearsal.
+* Added seven editable 1600x900 Excalidraw views with embedded official Azure
+  icons, SVG/PNG previews, text alternatives and a standard-library generator.
+  Views progress from the business idea to AI placement, runtime, controlled
+  proposals, operations, target sensors and Tokenomics. Current contracts,
+  historical observations, configured paths and deferred work remain distinct.
+* Incorporated merged Tokenomics PR #433, partial metering, historical
+  6,884-token/five-run evidence, proposed economics/control requirements and
+  unknown accepted-outcome cost. Preserved the owner-set October USD 700
+  ceiling, unchanged expiry and blocked post-change execution gates; no
+  production price, model benefit or cash saving is invented.
+* Checked memory/log, historical issue-generation evidence and private AMA
+  Plan project 7 after owner authentication. The historical approximate
+  180 means issues, including epics and stories, not agents or stories alone.
+  The dated current board has 189 items; its bundled image is labelled
+  API-derived, not a GitHub website screenshot or accepted delivery.
+* Updated capstone and reference routing. Existing executive/mentor decks,
+  original case study and owner memory remain unchanged. Final PowerPoint
+  authoring, native-viewer checks, human acceptance, actual rehearsal and
+  fresh live-demo preflight remain outstanding.
