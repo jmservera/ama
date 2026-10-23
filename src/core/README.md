@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-20
 ms.topic: reference
 ---
 
@@ -927,6 +927,16 @@ accept an approved flag, approval evidence or actor override. No actual
 approved form/template or delegated authority was supplied for this slice.
 It cannot prepare an approved form; real recorded version-specific authority
 and binding remain unmet. Synthetic fixtures demonstrate mechanics only.
+
+A separate fictional review pack, `src/core/evals/fictional_form_review_pack.json`
+(registered `DS-FICT-FORM-REVIEW-PACK`; [reviewer guide](../../docs/reference/research/retrofit-synthetic-data/form-review-pack-97.md)),
+supplies a concrete versioned template, per-field authority, evidence, freshness
+and lineage, proposed role separation and stale propagation, and fourteen null
+Finance decision fields for human review. Its schema uses this path, but the
+public file carries a placeholder reviewer (public payloads may not hold email
+addresses) and is refused as published; only a copy differing in `reviewer`,
+set to an existing registered person, registers, as `Unapproved`. The pack is
+not an approved template, and criterion 1 stays unmet.
 
 Candidate collection copies the existing case-owned document ID,
 `content_sha256`, version and upload date. Original bytes must match the stored

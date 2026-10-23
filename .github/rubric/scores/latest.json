@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-22T19:49:51+00:00",
-  "commit": "928d148f750c3066ce2e755a6451864c181de725",
+  "scored_at": "2026-10-23T18:43:22+00:00",
+  "commit": "c8266cb89985022a490e54679b6615ea483c1c8c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39840274826",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40004825228",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "5d3831f1da50a37c1732fd7e467c2f7721f4b570f55e9c97c8a440bdb67aed3a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
+    "solution-code": "df68e2de7e56bf1ed1bf9e5b8a6b4fb65d7b6eb167d88072ec5b4d900dc896b2",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
     "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
@@ -31,7 +31,7 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "Diff is BRD/PRD proposal text (NFR-012, FR-052) and a new pitch brief; no architecture or code change. Unchanged from baseline."
+      "rationale": "Diff adds a fictional form-review eval fixture, a test file and registry/README docs for #\u200b97; no architecture or component-contract change. Unchanged from baseline."
     },
     "A2": {
       "score": 5,
@@ -46,15 +46,15 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
+      "rationale": "Diff adds tests exercising existing forms.py/privacy.py controls (human-only field refusal, reviewer substitution) but no new security or RAI control code. Unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:2860-2920",
-        "src/api/checks/regulatory_ux_check.py:102-146"
+        "src/core/README.md:928-943",
+        "src/core/tests/test_form_review_pack.py:1-209"
       ],
-      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
+      "rationale": "New synthetic fixture and test exercise existing form-registration/staging capability end to end (register_schema, stage_candidates, privacy checks); still a fictional, unapproved pack, not a new capability. Already at ceiling for what is demonstrated. Unchanged."
     },
     "A5": {
       "score": 4,
@@ -62,19 +62,19 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
+      "rationale": "No operations, instrumentation or cost-measurement change in this diff; it is a test-fixture and documentation addition unrelated to A5. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new fixture is a data-integrity/form-governance test, not an AI evaluation. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
+      "rationale": "No new agentic orchestration introduced by this fixture/test/documentation diff. Unchanged."
     },
     "B1": {
       "score": 3,
@@ -113,7 +113,7 @@
         "docs/capstone/pitch/tokenomics-pitch-brief.md:1-137",
         "src/api/README.md:2555-2561"
       ],
-      "rationale": "New pitch brief is a well-organised, navigable preparation document; capstone deck remains unchanged and already well structured. Still capped at Good(4); some documentation remains dense elsewhere."
+      "rationale": "New README section (src/core/README.md:928-943) is well organised and consistent with existing documentation style; capstone deck remains unchanged and present (no cap applies). Still capped at Good(4) by pre-existing dense documentation elsewhere. Unchanged."
     },
     "B7": {
       "score": 3,
