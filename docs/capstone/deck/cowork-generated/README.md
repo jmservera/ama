@@ -13,21 +13,27 @@ repository despite their Microsoft Confidential marking. They remain drafts,
 not an accepted assessment, observed rehearsal or approved operational product.
 
 The owner subsequently supplied the [public v2 PPTX](../zava-forward-cowork-v2-draft.pptx).
-It is the sole selected scoring deck. Local verification with the scorer's
+It is the owner-designated current deck. Local verification with the scorer's
 actual extractor found 54 slides and 54 speaker-note blocks and confirmed
 the final slide-39 wording. The earlier protected source is retained below
-as history, not a second scored deck.
+in the handoff history only; its binary is not retained in this checkout.
+
+The [IoT and optional-portal refinement](./refinement-2026-10-23/README.md)
+now updates five slides and their notes at that same PPTX path. Use its
+[new native PowerPoint PDF](../zava-forward-cowork-v2-draft.pdf) and five
+native previews for the current revision. The import checks and original
+hash below describe the supplied pre-refinement file, not today's revised bytes.
 
 The [v2 handoff](./BUILD-HANDOFF-v2.md) describes 54 slides: 26 main-route
 pages, a question index and 27 appendix answers. The
 [v2 PDF](./Zava%20Forward%20v2%20-%20More%20homes%20ready%20with%20control%20intact.pdf)
 and [contact sheet](./Zava%20Forward%20v2%20-%20contact%20sheet.png) are the
-current rendered reference. The v1 exports are historical, not an alternate
+pre-refinement rendered reference. The v1 exports are historical, not an alternate
 presentation for scoring.
 
 ## Imported Files
 
-Generated binary outputs retain their original filenames and bytes. The v2
+Retained generated binary outputs keep their original filenames and bytes. The v2
 handoff has repository frontmatter and Markdown formatting adjustments;
 its substantive content, including reported validation and save failures,
 is retained. Cowork's validation claims are not independent local checks.
@@ -37,24 +43,30 @@ is retained. Cowork's validation claims are not independent local checks.
 | [BUILD-HANDOFF-v2.md](./BUILD-HANDOFF-v2.md) | Current v2 build report, forecast assumptions, limitations and outstanding decisions |
 | [Current PDF](./Zava%20Forward%20v2%20-%20More%20homes%20ready%20with%20control%20intact.pdf) | Rendered v2 presentation; not a speaker-notes substitute |
 | [Current contact sheet](./Zava%20Forward%20v2%20-%20contact%20sheet.png) | Overview of the rendered v2 slides |
-| [Current slide previews](./Zava%20Forward%20v2%20-%20slide%20previews.zip) | Original v2 preview archive |
-| [Protected source PPTX](./Zava%20Forward%20-%20More%20homes%20ready%20with%20control%20intact.pptx) | Original encrypted file; not readable or selected by the scorer |
+| Original v2 preview archive | Described in the handoff; not retained in this checkout. Use the five current native previews in the refinement record |
+| Original protected PPTX | Described in the handoff; encrypted binary not retained in this checkout |
 | [BUILD-HANDOFF.md](./BUILD-HANDOFF.md) | Historical v1 build report |
-| [Historical PDF](./Zava%20Forward%20-%20More%20homes%20ready%20with%20control%20intact.pdf) | v1 rendered presentation |
-| [Historical contact sheet](./Zava%20Forward%20-%20contact%20sheet.png) | v1 slide overview |
-| [Historical slide previews](./Zava%20Forward%20-%20slide%20previews.zip) | Original v1 preview archive |
+| Historical v1 PDF | Described in the handoff; not retained in this checkout |
+| Historical v1 contact sheet | Described in the handoff; not retained in this checkout |
+| Historical v1 preview archive | Described in the handoff; not retained in this checkout |
 | [Statistics research](../../../reference/research/sector/uk-social-housing-retrofit-damp-stats-report.md) | Existing canonical report, byte-identical to Cowork's copy; not duplicated |
 
 ## Scoring Selection and Local Validation
 
-The [artifact registry](../../../../.github/rubric/artifacts.json) selects only
-`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` for the capstone deck.
+The owner-designated current deck remains
+`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`. The owner-expanded
+[artifact registry](../../../../.github/rubric/artifacts.json) currently includes
+all root `docs/capstone/deck/*.pptx`; this is not an exclusive filename filter.
+The older executive binary is not retained in this checkout; any other root
+PPTX files would also match. This refinement preserves that registry choice;
+it does not claim exclusive
+v2 selection. Nested protected-source copies remain outside the glob.
 The later owner-supplied public export resolves the source encryption blocker.
-The original PPTX here remains a CDFV2 encrypted container; it is unchanged
-and excluded, along with the historical
-[executive deck](../zava-forward-executive-draft.pptx).
+The originally supplied PPTX was a CDFV2 encrypted container; that binary
+is not retained here. The historical executive deck is also not retained;
+the current registry permits any root-level PPTX rather than naming v2 alone.
 
-Local checks on the public export, 2026-10-23:
+Original public-export checks, 2026-10-23 (before refinement):
 
 * Readable OOXML ZIP with archive integrity verified
 * 54 slides and 54 speaker-note blocks extracted by `prepare.extract_pptx_text`

@@ -30,17 +30,28 @@ Recordings (video or audio) are not read by the scorer. Commit the transcript
 or written notes next to the recording and link the recording from them.
 
 The owner selected the [Cowork v2 presentation](./deck/cowork-generated/README.md)
-as the capstone scoring candidate on 2026-10-23. Its generated PDFs, contact
-sheets, preview archives, protected source PPTX and both build handoffs are
-retained there. The selected scoring path is
+as the capstone scoring candidate on 2026-10-23. Its original v2 PDF, contact
+sheet and both build handoffs are retained there. V1 exports, preview ZIPs
+and the original protected binary are described in those handoffs but are
+not retained in this checkout. The selected scoring path is
 `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`; an approved unencrypted
 v2 export is now supplied at that path. The scorer's actual extractor reads
 54 slides and 54 speaker-note blocks, including the final slide-39 wording
 recorded by Cowork. The earlier protected source is retained as history.
 The registry does not fall back to the old deck or treat PDF slides as notes.
 
-The [Zava Forward council proposal](./deck/zava-forward-executive-draft.pptx)
-is now historical, not the selected presentation. The owner retired its
+The [IoT and optional-resident-portal refinement](./deck/cowork-generated/refinement-2026-10-23/README.md)
+updates the same 54-slide v2 PPTX and provides a
+[new native PowerPoint PDF](./deck/zava-forward-cowork-v2-draft.pdf).
+IoT is visible on the main architecture build; resident self-service is an
+optional benefit assessment in issue #441, not a delivered channel or saving.
+Assisted routes and human review remain explicit. Five changed slides were
+natively rendered and visually checked; rehearsal, human and live acceptance
+remain separate. The current owner-expanded registry also includes other
+root-level PPTX files; this narrative refinement leaves that choice unchanged.
+
+The earlier Zava Forward council proposal is now historical and its binary
+is not retained in this checkout. The owner retired its
 duplicate in `docs/presentations/` on 2026-10-11; that folder still holds the
 separate mentor presentation. All decks remain drafts: production approval,
 measured benefits and live pitch evidence are separate gates.
@@ -76,7 +87,7 @@ benefits and outstanding human acceptance.
 
 Cowork subsequently generated a v1 presentation and a revised v2 story.
 The [imported output index](./deck/cowork-generated/README.md) distinguishes
-the current 54-page v2 PDF and handoff from historical v1 exports and the
+the original 54-page v2 PDF and handoff from historical v1 exports and the
 original 18-slide authoring contract. The owner selected v2 for scoring and
 confirmed repository clearance, but its saved PPTX is protected and its
 reported OneDrive save failure is retained as historical evidence. A later

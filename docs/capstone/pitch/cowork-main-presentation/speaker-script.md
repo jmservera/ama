@@ -113,19 +113,17 @@ Planned narration 03:30 to 05:00; 90 seconds. Discussion stops the narration clo
 
 * People -> controlled workbench -> retained evidence
 * Rules keep the boundaries; AI prepares bounded help
-* No mandatory resident portal
+* Optional portal assessed; assisted routes stay
 
 ### Say
 
-This is the whole idea before we look at individual Azure services. On the left are residents and accountable staff. In the middle is a workbench that carries the workflow, the commitments and the ownership. On the right is the retained evidence needed to explain what happened and why.
+The architecture starts with people, ownership and evidence, not a list of Azure products. The workbench carries commitments and workflow; Azure SQL retains structured state and Blob holds document files. AI prepares permitted evidence for a person's review, never authoritative state or domain approval.
 
-AI sits inside that arrangement as assistance. It can reduce the work of finding, comparing and explaining permitted evidence. It does not become the system of record and does not become the person authorised to make a controlled decision.
+In-use monitoring is the proposed post-retrofit feedback loop. Sensors or a labelled simulator send temperature and humidity through IoT Hub Basic, API validation and SQL; a deterministic signal may request human review. This accepted exercise design is not live transport, diagnosis or measured benefit. A resident's hazard report always uses the independent human safety route.
 
-Azure Container Apps hosts the application; Azure SQL carries structured programme state; Blob stores document files. Those names explain how the idea is realised, but the architecture starts with the operating model, not a shopping list of cloud services.
+The resident portal is optional, not rejected. Issue #441 assesses whether self-service status access can reduce avoidable calls and interruptions of staff working time. Portal/workflow comes first using existing case/API authority; any resident-answer assistant is separately gated. Per-message human review remains normative and routine automation is off. Phone, email, visits and accessible assisted routes stay available without detriment.
 
-The drawing is a logical view, not a promise that everything shown has passed live acceptance. In particular, source implementation, a configured dependency and a current staff session are different kinds of evidence. I will keep that distinction visible when we zoom in.
-
-The important design choice is that staff can serve a resident through an appropriate route. The programme does not require the resident to become a software user.
+Source implementation, a design decision and a current live service are different evidence. The portal's local work-in-progress is owner-reported, not inspected delivery or an approved handoff. Test staff and resident effort, access and comprehension before claiming benefit.
 
 ### Show and deliver
 
@@ -137,7 +135,7 @@ CIO: 'Is this a new system replacing housing management?' B02: a demonstrator of
 
 Return: The application owns the workflow; people retain the authority.
 
-Evidence: E02, E06, E07
+Evidence: E02, E06, E07, E12, E441
 
 ## S05: A faster wrong decision is not progress.
 

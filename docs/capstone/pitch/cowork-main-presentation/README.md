@@ -7,6 +7,15 @@ ms.topic: reference
 
 ## Start Here
 
+For the current presentation, apply the
+[IoT and optional-resident-portal refinement](../../deck/cowork-generated/refinement-2026-10-23/README.md)
+and the dated revision direction in [COWORK-BRIEF.md](./COWORK-BRIEF.md).
+The owner-selected native v2 deck has 54 slides. The 18-slide inventory below
+is the original authoring contract; its updated copy is reusable but does
+not reconstruct the complete later Cowork v2 layout. IoT now belongs in the
+main narrative, and the optional portal is under assessment in issue #441,
+not excluded, implemented or measured as a saving.
+
 Give Cowork **this entire folder**, then use [COWORK-BRIEF.md](./COWORK-BRIEF.md)
 as the opening instruction. It contains a complete authoring job, not just an
 outline. No repository access, private stock data or credentials are needed

@@ -19,6 +19,31 @@ not an extra demo minute.
 This is a proposed runbook, not a record that these actions have been executed.
 No cloud, directory, model or data mutation is authorised by this document.
 
+## Current v2 IoT and Resident-Channel Commentary (2026-10-23)
+
+The current v2 deck uses S22 (slide 25) to introduce the demo and S23 (slide 26)
+to close; S17/S18 references below belong to the original authoring inventory.
+Keep the same ten-minute slot. Neither refinement adds a live action:
+
+* Use the revised main architecture (slide 19) and B19 (slide 46) to explain
+  the target sensor/simulator -> IoT Hub Basic -> API checks -> SQL -> human
+  review path. It is accepted exercise design with partial offline evidence,
+  not an authenticated live Hub demo, diagnosis or measured prevention.
+  Resident hazard reports bypass the optional telemetry and AI paths.
+* In the same-home discussion, replace "no portal" with "optional portal
+  under assessment in [#441](https://github.com/jmservera/ama/issues/441)".
+  State the hypothesis: fewer avoidable status calls and longer uninterrupted
+  staff working periods, without shifting burden onto residents. Phone, email,
+  visits and accessible assisted channels remain available without detriment.
+* Do not show an invented portal screen, resident account or autonomous
+  response. The owner reports unpublished local work; the public issue still
+  records a Research-stage integration blocker and no published PR. Option B
+  is portal/workflow first using case/API authority; any resident-answer task
+  is separately gated, per-message human-reviewed and off for routine automation.
+* If asked about value, describe a proposed comparison of interruption time,
+  total handling/review effort, resident effort, access and comprehension.
+  No measured time saving, cash benefit or accepted portal result is available.
+
 ## Route Selection Before the Meeting
 
 | Route | Select only when | Say on entry |

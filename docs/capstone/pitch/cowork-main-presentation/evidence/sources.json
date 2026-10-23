@@ -1,4 +1,11 @@
 {
+  "E441": {
+    "path": "https://github.com/jmservera/ama/issues/441; https://github.com/jmservera/ama/issues/441#issuecomment-6374724922",
+    "section": "Issue body and latest public comment, retrieved 2026-10-23",
+    "classification": "Owner-confirmed optional-portal exercise direction; unresolved requirements integration; owner-reported unpublished local work",
+    "supports": "Option B reuses case/API authority, portal/workflow first and a separately gated resident-answer task; assess fewer avoidable calls and staff interruptions while preserving assisted channels",
+    "limit": "Issue remains open with a Research-stage integration blocker and no published PR at retrieval. Draft quality gates are blocked/failed, not approved. Per-message human review remains normative; routine automation is off pending requirements-owner disposition and separate release approval. No inspected implementation, numerical savings, resident acceptance or production approval."
+  },
   "E01": {
     "path": "docs/case_study_48_original.md",
     "section": "Business Challenge; Agentic Architecture Brief; Expected Outcomes; Business Case",

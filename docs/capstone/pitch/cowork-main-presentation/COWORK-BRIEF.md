@@ -17,6 +17,31 @@ owners, required evidence and a refreshed finite cost boundary. This is not
 a request for production rollout, autonomous operation or retrospective
 approval of spending.
 
+## Current v2 Revision Direction (2026-10-23)
+
+The owner-selected [54-slide v2 deck](../../deck/zava-forward-cowork-v2-draft.pptx)
+is the current presentation, not the original 18-slide authoring inventory
+below. Preserve its visual language, main-route timing and appendix navigation.
+Integrate these owner-requested refinements without claiming delivery:
+
+* Bring IoT into the main architecture story: labelled sensors or simulators
+  send temperature/humidity observations through IoT Hub Basic to API
+  validation and Azure SQL; deterministic signals request human review.
+  Explain the intended value of in-use monitoring after retrofit. This is
+  accepted exercise design, not verified live transport, diagnosis or benefit.
+  Resident hazard reports always retain their independent human safety route.
+* Replace categorical "no resident portal" language with "optional resident
+  self-service under assessment". [Issue #441](https://github.com/jmservera/ama/issues/441)
+  proposes reusing case/API authority, portal/workflow first and a separately
+  gated resident-answer task. Test fewer avoidable status calls and staff
+  interruptions; do not claim measured time or cash savings. Phone, email,
+  visits and accessible assisted channels remain available without detriment.
+* Issue #441 is open and its latest comment reports a Research-stage
+  integration blocker, with no published PR. The owner's reported local
+  work-in-progress is not inspected implementation or an approved handoff.
+  Keep per-message human review normative and routine automation off pending
+  explicit requirements-owner disposition and separate release approval.
+
 ## Read in This Order
 
 1. `README.md` and `audience-and-delivery.md`.

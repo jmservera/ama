@@ -6796,3 +6796,42 @@ metadata when the knowledge base was created.
 * New output-index and imported-handoff Markdown checks pass. Existing
   rubric/index/log diagnostics remain outside this import's scope. The full
   publication gate, independent assessment and hosted scoring were not run.
+
+## [2026-10-23] query | Main-route IoT and optional resident portal presentation refinement
+
+* Owner requested IoT in the main presentation and optional portal benefit
+  assessment rather than categorical exclusion. Read issue #441 and comment
+  6374724922: Option B reuses case/API authority, portal/workflow first and
+  resident-answer task separately gated. The issue is open with a Research
+  integration blocker and no published PR at retrieval; owner-reported local
+  work is not inspected implementation, approved requirements or delivery.
+* Revised v2 slides 9, 13, 19, 33 and 46 and their notes without changing the
+  54-slide inventory or navigation. The main architecture adds a consistently
+  amber, not-live sensor/simulator -> IoT Hub Basic -> API/SQL -> human-review
+  lane. Retained the independent hazard route and no-diagnosis boundary.
+* Portal copy now assesses fewer avoidable calls and staff interruptions,
+  including total review/handling and resident effort, access and comprehension.
+  Assisted channels remain available without detriment; per-message human
+  review stays normative and routine automation off. No numerical saving,
+  cash/headcount result or resident acceptance is asserted.
+* Updated the authoring brief, original slide contract, source ID E441,
+  generated speaker/backup notes and demo commentary. Original Cowork exports
+  and handoffs remain historical. Added a refinement record, native previews
+  and current PDF; retained the owner-expanded registry without modifying it.
+* Packer structural validation passed. Native PowerPoint opened 54 slides,
+  rendered all five changed slides and saved the PDF. Independent visual QA
+  found a clipped IoT sentence and ambiguous target status styling; local
+  corrections were repacked, re-rendered and inspected. Replaced a touched
+  resident banner that implied completed comprehension testing with a future
+  human-validation gate. This is scoped artifact evidence, not accessibility,
+  rehearsal, full capstone/human/live acceptance or publication clearance.
+* Installed-deck checks verify 54 slides and 54 notes with the original
+  slide-39 marker retained. Canonical XML comparison proves only the five
+  intended slides and their notes changed; package membership, all other
+  parts/media, sections and navigation relationships are unchanged. The
+  native PDF has 54 pages and the new IoT/portal wording. Registry untouched.
+* Final link review found inherited references to unretained source
+  deliverables (v1 exports, v2 preview ZIP and protected source PPTX). Replaced
+  those broken output-index links with explicit source-only status; did not
+  restore or delete archival binaries. Retained original v2 PDF/contact sheet
+  and handoff contents remain unchanged.

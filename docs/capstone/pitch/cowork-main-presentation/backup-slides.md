@@ -115,19 +115,19 @@ Audience: CEO / resident-services leader. Return to S05.
 
 ### On-slide copy
 
-* Assisted phone, letter and officer routes
+* Optional portal; assisted routes stay
 * Offer != agreement; silence != consent
 * Representative authority is task-limited
 
 ### Answer
 
-The workbench is staff-facing and the exercise includes assisted routes; it does not require a resident portal. Preferred and safe communication, support needs and the limits of a representative must be explicit. A sent message does not prove receipt or understanding, and no access or silence never becomes works consent. These are design and engineering boundaries, not evidence of tested resident comprehension. Direct resident research, approved communications and privacy decisions remain necessary.
+Issue #441 assesses optional resident self-service to reduce avoidable calls and interruptions of staff working time. This is a benefit hypothesis, not a delivered portal or measured saving. Owner-confirmed Option B reuses case/API authority: portal/workflow first, resident-answer task separately gated. Per-message human review remains normative and routine automation is off. Phone, email, letters, visits and accessible assisted routes remain available without detriment. Test total staff handling/review effort, interruption time, resident effort, access and comprehension. Preferred/safe contact and task-limited representative rights remain explicit. Sent does not mean received; silence, portal use and access never mean works consent. At the retrieved snapshot the issue is open with a Research-stage integration blocker and no published PR; reported local work is not inspected implementation. Direct resident, privacy and accessibility acceptance remain separate gates.
 
 ### Visual
 
 Resident at the centre, digital and assisted routes of equal visual weight. No invented quote or photograph presented as a real resident.
 
-Evidence: E02, E08, E12
+Evidence: E02, E08, E12, E441
 
 ## B07: What stops a human from rubber-stamping AI?
 
@@ -376,12 +376,12 @@ Audience: Asset / safety / CTO. Return to S14.
 ### On-slide copy
 
 * IoT Hub Basic is an exercise design decision
-* Offline consumer evidence is not a live Hub integration
+* Offline consumer tested; live Hub path remains roadmap
 * Signals request human review, never diagnose or suppress
 
 ### Answer
 
-The accepted ADR selects Basic IoT Hub for exercise device-to-cloud telemetry. The finite offline consumer has local engineering evidence; it does not establish live device identity, transport, Azure SQL, analysis or application acceptance. Proposed analysis is deterministic and source/version-bound. Missing data is insufficient, not safe. No AI or sensor result may suppress a resident report, diagnose a hazard or release a hold. Raw device/resident context must not leak into prompts or map payloads.
+The accepted ADR selects Basic IoT Hub for exercise device-to-cloud telemetry. The main architecture now explains the proposed post-retrofit feedback loop: sensors or a labelled simulator send temperature/humidity observations through IoT Hub, API validation and SQL; deterministic signals may request human follow-up. This is a value hypothesis, not measured prevention or diagnosis. The finite offline consumer has local engineering evidence, not live identity, transport, Azure SQL, derived-analysis or application acceptance. Missing data is insufficient, never safe. No signal may suppress a resident report, change priority, diagnose a hazard or release a hold. Keep raw device/resident context out of prompts and map payloads.
 
 ### Visual
 
