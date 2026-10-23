@@ -25,8 +25,12 @@ and adds no runtime, API, loader or schema engine.
 
 * Template `FICT-FUND-FORM` version 1, `effective_from` null and
   unresolved, with a fictional re-review date.
-* A schema block that registers unchanged through the existing path (funding
-  `Unknown`, always stamped `Unapproved`), with sixteen fields covering every
+* A schema block for the existing registration path (funding `Unknown`,
+  always stamped `Unapproved`). The public file is refused as published,
+  because its placeholder reviewer is not a registered person. A copy that
+  differs only in `reviewer`, set to an existing registered person, registers
+  as `Unapproved` with no approval evidence; this records no approval. The
+  block has sixteen fields covering every
   allowed type, units (GBP, m2, kWh/m2/year), required and conditional fields,
   ranked source authority, required evidence and three human-only fields
   (declaration, signature, approval).
