@@ -1,0 +1,6 @@
+{
+  "source_artifact": "adr/input-hash-manifest.json",
+  "source_sha256": "63a7759538b8bfb458d26ab9e418537586a8487946bb5d2ece7fb1068bde6f6f",
+  "source_bytes": 549163,
+  "disposition": "Original full snapshot inventory retained externally, not copied. Identity only, not an inventory or read-coverage claim."
+}

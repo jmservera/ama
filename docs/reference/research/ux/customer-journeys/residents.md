@@ -118,6 +118,13 @@ change the historical stage-map or eleven staff-profile denominators.
 See the [unregistered architecture proposal](../../../../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
 for selected Option B, current OFF-state diagram/text and deferred registration.
 
+The [completed unsigned PRD refinement](../../../../prds/zava-forward-retrofit-programme-demonstrator.md#pr442-author-complete-resident-refinement-contract-unsigned)
+adds twenty local stories and R0-R5 planning stages, not executed screens or
+new criterion IDs. Its linked current independent quality result remains
+FAIL / Validate BLOCKED / Finalize NOT_EVALUATED with seven cautions,
+including OPEN generic/resident latency/file-size precedence. All 30 resident
+criteria remain Not run; these six journey hypotheses do not waive the result.
+
 | Synthetic journey | Resident job and proposed sequence | Negative/exception and safe route | Proposed ownership |
 | --- | --- | --- | --- |
 | Sign-in and recovery | Use managed external identity with simple username/password-style UX; recover access; separately verify case/task/representative grants | Shared device clears content on logout; revoked household/representative grant denies next request; recovery cannot expand rights; assisted recovery available | Digital technical support; Housing case-rights exception; specialist privacy review |

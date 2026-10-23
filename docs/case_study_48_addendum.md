@@ -31,7 +31,7 @@ statements describe their dated baseline, not perpetual exclusion of this
 new proposal. The original case study and earlier executive assets are unchanged.
 
 The [BRD v0.20.0](./brds/agentic-retrofit-programme-brd.md#optional-resident-portal-and-communication-agent-draft-amendment)
-and [PRD v0.19.0](./prds/zava-forward-retrofit-programme-demonstrator.md#resident-answer-and-communication-authority)
+and [PRD v0.19.1](./prds/zava-forward-retrofit-programme-demonstrator.md#resident-answer-and-communication-authority)
 carry the owner-selected proposal: "Propose bounded routine automation; human
 review for consequential, sensitive or uncertain messages; activation separately
 gated." BRD FR-044/AC-084 and RULE-018/022/025/028 are reconciled prospectively.
@@ -79,6 +79,16 @@ equivalent; it is not a numbered/finalized ADR or native Excalidraw PNG export.
 The owner deferred registration after the actual allocator/bootstrap blocker.
 Full registration acceptance remains UNMET. Original quality FAIL/BLOCKED,
 unsigned requirements, OD-52-55 and formal/live approval remain unresolved.
+The completed PRD refinement adds twenty local stories, R0-R5 planning stages,
+six-journey verification design and qualified author trace without changing
+existing requirement definitions. Its current independent quality result is
+FAIL / Validate BLOCKED / Finalize NOT_EVALUATED, singular 1 below minimum 2,
+7 CAUTION/34 COVERED/0 RISK, not merely copied historical failure. All seven
+findings remain open, including bundled obligations, unsigned BRD, feasibility/
+GOAL-005, generic/resident latency/file-size precedence and inherited table/
+trace debt; see the PRD's linked current summary. All 30 resident criteria
+remain Not run. The architecture candidate is reconciled to that completed
+unsigned PRD, not registered or accepted by the reconciliation.
 No application, sending, real account/data, Azure change or paid inference
 is delivered or authorized by this documentation-only integration.
 

@@ -6732,3 +6732,33 @@ metadata when the knowledge base was created.
   by this authoring entry. Shared-path overlap with draft #424/#426/#439
   requires later reconciliation preserving all append entries; no sibling
   proposal is imported and no false issue dependency is created.
+
+## [2026-10-23] update | Completed unsigned resident PRD and architecture refinement (#441)
+
+* Integrated completed PRD v0.19.1 and the one reconciled architecture working
+  candidate after a new genuine Research, Plan/details and independent critique.
+  Exact immutable input hashes, source-to-integrated editorial/link mappings and
+  prior working bytes are retained as selected portable issue evidence.
+* All existing requirement definitions/IDs and 30 resident Not-run criteria
+  remain unchanged. Twenty local stories, R0-R5 planning, six-journey verification
+  and qualified full FR trace elaborate the proposal, not execute or approve it.
+* Current independent PRD quality remains FAIL / Validate BLOCKED / Finalize
+  NOT_EVALUATED, singular1<2, seven CAUTION/34 COVERED/zero RISK. All seven
+  findings remain current, including bundles, unsigned BRD, feasibility/GOAL-005,
+  OPEN generic/resident latency/file-size precedence, table shape and FR-059
+  trace. Author-complete does not mean Validate/Finalize/Govern or live approval.
+* The existing architecture location evolves as id:null/unregistered/proposed;
+  prior draft/source bytes remain history, not competing decisions or accepted
+  ADR supersession. Registration stays deferred/UNMET. Unchanged 47-element
+  Excalidraw and same-model SVG/Chrome PNG retain text equivalent and truthful
+  non-native-render provenance.
+* Owner-selected Option B, default human review/routine OFF, assisted channels
+  without detriment, scoped grants, OD-52-55/OQ-028-031 and live gates remain.
+  Correction1 validation/navigation and bot/history are retained; A5/B6 generated
+  score citations stay OPEN without manual score edits or paid scoring.
+* Only directly coupled addendum/index/journey notices change; BRD, original
+  case, owner memory, numbered ADRs and earlier log entries remain unchanged.
+  Draft #439 cost/index/log overlap needs later reconciliation preserving both
+  lanes. No application, sending, real account/data, Azure or paid inference
+  is delivered. Native Review/technical gate evidence is separate; this entry
+  does not attest a completed gate or authorize push/PR changes.

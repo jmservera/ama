@@ -1,0 +1,455 @@
+--- a/docs/prds/zava-forward-retrofit-programme-demonstrator.md
++++ b/docs/prds/zava-forward-retrofit-programme-demonstrator.md
+@@ -6,10 +6,10 @@
+ ms.topic: reference
+ prd_id: "PRD-2026-AMA48-001"
+ status: "in-review"
+-exercise_status: "candidate-pending-review-and-owner-acceptance"
++exercise_status: "author-complete-unsigned-pending-review-and-owner-acceptance"
+ historical_exercise_accepted_version: "0.12.0"
+ historical_exercise_accepted_date: "2026-10-10"
+-version: "0.19.0"
++version: "0.19.1"
+ owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
+ reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
+ created_date: "2026-10-03"
+@@ -32,7 +32,7 @@
+ license: "CC-BY 4.0 (Microsoft HVE-Core)"
+ ---
+ 
+-> **PRD-2026-AMA48-001** | Exercise: unsigned draft amendment awaiting review and owner acceptance; formal governance: in-review, no new approval | Version: 0.19.0 | Last Updated: 2026-10-23
++> **PRD-2026-AMA48-001** | Exercise: PR442 author-complete unsigned replacement candidate; formal governance: in-review, no new approval or publication | Version: 0.19.1 | Last Updated: 2026-10-23
+ 
+ ## Executive Summary
+ 
+@@ -998,6 +998,312 @@
+ | NFR-020 | AC-137/138 | BRD NFR-014, FR-056/057/061; AC-111/112/119/122 |
+ | NFR-021 | AC-139 | BRD OD-55; proposed exercise sizing, not an approved BRD target |
+ | GOAL-005 | AC-140 | BRD FR-053 to FR-062, RULE-027/028; synthetic slice only |
++
++### PR442 author-complete resident refinement contract (unsigned)
++
++This prospective refinement elaborates the existing PRD-2026-AMA48-001,
++not a second product or a ninth implementation issue. It is based exclusively
++on the immutable snapshot pinned by the caller to
++`4017b214bb021244b06264629953d84f29003c53`, including #441's already
++integrated v0.19.0 candidate and archived amendments. The original patch's
++v0.18.0 base and pre-reconciliation candidate remain historical provenance;
++neither replaces this pinned integration baseline. Package manifests identify
++the exact source and output bytes.
++
++**Author-complete means the proposed behavior, test intent, slices,
++dependencies and remaining approval evidence are written. It does not mean
++approved, built, feasible, tested or published.** All statements in this
++refinement are unsigned exercise proposals. Existing requirement IDs,
++unrelated content, eleven staff paths, nine workflows and historical review
++outcomes are retained. Requirements Author Assess, Discover, Create, Build
++and Integrate guidance was loaded; no Validate or Finalize phase is entered.
++The same-lane package is external to the repository and cannot update or
++invalidate #441's active native RPI gate evidence.
++
++#### Source hierarchy and decision disposition
++
++The canonical BRD-2026-AMA48-001 v0.20.0 and PRD v0.19.0 in the pinned
++snapshot already incorporate the owner-selected Option B and prospective
++BRD FR-044/AC-084 reconciliation. The archived PRD review's contrary finding
++describes its original assessed bytes; it is not a current universal-review
++rule or a new instruction to reselect the proposal. Named per-message review
++remains the current default; the proposed routine exception remains OFF.
++Owner scope direction is not OD-53 activation evidence.
++
++Product evidence is limited to the supplied snapshot: original case, dated
++addendum, KB routing, owner-memory context, canonical BRD/PRD and #441's
++source archive, research, plan, critique, changes, review and state/phase
++records. Memory is context, not validated company evidence. The draft handoff
++is `DRAFT_BRD_AMENDMENT_HANDOFF`, not `BRD_TO_PRD_HANDOFF_V1`; its declared
++coverage and no-waiver/no-signature context are ingested, not promoted to
++approval. No new market, legal-currentness, provider or platform claim is made.
++No synthetic or actual user-test result is asserted by this refinement.
++
++The owner-selected rationale remains:
++
++> Reuse existing case authority to avoid duplicate platforms; deliver the portal/workflow first and independently gate the bounded resident-answer task.
++
++#### Outcome, population and scope contract
++
++GOAL-005's learning question is whether residents can complete the six
++proposed jobs safely while staff retain one owned case history, and whether
++the separately gated answer task adds value over portal/workflow alone.
++The denominator is six scripted journeys, not six participants, eleven
++staff profiles or 60,000 accounts. At a later owner-scheduled resident
++milestone, all six scripts must reach their specified endpoint or seeded
++safe block and AC-111 through AC-140 must be reported individually. This
++defines a review window, not a committed date or an amendment to historical
++T0. Achievability, staffing and milestone acceptance remain unconfirmed;
++GOAL-005's SMART status stays deferred.
++
++Constructed resident and representative personas are hypotheses: a primary
++resident wants to know what happens next without chasing; a task-limited
++representative needs only the explicit authority granted; a resident without
++a safe device/account needs the same service through assistance; Housing
++needs an exception and accepted receiver rather than a delivery tick;
++Engagement needs verified safe contact; Digital needs safe diagnosis and
++recovery without private content in telemetry. These are not interview
++findings or demographic claims.
++
++In scope are fictional managed sign-in/recovery, current scoped case and
++published-document access, requested upload, appointment response,
++provenance-bearing shared events, staffed-role exception demonstrations,
++assisted continuity and a separately gated bounded question task. Out of
++scope remain real accounts/data/contact, production connectors, provider
++portal, resident persistent memory, custom passwords, staff-tenant-only
++identity, autonomous confirmed bookings, works/data consent inference and
++all controlled professional, safety, legal, contractual and financial
++decisions. Phone, email, letters, visits, accessibility adjustments and
++assisted service continue without detriment or digital prerequisites.
++
++#### Thin delivery stories and acceptance intent
++
++These are package-local story keys, not new PRD FR/AC identifiers or tracker
++issues. Each story is a value-bearing slice of an existing requirement.
++All listed GWT checks are **Not run** and elaborate the cited canonical
++criteria; they do not allocate or replace them. MUST means required for the
++named proposed slice, not approval to implement or activate it. Stories
++remain negotiable in implementation; team estimation and iteration sizing
++are not asserted. Dependencies are explicit rather than claiming artificial
++INVEST independence.
++
++| Story key / release | Story (role, capability, value) | Dependency | Existing PRD FR / AC | Priority |
++| --- | --- | --- | --- | --- |
++| PR442-S01 / R1 | As a resident, I want managed sign-in with simple username/password-style UX so that I can begin without a staff account. | Approved synthetic identity configuration before execution | FR-069; AC-127/128 | MUST |
++| PR442-S02 / R1 | As Housing, I want explicit verified person/case/document/task grants so that a successful login cannot expose a household. | S01; fictional grant-owner fixture | FR-062/069; AC-111/113/126/127 | MUST |
++| PR442-S03 / R1 | As a resident on a shared device, I want assisted recovery and safe logout so that loss of access does not lose service or reveal prior content. | S01/S02 | FR-068/069; AC-125/127/128 | MUST |
++| PR442-S04 / R1 | As Housing, I want task-limited representative revocation so that a changed relationship denies the next protected request. | S02 | FR-069; AC-126/127 | MUST |
++| PR442-S05 / R2 | As a resident, I want my recorded timeline and next action so that I can see status without chasing. | S02; published projection fixture | FR-062; AC-111/113 | MUST |
++| PR442-S06 / R2 | As a resident, I want the approved document version so that I do not rely on an internal or superseded draft. | S05; publication authority fixture | FR-062; AC-112/113/126 | MUST |
++| PR442-S07 / R2 | As a resident, I want a durable requested-upload receipt so that I can distinguish supplied from outstanding evidence. | S02; safe file configuration | FR-063; AC-114/115 | MUST |
++| PR442-S08 / R2 | As a document reviewer, I want scan and review states separated so that clean content is not silently accepted or published. | S07 | FR-063; AC-114/115/135 | MUST |
++| PR442-S09 / R3 | As a resident, I want to respond to an appointment offer so that staff can consider my availability without inventing a booking. | S02; offered-slot fixture | FR-064; AC-116/117 | MUST |
++| PR442-S10 / R3 | As Housing, I want a postponed visit held for review so that it is not counted as refusal or allowed to delay urgent safety action. | S09 | FR-064; AC-117; retained AC-033/062 | MUST |
++| PR442-S11 / R3 | As a case worker, I want portal events in the existing timeline so that I do not retype them. | S05/S07/S09; common event contract | FR-065; AC-118/119 | MUST |
++| PR442-S12 / R3 | As assisted-service staff, I want labelled manual channel intake with replay and ambiguity handling so that absent connectors do not create false automation or disclosures. | S02/S11 | FR-065/068; AC-118/119/125 | MUST |
++| PR442-S13 / R3 | As Housing, I want owned review/contact/handoff exceptions so that receipt cannot silently close unaccepted work. | S11/S12 | FR-066; AC-120/138 | MUST |
++| PR442-S14 / R3 | As a resident, I want verified contact/help requests through any permitted route so that portal non-use never changes priority or complaint access. | S12/S13 | FR-068; AC-124/125 | MUST |
++| PR442-S15 / R4 | As a resident, I want a disclosed source-grounded status/process proposal so that I can distinguish recorded facts from AI and human decisions. | R3; independent task registration/evaluation/release gate | FR-067; AC-121/122 | MUST within R4; deferred from R1–R3 |
++| PR442-S16 / R4 | As a resident, I want abstention and an owned person route so that uncertainty, hazard or model failure never becomes unsafe advice. | S13/S15; independent urgent/help route | FR-067/068; AC-122/123/125 | MUST within R4 |
++| PR442-S17 / R4 | As Engagement, I want a deny-by-default policy decision so that routine proposals cannot dispatch without complete versioned authority. | S15/S16; OD-53 evidence before any positive activation | FR-070; AC-129/130 | MUST within R4; activation OFF |
++| PR442-S18 / R4 | As the accountable operator, I want suspension and actual-disposition audit so that the next dispatch stops without losing manual service. | S17 | FR-070; AC-131/138 | MUST within R4 |
++| PR442-S19 / R5 | As Data/Programme, I want a frozen paired effort protocol so that portal value is not automatically attributed to AI. | R3 comparator; R4 evidence only if authorised | FR-071; AC-132/133 | MUST |
++| PR442-S20 / R5 | As Product/Engagement, I want six reproducible journey records so that safe blocks and unrun checks remain visible at milestone review. | R1–R3; R4 conditional; NFR checks | FR-071; GOAL-005; AC-134–140 | MUST |
++
++| Story key | GWT acceptance elaboration (Not run for every row) |
++| --- | --- |
++| PR442-S01 | Given a fictional resident without staff tenancy, when managed sign-in succeeds, then only identity is established and no case appears until a separate current grant passes. |
++| PR442-S02 | Given two people at one address and an unrelated case, when lists, direct IDs, searches, exports and document/model requests are made, then each returns only the explicitly granted scope and denied requests reveal no protected existence metadata. |
++| PR442-S03 | Given lost access or a shared device, when recovery or logout occurs, then recovery verifies identity and existing case grants separately, prior content is unavailable to the next user, and a person route remains usable without account enumeration or emailed passwords. |
++| PR442-S04 | Given appointment-only, interpreter-only, disputed and revoked authority, when the next request or dispatch is attempted in an already open session, then only currently allowed tasks succeed and revoked/disputed scope fails closed with protected grant history retained. |
++| PR442-S05 | Given current, stale and unknown published fields, when the resident opens the case, then recorded-as-of time, next action, owner and explicit unknown/stale text agree with the staff source; no internal note is returned. |
++| PR442-S06 | Given approved, unpublished and superseded versions and a revoked link, when accessed, then only the currently granted published version is returned with source/version, and cached or linked access cannot bypass revocation. |
++| PR442-S07 | Given a current document request and a permitted file, when durable intake succeeds or its acknowledgement is lost and retried, then one attributed receipt/event exists, request status is pending scan/review, and retry creates no duplicate case effect. |
++| PR442-S08 | Given malformed, malicious, unsupported, oversize or scan-unavailable content, when intake/review is attempted, then it remains inaccessible to readers/models until all checks pass; passing scan alone never grants acceptance or publication and accessible retry/help is offered. |
++| PR442-S09 | Given an offered slot and scoped representative, when a response is submitted, then accepted/proposed availability is recorded as a response only and confirmation still requires existing resident-authority, staff and contractor-capacity gates. |
++| PR442-S10 | Given postponement and a simultaneous urgent report, when recorded, then only affected non-urgent progression is held with its human owner/update, urgent referral continues, and no no-access/refusal/blanket withdrawal is inferred. |
++| PR442-S11 | Given a captured portal event, when staff inspect the shared case, then its source, channel, occurred/recorded times, actor, review/receipt/delivery states and next owner are visible without re-entry. |
++| PR442-S12 | Given a phone/email/letter/visit report, an absent connector, a replay and an ambiguous household match, when intake is recorded, then manual capture is labelled, replay references the original, and ambiguity enters an owned queue without disclosure. |
++| PR442-S13 | Given pending documents, failed contact and sent-but-unaccepted handoffs, when queues are inspected, then reason, urgency, due/next-update basis and chase owner remain visible until a separately evidenced receiver acceptance; delivery never closes the handoff. |
++| PR442-S14 | Given declined portal use and an unverified new contact preference, when help or a complaint is requested with assistance, then the same controlled case route and priority remain and contact pauses for verification rather than using an unsafe destination. |
++| PR442-S15 | Given an approved synthetic task release and current authorised facts, when a status question is proposed, then each material assertion has a source/version/as-of reference, AI is disclosed and the answer is held for named review under the current OFF policy. |
++| PR442-S16 | Given missing/stale/conflicting evidence, injection, timeout, distress or a controlled-domain request, when received, then no unsupported assertion or decision is produced, a traceable owned human route is shown and urgent help/referral works independently of the model. |
++| PR442-S17 | Given any absent/expired/mismatched policy, safe-contact, grant, evidence, release or limit condition, when dispatch is attempted, then no autonomous dispatch occurs; a future separately approved positive test is confined to a labelled simulated outbox and never bypasses named review for excluded content. |
++| PR442-S18 | Given pending policy-approved simulated messages and a suspend action, when the next dispatch is attempted, then it is denied, actual policy/human disposition is auditable without an invented reviewer, manual/urgent routes survive and restart requires distinct authorised review. |
++| PR442-S19 | Given identical versioned task packs and disjoint handling episodes, when the comparison is frozen and later reported, then portal-only and assisted-task effort include review/correction/reconciliation/support/recovery/resident time; missing outcomes remain unknown and adverse/non-digital outcomes are not averaged away. |
++| PR442-S20 | Given an intended milestone review, when its evidence manifest is checked, then all six journeys and each AC-111–140 have expected and observed-or-Not-run fields, with no missing critical privacy/accessibility check disguised as acceptance. |
++
++INVEST author screen: V and T have explicit role/value and GWT evidence;
++N remains open to the delivery team within the settled boundaries. I is
++conditional on the listed dependencies, not a blanket pass. E and S are
++unconfirmed until team estimation; split further by positive/denial/failure
++case if a story exceeds one iteration. For example, S02's read/list
++projection, document entitlement and model-context checks may be separate
++tasks with one shared grant contract. No fictional estimate or capacity
++commitment is supplied.
++
++#### Six-journey validation design
++
++All journeys below are **constructed hypotheses, Not run**. Use generated
++60,000-home/980-case lineage without regenerating the estate; new fictional
++people, household and grant fixtures require explicit provenance and case
++links. If a link is unverified, show unknown rather than inventing one.
++Use a versioned fixture pack with two unrelated residents, multiple occupants,
++a representative with appointment-only authority, an interpreter-only
++representative, current/revoked/disputed grants, approved/internal/superseded
++documents, one requested upload, one offered slot and one ambiguous intake.
++These are fixture roles, not asserted resident or account counts.
++
++| Journey / stories | Happy endpoint | Mandatory denial/failure and assisted counterpart | Criteria / proposed reviewer |
++| --- | --- | --- | --- |
++| Sign-in/recovery / S01–04 | Managed fictional identity plus separately verified current grant reaches own scope. | No staff membership assumption; unrelated occupant/expired representative denied; shared-device logout and assisted recovery cannot broaden rights. | AC-126–128, AC-135/137; Digital with Housing/Engagement |
++| Own case/documents / S05–06 | Correct published status/as-of/next owner and approved document version visible. | Direct-ID/search/export/model-context/internal/superseded/revoked-link attempts denied; phone/visit explanation uses the same case projection. | AC-111–113/126/135; Housing/source publisher |
++| Requested upload / S07–08 | One durable receipt leads to pending scan/review, distinct acceptance/publication. | Wrong type/size/malware/scan outage/interruption/lost-ack retry cannot satisfy evidence or expose content; assisted route records the same outstanding request. | AC-114/115/135/137; Housing reviewer with Digital |
++| Appointment response / S09–10 | Scoped accept/propose/postpone response reaches scheduling review. | No confirmed booking, consent, refusal or no-access inference; urgent route independent; staff-recorded phone response has identical authority checks. | AC-116/117, retained AC-033/062; Programme/Housing |
++| Grounded question/handoff / S15–18 | Current cited proposal is held for review, or explicit unknown reaches an accepted human receiver. | Model outage/injection/unsafe contact/expired policy/controlled question cannot dispatch; deterministic person/urgent help remains; no model task means human route only. | AC-121–123/129–131/138; Engagement and specialist owner |
++| Assisted continuity / S11–14 | No-account resident reaches same owned case/complaint/help route with labelled manual event. | Replay/ambiguous match/failed contact/overdue or unaccepted handoff stays owned; no repeated portal entry, disadvantage or assumed connector. | AC-118–120/124/125/138; Housing/Engagement |
++
++For each later run record fixture/scenario version, source/configuration
++hashes, expected output or safe block, observed result, timestamps, permitted
++protected audit references, reviewer identity/role, defects and limitations.
++No participant test, browser run, conformance assessment, real-inference
++result or actual release is performed by writing this PRD.
++
++#### Categorized resident NFR verification contract
++
++These operationalize existing NFR-018 through NFR-021 and inherited controls;
++no new NFR ID or corporate SLO is created. Each numerical limit below is
++the existing proposed synthetic configuration, not an approved provider or
++staff promise. All evidence is Not run.
++
++| Category | Existing PRD NFR / AC | Measurable proposed check and failure interpretation |
++| --- | --- | --- |
++| Performance and capacity | NFR-021; AC-139 | Five fictional concurrent sessions (three resident scopes, two staff), 30 minutes, retained dataset; permitted ordinary case/status/receipt API p95 <=2 seconds. Report method, total samples, p50/p95, errors/timeouts and excluded operations. A missing/insufficient run cannot pass. |
++| Scalability and elasticity | NFR-002/021; AC-139 | Record actual dataset/configuration and five-session workload; no extrapolation to 60,000 accounts or production concurrency. Larger workload requires OD-55 evidence and a separate approved test, not inferred linear scaling. |
++| Reliability and resilience | NFR-006/020; AC-137/138 | Seed each of identity, scanner, API and model outage plus lost acknowledgement/restart; zero false receipts or duplicate case effects in the defined suite, with one owned unresolved record where outcome is unknown. Show retry/assisted route and preserve urgent help. |
++| Security | NFR-003/019; AC-113/126–128/135 | Every seeded unrelated/disputed/revoked case, document, export and model-context request must deny protected content/metadata; revocation denies the next request even in an existing session. Zero permitted cross-case disclosures in the test suite is a necessary floor, not a universal security claim. |
++| Privacy | NFR-005/019; AC-135/136 | Zero real resident identifiers, raw prompts/file/contact content or credentials in diagnostic captures; files, minimal handoff/conversation and protected audit have separate purpose/owner/rights/retention records. Unknown real retention/lawful basis/DPIA blocks live data, not authoring. No invented retention days. |
++| Usability and accessibility | NFR-001/018; AC-134 | Report each of six scripts at 320/390/1280 CSS pixels and 200% text zoom, with keyboard and screen-reader checks against the WCAG 2.2 AA engineering target. Lost content, focus, inaccessible errors or blocked essential action fails the affected script; no conformance or participant-validation inference. |
++| Maintainability and operability | NFR-011/014/017/020; AC-109/129–131/138 | Version policy/configuration/fixture/release together. Suspension denies the next dispatch; restart requires distinct current authorisation; portal/manual/urgent routes survive task disable. Unknown safe configuration fails closed. Actual on-call staffing and service targets remain OD-52/55. |
++| Observability | NFR-004/011/019; AC-131/135/139 | Reconstruct protected action/source/grant/policy/disposition/outcome for each seeded audit case. Measure ordinary API duration separately from identity, scanning and model waits. Redaction and bounded cardinality checks must pass before telemetry is relied on; no new custom telemetry vocabulary is introduced. |
++| Compatibility and interoperability | NFR-008/020; AC-118/119/137 | Portal and labelled manual phone/email/letter/visit events reconcile to the same source/versioned case; replay has zero duplicate effects and ambiguous matches disclose nothing. Unsupported connectors remain absent/manual, never represented as tested interfaces. |
++| Portability | NFR-010/019; AC-131/136/138 | A later permitted export/recovery fixture must reconstruct protected event/document/grant/policy versions and actual disposition without dependence on a model supplier; no deletion of history as rollback. Live retention and export/rights approval remain separate. |
++
++For AC-139, freeze the request mix and sample method before testing. Use a
++fixed 30-minute measurement window after any separately recorded warm-up;
++do not remove timeouts/errors to improve the percentile. Report the ordinary
++API successful-completion distribution and every attempted request/error/
++timeout separately; if failures make the distribution misleading, the run
++is inconclusive or fails the agreed guardrail, not a response-time pass.
++Managed identity, asynchronous scan and model duration are separate end-to-end
++waits with visible pending/failure states. Receipt timing measures durable
++intake, not scan completion.
++
++Existing upload fixture limits remain PDF/JPEG/PNG, one file/request, maximum
++10 MiB. At 60 seconds of pending scan offer assisted follow-up, never
++fail-open or reader/model access. Clean is not accepted or published.
++Existing model fixture limits remain one call, no delegated agent/tool loop,
++15-second timeout and bounded input/output under the finite budget/release
++gate. Missing bounds, price/liability or approval means no call. This PRD
++does not supply a token budget, tenant permission or paid-call authorisation.
++One-working-day acknowledgement and two-working-day next-update examples
++are synthetic aging fixtures only, not actual SLAs or excuses to delay
++urgent help.
++
++Use the existing Observability and SLO Measurement Method and shared
++telemetry-foundations vocabulary. For HTTP service duration use
++`http.server.request.duration` in seconds with bounded dimensions; resource
++attributes remain `service.name`, `service.version`,
++`deployment.environment`, `telemetry.sdk.name`,
++`telemetry.sdk.language` and `telemetry.sdk.version`. Correlated structured
++logs retain `timestamp`, `severity_text`, `severity_number`, `body`,
++`attributes`, `resource`, `trace_id` and `span_id` where applicable.
++Never place credentials, raw case/contact/address/document/prompt content
++or unbounded person/case IDs in metrics. Protected case audit is separate.
++Any genuinely new vocabulary must use the skill's proposed-additions intake;
++none is coined or activated here.
++
++#### Proposed validation and release sequence
++
++These are dependency/acceptance planning stages of the same product, not
++execution records, calendar promises or an expansion of #441's active gate.
++No stage is marked delivered or approved by this refinement.
++
++| Stage | Included stories / contract | Required evidence before advancing | Stop/fallback |
++| --- | --- | --- | --- |
++| R0: fixture and boundary freeze | Existing IDs, grants, event/document state model, test expectations and protocol | Product/engineering review of exact candidate and fixture hashes; accountable synthetic reviewers/configuration and dependency inventory | Authoring can finish unsigned; no application or provider call on missing execution authority |
++| R1: identity and isolated read boundary | S01–04 | Synthetic managed identity and grant/recovery/revocation/shared-device negatives; essential privacy/accessibility checks | Deny resident scope on unsafe access; assisted service and independent staff delivery remain |
++| R2: useful portal-only job | S05–08 | Own case/document and upload positive/negative/replay tests; publication and review responsibilities | Quarantine/pending/unknown plus owned human help; no false receipt/acceptance |
++| R3: coordinated workflow and assisted comparator | S09–14 | Appointment response, event reconciliation, no-detriment and accepted-handoff evidence with simulated ages; portal/workflow-only effort baseline | No confirmation without capacity/human authority; no silent loss; keep manual capture |
++| R4: independently gated resident-answer increment | S15–18 | Distinct task registry and matching release/evaluation, sources/limits/oversight, model failure/injection tests; per-message human review current default | If task cannot pass, retain R3 and the human question route. Routine policy stays OFF unless separate scoped approval is evidenced; no live sends |
++| R5: resident milestone evidence review | S19–20 | Six journeys and all AC-111–140 reported, paired effort/adverse outcomes, load/accessibility/privacy results and exact versions | Unrun/failed critical criteria prevent acceptance. Owner/product/engineering decide; no inherited historical acceptance |
++| Separate live release, outside this exercise | No real use authorised by R0–R5 alone | OD-52–55, lawful processing/DPIA/retention, legal/service/security/recovery approvals, operational research and delegated release evidence | Real accounts/data/contact remain prohibited until approvals; no rollout date implied |
++
++For a later accepted application build, CON-009/AC-057 still requires
++authorised real Azure deployment, real SQL state and registered real AI
++evidence. A permitted offline prototype or synthetic fixture does not satisfy
++that accepted-build contract. Conversely, this documentation-only task runs
++no Azure, paid inference, application suite, heavy gate, deployment or
++publication operation.
++
++#### Measurement and capacity interpretation
++
++The controlled numerical model remains in the canonical BRD's Optional
++Resident Service — Illustrative Capacity Case, not this PRD. Its arrivals
++81/90/100 per week times 4/8/12 active weeks yield 324/720/1200 WIP.
++Its net staff-hours/week including recurring support, reconciliation,
++additional review and new-intake onboarding are -1.594/14.74/94.333
++(high rounded); the base initial-cohort onboarding is 48 one-off hours.
++These are owner-authorised author-judgement sensitivities, not statistics,
++forecasts, observed benefits, cash or headcount savings. 60,000 HOMES is
++stock lineage, not unique people/accounts or session concurrency.
++
++Do not double count a call and its follow-up unless separate work occurred;
++recording is already included in handling time. Shifted contacts are not
++avoided, initial and new-intake onboarding cohorts are disjoint, and default
++per-message review requires subtracting its actual incremental effort rather
++than assuming the inactive routine exception. Low-case negative value is
++material learning, not an error to hide.
++
++| GOAL-005 / FR-071 measure | Baseline / proposed target | Window and evidence / proposed owner |
++| --- | --- | --- |
++| Safe task completion | Unmeasured; 6/6 scripts reach their declared endpoint or seeded safe block, with all 30 criteria individually reported and no critical denial/control miss | Frozen resident milestone suite; fixture/result manifest; Product/Programme with Engagement |
++| Scope/document integrity | No resident run; zero cross-case disclosure, false acceptance/publication or inferred controlled decision in seeded cases | R1–R5 and after material grant/schema/policy change; protected audit and negatives; Digital/Housing |
++| Ordinary API response | No measurement; proposed p95 <=2s with five fictional concurrent sessions for 30 minutes; errors and other waits separate | NFR-021/AC-139 workload/configuration/results; Digital/Data |
++| Handoff and assisted continuity | No measured SLA; every seeded unaccepted/failed/overdue record retains an owner/next update; non-use has no seeded service detriment | Six scripts, synthetic ages only, receiver acceptance distinct; Housing/Engagement |
++| Net staff and resident effort | Unknown; no approved reduction percentage or uptake target for this resident increment | Frozen matched packs and disjoint episodes; staff review/correction/re-entry/recovery/support plus resident effort, portal-only versus permitted agent assistance; Data/Programme/Finance |
++| Adverse and non-digital outcomes | Unknown; report failures, abandonment, unsafe contact, assistance and control breaches separately; missing/insufficient samples stay insufficient | Same comparison window/cohorts, not a participant study or fairness claim; Engagement/Data |
++
++The scripted technical floor is not an achieved business target. A negative
++or inconclusive AI comparison can satisfy the learning/reporting intent while
++preventing task activation. Provider costs remain Unknown without dated
++price and billing evidence under existing FR-061/NFR-017 and OD-51.
++
++#### Remaining approval gates, not repeated discovery questions
++
++There is no unanswered human question that blocks writing this unsigned
++candidate. Existing OQ-028–031 and BRD OD-52–55 remain stable gate references,
++not requests to reselect already settled scope. Other inherited operational
++OQs and dated findings remain unchanged. No appointee, staffing, SLA, provider,
++legal basis, DPIA, retention, enrolment or recovery approval is fabricated.
++
++| Gate | Known proposed accountability | Missing decision evidence / blocked activity |
++| --- | --- | --- |
++| BRD-2026-AMA48-001::OD-52 / PRD OQ-028 | Programme accountable; Housing, Engagement and Digital responsible within their functions | Named delegated service/source/queue/support owners, staffing, actual channel inventory/connector evidence and escalation plan before live resident service |
++| BRD-2026-AMA48-001::OD-53 / PRD OQ-029 | Engagement proposal owner; DPO/Legal and each affected delegated domain authority review/approve; Digital implements only later | Actual task/channel/audience/content policy, approver/version/expiry, evaluation/release/oversight/limits, tested disable/restart and separate activation. Routine remains OFF; excluded content always named human review |
++| BRD-2026-AMA48-001::OD-54 / PRD OQ-030 | Digital accountable for design; Housing, Engagement, DPO/Legal review within authority | Supported identity provider/terms, person/case/document/representative grant proof, enrolment/session/abuse/recovery, file safety, lawful basis/DPIA/notice, retention/rights before real accounts/data |
++| BRD-2026-AMA48-001::OD-55 / PRD OQ-031 | Data responsible; Programme accountable; Engagement/Housing/Finance validate relevant outcomes | Frozen measurement plan, milestone acceptance, feasibility/load/recovery/support/limits and benefit evidence before production capacity or savings claims; coordinate OD-18/25/51 |
++| Legal and operational governance | Actual company/control owners not appointed here | OD-14/19/20/35/36/41/42/47/49/51 as applicable, competent human research/review, processing and incident/restart authority, formal upstream and product acceptance; synthetic proposals do not close them |
++| Architecture registration | Owner deferred; Digital/tooling owner to reconcile supported registry bootstrap/import | Existing proposal stays `id: null`, unregistered, registration UNMET; no numbered ADR, allocator/configuration or registry is invented |
++| Requirements lifecycle | Product/requirements/engineering and relevant human approvers | Fresh exact-byte independent quality evidence and actual approval before any later gate claim; historical BRD Define BLOCKED / Govern NOT_EVALUATED and PRD FAIL / Validate BLOCKED / Finalize NOT_EVALUATED are not overwritten |
++
++This refinement has no signatures, waivers, completed acceptance criteria or
++publication status. Its author-only structural checks and evidence-based
++self-assessment are not `PRD_QUALITY_REPORT_V1`, independent review or an
++authorisation for Validate/Finalize exit. A later integration must compare
++the pinned base hash before applying the patch; base drift requires explicit
++reconciliation and fresh evidence, never fuzzy application or mutation of an
++active exact-head gate record.
+ 
+ ## Functional Requirements
+ 
+@@ -2048,6 +2354,109 @@
+ Record actual account selection separately; no unit test or CLI profile can
+ stand in for an authenticated user's session.
+ 
++### PR442 namespace-qualified full FR contract
++
++`PRD::` denotes PRD-2026-AMA48-001 and `BRD::` denotes
++BRD-2026-AMA48-001 at the pinned snapshot. These namespaces never
++identify each other's same-numbered items. AC and goal columns below
++are read from actual PRD definitions, not inferred from identifier mentions.
++BRD sources for FR-001–061 are explicit author-derived elaboration links
++to preserved business statements; resident FR-062–071 retains #441's
++upstream mapping. They are not a signed upstream handoff or new business
++acceptance. Exact-byte hashes accompany the external authoring package.
++
++Priority MUST means required within the FR's existing declared or conditional
++exercise slice, an unsigned author-proposed planning classification, not
++reprioritisation or removal of historical release/adoption gates. In particular
++staff-chat, regulatory and resident tasks do not become activated. No inherited
++Should business priority is silently changed by a product elaboration.
++
++| PRD requirement | PRD goals | PRD acceptance | BRD source identifiers | Proposed slice priority |
++| --- | --- | --- | --- | --- |
++| PRD::FR-001 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-001, PRD::AC-002, PRD::AC-043 | BRD::FR-005, BRD::FR-006 | MUST within existing slice |
++| PRD::FR-002 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-001, PRD::AC-002, PRD::AC-003, PRD::AC-043 | BRD::FR-005, BRD::FR-035 | MUST within existing slice |
++| PRD::FR-003 | PRD::GOAL-001 | PRD::AC-004, PRD::AC-005, PRD::AC-060, PRD::AC-067 | BRD::FR-041, BRD::NFR-003 | MUST within existing slice |
++| PRD::FR-004 | PRD::GOAL-001, PRD::GOAL-003 | PRD::AC-006 | BRD::FR-016, BRD::FR-041 | MUST within existing slice |
++| PRD::FR-005 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-007, PRD::AC-008, PRD::AC-057 | BRD::FR-005, BRD::FR-006 | MUST within existing slice |
++| PRD::FR-006 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-009 | BRD::FR-036, BRD::FR-041 | MUST within existing slice |
++| PRD::FR-007 | PRD::GOAL-002 | PRD::AC-009, PRD::AC-010 | BRD::FR-036, BRD::RULE-008, BRD::RULE-010 | MUST within existing slice |
++| PRD::FR-008 | PRD::GOAL-002 | PRD::AC-010, PRD::AC-011, PRD::AC-067 | BRD::FR-001, BRD::FR-007, BRD::FR-016, BRD::FR-036 | MUST within existing slice |
++| PRD::FR-009 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-008, PRD::AC-012 | BRD::FR-008, BRD::FR-029, BRD::FR-030 | MUST within existing slice |
++| PRD::FR-010 | PRD::GOAL-002 | PRD::AC-012, PRD::AC-013 | BRD::FR-006, BRD::FR-008, BRD::FR-030 | MUST within existing slice |
++| PRD::FR-011 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-014, PRD::AC-036 | BRD::FR-017, BRD::FR-018 | MUST within existing slice |
++| PRD::FR-012 | PRD::GOAL-002 | PRD::AC-015, PRD::AC-040, PRD::AC-073 | BRD::FR-034, BRD::FR-035, BRD::FR-037, BRD::FR-042 | MUST within existing slice |
++| PRD::FR-013 | PRD::GOAL-002 | PRD::AC-016 | BRD::FR-007, BRD::FR-010 | MUST within existing slice |
++| PRD::FR-014 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-017, PRD::AC-037 | BRD::FR-011, BRD::FR-012, BRD::FR-013, BRD::FR-014, BRD::FR-015, BRD::FR-017, BRD::RULE-005 | MUST within existing slice |
++| PRD::FR-015 | PRD::GOAL-002 | PRD::AC-018, PRD::AC-038 | BRD::FR-002, BRD::FR-003, BRD::RULE-003 | MUST within existing slice |
++| PRD::FR-016 | PRD::GOAL-002 | PRD::AC-019, PRD::AC-039 | BRD::FR-019, BRD::FR-020, BRD::FR-021, BRD::FR-022, BRD::RULE-008 | MUST within existing slice |
++| PRD::FR-017 | PRD::GOAL-002 | PRD::AC-020, PRD::AC-042 | BRD::FR-028, BRD::FR-029, BRD::FR-030, BRD::RULE-013 | MUST within existing slice |
++| PRD::FR-018 | PRD::GOAL-002 | PRD::AC-021, PRD::AC-042 | BRD::FR-025, BRD::FR-028, BRD::RULE-008, BRD::RULE-010 | MUST within existing slice |
++| PRD::FR-019 | PRD::GOAL-002 | PRD::AC-022, PRD::AC-050 | BRD::FR-023, BRD::FR-024, BRD::FR-026, BRD::FR-027 | MUST within existing slice |
++| PRD::FR-020 | PRD::GOAL-003 | PRD::AC-023 | BRD::FR-033 | MUST within existing slice |
++| PRD::FR-021 | PRD::GOAL-003 | PRD::AC-024 | BRD::FR-033 | MUST within existing slice |
++| PRD::FR-022 | PRD::GOAL-003 | PRD::AC-025, PRD::AC-043, PRD::AC-057 | BRD::FR-006, BRD::FR-033 | MUST within existing slice |
++| PRD::FR-023 | PRD::GOAL-003 | PRD::AC-026 | BRD::FR-025, BRD::FR-033 | MUST within existing slice |
++| PRD::FR-024 | PRD::GOAL-001, PRD::GOAL-003 | PRD::AC-027, PRD::AC-041 | BRD::FR-033, BRD::FR-041 | MUST within existing slice |
++| PRD::FR-025 | PRD::GOAL-001, PRD::GOAL-004 | PRD::AC-028 | BRD::FR-009, BRD::FR-034, BRD::FR-036 | MUST within existing slice |
++| PRD::FR-026 | PRD::GOAL-001, PRD::GOAL-004 | PRD::AC-028, PRD::AC-029, PRD::AC-060, PRD::AC-070 | BRD::FR-009, BRD::FR-036 | MUST within existing slice |
++| PRD::FR-027 | PRD::GOAL-004 | PRD::AC-029, PRD::AC-030, PRD::AC-060, PRD::AC-070 | BRD::FR-009, BRD::FR-036, BRD::FR-044, BRD::RULE-018 | MUST within existing slice |
++| PRD::FR-028 | PRD::GOAL-004 | PRD::AC-030, PRD::AC-061, PRD::AC-072 | BRD::FR-036, BRD::NFR-004 | MUST within existing slice |
++| PRD::FR-029 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-031 | BRD::FR-005, BRD::FR-006, BRD::NFR-005 | MUST within existing slice |
++| PRD::FR-030 | PRD::GOAL-001, PRD::GOAL-002, PRD::GOAL-003 | PRD::AC-032 | BRD::FR-044, BRD::NFR-006 | MUST within existing slice |
++| PRD::FR-031 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-033 | BRD::RULE-006 | MUST within existing slice |
++| PRD::FR-032 | PRD::GOAL-001 | PRD::AC-034 | BRD::FR-041, BRD::NFR-008 | MUST within existing slice |
++| PRD::FR-033 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-035 | BRD::FR-012, BRD::FR-017, BRD::FR-018, BRD::NFR-009 | MUST within existing slice |
++| PRD::FR-034 | PRD::GOAL-001, PRD::GOAL-004 | PRD::AC-036, PRD::AC-040 | BRD::FR-034, BRD::FR-041 | MUST within existing slice |
++| PRD::FR-035 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-043 | BRD::FR-041, BRD::RULE-019, BRD::RULE-020 | MUST within existing slice |
++| PRD::FR-036 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-044, PRD::AC-057, PRD::AC-058, PRD::AC-069 | BRD::FR-036, BRD::FR-043 | MUST within existing slice |
++| PRD::FR-037 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-045, PRD::AC-054 | BRD::FR-034, BRD::FR-036 | MUST within existing slice |
++| PRD::FR-038 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-046 | BRD::FR-023, BRD::FR-024, BRD::FR-026, BRD::FR-027 | MUST within existing slice |
++| PRD::FR-039 | PRD::GOAL-001, PRD::GOAL-004 | PRD::AC-047, PRD::AC-053 | BRD::FR-024, BRD::FR-028, BRD::FR-034 | MUST within existing slice |
++| PRD::FR-040 | PRD::GOAL-001, PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-048, PRD::AC-053 | BRD::FR-009, BRD::FR-036 | MUST within existing slice |
++| PRD::FR-041 | PRD::GOAL-002 | PRD::AC-049 | BRD::FR-026, BRD::RULE-010 | MUST within existing slice |
++| PRD::FR-042 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-022, PRD::AC-050, PRD::AC-054 | BRD::FR-023, BRD::FR-024, BRD::FR-027, BRD::RULE-010 | MUST within existing slice |
++| PRD::FR-043 | PRD::GOAL-002 | PRD::AC-013, PRD::AC-051, PRD::AC-071 | BRD::FR-008, BRD::FR-040 | MUST within existing slice |
++| PRD::FR-044 | PRD::GOAL-001, PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-052, PRD::AC-054, PRD::AC-057, PRD::AC-058, PRD::AC-061, PRD::AC-066 | BRD::CON-007, BRD::FR-009, BRD::FR-036, BRD::RULE-018 | MUST within existing slice |
++| PRD::FR-045 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-037, PRD::AC-055, PRD::AC-064 | BRD::FR-011, BRD::FR-013, BRD::FR-045 | MUST within existing slice |
++| PRD::FR-046 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-037, PRD::AC-056 | BRD::FR-013, BRD::FR-014 | MUST within existing slice |
++| PRD::FR-047 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-058, PRD::AC-059, PRD::AC-060, PRD::AC-061 | BRD::FR-009, BRD::FR-036, BRD::FR-043 | MUST within existing slice |
++| PRD::FR-048 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-062, PRD::AC-065 | BRD::FR-046, BRD::RULE-007 | MUST within existing slice |
++| PRD::FR-049 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-063 | BRD::FR-029, BRD::FR-030, BRD::FR-047 | MUST within existing slice |
++| PRD::FR-050 | PRD::GOAL-002, PRD::GOAL-003 | PRD::AC-066, PRD::AC-067, PRD::AC-068 | BRD::FR-032, BRD::FR-048, BRD::RULE-014 | MUST within existing slice |
++| PRD::FR-051 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-069 | BRD::FR-043, BRD::RULE-020, BRD::RULE-022 | MUST within existing slice |
++| PRD::FR-052 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-071 | BRD::FR-034, BRD::FR-037, BRD::RULE-005 | MUST within existing slice |
++| PRD::FR-053 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-072 | BRD::NFR-004, BRD::RULE-020, BRD::RULE-024 | MUST within existing slice |
++| PRD::FR-054 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-073 | BRD::FR-037, BRD::NFR-008, BRD::RULE-019 | MUST within existing slice |
++| PRD::FR-055 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-091, PRD::AC-092, PRD::AC-093 | BRD::FR-049, BRD::RULE-025 | MUST within existing slice |
++| PRD::FR-056 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-094, PRD::AC-095 | BRD::FR-049, BRD::NFR-011 | MUST within existing slice |
++| PRD::FR-057 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-096, PRD::AC-097 | BRD::FR-050, BRD::RULE-026 | MUST within existing slice |
++| PRD::FR-058 | PRD::GOAL-002, PRD::GOAL-004 | PRD::AC-098, PRD::AC-099 | BRD::RULE-025 | MUST within existing slice |
++| PRD::FR-059 | PRD::GOAL-004 | PRD::AC-100, PRD::AC-101 | BRD::FR-043, BRD::FR-049, BRD::NFR-010, BRD::OD-49 | MUST within existing slice |
++| PRD::FR-060 | PRD::GOAL-001, PRD::GOAL-002 | PRD::AC-104, PRD::AC-105, PRD::AC-106 | BRD::FR-051 | MUST within existing slice |
++| PRD::FR-061 | PRD::GOAL-004 | PRD::AC-107, PRD::AC-108 | BRD::FR-052, BRD::NFR-012, BRD::OD-51 | MUST within existing slice |
++| PRD::FR-062 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-111, PRD::AC-112, PRD::AC-113 | BRD::FR-053 | MUST within existing slice |
++| PRD::FR-063 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-114, PRD::AC-115 | BRD::FR-054 | MUST within existing slice |
++| PRD::FR-064 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-116, PRD::AC-117 | BRD::FR-055, BRD::FR-046 | MUST within existing slice |
++| PRD::FR-065 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-118, PRD::AC-119 | BRD::FR-056 | MUST within existing slice |
++| PRD::FR-066 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-120 | BRD::FR-057 | MUST within existing slice |
++| PRD::FR-067 | PRD::GOAL-004, PRD::GOAL-005 | PRD::AC-121, PRD::AC-122, PRD::AC-123 | BRD::FR-058, BRD::FR-003, BRD::RULE-003 | MUST within existing slice |
++| PRD::FR-068 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-124, PRD::AC-125 | BRD::FR-059, BRD::RULE-027 | MUST within existing slice |
++| PRD::FR-069 | PRD::GOAL-002, PRD::GOAL-005 | PRD::AC-126, PRD::AC-127, PRD::AC-128 | BRD::FR-060, BRD::FR-045 | MUST within existing slice |
++| PRD::FR-070 | PRD::GOAL-004, PRD::GOAL-005 | PRD::AC-129, PRD::AC-130, PRD::AC-131 | BRD::FR-061, BRD::RULE-028, BRD::FR-044 | MUST within existing slice |
++| PRD::FR-071 | PRD::GOAL-004, PRD::GOAL-005 | PRD::AC-132, PRD::AC-133 | BRD::FR-062 | MUST within existing slice |
++
++Structural FR-to-AC and FR-to-goal definition linkage: 71/71 each (100%).
++This does not prove correct acceptance, feasibility or reciprocal fidelity.
++Inherited FR-059's definition has GOAL-004 while the retained existing
++goal-matrix range also adds GOAL-002; this table follows the definition
++and exposes, rather than repairs, that unrelated discrepancy.
++
++Resident NFR/goal links and all 23 BRD AC-104–126 remain in the existing
++Resident upstream trace table. PRD NFR-021's numerical sizing is linked
++to BRD OD-55, not falsely attributed to an approved BRD latency target.
++PRD AC-111–140 (30 criteria) remain Not run. Existing AC numbering gaps
++and malformed AC-104/105/106 table rows are preserved, not reallocated.
++
+ ## MVP and Release Framing
+ 
+ ### MVP learning goal
+@@ -2546,6 +2955,7 @@
+ 
+ | Version | Date | Change |
+ | --- | --- | --- |
++| 0.19.1 | 2026-10-23 | PR442 unsigned author-complete refinement of pinned #441 candidate: twenty local stories, six-journey validation design, measurable categorized NFR verification, full qualified FR trace and remaining approval gates; no new IDs, acceptance, lifecycle exit or publication |
+ | 0.19.0 | 2026-10-23 | Draft optional resident portal/communication increment from unsigned BRD v0.20.0 candidate: FR-062 to FR-071, AC-111 to AC-140, NFR-018 to NFR-021, GOAL-005, DD-009 and OQ-028 to OQ-031; owner-selected bounded policy/identity/roles, staff/no-send/history preserved, routine dispatch OFF; architecture explicitly unregistered, no signoff |
+ | 0.18.0 | 2026-10-22 | Proposal: AI Tokenomics (FR-061, NFR-017, AC-107 to AC-110, OQ-027) mapped to BRD v0.19.0 FR-052, NFR-012, AC-100 to AC-103 and OD-51; no existing ID renumbered; no price, budget or cost figure added |
+ | 0.17.0 | 2026-10-15 | Proposal: per-user agent chat and memory (FR-055 to FR-059, NFR-015, NFR-016, AC-091 to AC-103, OQ-020 to OQ-025) with a journey, agent and UI mapping; renumbered after the RAI controls took FR-051 to FR-054, NFR-014, AC-069 to AC-073 and OQ-017 to OQ-019; inactive until BRD OD-44 |
