@@ -15,6 +15,18 @@
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "e624f2558e3b64eea18ca0ac655e25f18da8e183bc908694e0dc58eca050eeb2"
+  "scored_at": "2026-10-23T18:10:54+00:00",
+  "commit": "21d485a35c3be825668391c3444f7b5a3ea63b48",
+  "model": "claude-sonnet-5",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40000502026",
+  "fingerprints": {
+    "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
+    "prd": "5d3831f1da50a37c1732fd7e467c2f7721f4b570f55e9c97c8a440bdb67aed3a",
+    "adr": "056e95549498ca8da084295bb4dd47db5f0e17d899409ebea2fb0f40c1714280",
+    "solution-code": "6674aafd12d556b48fb7bc6bcce9624c054e6fac443bdbf4d8b017f388a3dff1",
+    "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
+    "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
+    "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
   },
   "total": 77,
   "sections": {
@@ -35,6 +47,7 @@
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
       "rationale": "Diff only corrects wording on an already-documented ledger-table removal; no new architecture/modularity change. Ceiling retained, unchanged."
+      "rationale": "Diff is ADR addendum and README link to dated, labeled-unverified tile-provider research; no architecture or code change. Unchanged."
     },
     "A2": {
       "score": 5,
@@ -49,6 +62,7 @@
         "infra/README.md:1451"
       ],
       "rationale": "Diff corrects documentation accuracy on an existing ledger DELETE (clarifies history retention, non-history scan scope), not a new security control; baseline retained."
+      "rationale": "No security/RAI control changes; diff only adds dated research notes and a README cross-link. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -57,6 +71,7 @@
         "src/api/checks/employee_workspace_browser_check.py:1-155"
       ],
       "rationale": "Adds a missing-dependency guard with distinct recovery UX and a new browser check covering it; incremental completeness hardening within an already-complete baseline. Unchanged ceiling."
+      "rationale": "No implementation change; diff is documentation (ADR addendum, README link) only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 5,
@@ -71,6 +86,12 @@
         "src/api/tests/test_ai_tasks.py:44-90"
       ],
       "rationale": "New tests isolate employee Ai config from resident aliases and confirm missing-endpoint falls back to template without a model call; this is config/test hardening, not new model-choice justification or evaluation harness breadth. Unchanged baseline."
+      "rationale": "No metering, cost or performance instrumentation change in this diff; tile provider research is unrelated and explicitly unverified/draft. Unchanged from baseline."
+    },
+    "A6": {
+      "score": 3,
+      "evidence": [],
+      "rationale": "No AI model-choice or evaluation-harness change in this diff. Unchanged baseline."
     },
     "A7": {
       "score": 4,
@@ -117,6 +138,10 @@
         "src/api/README.md:2357-2449"
       ],
       "rationale": "README additions are clear and navigable developer documentation, consistent with the existing ceiling; not the capstone deck, so no basis to move the score. Unchanged."
+        "docs/adrs/0002-pilot-readiness-architecture.md:686-705",
+        "src/api/README.md:2366-2369"
+      ],
+      "rationale": "New ADR delta section and README cross-link are well-organised, dated, and carefully labeled with evidence-status caveats, consistent with existing Good(4) quality; not materially better or worse than baseline, so capped unchanged."
     },
     "B7": {
       "score": 5,
