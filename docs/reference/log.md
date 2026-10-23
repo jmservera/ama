@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-22
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -6715,3 +6715,9 @@ metadata when the knowledge base was created.
 * Process note: an earlier uncommitted draft was hand-authored before the RPI
   skills were activated. It is preserved with a dated disclosure and was
   re-verified through the executed research, plan, implement and review skills.
+
+## [2026-10-23] lint | Corrected form review pack registration claims (#97)
+
+* Files touched: the fictional form review guide, the core guide paragraph on the review pack, and this log (`ms.date`).
+* Contradiction found by independent full-diff review (FIN-001): both documents said the public fictional schema registers unchanged, but `register_schema` refuses its placeholder reviewer, and the focused test expects that refusal before registering a derived copy with a registered reviewer substituted.
+* Corrected both statements: the public file is refused as published; only a copy differing in `reviewer`, set to an existing registered person, registers, as `Unapproved`, recording no approval. No runtime, test, fixture, index, dictionary or provenance change; Finance FD-01..FD-14, template authority and OQ-015 stay unresolved and criterion 1 unmet. Earlier entries retained.

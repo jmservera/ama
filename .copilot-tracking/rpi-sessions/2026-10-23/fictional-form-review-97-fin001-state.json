@@ -1,0 +1,27 @@
+{
+  "task_id": "97-fin001",
+  "task_slug": "fictional-form-review-97-fin001",
+  "parent_task": {"task_id": "97-recovery", "task_slug": "fictional-form-review-97-recovery"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-23/fictional-form-review-97-fin001-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-23/fictional-form-review-97-fin001-plan.md",
+    "details": ".copilot-tracking/details/2026-10-23/fictional-form-review-97-fin001-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-23/fictional-form-review-97-fin001-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-23/fictional-form-review-97-fin001-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-23/fictional-form-review-97-fin001-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Owner authorized one extra ordered correction cycle for FIN-001; not a waiver.", "status": "confirmed", "evidence": "Owner brief 2026-10-23"},
+    {"decision": "Critique executed once: verdict Revise, PC-001..PC-006 accepted and applied before implementation.", "status": "recorded", "evidence": ".copilot-tracking/reviews/plans/2026-10-23/fictional-form-review-97-fin001-plan-critique.md"},
+    {"decision": "Review executed once: execution Complete, outcome Conformant, residual RV-001 gate not run. Original recovery Review unchanged.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-23/fictional-form-review-97-fin001-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Review", "action": "Coordinator fresh exact-head gate and independent review before any publication; Finance FD-01..FD-14 remain a human gate"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Fresh complete gate and independent review on the new head", "rationale": "Earlier b22d8639 gate is historical", "evidence": "changes file P02"}
+  ]
+}
