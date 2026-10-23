@@ -2,23 +2,24 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-21T16:28:01+00:00",
-  "commit": "217b58a6550b0b20eb36a8469b97444725aa43b7",
+  "scored_at": "2026-10-22T19:49:51+00:00",
+  "commit": "928d148f750c3066ce2e755a6451864c181de725",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39634055748",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39840274826",
   "fingerprints": {
-    "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
-    "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
+    "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
+    "prd": "5d3831f1da50a37c1732fd7e467c2f7721f4b570f55e9c97c8a440bdb67aed3a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
-    "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
+    "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
+    "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
   },
-  "total": 48,
+  "total": 55,
   "sections": {
     "A": 30,
-    "B": 13,
-    "C": 5,
+    "B": 16,
+    "C": 9,
     "D": 0
   },
   "floors_met": false,
@@ -30,14 +31,14 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "New incident/restart feature (#\u200b221) layered via existing mixin/decorator contracts. Decoupled from core store, consistent with prior modular baseline. The diff only adds a README subsection documenting a non-operative, unapproved drill preparation; no architectural change."
+      "rationale": "Diff is BRD/PRD proposal text (NFR-012, FR-052) and a new pitch brief; no architecture or code change. Unchanged from baseline."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "ADR 0005 names three rejected alternatives with explicit reasons. Diff adds no new trade-off reasoning text relevant to this criterion. Already at ceiling; no change."
+      "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
     },
     "A3": {
       "score": 5,
@@ -45,7 +46,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "Diff adds a README subsection (src/core/README.md:2860-2920) describing a proposed, explicitly UNAPPROVED and UNASSIGNED custody/witness/recovery process for a future drill. It is documentation of intent, not a new security control or mitigation, so it does not add new evidence of implemented con..."
+      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -53,81 +54,95 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "The new subsection extensively discloses open gaps (UNASSIGNED roles, UNAPPROVED external head custody, unticked acceptance criteria) consistent with the proactive-disclosure pattern already at ceiling (5). It reinforces rather than changes this already-maximal score."
+      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "src/api/tests/test_operator_suspension.py:614-665",
-        "src/core/src/zava_forward/core/sqlstore.py:572-630"
+        "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "No new cost or performance measurement in this diff; it is a documentation-only addition about drill preparation. Still only resilience evidenced, not both cost and performance; unchanged from baseline."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "Unchanged baseline: diff is a README documentation addition about a non-operative custody/witness drill, not an AI model choice or evaluation harness change."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "Restart decision remains a human-gated engineering drill; the new README text proposes additional human decision rights (witness, custody) for a future drill but introduces no new agentic orchestration. Unchanged from baseline assessment basis."
+      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch brief is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no new deck or rehearsal evidence in this diff. Baseline readiness score retained."
+      "rationale": "Live-scored; no rehearsal or delivery evidence exists to show register calibration in front of an audience. Baseline retained."
     },
     "B3": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
+      "score": 1,
+      "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
+      ],
+      "rationale": "The pitch artifact is now committed, so the 0 not-demonstrable floor no longer applies. The brief states the deck is unchanged and the material has not been rehearsed; no demo script, timing or recovery evidence exists, so readiness is Needs Improvement."
     },
     "B4": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
+      "score": 1,
+      "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:95-104"
+      ],
+      "rationale": "The brief drafts executive Q&A answer stems but these are prepared text, not a demonstrated live exchange under challenge; no transcript or rehearsal exists, so readiness is Needs Improvement."
     },
     "B5": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
+      "score": 1,
+      "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
+      ],
+      "rationale": "The brief states the 795-second main route has not been rehearsed against this material; no pace, timing or presence evidence exists yet."
     },
     "B6": {
       "score": 4,
       "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:1-137",
         "src/api/README.md:2555-2561"
       ],
-      "rationale": "src/core/README.md gained a well-organised but dense subsection (tables, numbered sequence) on custody/witness preparation, consistent with the existing dense operational-documentation style already noted as thin-in-places elsewhere. Still capped at Good(4); no higher level warranted."
+      "rationale": "New pitch brief is a well-organised, navigable preparation document; capstone deck remains unchanged and already well structured. Still capped at Good(4); some documentation remains dense elsewhere."
     },
     "B7": {
       "score": 3,
-      "evidence": [],
-      "rationale": "Unchanged baseline: not affected by this infra/ADR/governance-focused diff."
+      "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:85-93"
+      ],
+      "rationale": "The pitch brief states concrete, labelled numbers (6,884 tokens over five runs) with evidence-class caveats, but this is preparation material, not evidence delivered in an actual pitch or the deck. Claims carefully labelled; short of ceiling since much remains 'unknown' pending measurement."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
       ],
-      "rationale": "No BRD/stakeholder-framing changes in this diff; baseline FR-051 stakeholder naming and quantified targets unaffected. No change."
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
+      "score": 1,
+      "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:95-104"
+      ],
+      "rationale": "Live-scored; the pitch artifact now exists so the not-demonstrable floor lifts, but it only contains prepared answer stems, not a demonstrated live exchange showing restating challenges or conceding points. Readiness is Needs Improvement."
     },
     "C3": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: pitch. Maximum 0 until it is committed."
+      "score": 3,
+      "evidence": [
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:19-26",
+        "docs/capstone/pitch/tokenomics-pitch-brief.md:106-116"
+      ],
+      "rationale": "Not live-scored; pitch artifact now committed. The brief defends a recommendation (Option A), surfaces risk unprompted (Claims to Keep Out), and includes credible 'I will not estimate one' stems. Written preparation, not a live exchange, so short of ceiling."
     },
     "D1": {
       "score": 0,

@@ -1636,9 +1636,35 @@ The investment appraisal must separate:
 2. Existing expenditure already included in the long-term plan
 3. Rephased or displaced capital expenditure
 4. Incremental acceleration expenditure and financing
-5. The whole-life cost of data, workflow, integration and AI capabilities
+5. The whole-life cost of data, workflow, integration and AI capabilities,
+   including the Total Cost of AI and its token share (see AI Tokenomics below)
 6. Benefits attributable to the selected technology compared with a credible
    non-agentic alternative
+
+### AI Tokenomics (2026-10-22)
+
+After the 2026-10-22 mentor progress review the owner reported that a mentor
+raised Tokenomics as a likely line of challenge. This is owner-reported, and
+the mentor's meaning is unconfirmed. Tokenomics is a draft practice from the
+Tokenomics Foundation that manages the production, consumption and value of AI
+as one economic system and asks whether AI is driving value. The relevant ideas
+are that the token invoice is only one line of the Total Cost of AI, that unit
+economics are that total over realised value above a quality floor, and that
+a value claim needs a booked destination.
+
+For Zava Forward this changes the question from "what do tokens cost" to "what
+does each accepted proposal cost, beside the quality it must clear". The
+programme validates and retains token counts for five-assistant calls where the
+provider supplies them, and bounds those calls with finite call and token
+allowances. Coverage is partial: the legacy draft and image paths discard
+provider usage and assistant usage can remain unknown. It states no cost per
+accepted outcome because it holds no
+dated price source, no defined denominator and no measured accepted-outcome
+volume (ADR 0001 records this as an explicit gap). The proposals are BRD NFR-012
+and FR-052 and PRD NFR-017 and FR-061, with owner decisions in BRD OD-51. See the
+[AI Tokenomics resource note](./reference/resources/ai-tokenomics.md) and the
+[pitch brief](./capstone/pitch/tokenomics-pitch-brief.md). This is a hypothesis
+about what the panel will probe, not a measured result.
 
 ### Value Hypotheses
 
@@ -1652,6 +1678,7 @@ The investment appraisal must separate:
 | Residents receive equitable value | Disaggregated access, decision, disruption, complaint, comfort and affordability outcomes |
 | Acceleration remains affordable | Monthly cash, liquidity, covenant, security and severe-but-plausible downside model |
 | Bounded AI adds value over workflow automation | Options appraisal, pilot attribution, total cost of ownership and error severity |
+| AI running cost is proportionate to the value it returns | Metered usage reconciled to billing, Total Cost of AI and cost per accepted outcome above a quality floor, on a dated price source |
 
 ## Why Now (2026-2028)
 

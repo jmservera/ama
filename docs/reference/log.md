@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-18
+ms.date: 2026-10-22
 ms.topic: reference
 ---
 
@@ -6626,6 +6626,52 @@ metadata when the knowledge base was created.
   drill, live application acceptance or whole-issue closure. Original #219
   adverse and later correction evidence is retained.
 
+## [2026-10-22] ingest | AI Tokenomics and the capstone pitch
+
+* Owner reported that a mentor raised Tokenomics at the progress review. The
+  mentor's words are not in the repository, so the link is owner-reported and
+  unconfirmed. Retrieved the public Tokenomics Foundation pages (definition
+  draft v0.5.2, Total Cost of AI episode, projects) and recorded a pointer to an
+  internal Microsoft deck found through WorkIQ, marked do-not-quote.
+* Added [AI Tokenomics](./resources/ai-tokenomics.md): framing, mapping to
+  rubric A5, A6, B7, C1 and C3, existing Zava Forward evidence (per-call usage
+  envelope, finite limits, 6,884 tokens over five operator runs) and gaps.
+* Added BRD v0.19.0 (NFR-012, FR-052, AC-100 to AC-103, OD-51, BG-012 measure,
+  AI Consumption Economics section) and PRD v0.18.0 (FR-061, NFR-017, AC-107 to
+  AC-110, OQ-027), an addendum section, the
+  [Tokenomics pitch brief](../capstone/pitch/tokenomics-pitch-brief.md) and a
+  capstone README pointer. Index rows updated. On GitHub, created #432 and added
+  Tokenomics delta sections to #100, #104, #107, #108, #126, #144, #146, #157,
+  #159, #214, #225 and #226.
+* Contradiction flagged: [ADR 0001](../adrs/0001-azure-architecture.md) says
+  cost per unit of business value cannot be stated until measured usage exists;
+  the capstone rubric A5 rewards stating it. The new rows keep the gap explicit
+  and set no price, budget or target. PRD "59/59 FRs" link-coverage text was
+  already stale and is corrected to 61/61.
+* Not done: the 24-slide deck is unchanged (placement is an owner decision), no
+  rehearsal, no price retrieved, no spend authorised, no score claimed.
+
+## [2026-10-22] query | Backlog review after the Tokenomics amendment
+
+* Backlog Manager review of the open GitHub backlog (about 141 issues) with the
+  parent applying the executor operations, because the delegated agents had no
+  write tools. Not every issue body was read; targeted queries and named issues
+  only.
+* Created #435 (capstone pitch preparation, under #104). Linked #432 and #435
+  under #104 and #344 under #195. Added Tokenomics delta sections to #164, #216
+  and #217 (unticked criteria). Added missing Dependencies sections to #349,
+  #350 and #358. Removed the contradictory `status:not-started` label from #75,
+  #92, #97, #110, #126, #172 and #178 (each also carries
+  `status:partially-delivered`); the stale "not started" sentences in some
+  bodies were left for the owner. Added `status:not-started` to #432.
+* Board: `tools/backlog-sync.py --apply` moved nine open issues between Todo and
+  In Progress from PR and worktree evidence. It did not tick any criterion. #432,
+  #434 and #435 still report as missing from its item list although #432 and
+  #435 were added to project 7.
+* Left for the owner: automated rubric-failure issues #10, #33, #46 to #49 look
+  expired and closable as not planned (not done), #38 needs a check of the latest
+  scorer run, #6 and #434 are auto-managed and stay open, #430 stays open, and
+  #349, #350, #358, #360 still lack type, area and status labels and parents.
 ## [2026-10-20] update | Finite costed execution plan options for an unfinished Azure demo (#126)
 
 * Added a subsection to the existing Case Study 48 addendum and one index

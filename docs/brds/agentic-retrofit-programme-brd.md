@@ -2,15 +2,15 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-10-15
+ms.date: 2026-10-22
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.18.0"
+version: "0.19.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Zava North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
-last_updated: "2026-10-14"
+last_updated: "2026-10-22"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012", "BG-013"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -27,6 +27,17 @@ requirement_id_prefixes:
 ---
 
 ## Document Status
+
+Version 0.19.0 adds AI Tokenomics, the management of AI production,
+consumption and value as one economic system (NFR-012, FR-052, AC-100 to
+AC-103 and OD-51). It follows a mentor remark at the 2026-10-22 progress review
+and the [AI Tokenomics resource note](../reference/resources/ai-tokenomics.md).
+Tokenomics is an emerging, draft practice, not a standard. The rows turn the
+existing gap in [ADR 0001](../adrs/0001-azure-architecture.md), that cost per
+unit of business value cannot yet be stated, into metering, limit, reporting
+and booked-value requirements. They add no agent authority, set no budget,
+price or target, and state no cost figure, because no dated price table or
+measured accepted-outcome volume exists.
 
 Version 0.18.0 adds per-user
 agent chat and memory (BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010,
@@ -200,7 +211,9 @@ The programme will return with evidence in three forms:
 * a working architecture that completes representative property journeys
   end to end and exposes its state, decisions, handoffs and failures;
 * a task-level comparison showing whether each agent capability improves
-  quality, review time and cost over deterministic workflow alone; and
+  quality, review time and cost   over deterministic workflow alone, with the Total Cost of AI and AI cost per
+  accepted outcome stated beside the value above a quality floor (NFR-012,
+  FR-052); and
 * an operational validation plan showing how attributable value, resident
   experience, safety, quality, affordability and scale readiness will be
   measured against current delivery.
@@ -598,7 +611,7 @@ remains the Phase 0 readiness gate (OD-06, OD-33) before pilot mobilisation.
 | BG-009 | OBJ-09 | Improve resident outcomes | Energy-cost, comfort, satisfaction and complaint measures | Repairs 73.6%; listens and acts 61.6%; complaint handling 35.5% | Validated improvement without increased harm | Provisional sector medians |
 | BG-010 | OBJ-10 | Improve accountability | Exception handoffs accepted by a named human owner | Unknown | 100% accepted or escalated within approved times | Proposed |
 | BG-011 | OBJ-11 | Reduce avoidable coordination effort and delay | Primary cycle-time measure: assessment-to-ready-to-install elapsed time. Also measure manual coordination hours per accepted home, net of review and assurance. Report accepted handover separately as an outcome. | Measure in Phase 0 using a comparable cohort | Owner-confirmed proposed pilot improvements: at least 20% lower cycle time and 25% fewer coordination hours per accepted home against the measured baseline | Owner-delegated reviewer requested changes before draft-target ratification; endpoint direction recorded, OD-18 remains open |
-| BG-012 | OBJ-12 | Demonstrate proportionate technology value | Incremental benefit, whole-life cost, draft accuracy, overrides and critical exceptions versus non-agentic alternatives | Establish options and shadow-mode baseline | Positive attributable value before scale; zero autonomous controlled approvals and no missed critical exceptions in agreed tests | Proposed scale gate, not proof of zero live risk |
+| BG-012 | OBJ-12 | Demonstrate proportionate technology value | Incremental benefit, whole-life cost, Total Cost of AI and AI cost per accepted outcome above a quality floor, draft accuracy, overrides and critical exceptions versus non-agentic alternatives | Establish options and shadow-mode baseline | Positive attributable value before scale; zero autonomous controlled approvals and no missed critical exceptions in agreed tests | Proposed scale gate, not proof of zero live risk |
 | BG-013 | OBJ-13 | Offer bounded conversational assistance without loss of control, privacy or safety (proposed; inactive until OD-44) | Share of conversational turns that stay inside registered scope, refusals of out-of-authority requests, cross-user exposures, memory items held without consent, rights requests met on time | No baseline exists; conversation and memory are not in any earlier requirement set | No numeric benefit target is proposed. Proposed guardrails: zero cross-user exposures, zero memory items held without consent, zero conversation or memory content used as evidence or for performance rating | Proposed guardrails for the OD-44 to OD-49 decisions, not a benefit claim or proof of zero live risk |
 
 Every FR, RULE and NFR requirement row carries one canonical identifier, its
@@ -1328,18 +1341,18 @@ measured incremental value and no agreed critical-control failure.
 Every requirement row carries one canonical identifier, its legacy alias, the
 business goals it supports and one or more acceptance criteria. Numbering is
 sequential in creation order within each family. Identifiers added in later
-amendments (FR-045 to FR-050) sit beside their related requirements and are not
+amendments (FR-045 to FR-052) sit beside their related requirements and are not
 renumbered after insertion, deletion or reordering.
 
 | Prefix | Family | Use in this BRD | Count |
 | --- | --- | --- | --- |
 | BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 13 |
-| FR | Functional requirement | Business capability or control the programme must provide | 51 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 99 |
-| NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 11 |
+| FR | Functional requirement | Business capability or control the programme must provide | 52 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 103 |
+| NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 12 |
 | CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 7 |
 | RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 26 |
-| OD | Open decision | Unresolved company decision; not a requirement | 50 |
+| OD | Open decision | Unresolved company decision; not a requirement | 51 |
 
 Requirement rows remain grouped by business domain below, so a domain table
 can hold FR, RULE and NFR rows together. The prefix states the type.
@@ -1372,7 +1385,7 @@ authorize spending or supersede legal, resident or professional controls.
 | ISO/IEC 25010 category | Requirements | Coverage note |
 | --- | --- | --- |
 | Functional suitability | FR rows | Expressed through functional requirements and their acceptance criteria |
-| Performance efficiency | None yet | Volumes, response times and capacity need company data from readiness (OD-03, OD-09, OD-25) |
+| Performance efficiency | NFR-012 | Metering, limits and cost reporting for AI consumption; volumes, response times and capacity still need company data (OD-03, OD-09, OD-25) and cost conversion needs OD-51 |
 | Compatibility | NFR-005 | Interfaces to authoritative systems |
 | Interaction capability (usability) | NFR-008, NFR-009 | Accessibility, fair access, non-digital alternatives and plain-language explanation comprehension |
 | Reliability | NFR-004 | Safe operation during model, integration or platform failure |
@@ -1480,6 +1493,8 @@ authorize spending or supersede legal, resident or professional controls.
 | FR-042 | None | The programme shall use a Board-approved or delegated Asset Director-approved plain-language prioritisation policy with versioned scoring weights, published resident-facing rationale and per-home reason codes for inclusion, deferral or exclusion. | BG-001, BG-005, BG-007, BG-009, BG-012 | Residents, Board, assets, finance, data owners | AC-082: Before cohort use, the approved policy shows the authority, effective date, scoring weights, rule versions, source data and review date. Each home receives reason codes equivalent to FR-026 for inclusion, deferral or exclusion. Residents can request a "why not yet" explanation through digital and non-digital channels, with an indicative timescale where one exists. The control supports Safety and Quality Standard 2.3.2 on setting and clearly communicating timescales for planned improvements ([local snapshot](../reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md), effective 1 April 2024, converted 2026-09-19). | Must |
 | FR-043 | None | The programme shall maintain an AI capability register and provide a periodic AI assurance report to the Board covering each agent capability used or proposed for use. | BG-003, BG-005, BG-006, BG-008, BG-009, BG-012 | Board, DPO, residents, digital, assurance, control owners | AC-083: The register records purpose, data used, lawful-basis reference, owner, authority level, current model and configuration version, evaluation results, gate status and known limitations for each capability. Board assurance reports include incidents, overrides, unsupported-claim rate, outcome breakdowns across resident groups and gate status. Cadence is recorded as an owner decision before live pilot. A resident-facing summary may be published as proposed good practice only after Board and DPO approval. | Must |
 | FR-044 | None | Every agent output record shall preserve output provenance, human review and decision disposition for reconstruction, export and supplier-independent evidence retention. | BG-003, BG-005, BG-006, BG-010, BG-012 | Residents, staff, audit, digital, suppliers, control owners | AC-084: Each agent output stores model and configuration version, prompt or template version, source record references, source-based confidence category or "unknown", timestamp, reviewing human, and accept, edit or reject decision with reason. Records are immutable under NFR-002, exportable under NFR-006 and reconstructable through FR-040. | Must |
+| NFR-012 | None | AI consumption shall be metered, attributed, bounded and reportable at the point of use, so that each AI capability has finite owner-approved limits, an owner for every limit breach and a record from which the Total Cost of AI can be stated. | BG-008, BG-012 | Finance, digital, programme, assurance, Board | AC-100: Each model call records the capability, case type, model and configuration version, prompt or template version, input, output and cached token counts, retries, failures and outcome, linked to the FR-044 output record. Each capability and period has a finite owner-approved call, token and budget limit with an alert threshold and a named alert owner. Reaching a limit degrades the task to the tested workflow-only path under NFR-004 and never delays a statutory hazard response or clock. Each request has an approved maximum number of model calls and agent depth, and a test shows a request cannot exceed it or loop without a termination condition.<br>AC-101: Finance can reconcile metered usage to supplier billing records for each period, with the billing record as the financial source of truth, and reports any variance above an owner-set tolerance. Any conversion from usage to money uses a dated, versioned price source; no cost is stated without one. | Must |
+| FR-052 | None | Management reporting shall state the Total Cost of AI and the AI cost per accepted outcome for each capability beside the value it produced above a quality floor, and shall not present the token line alone as the cost of AI. | BG-008, BG-011, BG-012 | Board, executive, Finance, programme, digital, assurance | AC-102: Each report separates token or consumption cost from the other Total Cost of AI components: platform and hosting, licences, integration, retained staff, human review, correction and re-review, assurance, training, support, model and rule maintenance and exit, and energy or capital where a supplier discloses them. It names the denominator used (per assistant run, per accepted proposal or per accepted handover) and shows it beside the quality floor met: critical misses, unsupported-claim rate, override and reopened-case rates under FR-033 and FR-043. A fall in cost per token that worsens a quality, safety or resident measure is reported as a failure, not a saving.<br>AC-103: Value is reported only above the quality floor and only against a booked destination confirmed by the budget owner: new revenue won, revenue retained, spend removed, spend avoided or capital freed. Staff time released is reported as capacity gain, augmentation or automation, each with its own baseline, and is not cash unless Finance confirms it under RULE-016 and RULE-019. Multi-call capabilities, including conversational assistance under FR-049, report calls per request and agent depth, so cost growth with usage is visible before each RULE-020 release decision. | Must |
 
 ### Proportionate Solution and Professional Authority
 
@@ -1613,6 +1628,9 @@ review and challenge data before publication but no veto over the scorecard.
   value versus the agreed counterfactual
 * AI capability register status, gate status and a proposed resident-facing
   summary where approved as good practice
+* AI consumption economics: metered usage against limits, limit and alert
+  breaches, Total Cost of AI and AI cost per accepted outcome for each
+  capability beside its quality floor and booked value (NFR-012, FR-052)
 * AI assurance report to the Board, including incidents, overrides,
   unsupported-claim rate, outcome breakdowns across resident groups and gate
   status, at a cadence set by the responsible owners
@@ -1627,8 +1645,9 @@ Measures that must not be used as benefit evidence are starts, installations or
 works released as throughput; completed-only averages; agent activity counts;
 "hours saved" calculated as task counts multiplied by assumed minutes or
 converted into cash; consent rate as a target; combined grant captured;
-supplier-declared utilisation; zero incidents or days since last incident; and
-the absence of an AI flag or sensor alert.
+supplier-declared utilisation; zero incidents or days since last incident; the
+absence of an AI flag or sensor alert; and token cost or cost per token on its
+own as the cost of AI or as evidence of efficiency.
 
 ## Benefits and High-Level Economics
 
@@ -1675,6 +1694,45 @@ Finance must reconcile monthly spend and receipts, match funding, peak cash,
 liquidity, covenant and security headroom. Downside cases cover grant delay or
 loss, inflation, low volume, supplier failure, defects, financing and competing
 safety spend. Gross programme value is not the solution's return on investment.
+
+### AI Consumption Economics (Tokenomics)
+
+Evidence class: sector-informed recommendation. The framing comes from the
+Tokenomics Foundation's draft practice, retrieved 2026-10-22; it is not a
+standard and no figure below is a company fact. See the
+[AI Tokenomics resource note](../reference/resources/ai-tokenomics.md).
+
+AI Tokenomics asks one question across the AI lifecycle: is AI driving value?
+It separates production (how capability is made), consumption (how well it is
+used and what it costs) and value (what the output is worth and to whom). For
+this programme that means the AI line of the technology case cannot be the
+token invoice alone. NFR-012 requires metering, limits and a billing
+reconciliation. FR-052 requires the Total Cost of AI, the cost per accepted
+outcome and the value above a quality floor to be reported together.
+
+Three rules apply to every AI cost or value claim:
+
+* Cost per token suits infrastructure, cost per assistant run suits workflow
+  tuning and cost per accepted outcome suits the Board. State which
+  denominator is used, and do not compare figures that use different ones.
+* A cheaper model or a cache hit is a saving only if critical misses,
+  unsupported claims, overrides and reopened cases do not worsen. Human review,
+  correction and re-review are likely to cost more than the tokens, and the
+  RULE-019 measurement design includes them; its capture prerequisites (OD-18,
+  OD-36) remain open, so nothing has been measured yet.
+* Time released is capacity, not cash, until a budget owner confirms where the
+  spend falls (RULE-016). A booked claim names one destination: revenue won,
+  revenue retained, spend removed, spend avoided or capital freed.
+
+The five-assistant service already validates and retains token counts where the
+provider supplies them, and its call and token allowances are finite per
+authority reference. Coverage is partial: legacy draft and image paths discard
+provider usage, usage can remain unknown for an assistant call, and the
+allowances are not a currency guarantee or independent task and period budgets.
+The programme also holds no price table, defined denominator or measured
+accepted-outcome volume, so it states no AI cost per accepted outcome. NFR-012
+requires the complete metering and monetary limits that do not yet exist. OD-51
+records what the owners must decide first.
 
 ### Unvalidated Value Claims
 
@@ -1734,6 +1792,7 @@ would risk double counting.
 | Residents receive equitable value | Accessible journey tests and lawful outcome breakdowns, including adverse outcomes | Resident Engagement | FR-032, NFR-008 |
 | Acceleration remains affordable | Monthly cash and severe-but-plausible treasury scenarios | Finance and Board | FR-025, RULE-011, RULE-012 |
 | Agent capabilities add value over conventional workflow | Comparison 2 paired shadow-mode evidence, lawful task-level allocation where used, error severity, review effort, missed critical exceptions and incremental whole-life economics | Digital and Finance | RULE-016, FR-036, RULE-018, RULE-019, RULE-020 |
+| AI running cost is proportionate to the value it returns | Metered usage reconciled to billing, Total Cost of AI and cost per accepted outcome above a quality floor, with review effort and booked value destinations, on a dated price source | Finance and Digital | NFR-012, FR-052, RULE-016, RULE-019 |
 | Safe acceleration does not worsen guardrails | Approved stop triggers, breach logs, affected-work pauses and restart evidence | Building Safety, Programme and Sponsor | FR-001, FR-002, FR-003, FR-030, FR-032, RULE-003, RULE-020 |
 
 ### Executive Trade-Offs as Approval Criteria
@@ -1848,6 +1907,7 @@ continues. No result automatically activates a live control.
 | OD-48 | Whether memory is in scope at all or only conversation history, which content classes may be remembered, and how staff memory differs from any later resident memory | Owner, DPO and Digital service owner | Blocks FR-050 |
 | OD-49 | Grounding, abstention and injection-resistance thresholds for conversational turns and the accountable reviewer who approves them | Accountable AI reviewer named under FR-036 and Data and Performance Lead | Blocks activation of any conversational task (FR-036, NFR-010) |
 | OD-50 | Confirm which regulatory duties, sources and delegations apply to Zava North Homes, who approves rule cards and interprets sources, the alert and chat audiences, alert-fatigue tolerance, and whether chat adds value over deterministic rule cards with provision links | Legal, compliance, DPO, Building Safety, Assets and Digital | Blocks live use of FR-051 and any claim that it supports compliance; does not block the synthetic exercise |
+| OD-51 | AI Tokenomics decisions: the cost denominator for each capability (per assistant run, accepted proposal or accepted handover), the quality floor each must clear, finite budgets and alert owners per capability and period, which Total Cost of AI components Finance includes and who owns each, whether usage is shown back or charged back, and the dated price source | Finance and Grants Lead, Digital service owner, Data and Performance Lead and Executive Director of Assets | Blocks any statement of AI cost per accepted outcome (FR-052) and any production budget or limit change (NFR-012); does not block the synthetic exercise or metering |
 
 ### Owner Direction and Company Role-Profile Challenge (2026-10-04)
 
@@ -2000,17 +2060,17 @@ Acceptance criteria are not yet written in Given/When/Then form.
 | BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024, RULE-025 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009, NFR-010, NFR-011 |
 | BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047, FR-051 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024, RULE-025 | NFR-002, NFR-005, NFR-006, NFR-007 |
 | BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041, FR-042, FR-051 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
-| BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007 |
+| BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043, FR-052 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007, NFR-012 |
 | BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047, FR-048, FR-051 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022 | NFR-008, NFR-009 |
 | BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045, FR-051 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
-| BG-011 | FR-010, FR-022, FR-033, FR-041, FR-049 | RULE-016, RULE-019 | NFR-009 |
-| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050, FR-051 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007 |
+| BG-011 | FR-010, FR-022, FR-033, FR-041, FR-049, FR-052 | RULE-016, RULE-019 | NFR-009 |
+| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050, FR-051, FR-052 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-012 |
 | BG-013 | FR-049, FR-050 | RULE-025, RULE-026 | NFR-010, NFR-011 |
 
 ### FR-to-AC and FR-to-BG Coverage
 
-50 of 50 functional requirements have at least one acceptance criterion
-(100.0%, against the 80.0% threshold). 50 of 50 link to at least one business
+52 of 52 functional requirements have at least one acceptance criterion
+(100.0%, against the 80.0% threshold). 52 of 52 link to at least one business
 goal (100.0%, against the 100.0% target). Coverage shows that a link exists,
 not that the linked goal or criterion has been validated.
 
@@ -2067,6 +2127,7 @@ not that the linked goal or criterion has been validated.
 | FR-049 | None | AC-091, AC-092 | BG-011, BG-012, BG-013 |
 | FR-051 | None | AC-099 | BG-003, BG-004, BG-006, BG-007, BG-009, BG-010, BG-012 |
 | FR-050 | None | AC-093, AC-094 | BG-012, BG-013 |
+| FR-052 | None | AC-102, AC-103 | BG-008, BG-011, BG-012 |
 
 ### Business Rule Enforcement
 
@@ -2266,10 +2327,13 @@ licenses mock substitution or silently waives spend controls.
 
 ## Source and Review Record
 
+The 2026-10-22 proposal amendment (v0.19.0) adds NFR-012, FR-052, AC-100 to AC-103 and OD-51, and extends BG-012, for AI Tokenomics (backlog epic #104, new issue #432 and Tokenomics delta sections on #100, #107, #108, #126, #144, #146, #157, #159, #214, #225 and #226). The sources are a mentor remark reported by the owner on 2026-10-22, the public Tokenomics Foundation pages retrieved that day, ADR 0001's recorded cost-per-unit gap and the existing usage envelope in the core assistants. The framing is draft community practice. No price, budget, target, owner decision or company fact is added. Counts after this amendment are 52 FRs, 103 ACs, 12 NFRs, 7 constraints, 26 rules, 13 business goals and 51 open decisions.
+
 The 2026-10-14 proposal amendment (v0.18.0) adds BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098 and OD-44 to OD-49 for per-user agent chat and memory (backlog epic #157, children #158 to #164). The sources are the GitHub backlog issues, the journey atlas, [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) and the current assistant behaviour in the MVP; no owner, DPO or Legal decision has been made and no resident, staff or company fact is added. Counts after this amendment are 50 FRs, 98 ACs, 11 NFRs, 7 constraints, 26 rules, 13 business goals and 49 open decisions.
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 0.19.0 | 2026-10-22 | Proposal: AI Tokenomics (NFR-012, FR-052, AC-100 to AC-103, OD-51; BG-012 measure extended); no existing ID renumbered |
 | 0.18.0 | 2026-10-14 | Proposal: per-user agent chat and memory (BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098, OD-44 to OD-49); no existing ID renumbered |
 | 0.17.0 | 2026-10-14 | Journey atlas amendment: FR-045 to FR-048, AC-087 to AC-090, OD-41 to OD-43 |
 

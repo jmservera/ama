@@ -2,7 +2,7 @@
 title: Capstone Deliverables and Storage Map
 description: Where every capstone asset must be stored so the rubric gate can find and score it, and what scores 0 until it exists
 author: AMA programme
-ms.date: 2026-10-14
+ms.date: 2026-10-22
 ms.topic: reference
 ---
 
@@ -41,6 +41,19 @@ proposed B1, B2, B6 and B7 changes and left misleading missing-deck baseline
 rationales in the comment. See the
 [gate repair and activation boundary](../../.github/rubric/README.md).
 Do not treat a saved-scorecard replay as a fresh score for the revised deck.
+
+## Tokenomics Pitch Preparation (2026-10-22)
+
+A mentor raised Tokenomics at the progress review, reported by the owner and
+not yet confirmed with the mentor. The
+[Tokenomics pitch brief](./pitch/tokenomics-pitch-brief.md) proposes where the
+idea fits in the 15-minute route (a strengthened slide 16, a Q&A card on slide
+20 and an optional appendix), draft slide copy and notes, the numbers to bring,
+executive questions and the claims to keep out. It maps to rubric criteria A5,
+A6, B7, C1 and C3. The deck is unchanged: placement is an owner decision, the
+route is not rehearsed with it and no cost-per-accepted-proposal figure exists.
+Sources and evidence labels are in the
+[AI Tokenomics resource note](../reference/resources/ai-tokenomics.md).
 
 ## Solution Architecture Views (2026-10-14)
 
