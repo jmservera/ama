@@ -2,6 +2,7 @@
 
 import copy
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -154,3 +155,59 @@ def test_prompt_example_is_complete_and_accepted_by_adapter():
     example = workflow.split("```json\n", 1)[1].split("```", 1)[0]
     parsed = adapter.from_inputs(json.loads(example), IDS)
     assert list(parsed["criteria"]) == IDS
+
+
+@pytest.mark.parametrize("mutation", [
+    None, "missing-d3-reason", "missing-id", "extra-id", "extra-field",
+    "numeric-score", "invalid-score", "newline-score", "invalid-json", "evidence-type",
+    "rationale-type", "long-rationale", "unscored-rationale", "reason-type",
+    "blank-summary", "extra-input",
+])
+def test_given_candidate_when_prompt_preflight_runs_then_invalid_details_are_rejected(tmp_path, mutation):
+    workflow = (ROOT.parent / "workflows/rubric-score.md").read_text(encoding="utf-8")
+    preflight = workflow.split("```jq\n", 1)[1].split("```", 1)[0]
+    example = json.loads(workflow.split("```json\n", 1)[1].split("```", 1)[0])
+    details = json.loads(example["details"])
+    if mutation == "missing-d3-reason":
+        del details["D3"]["change_reason"]
+    elif mutation == "missing-id":
+        del details["B7"]
+    elif mutation == "extra-id":
+        details["D4"] = details["D3"]
+    elif mutation == "extra-field":
+        details["D3"]["score"] = 1
+    elif mutation in {"evidence-type", "rationale-type", "long-rationale", "unscored-rationale", "reason-type"}:
+        field, value = {
+            "evidence-type": ("evidence", [1]),
+            "rationale-type": ("rationale", 1),
+            "long-rationale": ("rationale", "x" * 300),
+            "unscored-rationale": ("rationale", "UNSCORED"),
+            "reason-type": ("change_reason", None),
+        }[mutation]
+        details["D3"][field] = value
+    elif mutation == "numeric-score":
+        example["D3_score"] = 1
+    elif mutation == "invalid-score":
+        example["D3_score"] = "6"
+    elif mutation == "newline-score":
+        example["D3_score"] = "3\n"
+    elif mutation == "blank-summary":
+        example["summary"] = " "
+    elif mutation == "extra-input":
+        example["unexpected"] = "value"
+    example["details"] = "{" if mutation == "invalid-json" else json.dumps(details)
+    context_path = tmp_path / "context.json"
+    context_path.write_text(json.dumps({"scorecard_template": {"criteria": dict.fromkeys(IDS)}}))
+
+    result = subprocess.run(
+        ["jq", "-e", "--slurpfile", "context", str(context_path), preflight],
+        input=json.dumps(example), capture_output=True, text=True, check=False,
+    )
+
+    if mutation is None:
+        assert result.returncode == 0, result.stderr
+        assert json.loads(result.stdout) == example
+        assert adapter.from_inputs(json.loads(result.stdout), IDS)
+    else:
+        assert result.returncode != 0
+        assert result.stdout == ""

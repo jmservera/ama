@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: how-to
 ---
 
@@ -84,6 +84,39 @@ Rerunning an older head's run can hit the branch-moved guard; merging this
 repair alone does not automatically replace PR #61's score.
 
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
+
+## Scorecard Submission Preflight
+
+[Run 40025652570](https://github.com/jmservera/ama/actions/runs/40025652570)
+was rejected because D3 omitted `change_reason`, not because its total fell
+below the 55-point baseline. The template contained the field, but the
+submitted details did not. No valid score was recorded.
+
+The scorer prompt now requires a read-only `jq -e` preflight of the complete
+final arguments before its single `record_rubric_score` call. The embedded
+filter checks all 20 criterion IDs, all 22 argument keys, exact score choices,
+detail keys and types, non-blank summary/rationales, and rationale length.
+It emits the candidate unchanged, without filling missing fields or coercing
+values. A failed preflight must be corrected before submission. Tests execute
+the actual filter from the prompt, including the D3 omission and a score with
+a trailing newline:
+
+```bash
+.venv/bin/python -m pytest .github/rubric/scripts/test_scorecard_adapter.py -q -k 'prompt_preflight or prompt_example'
+```
+
+The focused checks pass locally. The full adapter file has two failures in
+baseline-dependent round-trip/carry-forward tests, reproduced from unchanged
+HEAD; this repair does not change those fixtures or the recorded baseline.
+
+This is an executable agent instruction, not a new MCP interception hook.
+The pinned runtime still checks `details` only as a string before append;
+the strict adapter validates its contents afterward. The preflight does not
+prove evidence quality, reject duplicate outer JSON keys, or replace the
+gate's comparison and exactly-one-submission rule. Duplicate keys inside
+encoded details remain rejected by the adapter. No hosted rerun or score
+recovery is implied by these local tests. Deck registration and size support
+on trusted base `main` remain separate from this submission repair.
 
 ## Files
 
