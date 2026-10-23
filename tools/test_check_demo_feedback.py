@@ -17,7 +17,7 @@ from argparse import Namespace
 from pathlib import Path
 
 from zava_forward.api.workbench import navigation
-from zava_forward.core import ledger, projection, ranking, taskqueues
+from zava_forward.core import ai_tasks, ledger, projection, ranking, taskqueues
 from zava_forward.core.store import Store
 
 SCRIPT = Path(__file__).with_name("check-demo-feedback.py")
@@ -581,8 +581,93 @@ class AiEvidence(unittest.TestCase):
     def status(self, record):
         return statuses(report_for(bundle(ai=record)))["ai_evidence"]
 
-    def test_real_ai_passes(self):
+    def test_runtime_shaped_capture_passes(self):
         self.assertEqual(self.status(ai_record()), "pass")
+
+    def test_missing_item_fields_fail(self):
+        for field in ("case_id", "reason", "cites"):
+            with self.subTest(field=field):
+                record = ai_record()
+                del record["body"]["items"][0][field]
+                self.assertEqual(self.status(record), "fail")
+
+    def test_item_text_fields_require_nonempty_strings(self):
+        for field in ("case_id", "reason"):
+            for value in (None, False, True, 0, 1.5, [], ["text"], {}, "", " \t\n"):
+                with self.subTest(field=field, value=value):
+                    record = ai_record()
+                    record["body"]["items"][0][field] = value
+                    report = report_for(bundle(ai=record))
+                    check = next(
+                        c for c in report["checks"] if c["id"] == "ai_evidence"
+                    )
+                    self.assertEqual(check["status"], "fail")
+                    self.assertIn("cited items", check["reason"])
+                    self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_citations_require_nonempty_list_of_nonempty_strings(self):
+        invalid = (None, False, True, 0, 1.5, {}, [], "", " \t\n")
+        for cites in (
+            "Stage: S",
+            *invalid,
+            *([value] for value in invalid),
+            *(["Stage: S", value] for value in invalid),
+        ):
+            with self.subTest(cites=cites):
+                record = ai_record()
+                record["body"]["items"][0]["cites"] = cites
+                self.assertEqual(self.status(record), "fail")
+
+    def test_items_require_nonempty_list_of_valid_objects(self):
+        valid = ai_record()["body"]["items"][0]
+        malformed = dict(valid, reason=False)
+        for items in (
+            None,
+            {},
+            [],
+            [None],
+            ["item"],
+            [valid, None],
+            [valid, malformed],
+            [malformed, valid],
+        ):
+            with self.subTest(items=items):
+                record = ai_record()
+                record["body"]["items"] = items
+                self.assertEqual(self.status(record), "fail")
+
+    def test_reproduced_malformed_captures_fail(self):
+        for items in (
+            [{"cites": [{}]}],
+            [{"case_id": None, "reason": False, "cites": ["Stage: S"]}],
+        ):
+            with self.subTest(items=items):
+                record = ai_record()
+                record["body"]["items"] = items
+                self.assertEqual(self.status(record), "fail")
+
+    def test_runtime_validated_items_retain_offline_acceptance_boundaries(self):
+        proposed = [
+            dict(case_id="ZF-1", reason=" Because. ", cites=["Stage: S"]),
+            dict(case_id="ZF-2", reason="Another reason.", cites=["Stage: T"]),
+        ]
+        items, dropped, error = ai_tasks.priority_items(
+            json.dumps(proposed),
+            2,
+            {"ZF-1": ["Stage: S"], "ZF-2": ["Stage: T"]},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(dropped, 0)
+        self.assertEqual(items[0]["reason"], "Because.")
+        record = ai_record()
+        record["body"]["items"] = items
+        report = report_for(bundle(ai=record))
+        self.assertEqual(statuses(report)["ai_evidence"], "pass")
+        self.assertEqual(statuses(report)["case_write_reload"], "blocked")
+        self.assertEqual(statuses(report)["spend_bound"], "not-run")
+        self.assertEqual(statuses(report)["admin_account"], "not-run")
+        self.assertEqual(report["overall"], "blocked")
+        self.assertEqual(report["acceptance"], "not-accepted")
 
     def test_template_fails(self):
         record = ai_record()
@@ -614,7 +699,7 @@ class AiEvidence(unittest.TestCase):
 
     def test_uncited_quarantined_or_denied_fail(self):
         for field, value in (
-            ("items", [dict(case_id="ZF-1", cites=[])]),
+            ("items", [dict(case_id="ZF-1", reason="Because.", cites=[])]),
             ("quarantine", dict(reason="late")),
             ("release_denied", True),
             ("epoch_current", False),

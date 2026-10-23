@@ -6,6 +6,9 @@ environment credentials, submits no writes and never activates AI. Evidence
 is shaped like the real runtime responses; runtime schemas are imported from
 the installed zava_forward packages rather than copied.
 
+Captured AI items require nonempty string case IDs, reasons and citations.
+Their shape is checked offline, not their source resolution or provenance.
+
 This is an offline harness, not deployed acceptance. A redirect, an auth
 denial or the existence of a source asset is never a functional success, and
 the overall verdict can never be pass in this slice: spend-bound and
@@ -462,7 +465,12 @@ def check_ai(evidence, runtime):
         not isinstance(items, list)
         or not items
         or not all(
-            isinstance(i, dict) and isinstance(i.get("cites"), list) and i["cites"]
+            isinstance(i, dict)
+            and nonempty_str(i.get("case_id"))
+            and nonempty_str(i.get("reason"))
+            and isinstance(i.get("cites"), list)
+            and i["cites"]
+            and all(nonempty_str(cite) for cite in i["cites"])
             for i in items
         )
     ):
