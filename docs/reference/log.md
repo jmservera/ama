@@ -6701,3 +6701,34 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+
+## [2026-10-23] update | Optional resident requirements and unregistered architecture proposal (#441)
+
+* Integrated verified unsigned BRD v0.20.0 and PRD v0.19.0 source amendments
+  after genuine Research, Plan/details and independent plan critique. Source
+  hashes, reconstructed candidates, original FAIL/BLOCKED quality reports and
+  namespace trace remain in portable issue-specific evidence.
+* Prospectively reconciled FR-044/AC-084 and coupled rules for the owner-selected
+  bounded routine communication proposal, separately gated and OFF. Named
+  review remains default and always applies to consequential, sensitive,
+  uncertain, safety, consent, contractual and financial content. No controlled
+  authority is delegated. Proposed role ownership/shared timeline, managed
+  external identity/scoped grants and assisted channels without detriment
+  replace no settled legal/privacy/service gate.
+* Added six synthetic resident scripts and coupled content/design/WCAG/profile,
+  architecture/capstone and addendum routing without changing EXA-004 or
+  historical staff/map denominators. Targets/scenarios remain proposals and
+  author judgement, not measured benefits, production SLA or cash/headcount.
+* Published architecture as an explicitly UNREGISTERED issue-specific working
+  proposal with id null, selected Option B, original matching Excalidraw/SVG/
+  same-model Chrome PNG and accessible text. Owner deferred registration after
+  actual allocator/bootstrap failure: full registration acceptance remains
+  UNMET, no new registry/config/lineage/Govern claim.
+* Original case study, owner memory, numbered ADRs and earlier log entries
+  remain unchanged. OD-52-55, formal/lifecycle and live approval remain open.
+  This documentation-only proposal does not deliver a portal, live sending,
+  real accounts/data, Azure change or paid inference. Independent final-byte
+  Review and publication gate evidence are recorded separately, not implied
+  by this authoring entry. Shared-path overlap with draft #424/#426/#439
+  requires later reconciliation preserving all append entries; no sibling
+  proposal is imported and no false issue dependency is created.

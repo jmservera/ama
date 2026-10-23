@@ -1,0 +1,137 @@
+{
+  "checkedAt": "2026-10-23T17:56:46.865Z",
+  "status": "SESSION_ONLY_PROPOSED_DRAFT_READY_REGISTERED_GOVERN_BLOCKED",
+  "scope": "Bounded proposed ADR and supplemental diagram artifacts in the authorized session adr directory only.",
+  "ownerConfirmed": {
+    "frame": true,
+    "decide": true,
+    "option": "B",
+    "rationale": "Reuse existing case authority to avoid duplicate platforms; deliver the portal/workflow first and independently gate the bounded resident-answer task.",
+    "authority": "Proposed synthetic exercise architecture only; not company/control-owner approval, production/spending/deployment permission, or implementation.",
+    "decideAt": "2026-10-23T17:56:46.865Z"
+  },
+  "repository": {
+    "pinnedCommit": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+    "workingCheckoutHead": "18b9da428d3a7812ae2210800696a6359392126b",
+    "status": "Detached checkout unchanged; pre-existing untracked .env, .vscode and discovery files left untouched.",
+    "adrRegistry": "docs/adrs/0001–0006; no .adr-config.yml found in pinned tree; plugin default docs/planning/adrs conflicts with repository registry path.",
+    "idAllocated": false,
+    "repositoryWrites": false,
+    "gitOrGithubWrites": false
+  },
+  "upstream": {
+    "prdCandidateSha256": "bfe93dc2cb68ec18c76d10794305ee1667c5ecc1937c0c28cd876dae77195f8d",
+    "prdPatchSha256": "37e35e478f49165d787c475afed46d94eb5bff7eb8348925b68e8c43e1aed97c",
+    "brdCandidateSha256": "e318bacc1344c4e730645612371f2a7671926c645ee9370673b0f637a046e535",
+    "brdPatchSha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7",
+    "hashBasis": "Transcribed from upstream package validation.json; candidates/patches were not recomputed in this ADR session."
+  },
+  "lifecycle": {
+    "brdDefine": "BLOCKED",
+    "brdGovern": "NOT_EVALUATED",
+    "prdValidate": "BLOCKED",
+    "prdFinalize": "NOT_EVALUATED",
+    "adrStatus": "proposed",
+    "adrRegistered": false,
+    "decideOwnerConfirmed": true,
+    "governComplete": false,
+    "governBlockers": [
+      "No allocator-issued stable ADR ID; null is intentionally retained, not replaced with a fake or inferred 0007.",
+      "Authoritative repository ADR path and config/allocation convention must be resolved under native RPI.",
+      "No repository writes are authorized in this commission."
+    ],
+    "preserved": {
+      "fr044Ac084Conflict": "Unresolved; no ADR override",
+      "routineAutonomousMessaging": "OFF",
+      "od52To55": "Open",
+      "supersession": "None",
+      "adr0004": "Staff-only chat/memory decision unchanged",
+      "adr0005": "Regulatory assistant no-send unchanged"
+    }
+  },
+  "diagram": {
+    "contractCheck": "ADR diagramFormat and architecture-diagrams skill accept only ascii or mermaid. Excalidraw is not a valid enum value.",
+    "selectedEnum": "mermaid retained",
+    "supplementaryPath": "Editable Excalidraw JSON plus same-model SVG and local Chrome-rendered PNG embedded using a relative Markdown image link.",
+    "nativeExcalidrawRenderer": "Not available locally; no package install performed. PNG is not claimed to be an Excalidraw application export.",
+    "tools": {
+      "googleChrome": "155.0.8059.39 available",
+      "node": "v24.21.0",
+      "excalidrawCli": "not found",
+      "excalidrawNodePackage": "not resolvable",
+      "globalInstall": false,
+      "dependencyInstall": false
+    },
+    "png": "1800 x 1160; locally generated from matching SVG and inspected visually."
+  },
+  "checks": {
+    "publicSensitiveContentScan": {
+      "status": "PASS",
+      "high": 0,
+      "warn": 0,
+      "total": 0,
+      "command": "Installed adr-author scan_sensitive_content.py --public"
+    },
+    "frontmatterValidator": {
+      "status": "BLOCKED_AS_EXPECTED",
+      "exitCode": 1,
+      "diagnostics": [
+        "id must be a four-digit allocated string; draft deliberately uses null",
+        "optional JSON schema unavailable in plugin installation; built-in structural checks used"
+      ],
+      "otherStructuralAndBodyChecks": "PASS; after adding driver-by-option table, validator reports only the intentional unallocated-id blocker."
+    },
+    "diagramSource": {
+      "status": "PASS_BASIC_JSON",
+      "type": "excalidraw",
+      "version": 2,
+      "elements": 47
+    },
+    "relativeImageEmbedding": {
+      "status": "PASS",
+      "path": "./resident-service-boundary.png"
+    },
+    "markdownlint": "Not run",
+    "applicationOrFullTestSuites": "Not run",
+    "protectedGate": "Not run; gate3467165 not interrupted",
+    "cloudPaidTenantOperations": "Not run"
+  },
+  "businessModel": {
+    "classification": "Owner-authorized author-judgement illustration only",
+    "base": "90 new home cases/week × 8 weeks = 720 active; 360 calls and 288 separate email/document episodes/week; 84 baseline staff hours/week; 14.74 net staff hours/week freed after assumptions",
+    "lowNetHoursPerWeek": -1.594,
+    "highNetHoursPerWeek": 94.333,
+    "limitations": "Not measured uptake, forecast, cash/headcount savings, ROI, staffing plan or target; 60,000 homes are not resident accounts; five sessions are proposed exercise workload only."
+  },
+  "artifacts": {
+    "decide-draft.md": {
+      "bytes": 15999,
+      "sha256": "081ecba847f977c2165e127c8e7f602b4bc73602cd09abbd23c57283bcf278c7"
+    },
+    "proposed-adr-draft.md": {
+      "bytes": 26962,
+      "sha256": "528f062c3e5d476c57c150e0e214a5e208a247c3b2aa5b0f016f7ed477271541"
+    },
+    "integration-manifest.md": {
+      "bytes": 3949,
+      "sha256": "352e4a1ddc8b5aadba1117fa73e183d9c286370479cdc79cb233cd7e90c560a6"
+    },
+    "state.json": {
+      "bytes": 13412,
+      "sha256": "a6f1d5aa9c5cd3b2c58491468a157008a12f59345e0f37c6096d5b4ec2ed4e8d"
+    },
+    "resident-service-boundary.excalidraw": {
+      "bytes": 43454,
+      "sha256": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07"
+    },
+    "resident-service-boundary.svg": {
+      "bytes": 8573,
+      "sha256": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb"
+    },
+    "resident-service-boundary.png": {
+      "bytes": 178186,
+      "sha256": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc"
+    }
+  },
+  "validationFileHash": "Excluded to avoid self-reference; hash may be calculated externally after final write."
+}

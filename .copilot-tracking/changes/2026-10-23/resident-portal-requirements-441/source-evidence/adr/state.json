@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectSlug": "resident-portal-communication-agent",
+  "entryMode": "from-planner-handoff",
+  "outputTemplate": "madr-v4",
+  "phase": "govern",
+  "bootstrapConfirmed": true,
+  "frameStatus": "confirmed-by-owner; supplementary Excalidraw added without changing closed diagramFormat enum",
+  "userPreferences": {
+    "autonomyTier": "partial",
+    "diagramFormat": "mermaid",
+    "targetSystem": null,
+    "outputDetailLevel": "standard",
+    "includeOptionalArtifacts": {
+      "consequencesTable": true,
+      "decisionDrivers": true
+    }
+  },
+  "disclaimerShownAt": "2026-10-23T17:42:44.155Z",
+  "phaseSkillsLoaded": [
+    "adr-author/SKILL.md#frame",
+    "adr-author/SKILL.md#decide",
+    "adr-author/SKILL.md#govern"
+  ],
+  "inputs": [
+    {
+      "kind": "planner-handoff",
+      "ref": "../prd/adr-handoff.md; ../prd/amendment.patch; ../prd/amendment.md; ../prd/id-traceability.md; ../prd/quality-review.md; ../prd/validation.json; ../brd/draft-prd-handoff.json",
+      "capturedAt": "2026-10-23T17:42:44.155Z"
+    }
+  ],
+  "decisionMetadata": {
+    "title": "Optional resident service architecture boundary",
+    "suggestedDecision": "Frame a proposed synthetic-only architecture for an optional resident portal and separate bounded resident-answer task; preserve the existing staff and regulatory assistant boundaries, and defer unverified provider/live-operation choices.",
+    "deciders": [
+      "Programme owner (exercise architecture decision only; not company or control-owner approval)"
+    ],
+    "consulted": [
+      "Digital service owner",
+      "Programme Manager",
+      "Resident Engagement",
+      "Data and Performance",
+      "Housing Building Safety",
+      "privacy/DPO and security reviewers",
+      "accessibility representatives"
+    ],
+    "informed": [
+      "Delivery and operations teams",
+      "affected staff and resident-representation stakeholders"
+    ],
+    "tags": [
+      "resident-portal",
+      "identity",
+      "case-entitlement",
+      "documents",
+      "omnichannel",
+      "resident-answer-task"
+    ]
+  },
+  "scope": "Proposed architecture decision for the optional synthetic resident portal and distinct resident communication/answer task in parallel with existing staff delivery. Compare lean architecture compositions and establish authority, data, operational and staging boundaries; do not approve production topology, provider procurement, real resident processing, live sending or implementation.",
+  "deciders": [
+    "Programme owner (exercise architecture decision only; not company or control-owner approval)"
+  ],
+  "consulted": [
+    "Digital service owner",
+    "Programme Manager",
+    "Resident Engagement",
+    "Data and Performance",
+    "Housing Building Safety",
+    "privacy/DPO and security reviewers",
+    "accessibility representatives"
+  ],
+  "informed": [
+    "Delivery and operations teams",
+    "affected staff and resident-representation stakeholders"
+  ],
+  "drivers": [
+    "Optional resident self-service must preserve accessible, assisted and non-digital parity without detriment.",
+    "Enforce current identity, case/field/task and representative grants server-side with timely revocation; login, address, relationship and consent are distinct.",
+    "Safely receive, quarantine, scan, review, publish and revoke resident documents without exposing unsafe or unpublished content.",
+    "Provide a shared, provenance-rich omnichannel case-event history and owned exception/handoff workflow without assuming connectors or exactly-once delivery.",
+    "Bound the resident-answer task to current authorized evidence, abstention and human handoff; no persistent resident memory or delegated-agent loop.",
+    "Keep per-message human review as the default; any routine-policy exception remains OFF until upstream wording and OD-53/release gates are resolved.",
+    "Make service ownership, recovery, privacy, diagnostic telemetry and whole-service cost explicit; stage reversibly and do not delay independent staff landing absent verified dependency.",
+    "Treat 60,000 homes as stock, not resident accounts; five sessions are only a proposed exercise workload. Capacity and benefit claims remain unvalidated."
+  ],
+  "constraints": [
+    "BRD and PRD amendments are unsigned drafts: BRD Define BLOCKED/Govern NOT_EVALUATED; PRD Validate BLOCKED/Finalize NOT_EVALUATED. No owner signatures or approved handoff.",
+    "Resolve BRD FR-044 universal human-review wording versus AC-084 routine-policy disposition with the requirements owner; ADR cannot override it. Automation remains OFF.",
+    "OD-52 to OD-55 and OD-41/42/47 remain open as applicable; no role hypothesis supplies approval.",
+    "Preserve ADR 0001/0002 production-versus-exercise distinctions, ADR 0003 journey authority, ADR 0004 staff-only chat/memory acceptance, and ADR 0005 regulatory assistant no-send boundary; do not supersede them.",
+    "No homegrown password storage, assumed staff-directory membership, resident persistent memory, broad model/store access, production provider selection from memory, paid/tenant operation, implementation, deployment, or repository/Git/GitHub write.",
+    "Do not infer 60,000 unique accounts, five sessions as production scale, observed uptake, forecast, cash/headcount savings or ROI. Illustrative authorized judgement only: 90 new cases/week × 8 weeks = 720 active; base baseline 84 staff-hours/week; 14.74 net hours/week freed after stated assumptions; low -1.594, high 94.333.",
+    "No broad inherited requirement repairs and do not delay existing staff landing/auth absent a verified dependency."
+  ],
+  "asrTriggers": [
+    {
+      "kind": "security",
+      "evidence": "PRD FR-069/FR-070, NFR-019; BRD OD-54; adr-handoff.md identity and trust-boundary section",
+      "note": "Resident identity, scoped grants, representative revocation, documents, model access and dispatch create material trust-boundary decisions."
+    },
+    {
+      "kind": "compliance",
+      "evidence": "PRD NFR-019/AC-135/136; BRD OD-54; ADR 0004 open OD-45 to OD-49",
+      "note": "Privacy, retention, records and real-data processing authority remain explicit gates; no legal conclusion is made."
+    },
+    {
+      "kind": "cost",
+      "evidence": "PRD NFR-021/OD-55; BRD illustrative capacity model in amendment.md",
+      "note": "Portal, identity, storage, scanning, model and support alternatives alter whole-service cost; current figures are assumptions, not quotes or budget."
+    },
+    {
+      "kind": "performance",
+      "evidence": "PRD AC-139 and NFR-021; OD-55",
+      "note": "The proposed five-session exercise response measure and service waits need validation; it is not an operational SLO."
+    },
+    {
+      "kind": "availability",
+      "evidence": "PRD FR-066/068, NFR-020; BRD OD-52/55",
+      "note": "Outage, retry, lost acknowledgement and safe human fallback affect resident service continuity; actual targets remain open."
+    },
+    {
+      "kind": "scalability",
+      "evidence": "PRD NFR-021/OD-55; BRD workload assumptions in draft-prd-handoff.json",
+      "note": "Size only validated synthetic workload and bounded limits; 60,000 homes do not imply user concurrency."
+    },
+    {
+      "kind": "maintainability",
+      "evidence": "ADR 0001-0004; ADR handoff decision inventory",
+      "note": "Reuse versus extra service, connector and runtime complexity changes supportability alongside the existing staff path."
+    },
+    {
+      "kind": "evolvability",
+      "evidence": "PRD DD-009/OD-54/55; ADR 0001-0004",
+      "note": "Keep identity, connector, document and model/runtime choices replaceable where evidence is absent, without preselecting future topology."
+    }
+  ],
+  "lineage": {
+    "supersedes": [],
+    "supersededBy": null,
+    "relatedTo": [
+      "docs/adrs/0001-azure-architecture.md",
+      "docs/adrs/0002-pilot-readiness-architecture.md",
+      "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md",
+      "docs/adrs/0004-per-user-agent-chat-and-memory.md",
+      "docs/adrs/0005-regulatory-compliance-assistant.md",
+      "docs/adrs/0006-src-layout-and-cutover.md"
+    ]
+  },
+  "untrustedSources": [
+    {
+      "sourceType": "planner-handoff",
+      "identifier": "../prd/adr-handoff.md and linked unsigned BRD/PRD session package",
+      "atPhase": "frame"
+    }
+  ],
+  "handoffs": [],
+  "repoVisibility": "public",
+  "lastUpdatedAt": "2026-10-23T17:56:46.865Z",
+  "sourceIntegrity": {
+    "pinnedCommit": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+    "prdCandidateSha256": "bfe93dc2cb68ec18c76d10794305ee1667c5ecc1937c0c28cd876dae77195f8d",
+    "prdPatchSha256": "37e35e478f49165d787c475afed46d94eb5bff7eb8348925b68e8c43e1aed97c",
+    "brdCandidateSha256": "e318bacc1344c4e730645612371f2a7671926c645ee9370673b0f637a046e535",
+    "brdPatchSha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7",
+    "basis": "Values transcribed from upstream PRD/BRD validation and handoff artifacts; hashes not recomputed in this Frame bootstrap."
+  },
+  "pendingOwnerDecisions": [
+    "No further owner content decision pending. Before repository registration, native RPI must resolve identifier allocator and authoritative path; this session is forbidden from doing so."
+  ],
+  "decisionGroupingProposal": "One new high-level proposed architecture-boundary ADR is provisionally favored, with identity/recovery, grants, document lifecycle, event/outbox and resident-answer policy as explicit sub-decisions/evidence gates; it must not supersede ADR 0004 or 0005. Grouping and future split points remain subject to Frame/Decide confirmation.",
+  "registryInspection": {
+    "pinnedAdrFiles": [
+      "docs/adrs/0001-azure-architecture.md",
+      "docs/adrs/0002-pilot-readiness-architecture.md",
+      "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md",
+      "docs/adrs/0004-per-user-agent-chat-and-memory.md",
+      "docs/adrs/0005-regulatory-compliance-assistant.md",
+      "docs/adrs/0006-src-layout-and-cutover.md"
+    ],
+    "maxExistingId": "0006",
+    "adrConfigFound": false,
+    "repositoryRegistryPath": "docs/adrs",
+    "note": "No .adr-config.yml found; do not allocate or write repository IDs/lineage. Proposed stable ID/path requires owner and repository-native governance confirmation."
+  },
+  "writeBoundary": "Session-only state in this adr directory; no repository/worktree/Git/GitHub/tenant/deployment writes.",
+  "frameConfirmedAt": "2026-10-23T17:53:37.930Z",
+  "frameConfirmationSource": "Owner states ask_user explicitly confirmed: frame=I confirm this Frame; changes empty.",
+  "repoVisibilityEvidence": "Owner reports fresh gh repo view jmservera/ama --json visibility --jq .visibility returned PUBLIC; not independently rerun.",
+  "telemetrySkillLoaded": "shared/telemetry-foundations/SKILL.md plus PII denylist and proposed-additions references; apply existing OpenTelemetry semantic conventions; no new telemetry names proposed.",
+  "decideStatus": "draft-options-presented-awaiting-owner-choice-and-confirmation",
+  "options": [
+    {
+      "id": "A",
+      "title": "Portal and deterministic workflow first; no resident-answer agent in the first slice"
+    },
+    {
+      "id": "B",
+      "title": "Shared case authority with a separately registered, bounded resident-answer task; synthetic portal first and agent separately gated"
+    },
+    {
+      "id": "C",
+      "title": "Separate managed resident service / agent platform, stores and integrations"
+    }
+  ],
+  "recommendedCandidate": "B, provisional recommendation only; no chosen option recorded",
+  "chosenOption": "B",
+  "decisionRationale": "Reuse existing case authority to avoid duplicate platforms; deliver the portal/workflow first and independently gate the bounded resident-answer task.",
+  "decideConfirmedAt": "2026-10-23T17:56:46.865Z",
+  "decideConfirmationSource": "Owner explicit Decide confirmation received through ask_user; proposed exercise architecture only; no production/spending/deployment authority; assisted channels retained; routine autonomous messaging OFF pending reconciliation.",
+  "decisionStatus": "owner-confirmed-proposed-exercise-decision",
+  "supplementalDiagram": {
+    "format": "excalidraw",
+    "source": "resident-service-boundary.excalidraw",
+    "preview": "resident-service-boundary.png",
+    "svg": "resident-service-boundary.svg",
+    "ownerInstruction": "Use Excalidraw as a supplementary visual; preserve the closed ADR diagramFormat enum. SVG/PNG generated locally from the same editable element model, not Excalidraw application export."
+  },
+  "govEntryAutonomyTier": "partial (already persisted default); inbound planner-handoff caps effective Govern writes at partial",
+  "governStatus": "session-only proposed draft ready; registered final ADR blocked by unallocated ID and unresolved repository placement/allocator; no repository write",
+  "diagramDecision": {
+    "primaryEnum": "mermaid",
+    "supplementary": "Excalidraw source plus SVG/PNG preview",
+    "limitation": "ADR and architecture-diagrams contracts allow only ascii or mermaid in diagramFormat; replacing primary requires explicit approved deviation. Supplementary visual is the selected compliant path for this draft."
+  },
+  "draftArtifact": "proposed-adr-draft.md",
+  "integrationManifest": "integration-manifest.md",
+  "validationReport": "validation.json (written next; excludes its own hash)"
+}

@@ -1,7 +1,7 @@
 ---
 title: Zava Forward customer journey atlas and agent opportunities
 description: Nine company-role contributions covering daily work, resident experience, handoffs and exploratory agent assistance
-ms.date: 2026-10-14
+ms.date: 2026-10-23
 ms.topic: reference
 status: Published research hypotheses; not user validation or approved requirements
 ---
@@ -48,7 +48,22 @@ leasehold-service staff map and two missing subjourneys. This covers the
 currently identified role families, not every possible job title or
 validated completeness. Designer/coordinator, inspector/evaluator,
 CEO/Board and legal/privacy/control reviewers share some map stages but
-retain distinct decisions. No shared portal or daily screen is assumed.
+retain distinct decisions. No shared portal or daily screen was assumed by
+those original maps.
+
+### Prospective resident scope (2026-10-23, #441)
+
+The owner now proposes an optional resident portal and separately gated
+resident-answer task. The [six synthetic scripts](./residents.md#proposed-optional-resident-increment-2026-10-23-441)
+and [frontline continuity](./frontline.md#prospective-resident-service-and-frontline-continuity-2026-10-23-441)
+are an additive proposed acceptance denominator, not six newly validated
+stage maps or changed historical counts. Assisted phone/email/visits remain
+without detriment. Shared case authority and scoped managed external identity
+are proposed; connectors, staffing, privacy/recovery, formal approval and
+activation evidence remain open. BRD FR-044/AC-084 are reconciled for the
+selected bounded routine proposal, with named review default and mandatory
+for consequential/sensitive/uncertain/safety/consent/contract/finance content.
+No automation is activated and no resident research result is invented.
 
 ## All-user coverage and jobs to improve
 

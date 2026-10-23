@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-10-18
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -142,12 +142,37 @@ named human acceptance of resident-facing wording.
 
 ## Human review
 
-* Resident-facing wording (the message and letter drafts and any text a
-  resident reads) must be reviewed by a named human before any use. No
-  reviewer is named and no resident-facing text is approved.
-* The review record needs the reviewer's name and role, date, the exact text
-  and the outcome. Until it exists, drafts stay "not approved" and are for
-  synthetic-data demonstration only.
+Resident-facing wording defaults to named per-message review; no reviewer is
+appointed and no live text or sending is approved. Review records need name,
+role, date, exact text and outcome. Unreviewed drafts remain "not approved"
+and synthetic only.
+
+Prospective owner-selected proposal (2026-10-23, #441): only a separately
+activated versioned evaluated routine policy under
+[BRD RULE-028/FR-044/AC-084](../../../brds/agentic-retrofit-programme-brd.md#optional-resident-portal-and-communication-agent-draft-amendment)
+may replace individual review for bounded acknowledgements, reminders and
+grounded status/process replies. It must state task/channel/audience/content
+limits, expiry and actual policy approver/version, disposition and delivery.
+Never say "reviewed by a person" when only policy approval occurred.
+Consequential, sensitive, uncertain, safety, consent, contractual and financial
+content always needs named review. No exception activates in this document;
+staff drafts, memory and regulatory no-send boundaries are unchanged.
+
+### Proposed resident status and receipt wording
+
+| State | Candidate plain wording | Must not imply |
+| --- | --- | --- |
+| Durable file receipt | Received, waiting for checks | Verified, accepted or published |
+| Scan clean | File checks complete, waiting for a person | Accepted case evidence or resident-visible publication |
+| Reviewed/accepted document | Reviewed as case evidence, publication separate | Approval of works or consent |
+| Appointment response | Your response was recorded; waiting for confirmation | Confirmed booking or agreement to works |
+| Future routine policy disposition | Sent automatically under the recorded routine policy; AI involvement and source/as-of visible | Per-message human review or company approval |
+| Unknown/stale/conflicting answer | We cannot confirm this. Here is how to reach a person | Fabricated reassurance or inferred decision |
+
+These are proposed synthetic-copy patterns, not tested resident wording.
+Show reference, owner/next update and assisted route where appropriate.
+Urgent help remains visible independently of model success. Source/as-of,
+received/reviewed/accepted/published/confirmed states must stay distinct.
 
 ## Open items
 

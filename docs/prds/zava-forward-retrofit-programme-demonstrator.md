@@ -2,20 +2,20 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-22"
+ms.date: "2026-10-23"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.18.0"
+version: "0.19.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-22"
-product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
-product_goal_smart_status: "pass"
+last_updated: "2026-10-23"
+product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004", "GOAL-005"]
+product_goal_smart_status: "deferred"
 fr_to_ac_coverage_threshold_pct: 80.0
 fr_to_goal_coverage_threshold_pct: 100.0
 diagram_format: "mermaid"
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.18.0 | Last Updated: 2026-10-22
+> **PRD-2026-AMA48-001** | Exercise: unsigned draft amendment awaiting review and owner acceptance; formal governance: in-review, no new approval | Version: 0.19.0 | Last Updated: 2026-10-23
 
 ## Executive Summary
 
@@ -74,6 +74,43 @@ Records used in the non-production exercise are constructed for the
 demonstration and do not establish actual company performance, resident
 outcomes or operational decisions. Any use of real personal or operational
 data requires a separate release decision.
+
+### Optional resident-service direction (2026-10-23, unsigned draft)
+
+The owner requests an optional mobile-responsive resident portal and a separate
+resident communication agent: see one's authorised case progress, next action
+and approved documents; supply requested documents; accept, propose or postpone
+appointment options; ask a grounded question or reach a person. Shared case
+events and staff exception queues aim to reduce avoidable calls, emails and
+manual re-entry. Phone, email, letters, visits and assisted service remain
+available without detriment. Self-service is now proposed scope, not merely
+unspecified future exploration; real resident deployment remains excluded.
+
+This amendment elaborates **unsigned BRD v0.20.0 candidate intent**, based on
+v0.19.0 at commit `140d8f494482c78e84d15f3d46b9223d3c487af0`.
+Its input is `DRAFT_BRD_AMENDMENT_HANDOFF`, not
+`BRD_TO_PRD_HANDOFF_V1`: Define is BLOCKED, Govern NOT_EVALUATED, no
+signatures or waivers. BRD FR-053 to FR-062, AC-104 to AC-126,
+NFR-013/014, RULE-027/028 and OD-52 to OD-55 are provisional upstream
+references. Identical BRD/PRD prefixes do not identify the same requirements.
+The owner selected bounded routine automation as the exercise proposal on
+2026-10-23. BRD FR-044 and AC-084 are prospectively reconciled with RULE-028:
+versioned evaluated routine acknowledgements/reminders/grounded status and
+process replies may use policy disposition after separate activation gates;
+consequential, sensitive, uncertain, safety, consent, contractual and financial
+messages retain named human review. OD-53 remains operationally OPEN.
+No upstream lifecycle or activation gate is passed here.
+
+Add a contained synthetic resident increment on the continuing generated
+60,000-home stock/980-case lineage. Do not delay independent staff landing/auth
+unless a verified dependency is recorded. Staff ADR 0004 acceptance and
+regulatory assistant no-send authority do not extend to this service. ADR
+selection is recorded in the [unregistered architecture proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md):
+Option B, portal/workflow first with separately gated answer task. Its ID is
+null and full registration acceptance remains UNMET. Managed external identity
+is the selected provider-neutral proposal shape, not a vendor or new send
+authority. Original PRD FAIL/Validate BLOCKED and Finalize NOT_EVALUATED
+history remain; this amendment is unsigned, not a lifecycle-approved handoff.
 
 ### Case and presentation framing
 
@@ -163,9 +200,10 @@ This PRD describes one modular workbench because the workflows share:
 Splitting these into separate products would create competing case status,
 handoff, evidence and audit views. The modules may be delivered in increments
 and may integrate with separate systems of record, but they remain one
-product experience and one PRD. External provider and resident interactions
-are bounded channels or intake records, not assumptions that those groups use
-the internal workbench directly.
+product experience and one PRD. External provider interactions remain bounded
+intake channels. The proposed optional resident portal is a separately
+authorised projection over the same case, not resident access to the internal
+staff workbench or its conversation/memory stores.
 
 ### Proposed platform boundary
 
@@ -248,6 +286,16 @@ optional evidence store, and Teams as a notification and review channel. No
 M365 service becomes a system of record, approval authority or write path
 around the API, and Dataverse and Dynamics 365 remain out of scope (CON-005).
 
+The dated Entra realisation above describes staff/workload identities, not
+a requirement that residents join the staff directory. Resident sign-in shall
+offer a simple username/password-style experience using a supported managed
+identity service candidate; enrolment, recovery and proportionate extra
+verification remain ADR options. No homegrown password store, emailed password
+or address-only grant is permitted. Authentication, current case/field/task
+entitlement, representative authority, works consent and data-processing
+consent are separate checks. A shared home/address is not shared permission.
+This adds no production identity procurement, deployment or tenant change.
+
 ### Threat Model (illustrative, not validated)
 
 These threat scenarios focus review of the non-production demonstrator's
@@ -325,11 +373,15 @@ permission; selecting a perspective is not authentication.
 | Finance and Grants | Review investment, budget, invoice, claim and cash records | Budget line, commitment, invoice match, payment status, grant state, claim evidence, cash exposure and approval history |
 | Digital operator and auditor | Resolve imports, integrations, access and recovery; reconstruct decisions | Exception queue, component health, audit trail, versions, exports and failed/replayed operations |
 
-Residents are affected stakeholders, not users of this non-production MVP.
-No resident-facing production journey or live outbound communication is
-authorised. Their service intake and measure decisions must be represented in
-constructed exercise scenarios and later validated through direct, accessible
-research.
+Residents and task-limited representatives are proposed users of an optional
+synthetic resident increment, as well as affected stakeholders. A resident
+needs to understand their own case, complete a requested task and obtain human
+help without repeated chasing; a representative needs only the current tasks
+and case fields explicitly delegated to them. Include shared-device,
+multi-occupant, several-home, no-device, language and accessibility scenarios.
+These are product hypotheses, not interviews, account counts or delegated
+company authority. Live communication and real resident access remain excluded;
+direct accessible research remains necessary before operational adoption.
 
 ## Product Goals
 
@@ -339,12 +391,19 @@ research.
 | GOAL-002 | By T0+4 weeks, demonstrate the nine connected workflows, including one same-home journey with an EPC conflict, correction, independent handover and financial closure. | MUST | 9/9 workflow scenarios reach their exact expected state or safe block; all seeded prohibited transitions denied; audit and sibling/dependency isolation pass. Programme/control-role owners review evidence. | Owner-approved exercise target |
 | GOAL-003 | By T0+4 weeks, produce reconciled cohort dashboards and a reproducible four-week scenario forecast. | MUST | 100% defined reconciliation checks; identical reruns; constructed week-four error at most two homes and weekly cumulative MAE at most one on the six frozen forecast scenarios. Data/Programme owns definitions. No real forecast baseline claimed. | Owner-approved exercise target |
 | GOAL-004 | By T0+4 weeks, establish task-level value or lack of value using real Foundry inference and paired manual/parser comparisons without weakening controls. | MUST | Meet the task-quality/critical-control gates below, evaluate 12 paired packs and report whether the 15% net-effort hypothesis passes. Demonstrating measured lack of benefit passes the learning goal but does not activate a failing task. Product/Finance owns the decision. | Owner-approved exercise target |
+| GOAL-005 | At the separately reviewed resident-increment acceptance milestone, demonstrate six linked synthetic task scripts: sign-in/recovery, own-case/document access, requested upload, appointment response, grounded question/human handoff and assisted-channel continuity. | MUST (proposed increment) | 6/6 scripts reach the expected safe endpoint or explicitly seeded safe block; every new AC-111 to AC-140 is reported separately, all critical denial/control checks pass, and effort/adverse outcomes are reported even when there is no gain. Programme/Product and Engagement are proposed owners. | Proposed; milestone/date/feasibility and owner acceptance unconfirmed |
 
 SMART applies to the exercise targets above, not promised company outcomes.
 T0, workload, role accountability and falsifiable thresholds are defined.
 No target has been measured by this revision. The BRD's 20% cycle-time and
 25% net coordination-effort improvements remain unratified operational
 hypotheses under OD-18, not four-week PRD benefit commitments.
+
+GOAL-005 does not restart T0, add residents to the eleven staff-profile
+denominator or inherit the earlier four-week approval. Its review milestone
+is a proposed release boundary, not a committed date. The original four
+goals' historical SMART evaluation is preserved; aggregate SMART status is
+deferred pending review of the new goal and delivery capacity.
 
 ## Staff data trust and control (proposed)
 
@@ -436,6 +495,7 @@ production, procurement or company approvals.
 | DD-006: Appointment scenario | Retain the owner-directed missed-appointment rule only as a candidate exercise test. | Count only confirmed appointments with verified resident no-access while a case is active; route for human investigation only when the eligible count is greater than the configurable threshold (provisional default five). Exclude provider/contractor no-shows, cancellations and reschedules; human closure resets the active counter but preserves history. Do not infer refusal or delay urgent hazard response. Five is not a validated threshold or operational rule; evidence, Resident Engagement review and configuration governance remain open under OQ-014. |
 | DD-007: Bounded decision scoring | Include Microsoft Decision 1 as a task-specific evaluation candidate alongside rules, generative models and manual handling; the deployed build must still exercise real AI under CON-009. | #58 records source-bound candidate selection feasibility, not calibrated quality, three-class screening, UK-only inference or net benefit. Closed text/JSON output produces no rationale. Task adoption requires reviewed experiment and serving/privacy evidence; see [current learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11). |
 | DD-008: Form-assistance boundary | Use versioned form schemas and source-linked field proposals, with deterministic validation and an explicit human review/export step. | Funding applications seek awards; claims seek reimbursement under an evidenced award. A draft/export is neither submission nor award. Finance owns the route, template and declarations; no model or bulk action signs or submits. |
+| DD-009: Optional resident increment | Owner-selected Option B proposes a separate resident projection and separately gated resident-answer task over shared case authority, managed external identity with scoped grants and the bounded routine policy OFF pending separate activation. | Synthetic scope only, not live authority. Preserve staff-only FR-055 to FR-059, regulatory FR-060 no-send, assisted service and controlled decisions. BRD FR-044/AC-084 reconciled; actual OD-53/release and identity provider/privacy/recovery evidence remain open. Architecture linked as id-null UNREGISTERED proposal, full registration UNMET; compare portal/workflow-only against agent assistance. |
 
 ### Options Gate Scoring Framework
 
@@ -746,7 +806,7 @@ the reviewer stay in one place.
 | Programme and executive: ask about one case's blockers and next step | Yes, as a requester of the five assistants | The same five; no portfolio assistant | Case view panel in the programme workbench | First | Recommend | Portfolio narrative and analytics (atlas O10, O18 to O20) stay out of scope |
 | Safety and hazard intake | Limited | None; raise-only possible-signal check stays as in the AI coverage map | Existing hazard referral screen, no chat | Deferred | Flag only | First human triage, clocks, classification and closure never depend on a model or a conversation |
 | Provider or installer: job pack questions (atlas O11) | Possibly | None today; contractors cannot use the shared staff proposals | Contractor job pack | Deferred; separate decision | Not decided | Needs supplier-scoped access design and BRD OD-47 |
-| Resident and representative: report, give consent, choose a slot | Unknown | None | Resident-facing channel | Deferred; separate decision | Not decided | Needs BRD OD-47, OD-41, OD-42 and FR-045; resident memory is a different class from staff memory and is not proposed here |
+| Resident and representative: own-case question, requested upload and appointment response | Separate proposed increment, not staff chat | New resident-answer task requires its own FR-036 registry entry; not one of the five staff assistants | Optional resident portal | Draft FR-062 to FR-071; live use gated | Sourced answer/draft with policy-gated routine communication only | BRD OD-47/52 to OD-55 remain operational gates; login/upload/slot response is not works consent. Resident memory remains excluded; FR-055 to FR-059 and ADR 0004 stay staff-only |
 | DPO and Legal: rights-request inventory (atlas O22) | Possible later task | None; would need a registry change | DPO workbench | Deferred | Not decided | Decided by the DPO and Legal under BRD OD-45 |
 | Digital operator: outage questions (atlas O21) and source-change tracing (atlas O24) | Possible later task | None | Operator console | Deferred | Not decided | Each needs its own registry entry and thresholds |
 
@@ -828,6 +888,117 @@ All proposed criteria are Not run and are inactive until BRD OD-44.
 
 Open questions OQ-020 to OQ-025 below map to BRD OD-44 to OD-49.
 
+## Optional Resident Service — Draft Amendment
+
+All identifiers below are PRD identifiers unless explicitly prefixed BRD.
+The new FRs are Must for the proposed resident increment, not prerequisites
+for independently deliverable staff landing/auth. They are capability-sized
+requirements to be split into native RPI delivery slices, not estimates or
+claims that every story is independent/small. BRD priorities do not waive
+applicable consent, capacity, safety or representative controls.
+
+### Shared case and resident event contract
+
+The API remains the sole controlled write path. Residents see only a published
+case projection: status, recorded-as-of time, next action/owner/update,
+appointment offer/response state and approved document version/source.
+Internal notes, another occupant's private fields, staff threads/memory and
+unpublished drafts are absent from lists, search, links, downloads, exports
+and model inputs. The server rechecks the current identity and case/field/task
+grant on every request and turn, including file access and dispatch.
+
+A submission becomes an attributed, unverified resident event, not an accepted
+fact or instruction. Store event ID, case/source reference, channel, occurred
+and recorded times, actor/reporter, protected original/source link, purpose,
+delivery/receipt state, review state, next action/owner and correlation/replay
+reference; unknown is explicit. Link one portal event and one assisted
+phone/email/visit event to the same staff case. Deduplicate stable source
+events; ambiguous household matches go to an owned queue, never fuzzy disclosure.
+Do not infer telephony/email/letter connectors exist. Label assisted/manual
+capture separately from automatic capture; do not require retyping an already
+captured portal event. Original reports can be evidence of what was reported,
+not proof of their substantive truth, consent or professional approval.
+
+An upload receipt follows durable safe intake, with quarantine/scan state
+visible and no reader/model access before permitted type/size and malware
+checks pass. Clean is not reviewer-accepted; publication is a separate
+authorised action. A changed/revoked grant invalidates subsequent file access.
+Appointment acceptance records a response, not autonomous confirmation:
+resident authority, staff and contractor capacity/confirmation still apply.
+A postponement holds affected non-urgent progression for human review; it
+does not count as no-access, refusal or works withdrawal, and never holds
+urgent safety response.
+
+### Resident-answer and communication authority
+
+Display that AI is involved, its source/as-of limits and a route to a person.
+Only authorised current case facts and approved resident sources may ground
+material assertions. A stale, conflicting, missing or out-of-scope answer is
+unknown with an owned human handoff, not invented advice. Document text and
+resident prompts are untrusted data, never tools, policy or permission.
+Possible hazard/distress reports get deterministic visible urgent/help
+routing independent of model success; the model cannot diagnose, prioritise,
+set statutory clocks or suppress the referral. Accepted handoff is distinct
+from delivery; staff retain chase ownership until a receiver accepts.
+
+All AI-drafted resident replies remain held for named per-message human
+review, including in-portal replies, until a separate specific exercise or
+operational release is recorded. The proposed future exception permits only
+bounded acknowledgements, reminders and sourced factual status/process replies.
+Activation requires BRD OD-53 and RULE-028 under reconciled BRD FR-044/AC-084,
+named policy authority, task/channel/audience/content scope and expiry,
+version-matched evaluation/release evidence, safe contact, current access and
+evidence, finite limits, monitoring, disable and human fallback. Unmatched,
+sensitive, consequential, uncertain, safety, consent, contractual, financial
+content or failed checks always require named human review. No exception permits legal/consent/contract/cost/safety decisions or
+autonomous confirmed booking. Log policy approval/disposition honestly, never
+fabricate a per-message reviewer. Revocation/expiry is rechecked at dispatch.
+No live send is authorised by this PRD; a policy test uses a labelled simulated
+outbox. Staff FR-027/047/055 to FR-059, NFR-009 and regulatory FR-060 retain
+their review/proposal/no-send boundaries. The separate resident exception is
+proposed, not a relaxation of those existing tasks or their AC-069 release.
+
+For the distinct resident task only, FR-036's registry accountability includes
+the named policy approver/version for an activated routine disposition;
+FR-061's economics joins that actual disposition rather than inventing a
+human review outcome. Staff output/review/approval tests remain unchanged.
+Programme is proposed accountable; Engagement owns communication, Housing
+case exceptions, Digital technical support, with specialist domain escalation.
+These are proposed roles, not appointments or a staffed response SLA.
+Managed external identity is the selected provider-neutral shape: actual
+provider, enrolment, proof, grants, household/representative changes/revocation,
+assisted recovery, DPIA/lawful basis and retention remain OQ-030/BRD OD-54.
+
+Resident conversation is not persistent preference memory. Preserve only
+purpose-limited service records/minimal handoff context; rights, retention,
+safe recovery and incident decisions remain BRD OD-54/55. For diagnostics,
+apply the existing Observability and SLO Measurement Method: no credentials,
+raw resident prompts, file text or contact/address data; protected case audit
+is separate. No custom telemetry names are introduced by this amendment.
+
+### Resident upstream trace (unsigned BRD v0.20.0 candidate)
+
+Every BRD cell below is provisional. Structural links are not accepted tests
+or signed upstream authority; the exact package pins the BRD candidate hash.
+
+| PRD requirement | PRD criteria | BRD requirements / criteria / goals |
+| --- | --- | --- |
+| FR-062 | AC-111 to AC-113 | BRD FR-053; AC-104/105; BG-005/009/011 |
+| FR-063 | AC-114/115 | BRD FR-054; AC-106/107; BG-005/009/011 |
+| FR-064 | AC-116/117 | BRD FR-055; AC-108/109; BG-005/009/011; retained FR-046/AC-088 |
+| FR-065 | AC-118/119 | BRD FR-056; AC-110/111; BG-010/011 |
+| FR-066 | AC-120 | BRD FR-057; AC-112; BG-009/010/011 |
+| FR-067 | AC-121 to AC-123 | BRD FR-058; AC-113/114; BG-003/005/009/012; FR-003/RULE-003 |
+| FR-068 | AC-124/125 | BRD FR-059, RULE-027; AC-115/125; BG-005/009/010 |
+| FR-069 | AC-126 to AC-128 | BRD FR-060; AC-116/117; BG-005/010; retained FR-045 |
+| FR-070 | AC-129 to AC-131 | BRD FR-061, RULE-028; AC-118/119/126; BG-003/005/010/012; FR-044/AC-084 reconciled proposal, activation OPEN |
+| FR-071 | AC-132/133 | BRD FR-062; AC-123/124; BG-009/011/012 |
+| NFR-018 | AC-134 | BRD NFR-013; AC-120; BG-005/009 |
+| NFR-019 | AC-135/136 | BRD NFR-014; AC-121/122; BG-003/005/009 |
+| NFR-020 | AC-137/138 | BRD NFR-014, FR-056/057/061; AC-111/112/119/122 |
+| NFR-021 | AC-139 | BRD OD-55; proposed exercise sizing, not an approved BRD target |
+| GOAL-005 | AC-140 | BRD FR-053 to FR-062, RULE-027/028; synthetic slice only |
+
 ## Functional Requirements
 
 All requirements are draft candidates and shall be validated by the product
@@ -861,7 +1032,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, denominators, filter impact, unresolved items and approval status visible; a separate illustrative snapshot shall disclose that it is not derived from the inspectable case sample and shall not imply case drill-through or accepted handover. | Coordinator prepares a progress review | AC-027, AC-041 | GOAL-001, GOAL-003 |
 | FR-025 | The product shall offer source-linked next-step suggestions based on case state, approved rules and relevant evidence, showing rationale, proposed owner, prerequisite, due-date basis and unknowns. | User reviews a case or queue | AC-028 | GOAL-001, GOAL-004 |
 | FR-026 | A user shall be able to accept, edit or reject a suggestion with a reason; accepting creates a task or draft only and does not satisfy an approval or execute an external action. | User reviews an agent suggestion | AC-028, AC-029, AC-060, AC-070 | GOAL-001, GOAL-004 |
-| FR-027 | Bounded AI may extract, reconcile, summarise, draft or raise a signal from approved exercise sources; each material output shall cite its source and remain visibly unapproved until human review. | AI task is invoked | AC-029, AC-030, AC-060, AC-070 | GOAL-004 |
+| FR-027 | Bounded AI may extract, reconcile, summarise, draft or raise a signal from approved exercise sources; each material output shall cite its source and remain visibly unapproved until human review. The only proposed exception is the separately gated routine resident policy under FR-070/AC-129; it records actual policy disposition, never invented human review, and cannot approve a controlled decision. | AI task is invoked | AC-029, AC-030, AC-060, AC-070 | GOAL-004 |
 | FR-028 | The product shall provide a workflow-only path for every AI-assisted task and preserve failure, fallback, review, correction and override evidence for comparison. | AI unavailable, disabled or evaluated | AC-030, AC-061, AC-072 | GOAL-004 |
 | FR-029 | The product shall import declared exercise Excel structures with row-level preview, lineage, mapping/conflict resolution and explicit disposition without modifying source workbooks. | Data analyst previews an import | AC-031 | GOAL-001, GOAL-002 |
 | FR-030 | The product shall export interpretable exercise case, event, decision and evidence-reference data, retaining version, source, approval and supersession history independently of the AI provider. | Authorised user exports data | AC-032 | GOAL-001, GOAL-002, GOAL-003 |
@@ -890,6 +1061,16 @@ owner, named control owners and affected users before implementation approval.
 | FR-053 | An authorized operator shall be able to suspend an affected AI task and record its incident, impacted proposal/version set, accountable owner and restart decision, preserving permitted history and independent manual and hazard routes. | RAI incident or threshold breach | AC-072 | GOAL-002, GOAL-004 |
 | FR-054 | The product shall retain a versioned evaluation record for deterministic prioritisation and AI tasks with declared cohort definitions, denominators, missing-data treatment, subgroup error/exclusion/review-burden results, uncertainty, approved thresholds and human disparity disposition. | Release evaluation or material policy/model/data change | AC-073 | GOAL-002, GOAL-004 |
 | FR-061 | The product shall report AI consumption economics for the exercise: for each registered AI task, calls, input, output and cached tokens, retries, failures and outcome joined to the audit scenario record and the human review outcome, with the Total Cost of AI components and the cost per accepted proposal shown beside the quality floor met. It shall state no cost that it cannot tie to a dated price source and a billing record. | Finance, Digital or Product views AI economics, or an evaluation run completes | AC-107, AC-108 | GOAL-004 |
+| FR-062 | The product shall present the currently authorised resident case projection, next action and approved resident documents with source/version and recorded-as-of status. | Resident/representative opens own workspace | AC-111, AC-112, AC-113 | GOAL-002, GOAL-005 |
+| FR-063 | When a resident submits a requested document, the product shall provide a traceable safe-intake receipt and pending-review state without inferring acceptance. | Resident submits or retries a requested upload | AC-114, AC-115 | GOAL-002, GOAL-005 |
+| FR-064 | When a resident accepts, proposes or postpones an appointment option, the product shall record the scoped response for human scheduling under existing authority, capacity and urgent-safety gates. | Resident/representative responds to an offer | AC-116, AC-117 | GOAL-002, GOAL-005 |
+| FR-065 | The product shall reconcile resident/assisted-channel events into the same provenance-bearing case history without duplicate case effects or repeated entry of captured portal events. | Portal event, assisted intake or replay | AC-118, AC-119 | GOAL-002, GOAL-005 |
+| FR-066 | The product shall expose an owned staff exception queue for document review, ambiguous intake, failed contact, overdue work and unaccepted handoffs. | Intake/review/contact exception arises | AC-120 | GOAL-002, GOAL-005 |
+| FR-067 | A separately registered resident-answer task shall propose source-grounded authorised status/process answers or abstain to an owned human route, with visible AI disclosure and no controlled decision authority. | Resident asks a question | AC-121, AC-122, AC-123 | GOAL-004, GOAL-005 |
+| FR-068 | The product shall offer digital and assisted human-help/contact-preference requests with a reference, owner and next-update state, without penalising portal non-use. | Resident seeks help or changes safe contact | AC-124, AC-125 | GOAL-002, GOAL-005 |
+| FR-069 | The product shall enforce audited case/field/task entitlement separately from login, with scoped representative grant, expiry, revocation and recovery. | Enrolment, household change or each authorised request | AC-126, AC-127, AC-128 | GOAL-002, GOAL-005 |
+| FR-070 | The product shall deny routine automated resident dispatch unless the complete versioned activation policy passes, and shall retain named per-message human review for every sensitive, consequential, uncertain, safety, consent, contractual, financial or unmatched message. | A resident reply, acknowledgement or reminder would be dispatched | AC-129, AC-130, AC-131 | GOAL-004, GOAL-005 |
+| FR-071 | The product shall report a frozen comparable resident-service effort/outcome protocol and its results separately from illustrative assumptions, including adverse and non-digital outcomes. | Programme/Data reviews the resident comparison | AC-132, AC-133 | GOAL-004, GOAL-005 |
 
 ## Non-Functional Requirements
 
@@ -997,6 +1178,36 @@ interoperability (008), portability (010), plus integrity and AI controls.
   Azure cost records, with the billing record as the financial source. Verify
   through AC-109 and AC-110. Live budgets, owners and price sources require
   human approval (BRD OD-51).
+
+* **NFR-018 Resident usability/accessibility:** At the resident-slice review,
+  each of the six GOAL-005 scripts shall be reported at 320/390/1280 CSS
+  pixels, 200% text zoom, keyboard and screen-reader status/error navigation.
+  Apply NFR-001's WCAG 2.2 AA engineering target to sign-in/recovery, own
+  documents, upload, appointments, AI label and human help. Lost content,
+  inaccessible errors or a blocked essential task fail the affected script;
+  no conformance or real-user validation is claimed. Verify AC-134.
+* **NFR-019 Resident security/privacy:** Every resident request, file operation
+  and model turn shall enforce current server-side case/field/task scope.
+  Files stay quarantined until checks pass; credentials, raw documents and
+  sensitive conversation content shall not enter diagnostics. Purpose,
+  retention, rights and recovery classes for files, case audit and minimal
+  conversation records shall be distinct. No real resident data is permitted.
+  Verify AC-135/136; actual retention/DPIA/abuse controls remain OQ-030.
+* **NFR-020 Resident resilience/operability:** A model/policy/file/identity
+  failure shall expose a safe retry or owned assisted route, never claim a
+  received/accepted action without durable evidence. Restart/replay shall
+  preserve event provenance without duplicate effects. Suspending routine
+  dispatch shall leave authorised case reads and independent urgent human
+  routes available. Verify AC-137/138.
+* **NFR-021 Resident performance/capacity:** For the proposed synthetic slice,
+  use the existing generated stock, five concurrent fictional sessions
+  (three residents on separate scopes and two staff), and a 30-minute run.
+  Excluding managed sign-in and scan/model duration, report p95 permitted
+  case/status/receipt API completion at or below 2 seconds; measure sign-in,
+  scanning and model waits separately with visible pending/failure states.
+  These are author-proposed exercise targets, not approved SLOs or capacity
+  evidence. No 60,000-user/concurrent-resident inference. Verify AC-139;
+  owner acceptance/ADR feasibility and production limits remain OQ-031.
 
 ### Observability and SLO Measurement Method
 
@@ -1556,6 +1767,43 @@ technical, control and user representatives before acceptance.
 | AC-109 | Given a registered task with limits, a request built to loop or fan out beyond its approved call count or agent depth, a reached token or budget limit, an unknown price and an expired authority, when each occurs, then dispatch stops with a recorded outcome, no further provider call is made, the case continues on the workflow-only path, an owned alert names the limit reached, and hazard response and statutory clocks are unaffected. | NFR-017, FR-044 | Not run |
 | AC-110 | Given a period of metered usage and the Azure cost record, when Finance reconciles them, then variance above the owner-set tolerance is reported, the billing record is the financial source, the price source is dated and versioned, and usage by task, case type and release can be reconstructed without raw case content in telemetry. | NFR-017 | Not run |
 
+### Resident Increment Acceptance Criteria (proposed)
+
+All new criteria remain Not run; no simulated authority is live authority.
+
+| ID | Given / When / Then | Covers | Status |
+| --- | --- | --- | --- |
+| AC-111 | Given two fictional residents with separate cases, when each opens, lists or searches the workspace, then only their permitted case projection, timeline, next action, owner and recorded-as-of state are returned; unknown/stale values are explicit. | FR-062 | Not run |
+| AC-112 | Given approved, internal-only and superseded documents, when a permitted resident views/downloads one, then only the authorised published version and its source/version are returned, never internal metadata or another occupant's private material. | FR-062 | Not run |
+| AC-113 | Given an unrelated case ID, link, search, export and model-context probe, when requested, then the server denies content and existence-revealing metadata, regardless of UI controls. | FR-062 | Not run |
+| AC-114 | Given a current upload request and a permitted safe file, when durable intake completes, then a receipt/event reference and pending-scan/review state appear; only a clean permitted file becomes reviewer-accessible, and no receipt implies verified evidence or resident publication. | FR-063 | Not run |
+| AC-115 | Given oversize, unsupported, malicious, scan-unavailable and interrupted uploads, when submitted/retried, then unsafe or unvalidated content remains quarantined/inaccessible to residents, staff readers and models, rejected attempts do not satisfy the request, retry has no duplicate case effect and accessible help explains the outstanding state. | FR-063 | Not run |
+| AC-116 | Given an offered slot and a representative with appointment-only authority, when acceptance or another time is proposed, then only the response is recorded; confirmed status requires resident authority, authorised staff and contractor capacity under FR-048/AC-062, and no instruction or works consent is inferred. | FR-064 | Not run |
+| AC-117 | Given postponement, pause and urgent hazard scenarios, when a response is recorded, then the affected non-urgent scheduling progression is held for its human owner/update while urgent referral continues; no no-access count, refusal, blanket withdrawal or sibling measure change is inferred. | FR-064 | Not run |
+| AC-118 | Given one portal event and separately captured phone/email/visit reports for the same case, when staff inspect history, then source/channel, occurred/recorded times, actor/reporter, protected original link, purpose, delivery/receipt/review state, next-action owner and unknowns reconcile; assisted/manual capture is labelled and the portal event is not retyped. | FR-065 | Not run |
+| AC-119 | Given a replayed source event and an ambiguous household match, when intake/restart runs, then replay links to the original without duplicate effects and ambiguity enters an owned exception without cross-household disclosure; original provenance is retained. | FR-065 | Not run |
+| AC-120 | Given pending documents, failed contact and unaccepted/unowned/overdue handoffs, when staff open the queue, then reason, urgency, case, due/next-update time, accountable reviewer or escalation/chase owner are visible; delivery alone cannot close a handoff and receiver acceptance is separately evidenced. | FR-066 | Not run |
+| AC-121 | Given current authorised case facts and approved process sources, when the resident task proposes an answer, then each material assertion cites fact/source version and as-of time, AI involvement is disclosed, and the answer remains held for human review unless AC-129's complete policy passes. | FR-067 | Not run |
+| AC-122 | Given missing, conflicting, stale or unauthorised evidence and a model timeout, when a question is asked, then the service abstains from unsupported assertions, shows unknown/failure, creates an owned handoff with next-update state and keeps human help visible. | FR-067 | Not run |
+| AC-123 | Given prompt/document injection, safety/distress, legal/consent/contract/cost questions or a request for a person, when processed, then instructions cannot expand authority, controlled advice/decisions are withheld for human review, and deterministic urgent/help referral remains visible and recorded independently of model success; no hazard classification, suppressed referral or clock change occurs. | FR-067 | Not run |
+| AC-124 | Given a help request or changed safe contact/language/accessibility preference, when recorded digitally or with assistance, then it has a reference, owner and next-update time; uncertain/new contact is verified or communication pauses for clarification rather than using an unsafe route. | FR-068 | Not run |
+| AC-125 | Given no account/device, declined portal use, a complaint or a request for human review, when phone/email/letter/visit/assisted service is used, then the same controlled case route remains available without digital completion, detriment or loss of priority; help is not hidden behind model success. | FR-068 | Not run |
+| AC-126 | Given several occupants/homes, interpreter-only, expired, disputed and revoked representative grants, when any view/list/search/file/export/upload/turn or dispatch is requested, then current task/case/field scope is enforced and revocation denies the next request, even in an existing session. | FR-069 | Not run |
+| AC-127 | Given enrolment, lost access and household change, when supported managed identity/recovery is exercised, then case rights are separately verified by the authorised process; login, shared address/relationship, upload and slot response confer no works/data consent or broader representative authority; grant/revoke reason, actor and time are auditable. | FR-069 | Not run |
+| AC-128 | Given a shared device and a recovery request, when logout/session expiry or assisted recovery occurs, then prior case content cannot be reused by another user, account enumeration and unsafe recovery are prevented, and no raw password/token or emailed password is recorded or sent; managed identity options remain ADR decisions. | FR-069 | Not run |
+| AC-129 | Given absent, expired, mismatched or explicitly disabled routine authority, when a resident message would be displayed/sent, then named per-message human review is mandatory and no autonomous dispatch occurs. A labelled simulated-outbox positive test requires the reconciled BRD FR-044/AC-084, separately approved OD-53/RULE-028 exercise policy, named approver/version/expiry, task/channel/audience/content limits, matching evaluation/release, current safe contact/access/evidence, finite limits and disable/recovery evidence; none grants live send. The owner-selected proposal is not that separate activation approval. | FR-070 | Not run |
+| AC-130 | Given a tested routine policy and changed/revoked access, unsafe contact, stale evidence, uncertain/sensitive/consequential/safety/consent/contractual/financial content, limit exhaustion, failure or unmatched action, when dispatch is attempted, then it stops or routes to named human review with an owned exception; no consent, legal, contract, cost, safety or confirmed-booking decision is automated. | FR-070 | Not run |
+| AC-131 | Given simulated routine dispatch and a disable/incident test, when audited, then policy approver/version, actor/action, evidence, time and delivery outcome are reconstructable without invented per-message review; the kill switch denies the next dispatch, retains manual/case/urgent routes and restart needs distinct authorised review; staff chat and regulatory assistant still cannot send. | FR-070 | Not run |
+| AC-132 | Given a resident comparison plan, when frozen, then it declares routine handling episodes, case/task denominators, open/completed and digital/non-digital cohorts, window, attribution, repeats, review/correction/transcription/reconciliation/support/recovery and resident effort; linked call/follow-up work is not double counted, and initial/new-intake onboarding cohorts are disjoint. | FR-071 | Not run |
+| AC-133 | Given paired portal/workflow-only and agent-assisted results, when reported, then task success, guardrails, effort, failed access, handoff response, uncertainty and adverse/non-digital outcomes are separate; author-judgement BRD sensitivities remain labelled, missing evidence is unknown and no monetary ROI, headcount cash or achieved capacity saving is inferred. | FR-071 | Not run |
+| AC-134 | Given all six resident scripts, when tested at the NFR-018 widths/zoom with keyboard and screen reader, then focus, reflow, labels, status/error announcements, upload retry, appointment response, AI disclosure and human help are operable; results/exceptions and browser/tool versions are recorded, with failures blocking affected tasks and no conformance claim. | NFR-018 | Not run |
+| AC-135 | Given manipulated identifiers/links, file tricks, prompt injection and revoked grants, when access and scanning tests run, then unauthorised content/metadata is denied, unvalidated files cannot be read/retrieved by a model, and document instructions confer no authority; diagnostic captures contain no credentials, raw file/prompt/contact content or sensitive case identifiers. | NFR-019 | Not run |
+| AC-136 | Given the synthetic fixture and a proposed rights/retention request, when reviewed, then files, source events/audit and minimal conversation records have separate purpose/owner/retention/rights handling, deletion/restriction and protected history are not conflated, real identifiers are absent and missing live privacy decisions stay blocked under OQ-030. | NFR-019 | Not run |
+| AC-137 | Given model, identity, scanner and API failures plus a restart after lost acknowledgement, when a resident action is retried, then fail-closed access and accurate outstanding/pending states persist, no unreceived action is labelled received, no duplicate case effects occur and assisted/urgent routes remain visible. | NFR-020 | Not run |
+| AC-138 | Given a stopped resident task and manual queue recovery, when staff reconcile the case and accept its handoff, then original/duplicate provenance, accepted receiver and next update are reconstructable; disabling automation does not expose protected reads or close outstanding work. | NFR-020 | Not run |
+| AC-139 | Given NFR-021's retained dataset, five-session scope and 30-minute run, when measured later, then API p95, all error/timeouts, scan/model/sign-in durations and fixture/configuration versions are reported separately; a missed/unrun target is fail/not run, not a production-scale or 60,000-user claim. | NFR-021 | Not run |
+| AC-140 | Given a proposed resident-slice acceptance, when its manifest is reviewed, then all six GOAL-005 scripts and AC-111 to AC-139 have expected endpoints and separate observed/not-run status, including negative and assisted paths; essential privacy/accessibility checks cannot be deferred, and real Azure/SQL/registered AI evidence is still required for a later accepted application build under CON-009/AC-057. | GOAL-005 | Not run |
+
 ### Independently reportable review checks
 
 Parent AC identifiers remain stable. Test reports shall record each named
@@ -1671,8 +1919,22 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | NFR-016 | AC-103 | Linked |
 | FR-061 | AC-107, AC-108 | Linked |
 | NFR-017 | AC-109, AC-110 | Linked |
+| FR-062 | AC-111, AC-112, AC-113 | Linked |
+| FR-063 | AC-114, AC-115 | Linked |
+| FR-064 | AC-116, AC-117 | Linked |
+| FR-065 | AC-118, AC-119 | Linked |
+| FR-066 | AC-120 | Linked |
+| FR-067 | AC-121, AC-122, AC-123 | Linked |
+| FR-068 | AC-124, AC-125 | Linked |
+| FR-069 | AC-126, AC-127, AC-128 | Linked |
+| FR-070 | AC-129, AC-130, AC-131 | Linked |
+| FR-071 | AC-132, AC-133 | Linked |
+| NFR-018 | AC-134 | Linked |
+| NFR-019 | AC-135, AC-136 | Linked |
+| NFR-020 | AC-137, AC-138 | Linked |
+| NFR-021 | AC-139 | Linked |
 
-Link coverage: 61/61 FRs (including those proposed) and the proposed NFR-015 to NFR-017 linked to at least one criterion (100%); this matrix
+Link coverage: 71/71 FRs (including those proposed) and the proposed NFR-015 to NFR-021 linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
 Not run. Links and named subchecks are not proof that every behavior has
 been implemented or tested.
@@ -1688,6 +1950,9 @@ been implemented or tested.
 | FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
 | FR-051, FR-053, FR-054, FR-055 to FR-059, FR-061 | GOAL-004 |
+| FR-062 to FR-071 | GOAL-005 |
+| FR-062 to FR-066, FR-068, FR-069 | GOAL-002 |
+| FR-067, FR-070, FR-071 | GOAL-004 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
 
@@ -1892,11 +2157,50 @@ For full MVP acceptance, no workflow may be represented only in prose: each
 receives at least one screen/queue and one acceptance scenario. A next-prototype
 unavailable-feature label is transparent scope, not evidence of full delivery.
 
+### Incremental resident demonstrator (proposed, not live release)
+
+The next resident increment tests whether a common case projection and
+exception-led handling reduce resident chasing and staff re-entry. Begin with
+portal/workflow-only tasks, then compare the separately registered grounded
+resident-answer task. These are contained increments of this product; no
+resident long-term memory, provider portal, verified connector estate or
+production account rollout is included. Do not add a staff-auth dependency
+without evidence identifying the shared contract, failure and owner.
+
+Use fictional identities/authority grants linked to the retained generated
+60,000-home stock and 980-case programme where verified links exist; label
+new fixtures/provenance and keep unverified links unknown. Do not regenerate
+the estate or infer resident/account counts. Demonstrate one approved
+document, one requested safe upload, one appointment response, one grounded
+status answer and one abstention/accepted human handoff, plus a portal and
+an assisted-channel event in the same staff record. Include unrelated
+household, shared device, revoked representative, unsafe contact, injection,
+malicious upload, timeout and duplicate/restart negatives. The six GOAL-005
+scripts supply the acceptance denominator; they do not alter the eleven
+staff-profile or nine-workflow historical denominators.
+
+Proposed exercise configuration, author judgement pending review: upload
+allowlist PDF/JPEG/PNG, maximum 10 MiB/file and one file/request; all are
+quarantined pending validation/scan. Scan pending beyond 60 seconds offers
+assisted follow-up, never fail-open. A resident model task allows one call,
+no delegated agent/tool loop, 15-second timeout and bounded input/output
+under the existing finite budget gate; timeout gives unknown/handoff. A
+simulated ordinary handoff uses one working day to acknowledgement and two
+to next update solely to test overdue queues; urgent help is immediate and
+independent, not a two-day service promise. Reject unknown configuration.
+These limits are test fixtures, not corporate SLAs, live retention rules or
+model-spend permission. Identity session/recovery/abuse settings and actual
+retention require ADR/OQ-030; they cannot silently become insecure defaults.
+For any later accepted application delivery, CON-009/AC-057 still requires
+authorised real Azure/SQL/registered AI evidence, not mocks as acceptance.
+This document task runs no application, tenant, deployment or paid operation.
+
 ### Out of scope
 
-* Production rollout, live resident communications, resident login, real
-  personal data, or live integrations to safety, finance, provider or housing
-  systems.
+* Production rollout, real resident accounts/login, live resident
+  communications, real personal data, or live integrations to safety, finance,
+  provider or housing systems. Fictional resident sign-in and a labelled
+  simulated outbox are proposed within the separate resident increment.
 * Autonomous prioritisation policy, hazard diagnosis/classification, resident
   consent, professional approval, investment, procurement, provider instruction,
   invoice/payment approval, grant eligibility/submission, quality acceptance,
@@ -1913,8 +2217,10 @@ unavailable-feature label is transparent scope, not evidence of full delivery.
 * Replacing authoritative systems or implementing all platform options as
   production systems.
 * Per-user agent chat and memory (FR-055 to FR-059) until the owner, DPO and
-  Legal decide under BRD OD-44 to OD-46; resident, representative, provider and
-  installer chat until BRD OD-47; any new assistant not in the registry.
+  Legal decide under BRD OD-44 to OD-46; provider/installer chat and
+  resident/representative persistent memory remain excluded. Proposed resident
+  answers are separate under FR-067/070, with live use blocked by BRD OD-47/52
+  to OD-55; any new assistant not in the registry remains excluded.
 
 ## Success Metrics
 
@@ -1943,6 +2249,43 @@ No user-research result,
 business benefit or operational performance is claimed until measured and
 approved.
 
+### Resident capacity hypothesis and measurement (proposed)
+
+Use the controlled [BRD illustrative capacity case](../brds/agentic-retrofit-programme-brd.md#optional-resident-service--illustrative-capacity-case-2026-10-23)
+after its candidate amendment is integrated. That section, not a copied PRD
+table, owns low/base/high inputs, formulas, denominators and sensitivities.
+Its base illustration is 90 new home cases/week times eight active weeks =
+720 WIP; 0.5 routine calls/case/week at 10 minutes including administration
+plus 0.4 separate email/document transactions at five minutes = 84 baseline
+hours/week. 50% assumed uptake and 65% actual routine contacts avoided give
+27.3 gross hours; less 3.6 additional review, 0.96 reconciliation, two support
+and six new-intake onboarding hours gives **14.74 net hours/week**. Initial
+active-cohort onboarding is **48 one-off hours**, not another weekly charge.
+Low -1.594 and high 94.333 hours/week are combined sensitivities, not forecasts.
+All inputs are author judgement authorised for the pitch, not public statistics,
+observed company baselines, approved numeric targets or resident counts.
+
+Preserve BRD formulas W=A*D, B=W*(C*Tc+E*Te)/60, G=B*U*V,
+H=W*U*R*Tr/60, J=W*Q/60, N=G-H-J-S, O=A*U*To/60,
+F=N-O and I=W*U*To/60. Count disjoint handling episodes once: linked
+call/follow-up is one unless separate work occurred; Tc/Te already include
+recording. Shifted contacts are not avoided. Review is additional to retained
+work. Initial and newly onboarded cohorts/time windows must be disjoint.
+The illustration assumes a later permitted routine policy; under default
+per-message review, recompute review effort rather than assume that gate.
+No monetary ROI, headcount reduction, booked cash or production capacity follows.
+
+For GOAL-005/FR-071, freeze a paired synthetic protocol before testing:
+same task packs, authorised case versions, staff review/correction and
+resident task effort; compare portal/workflow-only with agent-assisted work
+and retain non-digital outcomes separately. Report completed/attempted tasks,
+failures/abandonment, contact episodes and minutes per active case-week and
+per completed case, repeats, transcription, human response/acceptance and
+support/recovery effort over the same stated window. Baselines/results are
+unknown until measured; the six-script technical target is not an uptake or
+benefit target. Data/Programme and Engagement are proposed measurement owners
+under OQ-031, not appointed signatories.
+
 ## Profile Journey Contract for the Next Prototype
 
 The following are proposed, constructed walkthroughs, not observed user
@@ -1966,6 +2309,19 @@ shall not be relabelled as stages of one home.
 | Quality and assurance | Quality queue -> positive per-measure evidence, defect owner, return/reinspection (422). | Incomplete evidence blocks handover; independent acceptance and provider correction remain separate. No safety conclusion from absence of an alert. |
 | Finance and Grants | Invoice queue -> compare quantities/scope/version/budget and accepted milestone evidence (752); separately select an evidenced funding route/template and inspect a constructed subsidy-application field draft with conflicting source candidates. | Explain exceptions/unknowns; review field/evidence/calculation and application pack, then inspect a reviewed export or safe readiness block. Declaration/submission/payment remain unavailable. Application/export, award, claim and cash are separate linked states; no award inferred from an invoice or draft. |
 | Digital operator and auditor | Conflict/return queue -> both source values/provenance (646), illustrative event metadata and recovery context (863). | Preserve unresolved eligibility and original source; no replay, silent correction or claim that narrative history is an operational audit trail. |
+
+### Resident increment journeys (constructed hypotheses)
+
+These supplement, not replace or renumber, the eleven staff paths.
+
+| Resident task | Entry/evidence | Safe endpoint and failure route |
+| --- | --- | --- |
+| Sign-in/recovery | Fictional managed sign-in -> explicit current case grants | Own case only; lost access/shared-device logout returns to assisted recovery, never address-only rights |
+| Status/document | Own case -> timeline/as-of/next action -> approved document | Published source/version shown; internal, unrelated or revoked document denied without metadata leakage |
+| Requested upload | Own current request -> permitted file | Durable receipt, scan/pending-review state; unsafe/interrupted files stay unaccepted with accessible retry/help |
+| Appointment response | Offered option -> accept/propose/postpone | Response visible to staff; human/capacity confirmation remains separate; no inferred consent/no-access |
+| Question/human handoff | Disclosed AI -> authorised sources or unknown | Held reviewed answer or gated simulated reply; hazard/help independent of model; staff receiver acceptance and next update visible |
+| Assisted continuity | No portal -> phone/email/letter/visit/manual capture -> shared case | Same service/complaint/decision route without detriment; portal event not retyped and duplicate intake reconciles |
 
 ### Candidate journey learning tests (hypotheses)
 
@@ -2062,11 +2418,15 @@ dependency and cannot be assumed away.
 | OQ-020 | Should the owner adopt per-user agent chat at all, for which staff roles and tasks, and as a registry change under FR-036? (BRD OD-44) | Owner, Executive Director of Assets | Proposal only; blocks FR-055 to FR-059 and NFR-015 and NFR-016 |
 | OQ-021 | What are the lawful basis, staff notice, DPIA, model provider and region terms and rights handling for conversation and memory data? (BRD OD-45) | DPO, Legal | Blocks any live personal data |
 | OQ-022 | What retention applies to each class, who may access it and is any aggregate use allowed? (BRD OD-46) | DPO, Legal, HR if named | Retention Unknown; blocks FR-057 and NFR-016 |
-| OQ-023 | May residents, representatives or providers ever use a conversational channel, and on what consent and authority evidence? (BRD OD-47) | Resident Engagement, DPO, Legal, Owner | Out of scope until decided |
+| OQ-023 | What operational authority/evidence permits resident/representative conversation, distinct from owner-directed synthetic scope, and could providers ever be included? (BRD OD-47) | Resident Engagement, DPO, Legal, Owner | Resident draft FR-062 to FR-071 is in proposed scope; live use remains blocked. Provider chat/resident memory remain excluded; no closure inferred from staff ADR acceptance |
 | OQ-024 | Is memory in scope or only thread history, and which content classes may be remembered? (BRD OD-48) | Owner, DPO, Digital | Blocks FR-057 |
 | OQ-025 | What grounding, abstention and injection thresholds apply, and who is the accountable reviewer? (BRD OD-49) | Accountable AI reviewer, Data and Performance Lead | Blocks activation of any conversational task |
 | OQ-026 | Which regulatory duties, sources and delegations apply to Zava North Homes, who approves rule cards and interprets sources, what alert and chat audiences and alert-fatigue tolerance are acceptable, and does chat add value over deterministic rule cards with provision links? (BRD OD-50) | Legal, compliance, DPO, Building Safety, Assets, Digital | Blocks live use of FR-060 and any compliance claim; the synthetic exercise may proceed with fixture cards |
 | OQ-027 | What cost denominator, quality floor, finite budgets, alert owners, Total Cost of AI components and dated price source apply to each AI task? (BRD OD-51) | Finance and Grants Lead, Digital, Data and Performance Lead, Executive Director of Assets | Blocks any AI cost per accepted proposal statement (FR-061) and any production limit change (NFR-017); the synthetic exercise and metering may proceed |
+| OQ-028 | Who owns the resident service, source publication, staffed exception/intake/support queues and which channels/connectors actually exist? (BRD OD-52) | Programme accountable; Housing, Engagement, Digital responsible, proposed roles only | Blocks live release; manual capture may demonstrate an absent connector; no invented appointment or staffing |
+| OQ-029 | Owner selected the bounded routine proposal on 2026-10-23 and BRD FR-044/AC-084 are reconciled. Which named delegated authorities approve the actual task/content/channel/audience/expiry/evaluation/disable/restart policy and separate activation? (BRD OD-53 remains OPEN) | Engagement proposal owner; each domain authority, DPO/Legal and Digital review | Blocks routine automated dispatch until activation evidence; named per-message human review remains default and always applies to consequential, sensitive, uncertain, safety, consent, contractual and financial messages; no legal/consent/contract/safety authority |
+| OQ-030 | Which managed resident identity, enrolment/recovery/session/abuse controls, task-limited household/representative grants/revocation, safe files, lawful basis/DPIA, retention and rights rules are accepted? (BRD OD-54) | Digital accountable; Housing, Engagement, DPO/Legal review | Blocks real accounts/data; basic access/privacy/secure-upload tests still essential for synthetic slice; ADR follows PRD |
+| OQ-031 | What baseline/targets, response/recovery/load/size/rate limits, cohort/windows and support capacity validate the hypothetical pitch and resident exercise configuration? (BRD OD-55 with OD-18/25/51) | Data responsible; Programme accountable; Engagement, Housing, Finance review | Blocks benefit/production-capacity claims, not gut-feel scenarios or synthetic planning; new milestone and performance targets remain proposed |
 
 ## Sign-Off and Handoff Readiness
 
@@ -2139,6 +2499,37 @@ and complete acceptance remain Not run for this candidate.
 Signed current upstream evidence, company control-owner sign-off, direct
 human user research and live-use approval remain future operational gates.
 
+### Resident amendment v0.19.0 candidate boundary (2026-10-23)
+
+The preceding candidate checklist/counts are retained as a historical snapshot,
+not current registry authority. This amendment has 71 FR definitions, 123
+PRD AC definitions (historical BRD-only AC references are not PRD definitions),
+21 NFRs, nine constraints, five goals, nine DDs and 31 OQs. New allocation:
+FR-062 to FR-071, AC-111 to AC-140, NFR-018 to NFR-021,
+GOAL-005, DD-009 and OQ-028 to OQ-031. No historical ID is renumbered.
+
+This is a draft amendment, not Finalize or new exercise acceptance.
+Upstream BRD v0.20.0 is unsigned, with historical Define BLOCKED/Govern
+NOT_EVALUATED; FR-044/AC-084 are prospectively reconciled. No canonical signed
+handoff, waiver, live policy activation or current owner signoff is inferred.
+Inherited BRD quality findings (including unratified goals and feasibility)
+remain open; the reviewer incorrectly reported performance efficiency absent
+despite existing BRD NFR-012. Its duplicate-key/inspection-only limitations
+require fresh exact integrated-byte review, not invented closure.
+
+* [ ] Integrate and independently review the exact BRD/PRD draft chain
+* [ ] Evidence actual OD-53 authority/release under reconciled BRD FR-044/AC-084 before any routine policy activation
+* [ ] Review GOAL-005, proposed configuration, feasibility and new NFRs
+* [ ] Obtain owner acceptance of the new exercise increment; no inherited acceptance
+* [ ] Register the separately linked id-null architecture proposal through a supported allocator/bootstrap; full registration remains UNMET, OD-52 to OD-55 open
+* [ ] Execute later authorised application acceptance; all new ACs remain Not run
+
+Validate exit remains blocked pending required independent quality evidence
+and upstream resolution; Finalize is not evaluated. Static patch/link/hash
+checks are not application acceptance or requirements signoff. Staff delivery
+may continue independently; operational use separately requires actual
+service/control-owner, privacy/security and release decisions.
+
 ## Disclaimer
 
 > **Disclaimer:** This agent is an assistive tool only. It does not provide product management approval, technical feasibility validation, or business sign-off and does not replace product managers, engineering leads, business stakeholders, or other qualified human reviewers. The output consists of suggested requirements, acceptance criteria, and product specifications to support a user's own product planning and decision-making. All Product Requirements Documents, functional requirements, non-functional requirements, and constraint definitions generated by this tool must be independently reviewed and validated by appropriate product and engineering reviewers before adoption. Outputs from this tool do not constitute product approval, requirements sign-off, or engineering commitment.
@@ -2147,7 +2538,7 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-22 (AI Tokenomics proposals FR-061 and NFR-017 added; 2026-10-18 constructed RAI finding-evidence engineering status retained; FR-060 and v0.17.0 chat/memory proposals remain pending fresh approval)
+* **Last Updated:** 2026-10-23 (unsigned optional resident increment FR-062 to FR-071 and NFR-018 to NFR-021; existing Tokenomics, regulatory and staff-chat history retained; no new approval)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
 
@@ -2155,6 +2546,7 @@ human user research and live-use approval remain future operational gates.
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 0.19.0 | 2026-10-23 | Draft optional resident portal/communication increment from unsigned BRD v0.20.0 candidate: FR-062 to FR-071, AC-111 to AC-140, NFR-018 to NFR-021, GOAL-005, DD-009 and OQ-028 to OQ-031; owner-selected bounded policy/identity/roles, staff/no-send/history preserved, routine dispatch OFF; architecture explicitly unregistered, no signoff |
 | 0.18.0 | 2026-10-22 | Proposal: AI Tokenomics (FR-061, NFR-017, AC-107 to AC-110, OQ-027) mapped to BRD v0.19.0 FR-052, NFR-012, AC-100 to AC-103 and OD-51; no existing ID renumbered; no price, budget or cost figure added |
 | 0.17.0 | 2026-10-15 | Proposal: per-user agent chat and memory (FR-055 to FR-059, NFR-015, NFR-016, AC-091 to AC-103, OQ-020 to OQ-025) with a journey, agent and UI mapping; renumbered after the RAI controls took FR-051 to FR-054, NFR-014, AC-069 to AC-073 and OQ-017 to OQ-019; inactive until BRD OD-44 |
 | 0.16.0 | 2026-10-15 | Journey and sensor requirements reconciled with proposed RAI release and oversight controls |

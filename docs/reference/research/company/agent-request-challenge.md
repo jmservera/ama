@@ -1,9 +1,22 @@
 ---
 title: Agent Request Challenge
 description: Role-by-role challenge of the five requested Zava Forward agents, the problems behind them, non-agent alternatives and what to build instead
-ms.date: 2026-09-26
+ms.date: 2026-10-23
 ms.topic: reference
 ---
+
+## Prospective resident scope qualification (2026-10-23, #441)
+
+The original role challenges below remain dated research. New owner direction
+adds an optional portal and distinct bounded resident-answer proposal under
+the [canonical BRD](../../../brds/agentic-retrofit-programme-brd.md#optional-resident-portal-and-communication-agent-draft-amendment).
+It does not turn the original coordination agent into an end-to-end authority.
+Staff/regulatory tasks retain review/no-send boundaries. Only the separate
+versioned evaluated routine policy may later replace individual review for
+eligible acknowledgements/reminders/grounded status/process replies; sensitive,
+uncertain, consequential, safety, consent, contractual and financial messages
+retain named review. Activation, operational roles/privacy/recovery and value
+evidence remain open. No original research result or company fact is rewritten.
 
 ## Purpose and Method
 

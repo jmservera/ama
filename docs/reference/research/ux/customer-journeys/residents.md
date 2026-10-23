@@ -5,7 +5,7 @@ perspective: "Resident Engagement and Insight"
 status: "Research hypotheses; not resident validation or operational approval"
 scope: "Rented households; shared owners/leaseholders; representatives; support workers"
 evidence_boundary: "Local sources only; no new legal claims"
-ms.date: 2026-10-19
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -92,7 +92,13 @@ Wording: "I can record your request; the responsible service must confirm bookin
 
 ## Future assistance: invented, bounded and reversible
 
-Exploratory hypotheses, usable through an officer on phone/home visits; no portal/new app assumed. Every AI resident message needs named human approval [S2, Challenge of the Requested Agents]. Self-service autonomy is later exploration only.
+The following invented asks retain their original officer-assisted research
+boundary. Prospectively, the owner added an optional resident portal and
+separately gated resident-answer task on 2026-10-23; see the proposed six
+journeys below. Named human review remains default, with only the bounded
+routine exception proposed under BRD RULE-028. Consequential, sensitive,
+uncertain, safety, consent, contractual and financial content always retains
+named review. No exception activates here.
 
 | Invented ask | Task/proactive suggestion on behalf | Evidence/access | Consent and approval | Error/manual fallback | Measure; non-AI alternative |
 | --- | --- | --- | --- | --- | --- |
@@ -102,6 +108,32 @@ Exploratory hypotheses, usable through an officer on phone/home visits; no porta
 | "Challenge why my bills rose after the work." | Assemble account, optional bills/commissioning evidence; propose aftercare review. | Purpose-limited evidence; optional sensors never overrule reports. | Resident approves sharing; technical staff investigate, Finance/complaints decide redress. | Missing baseline unknown; no blame, savings promise or automated causation. | Resolution, comfort/affordability, reopened concerns; human benefit review. |
 | "Help my advocate prepare only what is needed." | Draft scoped briefing, authority-expiry reminder and questions. | Verified authority and approved fields. | Resident confirms sharing; worker approves messages; no assumed delegated consent. | Unclear/withdrawn authority blocks disclosure; human contact. | Disclosure errors, repeats, effort; briefing template. |
 | "Show what our feedback changed." | Draft sourced feedback-to-decision ledger; flag unanswered themes. | Minimised themes/decisions; no invented testimony. | Engagement approves publication/safeguards; directors decide. | Remove unsupported links; resident-panel review. | Traceable changes/equity; paper/meeting 'you said, we did' register. |
+
+## Proposed optional resident increment (2026-10-23, #441)
+
+These six synthetic scripts elaborate
+[PRD GOAL-005/FR-062 to FR-071](../../../../prds/zava-forward-retrofit-programme-demonstrator.md#optional-resident-service--draft-amendment),
+not resident testimony, implemented screens or passed tests. They do not
+change the historical stage-map or eleven staff-profile denominators.
+See the [unregistered architecture proposal](../../../../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
+for selected Option B, current OFF-state diagram/text and deferred registration.
+
+| Synthetic journey | Resident job and proposed sequence | Negative/exception and safe route | Proposed ownership |
+| --- | --- | --- | --- |
+| Sign-in and recovery | Use managed external identity with simple username/password-style UX; recover access; separately verify case/task/representative grants | Shared device clears content on logout; revoked household/representative grant denies next request; recovery cannot expand rights; assisted recovery available | Digital technical support; Housing case-rights exception; specialist privacy review |
+| Own case and documents | See only authorized case timeline, next action/owner/as-of time and approved document versions | Deny unrelated household, internal draft/list/search/export metadata and stale grants; missing facts show unknown and person route | Programme accountable; Housing case exception |
+| Requested upload | Choose requested file, submit to safe intake, get durable receipt, distinguish scan/review/acceptance/publication | Unsafe/unvalidated file isolated; failed/interrupted intake gives no false receipt; scanner unavailable fails closed; assisted submission | Housing review queue; Digital file/scan failure |
+| Appointment response | Accept/propose/postpone offered slot, retain response/reference and next update | Response is not confirmed booking, works consent or no-access; actual capacity/human gates remain; phone/visit alternative | Programme coordination; Housing exception and specialist supplier handoff |
+| Grounded question and human handoff | Read cited current permitted status/process answer or unknown; request a person with reference, receiver/chase/update owner | Missing/conflicting/unsafe/uncertain or controlled-domain content abstains/escalates; urgent help independent of model; no legal/consent/cost/hazard authority | Engagement communication; Housing case exception; specialist domain escalation |
+| Assisted continuity | Phone/email/visit contact joins same permitted case timeline with actor/channel/occurred/recorded times and review/receipt states | No connector assumed: labelled manual capture; duplicates/ambiguity/lost ack stay owned; delivery alone never closes handoff; no detriment for non-use | Housing case continuity; Programme accountable; Digital connector fault |
+
+No actual postholder, appointment, connector or response SLA is established.
+Identity provider, enrolment, lawful basis/DPIA, retention and recovery remain
+live gates (OD-52-55). Fictional accounts/data only. Proposed five concurrent
+fictional sessions for 30 minutes and ordinary case/status/receipt API p95
+<=2s exclude identity/scan/model waits, measured separately. No production
+capacity, conformance, benefit or date commitment. Keyboard, screen-reader,
+resize/reflow and plain-language tests remain Not run.
 
 ## Research and decision tensions
 

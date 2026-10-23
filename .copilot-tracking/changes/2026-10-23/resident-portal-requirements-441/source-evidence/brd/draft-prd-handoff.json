@@ -1,0 +1,217 @@
+{
+  "artifact_type": "DRAFT_BRD_AMENDMENT_HANDOFF",
+  "artifact_version": 1,
+  "date": "2026-10-23",
+  "purpose": "Parent-coordinated PRD amendment authoring input, followed by ADR; not governed publication or implementation permission",
+  "canonical_brd_to_prd_handoff_emitted": false,
+  "canonical_handoff_ineligible_reasons": [
+    "BRD version is draft 0.20.0, not signed-off >=1.0.0",
+    "No actual company or control-owner signoff",
+    "Define exit BLOCKED; Govern exit NOT_EVALUATED",
+    "No active waivers"
+  ],
+  "upstream": {
+    "repository": "jmservera/ama",
+    "commit": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+    "ref_at_read": "origin/main",
+    "remote_fetched_by_this_task": false,
+    "brd_id": "BRD-2026-AMA48-001",
+    "brd_path": "docs/brds/agentic-retrofit-programme-brd.md",
+    "brd_version": "0.19.0",
+    "brd_status": "draft",
+    "brd_sha256": "25ed596cafc4d9a4d83e2411a59cf0e6d9667c816fc2f537f82a84f3d9c6cf4c",
+    "source_evidence": "amendment.md#source-evidence-and-conflicts"
+  },
+  "candidate": {
+    "brd_id": "BRD-2026-AMA48-001",
+    "version": "0.20.0",
+    "status": "draft",
+    "patch_path": "amendment.patch",
+    "patch_sha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7",
+    "brd_sha256_after_exact_patch": "e318bacc1344c4e730645612371f2a7671926c645ee9370673b0f637a046e535",
+    "lineage": {"supersedes": [], "superseded_by": []},
+    "lineage_note": "Draft amendment of same logical BRD; no governed replacement or historical deletion",
+    "rationale_path": "amendment.md",
+    "change_manifest": "change-manifest.md",
+    "quality_evidence": "quality-review.md",
+    "verification": "validation.json",
+    "approved_at": null,
+    "approvers": [],
+    "waivers": []
+  },
+  "direction_and_approval": {
+    "scope_direction": "Owner 2026-10-23: add lean optional resident portal and resident communication agent to business scope",
+    "quantification_direction": "Owner 2026-10-23 follow-up permits explicit gut-feel illustrative assumptions to quantify a pitch",
+    "does_not_authorize": ["operational approval", "actual company signoff", "paid operations", "real resident deployment", "autonomous consequential decisions", "approved numerical targets"],
+    "historical_exa004": "No required resident portal remains an inclusion protection. Earlier deferral is replaced prospectively, not a claim that all portals were prohibited.",
+    "historical_ai_review": "Per-message human review remains default. Only proposed RULE-028/FR-061 policy gate may later enable bounded routine communication; owner scope direction does not activate it."
+  },
+  "counts": {
+    "base": {"BG": 13, "FR": 52, "AC": 103, "NFR": 12, "CON": 7, "RULE": 26, "OD": 51},
+    "added": {"BG": 0, "FR": 10, "AC": 23, "NFR": 2, "CON": 0, "RULE": 2, "OD": 4},
+    "candidate": {"BG": 13, "FR": 62, "AC": 126, "NFR": 14, "CON": 7, "RULE": 28, "OD": 55},
+    "registry_inspection": "Entire pinned BRD text scanned before allocation; no DD identifiers; BR reserved for legacy aliases; existing IDs preserved"
+  },
+  "traceability": {
+    "author_matrix_ref": "docs/brds/agentic-retrofit-programme-brd.md#requirements-traceability after amendment.patch",
+    "new_fr_total": 10,
+    "new_fr_with_ac": 10,
+    "new_fr_with_bg": 10,
+    "new_fr_to_ac_pct": 100.0,
+    "new_fr_to_bg_pct": 100.0,
+    "candidate_fr_total": 62,
+    "candidate_fr_with_ac": 62,
+    "candidate_fr_with_bg": 62,
+    "candidate_fr_to_ac_pct": 100.0,
+    "candidate_fr_to_bg_pct": 100.0,
+    "fr_to_ac_threshold_pct": 80.0,
+    "fr_to_bg_target_pct": 100.0,
+    "meaning": "Structural link coverage only; no tested acceptance, approved goal or achieved outcome",
+    "new_rows": [
+      {"id": "FR-053", "capability": "Authorized resident case/timeline/approved-document workspace", "BG": ["BG-005", "BG-009", "BG-011"], "AC": ["AC-104", "AC-105"], "priority": "Must"},
+      {"id": "FR-054", "capability": "Requested document submission and review state", "BG": ["BG-005", "BG-009", "BG-011"], "AC": ["AC-106", "AC-107"], "priority": "Must"},
+      {"id": "FR-055", "capability": "Propose/accept/postpone appointments without bypassing gates", "BG": ["BG-005", "BG-009", "BG-011"], "AC": ["AC-108", "AC-109"], "priority": "Must"},
+      {"id": "FR-056", "capability": "Unified omnichannel provenance and reconciliation", "BG": ["BG-010", "BG-011"], "AC": ["AC-110", "AC-111"], "priority": "Must"},
+      {"id": "FR-057", "capability": "Staff exception queues and ownership", "BG": ["BG-009", "BG-010", "BG-011"], "AC": ["AC-112"], "priority": "Must"},
+      {"id": "FR-058", "capability": "Grounded resident answers, abstention and human handoff", "BG": ["BG-003", "BG-005", "BG-009", "BG-012"], "AC": ["AC-113", "AC-114"], "priority": "Must"},
+      {"id": "FR-059", "capability": "Human help and safe contact/accessibility preferences", "BG": ["BG-005", "BG-009", "BG-010"], "AC": ["AC-115"], "priority": "Must"},
+      {"id": "FR-060", "capability": "Separate identity, scoped case entitlement, representative revocation and recovery", "BG": ["BG-005", "BG-010"], "AC": ["AC-116", "AC-117"], "priority": "Must"},
+      {"id": "FR-061", "capability": "Versioned routine dispatch policy gate, auditing and disable", "BG": ["BG-003", "BG-005", "BG-010", "BG-012"], "AC": ["AC-118", "AC-119"], "priority": "Must"},
+      {"id": "FR-062", "capability": "Comparable effort/outcome measurement and honest reporting", "BG": ["BG-009", "BG-011", "BG-012"], "AC": ["AC-123", "AC-124"], "priority": "Must"},
+      {"id": "NFR-013", "capability": "Lean mobile/accessibility and simple resident login experience", "BG": ["BG-005", "BG-009"], "AC": ["AC-120"], "priority": "Must"},
+      {"id": "NFR-014", "capability": "Isolation, safe documents, privacy, abuse and recovery", "BG": ["BG-003", "BG-005", "BG-009"], "AC": ["AC-121", "AC-122"], "priority": "Must"},
+      {"id": "RULE-027", "capability": "Optional channel, no detriment", "BG": ["BG-005", "BG-009"], "AC": ["AC-125"], "priority": "Must"},
+      {"id": "RULE-028", "capability": "Routine-only policy exception; consequential/sensitive/uncertain messages stay human-reviewed", "BG": ["BG-003", "BG-005", "BG-009", "BG-012"], "AC": ["AC-126"], "priority": "Must"}
+    ],
+    "amended_existing_controls": ["RULE-018/AC-057", "RULE-022/AC-079", "RULE-025/AC-095", "FR-044/AC-084", "OD-47"],
+    "incidental_consistency_repairs": ["FR-033 All-goals matrix enumeration and BG-013 reciprocal link", "Escape literal line-initial #58 issue reference for MD018 without changing meaning"],
+    "retained_controls": ["FR-003/RULE-003", "FR-011/013/014/015", "FR-017/018", "FR-019/045/046/047", "FR-036", "FR-049/050 staff-only scope", "FR-051 no-send", "NFR-001/002/003/004/008/009/010/011/012", "RULE-005/006/007/008/019/020/022/024", "CON-001 to CON-007"]
+  },
+  "business_case": {
+    "classification": "Author judgement/gut-feel planning sensitivity; owner authorizes modeling, not numeric targets or results",
+    "assumed_on": "2026-10-23",
+    "external_statistics_used": [],
+    "population": "Active home cases and mutually exclusive routine handling episodes; not unique residents/accounts",
+    "assumptions_order": ["low", "base", "high"],
+    "assumptions": {
+      "new_home_cases_per_week_A": [81, 90, 100],
+      "mean_active_duration_weeks_D": [4, 8, 12],
+      "routine_calls_per_active_case_week_C": [0.30, 0.50, 0.70],
+      "minutes_per_call_including_lookup_and_recording_Tc": [8, 10, 12],
+      "separate_email_document_transactions_per_active_case_week_E": [0.25, 0.40, 0.60],
+      "minutes_per_transaction_including_recording_Te": [4, 5, 6],
+      "digital_uptake_fraction_U": [0.30, 0.50, 0.70],
+      "adopter_routine_contacts_actually_avoided_fraction_V": [0.50, 0.65, 0.75],
+      "additional_reviews_per_digital_active_case_week_R": [0.10, 0.15, 0.20],
+      "minutes_per_additional_review_Tr": [4, 4, 5],
+      "additional_reconciliation_minutes_per_all_active_case_week_Q": [0.05, 0.08, 0.10],
+      "fixed_recurring_support_staff_hours_per_week_S": [1, 2, 4],
+      "staff_onboarding_minutes_per_primary_new_case_contact_To": [6, 8, 10]
+    },
+    "formulas": {
+      "W": "A*D",
+      "B": "W*(C*Tc+E*Te)/60",
+      "G": "B*U*V",
+      "H": "W*U*R*Tr/60",
+      "J": "W*Q/60",
+      "N": "G-H-J-S",
+      "O": "A*U*To/60",
+      "F": "N-O",
+      "I": "W*U*To/60; one-off initial active cohort, not a weekly charge"
+    },
+    "results": {
+      "concurrent_home_cases_W": [324, 720, 1200],
+      "routine_calls_per_week": [97.2, 360, 840],
+      "separate_email_document_transactions_per_week": [81, 288, 720],
+      "baseline_routine_staff_hours_per_week_B": [18.36, 84, 240],
+      "gross_avoided_hours_per_week_G": [2.754, 27.3, 126],
+      "additional_review_hours_per_week_H": [0.648, 3.6, 14],
+      "reconciliation_hours_per_week_J": [0.27, 0.96, 2],
+      "routine_net_released_hours_per_week_N": [0.836, 20.74, 106],
+      "new_intake_onboarding_hours_per_week_O": [2.43, 6, 11.6666666667],
+      "net_released_hours_including_intake_per_week_F": [-1.594, 14.74, 94.3333333333],
+      "initial_active_cohort_onboarding_staff_hours_I_one_off": [9.72, 48, 140]
+    },
+    "sensitivity": {
+      "base_formula_net_hours_including_intake": "35.4*U-2.96",
+      "base_minimum_uptake_fraction": 0.0836158192,
+      "base_uptake_fractions": [0.25, 0.50, 0.75],
+      "base_net_hours_at_uptake": [5.89, 14.74, 23.59],
+      "base_minimum_avoided_fraction_at_50pct_uptake": 0.2990476190,
+      "interpretation": "Staff-time-only break-even, not a monetary forecast. No uptake breaks even if variable savings after review/onboarding are non-positive."
+    },
+    "no_double_counting": [
+      "Count each handling episode once; linked call/document is one unless separate staff work is needed",
+      "Lookup and recording already in Tc/Te; no extra transcription saving",
+      "Contacts merely shifted rather than avoided earn no saving",
+      "Retain non-avoided workload; R is additional review/escalation beyond it",
+      "I and O must refer to disjoint cohorts/time periods; reusable identities may lower onboarding",
+      "Routine-only workload excludes existing consequential/safety/consent decisions"
+    ],
+    "conditions": [
+      "Routine automation savings assume OD-53 later permits eligible traffic; current per-message review default remains",
+      "Recompute R/Tr for per-message review when no exception is enabled",
+      "Uptake is assumed, not inferred from smartphone ownership",
+      "Low combined scenario consumes time; extra recovery/support can erase benefit",
+      "No headcount cuts, booked cash, validated benefit, cost ROI or financial payback",
+      "Money claims require explicit loaded hourly cost and incremental build/operating/support/model/identity/storage costs; these are unspecified"
+    ],
+    "pitch": "At illustrative 90 new homes/week and eight weeks in process, 720 cases overlap. Half using self-service with 65% of their routine contacts avoided could release about 15 staff-hours/week after review, reconciliation, support and new-intake onboarding. This is a testable capacity scenario, not observed savings; the low scenario loses about two hours/week."
+  },
+  "prd_authoring_contract": {
+    "target": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+    "do_not_author_here": true,
+    "ids": "Inspect complete fresh PRD registry before allocation. BRD and PRD FR/AC/NFR IDs are separate namespaces; PRD FR-061 already means Tokenomics.",
+    "minimum_increment": [
+      "Fictional resident login and separate current case entitlement; no staff-directory membership assumption",
+      "Authorized case/timeline/next-action and one approved document; deny unrelated home/occupant",
+      "One requested upload with safe handling, receipt and unaccepted review state",
+      "One appointment acceptance/proposal/postponement with retained human/capacity/consent controls",
+      "One grounded status/process answer, unknown response and accepted human handoff with visible help",
+      "One portal event and assisted phone/email/visit event in same staff exception record",
+      "Negative tests for revoked representative, unsafe contact, shared household, injection/document abuse, model failure and duplicate event",
+      "Routine dispatch remains off absent explicit exercise policy/release; distinguish simulated approval from real authority",
+      "Mobile/accessibility and safe fallback before calling the slice demonstrable"
+    ],
+    "delivery_boundary": "Incremental synthetic slice; do not delay independent owner-testable staff landing/auth unless a proven dependency is recorded. Existing generated 60,000 homes and retained 980-case lineage continue.",
+    "accepted_application_evidence_later": "CON-007/AC-086 actual authorized Azure/SQL/registered real AI evidence applies to subsequent accepted application build; this authoring package launches no cloud or paid operation.",
+    "practical_acceptance_controls": [
+      "Case/field authorization server-side across view/list/search/files/export/model inputs and every turn/request",
+      "Login, scheduling, works consent, data consent and representative authority distinct",
+      "No emailed passwords; simple username/password UX with managed identity/security options deferred to ADR",
+      "No consent/contract/cost/hazard decisions or autonomous confirmed booking",
+      "Inbound channel integrations inventoried, not assumed; manual/assisted capture labelled",
+      "Record observed-as-of/evidence provenance; stale/conflicting/unknown answers abstain",
+      "Human response times, load, upload limits, retention, recovery and abuse thresholds made explicit exercise assumptions or open production decisions",
+      "Guardrails, effort, task-success and non-digital cohorts measured separately; no uptake-only success claim"
+    ],
+    "handoff_to_adr_after_prd": [
+      "Resident identity/recovery options, case entitlement and representative revocation trust boundary",
+      "Safe document storage/publication/quarantine and model retrieval scope",
+      "Omnichannel event reconciliation/provenance and delivery state",
+      "Grounding/evaluation/uncertainty, policy-gated dispatch, incident disable and recovery",
+      "Cost/limits and capacity sizing under documented scenarios, not claims of 60,000 simultaneous users",
+      "Preserve staff ADR 0004 acceptance and FR-051 regulatory assistant no-send restrictions"
+    ]
+  },
+  "residual_decisions": [
+    {"id": "OD-52", "decision": "Named service/support/intake/source owners and actual channel/connector inventory", "accountable_proposed_role": "Programme Manager", "blocks": "Live release"},
+    {"id": "OD-53", "decision": "Narrow routine-message policy authority, tests, content/channel scope, oversight and separate release", "accountable_proposed_role": "Resident Engagement for proposal; domain approvals remain separate", "blocks": "All per-message-review exceptions"},
+    {"id": "OD-54", "decision": "Resident identity, entitlement/revocation/recovery, privacy/DPIA, files/retention/rights/abuse controls", "accountable_proposed_role": "Digital service owner", "blocks": "Real resident accounts/data"},
+    {"id": "OD-55", "decision": "Validate hypothetical assumptions and freeze baselines, measures, targets, load and service limits", "accountable_proposed_role": "Programme; Data and Performance responsible", "blocks": "Benefit/production capacity claims, not hypothetical modeling"},
+    {"id": "OD-41/42/47", "decision": "Real research, representative proof and non-staff conversation operating authority", "blocks": "Operational resident use; owner scope direction is not approval closure"},
+    {"id": "OD-18/25/35/36/49/51", "decision": "Retain existing measurement, service times, incident/restart, lawful measurement, AI evaluation and economic limits decisions", "blocks": "Applicable operational claims/actions; no invented ratification"}
+  ],
+  "quality": {
+    "reviewer": "hve-core-all:brd-quality-reviewer",
+    "standard_findings_contract": "BRD_STANDARD_FINDINGS_V1",
+    "quality_report_contract": "BRD_QUALITY_REPORT_V1",
+    "report_id": "BRD-2026-AMA48-001-quality-20261023T164608Z",
+    "overall_status_as_returned": "FAIL",
+    "define_exit": "BLOCKED",
+    "govern_exit": "NOT_EVALUATED",
+    "limitations": "Reviewer inspected amendment and renderer but could not execute it; counts independently checked by author. Reviewer falsely says performance efficiency is missing despite existing NFR-012, and returned duplicate top_findings key; see disposition in quality-review.md.",
+    "no_blocker_to_bounded_draft_delivery": true,
+    "does_not_pass_any_gate": true
+  }
+}
