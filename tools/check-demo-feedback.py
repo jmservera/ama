@@ -8,6 +8,7 @@ the installed zava_forward packages rather than copied.
 
 Captured AI items require unique, nonempty string case IDs, reasons and citations.
 Their shape is checked offline, not their source resolution or provenance.
+Evidence JSON requires finite numbers and an exact integer schema version.
 
 This is an offline harness, not deployed acceptance. A redirect, an auth
 denial or the existence of a source asset is never a functional success, and
@@ -85,6 +86,13 @@ def reject_constant(name):
     raise ValueError(f"non-standard JSON constant {name}")
 
 
+def parse_finite_float(value: str) -> float:
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError(f"non-finite JSON number {value}")
+    return number
+
+
 def load_evidence(path):
     target = Path(path)
     if not target.is_file():
@@ -97,7 +105,9 @@ def load_evidence(path):
                 f"Evidence file is {size} bytes; the limit is {MAX_EVIDENCE_BYTES}.",
             )
         text = target.read_bytes().decode("utf-8")
-        data = json.loads(text, parse_constant=reject_constant)
+        data = json.loads(
+            text, parse_constant=reject_constant, parse_float=parse_finite_float
+        )
     except OSError as error:
         raise Verdict(
             BLOCKED, f"Evidence file cannot be read: {error.strerror}."
@@ -108,8 +118,11 @@ def load_evidence(path):
         raise Verdict(BLOCKED, f"Evidence file is not valid JSON: {error}.") from error
     if not isinstance(data, dict):
         raise Verdict(BLOCKED, "Evidence must be a JSON object.")
-    if data.get("schema_version") != SCHEMA_VERSION:
-        raise Verdict(BLOCKED, f"Evidence schema_version must be {SCHEMA_VERSION}.")
+    schema_version = data.get("schema_version")
+    if type(schema_version) is not int or schema_version != SCHEMA_VERSION:
+        raise Verdict(
+            BLOCKED, f"Evidence schema_version must be integer {SCHEMA_VERSION}."
+        )
     if data.get("origin") not in ORIGINS:
         raise Verdict(BLOCKED, f"Evidence origin must be one of {', '.join(ORIGINS)}.")
     unknown = sorted(set(data) - TOP_KEYS)

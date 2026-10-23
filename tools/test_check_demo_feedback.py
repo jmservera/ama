@@ -795,12 +795,19 @@ class BaselineDistinction(unittest.TestCase):
 
 
 class InputSafety(unittest.TestCase):
-    def blocked_reason(self, content):
+    def blocked_reason(self, content, expected_reason=None):
+        def loader():
+            raise AssertionError("runtime must not load for invalid evidence")
+
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "evidence.json"
             path.write_bytes(content)
-            report = cdf.build_report(str(path), OPTIONS)
+            report = cdf.build_report(str(path), OPTIONS, loader)
         self.assertEqual(report["overall"], "blocked")
+        self.assertTrue(report["offline_only"])
+        self.assertEqual(report["acceptance"], "not-accepted")
+        for name in cdf.GAPS:
+            self.assertEqual(statuses(report)[name], "not-run")
         self.assertTrue(
             all(
                 c["status"] == "blocked"
@@ -808,6 +815,93 @@ class InputSafety(unittest.TestCase):
                 if c["id"] in cdf.CHECKS
             )
         )
+        if expected_reason is not None:
+            for check in report["checks"]:
+                if check["id"] in cdf.CHECKS:
+                    self.assertIn(expected_reason, check["reason"])
+
+    def test_exponent_overflow_is_blocked_before_runtime(self):
+        for token in ("1e999", "-1e999", "1.0e999"):
+            for location in ("latency", "rank", "nested_extra"):
+                with self.subTest(token=token, location=location):
+                    data = bundle()
+                    if location == "latency":
+                        data["ai"]["body"]["latency_ms"] = "NUMBER_TOKEN"
+                    elif location == "rank":
+                        data["ai"]["body"]["items"][0]["rank"] = "NUMBER_TOKEN"
+                    else:
+                        data["programme"]["body"]["extra"] = [{"value": "NUMBER_TOKEN"}]
+                    raw = json.dumps(data)
+                    self.assertEqual(raw.count('"NUMBER_TOKEN"'), 1)
+                    raw = raw.replace('"NUMBER_TOKEN"', token)
+                    self.blocked_reason(
+                        raw.encode(), "Evidence file is not valid JSON: non-finite"
+                    )
+
+    def test_schema_version_requires_supported_integer_type(self):
+        for value in (True, False, 1.0, 2):
+            with self.subTest(value=value):
+                self.blocked_reason(
+                    json.dumps(bundle(schema_version=value)).encode(),
+                    "schema_version must be integer 1",
+                )
+
+    def test_supported_integer_schema_preserves_offline_boundaries(self):
+        report = report_for(bundle(schema_version=1))
+        self.assertEqual(statuses(report)["ai_evidence"], "pass")
+        self.assertEqual(statuses(report)["case_write_reload"], "blocked")
+        for name in cdf.GAPS:
+            self.assertEqual(statuses(report)[name], "not-run")
+        self.assertEqual(report["overall"], "blocked")
+        self.assertTrue(report["offline_only"])
+        self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_finite_float_tokens_preserve_field_scope(self):
+        for token in ("1.25", "1e308", "1e-999", "-1.25"):
+            for field in ("rank", "latency_ms"):
+                with self.subTest(token=token, field=field):
+                    data = bundle()
+                    target = data["ai"]["body"]
+                    if field == "rank":
+                        target = target["items"][0]
+                    target[field] = "NUMBER_TOKEN"
+                    raw = json.dumps(data)
+                    self.assertEqual(raw.count('"NUMBER_TOKEN"'), 1)
+                    raw = raw.replace('"NUMBER_TOKEN"', token)
+                    with tempfile.TemporaryDirectory() as directory:
+                        path = Path(directory) / "evidence.json"
+                        path.write_text(raw, encoding="utf-8")
+                        decoded = cdf.load_evidence(path)
+                        decoded_target = decoded["ai"]["body"]
+                        if field == "rank":
+                            decoded_target = decoded_target["items"][0]
+                        self.assertIs(type(decoded_target[field]), float)
+                        self.assertEqual(decoded_target[field], float(token))
+                        report = cdf.build_report(str(path), OPTIONS)
+                    expected = (
+                        "fail" if field == "latency_ms" and token == "-1.25" else "pass"
+                    )
+                    self.assertEqual(statuses(report)["ai_evidence"], expected)
+                    self.assertEqual(statuses(report)["case_write_reload"], "blocked")
+                    self.assertEqual(
+                        report["overall"], "fail" if expected == "fail" else "blocked"
+                    )
+                    self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_numeric_strings_keep_existing_field_rules(self):
+        for field in ("rank", "latency_ms"):
+            with self.subTest(field=field):
+                data = bundle()
+                target = data["ai"]["body"]
+                if field == "rank":
+                    target = target["items"][0]
+                target[field] = "1e999"
+                report = report_for(data)
+                self.assertEqual(
+                    statuses(report)["ai_evidence"],
+                    "pass" if field == "rank" else "fail",
+                )
+                self.assertEqual(report["acceptance"], "not-accepted")
 
     def test_bad_inputs_are_blocked(self):
         for content in (
