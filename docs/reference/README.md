@@ -2,6 +2,7 @@
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
 ms.date: 2026-10-28
+ms.date: 2026-10-23
 ---
 
 ## Purpose
@@ -95,7 +96,11 @@ publication receipt or PR is implied. Independent local lanes can continue.
 For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
 records dated licence, attribution, coverage, cost, processor and privacy
 evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
-self-hosted tiles, and what cannot yet be verified. It is a proposal for owner
+self-hosted tiles, and what cannot yet be verified. Vendor statements carry
+evidence-status labels: only the OSM tile policy and Azure Maps pricing page
+were re-read, the rest is draft, unverified. Its budget wording follows the
+[addendum](../case_study_48_addendum.md#revised-owner-budget-decision-2026-10-22)
+(USD 700 all-in ceiling, headroom Unknown, earlier USD500 and 535.41 as history). It is a proposal for owner
 review, not a provider selection or purchase. The
 [screen-reader protocol and unmet gate](./research/ux/wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119)
 record that no screen reader was available, so no run is claimed.
