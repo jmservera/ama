@@ -45,6 +45,12 @@ simulation Pass; actual native host candidate discovery is Deferred. That
 blocks P04 completion/publication, not independent P03 local runtime evidence.
 Azure headroom stays Unknown and no cloud work is authorized.
 
+P03 execution and reconciliation now complete with an actual failed native
+receipt:16 groups passed, core filtered-query17383ms exceeds1500ms.
+Three focused repeats pass106-108ms, cause unknown; they do not repair the
+receipt. P04-T01 host discovery remains Deferred. Task blocked in Implement,
+not eligible for original Review/final publication yet.
+
 ## User Decisions and Requirements
 
 * Run real ordered Research, Plan/details/critique, Implement and independent Review in this isolated worktree, with genuine dated artifacts written during their phases.
@@ -111,7 +117,7 @@ other sessions, tools/model configuration, automatic issue/epic acceptance.
 | Research | .copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md; C1-C15, W1-W4 |
 | Changes record | .copilot-tracking/changes/2026-10-23/issue-440-stabilization-changes.md |
 | Readiness | Planning complete; PC-001/002 corrected; implementation active |
-| Continuation | P01/P02 complete; P03 native integration next; P04 host Deferred |
+| Continuation | P01-P03 execution complete with failed native receipt; P04-T01 host Deferred; task blocked |
 
 ## Sources
 
@@ -155,13 +161,13 @@ other sessions, tools/model configuration, automatic issue/epic acceptance.
 * Detail section: P02-T01.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Execute pinned-main checkpoint and triage
+### [x] P03: Execute pinned-main checkpoint and triage
 
 * Intent: genuine bounded main evidence, separately labelled from candidate-policy validation.
 * Dependencies: P01, installed source distributions. May execute independently of P02 source prose, but never on unmerged source functionality.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Run focused local contracts and affected suites
+#### [x] P03-T01: Run focused local contracts and affected suites
 
 * Execute existing tracked auth/session/manual/safety/consent/review/persistence selectors, then five existing package suites and structural/lint/type checks as relevant.
 * Record all command exits, test counts/skips, source/tool/environment identities and limitations. No dataset defaults or paid model invocation.
@@ -169,14 +175,18 @@ other sessions, tools/model configuration, automatic issue/epic acceptance.
 * Prove application/test/build/workflow inputs equal pinned main; the only allowed preliminary diff is existing coordinator, src/README.md and own tracking artifacts. Then run existing --all with --lock-timeout 0 in a unique external directory for actual browser/SQL/Docker ownership.
 * Persist actual broad results only after the preliminary run completes. P03 receipt is engineering-checkpoint evidence, never final-candidate publication eligibility; P05 repeats full gate after original Review and final commit.
 * Detail section: P03-T01 and validation ownership table.
+* Executed, not accepted: preliminary native gate16 groups pass/core benchmark
+  failure; original failure and three passing focused retests retained.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Persist reconciliation and deduplicated findings
+#### [x] P03-T02: Persist reconciliation and deduplicated findings
 
 * Append dated evidence to docs/architecture/cutover-evidence-pack.md; update docs/reference/README.md and append-only docs/reference/log.md when filing the material KB pointer.
 * Requirement/document IDs, scope/merged PRs, ADR contracts, actual journey results and classification per row; continue/fix/pivot with exact affected gate and independent lanes.
 * Code bugs/refactors only if demonstrated, deduplicated against fresh open issues. Separate issue requires severity/reproduction/requirement/ADR/smallest fix/regression test/dependency; return numbers to coordinator.
 * Detail section: P03-T02.
+* Actual dated checkpoint/index/append-only log filed. No confirmed stable
+  application defect/refactor or new bug issue; validation blockers explicit.
 
 <!-- rpi:phase id=P04 -->
 ### [ ] P04: Validate final policy and independently Review
@@ -243,10 +253,15 @@ not runtime verification or a retroactively changed independent verdict.
 
 ## Follow-Up Items
 
-* None newly confirmed. Existing #349/#350/#360 live gaps and #432 Tokenomics remain outside this policy PR.
+* Diagnose measured native benchmark breach/repeatability, retain original
+  failure and unchanged threshold; no confirmed source cause or speculative fix.
+* Resolve safely contained native policy discovery; static/simulation Pass
+  cannot replace unmet host evidence.
+* Existing #349/#350/#360 live gaps and #432 Tokenomics remain outside this policy PR.
 
 ## Handoff
 
-* Active implementation: P02/P03 after P01 actual free-lock/current-main proof.
-* Changes record exists; final Review/receipt/PR remain future evidence.
+* Blocked Implement at P04-T01: P01-P03 executed, required host discovery unmet
+  and native preliminary receipt failed. Exact resume facts in changes/state.
+* Original Review/final receipt/PR remain not run, not fabricated.
 * Original research/critique and adverse results remain preserved.

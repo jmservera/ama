@@ -6,10 +6,9 @@
 * Task ID: 440; task slug: issue-440-stabilization.
 * Plan: .copilot-tracking/plans/2026-10-23/issue-440-stabilization-plan.md.
 * Research: .copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md.
-* Current state: owner resumed; rpi-implement activated; P01/P02 complete;
-  focused/package current-main checks complete with explicit skips. P03 native
-  integration next. Original critique preserved; policy static/simulation Pass,
-  host Deferred, publication blocked.
+* Current state: rpi-implement active; P01-P03 execution/reconciliation complete,
+  native receipt failed. Original critique preserved; policy static/simulation
+  Pass, host Deferred. Task blocked at P04-T01; original Review/publication not run.
 
 ## Phase Index
 
@@ -17,7 +16,7 @@
 | --- | --- | --- | --- |
 | P01 | Safe execution boundary | complete | P01-T01 |
 | P02 | Existing policy improvement | authoring complete | P02-T01 |
-| P03 | Pinned-main checkpoint | focused/package complete with skips; native gate pending | P03-T01, P03-T02 |
+| P03 | Pinned-main checkpoint | executed/reconciled, native overall failure preserved | P03-T01, P03-T02 |
 | P04 | Policy validation and Review | static/simulation Pass; host Deferred; original Review not run | P04-T01, P04-T02 |
 | P05 | Freeze/gate/publication | not started | P05-T01 |
 
@@ -76,8 +75,8 @@ Completion: actual commands/exits/counts/skips and classified findings.
 Actual focused174 passed. Package suites2392 discovered,468 skipped;1924
 executed successfully. Original archive-harness core failures preserved; Git
 metadata restoration and preserved generated fixtures resolved all four
-focused failures and full core rerun without source changes. Native SQL/browser/
-Docker evidence remains pending clean preliminary gate, not inferred from skips.
+focused failures and full core rerun without source changes. Native SQL/browser/Docker evidence is now observed:16 groups passed, core
+benchmark failed. Focused retests do not repair failed receipt.
 
 <!-- rpi:task id=P03-T01 -->
 ### P03-T01: Run focused local contracts and affected suites
@@ -109,7 +108,15 @@ Docker evidence remains pending clean preliminary gate, not inferred from skips.
 * While preliminary runner is active, keep the commit/worktree frozen and all observations in external logs. Preserve logs/environments and do not independently clean any active validation resources. Let the runner perform only its defined owned-resource cleanup. On completion, record real commands/counts/skips/errors and receipt if emitted; absence/failure stays unmet. The preliminary receipt has its own checkpoint head (policy/tracking differ), with application/test/build inputs explicitly proven equal to pinned main; it is not literally a receipt for main HEAD and not the final publication receipt.
 * Only AFTER this run finishes, P03-T02 appends actual results to project evidence and updates changes/state. Those writes and all later commits invalidate preliminary publication eligibility. P04 then consumes completed evidence; P05 commits original Review/final candidate and runs a NEW full gate in a DIFFERENT external directory. A preliminary full gate is needed for this first integration checkpoint because the existing supported resource owner exposes only --all; it is not a policy requiring full gates per edit.
 * Completion: exact source SHA and each command/environment/exit/count/output path with classification. Current main product evidence must remain separately labelled from later policy-branch final receipt even where source bytes match.
-* Unresolved: none executed. Existing tests may expose new failures; no root cause/severity asserted until reproduction.
+* Actual: one native gate at d8a6506100c56c9454a85bcc31bac11d56b4a3bc,
+  base140d8f49, output /tmp/ama-440-preliminary-20261023-d8a65061.
+  Sixteen groups passed; core1243/skipped167 failed one1500ms benchmark
+  at17383.017630ms. Actual browser/SQL244(skip1)/four images/scanners/SPDX/
+  logo0600 passed. Official receipt verification refused failed status, exit1.
+  Failed receipt SHA256ce6ff80079f2086b49159dd33a9d208fb1f328998de1d4cc85dd14de8b2990a9.
+  Three later focused repeats passed106-108ms under nonqueued lock;
+  source cause unknown, no unchanged-threshold waiver. Changes record and
+  project checkpoint hold exact commands/counts/paths/limitations.
 
 <!-- rpi:task id=P03-T02 -->
 ### P03-T02: Persist reconciliation and deduplicated findings
@@ -123,6 +130,11 @@ Docker evidence remains pending clean preliminary gate, not inferred from skips.
 * First recommendation must be bounded by evidence. No total product pass. Confirmed bugs get separate issue/RPI execution, not a fix here; return new issue numbers to coordinator. If no defect confirmed, state that explicitly and do not invent refactors.
 * Existing #349 tenant/session, #350 deployed parity/API302 and #360 live direct demo gaps remain open and unticked. BRD Tokenomics #432 is an acknowledged planned gap, not a reproduced regression.
 * Completion: actual evidence table and prioritized findings, scopes of blocked closure/dependent expansion and independent lanes allowed. Any proposed pivot/relaxation/deferral remains awaiting owner approval.
+* Actual complete execution/evidence: appended dated checkpoint, KB index and
+  append-only log; source/docs/mergedPR issue pins, explicit classes and
+  recommendation fix validation/continue independent lanes. Open inventory/
+  exact benchmark-name search refreshed; #76 queue owner, no duplicate bug
+  issue and no confirmed stable application defect/necessary refactor.
 
 <!-- rpi:phase id=P04 -->
 ## P04: Policy validation and Review
@@ -176,6 +188,10 @@ Depends on P02/P03; no deferred stage counted passed.
 * Boundaries: actual diff and full evidence, no source writes by reviewer or invented human approval.
 * Completion: .copilot-tracking/reviews/logs/2026-10-23/issue-440-stabilization-review.md (actual review date if resumed later) records assessed boundary, execution and outcome separately. Open findings route to later work; no repeat Review.
 * Unresolved: no implementation candidate exists; no Review artifact now.
+* Current stop supersedes that initial planned condition: candidate exists,
+  actual native receipt failed and P04-T01 host Deferred. Original Review has
+  not executed, no placeholder outcome/artifact. Do not advance automatically
+  across missing required evidence; preserve exact resume state.
 
 <!-- rpi:phase id=P05 -->
 ## P05: Freeze/gate/publication

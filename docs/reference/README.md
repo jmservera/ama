@@ -2,6 +2,7 @@
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
 ms.date: 2026-10-27
+ms.date: 2026-10-23
 ---
 
 ## Purpose
@@ -83,6 +84,15 @@ retain original outcomes and siblings, including
 and [v0.12.0](./research/reports/2026-10-10/proper-warm-prd-v0-12-0/challenge-disposition.md).
 Original tracking records remain; selected historical previews are explicitly
 archive-backed, not live-local. Promotion changes no approval or review gates.
+For issue #440, the
+[first bounded local stabilization checkpoint](../architecture/cutover-evidence-pack.md#first-bounded-local-stabilization-checkpoint-2026-10-23-440)
+pins merged-main runtime inputs, BRD/PRD/ADR versions and covered journeys.
+Focused/package checks and actual browser/SQL Server/Docker observations are
+separate from the policy candidate. The native full run failed a1500ms SQL-read
+benchmark at17383ms; three focused repeats passed but do not repair its failed
+receipt. Native policy-host discovery remains Deferred. No total-product pass,
+new confirmed code defect, acceptance tick, cloud/real-AI approval, final
+publication receipt or PR is implied. Independent local lanes can continue.
 
 For issue #221, the [core incident boundary](../../src/core/README.md#operator-incidents-and-constructed-restart-221)
 and [API contract](../../src/api/README.md#incident-and-restart-contract-221)

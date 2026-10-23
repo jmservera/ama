@@ -64,3 +64,25 @@ model submissions, private credentials/data or shared-system effects. Preserve
 the original negative evidence. If authenticated discovery is necessary, obtain
 explicit bounded authority/containment rather than enabling network or importing
 credentials into this container. Further blind retries are not justified here.
+
+## Narrow prerequisite diagnosis after the preliminary freeze
+
+While the source remained frozen for the native local gate, a bounded
+read-only Git executable probe in the isolated public slim image exited1:
+the host Git binary requires GLIBC_2.38, absent in that image. This explained
+one isolation-prerequisite gap, not the agent result. Restored that specifically
+missing prerequisite using official node:24-bookworm with its compatible Git
+instead of mounting the host executable. Retained public image and owned stopped
+container ama-440-host-listing-8; raw argv.json/transcript.bin/transcript.txt/
+transcript-clean.txt under /tmp/ama-440-host-native-compatible-20261023.
+The CLI then recognized /workspace as a Git checkout, accepted isolated
+container-only trust, processed /agent and exited0 after dismissal and /exit.
+The actual chooser STILL said No custom agents found. Thus final host verdict
+remains Deferred. Do not infer authentication is the proven cause or introduce
+credentials/network/agent-configuration changes. No model prompt or coordinator
+selection occurred. Source directory/file access was also checked: uid1000
+owns directory775/file664, so no permission failure was observed.
+
+These local tooling/image restores overlapped the preliminary gate. Its later
+core benchmark breach has unknown cause; contention cannot be excluded.
+No candidate source changed; no further host retry or heavy gate was launched.

@@ -2,6 +2,7 @@
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
 ms.date: 2026-10-27
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -1916,3 +1917,169 @@ publication, every dependent-epic disposition or post-merge rubric comparison.
 Accordingly all five issues are referenced, not closed. The literal zero-token
 repository-wide criterion in #203 is not claimed complete: preserved history
 and defensive fixtures are explicit exceptions.
+## First Bounded Local Stabilization Checkpoint (2026-10-23, #440)
+
+**Executed, partial; not a product or release pass.** This checkpoint assesses
+merged-main runtime inputs, separately from the proposed coordinator policy.
+No issue/epic criterion was ticked, no cloud action or paid inference ran, and
+no resident, professional or release approval is inferred.
+
+### Source, coverage and requirement baseline
+
+Fresh `origin/main` before testing and after the run:
+`140d8f494482c78e84d15f3d46b9223d3c487af0`, tree
+`e4910768767a071827a771d9c0c919451cccae57`. Focused tests used an external
+exact-main export, installed distributions and constructed fixtures. The native
+runner requires a clean commit: preliminary policy/evidence head
+`d8a6506100c56c9454a85bcc31bac11d56b4a3bc`, tree
+`681da68894aa36082d84bfe4f4b15f45502e5992`, was frozen for its entire run.
+Its diff from main contained only the existing coordinator, `src/README.md`
+and this issue's tracking evidence. All application, test, dependency, tool,
+workflow and executable build inputs were identical to main. The external
+allowlist proof is `/tmp/ama-440-preliminary-identity-20261023.json`.
+The receipt binds that preliminary head, **not literally main HEAD and not a
+final publication candidate**. Subsequent checkpoint-documentation commits
+invalidate any publication eligibility independently of its failed status.
+
+Bounded recent merged coverage is #419 / #221 (incident/restart source,
+`993a7b88c03f5240f1e7a4c7c7afa7c064281622`), #418 / #220 (resident
+challenge/correction, `7e95f0224bfb7a8a62990a1de162fbcfa68db539`), #427 /
+#151 (contrast correction, `9e55a392b95c90730c6410b9a4db4ad3a5ae70ce`)
+and #414 / #413 (native gate,
+`fa659cfd021100f7c64f8ec73bbff76c03adf234`). Requirements amendments #433 /
+#432 are at the source pin; #431 / #122
+(`3deb179d57b6520e114a27862f79ca95399f833e`) remains a custody proposal,
+not observed recovery-service delivery. Older merged runtime code supports
+the tested welcome, session, proposal, import and persistence boundaries;
+this is not exhaustive feature, PR or acceptance coverage. Unmerged #437 and
+all sibling-branch functionality are excluded. #349, #350 and #360 remain
+open live-acceptance gaps, not new duplicate bugs.
+
+| Baseline document | Version/status at source pin | Git blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | Draft 0.19.0, 2026-10-22 | `e96c4b16010f47a8ce01b29a9c208e4b3bb34319` |
+| [Demonstrator PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | Candidate 0.18.0, 2026-10-22; historical exercise acceptance of 0.12.0 does not accept this delta | `a1fa17ab39924bb4bed7cd92c7bf2c8c79772410` |
+| [ADR 0001](../adrs/0001-azure-architecture.md) | Proposed, dated amendments | `9f53b5b6ee36ff0a21854c3058e10c55e3bd7835` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Proposed, dated shared-API realization | `e6c8ce004e04dd0aeda3beafc01719ebe81c927a` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Accepted with Basic IoT Hub amendment | `6044e1061f45964393e649aefa80b2293644d58f` |
+| [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) | Accepted staged | `259358e53e37ddeade73f9ee3aafd8dcacea20f9` |
+| [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) | Accepted synthetic-development scope only | `4d610335a5a18bb282e29c6cb3053404beda995d` |
+| [ADR 0006](../adrs/0006-src-layout-and-cutover.md) | Accepted layout/dependency boundary | `a5063f8f31c79044137b529145fbef7667841305` |
+
+Document-qualified IDs below are traceability, not new document approval,
+legal-currentness confirmation or activation of operational controls.
+
+### Actual local commands and outcomes
+
+Focused environment: `/tmp/ama-440-focused-20261023`, Python 3.12.3, installed
+all five `src/` distributions with pip after the chosen import probe actually
+failed `ModuleNotFoundError: zava_forward`. No `PYTHONPATH=mvp`, default/private
+dataset, private roster or `.env` was used. From each exported component,
+the installed interpreter ran `-m unittest -v` with these exact selector sets:
+
+| Component | Selectors | Actual result |
+| --- | --- | --- |
+| API | `test_auth.ProxyHttpTests`, `test_auth.PasswordProviderTests`, `test_auth.TrustedProxyTests`, `test_assistants.ContractTests.test_every_capability_failure_disabled_and_malformed`, `test_assistants.DurabilityTests.test_schema_failure_disables_assistance_not_manual_reads`, `test_assistants.ApiTests.test_invalid_payload_and_store_failure_leave_manual_api_available`, `test_assistants.ReviewTests.test_independent_qa_reviewer_and_separate_human_verification`, `test_resident_api.ResidentApi.test_live_local_http_decision_pause_redress_and_restart`, `test_workflows.SqlFlows.test_safety_flow_blocks_booking_until_released_by_someone_else`, `test_ai_tasks` | 60 passed, 16.309s, exit0 |
+| Core | `test_sqlstore test_recovery test_dependency_rule` | 32 passed, 9.258s, exit0 |
+| Importer | `test_excel_transition test_dependency_rule` | 32 passed, 0.118s, exit0 |
+| Orchestrator | `test_digest_blob test_token_store test_document_rescan_job test_source_monitor test_dependency_rule` | 44 passed, 4.744s, exit0 |
+| Agents | `test_ai_identity test_dependency_rule` | 6 passed, 0.069s, exit0 |
+
+API used fixture-only `PYTHONPATH=tests:../core/tests:../agents/tests`.
+The five existing component discoveries used the installed interpreter,
+`-m unittest discover -s tests -q` and documented shared fixture paths.
+Final standalone outcomes: core1243/307.123s, skipped167; agents105/18.226s;
+API959/386.227s, skipped301; orchestrator46/4.863s; importer39/0.147s.
+All exited0: 2392 discovered, 468 skipped, 1924 executed successfully.
+Skipped checks are not passes.
+
+The original archive-only core run failed three tests and errored once:
+Git audit/provenance and repository-output guards require Git metadata.
+Restoring metadata from the exact local pin, preserving erroneous generated
+outputs externally, then running all four focused failures and the full core
+suite resolved them without source edits. Intermediate mistyped-SHA/import-path
+and stale-fixture retries are retained, not hidden. Logs are
+`*-focused.log`, `*-suite.log`, `core-harness-reproduction*.log`,
+`core-suite-git-aware.log` and `archive-harness-artifacts/` under the focused
+directory. These harness failures are not confirmed application bugs.
+
+The existing native gate then ran once, 13:10:49-13:41:44Z:
+
+```bash
+python3 tools/rpi-checks.py --all --base 140d8f494482c78e84d15f3d46b9223d3c487af0 --out /tmp/ama-440-preliminary-20261023-d8a65061 --lock-timeout 0
+```
+
+**Exit1, failed receipt preserved.** Sixteen groups passed; `project-core`
+failed one benchmark. The runner continued its other groups rather than
+converting the overall result to success.
+
+| Native result | Exact evidence in native output directory | Classification and limitation |
+| --- | --- | --- |
+| Core1243/361.428s, one failure, skipped167 | `0012-project-core.log`: `test_sqlreads.Scale.test_sql_reads_at_60000`, filtered page17383.017630ms, required strictly below1500ms | Local observed failure; core Ruff/format/mypy were not reached in this group |
+| Agents105, API959 skipped301, orchestrator46, importer39; all exit0 | `0018`, `0027`, `0036`, `0045` component logs; their Ruff/format/mypy commands passed | Local observed; integration skips remain qualified |
+| Namespace, static, infra and migration groups passed | Receipt command ledger; static runner12 tests, infra368 tests; offline Bicep build/lint and workflow inventory | Local observed, not Azure deployment/what-if |
+| Actual Chromium design-system and regulatory UX harnesses exit0 | `0139-browser.log`, `0140-browser.log`, `regulatory-ux-results.json`; Chromium156.0.8078.4, pinned axe4.10.3 | Local observed, synthetic changed surfaces only; 19 scans, zero reported violations, ten color-contrast incomplete observations needing manual review |
+| Actual disposable SQL Server244/378.736s, exit0, skipped1 | `0155-mssql.log`; owned loopback SQL container and random credentials, seven existing SQL selector groups | Local observed persistence/proposal/review/ledger parity; one JSON-only separate-file audit test deliberately skipped, not SQL proof |
+| Four Docker/non-root contracts and separate API logo-mode0600 contract passed | `image-api`, `image-agents`, `image-orchestrator`, `image-importer`, `logo-0600` receipt groups | Local observed startup/negative-probe controls, not deployed workload equivalence |
+| Four configured scanner gates and SPDX reports produced | Each component `*-gate.json`, `*-all.json`, `*.spdx.json` | Local observed: zero fixable HIGH/CRITICAL under configured gate; full reports retain residuals, not vulnerability-free certification |
+
+Native output and retained environments:
+`/tmp/ama-440-preliminary-20261023-d8a65061`.
+Failed receipt SHA256:
+`ce6ff80079f2086b49159dd33a9d208fb1f328998de1d4cc85dd14de8b2990a9`.
+The official `--verify-receipt` with that `receipt.json` and the same current
+base exited1: `Receipt does not establish a complete passing run`.
+Verification output is `/tmp/ama-440-preliminary-verification-20261023.log`.
+There is **no eligible final receipt**.
+
+After the gate released its lock, a nonqueued focused invocation repeated
+`test_sqlreads.Scale.test_sql_reads_at_60000` three times in the exact-main
+focused environment. All three passed in55.045s; filtered measurements were
+108/106/108ms, with the original1500ms assertion unchanged. Full standalone
+core had also passed earlier. These retests do not repair the failed receipt
+or prove the cause of the17.383s observation. Contention and suite-order effects
+remain unproven possibilities; bounded host-tool image restores overlapped
+the native run, so environmental interference cannot be excluded.
+
+### Requirement, architecture and journey reconciliation
+
+| Qualified requirement / decision | Planned boundary and actual local observation | Remaining gap / classification |
+| --- | --- | --- |
+| PRD FR-003, AC-004/005, NFR-003; ADR0002 | Public feedback-first welcome, protected workbench/API, missing-principal401, dev-cookie expiry and trusted-proxy role/case denial exercised by focused `test_auth` and browser harness | Local observed only. Real Entra callback/session/role provisioning blocked under #349; historical #350 redirect is not JSON/API acceptance |
+| PRD FR-028/044/047, AC-030/052/058-061; BRD RULE-018, FR-044 | Disabled/malformed/schema/storage/provider failures preserve manual reads and explicit AI status; independent proposal QA/human-verification separation, unchanged controlled state and durable proposal evidence tested locally and in SQL | Local observed scripted/model-off behavior. Real task-bound AI, task quality/value and deployed AC-057 blocked/unverified under #360, not accepted from mocks |
+| PRD FR-045/046; BRD CON-006/RULE-006 | Local HTTP supplied measure decision/pause/redress/restart and scoped safety/booking hold; unrelated choices and manual paths remain separate | Local observed constructed decisions, not actual resident consent, appointed professional review or witnessed restart |
+| BRD RULE-020/024; #221 | Incident/restart guards and distinct-authority fixture checks included in package suites; emergency/manual routes independent | Actual OD-35 named acceptance/thresholds and controlled restart remain blocked/unknown; synthetic reviewer cannot release work |
+| PRD FR-001/005, NFR-010; ADR0002/0006 | SQLite reopen/recovery plus actual SQL Server store, ledger, assistant durability/review/API tests | Local observed parity, not production Azure SQL identity, backup/restore or deployed restart acceptance; #350/#360 remain |
+| PRD FR-030; ADR0006 supporting importer boundary | Import quarantine/preparer-reviewer refusal, retained source/history and namespace contracts exercised; portable exports are a separate PRD obligation | Local observed library/API support, not complete import UI/worker/approval-channel delivery |
+| ADR0006 | Five installed distributions and namespace/dependency tests; workloads depend on core, temporary API-to-agents edge allowed; no workload-to-API | Local observed accepted layout. Cohesive core is an accepted trade-off, not evidence demanding speculative decomposition |
+| ADR0001 versus ADR0002 | Shared API proposal realization tested; orchestrator digest/token/rescan/source and importer interfaces exercised with local/mocked providers | Separate autonomous worker/identity estate remains proposed/deferred, not delivered by skeletons or unit tests |
+| ADR0003/0004/0005 | Existing synthetic sensor, staged chat/memory and compliance-assistant guards fall within component/regulatory harness scope | Live Hub transport, privacy/human gates and qualified legal/RAI acceptance remain implemented-unverified, blocked or deferred as applicable; no operational-law approval |
+| BRD FR-052/NFR-012, PRD Tokenomics amendments from #433 | Pinned requirement delta reconciled against existing proposal usage controls | Full all-in cost/value reporting deferred to existing #432, not a newly discovered regression or inferred acceptance |
+
+No new `Azure observed` row exists. Complete all-in headroom is Unknown despite
+the USD700 replacement ceiling and unchanged 2026-10-25T16:02Z expiry. Cloud,
+Graph, tenant, paid inference and private-data operations were not authorized
+or executed. Staff comprehension, resident wording review, screen-reader/
+universal WCAG conformance and actual human approvals remain unmet.
+
+### Findings, scoped recommendation and resume
+
+| Priority / severity | Finding and reproduction | Smallest next action, owner and dependency |
+| --- | --- | --- |
+| 1 / High delivery blocker; source-defect severity unknown | PRD NFR-002/PR-005 and ADR0002 paging boundary: native core benchmark17383ms exceeds its existing1500ms assertion; standalone suite and three focused repeats pass. Original failure and recipe above retained | Issue440/coordinator validation owner: diagnose performance repeatability/environment attribution in separately scoped work if needed; retain unchanged threshold and regression. No speculative query refactor or code fix here. A later complete stable-candidate run, not a focused pass, is required for publication |
+| 2 / High validation blocker, not a product defect | Policy static Pass and seven-scenario simulation Complete/Pass; independent host metadata/references pass, but actual contained native chooser did not discover the candidate | P04-T01 host-validation owner: establish safe supported exact-candidate native discovery without selecting/launching coordinator, model submissions, private credentials or cloud effects. HVE remains Deferred, original RPI Review and final publication gate not yet eligible |
+| Existing acceptance gates | #349 tenant/session, #350 deployed parity, #360 real deployed/AI workflow; #432 requirements delta; named safety/resident/quality authority | Existing owners, no duplicate issues, no ticks/closure. Local fixture success cannot substitute for these gates |
+
+Current open-issue inventory was refreshed; exact benchmark-name body search
+found no open match, and existing #76 remains the queue-functionality owner.
+No stable application defect or necessary refactor was confirmed, so no new
+bug issue or code change was manufactured. The transient measured gate failure
+is an explicit regression/reliability risk, not dismissed as a pass.
+
+Recommendation: **fix the affected validation evidence before publication or
+affected closure/dependent expansion; continue independent local lanes**.
+No product pivot, requirement relaxation or deliberate acceptance deferral is
+approved or proposed. Epics cannot close merely because their children merged.
+The original critique, failed runs and unchecked human sign-off above remain.
+The shared heavy lock was free after the owned gate and focused repeats; no
+#349 process/output or receipt environment was interrupted, read or reused.
