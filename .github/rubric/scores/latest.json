@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-22T19:49:51+00:00",
-  "commit": "928d148f750c3066ce2e755a6451864c181de725",
+  "scored_at": "2026-10-23T16:21:41+00:00",
+  "commit": "b09f08f8f2d5f3f413c44c07fd6cb46c67392a56",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39840274826",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/39985235987",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "5d3831f1da50a37c1732fd7e467c2f7721f4b570f55e9c97c8a440bdb67aed3a",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
+    "solution-code": "407c8c280c32b797ae147954cbe600b8d75faa377423d0f5139c1c16def9ae02",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
     "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
@@ -110,10 +110,10 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:1-137",
-        "src/api/README.md:2555-2561"
+        "src/core/README.md:928-937",
+        "src/core/tests/test_form_review_pack.py:1-209"
       ],
-      "rationale": "New pitch brief is a well-organised, navigable preparation document; capstone deck remains unchanged and already well structured. Still capped at Good(4); some documentation remains dense elsewhere."
+      "rationale": "README section documenting the new fictional review pack is clear and navigable; well-structured test evidence. Capped at Good(4); some documentation remains dense elsewhere. Unchanged from baseline."
     },
     "B7": {
       "score": 3,
