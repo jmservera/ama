@@ -96,8 +96,8 @@ byte identity plus narrow ancestry/rubric inspection and full current-base gate.
 <!-- phase: P05 -->
 ### P05: Local rebase
 
-* [ ] P05-T01: Recheck remote/base, rebase clean branch, reconcile exact53/22.
-* [ ] P05-T02: Record actual changes/limitations, commit final pre-gate evidence.
+* [x] P05-T01: Recheck remote/base, reconcile bot, rebase clean branch, exact53/22.
+* [x] P05-T02: Actual changes/limitations recorded; this evidence commit precedes gate.
 
 <!-- phase: P06 -->
 ### P06: Current-base evidence and local handoff
@@ -139,3 +139,15 @@ Details: .copilot-tracking/details/2026-10-23/resident-portal-requirements-441-r
 Critique: .copilot-tracking/reviews/plans/2026-10-23/resident-portal-requirements-441-rebase-plan-critique.md
 Changes (Implement-owned): .copilot-tracking/changes/2026-10-23/resident-portal-requirements-441-rebase-changes.md
 Post-gate assessment and state remain external in this native session.
+
+## Implementation readiness reconciliation
+
+Conflict-free local rebase completed after preserving actual remote bot4017b214.
+Original product commit rebased to b5744db2, bot to7da9203a; exact stable
+patch IDs match originals. All53 original issue blobs unchanged; all22
+reviewed output pins match. Main rubric config and bot score bytes exact.
+Additional diff versus remote4017b214 is only main's one-line config addition
+and five new continuation evidence files. No canonical edits, tests, tools,
+registration or PR/body changes. P06 remains pending, not historical approval.
+After this final pre-gate evidence commit all state/assessment/receipt results
+remain external; committed P06 unchecked markers intentionally stay historical.

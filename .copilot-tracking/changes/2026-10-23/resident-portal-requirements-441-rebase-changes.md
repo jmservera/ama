@@ -35,3 +35,34 @@ onto the actual remote bot tip with clean rebase, then rebase the resulting
 three-commit chain onto pinned main. Exact expected remote lease is now
 4017b214bb021244b06264629953d84f29003c53, not published b39b377f.
 Compare all original53 files and22 output pins plus exact bot score blob.
+
+## P05 actual rebase and byte continuity
+
+Both clean local rebases succeeded without conflict or product edit.
+Original product commit is now b5744db2; original bot commit now7da9203a.
+The pre-final-evidence local head is
+7ecca6ef (full actual identity in external hash reconciliation).
+
+Independent parent calculations found:
+
+* All53 original committed issue file blobs unchanged.
+* All22 focused-report original output SHA-256 values exactly matched.
+* Product stable patch ID f05f02a2f351afa94a57972180374de4e5929148 unchanged.
+* Bot stable patch ID4eda76c9ec85aa6b1a90fb60b75ae6ceb0413fda unchanged.
+* Exact bot score blob retained; score's b39b377f source remains historical.
+* Rubric artifact config equals exact fetched main. Relative diff from remote
+  bot tip contains only that one-line main delta and five continuation files.
+
+No primary/sibling worktree, original product/research/review/source evidence,
+runtime, tool, numbered ADR/config, owner memory, original case study or
+PR/body changed. Assisted/live/unsigned/unregistered boundaries persist by
+exact original byte identity; no acceptance or current hosted result inferred.
+
+## Remaining P06 and evidence boundary
+
+Commit this final continuation evidence before the one new complete gate.
+Then no repository edits: current head/base/receipt/verifier, independent
+delta assessment and stopped-before-push handoff persist externally.
+Old receipt d9c17bb8 and its environments remain untouched historical evidence.
+New lock availability, complete gate, official verification and independent
+assessment remain unexecuted at this commit. No current-base receipt is claimed.

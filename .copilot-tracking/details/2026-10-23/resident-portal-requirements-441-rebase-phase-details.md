@@ -97,3 +97,14 @@ onto pinned mainf1e2d830. No score edit or manual regeneration. Add exact score
 blob equality and original53/22 retention to completion evidence.
 This implements owner's explicit bot reconciliation direction; no new scope,
 second critique, remote write or approval. Stop again if remote moves further.
+
+## Actual P05 completion
+
+Conflict-free chain replay retained original53 blobs and all22 reviewed pins;
+product patch ID f05f02a2f351afa94a57972180374de4e5929148,
+bot patch ID4eda76c9ec85aa6b1a90fb60b75ae6ceb0413fda match originals.
+Actual remote expected old head4017b214 retained in exact bot score bytes.
+Read-only computed reconciliation resides externally as
+441-rebase-hash-reconciliation.json in the native session. Its intermediate
+head precedes this final evidence commit; independent assessment must bind
+actual final head separately. P06 gate/assessment not yet run.
