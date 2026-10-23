@@ -14,3 +14,24 @@ P04 planning inputs will be committed first, then clean rebase P05 onto
 f1e2d830f17558efd868919de1973ea7244a8841. No product, registry, runtime,
 tool or PR/body modification intended. Gate/assessment not yet executed.
 Stop before push; no current-base approval claimed.
+
+## P04 commit and remote-movement amendment
+
+Planning/research/critique/opening changes evidence committed as
+3bf85a9588a602341c5d9be8fa806f4caf1f3393 before rebase.
+Fresh fetch detected remote bot commit
+4017b214bb021244b06264629953d84f29003c53, so the chained identity assertion
+stopped before any rebase. Main remained f1e2d830.
+
+Read complete bot delta: only `.github/rubric/scores/latest.json`, produced
+by github-actions[bot], score55/100, source commit b39b377f, run40032509668.
+No product or source/tool change. Retain the entire actual bot commit and
+score bytes without manual regeneration or score adjustment.
+
+Owner explicitly required reconciliation of actual bot changes. This is an
+immediately relevant execution amendment preserving intent, not a new product
+decision or second critique. Move only the local continuation evidence commit
+onto the actual remote bot tip with clean rebase, then rebase the resulting
+three-commit chain onto pinned main. Exact expected remote lease is now
+4017b214bb021244b06264629953d84f29003c53, not published b39b377f.
+Compare all original53 files and22 output pins plus exact bot score blob.

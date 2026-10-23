@@ -95,3 +95,11 @@ remain, but do not prevent this local rebase/evidence continuation.
 Self-check: actual identities and one-line delta recorded; no fabricated
 implementation, critique, current receipt or approval. Parent may enter Plan
 as explicitly requested by this owner continuation.
+
+## Prospective implementation discovery
+
+The P05 fresh-fetch guard later detected actual bot4017b214, after this
+Research/Plan/critique had completed. Initial no-bot observations remain
+historically correct. Full score-only delta was inspected in Implement and
+recorded as an owner-authorized reconciliation amendment in current
+plan/details/changes, not silently overwritten or retroactively claimed here.

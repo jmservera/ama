@@ -52,6 +52,12 @@ against rebased equivalent excluding only new continuation artifacts.
 Verify new rubric config equals fetched main; verify old published53 files
 unchanged, and original22 output SHA-256 pins. Old reviewed blob hashes and
 product Review support retained quality, not current gate or formal approval.
+Execution amendment: fresh pre-rebase fetch found bot-only remote4017b214.
+The safety assertion stopped before rebase. Its full score-only delta was
+inspected; preserve that commit unchanged in intent/bytes by first replaying
+only local planning evidence atop remote4017b214, then rebasing the complete
+chain onto pinned main. No manual score edits. Original53/22 identity checks
+plus bot score blob retention required. Expected lease now4017b214.
 
 ## Non-Functional Requirements
 

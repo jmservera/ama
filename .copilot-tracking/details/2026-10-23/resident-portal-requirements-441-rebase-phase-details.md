@@ -84,3 +84,16 @@ with zero wait; worker must not do prohibited operations in its own context.
 No lock bypass, tool edit, alternate runner, fallback or waiver is permitted.
 This resolves applicability for this plan; actual busy lock/failure still
 blocks. See plan Critique Disposition; no repeat critique or new owner prompt.
+
+## Actual remote bot reconciliation amendment
+
+Pre-rebase assertion stopped on new remote
+4017b214bb021244b06264629953d84f29003c53. Entire delta inspected:
+only workflow-owned `.github/rubric/scores/latest.json`. Preserve bot score
+byte-for-byte and author/commit intent; it remains evidence for original
+b39b377f, not newly scored rebased HEAD. Replay only local evidence commits
+onto actual remote4017b214, then rebase complete chain from oldbase140d8f49
+onto pinned mainf1e2d830. No score edit or manual regeneration. Add exact score
+blob equality and original53/22 retention to completion evidence.
+This implements owner's explicit bot reconciliation direction; no new scope,
+second critique, remote write or approval. Stop again if remote moves further.
