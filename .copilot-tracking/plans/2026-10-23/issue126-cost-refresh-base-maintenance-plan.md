@@ -12,12 +12,13 @@
 
 ## Executive Summary
 
-Locally rebase the idle issue126 branch onto verified origin/main
+Locally rebased the idle issue126 branch onto verified origin/main
 f1e2d830f17558efd868919de1973ea7244a8841 after one independent critique.
-Preserve every original tracked path/mode/blob except the upstream rubric
-insertion; add only separate dated maintenance RPI evidence. Stop after focused
-checks, actual continuation Review and clean committed evidence. No heavy
-gate, queue, push, PR mutation or Azure call.
+Every original tracked path/mode/blob preserved except the upstream rubric
+insertion; only separate dated maintenance RPI evidence added. Actual
+continuation Review completed with Residual work. Parent seals clean evidence
+and focused terminal checks, then stops. No heavy gate, queue, push, PR mutation
+or Azure call.
 
 ### What You May Not Know
 
@@ -99,8 +100,8 @@ Current user prohibits heavy validation; focused checks cannot replace it.
 | Plan/details/critique | Task Metadata paths; original Revise retained, three findings dispositioned |
 | Changes record | .copilot-tracking/changes/2026-10-23/issue126-cost-refresh-base-maintenance-changes.md |
 | Review | .copilot-tracking/reviews/logs/2026-10-23/issue126-cost-refresh-base-maintenance-review.md |
-| Readiness | Candidate ready for critique; no implementation/rebase yet |
-| Continuation | Full-loop parent; stop at local maintenance boundary |
+| Readiness | P01/P02-T01 complete; one continuation Review execution Complete, outcome Residual work |
+| Continuation | P02-T02 final seal/terminal checks pending at this committed checkpoint; exact post-seal result external to avoid self-reference |
 
 ## Sources
 
@@ -110,12 +111,12 @@ cost source and RPI artifacts are historical inputs and not writable targets.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Checkpoint and authorized local rebase
+### [x] P01: Checkpoint and authorized local rebase
 
 Dependency: completed research and single critique disposition.
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Seal maintenance readiness evidence
+#### [x] P01-T01: Seal maintenance readiness evidence
 
 Resolve authenticated gh identity; locally configure privacy-safe email and
 use explicit author/committer env. Commit only new maintenance research,
@@ -123,7 +124,7 @@ plan/details/critique/state and initialized changes evidence. Commit is a
 pre-rebase checkpoint, never a completed-rebase/Review claim.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Rebase onto verified fresh origin/main
+#### [x] P01-T02: Rebase onto verified fresh origin/main
 
 Dependency: P01-T01 clean commit. Recheck current base/topic remote lease and
 unique commit list immediately before replay; exact prescribed target main.
@@ -138,7 +139,7 @@ Report changed original commit identity and actual result.
 Dependency: successful P01.
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Focused byte and consistency validation
+#### [x] P02-T01: Focused byte and consistency validation
 
 Full old-to-new original path/mode/blob comparison excluding only inherited
 rubric; additions must be a subset of the exact allowlist below, complete at
@@ -213,5 +214,9 @@ or second critique.
 
 ## Handoff
 
-Implementation begins only after critique disposition. First P01-T01, then
-P01-T02; no source or rebase operation has occurred during planning.
+P01 and P02-T01 complete after critique disposition; local replay conflict-free.
+Original update replayed as6be411e0; checkpoint replayed asd9dca155.
+P02-T02 continuation Review executed, outcome Residual work; final evidence
+seal/terminal focused checks remain at this checkpoint. No in-scope defect
+found; new Review RV-001 routes later publication to coordinator, original
+cost RV-001/002 remain open. No full gate or publication eligible here.

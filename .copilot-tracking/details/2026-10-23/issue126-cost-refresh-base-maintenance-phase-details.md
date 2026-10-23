@@ -14,15 +14,16 @@
 
 | Phase | Status | Tasks |
 | --- | --- | --- |
-| P01 | Ready candidate after critique | P01-T01/P01-T02 |
-| P02 | Dependent on P01 | P02-T01/P02-T02 |
+| P01 | Complete, conflict-free replay | P01-T01/P01-T02 |
+| P02 | P02-T01 passed; Review Complete/Residual work; seal pending | P02-T01/P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Checkpoint and authorized local rebase
 
-Original branch is clean at630603d69e3f2d4ef9b9f1b580da2f4ff6b82952.
-Research has added only separate uncommitted maintenance artifacts, so seal
-them before rebase. No existing work is stashed/discarded/carried elsewhere.
+Original branch was clean at630603d69e3f2d4ef9b9f1b580da2f4ff6b82952.
+New evidence checkpoint19f982c7 preceded replay. Actual local rebase completed
+without conflict; original update now6be411e0, replayed checkpointd9dca155.
+No existing work stashed/discarded/carried elsewhere; original byte pins pass.
 
 <!-- rpi:task id=P01-T01 -->
 ### P01-T01: Seal maintenance readiness evidence
