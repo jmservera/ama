@@ -99,10 +99,10 @@ src/README.md local commands and local RPI gate; unchanged on fresh main.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Reconcile local history
+### [x] P01: Reconcile local history
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Preserve phase evidence and both source histories
+#### [x] P01-T01: Preserve phase evidence and both source histories
 
 After critique disposition and Implement activation, generate exactly two
 Git format-patch artifacts for 3b881a65 and 6c284d45 under this dated research
@@ -111,7 +111,7 @@ identity/trailer; this is a real pre-rebase evidence checkpoint, not a final
 gate candidate. No prior artifacts overwritten.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Rebase preserving known intents
+#### [x] P01-T02: Rebase preserving known intents
 
 Refresh refs. If remote/main differs, inspect before proceeding. Rebase local
 checkpoint onto fetched remote topic to include remote-only commit, then
@@ -122,10 +122,10 @@ No merge or push. No blanket conflict choice, source changes or log rewriting.
 Stop on any unfamiliar intent/conflict. Record actual mapping and differences.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate reconciled checker
+### [x] P02: Validate reconciled checker
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Ownership and distribution prerequisites
+#### [x] P02-T01: Ownership and distribution prerequisites
 
 Inspect live processes/lock before running validation. Create a new isolated
 non-receipt pip environment for this continuation unconditionally; establish
@@ -136,7 +136,7 @@ No dependency-manifest change or unpinned tooling introduction. Preserve old
 receipt environments untouched. Log externally without repository caches.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Focused validation and reconciliation invariants
+#### [x] P02-T02: Focused validation and reconciliation invariants
 
 Parent owns tests. Removals: none. Additions: zero methods; generated targets:
 only two historical patches, no code generation. Preserve all 35 existing tests.
@@ -150,7 +150,7 @@ entire KB log/active rubric to exact main. Confirm range-diff only expected.
 ### [ ] P03: Original Review and committed candidate
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: One independent Review
+#### [x] P03-T01: One independent Review
 
 Fresh worker activates rpi-review once. Scope: reconciliation and preserved
 checker, artifacts, real validation; no live acceptance or post-gate assessment.
@@ -217,4 +217,17 @@ No significant decision or second critique needed. Plan and details reconciled.
 Changes: .copilot-tracking/changes/2026-10-23/issue349-tenant-readiness-preflight-current-main-changes.md.
 Critique: .copilot-tracking/reviews/plans/2026-10-23/issue349-tenant-readiness-preflight-current-main-plan-critique.md.
 Review: .copilot-tracking/reviews/logs/2026-10-23/issue349-tenant-readiness-preflight-current-main-review.md.
-Planning complete and Ready. No implementation begun. Next: P01-T01.
+P01 complete, conflict-free: phase checkpoint 4fd7a32f, remote integration then
+rebased checkpoint fab84fa4 on exact main. All five human checker commits
+replayed; only two archived bot-score commits omitted. No source edit.
+P02 complete: fresh pip context, all 35 tests, no-cache Ruff, strict mypy and
+whitespace checks passed. All 28 original blobs and all 10 main-changed files
+byte-identical; archived patches exact; range-diff confirms expected mapping.
+P03-T01 complete: independent Review execution Complete, outcome Conformant
+for bounded pre-commit reconciliation, no unresolved blocking finding.
+Reviewer independently reproduced preservation/lineage comparisons; focused
+checks honestly attributed to parent. RV-001 routes seal/gate to parent,
+RV-002 coordinator exact-head/lineage and RV-003 hosted/live acceptance remain.
+Pre-seal snapshot: P03-T02 final commit is next; P04 not run and not claimed
+passed. Main/topic fetched again unchanged immediately before sealing.
+After seal, completion evidence stays external so no gated inputs are changed.

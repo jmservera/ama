@@ -3,7 +3,7 @@
   "task_slug": "issue349-tenant-readiness-preflight-current-main",
   "parent_task": {"task_id": "349-correction3", "task_slug": "issue349-tenant-readiness-preflight-correction3"},
   "mode": "manual",
-  "active_phase": "Implement",
+  "active_phase": "Follow-up",
   "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
@@ -12,14 +12,20 @@
     "details": ".copilot-tracking/details/2026-10-23/issue349-tenant-readiness-preflight-current-main-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-23/issue349-tenant-readiness-preflight-current-main-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-23/issue349-tenant-readiness-preflight-current-main-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-23/issue349-tenant-readiness-preflight-current-main-review.md"
   },
   "confirmed_decisions": [
     {"decision": "Owner explicitly requests same-history ordered Research, Plan/details/critique, Implement/changes, Review continuation, local rebase preserving both intents, one full gate and no push.", "status": "confirmed", "evidence": "2026-10-23 user request"},
     {"decision": "Fetched main 140d8f494482c78e84d15f3d46b9223d3c487af0 and remote topic 6c284d4547de7c52a360b2ec2406ea2078a98f16; initial local head 3eebcc3922188f5ddd614bfa5d4583b082f4e1c5.", "status": "observed", "evidence": "Intake Git fetch, rev-parse and read-only PR query"},
-    {"decision": "Research executed and Ready on C1-C6; one final-candidate critique executed, verdict Revise preserved; PC-001/PC-002 accepted and applied, plan/details Ready.", "status": "complete", "evidence": "2026-10-23 research and plan Critique Disposition"}
+    {"decision": "Research executed and Ready on C1-C6; one final-candidate critique executed, verdict Revise preserved; PC-001/PC-002 accepted and applied, plan/details Ready.", "status": "complete", "evidence": "2026-10-23 research and plan Critique Disposition"},
+    {"decision": "Remote-first rebase then exact-main replay completed conflict-free; five human patches identical, two archived score commits omitted only. All28 original blobs and all10 main-changed files identical.", "status": "verified", "evidence": "Changes P01/P02; independent Review preservation comparisons"},
+    {"decision": "Fresh non-receipt pip context installed existing five projects; all35 focused tests, pinned no-cache lint/format, strict mypy and preservation checks passed.", "status": "complete", "evidence": ".copilot-tracking/changes/2026-10-23/issue349-tenant-readiness-preflight-current-main-changes.md"},
+    {"decision": "One original independent Review execution Complete; outcome Conformant for bounded pre-commit reconciliation. No unresolved blocking finding; RV-001 parent seal/gate, RV-002/RV-003 separate coordinator/hosted/live residuals.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-23/issue349-tenant-readiness-preflight-current-main-review.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "P01-T01: generate two inert historical score patches and commit pre-rebase phase checkpoint; then integrate remote ancestry and rebase."},
-  "prioritized_follow_ups": []
+  "next_action": {"phase": "Follow-up", "action": "Pre-seal snapshot: create final evidence commit, inspect exact base/ownership/clean inputs and execute sole full gate; official receipt verification against fresh origin/main, report stale if moved. Keep final results external, no post-seal edits or push."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent coordinator exact-final-head and rewritten-lineage assessment", "rationale": "Required publication boundary; this pre-commit Review and local gate do not replace it. Coordinator owns publication.", "evidence": "Review RV-002"},
+    {"rank": 2, "task": "Hosted checks and authorized human/tenant/operator acceptance", "rationale": "Live registration/credential/private roster/operator consent, Entra sign-in, real API/browser and private transport remain blocked; October headroom Unknown.", "evidence": "Review RV-003"}
+  ]
 }
