@@ -1,0 +1,57 @@
+<!-- markdownlint-disable-file -->
+
+# Changes: issue-119-map-options-recovery
+
+Plan: .copilot-tracking/plans/2026-10-20/issue-119-map-options-recovery-plan.md
+Execution: rpi-implement skill actually invoked in the coordinator-intervention continuation. Scope: full plan P01-P02 and P03-T01; P03-T02 (commit and gate) follows.
+
+## P01 options document
+
+* P01-T01: docs/reference/research/ux/map-tile-provider-options.md Option C cost cell now notes a second, inconsistent secondary OS rate (about GBP 0.000525 per leisure view) and that no secondary figure is relied on.
+* P01-T02: bounded-options wording re-read; comparative only, no ranking, shortlist or fallback.
+* P01-T03: audit of options doc, WCAG baseline and ADR 0002: prices and DPA positions are labelled secondary or unverified; screen-reader record is "Not run"; engineering evidence labelled not a screen-reader run; the DPO personal-data question is left open. No further edit needed.
+
+## P02 clarifications
+
+* P02-T01: appended a dated correction entry to docs/reference/log.md (append-only).
+* P02-T02: appended a clarification section to the six original markdown tracking artifacts. Original JSON state untouched; recovery state is a separate file. Draft commit 69fa487a. An earlier full-gate runner (pids 1610738/1610739, out /tmp/ama-119-gate-yy1w/out) was started on that draft and was left running, not killed, as historical and not final evidence.
+
+## Validation (P03-T01)
+
+* git diff --check clean; no non-ASCII added lines.
+* src/api tests.test_accessibility_baseline: 7 tests OK (static checks only).
+* Procedural note: the log entry was appended with a shell heredoc rather than the edit tool; content is append-only and reviewable in the diff.
+
+## Divergences and follow-ups
+
+* No plan divergence. Follow-ups: human screen-reader run; owner-approved vendor term and price verification; owner provider decision.
+
+## P04 budget wording correction (rpi-implement, 2026-10-20)
+
+* Independent assessor returned Defects on e69a2ed5: the options doc called USD500 a monthly budget and gated only account creation. Corrected in docs/reference/research/ux/map-tile-provider-options.md (total October cap, accrued and forecast, across ama and other scopes, separate finite costed plan before any paid execution, no spend authorised, unknown headroom blocks).
+* Appended a dated correction entry to docs/reference/log.md. Index unchanged.
+* Original review, critique and adverse receipt preserved. The e69a2ed5 receipt is historical; the full gate is pending a fresh coordinator run on the new head.
+* Not claimed: provider selection, purchase, Legal or DPO approval, UI change, screen-reader acceptance (not run); rates, terms and DPA unverified. Refs #119, not closing.
+
+## P05 certifi lock correction (rpi-implement, 2026-10-21)
+
+Discovered cross-cutting security gate regression, attributed honestly; not part of the map-domain findings.
+
+* Files: src/core/requirements.txt, src/api/requirements.txt, src/importer/requirements.txt, src/orchestrator/requirements.txt (certifi 2026.7.22 to 2026.10.19, hashes 035c1e85...a1ae and 42d35340...0e1b from PyPI JSON).
+* Evidence in /tmp/ama-119-certifi-repro (kept external): pip install --require-hashes of the api lockfile succeeded and pip check was clean; docker build of src/api, src/importer and src/orchestrator Dockerfiles succeeded; trivy 0.76.0 image with the gate flags returned exit 0 and zero HIGH or CRITICAL fixable findings for all three images (trivy-*.json).
+* No Trivy ignore, baseline, severity change or skip token. Temporary venv and local image tags were removed.
+* Not run: the full heavy gate (coordinator serialises it on the final head); the old receipt stays historical.
+* Map findings are unchanged: screen-reader NOT RUN, rates, terms and DPA unverified, no provider selected. Refs #119.
+
+## P06 budget evidence wording (rpi-implement, 2026-10-21)
+
+* docs/reference/research/ux/map-tile-provider-options.md cost paragraph now states the provisional RG-only forecast USD 535.41 (coordinator-supplied, 2026-10-21, not live, no in-repo source; a repository search found no copy) already exceeds the USD500 total October cap before unknown non-RG liabilities; no zero or approval inference.
+* Validation: git diff --check, non-ASCII scan. Original reviews, critiques and failed receipts preserved; the a3257c71 pass receipt is historical. No dependency edits. Screen-reader NOT RUN; rates, terms, DPA unverified; no provider selected. Refs #119.
+
+## P07 integration onto main ca4baf75 (rpi-implement, 2026-10-21)
+
+* Fast-forwarded to origin/docs/map-provider-options-119 c184df61 (bot commit "chore(rubric): record score 48/100", only .github/rubric/scores/latest.json, scored source head 24fa0f67), then rebased onto origin/main ca4baf75 (merged PR #420).
+* c184df61 conflicted only in .github/rubric/scores/latest.json against main's generated score (commit 2f5e1b78). Owner decision: "Skip the stale bot score commit and regenerate through the workflow". It was skipped with git rebase --skip; main's file is unchanged and no score was edited by hand. The old bot SHA c184df61 and source head 24fa0f67 remain in the remote branch history and are not a current score. A new score must come from the workflow after a validated publication.
+* The certifi 2026.10.19 pins already on main from PR #420 are retained; no issue-specific requirement diff remains.
+* Focused validation: git diff --check and non-ASCII scan only. No heavy gate, Docker or Azure. Earlier exact-head receipts are historical, not current acceptance.
+* Original Review, critiques and adverse receipts are unchanged. Both acceptance criteria stay unmet and the PR a proposal: screen reader NOT RUN, rates, terms and DPA unverified, no provider selected, no paid execution approved; provisional coordinator-supplied RG-only forecast USD 535.41 exceeds the USD500 October cap (expiry 2026-10-25T16:02Z), no headroom. Refs #119.

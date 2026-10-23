@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-19
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -682,6 +682,26 @@ Trade-offs:
 | Vector tiles generated per filter | Smooth | Heavy infrastructure for one team | Rejected |
 | Continue OSM public tiles | Free | Policy allows light use only; not for production traffic | Demo only |
 | Self-hosted tiles | Control | Operations burden | Not now |
+
+#### Tile provider options delta (2026-10-20, refs #119)
+
+The [options review](../reference/research/ux/map-tile-provider-options.md)
+adds dated evidence without changing the proposal above or selecting a
+provider. Its vendor statements carry evidence-status labels (corrected
+2026-10-23): only the OSM tile policy and the Azure Maps pricing page were
+re-read, and everything below about Azure Maps, Ordnance Survey and others is
+draft, unverified. It finds that Azure Maps terms, paid rate and processor position are
+not yet verified, that its Europe geography (draft, unverified) is not the `uksouth` pilot region,
+and, as an implementation inference rather than vendor evidence, that the
+current Leaflet image-tile requests cannot attach the Entra ID header (whether
+Azure Maps requires it is draft, unverified), so a URL
+key, SAS token, same-origin proxy or different tile loading would be an open design question. Ordnance Survey Maps
+API is Great Britain only, requires an API key and advises a backend proxy for
+public web maps (all draft, unverified). The configured tile URL reaches every signed-in browser, and at
+zoom 19 a tile covers roughly 44 m at the pilot latitude, so a property-centred
+view discloses an area of about one building or street to the provider. These
+are proposals for owner and Data Protection Officer review; no account, key,
+subscription or approval exists.
 
 ### Sensor Data Capture, Analysis and Map
 
