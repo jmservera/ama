@@ -99,14 +99,14 @@ plus exact navigation diff and score/product byte comparisons.
 <!-- phase: P08 -->
 ### P08: Local corrections
 
-* [ ] P08-T01: Integrate second bot preserving local evidence; no remote writes.
-* [ ] P08-T02: Validator helpers, small regressions and14 navigation hrefs.
-* [ ] P08-T03: Focused tests/report/links and provenance reconciliation.
+* [x] P08-T01: Integrate second bot preserving local evidence; no remote writes.
+* [x] P08-T02: Validator helpers,8 regressions and14 navigation hrefs.
+* [x] P08-T03: Focused tests/report/links and provenance reconciliation.
 
 <!-- phase: P09 -->
 ### P09: Review and author-handoff preparation
 
-* [ ] P09-T01: One independent correction Review; no repeat historical Review.
+* [x] P09-T01: One independent correction Review; no repeat historical Review.
 * [ ] P09-T02: Commit correction evidence/source, clean local handoff; no gate/push.
 
 ## Critique Disposition
@@ -123,3 +123,12 @@ Hosted Low A5/B6 remain open: supported scorer regeneration requires inference/
 workflow, explicitly excluded. Later complete PRD/ADR package must be handed
 off/reconciled separately before one final stable-candidate gate and coordinator
 assessment/publication. This correction does not certify author package readiness.
+
+## Review disposition and final commit boundary
+
+Independent correction1 Review executed Complete, outcome Conformant with
+justified divergence, zero active-correction findings. Independent8-method
+regressions passed. A5/B6 and later author integration/gate remain open.
+This does not alter prior Residual work or grant product/publication approval.
+P09-T02 final commit/clean-head result will be recorded externally after the
+commit; this precommit checkbox intentionally does not fabricate completion.

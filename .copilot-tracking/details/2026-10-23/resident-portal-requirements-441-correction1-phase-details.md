@@ -77,3 +77,20 @@ Commit correction plus new Review as one final issue-only commit, no amend.
 Postcommit actual validator reproduction external report may bind head;
 no source changes or Review rerun afterward. Return exact clean head/base/
 remote expected lease and handoff readiness for later package, not publication.
+
+## Implementation reconciliation before Review
+
+P08 complete: bot exact via745407f3, validator actual report succeeds,
+8 focused methods pass; includes PC-001 fragment caller tests and ADR rename
+boundary. Existing custody YAML suffix allowance justified by actual rejected
+original files, then tested. Historical Review14 href-only correction and
+new critique5 href-only repairs leave findings/outcomes/prose unchanged.
+Canonical docs unchanged,21/22 original pins retained, old report unchanged.
+158 inherited diagnostics/3 anchors and open A5/B6 recorded in changes.
+P09 Review/commit remain; no full gate or publication in this loop.
+
+P09-T01 now executed once: Complete/Conformant with justified divergence,
+zero active-correction findings; eight independent tests passed. No source
+fixes after Review. P09-T02 commit and clean exact-head handoff are parent-owned
+next; completion result persists externally after actual commit. A5/B6,
+complete author handoff, stable gate and coordinator publication remain open.

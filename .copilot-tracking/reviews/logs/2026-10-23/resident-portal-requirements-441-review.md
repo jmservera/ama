@@ -500,20 +500,20 @@ Protected memory SHA-256:
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-plan.md](.copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-plan.md) | Current plan and remaining publication phase |
-| [.copilot-tracking/details/2026-10-23/resident-portal-requirements-441-phase-details.md](.copilot-tracking/details/2026-10-23/resident-portal-requirements-441-phase-details.md) | Phase contracts and owner boundaries |
-| [.copilot-tracking/reviews/plans/2026-10-23/resident-portal-requirements-441-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-23/resident-portal-requirements-441-plan-critique.md) | Single qualified plan critique |
-| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441-changes.md](.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441-changes.md) | Implementation and local refinements |
-| [.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-research.md](.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-research.md) | Historical blocked cycle and reduced-scope continuation |
-| [.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-input-custody.json](.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-input-custody.json) | Exact original custody |
-| [.copilot-tracking/rpi-sessions/2026-10-23/resident-portal-requirements-441-state.json](.copilot-tracking/rpi-sessions/2026-10-23/resident-portal-requirements-441-state.json) | Active Review and preserved decisions |
-| [.copilot-tracking/rpi-sessions/2026-10-23/resident-portal-requirements-441-phases.json](.copilot-tracking/rpi-sessions/2026-10-23/resident-portal-requirements-441-phases.json) | Native history and RV-001 reconciliation target |
-| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/focused-validation.json](.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/focused-validation.json) | Matched 22 final-file hashes and inherited diagnostics |
-| [docs/brds/agentic-retrofit-programme-brd.md](docs/brds/agentic-retrofit-programme-brd.md) | Assessed unsigned canonical BRD |
-| [docs/prds/zava-forward-retrofit-programme-demonstrator.md](docs/prds/zava-forward-retrofit-programme-demonstrator.md) | Assessed unsigned canonical PRD |
-| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md](.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md) | Assessed id-null architecture/options/text equivalent |
-| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md](.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md) | Original adverse-source evidence archive |
-| [.copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md](.copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md) | This task's one canonical Review |
+| [.copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-plan.md](../../../plans/2026-10-23/resident-portal-requirements-441-plan.md) | Current plan and remaining publication phase |
+| [.copilot-tracking/details/2026-10-23/resident-portal-requirements-441-phase-details.md](../../../details/2026-10-23/resident-portal-requirements-441-phase-details.md) | Phase contracts and owner boundaries |
+| [.copilot-tracking/reviews/plans/2026-10-23/resident-portal-requirements-441-plan-critique.md](../../plans/2026-10-23/resident-portal-requirements-441-plan-critique.md) | Single qualified plan critique |
+| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441-changes.md](../../../changes/2026-10-23/resident-portal-requirements-441-changes.md) | Implementation and local refinements |
+| [.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-research.md](../../../research/2026-10-23/resident-portal-requirements-441-research.md) | Historical blocked cycle and reduced-scope continuation |
+| [.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-input-custody.json](../../../research/2026-10-23/resident-portal-requirements-441-input-custody.json) | Exact original custody |
+| [.copilot-tracking/rpi-sessions/2026-10-23/resident-portal-requirements-441-state.json](../../../rpi-sessions/2026-10-23/resident-portal-requirements-441-state.json) | Active Review and preserved decisions |
+| [.copilot-tracking/rpi-sessions/2026-10-23/resident-portal-requirements-441-phases.json](../../../rpi-sessions/2026-10-23/resident-portal-requirements-441-phases.json) | Native history and RV-001 reconciliation target |
+| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/focused-validation.json](../../../changes/2026-10-23/resident-portal-requirements-441/focused-validation.json) | Matched 22 final-file hashes and inherited diagnostics |
+| [docs/brds/agentic-retrofit-programme-brd.md](../../../../docs/brds/agentic-retrofit-programme-brd.md) | Assessed unsigned canonical BRD |
+| [docs/prds/zava-forward-retrofit-programme-demonstrator.md](../../../../docs/prds/zava-forward-retrofit-programme-demonstrator.md) | Assessed unsigned canonical PRD |
+| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md](../../../changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md) | Assessed id-null architecture/options/text equivalent |
+| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md](../../../changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md) | Original adverse-source evidence archive |
+| [.copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md](resident-portal-requirements-441-review.md) | This task's one canonical Review |
 
 ## Next Steps
 

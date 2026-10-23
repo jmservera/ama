@@ -18,10 +18,63 @@ HERE = Path(__file__).resolve().parent
 BASE = "140d8f494482c78e84d15f3d46b9223d3c487af0"
 BRD = "docs/brds/agentic-retrofit-programme-brd.md"
 PRD = "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+CANONICAL_DOCS = frozenset({
+    BRD, PRD, "docs/architecture/README.md", "docs/capstone/README.md",
+    "docs/case_study_48_addendum.md", "docs/reference/README.md", "docs/reference/log.md",
+    "docs/reference/research/company/agent-request-challenge.md",
+    "docs/reference/research/company/agent-what-if-study.md",
+    "docs/reference/research/ux/content-standard.md",
+    "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
+    "docs/reference/research/ux/customer-journeys/frontline.md",
+    "docs/reference/research/ux/customer-journeys/residents.md",
+    "docs/reference/research/ux/design-system.md",
+    "docs/reference/research/ux/wcag-conformance-baseline.md",
+    "docs/reference/research/ux/zava-forward-prototype-profile-review.md",
+})
+TASK = "resident-portal-requirements-441"
+TRACKING = re.compile(
+    r"\.copilot-tracking/(?:research|plans|details|changes|reviews/plans|reviews/logs|rpi-sessions)"
+    r"/\d{4}-\d{2}-\d{2}/" + TASK + r"(?:-[a-z0-9][a-z0-9-]*)?\.(?:md|json)"
+)
+PACKAGE = HERE.relative_to(ROOT).as_posix() + "/"
 
 
-def git_bytes(path):
+def git_bytes(path, *, allow_missing=False):
+    if allow_missing and not subprocess.check_output(
+        ["git", "ls-tree", "-z", BASE, "--", path], cwd=ROOT
+    ):
+        return b""
     return subprocess.check_output(["git", "show", f"{BASE}:{path}"], cwd=ROOT)
+
+
+def canonical_changes(changed):
+    rejected = []
+    for path in changed:
+        parts = path.split("/")
+        normalized = not any(part in ("", ".", "..", "node_modules", "__pycache__") for part in parts)
+        package_file = path.startswith(PACKAGE) and Path(path).suffix in {
+            ".md", ".json", ".yaml", ".py", ".patch", ".excalidraw", ".svg", ".png",
+        }
+        allowed = path in CANONICAL_DOCS or path == ".github/rubric/scores/latest.json"
+        if not normalized or not (allowed or TRACKING.fullmatch(path) or package_file):
+            rejected.append(path)
+    if rejected:
+        raise ValueError(f"Paths outside issue 441 scope: {sorted(rejected)}")
+    return sorted(set(changed) & CANONICAL_DOCS)
+
+
+def branch_changes():
+    scope_base = subprocess.check_output(
+        ["git", "merge-base", "HEAD", "origin/main"], cwd=ROOT
+    ).decode().strip()
+    tracked = subprocess.check_output(
+        ["git", "diff", "--no-renames", "--name-only", "-z", scope_base], cwd=ROOT
+    )
+    untracked = subprocess.check_output(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z"], cwd=ROOT
+    )
+    changed = sorted(set((tracked + untracked).decode().strip("\0").split("\0")) - {""})
+    return scope_base, canonical_changes(changed)
 
 
 def sha(data):
@@ -107,7 +160,7 @@ def broken_links(path, text, baseline=False):
             broken.add(target)
         elif fragment and resolved.suffix == ".md":
             relative = resolved.relative_to(ROOT).as_posix()
-            data = git_bytes(relative).decode() if baseline else resolved.read_text()
+            data = git_bytes(relative, allow_missing=True).decode() if baseline else resolved.read_text()
             if fragment not in anchors(data):
                 broken.add(target)
     return broken
@@ -267,10 +320,8 @@ def main():
     assert ("five concurrent fictional sessions\n  (three residents on separate scopes and two staff), "
             "and a 30-minute run.") in prd
     assert "case/status/receipt API completion at or below 2 seconds" in prd
-    changed = subprocess.check_output(["git", "diff", "--name-only", BASE], cwd=ROOT).decode().splitlines()
-    assert all(path.startswith("docs/") for path in changed)
-    assert not any(path.startswith("docs/adrs/") for path in changed)
-    paths = [ROOT / path for path in changed if path.endswith(".md")]
+    scope_base, changed = branch_changes()
+    paths = [ROOT / path for path in changed]
     paths += [proposal, HERE / "source-evidence/README.md"]
     lint_report, link_report, hashes = {}, {}, {}
     for path in paths:
@@ -278,7 +329,7 @@ def main():
         data = path.read_bytes()
         hashes[relative] = sha(data)
         assert not re.search(rb"\]\([^)]*(?:/home/|session-state|file://)", data), relative
-        base_data = git_bytes(relative) if relative in changed else b""
+        base_data = git_bytes(relative, allow_missing=True)
         base_lint = lint(base_data, args.markdownlint_cli)
         current_lint = lint(data, args.markdownlint_cli)
         introduced = current_lint[2] - base_lint[2]
@@ -296,6 +347,7 @@ def main():
     report = {
         "status": "PASS_FOCUSED_STATIC_NOT_APPROVAL",
         "base": BASE, "source_custody": "PASS", "asset_identity": "PASS",
+        "scope_base": scope_base,
         "brd": {"FR": 62, "AC": 126, "NFR": 14, "RULE": 28},
         "prd": expected, "all_new_ACs": "Not run", "new_upstream_trace": "23/23",
         "formula_scenarios": results, "protected_history": "PASS",

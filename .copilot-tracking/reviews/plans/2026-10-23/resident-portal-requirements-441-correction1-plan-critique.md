@@ -112,11 +112,11 @@ The only critic-owned write is this critique artifact.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-correction1-research.md](.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-correction1-research.md) | Supplied bounded correction evidence |
-| [.copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-correction1-plan.md](.copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-correction1-plan.md) | Assessed correction plan |
-| [.copilot-tracking/details/2026-10-23/resident-portal-requirements-441-correction1-phase-details.md](.copilot-tracking/details/2026-10-23/resident-portal-requirements-441-correction1-phase-details.md) | Assessed implementation and test contract |
-| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/validate-integration.py](.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/validate-integration.py) | Existing validator examined read-only |
-| [.copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md](.copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md) | Historical navigation and outcome boundary |
+| [.copilot-tracking/research/2026-10-23/resident-portal-requirements-441-correction1-research.md](../../../research/2026-10-23/resident-portal-requirements-441-correction1-research.md) | Supplied bounded correction evidence |
+| [.copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-correction1-plan.md](../../../plans/2026-10-23/resident-portal-requirements-441-correction1-plan.md) | Assessed correction plan |
+| [.copilot-tracking/details/2026-10-23/resident-portal-requirements-441-correction1-phase-details.md](../../../details/2026-10-23/resident-portal-requirements-441-correction1-phase-details.md) | Assessed implementation and test contract |
+| [.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/validate-integration.py](../../../changes/2026-10-23/resident-portal-requirements-441/validate-integration.py) | Existing validator examined read-only |
+| [.copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md](../../logs/2026-10-23/resident-portal-requirements-441-review.md) | Historical navigation and outcome boundary |
 
 ## Next Steps
 
