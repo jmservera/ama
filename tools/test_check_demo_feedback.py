@@ -293,6 +293,117 @@ class MeContract(unittest.TestCase):
     def test_contractor_contract_passes(self):
         self.assertEqual(self.status(contractor_me()), "pass")
 
+    def test_account_fields_reject_wrong_json_types(self):
+        for make_me in (staff_me, contractor_me):
+            for field in ("name", "email", "provider"):
+                for value in (
+                    None,
+                    [],
+                    ["text"],
+                    {},
+                    {"text": "value"},
+                    False,
+                    True,
+                    0,
+                    1.5,
+                ):
+                    with self.subTest(role=make_me.__name__, field=field, value=value):
+                        me = make_me()
+                        me["body"]["account"][field] = value
+                        report = report_for(bundle(me=me))
+                        check = next(
+                            c for c in report["checks"] if c["id"] == "me_contract"
+                        )
+                        self.assertEqual(check["status"], "fail")
+                        self.assertIn("account", check["reason"])
+                        if field != "provider":
+                            self.assertIn(field, check["reason"])
+
+    def test_map_fields_reject_wrong_json_types(self):
+        for make_me in (staff_me, contractor_me):
+            for field in ("tiles", "attribution"):
+                for value in (
+                    None,
+                    [],
+                    ["text"],
+                    {},
+                    {"text": "value"},
+                    False,
+                    True,
+                    0,
+                    1.5,
+                ):
+                    if field == "tiles" and value is None:
+                        continue
+                    with self.subTest(role=make_me.__name__, field=field, value=value):
+                        me = make_me()
+                        me["body"]["map"][field] = value
+                        report = report_for(bundle(me=me))
+                        check = next(
+                            c for c in report["checks"] if c["id"] == "me_contract"
+                        )
+                        self.assertEqual(check["status"], "fail")
+                        self.assertIn("map", check["reason"])
+                        self.assertIn(field, check["reason"])
+
+    def test_string_fields_have_no_new_content_restrictions(self):
+        for make_me in (staff_me, contractor_me):
+            for section, field in (
+                ("account", "name"),
+                ("account", "email"),
+                ("map", "tiles"),
+                ("map", "attribution"),
+            ):
+                for value in ("", " ", "arbitrary text"):
+                    with self.subTest(
+                        role=make_me.__name__, section=section, field=field, value=value
+                    ):
+                        me = make_me()
+                        me["body"][section][field] = value
+                        report = report_for(bundle(me=me))
+                        self.assertEqual(statuses(report)["me_contract"], "pass")
+                        self.assertEqual(
+                            statuses(report)["case_write_reload"], "blocked"
+                        )
+                        self.assertEqual(report["overall"], "blocked")
+                        self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_unconfigured_tiles_and_empty_attribution_pass(self):
+        for make_me in (staff_me, contractor_me):
+            with self.subTest(role=make_me.__name__):
+                me = make_me()
+                me["body"]["map"] = dict(tiles=None, attribution="")
+                report = report_for(bundle(me=me))
+                self.assertEqual(statuses(report)["me_contract"], "pass")
+                self.assertEqual(statuses(report)["case_write_reload"], "blocked")
+                self.assertEqual(report["overall"], "blocked")
+                self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_contractor_empty_account_email_passes(self):
+        me = contractor_me()
+        self.assertEqual(me["body"]["account"]["email"], "")
+        self.assertEqual(self.status(me), "pass")
+
+    def test_provider_content_checks_are_unchanged(self):
+        for make_me in (staff_me, contractor_me):
+            for provider in ("", " ", "password", "arbitrary text", "trusted-proxy"):
+                for origin in ("synthetic-fixture", "deployed-capture"):
+                    with self.subTest(
+                        role=make_me.__name__, provider=provider, origin=origin
+                    ):
+                        me = make_me()
+                        me["body"]["account"]["provider"] = provider
+                        expected = (
+                            "pass"
+                            if provider.strip()
+                            and (
+                                origin == "synthetic-fixture"
+                                or provider == "trusted-proxy"
+                            )
+                            else "fail"
+                        )
+                        self.assertEqual(self.status(me, origin=origin), expected)
+
     def test_contractor_with_staff_data_fails(self):
         me = contractor_me()
         me["body"]["staff"] = [

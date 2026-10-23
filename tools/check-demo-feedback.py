@@ -249,6 +249,9 @@ def check_me(evidence, options, runtime):
         account.get("provider")
     ):
         raise Verdict(FAIL, "account must be {name, email, provider}.")
+    for field in ("name", "email"):
+        if not isinstance(account[field], str):
+            raise Verdict(FAIL, f"/api/me account.{field} must be a string.")
     if (
         evidence["origin"] == "deployed-capture"
         and account["provider"] != "trusted-proxy"
@@ -259,6 +262,10 @@ def check_me(evidence, options, runtime):
     tiles = need_dict(body["map"], "/api/me map")
     if set(tiles) != {"tiles", "attribution"}:
         raise Verdict(FAIL, "map must be {tiles, attribution}.")
+    if tiles["tiles"] is not None and not isinstance(tiles["tiles"], str):
+        raise Verdict(FAIL, "/api/me map.tiles must be null or a string.")
+    if not isinstance(tiles["attribution"], str):
+        raise Verdict(FAIL, "/api/me map.attribution must be a string.")
     if body["navigation"] != runtime.navigation(user):
         raise Verdict(
             FAIL, "navigation differs from the runtime navigation for this role."
