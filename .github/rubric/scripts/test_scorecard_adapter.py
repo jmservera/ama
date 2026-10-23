@@ -20,11 +20,31 @@ IDS = [criterion["id"] for criterion in RUBRIC["criteria"]]
 
 
 def card():
-    result = prepare.build_scorecard_template(RUBRIC, BASELINE, False, False)
-    for cid in IDS:
-        result["criteria"][cid]["change_reason"] = f"Reason for {cid}"
-    result["summary"] = "Exact summary"
-    return result
+    return {
+        "criteria": {
+            cid: {
+                "score": 3,
+                "evidence": [],
+                "rationale": f"Synthetic assessment for {cid}",
+                "change_reason": f"Reason for {cid}",
+            }
+            for cid in IDS
+        },
+        "summary": "Exact summary",
+    }
+
+
+@pytest.mark.parametrize("baseline_score", [0, None])
+def test_given_unscored_baseline_when_building_card_then_fixture_is_complete(monkeypatch, baseline_score):
+    monkeypatch.setitem(BASELINE["criteria"]["D3"], "score", baseline_score)
+    before = copy.deepcopy(BASELINE)
+
+    canonical = card()
+    reconstructed = adapter.from_inputs(adapter.to_inputs(canonical, IDS), IDS)
+
+    assert reconstructed == canonical
+    assert all(entry["score"] == 3 for entry in reconstructed["criteria"].values())
+    assert BASELINE == before
 
 
 def test_complete_card_round_trips_without_mutating_baseline():

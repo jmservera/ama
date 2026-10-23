@@ -102,12 +102,16 @@ the actual filter from the prompt, including the D3 omission and a score with
 a trailing newline:
 
 ```bash
-.venv/bin/python -m pytest .github/rubric/scripts/test_scorecard_adapter.py -q -k 'prompt_preflight or prompt_example'
+.venv/bin/python -m pytest .github/rubric/scripts/test_scorecard_adapter.py -q
 ```
 
-The focused checks pass locally. The full adapter file has two failures in
-baseline-dependent round-trip/carry-forward tests, reproduced from unchanged
-HEAD; this repair does not change those fixtures or the recorded baseline.
+All 49 adapter tests pass locally after a separate fixture repair. The two
+earlier round-trip/carry-forward failures were reproduced from unchanged
+HEAD: their submitted-card fixture reused an unfinished baseline-derived
+template. Completed-card tests now use explicit synthetic grades, independent
+of the recorded score. Zero/null baseline cases are covered, while unscored
+bootstrap/calibration scaffolds remain rejected. Production template, adapter,
+gate and recorded baseline behavior are unchanged.
 
 This is an executable agent instruction, not a new MCP interception hook.
 The pinned runtime still checks `details` only as a string before append;
