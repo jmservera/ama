@@ -27,3 +27,11 @@ Order followed: research, plan and details, independent critique (REVISE, all fo
 * No live schema change and no deployment. Azure SQL ledger behaviour is inferred from SQL Server 2022 (same engine feature and message); first proof is the fixed image starting against the live database through the approved route.
 * The live `cases` column gap was not read; all columns are handled.
 * Out of scope: sensor_consumer.py:351 `ALTER COLUMN`, kaniko Dockerfile variant, grant-application-admin.py `--apply` body_directory defect, legacy_roster_tenant.
+
+## Correction cycle 1 (2026-10-24, PR 450, test-only)
+Trigger: fresh external PR review (two findings: MssqlLedgerMigration fixture lacks the local-server guard; chat-memory rollback is untested with a populated row). Owner-approved first bounded correction; the original gate receipts above remain historical and no longer apply to the new head.
+* src/api/tests/test_mssqlstore.py: `MssqlLedgerMigration.setUp` now refuses any `ZF_SQL_SERVER` other than localhost, 127.0.0.1 or sql before registering cleanup or connecting (same guard as test_assistants.py). New always-on `MssqlLedgerMigrationGuard` proves a remote host raises before any `_Conn` call or `drop_database`.
+* New `test_populated_chat_memory_failure_rolls_back_and_retries`: legacy chat_memory row seeded; failure injected after the first real chat_memory backfill; asserts no added column, CHECK or default remains, then retry preserves the content, applies the three defaults and rejects explicit NULL.
+* No source change; no coupled defect was exposed.
+* Mutation check: with the BEGIN/COMMIT/ROLLBACK temporarily removed from `_migrate_chat_memory` the new test fails (item_class column left behind); the source was restored with git checkout.
+* Local validation: ledger, guard and statement tests 11 OK on a disposable local SQL Server 2022 (own container, port 14361); remote host refused with no connection; gate-style ruff check, ruff format --check and mypy for src/api pass.

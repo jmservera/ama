@@ -605,6 +605,8 @@ class MssqlLedgerMigration(unittest.TestCase):
 
     def setUp(self):
         import uuid
+        if os.environ.get("ZF_SQL_SERVER") not in ("localhost", "127.0.0.1", "sql"):
+            raise ValueError("Ledger migration tests require the local disposable SQL service, never Azure SQL.")
         self.name = f"zf_ledger_{uuid.uuid4().hex[:10]}"
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -726,6 +728,36 @@ class MssqlLedgerMigration(unittest.TestCase):
         self.open_store()
         self.assertEqual(self.column_facts(db, "cases", added), facts)
 
+    def test_populated_chat_memory_failure_rolls_back_and_retries(self):
+        from zava_forward.core.chatthreads import MEMORY_ADDED
+        from zava_forward.core.mssqlstore import MssqlStore
+        db, _, _, _ = self.run_previous_schema(True)
+        names = [c for c, _ in MEMORY_ADDED]
+        db.execute("INSERT INTO chat_memory (id, owner, owner_role, content, redactions, created_at) VALUES (N'm1', N'o', N'r', N'kept content', N'', N'2026-10-24')")
+        original, calls = MssqlStore._add_column_default, []
+
+        def fail_after_first_chat_backfill(store, table, *args):
+            if table == "chat_memory":
+                calls.append(args[0])
+                if len(calls) == 2:
+                    raise RuntimeError("injected after the first chat_memory backfill")
+            return original(store, table, *args)
+
+        with patch.object(MssqlStore, "_add_column_default", fail_after_first_chat_backfill), self.assertRaises(RuntimeError):
+            self.open_store()
+        self.assertEqual(calls, names[:2])
+        self.assertEqual(self.column_facts(db, "chat_memory", names), [])
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM sys.check_constraints WHERE name LIKE N'ck[_]chat[_]memory[_]%'").fetchone()[0], 0)
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM sys.default_constraints WHERE name LIKE N'df[_]chat[_]memory[_]%'").fetchone()[0], 0)
+        store = self.open_store()
+        self.assertEqual(len(self.column_facts(db, "chat_memory", names)), len(names))
+        row = db.execute(f"SELECT content, {', '.join(names)} FROM chat_memory WHERE id = N'm1'").fetchone()
+        self.assertEqual(row[0], "kept content")
+        self.assertEqual(list(row[1:]), [d for _, d in MEMORY_ADDED])
+        for col in names:
+            with self.assertRaises(store.dberror):
+                db.execute(f"UPDATE chat_memory SET {col} = NULL WHERE id = N'm1'")
+
     def test_previous_schema_still_migrates_in_an_ordinary_database(self):
         db, added, derived, facts = self.run_previous_schema(False)
         self.open_store()
@@ -739,6 +771,19 @@ class MssqlLedgerMigration(unittest.TestCase):
         store = self.open_store()
         self.assertEqual(self.table_kind(store.db, "audit"), "APPEND_ONLY_LEDGER_TABLE")
         self.assertEqual(len(store.cases), 12)
+
+
+class MssqlLedgerMigrationGuard(unittest.TestCase):
+    def test_remote_server_is_refused_before_any_connection_or_cleanup(self):
+        case = MssqlLedgerMigration("test_fresh_ledger_database_initialises")
+        with patch.dict(os.environ, {"ZF_SQL_SERVER": "example.database.windows.net"}), \
+                patch("zava_forward.core.mssqlstore._Conn", side_effect=AssertionError("connected")) as conn, \
+                patch.object(MssqlLedgerMigration, "drop_database", side_effect=AssertionError("cleanup")) as drop:
+            with self.assertRaises(ValueError):
+                case.setUp()
+            case.doCleanups()
+        conn.assert_not_called()
+        drop.assert_not_called()
 
 
 if __name__ == "__main__":

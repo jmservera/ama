@@ -32,3 +32,11 @@ Outcome: PASS with three test-quality findings (1 Medium, 2 Low).
 * Azure SQL ledger behaviour is inferred from SQL Server 2022, not proven; the fixed image must be started against the live database through the approved route.
 * The live column gap was never read. On a ledger database the migrated columns report nullable in metadata, enforced by CHECK.
 * The post-review test edits were validated by running the tests, lint and type checks, not by a second review.
+
+## Addendum: external PR 450 review and correction cycle 1 (2026-10-24)
+
+The original review above is unchanged. A later fresh external review of PR 450 raised two valid test findings; the coordinator held the merge.
+
+* External 1 (Medium): the destructive `MssqlLedgerMigration` fixture accepted any `ZF_SQL_SERVER`. Corrected with the established local-server guard before cleanup or connection, plus a regression proving refusal.
+* External 2 (Medium, thread discussion_r4368820916): no populated chat-memory rollback and retry test. Corrected with a seeded-row test that fails after the first real backfill, and was shown to fail when the transaction is removed.
+* Disposition: test-only; the source fix is unchanged. The correction has not had a separate independent review other than the external review that raised it and the coordinator's assessment of the follow-up.
