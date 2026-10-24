@@ -216,14 +216,21 @@ class BulkEditApi(unittest.TestCase):
         headers["X-ZF-CSRF"] = "1"
         code, preview = self.call(PREVIEW, self.request, headers=headers)
         self.assertEqual(code, 200)
+        # Entra is authoritative: a changed SQL staff oid neither grants nor removes access.
         rebound = dict(self.store.staff["sam@example.test"], oid="different-synthetic-oid")
         self.store.db.execute(
             "UPDATE staff SET body=? WHERE email=?", (json.dumps(rebound), "sam@example.test")
         )
-        self.assertEqual(self.call(PREVIEW, self.request, headers=headers)[0], 403)
+        self.assertEqual(self.call(PREVIEW, self.request, headers=headers)[0], 200)
+        principal["claims"][2]["val"] = "99999999-2222-3333-4444-555555555555"
+        wrong = base64.b64encode(json.dumps(principal).encode()).decode()
         self.assertEqual(
-            self.call(APPLY, {"preview_id": preview["preview_id"]}, headers=headers)[0], 403
+            self.call(
+                PREVIEW, self.request, headers=dict(headers, **{"X-MS-CLIENT-PRINCIPAL": wrong})
+            )[0],
+            401,
         )
+        principal["claims"][2]["val"] = TENANT
         principal["claims"][0]["val"] = "ZavaForward.ProgrammeManager"
         headers["X-MS-CLIENT-PRINCIPAL"] = base64.b64encode(json.dumps(principal).encode()).decode()
-        self.assertEqual(self.call(PREVIEW, self.request, headers=headers)[0], 403)
+        self.assertEqual(self.call(PREVIEW, self.request, headers=headers)[0], 200)

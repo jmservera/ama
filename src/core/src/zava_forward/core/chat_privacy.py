@@ -30,6 +30,7 @@ import time
 import uuid
 from datetime import datetime, timedelta, timezone
 
+from zava_forward.core import identity
 from zava_forward.core.chatthreads import MAX_CONTENT, MEMORY_ID_PREFIX, user_key
 
 WARNING = ("Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, "
@@ -198,7 +199,7 @@ class ChatPrivacy:
 
     def _admin(self, user):
         # The role comes from the register record, never from the caller's dict.
-        rec = self.store.staff.get(user_key(user)) or {}
+        rec = (identity.verified(user) if identity.is_entra(user) else self.store.staff.get(user_key(user))) or {}
         if rec.get("role") not in MEMORY_ADMIN_ROLES:
             raise PermissionError("Only an administrator can change the memory switches.")
 

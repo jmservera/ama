@@ -9,7 +9,7 @@ TrustedProxyProvider is for Azure Container Apps built-in authentication
 as the X-MS-CLIENT-PRINCIPAL header. The service trusts that header only when it
 can be reached solely through that ingress, so it is opt-in and fails closed:
 no principal, a principal from another tenant or identity provider, no or
-several mapped app roles, or a person not provisioned in the staff list all
+several staff app roles, or a malformed tenant or object id all
 give no user. Roles come from the Entra app role, never from the staff file.
 Nothing here validates a token signature; that is the platform's job (see the
 README for what must be configured in Azure).
@@ -22,6 +22,8 @@ import json
 import os
 import secrets
 import time
+
+from zava_forward.core import identity
 
 OID = ("oid", "http://schemas.microsoft.com/identity/claims/objectidentifier")
 TID = ("tid", "http://schemas.microsoft.com/identity/claims/tenantid")
@@ -40,6 +42,8 @@ DEFAULT_ROLE_MAP = {
     "ZavaForward.Contractor": "Contractor",
 }
 MAX_HEADER = 16384
+ADMIN_ROLE = "ZavaForward.ApplicationAdmin"
+ADMIN_EFFECTIVE_ROLE = identity.ADMIN_ROLE_NAME
 RULE_ROLE_MAP = {
     "ZavaForward.RuleAuthor": "rule_author",
     "ZavaForward.RuleOwner": "rule_owner",
@@ -100,15 +104,14 @@ class TrustedProxyProvider:
     def __init__(self, store, env=None):
         env = os.environ if env is None else env
         self.store = store
-        self.tenant = (env.get("ZF_ENTRA_TENANT_ID") or "").strip().lower()
+        self.tenant = identity.canonical_guid(env.get("ZF_ENTRA_TENANT_ID") or "")
         if not self.tenant:
-            raise SystemExit("ZF_AUTH=trusted-proxy needs ZF_ENTRA_TENANT_ID.")
+            raise SystemExit("ZF_AUTH=trusted-proxy needs ZF_ENTRA_TENANT_ID as a tenant GUID.")
         if (env.get("ZF_TRUSTED_PROXY") or "") != "1":
             raise SystemExit("ZF_AUTH=trusted-proxy needs ZF_TRUSTED_PROXY=1, confirming the service is reachable only through the authenticating ingress.")
         self.role_map = dict(DEFAULT_ROLE_MAP)
         if env.get("ZF_ROLE_MAP"):
             self.role_map.update(json.loads(env["ZF_ROLE_MAP"]))
-        self.email_fallback = env.get("ZF_AUTH_EMAIL_FALLBACK") == "1"
 
     @staticmethod
     def parse_principal(raw):
@@ -130,32 +133,30 @@ class TrustedProxyProvider:
 
     def authenticate(self, headers):
         p = self.parse_principal(headers.get("X-MS-CLIENT-PRINCIPAL"))
-        if not p or p.get("auth_typ") not in ("aad", "Bearer"):  # Container Apps reports Entra tokens as Bearer
+        if not p or p.get("auth_typ") not in ("aad", "Bearer"):  # Container Apps reports Entra tokens as "aad" or "Bearer"
             return self._deny("no aad principal", p and p.get("auth_typ"))
-        tid = {t.lower() for t in self.claims(p, TID)}
+        tid = {identity.canonical_guid(t) for t in self.claims(p, TID)}
         if tid != {self.tenant}:
-            return self._deny("tenant mismatch", sorted(tid))
+            return self._deny("tenant mismatch", sorted(t for t in tid if t))
+        oids = {identity.canonical_guid(o) for o in self.claims(p, OID)}
+        if len(oids) != 1 or None in oids:
+            return self._deny("need exactly one valid object id")
         claims = self.claims(p, ROLES)
-        mapped = {self.role_map[r] for r in claims if r in self.role_map and r not in RULE_ROLE_MAP}
-        if len(mapped) != 1:
-            return self._deny("need exactly one mapped app role", self.claims(p, ROLES))
-        role = mapped.pop()
-        oid = self.claims(p, OID)
-        person = None
-        bound = False
-        if len(oid) == 1:
-            matches = [s for s in self.store.staff.values() if s.get("oid", "").lower() == oid[0].lower()]
-            if len(matches) == 1:
-                person = matches[0]
-                bound = True
-        if person is None and self.email_fallback:
-            em = self.claims(p, EMAIL)
-            if len(em) == 1:
-                person = self.store.staff.get(em[0].lower())
-        if person is None:
-            return self._deny("no staff record with this oid", oid)
-        return dict(person, role=role, auth_provider=self.name,
-                    rule_roles=sorted({RULE_ROLE_MAP[r] for r in claims if bound and r in RULE_ROLE_MAP}))
+        admin = ADMIN_ROLE in claims
+        staff = {self.role_map[r] for r in claims if r in self.role_map and r not in RULE_ROLE_MAP and r != ADMIN_ROLE}
+        if len(staff) > 1 or not (staff or admin):
+            return self._deny("need one mapped staff role or the application admin role", sorted(set(claims)))
+        staff_assigned = bool(staff)
+        role = staff.pop() if staff else ADMIN_EFFECTIVE_ROLE
+        if role == "Contractor" and admin:
+            return self._deny("a contractor cannot hold the application administrator role")
+        names, emails = self.claims(p, NAME), self.claims(p, EMAIL)
+        return identity.principal(
+            self.tenant, oids.pop(), role,
+            name=names[0] if len(names) == 1 else "", email=emails[0] if len(emails) == 1 else "",
+            roles=tuple(r for r in set(claims) if r in self.role_map or r in RULE_ROLE_MAP or r == ADMIN_ROLE),
+            app_admin=admin, view_only=not staff_assigned) | dict(
+            rule_roles=sorted({RULE_ROLE_MAP[r] for r in claims if r in RULE_ROLE_MAP}))
 
     @staticmethod
     def _deny(reason, detail=None):
@@ -164,10 +165,9 @@ class TrustedProxyProvider:
 
     def account(self, headers, user):
         p = self.parse_principal(headers.get("X-MS-CLIENT-PRINCIPAL"))
-        names = self.claims(p, NAME)
-        emails = self.claims(p, EMAIL)
-        return {"name": names[0] if names else user["name"],
-                "email": emails[0] if emails else "", "provider": self.name}
+        names, emails = self.claims(p, NAME), self.claims(p, EMAIL)
+        return {"name": identity.display(names[0]) if len(names) == 1 and identity.display(names[0]) else user["name"],
+                "email": identity.display(emails[0], 200) if len(emails) == 1 else "", "provider": self.name}
 
     def logout_response(self, switch=False):
         target = "/sign-in?switch=1" if switch else "/.auth/logout?post_logout_redirect_uri=%2F"

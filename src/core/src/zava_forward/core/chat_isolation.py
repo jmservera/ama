@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 
 from zava_forward.core import projection, export_fields
 from zava_forward.core.chat_privacy import ChatPrivacy, redact
+from zava_forward.core import identity
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
 MAX_PURPOSE = 200
@@ -59,6 +60,11 @@ class ChatIsolation:
     def current_user(self, user):
         """Re-read the signed-in user's role from the register; a removed user or unknown role is refused."""
         key = user_key(user)
+        if identity.is_entra(user):
+            rec = identity.verified(user)
+            if rec is None or not projection.allowed(dict(rec), "chat"):
+                raise ChatForbidden("Your role does not include chat.")
+            return rec
         rec = self.store.staff.get(key) or next((s for s in self.store.data["staff"] if s["email"].lower() == key), None)
         if rec is None or not projection.allowed(dict(rec), "chat"):
             raise ChatForbidden("Your role does not include chat.")

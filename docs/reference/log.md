@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -7029,3 +7029,9 @@ metadata when the knowledge base was created.
   Finance/funder, accessibility and presentation acceptance gates remain
   separate. Archive portability requires transferring and verifying its
   actual bytes, not only retaining the repository manifest.
+
+## [2026-10-24] update | Entra-authoritative staff access, owner decision (#360)
+
+* Recorded the owner's 2026-10-24 decision that verified Entra tenant, object id and explicit application roles determine staff login, with no SQL staff row or database read on the authentication path. Added a dated subsection to ADR 0002 (the ADR stays Proposed overall) with a reciprocal ADR 0001 lineage note, BRD v0.20.0 (CON-008, FR-053, FR-054, AC-104 to AC-109, NFR-003/AC-050 clarified), PRD v0.19.0 (DD-009, FR-062, FR-063, AC-111 to AC-117) and aligned the architecture and infra READMEs and the task-routing index.
+* ApplicationAdmin alone is view-only (shows the manager option set; the server refuses state-changing requests). The 2026-10-13 SQL-binding observations are retained as history and superseded prospectively for sign-in only.
+* Design and source only: not deployed, no role assignment readback and no real-user login observed. Earlier entries retained.

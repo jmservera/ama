@@ -1868,11 +1868,12 @@ def setup(args: argparse.Namespace) -> int:
                         wait_for(lambda: cli.rest(auth_url)["properties"],
                                  lambda actual: all(actual.get(k) == v for k, v in desired.items()),
                                  "Auth configuration update is not verified; rerun before sign-in.")
-                runtime = runtime_patch(app, object_id(reg["appId"]), tenant)
+                app_url = ARM + app["id"] + f"?api-version={API_VERSION}"
+                # The ARM representation, not the CLI one, which carries read-only fields ARM rejects.
+                runtime = runtime_patch(cli.rest(app_url), object_id(reg["appId"]), tenant)
                 if runtime:
                     drift += 1
                     if not readonly:
-                        app_url = ARM + app["id"] + f"?api-version={API_VERSION}"
                         cli.rest(app_url, method="PATCH", body=runtime)
                         wait_for(lambda: cli.rest(app_url),
                                  lambda a: runtime_patch(a, object_id(reg["appId"]), tenant) is None

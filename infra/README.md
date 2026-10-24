@@ -677,8 +677,11 @@ python3 infra/scripts/private-cutover-proof.py smoke --direct-ingress \
 
 The optional session file must be owner-owned mode `0600`, outside the
 repository, with exactly one `cookie` or `token` JSON field. It supplies an
-already authenticated **Contractor** session with provisioned staff binding;
-it does not manufacture roles or authenticate a person. The probe first
+already authenticated **Contractor** session; it does not manufacture roles or
+authenticate a person. A Contractor signs in only when exactly one enabled roster row binds its
+OID to a company. Roster rows match an Entra principal on tenant and OID; a row
+without a `tid` matches only when the store records `legacy_roster_tenant`, so
+legacy ownership continuity needs that record set through a reviewed guarded step. The probe first
 requires `/api/me` 200, then `/api/stats` 403: Contractor may read its own
 account but cannot read staff-wide statistics. An administrator is not the
 wrong-role fixture for this endpoint. Missing/unknown staff or invalid sessions
@@ -1831,11 +1834,37 @@ gate/receipt and independent assessment are required before any publication.
 
 ### Tenant staff and application-role initialization
 
-An enterprise-app role assignment alone is not enough. The workbench also
-requires an internal staff record bound to the person's Entra object id. A
-valid role with no matching staff `oid` produces `Account not authorised`;
-email fallback remains disabled. SQL staff is cached at startup, so completing
-the binding also requires reloading the API replicas.
+Entra-authoritative access (owner decision 2026-10-24, Refs #360; see the
+[ADR 0002 decision](../docs/adrs/0002-pilot-readiness-architecture.md#entra-authoritative-staff-access-owner-decision-2026-10-24-refs-360)).
+A verified tenant, one valid object id and an assigned app role are sufficient
+for staff sign-in. No SQL staff row, SQL read or replica reload is a login
+prerequisite, and email fallback stays disabled. The roster/binding route below
+is historical and optional business-metadata reconciliation only; do not run it
+to fix a login. This is selected design for the changed build, not evidence of
+the serving revision or of a real-user session.
+
+Provisioning uses the isolated Graph profile. Setup merges `appRoles`
+idempotently and its manifest now includes `ZavaForward.ApplicationAdmin`:
+
+```bash
+python3 infra/scripts/setup-entra.py --dry-run
+python3 infra/scripts/grant-application-admin.py --tenant TENANT_ID \
+  --app-id CLIENT_ID --upn VERIFIED_ADMIN_UPN --expected-oid VERIFIED_OID   # dry run
+python3 infra/scripts/grant-application-admin.py ... --apply  # one assignment
+```
+
+The grant script verifies the tenant, the unique enterprise app, the enabled role
+and an enabled member, adds only that assignment and is a no-op on repeat.
+`ApplicationAdmin` alone is the non-staff role "Application Administrator": it
+lists every option but reads no business data and the server refuses every
+state-changing request; combine it with a staff role such
+as `ProgrammeManager` to act. It grants no RuleOwner, AIRestart, professional
+sign-off, consent or private-thread authority.
+
+Historical route (superseded for sign-in): an enterprise-app role assignment
+alone was not enough because an internal staff record bound to the person's
+Entra object id was also required. A valid role with no matching staff `oid`
+produced `Account not authorised`. SQL staff is cached at startup.
 
 The default setup command now orchestrates `scripts/initialize-workbench-staff.py`
 after Entra reconciliation and a fresh Entra check. Its private JSON roster
