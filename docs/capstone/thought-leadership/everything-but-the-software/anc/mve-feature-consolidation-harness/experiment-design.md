@@ -3,6 +3,8 @@
 
 Phase 4 output (HVE Core Experiment Designer). Experiment type: LLM / agentic software-engineering process, controlled comparison.
 
+Status: proposed, awaiting recorded owner approval and freezing of the dated protocol version before the pilot. Sample sizes, study scope and optional arm C are frozen before any non-pilot run.
+
 ## 1. Approach in one paragraph
 
 Give a coding agent the same sequence of feature requests, one at a time, under two conditions. In arm A it moves straight to the next feature. In arm B it must first stop and consolidate: review what it built, refactor under tests without changing behaviour, and rewrite a one-page design note. After every step, scripts the agent never sees measure whether everything delivered so far still works (hidden acceptance tests), how the internal quality of the code is evolving, how much there is to review, and what it cost. At the end, every code base receives the same unplanned cross-cutting change, to test how changeable it stayed.
@@ -13,9 +15,11 @@ Give a coding agent the same sequence of feature requests, one at a time, under 
 | --- | --- | --- |
 | A, feature-only (control) | Next feature starts immediately | Baseline of continuous feature accumulation |
 | B, feature + consolidation (treatment) | Consolidation step, budget 50% of a feature step | Tests the harness |
-| C, feature + review-only (optional placebo) | Read-only review with the same budget as B; writes REVIEW.md only | Separates refactoring from "a second look" (H7) |
+| C, feature + review-only (optional comparison) | Read-only review with the same budget as B; writes REVIEW.md only | Compares the complete consolidation package with review-only (H7) |
 
 Everything except the post-feature step is identical across arms: model and version, agent runtime, feature prompts, starting skeleton, tools, per-feature budget, machine.
+
+The B-C contrast does not isolate refactoring. B may add behaviour-pinning tests and writes architectural DESIGN.md; C cannot change code or tests and writes issue-oriented REVIEW.md. Later feature sessions read those different notes, so any H7 benefit belongs to the complete package, including tests and documentation.
 
 ## 3. Task suites
 
@@ -70,13 +74,13 @@ Related design references: SWE-Maintain (Pan et al., 2026) shows the downstream 
 ## 4. Procedure per run
 
 1. Create a fresh git repository from the skeleton. Record model, runtime and tool versions.
-2. For k = 1..N (N = 10; 8 in the first pass):
+2. For k = 1..N (N = 10 in both first pass and main study):
    1. Copy feature k's visible example tests into the workspace.
    2. **Feature step** (all arms): the runner tags the head `feature-start` (`git tag -f`), then starts a fresh agent session with the feature prompt (`harness/feature-step.prompt.md`). Budget: 30 minutes wall-clock (TODO(owner): confirm, plus a turn or token cap). The agent may commit only when all visible tests pass; uncommitted work at the end of the budget is discarded, so the step either delivers a green increment or nothing.
    3. **Measure** (scripts, outside the agent): tag the committed head `feature-end`, then run the cumulative hidden suite and the metrics in section 6 on the committed head.
    4. **Post-feature step**: arm A none; arm B consolidation session (`harness/consolidation-step.prompt.md`, 15 minutes); arm C review-only session (`harness/review-only-step.prompt.md`, 15 minutes).
    5. **Measure again** (arms B and C) on the new head.
-3. **Change request**: fresh session with the held-out request, 45-minute budget, same commit rule; run its hidden tests plus the full cumulative suite.
+3. **Change request**: after all ten feature steps, fresh session with the held-out request, 45-minute budget, same commit rule; run its hidden tests plus the full cumulative suite. CR1 requires ranking (F9) and exports (F10), so no shortened F1-F8 sequence receives the full CR1 test set.
 4. Archive the repository, session logs, metrics and cost records with the run identifier.
 
 Fresh sessions per step mirror the case's coordinator: context travels only through the repository.
@@ -128,8 +132,9 @@ Reporting follows the guidelines for empirical studies involving LLMs (Baltes et
 
 * One pinned model and runtime for all arms; arms interleaved in a randomised run order on the same machine, so model drift and load affect all arms alike.
 * Hidden tests and the metrics pipeline frozen before the pilot; the agent cannot read them.
-* Pilot results are excluded from the confirmatory analysis.
+* Pilot and exploratory first-pass results are excluded from the main study's confirmatory analysis; each stage is reported separately.
 * Blinded human review; analysis script written and dry-run on pilot data before the main runs.
+* Sample sizes, first-pass-only versus first-pass-plus-main scope, and inclusion of C are recorded before any non-pilot run. No outcome-dependent additions to the confirmatory sample are permitted.
 * Every run is reported, including incomplete ones; deviations go to a divergence log.
 
 ## 8. Scope, sample and timeline
@@ -138,26 +143,28 @@ Reporting follows the guidelines for empirical studies involving LLMs (Baltes et
 | --- | --- | --- | --- |
 | Build | Suites S1 (and S2), hidden tests, skeleton, prompts, runner, metrics, analysis script | n/a | Days 1-3 |
 | Pilot | S1, arms A and B, one run each, N = 10 | 20 feature + 10 consolidation steps | Day 4 |
-| First pass (minimum viable) | S1, arms A and B, 3 runs each, N = 8, plus CR1 | 48 feature + 24 consolidation + 6 CR steps | Days 5-6 |
+| First pass (minimum viable, exploratory) | S1, arms A and B, 3 runs each, N = 10, plus CR1 | 60 feature + 30 consolidation + 6 CR steps | Days 5-6 |
 | Main (if budget allows) | S1 and S2, arms A and B (C optional), 5 runs each, N = 10, plus CRs | 200 feature + 100 consolidation + 20 CR steps | Week 2 |
 
-Upper bound of agent time for the first pass, at the proposed budgets: about 35 hours, or roughly 9 hours with four parallel sessions. TODO(owner): set the token or premium-request ceiling after the pilot measures real consumption.
+Upper bound of agent time for the first pass, at the proposed budgets: 42 hours (60 x 30 + 30 x 15 + 6 x 45 minutes), or an idealised 10.5 hours with four parallel sessions, excluding measurement and scheduling overhead. TODO(owner): set the token or premium-request ceiling after the pilot measures real consumption, and record the selected scope, sample sizes and inclusion of C before any non-pilot run. First-pass runs are not counted toward the five main-study runs per arm per suite.
 
 Out of scope: human checkpoints inside the loop, multiple models, browser user interfaces, cloud deployment, and running the full RPI workflow per feature (a possible replication once the primary result exists).
 
-## 9. Analysis plan (fixed before the main runs)
+## 9. Proposed analysis plan (freeze before the main runs)
 
-* **H1**: difference in mean cumulative hidden pass rate after the final feature (B minus A) with a 95% bootstrap interval, resampling runs within suite. Supporting model: mixed-effects logistic regression of per-test pass on arm, feature index and their interaction, with random intercepts for suite and run.
+* **H1**: difference in mean cumulative hidden pass rate after the final feature (B minus A) with a 95% bootstrap interval, resampling runs within suite. Validated when the estimated gain is at least 10 percentage points and the interval's lower bound is above zero; invalidated when its upper bound is below 5 points; otherwise inconclusive for evaluable data. A 12-point gain with an interval of [-2, 26] is inconclusive. Supporting model: mixed-effects logistic regression of per-test pass on arm, feature index and their interaction, with random intercepts for suite and run.
 * **H2, H3**: linear mixed models of each measure on arm, feature index and arm-by-index, random intercepts for suite and run; report slopes and interaction with intervals.
 * **H5**: per-step cost on arm and feature index; cumulative cost curves; ratio of total cost B to A with a bootstrap interval.
 * **H6**: success-rate difference with an exact or Bayesian beta-binomial interval (small n); cost ratio for successful attempts.
 * **H4**: non-test lines (as H3); comprehension time and accuracy compared with rank-based tests and effect sizes.
 * Outcome vocabulary per hypothesis (HVE): validated, invalidated, mixed, inconclusive or not evaluable. Decision: go (adopt the harness), no-go (report null and test alternatives) or adjust.
+* H1 invalidation routes to no-go; inconclusive H1 routes to adjust, without enlarging the confirmatory sample. Go requires H1 and H6 validated and H5 not invalidated, as specified in mve-plan.md.
+* Main-study inference uses only its predeclared fixed sample (five runs per arm per suite), not pilot, first-pass or later extension runs. Report any exploratory extension separately, without pooling it into the original confirmatory estimates or changing their verdict.
 
 ## 10. Iteration plan
 
-* Arm A shows no decay in the pilot: lengthen the sequence to 15 features or increase feature interplay before the main runs.
-* Results within thresholds but intervals overlap zero: add runs (up to 10 per arm) before deciding.
+* Arm A shows no decay in the pilot: lengthen the sequence to 15 features or increase feature interplay, record a revised protocol and rerun the pilot before freezing the non-pilot design.
+* Intervals overlap zero without meeting the invalidation criterion: report the outcome as inconclusive. Any additional runs form a separately labelled exploratory extension with its own recorded design, not an enlargement of the original confirmatory sample.
 * Consolidation games metrics (for example trivial function splitting) without behavioural gains: report it as a Goodhart finding; add a human checkpoint arm in a follow-up.
 * Consolidation cost exceeds 150% of a feature step on average: reduce its budget and rerun the pilot.
 

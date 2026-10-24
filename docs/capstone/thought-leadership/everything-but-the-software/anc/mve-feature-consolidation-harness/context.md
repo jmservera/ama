@@ -49,7 +49,7 @@ Research preparation status (24 Oct 2026). Evidence IDs refer to the register be
 | A4 | A per-feature consolidation step reduces decay. | Inconclusive: no controlled evidence found | Practitioner support (Beck, Martin, Lanzetta). E8 shows instructions alone are insufficient; E19-E21 show agent refactorings are often superficial or wrong without verification (TCR mitigates). This is the gap the MVE fills. |
 | A5 | The cost of consolidation is recovered later in the sequence. | Inconclusive | Fowler's design stamina hypothesis is explicitly unproven; E5-E6 are correlational. |
 | A6 | Consolidated code bases absorb an unplanned cross-cutting change better. | Inconclusive | No direct evidence found. |
-| A7 | Any benefit comes from refactoring rather than a second look. | Inconclusive | No direct evidence found; placebo arm C tests it. |
+| A7 | The complete consolidation package outperforms review-only. | Inconclusive | No direct evidence found; arm C compares review-only with the package, including refactoring, behaviour-pinning tests and architectural notes. It cannot isolate refactoring. |
 
 ## Evidence register (Research preparation)
 

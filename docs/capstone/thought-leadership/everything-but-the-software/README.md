@@ -61,7 +61,7 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
    - confirm that the partners and the colleague concerned accept their anonymised descriptions;
    - add coding-agent consumption for 15–24 Oct if you have it;
    - confirm the dates and wording of your "feedback-first" and "sites ASAP" instructions;
-   - confirm every experiment threshold before the pilot, then do not change it;
+   - record owner approval and the dated frozen protocol version, including hypotheses and thresholds, before the pilot; record scope, sample sizes and optional arm C before any non-pilot run;
    - after the runs, set `\resultstrue` and write the results;
    - update the date, the acknowledgements and the generative-AI statement.
 2. Resolve every `TODO(owner)` in `anc/mve-feature-consolidation-harness/`. The open choices are thresholds, model and runtime, budgets, first pass only or main runs, and suite S2 (library suite or SlopCodeBench).
@@ -72,7 +72,7 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 
 ## Running the experiment with HVE Core
 
-To continue in VS Code with the Experiment Designer agent, copy `anc/mve-feature-consolidation-harness/` into the experiment repository as `.copilot-tracking/mve/2026-10-24/feature-consolidation-harness/`. Keep the published copy under `anc/` as the record of the precommitted protocol.
+To continue in VS Code with the Experiment Designer agent, copy `anc/mve-feature-consolidation-harness/` into the experiment repository as `.copilot-tracking/mve/2026-10-24/feature-consolidation-harness/`. The current protocol is provisional, not yet approved or frozen. Once owner approval and freezing are recorded, keep that published version under `anc/` as the precommitted record and log subsequent deviations separately.
 
 ## arXiv notes (checked 24 Oct 2026)
 

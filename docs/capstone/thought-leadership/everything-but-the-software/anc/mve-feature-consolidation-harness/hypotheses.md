@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # MVE Hypotheses: feature-consolidation-harness
 
-Phase 2 output (HVE Core Experiment Designer). Thresholds are proposals set before any run; the owner accepts, revises or rejects each one before execution. Criteria changed after execution starts are recorded as divergence, never silently replaced.
+Phase 2 output (HVE Core Experiment Designer). Hypotheses and thresholds are provisional; the owner accepts, revises or rejects them and records approval and the dated frozen protocol version before the pilot. No approval or freeze is recorded yet. Criteria changed after execution starts are recorded as divergence, never silently replaced.
 
 ## Project goal
 
@@ -23,7 +23,7 @@ Find out whether interleaving every agent-delivered feature with a consolidation
 
 ## Objective 1: Working software as features accumulate (owner's factor 1, compounding errors)
 
-**H1 (priority 1, primary).** We believe that a consolidation step after every feature preserves functional correctness as features accumulate. We will test this by delivering the same feature sequence in a feature-only arm (A) and a feature-plus-consolidation arm (B), five independent runs per arm per suite, and running the cumulative hidden acceptance suite after every feature step. We will know we are right when, after the final feature, arm B's mean cumulative hidden pass rate is at least 10 percentage points higher than arm A's and the 95% confidence interval of the difference excludes zero; we are wrong when the difference is below 5 points or its interval includes zero.
+**H1 (priority 1, primary).** We believe that a consolidation step after every feature preserves functional correctness as features accumulate. We will test this by delivering the same feature sequence in a feature-only arm (A) and a feature-plus-consolidation arm (B), five independent main-study runs per arm per suite, and running the cumulative hidden acceptance suite after every feature step. H1 is validated when, after the final feature, arm B's mean cumulative hidden pass rate is at least 10 percentage points higher than arm A's and the lower bound of the 95% confidence interval of the difference is above zero. H1 is invalidated when the interval's upper bound is below 5 points, ruling out even the proposed minimum useful gain. All other evaluable outcomes are inconclusive, including intervals that contain zero without ruling out a useful gain and estimates between 5 and 10 points. For example, a 12-point gain with an interval of [-2, 26] is inconclusive, not invalidated. Inconclusive H1 routes to adjust, not no-go.
 
 **H2 (priority 1).** We believe that in feature-only delivery, errors compound: regressions accumulate and persist. We will test this by counting open regressions and the number of steps each one survives, after every feature step, in both arms. We will know we are right when arm A's open regressions show a positive trend over the feature index (slope interval above zero) and arm B has at least 50% fewer open regressions after the final feature; we are wrong when arm A shows no positive trend.
 
@@ -41,9 +41,9 @@ Dependency: H1 can only show an effect if decay exists in arm A. H2 and H3 are c
 
 **H6 (priority 1).** We believe consolidated code bases absorb an unplanned cross-cutting change better. We will test this by giving every final code base the same held-out change request with the same budget and running its hidden tests. We will know we are right when arm B's success rate is at least 20 percentage points higher, or its cost at least 25% lower at no lower success; we are wrong when neither difference appears.
 
-## Optional attribution check
+## Optional package comparison
 
-**H7 (priority 3, runs only if budget allows).** We believe the benefit comes from refactoring rather than from a second look. We will test this with a placebo arm (C) whose post-feature step has the same budget but is read-only: the agent reviews and writes notes but cannot change code. We will know we are right when arm B outperforms arm C on H1 and H3 by at least half of the B-A difference; we are wrong when arms B and C perform alike.
+**H7 (priority 3, runs only if budget allows).** We believe the complete consolidation package outperforms review-only. We will test this with an arm (C) whose post-feature step has the same budget but is read-only: the agent reviews and writes notes but cannot change code or tests. We will know we are right when arm B outperforms arm C on H1 and H3 by at least half of the B-A difference; we are wrong when arms B and C perform alike. This compares packages, not refactoring alone: B may add behaviour-pinning tests and writes architectural DESIGN.md, whereas C writes issue-oriented REVIEW.md, and later feature sessions read those different notes.
 
 ## Priority ranking and rationale
 
@@ -55,7 +55,7 @@ Dependency: H1 can only show an effect if decay exists in arm A. H2 and H3 are c
 | 4 | H3 | Tests internal decay, which the harness targets directly. |
 | 5 | H5 | Tells adopters whether the harness is affordable. |
 | 6 | H4 | Tests the owner's factor 2; needs human reviewers, so it is costlier. |
-| 7 | H7 | Strengthens attribution; optional. |
+| 7 | H7 | Compares the consolidation package with review-only; optional. |
 
 ## Owner decisions on proposed thresholds
 
@@ -67,4 +67,4 @@ Dependency: H1 can only show an effect if decay exists in arm A. H2 and H3 are c
 | H4 thresholds (20% fewer lines, 20% less time) | Proposed | TODO(owner) |
 | H5 thresholds (125% / 150% cost) | Proposed | TODO(owner) |
 | H6 thresholds (20 points / 25% cost) | Proposed | TODO(owner) |
-| H7 placebo arm | Optional | TODO(owner): include or defer |
+| H7 review-only arm | Optional | TODO(owner): include or defer |

@@ -154,7 +154,8 @@ invariants, checkpoints, proportional gates and measures that an architect can
 apply on the next working day (Section~\ref{sec:feedbackfirst}).
 \item A consolidation harness and a controlled experiment protocol to test
 it, designed with HVE Core's Minimum Viable Experiment method, with hypotheses
-and thresholds fixed before any run (Sections~\ref{sec:harness}
+and proposed thresholds awaiting recorded owner approval and freezing before
+the pilot (Sections~\ref{sec:harness}
 and~\ref{sec:experiment}).
 \item A reading of the developer's existential crisis grounded in what, in
 this case, remained the human's job (Section~\ref{sec:discussion}).
@@ -1079,9 +1080,10 @@ I designed the experiment with HVE Core's Experiment Designer as a Minimum
 Viable Experiment~\cite{hvecore}, following guidance for empirical studies
 that involve language models~\cite{baltes2026guidelines} and for software
 engineering experiments in general~\cite{wohlin2012experimentation}. The
-hypotheses and thresholds below were fixed before any run;%
+hypotheses and thresholds below are provisional, pending recorded owner
+approval and freezing of the dated protocol version before the pilot.%
 % TODO(author): confirm every threshold in the protocol before the pilot.
- the complete
+ The complete
 protocol, with its context, vetting record, design, plan and prompts, is
 published with this report. I found no study that tests consolidation steps
 interleaved between agent feature steps. The closest, SlopCodeBench, shows
@@ -1099,14 +1101,15 @@ and the measurable outcome that would show it right or wrong.
 \centering\footnotesize
 \caption{Hypotheses, compared after the final feature unless stated. A is
 feature-only delivery, B adds the consolidation harness, C (optional) adds a
-read-only review of equal budget.}\label{tab:hypotheses}
+read-only review of equal budget. Thresholds are provisional. H1 is
+inconclusive when neither criterion is met.}\label{tab:hypotheses}
 \begin{tabularx}{\textwidth}{@{}L{0.7cm}L{3.5cm}YL{3.0cm}@{}}
 \toprule
 ID & We believe & Right when & Wrong when \\
 \midrule
 H1 & The harness preserves working software & B's cumulative hidden pass rate
-is at least 10 points higher, interval excludes zero & Difference below 5
-points or interval includes zero \\
+is at least 10 points higher, 95\% interval lower bound above zero & 95\%
+interval upper bound below 5 points \\
 H6 & Consolidated code absorbs an unplanned change better & Change-request
 success at least 20 points higher, or cost at least 25\% lower & No
 difference \\
@@ -1120,7 +1123,7 @@ cheaper per feature in the last third & B above 150\% with no late advantage
 \\
 H4 & The harness leaves less to review & B has at least 20\% fewer non-test
 lines; reviewers as accurate in 20\% less time & Differences below 10\% \\
-H7 & The gain comes from refactoring, not a second look (optional) & B beats C
+H7 & The consolidation package beats review-only (optional) & B beats C
 by at least half of the B--A gap & B and C alike \\
 \bottomrule
 \end{tabularx}
@@ -1131,9 +1134,13 @@ by at least half of the B--A gap & B and C alike \\
 \emph{Arms.} Arm A delivers features one after another. Arm B runs the
 consolidation harness after every feature, with half the time budget of a
 feature step. An optional arm C replaces consolidation with a read-only review
-of equal budget, to separate the effect of refactoring from that of a second
-look. Everything else is identical: model and version, agent runtime,
-prompts, starting skeleton, tools and budgets.
+of equal budget, to compare the complete consolidation package with
+review-only. B may add behaviour-pinning tests and writes an architectural
+\texttt{DESIGN.md}; C cannot change tests and writes issue-oriented
+\texttt{REVIEW.md}. Subsequent sessions read those different notes, so this
+comparison cannot isolate refactoring. Everything outside the post-feature
+intervention is identical: model and version, agent runtime, feature prompts,
+starting skeleton, tools and per-feature budgets.
 
 \emph{Suites.} Suite S1 is a ten-feature retrofit case workbench drawn from
 the case domain, whose features deliberately interact: lifecycle, handoffs,
@@ -1151,8 +1158,10 @@ step may commit only when the visible tests pass; uncommitted work is
 discarded when its budget is spent. After every step, scripts the agent cannot
 see run the cumulative hidden suite, which covers every feature delivered so
 far, and collect the metrics. A pilot calibrates budgets; a first pass runs
-S1 with three runs per arm and eight features; the main study runs both
-suites with five runs per arm and ten features.
+S1 with three runs per arm and all ten features before CR1, which depends on
+ranking (F9) and exports (F10); the main study runs both suites with five runs
+per arm and ten features. These sample sizes, whether to run the main study
+and whether to include C must be recorded before any non-pilot run.
 
 \emph{Measures.} Cumulative hidden pass rate, open regressions and how long
 they survive; mean cyclomatic complexity, the share of functions above
@@ -1172,7 +1181,14 @@ mixed-effects models that include an arm-by-feature-index interaction and
 random intercepts for suite and run. Because code generation is not
 deterministic, even at temperature zero~\cite{ouyang2025nondeterminism}, every
 condition is run several times and intervals are reported rather than single
-values. Arms are interleaved in a randomised order on the same machine; hidden
+values. The main study has a fixed sample size; pilot and exploratory
+first-pass data are excluded from its confirmatory analysis. Overlapping
+intervals do not trigger extra confirmatory runs: any extension is separately
+labelled exploratory and is not pooled into the original analysis. For H1,
+validation requires a gain of at least 10 percentage points and a 95\%
+interval wholly above zero; invalidation requires its upper bound to be below
+5 points. All other evaluable H1 outcomes are inconclusive and route to
+adjust, not no-go. Arms are interleaved in a randomised order on the same machine; hidden
 tests, metrics and the analysis script are frozen before the pilot, whose
 data are excluded; the comprehension task is blinded; every run is reported;
 and deviations from the protocol are logged. Each hypothesis is recorded as

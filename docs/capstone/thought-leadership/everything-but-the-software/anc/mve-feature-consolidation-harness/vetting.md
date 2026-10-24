@@ -29,7 +29,7 @@ Phase 3 output (HVE Core Experiment Designer). Verdict: **viable as an MVE**, wi
 
 ## Concerns raised
 
-1. **Confirmation bias.** The motivation is to "prove" a theory the owner already holds. Mitigations: thresholds fixed before the pilot; hidden tests and metrics computed by scripts; blinded human review (arm labels removed, tracking files stripped); all runs reported, including failed and null ones; deviations logged.
+1. **Confirmation bias.** The motivation is to "prove" a theory the owner already holds. Planned mitigations: owner approval and a dated frozen protocol version before the pilot (not yet recorded); hidden tests and metrics computed by scripts; blinded human review (arm labels removed, tracking files stripped); all runs reported, including failed and null ones; deviations logged. Freeze sample sizes, study scope and inclusion of C before any non-pilot run; exclude pilot and first-pass data from main-study confirmatory inference and report later extensions separately as exploratory.
 2. **Metric gaming (Goodhart).** A consolidation step judged by complexity metrics may split functions without improving design. Mitigations: several metrics, hidden behavioural tests, the held-out change request (H6) and blinded comprehension (H4), none of which can be satisfied by cosmetic refactoring.
 3. **Test tampering.** Agents may delete or weaken tests to make them pass. Mitigations: hidden tests live outside the agent workspace; visible example tests are checksummed and read-only; test and assertion counts are tracked per step.
 4. **Scale.** LLM runs vary widely. Five runs per arm per suite is an MVE-sized sample: report effect sizes with intervals and treat the result as preliminary unless intervals are clear.
