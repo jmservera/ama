@@ -2,13 +2,13 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T20:47:00+00:00",
-  "commit": "5bed0a347268ed64ea3d176d0b41c693c913b90e",
+  "scored_at": "2026-10-24T21:44:47+00:00",
+  "commit": "e58a2184cc1c53f267910e9e981088145107d401",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40130745526",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40135111070",
   "fingerprints": {
-    "brd": "72029f8cd1f9f91198af36c0a4c7f6b4f873e2bf62c5da561d98b0927d242078",
-    "prd": "c3a6609cf5d4609f85ab040ff608e43e14cbe1a1d253898dc400f66725a42bef",
+    "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
+    "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
     "solution-code": "238c8bac7556419a2c59e7818d310760e972d42005c7f3802deaba8e38ea2875",
     "infrastructure": "5ae0103ecea79755f49c0835da379867fcdbc1cc711b6e2161118cf2b8fcecf6",
@@ -16,15 +16,15 @@
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "2ed7e04b0ff17682b157b7af465dfac064ad215d62a138c3d05f11f405edf951"
   },
-  "total": 69,
+  "total": 73,
   "sections": {
     "A": 31,
     "B": 22,
     "C": 11,
-    "D": 5
+    "D": 9
   },
-  "floors_met": false,
-  "outcome": "Not Yet Met (floor)",
+  "floors_met": true,
+  "outcome": "Pass",
   "criteria": {
     "A1": {
       "score": 5,
@@ -32,7 +32,7 @@
         "src/core/src/zava_forward/core/identity.py:1-400",
         "docs/adrs/0002-pilot-readiness-architecture.md:560-684"
       ],
-      "rationale": "New identity.py is a decoupled module with explicit typed contracts, threaded through auth/server/coordinator/forms/workflows/rulecards. ADR 0002 documents explicit failure domain and a scaling bound."
+      "rationale": "New identity.py is a decoupled module with explicit typed contracts. ADR 0002 documents explicit failure domain and scaling bound."
     },
     "A2": {
       "score": 5,
@@ -63,12 +63,12 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "Metering/cost proposals exist but nothing is instrumented yet. Unchanged from baseline."
+      "rationale": "Cost/metering still only proposed, nothing newly measured in this diff. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change to the demonstrator in this diff. Unchanged baseline."
     },
     "A7": {
       "score": 4,
@@ -117,7 +117,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "Complete, cross-linked pitch documentation set alongside the committed 54-slide deck meets Excellent."
+      "rationale": "Pitch documentation set and deck remain complete and navigable; this diff does not touch the pitch/deck documentation. Unchanged."
     },
     "B7": {
       "score": 4,
@@ -129,7 +129,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD stakeholder-framing change beyond existing material already at ceiling. Unchanged."
+      "rationale": "No BRD stakeholder-framing change in this diff. Unchanged."
     },
     "C2": {
       "score": 2,
@@ -146,30 +146,28 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 2,
+      "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1185-1196",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-14",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:33-46"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-40",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-20"
       ],
-      "rationale": "Original single-case study grounded in this repository's own log/history, with a protocol, six rival explanations and reproducible measurements. Strong synthesis, but the experiment has not run and registration is pending: Good, not yet Excellent."
+      "rationale": "Original thesis (agent-accelerated feature decay) grounded in the author's own repo-history evidence and a defined participant-observer case; verified citations and rival explanations. Experiment unrun, so grounding is partial synthesis rather than validated finding."
     },
     "D2": {
-      "score": 2,
+      "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:33-38",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:170-226",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-112"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:1-30",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:16-20"
       ],
-      "rationale": "Structured, 94-reference cited draft that compiles cleanly to a 29-page PDF with figures and reproducibility scripts, but 18 TODO(author) markers remain (results switch, dates, version checks, approvals) and the README itself states light rework is still required: Good, not yet publish-ready."
+      "rationale": "Well-structured, cited (94 matched references) and checked draft, but the paper explicitly states it is 'not submission-ready': 18 unresolved TODO(author) items, pending owner approvals, and no results written. Significant author work remains before publish-ready."
     },
     "D3": {
-      "score": 1,
+      "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-112",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-9"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-110",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:12-15"
       ],
-      "rationale": "No submission, filing or delivery to any audience beyond the cohort is evidenced; README's 'Before you submit' list and the revision report both state internal approvals and submission are still outstanding. Produced for the rubric/engagement only so far."
+      "rationale": "A specific arXiv submission path (category, eligibility rules, compile instructions) is documented, but nothing has been submitted, approved internally, or delivered to any audience; the experiment has not run and the protocol is unfrozen."
     }
   }
 }
