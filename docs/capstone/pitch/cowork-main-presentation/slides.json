@@ -1,0 +1,500 @@
+{
+  "title": "Zava Forward: more homes ready, with control intact",
+  "status": "Cowork authoring handoff, not final deck or production approval",
+  "presentation_seconds": 1800,
+  "narration_seconds": 1440,
+  "discussion_seconds": 360,
+  "demo_seconds": 600,
+  "cost_model": {
+    "source": "E21",
+    "price_date": "2026-10-23",
+    "price_basis": "Historical secondary-source assumption; not verified current deployment pricing",
+    "observed_tokens": "6884",
+    "observed_runs": "5",
+    "task_size_multiplier": "10",
+    "tasks_per_home": "20",
+    "usd_per_million_tokens": "1.60",
+    "stock_homes": "60000",
+    "below_epc_c_share": "0.26",
+    "works_gbp_per_home": "6082",
+    "conditional_grant_share": "0.50",
+    "historical_grant_cap_gbp": "7500"
+  },
+  "navigation": {
+    "interruption_return": "calling-main-slide",
+    "index_return": "backup-topic-slide",
+    "powerpoint_interruption_action": "last-slide-viewed"
+  },
+  "main": [
+    {
+      "id": "S01",
+      "title": "More homes ready. No shortcuts on trust.",
+      "seconds": 60,
+      "on_slide": ["Zava Forward", "Modernise the programme. Prove where AI helps.", "Decision today: a gated validation path, not autonomous delivery."],
+      "notes": "My recommendation is to modernise how Zava North Homes moves a home from an identified need to an accepted outcome, and to make AI earn its place inside that process. Not five digital managers making decisions about residents. One accountable programme, with better evidence, less avoidable chasing and clear human authority.\n\nToday I will show the business logic, the architecture behind it and what we have actually learned from building it. Then we will walk one constructed home through the workbench, including an exception. I will distinguish a working technical path from a proven business benefit throughout.\n\nThe decision I want is agreement on the next validation gate: named owners, a bounded cost envelope and explicit evidence required before expansion. It is not permission to release works, spend resident funds or operate autonomously. Interrupt me where you need to: the headline survives without the implementation detail.",
+      "visual": "Full-bleed quiet title, Zava green and warm white. One large outcome sentence; no technology logos. Pause after 'one accountable programme'.",
+      "sources": ["E01", "E02", "E03"],
+      "interrupt": "If asked 'what exactly are you asking us to approve?', answer: a proposed validation path, not a production rollout. B15 contains the gate.",
+      "return": "The outcome is accepted progress, not more AI activity."
+    },
+    {
+      "id": "S02",
+      "title": "The constraint is coordinated readiness, not a lack of ambition.",
+      "seconds": 75,
+      "on_slide": ["60,000 homes in the case brief", "Evidence, funding, capacity and resident choice must align", "More starts are not the same as more accepted homes"],
+      "notes": "The case starts with a 60,000-home association, a small team and a fragmented programme. An energy ambition competes for the same organisational attention as repairs, resident communication, funding and quality assurance.\n\nA home is not ready because it appears near the top of a list. Its evidence must be credible, the right professional must accept the assessment, the resident must retain real choice, and funding and contractor capacity must be aligned. An incomplete handoff simply moves the delay to the next team.\n\nThat changes the management question. Instead of asking how many recommendations an agent generated, we ask how many homes reached an accepted handover, how much effort that took and what remained unresolved. Safety reports retain an independent human route; a routine retrofit queue must never become the gatekeeper for urgent help.\n\nThe brief's doubling and grant-capture ambitions are the challenge we are testing, not results I can claim today. I am also not presenting the original regulatory wording as a fresh legal update.",
+      "visual": "Three horizontal bands: demand -> coordination constraint -> accepted outcome. Make 60,000 the only large number. Footnote 'Case-study scale; benefits not yet validated'.",
+      "sources": ["E01", "E02", "E12"],
+      "interrupt": "CEO: 'Why not hire more coordinators?' Use B01: capacity is necessary, but adding people without fixing evidence and handoffs can preserve the same friction.",
+      "return": "The bottleneck is a complete, trusted handoff."
+    },
+    {
+      "id": "S03",
+      "title": "One home makes the operating model tangible.",
+      "seconds": 75,
+      "on_slide": ["Identify need -> assemble evidence -> review readiness -> deliver -> accept", "A conflicting record stops dependent approval, not all useful work", "Illustrative journey, not a resident testimonial"],
+      "notes": "Imagine one fictional home in that programme. A record suggests it needs retrofit attention, but two sources disagree about its energy evidence. A conventional dashboard might make the inconsistency another amber dot. Here it becomes an owned task: identify the source, retain the conflict and request the relevant review.\n\nThe assessment can be prepared without pretending that the missing fact is known. An assistant may explain the evidence or draft a message, but cannot manufacture the observation, infer resident consent or release the work. When the evidence changes, only the reviews that depend on it should need attention again.\n\nAfter installation, provider completion, independent quality acceptance, resident handover and financial closure remain different events. Closing one must not erase an unresolved defect or complaint.\n\nThat is our narrative thread. The demo will return to this same-home pattern rather than jump among unrelated AI tricks. If the current deployed build cannot support a step, I will show its documented contract and label that honestly.",
+      "visual": "Five large journey stations. Use an explicitly fictional identifier such as EXAMPLE-HOME, never a copied resident name/address. Highlight the conflict, then the named review.",
+      "sources": ["E02", "E07", "E08"],
+      "interrupt": "Resident/customer concern: 'Does no response mean consent?' Answer no, then B06.",
+      "return": "The home progresses only when its evidence and decisions are ready."
+    },
+    {
+      "id": "S04",
+      "title": "One programme. One evidence trail. People decide.",
+      "seconds": 90,
+      "on_slide": ["People -> controlled workbench -> retained evidence", "Rules keep the boundaries; AI prepares bounded help", "Optional portal assessed; assisted routes stay"],
+      "notes": "The architecture starts with people, ownership and evidence, not a list of Azure products. The workbench carries commitments and workflow; Azure SQL retains structured state and Blob holds document files. AI prepares permitted evidence for a person's review, never authoritative state or domain approval.\n\nIn-use monitoring is the proposed post-retrofit feedback loop. Sensors or a labelled simulator send temperature and humidity through IoT Hub Basic, API validation and SQL; a deterministic signal may request human review. This accepted exercise design is not live transport, diagnosis or measured benefit. A resident's hazard report always uses the independent human safety route.\n\nThe resident portal is optional, not rejected. Issue #441 assesses whether self-service status access can reduce avoidable calls and interruptions of staff working time. Portal/workflow comes first using existing case/API authority; any resident-answer assistant is separately gated. Per-message human review remains normative and routine automation is off. Phone, email, visits and accessible assisted routes stay available without detriment.\n\nSource implementation, a design decision and a current live service are different evidence. The portal's local work-in-progress is owner-reported, not inspected delivery or an approved handoff. Test staff and resident effort, access and comprehension before claiming benefit.",
+      "visual": "diagrams/01-the-idea.svg. Three clicks: people; workbench and evidence; bounded-AI strip. Keep the complete static image available; animation is optional.",
+      "sources": ["E02", "E06", "E07", "E12", "E441"],
+      "interrupt": "CIO: 'Is this a new system replacing housing management?' B02: a demonstrator of the coordination layer; live integration/replacement is not proven.",
+      "return": "The application owns the workflow; people retain the authority."
+    },
+    {
+      "id": "S05",
+      "title": "A faster wrong decision is not progress.",
+      "seconds": 90,
+      "on_slide": ["Resident choice is explicit", "Professional and financial approvals remain independent", "Unknown, stale or failed evidence never becomes permission"],
+      "notes": "For this customer, control is part of the value proposition, not a compliance appendix. A faster wrong decision can create more rework, more resident distrust and more organisational exposure.\n\nWe therefore distinguish an offer from a commitment, a draft from an approved assessment, an award from grant cash and a provider's completion from independent acceptance. These distinctions exist in the records and API contracts, not just in the colour of a screen.\n\nThe assistant can contribute to preparation. It cannot take over resident choice, approve its own work, submit a grant, accept quality or authorise payment. A person reviewing an AI proposal must still have current permission and current source evidence. Accepting a useful paragraph is not accepting the underlying domain action.\n\nUnknown remains a meaningful outcome. If an input is missing or a review becomes stale, the right result can be an owned hold or a request for clarification, not a confident completion message. An urgent hazard goes to its independent human route even if the model is negative or unavailable.\n\nThese are testable design boundaries. They are not a claim that every human, legal or professional acceptance gate has already passed.",
+      "visual": "Three large paired labels: draft != approval; offer != commitment; completion != acceptance. Use text and shape signals, not colour alone.",
+      "sources": ["E02", "E07", "E08", "E12"],
+      "interrupt": "Risk leader: 'Can a human rubber-stamp it?' Use B07: meaningful review needs source inspection, competence, time and a challenge route.",
+      "return": "We accelerate preparation, not the removal of accountability."
+    },
+    {
+      "id": "S06",
+      "title": "Use AI for uncertainty, not for arithmetic or authority.",
+      "seconds": 90,
+      "on_slide": ["Rules: explicit policy and repeatable calculation", "Decision model: bounded scoring over supplied candidates", "Generative AI: source-bound explanation and drafting"],
+      "notes": "There are three different tools here, and treating all three as a chatbot would be an expensive design mistake.\n\nFirst, deterministic rules handle known calculations and controlled state changes: eligibility arithmetic, freshness checks, ownership, permitted transitions and the evidence required before release. They are easier to reproduce and explain than asking a language model to reinterpret the same policy every time.\n\nSecond, a decision model such as Decision 1 is a candidate for bounded tasks such as selecting among supplied form candidates or screening evidence support. That is learned scoring, not the rules engine. It must be allowed to abstain, and the candidate set and review cost matter.\n\nThird, generative AI helps where the work is language and synthesis: a cited explanation, an assessment draft or a resident-update draft from permitted facts. It must not invent the missing observation.\n\nA smaller specialised model may improve inference cost or latency, but that is not a measured saving here. We compare the complete task against rules, templates and manual handling, including review, correction, retries and failure. If the simpler route wins, we keep it. AI adoption is not the success measure.",
+      "visual": "diagrams/02-ai-placement.svg. Reveal rules first, then decision model, then generative AI. Say 'learned scoring' explicitly so Decision Models are not confused with decision tables.",
+      "sources": ["E04", "E05", "E09"],
+      "interrupt": "CFO: 'How much faster and cheaper?' B04 and B05: show the cost equation; no unsupported percentage.",
+      "return": "The unit of comparison is an accepted task, not a model token."
+    },
+    {
+      "id": "S07",
+      "title": "We kept the five responsibilities, not five autonomous managers.",
+      "seconds": 90,
+      "on_slide": ["Prioritisation | assessment | funding | coordination | quality", "Five bounded capabilities in one controlled workflow", "Authority follows the action, not the agent label"],
+      "notes": "The original request named five agents. We did not discard those business responsibilities: prioritisation, assessment, funding, contractor and resident coordination, and quality are still the capability map.\n\nWhat we challenged was the assumption that each responsibility should become an autonomous digital manager with its own authority and runtime. Ranking policy, consent, quality acceptance and financial controls should not depend on a persuasive model response. Splitting them into five independent services would also introduce more state synchronisation, retries, failure boundaries and operating overhead before proving the customer value.\n\nThe implementation therefore has five bounded assistants sharing one API and a controlled proposal pattern. A deterministic supervisor determines eligible work and records; the assistant prepares an unreviewed output; an authorised person makes the separate decision. Separate queue workers remain a deferred topology, not the explanation of today's assistant runtime.\n\nThat is the consultative change: fulfil the purpose of the request while challenging an unsafe or unnecessarily complex implementation. The historical operator evidence includes five real model paths, but ordinary assistant authority and proactive scans were left off after bounded QA. I will not turn that evidence into a claim of five autonomous workers running today.",
+      "visual": "Five equal capability labels above a single workflow rail; one human-decision boundary beneath. Do not draw five AI avatars as decision owners.",
+      "sources": ["E01", "E03", "E06", "E09"],
+      "interrupt": "Sponsor: 'So did you ignore the brief?' B03 maps each requested responsibility to the retained capability and changed autonomy.",
+      "return": "We challenged the mechanism, not the customer's outcome."
+    },
+    {
+      "id": "S08",
+      "title": "Measure accepted outcomes, not generated activity.",
+      "seconds": 90,
+      "on_slide": ["Accepted handovers and time to readiness", "Net coordination effort, including review and rework", "Safety, resident choice and quality are guardrails"],
+      "notes": "The value case has to survive a comparison with a well-organised workflow that uses no AI. Otherwise we risk attributing the benefit of clearer ownership and cleaner data to the model.\n\nThe first comparison asks whether the modernised workflow improves the programme relative to its baseline. The second asks whether adding AI improves the same workflow further. We keep the cohort, task and guardrails comparable, and count preparation, review, correction and burden shifted to other people.\n\nThe outcome is accepted handover, not starts. We also need time to readiness, net coordination effort and quality rework, with safety and resident agency treated as constraints rather than metrics to optimise away. Grant application, award, claim and cash remain separate.\n\nThe case brief's delivery and grant ambitions are useful hypotheses, not observed benefits. Likewise, the 60,000-home stock is a scale fixture; it is not a claim of 60,000 operational cases in Azure SQL.\n\nA saved hour is capacity until Finance validates how it changes staffing, overtime, contracted effort or delivery. We should not sell it as a cash saving twice. A negative AI result is still a useful result if it prevents an unnecessary operating cost.",
+      "visual": "Two clean comparison brackets: baseline -> modernised workflow; same workflow -> workflow + AI. Put 'accepted task' at the centre and guardrails underneath.",
+      "sources": ["E02", "E10", "E07"],
+      "interrupt": "CEO: 'Will this double delivery?' B08: not yet evidenced; physical capacity and scope remain constraints.",
+      "return": "Better evidence must turn into accepted progress, not a busier dashboard."
+    },
+    {
+      "id": "S09",
+      "title": "Thousands in works and funding per home. Cost the technology separately.",
+      "seconds": 90,
+      "on_slide": ["Historical benchmark: GBP 6,082 works/home", "Illustrative grant: GBP 3,041/home; GBP 47.4m across 15,600 homes", "Technology exercise: USD 700 October ceiling, not full project TCO"],
+      "notes": "We did the arithmetic, and the scale matters. The earlier housing-association benchmark is six thousand and eighty-two pounds of works per home. Apply it to our modelled fifteen thousand six hundred homes and the works scenario is ninety-four point nine million pounds. These are national-benchmark planning figures, not surveyed Zava costs or contractor quotations.\n\nIf every home and all that cost qualified, a fifty-percent grant share would be three thousand and forty-one pounds per home, below the historical seven-and-a-half-thousand cap: forty-seven point four million pounds across the cohort. That is conditional funding potential, not an allocation or award. Current scheme rules, eligible costs, deadlines and available funding need Finance and funder confirmation.\n\nThis is why the documentation matters: link each eligible home and measure to reviewed assessments, cost evidence, the approved application and the evidence required for claims. Reconcile application, award, claim and cash separately. Better records can reduce avoidable returns and clawback exposure; they do not create eligibility or guarantee subsidy. We must measure the improvement.\n\nThe technology exercise has an owner-set seven-hundred-dollar October ceiling, not a production quote or full project cost. Execution gates remain and authority expires on 25 October at 16:02 UTC. We still need implementation, integration, hosting, support and human-review costs. The next AI slide restores the inference calculation, without pretending those other costs disappear.",
+      "visual": "Three labelled figures: GBP 6,082 works/home; GBP 3,041 conditional grant/home; USD 700 October exercise ceiling. Beneath, show GBP 94.9m works and GBP 47.4m conditional grant for the 15,600-home scenario. Label historical benchmark, conditional scenario and exercise budget separately; no cross-currency ratio. B09 retains the separate GBP 20,000 exercise package.",
+      "sources": ["E02", "E05", "E11", "E21"],
+      "interrupt": "CFO: 'Is USD 700 the monthly production price?' No. Use B05 and B09; it is the owner-set October exercise forecast ceiling, not a quote or unconditional tranche authority.",
+      "return": "We buy evidence in stages; we do not infer a production business case from a demo bill."
+    },
+    {
+      "id": "S10",
+      "title": "The runtime is deliberately simpler than the capability map.",
+      "seconds": 90,
+      "on_slide": ["Container Apps API + Azure SQL + Blob", "Entra identity; application-enforced scope", "Models return proposals, not authoritative state"],
+      "notes": "Now we can zoom into the same architecture without changing the story. A staff browser reaches the application through Entra-backed authentication. The API checks the effective staff identity, role, case and permitted fields. Signing in proves an identity, not professional competence or spending delegation.\n\nThe Container Apps API hosts the workflow and the five bounded assistants. Azure SQL retains cases, controlled records, proposals and audit. Blob holds document bytes, with references and hashes retained separately. The assistant's context is constrained to what that task is allowed to use.\n\nFor a model request, the API captures the relevant evidence, calls the permitted endpoint and validates the result before retaining an unreviewed proposal. The direct Azure OpenAI path does not imply that a Foundry Agent Service is orchestrating the programme. Decision 1 is a separately gated task path, not an assumed always-on service.\n\nManaged identities and private dependencies are part of the design. The diagram is not a fresh network inventory or a claim that every configured control has been accepted in Azure. The latest deployment and sign-in gates remain explicit in the demo preflight.\n\nWe can add runtime boundaries when measured load, isolation or reliability requires them. We do not add a microservice merely because a capability has an agent name.",
+      "visual": "diagrams/03-runtime.svg. Build browser/API/SQL first; add identity, models and Blob second. Full-static alternative is mandatory.",
+      "sources": ["E06", "E07", "E09", "E13"],
+      "interrupt": "CTO: 'Where are the queues and five workers?' B10: deferred topology, not the current assistant runtime.",
+      "return": "Shared workflow state is controlled centrally; model reasoning is bounded."
+    },
+    {
+      "id": "S11",
+      "title": "Modelled inference: about 44 US cents per home. Full project cost is separate.",
+      "seconds": 90,
+      "on_slide": ["Planning scenario: USD 0.44 inference/home; USD 6,873 for 15,600 homes", "20 tasks/home x 13,768 tokens/task x USD 1.60/million", "Dated third-party price assumption; excludes platform, people and delivery"],
+      "notes": "Here is the calculation we used before. Five real operator runs consumed six thousand eight hundred and eighty-four tokens, averaging one thousand three hundred and seventy-six point eight per run. For planning, we allowed twenty AI tasks per home and made each task ten times that observed size: thirteen thousand seven hundred and sixty-eight tokens.\n\nWe priced every token at one dollar sixty per million, the output rate reported by third-party Azure pricing mirrors on 23 October. That gives forty-four US cents of inference per planned home and about six thousand eight hundred and seventy-three dollars across fifteen thousand six hundred homes. Double the workload and it is about eighty-eight cents per home. This is a transparent sensitivity calculation, not a verified deployment price, usage ceiling or measured cost per accepted home.\n\nCompare the scale with the earlier six-thousand-and-eighty-two-pound works benchmark and illustrative three-thousand-and-forty-one-pound grant share. Do not silently equate dollars and pounds. The inference line is small; implementation, integration, hosting, security, support, evaluation and human review still need costing. The seven-hundred-dollar October envelope already includes its AI spend, so we must not count that twice.\n\nFor the council, the value is a defensible evidence trail supporting eligible applications and claims, not a promise of automatic subsidy. We still owe measured quality, acceptance, total cost and grant outcomes. Finite tokens are not a money cap; full metering and monetary controls remain requirements to test.",
+      "visual": "Use a large USD 0.44/home with an adjacent 'INFERENCE PLANNING SCENARIO' label. Show the three-factor formula, USD 6,873 cohort total and USD 0.88 doubled-workload sensitivity. Keep dated secondary-source price and exclusions legible. Use diagram 07 only as the separate measurement/control view; it is not a priced forecast. B25 has the exact workings and limitations.",
+      "sources": ["E07", "E09", "E13", "E04", "E19", "E21"],
+      "interrupt": "CFO: 'Can the bill run away?' Use B25: finite tokens are not money; monetary/per-task/per-request limits remain proposed. B26 covers caching and routing.",
+      "return": "Small inference cost is a planning result; accepted value and total project cost still need evidence."
+    },
+    {
+      "id": "S12",
+      "title": "We engineered the learning before scaling the build.",
+      "seconds": 90,
+      "on_slide": ["Design thinking: understand, explore, test", "HVE: research -> plan -> implement -> review", "Prototype and MVP iterations changed the design"],
+      "notes": "The technique used to build the solution matters because it explains why the result is more than a literal implementation of the first brief.\n\nWe used design-thinking techniques to explore the customer problem and the journeys around it, rather than starting with five model prompts. Role instruments helped challenge the programme from asset, finance, resident, safety, procurement and delivery perspectives. They were research aids, not actual employees and not a substitute for talking to residents or staff.\n\nPrototypes and executable MVP iterations made the assumptions inspectable. The learning was not simply which layout looked better. It exposed ownership confusion, unnecessary complexity, source conflicts and the need for one shared workbench with distinct human decisions.\n\nHVE then provided a disciplined engineering loop: research the evidence, plan a bounded change, implement against explicit acceptance criteria and review the result. Responsible AI, architecture, privacy and supply-chain techniques informed the controls. A review that finds a defect is evidence to act on, not a ceremonial stamp.\n\nThe knowledge base compounds that learning across iterations. Decisions, limitations and source dates survive the individual chat session. This is a documented method and artifact story, not a claim of measured developer-productivity uplift.",
+      "visual": "A three-stage learning ribbon: problem discovery -> prototypes/MVP learning -> bounded engineering loops. Show one real design reversal rather than a wall of HVE logos.",
+      "sources": ["E14", "E15", "E03"],
+      "interrupt": "Panel: 'Were these real user interviews?' B12: distinguish owner feedback, role-instrument desk research and unperformed human validation.",
+      "return": "The method made assumptions visible before agents multiplied implementation effort."
+    },
+    {
+      "id": "S13",
+      "title": "From BRD, PRD and ADRs to a reviewable delivery backlog.",
+      "seconds": 90,
+      "on_slide": ["BRD + PRD + ADRs -> hierarchical GitHub issues", "189 board items on 23 October: epics, features, stories and other issues", "Agents implement bounded changes; reviewers retain the gate"],
+      "notes": "Once the problem, journeys and product boundaries were clear enough, we used the BRD, PRD and architecture decisions to generate a large hierarchical GitHub backlog. The historical recollection is around 180 issues, including epics and user stories, not 180 agents or stories alone. We checked the AMA Plan project: on 23 October it has 189 board items, including epics, features, stories and other issues. That is a current project snapshot, not an exact original-generation count and not a claim that every item has been accepted.\n\nThe important part is the chain. A business need becomes a requirement. Architecture decisions constrain the implementation. Epics, features and stories organise the work and acceptance conditions. An implementation agent gets a bounded task, not a licence to reinterpret the operating model. Tests, source changes, review findings and pull-request evidence make the work inspectable.\n\nWhere work can proceed independently, agents can work on separate topics. Where a decision or dependency blocks it, they must not invent authority to keep a throughput number high. Findings and corrections stay attached to the evidence.\n\nThis is the second AI story: AI helped build the solution, using decomposition and feedback rather than an unbounded software factory. More generated code is not the outcome; accepted behaviour is.",
+      "visual": "Use evidence/project-snapshot.png as a project-backed API visual, explicitly not a screenshot of GitHub's website. Preserve the date and status-is-not-acceptance caveat. Add the BRD/PRD/ADR -> issue -> PR -> evidence chain as native PowerPoint text, not a completion chart.",
+      "sources": ["E14", "E15", "E16", "E19", "E20"],
+      "interrupt": "CEO: 'Did agents build all of it without people?' B13: bounded implementation and human/independent gates, no unsupported completion or productivity claim.",
+      "return": "We scaled reviewable work, not unbounded autonomy."
+    },
+    {
+      "id": "S14",
+      "title": "The most valuable learning was what not to automate.",
+      "seconds": 90,
+      "on_slide": ["Do not ask a model to enforce known policy", "Do not infer consent, safety or financial authority", "Do not add a service before proving its need"],
+      "notes": "Three design choices summarise the learning.\n\nFirst, do not use a generative model to repeat a calculation or enforce an already explicit rule. The variability and review burden add little value. A rules result should be reproducible, and a policy change should be reviewed as a policy change, not drift through a prompt.\n\nSecond, do not confuse assistance with delegated authority. A well-written resident message does not prove that the resident consented or even received it. A neat evidence summary does not replace the professional quality judgement. A confident funding draft does not establish eligibility or cash.\n\nThird, do not confuse architectural ambition with a need for more services. Five business responsibilities do not force five separately deployed agents. Sensors can be a useful future evidence source, but a simulated or offline reading is not a live IoT integration, and missing telemetry is not evidence that a home is safe.\n\nThese are deliberate trade-offs. We give up the appearance of blanket autonomy in exchange for explainable state, a manual route and a smaller failure surface. The reversal condition is evidence: if a specialised model or independent worker genuinely improves accepted-task economics or isolation, the design can evolve through a new reviewed contract.",
+      "visual": "Three large 'not this / instead this' pairs. Optional link to diagrams/06-sensor-target.svg only if the audience asks about telemetry.",
+      "sources": ["E03", "E04", "E06", "E12"],
+      "interrupt": "Innovation leader: 'Are you being too conservative?' B14: bounded autonomy is a scaling mechanism, not a ban on AI.",
+      "return": "We automate effort where it helps, not accountability where it matters."
+    },
+    {
+      "id": "S15",
+      "title": "The next risk is acceptance, not another architecture box.",
+      "seconds": 75,
+      "on_slide": ["Engineering evidence is necessary, not sufficient", "Human task checks, recovery, privacy and live access remain gates", "Expand only on current, task-bound evidence"],
+      "notes": "The next phase should not be sold as another feature list. It is an acceptance plan.\n\nWe need genuine staff sign-in and role-denial evidence on the selected deployment, task-bound real AI results, durable SQL behaviour and a current cost view. We also need human task and comprehension checks, accessibility evidence, privacy and processing decisions, and recovery work that goes beyond a successful process restart.\n\nThe local engineering work gives us useful contracts and negative tests. It does not appoint a professional reviewer, ratify a policy, prove a restore or establish that a resident understands the result. The latest deployment blockers make that distinction particularly important.\n\nThe operating model must remain usable if optional inference is disabled, stale or unaffordable. The manual and safety routes must not depend on the demonstration working.\n\nI would therefore treat expansion as an explicit decision after the evidence is assembled, with a named owner for each unresolved control. We can continue useful independent engineering while a human decision is pending, but we cannot silently convert that pending decision into approval.",
+      "visual": "Three gates: technical reality; human and control acceptance; measured value. All are required. Optional B16 uses diagrams/05-operations.svg.",
+      "sources": ["E07", "E12", "E13", "E17"],
+      "interrupt": "CIO: 'Is it production ready?' B15/B16: no; show exact outstanding gates without an invented readiness percentage.",
+      "return": "The release decision follows evidence, not the end of the slide deck."
+    },
+    {
+      "id": "S16",
+      "title": "Fund the next evidence gate, then decide whether to scale.",
+      "seconds": 75,
+      "on_slide": ["Scope: one connected journey and a paired comparator", "Owners: programme, Finance, technical and control reviewers", "Stop or reverse if quality, control or net value fails"],
+      "notes": "My proposed next step is a bounded validation tranche, not a commitment to roll out across the entire estate.\n\nThe Programme owner defines the journey and what accepted progress means. Finance refreshes the total cost boundary and approves any finite spend. The technical owner establishes deployment and recovery evidence. Named professional, resident-engagement, privacy and safety reviewers own the relevant acceptance decisions; role-agent personas cannot supply those approvals.\n\nFreeze the comparator before running the test. Measure accepted-task quality, total preparation and review time, rework, latency, cost and the guardrails. Retain negative results. If the AI route creates more review work or loses critical evidence, keep the simpler workflow while investigating.\n\nNo date or cash commitment is being invented on this slide. The immediate deliverable is an agreed scope, owner and acceptance protocol. A schedule and spend request follow from resolved prerequisites. Expansion is a separate decision after that evidence, with a manual route and a documented reversal condition throughout.",
+      "visual": "One-page decision card: scope / named role owner / evidence / stop condition. No fictional signatures or approved green ticks.",
+      "sources": ["E02", "E10", "E11", "E13"],
+      "interrupt": "CEO: 'When do we get value?' B17: schedule is dependency-led; identify the next evidence deliverable, not an unsupported go-live date.",
+      "return": "We are buying a decision-quality result before buying scale."
+    },
+    {
+      "id": "S17",
+      "title": "Now test the story: one home, one exception, one accountable next step.",
+      "seconds": 60,
+      "on_slide": ["Watch the evidence conflict and its owner", "Watch what AI can draft, and what it cannot approve", "Watch the retained state and next action"],
+      "notes": "For the next ten minutes, I want you to judge three things. Can we see why the home is blocked? Can we see who can resolve it? And can we distinguish useful AI help from the decision that still belongs to a person?\n\nThis is a constructed exercise, not a resident case or a production service. I will state which route passed preflight. If the live route is unavailable, I will use the labelled repository-evidence walkthrough rather than pretend a recording or template is live inference.\n\nPlease interrupt on the business decision. If we go deep on infrastructure, I will park the question and use the matching appendix afterwards so that we still reach the exception and the next accountable action. At the end, we return to the same investment decision we started with: what evidence would justify the next controlled step?",
+      "visual": "Three watch-for prompts. Link to the separate demo runbook and a static 'recorded evidence, not live' title card.",
+      "sources": ["E07", "E13"],
+      "interrupt": "If asked to try an unprepared action, do not grant roles or mutate a live case. B18 explains the demonstration boundary.",
+      "return": "The demo is proof of a bounded behaviour, not permission to operate."
+    },
+    {
+      "id": "S18",
+      "title": "More homes ready, with control intact.",
+      "seconds": 30,
+      "on_slide": ["Agree the next validation gate", "Confirm owners, evidence and finite cost boundary", "Scale only what earns trust and measurable value"],
+      "notes": "The outcome is not five agents. It is a programme that can move more homes toward an accepted result without losing the resident, the evidence or the accountable decision-maker.\n\nWe have a credible architecture and real engineering learning. We still owe the human, operational and value evidence. My recommendation is to agree the bounded validation gate, confirm its owners and cost boundary, and make the scale decision from the result. That is how we turn AI ambition into a service we can defend.",
+      "visual": "Return to the opening visual. Show the decision in one sentence; no new diagram or new number.",
+      "sources": ["E02", "E10", "E13"],
+      "interrupt": "Restate any requested change in the customer's language, name which assumption changes and record the decision as pending unless explicitly made.",
+      "return": "More accepted progress. No shortcuts on trust."
+    }
+  ],
+  "backup": [
+    {
+      "id": "B01",
+      "question": "Why not fix the process and hire more people instead?",
+      "audience": "CEO / COO",
+      "return": "S02",
+      "on_slide": ["Process improvement is the baseline", "AI must beat the same workflow without AI", "Physical delivery capacity still limits throughput"],
+      "answer": "We should fix the process regardless. Clear ownership, valid evidence and reliable handoffs are prerequisites, not an AI benefit. The proposal separates workflow improvement from incremental AI value through two comparisons. Additional staff or contractor capacity may still be necessary; the demonstrator does not establish the staffing plan. If rules and templates deliver the better accepted-task result, retain them and report the negative AI finding.",
+      "visual": "Three options with explicit trade-offs: manual/process only; workflow + rules; workflow + bounded AI.",
+      "sources": ["E02", "E10"]
+    },
+    {
+      "id": "B02",
+      "question": "Is this replacing our housing system or integrating with it?",
+      "audience": "CIO / COO",
+      "return": "S04",
+      "on_slide": ["Demonstrator of coordination and evidence contracts", "No live housing/repairs integration proven", "Integration scope, authority and migration need separate discovery"],
+      "answer": "Do not treat the demonstrator as a replacement decision. It explores the coordination layer and controlled records. Current application documentation explicitly says there is no live integration with housing or repairs systems. Production appraisal must identify authoritative systems, field ownership, APIs, event and reconciliation contracts, security, retention and the manual service route. A configured or proposed M365 path is not an implemented enterprise integration.",
+      "visual": "Current workbench solid; customer systems outlined and labelled 'future integration appraisal'.",
+      "sources": ["E06", "E07"]
+    },
+    {
+      "id": "B03",
+      "question": "Why did you not build exactly the five agents we requested?",
+      "audience": "CEO / sponsor / CTO",
+      "return": "S07",
+      "on_slide": ["Five requested responsibilities are preserved", "Autonomy is bounded by decision rights and risk", "Five assistants != five independent runtimes"],
+      "answer": "We kept stock prioritisation, assessment preparation, funding evidence, coordination and quality evidence. We changed the mechanism where the original autonomy could imply authority that belongs to residents or accountable professionals. Known policy remains deterministic, models prepare unreviewed proposals and people make separate controlled decisions. One API hosts the current assistants; independent queue workers remain deferred. Historical five-path real inference is evidence of bounded invocation, not standing autonomy.",
+      "visual": "Five-row mapping: original responsibility -> bounded help -> human decision owner. Funding -> Finance submits; quality -> independent professional accepts; coordination -> resident agrees; stock -> approved policy/human review; assessment -> qualified reviewer.",
+      "sources": ["E01", "E03", "E06", "E09"]
+    },
+    {
+      "id": "B04",
+      "question": "How do Decision Models reduce cost and response time?",
+      "audience": "CFO / CTO",
+      "return": "S06",
+      "on_slide": ["Bounded candidates may avoid long-form generation", "Compare complete tasks, not endpoint prices", "No calibrated cheaper/faster result claimed"],
+      "answer": "Decision 1 has historical narrow real-call feasibility for source-bound candidate selection; it is a learned scorer, not a deterministic decision table. A bounded scoring call may need less generation, but access, serving method, candidate count and human correction determine the result. No calibrated cost or latency win is established. Compare rules/manual, parser/templates, Decision 1 and generation on identical held-out tasks, counting abstentions, errors, review, retries, hosting and usage. Separately, a historical prototype recorded 0.03 ms workflow-only gates versus a 12.5 s median agent drafting step. Those are different outputs, not an equivalent-task speedup: keep explicit policy and arithmetic deterministic, then test whether drafting earns its cost.",
+      "visual": "Task-cost equation plus a blank comparison table marked 'Not measured', never invented bars. Columns: accepted quality, total staff time, p50/p95 latency, cost/accepted task, critical errors.",
+      "sources": ["E04", "E05", "E15"]
+    },
+    {
+      "id": "B05",
+      "question": "What does the technology cost today?",
+      "audience": "CFO",
+      "return": "S09",
+      "on_slide": ["USD 700 owner-set October exercise ceiling; not production TCO", "Modelled programme inference: USD 6,873, not an extra monthly bill", "Project/home = (non-inference project costs + USD 6,872.9856) / 15,600"],
+      "answer": "The 22 October owner decision sets USD 700 as the replacement calendar-month all-in forecast ceiling, not additional spend or a production quote. It retains the 25 October 16:02 UTC expiry. A refreshed forecast, unknown outside-group spend and remaining prerequisites still block paid tranches. USD 242.36 is a partial 11-22 October resource-group observation, estimated until invoiced; USD 535.33 is a pre-change scenario, not the current forecast. Do not add overlapping cost reads or credit unmeasured savings. The recovered USD 6,872.9856 is a separate whole-cohort inference scenario, not October accrued spend. For a future same-period appraisal add it only to non-inference implementation, integration, platform, review, assurance and support costs, then divide by 15,600 planned homes. Those other costs are unpriced; no full project total or payback is claimed. Never add AI again to an envelope that already includes it, extrapolate the October ceiling as a production quote or compare USD with GBP without a dated Finance-approved exchange rate.",
+      "visual": "Dated cost ledger with scope, actual/forecast/proposal and 'superseded for authorisation' label. Use evidence/ai-cost-evidence.md for exact historical actual, not a live-bill claim.",
+      "sources": ["E11", "E05", "E21"]
+    },
+    {
+      "id": "B06",
+      "question": "How do residents retain choice, especially without digital access?",
+      "audience": "CEO / resident-services leader",
+      "return": "S05",
+      "on_slide": ["Optional portal; assisted routes stay", "Offer != agreement; silence != consent", "Representative authority is task-limited"],
+      "answer": "Issue #441 assesses optional resident self-service to reduce avoidable calls and interruptions of staff working time. This is a benefit hypothesis, not a delivered portal or measured saving. Owner-confirmed Option B reuses case/API authority: portal/workflow first, resident-answer task separately gated. Per-message human review remains normative and routine automation is off. Phone, email, letters, visits and accessible assisted routes remain available without detriment. Test total staff handling/review effort, interruption time, resident effort, access and comprehension. Preferred/safe contact and task-limited representative rights remain explicit. Sent does not mean received; silence, portal use and access never mean works consent. At the retrieved snapshot the issue is open with a Research-stage integration blocker and no published PR; reported local work is not inspected implementation. Direct resident, privacy and accessibility acceptance remain separate gates.",
+      "visual": "Resident at the centre, digital and assisted routes of equal visual weight. No invented quote or photograph presented as a real resident.",
+      "sources": ["E02", "E08", "E12", "E441"]
+    },
+    {
+      "id": "B07",
+      "question": "What stops a human from rubber-stamping AI?",
+      "audience": "Risk / compliance / COO",
+      "return": "S05",
+      "on_slide": ["Source verification before proposal acceptance", "Current permission, evidence and independent authority", "Meaningful oversight remains a human acceptance gate"],
+      "answer": "The contract requires source verification, current permissions and version checks. Proposal acceptance does not execute the separate domain approval. No-self-approval and distinct professional decisions reduce the risk of one actor accepting everything. But a workflow control cannot prove that a human has enough competence, time or incentive to challenge a draft. That requires an agreed review protocol, realistic task tests, challenge/correction and monitoring. The package does not claim that protocol has been ratified.",
+      "visual": "diagrams/04-controlled-ai-flow.svg, with review and separate domain action highlighted.",
+      "sources": ["E02", "E09", "E12"]
+    },
+    {
+      "id": "B08",
+      "question": "Will this double retrofit delivery and capture GBP 40 million?",
+      "audience": "CEO / CFO",
+      "return": "S08",
+      "on_slide": ["Original brief ambitions, not observed outcomes", "Capacity, scope, eligibility and cash all constrain value", "Frozen cohorts and attributable comparisons required"],
+      "answer": "Those are original brief ambitions, not achieved or validated figures. Programme throughput depends on survey, technical, contractor, material, resident and QA capacity as well as administration. The modelled scenarios cannot establish actual grant availability or secured cash. Measure accepted handovers and the whole cost of the work. Present benefit ranges only after a baseline, causal limitations and sensitivity analysis are agreed. Do not turn saved minutes into a cash saving without a Finance-approved mechanism.",
+      "visual": "Ambition -> dependencies -> test -> observed result, with the final cell explicitly outstanding.",
+      "sources": ["E01", "E02", "E10"]
+    },
+    {
+      "id": "B09",
+      "question": "What is the per-home business case and cash exposure?",
+      "audience": "CFO / asset executive",
+      "return": "S09",
+      "on_slide": ["Historical benchmark: GBP 6,082 works/home; GBP 94.9m cohort", "Conditional 50% grant illustration: GBP 3,041/home; GBP 47.4m cohort", "Separate exercise package: GBP 20,000 base; GBP 7,500 fictional grant"],
+      "answer": "The earlier national HA benchmark is GBP 6,082/home: 15,600 modelled homes x GBP 6,082 = GBP 94,879,200. Assuming every home and the entire cost qualify, min(50% x GBP 6,082, GBP 7,500 historical ordinary cap) = GBP 3,041/home, or GBP 47,439,600 cohort grant potential. This is not an award, funding allocation or guarantee. Check current official scheme rules, eligibility, co-funding, deadlines and available allocation with Finance/funder owners. A reviewed evidence pack should link eligible property/measure, professional assessment, cost/invoice evidence, quality/completion evidence and application/award/claim/cash records; document requirements remain scheme-specific. Better documentation can reduce avoidable returns or clawback, but no incremental grant gain has been measured. Separately, the approved fictional exercise uses GBP 18,000 contractor plus GBP 2,000 internal = GBP 20,000 base, with GBP 2,000 contingency. GBP 16,000 eligible cost minus GBP 7,500 fictional grant gives GBP 8,500 match; plus GBP 4,000 ineligible = GBP 12,500 provider base. Fully spent contingency raises provider exposure to GBP 14,500. GBP 12,000 eligible cost caps that fictional grant at GBP 6,000, leaving GBP 14,000 provider base. Gross cash before grant receipt remains GBP 20,000. Do not mix that package with the national benchmark or treat either as a company quotation.",
+      "visual": "Waterfall with separate gross cash and grant receivable lanes. Keep GBP distinct from technology USD.",
+      "sources": ["E02", "E21"]
+    },
+    {
+      "id": "B10",
+      "question": "Why not deploy each agent independently?",
+      "audience": "CTO / CIO",
+      "return": "S10",
+      "on_slide": ["Current runtime: shared API and SQL", "Separate workers add failure and operating boundaries", "Split when measured isolation or load justifies it"],
+      "answer": "Independent workers can be appropriate when load, isolation, deployment cadence or resilience requires them. They also introduce queue ownership, retries, duplicate handling and distributed state. The five assistants currently use the API proposal service, with short SQL transactions and inference outside locks. Do not draw deferred orchestrator/queue/worker placeholders as the active five-agent implementation. A future split needs explicit contracts, operational evidence and a separate decision.",
+      "visual": "Current single runtime left; future split right, dashed and labelled deferred. No suggestion of a deployed Service Bus or Foundry Agent Service.",
+      "sources": ["E06", "E09", "E13"]
+    },
+    {
+      "id": "B11",
+      "question": "What proves the AI is real and useful rather than a template?",
+      "audience": "CTO / panel",
+      "return": "S11",
+      "on_slide": ["Provider/model/usage and source=ai evidence", "Template/replay is explicitly not real inference", "Real invocation != calibrated quality or value"],
+      "answer": "Use the dated provider/model/usage receipt and actual output source, not a visually fluent paragraph. Historical real calls and persistence are documented. A template or replay can support a fallback demonstration only when labelled; it cannot pass the real-inference gate. Semantic quality, critical omissions, unsafe advice, fairness, review burden and incremental value require separate evaluation. Current live readiness must be re-established rather than inferred from the historical call.",
+      "visual": "Three evidence cards: invocation; semantic acceptance; incremental value. Keep the latter gates outstanding.",
+      "sources": ["E07", "E09", "E04", "E13"]
+    },
+    {
+      "id": "B12",
+      "question": "Did you validate this with real residents and staff?",
+      "audience": "CEO / COO / panel",
+      "return": "S12",
+      "on_slide": ["Owner feedback and role-instrument review informed design", "Role agents are not customer participants", "Human task/comprehension validation remains outstanding"],
+      "answer": "There is useful owner feedback, prototype review and structured role-instrument research. Those sources can expose plausible tensions but cannot speak for real residents, establish workforce acceptance or approve a service. The design must next be tested with appropriate people and accessible routes under privacy and research controls. No invented testimonial, persona quote or expert artifact review should be presented as a real customer's endorsement.",
+      "visual": "Evidence categories in separate boxes: owner feedback; desk/role research; actual human validation outstanding.",
+      "sources": ["E14", "E15", "E12"]
+    },
+    {
+      "id": "B13",
+      "question": "How did the requirements become an agent-delivered backlog?",
+      "audience": "CIO / engineering leader / panel",
+      "return": "S13",
+      "on_slide": ["BRD, PRD and ADRs generated a hierarchical issue backlog", "Current board: 189 items; 16 epic, 110 feature, 34 story, 29 other", "Bounded RPI, dependencies, pull requests and retained findings"],
+      "answer": "The owner recalls approximately 180 issues including epics and stories; today's board has 189 items across epics, features, stories and other issues. Keep historical waves and dated scopes separate. One concrete chain is epic #73 -> feature #76 -> story #77: the story cites PRD FR-004/032/034, specifies queue definitions and versioned reset behaviour, and records delivery/local browser evidence in PR #376. That trace is inspectable, but a closed story is not whole-epic or current cloud/human acceptance. BRD, PRD and ADRs constrain bounded research/plan/implementation/review tasks. Independent review and owner decisions remain separate; counts are not measured productivity.",
+      "visual": "Use epic #73 -> feature #76 -> story #77 -> PR #376 as the concrete trace. Show the story's PRD FR-004/032/034 and local-browser versus human/cloud acceptance boundary. No accepted-completion pie chart.",
+      "sources": ["E14", "E16", "E17", "E20"]
+    },
+    {
+      "id": "B14",
+      "question": "Is this actually agentic if so much is deterministic?",
+      "audience": "Innovation leader / CTO",
+      "return": "S14",
+      "on_slide": ["Reasoning and preparation are bounded capabilities", "Deterministic orchestration protects controlled state", "Autonomy is task-specific, not a marketing label"],
+      "answer": "The architecture deliberately assigns different jobs to rules, models and humans. Models reason over permitted context and prepare drafts or flags; the application determines eligibility and protects state; people retain decisions requiring consent, professional judgement or delegation. That is a bounded AI-assisted operating model. We should not inflate the current autonomy to satisfy the word agentic. Future autonomous actions require an explicit, evaluated task contract and authorised boundary.",
+      "visual": "Three ownership bands: policy/state; reasoning/preparation; accountable decision.",
+      "sources": ["E03", "E06", "E09"]
+    },
+    {
+      "id": "B15",
+      "question": "What exactly must happen before a pilot or production decision?",
+      "audience": "CEO / CIO / risk",
+      "return": "S16",
+      "on_slide": ["Current deployment, roles, SQL and real-AI evidence", "Human, privacy, professional and accessibility acceptance", "Measured value, cost, recovery and explicit release decision"],
+      "answer": "Agree a bounded scope, named accountable owners, data and processing approvals, current cost and an evaluation protocol. Prove genuine staff access and role denial, task-bound real inference and SQL persistence on the selected deployment. Complete human task/comprehension, accessibility, safety/privacy and professional acceptance, plus recovery and value tests. Do not infer readiness from an ARM success, fixture test, document merge or a rubric comment. The current pack recommends a gate; it does not claim that gate is passed.",
+      "visual": "Three mandatory gates with owner role and required artifact, all labelled pending until evidence exists.",
+      "sources": ["E02", "E12", "E13", "E17"]
+    },
+    {
+      "id": "B16",
+      "question": "What happens if the model, cloud or deployment fails?",
+      "audience": "COO / CIO",
+      "return": "S15",
+      "on_slide": ["No approval from failure or stale evidence", "Owned manual work and independent safety handling", "Restart proof is not a full restore drill"],
+      "answer": "An unavailable, stale or disabled assistant must not change controlled state or suppress a hazard. Preserve the owned manual route and the evidence needed to resume. In migration, stop and account for producers and claims before switching consumers; do not run competing generations or reseed away a failure. Historical SQL restart results are bounded persistence evidence, not a whole-system backup/restore or disaster-recovery result. Operational targets and drills remain acceptance work.",
+      "visual": "diagrams/05-operations.svg. Use an explicit manual lane; no unsupported availability percentage, RTO or RPO.",
+      "sources": ["E06", "E07", "E13"]
+    },
+    {
+      "id": "B17",
+      "question": "When can we go live and who owns the next step?",
+      "audience": "CEO / sponsor",
+      "return": "S16",
+      "on_slide": ["Dependency-led plan, not an invented launch date", "Programme owns scope; Finance owns spend review", "Technical and control owners supply acceptance evidence"],
+      "answer": "The next commitment should be a named owner and deliverable: an agreed validation scope, refreshed cost and current deployment prerequisites. The historical four-week exercise plan is not a newly approved go-live promise. Technical access/capacity, human review and processing decisions affect the sequence. Establish dates after those dependencies and the finite test are authorised. A commercial pilot and an operational release remain separate decisions.",
+      "visual": "Readiness sequence with dependencies rather than calendar dates.",
+      "sources": ["E02", "E11", "E13"]
+    },
+    {
+      "id": "B18",
+      "question": "Can you demonstrate a new live action right now?",
+      "audience": "Any executive",
+      "return": "S17",
+      "on_slide": ["Only pre-authorised, reversible constructed scope", "No unplanned role, network, spend or data changes", "Fallback is visibly labelled evidence, never simulated live proof"],
+      "answer": "Only if it is already within the preflighted, authorised demonstration boundary. We will not grant a role, bypass private networking, enable assistant authority, submit a grant or send a resident message on the fly. A ten-minute demonstration should show known behaviour and a failure boundary, not become an infrastructure repair session. If live access fails, switch once to the prepared evidence route and say exactly what it does and does not prove.",
+      "visual": "Demo route selector: live passed / labelled evidence / unavailable. No silent mock fallback.",
+      "sources": ["E07", "E13"]
+    },
+    {
+      "id": "B19",
+      "question": "Where do sensors fit and can AI diagnose damp or mould?",
+      "audience": "Asset / safety / CTO",
+      "return": "S14",
+      "on_slide": ["IoT Hub Basic is an exercise design decision", "Offline consumer tested; live Hub path remains roadmap", "Signals request human review, never diagnose or suppress"],
+      "answer": "The accepted ADR selects Basic IoT Hub for exercise device-to-cloud telemetry. The main architecture now explains the proposed post-retrofit feedback loop: sensors or a labelled simulator send temperature/humidity observations through IoT Hub, API validation and SQL; deterministic signals may request human follow-up. This is a value hypothesis, not measured prevention or diagnosis. The finite offline consumer has local engineering evidence, not live identity, transport, Azure SQL, derived-analysis or application acceptance. Missing data is insufficient, never safe. No signal may suppress a resident report, change priority, diagnose a hazard or release a hold. Keep raw device/resident context out of prompts and map payloads.",
+      "visual": "diagrams/06-sensor-target.svg, with the whole telemetry path dashed and independent safety route solid.",
+      "sources": ["E12"]
+    },
+    {
+      "id": "B20",
+      "question": "Why Azure instead of M365, Power Platform or buying a product?",
+      "audience": "CIO / CFO",
+      "return": "S10",
+      "on_slide": ["Appraise buy/configure/build on the same requirements", "Azure exercise proves contracts, not procurement superiority", "Licensing, integration, control and TCO decide"],
+      "answer": "Azure is the selected exercise realisation, not proof that custom development is commercially superior. Compare an existing housing product, M365/Power Platform configuration and custom Azure against the same workflow, permissions, audit, integration, accessibility, model terms and total cost. Existing licences and tenant capability cannot be assumed. A training preference is not customer value. The current source gives us testable contracts and trade-offs to take into that appraisal, not a completed procurement decision.",
+      "visual": "Option matrix with evidence required; no unsupported winning score.",
+      "sources": ["E02", "E03", "E06"]
+    },
+    {
+      "id": "B21",
+      "question": "How do you prevent hallucinations and prompt injection?",
+      "audience": "CISO / CTO / risk",
+      "return": "S11",
+      "on_slide": ["Permitted task context and source/version binding", "Schema/citation checks plus independent semantic review", "No vulnerability-free or hallucination-free claim"],
+      "answer": "Constrain inputs and outputs, keep source and task versions, enforce permissions before model context and again at review, and treat documents as evidence rather than instructions. Validate schema and citations, allow abstention and retain a manual route. These controls reduce risk; they do not prove semantic truth or immunity to prompt injection. Critical-error and unsafe-advice evaluation, red-team work and authorised release evidence remain separate. This answer describes design controls, not a fresh security audit.",
+      "visual": "diagrams/04-controlled-ai-flow.svg with untrusted evidence and review boundaries called out in notes.",
+      "sources": ["E09", "E12", "E07"]
+    },
+    {
+      "id": "B22",
+      "question": "Can customer data leave the UK or train a provider's model?",
+      "audience": "DPO / CISO / CIO",
+      "return": "S10",
+      "on_slide": ["Region labels alone do not establish processing geography", "Verify exact model, deployment type and contract", "No real resident data or private dataset in this handoff"],
+      "answer": "This package cannot make that contractual or legal assurance. Verify the exact provider, model/version, deployment SKU, routing/geography, retention, abuse monitoring, subprocessors and applicable agreement before real data is processed. A UK resource name or region does not alone prove UK-only inference, especially for a GlobalStandard model deployment. Local snapshots and research are evidence to review, not current legal sign-off. The handoff contains only public synthetic illustrations and repository-authored summaries, not private datasets or credentials.",
+      "visual": "Processing decision checklist, no unverified UK-only green badge.",
+      "sources": ["E04", "E06", "E12", "E13"]
+    },
+    {
+      "id": "B23",
+      "question": "How will you know this is fair and accessible?",
+      "audience": "CEO / resident services / risk",
+      "return": "S15",
+      "on_slide": ["No-digital route and understandable explanations", "Cohort errors, exclusions and unknowns are visible", "Engineering checks != resident or WCAG acceptance"],
+      "answer": "Keep assisted routes and native semantics, check task success and comprehension, and inspect errors and exclusions by agreed cohorts without exposing small groups. The exercise targets WCAG 2.2 AA and has engineering work, but partial scans or role-agent walkthroughs cannot establish conformance or fairness. Appropriate human research and reviewer-approved thresholds are required. An AI result that improves average speed while worsening a critical group outcome should not pass the gate.",
+      "visual": "Outcome comparison with guardrails and visible unknowns, not a compliance seal.",
+      "sources": ["E02", "E12", "E15"]
+    },
+    {
+      "id": "B24",
+      "question": "How will you keep policy, law and funding rules current?",
+      "audience": "Risk / legal / CFO",
+      "return": "S05",
+      "on_slide": ["Dated sources with authority classification", "Detected change -> reviewed rule change -> tests", "No silent model update to live controls"],
+      "answer": "Separate legislation, guidance, policy, funding conditions and internal interpretation. Keep dated evidence and review official sources before consequential use. A detected change should identify affected requirements, rules, journeys, tests and evidence, then go to named legal/compliance/professional owners. Models may retrieve, compare and flag; they must not decide that a legal duty is satisfied or silently activate a new rule. No current legal status or statutory timing assertion is made by this authoring package.",
+      "visual": "Source -> reviewed change item -> approved control version -> regression evidence.",
+      "sources": ["E02", "E12", "E18"]
+    },
+    {
+      "id": "B25",
+      "question": "What is your Tokenomics unit and can the AI bill run away?",
+      "audience": "CFO / panel",
+      "return": "S11",
+      "on_slide": ["Recovered estimate: (6,884 / 5) x 10 x 20 x USD 1.60 / 1m", "USD 0.440576/planned home; USD 6,872.9856 for 15,600 homes", "Measured accepted-outcome TCA still unknown; money controls proposed"],
+      "answer": "The recovered v2 planning scenario takes 1,376.8 observed tokens/run, assumes tenfold task size and twenty tasks/home, then prices all 275,360 tokens/home at the reported USD 1.60/million output rate. It yields USD 0.440576/home and USD 6,872.9856 for 15,600 homes; doubling task count or size gives USD 0.881152/home and USD 13,745.9712 total. The 23 October price is from third-party mirrors, not verified deployment pricing or a reconciled bill. Task count, size, retries and future prices are assumptions, not a lifetime cap. This is cost per planned home, not cost per accepted outcome. The latter requires attributable inference, platform, review, correction, assurance and support divided by human-accepted proposals above an agreed quality floor, with critical misses, unsupported claims, overrides and reopenings. OD-51 is still open; a zero or unknown accepted denominator is not measurable. Current finite calls/tokens/expiry are not independent task/period monetary budgets or universal request-depth bounds. FR-052/NFR-012 and AC-108/AC-109 remain requirements to test.",
+      "visual": "Show the recovered formula and its assumptions beside, not in place of, the accepted-outcome TCA equation. Label planning scenario versus observed acceptance. No guaranteed currency ceiling or cheapest-project claim.",
+      "sources": ["E19", "E05", "E11", "E21"]
+    },
+    {
+      "id": "B26",
+      "question": "Why not cache every answer and route everything to the cheapest model?",
+      "audience": "CIO / CTO / CFO",
+      "return": "S11",
+      "on_slide": ["Same permission, evidence version and task validity required", "Smallest model must clear held-out quality and latency thresholds", "Change one lever, compare, then keep or revert"],
+      "answer": "A cheap answer that misses a critical fact is not a cheaper accepted outcome. Compare candidate routes on the same held-out cases, including abstentions, unsupported claims, review and latency. A cache needs a demonstrated equivalence contract: same permitted scope, relevant evidence and control versions, current authority and valid task. It must not leak one case or person's answer into another. Routing, caching and context trimming are proposed optimisations to evaluate, not deployed universal controls. Complete measurement must include legacy paths that currently discard usage.",
+      "visual": "One-lever experiment: baseline -> routing OR context OR cache -> quality/latency/cost check -> retain/revert.",
+      "sources": ["E19", "E04", "E09"]
+    },
+    {
+      "id": "B27",
+      "question": "What stops chat and agent sprawl multiplying hidden calls?",
+      "audience": "CTO / CIO / panel",
+      "return": "S11",
+      "on_slide": ["Deterministic state graph, not an open-ended agent loop", "Existing bounded authority expires and exhausts", "Per-request call/depth limits are proposed, Not run"],
+      "answer": "The assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is an acceptance test to run, not a result already obtained. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.",
+      "visual": "One user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.",
+      "sources": ["E19", "E09"]
+    }
+  ]
+}

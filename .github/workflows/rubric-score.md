@@ -536,6 +536,48 @@ criteria); do not omit it. Supply `summary`.
 The trusted adapter reconstructs the canonical card for the unchanged gate.
 The single-submission rule is enforced by that gate, not by MCP append quota.
 
+### Preflight Before Submission
+
+Before calling `record_rubric_score`, run this filter with `jq -e
+--slurpfile context /tmp/gh-aw/agent/rubric/context.json`. Pass the complete
+final tool-argument object on standard input using a quoted here-document;
+do not write a candidate file or run repository code. The filter prints the
+unchanged candidate only when validation succeeds. Submit exactly that
+validated object. If jq fails, correct the candidate and repeat the preflight
+without calling the output tool. Never submit an unvalidated revision.
+
+```jq
+. as $candidate
+| ($context[0].scorecard_template.criteria | keys) as $ids
+| ($ids | map(. + "_score")) as $score_fields
+| if (
+    ($ids | length) == 20
+    and ($candidate | type) == "object"
+    and ($candidate | keys) == (($score_fields + ["details", "summary"]) | sort)
+    and all($candidate[]; type == "string")
+    and all($score_fields[]; . as $field | $candidate[$field] | IN("1", "2", "3", "4", "5"))
+    and ($candidate.summary | test("\\S"))
+    and ($candidate.details | fromjson | . as $details
+      | type == "object"
+      and keys == $ids
+      and all($details[];
+        type == "object"
+        and keys == ["change_reason", "evidence", "rationale"]
+        and (.evidence | type == "array" and all(.[]; type == "string"))
+        and (.rationale | type == "string" and length < 300 and test("\\S")
+          and (contains("UNSCORED") | not))
+        and (.change_reason | type == "string")))
+  ) then $candidate else error("Invalid scorecard; repair it before submission") end
+```
+
+This preflight checks structure and types, not evidence quality or the gate's
+decision. In particular, even a missing-artifact entry such as D3 must include
+`"change_reason": ""`. The runtime still accepts `details` as a string; the
+strict adapter and exactly-one-submission gate remain authoritative. jq does
+not detect duplicate JSON keys, so build the candidate from the template
+without retyping or duplicating keys. The adapter rejects duplicates inside
+the encoded details; jq has already collapsed duplicate outer argument keys.
+
 This complete shape example is illustrative only; never copy its grades or
 evidence instead of assessing the repository:
 

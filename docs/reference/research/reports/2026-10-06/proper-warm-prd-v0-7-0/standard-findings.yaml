@@ -1,0 +1,66 @@
+schema_version: PRD_STANDARD_FINDINGS_V1
+assessment_id: requirements-quality-PRD-2026-AMA48-001-followup-20261006T094249Z
+assessed_at: "2026-10-06T09:42:49Z"
+prd:
+  id: PRD-2026-AMA48-001
+  version: 0.7.0
+  phase: Build
+  partition_id: amendment-followup-2026-10-06
+  artifact_path: docs/prds/proper-warm-retrofit-programme-demonstrator.md
+standard:
+  skill_name: requirements-quality
+  skill_version: "1.1"
+mode: plan
+assessment_outcome: plan
+overall_status: COVERED
+summary_counts:
+  RISK: 0
+  CAUTION: 0
+  COVERED: 2
+  NOT_APPLICABLE: 0
+findings:
+  - finding_id: req-qual-001
+    checklist_item: profile-default-manifest-verifiability
+    requirement_id: AC-034
+    status: COVERED
+    severity: N/A
+    location:
+      section: "MVP and Release Framing; Next read-only prototype generation contract"
+    finding: Baseline fixture manifest v1 explicitly lists ordered default fixture IDs, counts, and reset selections for all eleven perspectives and states it is exhaustive for Slice A. Slice B/C require a new manifest with complete IDs, counts, order, and selected-ID expectations before AC-034/043 checks; examples are not implicit defaults.
+    recommendation: null
+  - finding_id: req-qual-002
+    checklist_item: nfr-001-reflow-verifiability
+    requirement_id: NFR-001
+    status: COVERED
+    severity: N/A
+    location:
+      section: "Non-Functional Requirements"
+    finding: The proposed fixture checks specify 320, 390, and 1280 CSS-pixel viewport widths and 200% text zoom, with no clipped or lost content and no page-level horizontal overflow. The requirement explicitly permits a genuinely two-dimensional case table to scroll within a labelled, keyboard-focusable region and requires recording the browser, viewport, zoom, exception, and result.
+    recommendation: null
+iso_29148_attributes:
+  necessary: 3
+  appropriate: 3
+  unambiguous: 2
+  complete: 2
+  singular: 2
+  feasible: 2
+  verifiable: 2
+  correct: 3
+  conforming: 3
+nist_800_160_nfr_categories:
+  performance_and_capacity: true
+  reliability_and_resilience: true
+  security: true
+  privacy: true
+  scalability_and_elasticity: false
+  maintainability_and_operability: true
+  observability: true
+  usability_and_accessibility: true
+  compatibility_and_interoperability: true
+  portability: true
+smart_product_goals: []
+fr_ac_coverage:
+  fr_total: 35
+  fr_with_ac: 35
+  coverage_pct: 100.0
+notes: "This is an amendment-scoped follow-up, not a fresh full-PRD quality review. NIST category presence is checked against the PRD NFRs: NFR-002 addresses workload/capacity, NFR-006 recovery, NFR-001 usability/accessibility, and NFR-008 interoperability; applicable numeric targets or owner-approved thresholds remain TBD and are not counted as absent categories. Scalability and elasticity is absent because no scaling dimension and load range are specified. SMART goals are outside this follow-up partition and are not reassessed here."

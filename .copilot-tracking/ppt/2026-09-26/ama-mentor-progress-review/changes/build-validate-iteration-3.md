@@ -6,7 +6,7 @@
 
 * Log entries after the iteration 2 build (20:46, 26 Sep): the pilot measurement challenge, BRD 0.3.0 integration, the agent-led modernisation reframe (BRD 0.4.0) and the explainability and transparency review (BRD 0.5.0).
 * `docs/reference/memory.md`: no change since 2026-09-25.
-* Storytelling review: `research/subagents/storytelling-review-iteration-3.md` (Presentation Communications Strategist).
+* Storytelling review: `research/subagents/storytelling-review-iteration-3.md` (AMA Presentation Communications Strategist).
 
 ## Content Changes (first pass)
 

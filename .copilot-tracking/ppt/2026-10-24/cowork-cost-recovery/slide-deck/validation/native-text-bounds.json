@@ -1,0 +1,1432 @@
+﻿[
+    {
+        "slide":  6,
+        "id":  26433,
+        "text":  "ACT 1 · THE FORECAST\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  792,
+        "bound_width":  173.625046,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26435,
+        "text":  "Forecast: every Zava home at EPC C by April 2030.\r ",
+        "height":  46.8,
+        "bound_height":  39.6,
+        "width":  873.6,
+        "bound_width":  780.185059,
+        "font_size":  32
+    },
+    {
+        "slide":  6,
+        "id":  26438,
+        "text":  "Forecast: 15,600 homes; E21: assumed workload + secondary price (23 Oct 2026). Grant subject to eligibility, allocation, award and claim.",
+        "height":  21.6,
+        "bound_height":  12,
+        "width":  698.4,
+        "bound_width":  611,
+        "font_size":  10
+    },
+    {
+        "slide":  6,
+        "id":  26442,
+        "text":  "S05 · Answers: B08\r ",
+        "height":  21.6,
+        "bound_height":  15.6,
+        "width":  168,
+        "bound_width":  108.59,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26447,
+        "text":  "FORECAST\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  110.16,
+        "bound_width":  78.37496,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26453,
+        "text":  "Homes at EPC C, cumulative from Nov 2026\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  307.44,
+        "bound_width":  280.25,
+        "font_size":  14
+    },
+    {
+        "slide":  6,
+        "id":  26460,
+        "text":  "0\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  10,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26477,
+        "text":  "4,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  33.25,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26498,
+        "text":  "8,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  33.25,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26523,
+        "text":  "12,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26537,
+        "text":  "16,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  26568,
+        "text":  "5,327\r ",
+        "height":  39.7858276,
+        "bound_height":  20.4,
+        "width":  75.6,
+        "bound_width":  44.5,
+        "font_size":  16
+    },
+    {
+        "slide":  6,
+        "id":  26585,
+        "text":  "End 2027\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  92.7,
+        "bound_width":  63.62504,
+        "font_size":  14
+    },
+    {
+        "slide":  6,
+        "id":  26622,
+        "text":  "9,893\r ",
+        "height":  39.7858276,
+        "bound_height":  20.4,
+        "width":  75.6,
+        "bound_width":  44.5,
+        "font_size":  16
+    },
+    {
+        "slide":  6,
+        "id":  26642,
+        "text":  "End 2028\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  92.7,
+        "bound_width":  63.62504,
+        "font_size":  14
+    },
+    {
+        "slide":  6,
+        "id":  26685,
+        "text":  "14,459\r ",
+        "height":  39.7858276,
+        "bound_height":  20.4,
+        "width":  75.6,
+        "bound_width":  53.37496,
+        "font_size":  16
+    },
+    {
+        "slide":  6,
+        "id":  26708,
+        "text":  "End 2029\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  92.7,
+        "bound_width":  63.62504,
+        "font_size":  14
+    },
+    {
+        "slide":  6,
+        "id":  26757,
+        "text":  "15,600\r ",
+        "height":  39.7858276,
+        "bound_height":  20.4,
+        "width":  75.6,
+        "bound_width":  53.37496,
+        "font_size":  16
+    },
+    {
+        "slide":  6,
+        "id":  26783,
+        "text":  "1 Apr 2030\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  92.7,
+        "bound_width":  71.35496,
+        "font_size":  14
+    },
+    {
+        "slide":  6,
+        "id":  27608,
+        "text":  "Target 15,600\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  126,
+        "bound_width":  78.98504,
+        "font_size":  12
+    },
+    {
+        "slide":  6,
+        "id":  27707,
+        "text":  "15,600 homes · 41 months\r ",
+        "height":  44.5858269,
+        "bound_height":  25.2,
+        "width":  398.4,
+        "bound_width":  243,
+        "font_size":  20
+    },
+    {
+        "slide":  6,
+        "id":  27758,
+        "text":  "88\r ",
+        "height":  116.585823,
+        "bound_height":  97.2,
+        "width":  108,
+        "bound_width":  111.25,
+        "font_size":  80
+    },
+    {
+        "slide":  6,
+        "id":  27810,
+        "text":  "homes a week\r ",
+        "height":  49.3858261,
+        "bound_height":  30,
+        "width":  291.41568,
+        "bound_width":  169.375046,
+        "font_size":  24
+    },
+    {
+        "slide":  6,
+        "id":  27917,
+        "text":  "GBP 95m\rworks benchmark",
+        "height":  64.8,
+        "bound_height":  48,
+        "width":  190.2,
+        "bound_width":  122.53,
+        "font_size":  26
+    },
+    {
+        "slide":  6,
+        "id":  28028,
+        "text":  "GBP 47.4m\rconditional grant potential",
+        "height":  64.8,
+        "bound_height":  40.8,
+        "width":  190.2,
+        "bound_width":  153.875046,
+        "font_size":  22
+    },
+    {
+        "slide":  6,
+        "id":  28143,
+        "text":  "USD 6,873\rwhole-cohort inference scenario",
+        "height":  64.8,
+        "bound_height":  44.4,
+        "width":  344.4,
+        "bound_width":  203.875046,
+        "font_size":  24
+    },
+    {
+        "slide":  11,
+        "id":  35623,
+        "text":  "ACT 2 · DISCOVERY\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  477.6,
+        "bound_width":  145.93,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  35625,
+        "text":  "We stress-tested the economics\rbefore we wrote the product.",
+        "height":  86.4,
+        "bound_height":  76.8,
+        "width":  510.068726,
+        "bound_width":  496.42,
+        "font_size":  32
+    },
+    {
+        "slide":  11,
+        "id":  35628,
+        "text":  "E21: dated benchmark, not a quote. Grant assumes eligible homes/costs, allocation, award and claim. GBP 20,000 fixture remains separate.",
+        "height":  36,
+        "bound_height":  24,
+        "width":  412.093536,
+        "bound_width":  373.25,
+        "font_size":  10
+    },
+    {
+        "slide":  11,
+        "id":  35632,
+        "text":  "S10 · Answers: B09\r ",
+        "height":  21.6,
+        "bound_height":  15.6,
+        "width":  123.84,
+        "bound_width":  108.59,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  35637,
+        "text":  "WHAT-IF\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  92.16,
+        "bound_width":  60.57496,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  35658,
+        "text":  "20 scenarios\rfive agents, a programme supervisor and a damp and mould loop",
+        "height":  64.8,
+        "bound_height":  57.6,
+        "width":  283.131256,
+        "bound_width":  269,
+        "font_size":  20
+    },
+    {
+        "slide":  11,
+        "id":  35688,
+        "text":  "ONE HOME · exercise fixture (fictional)\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  314.4,
+        "bound_width":  261.375031,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  35700,
+        "text":  "THE PROGRAMME · 15,600 homes\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  522,
+        "bound_width":  233.75,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  53797,
+        "text":  "Gross cash before grant\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  265.2,
+        "bound_width":  143.5,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  53822,
+        "text":  "20,000\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  68.4,
+        "bound_width":  46.5,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  53848,
+        "text":  "Provider funding, base case\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  265.2,
+        "bound_width":  165.125046,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  53875,
+        "text":  "12,500\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  68.4,
+        "bound_width":  46.5,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  53903,
+        "text":  "Contingency spent\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  265.2,
+        "bound_width":  111.5,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  53932,
+        "text":  "14,500\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  68.4,
+        "bound_width":  46.5,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  53962,
+        "text":  "Eligible cost falls to 12,000\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  265.2,
+        "bound_width":  157.75,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  53993,
+        "text":  "14,000\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  68.4,
+        "bound_width":  46.5,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  54025,
+        "text":  "0\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  10,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54058,
+        "text":  "5,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  33.25,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54092,
+        "text":  "10,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54127,
+        "text":  "15,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54163,
+        "text":  "20,000\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54200,
+        "text":  "GBP\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  250.8,
+        "bound_width":  29.37496,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54238,
+        "text":  "WORKS\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  259.089844,
+        "bound_width":  58.37504,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54277,
+        "text":  "GBP 6,082/home historical HA benchmark",
+        "height":  36.1858253,
+        "bound_height":  15.6,
+        "width":  259.089844,
+        "bound_width":  247.3,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  54317,
+        "text":  "94.9m",
+        "height":  37.3858261,
+        "bound_height":  19.2,
+        "width":  72,
+        "bound_width":  49.87504,
+        "font_size":  16
+    },
+    {
+        "slide":  11,
+        "id":  54358,
+        "text":  "By EPC band\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  259.089844,
+        "bound_width":  81.62504,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  54400,
+        "text":  "£107m\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  72,
+        "bound_width":  47.37504,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  54443,
+        "text":  "Deep-retrofit fixture (GBP 20,000 a home)\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  259.089844,
+        "bound_width":  245.39,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  54487,
+        "text":  "£312m\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  72,
+        "bound_width":  47.37504,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  54532,
+        "text":  "GRANT SCENARIOS",
+        "height":  34.98583,
+        "bound_height":  14.4,
+        "width":  259.089844,
+        "bound_width":  144.625046,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54578,
+        "text":  "Proportional wave 3 share\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  259.089844,
+        "bound_width":  155,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  54625,
+        "text":  "£22.5m\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  72,
+        "bound_width":  51.25,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  54673,
+        "text":  "Conditional GBP 3,041/home (50% share)",
+        "height":  36.1858253,
+        "bound_height":  15.6,
+        "width":  259.089844,
+        "bound_width":  246.64,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  54722,
+        "text":  "47.4m",
+        "height":  37.3858261,
+        "bound_height":  19.2,
+        "width":  72,
+        "bound_width":  49.87504,
+        "font_size":  16
+    },
+    {
+        "slide":  11,
+        "id":  54772,
+        "text":  "Full £7,500 cap\r ",
+        "height":  36.1858253,
+        "bound_height":  16.8,
+        "width":  259.089844,
+        "bound_width":  92.75,
+        "font_size":  13
+    },
+    {
+        "slide":  11,
+        "id":  54823,
+        "text":  "£117m\r ",
+        "height":  37.3858261,
+        "bound_height":  18,
+        "width":  72,
+        "bound_width":  46.6050377,
+        "font_size":  14
+    },
+    {
+        "slide":  11,
+        "id":  54875,
+        "text":  "0\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  10,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54928,
+        "text":  "100\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  23.25,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  54982,
+        "text":  "200\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  23.25,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  55037,
+        "text":  "300\r ",
+        "height":  34.98583,
+        "bound_height":  15.6,
+        "width":  72,
+        "bound_width":  23.25,
+        "font_size":  12
+    },
+    {
+        "slide":  11,
+        "id":  55093,
+        "text":  "GBP m",
+        "height":  34.98583,
+        "bound_height":  14.4,
+        "width":  198.0082,
+        "bound_width":  43.16,
+        "font_size":  12
+    },
+    {
+        "slide":  21,
+        "id":  63872,
+        "text":  "ACT 4 · BUILT TO BE TRUSTED\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  792,
+        "bound_width":  225.145035,
+        "font_size":  12
+    },
+    {
+        "slide":  21,
+        "id":  63874,
+        "text":  "Model inference. Measure accepted value.",
+        "height":  46.8,
+        "bound_height":  38.4,
+        "width":  873.6,
+        "bound_width":  646,
+        "font_size":  32
+    },
+    {
+        "slide":  21,
+        "id":  63877,
+        "text":  "E21: assumed workload; secondary price, 23 Oct 2026, not current verified price. E19: usage only. E05: controls proposed; #435 not accepted.",
+        "height":  36,
+        "bound_height":  24,
+        "width":  633.6,
+        "bound_width":  584.625061,
+        "font_size":  10
+    },
+    {
+        "slide":  21,
+        "id":  63881,
+        "text":  "S18 · Answers: B05 · B25 · B26 · B27\r ",
+        "height":  21.6,
+        "bound_height":  15.6,
+        "width":  230.4,
+        "bound_width":  204.59,
+        "font_size":  12
+    },
+    {
+        "slide":  21,
+        "id":  63907,
+        "text":  "INFERENCE PLANNING SCENARIO\rUSD 0.44/home\rUSD 6,873 / 15,600 homes",
+        "height":  112.8,
+        "bound_height":  72,
+        "width":  274.4,
+        "bound_width":  229.25,
+        "font_size":  13
+    },
+    {
+        "slide":  21,
+        "id":  63916,
+        "text":  "20 tasks x 13,768 tokens\rx USD 1.60/million",
+        "height":  38.4,
+        "bound_height":  31.2,
+        "width":  274.4,
+        "bound_width":  147.75,
+        "font_size":  13
+    },
+    {
+        "slide":  21,
+        "id":  63937,
+        "text":  "Include review effort\rand assurance",
+        "height":  38.4,
+        "bound_height":  31.2,
+        "width":  274.4,
+        "bound_width":  120.015038,
+        "font_size":  13
+    },
+    {
+        "slide":  21,
+        "id":  63949,
+        "text":  "Double workload\rUSD 0.88/home",
+        "height":  91.2,
+        "bound_height":  49.2,
+        "width":  231.2,
+        "bound_width":  187.5,
+        "font_size":  16
+    },
+    {
+        "slide":  21,
+        "id":  63962,
+        "text":  "Inference only. Full project TCO and accepted-outcome cost remain unknown.",
+        "height":  44.5858269,
+        "bound_height":  22.8,
+        "width":  873.6,
+        "bound_width":  710.34,
+        "font_size":  19
+    },
+    {
+        "slide":  21,
+        "id":  64007,
+        "text":  "IN PLACE\r ",
+        "height":  27.36,
+        "bound_height":  15.6,
+        "width":  82.08,
+        "bound_width":  68.37504,
+        "font_size":  12
+    },
+    {
+        "slide":  21,
+        "id":  64024,
+        "text":  "finite calls, tokens and expiry per authority\rusage captured on the assistant path\rAzure budget alerts",
+        "height":  64.8,
+        "bound_height":  57.6,
+        "width":  425.28,
+        "bound_width":  302.5,
+        "font_size":  16
+    },
+    {
+        "slide":  21,
+        "id":  64042,
+        "text":  "NEXT\r ",
+        "height":  27.36,
+        "bound_height":  15.6,
+        "width":  54.72,
+        "bound_width":  40.37504,
+        "font_size":  12
+    },
+    {
+        "slide":  21,
+        "id":  64061,
+        "text":  "proposed money budgets per task and period\rper-request call and depth limits\raccepted-outcome cost: not yet measured",
+        "height":  64.8,
+        "bound_height":  54,
+        "width":  425.28,
+        "bound_width":  306.5,
+        "font_size":  15
+    },
+    {
+        "slide":  21,
+        "id":  65964,
+        "text":  "Accepted cost\rUnknown\rNo accepted-outcome\runit cost established",
+        "height":  132,
+        "bound_height":  98.4,
+        "width":  274.4,
+        "bound_width":  161,
+        "font_size":  18
+    },
+    {
+        "slide":  32,
+        "id":  2888,
+        "text":  "APPENDIX · B05 · CFO\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  648,
+        "bound_width":  164.875046,
+        "font_size":  12
+    },
+    {
+        "slide":  32,
+        "id":  2910,
+        "text":  "What does the technology cost today?\r ",
+        "height":  46.8,
+        "bound_height":  34.8,
+        "width":  873.6,
+        "bound_width":  522,
+        "font_size":  28
+    },
+    {
+        "slide":  32,
+        "id":  2933,
+        "text":  "Sources: E11 / E05 / E21. Historical price assumption: 23 Oct 2026; no verified current quote.",
+        "height":  21.6,
+        "bound_height":  12,
+        "width":  576,
+        "bound_width":  413.625031,
+        "font_size":  10
+    },
+    {
+        "slide":  32,
+        "id":  2957,
+        "text":  "B05 · Index: slide 27",
+        "height":  21.6,
+        "bound_height":  14.4,
+        "width":  290.4,
+        "bound_width":  111.874962,
+        "font_size":  12
+    },
+    {
+        "slide":  32,
+        "id":  2982,
+        "text":  "Return to caller",
+        "height":  28.8,
+        "bound_height":  14.4,
+        "width":  175.2,
+        "bound_width":  90.75,
+        "font_size":  12
+    },
+    {
+        "slide":  32,
+        "id":  22541,
+        "text":  "USD 700 owner-set October all-in forecast ceiling\r ",
+        "height":  50.4,
+        "bound_height":  44.4,
+        "width":  279.2,
+        "bound_width":  242,
+        "font_size":  18
+    },
+    {
+        "slide":  32,
+        "id":  22543,
+        "text":  "Execution gates remain; authority expires 25 October 16:02 UTC\r ",
+        "height":  72,
+        "bound_height":  66,
+        "width":  279.2,
+        "bound_width":  249,
+        "font_size":  18
+    },
+    {
+        "slide":  32,
+        "id":  22546,
+        "text":  "Refresh post-change forecast; outside-group cost remains unknown",
+        "height":  72,
+        "bound_height":  61.2,
+        "width":  279.2,
+        "bound_width":  250.625046,
+        "font_size":  17
+    },
+    {
+        "slide":  32,
+        "id":  26175,
+        "text":  "Count each cost once. Do not add the October USD 700 envelope and its included inference.",
+        "height":  27.6,
+        "bound_height":  15.6,
+        "width":  640,
+        "bound_width":  539.625061,
+        "font_size":  13
+    },
+    {
+        "slide":  32,
+        "id":  59994,
+        "text":  "DATED LEDGER\rNOT PRODUCTION TCO",
+        "height":  43.2,
+        "bound_height":  26.4,
+        "width":  183.6,
+        "bound_width":  147.124954,
+        "font_size":  11
+    },
+    {
+        "slide":  32,
+        "id":  2,
+        "text":  "Topic: S18 / slide 21",
+        "height":  28.8,
+        "bound_height":  14.4,
+        "width":  201.6,
+        "bound_width":  116.734962,
+        "font_size":  12
+    },
+    {
+        "slide":  32,
+        "id":  70001,
+        "text":  "Future project appraisal\rP + USD 6,872.9856\rPer planned home:\r(P + USD 6,872.9856)\r/ 15,600\rP = non-inference costs\rfor the same period.\rP is not yet priced.",
+        "height":  172.440948,
+        "bound_height":  133.2,
+        "width":  215.6,
+        "bound_width":  174.875046,
+        "font_size":  15
+    },
+    {
+        "slide":  36,
+        "id":  3518,
+        "text":  "APPENDIX · B09 · CFO / ASSET EXECUTIVE\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  648,
+        "bound_width":  312.93,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  3560,
+        "text":  "What is the per-home business case and cash exposure?\r ",
+        "height":  46.8,
+        "bound_height":  34.8,
+        "width":  873.6,
+        "bound_width":  771.375061,
+        "font_size":  28
+    },
+    {
+        "slide":  36,
+        "id":  3603,
+        "text":  "E02 / E21: historical benchmark, not quote. Grant assumes eligible homes/costs, allocation, award and claim; Finance/funder review required.",
+        "height":  21.6,
+        "bound_height":  22.8,
+        "width":  576,
+        "bound_width":  555.75,
+        "font_size":  9.5
+    },
+    {
+        "slide":  36,
+        "id":  3647,
+        "text":  "B09 · Index: slide 27",
+        "height":  21.6,
+        "bound_height":  14.4,
+        "width":  290.4,
+        "bound_width":  111.874962,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  3692,
+        "text":  "Return to caller",
+        "height":  28.8,
+        "bound_height":  14.4,
+        "width":  175.2,
+        "bound_width":  90.75,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  24019,
+        "text":  "Contractor\r ",
+        "height":  40.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  69,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  24070,
+        "text":  "Internal\r ",
+        "height":  40.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  50.37496,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  24125,
+        "text":  "Base\r ",
+        "height":  40.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  35.75,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  24184,
+        "text":  "Fictional grant\r ",
+        "height":  40.8,
+        "bound_height":  34.8,
+        "width":  100.8,
+        "bound_width":  55.87496,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  24247,
+        "text":  "Provider base\r ",
+        "height":  40.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  90,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  24280,
+        "text":  "FICTIONAL EXERCISE ARITHMETIC\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  270,
+        "bound_width":  238.215042,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  24314,
+        "text":  "Fictional base GBP 20,000\rGBP 22,000 with contingency",
+        "height":  50.4,
+        "bound_height":  38.4,
+        "width":  283.2,
+        "bound_width":  216.695038,
+        "font_size":  17
+    },
+    {
+        "slide":  36,
+        "id":  26205,
+        "text":  "Benchmark: GBP 6,082/home\rx 15,600 = GBP 94,879,200 works",
+        "height":  56.6929131,
+        "bound_height":  38.4,
+        "width":  427.8,
+        "bound_width":  242.07,
+        "font_size":  17
+    },
+    {
+        "slide":  36,
+        "id":  26207,
+        "text":  "Conditional: min(50% x GBP 6,082, GBP 7,500)\r= GBP 3,041/home; x 15,600 = GBP 47,439,600",
+        "height":  56.6929131,
+        "bound_height":  33.6,
+        "width":  427.8,
+        "bound_width":  312.115051,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  26210,
+        "text":  "0\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  10,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  26214,
+        "text":  "5,000\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  33.25,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  26219,
+        "text":  "10,000\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  26225,
+        "text":  "15,000\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  26232,
+        "text":  "20,000\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  39.87504,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  26240,
+        "text":  "GBP\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  61.2,
+        "bound_width":  35.37504,
+        "font_size":  12
+    },
+    {
+        "slide":  36,
+        "id":  26249,
+        "text":  "GBP 18,000\r ",
+        "height":  28.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  80.49496,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  26259,
+        "text":  "+ GBP 2,000\r ",
+        "height":  28.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  84.74504,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  26270,
+        "text":  "GBP 20,000\r ",
+        "height":  28.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  80.49496,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  26282,
+        "text":  "− GBP 7,500\r ",
+        "height":  28.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  84.74504,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  26295,
+        "text":  "GBP 12,500\r ",
+        "height":  28.8,
+        "bound_height":  18,
+        "width":  100.8,
+        "bound_width":  80.49496,
+        "font_size":  14
+    },
+    {
+        "slide":  36,
+        "id":  26309,
+        "text":  "Gross cash GBP 20,000 before grant\rFictional receivable GBP 7,500\rAn award is not cash.",
+        "height":  66.92913,
+        "bound_height":  46.8,
+        "width":  283.2,
+        "bound_width":  217.765045,
+        "font_size":  13
+    },
+    {
+        "slide":  36,
+        "id":  26324,
+        "text":  "Contingency spent: provider GBP 14,500\rEvidence supports claims; not eligibility, award or payment.",
+        "height":  59.8425179,
+        "bound_height":  46.8,
+        "width":  283.2,
+        "bound_width":  271.16,
+        "font_size":  13
+    },
+    {
+        "slide":  36,
+        "id":  2,
+        "text":  "Topic: S10 / slide 11",
+        "height":  28.8,
+        "bound_height":  14.4,
+        "width":  201.6,
+        "bound_width":  116.074959,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  10038,
+        "text":  "APPENDIX · B25 · CFO / PANEL\r ",
+        "height":  25.2,
+        "bound_height":  15.6,
+        "width":  648,
+        "bound_width":  226.735046,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  10160,
+        "text":  "What is your Tokenomics unit and can the AI bill run away?\r ",
+        "height":  46.8,
+        "bound_height":  34.8,
+        "width":  873.6,
+        "bound_width":  797.13,
+        "font_size":  28
+    },
+    {
+        "slide":  52,
+        "id":  10283,
+        "text":  "Sources E19 / E05 / E11 / E21. #435 not accepted; no saving, payback or full-project price established.",
+        "height":  21.6,
+        "bound_height":  12,
+        "width":  576,
+        "bound_width":  455.25,
+        "font_size":  10
+    },
+    {
+        "slide":  52,
+        "id":  10407,
+        "text":  "B25 · Index: slide 27",
+        "height":  21.6,
+        "bound_height":  14.4,
+        "width":  290.4,
+        "bound_width":  111.874962,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  10532,
+        "text":  "Return to caller",
+        "height":  28.8,
+        "bound_height":  14.4,
+        "width":  175.2,
+        "bound_width":  90.75,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  21688,
+        "text":  "Planning: USD 0.440576/home inference; accepted-outcome TCA unknown",
+        "height":  42.1858253,
+        "bound_height":  21.6,
+        "width":  873.6,
+        "bound_width":  643.33,
+        "font_size":  18
+    },
+    {
+        "slide":  52,
+        "id":  21690,
+        "text":  "Historical secondary price: 23 Oct 2026. Assumed workload, not current verified deployment price.",
+        "height":  42.1858253,
+        "bound_height":  16.8,
+        "width":  873.6,
+        "bound_width":  609.73,
+        "font_size":  14
+    },
+    {
+        "slide":  52,
+        "id":  21708,
+        "text":  "Observe, then assume",
+        "height":  44.5858269,
+        "bound_height":  21.6,
+        "width":  229.56,
+        "bound_width":  197,
+        "font_size":  18
+    },
+    {
+        "slide":  52,
+        "id":  21723,
+        "text":  "Price inference only",
+        "height":  44.5858269,
+        "bound_height":  21.6,
+        "width":  229.56,
+        "bound_width":  176,
+        "font_size":  18
+    },
+    {
+        "slide":  52,
+        "id":  21732,
+        "text":  "275,360 / 1m x USD 1.60\r= USD 0.440576/home\rx 15,600 = USD 6,872.9856",
+        "height":  64.8,
+        "bound_height":  54,
+        "width":  270.6,
+        "bound_width":  189.125046,
+        "font_size":  15
+    },
+    {
+        "slide":  52,
+        "id":  21742,
+        "text":  "Measure accepted TCA",
+        "height":  44.5858269,
+        "bound_height":  21.6,
+        "width":  270.6,
+        "bound_width":  203,
+        "font_size":  18
+    },
+    {
+        "slide":  52,
+        "id":  21792,
+        "text":  "Inference scenario is not total project cost or accepted value",
+        "height":  42.1858253,
+        "bound_height":  20.4,
+        "width":  626.64,
+        "bound_width":  495.25,
+        "font_size":  17
+    },
+    {
+        "slide":  52,
+        "id":  21807,
+        "text":  "DESIGNED · NEXT MILESTONE",
+        "height":  25.2,
+        "bound_height":  14.4,
+        "width":  239.76,
+        "bound_width":  206.41,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  21858,
+        "text":  "Existing bounded path\r ",
+        "height":  44.5858269,
+        "bound_height":  25.2,
+        "width":  420.156464,
+        "bound_width":  221.125046,
+        "font_size":  20
+    },
+    {
+        "slide":  52,
+        "id":  21877,
+        "text":  "Finite calls / tokens / expiry; partial metering\rNot hard currency or request-depth limits.",
+        "height":  45.6,
+        "bound_height":  36,
+        "width":  420.156464,
+        "bound_width":  295.375031,
+        "font_size":  15
+    },
+    {
+        "slide":  52,
+        "id":  21897,
+        "text":  "Proposed: not run",
+        "height":  44.5858269,
+        "bound_height":  22.8,
+        "width":  429.65213,
+        "bound_width":  169.125046,
+        "font_size":  19
+    },
+    {
+        "slide":  52,
+        "id":  21918,
+        "text":  "Complete attribution; task/period money stops\rRequest/depth bounds; billing reconciliation.",
+        "height":  45.6,
+        "bound_height":  36,
+        "width":  429.65213,
+        "bound_width":  309.625031,
+        "font_size":  15
+    },
+    {
+        "slide":  52,
+        "id":  21940,
+        "text":  "Tokenomics framing: our working method, refined with Finance",
+        "height":  25.2,
+        "bound_height":  14.4,
+        "width":  477.6,
+        "bound_width":  334.67,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  21963,
+        "text":  "RECOVERY: 24 OCT 2026",
+        "height":  25.2,
+        "bound_height":  14.4,
+        "width":  229.68,
+        "bound_width":  168.915039,
+        "font_size":  12
+    },
+    {
+        "slide":  52,
+        "id":  59979,
+        "text":  "6,884 / 5 = 1,376.8 tokens/run\rx 10 = 13,768 tokens/task\rx 20 = 275,360 tokens/home",
+        "height":  67.2,
+        "bound_height":  54,
+        "width":  270.6,
+        "bound_width":  210.375046,
+        "font_size":  15
+    },
+    {
+        "slide":  52,
+        "id":  59997,
+        "text":  "Hosting + review + assurance\rAccepted above quality floor\rTCA / accepted work: unknown\rDouble workload: USD 0.881152/home",
+        "height":  88.8,
+        "bound_height":  61.2,
+        "width":  270.6,
+        "bound_width":  209.11,
+        "font_size":  13
+    },
+    {
+        "slide":  52,
+        "id":  2,
+        "text":  "Topic: S18 / slide 21",
+        "height":  28.8,
+        "bound_height":  14.4,
+        "width":  201.6,
+        "bound_width":  116.734962,
+        "font_size":  12
+    }
+]

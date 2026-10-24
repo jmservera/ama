@@ -188,6 +188,50 @@ def test_given_unchanged_main_when_computed_then_no_scoring(tmp_path):
 
 
 @pytest.mark.parametrize(
+    ("limit", "size", "expected"),
+    [(None, MAX_BYTES + 1, False), (1500, 1500, True), (1500, 1501, False)],
+)
+def test_given_deck_size_override_when_computed_then_only_deck_limit_changes(
+    tmp_path, limit, size, expected
+):
+    root = make_repo(tmp_path)
+    registry_path = root / prepare.REGISTRY_PATH
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    deck_entry = next(entry for entry in registry["artifacts"] if entry["id"] == "capstone-deck")
+    deck_entry.pop("max_file_bytes", None)
+    if limit is not None:
+        deck_entry["max_file_bytes"] = limit
+    registry_path.write_text(json.dumps(registry), encoding="utf-8")
+    deck_path = "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx"
+    (root / deck_path).parent.mkdir(parents=True)
+    (root / deck_path).write_bytes(b"x" * size)
+    (root / "docs/brds/oversize.md").write_bytes(b"x" * (MAX_BYTES + 1))
+    git(root, "add", ".")
+    git(root, "commit", "-m", "configure deck size limit")
+
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    assert (deck_path in state["artifacts"]["capstone-deck"]["files"]) is expected
+    assert "docs/brds/oversize.md" not in state["artifacts"]["brd"]["files"]
+
+
+@pytest.mark.parametrize(
+    ("path", "expected"),
+    [
+        ("docs/capstone/deck/zava-forward-cowork-v2-draft.pptx", True),
+        ("docs/capstone/deck/zava-forward-executive-draft.pptx", False),
+        ("docs/capstone/deck/cowork-generated/Zava Forward - More homes ready with control intact.pptx", False),
+    ],
+)
+def test_given_cowork_registry_when_matching_then_only_current_deck_selected(path, expected):
+    registry = json.loads((RUBRIC_DIR / "artifacts.json").read_text(encoding="utf-8"))
+    deck_entry = next(entry for entry in registry["artifacts"] if entry["id"] == "capstone-deck")
+
+    matched = prepare.in_scope(path, deck_entry["include"], deck_entry["exclude"])
+
+    assert matched is expected
+
+@pytest.mark.parametrize(
     ("artifact_max_bytes", "file_size", "expected"),
     [
         (MAX_BYTES * 2, MAX_BYTES + 1, True),
