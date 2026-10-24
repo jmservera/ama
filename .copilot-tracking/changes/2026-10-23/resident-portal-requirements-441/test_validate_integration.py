@@ -95,6 +95,33 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unrelated.py"):
             validator.branch_changes()
 
+    def test_merge_scope_uses_incoming_main_as_its_base(self):
+        self.git("switch", "-c", "feature")
+        doc = self.root / validator.BRD
+        doc.parent.mkdir(parents=True)
+        doc.write_text("# Candidate\n")
+        self.git("add", ".")
+        self.git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+                 "commit", "-qm", "feature")
+        self.git("switch", "-c", "upstream", self.base)
+        source = self.root / "src/api/auth.py"
+        source.parent.mkdir(parents=True)
+        source.write_text("main_change = True\n")
+        self.git("add", ".")
+        self.git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+                 "commit", "-qm", "upstream")
+        upstream = self.git("rev-parse", "HEAD").strip()
+        self.git("update-ref", "refs/remotes/origin/main", upstream)
+        self.git("switch", "feature")
+        self.git("config", "user.name", "Fixture")
+        self.git("config", "user.email", "fixture@example.test")
+        merged = subprocess.run(
+            ["git", "-C", str(self.root), "merge", "--no-commit", "--no-ff", "upstream"],
+            check=False, capture_output=True,
+        )
+        self.assertEqual(merged.returncode, 0, merged.stderr.decode())
+        self.assertEqual(validator.branch_changes(), (upstream, [validator.BRD]))
+
     def test_new_file_empty_baseline_existing_file_preserved(self):
         self.assertEqual(validator.git_bytes("new.md", allow_missing=True), b"")
         self.assertEqual(validator.git_bytes("existing.md", allow_missing=True), b"# Existing\n")

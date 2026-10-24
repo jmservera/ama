@@ -40,9 +40,29 @@ def reverse_patch(patch):
     return "".join(result).encode()
 
 
+def integrated_bytes(record):
+    path = record["integrated_path"]
+    current = (ROOT / path).read_bytes()
+    if v.sha(current) == record["integrated_sha256"]:
+        return current
+    try:
+        commits = subprocess.check_output(
+            ["git", "log", "--all", "--format=%H", "--", path], cwd=ROOT, text=True
+        ).splitlines()
+    except subprocess.CalledProcessError as error:
+        raise AssertionError(path) from error
+    for commit in commits:
+        result = subprocess.run(
+            ["git", "show", f"{commit}:{path}"], cwd=ROOT,
+            capture_output=True, check=False,
+        )
+        if result.returncode == 0 and v.sha(result.stdout) == record["integrated_sha256"]:
+            return result.stdout
+    raise AssertionError(path)
+
+
 def source_bytes(record):
-    current = (ROOT / record["integrated_path"]).read_bytes()
-    assert v.sha(current) == record["integrated_sha256"], record["integrated_path"]
+    current = integrated_bytes(record)
     patch = record["source_to_integrated_patch"]
     source = v.reconstruct(current, reverse_patch(patch)) if patch else current
     assert v.sha(source) == record["source_sha256"] and len(source) == record["source_bytes"]
@@ -109,6 +129,11 @@ def main():
     mapping = json.loads((EVIDENCE / "source-to-integrated.json").read_text())
     records = mapping["files"]
     sources = {record["source"]: source_bytes(record) for record in records}
+    integrated_prd = next(
+        record for record in records
+        if record["integrated_path"] == v.PRD
+    )
+    previous_prd = integrated_bytes(integrated_prd).decode()
     for name, manifest, field in [
         ("prd", "prd/output-manifest.json", "outputs"),
         ("adr", "adr/reconciliation-output-manifest.json", "files"),
@@ -125,18 +150,73 @@ def main():
         "prd/zava-forward-retrofit-programme-demonstrator.md"]
     current = (ROOT / v.PRD).read_text()
     counts = {}
+    additions = {
+        "FR": {"FR-072", "FR-073"},
+        "AC": {f"AC-{i:03}" for i in range(141, 148)},
+        "DD": {"DD-010"},
+    }
+    changed = {
+        "FR": {"FR-003", "FR-005", "FR-008", "FR-022"},
+        "NFR": {"NFR-003"},
+    }
     for prefix in ("FR", "AC", "NFR", "CON", "GOAL", "DD", "OQ"):
-        before = v.prd_definitions(at_entry(v.PRD).decode(), prefix)
+        before = v.prd_definitions(previous_prd, prefix)
         after = v.prd_definitions(current, prefix)
-        assert before == after, prefix
+        assert before.keys() <= after.keys(), prefix
+        assert set(after) - set(before) == additions.get(prefix, set()), prefix
+        assert all(
+            after[key] == row or key in changed.get(prefix, set())
+            for key, row in before.items()
+        ), prefix
         counts[prefix] = len(after)
     acs = v.prd_definitions(current, "AC")
     assert all(acs[f"AC-{i:03}"].endswith("| Not run |") for i in range(111, 141))
+    assert all(acs[f"AC-{i:03}"].endswith("| Not run |") for i in range(141, 148))
     assert len(set(re.findall(r"PR442-S\d{2}", current))) == 20
-    assert len(re.findall(r"^\| PRD::FR-\d{3} \|", current, flags=re.M)) == 71
-    for name in (v.BRD, "docs/case_study_48_original.md", "docs/reference/memory.md"):
+    assert len(re.findall(r"^\| PRD::FR-\d{3} \|", current, flags=re.M)) == 73
+    brd = (ROOT / v.BRD).read_text()
+    brd_requirements = brd.split("## Requirements Traceability", 1)[0]
+    brd_fr = set(re.findall(r"^\| (FR-\d{3}) \|", brd_requirements, flags=re.M))
+    brd_ac = set(re.findall(r"\bAC[:-](\d{3}):", brd_requirements))
+    assert len(brd_fr) == 64 and len(brd_ac) == 132
+    assert {f"FR-{i:03}" for i in range(53, 65)} <= brd_fr
+    assert {str(i) for i in range(104, 133)} <= brd_ac
+    brd_trace = current.split("### Traceability to the BRD", 1)[1].split(
+        "\n## ", 1
+    )[0]
+    trace_rows = {
+        v.cells(line)[0]: v.cells(line)[1]
+        for line in brd_trace.splitlines()
+        if len(v.cells(line)) == 2
+    }
+    assert "BRD FR-063" in trace_rows["FR-072"]
+    assert "BRD FR-064" in trace_rows["FR-073"]
+    for name in ("docs/case_study_48_original.md", "docs/reference/memory.md"):
         assert (ROOT / name).read_bytes() == at_entry(name), name
-    assert (ROOT / "docs/reference/log.md").read_bytes().startswith(at_entry("docs/reference/log.md"))
+    main_log = subprocess.check_output(
+        ["git", "show", "origin/main:docs/reference/log.md"], cwd=ROOT
+    )
+    current_log = (ROOT / "docs/reference/log.md").read_bytes()
+    assert current_log.startswith(main_log)
+    merge_head = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", "MERGE_HEAD"],
+        cwd=ROOT, capture_output=True, check=False,
+    )
+    branch_parent = "HEAD" if merge_head.returncode == 0 else "HEAD^1"
+    branch_log = subprocess.check_output(
+        ["git", "show", f"{branch_parent}:docs/reference/log.md"], cwd=ROOT, text=True
+    )
+    current_log_text = current_log.decode()
+    for heading in (
+        "## [2026-10-23] update | Optional resident requirements and unregistered architecture proposal (#441)",
+        "## [2026-10-23] update | Completed unsigned resident PRD and architecture refinement (#441)",
+    ):
+        def entry(text):
+            lines = text.splitlines()
+            start = lines.index(heading)
+            end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+            return "\n".join(lines[start:end]).strip()
+        assert entry(branch_log) in current_log_text
     for name in ("resident-service-boundary.excalidraw", "resident-service-boundary.svg",
                  "resident-service-boundary.png"):
         relative = (HERE / name).relative_to(ROOT).as_posix()

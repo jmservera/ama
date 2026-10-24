@@ -142,7 +142,10 @@ class FakeAzure:
         elif args[:2] == ["containerapp", "list"]:
             value = self.apps
         elif args[:2] == ["containerapp", "show"]:
-            value = next(app for app in self.apps if app["name"] == args[args.index("-n") + 1])
+            value = copy.deepcopy(next(app for app in self.apps if app["name"] == args[args.index("-n") + 1]))
+            # The Container Apps CLI adds a read-only field that ARM PATCH rejects.
+            for container in value["properties"]["template"].get("containers", []):
+                container["imageType"] = "ContainerImage"
         elif args[:3] == ["containerapp", "revision", "list"]:
             value = self.revisions
         elif args[:3] == ["deployment", "group", "list"]:
@@ -195,6 +198,7 @@ class FakeAzure:
                     assert body["properties"]["configuration"]["ingress"]["fqdn"] == FQDN
                     self.app["properties"]["configuration"]["secrets"] = body["properties"]["configuration"]["secrets"]
                 if "template" in properties:
+                    assert all("imageType" not in c for c in properties["template"]["containers"])
                     self.app["properties"]["template"] = body["properties"]["template"]
             return self.app
         if "/listSecrets?" in url:

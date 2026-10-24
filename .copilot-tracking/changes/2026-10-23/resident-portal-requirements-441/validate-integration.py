@@ -66,9 +66,17 @@ def canonical_changes(changed):
 
 
 def branch_changes():
-    scope_base = subprocess.check_output(
-        ["git", "merge-base", "HEAD", "origin/main"], cwd=ROOT
-    ).decode().strip()
+    merge_head = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", "MERGE_HEAD"],
+        cwd=ROOT, capture_output=True, check=False,
+    )
+    scope_base = (
+        merge_head.stdout.decode().strip()
+        if merge_head.returncode == 0
+        else subprocess.check_output(
+            ["git", "merge-base", "HEAD", "origin/main"], cwd=ROOT
+        ).decode().strip()
+    )
     tracked = subprocess.check_output(
         ["git", "diff", "--no-renames", "--name-only", "-z", scope_base], cwd=ROOT
     )
@@ -224,13 +232,13 @@ def main():
             if len(row) == 7 and re.fullmatch(r"(?:FR|NFR|RULE)-\d{3}", row[0]):
                 assert row[0] not in dest
                 dest[row[0]] = row
-    assert len([x for x in rows if x.startswith("FR-")]) == 62
+    assert len([x for x in rows if x.startswith("FR-")]) == 64
     assert len([x for x in rows if x.startswith("NFR-")]) == 14
     assert len([x for x in rows if x.startswith("RULE-")]) == 28
-    old_acs = {ac for row in old_rows.values() for ac in re.findall(r"AC-\d{3}:", row[5])}
-    new_acs = [ac for row in rows.values() for ac in re.findall(r"AC-\d{3}:", row[5])]
-    assert len(new_acs) == len(set(new_acs)) == 126 and old_acs <= set(new_acs)
-    allowed_changes = {"FR-044", "RULE-018", "RULE-022", "RULE-025"}
+    old_acs = {ac for row in old_rows.values() for ac in re.findall(r"AC[:-]\d{3}:", row[5])}
+    new_acs = [ac for row in rows.values() for ac in re.findall(r"AC[:-]\d{3}:", row[5])]
+    assert len(new_acs) == len(set(new_acs)) == 132 and old_acs <= set(new_acs)
+    allowed_changes = {"FR-044", "NFR-003", "RULE-018", "RULE-022", "RULE-025"}
     for key, row in old_rows.items():
         assert key in rows and (rows[key] == row or key in allowed_changes), key
     matrix = brd.split("### FR-to-AC and FR-to-BG Coverage", 1)[1].split(
@@ -243,13 +251,16 @@ def main():
     for line in old_brd.splitlines():
         if line.startswith("| FR-033 | BR-041 | AC-051 |") or line.startswith("| BG-013 | FR-049"):
             assert line in brd, "Unrelated inherited goal repair introduced"
-    expected = {"FR": 71, "AC": 123, "NFR": 21, "CON": 9, "GOAL": 5, "DD": 9, "OQ": 31}
+    expected = {"FR": 73, "AC": 130, "NFR": 21, "CON": 9, "GOAL": 5, "DD": 10, "OQ": 31}
     definitions = {p: prd_definitions(prd, p) for p in expected}
     for prefix, count in expected.items():
         assert len(definitions[prefix]) == count, prefix
         old = prd_definitions(old_prd, prefix)
         assert old.keys() <= definitions[prefix].keys()
-        changes = {"FR": {"FR-027"}, "OQ": {"OQ-023"}, "AC": set()}
+        changes = {
+            "FR": {"FR-003", "FR-005", "FR-008", "FR-022", "FR-027"},
+            "NFR": {"NFR-003"}, "OQ": {"OQ-023"}, "AC": set(),
+        }
         for key, row in old.items():
             assert definitions[prefix][key] == row or key in changes.get(prefix, set()), key
     for i in range(111, 141):
@@ -317,7 +328,10 @@ def main():
         assert value in prd, value
     for path in ("docs/case_study_48_original.md", "docs/reference/memory.md"):
         assert (ROOT / path).read_bytes() == git_bytes(path), path
-    assert (ROOT / "docs/reference/log.md").read_bytes().startswith(git_bytes("docs/reference/log.md"))
+    main_log = subprocess.check_output(
+        ["git", "show", "origin/main:docs/reference/log.md"], cwd=ROOT
+    )
+    assert (ROOT / "docs/reference/log.md").read_bytes().startswith(main_log)
     old_exa = next(line for line in git_bytes("docs/case_study_48_addendum.md").decode().splitlines()
                    if line.startswith("| EXA-004 "))
     assert old_exa in (ROOT / "docs/case_study_48_addendum.md").read_text()
@@ -358,7 +372,7 @@ def main():
         "status": "PASS_FOCUSED_STATIC_NOT_APPROVAL",
         "base": BASE, "source_custody": "PASS", "asset_identity": "PASS",
         "scope_base": scope_base,
-        "brd": {"FR": 62, "AC": 126, "NFR": 14, "RULE": 28},
+        "brd": {"FR": 64, "AC": 132, "NFR": 14, "RULE": 28},
         "prd": expected, "all_new_ACs": "Not run", "new_upstream_trace": "23/23",
         "formula_scenarios": results, "protected_history": "PASS",
         "inherited_goal_discrepancy": differences,

@@ -115,6 +115,12 @@ class RuleError(Exception):
 
 
 class RuleCardStore:
+    canonical = None  # optional resolver mapping a recorded alias to one canonical person key
+    distinct = None  # optional (actor, author) -> bool; when set, only a demonstrably distinct actor may approve
+
+    def _who(self, name):
+        return self.canonical(name) if self.canonical else _canon(name)
+
     def __init__(self, db):
         """Accept an existing law SQL adapter or a legacy local SQLite connection."""
         self.sql = lawstore.SqliteDb(connection=db) if isinstance(db, sqlite3.Connection) else db
@@ -224,14 +230,16 @@ class RuleCardStore:
 
     def _owner_only(self, card_id, version, actor, role):
         c = self._version(card_id, version)
-        if role != OWNER or _canon(actor) != _canon(c["approver"]):
+        if role != OWNER or self._who(actor) != self._who(c["approver"]):
             raise RuleError("only the named owner role of this card can do this")
         return c
 
     @_mutation
     def approve(self, card_id, version, actor, role, today=None):
         c = self._owner_only(card_id, version, actor, role)
-        if _canon(actor) == _canon(c["author"]):
+        if self.distinct is not None and not self.distinct(actor, c["author"]):
+            raise RuleError("an author cannot approve their own card, or the author identity cannot be resolved")
+        if self._who(actor) == self._who(c["author"]):
             raise RuleError("an author cannot approve their own card")
         if self.state(card_id, version) != "draft":
             raise RuleError("only a draft can be approved")

@@ -2,15 +2,15 @@
 title: Agentic Retrofit Programme Business Requirements Document
 description: Business requirements for safe, resident-centred and financially controlled retrofit delivery
 author: AMA Research Team
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 brd_id: "BRD-2026-AMA48-001"
 status: "draft"
-version: "0.20.0"
+version: "0.21.0"
 owners: ["AMA Research Team"]
 reviewers: ["Executive Director of Assets (proposed sponsor)", "Named Zava North Homes control owners (to be confirmed)"]
 created_date: "2026-09-11"
-last_updated: "2026-10-23"
+last_updated: "2026-10-24"
 business_goal_ids: ["BG-001", "BG-002", "BG-003", "BG-004", "BG-005", "BG-006", "BG-007", "BG-008", "BG-009", "BG-010", "BG-011", "BG-012", "BG-013"]
 business_goal_smart_status: "fail"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -28,20 +28,32 @@ requirement_id_prefixes:
 
 ## Document Status
 
-Version 0.20.0 proposes optional resident self-service and bounded resident
-communication (FR-053 to FR-062, AC-104 to AC-126, NFR-013/014,
-RULE-027/028 and OD-52 to OD-55), following owner scope direction on
-2026-10-23, including author-judgement capacity scenarios requested by the
-owner. This is a draft amendment, not operational approval, approved numeric
-targets or a passed Define/Govern gate. Routine automated resident messages
-remain disabled pending the explicit policy and release gate in OD-53.
+Version 0.21.0 combines the 2026-10-23 optional resident increment with the
+2026-10-24 P0 decision for Entra-authoritative staff access. Resident additions
+retain FR-053 to FR-062 and AC-104 to AC-126; staff-access additions follow as
+FR-063/064 and AC-127 to AC-132 to preserve creation order without identifier
+collisions. The combined draft has 64 FR, 132 AC, 14 NFR, 8 constraints, 28
+rules and 55 open decisions. It is not operational approval, approved numeric
+targets or a passed Define/Govern gate.
 
-The owner selected the exercise proposal on 2026-10-23: "Propose bounded
-routine automation; human review for consequential, sensitive or uncertain
-messages; activation separately gated." FR-044 and AC-084 are reconciled
-prospectively below; OD-53 now concerns operational authority/evidence, not
-an unresolved exercise choice. No exception is activated by this document.
-The [unregistered architecture proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
+Verified Entra tenant and object identity plus explicit application-role
+assignments determine staff login and application-role permissions; no
+preprovisioned database staff row is required. An explicitly assigned
+application administrator can see intended staff options without bypassing
+record access, resident consent, professional or financial authority, or
+separation of duties. Application data and audit identifiers remain
+application-owned. This is requested design, not deployed observed acceptance
+or approval of the full BRD.
+
+The resident increment follows owner scope direction on 2026-10-23, including
+author-judgement capacity scenarios. Routine automated resident messages
+remain disabled pending the explicit policy and release gate in OD-53. The
+owner selected the exercise proposal on 2026-10-23: "Propose bounded routine
+automation; human review for consequential, sensitive or uncertain messages;
+activation separately gated." FR-044 and AC-084 are reconciled prospectively
+below; OD-53 concerns operational authority/evidence, not an unresolved
+exercise choice. No exception is activated by this document. The
+[unregistered architecture proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
 records selected Option B, its alternatives and assets. Its ID is null;
 registration acceptance remains UNMET. Original BRD FAIL/Define BLOCKED and
 Govern NOT_EVALUATED history and unsigned status are not replaced by proposal
@@ -781,7 +793,7 @@ Detailed sources, caveats, calculations and unsupported-average gaps are in
 | Data and Performance Lead | Lifecycle measurement, data quality and evaluation design | Designs baselines, validity tolerances and shadow-test statistics; does not own operational decisions |
 | Contractors and subcontractors | Installation, resident service and evidence production | Deliver work and evidence without self-approving acceptance |
 | Data Protection Officer | Personal-data and special-category-data governance | Reviews lawful use, access, retention and resident rights |
-| Digital service owner and data owners | Integrations, data stewardship, workflow, AI operation and continuity | Accept interfaces, recovery, model and rule changes, access controls and service support within delegated authority |
+| Digital service owner and data owners | Integrations, data stewardship, workflow, AI operation and continuity | Accept interfaces, recovery, model and rule changes, access controls and service support within delegated authority. An explicitly assigned application administrator has intended staff-option visibility, not Azure/directory administration, universal record access or business approval authority |
 | Benefit owners | Attributable operational, financial and resident outcomes | Finance validates value; Programme validates effort and delivery; Resident Engagement validates lived-outcome evidence |
 | Employees who would use conversational assistants (proposed) | Ask case-linked questions of a registered assistant and own their conversation and memory content | Opt in or out of memory, inspect, edit and delete their own items; no manager or peer visibility by default (OD-44, OD-46) |
 | Human resources or employee relations (to be named) | Staff notice and the prohibition on using conversation or memory content for performance management | Named only if OD-46 identifies the need; reviews the use limits in RULE-026 |
@@ -849,6 +861,19 @@ must not depend on AI availability; mandatory deployed AI is not mandatory
 model use in every workflow or approval. Rejecting a narrow Decision task
 does not permit a wholly disabled-AI application to pass exercise acceptance.
 Source-linked rules/manual handling remains the baseline comparator.
+
+For staff access, verified Entra tenant and object ID (OID), together with
+explicit app-role assignments for this application, are the source of truth
+for identity and application-role permissions. A pre-existing database
+staff record is not a condition of login or assigned-role permission.
+Application-side identity links or profiles may be created idempotently
+after verification, but do not independently grant roles. Email, display
+name, seeded staff flags and Azure or directory administrator status do not
+substitute for verified identity and explicit application-role assignment.
+Server-side record, field, purpose, consent, professional, financial and
+separation-of-duties controls remain additional conditions on each action.
+This owner-selected access design does not transfer programme data,
+business decisions, stable application identifiers or audit history to Entra.
 
 The digital foundation connects authoritative asset, repairs, housing, finance,
 procurement and contractor systems. It does not recreate their services or
@@ -1420,16 +1445,16 @@ measured incremental value and no agreed critical-control failure.
 Every requirement row carries one canonical identifier, its legacy alias, the
 business goals it supports and one or more acceptance criteria. Numbering is
 sequential in creation order within each family. Identifiers added in later
-amendments (FR-045 to FR-062) sit beside their related requirements and are not
+amendments (FR-045 to FR-064) sit beside their related requirements and are not
 renumbered after insertion, deletion or reordering.
 
 | Prefix | Family | Use in this BRD | Count |
 | --- | --- | --- | --- |
 | BG | Business goal | Outcome in Business Objectives and Success Metrics; legacy alias OBJ-## | 13 |
-| FR | Functional requirement | Business capability or control the programme must provide | 62 |
-| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 126 |
+| FR | Functional requirement | Business capability or control the programme must provide | 64 |
+| AC | Acceptance criterion | Testable condition in the Acceptance criteria column of each requirement row | 132 |
 | NFR | Non-functional requirement | Quality attribute classified by ISO/IEC 25010 category | 14 |
-| CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 7 |
+| CON | Constraint | Imposed boundary from legislation, regulation, funding, case study or owner-directed exercise delivery | 8 |
 | RULE | Business rule | Standing policy or authority rule that outlives the solution; replaces the canonical BR prefix to avoid a clash with legacy BR-### aliases | 28 |
 | OD | Open decision | Unresolved company decision; not a requirement | 55 |
 
@@ -1448,6 +1473,8 @@ against the official source online.
 CON-007 is the later owner-directed exercise boundary, not legislation or
 company policy. It requires the owner's new decision to change; it does not
 authorize spending or supersede legal, resident or professional controls.
+CON-008 is the exercise owner's explicit platform/access boundary dated
+2026-10-24, not a statutory requirement or a claim about deployment.
 
 | ID | Constraint | Imposing source and date | Category | Affected boundary | Non-negotiable condition | Exception authority | Affected requirements |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1458,6 +1485,7 @@ authorize spending or supersede legal, resident or professional controls.
 | CON-005 | Any WH:SHF Wave 3 award is subject to the scheme's eligibility, route and spend conditions. | WH:SHF technical annex, January 2025: in scope (EPC D or below) does not by itself mean eligible (Page 3, footnote 1); formula allocations to the Greater Manchester (5.7%) and West Midlands (7.8%) combined authorities (Page 5, Table 3) ([local snapshot](../reference/regulatory/retrofit-standards-and-funding/warm-homes-social-housing-fund-technical-annex-2025.md), converted 2026-09-19). Spend by 31 March 2028 is recorded by the addendum and supporting research, not verified against a grant agreement. | Funding condition | Funding route, eligibility, match funding and claim evidence for grant-funded homes | Applies once an award is evidenced; no allocation to Zava North Homes is evidenced. | The grant authority only. | FR-023, FR-024, FR-026, FR-027, RULE-009, RULE-010 |
 | CON-006 | Residents control consent, the asset director approves investment and Finance submits grant applications. | [Original Case Study 48](../case_study_48_original.md), Transformation Objective and Agentic Architecture Brief | Organisational (case-study fact) | Resident decisions, investment approval and grant submission | No agent or programme role may take these decisions for their owners. | Changes only through the association's scheme of delegation. | FR-011, FR-013, FR-014, FR-045, FR-046, RULE-010, RULE-011 |
 | CON-007 | Every subsequent accepted application exercise build uses real AI, real SQL state and an actual Azure deployment on the continuing generated stock/programme lineage. | Owner direction 2026-10-11, [addendum](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11) | Exercise delivery (owner decision) | Delivered AMA prototypes/PoCs/MVPs and updates; not documentation/unit/CI checks | At least one permitted real model task, actual SQL durability and Azure workflow evidence under AC-086; local/mock-only delivery cannot pass. No premium topology or production approval inferred. | New explicit exercise-owner decision only; no waiver by an implementer or model | FR-036, FR-044, NFR-002, NFR-004, RULE-018, RULE-019, RULE-020; AC-086 |
+| CON-008 | Staff identity and application-role permissions use verified Entra tenant plus OID and explicit assignments of this application's roles; provisioning uses idempotent m365/Microsoft Graph scripts with verified intended administrator assignment. | Explicit exercise-owner decision, 2026-10-24 | Exercise delivery (owner decision) | Staff login, application-role permissions and access provisioning | No preprovisioned database staff row is required; no implicit administrator grant or bypass of object access, resident consent, professional or financial approval, separation of duties or no-self-approval. Application business data and stable audit identifiers remain application-owned. | New explicit exercise-owner decision only; no implementer waiver | FR-063, FR-064, NFR-003; AC-050, AC-127 to AC-132 |
 
 ### Non-Functional Requirement Categories
 
@@ -1566,7 +1594,7 @@ authorize spending or supersede legal, resident or professional controls.
 | --- | --- | --- | --- | --- | --- | --- |
 | RULE-015 | BR-038 | The association shall define an authoritative source and accountable owner for each property, safety, resident, contract, finance and quality data domain. | BG-003, BG-006, BG-007 | Data owners, all users | AC-048: Conflicting records prevent controlled progression until reconciled by an authorised owner. | Must |
 | NFR-002 | BR-039 | Controlled assessments, designs, consents, instructions, evidence packs, handovers and decisions shall have immutable version identifiers and retained prior versions. | BG-005, BG-006 | All control owners | AC-049: Approved records are superseded rather than overwritten. | Must |
-| NFR-003 | BR-040 | Access to personal, vulnerability, safety, commercial and financial information shall follow role, purpose and minimum-necessary principles. | BG-003, BG-005, BG-008 | Data protection, security, all users | AC-050: Access tests demonstrate separation by role and record all disclosures. | Must |
+| NFR-003 | BR-040 | Access to personal, vulnerability, safety, commercial and financial information shall follow role, purpose and minimum-necessary principles, with server-enforced object and field access independent of staff-option visibility. Staff application-role permissions follow CON-008 and FR-063. | BG-003, BG-005, BG-008 | Data protection, security, all users | AC-050: Access tests demonstrate separation by role, object, field and purpose across UI, API, search, export and model inputs and record all disclosures. Application-administrator visibility does not expose otherwise unauthorized data or permit controlled actions without their independent authority, consent and separation-of-duties checks. | Must |
 | FR-033 | BR-041 | Programme reporting shall distinguish starts, accepted handovers and intended energy outcomes, and show holds, resident pauses, handoffs, capacity, defects, grant states, financial tolerances and attributable technology benefit. | All | Board, executive, programme, residents | AC-051: Reports expose overdue, unowned, blocked and reopened work, with cycle time, effort and quality-adjusted cost denominators; no incomplete work is presented as accepted. | Must |
 | FR-034 | BR-042 | Decision explanations shall show the data, rules, source-based confidence category, exceptions and human authority relevant to each prioritisation, eligibility, hold or agent-assisted output. | BG-005, BG-010 | Residents, staff, audit | AC-052: 100% of prioritisation, eligibility, hold and agent-assisted outputs carry an explanation record before they are used. Each record states whether the output is a recommendation, draft, flag or approved decision and gives a correction or challenge route.<br>AC-080: Explanation records have audience-specific fields: resident records include a plain-language reason, main factors, data used, what is unknown, who decided and how to correct data or challenge; staff records include sources, rule and model version, source-based confidence category and open exceptions; audit records link to the full reconstruction required by FR-040.<br>AC-081: Before live resident contact, Resident Engagement tests resident explanations with a representative resident group, including accessible and non-digital formats linked to NFR-008. The Resident Engagement lead sets and records comprehension and accessibility thresholds before live use, and deficiencies block the affected explanation pattern. | Must |
 | FR-042 | None | The programme shall use a Board-approved or delegated Asset Director-approved plain-language prioritisation policy with versioned scoring weights, published resident-facing rationale and per-home reason codes for inclusion, deferral or exclusion. | BG-001, BG-005, BG-007, BG-009, BG-012 | Residents, Board, assets, finance, data owners | AC-082: Before cohort use, the approved policy shows the authority, effective date, scoring weights, rule versions, source data and review date. Each home receives reason codes equivalent to FR-026 for inclusion, deferral or exclusion. Residents can request a "why not yet" explanation through digital and non-digital channels, with an indicative timescale where one exists. The control supports Safety and Quality Standard 2.3.2 on setting and clearly communicating timescales for planned improvements ([local snapshot](../reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md), effective 1 April 2024, converted 2026-09-19). | Must |
@@ -1589,6 +1617,8 @@ authorize spending or supersede legal, resident or professional controls.
 | --- | --- | --- | --- | --- | --- | --- |
 | FR-036 | BR-046 | Deterministic workflow shall enforce mandatory gates and an explicit allow/deny authority matrix. | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 | All control owners, digital, audit | AC-056: Tests block AI diagnosis, statutory-duty determination, safety-hold release, professional approval, consent inference, investment or procurement commitment, contractor instruction, payment, bid or claim submission, and hazard, complaint or defect closure. Approval cannot be supplied by generated text.<br>AC-086: Each accepted application exercise build records its authorized Azure endpoint and source/image/revision/config versions, verified least-privilege workload identity, actual Azure SQL write/read and independent before/after restart state/audit evidence, plus at least one permitted real generative or Decision task with source/model/provider/usage/outcome, citations and Not reviewed authority. Failure/manual handling preserves case access and controls. Missing effective budget, authorization or service evidence is Blocked or Not run; templates, mocks or unrelated historical calls cannot pass. Retained generated-stock/programme lineage and separate quality/value gates remain explicit. | Must |
 | RULE-018 | BR-046 | In the initial pilot, AI shall be restricted to sourced recommendations, drafts, reconciliation, routing to fixed categories and raise-only flags. Accepted application exercise builds require deployed real AI under CON-007, but invoking assistance per record is optional and manual case access never depends on model availability. | BG-003, BG-004, BG-005, BG-006, BG-007, BG-012 | All control owners, digital, audit | AC-057: A flag can only add work to a human queue and can never clear, accept or close an item. Routing sends messages only to staffed queues. Consequential resident contact requires human authorisation. The only proposed routine communication exception is RULE-028/FR-061; until OD-53 and the separate release decision pass, per-message approval remains mandatory. | Must |
+| FR-063 | None | The application shall determine staff login and application-role permissions from verified Entra tenant plus OID and explicit assignments of this application's roles, without requiring a preprovisioned database staff row. | BG-003, BG-005, BG-008, BG-010 | Staff, digital service owner, security, DPO, control owners, audit | AC-127: Given a verified permitted-tenant/OID identity with an explicitly assigned recognized application role and no pre-existing database staff row, staff login and the operations permitted by that role succeed without staff-row provisioning, subject to independent object and business gates.<br>AC-128: Missing, invalid or unverified identity, an unpermitted tenant, or no recognized assigned application role denies protected staff access. Email, display name, a local staff role/administrator flag, UI role selection and Azure/directory administrator status cannot grant it. A role change or removal is enforced after refreshed verified identity/role evidence; a database copy cannot retain or restore that entitlement.<br>AC-129: An explicit application-administrator assignment exposes the intended staff options in the owner-reviewed option/role matrix. Tests still deny unauthorized objects and fields, cross-user conversations/memory, inferred resident consent, unqualified professional sign-off, unapproved financial action and self-approval, including when administrator and business roles are combined. Administrator alone sees every option, flagged as needing a role with the authority, but is not a staff role: it reads no business data, exports or staff directory and supplies no business action, approval or exceptional break-glass authority. With a staff role, that role's data and actions apply.<br>AC-130: Repeated verified login resolves tenant plus OID to the same stable application identity without email fallback or duplicate identities. Profile or role changes retain existing case, approval and audit references; directory identity is provenance, not a replacement for application business/audit keys. A verified tenant and OID matching exactly one enabled legacy roster row keep that row's business code for ownership and handoffs (never by email); a Contractor signs in only with a unique company-bound row. Optional profile/link materialization cannot become a preprovisioning gate or an independent role source.<br>AC-131: Changed-design deployed acceptance records the authorized tenant, application/service principal, exact source/image/revision/configuration, verified intended administrator assignment, genuine staff-browser no-preprovisioned-row login and administrator-option observations, plus applicable denial and business-gate evidence from the deployed build. Sanitized evidence distinguishes local/source tests, observed deployment and human acceptance. Until these checks occur, report Not deployed / Not run, or Blocked with reason; historical SQL-bound login evidence, mocks and successful provisioning alone cannot pass. | Must (P0 owner direction) |
+| FR-064 | None | Authorized operators shall be able to reconcile the required application access configuration through idempotent m365/Microsoft Graph provisioning scripts, including verification of the intended application-administrator role assignment. | BG-010, BG-012 | Exercise owner, digital service owner, authorized tenant operator, security, audit | AC-132: An authorized initial run and unchanged repeat run leave one intended access configuration without duplicate app roles or assignments or changes to unrelated principals. Readback verifies the intended tenant, application/service principal, administrator principal OID and explicit administrator app-role assignment; command success alone is insufficient. Missing, ambiguous or failed verification reports failure or Blocked, not readiness. Reconciliation does not infer administrator from a seeded ProgrammeManager/staff flag or grant Azure/directory administration. Retain sanitized change/no-change and verification results; do not disclose credentials or tokens. | Must (P0 owner direction) |
 | NFR-004 | BR-047 | Service operation shall remain safe during model, integration or platform failure through monitored queues, a disable mechanism, tested manual fallback and controlled recovery. | BG-003, BG-004, BG-010, BG-012 | Digital, repairs, safety, housing, programme | AC-058: Owners approve response and recovery limits before live use. Outage tests preserve hazard response and statutory clocks, expose unowned work, block unverified controlled transitions and reconcile missed or duplicate actions before restart. | Must |
 | NFR-005 | BR-048 | The solution shall connect authoritative systems through documented interfaces. | BG-005, BG-006, BG-008, BG-010, BG-012 | Digital, data owners, procurement, audit | AC-059: Owners accept identifier mapping, conflict handling and reconciliation for each interface. | Must |
 | NFR-006 | BR-048 | The solution shall preserve exportable, versioned evidence independently of an AI supplier. | BG-005, BG-006, BG-008, BG-010, BG-012 | Digital, data owners, procurement, audit | AC-060: Export tests retain source, approval and supersession history. Contracts specify data access, retention, support and exit responsibilities. AI supplier terms require model documentation, advance notice of model or material behaviour changes, access to relevant evaluation results and output logs, and support for NFR-007 version evaluation. | Must |
@@ -1678,6 +1708,10 @@ FR-044/AC-084 and FR-061 dispatch; "routine" never overrides a domain boundary.
 ### Minimum Data Domains
 
 * Authoritative property and building identifiers
+* Stable application actor identifiers with verified Entra tenant/OID
+  identity links and access-decision provenance; identity links are not
+  staff-role authority, do not require staff-row preprovisioning, and do
+  not move programme, consent, finance, approval or audit records into Entra
 * EPC, condition, component and planned-maintenance data
 * Safety, hazard, inspection, action and completion records
 * PAS 2035 assessment, pathway, design and competent-person records
@@ -2285,22 +2319,22 @@ AC-104 to AC-126 use Given/When/Then for the proposed resident amendment.
 | --- | --- | --- | --- |
 | BG-001 | FR-033, FR-035, FR-042 | RULE-011 | NFR-008 |
 | BG-002 | FR-005, FR-019, FR-020, FR-021, FR-022, FR-033, FR-035 | RULE-007, RULE-011, RULE-016, RULE-019, RULE-020 | None |
-| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048, FR-051, FR-058, FR-061 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024, RULE-025, RULE-028 | NFR-003, NFR-004, NFR-009, NFR-014 |
+| BG-003 | FR-001, FR-002, FR-003, FR-004, FR-007, FR-008, FR-009, FR-010, FR-016, FR-029, FR-030, FR-032, FR-033, FR-035, FR-036, FR-037, FR-038, FR-039, FR-040, FR-043, FR-044, FR-048, FR-051, FR-058, FR-061, FR-063 | RULE-001, RULE-003, RULE-012, RULE-014, RULE-015, RULE-017, RULE-018, RULE-020, RULE-021, RULE-022, RULE-024, RULE-025, RULE-028 | NFR-003, NFR-004, NFR-009, NFR-014 |
 | BG-004 | FR-001, FR-002, FR-003, FR-004, FR-016, FR-033, FR-036, FR-038, FR-039, FR-040, FR-051 | RULE-002, RULE-003, RULE-018, RULE-021, RULE-024 | NFR-004, NFR-009 |
-| BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047, FR-053, FR-054, FR-055, FR-058, FR-059, FR-060, FR-061 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024, RULE-025, RULE-027, RULE-028 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009, NFR-010, NFR-011, NFR-013, NFR-014 |
+| BG-005 | FR-008, FR-011, FR-012, FR-013, FR-014, FR-015, FR-016, FR-031, FR-033, FR-034, FR-036, FR-037, FR-040, FR-041, FR-042, FR-043, FR-044, FR-045, FR-046, FR-047, FR-053, FR-054, FR-055, FR-058, FR-059, FR-060, FR-061, FR-063 | RULE-005, RULE-006, RULE-012, RULE-018, RULE-020, RULE-022, RULE-024, RULE-025, RULE-027, RULE-028 | NFR-001, NFR-002, NFR-003, NFR-005, NFR-006, NFR-007, NFR-008, NFR-009, NFR-010, NFR-011, NFR-013, NFR-014 |
 | BG-006 | FR-005, FR-006, FR-007, FR-008, FR-009, FR-010, FR-019, FR-021, FR-022, FR-028, FR-029, FR-030, FR-033, FR-036, FR-038, FR-040, FR-043, FR-044, FR-046, FR-047, FR-051 | RULE-004, RULE-007, RULE-008, RULE-012, RULE-013, RULE-014, RULE-015, RULE-017, RULE-018, RULE-019, RULE-020, RULE-021, RULE-024, RULE-025 | NFR-002, NFR-005, NFR-006, NFR-007 |
 | BG-007 | FR-023, FR-024, FR-025, FR-026, FR-027, FR-030, FR-033, FR-036, FR-038, FR-039, FR-040, FR-041, FR-042, FR-051 | RULE-004, RULE-009, RULE-010, RULE-014, RULE-015, RULE-018, RULE-021 | None |
-| BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043, FR-052 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007, NFR-012 |
+| BG-008 | FR-022, FR-025, FR-027, FR-033, FR-035, FR-043, FR-052, FR-063 | RULE-008, RULE-010, RULE-011, RULE-012, RULE-016, RULE-020 | NFR-003, NFR-005, NFR-006, NFR-007, NFR-012 |
 | BG-009 | FR-012, FR-015, FR-020, FR-021, FR-029, FR-031, FR-032, FR-033, FR-037, FR-041, FR-042, FR-043, FR-045, FR-046, FR-047, FR-048, FR-051, FR-053, FR-054, FR-055, FR-057, FR-058, FR-059, FR-062 | RULE-005, RULE-006, RULE-014, RULE-019, RULE-022, RULE-027, RULE-028 | NFR-008, NFR-009, NFR-013, NFR-014 |
-| BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045, FR-051, FR-056, FR-057, FR-059, FR-060, FR-061 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
+| BG-010 | FR-003, FR-006, FR-016, FR-017, FR-018, FR-033, FR-034, FR-038, FR-039, FR-040, FR-041, FR-044, FR-045, FR-051, FR-056, FR-057, FR-059, FR-060, FR-061, FR-063, FR-064 | RULE-003, RULE-008, RULE-021 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-009 |
 | BG-011 | FR-010, FR-022, FR-033, FR-041, FR-049, FR-052, FR-053, FR-054, FR-055, FR-056, FR-057, FR-062 | RULE-016, RULE-019 | NFR-009 |
-| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050, FR-051, FR-052, FR-058, FR-061, FR-062 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022, RULE-028 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-012 |
+| BG-012 | FR-004, FR-025, FR-026, FR-027, FR-033, FR-036, FR-038, FR-039, FR-042, FR-043, FR-044, FR-049, FR-050, FR-051, FR-052, FR-058, FR-061, FR-062, FR-064 | RULE-016, RULE-018, RULE-019, RULE-020, RULE-021, RULE-022, RULE-028 | NFR-004, NFR-005, NFR-006, NFR-007, NFR-012 |
 | BG-013 | FR-049, FR-050 | RULE-025, RULE-026 | NFR-010, NFR-011 |
 
 ### FR-to-AC and FR-to-BG Coverage
 
-62 of 62 functional requirements have at least one acceptance criterion
-(100.0%, against the 80.0% threshold). 62 of 62 link to at least one business
+64 of 64 functional requirements have at least one acceptance criterion
+(100.0%, against the 80.0% threshold). 64 of 64 link to at least one business
 goal (100.0%, against the 100.0% target). Coverage shows that a link exists,
 not that the linked goal or criterion has been validated.
 
@@ -2368,6 +2402,8 @@ not that the linked goal or criterion has been validated.
 | FR-060 | None | AC-116, AC-117 | BG-005, BG-010 |
 | FR-061 | None | AC-118, AC-119 | BG-003, BG-005, BG-010, BG-012 |
 | FR-062 | None | AC-123, AC-124 | BG-009, BG-011, BG-012 |
+| FR-063 | None | AC-127, AC-128, AC-129, AC-130, AC-131 | BG-003, BG-005, BG-008, BG-010 |
+| FR-064 | None | AC-132 | BG-010, BG-012 |
 
 ### Business Rule Enforcement
 
@@ -2495,6 +2531,14 @@ authority. AC-086/PRD AC-057 require the changed build's actual Azure
 workflow, SQL durability and enabled AI proof; unchanged resources may be
 reused, not merely assumed connected. Record current source/image/revision
 and separate recorded #58 observations from newer undeployed source tests.
+P0 staff-access acceptance additionally requires FR-063/FR-064 and
+AC-127 to AC-132 against the changed design, including verified intended
+application-administrator assignment. This owner decision defines requested
+behaviour; the design is not deployed yet. Local tests, script readback and
+deployed browser observations are separate evidence classes and must not
+be promoted into one another. CON-007/AC-086 and all resident, safety,
+professional, financial and live-use gates remain independently required.
+
 Full workflow, permissions, performance/recovery and direct human acceptance
 are not established by one successful inference or restart.
 
@@ -2577,12 +2621,21 @@ self-service deferral and universal message-review assumptions require dated
 downstream reconciliation. No actual company signoff, quality-gate passage,
 live processing, routine-policy activation or achieved benefit is recorded.
 
+The 2026-10-24 owner-directed P0 Entra-access amendment originally used
+FR-053/054 and AC-104 to AC-109. During merge, these new requirements were
+assigned FR-063/064 and AC-127 to AC-132 after the earlier resident increment;
+the source decision remains unchanged. CON-008 and NFR-003/AC-050 carry the
+staff-access controls. The combined candidate has 64 FRs, 132 ACs, 14 NFRs,
+8 constraints, 28 rules and 55 open decisions. No deployment,
+role-assignment readback, acceptance result or full-BRD approval is asserted.
+
 The 2026-10-22 proposal amendment (v0.19.0) adds NFR-012, FR-052, AC-100 to AC-103 and OD-51, and extends BG-012, for AI Tokenomics (backlog epic #104, new issue #432 and Tokenomics delta sections on #100, #107, #108, #126, #144, #146, #157, #159, #214, #225 and #226). The sources are a mentor remark reported by the owner on 2026-10-22, the public Tokenomics Foundation pages retrieved that day, ADR 0001's recorded cost-per-unit gap and the existing usage envelope in the core assistants. The framing is draft community practice. No price, budget, target, owner decision or company fact is added. Counts after this amendment are 52 FRs, 103 ACs, 12 NFRs, 7 constraints, 26 rules, 13 business goals and 51 open decisions.
 
 The 2026-10-14 proposal amendment (v0.18.0) adds BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098 and OD-44 to OD-49 for per-user agent chat and memory (backlog epic #157, children #158 to #164). The sources are the GitHub backlog issues, the journey atlas, [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) and the current assistant behaviour in the MVP; no owner, DPO or Legal decision has been made and no resident, staff or company fact is added. Counts after this amendment are 50 FRs, 98 ACs, 11 NFRs, 7 constraints, 26 rules, 13 business goals and 49 open decisions.
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 0.21.0 | 2026-10-24 | Merged unsigned candidate: preserves the 2026-10-23 resident FR-053 to FR-062/AC-104 to AC-126 and appends the 2026-10-24 P0 Entra staff-access requirements as FR-063/064 and AC-127 to AC-132; NFR-003/AC-050 clarified; not deployed |
 | 0.19.0 | 2026-10-22 | Proposal: AI Tokenomics (NFR-012, FR-052, AC-100 to AC-103, OD-51; BG-012 measure extended); no existing ID renumbered |
 | 0.18.0 | 2026-10-14 | Proposal: per-user agent chat and memory (BG-013, FR-049, FR-050, RULE-025, RULE-026, NFR-010, NFR-011, AC-091 to AC-098, OD-44 to OD-49); no existing ID renumbered |
 | 0.17.0 | 2026-10-14 | Journey atlas amendment: FR-045 to FR-048, AC-087 to AC-090, OD-41 to OD-43 |

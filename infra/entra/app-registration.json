@@ -21,7 +21,8 @@
     {"key": "RuleAuthor", "label": "Regulatory rule author", "capability": "rule_author"},
     {"key": "RuleOwner", "label": "Regulatory named owner", "capability": "rule_owner"},
     {"key": "RegulatoryChat", "label": "Regulatory chat user", "capability": "regulatory_chat"},
-    {"key": "AIRestart", "label": "Constructed AI restart capability", "capability": "ai_restart"}
+    {"key": "AIRestart", "label": "Constructed AI restart capability", "capability": "ai_restart"},
+    {"key": "ApplicationAdmin", "label": "Application administrator", "capability": "application_admin"}
   ],
   "contractorIdentity": {
     "status": "Proposed in ADR 0002, owner confirmation open (#116)",
