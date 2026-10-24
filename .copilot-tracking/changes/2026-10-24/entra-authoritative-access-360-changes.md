@@ -50,3 +50,11 @@ new commits.
 * Docs realigned: BRD FR-053 AC-106/107, PRD DD-009/FR-062/AC-113/changelog, ADR 0002 subsection, infra README.
 * Tests: api focused 83 OK, infra proof/grant 24 OK; full suites and the exact-head gate are recorded separately.
 * Known limits: derived `E-` key is a 12-hex digest; registry roles are last-seen; some seams (hazard subject, capacity accepted_by) may still fail closed for unbound principals; the web UI does not yet render the `access` flag; ingress forged-claim, wrong-audience and direct-origin probes on the serving revision remain a pre-deployment gate. Not production acceptance.
+
+## Correction cycle 2 of 2 (coordinator reassessment REVISE against 22ca2c2b; F1, F4, F5 corrections preserved)
+
+* F2.1 (HIGH): `identity.link` records each verified person's aliases (derived and legacy code/email) append-only in one transaction; `identity.canonical` maps any recorded alias to one canonical tenant:OID key. `RuleCardStore` compares author, approver and named owner through that resolver (`rulecards._who`); the rule routes call `identity.link(strict=True)` and the resolver is strict, so an unreadable record denies rather than creating a second person. Test: one person under legacy and derived aliases, including a disabled binding, cannot approve their own card.
+* F2.2 (HIGH): `identity.matches(store, tid, oid)` requires the canonical tenant and OID; a foreign-tenant row never matches and a tenant-less legacy row matches only the store's recorded `legacy_roster_tenant`. `change_provenance._actor` passes the tenant. Limitation: the live store has no `legacy_roster_tenant` record, so legacy roster continuity does not apply there until it is recorded through a reviewed guarded step; staff login is unaffected.
+* F3 (MEDIUM): registry read-merge-write is a single `BEGIN IMMEDIATE` transaction (SQLite and the Azure SQL adapter) or a locked JSON update; the registry is keyed by tenant:OID. Test: 12 concurrent registrations all persist on JSON and SQLite.
+* F4 (MEDIUM): `/api/me` staff adds `identity.people` recipients (code, name, email, role only). Test with an empty roster.
+* Not claimed: the web UI does not yet show the navigation `access` flag; derived key remains a 12-hex digest.

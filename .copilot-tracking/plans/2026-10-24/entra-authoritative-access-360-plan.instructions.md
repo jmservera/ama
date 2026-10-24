@@ -41,3 +41,7 @@ The original critique REVISE outcome and its dispositions above are preserved. L
 ## Correction cycle 1 of 2 (appended; original plan unchanged)
 
 Trigger: coordinator exact-head assessment REVISE (F1-F5) against c96dae0c. Scope: separate option visibility from business authority; OID-verified roster continuity and selectable Entra recipients; scoped authority resolved at the protected operation; OID-bound grant script; company-bound Contractor path. No documentation-only resolution. Critique is not repeated for the task; corrections are covered by an independent correction review before the clean-head gate.
+
+## Correction cycle 2 of 2 (appended)
+
+Trigger: coordinator reassessment REVISE of 22ca2c2b. Scope: tenant-aware continuity resolver, canonical distinct-person checks over a transactional alias record, recipient projection. No broad redesign; no third unapproved retry (a remaining blocker goes to an explicit technical ledger).

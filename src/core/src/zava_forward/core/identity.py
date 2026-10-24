@@ -5,7 +5,9 @@ The derived code and pseudonymous email are the stable authorization and audit
 keys. Display name and email claims are never used to authorize anything.
 """
 import hashlib
+import json
 import re
+import threading
 import uuid
 from copy import deepcopy
 from typing import Any
@@ -14,6 +16,8 @@ SOURCE = "entra"
 ADMIN_ROLE_NAME = "Application Administrator"
 REGISTRY_KEY = "entra_people"
 REGISTRY_LIMIT = 2000
+LEGACY_TENANT_KEY = "legacy_roster_tenant"
+_json_lock = threading.RLock()
 ENTRA_EMAIL = re.compile(r"e-[0-9a-f]{12}@entra\.invalid")
 _CONTROL = re.compile(r"[\x00-\x1f\x7f-\x9f\u200b-\u200f\u2028-\u202e\u2066-\u2069\ufeff]")
 
@@ -80,16 +84,50 @@ def verified(user: dict[str, Any]) -> dict[str, Any] | None:
 
 def _rows(store: Any) -> list[dict[str, Any]]:
     if hasattr(store, "db"):
-        import json
         with store.dblock:
             return [json.loads(r[0]) for r in store.db.execute("SELECT body FROM staff")]
     return list(store.staff.values())
 
 
-def matches(store: Any, oid: str) -> list[dict[str, Any]]:
-    """Enabled roster rows carrying exactly this verified object id (an immutable key, never an email)."""
-    return [r for r in _rows(store)
-            if isinstance(r, dict) and canonical_guid(r.get("oid")) == oid and r.get("oid") == oid and not r.get("disabled")]
+def _meta(store: Any, key: str) -> Any:
+    if hasattr(store, "db"):
+        with store.dblock:
+            row = store.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+        return json.loads(row[0]) if row else None
+    return store.data.get(key)
+
+
+def legacy_tenant(store: Any) -> str | None:
+    """Tenant that verifiably owns roster rows carrying no tenant id (store provenance; never assumed)."""
+    try:
+        value = _meta(store, LEGACY_TENANT_KEY)
+    except Exception:
+        return None
+    return canonical_guid(value)
+
+
+def key_of(tid: str, oid: str) -> str:
+    return f"{tid}:{oid}"
+
+
+def matches(store: Any, tid: str, oid: str) -> list[dict[str, Any]]:
+    """Enabled roster rows for exactly this verified tenant and object id (immutable keys, never an email).
+
+    A row naming another tenant never matches. A row without a tenant matches only the tenant the store
+    records as owning legacy rows.
+    """
+    legacy = legacy_tenant(store)
+    out = []
+    for r in _rows(store):
+        if not isinstance(r, dict) or r.get("disabled") or r.get("oid") != oid or canonical_guid(r.get("oid")) != oid:
+            continue
+        row_tid = r.get("tid")
+        if row_tid in (None, ""):
+            if legacy == tid:
+                out.append(r)
+        elif canonical_guid(row_tid) == tid and row_tid == tid:
+            out.append(r)
+    return out
 
 
 def bind(store: Any, user: dict[str, Any]) -> dict[str, Any] | None:
@@ -97,7 +135,9 @@ def bind(store: Any, user: dict[str, Any]) -> dict[str, Any] | None:
 
     A verified tenant and object id that uniquely match an existing roster row keep that row's code, email
     and name, so legacy ownership, handoffs, named owners and scoped authorities continue. Contractors also
-    need exactly one company-bound row or are refused. Staff continuity fails soft to the derived identity.
+    need exactly one company-bound row or are refused. Staff continuity fails soft to the derived identity;
+    person independence is judged on the canonical tenant and object id (see `canonical`), so the derived
+    identity is never a different person.
     """
     u = verified(user)
     if not u:
@@ -106,7 +146,7 @@ def bind(store: Any, user: dict[str, Any]) -> dict[str, Any] | None:
     if u.get("view_only") and not contractor:
         return u
     try:
-        rows = matches(store, u["oid"])
+        rows = matches(store, u["tid"], u["oid"])
     except Exception:
         rows = None
     if contractor:
@@ -125,53 +165,110 @@ def bind(store: Any, user: dict[str, Any]) -> dict[str, Any] | None:
     return out
 
 
-def _registry(store: Any) -> dict[str, Any]:
-    if hasattr(store, "db"):
-        import json
-        with store.dblock:
-            row = store.db.execute("SELECT value FROM meta WHERE key=?", (REGISTRY_KEY,)).fetchone()
-        value = json.loads(row[0]) if row else {}
-    else:
-        value = store.data.get(REGISTRY_KEY, {})
-    return value if isinstance(value, dict) else {}
+def _aliases(u: dict[str, Any]) -> list[str]:
+    values = [u.get("code"), u.get("email"), u.get("derived_code"), u.get("derived_email")]
+    return sorted({" ".join(v.split()).casefold() for v in values if isinstance(v, str) and v.strip()})
 
 
-def people(store: Any) -> list[dict[str, Any]]:
-    """Signed-in Entra staff without a roster row, selectable as handoff recipients."""
-    return [dict(v) for v in _registry(store).values() if isinstance(v, dict)]
+def _entry(u: dict[str, Any], old: dict[str, Any] | None) -> dict[str, Any]:
+    aliases = sorted(set(_aliases(u)) | set((old or {}).get("aliases") or []))
+    return dict(key=key_of(u["tid"], u["oid"]), tid=u["tid"], oid=u["oid"], code=u["code"], email=u["email"], name=u["name"],
+                role=u["role"], bound=bool(u.get("bound")), aliases=aliases, identity_source=SOURCE,
+                auth_provider=u.get("auth_provider"))
 
 
-def person(store: Any, email: Any) -> dict[str, Any] | None:
-    if not isinstance(email, str) or not ENTRA_EMAIL.fullmatch(email.strip().lower()):
-        return None
-    found = _registry(store).get(email.strip().lower())
-    return dict(found) if isinstance(found, dict) else None
+def link(store: Any, user: dict[str, Any], *, strict: bool = False) -> bool:
+    """Record the verified person's aliases and last-seen business identity in one serialized transaction.
 
-
-def register(store: Any, user: dict[str, Any]) -> None:
-    """Record a signed-in, acting, unbound Entra staff member as a recipient. Best effort; never affects access."""
+    Read, merge and write happen together, so concurrent sign-ins each keep their own entry. Aliases are
+    append-only, which keeps author and approver independence stable if a roster binding is later disabled or
+    unreadable. Access never depends on this record; with strict=True a failure raises for callers that need it.
+    """
     u = verified(user)
-    if not u or u.get("bound") or u.get("view_only") or u.get("role") == "Contractor":
-        return
-    entry = dict(code=u["code"], email=u["email"], name=u["name"], role=u["role"], oid=u["oid"], tid=u["tid"],
-                 identity_source=SOURCE, auth_provider=u.get("auth_provider"))
+    if not u or u.get("view_only") or u.get("role") == "Contractor":
+        return False
+    key = key_of(u["tid"], u["oid"])
     try:
-        current = _registry(store)
-        if current.get(u["email"]) == entry or (u["email"] not in current and len(current) >= REGISTRY_LIMIT):
-            return
-        current = dict(current, **{u["email"]: entry})
+        if _merge(_registry(store), key, u) is None:
+            return True  # already recorded: avoid a write transaction on every request
         if hasattr(store, "db"):
-            import json
             with store.dblock:
                 store.db.execute("BEGIN IMMEDIATE")
                 try:
-                    store._meta_set(REGISTRY_KEY, json.dumps(current))
+                    row = store.db.execute("SELECT value FROM meta WHERE key=?", (REGISTRY_KEY,)).fetchone()
+                    current = json.loads(row[0]) if row else {}
+                    merged = _merge(current, key, u)
+                    if merged is not None:
+                        store._meta_set(REGISTRY_KEY, json.dumps(merged))
                     store.db.execute("COMMIT")
                 except BaseException:
                     store.db.execute("ROLLBACK")
                     raise
         else:
-            store.data[REGISTRY_KEY] = current
-            store.save()
+            with _json_lock:
+                merged = _merge(store.data.get(REGISTRY_KEY, {}), key, u)
+                if merged is not None:
+                    store.data[REGISTRY_KEY] = merged
+                    store.save()
+        return True
     except Exception:
-        return
+        if strict:
+            raise
+        return False
+
+
+def _merge(current: Any, key: str, u: dict[str, Any]) -> dict[str, Any] | None:
+    current = current if isinstance(current, dict) else {}
+    if key not in current and len(current) >= REGISTRY_LIMIT:
+        raise OverflowError("identity registry is full")
+    entry = _entry(u, current.get(key))
+    return None if current.get(key) == entry else dict(current, **{key: entry})
+
+
+def _registry(store: Any) -> dict[str, Any]:
+    try:
+        value = _meta(store, REGISTRY_KEY)
+    except Exception:
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _recipient(e: dict[str, Any]) -> dict[str, Any]:
+    return dict(code=e["code"], email=e["email"], name=e["name"], role=e["role"], oid=e["oid"], tid=e["tid"],
+                identity_source=SOURCE, auth_provider=e.get("auth_provider"))
+
+
+def people(store: Any) -> list[dict[str, Any]]:
+    """Signed-in Entra staff without a roster binding, selectable as handoff recipients."""
+    return [_recipient(e) for e in _registry(store).values()
+            if isinstance(e, dict) and not e.get("bound") and isinstance(e.get("code"), str)]
+
+
+def person(store: Any, alias: Any) -> dict[str, Any] | None:
+    """The recipient a recorded alias refers to, with its last-seen business identity."""
+    if not isinstance(alias, str):
+        return None
+    wanted = " ".join(alias.split()).casefold()
+    for e in _registry(store).values():
+        if isinstance(e, dict) and wanted in (e.get("aliases") or []) and isinstance(e.get("code"), str):
+            return _recipient(e)
+    return None
+
+
+def canonical(store: Any, name: Any, *, strict: bool = False) -> str:
+    """Canonical person key for a recorded alias, else the normalized text.
+
+    Two names for one verified tenant and object id (legacy and derived) canonicalize identically, so
+    independence checks cannot be passed by switching aliases. With strict=True the registry must be readable.
+    """
+    text = " ".join(str(name).split()).casefold()
+    try:
+        registry = _meta(store, REGISTRY_KEY)
+    except Exception:
+        if strict:
+            raise
+        registry = None
+    for e in (registry or {}).values() if isinstance(registry, dict) else ():
+        if isinstance(e, dict) and text in (e.get("aliases") or []):
+            return "entra:" + str(e.get("key"))
+    return text

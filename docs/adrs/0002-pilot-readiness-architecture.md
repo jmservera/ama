@@ -620,15 +620,24 @@ Decision:
   identity without ambiguous aliasing. Legacy case-owner codes and historical
   audit entries are retained; any association with an Entra principal is
   explicit and verified, never guessed from email.
-  Continuity: after authentication, a verified OID that matches exactly one
-  enabled roster row keeps that row's business code, email and name for
+  Continuity: after authentication, a verified tenant and OID that match
+  exactly one enabled roster row keep that row's business code, email and name for
   ownership, handoffs and audit (never matched by email; ambiguous or
-  disabled matches fall back to the derived key). Role and capabilities still
+  disabled matches fall back to the derived key). A row naming another tenant
+  never matches, and a row without a tenant matches only the tenant the store
+  records as owning legacy rows (`legacy_roster_tenant`); without that record
+  such rows do not match. Person independence (author, approver, named owner)
+  is judged on the canonical tenant and OID: a transactional, append-only
+  alias record links the derived and legacy codes/emails of one verified
+  person, so disabling or failing to read a binding cannot turn an author into
+  a second person. Rule-card authoring and approval fail closed when that
+  record cannot be written or read. Role and capabilities still
   come only from claims. Scoped finance and contract authority is resolved
   from the matched row by immutable identity only at the protected operation,
   with expiry, revocation, scope and independence checks unchanged. Entra
-  staff without a roster row become selectable handoff recipients once they
-  sign in (a bounded registry of acting staff). A Contractor signs in only
+  staff without a roster binding become selectable handoff recipients once they
+  sign in (a bounded registry written in one serialized read-merge-write
+  transaction and projected to `/api/me` as recipients). A Contractor signs in only
   with exactly one enabled Contractor row bound to the OID with a company;
   absent or ambiguous is denied and provider object scope is unchanged. The
   derived key is a truncated digest, a known collision limit. A roster may retain

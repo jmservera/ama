@@ -23,7 +23,7 @@ def _actor(store: Any, user: Record) -> Record:
         actor = identity.verified(user)
         if actor and actor.get("bound"):
             # Scoped business metadata is resolved by the immutable tenant object id only at this protected operation.
-            rows = identity.matches(store, actor["oid"])
+            rows = identity.matches(store, actor["tid"], actor["oid"])
             bound = actor["bound"]
             if len(rows) != 1 or rows[0].get("code") != bound["code"] or str(rows[0].get("email", "")).strip().lower() != bound["email"]:
                 actor = None

@@ -679,7 +679,9 @@ The optional session file must be owner-owned mode `0600`, outside the
 repository, with exactly one `cookie` or `token` JSON field. It supplies an
 already authenticated **Contractor** session; it does not manufacture roles or
 authenticate a person. A Contractor signs in only when exactly one enabled roster row binds its
-OID to a company. The probe first
+OID to a company. Roster rows match an Entra principal on tenant and OID; a row
+without a `tid` matches only when the store records `legacy_roster_tenant`, so
+legacy ownership continuity needs that record set through a reviewed guarded step. The probe first
 requires `/api/me` 200, then `/api/stats` 403: Contractor may read its own
 account but cannot read staff-wide statistics. An administrator is not the
 wrong-role fixture for this endpoint. Missing/unknown staff or invalid sessions

@@ -36,3 +36,9 @@ Review is not repeated within this task. Corrections committed after this review
 The original Review above (CONFORMANT WITH FOLLOW-UPS on 885dc5fc) stands unchanged; it did not detect F1-F5. The coordinator's exact-head assessment of c96dae0c returned REVISE. The gate attempt against c96dae0c was cancelled while queued because of these defects and no pass receipt exists. Corrections are listed in the changes artifact. A separate independent correction review of the corrected diff is required before the clean-head gate; it is not a duplicate original Review.
 
 Correction review outcome (independent code-review agent, read-only, 2026-10-24): F1 PASS, F2 PASS, F3 PASS, F4 PASS, F5 PASS; no High or Medium findings. Test suites were not run by the reviewer; the exact-head gate follows.
+
+## Review correction record (correction cycle 2 of 2)
+
+The original Review and the cycle 1 correction review stand unchanged. Coordinator reassessment REVISE against 22ca2c2b found F2/F3 in identity continuity; F1/F4/F5 were verified corrected. A separate independent review of the cycle 2 corrections is recorded below when run.
+
+Cycle 2 correction review outcome (independent code-review agent, read-only): findings 1-4 PASS, no High. One Medium performance note (a write transaction on every request) was fixed by an unlocked already-recorded check before the transaction; a legacy-data edge (cards drafted before linking) and the need to record `legacy_roster_tenant` are documented, not claimed resolved.

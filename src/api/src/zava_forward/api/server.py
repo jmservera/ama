@@ -205,6 +205,8 @@ def make_handler(app):
             if user and identity.is_entra(user):
                 # Business-identity continuity and contractor company binding, separate from authentication.
                 user = identity.bind(app.store, user)
+                if user:
+                    identity.link(app.store, user)
             return user
 
         def _body(self):
@@ -367,10 +369,9 @@ def make_handler(app):
                     return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
                 return self._json(404, {"error": "Not found."})
             if url.path == "/api/me":
-                if identity.is_entra(u):
-                    identity.register(s, u)
                 admin_only = u.get("role") == identity.ADMIN_ROLE_NAME
-                out = projection.me_payload(u, {} if admin_only else s.counts(u), list(s.staff.values()))
+                recipients = [dict(code=p["code"], name=p["name"], email=p["email"], role=p["role"]) for p in identity.people(s)]
+                out = projection.me_payload(u, {} if admin_only else s.counts(u), list(s.staff.values()) + recipients)
                 out["account"] = app.provider.account(self.headers, u)
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)
@@ -548,6 +549,7 @@ def make_handler(app):
             if app.law is None:
                 return self._json(503, {"error": "The law store is not loaded."})
             rules = app.law.rules
+            rules.canonical = lambda name: identity.canonical(app.store, name, strict=True)
             try:
                 with app.law_lock:
                     if body is None:
@@ -581,6 +583,8 @@ def make_handler(app):
                         fields["approver"] = person["email"].strip().lower()
                         cid = body.get("card_id")
                         cid = cid.strip() if isinstance(cid, str) else cid
+                        if identity.is_entra(user) and not identity.link(app.store, user, strict=True):
+                            raise rulecards.RuleError("identity continuity is unavailable")
                         version = rules.propose(cid, user["email"].strip().lower(), rulecards.AUTHOR, **fields)
                         return self._json(201, {"version": version, "versions": rules.history(cid)})
                     elif len(parts) == 6:
@@ -591,6 +595,8 @@ def make_handler(app):
                                    "release": rules.release, "retire": rules.retire}
                         if action not in actions or not 1 <= version <= 2147483647:
                             return self._json(404, {"error": "Rule action not found."})
+                        if identity.is_entra(user) and not identity.link(app.store, user, strict=True):
+                            raise rulecards.RuleError("identity continuity is unavailable")
                         args = (cid, version, user["email"].strip().lower(), rulecards.OWNER)
                         if action == "hold":
                             rules.hold(*args, note=body.get("note"))

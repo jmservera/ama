@@ -42,6 +42,11 @@
       "decision": "Correction cycle 1 of 2 for coordinator REVISE F1-F5 on c96dae0c",
       "status": "implemented locally, uncommitted until correction review",
       "evidence": "changes artifact correction section; focused api 83 OK, infra 24 OK; gate on c96dae0c cancelled, no pass receipt"
+    },
+    {
+      "decision": "Correction cycle 2 of 2 for coordinator REVISE on 22ca2c2b",
+      "status": "implemented locally, uncommitted until correction review",
+      "evidence": "changes artifact cycle 2 section; gate on 22ca2c2b was interrupted (signal 15), no pass receipt"
     }
   ],
   "blockers": [
@@ -53,7 +58,7 @@
   ],
   "next_action": {
     "phase": "Review",
-    "action": "Independent correction review of F1-F5 corrections, then commit, clean-head gate with new external path and verify receipt, then coordinator release"
+    "action": "Independent review of cycle 2 corrections, commit, clean-head gate on new external path, verify receipt"
   },
   "prioritized_follow_ups": []
 }

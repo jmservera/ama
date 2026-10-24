@@ -32,3 +32,10 @@ ms.date: 2026-10-24
 * change_provenance.py: `_actor` OID re-resolution.
 * grant-application-admin.py: `--expected-oid`.
 * Tests: `test_entra_authoritative` (admin data denial, composition, continuity, scoped authority, registry), `test_auth`, `test_rule_alerts`, `test_private_cutover_proof`, `test_grant_application_admin`.
+
+## Correction cycle 2 of 2 details (appended)
+
+* identity.py: `matches(store, tid, oid)`, `legacy_tenant`, `link`, `canonical`, `person`, `people`.
+* rulecards.py: `_who` resolver for author/approver/named owner; server.py wires it and links strictly.
+* server.py: `_user` links after bind; `/api/me` staff includes recipients.
+* Tests: `test_auth.RuleHttpTests` alias independence; `test_entra_authoritative` tenant provenance, alias, concurrency, recipient projection.

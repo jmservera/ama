@@ -367,6 +367,7 @@ class DirectProofTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             seed = Path(directory) / "seed.json"
             fixture = proof.fixture()
+            fixture["legacy_roster_tenant"] = TENANT_GUID
             fixture["staff"] = [{
                 "code": "CON-FIXTURE", "name": "Synthetic Contractor",
                 "email": "contractor@example.test", "role": "Contractor",

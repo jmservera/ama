@@ -1,6 +1,7 @@
 """Entra-authoritative access: validated tenant, object id and app roles, no staff row."""
 
 import json
+from pathlib import Path
 import threading
 import unittest
 import urllib.error
@@ -133,6 +134,7 @@ class ContinuityTests(Base):
 
     def setUp(self):
         super().setUp()
+        self.store.data[identity.LEGACY_TENANT_KEY] = TENANT
         self.row = dict(code="RC-01", name="Legacy Owner", email="legacy@example.test", role="Retrofit Coordinator", oid=self.OID_LEGACY,
                         financial_authority=dict(marker="scoped"), contract_authorities=[dict(marker="scoped")])
         self.store.staff[self.row["email"]] = self.row
@@ -185,11 +187,70 @@ class ContinuityTests(Base):
             {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Coordinator",), oid=OID_NEW)})
         with self.assertRaises(ValueError):
             self.store._staff_person(other["email"])
-        identity.register(self.store, identity.bind(self.store, other))
+        identity.link(self.store, identity.bind(self.store, other))
         self.assertEqual(self.store._staff_person(other["email"])["code"], other["code"])
         self.assertIn(other["code"], [p["code"] for p in identity.people(self.store)])
-        identity.register(self.store, identity.bind(self.store, self.entra))
+        identity.link(self.store, identity.bind(self.store, self.entra))
         self.assertNotIn("RC-01", [p["code"] for p in identity.people(self.store)])
+        self.assertEqual(self.store._staff_person(identity.email_for(TENANT, self.OID_LEGACY))["code"], "RC-01")
         admin = auth.TrustedProxyProvider(self.store, ENV).authenticate({"X-MS-CLIENT-PRINCIPAL": principal(roles=(ADMIN,), oid="eeeeeeee-0000-0000-0000-000000000001")})
-        identity.register(self.store, identity.bind(self.store, admin))
+        identity.link(self.store, identity.bind(self.store, admin))
         self.assertNotIn(admin["code"], [p["code"] for p in identity.people(self.store)])
+
+    def test_foreign_or_unproven_tenant_rows_never_match(self):
+        self.row["tid"] = "99999999-2222-3333-4444-555555555555"
+        self.assertEqual(identity.bind(self.store, self.entra)["code"], identity.code_for(TENANT, self.OID_LEGACY))
+        self.assertEqual(identity.matches(self.store, TENANT, self.OID_LEGACY), [])
+        self.row["tid"] = TENANT
+        self.assertEqual(identity.bind(self.store, self.entra)["code"], "RC-01")
+        del self.row["tid"]
+        del self.store.data[identity.LEGACY_TENANT_KEY]
+        self.assertEqual(identity.bind(self.store, self.entra)["code"], identity.code_for(TENANT, self.OID_LEGACY))
+        self.store.data[identity.LEGACY_TENANT_KEY] = "99999999-2222-3333-4444-555555555555"
+        self.assertEqual(identity.matches(self.store, TENANT, self.OID_LEGACY), [])
+        from zava_forward.core import change_provenance
+        foreign = identity.bind(self.store, self.entra)
+        self.assertNotIn("contract_authorities", change_provenance._actor(self.store, foreign))
+
+    def test_alias_independence_survives_disabled_binding(self):
+        bound = identity.bind(self.store, self.entra)
+        identity.link(self.store, bound, strict=True)
+        self.row["disabled"] = True
+        derived = identity.bind(self.store, self.entra)
+        self.assertEqual(derived["email"], identity.email_for(TENANT, self.OID_LEGACY))
+        self.assertEqual(identity.canonical(self.store, bound["email"]), identity.canonical(self.store, derived["email"]))
+        self.assertEqual(identity.canonical(self.store, "RC-01"), identity.canonical(self.store, derived["code"]))
+        stranger = identity.email_for(TENANT, OID_NEW)
+        self.assertNotEqual(identity.canonical(self.store, stranger), identity.canonical(self.store, bound["email"]))
+
+    def test_concurrent_registrations_all_persist_json_and_sqlite(self):
+        import tempfile, os
+        from zava_forward.core.sqlstore import SqlStore
+        people = [auth.TrustedProxyProvider(self.store, ENV).authenticate(
+            {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Coordinator",), oid=f"ffffffff-0000-0000-0000-{i:012d}")}) for i in range(12)]
+        stores = [self.store]
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        sql = SqlStore(str(Path(self.tmp.name) / "zavaforward.json"), os.path.join(tmp.name, "z.db"))
+        self.addCleanup(sql.db.close)
+        stores.append(sql)
+        for store in stores:
+            threads = [threading.Thread(target=identity.link, args=(store, p), kwargs=dict(strict=True)) for p in people]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join()
+            self.assertEqual({p["code"] for p in people} <= {x["code"] for x in identity.people(store)}, True, type(store).__name__)
+        self.assertEqual(len(stores), 2)
+
+
+class RecipientProjectionTests(EntraHttpTests):
+    def test_me_staff_lists_registered_entra_colleagues_with_an_empty_roster(self):
+        other = "ffffffff-0000-0000-0000-00000000000b"
+        self.call("/api/me", roles=("ZavaForward.Coordinator",), oid=other)
+        code, me = self.call("/api/me", roles=("ZavaForward.ProgrammeManager",), oid=OID_NEW)
+        self.assertEqual(code, 200)
+        emails = {p["email"] for p in me["staff"]}
+        self.assertIn(identity.email_for(TENANT, other), emails)
+        self.assertTrue(all(set(p) == {"code", "name", "email", "role"} for p in me["staff"] if p["email"].endswith("@entra.invalid")))
+        self.assertEqual(self.call("/api/me", oid=OID_NEW)[1]["staff"], [])

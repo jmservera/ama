@@ -42,6 +42,7 @@ class Base(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         d = json.loads(json.dumps(test_mvp.DATA))
         d["staff"][0]["oid"] = OID_SAM
+        d[identity.LEGACY_TENANT_KEY] = TENANT
         d["staff"].append(dict(code="CON-1", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd",
                                oid="aaaaaaaa-0000-0000-0000-000000000009"))
         p = Path(self.tmp.name) / "zavaforward.json"
@@ -217,6 +218,29 @@ class RuleHttpTests(Base):
     def transition(self, action, headers=None, body=None, version=2):
         return self.call(f"/api/law/cards/hazard-awareness-clock/{version}/{action}",
                          self.headers("owner") if headers is None else headers, {} if body is None else body)
+
+    def self_headers(self):
+        return {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.LiaisonOfficer", "ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"), oid=OID_SAM),
+                "X-ZF-CSRF": "1"}
+
+    def test_one_person_cannot_approve_their_own_card_under_any_verified_alias(self):
+        me = self.self_headers()
+        derived = identity.email_for(TENANT, OID_SAM)
+        for named in (derived, "sam@example.test"):
+            version = self.call(headers=me, body=dict(SEED_CARDS[0], approver=named))[1]["version"]
+            code, body = self.call(f"/api/law/cards/hazard-awareness-clock/{version}/approve", me, {})
+            self.assertEqual(code, 409, body)
+            self.assertIn("own card", body["error"])
+        # Disabling the binding changes the principal's email to the derived alias, not the person.
+        version = self.call(headers=me, body=dict(SEED_CARDS[0], approver="sam@example.test"))[1]["version"]
+        self.store.staff["sam@example.test"]["disabled"] = True
+        code, body = self.call(f"/api/law/cards/hazard-awareness-clock/{version}/approve", me, {})
+        self.assertEqual(code, 409, body)
+        self.assertIn("own card", body["error"])
+        # A different verified person is still independent of the author.
+        self.store.staff["sam@example.test"]["disabled"] = False
+        other = self.call(f"/api/law/cards/hazard-awareness-clock/{version}/approve", self.headers("owner"), {})
+        self.assertEqual(other[0], 409)
 
     def test_running_local_app_full_lifecycle_and_retained_versions(self):
         self.assertEqual(self.call("/healthz")[0], 200)
