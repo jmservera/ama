@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -2744,3 +2744,39 @@ Priority generation, latest and review responses retain correct stale/actionable
 flags but withhold `challenge_ids` unless the requesting reader currently has
 both resident-information and recorded-reason rights, even for policy corrections
 on another case.
+
+## Synthetic resident feedback preview (#444)
+
+A separate, read-only, loopback-only web page for owner feedback on what a resident could see.
+It is invented data only: not enrolment, not a live service and not an approved resident design.
+The staff `server.py`, `auth.py`, projection and store are unchanged and are not imported.
+
+Build a disposable fixture and start one server per subject from a clean environment. The
+start-up guard refuses any `ZF_`, `AI_`, `IDENTITY_`, `MSI_`, `AZURE_`, `MSSQL`,
+`APPLICATIONINSIGHTS`, `OPENAI` or `SQL` variable:
+
+```bash
+pip install -e ../core -e ../agents -e .
+env -i PATH="$PATH" HOME="$HOME" python3 -m zava_forward.api.resident_preview --build-fixture /tmp/ama-444-preview-data
+env -i PATH="$PATH" HOME="$HOME" python3 -m zava_forward.api.resident_preview \
+  --data-dir /tmp/ama-444-preview-data --subject SYN-RES-A --port 8444
+```
+
+* Identity is the `--subject` this server process was started with. No password, role selector,
+  cookie, header, query or path value chooses who is viewing, and resident routes take no case id.
+* Routes: `/` page, `/resident/view` JSON, `/resident/about` limits, `/healthz`. Writes return
+  405. Messages, uploads, downloads, appointment replies, consent and AI return 403 and the page
+  shows them as unavailable. `/api/*` and every staff route are 404.
+* The Host header must be a loopback name with the bound port. Only `127.0.0.1` or `::1` binds.
+* The grant file is re-read on every request, so revocation and expiry apply to the next request.
+  Malformed, ambiguous, unknown or unlisted grants deny.
+* Subjects: `SYN-RES-A` (confirmed appointment), `SYN-RES-B` (offer only), `SYN-REP-B`
+  (confirmed representative, receive information and attend), `SYN-REP-WRONG` (grant names a task
+  the domain record does not confirm), and the denied `SYN-RES-EXPIRED`, `SYN-RES-REVOKED`,
+  `SYN-RES-AMBIG` and `SYN-RES-NOGRANT`.
+* Tests: `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests/test_resident_preview_api.py`
+  (real local server, authorization and isolation) and `python -m checks.resident_preview_browser_check`
+  (Chromium on the real server: keyboard, focus, error, 320 px reflow, reduced motion).
+
+Limits: the preview is not WCAG conformance evidence, not an external accessibility audit and
+not live Azure, SQL or AI acceptance. See the [core boundary](../core/README.md#resident-owned-preview-boundary-444).

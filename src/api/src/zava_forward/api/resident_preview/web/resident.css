@@ -1,0 +1,56 @@
+:root{
+  --colorNeutralForeground1:#242424;--colorNeutralForeground2:#424242;
+  --colorNeutralBackground1:#fff;--colorNeutralBackground2:#f5f7f8;
+  --colorBrandBackground:#0b5d6b;--colorBrandBackgroundHover:#08434d;
+  --fontFamilyBase:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  --fontSizeBase400:1rem;--fontSizeBase500:1.25rem;--fontSizeBase600:1.5rem;
+  --spacingHorizontalS:.5rem;--spacingHorizontalM:.75rem;--spacingHorizontalL:1rem;--spacingHorizontalXXL:1.5rem;
+  --borderRadiusMedium:.25rem;--borderRadiusXLarge:.5rem;--durationFast:150ms;
+  --ink:var(--colorNeutralForeground1);--muted:var(--colorNeutralForeground2);--line:#d9dee3;
+  --bg:var(--colorNeutralBackground2);--surface:var(--colorNeutralBackground1);
+  --brand:var(--colorBrandBackground);--soft:#e7f1f3;--soft-line:#b9d6db;
+  --caution:#d98a00;--caution-bg:#fff8e1;--caution-line:#f0d58a;--warn:#b42318;--warn-bg:#fde8e6;
+  --ok:#1a6b3a;--ok-bg:#e6f4ea;--disabled-bg:#eceff1;--disabled-ink:#555e65;
+  --focus:#f2a900;--focus-ink:#1f2933;--focus-w:3px;--focus-off:2px;--motion:var(--durationFast);
+}
+@media(prefers-reduced-motion:reduce){:root{--motion:0s}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:var(--fontSizeBase400)/1.5 var(--fontFamilyBase);color:var(--ink);background:var(--bg);overflow-wrap:anywhere}
+.skip{position:absolute;left:.5rem;top:-4rem;background:var(--surface);color:var(--ink);padding:.5rem 1rem;z-index:3;border:2px solid var(--ink)}
+.skip:focus{top:.5rem}
+:focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
+.synthetic{background:var(--caution-bg);border-bottom:3px solid var(--caution);padding:.6rem var(--spacingHorizontalL);color:var(--ink)}
+.top{display:flex;gap:.75rem;align-items:center;background:var(--brand);color:#fff;padding:.6rem var(--spacingHorizontalL)}
+.brand{margin:0;font-weight:600;font-size:1.15rem}
+.brand small{display:block;font-weight:400;font-size:.85rem}
+.logo{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:.6rem;background:var(--surface);color:var(--brand);font-weight:700;flex:none}
+main{max-width:46rem;margin:0 auto;padding:var(--spacingHorizontalL)}
+main:focus{outline:none}
+h1{font-size:var(--fontSizeBase600);line-height:2rem;margin:.5rem 0}
+h2{font-size:var(--fontSizeBase500);margin:0 0 .5rem}
+.lede{color:var(--muted);margin-top:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--borderRadiusXLarge);padding:var(--spacingHorizontalL);margin:var(--spacingHorizontalL) 0}
+.card.confirmed{border-left:6px solid var(--ok)}
+.card.offered{border-left:6px dashed var(--caution);background:var(--caution-bg)}
+.card.denied{border-left:6px solid var(--warn)}
+.tag{display:inline-block;font-weight:600;font-size:.85rem;padding:.1rem .5rem;border-radius:var(--borderRadiusMedium);border:1px solid currentColor}
+.tag.ok{color:var(--ok);background:var(--ok-bg)}
+.tag.offer{color:#6b4a00;background:#fff;border-style:dashed}
+.status{padding:.5rem 0;color:var(--muted)}
+.error{background:var(--warn-bg);border:1px solid var(--warn);border-radius:var(--borderRadiusXLarge);padding:var(--spacingHorizontalL)}
+ul{padding-left:1.25rem;margin:.25rem 0}
+li{margin:.25rem 0}
+dl{margin:0}
+dt{font-weight:600}
+dd{margin:0 0 .5rem}
+button{font:inherit;font-weight:600;min-height:2.75rem;min-width:2.75rem;border:1px solid var(--brand);background:var(--brand);color:#fff;padding:.5rem 1rem;border-radius:var(--borderRadiusMedium);cursor:pointer;transition:background var(--motion)}
+button:hover{background:var(--colorBrandBackgroundHover)}
+button[disabled]{background:var(--disabled-bg);color:var(--disabled-ink);border-color:var(--disabled-ink);cursor:not-allowed}
+.unavail{list-style:none;padding:0}
+.unavail li{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;border-top:1px solid var(--line);padding:.5rem 0}
+.unavail .why{flex:1 1 14rem;color:var(--muted)}
+.foot{max-width:46rem;margin:0 auto;padding:var(--spacingHorizontalL);color:var(--muted);font-size:.9rem}
+a{color:var(--brand);text-underline-offset:.15em}
+@media(max-width:30rem){main{padding:.75rem}.card{padding:.75rem}}
