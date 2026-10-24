@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T13:29:54+00:00",
-  "commit": "27700ea8614baf2a008ca1089d1dc4e636e51f24",
+  "scored_at": "2026-10-24T14:03:08+00:00",
+  "commit": "5e09756247a0bcd9e6cf2a6ec1f3855e22f25aa5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40097044893",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40099347125",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "9abe2693489a8bc54e2b5418ef4663d28d7f9ca16e3edb90cbad4811df1cfa3b",
@@ -30,7 +30,7 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "Diff is link-path fixes, ADR/PRD doc edits and a new pitch package; no architecture or code change. Unchanged."
+      "rationale": "Diff is BRD/PRD proposal text (NFR-012, FR-052) and a new pitch brief; no architecture or code change. Unchanged from baseline."
     },
     "A2": {
       "score": 5,
@@ -45,7 +45,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control changes in this doc-only diff. Unchanged."
+      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -53,20 +53,20 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "No implementation change; diff is docs/PRD/ADR/pitch only. Already at ceiling. Unchanged."
+      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998",
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:197-209"
+        "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "Pitch evidence restates a modelled USD 0.44/home inference scenario with explicit caveats, but nothing is newly measured or instrumented; still resilience evidenced, cost remains a labelled scenario. Unchanged from baseline."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch package cites existing historical observations but adds no new evaluation evidence. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch material references an existing smallest-model rule but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
@@ -77,76 +77,73 @@
     },
     "B1": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/speaker-script.md:14-30"
-      ],
-      "rationale": "Live-scored; the new script shows a clear written arc (problem, stakes, recommendation) but it is a rehearsal script, not an observed delivery. No rehearsal/delivered-session evidence exists; readiness baseline retained."
+      "evidence": [],
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch package is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-25"
-      ],
-      "rationale": "Live-scored; the new audience map plans register calibration per stakeholder, but no rehearsal or delivery evidence exists to show it executed live. Baseline retained."
+      "evidence": [],
+      "rationale": "Live-scored; no rehearsal or delivery evidence exists to show register calibration in front of an audience. Baseline retained."
     },
     "B3": {
       "score": 1,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:8-16",
-        "docs/capstone/deck/zava-forward-executive-draft.pptx"
+        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:1-40"
       ],
-      "rationale": "Live-scored; a detailed proposed demo runbook with recovery table exists but is explicitly unrehearsed (\"not a record that these actions have been executed\"); no delivered/recovered demo evidence. Needs Improvement retained."
+      "rationale": "Live-scored; detailed preflight and route-selection runbook now exists but explicitly records no rehearsal or executed demo. Readiness remains Needs Improvement; not raised since nothing was delivered."
     },
     "B4": {
       "score": 1,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/backup-slides.md:12-30"
+        "docs/capstone/pitch/cowork-main-presentation/backup-slides.md:1-16"
       ],
-      "rationale": "Live-scored; 27 prepared backup Q&A answers now exist with evidence and limits, but these are prepared material, not a demonstrated live exchange under challenge; no transcript or rehearsal exists. Readiness stays Needs Improvement."
+      "rationale": "New backup-slide Q&A appendix states these are anticipated questions, not a transcript of a real exchange; no live challenge or concession evidence exists, so readiness is unchanged."
     },
     "B5": {
       "score": 1,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:104-116"
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:14-30"
       ],
-      "rationale": "Live-scored; detailed delivery-craft notes per slide now exist (posture, pacing, pause cues) but the package is explicitly unrehearsed; no pace, timing or presence evidence from an actual delivery exists."
+      "rationale": "New timing/delivery plan is detailed preparation but explicitly not yet rehearsed; no pace, timing or presence evidence exists. Readiness unchanged."
     },
     "B6": {
       "score": 3,
       "evidence": [
         "docs/capstone/deck/zava-forward-executive-draft.pptx",
-        "docs/capstone/pitch/cowork-main-presentation/README.md:1-20"
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
+        "docs/capstone/pitch/cowork-main-presentation/README.md:1-30"
       ],
-      "rationale": "Gate caps B6 at 3: capstone-deck is missing after this diff deleted the only prior deck file (zava-forward-executive-draft.pptx); cap applies regardless of pitch-package quality."
+      "rationale": "Required capstone-deck artifact is missing from docs/capstone/deck/*.pptx after this diff; gate caps B6 at 3 regardless of the richer, well-organised pitch package added alongside it."
     },
     "B7": {
       "score": 3,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:197-209"
+        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:1-271",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/delivery-method-evidence.md:1-159"
       ],
-      "rationale": "Expanded evidence states labelled numbers (USD 0.44/home, USD 6,873 total, sensitivity) with careful caveats, but is preparation material, not pitch/deck-delivered evidence; accepted-outcome cost remains unknown."
+      "rationale": "New evidence reports add carefully source-cited, caveated cost and delivery-chain data (labelled scenario figures, dated snapshots), improving storytelling rigor over the baseline brief alone. Still preparation material, not pitch/deck-delivered evidence, so held short of ceiling."
     },
     "C1": {
       "score": 5,
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
       ],
-      "rationale": "No new BRD stakeholder-framing change in this diff beyond link fixes; already at ceiling. Unchanged."
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; new pitch evidence quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 1,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:77-96"
+        "docs/capstone/pitch/cowork-main-presentation/backup-slides.md:1-16"
       ],
-      "rationale": "Live-scored; a detailed interruption protocol (restate, answer, park) now exists in writing, but it only contains prepared stems, not a demonstrated live exchange showing restating challenges or conceding points. Readiness is Needs Improvement."
+      "rationale": "Live-scored; the backup-slide appendix contains only prepared answer stems, explicitly anticipated rather than demonstrated, so readiness remains Needs Improvement."
     },
     "C3": {
       "score": 3,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/validation.md:93-96",
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:96-97"
+        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:1-60",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/delivery-method-evidence.md:60-120"
       ],
-      "rationale": "Not live-scored; the package explicitly disclaims being 'rehearsed' or 'rubric passed' and includes credible 'I do not have a defensible unit price today' stems, surfacing risk unprompted. Written preparation, not a live exchange, so short of ceiling."
+      "rationale": "Not live-scored; new evidence reports surface risk and limits unprompted, defend a labelled recommendation and distinguish evidence classes carefully, strengthening written data storytelling. Still preparation, not a live exchange, so short of ceiling."
     },
     "D1": {
       "score": 0,
