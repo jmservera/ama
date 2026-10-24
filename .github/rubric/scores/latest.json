@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T02:02:42+00:00",
-  "commit": "2b364f6f4618a055e4fe78c76007c2e3ed8799d7",
+  "scored_at": "2026-10-24T09:34:21+00:00",
+  "commit": "cfd5bfb9a12bf53aaed9f0f1d5d2c35c9f178abd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40051802753",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40081886573",
   "fingerprints": {
     "brd": "b04143df95f139390e2c56272fd468c5ed476bcf6b8c80deaff1cf56ae7671f5",
     "prd": "0c37532cda9afe14c2ca3353c4a75fcafd9712adbbf6dfcc9fac353001279ae4",
@@ -15,10 +15,10 @@
     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
     "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
   },
-  "total": 55,
+  "total": 54,
   "sections": {
     "A": 30,
-    "B": 16,
+    "B": 15,
     "C": 9,
     "D": 0
   },
@@ -31,14 +31,14 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "Diff adds BRD/PRD resident-portal proposal text (FR-053 to FR-071, NFR-013/014, NFR-018 to NFR-021, GOAL-005) only; no architecture or code change. Unchanged from baseline."
+      "rationale": "Diff is BRD/PRD proposal text (NFR-012, FR-052) and a new pitch brief; no architecture or code change. Unchanged from baseline."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "No new trade-off reasoning text in this documentation-only diff; already at ceiling. Unchanged."
+      "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
     },
     "A3": {
       "score": 5,
@@ -46,7 +46,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control code changes; BRD/PRD proposes NFR-019 resident security controls but these remain requirement text, not implemented or verified controls. Unchanged."
+      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -54,27 +54,27 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "No implementation change; diff is BRD/PRD draft requirements documentation only, with all new resident ACs explicitly marked Not run. Already at ceiling. Unchanged."
+      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1770-1800",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:2676-2700"
+        "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "New illustrative capacity case and NFR-021 performance targets are author-judgement proposals with no instrumentation or measurement delivered; still only resilience evidenced, cost/performance remain proposals. Unchanged from baseline."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; FR-067 resident-answer task is a proposed requirement, not an implemented or evaluated model choice. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "No new agentic orchestration code introduced; FR-067/FR-070 resident-answer and dispatch-policy requirements remain draft text with explicit single-call, no-loop constraints, not implemented orchestration. Unchanged."
+      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
     },
     "B1": {
       "score": 3,
@@ -108,12 +108,13 @@
       "rationale": "The brief states the 795-second main route has not been rehearsed against this material; no pace, timing or presence evidence exists yet."
     },
     "B6": {
-      "score": 4,
+      "score": 3,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1770-1800",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:2373-2464"
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:37-50",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:1018-1050",
+        "docs/brds/agentic-retrofit-programme-brd.md:683-732"
       ],
-      "rationale": "New resident-amendment sections and large traceability tables are organised and cross-referenced but add further document density; capstone deck remains unchanged. Still capped at Good(4), consistent with baseline."
+      "rationale": "New BRD/PRD sections (resident amendment, capacity case, PR442 refinement contract) are long and repetitive with internal provenance/hash/status jargon for process reviewers, not a reader; capstone deck unchanged and still well structured, so overall documentation is no longer uniformly clear."
     },
     "B7": {
       "score": 3,
@@ -127,7 +128,7 @@
       "evidence": [
         "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
       ],
-      "rationale": "New illustrative capacity case quantifies a resident-service cost/effort hypothesis but is explicitly labelled author-judgement, not measured value; stakeholder/value framing is already at ceiling with no material change. Unchanged."
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 1,
