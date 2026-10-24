@@ -2,13 +2,13 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-23T22:38:10+00:00",
-  "commit": "4017b214bb021244b06264629953d84f29003c53",
+  "scored_at": "2026-10-24T00:56:38+00:00",
+  "commit": "f902cd4420aeefa32380bc6e25d764584af16d3b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40034175334",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40047017977",
   "fingerprints": {
     "brd": "b04143df95f139390e2c56272fd468c5ed476bcf6b8c80deaff1cf56ae7671f5",
-    "prd": "2828571b884af58beba1b9baf694c4bad2df2158972e3c807f9b264d775b3b1a",
+    "prd": "0c37532cda9afe14c2ca3353c4a75fcafd9712adbbf6dfcc9fac353001279ae4",
     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
@@ -31,14 +31,14 @@
         "src/core/src/zava_forward/core/continuity.py:50-260",
         "src/api/src/zava_forward/api/server.py:851-875"
       ],
-      "rationale": "Diff is BRD/PRD resident-portal proposal text only (FR-053 to FR-071, NFR-013/014); no architecture or code change. Unchanged from baseline."
+      "rationale": "Diff is BRD/PRD proposal text (NFR-012, FR-052) and a new pitch brief; no architecture or code change. Unchanged from baseline."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "No new trade-off reasoning text evidenced in changed files (the referenced architecture-option doc is not part of this diff); already at ceiling. Unchanged."
+      "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
     },
     "A3": {
       "score": 5,
@@ -46,7 +46,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control code changes in this proposal-only diff; new RULE-027/028 and NFR-014 are draft BRD/PRD policy text, not implemented controls. Unchanged."
+      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -54,7 +54,7 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "No implementation change; diff is BRD/PRD documentation proposing a new resident-portal scope (GOAL-005), not building it. Already at ceiling. Unchanged."
+      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 4,
@@ -62,50 +62,50 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "No new metering/cost-instrumentation evidence; NFR-012/FR-052 remain unchanged proposals. Diff adds resident-service capacity sensitivities, clearly labelled as author judgement, not measured ops/cost data. Unchanged."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; resident-answer task (FR-058/FR-067) is proposed, not built or evaluated. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "No new agentic orchestration introduced; resident communication agent is draft requirement text only, not implemented. Unchanged."
+      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists in this BRD/PRD-only diff. Baseline readiness retained."
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch brief is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivery evidence exists to show register calibration. Baseline retained."
+      "rationale": "Live-scored; no rehearsal or delivery evidence exists to show register calibration in front of an audience. Baseline retained."
     },
     "B3": {
       "score": 1,
       "evidence": [
         "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
       ],
-      "rationale": "Pitch brief is unchanged by this diff; still not rehearsed, no demo script/timing/recovery evidence. Needs Improvement retained."
+      "rationale": "The pitch artifact is now committed, so the 0 not-demonstrable floor no longer applies. The brief states the deck is unchanged and the material has not been rehearsed; no demo script, timing or recovery evidence exists, so readiness is Needs Improvement."
     },
     "B4": {
       "score": 1,
       "evidence": [
         "docs/capstone/pitch/tokenomics-pitch-brief.md:95-104"
       ],
-      "rationale": "Pitch brief unchanged; prepared Q&A stems only, no transcript or rehearsal evidence. Unchanged."
+      "rationale": "The brief drafts executive Q&A answer stems but these are prepared text, not a demonstrated live exchange under challenge; no transcript or rehearsal exists, so readiness is Needs Improvement."
     },
     "B5": {
       "score": 1,
       "evidence": [
         "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
       ],
-      "rationale": "No rehearsal, pace or timing evidence added by this diff. Unchanged."
+      "rationale": "The brief states the 795-second main route has not been rehearsed against this material; no pace, timing or presence evidence exists yet."
     },
     "B6": {
       "score": 4,
@@ -113,29 +113,28 @@
         "docs/capstone/pitch/tokenomics-pitch-brief.md:1-137",
         "src/api/README.md:2555-2561"
       ],
-      "rationale": "Capstone deck and pitch brief untouched by this diff; BRD/PRD remain well organised with tables and cross-references despite added length. Still capped at Good(4)."
+      "rationale": "New pitch brief is a well-organised, navigable preparation document; capstone deck remains unchanged and already well structured. Still capped at Good(4); some documentation remains dense elsewhere."
     },
     "B7": {
       "score": 3,
       "evidence": [
         "docs/capstone/pitch/tokenomics-pitch-brief.md:85-93"
       ],
-      "rationale": "Pitch brief (the evidence-storytelling artifact) is unchanged by this diff; BRD's new Illustrative Capacity Case is clearly labelled author-judgement sensitivity, consistent with prior caveated-claims pattern. Unchanged."
+      "rationale": "The pitch brief states concrete, labelled numbers (6,884 tokens over five runs) with evidence-class caveats, but this is preparation material, not evidence delivered in an actual pitch or the deck. Claims carefully labelled; short of ceiling since much remains 'unknown' pending measurement."
     },
     "C1": {
       "score": 5,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521",
-        "docs/brds/agentic-retrofit-programme-brd.md:1771-1869"
+        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
       ],
-      "rationale": "Diff substantially deepens stakeholder naming, quantified value-at-stake sensitivities and named role owners for the resident-service amendment, consistent with already-ceiling business framing. Already at ceiling (5); no change possible."
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 1,
       "evidence": [
         "docs/capstone/pitch/tokenomics-pitch-brief.md:95-104"
       ],
-      "rationale": "Live-scored; pitch artifact unchanged by this diff, still only prepared answer stems, no demonstrated live exchange. Unchanged."
+      "rationale": "Live-scored; the pitch artifact now exists so the not-demonstrable floor lifts, but it only contains prepared answer stems, not a demonstrated live exchange showing restating challenges or conceding points. Readiness is Needs Improvement."
     },
     "C3": {
       "score": 3,
@@ -143,7 +142,7 @@
         "docs/capstone/pitch/tokenomics-pitch-brief.md:19-26",
         "docs/capstone/pitch/tokenomics-pitch-brief.md:106-116"
       ],
-      "rationale": "Pitch artifact unchanged by this diff. BRD amendment continues intellectually honest framing (explicit 'not a measured baseline', breakeven caveats) but this is written BRD preparation, not a live exchange. Unchanged."
+      "rationale": "Not live-scored; pitch artifact now committed. The brief defends a recommendation (Option A), surfaces risk unprompted (Claims to Keep Out), and includes credible 'I will not estimate one' stems. Written preparation, not a live exchange, so short of ceiling."
     },
     "D1": {
       "score": 0,
