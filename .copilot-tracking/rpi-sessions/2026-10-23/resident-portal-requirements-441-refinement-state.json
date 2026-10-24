@@ -1,0 +1,69 @@
+{
+  "task_id": "jmservera/ama#441",
+  "task_slug": "resident-portal-requirements-441",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-23/resident-portal-requirements-441-refinement-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-refinement-plan.md",
+    "details": ".copilot-tracking/details/2026-10-23/resident-portal-requirements-441-refinement-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-23/resident-portal-requirements-441-refinement-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441-refinement-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Native session59f31558 continuation; this committed record is a pre-Review snapshot, not the later clean-head gate state. Subsequent native state/receipt/handoff stays external.",
+      "status": "recorded",
+      "evidence": "Owner explicitly requested completed author-package integration and stop before publication."
+    },
+    {
+      "decision": "Research executed Complete/Ready unsigned proposal only; Plan/details then independent critique preceded all product edits.",
+      "status": "executed",
+      "evidence": "Dated refinement artifacts and actual native tool sequence."
+    },
+    {
+      "decision": "Independent critique executed Complete, verdict Pass, PC-001 Low accepted directly. Exact owned cache removed, bytecode disabled, ignored status empty.",
+      "status": "recorded",
+      "evidence": "Independent critique and P01 completion evidence; four navigation-only href corrections disclosed separately."
+    },
+    {
+      "decision": "P01 completed: integrated canonical PRD/one existing unregistered proposal and selected portable evidence, no requirement-definition changes. Both focused validators and10regressions pass.",
+      "status": "executed",
+      "evidence": "refinement-evidence/integrated-validation.json and original-validator-result.json; current FAIL/seven findings preserved."
+    },
+    {
+      "decision": "Formal PRD FAIL/Validate BLOCKED/Finalize NOT_EVALUATED, ADR registration UNMET/id:null, all30residentACNotrun and live gates remain; technical gate cannot waive them.",
+      "status": "unresolved-outside-integration",
+      "evidence": "Current independent PRD source review and explicit owner-authorized unsigned publication scope."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Obtain one independent integrated-byte RPI Review. If no integration defects, commit stable evidence and run one eligible zero-wait complete local gate/verifier. STOP BEFORE PUSH/PR updates."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve current seven requirements-quality findings under separately authorized scope",
+      "rationale": "Current core threshold blocks Validate; preserve all adverse findings and actual approval limits.",
+      "evidence": "PRD current reviewer-result-summary and reconciled proposal."
+    },
+    {
+      "rank": 2,
+      "task": "Supported native ADR bootstrap/import and actual allocation",
+      "rationale": "Registration remains owner-deferred and UNMET, no competing registry or guessed ID.",
+      "evidence": "Original registration blocker and current unregistered working candidate."
+    },
+    {
+      "rank": 3,
+      "task": "Supported scorer citation correction without hand edits",
+      "rationale": "A5/B6 remain OPEN; no paid scorer dispatch or bounded deterministic correction established.",
+      "evidence": "Hosted4364841399/4364841447 and correction1 research/Review."
+    }
+  ]
+}

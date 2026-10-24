@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0.0",
+  "createdAt": "2026-10-23T23:21:00.202719+00:00",
+  "purpose": "New reconciled unsigned proposal file set only; original manifests unchanged",
+  "recommendedCandidate": "resident-service-unregistered-proposal-reconciled.md",
+  "originalManifestSha256": "70990fb8e5df9bfe97cb1bbe681335daa9a086cde858825d94e362363701a499",
+  "inputManifestSha256": "22dfe903eabb3e1c25ac455d78ea41644d4e594d730640d83ae9896e812471de",
+  "files": [
+    {
+      "path": "integration-handoff-reconciled.md",
+      "bytes": 8590,
+      "sha256": "b879309899028b7f9e37043f50c2d7faf8f903a3da8016b0718b5dbea8c4842a"
+    },
+    {
+      "path": "reconciled-candidate-prewrite-scan.json",
+      "bytes": 86,
+      "sha256": "7493c19e5056a2e23a0fff171aa71388f881239969f1f1b0ab3ee6ee0679cab0"
+    },
+    {
+      "path": "reconciliation-input-manifest.json",
+      "bytes": 8120,
+      "sha256": "22dfe903eabb3e1c25ac455d78ea41644d4e594d730640d83ae9896e812471de"
+    },
+    {
+      "path": "reconciliation-report.md",
+      "bytes": 11729,
+      "sha256": "fa57b84489966ad51050695e32976c0b7eb4090f4fffbbbc16ef4fee93929f5c"
+    },
+    {
+      "path": "reconciliation-validation.json",
+      "bytes": 11326,
+      "sha256": "919060225b0d3ce1e27b3b3d083a86d1436cc243b0346e3a04356c9b1d14945b"
+    },
+    {
+      "path": "requirement-map-reconciled.json",
+      "bytes": 94450,
+      "sha256": "72ba21d6ab350a8544603e327ea1c297a133198e6be36e7d417f40501cc697b8"
+    },
+    {
+      "path": "requirement-map-reconciled.md",
+      "bytes": 5222,
+      "sha256": "6916d03ea911a716c1a0163f737f6b99569ed39db6b09494e508240d0e6c2ca4"
+    },
+    {
+      "path": "resident-service-unregistered-proposal-reconciled.md",
+      "bytes": 58657,
+      "sha256": "8e44d6ffbfe907a5e7e8cd057d0a29e0e977e916456ed0f0d9799efe8e1a4d77"
+    },
+    {
+      "path": "state-reconciled.json",
+      "bytes": 16109,
+      "sha256": "1b079734df9f90e53585b806f43c73f22fe7d72d9a82255ea9a27f4aba5cd4c1"
+    },
+    {
+      "path": "validate-reconciliation.py",
+      "bytes": 13851,
+      "sha256": "7cfc539df0a87f19dd5ff95a1c781cd42ae5cfe8ffbc5680730f42736abe9dc6"
+    }
+  ],
+  "selfExcluded": "reconciliation-output-manifest.json; final SHA-256 returned externally",
+  "originalFilesPreserved": 17,
+  "doesNotExtendOriginalManifest": true
+}

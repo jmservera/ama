@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Design System Foundations
 description: Design tokens, component inventory with states, non-colour signal rules and the extend-versus-adopt decision for the workbench UI (issue #150)
-ms.date: 2026-10-15
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -31,6 +31,24 @@ adoption. Delivery must still select/integrate an actual Fluent implementation
 and evidence its rendered states, packaging, CSP and accessibility, or obtain
 explicit owner acceptance of a native-only substitute. Issue #150 stays open.
 This is not a renewed decision to retain the old bespoke system.
+
+## Proposed resident task extension (2026-10-23, #441)
+
+The [six proposed resident scripts](./customer-journeys/residents.md#proposed-optional-resident-increment-2026-10-23-441)
+inherit owner-selected Fluent 2, native semantics, non-colour status, visible
+focus, reduced motion and plain content. This is documentation only, not
+resident UI implementation or completion of Fluent adoption.
+Specify loading/empty/failed/unknown/stale/denied/session-expired/received/
+scan-pending/reviewed/published/response-recorded/confirmed states distinctly.
+Do not make receipt a verification, response a booking, or policy disposition
+a human review. Safe recovery and revoked grants must have accessible routes
+without disclosing another case. Keep person/urgent help and phone/email/visit
+equivalents visible; non-use has no service detriment.
+
+Resident components/states, keyboard and assistive-technology checks,
+comprehension and real-user validation remain proposed/Not run under the
+[WCAG extension](./wcag-conformance-baseline.md#proposed-resident-task-audit-2026-10-23-441).
+No aesthetic overhaul, framework swap or native-only acceptance is inferred.
 
 ## Design tokens
 

@@ -1,9 +1,22 @@
 ---
 title: Agent What-If Study
 description: What-if session on the Agent Request Challenge, running multiple augmentation scenarios per requested agent to test whether any moves them closer to a viable agentic end-to-end
-ms.date: 2026-09-27
+ms.date: 2026-10-23
 ms.topic: reference
 ---
+
+## Prospective communication qualification (2026-10-23, #441)
+
+The dated what-if findings and universal per-message-review baseline below
+remain historical research, not a veto on later owner choices. The owner now
+selects a proposed bounded routine exception under reconciled
+[BRD FR-044/AC-084 and RULE-028](../../../brds/agentic-retrofit-programme-brd.md#optional-resident-portal-and-communication-agent-draft-amendment).
+It covers only versioned evaluated routine acknowledgements/reminders/grounded
+status/process replies after separate activation. Named review remains default
+and always applies to consequential, sensitive, uncertain, safety, consent,
+contractual and financial content. No model controlled-domain authority or
+operational exception activates here. The optional resident service is proposed
+synthetic scope; original comparisons and absence of observed value remain.
 
 ## Purpose and Method
 

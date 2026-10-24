@@ -1,0 +1,71 @@
+{
+  "task_id": "jmservera/ama#441",
+  "task_slug": "resident-portal-requirements-441",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-23/resident-portal-requirements-441-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-23/resident-portal-requirements-441-plan.md",
+    "details": ".copilot-tracking/details/2026-10-23/resident-portal-requirements-441-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-23/resident-portal-requirements-441-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Earlier blocked/not-executed decision entries below are preserved historical intake records, superseded prospectively by resumed Research/Plan/Implement/Review execution.",
+      "status": "historical records explicitly qualified",
+      "evidence": "phases.json original sequence and initial_scope_preservation versus continuation_2026_10_23/current_scope_preservation"
+    },
+    {
+      "decision": "Execute the explicitly requested ordered Research, Plan/details, independent critique, Implement and Review sequence, then gated draft publication; stop at publication handoff.",
+      "status": "owner-directed",
+      "evidence": "Native session 59f31558-980b-475c-b2e2-3b8d68279ed9, user request 2026-10-23; no inferred automatic-mode switch."
+    },
+    {
+      "decision": "Option B, bounded routine communication proposal, role ownership, managed external identity, synthetic scenarios and honest diagram provenance.",
+      "status": "exercise proposal choices confirmed; not operational approval",
+      "evidence": "Six numbered owner decisions in native intake; current issue body is older task data and does not override them."
+    },
+    {
+      "decision": "Research disposition executed, partial; Planning Readiness Blocked by ADR-REGISTRY-BOOTSTRAP.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/research/2026-10-23/resident-portal-requirements-441-research.md; actual allocator exit 1 before writes."
+    },
+    {
+      "decision": "Plan, independent critique, implementation, Review and publication have not executed.",
+      "status": "not executed",
+      "evidence": "No product-document diff, no ADR allocation/config write, no candidate commit, no receipt, no push or PR."
+    },
+    {
+      "decision": "Research cycle 2 executed and Ready for reduced scope; Plan/details completed before product edits; one independent final-candidate critique executed Partial, verdict Pass for assessed scope, zero findings.",
+      "status": "Ready with disclosed critique input-access limitation; historical earlier not-executed records preserved",
+      "evidence": "Research cycle 2 and plan Critique Disposition; critic read issue/current owner direction/packages but not original brief directly; parent read original brief. No material conflict found."
+    },
+    {
+      "decision": "P01/P02 implemented; one independent Review Complete, outcome Conformant with justified divergence for reduced unsigned proposal scope; 22/22 hashes verified, no material proposal defect.",
+      "status": "Review executed; not company/lifecycle/live approval",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-23/resident-portal-requirements-441-review.md; RV-001 Low parent evidence bookkeeping recorded in phases continuation, no product change or second Review"
+    },
+    {
+      "decision": "Publish draft PR with BRD/PRD and explicitly unregistered ADR proposal; defer registration.",
+      "status": "owner-approved reduced publication scope on 2026-10-23; supersedes the registration blocker for proposal publication only",
+      "evidence": "Same-session owner continuation at 21:07Z. Keep id null, assets in issue-specific tracking, no registry/config/lineage/Govern claim. Full registration acceptance remains unmet. Mention @jmservera in draft PR."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "ADR-REGISTRY-BOOTSTRAP",
+      "summary": "Native docs/adrs contains ADR 0001-0006 but no .adr-config.yml. Installed adr-author allocator requires an existing config, owns last_decision_id, and exposes only allocate/supersede, with no existing-registry bootstrap/import. Actual allocation attempt fails before writes.",
+      "resolution": "Owner deferred registration on 2026-10-23 at 21:07Z and authorized an explicitly unregistered tracked proposal. Historical allocator failure remains valid; registration acceptance remains unmet. This no longer blocks the reduced proposal publication scope."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Execute owner-requested P03-T02 only. This committed state will remain pre-gate evidence; post-commit transitions/receipt/publication evidence persist externally in this native session to preserve exact-head cleanliness. No automatic extra work."
+  },
+  "prioritized_follow_ups": []
+}

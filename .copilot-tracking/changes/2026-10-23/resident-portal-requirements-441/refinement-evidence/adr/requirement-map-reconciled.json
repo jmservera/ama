@@ -1,0 +1,2472 @@
+{
+  "schemaVersion": "1.0.0",
+  "publishedHead": "4017b214bb021244b06264629953d84f29003c53",
+  "namespaceRule": "BRD and PRD identifiers are distinct; no number-only joining",
+  "futureSiblingPrdRead": true,
+  "criteria": [
+    {
+      "prdCriterion": "AC-111",
+      "verbatimCriterion": "Given two fictional residents with separate cases, when each opens, lists or searches the workspace, then only their permitted case projection, timeline, next action, owner and recorded-as-of state are returned; unknown/stale values are explicit.",
+      "prdRequirement": "FR-062",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2082,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-053"
+      ],
+      "brdCriteria": [
+        "AC-104",
+        "AC-105"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-053",
+            "definitionLines": [
+              1661,
+              2361
+            ]
+          },
+          {
+            "id": "AC-104",
+            "definitionLines": [
+              1661
+            ]
+          },
+          {
+            "id": "AC-105",
+            "definitionLines": [
+              1661
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2"
+      ],
+      "designObligation": "Allowed/denied projections, approved versions, no existence-revealing metadata",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1776,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-062",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-111",
+          "PRD-2026-AMA48-001::AC-112",
+          "PRD-2026-AMA48-001::AC-113"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-053"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-104",
+          "BRD-2026-AMA48-001::AC-105"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-112",
+      "verbatimCriterion": "Given approved, internal-only and superseded documents, when a permitted resident views/downloads one, then only the authorised published version and its source/version are returned, never internal metadata or another occupant's private material.",
+      "prdRequirement": "FR-062",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2083,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-053"
+      ],
+      "brdCriteria": [
+        "AC-104",
+        "AC-105"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-053",
+            "definitionLines": [
+              1661,
+              2361
+            ]
+          },
+          {
+            "id": "AC-104",
+            "definitionLines": [
+              1661
+            ]
+          },
+          {
+            "id": "AC-105",
+            "definitionLines": [
+              1661
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2"
+      ],
+      "designObligation": "Allowed/denied projections, approved versions, no existence-revealing metadata",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1777,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-062",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-111",
+          "PRD-2026-AMA48-001::AC-112",
+          "PRD-2026-AMA48-001::AC-113"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-053"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-104",
+          "BRD-2026-AMA48-001::AC-105"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-113",
+      "verbatimCriterion": "Given an unrelated case ID, link, search, export and model-context probe, when requested, then the server denies content and existence-revealing metadata, regardless of UI controls.",
+      "prdRequirement": "FR-062",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2084,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-053"
+      ],
+      "brdCriteria": [
+        "AC-104",
+        "AC-105"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-053",
+            "definitionLines": [
+              1661,
+              2361
+            ]
+          },
+          {
+            "id": "AC-104",
+            "definitionLines": [
+              1661
+            ]
+          },
+          {
+            "id": "AC-105",
+            "definitionLines": [
+              1661
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2"
+      ],
+      "designObligation": "Allowed/denied projections, approved versions, no existence-revealing metadata",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1778,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-062",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-111",
+          "PRD-2026-AMA48-001::AC-112",
+          "PRD-2026-AMA48-001::AC-113"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-053"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-104",
+          "BRD-2026-AMA48-001::AC-105"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-114",
+      "verbatimCriterion": "Given a current upload request and a permitted safe file, when durable intake completes, then a receipt/event reference and pending-scan/review state appear; only a clean permitted file becomes reviewer-accessible, and no receipt implies verified evidence or resident publication.",
+      "prdRequirement": "FR-063",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2085,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-054"
+      ],
+      "brdCriteria": [
+        "AC-106",
+        "AC-107"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-054",
+            "definitionLines": [
+              1662,
+              2362
+            ]
+          },
+          {
+            "id": "AC-106",
+            "definitionLines": [
+              1662
+            ]
+          },
+          {
+            "id": "AC-107",
+            "definitionLines": [
+              1662
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "designObligation": "Durable receipt distinct from scan/review/acceptance/publication; unsafe files isolated",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1779,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-063",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-114",
+          "PRD-2026-AMA48-001::AC-115"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-054"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-106",
+          "BRD-2026-AMA48-001::AC-107"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-115",
+      "verbatimCriterion": "Given oversize, unsupported, malicious, scan-unavailable and interrupted uploads, when submitted/retried, then unsafe or unvalidated content remains quarantined/inaccessible to residents, staff readers and models, rejected attempts do not satisfy the request, retry has no duplicate case effect and accessible help explains the outstanding state.",
+      "prdRequirement": "FR-063",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2086,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-054"
+      ],
+      "brdCriteria": [
+        "AC-106",
+        "AC-107"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-054",
+            "definitionLines": [
+              1662,
+              2362
+            ]
+          },
+          {
+            "id": "AC-106",
+            "definitionLines": [
+              1662
+            ]
+          },
+          {
+            "id": "AC-107",
+            "definitionLines": [
+              1662
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "designObligation": "Durable receipt distinct from scan/review/acceptance/publication; unsafe files isolated",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1780,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-063",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-114",
+          "PRD-2026-AMA48-001::AC-115"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-054"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-106",
+          "BRD-2026-AMA48-001::AC-107"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-116",
+      "verbatimCriterion": "Given an offered slot and a representative with appointment-only authority, when acceptance or another time is proposed, then only the response is recorded; confirmed status requires resident authority, authorised staff and contractor capacity under FR-048/AC-062, and no instruction or works consent is inferred.",
+      "prdRequirement": "FR-064",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2087,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-055"
+      ],
+      "brdCriteria": [
+        "AC-108",
+        "AC-109"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-055",
+            "definitionLines": [
+              1663,
+              2363
+            ]
+          },
+          {
+            "id": "AC-108",
+            "definitionLines": [
+              1663
+            ]
+          },
+          {
+            "id": "AC-109",
+            "definitionLines": [
+              1663
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C3",
+        "C5"
+      ],
+      "designObligation": "Scoped response, capacity/human confirmation, no inferred consent/no-access; urgent route independent",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1781,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-064",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-116",
+          "PRD-2026-AMA48-001::AC-117"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-055",
+          "BRD-2026-AMA48-001::FR-046"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-108",
+          "BRD-2026-AMA48-001::AC-109",
+          "BRD-2026-AMA48-001::AC-088"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-117",
+      "verbatimCriterion": "Given postponement, pause and urgent hazard scenarios, when a response is recorded, then the affected non-urgent scheduling progression is held for its human owner/update while urgent referral continues; no no-access count, refusal, blanket withdrawal or sibling measure change is inferred.",
+      "prdRequirement": "FR-064",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2088,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-055"
+      ],
+      "brdCriteria": [
+        "AC-108",
+        "AC-109"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-055",
+            "definitionLines": [
+              1663,
+              2363
+            ]
+          },
+          {
+            "id": "AC-108",
+            "definitionLines": [
+              1663
+            ]
+          },
+          {
+            "id": "AC-109",
+            "definitionLines": [
+              1663
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C3",
+        "C5"
+      ],
+      "designObligation": "Scoped response, capacity/human confirmation, no inferred consent/no-access; urgent route independent",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1782,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-064",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-116",
+          "PRD-2026-AMA48-001::AC-117"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-055",
+          "BRD-2026-AMA48-001::FR-046"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-108",
+          "BRD-2026-AMA48-001::AC-109",
+          "BRD-2026-AMA48-001::AC-088"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-118",
+      "verbatimCriterion": "Given one portal event and separately captured phone/email/visit reports for the same case, when staff inspect history, then source/channel, occurred/recorded times, actor/reporter, protected original link, purpose, delivery/receipt/review state, next-action owner and unknowns reconcile; assisted/manual capture is labelled and the portal event is not retyped.",
+      "prdRequirement": "FR-065",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2089,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-056"
+      ],
+      "brdCriteria": [
+        "AC-110",
+        "AC-111"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-056",
+            "definitionLines": [
+              1664,
+              2364
+            ]
+          },
+          {
+            "id": "AC-110",
+            "definitionLines": [
+              1664
+            ]
+          },
+          {
+            "id": "AC-111",
+            "definitionLines": [
+              1664
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C3",
+        "C8"
+      ],
+      "designObligation": "Shared source provenance, stable replay identity, manual capture and restricted ambiguity",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1783,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-065",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-118",
+          "PRD-2026-AMA48-001::AC-119"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-056"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-110",
+          "BRD-2026-AMA48-001::AC-111"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-010",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-119",
+      "verbatimCriterion": "Given a replayed source event and an ambiguous household match, when intake/restart runs, then replay links to the original without duplicate effects and ambiguity enters an owned exception without cross-household disclosure; original provenance is retained.",
+      "prdRequirement": "FR-065",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2090,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-056"
+      ],
+      "brdCriteria": [
+        "AC-110",
+        "AC-111"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-056",
+            "definitionLines": [
+              1664,
+              2364
+            ]
+          },
+          {
+            "id": "AC-110",
+            "definitionLines": [
+              1664
+            ]
+          },
+          {
+            "id": "AC-111",
+            "definitionLines": [
+              1664
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C3",
+        "C8"
+      ],
+      "designObligation": "Shared source provenance, stable replay identity, manual capture and restricted ambiguity",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1784,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-065",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-118",
+          "PRD-2026-AMA48-001::AC-119"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-056"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-110",
+          "BRD-2026-AMA48-001::AC-111"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-010",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-120",
+      "verbatimCriterion": "Given pending documents, failed contact and unaccepted/unowned/overdue handoffs, when staff open the queue, then reason, urgency, case, due/next-update time, accountable reviewer or escalation/chase owner are visible; delivery alone cannot close a handoff and receiver acceptance is separately evidenced.",
+      "prdRequirement": "FR-066",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2091,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-057"
+      ],
+      "brdCriteria": [
+        "AC-112"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-057",
+            "definitionLines": [
+              1665,
+              2365
+            ]
+          },
+          {
+            "id": "AC-112",
+            "definitionLines": [
+              1665
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C3",
+        "C8"
+      ],
+      "designObligation": "Owned exception/chase and next update; receiver acceptance separate from delivery",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1785,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-066",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-120"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-057"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-112"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-010",
+          "BRD-2026-AMA48-001::BG-011"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-121",
+      "verbatimCriterion": "Given current authorised case facts and approved process sources, when the resident task proposes an answer, then each material assertion cites fact/source version and as-of time, AI involvement is disclosed, and the answer remains held for human review unless AC-129's complete policy passes.",
+      "prdRequirement": "FR-067",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2092,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-058"
+      ],
+      "brdCriteria": [
+        "AC-113",
+        "AC-114"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-058",
+            "definitionLines": [
+              1666,
+              2366
+            ]
+          },
+          {
+            "id": "AC-113",
+            "definitionLines": [
+              1666
+            ]
+          },
+          {
+            "id": "AC-114",
+            "definitionLines": [
+              1666
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C6",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "Distinct registered/evaluated bounded task, authorised current sources, disclosure, abstention and deterministic help",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1786,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-067",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-121",
+          "PRD-2026-AMA48-001::AC-122",
+          "PRD-2026-AMA48-001::AC-123"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-058",
+          "BRD-2026-AMA48-001::FR-003",
+          "BRD-2026-AMA48-001::RULE-003"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-113",
+          "BRD-2026-AMA48-001::AC-114"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-003",
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-122",
+      "verbatimCriterion": "Given missing, conflicting, stale or unauthorised evidence and a model timeout, when a question is asked, then the service abstains from unsupported assertions, shows unknown/failure, creates an owned handoff with next-update state and keeps human help visible.",
+      "prdRequirement": "FR-067",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2093,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-058"
+      ],
+      "brdCriteria": [
+        "AC-113",
+        "AC-114"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-058",
+            "definitionLines": [
+              1666,
+              2366
+            ]
+          },
+          {
+            "id": "AC-113",
+            "definitionLines": [
+              1666
+            ]
+          },
+          {
+            "id": "AC-114",
+            "definitionLines": [
+              1666
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C6",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "Distinct registered/evaluated bounded task, authorised current sources, disclosure, abstention and deterministic help",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1787,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-067",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-121",
+          "PRD-2026-AMA48-001::AC-122",
+          "PRD-2026-AMA48-001::AC-123"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-058",
+          "BRD-2026-AMA48-001::FR-003",
+          "BRD-2026-AMA48-001::RULE-003"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-113",
+          "BRD-2026-AMA48-001::AC-114"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-003",
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-123",
+      "verbatimCriterion": "Given prompt/document injection, safety/distress, legal/consent/contract/cost questions or a request for a person, when processed, then instructions cannot expand authority, controlled advice/decisions are withheld for human review, and deterministic urgent/help referral remains visible and recorded independently of model success; no hazard classification, suppressed referral or clock change occurs.",
+      "prdRequirement": "FR-067",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2094,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-058"
+      ],
+      "brdCriteria": [
+        "AC-113",
+        "AC-114"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-058",
+            "definitionLines": [
+              1666,
+              2366
+            ]
+          },
+          {
+            "id": "AC-113",
+            "definitionLines": [
+              1666
+            ]
+          },
+          {
+            "id": "AC-114",
+            "definitionLines": [
+              1666
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C6",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "Distinct registered/evaluated bounded task, authorised current sources, disclosure, abstention and deterministic help",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1788,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-067",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-121",
+          "PRD-2026-AMA48-001::AC-122",
+          "PRD-2026-AMA48-001::AC-123"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-058",
+          "BRD-2026-AMA48-001::FR-003",
+          "BRD-2026-AMA48-001::RULE-003"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-113",
+          "BRD-2026-AMA48-001::AC-114"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-003",
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-124",
+      "verbatimCriterion": "Given a help request or changed safe contact/language/accessibility preference, when recorded digitally or with assistance, then it has a reference, owner and next-update time; uncertain/new contact is verified or communication pauses for clarification rather than using an unsafe route.",
+      "prdRequirement": "FR-068",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2095,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-059"
+      ],
+      "brdCriteria": [
+        "AC-115",
+        "AC-125"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-059",
+            "definitionLines": [
+              1667,
+              2367
+            ]
+          },
+          {
+            "id": "AC-115",
+            "definitionLines": [
+              1667
+            ]
+          },
+          {
+            "id": "AC-125",
+            "definitionLines": [
+              1673
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C5",
+        "C8"
+      ],
+      "designObligation": "Verified safe contact or clarification, human routes and optionality without detriment",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1789,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-068",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-124",
+          "PRD-2026-AMA48-001::AC-125"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-059",
+          "BRD-2026-AMA48-001::RULE-027"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-115",
+          "BRD-2026-AMA48-001::AC-125"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-010"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-125",
+      "verbatimCriterion": "Given no account/device, declined portal use, a complaint or a request for human review, when phone/email/letter/visit/assisted service is used, then the same controlled case route remains available without digital completion, detriment or loss of priority; help is not hidden behind model success.",
+      "prdRequirement": "FR-068",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2096,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-059"
+      ],
+      "brdCriteria": [
+        "AC-115",
+        "AC-125"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-059",
+            "definitionLines": [
+              1667,
+              2367
+            ]
+          },
+          {
+            "id": "AC-115",
+            "definitionLines": [
+              1667
+            ]
+          },
+          {
+            "id": "AC-125",
+            "definitionLines": [
+              1673
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C5",
+        "C8"
+      ],
+      "designObligation": "Verified safe contact or clarification, human routes and optionality without detriment",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1790,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-068",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-124",
+          "PRD-2026-AMA48-001::AC-125"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-059",
+          "BRD-2026-AMA48-001::RULE-027"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-115",
+          "BRD-2026-AMA48-001::AC-125"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-010"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-126",
+      "verbatimCriterion": "Given several occupants/homes, interpreter-only, expired, disputed and revoked representative grants, when any view/list/search/file/export/upload/turn or dispatch is requested, then current task/case/field scope is enforced and revocation denies the next request, even in an existing session.",
+      "prdRequirement": "FR-069",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2097,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-060"
+      ],
+      "brdCriteria": [
+        "AC-116",
+        "AC-117"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-060",
+            "definitionLines": [
+              1668,
+              2368
+            ]
+          },
+          {
+            "id": "AC-116",
+            "definitionLines": [
+              1668
+            ]
+          },
+          {
+            "id": "AC-117",
+            "definitionLines": [
+              1668
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C2",
+        "C5"
+      ],
+      "designObligation": "Person and scoped grants separate; expiry/revocation/recovery/shared-device and representative checks",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1791,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-069",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-126",
+          "PRD-2026-AMA48-001::AC-127",
+          "PRD-2026-AMA48-001::AC-128"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-060",
+          "BRD-2026-AMA48-001::FR-045"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-116",
+          "BRD-2026-AMA48-001::AC-117"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-010"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-127",
+      "verbatimCriterion": "Given enrolment, lost access and household change, when supported managed identity/recovery is exercised, then case rights are separately verified by the authorised process; login, shared address/relationship, upload and slot response confer no works/data consent or broader representative authority; grant/revoke reason, actor and time are auditable.",
+      "prdRequirement": "FR-069",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2098,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-060"
+      ],
+      "brdCriteria": [
+        "AC-116",
+        "AC-117"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-060",
+            "definitionLines": [
+              1668,
+              2368
+            ]
+          },
+          {
+            "id": "AC-116",
+            "definitionLines": [
+              1668
+            ]
+          },
+          {
+            "id": "AC-117",
+            "definitionLines": [
+              1668
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C2",
+        "C5"
+      ],
+      "designObligation": "Person and scoped grants separate; expiry/revocation/recovery/shared-device and representative checks",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1792,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-069",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-126",
+          "PRD-2026-AMA48-001::AC-127",
+          "PRD-2026-AMA48-001::AC-128"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-060",
+          "BRD-2026-AMA48-001::FR-045"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-116",
+          "BRD-2026-AMA48-001::AC-117"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-010"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-128",
+      "verbatimCriterion": "Given a shared device and a recovery request, when logout/session expiry or assisted recovery occurs, then prior case content cannot be reused by another user, account enumeration and unsafe recovery are prevented, and no raw password/token or emailed password is recorded or sent; managed identity options remain ADR decisions.",
+      "prdRequirement": "FR-069",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2099,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-060"
+      ],
+      "brdCriteria": [
+        "AC-116",
+        "AC-117"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-060",
+            "definitionLines": [
+              1668,
+              2368
+            ]
+          },
+          {
+            "id": "AC-116",
+            "definitionLines": [
+              1668
+            ]
+          },
+          {
+            "id": "AC-117",
+            "definitionLines": [
+              1668
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C2",
+        "C5"
+      ],
+      "designObligation": "Person and scoped grants separate; expiry/revocation/recovery/shared-device and representative checks",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1793,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-069",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-002",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-126",
+          "PRD-2026-AMA48-001::AC-127",
+          "PRD-2026-AMA48-001::AC-128"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-060",
+          "BRD-2026-AMA48-001::FR-045"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-116",
+          "BRD-2026-AMA48-001::AC-117"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-010"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-129",
+      "verbatimCriterion": "Given absent, expired, mismatched or explicitly disabled routine authority, when a resident message would be displayed/sent, then named per-message human review is mandatory and no autonomous dispatch occurs. A labelled simulated-outbox positive test requires the reconciled BRD FR-044/AC-084, separately approved OD-53/RULE-028 exercise policy, named approver/version/expiry, task/channel/audience/content limits, matching evaluation/release, current safe contact/access/evidence, finite limits and disable/recovery evidence; none grants live send. The owner-selected proposal is not that separate activation approval.",
+      "prdRequirement": "FR-070",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2100,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-061"
+      ],
+      "brdCriteria": [
+        "AC-118",
+        "AC-119",
+        "AC-126",
+        "AC-084"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-061",
+            "definitionLines": [
+              1669,
+              2369
+            ]
+          },
+          {
+            "id": "AC-118",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-119",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-126",
+            "definitionLines": [
+              1674
+            ]
+          },
+          {
+            "id": "AC-084",
+            "definitionLines": [
+              1574
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C6",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "OFF/default human review, exact routine policy/version gates, always-human excluded categories and truthful disposition",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1794,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-070",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-129",
+          "PRD-2026-AMA48-001::AC-130",
+          "PRD-2026-AMA48-001::AC-131"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-061",
+          "BRD-2026-AMA48-001::RULE-028",
+          "BRD-2026-AMA48-001::FR-044"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-118",
+          "BRD-2026-AMA48-001::AC-119",
+          "BRD-2026-AMA48-001::AC-126",
+          "BRD-2026-AMA48-001::AC-084"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-003",
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-010",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-130",
+      "verbatimCriterion": "Given a tested routine policy and changed/revoked access, unsafe contact, stale evidence, uncertain/sensitive/consequential/safety/consent/contractual/financial content, limit exhaustion, failure or unmatched action, when dispatch is attempted, then it stops or routes to named human review with an owned exception; no consent, legal, contract, cost, safety or confirmed-booking decision is automated.",
+      "prdRequirement": "FR-070",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2101,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-061"
+      ],
+      "brdCriteria": [
+        "AC-118",
+        "AC-119",
+        "AC-126",
+        "AC-084"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-061",
+            "definitionLines": [
+              1669,
+              2369
+            ]
+          },
+          {
+            "id": "AC-118",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-119",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-126",
+            "definitionLines": [
+              1674
+            ]
+          },
+          {
+            "id": "AC-084",
+            "definitionLines": [
+              1574
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C6",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "OFF/default human review, exact routine policy/version gates, always-human excluded categories and truthful disposition",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1795,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-070",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-129",
+          "PRD-2026-AMA48-001::AC-130",
+          "PRD-2026-AMA48-001::AC-131"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-061",
+          "BRD-2026-AMA48-001::RULE-028",
+          "BRD-2026-AMA48-001::FR-044"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-118",
+          "BRD-2026-AMA48-001::AC-119",
+          "BRD-2026-AMA48-001::AC-126",
+          "BRD-2026-AMA48-001::AC-084"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-003",
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-010",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-131",
+      "verbatimCriterion": "Given simulated routine dispatch and a disable/incident test, when audited, then policy approver/version, actor/action, evidence, time and delivery outcome are reconstructable without invented per-message review; the kill switch denies the next dispatch, retains manual/case/urgent routes and restart needs distinct authorised review; staff chat and regulatory assistant still cannot send.",
+      "prdRequirement": "FR-070",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2102,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-061"
+      ],
+      "brdCriteria": [
+        "AC-118",
+        "AC-119",
+        "AC-126",
+        "AC-084"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-061",
+            "definitionLines": [
+              1669,
+              2369
+            ]
+          },
+          {
+            "id": "AC-118",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-119",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-126",
+            "definitionLines": [
+              1674
+            ]
+          },
+          {
+            "id": "AC-084",
+            "definitionLines": [
+              1574
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C2",
+        "C6",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "OFF/default human review, exact routine policy/version gates, always-human excluded categories and truthful disposition",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1796,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-070",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-129",
+          "PRD-2026-AMA48-001::AC-130",
+          "PRD-2026-AMA48-001::AC-131"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-061",
+          "BRD-2026-AMA48-001::RULE-028",
+          "BRD-2026-AMA48-001::FR-044"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-118",
+          "BRD-2026-AMA48-001::AC-119",
+          "BRD-2026-AMA48-001::AC-126",
+          "BRD-2026-AMA48-001::AC-084"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-003",
+          "BRD-2026-AMA48-001::BG-005",
+          "BRD-2026-AMA48-001::BG-010",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-132",
+      "verbatimCriterion": "Given a resident comparison plan, when frozen, then it declares routine handling episodes, case/task denominators, open/completed and digital/non-digital cohorts, window, attribution, repeats, review/correction/transcription/reconciliation/support/recovery and resident effort; linked call/follow-up work is not double counted, and initial/new-intake onboarding cohorts are disjoint.",
+      "prdRequirement": "FR-071",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2103,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-062"
+      ],
+      "brdCriteria": [
+        "AC-123",
+        "AC-124"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-062",
+            "definitionLines": [
+              1670,
+              2370
+            ]
+          },
+          {
+            "id": "AC-123",
+            "definitionLines": [
+              1670
+            ]
+          },
+          {
+            "id": "AC-124",
+            "definitionLines": [
+              1670
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C9"
+      ],
+      "designObligation": "Frozen disjoint denominators/cohorts, portal-only comparison, all incremental effort and adverse outcomes",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1797,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-071",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-132",
+          "PRD-2026-AMA48-001::AC-133"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-062"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-123",
+          "BRD-2026-AMA48-001::AC-124"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-133",
+      "verbatimCriterion": "Given paired portal/workflow-only and agent-assisted results, when reported, then task success, guardrails, effort, failed access, handoff response, uncertainty and adverse/non-digital outcomes are separate; author-judgement BRD sensitivities remain labelled, missing evidence is unknown and no monetary ROI, headcount cash or achieved capacity saving is inferred.",
+      "prdRequirement": "FR-071",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2104,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-062"
+      ],
+      "brdCriteria": [
+        "AC-123",
+        "AC-124"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "FR-062",
+            "definitionLines": [
+              1670,
+              2370
+            ]
+          },
+          {
+            "id": "AC-123",
+            "definitionLines": [
+              1670
+            ]
+          },
+          {
+            "id": "AC-124",
+            "definitionLines": [
+              1670
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C9"
+      ],
+      "designObligation": "Frozen disjoint denominators/cohorts, portal-only comparison, all incremental effort and adverse outcomes",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1798,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "prd_requirement": "PRD-2026-AMA48-001::FR-071",
+        "prd_goals": [
+          "PRD-2026-AMA48-001::GOAL-004",
+          "PRD-2026-AMA48-001::GOAL-005"
+        ],
+        "prd_acceptance_criteria": [
+          "PRD-2026-AMA48-001::AC-132",
+          "PRD-2026-AMA48-001::AC-133"
+        ],
+        "brd_sources": [
+          "BRD-2026-AMA48-001::FR-062"
+        ],
+        "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+        "mapping_basis": "Retained #441 resident mapping",
+        "implementation_acceptance": "NOT_ASSERTED",
+        "brd_acceptance_criteria": [
+          "BRD-2026-AMA48-001::AC-123",
+          "BRD-2026-AMA48-001::AC-124"
+        ],
+        "brd_business_goals": [
+          "BRD-2026-AMA48-001::BG-009",
+          "BRD-2026-AMA48-001::BG-011",
+          "BRD-2026-AMA48-001::BG-012"
+        ]
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-134",
+      "verbatimCriterion": "Given all six resident scripts, when tested at the NFR-018 widths/zoom with keyboard and screen reader, then focus, reflow, labels, status/error announcements, upload retry, appointment response, AI disclosure and human help are operable; results/exceptions and browser/tool versions are recorded, with failures blocking affected tasks and no conformance claim.",
+      "prdRequirement": "NFR-018",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2105,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "NFR-013"
+      ],
+      "brdCriteria": [
+        "AC-120"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "NFR-013",
+            "definitionLines": [
+              1671
+            ]
+          },
+          {
+            "id": "AC-120",
+            "definitionLines": [
+              1671
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C4",
+        "C5",
+        "C6",
+        "C8"
+      ],
+      "designObligation": "Six tasks at 320/390/1280 CSS px, 200% text zoom, keyboard/screen reader; blocked task fails, no conformance claim",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1799,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-135",
+      "verbatimCriterion": "Given manipulated identifiers/links, file tricks, prompt injection and revoked grants, when access and scanning tests run, then unauthorised content/metadata is denied, unvalidated files cannot be read/retrieved by a model, and document instructions confer no authority; diagnostic captures contain no credentials, raw file/prompt/contact content or sensitive case identifiers.",
+      "prdRequirement": "NFR-019",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2106,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "NFR-014"
+      ],
+      "brdCriteria": [
+        "AC-121",
+        "AC-122"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "NFR-014",
+            "definitionLines": [
+              1672
+            ]
+          },
+          {
+            "id": "AC-121",
+            "definitionLines": [
+              1672
+            ]
+          },
+          {
+            "id": "AC-122",
+            "definitionLines": [
+              1672
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C2",
+        "C4",
+        "C6",
+        "C9"
+      ],
+      "designObligation": "Adversarial denial and quarantine, safe diagnostics and distinct rights/retention/purpose classes",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1800,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-136",
+      "verbatimCriterion": "Given the synthetic fixture and a proposed rights/retention request, when reviewed, then files, source events/audit and minimal conversation records have separate purpose/owner/retention/rights handling, deletion/restriction and protected history are not conflated, real identifiers are absent and missing live privacy decisions stay blocked under OQ-030.",
+      "prdRequirement": "NFR-019",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2107,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "NFR-014"
+      ],
+      "brdCriteria": [
+        "AC-121",
+        "AC-122"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "NFR-014",
+            "definitionLines": [
+              1672
+            ]
+          },
+          {
+            "id": "AC-121",
+            "definitionLines": [
+              1672
+            ]
+          },
+          {
+            "id": "AC-122",
+            "definitionLines": [
+              1672
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C2",
+        "C4",
+        "C6",
+        "C9"
+      ],
+      "designObligation": "Adversarial denial and quarantine, safe diagnostics and distinct rights/retention/purpose classes",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1801,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-137",
+      "verbatimCriterion": "Given model, identity, scanner and API failures plus a restart after lost acknowledgement, when a resident action is retried, then fail-closed access and accurate outstanding/pending states persist, no unreceived action is labelled received, no duplicate case effects occur and assisted/urgent routes remain visible.",
+      "prdRequirement": "NFR-020",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2108,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "NFR-014"
+      ],
+      "brdCriteria": [
+        "AC-111",
+        "AC-112",
+        "AC-119",
+        "AC-122"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "NFR-014",
+            "definitionLines": [
+              1672
+            ]
+          },
+          {
+            "id": "AC-111",
+            "definitionLines": [
+              1664
+            ]
+          },
+          {
+            "id": "AC-112",
+            "definitionLines": [
+              1665
+            ]
+          },
+          {
+            "id": "AC-119",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-122",
+            "definitionLines": [
+              1672
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C3",
+        "C4",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "Failure/lost-ack/restart accuracy, fail-closed access, no duplicates, accepted manual handoff",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1802,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-138",
+      "verbatimCriterion": "Given a stopped resident task and manual queue recovery, when staff reconcile the case and accept its handoff, then original/duplicate provenance, accepted receiver and next update are reconstructable; disabling automation does not expose protected reads or close outstanding work.",
+      "prdRequirement": "NFR-020",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2109,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "NFR-014"
+      ],
+      "brdCriteria": [
+        "AC-111",
+        "AC-112",
+        "AC-119",
+        "AC-122"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "NFR-014",
+            "definitionLines": [
+              1672
+            ]
+          },
+          {
+            "id": "AC-111",
+            "definitionLines": [
+              1664
+            ]
+          },
+          {
+            "id": "AC-112",
+            "definitionLines": [
+              1665
+            ]
+          },
+          {
+            "id": "AC-119",
+            "definitionLines": [
+              1669
+            ]
+          },
+          {
+            "id": "AC-122",
+            "definitionLines": [
+              1672
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C1",
+        "C3",
+        "C4",
+        "C7",
+        "C8"
+      ],
+      "designObligation": "Failure/lost-ack/restart accuracy, fail-closed access, no duplicates, accepted manual handoff",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1803,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-139",
+      "verbatimCriterion": "Given NFR-021's retained dataset, five-session scope and 30-minute run, when measured later, then API p95, all error/timeouts, scan/model/sign-in durations and fixture/configuration versions are reported separately; a missed/unrun target is fail/not run, not a production-scale or 60,000-user claim.",
+      "prdRequirement": "NFR-021",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2110,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "OD-55"
+      ],
+      "brdCriteria": [],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": [
+          {
+            "id": "OD-55",
+            "definitionLines": [
+              2139
+            ]
+          }
+        ]
+      },
+      "contracts": [
+        "C9"
+      ],
+      "designObligation": "Five fictional sessions, 30 minutes, ordinary API p95 <=2s; sign-in/scan/model separate; not measured",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1804,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    },
+    {
+      "prdCriterion": "AC-140",
+      "verbatimCriterion": "Given a proposed resident-slice acceptance, when its manifest is reviewed, then all six GOAL-005 scripts and AC-111 to AC-139 have expected endpoints and separate observed/not-run status, including negative and assisted paths; essential privacy/accessibility checks cannot be deferred, and real Azure/SQL/registered AI evidence is still required for a later accepted application build under CON-009/AC-057.",
+      "prdRequirement": "GOAL-005",
+      "canonicalStatus": "Not run",
+      "prdSource": {
+        "path": "../prd/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 2111,
+        "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+      },
+      "brdRequirements": [
+        "FR-053–FR-062"
+      ],
+      "brdCriteria": [
+        "AC-104–AC-126"
+      ],
+      "brdSource": {
+        "path": "../source/docs/brds/agentic-retrofit-programme-brd.md",
+        "sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+        "references": []
+      },
+      "contracts": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "C7",
+        "C8",
+        "C9"
+      ],
+      "designObligation": "All six scripts and individual criteria with expected/observed status; later real Azure/SQL/AI build evidence remains required",
+      "execution": "Not run",
+      "mappingAuthority": "Pinned canonical upstream trace plus explicit cross-cutting parent controls; no signed approval",
+      "baselinePrdSource": {
+        "path": "../source/docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "line": 1805,
+        "sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9"
+      },
+      "comparisonDisposition": "UNCHANGED exact criterion text, parent and Not-run status",
+      "completedPrdFrTrace": {
+        "source": "Completed PRD resident upstream trace; no FR-row for NFR/GOAL parents"
+      },
+      "traceSupplementDisposition": "Original BRD parents remain design obligations; completed qualified trace adds explicit cross-cutting BRD parents where present; no contradiction or acceptance inferred"
+    }
+  ],
+  "crossCuttingControls": [
+    {
+      "BRD": [
+        "FR-044",
+        "AC-084",
+        "RULE-018",
+        "RULE-020",
+        "RULE-022",
+        "RULE-025",
+        "RULE-027",
+        "RULE-028",
+        "FR-045",
+        "FR-046",
+        "RULE-007",
+        "FR-036"
+      ],
+      "note": "Reconciled prospective routine wording; all live approvals and task registration remain gated. Staff/regulatory authorities unchanged."
+    }
+  ],
+  "openDecisionMap": [
+    {
+      "BRD": "OD-52",
+      "PRD": "OQ-028"
+    },
+    {
+      "BRD": "OD-53",
+      "PRD": "OQ-029"
+    },
+    {
+      "BRD": "OD-54",
+      "PRD": "OQ-030"
+    },
+    {
+      "BRD": "OD-55",
+      "PRD": "OQ-031"
+    }
+  ],
+  "completedPrdReadAndCompared": true,
+  "candidatePrdSha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+  "priorMapSha256": "21176fdf9c060dffed42908948266e3b1b98df02eb3b1e4162069a4fb371b395",
+  "currentPrdQuality": {
+    "overall": "FAIL",
+    "validate": "BLOCKED",
+    "finalize": "NOT_EVALUATED",
+    "singular": 1,
+    "minimum": 2,
+    "reviewSummarySha256": "20853b85a852d7df3b8c87ce66fb3c925c40f24b9668d96880d0987d3989e99b",
+    "notAcceptedHandoff": true
+  },
+  "nfrPrecedence": "OPEN pr442-qual-041; no silent generic/resident response or file-size override"
+}
