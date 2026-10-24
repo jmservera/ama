@@ -4,7 +4,7 @@
 
 ## Inputs
 
-* Storytelling review: `research/subagents/storytelling-review.md` (Presentation Communications Strategist).
+* Storytelling review: `research/subagents/storytelling-review.md` (AMA Presentation Communications Strategist).
 * Owner decision on 2026-09-26: tell the turning point as its real origin. The control plane hypothesis appears in the 11 Sep addendum (commit dc6561a). The 26 Sep role challenge tested it for each agent. The priming caveat is stated on the slide.
 
 ## Changes Applied (all 8 prioritised recommendations)

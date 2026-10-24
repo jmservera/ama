@@ -71,7 +71,7 @@
       "title": "Thought leadership artifact and dissemination evidence",
       "status": "active",
       "extractor": "text",
-      "include": ["docs/capstone/thought-leadership/**/*.md", "docs/capstone/thought-leadership/**/*.txt", "docs/capstone/thought-leadership/**/*.vtt"],
+      "include": ["docs/capstone/thought-leadership/**/*.md", "docs/capstone/thought-leadership/**/*.txt", "docs/capstone/thought-leadership/**/*.vtt", "docs/capstone/thought-leadership/**/*.tex"],
       "exclude": [],
       "criteria": ["D1", "D2", "D3"]
     }

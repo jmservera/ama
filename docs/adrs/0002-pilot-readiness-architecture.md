@@ -334,7 +334,7 @@ proposal controls and bounded operator calls do not prove these new gates.
 
 The [failed assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
 is retained alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
-and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+and [baseline RAI report](../reference/research/reports/2026-10-14/rai-report-ama-20261014.md).
 Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
 source verification and manual routes reduced nine original severity claims.
 The owner accepted the bounded baseline report for remediation planning on

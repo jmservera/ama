@@ -2,7 +2,7 @@
 title: Capstone Deliverables and Storage Map
 description: Where every capstone asset must be stored so the rubric gate can find and score it, and what scores 0 until it exists
 author: AMA programme
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -29,11 +29,37 @@ the [Capstone Assessment Guide](../reference/method/ama-capstone-assessment-guid
 Recordings (video or audio) are not read by the scorer. Commit the transcript
 or written notes next to the recording and link the recording from them.
 
-The [Zava Forward council proposal](./deck/zava-forward-executive-draft.pptx)
-is the executive capstone artifact. The owner retired its duplicate in
-`docs/presentations/` on 2026-10-11; that folder still holds the separate
-mentor presentation. The filename retains its draft status: production
-approval, measured benefits and live pitch evidence remain separate gates.
+The owner selected the [Cowork v2 presentation](./deck/cowork-generated/README.md)
+as the capstone scoring candidate on 2026-10-23. Its original v2 PDF, contact
+sheet and both build handoffs are retained there. V1 exports, preview ZIPs
+and the original protected binary are described in those handoffs but are
+not retained in this checkout. The selected scoring path is
+`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`; an approved unencrypted
+v2 export is now supplied at that path. The scorer's actual extractor reads
+54 slides and 54 speaker-note blocks, including the final slide-39 wording
+recorded by Cowork. The earlier protected source is retained as history.
+The registry does not fall back to the old deck or treat PDF slides as notes.
+
+The [IoT and optional-resident-portal refinement](./deck/cowork-generated/refinement-2026-10-23/README.md)
+updates the same 54-slide v2 PPTX and provides a
+[new native PowerPoint PDF](./deck/zava-forward-cowork-v2-draft.pdf).
+IoT is visible on the main architecture build; resident self-service is an
+optional benefit assessment in issue #441, not a delivered channel or saving.
+Assisted routes and human review remain explicit. Five changed slides were
+natively rendered and visually checked; rehearsal, human and live acceptance
+remain separate. The corrected registry selects the exact current v2 PPTX
+with a 20 MB allowance; the historical draft and its previews are not scored.
+
+The [2026-10-24 PR review corrections](./deck/cowork-generated/review-corrections-2026-10-24.md)
+qualify current deployment status, remove unsupported inference prices,
+preserve authored diagrams during notes rebuilds, and distinguish caller
+returns from fixed appendix topic links. The imported handoff remains history.
+
+The earlier [Zava Forward council proposal](./deck/draft/zava-forward-executive-draft.pptx)
+is retained as historical evidence, not the scoring candidate. The owner retired its
+duplicate in `docs/presentations/` on 2026-10-11; that folder still holds the
+separate mentor presentation. All decks remain drafts: production approval,
+measured benefits and live pitch evidence are separate gates.
 
 The deck was detected in PR #61, but the scorer's `:slideN` references did not
 match the deterministic gate's text-only anchor parser. This discarded its
@@ -54,6 +80,39 @@ The proposal's synthetic workload and illustrative net staff-hours are not
 observed benefits, production capacity, cash/headcount or a delivery date.
 Full registration, OD-52-55, live privacy/service/authority and application
 acceptance remain unmet; no rubric score is manually changed.
+## Main Presentation Cowork Handoff (2026-10-23)
+
+The [complete Cowork authoring package](./pitch/cowork-main-presentation/README.md)
+provides the owner-requested top-down 30-minute presentation plus a separate
+10-minute demo. Give Cowork the entire folder and start with its
+[authoring brief](./pitch/cowork-main-presentation/COWORK-BRIEF.md).
+It includes 18 main slides, 27 CXO backups, full speaker notes, interruption
+routes, a preflight-gated demo, seven progressive slide-sized Excalidraw
+diagrams with official Azure icons, Tokenomics and cost evidence, and the
+HVE/design-thinking/prototype-to-backlog delivery story.
+
+The original "around 180" is an approximate issue count, including epics and
+stories, not agents or stories alone. A read-only AMA Plan project snapshot
+retrieved on 2026-10-23 has 189 items across epics, features, stories and other
+issues. Its included board image is an explicitly labelled API-derived
+visual, not a screenshot of GitHub's website or accepted delivery.
+
+This route supersedes the old 15-minute limit only for the new authoring
+job. It incorporates merged Tokenomics PR #433, separates the owner-set
+October USD 700 ceiling from blocked execution gates, and labels unmeasured
+benefits and outstanding human acceptance.
+
+Cowork subsequently generated a v1 presentation and a revised v2 story.
+The [imported output index](./deck/cowork-generated/README.md) distinguishes
+the original 54-page v2 PDF and handoff from historical v1 exports and the
+original 18-slide authoring contract. The owner selected v2 for scoring and
+confirmed repository clearance, but its saved PPTX is protected and its
+reported OneDrive save failure is retained as historical evidence. A later
+owner-supplied public v2 export is now installed at the selected scoring path;
+local extraction verifies all 54 slides/notes and the final-save marker.
+Full source/notes parity, review, native-viewer checks and publication gates
+remain outstanding; no fresh rubric score or rehearsal is claimed. Keep the
+eventual validated executive delivery under `docs/capstone/deck/`.
 
 ## Tokenomics Pitch Preparation (2026-10-22)
 
@@ -84,7 +143,7 @@ or slide 13's business-process map.
 ### Architecture and UX Refresh (2026-10-14)
 
 The owner-requested UX Designer and PowerPoint agents informed the current
-[24-slide council proposal](./deck/zava-forward-executive-draft.pptx).
+[24-slide council proposal](./deck/draft/zava-forward-executive-draft.pptx).
 It retains the 18-slide main route and adds only two optional appendices.
 The architecture is adapted into native PowerPoint boxes, text and
 connectors, with individual official Azure service icons, rather than
@@ -92,10 +151,10 @@ shrinking the detailed diagram into a slide-sized picture.
 
 | Slide | Audience and purpose | Rendered preview |
 | --- | --- | --- |
-| 10 | Executive: one workbench, controlled evidence, bounded AI and human authority | [Executive architecture](./deck/architecture-executive-native.png) |
-| 19 | Technical: current runtime, identity, SQL/Blob/model contracts and separate proposal review | [Runtime interactions](./deck/architecture-runtime-native.png) |
-| 23 | Technical: token renewal, deployment, operations, network context and failure domains | [Operations and identity](./deck/architecture-operations-native.png) |
-| 24 | Technical: deferred workers/import, conditional M365, intended edge and unimplemented anchoring | [Deferred topology](./deck/architecture-deferred-native.png) |
+| 10 | Executive: one workbench, controlled evidence, bounded AI and human authority | [Executive architecture](./deck/draft/architecture-executive-native.png) |
+| 19 | Technical: current runtime, identity, SQL/Blob/model contracts and separate proposal review | [Runtime interactions](./deck/draft/architecture-runtime-native.png) |
+| 23 | Technical: token renewal, deployment, operations, network context and failure domains | [Operations and identity](./deck/draft/architecture-operations-native.png) |
+| 24 | Technical: deferred workers/import, conditional M365, intended edge and unimplemented anchoring | [Deferred topology](./deck/draft/architecture-deferred-native.png) |
 
 The UX review made alternatives explicit on the main route, separated
 recorded technical evidence from acceptance still outstanding, and clarified
@@ -138,7 +197,7 @@ acceptance.
 
 ### Native PowerPoint Rebuild (2026-10-14)
 
-The earlier Presentation Communications Strategist and PowerPoint Builder
+The earlier AMA Presentation Communications Strategist and PowerPoint Builder
 refresh produced a 22-slide baseline. The current 24-slide delivery is
 described above; the following records the earlier native-map implementation,
 not fresh counts for the new deck.
@@ -179,10 +238,10 @@ At that publication, the 22-slide PPTX matched the checked working copy. The
 do not use them or the superseded 22-slide build as the current full-deck
 source. Use the architecture/UX refresh handover above.
 
-![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/agents-in-retrofit-process-native.png)
+![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/draft/agents-in-retrofit-process-native.png)
 
-The standalone [vector process map](./deck/agents-in-retrofit-process.svg)
-and [original PNG](./deck/agents-in-retrofit-process.png) remain reference
+The standalone [vector process map](./deck/draft/agents-in-retrofit-process.svg)
+and [original PNG](./deck/draft/agents-in-retrofit-process.png) remain reference
 illustrations of the proposed design, not the current editable slide or five
 autonomous managers. The workflow owns progression and accountable people retain
 policy, resident choice, technical acceptance, work release, grant submission,

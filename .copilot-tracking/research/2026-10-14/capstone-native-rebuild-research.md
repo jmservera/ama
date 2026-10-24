@@ -31,7 +31,7 @@ no cloud operation, new external research or new paid inference is needed.
 * .copilot-tracking/ppt/2026-10-13/zava-forward-agent-process/: historical
   partial-build content embeds a PNG on slide13; native rebuilding is needed.
 * .github/agents/ama-presentation-communications-strategist.agent.md:
-  available runtime name Presentation Communications Strategist.
+  available runtime name AMA Presentation Communications Strategist.
   Available PowerPoint execution agent: hve-core-all:pptx-subagent, dispatched
   as powerpoint-builder with the requested native drawing objective.
 

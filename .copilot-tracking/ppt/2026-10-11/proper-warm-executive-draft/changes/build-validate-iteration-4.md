@@ -140,7 +140,7 @@ open. Independent final narrative review is the parent's next task.
 
 ## Independent review and publication follow-through
 
-The independent Presentation Communications Strategist review in
+The independent AMA Presentation Communications Strategist review in
 `research/subagents/storytelling-review-iteration-5.md` passed the narrative
 and all 21 rendered slides without blockers. Applied its three precise
 editorial findings: restored "application" in the original funding ask,

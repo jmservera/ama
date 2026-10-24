@@ -1,0 +1,2637 @@
+{
+  "items": [
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 73,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Home case and role-based workbench",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/73"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 74,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Versioned home case linked to building, scheme and work package",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/74"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 76,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Role-based task queues, case card and shared work queue",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/76"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 78,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Controlled editing and permitted bulk updates",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/78"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 75,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Model building-level shared systems, dependencies, holds and costs",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/75"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 79,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Deterministic home ranking with versioned policy",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/79"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "adr",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 80,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Excel transition: import, export and read-only comparison",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/80"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:case-workbench",
+        "status:not-started"
+      ],
+      "number": 135,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Data steward and digital operator exception queue",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/135"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "area:case-workbench",
+        "status:partially-delivered"
+      ],
+      "number": 77,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Complete the work-queue signals and reset behaviour",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/77"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 81,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Safety, resident consent and controlled lifecycle",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/81"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 82,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Deterministic gates for controlled state transitions",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/82"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 83,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Return, reopen and role-owned handoffs",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/83"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 84,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Stock reconciliation, technical sign-off and design versioning",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/84"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 85,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Hazard referral and retrofit hold without taking over hazard ownership",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/85"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 86,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Resident decisions, representatives and pause or withdrawal",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/86"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent"
+      ],
+      "number": 87,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Offer versus commitment, appointments and household constraints",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/87"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:safety-consent",
+        "status:partially-delivered"
+      ],
+      "number": 88,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Resident updates and remedy closure rules",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/88"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:safety-consent",
+        "status:not-started"
+      ],
+      "number": 130,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Nomination, self-referral, acknowledgement and challenge route",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/130"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:safety-consent",
+        "status:not-started"
+      ],
+      "number": 131,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Tenure and lease-interest decision route for shared owners and leaseholders",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/131"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "area:delivery-quality",
+        "status:partially-delivered"
+      ],
+      "number": 89,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Provider capacity, work orders and quality acceptance",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/89"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:delivery-quality",
+        "status:partially-delivered"
+      ],
+      "number": 90,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Provider packages, committed capacity and controlled work orders",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/90"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:delivery-quality",
+        "status:partially-delivered"
+      ],
+      "number": 91,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Per-measure quality acceptance, defects and handover",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/91"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:delivery-quality",
+        "status:partially-delivered"
+      ],
+      "number": 92,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Leaseholder consultation check before contract let or renewal",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/92"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:delivery-quality",
+        "status:not-started"
+      ],
+      "number": 132,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Contractor job pack and fieldwork evidence capture (staff-facing)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/132"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:delivery-quality",
+        "status:not-started"
+      ],
+      "number": 133,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Aftercare concern route and lived-performance review",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/133"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "area:finance-grants",
+        "status:partially-delivered"
+      ],
+      "number": 93,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Finance, grants and form-assisted funding evidence",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/93"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:finance-grants",
+        "status:partially-delivered"
+      ],
+      "number": 94,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Budgets, commitments, invoice intake and line-level match",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/94"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:finance-grants",
+        "status:partially-delivered"
+      ],
+      "number": 95,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Grant opportunity, award, claim and cash states",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/95"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:finance-grants",
+        "status:partially-delivered"
+      ],
+      "number": 96,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Assisted form workspace and funding or claim pack assembly",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/96"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:finance-grants",
+        "status:not-started"
+      ],
+      "number": 99,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Investment envelope, liquidity and downside tolerance controls",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/99"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "area:finance-grants",
+        "status:partially-delivered"
+      ],
+      "number": 97,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Approved versioned form schemas and staged candidate fields",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/97"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "area:finance-grants",
+        "status:not-started"
+      ],
+      "number": 98,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Field review, deterministic validation and stale propagation",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/98"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "area:insight-data",
+        "status:partially-delivered"
+      ],
+      "number": 100,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Epic: Management insight, forecasting and evidence export",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/100"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:insight-data",
+        "status:partially-delivered"
+      ],
+      "number": 101,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Coordinator heatmap and lifecycle funnel",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/101"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:insight-data",
+        "status:not-started"
+      ],
+      "number": 102,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Historical progression, forecasts and stakeholder progress packs",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/102"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:insight-data",
+        "status:partially-delivered"
+      ],
+      "number": 103,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Constructed-scenario manifest and exercise test data",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/103"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:insight-data",
+        "status:not-started"
+      ],
+      "number": 134,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Profile journey contract and connected same-home journey acceptance",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/134"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "adr",
+        "area:ai",
+        "status:partially-delivered"
+      ],
+      "number": 104,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Epic: Bounded AI assistance with human review",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/104"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:ai",
+        "status:partially-delivered"
+      ],
+      "number": 105,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "AI task registry and proposal envelope",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/105"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "area:ai",
+        "status:partially-delivered"
+      ],
+      "number": 106,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Suggestions, accept or reject with reason, and workflow-only fallback",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/106"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:ai",
+        "status:partially-delivered"
+      ],
+      "number": 107,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Five reactive and proactive assistants on one proposal service",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/107"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:ai",
+        "status:partially-delivered"
+      ],
+      "number": 108,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "AI evaluation harness and model selection",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/108"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "adr",
+        "area:monitoring",
+        "status:not-started"
+      ],
+      "number": 109,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: In-use monitoring with Azure IoT Hub (simulated)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/109"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:monitoring",
+        "status:partially-delivered"
+      ],
+      "number": 110,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Device-to-cloud ingestion through IoT Hub into Azure SQL",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/110"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:monitoring",
+        "status:not-started"
+      ],
+      "number": 111,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Deterministic versioned sensor analysis and review task",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/111"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "adr",
+        "area:monitoring"
+      ],
+      "number": 112,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Monitoring data protection, access and map reuse",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/112"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "adr",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 113,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Azure platform, security and data protection",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/113"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "area:platform",
+        "status:partially-delivered",
+        "delivery:feedback-first"
+      ],
+      "number": 114,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Durable Azure SQL store with ledger audit",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/114"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:platform",
+        "status:partially-delivered",
+        "delivery:feedback-first"
+      ],
+      "number": 116,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Entra ID sign-in, roles and field-level visibility",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/116"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 117,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Documents: malware scanning, retention and legal hold",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/117"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 118,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Hardened deployment, CI and infrastructure as code",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/118"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 119,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Licensed map tile provider and accessible map alternative",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/119"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:platform",
+        "status:partially-delivered",
+        "delivery:deferred"
+      ],
+      "number": 120,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Staff time capture gated on DPIA",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/120"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "adr",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 121,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Data protection, retention and rights controls",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/121"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 122,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Service continuity, versioning, exportability and integration",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/122"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "area:platform",
+        "status:partially-delivered"
+      ],
+      "number": 115,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Immutable Blob ledger digests and scheduled verification",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/115"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "area:governance",
+        "status:not-started"
+      ],
+      "number": 123,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Discovery, evaluation and release governance",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/123"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:governance",
+        "status:not-started"
+      ],
+      "number": 124,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Phase 0 retrofit-flow discovery",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/124"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:governance",
+        "status:not-started"
+      ],
+      "number": 125,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Optional discovery assistant (read-only, design hypothesis)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/125"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:governance",
+        "status:partially-delivered",
+        "delivery:feedback-first"
+      ],
+      "number": 126,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Frozen protocol, benefits register and phase release gates",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/126"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "area:governance",
+        "status:not-started"
+      ],
+      "number": 127,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Regulatory change review workflow",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/127"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:governance",
+        "status:partially-delivered"
+      ],
+      "number": 128,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Accessibility, equity and journey ownership testing",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/128"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "area:governance",
+        "status:not-started"
+      ],
+      "number": 129,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Journey learning-test bundles with non-AI comparators",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/129"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 136,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Bicep infrastructure as code and deployment pipeline",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/136"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 137,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Environment strategy and parameter sets (dev, test, pilot)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/137"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:infrastructure"
+      ],
+      "number": 138,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "CI/CD deployment pipeline with what-if, approvals and image release",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/138"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "status:not-started",
+        "area:infrastructure"
+      ],
+      "number": 139,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Bicep quality gates beyond build and lint",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/139"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:infrastructure"
+      ],
+      "number": 140,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Azure IoT Hub Bicep module with identity, networking and diagnostics",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/140"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 141,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Identity, RBAC and Entra registration as code with least-privilege review",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/141"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 142,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Key Vault secret lifecycle: rotation, expiry and access review",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/142"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure",
+        "delivery:deferred"
+      ],
+      "number": 143,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Private networking and public edge (Front Door Premium and WAF)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/143"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 144,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Container hosting completeness: workers, scaling, revisions and load test",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/144"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 145,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Azure SQL pilot tier, backup restore and recovery proof",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/145"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 146,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Monitoring coverage: alerts, dashboards and runbooks",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/146"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "status:not-started",
+        "area:infrastructure"
+      ],
+      "number": 147,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Azure Policy, Defender plans, locks and tagging as code",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/147"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "status:partially-delivered",
+        "area:infrastructure"
+      ],
+      "number": 148,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Repeatable from-empty rebuild and teardown automation",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/148"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "status:partially-delivered",
+        "area:ux"
+      ],
+      "number": 149,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: UX design, accessibility and usability",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/149"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 150,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Design system and UI component foundations",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/150"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 151,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "WCAG 2.2 conformance baseline for the workbench",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/151"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:partially-delivered",
+        "area:ux",
+        "delivery:demo-next"
+      ],
+      "number": 152,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Role workbench information architecture and responsive layout",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/152"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 153,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Content design and plain-language copy audit",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/153"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 154,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Resident-facing and representative-facing UX design",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/154"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 155,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Usability testing programme with representative users",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/155"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:partially-delivered",
+        "area:ux"
+      ],
+      "number": 156,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Design artefacts, traceability and design review gate",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/156"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 225,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Finance and grants screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/225"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 226,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Asset executive and board views",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/226"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 227,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Building safety lead and repairs hazard screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/227"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 228,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Supplier, contractor and procurement screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/228"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 229,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Data steward and digital operator screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/229"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 230,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Programme manager and coordinator screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/230"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 231,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Retrofit assessor, designer and quality inspector screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/231"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 232,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Housing officer and resident engagement screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/232"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:ux"
+      ],
+      "number": 233,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Apply atlas UX findings and role journeys to screens",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/233"
+    },
+    {
+      "labels": [
+        "epic",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 157,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Epic: Per-user agent chat and memory",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/157"
+    },
+    {
+      "labels": [
+        "story",
+        "adr",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 158,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Decide whether to accept or amend ADR 0004 (conversational interaction and memory model)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/158"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 159,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Conversational assistant experience in the workbench",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/159"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 160,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Per-user chat thread storage and lifecycle in Azure SQL",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/160"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 161,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Per-user memory: scoped, consented, inspectable, deletable and expiring",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/161"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 162,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "User isolation and access control for chat and memory",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/162"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 163,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Privacy, DPIA and retention for chat and memory",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/163"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:agent-chat"
+      ],
+      "number": 164,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Grounding, evaluation and human-review boundaries for chat",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/164"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "adr",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 165,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Synthetic data programme: needs, generator and sensor simulator",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/165"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 166,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Synthetic data needs inventory and phase gate",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/166"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 167,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Generator coverage baseline and gap closure",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/167"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 175,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Synthetic data dictionary, provenance and PII-free guarantee",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/175"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 176,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Determinism, seeds, versioning and refresh policy for synthetic data",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/176"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 177,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Sensor simulator stage 1: two-year historical backfill",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/177"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 184,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Sensor simulator stage 2: live streaming into Azure IoT Hub",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/184"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 190,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Sensor simulation validation, scenarios and documentation",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/190"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 168,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Link the 60,000-home stock to cases and add fabric attributes",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/168"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 169,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Residents, households and tenancy at stock scale",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/169"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:partially-delivered",
+        "area:synthetic-data",
+        "delivery:demo-next"
+      ],
+      "number": 178,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Select and record the historical climate source and licence",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/178"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 191,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Plausibility and statistical range tests",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/191"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 185,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Simulated device identity and provisioning",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/185"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 192,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Mould-risk and damp scenario pack",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/192"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 186,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Message schema, rate and volume",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/186"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 193,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Before and after retrofit scenarios",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/193"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 187,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Replay, speed controls and failure injection",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/187"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 194,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Simulator documentation and sensor data dictionary",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/194"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 188,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Ingestion into the store and consistency with the backfill",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/188"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 189,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Cost, scale and run controls for the simulator",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/189"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 179,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Indoor condition projection model by dwelling and fabric",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/179"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 180,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Retrofit before and after effect model",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/180"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 181,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Occupancy and heating behaviour model without resident blame",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/181"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 182,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Fault, outlier and missing-data injection",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/182"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 170,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Survey, EPC and assessment record fixtures",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/170"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 183,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Deterministic backfill generator tied to stock home IDs",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/183"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:not-started",
+        "area:synthetic-data"
+      ],
+      "number": 171,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Documents, forms and field-candidate fixtures",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/171"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 172,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Agent chat and memory test data and personas",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/172"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 173,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Contractor, finance, grant, safety and consent records beyond the 980-case snapshot",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/173"
+    },
+    {
+      "labels": [
+        "story",
+        "prd",
+        "status:partially-delivered",
+        "area:synthetic-data"
+      ],
+      "number": 174,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Evaluation and golden dataset registry and stock-scale fixture",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/174"
+    },
+    {
+      "labels": [
+        "epic",
+        "adr",
+        "status:partially-delivered",
+        "area:repo-restructure"
+      ],
+      "number": 195,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Repository restructure, src consolidation and retirement of mvp and prototype folders",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/195"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 196,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Decide src layout and cut-over policy (ADR)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/196"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 197,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Build parity matrix of mvp features to backlog issues and src locations",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/197"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 198,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Update rubric workflow and registry for src counting and mvp stop",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/198"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 199,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Migrate mvp modules and tests into src incrementally",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/199"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 200,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Repoint CI, Docker, Bicep, scripts and docs to src",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/200"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 201,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Cut-over gate and owner sign-off",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/201"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 202,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Archive tag, then delete mvp and prototype folders",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/202"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 203,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Verify references and update knowledge base after cleanup",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/203"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 208,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Epic: Regulatory compliance assistant (proposed)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/208"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 209,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Decide on ADR 0005 and name Legal, Compliance and DPO owners",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/209"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 210,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Versioned law store seeded from the local regulatory snapshots",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/210"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 211,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Rule cards and approval workflow",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/211"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 212,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Deterministic rule engine and proactive step alerts",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/212"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 213,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Source change monitoring and regulatory review items",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/213"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 214,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Home-specific cited chat with role-scoped retrieval, refusals and doubt route",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/214"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 215,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "UX for regulatory alerts and the home chat",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/215"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 216,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Evaluation gates for citation validity, refusals and comparison against rule cards",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/216"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:regulatory-assistant"
+      ],
+      "number": 217,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Security, privacy and audit for the regulatory assistant",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/217"
+    },
+    {
+      "labels": [
+        "epic",
+        "brd",
+        "prd",
+        "adr",
+        "status:not-started",
+        "area:responsible-ai"
+      ],
+      "number": 218,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Epic: Responsible AI release, challenge and incident control",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/218"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:responsible-ai",
+        "delivery:feedback-first"
+      ],
+      "number": 219,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "RAI release record bound to each AI task activation",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/219"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:partially-delivered",
+        "area:responsible-ai"
+      ],
+      "number": 220,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Affected-person challenge and correction route",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/220"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "status:partially-delivered",
+        "area:responsible-ai"
+      ],
+      "number": 221,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Operator suspension, incident and restart record",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/221"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:responsible-ai"
+      ],
+      "number": 222,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Cohort and missing-data evaluation record",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/222"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:responsible-ai"
+      ],
+      "number": 223,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Meaningful human-review effectiveness test",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/223"
+    },
+    {
+      "labels": [
+        "feature",
+        "prd",
+        "status:not-started",
+        "area:responsible-ai"
+      ],
+      "number": 224,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Legal review of UK automated-decision rules and EU AI Act applicability",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/224"
+    },
+    {
+      "labels": null,
+      "number": 23,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Rubric scoring failed on main",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/23"
+    },
+    {
+      "labels": [
+        "feature",
+        "adr",
+        "status:not-started",
+        "area:repo-restructure"
+      ],
+      "number": 290,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Create src project skeletons, packaging and per-project CI (ADR 0006 phase 1)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/290"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 6,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "[aw] Detection Runs",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/6"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 10,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/10"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 33,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/33"
+    },
+    {
+      "labels": null,
+      "number": 38,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Rubric scoring failed on main",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/38"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 46,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/46"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 47,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/47"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 48,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/48"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 49,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/49"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 51,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/51"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 52,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/52"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 53,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/53"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 64,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/64"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 206,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/206"
+    },
+    {
+      "labels": null,
+      "number": 322,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Make orchestratorImage explicit for redeploys (auth-renewal and ledger-verify jobs)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/322"
+    },
+    {
+      "labels": null,
+      "number": 323,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Owner: remove stale required check 'Prototype validation / validate' from branch protection",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/323"
+    },
+    {
+      "labels": null,
+      "number": 327,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Task queue filters scan every case at 60,000 scale (queue= is 1-2.5 s)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/327"
+    },
+    {
+      "labels": null,
+      "number": 329,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Rule engine: add tests for consultation/historical gating and cross-episode attention rate limit",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/329"
+    },
+    {
+      "labels": null,
+      "number": 332,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Source monitor: a failed retrieval resets the per-source cadence timer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/332"
+    },
+    {
+      "labels": null,
+      "number": 339,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "deploy.py: whitespace-only --orchestrator-image bypasses the placeholder fallback",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/339"
+    },
+    {
+      "labels": [
+        "area:infrastructure",
+        "area:repo-restructure"
+      ],
+      "number": 344,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Restore public browser access with Entra sign-in for the src deployment (MVP parity)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/344"
+    },
+    {
+      "labels": [
+        "delivery:feedback-first"
+      ],
+      "number": 349,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Restore tenant prerequisites for src browser sign-in after public cut-over",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/349"
+    },
+    {
+      "labels": [
+        "delivery:feedback-first"
+      ],
+      "number": 350,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Complete deployed src MVP feature parity after public edge restoration",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/350"
+    },
+    {
+      "labels": null,
+      "number": 351,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "fix: initialize-api-auth.py fails when the app auth clientId is not a UUID",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/351"
+    },
+    {
+      "labels": [
+        "status:partially-delivered",
+        "delivery:feedback-first"
+      ],
+      "number": 358,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "follow-up: setup-entra.py credential-expiry test and Key Vault secret preservation",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/358"
+    },
+    {
+      "labels": [
+        "status:partially-delivered",
+        "delivery:feedback-first"
+      ],
+      "number": 360,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "Demo: direct Container Apps HTTPS ingress with Entra sign-in, Front Door optional",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/360"
+    },
+    {
+      "labels": null,
+      "number": 413,
+      "repository": "jmservera/ama",
+      "status": "Done",
+      "title": "Run complete local RPI checks before push and consolidate duplicate CI",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/413"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 430,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "[aw] Failed jobs: Capstone Rubric Scorer",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/430"
+    },
+    {
+      "labels": [
+        "feature",
+        "brd",
+        "prd",
+        "area:ai",
+        "status:not-started"
+      ],
+      "number": 432,
+      "repository": "jmservera/ama",
+      "status": "In Progress",
+      "title": "AI consumption metering, limits and cost per accepted outcome (Tokenomics)",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/432"
+    },
+    {
+      "labels": [
+        "agentic-workflows"
+      ],
+      "number": 434,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "[aw] Detection Runs",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/434"
+    },
+    {
+      "labels": [
+        "story",
+        "area:ai",
+        "status:not-started"
+      ],
+      "number": 435,
+      "repository": "jmservera/ama",
+      "status": "Todo",
+      "title": "Capstone pitch preparation: Tokenomics placement, rehearsal and assessment challenge",
+      "type": "Issue",
+      "url": "https://github.com/jmservera/ama/issues/435"
+    }
+  ],
+  "totalCount": 189,
+  "title": "AMA Plan",
+  "url": "https://github.com/users/jmservera/projects/7",
+  "public": false,
+  "retrieved_at": "2026-10-23T07:21:14Z",
+  "readme": "This project is a snapshot of all issues in jmservera/ama that did not have the agentic-workflows label when generated on 2026-10-15. It includes open and closed issues.",
+  "classification": "Read-only API projection, not accepted completion or a GitHub website screenshot"
+}
