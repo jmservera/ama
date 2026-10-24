@@ -229,3 +229,43 @@ Existing #349/#350/#360/#432 acceptance gaps remain outside this policy PR.
 Automatic session running, task blocked in Implement at P04-T01; failed
 preliminary receipt only, no eligible final receipt, original Review or PR.
 Keep all evidence/environments; no cleanup or merge.
+
+## 2026-10-24 Resume: Original Review and Final-Gate Reconciliation
+
+Evidence classes, kept separate:
+
+* Native discovery (owner-approved, one-time, discovery only): the coordinator
+  reported on issue #440 comment 6385349053 that the native /agent chooser
+  listed "AMA Backlog Delivery Coordinator" as entry 8 at clean HEAD 1bb637a7,
+  with nothing launched and no model task. The retained external transcript
+  /tmp/ama-440-discovery-20261024.txt does not itself show entry 8 (RV-003);
+  the claim rests on the coordinator's recorded comment. It is not behavioral
+  acceptance. Earlier empty-chooser container attempts are preserved.
+* Simulated HVE behavior: seven scenarios Pass, proxy, actual profile unknown,
+  human-review checkbox unchecked.
+* Observed local product evidence: focused/package/browser/SQL Server/Docker
+  results above on pinned main only. No Azure, real AI or real Entra evidence.
+
+Original independent Review executed once (execution Partial, outcome Residual
+work, no confirmed defects, High 2 Medium 1 Low 2):
+.copilot-tracking/reviews/logs/2026-10-24/issue-440-stabilization-review.md.
+It is not repeated.
+
+New facts recorded, not waived:
+
+* origin/main moved to f1e2d830f17558efd868919de1973ea7244a8841 (one-line
+  .github/rubric/artifacts.json change, #443). It is reconciled by a merge
+  commit, not a rebase; the final gate must use this or a fresher base.
+* The external directories /tmp/ama-440-preliminary-20261023-d8a65061 and
+  /tmp/ama-440-focused-20261023 and /tmp/brief-440-stabilization-20261023.md
+  were found absent on 2026-10-24 (cause unknown, not deleted by this session).
+  The failed receipt, its SHA256 and the 17383ms-versus-1500ms figures are
+  now supported only by this record, the state file and the evidence pack.
+  PERF-440 stays open, threshold unwaived; a fresh complete gate is required.
+* Heavy lock held by #350 gate (PID 43028), #444 queued behind it. No gate was
+  started or duplicated by this session.
+
+Resume point: after the lock is released and the coordinator confirms queue
+order, run python3 tools/rpi-checks.py --all --base <fresh origin/main SHA>
+--out <new nonexistent external path> on the frozen clean head, then
+--verify-receipt. No push, PR or acceptance ticks.
