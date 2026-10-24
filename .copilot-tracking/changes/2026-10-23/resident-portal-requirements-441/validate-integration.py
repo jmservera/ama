@@ -55,7 +55,9 @@ def canonical_changes(changed):
         package_file = path.startswith(PACKAGE) and Path(path).suffix in {
             ".md", ".json", ".yaml", ".py", ".patch", ".excalidraw", ".svg", ".png",
         }
-        allowed = path in CANONICAL_DOCS or path == ".github/rubric/scores/latest.json"
+        allowed = path in CANONICAL_DOCS or path in {
+            ".github/rubric/scores/latest.json", ".github/rubric/scores/badge.svg",
+        }
         if not normalized or not (allowed or TRACKING.fullmatch(path) or package_file):
             rejected.append(path)
     if rejected:

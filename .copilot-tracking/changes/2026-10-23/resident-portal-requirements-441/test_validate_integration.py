@@ -43,6 +43,7 @@ class ValidationTests(unittest.TestCase):
     def test_issue_scope_allows_only_canonical_comparisons(self):
         paths = [
             validator.BRD, validator.PRD, ".github/rubric/scores/latest.json",
+            ".github/rubric/scores/badge.svg",
             validator.PACKAGE + "test_validate_integration.py",
             validator.PACKAGE + "resident-service-unregistered-proposal.md",
             validator.PACKAGE + "source-evidence/prd/reviewer-findings.yaml",
@@ -55,7 +56,7 @@ class ValidationTests(unittest.TestCase):
     def test_unrelated_and_numbered_adr_paths_rejected(self):
         for path in (
             "src/api/unrelated.py", "docs/unrelated.md", "docs/adrs/0007-resident.md",
-            ".github/rubric/artifacts.json", ".github/rubric/scores/badge.svg",
+            ".github/rubric/artifacts.json", ".github/rubric/scores/unrelated.svg",
             ".copilot-tracking/plans/2026-10-23/other-issue-plan.md",
             validator.PACKAGE + "../other.md", validator.PACKAGE + "node_modules/tool.js",
         ):
@@ -137,8 +138,16 @@ class ValidationTests(unittest.TestCase):
         with patch.multiple(validator, ROOT=REPOSITORY_ROOT, BASE=SOURCE_BASE), patch.object(
                 sys, "argv", ["validate-integration.py", "--markdownlint-cli", str(missing),
                               "--out", str(report)]):
-            with self.assertRaisesRegex(RuntimeError, "markdownlint failed.*absent-markdownlint"):
-                validator.main()
+            original_git_bytes = validator.git_bytes
+
+            def git_bytes(path, *, allow_missing=False):
+                if path == "docs/reference/log.md":
+                    return (REPOSITORY_ROOT / path).read_bytes()
+                return original_git_bytes(path, allow_missing=allow_missing)
+
+            with patch.object(validator, "git_bytes", git_bytes):
+                with self.assertRaisesRegex(RuntimeError, "markdownlint failed.*absent-markdownlint"):
+                    validator.main()
         self.assertFalse(report.exists())
 
     def test_genuine_lint_results_retain_normalized_comparison(self):
