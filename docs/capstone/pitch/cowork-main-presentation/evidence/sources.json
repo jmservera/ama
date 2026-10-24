@@ -1,0 +1,156 @@
+{
+  "E441": {
+    "path": "https://github.com/jmservera/ama/issues/441; https://github.com/jmservera/ama/issues/441#issuecomment-6374724922",
+    "section": "Issue body and latest public comment, retrieved 2026-10-23",
+    "classification": "Owner-confirmed optional-portal exercise direction; unresolved requirements integration; owner-reported unpublished local work",
+    "supports": "Option B reuses case/API authority, portal/workflow first and a separately gated resident-answer task; assess fewer avoidable calls and staff interruptions while preserving assisted channels",
+    "limit": "Issue remains open with a Research-stage integration blocker and no published PR at retrieval. Draft quality gates are blocked/failed, not approved. Per-message human review remains normative; routine automation is off pending requirements-owner disposition and separate release approval. No inspected implementation, numerical savings, resident acceptance or production approval."
+  },
+  "E01": {
+    "path": "docs/case_study_48_original.md",
+    "section": "Business Challenge; Agentic Architecture Brief; Expected Outcomes; Business Case",
+    "classification": "Original case brief, including unvalidated outcome ambitions",
+    "supports": "60,000-home scale and five requested responsibilities/autonomy levels",
+    "limit": "Original regulatory wording and GBP 40m/doubling claims are not current legal findings or observed results."
+  },
+  "E02": {
+    "path": "docs/case_study_48_addendum.md",
+    "section": "Purpose and Status; Owner-Approved Exercise Baseline; Numerical Targets and Attribution; Subsequent Application Exercise Builds",
+    "classification": "Declared exercise assumptions, subsequent owner directions and proposals",
+    "supports": "One-home story, human boundaries, GBP fixture arithmetic, real AI/SQL/Azure requirement and value hypotheses",
+    "limit": "Not company commitments, formal governance approval or operational outcomes."
+  },
+  "E03": {
+    "path": "docs/reference/research/company/agent-request-challenge.md",
+    "section": "Summary and five-agent request challenge; see ai-cost-evidence.md for precise line citations",
+    "classification": "Consultative design analysis",
+    "supports": "Retain five business capabilities while challenging autonomy, service proliferation and agent-first design",
+    "limit": "Not a customer approval or a measured comparison of architecture options."
+  },
+  "E04": {
+    "path": "docs/ideas/typesafe-system-one-agent-fit.md",
+    "section": "Observed Feasibility and Parallel Value Experiment, 2026-10-11; task suitability and serving limitations",
+    "classification": "Dated research, feasibility observations and experiment proposals",
+    "supports": "Decision 1 candidate scoring and screening distinct from rules and generation",
+    "limit": "No general cheaper/faster, calibrated quality, Foundry tier availability or accepted-outcome saving claim."
+  },
+  "E05": {
+    "path": "docs/brds/agentic-retrofit-programme-brd.md; docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+    "section": "Merged Tokenomics delta: BRD FR-052/NFR-012/OD-51; PRD AC-108/AC-109; RULE-016/RULE-019",
+    "classification": "Requirements and acceptance proposals, not execution results",
+    "supports": "Complete metering, quality floor, monetary/task/period budgets and request/depth bounds to test",
+    "limit": "New criteria remain unexecuted; time saved is capacity until Finance validates a value destination."
+  },
+  "E06": {
+    "path": "docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep",
+    "section": "Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters",
+    "classification": "Source-based architecture and dated historical handover",
+    "supports": "Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons",
+    "limit": "Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing."
+  },
+  "E07": {
+    "path": "src/api/README.md",
+    "section": "Honest limits; Run it locally; role/context and controlled feature contracts",
+    "classification": "Implementation documentation with explicit dated limitations",
+    "supports": "Real historical Azure SQL/model checks, 60,000 stock versus 980 programme cases, no live housing integration and current acceptance boundaries",
+    "limit": "Local/scripted checks and older deployment results do not establish current staff access, production scale, restore or semantic quality."
+  },
+  "E08": {
+    "path": "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
+    "section": "Context and Decisions 1-5; journey-derived authority, offer/commitment and independent closure",
+    "classification": "Owner-accepted scoped ADR direction and role-instrument desk research",
+    "supports": "Separate offers, resident decisions, representative authority, remedies and controlled progression",
+    "limit": "No direct resident/staff validation, professional appointment or lawful-processing acceptance."
+  },
+  "E09": {
+    "path": "docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py",
+    "section": "Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling",
+    "classification": "Source controls and dated bounded operator observations",
+    "supports": "Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output",
+    "limit": "Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets."
+  },
+  "E10": {
+    "path": "docs/reference/research/company/pilot-measurement-challenge.md",
+    "section": "Comparison 1 and Comparison 2; frozen protocol; benefits scorecard and attribution caveat",
+    "classification": "Measurement design and owner-directed modernisation comparison",
+    "supports": "Separate workflow improvement from incremental AI value; accepted handover and net total effort",
+    "limit": "Not an executed comparison, causal proof or numerical benefit."
+  },
+  "E11": {
+    "path": "docs/case_study_48_addendum.md; docs/reference/README.md",
+    "section": "Finite Costed Execution Plan Options, 2026-10-20; 2026-10-22 USD 700 revision and post-change correction",
+    "classification": "2026-10-22 owner budget decision, separate unexecuted planning proposals and historical scoped observations",
+    "supports": "USD 700 owner-set October all-in forecast ceiling with 2026-10-25T16:02Z expiry; USD 535.33 pre-change forecast requires refresh; outside-group costs unknown",
+    "limit": "Not a production price, current bill or unconditional tranche approval. Separate planning and acceptance gates remain blocked."
+  },
+  "E12": {
+    "path": "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/case_study_48_addendum.md; docs/reference/regulatory/README.md",
+    "section": "ADR Decision 6 and Implementation Status; Responsible AI release boundary; source authority and human acceptance",
+    "classification": "Accepted Basic IoT Hub exercise direction; partial engineering; separate human/legal gates",
+    "supports": "Offline consumer is not live Hub integration; no diagnosis or suppressed hazard route; human/legal/privacy acceptance remains distinct",
+    "limit": "No current legal determination, live telemetry, qualified assessment, fairness or WCAG-conformance claim."
+  },
+  "E13": {
+    "path": "docs/architecture/cutover-evidence-pack.md; infra/README.md",
+    "section": "Bounded RG Publication Continuation, 2026-10-19; Current Exercise Handover; Direct Entra Setup and Acceptance",
+    "classification": "Dated actual cloud observations, failed attempts and source runbook",
+    "supports": "Current cutover blockers; exact live versus local evidence; preflight, rollback, private backing and owner sign-off requirements",
+    "limit": "No fresh deployment, paid call or genuine staff session performed for this presentation package."
+  },
+  "E14": {
+    "path": "docs/reference/log.md; delivery-method-evidence.md",
+    "section": "Dated prototype/MVP and knowledge-base history; HVE/RPI milestone citations in bundled report",
+    "classification": "Repository chronology and documented method",
+    "supports": "Iterative learning and evidence-led research/plan/implement/review",
+    "limit": "Method and artifact evidence, not a measured productivity gain or real customer validation."
+  },
+  "E15": {
+    "path": "docs/reference/research/ux/prototype-learnings-and-simplicity-review.md; docs/reference/research/ux/zava-forward-prototype-profile-review.md",
+    "section": "Prototype learnings; owner feedback; shared workbench direction; profile review and validation limits",
+    "classification": "Owner feedback, expert artifact review and role-instrument hypotheses",
+    "supports": "Simpler workbench, ownership, evidence and assisted routes; prototype/MVP design learning",
+    "limit": "Not a resident interview, observed workforce acceptance or complete usability/accessibility result."
+  },
+  "E16": {
+    "path": "docs/reference/log.md; docs/reference/research/ux/zava-forward-prototype-profile-review.md; delivery-method-evidence.md; project-snapshot.json; https://github.com/jmservera/ama/issues/73; https://github.com/jmservera/ama/issues/77",
+    "section": "Historical generation waves and source versions; dated hierarchy and current board projection",
+    "classification": "Repository/GitHub historical snapshots plus owner's approximate scale recollection",
+    "supports": "BRD/PRD/ADR-derived backlog across epics, features and stories; around 180 issues is not 180 agents or stories alone",
+    "limit": "Counts are snapshot-specific. Current board status and original generation count are not accepted completion."
+  },
+  "E17": {
+    "path": "docs/reference/method/ama-capstone-assessment-guide.md; delivery-method-evidence.md; docs/capstone/README.md",
+    "section": "Full 20 assessment criteria, individual/section floors and required evidence",
+    "classification": "Published assessment requirements and preparation gap mapping",
+    "supports": "Full final deck/architecture/pitch challenge, including live delivery and thought-leadership evidence",
+    "limit": "This authoring package is not a fresh rubric score, final deck acceptance or a rehearsal transcript."
+  },
+  "E18": {
+    "path": "docs/reference/regulatory/README.md",
+    "section": "Authority and Use; Change Assessment and Monitoring Register; Managed Update Workflow",
+    "classification": "Repository source-governance convention",
+    "supports": "Dated sources, authority hierarchy, human approval and reviewed control updates",
+    "limit": "No live legal-source currentness check or operational activation performed for this package."
+  },
+  "E19": {
+    "path": "docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md",
+    "section": "What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring",
+    "classification": "PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements",
+    "supports": "6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison",
+    "limit": "No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included."
+  },
+  "E21": {
+    "path": "docs/capstone/deck/cowork-generated/BUILD-HANDOFF-v2.md; docs/reference/research/sector/uk-social-housing-retrofit-damp-stats-report.md; ai-cost-evidence.md",
+    "section": "Historical forecast; statistics report rows 1.4, 2.2, 2.9-2.10 and pricing section; Recovered Council Comparison, 2026-10-24",
+    "classification": "Recovered 2026-10-23 planning arithmetic with historical benchmarks and unverified secondary-source pricing, not measured unit economics",
+    "supports": "6,884/5 x 10 x 20 x USD 1.60/million = USD 0.440576/planned home; USD 6,872.9856 across 15,600 homes. GBP 6,082 benchmark gives GBP 94,879,200 works; conditional 50% grant gives GBP 3,041/home and GBP 47,439,600 cohort.",
+    "limit": "No current deployment price, accepted-outcome cost, full project TCO, FX comparison, award, scheme availability or additional grant income established. Do not count AI twice inside an all-in envelope. Current official funding and Finance/funder verification remain required. Distinct from the GBP 20,000 fictional exercise package."
+  },
+  "E20": {
+    "path": "project-snapshot.json; project-snapshot.html; project-snapshot.png",
+    "section": "AMA Plan project 7, retrieved 2026-10-23T07:21:14Z",
+    "classification": "Read-only GitHub API projection, not a screenshot of the GitHub website",
+    "supports": "189 current board items; 16 epic, 110 feature, 34 story labels, 29 unclassified; 111 Todo, 24 In Progress, 54 Done",
+    "limit": "Private board. Readme says originally generated 2026-10-15 excluding agentic-workflows-labelled issues and includes open/closed issues. Current statuses do not establish acceptance; no exact historical 180 count inferred."
+  }
+}

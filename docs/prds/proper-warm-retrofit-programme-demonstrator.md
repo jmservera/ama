@@ -297,7 +297,7 @@ suggestion rationale and return-source wording have demonstrable
 inconsistencies. This revision makes those lessons testable without treating
 missing product capabilities as already delivered.
 
-An independent [draft-stage PRD challenge and disposition](../../.copilot-tracking/reviews/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md)
+An independent [draft-stage PRD challenge and disposition](../reference/research/reports/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md)
 led to explicit slice applicability, conflict inputs, per-profile reset
 oracles, exact traceability, receipt/acceptance examples, separately reportable
 checks and constraint classification. The final bounded follow-up found no
@@ -1590,8 +1590,8 @@ current legal/technical/funding evidence, signed upstream handoff, actual
 delegations and human stakeholder/user reviews; these are not fictional
 company research tasks that must recur before every exercise iteration.
 
-The [historical v0.12.0 independent review](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json)
-and [targeted correction disposition](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md)
+The [historical v0.12.0 independent review](../reference/research/reports/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json)
+and [targeted correction disposition](../reference/research/reports/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md)
 retain the formal upstream limitation. Four actionable source findings were
 corrected, including canonical resident-choice decomposition, supplementary
 source classification, forecast-resource precision and result terminology.

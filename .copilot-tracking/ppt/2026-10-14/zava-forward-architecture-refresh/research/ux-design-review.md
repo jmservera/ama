@@ -5,7 +5,7 @@ status: expert-review-for-builder
 review_type: expert artifact review, not audience or user testing
 baseline_head: f94f53a56c36d38ec36f7f662595912084571380
 canonical_sha256: 7b25fd7e77d1ed7d9aa908cf3da429bcfeae104beadea5ac90c1e97dbc71fbb4
-owner: Presentation Communications Strategist
+owner: AMA Presentation Communications Strategist
 scope: presentation information architecture, comprehension, hierarchy, decision, accessibility
 ---
 <!-- markdownlint-disable-file -->

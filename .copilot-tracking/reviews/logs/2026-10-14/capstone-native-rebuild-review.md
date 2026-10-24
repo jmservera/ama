@@ -55,7 +55,7 @@ ms.date: 2026-10-14
 
 | Requirement | Actual evidence | Assessment |
 | --- | --- | --- |
-| Both requested specialists | Presentation Communications Strategist contribution and PowerPoint execution agent dispatched as powerpoint-builder | Met; only requested specialist objectives delegated |
+| Both requested specialists | AMA Presentation Communications Strategist contribution and PowerPoint execution agent dispatched as powerpoint-builder | Met; only requested specialist objectives delegated |
 | Rebuild complete capstone | All22slide source folders/notes and current full-deck images;18main/4appendix | Met; not merely inserting one diagram |
 | Native process map | Slide13:43TEXT_BOX/12AUTO_SHAPE/4LINE/one identified branding PICTURE | Met; zero process-diagram pictures, all five titles/owners/triggers/core boundaries extractable |
 | Titles aligned up and body aligned across peers | 311TOP/fixedtextframes;56rows exactly equal in top/height/padding/fonts | Met in saved/rendered artifacts; variable two/three-line slide15 headings have common body start |
