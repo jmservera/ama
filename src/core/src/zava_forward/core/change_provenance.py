@@ -9,6 +9,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any
 
+from . import identity
 from . import projection
 
 Record = dict[str, Any]
@@ -17,7 +18,9 @@ Record = dict[str, Any]
 def _actor(store: Any, user: Record) -> Record:
     email = user.get("email")
     actor = None
-    if isinstance(email, str):
+    if identity.is_entra(user):
+        actor = identity.verified(user)
+    elif isinstance(email, str):
         if hasattr(store, "db"):
             with store.dblock:
                 row = store.db.execute(

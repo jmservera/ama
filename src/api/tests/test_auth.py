@@ -14,12 +14,15 @@ from pathlib import Path
 import test_mvp
 from zava_forward.api import auth
 from zava_forward.api.server import App, make_handler
+from zava_forward.core import identity
 from zava_forward.core.store import Store
 from zava_forward.core.lawstore import LawStore
 from zava_forward.core.rulecards import SEED_CARDS
 
 TENANT = "11111111-2222-3333-4444-555555555555"
 OID_SAM = "aaaaaaaa-0000-0000-0000-000000000001"
+OID_NEW = "bbbbbbbb-0000-0000-0000-000000000001"
+OID_OWNER = "cccccccc-0000-0000-0000-000000000001"
 ENV = dict(ZF_AUTH="trusted-proxy", ZF_TRUSTED_PROXY="1", ZF_ENTRA_TENANT_ID=TENANT)
 
 
@@ -56,16 +59,45 @@ class TrustedProxyTests(Base):
     def who(self, header, **extra):
         return self.prov(**extra).authenticate({"X-MS-CLIENT-PRINCIPAL": header} if header is not None else {})
 
-    def test_valid_principal_maps_role_from_app_role(self):
-        u = self.who(principal())
-        self.assertEqual((u["code"], u["role"]), ("RLO-01", "Resident Liaison Officer"))
-        u = self.who(principal(roles=("ZavaForward.ProgrammeManager",)))
-        self.assertEqual(u["role"], "Retrofit Programme Manager")
-        self.assertEqual(u["code"], "RLO-01")
+    def test_valid_principal_maps_role_from_app_role_without_staff_row(self):
+        class NoStore:
+            def __getattr__(self, name):
+                raise AssertionError("authentication touched the store: " + name)
 
-    def test_contractor_role_and_custom_map(self):
-        u = self.who(principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009"))
-        self.assertEqual((u["role"], u["contractor"]), ("Contractor", "Test Ltd"))
+        provider = auth.TrustedProxyProvider(NoStore(), ENV)
+        u = provider.authenticate({"X-MS-CLIENT-PRINCIPAL": principal(oid=OID_NEW, email="whoever@example.test")})
+        self.assertEqual((u["role"], u["oid"], u["tid"]), ("Resident Liaison Officer", OID_NEW, TENANT))
+        self.assertEqual(u["code"], identity.code_for(TENANT, OID_NEW))
+        self.assertEqual(u["email"], identity.email_for(TENANT, OID_NEW))
+        self.assertEqual(u["display_email"], "whoever@example.test")
+        self.assertEqual(u["identity_source"], "entra")
+
+    def test_identity_is_stable_across_claim_casing_and_display_changes(self):
+        first = self.who(principal(oid=OID_NEW.upper(), email="a@example.test"))
+        second = self.who(principal(oid=OID_NEW, email="b@example.test"))
+        self.assertEqual({k: first[k] for k in ("code", "email", "oid", "tid")}, {k: second[k] for k in ("code", "email", "oid", "tid")})
+
+    def test_staff_row_and_email_claim_never_authorize(self):
+        self.assertIsNotNone(self.who(principal(oid=OID_NEW, email="sam@example.test")))
+        user = self.who(principal(oid=OID_NEW, email="sam@example.test"))
+        self.assertNotEqual(user["code"], "RLO-01")
+        self.assertNotEqual(user["email"], "sam@example.test")
+
+    def test_application_admin_alone_and_with_programme_manager(self):
+        alone = self.who(principal(roles=("ZavaForward.ApplicationAdmin",)))
+        self.assertEqual((alone["role"], alone["app_admin"]), ("Retrofit Programme Manager", True))
+        both = self.who(principal(roles=("ZavaForward.ProgrammeManager", "ZavaForward.ApplicationAdmin")))
+        self.assertEqual((both["role"], both["app_admin"]), ("Retrofit Programme Manager", True))
+        other = self.who(principal(roles=("ZavaForward.Coordinator", "ZavaForward.ApplicationAdmin")))
+        self.assertEqual((other["role"], other["app_admin"]), ("Retrofit Coordinator", True))
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.Coordinator", "ZavaForward.ProgrammeManager", "ZavaForward.ApplicationAdmin"))))
+
+    def test_admin_adds_no_rule_owner_or_restart_authority(self):
+        user = self.who(principal(roles=("ZavaForward.ApplicationAdmin",)))
+        self.assertEqual(user["rule_roles"], [])
+
+    def test_contractor_needs_a_registered_binding_and_custom_map_works(self):
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.Contractor",))))
         u = self.who(principal(roles=("Warm.Coord",)), ZF_ROLE_MAP=json.dumps({"Warm.Coord": "Retrofit Coordinator"}))
         self.assertEqual(u["role"], "Retrofit Coordinator")
 
@@ -80,41 +112,35 @@ class TrustedProxyTests(Base):
         self.assertIsNone(self.who(principal(tid=None)))
         self.assertIsNone(self.who(principal(roles=())))
         self.assertIsNone(self.who(principal(roles=("Unmapped.Role",))))
-        self.assertIsNone(self.who(principal(roles=("ZavaForward.Contractor", "ZavaForward.ProgrammeManager"))))
-        self.assertIsNone(self.who(principal(oid="not-a-provisioned-person")))
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.RuleAuthor",))))
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.LiaisonOfficer", "ZavaForward.ProgrammeManager"))))
+        self.assertIsNone(self.who(principal(oid="not-a-guid")))
         self.assertIsNone(self.who(principal(oid=None)))
         self.assertIsNone(self.who("A" * 20000))
 
-    def test_email_match_only_when_enabled(self):
-        h = principal(oid="unknown-oid", email="sam@example.test")
-        self.assertIsNone(self.who(h))
-        self.assertEqual(self.who(h, ZF_AUTH_EMAIL_FALLBACK="1")["code"], "RLO-01")
+    def test_duplicate_or_conflicting_oid_claims_deny(self):
+        p = json.loads(base64.b64decode(principal()))
+        p["claims"].append(dict(typ="oid", val="bbbbbbbb-0000-0000-0000-000000000002"))
+        self.assertIsNone(self.who(base64.b64encode(json.dumps(p).encode()).decode()))
 
-    def test_rule_capabilities_require_unique_object_binding(self):
+    def test_display_claims_are_sanitised(self):
+        p = json.loads(base64.b64decode(principal(email="x@example.test")))
+        p["claims"].append(dict(typ="name", val="Ann\x00\u202eBob" + "x" * 500))
+        user = self.who(base64.b64encode(json.dumps(p).encode()).decode())
+        self.assertNotIn("\x00", user["name"])
+        self.assertLessEqual(len(user["name"]), 120)
+
+    def test_rule_capabilities_come_from_validated_claims_only(self):
         roles = ("ZavaForward.LiaisonOfficer", "ZavaForward.RuleAuthor", "ZavaForward.RuleOwner")
         self.store.staff["sam@example.test"]["rule_roles"] = ["forged"]
-        user = self.who(principal(roles=roles, email="someone-else@example.test"))
-        self.assertEqual(user["email"], "sam@example.test")
+        user = self.who(principal(roles=roles))
         self.assertEqual(user["rule_roles"], ["rule_author", "rule_owner"])
         self.assertEqual(self.who(principal())["rule_roles"], [])
-        for oid in ("unknown", None):
-            user = self.who(principal(roles=roles, oid=oid, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")
-            self.assertEqual(user["rule_roles"], [])
-        p = json.loads(base64.b64decode(principal(roles=roles, email="sam@example.test")))
-        p["claims"].append(dict(typ="oid", val="another"))
-        header = base64.b64encode(json.dumps(p).encode()).decode()
-        self.assertEqual(self.who(header, ZF_AUTH_EMAIL_FALLBACK="1")["rule_roles"], [])
-        self.store.staff["duplicate@example.test"] = dict(self.store.staff["sam@example.test"])
-        self.assertEqual(self.who(principal(roles=roles, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")["rule_roles"], [])
-        self.assertIsNone(self.who(principal(roles=roles)))
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.RegulatoryChat",), tid=None)))
 
-    def test_regulatory_chat_is_a_separate_bound_capability_not_a_staff_role(self):
+    def test_regulatory_chat_is_a_separate_capability_not_a_staff_role(self):
         chat = "ZavaForward.RegulatoryChat"
-        roles = ("ZavaForward.LiaisonOfficer", chat)
-        self.assertEqual(self.who(principal(roles=roles))["rule_roles"], ["regulatory_chat"])
-        for oid in ("unknown", None):
-            user = self.who(principal(roles=roles, oid=oid, email="sam@example.test"), ZF_AUTH_EMAIL_FALLBACK="1")
-            self.assertEqual(user["rule_roles"], [])
+        self.assertEqual(self.who(principal(roles=("ZavaForward.LiaisonOfficer", chat)))["rule_roles"], ["regulatory_chat"])
         self.assertIsNone(self.who(principal(roles=(chat,)), ZF_ROLE_MAP=json.dumps({chat: "Retrofit Programme Manager"})))
         for capability in ("ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"):
             self.assertNotIn("regulatory_chat", self.who(principal(roles=("ZavaForward.LiaisonOfficer", capability)))["rule_roles"])
@@ -143,7 +169,6 @@ class TrustedProxyTests(Base):
 class RuleHttpTests(Base):
     def setUp(self):
         super().setUp()
-        self.store.staff["pam@example.test"]["oid"] = "synthetic-owner-oid"
         self.law = LawStore(str(Path(self.tmp.name) / "law.sqlite"), Path(self.tmp.name) / "blobs")
         self.app = App(self.store, provider=auth.TrustedProxyProvider(self.store, ENV), law=self.law)
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
@@ -160,7 +185,7 @@ class RuleHttpTests(Base):
 
     def headers(self, who="author", capabilities=None):
         capabilities = capabilities if capabilities is not None else ("ZavaForward.RuleAuthor",) if who == "author" else ("ZavaForward.RuleOwner",)
-        oid = OID_SAM if who == "author" else "synthetic-owner-oid"
+        oid = OID_SAM if who == "author" else OID_OWNER
         return {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.LiaisonOfficer", *capabilities), oid=oid), "X-ZF-CSRF": "1"}
 
     def call(self, path="/api/law/cards", headers=None, body=None):
@@ -174,7 +199,7 @@ class RuleHttpTests(Base):
             return error.code, json.loads(error.read())
 
     def draft(self, **kw):
-        return dict(SEED_CARDS[0], approver="pam@example.test", **kw)
+        return dict(SEED_CARDS[0], approver=identity.email_for(TENANT, OID_OWNER), **kw)
 
     def transition(self, action, headers=None, body=None, version=2):
         return self.call(f"/api/law/cards/hazard-awareness-clock/{version}/{action}",
@@ -193,8 +218,8 @@ class RuleHttpTests(Base):
         history = self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"]
         self.assertTrue(all(c["source_freshness"]["status"] == "unknown" for c in history))
         self.assertEqual([c["state"] for c in history], ["draft", "retired"])
-        self.assertEqual(history[-1]["author"], "sam@example.test")
-        self.assertEqual(history[-1]["approved_by"], "pam@example.test")
+        self.assertEqual(history[-1]["author"], identity.email_for(TENANT, OID_SAM))
+        self.assertEqual(history[-1]["approved_by"], identity.email_for(TENANT, OID_OWNER))
         self.assertTrue(history[-1]["approved_on"])
         self.assertTrue(all(e["simulated"] for e in history[-1]["events"]))
         before = self.law.rules.history("hazard-awareness-clock")
@@ -239,7 +264,7 @@ class RuleHttpTests(Base):
 
     def test_dual_roles_do_not_allow_self_approval(self):
         fields = self.draft()
-        fields["approver"] = "sam@example.test"
+        fields["approver"] = identity.email_for(TENANT, OID_SAM)
         dual = self.headers(capabilities=("ZavaForward.RuleAuthor", "ZavaForward.RuleOwner"))
         self.assertEqual(self.call(headers=dual, body=fields)[0], 201)
         self.assertEqual(self.transition("approve", dual)[0], 409)
@@ -255,15 +280,14 @@ class RuleHttpTests(Base):
         for roles in (("agent",), ("ZavaForward.RuleAuthor",), ("ZavaForward.LiaisonOfficer", "ZavaForward.ProgrammeManager", "ZavaForward.RuleAuthor")):
             h = {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles), "X-ZF-CSRF": "1"}
             self.assertEqual(self.call(headers=h, body=self.draft())[0], 401)
-        self.app.provider = auth.TrustedProxyProvider(self.store, dict(ENV, ZF_AUTH_EMAIL_FALLBACK="1"))
         h = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.LiaisonOfficer", "ZavaForward.RuleAuthor"),
-                                              oid="unknown", email="sam@example.test"), "X-ZF-CSRF": "1"}
-        self.assertEqual(self.call(headers=h, body=self.draft())[0], 403)
+                                              oid="not-a-guid", email="sam@example.test"), "X-ZF-CSRF": "1"}
+        self.assertEqual(self.call(headers=h, body=self.draft())[0], 401)
         con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor", "ZavaForward.RuleOwner", "ZavaForward.RuleAuthor"),
                                                 oid="aaaaaaaa-0000-0000-0000-000000000009"), "X-ZF-CSRF": "1"}
         for path in ("/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock"):
-            self.assertEqual(self.call(path, con)[0], 403)
-            self.assertEqual(self.call(path, con, {})[0], 403)
+            self.assertEqual(self.call(path, con)[0], 401)
+            self.assertEqual(self.call(path, con, {})[0], 401)
         self.app.provider = auth.PasswordProvider(self.store, "synthetic")
         cookie = self.app.provider.login("sam@example.test", "synthetic")
         self.assertEqual(self.call(headers={"Cookie": f"zf_session={cookie}"}, body=self.draft())[0], 403)
@@ -316,8 +340,8 @@ class ProxyHttpTests(Base):
         code, me = self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": principal()})
         self.assertEqual((code, me["user"]["role"]), (200, "Resident Liaison Officer"))
         con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009")}
-        self.assertEqual(self.call("/api/stats", con)[0], 403)
-        self.assertEqual(self.call("/api/cases", con)[0], 200)
+        self.assertEqual(self.call("/api/stats", con)[0], 401)
+        self.assertEqual(self.call("/api/cases", con)[0], 401)
 
     def test_post_needs_csrf_header_and_logout_redirects(self):
         h = {"X-MS-CLIENT-PRINCIPAL": principal()}
@@ -433,9 +457,9 @@ class ProxyHttpTests(Base):
         with patch("zava_forward.core.profile.own_photo") as photo:
             from zava_forward.core.profile import PhotoError
             photo.side_effect = PhotoError(404, "No Microsoft profile photo has been set.")
-            self.assertEqual(self.call("/api/account/photo", con)[0], 404)
-            self.assertEqual(self.call("/api/me", con)[1]["staff"], [])
-            photo.assert_called_once_with(None)
+            self.assertEqual(self.call("/api/account/photo", con)[0], 401)
+            self.assertEqual(self.call("/api/me", con)[0], 401)
+            photo.assert_not_called()
 
     def test_photo_binary_response_is_private_and_does_not_expose_platform_token(self):
         from zava_forward.api.server import WEB

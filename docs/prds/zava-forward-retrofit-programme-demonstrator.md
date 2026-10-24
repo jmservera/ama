@@ -2,18 +2,18 @@
 title: "Zava Forward Retrofit Programme Workbench"
 description: "Product requirements for a role-based retrofit delivery workbench covering the Zava Forward workflow portfolio"
 author: AMA Research Team
-ms.date: "2026-10-22"
+ms.date: "2026-10-24"
 ms.topic: reference
 prd_id: "PRD-2026-AMA48-001"
 status: "in-review"
 exercise_status: "candidate-pending-review-and-owner-acceptance"
 historical_exercise_accepted_version: "0.12.0"
 historical_exercise_accepted_date: "2026-10-10"
-version: "0.18.0"
+version: "0.19.0"
 owners: ["AMA project owner (exercise approval)", "Retrofit Programme Manager (exercise product-owner role)"]
 reviewers: ["Independent PRD Quality Reviewer", "AMA project owner (final exercise acceptance); live control owners remain unconfirmed"]
 created_date: "2026-10-03"
-last_updated: "2026-10-22"
+last_updated: "2026-10-24"
 product_goal_ids: ["GOAL-001", "GOAL-002", "GOAL-003", "GOAL-004"]
 product_goal_smart_status: "pass"
 fr_to_ac_coverage_threshold_pct: 80.0
@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.18.0 | Last Updated: 2026-10-22
+> **PRD-2026-AMA48-001** | Exercise: candidate awaiting review and owner acceptance; formal governance: in-review | Version: 0.19.0 | Last Updated: 2026-10-24
 
 ## Executive Summary
 
@@ -242,11 +242,15 @@ workbook baseline, with Awaab's Law clocks protected throughout and hazard
 cases never routed through Teams nudges. Detail and sources are in the ADR
 section Hybrid M365 and Excel transition.
 
-M365 is limited to three roles in the demonstrator, each conditional on OQ-012:
-Entra ID as the identity provider and role source, a SharePoint site as the
-optional evidence store, and Teams as a notification and review channel. No
-M365 service becomes a system of record, approval authority or write path
-around the API, and Dataverse and Dynamics 365 remain out of scope (CON-005).
+For P0 staff access, owner direction dated 2026-10-24 makes verified Entra
+identity and explicitly assigned application roles authoritative. This is
+not conditional on optional SharePoint or Teams adoption under OQ-012.
+SharePoint remains an optional evidence store and Teams an optional
+notification/review channel, each subject to OQ-012. Entra determines
+application access, not professional competence, resident consent or
+financial delegation. No M365 service becomes the programme-state system
+of record or a write path around the API; Dataverse and Dynamics 365 remain
+out of scope (CON-005).
 
 ### Threat Model (illustrative, not validated)
 
@@ -436,6 +440,7 @@ production, procurement or company approvals.
 | DD-006: Appointment scenario | Retain the owner-directed missed-appointment rule only as a candidate exercise test. | Count only confirmed appointments with verified resident no-access while a case is active; route for human investigation only when the eligible count is greater than the configurable threshold (provisional default five). Exclude provider/contractor no-shows, cancellations and reschedules; human closure resets the active counter but preserves history. Do not infer refusal or delay urgent hazard response. Five is not a validated threshold or operational rule; evidence, Resident Engagement review and configuration governance remain open under OQ-014. |
 | DD-007: Bounded decision scoring | Include Microsoft Decision 1 as a task-specific evaluation candidate alongside rules, generative models and manual handling; the deployed build must still exercise real AI under CON-009. | #58 records source-bound candidate selection feasibility, not calibrated quality, three-class screening, UK-only inference or net benefit. Closed text/JSON output produces no rationale. Task adoption requires reviewed experiment and serving/privacy evidence; see [current learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11). |
 | DD-008: Form-assistance boundary | Use versioned form schemas and source-linked field proposals, with deterministic validation and an explicit human review/export step. | Funding applications seek awards; claims seek reimbursement under an evidenced award. A draft/export is neither submission nor award. Finance owns the route, template and declarations; no model or bulk action signs or submits. |
+| DD-009: Entra-authoritative staff access (P0, owner direction 2026-10-24) | Use verified Entra tenant and object identity plus explicitly assigned supported application roles as staff application-access authority, with no database staff provisioning or database read as a login prerequisite. Provide explicit `ZavaForward.ApplicationAdmin`, alone or composed with a staff role such as `ZavaForward.ProgrammeManager`. | Email, display name, a roster entry and a selected screen grant no authority. ApplicationAdmin alone shows the manager option set read-only and changes nothing; actions need an explicit staff role. Database programme state, object/field/action checks, resident separation, no-self-approval and independent human/professional/finance/consent gates remain unchanged. This decision authorizes the bounded access correction, not unrelated architecture changes or blanket production use; implementation, deployment and real-user observation require separate evidence. |
 
 ### Options Gate Scoring Framework
 
@@ -824,6 +829,8 @@ All proposed criteria are Not run and are inactive until BRD OD-44.
 | NFR-015 | BRD NFR-010, AC-097 |
 | NFR-016 | BRD NFR-011, RULE-026, AC-096, AC-098 |
 | FR-061 | BRD FR-052, AC-102, AC-103, OD-51 |
+| FR-062 | BRD FR-053, AC-106 |
+| FR-063 | BRD FR-054, AC-108 |
 | NFR-017 | BRD NFR-012, AC-100, AC-101, OD-51 |
 
 Open questions OQ-020 to OQ-025 below map to BRD OD-44 to OD-49.
@@ -837,12 +844,12 @@ owner, named control owners and affected users before implementation approval.
 | --- | --- | --- | --- | --- |
 | FR-001 | The product shall maintain one versioned home case linked to its building, scheme, work package and relevant resident-service, hazard, provider, quality and finance records. | Any authorised user opens or updates a case | AC-001, AC-002, AC-043 | GOAL-001, GOAL-002 |
 | FR-002 | The product shall show building-level shared systems, dependencies, holds, works and costs separately from each home's evidence, decision, cost allocation and outcome; a shared building ID alone shall not establish package applicability or transfer a home-specific gate. | User reviews a building or linked home | AC-001, AC-002, AC-003, AC-043 | GOAL-001, GOAL-002 |
-| FR-003 | The product shall present task-focused screens and queues by authenticated role, with field/action permissions enforced by the service rather than by a selectable view label. | User signs in or changes task context | AC-004, AC-005, AC-060, AC-067 | GOAL-001 |
+| FR-003 | For staff sign-in, the product shall derive application access from a verified Entra principal in the configured tenant with one unambiguous valid object ID and explicitly assigned supported application roles, without requiring a database staff record, staff provisioning or database reads on the authentication path; task screens and queues shall use server-enforced role, record, field and action permissions, never a selectable view label, email or display name. | Staff user signs in or changes task context | AC-004, AC-005, AC-060, AC-067, AC-111, AC-112, AC-113, AC-114, AC-116, AC-117 | GOAL-001 |
 | FR-004 | The shared work queue shall identify newly arrived work, approved priority, stale evidence, blockers, overdue tasks, unowned handoffs and cases needing extra human attention using visible definitions and filters. | User opens a permitted queue | AC-006 | GOAL-001, GOAL-003 |
-| FR-005 | The product shall allow authorised users to view and edit case fields, evidence references, task owners, due dates and permitted workflow details, preserving source, version, actor, timestamp and reason for each change. | User edits an individual case | AC-007, AC-008, AC-057 | GOAL-001, GOAL-002 |
+| FR-005 | The product shall allow authorised users to view and edit case fields, evidence references, task owners, due dates and permitted workflow details, preserving source, version, actor, timestamp and reason for each change. | User edits an individual case | AC-007, AC-008, AC-057, AC-116 | GOAL-001, GOAL-002 |
 | FR-006 | The product shall support bulk updates of explicitly permitted fields across selected cases, with a preview of the target records, proposed changes, validation failures and resulting per-case outcomes. | User selects multiple cases and requests an allowed change | AC-009 | GOAL-001, GOAL-002 |
 | FR-007 | Bulk actions shall not approve or release technical work, consent, safety decisions, procurement instructions, budget commitments, invoices, payments, claims, quality acceptance, defect closure or complaints. | User attempts a bulk action | AC-009, AC-010 | GOAL-002 |
-| FR-008 | The product shall enforce deterministic evidence, eligibility, authority, safety, resident, funding, capacity, quality and finance gates before a controlled state transition. | User or workflow requests a transition | AC-010, AC-011, AC-067 | GOAL-002 |
+| FR-008 | The product shall enforce deterministic evidence, eligibility, authority, safety, resident, funding, capacity, quality and finance gates before a controlled state transition. | User or workflow requests a transition | AC-010, AC-011, AC-067, AC-114 | GOAL-002 |
 | FR-009 | An authorised reviewer shall be able to return a case or work item to an earlier lifecycle stage, request missing/corrected information, or reopen it when evidence, scope, condition, resident circumstances or status changes. | Reviewer returns/reopens a case | AC-008, AC-012 | GOAL-001, GOAL-002 |
 | FR-010 | The product shall record each return/reopen as a versioned disposition with reason, source, initiating authority, receiving owner and next action. History preservation is governed by FR-022; dependent invalidation by FR-043. | Case return, reopen or material change | AC-012, AC-013 | GOAL-002 |
 | FR-011 | The product shall maintain role-owned handoffs with distinct sent, received, accepted, rejected/returned, escalated and completed states; show current accountable owner, destination, proposed/confirmed receiver, chase owner, urgency, due date and next action separately, with unknown/unassigned values explicit and receipt not implying acceptance. | A case crosses a team boundary | AC-014, AC-036 | GOAL-001, GOAL-002 |
@@ -856,7 +863,7 @@ owner, named control owners and affected users before implementation approval.
 | FR-019 | The product shall maintain distinct evidence-linked opportunity, application preparation/review/export/submission/disposition, award, claimable, claim-submission/disposition and cash records, separately from provider invoices/payments; each external application or claim event shall identify its scheme/route, pack version and authorized evidence without changing unrelated finance states. | Finance updates grant evidence | AC-022, AC-050 | GOAL-002 |
 | FR-020 | The coordinator dashboard shall provide a filterable heatmap of cases by approved geography/building/archetype and stage, with counts, denominator, holds, priority and data-coverage cues. | Coordinator or authorised stakeholder selects heatmap | AC-023 | GOAL-003 |
 | FR-021 | The coordinator dashboard shall provide a funnel of cases through lifecycle stages, showing entries, exits, returns, holds and exclusions with consistent definitions and drill-through to records. | Coordinator views funnel | AC-024 | GOAL-003 |
-| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history; narrative illustrations shall be labelled separately and shall not establish auditability or durations where event times are unknown. | Coordinator or assurance user selects a time range | AC-025, AC-043, AC-057 | GOAL-003 |
+| FR-022 | The product shall provide historical views of case and cohort progression from timestamped events, including stage duration, handoff, pause, return, reopen and decision history; narrative illustrations shall be labelled separately and shall not establish auditability or durations where event times are unknown. | Coordinator or assurance user selects a time range | AC-025, AC-043, AC-057, AC-116 | GOAL-003 |
 | FR-023 | The product shall generate delivery forecasts from declared cohort, stage, event, committed-capacity, dependency and scenario assumptions, show uncertainty and data limits, and distinguish forecast from target, approved plan and actual outcome. | Coordinator or Asset/Finance user requests forecast | AC-026 | GOAL-003 |
 | FR-024 | The product shall support role-appropriate stakeholder progress views and exportable evidence for a selected cohort and as-of date, with definitions, sources, denominators, filter impact, unresolved items and approval status visible; a separate illustrative snapshot shall disclose that it is not derived from the inspectable case sample and shall not imply case drill-through or accepted handover. | Coordinator prepares a progress review | AC-027, AC-041 | GOAL-001, GOAL-003 |
 | FR-025 | The product shall offer source-linked next-step suggestions based on case state, approved rules and relevant evidence, showing rationale, proposed owner, prerequisite, due-date basis and unknowns. | User reviews a case or queue | AC-028 | GOAL-001, GOAL-004 |
@@ -890,6 +897,8 @@ owner, named control owners and affected users before implementation approval.
 | FR-053 | An authorized operator shall be able to suspend an affected AI task and record its incident, impacted proposal/version set, accountable owner and restart decision, preserving permitted history and independent manual and hazard routes. | RAI incident or threshold breach | AC-072 | GOAL-002, GOAL-004 |
 | FR-054 | The product shall retain a versioned evaluation record for deterministic prioritisation and AI tasks with declared cohort definitions, denominators, missing-data treatment, subgroup error/exclusion/review-burden results, uncertainty, approved thresholds and human disparity disposition. | Release evaluation or material policy/model/data change | AC-073 | GOAL-002, GOAL-004 |
 | FR-061 | The product shall report AI consumption economics for the exercise: for each registered AI task, calls, input, output and cached tokens, retries, failures and outcome joined to the audit scenario record and the human review outcome, with the Total Cost of AI components and the cost per accepted proposal shown beside the quality floor met. It shall state no cost that it cannot tie to a dated price source and a billing record. | Finance, Digital or Product views AI economics, or an evaluation run completes | AC-107, AC-108 | GOAL-004 |
+| FR-062 | The product shall recognize the explicitly assigned `ZavaForward.ApplicationAdmin` role as sufficient for staff application access and the Programme Manager application option set, both alone and with a staff role such as `ZavaForward.ProgrammeManager`, without a database staff record. ApplicationAdmin alone is view-only: every state-changing request is refused until an explicit staff role is also assigned, and administrative access shall not confer independent professional, finance, resident, named-approver or AI-restart authority. | Verified staff principal has the ApplicationAdmin role | AC-113, AC-114 | GOAL-001, GOAL-002 |
+| FR-063 | The controlled M365/Microsoft Graph provisioning script shall support an idempotent ApplicationAdmin assignment with a non-mutating dry run, exact configured tenant/application/service-principal/target-principal verification and verification of the resulting role assignment, preserving unrelated role definitions and assignments and requiring no database staff provisioning. | Authorized operator requests a plan or applies the exact approved assignment | AC-115 | GOAL-001, GOAL-002 |
 
 ## Non-Functional Requirements
 
@@ -927,12 +936,29 @@ interoperability (008), portability (010), plus integrity and AI controls.
   scale-test workload, reporting results separately from the core journey.
   A failing/unexecuted scale test prevents a scale claim, not a silent
   reduction in fidelity. No production elasticity is established.
-* **NFR-003 Security and authorization:** Authentication and server-enforced
-  role, record and field permissions shall be tested for every user profile
-  and controlled action. A UI perspective switch shall never grant access.
+* **NFR-003 Security and authorization:** Verified Entra tenant, object
+  identity and explicitly assigned supported app roles shall determine staff
+  application access. Authentication shall perform zero database reads and
+  shall not require a staff record or email match. Missing, malformed,
+  conflicting, wrong-tenant or unverified identity, and missing or
+  unsupported-only role claims, shall deny staff access. Server-enforced
+  role, record, field and action permissions shall be tested for every user
+  profile and controlled action; a UI perspective switch grants nothing.
+  ApplicationAdmin shall compose with ProgrammeManager without bypassing
+  resident separation, no-self-approval or independent human, professional,
+  finance, consent, named-approver and AI-restart gates. Verify through
+  AC-004, AC-005 and AC-111 to AC-114.
 * **NFR-004 Auditability:** Case edits, bulk changes, imports, exports,
   handoffs, returns, approvals, overrides, agent outputs and failures shall be
-  attributable, timestamped, versioned and reconstructable.
+  attributable, timestamped, versioned and reconstructable. For Entra
+  actors, attribution and user-owned records shall use a stable
+  server-derived identity bound to the canonical tenant and object ID,
+  not email, display name or the presence of a database staff record.
+  Display-claim changes shall not change the actor or transfer ownership;
+  a different tenant/object pair shall not inherit ownership. Preserve
+  historical attribution and existing case/staff assignment references
+  without silently relabelling or merging them. Verify through AC-007,
+  AC-025 and AC-116.
 * **NFR-005 Privacy:** MVP data shall consist of constructed,
   non-identifying exercise records only. Personal data shall
   not be ingested without separate lawful-basis, data-protection and release
@@ -1245,6 +1271,21 @@ actual outcome, environment and evidence. No average score can offset a
 critical permission, resident-choice, safety, professional or financial
 control failure. Freeze fixture oracles before execution.
 
+P0 access correction, owner direction 2026-10-24: DD-009 and AC-111 to
+AC-117 define a bounded Entra-authoritative staff-access increment.
+Report three independent evidence states: implemented, deployed and
+real-user-observed. Implemented means the named source passes the scoped
+tests; deployed means the verified serving image/revision carries that
+source and relevant authentication configuration; real-user-observed
+means a fresh authorized Entra browser session reaches the intended staff
+UI/API without database staff provisioning. Current login is not fixed.
+Local source changes and historical successes do not close this failure.
+The access decision does not require blanket production approval,
+optional M365 adoption or unrelated architecture work before its bounded
+implementation; existing change/deployment authority and all domain
+controls remain applicable. Full-build acceptance under AC-057/CON-009
+and live-use governance remain separate.
+
 #### Core Journey, UX and Source Contracts
 
 Use one wholly fictional home, building and versioned package, with a sibling
@@ -1555,6 +1596,13 @@ technical, control and user representatives before acceptance.
 | AC-108 | Given a cheaper candidate or cache setting that lowers cost per invocation but raises a critical miss, unsupported-claim, override or reopened-case rate on the same held-out scenarios, when results are compared, then the change is reported as a failure, not a saving; time released is reported as capacity, not cash, unless Finance confirms a booked destination; and no token-cost benefit is claimed. | FR-061, FR-027 | Not run |
 | AC-109 | Given a registered task with limits, a request built to loop or fan out beyond its approved call count or agent depth, a reached token or budget limit, an unknown price and an expired authority, when each occurs, then dispatch stops with a recorded outcome, no further provider call is made, the case continues on the workflow-only path, an owned alert names the limit reached, and hazard response and statutory clocks are unaffected. | NFR-017, FR-044 | Not run |
 | AC-110 | Given a period of metered usage and the Azure cost record, when Finance reconciles them, then variance above the owner-set tolerance is reported, the billing record is the financial source, the price source is dated and versioned, and usage by task, case type and release can be reconstructed without raw case content in telemetry. | NFR-017 | Not run |
+| AC-111 | Given a verified configured-tenant staff principal with a valid object ID, one supported assigned staff role and no database staff record, when authentication runs against a database/store double that raises on any access, then authentication succeeds with zero database access; with programme state available, a permitted case action also succeeds without an actor-roster lookup becoming a substitute login prerequisite, while its normal record/field/action gates still apply. | FR-003 | Not run |
+| AC-112 | Given anonymous, forged or untrusted principal input, a wrong tenant, missing/malformed/conflicting tenant or object IDs, no app role, unsupported-only roles or conflicting mapped staff roles, when staff access is requested, then access is denied without database access; a matching email, name, roster row or selected perspective cannot rescue it, and unknown supplementary roles add no capability to an otherwise valid supported principal. | FR-003 | Not run |
+| AC-113 | Given separate verified principals assigned ApplicationAdmin alone, ApplicationAdmin with ProgrammeManager, and ProgrammeManager without ApplicationAdmin, each with no database staff record, when they sign in and request their option sets through the UI and API, then both admin combinations succeed with the Programme Manager application option set, role composition does not create a conflicting-staff-role denial, and the manager-only principal is not labelled or authorized as ApplicationAdmin. | FR-003, FR-062 | Not run |
+| AC-114 | Given ApplicationAdmin alone and with ProgrammeManager, when permitted and prohibited object/field/action, bulk, export, assistant and private-conversation scenarios are exercised, then ApplicationAdmin alone refuses every state-changing request, permitted application operations work with an explicit staff role, but unauthorized records/fields and another user's private conversation or memory are not disclosed; self-approval, provider self-acceptance, missing competent professional or Finance authority, missing resident/representative consent, named rule-owner approval and distinct AI-restart approval remain denied unless their separate existing requirements are satisfied. | FR-003, FR-008, FR-062 | Not run |
+| AC-115 | Given an explicitly selected tenant, application/client ID, resource service-principal ID, target principal object ID and enabled ApplicationAdmin role definition, when the provisioning script plans, applies and reruns the assignment, then dry run performs no mutation or SQL staff provisioning, apply verifies the exact tenant/app/resource/principal and adds only the missing intended assignment, and rerun is a no-op; wrong, missing, ambiguous or incompatible targets and insufficient authority refuse mutation, result verification is required, and before/after comparisons preserve all unrelated app-role definitions and assignments. | FR-063 | Not run |
+| AC-116 | Given a verified Entra actor without a staff row, when a permitted change is audited and the actor later signs in with changed email/name or a different supported role, then the canonical tenant/object-bound actor and ownership remain stable; a different object ID with the old email cannot inherit private records or satisfy a distinct-actor check, existing historical attribution/assignment references remain unchanged, and neither display claims nor a roster match authorize access. | FR-003, FR-005, FR-022 | Not run |
+| AC-117 | Given the P0 access correction, when delivery status is reported, then implemented, deployed and real-user-observed outcomes are recorded separately: implementation names the tested source and AC-111 to AC-116 results; deployment names the serving image/revision and relevant auth configuration verification; real-user observation records a fresh authorized Entra browser session reaching the intended staff UI/API with the expected role set and no staff-binding prerequisite. Local tests, role assignment, a healthy endpoint, operator/model probes and historical login reports do not substitute for the last two outcomes; missing evidence is Not run or Blocked and login is not reported fixed. | FR-003 | Not run |
 
 ### Independently reportable review checks
 
@@ -1609,12 +1657,12 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | --- | --- | --- |
 | FR-001 | AC-001, AC-002, AC-043 | Linked |
 | FR-002 | AC-001, AC-002, AC-003, AC-043 | Linked |
-| FR-003 | AC-004, AC-005, AC-060, AC-067 | Linked |
+| FR-003 | AC-004, AC-005, AC-060, AC-067, AC-111, AC-112, AC-113, AC-114, AC-116, AC-117 | Linked |
 | FR-004 | AC-006 | Linked |
-| FR-005 | AC-007, AC-008, AC-057 | Linked |
+| FR-005 | AC-007, AC-008, AC-057, AC-116 | Linked |
 | FR-006 | AC-009 | Linked |
 | FR-007 | AC-009, AC-010 | Linked |
-| FR-008 | AC-010, AC-011, AC-067 | Linked |
+| FR-008 | AC-010, AC-011, AC-067, AC-114 | Linked |
 | FR-009 | AC-008, AC-012 | Linked |
 | FR-010 | AC-012, AC-013 | Linked |
 | FR-011 | AC-014, AC-036 | Linked |
@@ -1628,7 +1676,7 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | FR-019 | AC-022, AC-050 | Linked |
 | FR-020 | AC-023 | Linked |
 | FR-021 | AC-024 | Linked |
-| FR-022 | AC-025, AC-043, AC-057 | Linked |
+| FR-022 | AC-025, AC-043, AC-057, AC-116 | Linked |
 | FR-023 | AC-026 | Linked |
 | FR-024 | AC-027, AC-041 | Linked |
 | FR-025 | AC-028 | Linked |
@@ -1670,9 +1718,11 @@ checks cannot pass acceptance but are not falsely labelled executed failures.
 | NFR-015 | AC-102 | Linked |
 | NFR-016 | AC-103 | Linked |
 | FR-061 | AC-107, AC-108 | Linked |
+| FR-062 | AC-113, AC-114 | Linked |
+| FR-063 | AC-115 | Linked |
 | NFR-017 | AC-109, AC-110 | Linked |
 
-Link coverage: 61/61 FRs (including those proposed) and the proposed NFR-015 to NFR-017 linked to at least one criterion (100%); this matrix
+Link coverage: 63/63 FRs (including those proposed) and the proposed NFR-015 to NFR-017 linked to at least one criterion (100%); this matrix
 matches both requirement and criterion tables. Behavioral acceptance remains
 Not run. Links and named subchecks are not proof that every behavior has
 been implemented or tested.
@@ -1688,6 +1738,7 @@ been implemented or tested.
 | FR-004, FR-020 to FR-024, FR-030, FR-050 | GOAL-003 |
 | FR-025 to FR-028, FR-034, FR-036 to FR-037, FR-039 to FR-040, FR-044, FR-047 | GOAL-004 |
 | FR-051, FR-053, FR-054, FR-055 to FR-059, FR-061 | GOAL-004 |
+| FR-062, FR-063 | GOAL-001, GOAL-002 |
 
 All goals have linked requirements; all FRs map to at least one goal (100%).
 
@@ -1745,7 +1796,7 @@ Nothing here records implementation, requirements approval or live-use acceptanc
 | Narrative timeline lacks audit fields; original examples cannot establish durations | FR-022, NFR-004; AC-025/043 | Constructed events labelled as such; operational audit/recovery deferred |
 | Eleven perspectives not eleven validated journeys; adjacent provider/quality/operator lenses insufficient | FR-035, NFR-001; profile journey contract | Direct representative/device/accessibility research OQ-004/011; no conformance claimed |
 | #58 actual selection/generation and Azure SQL deployment; endpoint fixed; later source controls not all deployed | CON-009/AC-057, DD-007 and separate source/image/revision records | Narrow feasibility observed, not calibrated screening, benefit or full acceptance; [pinned learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) |
-| 2026-10-12/13: app role alone failed because SQL staff oid was absent; owner subsequently confirms tenant access | FR-003, NFR-003, AC-004/005; [private initialization](../../infra/README.md#tenant-staff-and-application-role-initialization) reconciles claims plus binding without email fallback | Eleven tenant-member demo allocations are not company staffing/competence or validated B2B onboarding; complete role/field and human acceptance remain separate |
+| 2026-10-12/13 historical login required SQL staff binding; owner superseded that access design on 2026-10-24 after renewed login failure | DD-009, FR-003/062/063, NFR-003/004 and AC-111 to AC-117 require verified Entra tenant/object identity and explicit app roles, with no database staff provisioning/read as a login prerequisite and no email authorization fallback | Earlier private initialization and reported successful login remain historical observations, not the current remedy or proof of this correction. ApplicationAdmin composition, controlled-action regression, serving-image deployment and a fresh real-user session still require separate evidence; login is not fixed |
 | 2026-10-12: current names changed but staff/workload codes and historical attribution must not | FR-005/011/022, NFR-004; shared-lock atomic update, exact private preservation and no-op restart recovery | Observed 980-case programme, not 60,000 live SQL cases; stock retained, no operational business-value claim |
 | 2026-10-12/13: welcome, own-account photo and switching are distinct from authorisation | NFR-001/003 and GOAL-001; public logo/name with deliberate entry, private delegated own-photo transport, image-only Blob CSP and explicit Microsoft account picker | Owner reports sign-in works; synthetic/photo transport and anonymous platform traces do not establish a person's photo, accessibility or changed authenticated session |
 | 2026-10-13: useful diagnostics require safe events and deployed configuration evidence, not generic request logs | FR-003/022, NFR-003/004; [fixed flow events](../../infra/README.md#account-selection-and-safe-flow-diagnostics), existing centralized routing and private image-only config comparison | Markers contain no new identity/token payload; existing logs need controlled handling. CI provider failures and rubric scores are not app or business acceptance |
@@ -2147,7 +2198,7 @@ human user research and live-use approval remain future operational gates.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-22 (AI Tokenomics proposals FR-061 and NFR-017 added; 2026-10-18 constructed RAI finding-evidence engineering status retained; FR-060 and v0.17.0 chat/memory proposals remain pending fresh approval)
+* **Last Updated:** 2026-10-24 (owner-directed Entra-authoritative staff access added); earlier: 2026-10-22 (AI Tokenomics proposals FR-061 and NFR-017 added; 2026-10-18 constructed RAI finding-evidence engineering status retained; FR-060 and v0.17.0 chat/memory proposals remain pending fresh approval)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
 
@@ -2155,6 +2206,7 @@ human user research and live-use approval remain future operational gates.
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 0.19.0 | 2026-10-24 | Owner-directed P0 Entra-authoritative staff access: DD-009, amended FR-003/NFR-003/NFR-004, FR-062/063 and AC-111 to AC-117; no SQL staff provisioning/read as login prerequisite; explicit ApplicationAdmin composition (alone it is view-only); domain gates retained; implementation, deployment and real-user observation remain separate and login is not fixed |
 | 0.18.0 | 2026-10-22 | Proposal: AI Tokenomics (FR-061, NFR-017, AC-107 to AC-110, OQ-027) mapped to BRD v0.19.0 FR-052, NFR-012, AC-100 to AC-103 and OD-51; no existing ID renumbered; no price, budget or cost figure added |
 | 0.17.0 | 2026-10-15 | Proposal: per-user agent chat and memory (FR-055 to FR-059, NFR-015, NFR-016, AC-091 to AC-103, OQ-020 to OQ-025) with a journey, agent and UI mapping; renumbered after the RAI controls took FR-051 to FR-054, NFR-014, AC-069 to AC-073 and OQ-017 to OQ-019; inactive until BRD OD-44 |
 | 0.16.0 | 2026-10-15 | Journey and sensor requirements reconciled with proposed RAI release and oversight controls |

@@ -13,6 +13,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any, Protocol
 
+from . import identity
 from . import ai_registry, projection
 from .controls import RESIDENT_VIEW_ROLES
 from .documents import ACCEPTED
@@ -102,7 +103,10 @@ def _registered(store: FormStore, email: str) -> Record | None:
 
 def _actor(store: FormStore, user: Record) -> Record:
     email = user.get("email")
-    actor = _registered(store, email) if isinstance(email, str) else None
+    if identity.is_entra(user):
+        actor = identity.verified(user)
+    else:
+        actor = _registered(store, email) if isinstance(email, str) else None
     if (
         actor is None
         or any(actor.get(k) != user.get(k) for k in ("code", "name", "role"))

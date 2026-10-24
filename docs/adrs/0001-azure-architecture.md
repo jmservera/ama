@@ -2,7 +2,7 @@
 title: ADR 0001 Azure Architecture for the Zava Forward Demonstrator
 description: Proposed Azure hosting, agent placement, data, model and security architecture for the non-production Zava Forward retrofit workbench demonstrator
 author: AMA programme
-ms.date: 2026-10-17
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -58,6 +58,13 @@ personal content, per owner direction and DH-007), field-level role visibility,
 deterministic home ranking, map scale for about 60,000 homes, replicas and
 image hardening, and DPIA-gated staff time capture. Where the two differ for
 the MVP, ADR 0002 applies once approved.
+
+The bounded
+[2026-10-24 staff-access decision in ADR 0002](./0002-pilot-readiness-architecture.md#entra-authoritative-staff-access-owner-decision-2026-10-24-refs-360)
+is owner-accepted independently of the wider proposal. Entra is authoritative
+for staff identity and application roles, without SQL staff provisioning for
+authentication. This does not replace the topology or accept either ADR as a
+whole; SQL business controls and existing human authority boundaries remain.
 
 ## Context
 

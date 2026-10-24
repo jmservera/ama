@@ -40,6 +40,7 @@ roles=(
   "RuleOwner|Regulatory named owner"
   "RegulatoryChat|Regulatory chat user"
   "AIRestart|Constructed AI restart capability"
+  "ApplicationAdmin|Application administrator"
 )
 roles_json=$(python3 - "${roles[@]}" <<'PY'
 import json, sys, uuid

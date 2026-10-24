@@ -15,7 +15,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from zava_forward.core import controls, forms, profile
 
-from zava_forward.core import projection, quality, ranking, taskqueues
+from zava_forward.core import identity, projection, quality, ranking, taskqueues
 
 from zava_forward.core import lawstore, rulecards, rule_engine
 from zava_forward.api import auth
@@ -565,8 +565,11 @@ def make_handler(app):
                             raise ValueError("approver must be a provisioned staff email.")
                         owner = owner.strip().lower()
                         person = app.store.staff.get(owner)
+                        if identity.ENTRA_EMAIL.fullmatch(owner):
+                            # An Entra-derived identity names one tenant object id; it cannot equal any staff email.
+                            person = dict(email=owner, role=projection.STAFF_ROLES[0])
                         if not person or person.get("role") not in projection.STAFF_ROLES:
-                            raise ValueError("approver must be a provisioned staff email.")
+                            raise ValueError("approver must be a provisioned staff email or an Entra staff identity.")
                         fields = {k: v for k, v in body.items() if k != "card_id"}
                         fields["approver"] = person["email"].strip().lower()
                         cid = body.get("card_id")
@@ -787,6 +790,8 @@ def make_handler(app):
                 return self._json(401, {"error": "Please sign in."})
             if app.provider.name == "trusted-proxy" and self.headers.get("X-ZF-CSRF") != "1":
                 return self._json(403, {"error": "Missing request header."})
+            if u.get("view_only") and url.path != "/api/logout":
+                return self._json(403, {"error": "Administrator access shows every option but changes nothing; a staff role is needed to act."})
             if url.path == "/api/logout":
                 if app.provider.name == "trusted-proxy":
                     if body.get("switchAccount") is True:

@@ -5,6 +5,7 @@ import math
 from collections.abc import Mapping
 from typing import Any
 
+from . import identity
 from . import insights, progress, projection, ranking, taskqueues
 from .export_fields import scalars
 
@@ -158,7 +159,8 @@ def read(store: Any, user: Record, query: Mapping[str, str]) -> Record:
     taskqueues.validate_queue(filters.get("queue", ""))
     with store.lock:
         email = user.get("email")
-        actor = store.staff.get(email.lower()) if isinstance(email, str) else None
+        actor = (identity.verified(user) if identity.is_entra(user)
+                 else store.staff.get(email.lower()) if isinstance(email, str) else None)
         if (
             actor is None
             or actor.get("role") not in projection.STAFF_ROLES

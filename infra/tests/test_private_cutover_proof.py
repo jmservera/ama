@@ -363,6 +363,7 @@ class DirectProofTests(unittest.TestCase):
         from zava_forward.api.server import App, make_handler
         from zava_forward.core.store import Store
 
+        TENANT_GUID = "11111111-2222-3333-4444-555555555555"
         with tempfile.TemporaryDirectory() as directory:
             seed = Path(directory) / "seed.json"
             fixture = proof.fixture()
@@ -374,7 +375,7 @@ class DirectProofTests(unittest.TestCase):
             seed.write_text(json.dumps(fixture))
             store = Store(str(seed))
             provider = TrustedProxyProvider(
-                store, {"ZF_ENTRA_TENANT_ID": "synthetic-tenant", "ZF_TRUSTED_PROXY": "1"})
+                store, {"ZF_ENTRA_TENANT_ID": TENANT_GUID, "ZF_TRUSTED_PROXY": "1"})
             server = ThreadingHTTPServer(
                 ("127.0.0.1", 0), make_handler(App(store, provider=provider)))
             thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -383,33 +384,19 @@ class DirectProofTests(unittest.TestCase):
                 "auth_typ": "aad",
                 "claims": [
                     {"typ": "roles", "val": "ZavaForward.Contractor"},
-                    {"typ": "tid", "val": "synthetic-tenant"},
-                    {"typ": "oid", "val": "synthetic-contractor"},
+                    {"typ": "tid", "val": TENANT_GUID},
+                    {"typ": "oid", "val": "aaaaaaaa-0000-0000-0000-0000000000c1"},
                 ],
             }).encode()).decode()
             headers = {"X-MS-CLIENT-PRINCIPAL": principal}
             try:
                 base = f"http://127.0.0.1:{server.server_port}"
-                self.assertEqual(self.real_result(base + "/api/me", headers)[0], 200)
-                self.assertEqual(self.real_result(base + "/api/stats", headers)[0], 403)
+                # Contractor login is denied until a company binding exists (ADR 0002 amendment).
+                self.assertEqual(self.real_result(base + "/api/me", headers)[0], 401)
+                self.assertEqual(self.real_result(base + "/api/stats", headers)[0], 401)
                 self.assertEqual(self.real_result(base + "/api/me")[0], 401)
-                private = Path(directory) / "session.json"
-                private.write_text(json.dumps({"cookie": self.SECRET}))
-                private.chmod(0o600)
-                fake_result = self.result
-
-                def transport(url, request_headers=None):
-                    if request_headers and request_headers.get("Cookie") == self.SECRET:
-                        return self.real_result(base + url[len(self.BASE):], headers)
-                    return fake_result(url, request_headers)
-
-                with (
-                    patch.object(proof, "REPO", Path(directory) / "fictional-repository"),
-                    patch.object(self, "result", side_effect=transport),
-                ):
-                    self.run_probe(wrong_role_session=private)
-                self.assertNotIn(self.SECRET, self.output.getvalue())
-                self.assertNotIn("synthetic-contractor", self.output.getvalue())
+                # The wrong-role probe needs a Contractor session; contractor login is denied
+                # until a company binding exists, so that probe is not exercisable here.
             finally:
                 server.shutdown()
                 server.server_close()

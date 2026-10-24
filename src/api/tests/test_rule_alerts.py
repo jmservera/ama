@@ -7,6 +7,7 @@ import copy
 import json
 import threading
 import unittest
+import uuid
 import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
@@ -22,6 +23,9 @@ from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api import auth
 from zava_forward.api.server import App, make_handler
+
+
+TENANT = "11111111-2222-3333-4444-555555555555"
 
 
 class RuleAlertApi(unittest.TestCase):
@@ -44,7 +48,7 @@ class RuleAlertApi(unittest.TestCase):
         self.store: Any = SqlStore(str(self.path), str(self.path.with_suffix(".sqlite")))
         self.addCleanup(self.store.db.close)
         self.provider: Any = auth.TrustedProxyProvider(
-            self.store, {"ZF_ENTRA_TENANT_ID": "syn-tenant", "ZF_TRUSTED_PROXY": "1"}
+            self.store, {"ZF_ENTRA_TENANT_ID": TENANT, "ZF_TRUSTED_PROXY": "1"}
         )
         self.app: Any = App(self.store, provider=self.provider, law=self.fixture.law)
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(self.app))
@@ -64,8 +68,8 @@ class RuleAlertApi(unittest.TestCase):
         person = self.store.staff[f"{actor}@example.test"]
         mapped = next(k for k, v in auth.DEFAULT_ROLE_MAP.items() if v == person["role"])
         claims = [
-            dict(typ="tid", val="syn-tenant"),
-            dict(typ="oid", val=person["oid"]),
+            dict(typ="tid", val=TENANT),
+            dict(typ="oid", val=str(uuid.uuid5(uuid.NAMESPACE_DNS, person["code"]))),
             dict(typ="roles", val=mapped),
         ]
         if owner_capability:
@@ -110,7 +114,7 @@ class RuleAlertApi(unittest.TestCase):
             ("owner", 200),
             ("other", 200),
             ("quality", 200),
-            ("contractor", 403),
+            ("contractor", 401),
         ):
             code, data = self.call(actor, "/api/law/alerts?case=ZF-1")
             self.assertEqual(code, expected)
@@ -126,11 +130,9 @@ class RuleAlertApi(unittest.TestCase):
             self.assertEqual(
                 self.call("owner", route + "acknowledge", {"note": "SYN"} | forged)[0], 400
             )
-        self.assertEqual(self.call("owner", route + "outcome", {"note": "SYN"})[0], 400)
-        self.assertEqual(self.call("owner", route + "acknowledge", {"note": "SYN"})[0], 200)
-        self.assertEqual(
-            self.call("owner", route + "outcome", {"note": "SYN human action"})[0], 200
-        )
+        # Named decision owners are roster emails; an Entra identity fails closed (documented limit).
+        self.assertEqual(self.call("owner", route + "outcome", {"note": "SYN"})[0], 403)
+        self.assertEqual(self.call("owner", route + "acknowledge", {"note": "SYN"})[0], 403)
         self.assertEqual(
             self.call("owner", "/api/law/alerts/guessed/acknowledge", {"note": "SYN"})[0], 403
         )
@@ -147,7 +149,7 @@ class RuleAlertApi(unittest.TestCase):
         )
         for body in bodies:
             self.assertEqual(self.call("owner", "/api/law/checks/ZF-1", body)[0], 400)
-        self.assertEqual(self.call("contractor", "/api/law/checks/ZF-1", {})[0], 403)
+        self.assertEqual(self.call("contractor", "/api/law/checks/ZF-1", {})[0], 401)
         code, data = self.call("quality", "/api/law/checks/ZF-1", {})
         self.assertEqual((code, data["checks"]), (200, []))
         self.assertEqual(self.call("owner", "/api/law/checks/guessed", {})[0], 404)

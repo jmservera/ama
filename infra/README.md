@@ -1831,11 +1831,36 @@ gate/receipt and independent assessment are required before any publication.
 
 ### Tenant staff and application-role initialization
 
-An enterprise-app role assignment alone is not enough. The workbench also
-requires an internal staff record bound to the person's Entra object id. A
-valid role with no matching staff `oid` produces `Account not authorised`;
-email fallback remains disabled. SQL staff is cached at startup, so completing
-the binding also requires reloading the API replicas.
+Entra-authoritative access (owner decision 2026-10-24, Refs #360; see the
+[ADR 0002 decision](../docs/adrs/0002-pilot-readiness-architecture.md#entra-authoritative-staff-access-owner-decision-2026-10-24-refs-360)).
+A verified tenant, one valid object id and an assigned app role are sufficient
+for staff sign-in. No SQL staff row, SQL read or replica reload is a login
+prerequisite, and email fallback stays disabled. The roster/binding route below
+is historical and optional business-metadata reconciliation only; do not run it
+to fix a login. This is selected design for the changed build, not evidence of
+the serving revision or of a real-user session.
+
+Provisioning uses the isolated Graph profile. Setup merges `appRoles`
+idempotently and its manifest now includes `ZavaForward.ApplicationAdmin`:
+
+```bash
+python3 infra/scripts/setup-entra.py --dry-run
+python3 infra/scripts/grant-application-admin.py --tenant TENANT_ID \
+  --app-id CLIENT_ID --upn VERIFIED_ADMIN_UPN            # dry run
+python3 infra/scripts/grant-application-admin.py ... --apply  # one assignment
+```
+
+The grant script verifies the tenant, the unique enterprise app, the enabled role
+and an enabled member, adds only that assignment and is a no-op on repeat.
+`ApplicationAdmin` alone is view-only: it shows the manager option set while the
+server refuses every state-changing request; combine it with a staff role such
+as `ProgrammeManager` to act. It grants no RuleOwner, AIRestart, professional
+sign-off, consent or private-thread authority.
+
+Historical route (superseded for sign-in): an enterprise-app role assignment
+alone was not enough because an internal staff record bound to the person's
+Entra object id was also required. A valid role with no matching staff `oid`
+produced `Account not authorised`. SQL staff is cached at startup.
 
 The default setup command now orchestrates `scripts/initialize-workbench-staff.py`
 after Entra reconciliation and a fresh Entra check. Its private JSON roster
