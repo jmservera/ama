@@ -7,6 +7,7 @@ import urllib.error
 import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from typing import Any, cast
 
 from zava_forward.core import identity, projection
 
@@ -16,27 +17,37 @@ from zava_forward.api.server import App, make_handler
 
 ADMIN = "ZavaForward.ApplicationAdmin"
 
+# The shared fixtures and server seams are not yet annotated; these aliases are explicit Any seams.
+Provider: Any = auth.TrustedProxyProvider
+Application: Any = App
+handler: Any = make_handler
+make_principal: Any = principal
+
 
 class EntraHttpTests(Base):
-    def setUp(self):
-        super().setUp()
+    def setUp(self) -> None:
+        cast(Any, super()).setUp()
         self.store.staff.clear()
         self.store.data["staff"].clear()
-        prov = auth.TrustedProxyProvider(self.store, ENV)
+        prov = Provider(self.store, ENV)
         self.httpd = ThreadingHTTPServer(
-            ("127.0.0.1", 0), make_handler(App(self.store, provider=prov))
+            ("127.0.0.1", 0), handler(Application(self.store, provider=prov))
         )
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
         self.base = f"http://127.0.0.1:{self.httpd.server_address[1]}"
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.httpd.shutdown()
         self.httpd.server_close()
-        super().tearDown()
+        cast(Any, super()).tearDown()
 
-    def call(self, path, roles=(ADMIN,), **kw):
+    def call(
+        self, path: str, roles: tuple[str, ...] | None = (ADMIN,), **kw: Any
+    ) -> tuple[int, Any]:
         headers = (
-            {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles, **kw)} if roles is not None else {}
+            {"X-MS-CLIENT-PRINCIPAL": make_principal(roles=roles, **kw)}
+            if roles is not None
+            else {}
         )
         try:
             with urllib.request.urlopen(
@@ -46,7 +57,7 @@ class EntraHttpTests(Base):
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read())
 
-    def test_admin_alone_enters_and_sees_every_option_but_reads_no_business_data(self):
+    def test_admin_alone_enters_and_sees_every_option_but_reads_no_business_data(self) -> None:
         code, me = self.call("/api/me", oid=OID_NEW)
         self.assertEqual(code, 200)
         self.assertEqual(me["user"]["role"], "Application Administrator")
@@ -71,7 +82,9 @@ class EntraHttpTests(Base):
         ):
             self.assertEqual(self.call(path, oid=OID_NEW)[0], 403, path)
 
-    def test_admin_with_a_staff_role_sees_every_option_but_data_follows_the_staff_role(self):
+    def test_admin_with_a_staff_role_sees_every_option_but_data_follows_the_staff_role(
+        self,
+    ) -> None:
         roles = (ADMIN, "ZavaForward.Coordinator")
         code, me = self.call("/api/me", roles=roles, oid=OID_NEW)
         self.assertEqual((code, me["user"]["role"]), (200, "Retrofit Coordinator"))
@@ -84,11 +97,13 @@ class EntraHttpTests(Base):
         plain = self.call("/api/me", roles=("ZavaForward.Coordinator",), oid=OID_NEW)[1]
         self.assertTrue(all("access" not in d for d in plain["navigation"]))
 
-    def post(self, path, roles, body=None):
+    def post(
+        self, path: str, roles: tuple[str, ...], body: dict[str, Any] | None = None
+    ) -> tuple[int, Any]:
         req = urllib.request.Request(
             self.base + path,
             json.dumps(body or {}).encode(),
-            headers={"X-MS-CLIENT-PRINCIPAL": principal(roles=roles), "X-ZF-CSRF": "1"},
+            headers={"X-MS-CLIENT-PRINCIPAL": make_principal(roles=roles), "X-ZF-CSRF": "1"},
         )
         try:
             with urllib.request.urlopen(req) as r:
@@ -96,7 +111,9 @@ class EntraHttpTests(Base):
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read())
 
-    def test_admin_alone_is_view_only_but_admin_with_staff_role_keeps_that_role_authority(self):
+    def test_admin_alone_is_view_only_but_admin_with_staff_role_keeps_that_role_authority(
+        self,
+    ) -> None:
         code, body = self.post("/api/bulk-edits/apply", (ADMIN,))
         self.assertEqual(code, 403)
         self.assertIn("changes nothing", body["error"])
@@ -108,16 +125,16 @@ class EntraHttpTests(Base):
             "Programme Support Officer",
         )
 
-    def test_admin_alone_still_cannot_post_and_gets_no_business_role(self):
+    def test_admin_alone_still_cannot_post_and_gets_no_business_role(self) -> None:
         for path in ("/api/cases/ZF-1/call", "/api/finance/budget"):
             self.assertEqual(self.post(path, (ADMIN,), {})[0], 403)
 
-    def test_admin_with_programme_manager_is_not_a_two_role_denial(self):
+    def test_admin_with_programme_manager_is_not_a_two_role_denial(self) -> None:
         self.assertEqual(
             self.call("/api/me", roles=("ZavaForward.ProgrammeManager", ADMIN))[0], 200
         )
 
-    def test_anonymous_unassigned_wrong_tenant_and_bad_oid_are_denied(self):
+    def test_anonymous_unassigned_wrong_tenant_and_bad_oid_are_denied(self) -> None:
         self.assertEqual(self.call("/api/me", roles=None)[0], 401)
         self.assertEqual(self.call("/api/me", roles=())[0], 401)
         self.assertEqual(self.call("/api/me", roles=("Unmapped.Role",))[0], 401)
@@ -125,15 +142,15 @@ class EntraHttpTests(Base):
         self.assertEqual(self.call("/api/me", oid="not-a-guid")[0], 401)
         self.assertEqual(self.call("/api/me", oid=None)[0], 401)
 
-    def test_admin_grants_no_approval_or_override_capability(self):
-        user = auth.TrustedProxyProvider(self.store, ENV).authenticate(
-            {"X-MS-CLIENT-PRINCIPAL": principal(roles=(ADMIN,))}
+    def test_admin_grants_no_approval_or_override_capability(self) -> None:
+        user = Provider(self.store, ENV).authenticate(
+            {"X-MS-CLIENT-PRINCIPAL": make_principal(roles=(ADMIN,))}
         )
         self.assertEqual(user["rule_roles"], [])
         self.assertNotIn(user["role"], ("Building Safety Liaison", "Quality Inspector"))
         self.assertFalse(projection.is_contractor(user))
 
-    def test_identity_verification_rejects_tampered_keys(self):
+    def test_identity_verification_rejects_tampered_keys(self) -> None:
         user = identity.principal(TENANT, OID_NEW, "Retrofit Programme Manager")
         self.assertIsNotNone(identity.verified(user))
         for key, value in (
@@ -147,7 +164,7 @@ class EntraHttpTests(Base):
 
 
 class IdentitySeamTests(unittest.TestCase):
-    def test_distinct_people_get_distinct_stable_keys(self):
+    def test_distinct_people_get_distinct_stable_keys(self) -> None:
         a = identity.principal(TENANT, OID_NEW, "Retrofit Coordinator")
         b = identity.principal(
             TENANT, "bbbbbbbb-0000-0000-0000-000000000002", "Retrofit Coordinator"
@@ -157,7 +174,7 @@ class IdentitySeamTests(unittest.TestCase):
             a, identity.principal(TENANT.upper(), OID_NEW.upper(), "Retrofit Coordinator")
         )
 
-    def test_display_claims_cannot_inject_controls_or_exceed_limits(self):
+    def test_display_claims_cannot_inject_controls_or_exceed_limits(self) -> None:
         self.assertEqual(identity.display("A\x00B\u202ec" + "z" * 400), "ABc" + "z" * 117)
         self.assertEqual(identity.display(None), "")
 
@@ -169,10 +186,10 @@ if __name__ == "__main__":
 class ContinuityTests(Base):
     OID_LEGACY = "dddddddd-0000-0000-0000-0000000000aa"
 
-    def setUp(self):
-        super().setUp()
+    def setUp(self) -> None:
+        cast(Any, super()).setUp()
         self.store.data[identity.LEGACY_TENANT_KEY] = TENANT
-        self.row = dict(
+        self.row: dict[str, Any] = dict(
             code="RC-01",
             name="Legacy Owner",
             email="legacy@example.test",
@@ -182,15 +199,17 @@ class ContinuityTests(Base):
             contract_authorities=[dict(marker="scoped")],
         )
         self.store.staff[self.row["email"]] = self.row
-        self.entra = auth.TrustedProxyProvider(self.store, ENV).authenticate(
+        self.entra = Provider(self.store, ENV).authenticate(
             {
-                "X-MS-CLIENT-PRINCIPAL": principal(
+                "X-MS-CLIENT-PRINCIPAL": make_principal(
                     roles=("ZavaForward.Coordinator",), oid=self.OID_LEGACY
                 )
             }
         )
 
-    def test_verified_oid_keeps_legacy_business_identity_but_role_comes_from_the_claim(self):
+    def test_verified_oid_keeps_legacy_business_identity_but_role_comes_from_the_claim(
+        self,
+    ) -> None:
         user = identity.bind(self.store, self.entra)
         self.assertEqual(
             (user["code"], user["email"], user["name"]),
@@ -205,7 +224,7 @@ class ContinuityTests(Base):
         self.row["role"] = "Retrofit Programme Manager"
         self.assertEqual(identity.bind(self.store, self.entra)["role"], "Retrofit Coordinator")
 
-    def test_ambiguous_disabled_or_missing_match_keeps_the_derived_identity(self):
+    def test_ambiguous_disabled_or_missing_match_keeps_the_derived_identity(self) -> None:
         self.store.staff["copy@example.test"] = dict(
             self.row, email="copy@example.test", code="RC-02"
         )
@@ -220,7 +239,7 @@ class ContinuityTests(Base):
             identity.code_for(TENANT, self.OID_LEGACY),
         )
 
-    def test_bound_identity_cannot_be_forged_or_stale(self):
+    def test_bound_identity_cannot_be_forged_or_stale(self) -> None:
         user = identity.bind(self.store, self.entra)
         self.assertIsNone(identity.verified(dict(user, code="RC-99")))
         self.assertIsNone(
@@ -229,7 +248,9 @@ class ContinuityTests(Base):
         forged = dict(user, bound=None, code="RC-01", email="legacy@example.test")
         self.assertIsNone(identity.verified(forged))
 
-    def test_scoped_authorities_resolve_by_immutable_identity_at_the_protected_operation(self):
+    def test_scoped_authorities_resolve_by_immutable_identity_at_the_protected_operation(
+        self,
+    ) -> None:
         from zava_forward.core import change_provenance
 
         user = identity.bind(self.store, self.entra)
@@ -242,16 +263,24 @@ class ContinuityTests(Base):
             change_provenance._actor(self.store, user)
         derived = identity.bind(self.store, self.entra | dict(oid=self.entra["oid"]))
         self.row["code"] = "RC-01"
-        other = auth.TrustedProxyProvider(self.store, ENV).authenticate(
-            {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Coordinator",), oid=OID_NEW)}
+        other = Provider(self.store, ENV).authenticate(
+            {
+                "X-MS-CLIENT-PRINCIPAL": make_principal(
+                    roles=("ZavaForward.Coordinator",), oid=OID_NEW
+                )
+            }
         )
         unbound = change_provenance._actor(self.store, identity.bind(self.store, other))
         self.assertNotIn("financial_authority", unbound)
         self.assertIsNotNone(derived)
 
-    def test_new_entra_recipients_are_selectable_only_after_they_sign_in(self):
-        other = auth.TrustedProxyProvider(self.store, ENV).authenticate(
-            {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Coordinator",), oid=OID_NEW)}
+    def test_new_entra_recipients_are_selectable_only_after_they_sign_in(self) -> None:
+        other = Provider(self.store, ENV).authenticate(
+            {
+                "X-MS-CLIENT-PRINCIPAL": make_principal(
+                    roles=("ZavaForward.Coordinator",), oid=OID_NEW
+                )
+            }
         )
         with self.assertRaises(ValueError):
             self.store._staff_person(other["email"])
@@ -263,9 +292,9 @@ class ContinuityTests(Base):
         self.assertEqual(
             self.store._staff_person(identity.email_for(TENANT, self.OID_LEGACY))["code"], "RC-01"
         )
-        admin = auth.TrustedProxyProvider(self.store, ENV).authenticate(
+        admin = Provider(self.store, ENV).authenticate(
             {
-                "X-MS-CLIENT-PRINCIPAL": principal(
+                "X-MS-CLIENT-PRINCIPAL": make_principal(
                     roles=(ADMIN,), oid="eeeeeeee-0000-0000-0000-000000000001"
                 )
             }
@@ -273,7 +302,7 @@ class ContinuityTests(Base):
         identity.link(self.store, identity.bind(self.store, admin))
         self.assertNotIn(admin["code"], [p["code"] for p in identity.people(self.store)])
 
-    def test_foreign_or_unproven_tenant_rows_never_match(self):
+    def test_foreign_or_unproven_tenant_rows_never_match(self) -> None:
         self.row["tid"] = "99999999-2222-3333-4444-555555555555"
         self.assertEqual(
             identity.bind(self.store, self.entra)["code"],
@@ -295,7 +324,7 @@ class ContinuityTests(Base):
         foreign = identity.bind(self.store, self.entra)
         self.assertNotIn("contract_authorities", change_provenance._actor(self.store, foreign))
 
-    def test_alias_independence_survives_disabled_binding(self):
+    def test_alias_independence_survives_disabled_binding(self) -> None:
         bound = identity.bind(self.store, self.entra)
         identity.link(self.store, bound, strict=True)
         self.row["disabled"] = True
@@ -313,16 +342,16 @@ class ContinuityTests(Base):
             identity.canonical(self.store, stranger), identity.canonical(self.store, bound["email"])
         )
 
-    def test_concurrent_registrations_all_persist_json_and_sqlite(self):
+    def test_concurrent_registrations_all_persist_json_and_sqlite(self) -> None:
         import os
         import tempfile
 
         from zava_forward.core.sqlstore import SqlStore
 
         people = [
-            auth.TrustedProxyProvider(self.store, ENV).authenticate(
+            Provider(self.store, ENV).authenticate(
                 {
-                    "X-MS-CLIENT-PRINCIPAL": principal(
+                    "X-MS-CLIENT-PRINCIPAL": make_principal(
                         roles=("ZavaForward.Coordinator",), oid=f"ffffffff-0000-0000-0000-{i:012d}"
                     )
                 }
@@ -355,7 +384,7 @@ class ContinuityTests(Base):
 
 
 class RecipientProjectionTests(EntraHttpTests):
-    def test_me_staff_lists_registered_entra_colleagues_with_an_empty_roster(self):
+    def test_me_staff_lists_registered_entra_colleagues_with_an_empty_roster(self) -> None:
         other = "ffffffff-0000-0000-0000-00000000000b"
         self.call("/api/me", roles=("ZavaForward.Coordinator",), oid=other)
         code, me = self.call("/api/me", roles=("ZavaForward.ProgrammeManager",), oid=OID_NEW)
@@ -373,7 +402,7 @@ class RecipientProjectionTests(EntraHttpTests):
 
 
 class DistinctTests(ContinuityTests):
-    def test_storage_failure_denies_and_linked_or_verified_distinct_paths(self):
+    def test_storage_failure_denies_and_linked_or_verified_distinct_paths(self) -> None:
         bound = identity.bind(self.store, self.entra)
         identity.link(self.store, bound, strict=True)
         self.assertFalse(
@@ -390,7 +419,7 @@ class DistinctTests(ContinuityTests):
         )
 
         class Broken:
-            def __getattr__(self, name):
+            def __getattr__(self, name: str) -> Any:
                 raise OSError("storage down")
 
         with self.assertRaises(OSError):

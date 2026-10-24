@@ -61,9 +61,10 @@ def principal(
     view_only: bool = False,
     provider: str = "trusted-proxy",
 ) -> dict[str, Any]:
-    tid, oid = canonical_guid(tid), canonical_guid(oid)
-    if not tid or not oid:
+    tenant, object_id = canonical_guid(tid), canonical_guid(oid)
+    if not tenant or not object_id:
         raise ValueError("A tenant and object id are required.")
+    tid, oid = tenant, object_id
     code = code_for(tid, oid)
     return dict(
         code=code,

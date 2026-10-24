@@ -72,3 +72,11 @@ new commits.
 * Lint/format-only commit ffbbaef4 (head 9dff4239, tree 9dff4239363d7b8837daf1f01a1b432fa33514a9 is the tree id of that head). Focused tests 87 OK.
 * Gate on that head (`/tmp/ama-360-live/gate-entra-extra-lint`) failed mypy: project-core identity.py:64 assignment type; project-api 75 typing errors in tests/test_entra_authoritative.py (untyped test helpers). Failed receipt retained, not a pass.
 * Repair window (17:39Z) elapsed before another gate could complete. No deployment, admin assignment or live mutation was performed in this cycle; no further automatic retry.
+
+## Typing-only correction cycle, 2026-10-24T19:40Z (owner approved at 18:17Z; window extended to 19:00Z was owner-stated, now elapsed per clock)
+
+* Amendment at the earliest affected stage (Implement, typing only): the gate on ffbbaef4 failed mypy. Plan and Review outcomes are unchanged; no auth-policy change.
+* `identity.py` `_principal` build: `canonical_guid` results are held in new `tenant`/`object_id` locals so the optional-string result no longer reassigns the `str` parameters. Behaviour identical.
+* `tests/test_entra_authoritative.py`: `-> None` annotations on tests, typed `call`/`post` helpers, `dict[str, Any]` row, and four named `Any` seams (`Provider`, `Application`, `handler`, `make_principal`) for the still-untyped fixtures and server. `cast(Any, super())` for the untyped base fixtures. No `type: ignore`, no config or exclusion change.
+* Local checks before the gate: core and api mypy strict clean; core and api ruff check and format clean; focused api tests (auth, entra_authoritative, rule_alerts, bulk_edit_api) 87 OK.
+* Preserved failures: `/tmp/ama-360-live/gate-entra-extra-d9a1b84a` (ruff) and `/tmp/ama-360-live/gate-entra-extra-lint` (mypy).
