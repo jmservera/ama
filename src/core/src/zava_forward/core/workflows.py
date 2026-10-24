@@ -8,7 +8,7 @@ skip a state.
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import change_provenance, controls, hazard, insights, projection
+from . import change_provenance, controls, hazard, identity, insights, projection
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
@@ -150,7 +150,7 @@ class WorkflowMixin:
     def _staff_person(self, email):
         if not isinstance(email, str):
             raise ValueError("Choose a colleague to take this over.")
-        p = self.staff.get((email or "").lower())
+        p = self.staff.get((email or "").lower()) or identity.person(self, email)
         if not p or p["role"] not in projection.STAFF_ROLES:
             raise ValueError("Choose a colleague to take this over.")
         return p

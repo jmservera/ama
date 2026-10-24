@@ -1,0 +1,132 @@
+schema_version: PRD_STANDARD_FINDINGS_V1
+assessment_id: requirements-quality-PRD-2026-AMA48-001-20261023T172745Z
+assessed_at: "2026-10-23T17:27:45Z"
+prd:
+  id: PRD-2026-AMA48-001
+  version: 0.19.0
+  phase: Validate
+  artifact_path: docs/prds/zava-forward-retrofit-programme-demonstrator.md
+standard:
+  skill_name: requirements-quality
+  skill_version: "1.1"
+mode: plan
+assessment_outcome: plan
+overall_status: RISK
+summary_counts:
+  RISK: 2
+  CAUTION: 3
+  COVERED: 0
+  NOT_APPLICABLE: 0
+findings:
+  - finding_id: req-qual-001
+    checklist_item: exact-candidate-verification
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Candidate source and amendment.patch"
+    finding: "The exact v0.19.0 candidate could not be reconstructed or hash-checked in this review. The accessible checkout file is v0.17.0 rather than the specified pinned v0.18.0 base, and the validator could not be executed; therefore the patch's exact application, preserved definitions, identifiers, and line-level coverage remain unverified."
+    recommendation: "Before relying on this Validate result, supply the exact pinned base and candidate output or have the parent run the read-only in-memory validator, then review the resulting exact candidate bytes."
+  - finding_id: req-qual-002
+    checklist_item: upstream-authority-and-handoff
+    status: RISK
+    severity: HIGH
+    location:
+      section: "Optional resident-service direction; upstream authority boundary"
+      line_range: L78-L109
+    finding: "Inherited upstream limitation: the referenced BRD v0.20.0 is an unsigned draft amendment, not a canonical approved handoff; its Define exit is BLOCKED and Govern is NOT_EVALUATED. The PRD package accurately discloses this, but that input cannot be treated as approved authority or as evidence that a lifecycle gate has passed."
+    recommendation: "Keep the PRD amendment unsigned and Validate blocked; do not convert structural links or the draft handoff into approval evidence. Reassess against a valid governed upstream input before claiming downstream approval."
+  - finding_id: req-qual-003
+    checklist_item: smart-product-goal
+    requirement_id: GOAL-005
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Product Goals"
+      line_range: L385-L386
+    finding: "Amendment-specific: GOAL-005 defines six measurable synthetic scripts, but its acceptance milestone has no stated date or measurement window and its feasibility is explicitly unconfirmed. It therefore fails the SMART time-bound and achievable checks; the draft appropriately labels its status deferred."
+    recommendation: "Before treating GOAL-005 as passing, state a review date or bounded measurement window and record feasibility evidence; otherwise retain the deferred status and do not claim the goal passes SMART."
+  - finding_id: req-qual-004
+    checklist_item: upstream-consistency-and-activation-boundary
+    requirement_id: FR-070
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Resident-answer and communication authority; FR-070 and AC-129"
+      line_range: L1044-L1054
+    finding: "Inherited upstream contradiction: BRD FR-044 requires universal human review while amended AC-084 allows policy disposition. The PRD surfaces this conflict, keeps per-message review as the default, and gates the simulated policy test; routine-dispatch activation remains blocked until the parent reconciles the wording and authority."
+    recommendation: "Keep routine activation OFF and retain human review. Reconcile BRD FR-044/AC-084 and resolve OD-53 before enabling any exception; do not use the PRD or an ADR to silently choose the permissive interpretation."
+  - finding_id: req-qual-005
+    checklist_item: constraint-quality-validation
+    status: CAUTION
+    severity: MEDIUM
+    location:
+      section: "Constraints"
+    finding: "The package states that all nine inherited CON definitions are unchanged and adds no CON items, but the exact pinned candidate and each CON row were not available for independent inspection. Imposing source, affected boundary, non-negotiability, category, and separation from NFRs/design decisions therefore remain unverified in this pass."
+    recommendation: "Verify each CON-### against the exact pinned candidate before relying on constraint-quality coverage; retain imposed boundaries as CONs and keep desired functionality, quality targets, and design choices under FR, NFR, and DD respectively."
+iso_29148_attributes:
+  necessary: 3
+  appropriate: 3
+  unambiguous: 2
+  complete: 2
+  singular: 2
+  feasible: 1
+  verifiable: 3
+  correct: 2
+  conforming: 3
+nist_800_160_nfr_categories:
+  performance_and_capacity: true
+  reliability_and_resilience: true
+  security: true
+  privacy: true
+  scalability_and_elasticity: true
+  maintainability_and_operability: true
+  observability: true
+  usability_and_accessibility: true
+  compatibility_and_interoperability: true
+  portability: true
+smart_product_goals:
+  - goal_id: GOAL-001
+    statement: "By T0+4 weeks, each of the eleven profile scripts shall identify its permitted work, blocker, evidence, owner and next action without an unexplained dead-end or permission breach."
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: GOAL-002
+    statement: "By T0+4 weeks, demonstrate the nine connected workflows, including one same-home journey with an EPC conflict, correction, independent handover and financial closure."
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: GOAL-003
+    statement: "By T0+4 weeks, produce reconciled cohort dashboards and a reproducible four-week scenario forecast."
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: GOAL-004
+    statement: "By T0+4 weeks, establish task-level value or lack of value using real Foundry inference and paired manual/parser comparisons without weakening controls."
+    specific: true
+    measurable: true
+    achievable: true
+    relevant: true
+    time_bound: true
+    overall: PASS
+  - goal_id: GOAL-005
+    statement: "At the separately reviewed resident-increment acceptance milestone, demonstrate six linked synthetic task scripts: sign-in/recovery, own-case/document access, requested upload, appointment response, grounded question/human handoff and assisted-channel continuity."
+    specific: true
+    measurable: true
+    achievable: false
+    relevant: true
+    time_bound: false
+    overall: FAIL
+fr_ac_coverage:
+  fr_total: 71
+  fr_with_ac: 71
+  coverage_pct: 100.0
+notes: "Coverage and counts reflect the supplied package declarations (71/71 FR-to-AC and 71/71 FR-to-GOAL), not an independent exact-candidate scan. The amendment describes optional resident access, scoped authority and revocation distinct from consent, shared provenance and exception ownership, human review for sensitive/consequential/uncertain messages, routine activation OFF by default, grounded abstention/injection controls, and essential privacy/accessibility checks. Staff chat and regulatory no-send boundaries are stated as preserved. No new CON definitions are declared. Capacity figures are presented as linked illustrative assumptions, not measured outcomes, forecasts, cash, or resident counts."

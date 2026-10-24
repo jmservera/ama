@@ -161,7 +161,7 @@ class EntraRegistrationTests(unittest.TestCase):
         manifest = {f"ZavaForward.{r['key']}": r["label"] for r in ENTRA["appRoles"]}
         self.assertEqual(manifest, DEFAULT_ROLE_MAP)
         capabilities = {f"ZavaForward.{r['key']}": r["capability"] for r in ENTRA["capabilityRoles"]}
-        self.assertEqual(capabilities, RULE_ROLE_MAP)
+        self.assertEqual(capabilities, RULE_ROLE_MAP | {"ZavaForward.ApplicationAdmin": "application_admin"})
         self.assertTrue(set(manifest).isdisjoint(capabilities))
         script = (ROOT / "scripts" / "create-api-app-registration.sh").read_text(encoding="utf-8")
         pairs = dict(re.findall(r'"(\w+)\|([^"]+)"', script))

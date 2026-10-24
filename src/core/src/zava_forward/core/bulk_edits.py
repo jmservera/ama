@@ -7,7 +7,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any
 
-from . import projection
+from . import identity, projection
 from .store import ConflictError
 from .workflows import HANDOFF_ACTIVE, MANAGER_ROLES, _due
 
@@ -70,7 +70,9 @@ def _identity(user: Record) -> Record:
 def _fresh_actor(store: Any, user: Record) -> Record:
     email = user.get("email")
     actor = None
-    if isinstance(email, str):
+    if identity.is_entra(user):
+        actor = identity.verified(user)
+    elif isinstance(email, str):
         if hasattr(store, "db"):
             with store.dblock:
                 row = store.db.execute(

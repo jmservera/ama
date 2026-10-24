@@ -1,0 +1,148 @@
+{
+  "status": "PASS_REFINEMENT_STATIC_NOT_QUALITY_APPROVAL",
+  "entry": "8ada8109f9d4b7348fbd8ff76839d020dec04d4b",
+  "four_owner_pins": {
+    "prd/zava-forward-retrofit-programme-demonstrator.md": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+    "prd/output-manifest.json": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1",
+    "adr/resident-service-unregistered-proposal-reconciled.md": "8e44d6ffbfe907a5e7e8cd057d0a29e0e977e916456ed0f0d9799efe8e1a4d77",
+    "adr/reconciliation-output-manifest.json": "c0b97777d015926573a320d004e38f11c45e965f0540e2e64d8e241bde4f57ce"
+  },
+  "portable_selected_mappings": 18,
+  "definitions_unchanged": {
+    "FR": 71,
+    "AC": 123,
+    "NFR": 21,
+    "CON": 9,
+    "GOAL": 5,
+    "DD": 9,
+    "OQ": 31
+  },
+  "source_patch_reconstructed": true,
+  "all_30_resident_AC": "Not run",
+  "local_stories": 20,
+  "qualified_FR_trace_rows": 71,
+  "current_quality": {
+    "report": "PRD-2026-AMA48-001-quality-20261023T225531005Z",
+    "overall": "FAIL",
+    "validate": "BLOCKED",
+    "finalize": "NOT_EVALUATED",
+    "findings": {
+      "RISK": 0,
+      "CAUTION": 7,
+      "COVERED": 34
+    },
+    "attestation_limit": "Source quality is not exact integrated-byte approval. Integration editorial notices/links require separate actual-byte Review; no requirement substance changed."
+  },
+  "source_map_sha256": "97c8cf1544d2aabe9865793ef564b0604f4ea30ccb0700130b538035dc558791",
+  "markdownlint": {
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/traceability.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/review/reviewer-result-summary.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/source-drift-and-validation-limitations.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/reconciliation-report.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/requirement-map-reconciled.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/integration-handoff-reconciled.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/capstone-review-boundary.md": {
+      "source_diagnostics": 0,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    },
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": {
+      "source_diagnostics": 3,
+      "integrated_diagnostics": 3,
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": {
+      "source_diagnostics": 1,
+      "integrated_diagnostics": 0,
+      "introduced": []
+    }
+  },
+  "links": {
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/traceability.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/review/reviewer-result-summary.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/source-drift-and-validation-limitations.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/reconciliation-report.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/requirement-map-reconciled.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/integration-handoff-reconciled.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/capstone-review-boundary.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": {
+      "inherited": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": {
+      "inherited": [],
+      "introduced": []
+    }
+  },
+  "sha256": {
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/output-manifest.json": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/amendment.patch": "ec88dd2bd970777243632894df6b6b73ea290f7f90fad12aa28fd8140d9c3872",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/traceability.md": "f2ecb520c3466937aae7c8de606a646ca84965d2dc330dffeb94ca8fb3ab521b",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/traceability.json": "49e48154efb2acdb6f91b3b2fcb28cc3f7155c16c215c7494dbaa5daa61fbe49",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/review/reviewer-result-summary.md": "20853b85a852d7df3b8c87ce66fb3c925c40f24b9668d96880d0987d3989e99b",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/prd/source-drift-and-validation-limitations.md": "df756eca34167c48fc723ba246e2b92cf45afb27b14cdc3cd05717e68d9ad39a",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/reconciliation-output-manifest.json": "c0b97777d015926573a320d004e38f11c45e965f0540e2e64d8e241bde4f57ce",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/reconciliation-input-manifest.json": "22dfe903eabb3e1c25ac455d78ea41644d4e594d730640d83ae9896e812471de",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/reconciliation-report.md": "b041cf3c8ae361759f14bfa0e0718071c5e97d239375db146843dac2d64ed25e",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/requirement-map-reconciled.md": "3ed5bdb2ad9997b84d2aa69aa33003f286514b37d6e802a2d34bbdf38a1bf6da",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/requirement-map-reconciled.json": "72ba21d6ab350a8544603e327ea1c297a133198e6be36e7d417f40501cc697b8",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/integration-handoff-reconciled.md": "f1f7fa5dab5e856d121f634a304cf5bca53f38e126a8ef16737dd5012556469d",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/reconciliation-validation.json": "4c3dc4e2eee4e9a4e7f901f9ee1bded2e318008db402e7bf610551cef0edb2b1",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/adr/capstone-review-boundary.md": "02d9bfb82755cf4574ecb804527fa2b84bcdfeeb6138f243f7867a7dfd3cf1cc",
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": "0c53fdfefc243bee573b3fbc795def63fda0bc2ed516ff6f80b158dbb2888c26",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": "51b8a6dc411906a60773b83bf607ae12f580037ac62999a2bdc732991f809438",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/author-prd.md": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/refinement-evidence/author-proposal.md": "8e44d6ffbfe907a5e7e8cd057d0a29e0e977e916456ed0f0d9799efe8e1a4d77"
+  },
+  "limits": [
+    "All seven current quality findings remain open, not waived",
+    "Raw archives retain original link context and are not navigable derivatives",
+    "No application execution, requirements approval, registration or live acceptance",
+    "Hosted A5/B6 score citations remain OPEN; no generated score edit"
+  ]
+}

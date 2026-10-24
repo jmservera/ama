@@ -1,0 +1,102 @@
+{
+  "artifact_type": "EXACT_OUTPUT_MANIFEST",
+  "candidate_target": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+  "source_head": "4017b214bb021244b06264629953d84f29003c53",
+  "source_prd_sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9",
+  "source_brd_sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+  "source_tree_sha256": "f9936cadd2aa3943a6d6655ebf013653b7dc1a9b77eac13f33c320dd415cb4c6",
+  "outputs": {
+    "README.md": {
+      "bytes": 7592,
+      "sha256": "2ec7544a4c6a6fd739ed7b56f70ff3668413242f28408de46da1dc8bf40b7f00"
+    },
+    "amendment.patch": {
+      "bytes": 48938,
+      "sha256": "ec88dd2bd970777243632894df6b6b73ea290f7f90fad12aa28fd8140d9c3872"
+    },
+    "architecture-handoff.md": {
+      "bytes": 9153,
+      "sha256": "ffbe454531e472f8c4155a8c3f2a75e409fdc3d277e2884ffeae16fe3cd73bb3"
+    },
+    "source-drift-and-validation-limitations.md": {
+      "bytes": 2267,
+      "sha256": "df756eca34167c48fc723ba246e2b92cf45afb27b14cdc3cd05717e68d9ad39a"
+    },
+    "assets/resident-service-boundary.excalidraw": {
+      "bytes": 43454,
+      "sha256": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07"
+    },
+    "assets/resident-service-boundary.png": {
+      "bytes": 178186,
+      "sha256": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc"
+    },
+    "assets/resident-service-boundary.svg": {
+      "bytes": 8573,
+      "sha256": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb"
+    },
+    "authoring/resident-refinement.md": {
+      "bytes": 33985,
+      "sha256": "92e4a1306509712811289d1e5b31adb8c938db99d950d136300d452a00c590ad"
+    },
+    "build-package.py": {
+      "bytes": 30274,
+      "sha256": "bb8a1fe68e8ab5ffe24f5d90e2cd99fe0ea47018809087af4237162b23dc644f"
+    },
+    "change-gap-disposition.md": {
+      "bytes": 8724,
+      "sha256": "cc98fc85f2eabd0304aa4f6eaa1cae9684638e48b23a5462b31ebd5bc8c3a4dd"
+    },
+    "input-manifest.json": {
+      "bytes": 524132,
+      "sha256": "2ef393664b538eb2176acf1aabec4183fdb41f04dfaadf2a4f68da65ed492824"
+    },
+    "quality-self-assessment.md": {
+      "bytes": 11762,
+      "sha256": "8cf0fa07a7fa2fdd9062981a02fe7997daffab213b5bffaccaef8b17541182fc"
+    },
+    "state.json": {
+      "bytes": 20559,
+      "sha256": "99c17ee38f0583bd7107b8945204dfe46a1929ebfb5b3632aa6761e8c66b311e"
+    },
+    "traceability.json": {
+      "bytes": 50487,
+      "sha256": "49e48154efb2acdb6f91b3b2fcb28cc3f7155c16c215c7494dbaa5daa61fbe49"
+    },
+    "traceability.md": {
+      "bytes": 11548,
+      "sha256": "f2ecb520c3466937aae7c8de606a646ca84965d2dc330dffeb94ca8fb3ab521b"
+    },
+    "validation.json": {
+      "bytes": 8268,
+      "sha256": "03c2231d1e84bf5f552e49a741e62f377c78b21180fb25af2b00e4eef25bcffc"
+    },
+    "review/reviewer-result-summary.md": {
+      "bytes": 4992,
+      "sha256": "20853b85a852d7df3b8c87ce66fb3c925c40f24b9668d96880d0987d3989e99b"
+    },
+    "zava-forward-retrofit-programme-demonstrator.md": {
+      "bytes": 329931,
+      "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+    }
+  },
+  "co_located_not_authored_or_used_as_source": {
+    "adr/resident-service-architecture-proposal.md": {
+      "bytes": 27443,
+      "sha256": "5aa5184d7fab1b81df643cd8442f386fd5004b9b582c7f1928ce10988959b46f"
+    },
+    "adr/review-handoff.md": {
+      "bytes": 7166,
+      "sha256": "d322d6f62ad98f12fb8fbed174914d09828fb375d80b261f032c57ec4af0a986"
+    },
+    "adr/source-output-hashes.sha256": {
+      "bytes": 3705,
+      "sha256": "3f4e6094b5c22af87c574371e8277ebb9620b4b74e336bdd66ff35bcb8b90860"
+    }
+  },
+  "co_location_note": "The independent ADR proposal was authored concurrently under adr/ from the same snapshot; it is excluded from this PRD author's outputs/checks and SHA256SUMS, with its own source-output-hashes.sha256. The ADR proposal remains an unsigned, unregistered id:null draft.",
+  "excluded_self_referential_files": [
+    "output-manifest.json",
+    "SHA256SUMS"
+  ],
+  "exclusion_reason": "A file cannot carry its own final-byte SHA-256. These two final hashes are returned to the caller; SHA256SUMS additionally authenticates output-manifest.json."
+}

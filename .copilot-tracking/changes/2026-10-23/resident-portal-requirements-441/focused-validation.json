@@ -1,0 +1,453 @@
+{
+  "status": "PASS_FOCUSED_STATIC_NOT_APPROVAL",
+  "base": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+  "source_custody": "PASS",
+  "asset_identity": "PASS",
+  "brd": {
+    "FR": 62,
+    "AC": 126,
+    "NFR": 14,
+    "RULE": 28
+  },
+  "prd": {
+    "FR": 71,
+    "AC": 123,
+    "NFR": 21,
+    "CON": 9,
+    "GOAL": 5,
+    "DD": 9,
+    "OQ": 31
+  },
+  "all_new_ACs": "Not run",
+  "new_upstream_trace": "23/23",
+  "formula_scenarios": {
+    "low": {
+      "W": 324,
+      "B": 18.36,
+      "G": 2.754,
+      "H": 0.648,
+      "J": 0.26999999999999996,
+      "O": 2.43,
+      "F": -1.5940000000000003,
+      "I": 9.72
+    },
+    "base": {
+      "W": 720,
+      "B": 84.0,
+      "G": 27.3,
+      "H": 3.6,
+      "J": 0.9600000000000001,
+      "O": 6.0,
+      "F": 14.739999999999998,
+      "I": 48.0
+    },
+    "high": {
+      "W": 1200,
+      "B": 239.99999999999997,
+      "G": 125.99999999999997,
+      "H": 14.0,
+      "J": 2.0,
+      "O": 11.666666666666666,
+      "F": 94.3333333333333,
+      "I": 140.0
+    }
+  },
+  "protected_history": "PASS",
+  "inherited_goal_discrepancy": {
+    "FR-059": {
+      "declared": [
+        "GOAL-004"
+      ],
+      "matrix": [
+        "GOAL-002",
+        "GOAL-004"
+      ]
+    }
+  },
+  "markdownlint": {
+    "docs/architecture/README.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:115 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Legend\"]",
+        "stdin:129 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Key Relationships\"]"
+      ],
+      "introduced": []
+    },
+    "docs/brds/agentic-retrofit-programme-brd.md": {
+      "base_exit": 1,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    "docs/capstone/README.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    "docs/case_study_48_addendum.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:374:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#58 is not fully superseded: u...\"]",
+        "stdin:379:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#65 identity/welcome progress,...\"]",
+        "stdin:1251:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#187/#188 need a separate revi...\"]"
+      ],
+      "introduced": []
+    },
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:836:478 MD056/table-column-count Table column count [Expected: 5; Actual: 2; Too few cells, row will be missing data]",
+        "stdin:837:643 MD056/table-column-count Table column count [Expected: 5; Actual: 2; Too few cells, row will be missing data]",
+        "stdin:838:608 MD056/table-column-count Table column count [Expected: 5; Actual: 2; Too few cells, row will be missing data]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/README.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:198:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#358 live secret round-trip re...\"]",
+        "stdin:357:102 MD056/table-column-count Table column count [Expected: 3; Actual: 2; Too few cells, row will be missing data]",
+        "stdin:379:570 MD056/table-column-count Table column count [Expected: 3; Actual: 2; Too few cells, row will be missing data]",
+        "stdin:407:224 MD056/table-column-count Table column count [Expected: 3; Actual: 2; Too few cells, row will be missing data]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/log.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:1257:12 MD034/no-bare-urls Bare URL used [Context: \"https://osm.wiki/Blocked\"]",
+        "stdin:1647 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:1718 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"unrelated historical fixture o...\"]",
+        "stdin:1719 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-11] update | Decision 1 rebuild specification and PR 58 learnings split\"]",
+        "stdin:2367 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:2401 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:2428 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"fairness/oversight, held-out m...\"]",
+        "stdin:2429 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-14] update | BRD v0.17.0, PRD v0.15.0 and ADR 0003 from the journey atlas\"]",
+        "stdin:2930 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"contractor identity model, and...\"]",
+        "stdin:2931 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## 2026-10-15 Azure Policy, Defender plans, locks and tagging as code (#147)\"]",
+        "stdin:2940 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"* No regulatory snapshot chang...\"]",
+        "stdin:2941 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## 2026-10-15 IoT Hub Bicep module (#140)\"]",
+        "stdin:2953 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"* Removed an unsourced deploym...\"]",
+        "stdin:2954 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## 2026-10-15 Identity and RBAC as code (#141)\"]",
+        "stdin:3093 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:3475 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"existing policy remains draft....\"]",
+        "stdin:3476 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] ingest | Rule-card identity and source-review engineering slice\"]",
+        "stdin:3493 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"routed deployment/human/produc...\"]",
+        "stdin:3494 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] restructure | Complete live src path cut-over (#200)\"]",
+        "stdin:3532 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"Server/Azure verification rema...\"]",
+        "stdin:3533 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] query | Resident first-contact retention and confirmed field matrix (#86)\"]",
+        "stdin:3607 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"five passed. No live legal-sou...\"]",
+        "stdin:3608 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] update | Coordinator guards against accidental issue closing\"]",
+        "stdin:3666 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"Hosted checks started; merge r...\"]",
+        "stdin:3667 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] update | Rule-engine gating regression coverage (Refs #329)\"]",
+        "stdin:3689 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"owner's merge decision remain ...\"]",
+        "stdin:3690 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] update | Source monitor retrieval retry cadence (Refs #332)\"]",
+        "stdin:3770 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"remain separate from the local...\"]",
+        "stdin:3771 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] update | Image-preserving infrastructure redeploy (Refs #322)\"]",
+        "stdin:3845 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"was Conformant; hosted checks ...\"]",
+        "stdin:3846 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] update | Cut-over evidence refreshed after main integration (Refs #200, Refs #201)\"]",
+        "stdin:3874 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"* Updated the coordinator agen...\"]",
+        "stdin:3875 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] query | Private deployed-from-src proof (Refs #200, Refs #201)\"]",
+        "stdin:3931 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"#349/#350. No merge or issue-b...\"]",
+        "stdin:3932 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] query | Hardened source deployment and honest criterion audit\"]",
+        "stdin:3988 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"owner; ADR 0005 acceptance is ...\"]",
+        "stdin:3989 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] decision | ADR 0005 accepted for synthetic development only (Refs #209)\"]",
+        "stdin:4027 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"Updated the knowledge-base ind...\"]",
+        "stdin:4028 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] implementation | Regulatory alert and home chat UX (Refs #215)\"]",
+        "stdin:4059 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"separate gates. No private dat...\"]",
+        "stdin:4060 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] implementation | Regulatory security, privacy and audit (Refs #217)\"]",
+        "stdin:4080 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"legal approval. Issue checkbox...\"]",
+        "stdin:4081 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] query | PR 347 deployment hardening review corrections\"]",
+        "stdin:4144 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"resource or legacy application...\"]",
+        "stdin:4145 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] query | Offline CI/CD deployment pipeline\"]",
+        "stdin:4187 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"real owners and sources remain...\"]",
+        "stdin:4188 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] implementation | Regulatory UX review regression gates\"]",
+        "stdin:4229 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"resources or real owner/source...\"]",
+        "stdin:4230 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] implementation | Entra setup review findings and infra CI repair (Refs #351)\"]",
+        "stdin:4388 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"financial or operational appro...\"]",
+        "stdin:4389 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] query | Offline historical climate source audit\"]",
+        "stdin:4406 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"No issue checkboxes, executabl...\"]",
+        "stdin:4407 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-16] update | Demo external environment created (#360)\"]",
+        "stdin:4585:44 MD050/strong-style Strong style [Expected: underscore; Actual: asterisk]",
+        "stdin:4585:55 MD050/strong-style Strong style [Expected: underscore; Actual: asterisk]",
+        "stdin:5278 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"remain open. External final-he...\"]",
+        "stdin:5279 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-17] query | Grant lifecycle and scoped human exercise authority (#95)\"]",
+        "stdin:6167 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"close the issue, approve resid...\"]",
+        "stdin:6168 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-17] query | Consultation record and unknown confirmation hold (#92)\"]",
+        "stdin:6674 MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: \"#349, #350, #358, #360 still l...\"]",
+        "stdin:6675 MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: \"## [2026-10-20] update | Finite costed execution plan options for an unfinished Azure demo (#126)\"]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/research/company/agent-request-challenge.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:149 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Real Problem\"]",
+        "stdin:155 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Challenge\"]",
+        "stdin:165 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Alternatives, Cheapest First\"]",
+        "stdin:171 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Where AI Fits\"]",
+        "stdin:181 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Value Test and Stop Criteria\"]",
+        "stdin:192 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Real Problem\"]",
+        "stdin:199 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Challenge\"]",
+        "stdin:215 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Alternatives, Cheapest First\"]",
+        "stdin:223 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Where AI Fits\"]",
+        "stdin:231 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Value Test and Stop Criteria\"]",
+        "stdin:243 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Real Problem\"]",
+        "stdin:260 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Challenge\"]",
+        "stdin:276 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Alternatives, Cheapest First\"]",
+        "stdin:290 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Where AI Fits\"]",
+        "stdin:303 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Value Test and Stop Criteria\"]",
+        "stdin:317 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Real Problem\"]",
+        "stdin:326 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Challenge\"]",
+        "stdin:345 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Alternatives, Cheapest First\"]",
+        "stdin:354 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Where AI Fits\"]",
+        "stdin:363 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Value Test and Stop Criteria\"]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/research/company/agent-what-if-study.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:410 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:421 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:429 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:476 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:485 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:495 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:505 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:551 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:586 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:598 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:619 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:665 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:677 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:688 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:699 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:738 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:746 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:761 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:771 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:814 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:864 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:873 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:887 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:931 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:940 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:950 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:962 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1019 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1027 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1036 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1045 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1101 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1136 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1148 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1168 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1232 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1242 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1253 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1263 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1324 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1333 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1344 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1353 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1414 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1455 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1469 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1493 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1559 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1568 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1578 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1587 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1650 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]",
+        "stdin:1659 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Augmentation\"]",
+        "stdin:1669 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Would It Remove the Original B...\"]",
+        "stdin:1678 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Clarification Questions to the...\"]",
+        "stdin:1738 MD024/no-duplicate-heading Multiple headings with the same content [Context: \"Scenario Verdict\"]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/research/ux/content-standard.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/customer-journeys/frontline.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:15 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:32 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:77 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:93 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]",
+        "stdin:136 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/research/ux/customer-journeys/residents.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:16 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]"
+      ],
+      "introduced": []
+    },
+    "docs/reference/research/ux/design-system.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/wcag-conformance-baseline.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/zava-forward-prototype-profile-review.md": {
+      "base_exit": 1,
+      "integrated_exit": 1,
+      "diagnostics": [
+        "stdin:233:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#160-163 storage. Source exist...\"]",
+        "stdin:246:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#105's schema/envelope and #16...\"]",
+        "stdin:906:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#233. Its owner comments move ...\"]"
+      ],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md": {
+      "base_exit": 0,
+      "integrated_exit": 0,
+      "diagnostics": [],
+      "introduced": []
+    }
+  },
+  "links_and_anchors": {
+    "docs/architecture/README.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/brds/agentic-retrofit-programme-brd.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/capstone/README.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/case_study_48_addendum.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/README.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/log.md": {
+      "inherited_unresolved": [
+        "../../mvp/README.md#entra-id-on-container-apps",
+        "../../mvp/README.md#five-retrofit-assistants-2026-10-13-implementation",
+        "../../mvp/README.md#honest-limits"
+      ],
+      "introduced": []
+    },
+    "docs/reference/research/company/agent-request-challenge.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/company/agent-what-if-study.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/content-standard.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/customer-journeys/frontline.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/customer-journeys/residents.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/design-system.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/wcag-conformance-baseline.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    "docs/reference/research/ux/zava-forward-prototype-profile-review.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    },
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md": {
+      "inherited_unresolved": [],
+      "introduced": []
+    }
+  },
+  "sha256": {
+    "docs/architecture/README.md": "b85c71891034d7211b365151333353edda98a634205115396f6f804fe1a424a9",
+    "docs/brds/agentic-retrofit-programme-brd.md": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+    "docs/capstone/README.md": "b7728543af4b3909df201ee4017041e6e850b8a87d658a04528c74ed5b5fa59e",
+    "docs/case_study_48_addendum.md": "f75c5c4f93412c3028425bec4f01a68e94248652bebd73f161536afb06b62065",
+    "docs/prds/zava-forward-retrofit-programme-demonstrator.md": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9",
+    "docs/reference/README.md": "4bf62e01f760e92d404742dab5af1528ee4be72b3330088f79b9e5a3bb179205",
+    "docs/reference/log.md": "b67a84841ad882ada536b195857bb3f97f9a65ba8f5f2261b5b97b4b2de4ca13",
+    "docs/reference/research/company/agent-request-challenge.md": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+    "docs/reference/research/company/agent-what-if-study.md": "0d3f8af8e9c8795fb43db255e944fb767fd744c7689f3836b6f97293ad362be3",
+    "docs/reference/research/ux/content-standard.md": "3fed4a6e7467985ecd7374f8aeda521d3151351ec4ac57eeff2b1fe41fd21a14",
+    "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md": "ecca463203727675871236e057ddcd9f461eaf7c03f246962ba0cfcc6ffca3f8",
+    "docs/reference/research/ux/customer-journeys/frontline.md": "d9c62c163a713557be9ff04423447fbc0de39ea00db589a32419f7e1c573c930",
+    "docs/reference/research/ux/customer-journeys/residents.md": "55d453beb0aa85e996524e6fbea127166e8de403e187d4daa647cb2736d20e33",
+    "docs/reference/research/ux/design-system.md": "086ab45de5caafefcc5a370b2f1f71b34e7b9f41cbe3a09fb3170a019929091c",
+    "docs/reference/research/ux/wcag-conformance-baseline.md": "2c874cb7429789a39a36004293b250bfcbf06cfacb283a10f506102ee581a21f",
+    "docs/reference/research/ux/zava-forward-prototype-profile-review.md": "4b8ea70261601f27eb8ac966e4dd16c41baec4c12bb20edd5a7cff4e19ceb489",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md": "88505a885e972bec00b293231e04dc5cd9ea715c9cde0a03341628644dbe4d52",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/source-evidence/README.md": "922f26ddd63dfce1f20830fb7e257423dda2dcb6543be7d3272d1b94c4cc8397",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-boundary.excalidraw": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-boundary.svg": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-boundary.png": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc",
+    ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/validate-integration.py": "3f1f176863ccb1f3751d863a5775923c603971bc78cedd6ea9146d35ab9367e0"
+  },
+  "limits": [
+    "Not requirements approval, application acceptance or WCAG conformance",
+    "Historical archived source links/diagnostics intentionally not rewritten",
+    "Full publication gate and independent Review separate",
+    "ADR registration UNMET; OD-52-55 and live approvals open"
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "checked_at": "2026-10-23T17:36:25.718589+00:00",
+  "status": "STATIC_ONLY_NOT_APPROVAL",
+  "record_scope": "Compact persisted summary of validate-package.py stdout; full diagnostics reproducible with the read-only validator.",
+  "commit": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+  "target": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+  "locally_available_origin_main_at_check": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+  "remote_fetch_or_freshness_claim": false,
+  "base_sha256": "315798b6c15c72a659403257b840fe7ffddef54614048ae60b1db321dcf6c9e2",
+  "candidate_sha256": "bfe93dc2cb68ec18c76d10794305ee1667c5ecc1937c0c28cd876dae77195f8d",
+  "candidate_bytes": 281595,
+  "patch_sha256": "37e35e478f49165d787c475afed46d94eb5bff7eb8348925b68e8c43e1aed97c",
+  "hunk_count": 29,
+  "git_apply_numstat": "396\t23\tdocs/prds/zava-forward-retrofit-programme-demonstrator.md",
+  "every_hunk_contains_original_context": true,
+  "definitions": {
+    "FR": {"base": 61, "candidate": 71, "added": ["FR-062", "FR-063", "FR-064", "FR-065", "FR-066", "FR-067", "FR-068", "FR-069", "FR-070", "FR-071"]},
+    "AC": {"base": 93, "candidate": 123, "added": ["AC-111", "AC-112", "AC-113", "AC-114", "AC-115", "AC-116", "AC-117", "AC-118", "AC-119", "AC-120", "AC-121", "AC-122", "AC-123", "AC-124", "AC-125", "AC-126", "AC-127", "AC-128", "AC-129", "AC-130", "AC-131", "AC-132", "AC-133", "AC-134", "AC-135", "AC-136", "AC-137", "AC-138", "AC-139", "AC-140"]},
+    "NFR": {"base": 17, "candidate": 21, "added": ["NFR-018", "NFR-019", "NFR-020", "NFR-021"]},
+    "CON": {"base": 9, "candidate": 9, "added": []},
+    "GOAL": {"base": 4, "candidate": 5, "added": ["GOAL-005"]},
+    "DD": {"base": 8, "candidate": 9, "added": ["DD-009"]},
+    "OQ": {"base": 27, "candidate": 31, "added": ["OQ-028", "OQ-029", "OQ-030", "OQ-031"]}
+  },
+  "checks": {
+    "exact_base_hunks_no_fuzz_offsets_or_repo_application": "PASS",
+    "all_original_FR_AC_NFR_CON_GOAL_DD_definitions_byte_preserved": "PASS",
+    "only_existing_definition_revised_OQ023": "PASS",
+    "new_ids_unique_and_after_full_base_registry": "PASS",
+    "FR_matrix_equals_all_requirement_AC_links": "PASS",
+    "FR_to_AC": {"linked": 71, "total": 71, "pct": 100.0},
+    "FR_to_goal": {"linked": 71, "total": 71, "pct": 100.0},
+    "historical_approval_checklist_unchanged": "PASS",
+    "new_AC_completion_markers_all_Not_run": "PASS",
+    "upstream_exact_base_patch_candidate_hashes": "PASS",
+    "upstream_scenario_formulas_recomputed": "PASS"
+  },
+  "new_FR_goal_matrix_links_exact": "PASS",
+  "all_23_new_upstream_BRD_ACs_mapped": "PASS",
+  "inherited_goal_matrix_discrepancy_preserved_not_repaired": {
+    "FR-059": {"requirement": ["GOAL-004"], "matrix": ["GOAL-002", "GOAL-004"]}
+  },
+  "reviewer_payload_checks": {
+    "yaml_parses_without_duplicate_keys": "PASS",
+    "contract_discriminants_counts_gate_separation": "PASS",
+    "full_official_schema_or_independent_candidate_verification": "NOT_CLAIMED",
+    "report_id": "PRD-2026-AMA48-001-quality-20261023T172745Z",
+    "gate_decisions": {"validate_exit": "BLOCKED", "finalize_exit": "NOT_EVALUATED"}
+  },
+  "markdownlint": {
+    "tool": "markdownlint-cli@0.45.0 (existing upstream package, no install)",
+    "default_rules_pass_claimed": false,
+    "inheritance_tolerant_profile": "MD013/MD041 false; MD033 allows br; MD056 false",
+    "baseline_profile": "Same except MD056 enabled; three inherited warnings, no new warnings",
+    "inherited_diagnostics": {
+      "rule": "MD056/table-column-count",
+      "message": "Expected five cells, actual two, in existing AC-104/105/106 definition rows",
+      "base_lines": [776, 777, 778],
+      "candidate_lines": [828, 829, 830],
+      "unchanged_warning_count": 3
+    },
+    "results": [
+      {"profile": "brd/.markdownlint.json", "artifact": "pinned-base", "exit_code": 1, "diagnostic_rules": ["MD056"]},
+      {"profile": "brd/.markdownlint.json", "artifact": "candidate", "exit_code": 1, "diagnostic_rules": ["MD056"]},
+      {"profile": "brd/.markdownlint.json", "artifact": "adr-handoff.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "brd/.markdownlint.json", "artifact": "amendment.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "brd/.markdownlint.json", "artifact": "change-manifest.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "brd/.markdownlint.json", "artifact": "id-traceability.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "brd/.markdownlint.json", "artifact": "quality-review.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "pinned-base", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "candidate", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "adr-handoff.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "amendment.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "change-manifest.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "id-traceability.md", "exit_code": 0, "diagnostic_rules": []},
+      {"profile": "prd/.markdownlint.json", "artifact": "quality-review.md", "exit_code": 0, "diagnostic_rules": []}
+    ]
+  },
+  "upstream_files": {
+    "draft-prd-handoff.json": {"sha256": "979fa96b96f59112c83f779b2daf59847111ebbbe3e2458001179e99eaa44a63", "bytes": 16725},
+    "amendment.md": {"sha256": "7aa081028e39b6931db76416db23336c05c6dc3c149a1fcb9f44525a65e811ae", "bytes": 33350},
+    "amendment.patch": {"sha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7", "bytes": 73884},
+    "change-manifest.md": {"sha256": "3005ee38c185164f1837148faff7097914ab719a2acf91aa5ac6c152e6279320", "bytes": 11272},
+    "quality-review.md": {"sha256": "d85e40ccb09cfaf0a08efe55ada4a0beaef8822bb3bfa56281062e28944f37a4", "bytes": 6828},
+    "validation.json": {"sha256": "c1798d7458603e97e2386d8a1ad6effd50a5ad3ec7b704d466a5077f41294d56", "bytes": 6686}
+  },
+  "upstream_brd_candidate_sha256": "e318bacc1344c4e730645612371f2a7671926c645ee9370673b0f637a046e535",
+  "calculated_scenarios": {
+    "low": {"W": 324, "B": 18.36, "G": 2.754, "H": 0.648, "J": 0.26999999999999996, "S": 1, "O": 2.43, "F": -1.5940000000000003, "I": 9.72},
+    "base": {"W": 720, "B": 84.0, "G": 27.3, "H": 3.6, "J": 0.9600000000000001, "S": 2, "O": 6.0, "F": 14.739999999999998, "I": 48.0},
+    "high": {"W": 1200, "B": 239.99999999999997, "G": 125.99999999999997, "H": 14.0, "J": 2.0, "S": 4, "O": 11.666666666666666, "F": 94.3333333333333, "I": 140.0}
+  },
+  "not_run": ["application/heavy suites", "#97 gate", "cloud/tenant/paid calls", "real resident service", "implementation", "Finalize"],
+  "file_hashes_excluding_this_validation_record": {
+    ".markdownlint.json": {"sha256": "df16d2731c76867aa048bf05d279292d98d0e16cb7cae9351d8338792d19176e", "bytes": 98},
+    "adr-handoff.md": {"sha256": "835aa49c4d49a1785a66a35a1b87d1104f9daa4e25a5404384952906f9404da8", "bytes": 9993},
+    "amendment.md": {"sha256": "a41caa0e47c6b2fc0dbd146dc44cc146de7684d3dbfdbfd2d3aa0db5350b180a", "bytes": 12305},
+    "amendment.patch": {"sha256": "37e35e478f49165d787c475afed46d94eb5bff7eb8348925b68e8c43e1aed97c", "bytes": 47478},
+    "change-manifest.md": {"sha256": "b6eaa763d387391efc2abc13d1a84dc24508e1085e2e7e8a2a89a7b6b93bf1a5", "bytes": 6885},
+    "id-traceability.md": {"sha256": "86160572e1fe833b4ce10ccfe7a9cb0d305466c1cc5296d6091edac7be6dc4d9", "bytes": 5357},
+    "quality-review.md": {"sha256": "cdf507a8413c8711ea0ea7a20009794fa9dfda5d0a9ae26a4f2704674eea3dd6", "bytes": 6856},
+    "reviewer-findings.yaml": {"sha256": "288981bd8a42295a00a47531c0c02945f0f4e5600f45f02f9754150fec85fed0", "bytes": 7406},
+    "reviewer-report.yaml": {"sha256": "6440f4ad3cb27d567eb7f5f97c79ff815a29970e4097cad04e6814fb15eee5fb", "bytes": 5762},
+    "state.json": {"sha256": "da980b98748f065c7d5d50bba2a7ce93e8e7b95df8ecfd94c524c814d0a8c158", "bytes": 4017},
+    "validate-package.py": {"sha256": "294588d4b96dc9453ad382829d3efe3a75043accf1f5910384f9c05d83f3c1d4", "bytes": 15269}
+  }
+}
