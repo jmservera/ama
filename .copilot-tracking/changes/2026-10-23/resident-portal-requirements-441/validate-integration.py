@@ -171,8 +171,16 @@ def lint(data, cli):
         ["node", str(cli), "--stdin", "--config", str(HERE / "markdownlint.json")],
         input=data, capture_output=True, cwd=ROOT, check=False,
     )
-    assert result.returncode in (0, 1), result.stderr.decode()
     output = (result.stderr + result.stdout).decode().strip().splitlines()
+    diagnostics = output and all(re.fullmatch(
+        r"stdin:[1-9]\d*(?::[1-9]\d*)? MD\d{3}(?:/[A-Za-z0-9_-]+)* \S.*", line
+    ) for line in output)
+    if not ((result.returncode == 0 and not output)
+            or (result.returncode == 1 and diagnostics and not result.stdout)):
+        raise RuntimeError(
+            f"markdownlint failed: {cli} (exit {result.returncode})\n"
+            + "\n".join(output)
+        )
     normalized = Counter(re.sub(r"^stdin:\d+(?::\d+)? ", "", line) for line in output)
     return result.returncode, output, normalized
 
