@@ -43,7 +43,7 @@ DEFAULT_ROLE_MAP = {
 }
 MAX_HEADER = 16384
 ADMIN_ROLE = "ZavaForward.ApplicationAdmin"
-ADMIN_EFFECTIVE_ROLE = "Retrofit Programme Manager"
+ADMIN_EFFECTIVE_ROLE = identity.ADMIN_ROLE_NAME
 RULE_ROLE_MAP = {
     "ZavaForward.RuleAuthor": "rule_author",
     "ZavaForward.RuleOwner": "rule_owner",
@@ -148,9 +148,8 @@ class TrustedProxyProvider:
             return self._deny("need one mapped staff role or the application admin role", sorted(set(claims)))
         staff_assigned = bool(staff)
         role = staff.pop() if staff else ADMIN_EFFECTIVE_ROLE
-        if role == "Contractor":
-            # A contractor's company binding is a separate approved data decision, not an Entra claim.
-            return self._deny("contractor access needs a registered company binding")
+        if role == "Contractor" and admin:
+            return self._deny("a contractor cannot hold the application administrator role")
         names, emails = self.claims(p, NAME), self.claims(p, EMAIL)
         return identity.principal(
             self.tenant, oids.pop(), role,

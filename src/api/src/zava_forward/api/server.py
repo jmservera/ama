@@ -201,7 +201,11 @@ def make_handler(app):
             return m.value if m else None
 
         def _user(self):
-            return app.provider.authenticate(self.headers)
+            user = app.provider.authenticate(self.headers)
+            if user and identity.is_entra(user):
+                # Business-identity continuity and contractor company binding, separate from authentication.
+                user = identity.bind(app.store, user)
+            return user
 
         def _body(self):
             n = int(self.headers.get("Content-Length") or 0)
@@ -363,7 +367,10 @@ def make_handler(app):
                     return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
                 return self._json(404, {"error": "Not found."})
             if url.path == "/api/me":
-                out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
+                if identity.is_entra(u):
+                    identity.register(s, u)
+                admin_only = u.get("role") == identity.ADMIN_ROLE_NAME
+                out = projection.me_payload(u, {} if admin_only else s.counts(u), list(s.staff.values()))
                 out["account"] = app.provider.account(self.headers, u)
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)

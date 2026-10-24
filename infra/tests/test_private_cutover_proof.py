@@ -370,7 +370,7 @@ class DirectProofTests(unittest.TestCase):
             fixture["staff"] = [{
                 "code": "CON-FIXTURE", "name": "Synthetic Contractor",
                 "email": "contractor@example.test", "role": "Contractor",
-                "contractor": "Fictional Ltd", "oid": "synthetic-contractor",
+                "contractor": "Fictional Ltd", "oid": "aaaaaaaa-0000-0000-0000-0000000000c1",
             }]
             seed.write_text(json.dumps(fixture))
             store = Store(str(seed))
@@ -391,12 +391,10 @@ class DirectProofTests(unittest.TestCase):
             headers = {"X-MS-CLIENT-PRINCIPAL": principal}
             try:
                 base = f"http://127.0.0.1:{server.server_port}"
-                # Contractor login is denied until a company binding exists (ADR 0002 amendment).
-                self.assertEqual(self.real_result(base + "/api/me", headers)[0], 401)
-                self.assertEqual(self.real_result(base + "/api/stats", headers)[0], 401)
+                # A Contractor bound to exactly one company-bound roster row signs in; other roles' data is 403.
+                self.assertEqual(self.real_result(base + "/api/me", headers)[0], 200)
+                self.assertEqual(self.real_result(base + "/api/stats", headers)[0], 403)
                 self.assertEqual(self.real_result(base + "/api/me")[0], 401)
-                # The wrong-role probe needs a Contractor session; contractor login is denied
-                # until a company binding exists, so that probe is not exercisable here.
             finally:
                 server.shutdown()
                 server.server_close()

@@ -678,8 +678,8 @@ python3 infra/scripts/private-cutover-proof.py smoke --direct-ingress \
 The optional session file must be owner-owned mode `0600`, outside the
 repository, with exactly one `cookie` or `token` JSON field. It supplies an
 already authenticated **Contractor** session; it does not manufacture roles or
-authenticate a person. Entra Contractor sign-in is currently denied pending a
-company binding, so this probe cannot pass until that exists. The probe first
+authenticate a person. A Contractor signs in only when exactly one enabled roster row binds its
+OID to a company. The probe first
 requires `/api/me` 200, then `/api/stats` 403: Contractor may read its own
 account but cannot read staff-wide statistics. An administrator is not the
 wrong-role fixture for this endpoint. Missing/unknown staff or invalid sessions
@@ -1847,14 +1847,15 @@ idempotently and its manifest now includes `ZavaForward.ApplicationAdmin`:
 ```bash
 python3 infra/scripts/setup-entra.py --dry-run
 python3 infra/scripts/grant-application-admin.py --tenant TENANT_ID \
-  --app-id CLIENT_ID --upn VERIFIED_ADMIN_UPN            # dry run
+  --app-id CLIENT_ID --upn VERIFIED_ADMIN_UPN --expected-oid VERIFIED_OID   # dry run
 python3 infra/scripts/grant-application-admin.py ... --apply  # one assignment
 ```
 
 The grant script verifies the tenant, the unique enterprise app, the enabled role
 and an enabled member, adds only that assignment and is a no-op on repeat.
-`ApplicationAdmin` alone is view-only: it shows the manager option set while the
-server refuses every state-changing request; combine it with a staff role such
+`ApplicationAdmin` alone is the non-staff role "Application Administrator": it
+lists every option but reads no business data and the server refuses every
+state-changing request; combine it with a staff role such
 as `ProgrammeManager` to act. It grants no RuleOwner, AIRestart, professional
 sign-off, consent or private-thread authority.
 

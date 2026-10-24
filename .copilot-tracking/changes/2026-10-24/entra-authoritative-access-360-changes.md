@@ -33,3 +33,20 @@ BRD v0.20.0, PRD v0.19.0, ADR 0002 amendment, ADR 0001 lineage, infra README, ar
 * Contractor login denied pending company binding.
 * Ingress trust boundary requires external forged-header, anonymous and direct-origin negative tests before release.
 * Not production acceptance; no live mutation performed yet in this cycle.
+
+
+## Correction cycle 1 of 2 (coordinator exact-head REVISE against c96dae0c)
+
+The earlier "Known limitations" entries on lost roster ownership, stored-authority
+re-reads and Contractor denial are superseded by the corrections below (original
+text retained above). Commits 885dc5fc and c96dae0c are preserved; corrections are
+new commits.
+
+* F1 (HIGH): `auth.py`, `projection.py`, `server.py`, `workbench.py`. ApplicationAdmin alone is the non-staff role "Application Administrator": no Programme Manager coercion, only GET of the caller's own `/api/me`, empty counts and staff. With a staff role the role, data and actions are that role's, all ten options are listed and flagged `access`.
+* F2 (HIGH): `identity.bind` after authentication gives a verified OID matching exactly one enabled roster row its legacy code/email/name (never email match, role from claims only); a registry of acting Entra staff supplies selectable handoff recipients via `workflows._staff_person` and store suggestions. Rule-alert owner acknowledgement positive test restored.
+* F3 (HIGH): `change_provenance._actor` re-resolves the bound row by OID at the protected operation (code and email must match `bound`) and overlays `financial_authority` and `contract_authorities`; expiry, revocation, scope, independence checks unchanged; no DB read on the auth path.
+* F4 (MEDIUM): `grant-application-admin.py` requires `--expected-oid`; the UPN must resolve to it in dry run and apply, and the read-back verifies resource, role and principal.
+* F5 (MEDIUM): a Contractor authenticates to a pending principal with no DB read; `identity.bind` requires exactly one enabled Contractor row with that OID and a company, else 401; contractor positive and wrong-role 403 coverage restored (including `test_private_cutover_proof`).
+* Docs realigned: BRD FR-053 AC-106/107, PRD DD-009/FR-062/AC-113/changelog, ADR 0002 subsection, infra README.
+* Tests: api focused 83 OK, infra proof/grant 24 OK; full suites and the exact-head gate are recorded separately.
+* Known limits: derived `E-` key is a 12-hex digest; registry roles are last-seen; some seams (hazard subject, capacity accepted_by) may still fail closed for unbound principals; the web UI does not yet render the `access` flag; ingress forged-claim, wrong-audience and direct-origin probes on the serving revision remain a pre-deployment gate. Not production acceptance.

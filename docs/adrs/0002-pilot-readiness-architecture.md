@@ -597,18 +597,17 @@ Decision:
   only the trusted-proxy flag. External anonymous, forged-header and
   direct-origin negative probes must pass before any release or acceptance.
 * The explicit `ZavaForward.ApplicationAdmin` application role supports
-  application-option visibility. It is not a wildcard permission for all
-  protected actions, records, fields, exports, model inputs or private chats.
-  Known exposure: a view-only principal reads through the Programme Manager
-  projection, so case data, exports and the staff directory that role may read
-  are visible to it. Limiting exports or resident-level fields for view-only
-  principals is a follow-up.
-  With a staff role it composes without replacing that role, and that staff
-  role alone supplies business-action authority. Without a staff role the
-  principal is view-only: it sees the Programme Manager option set, but the
-  server refuses every state-changing request, so presentation never becomes
-  business-action authority. Every protected operation still evaluates its
-  actual role/capability and domain predicates on the server.
+  application-option visibility. It is not a wildcard permission for protected
+  actions, records, fields, exports, model inputs or private chats. Alone it
+  yields the distinct role "Application Administrator", outside the staff
+  roles: every option is listed, flagged "needs a role with this authority",
+  and the only readable endpoint is the caller's own account; business data,
+  exports, the staff directory and every state change are refused. With one
+  staff role it composes without replacing that role: that role's data,
+  fields, exports and actions apply, every option stays visible and options
+  beyond that role are flagged, and no further authority is added.
+  Every protected operation evaluates its actual role/capability and domain
+  predicates on the server.
 * Case scope, object grants, provider/supplier assignment, field projection,
   resident consent and representative authority remain business controls.
   Professional competence, named delegations, Finance authority, independent
@@ -620,7 +619,19 @@ Decision:
   name and account-selection changes. Derived storage keys must preserve that
   identity without ambiguous aliasing. Legacy case-owner codes and historical
   audit entries are retained; any association with an Entra principal is
-  explicit and verified, never guessed from email. A roster may retain
+  explicit and verified, never guessed from email.
+  Continuity: after authentication, a verified OID that matches exactly one
+  enabled roster row keeps that row's business code, email and name for
+  ownership, handoffs and audit (never matched by email; ambiguous or
+  disabled matches fall back to the derived key). Role and capabilities still
+  come only from claims. Scoped finance and contract authority is resolved
+  from the matched row by immutable identity only at the protected operation,
+  with expiry, revocation, scope and independence checks unchanged. Entra
+  staff without a roster row become selectable handoff recipients once they
+  sign in (a bounded registry of acting staff). A Contractor signs in only
+  with exactly one enabled Contractor row bound to the OID with a company;
+  absent or ambiguous is denied and provider object scope is unchanged. The
+  derived key is a truncated digest, a known collision limit. A roster may retain
   assignment metadata and labels but must not become a second login or
   application-role registry.
 * An authenticated principal is not thereby an appointed approver or owner

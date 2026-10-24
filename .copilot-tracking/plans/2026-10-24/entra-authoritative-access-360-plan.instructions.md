@@ -36,3 +36,8 @@ The original critique REVISE outcome and its dispositions above are preserved. L
 * Named workflows unavailable for Entra principals (RuleOwner or AIRestart named-person binding, procurement capacity re-reads, contractor company binding) fail closed and are reported as limitations, not completed.
 * Ingress trust: the Python parser trusts platform-injected headers; anonymous and forged-header denial must be verified externally against the serving build (release gate).
 * Documents updated from the session proposals: BRD v0.20.0, PRD v0.19.0, ADR 0002 dated subsection with ADR 0001 lineage note, infra and architecture READMEs, KB index and log. Status is owner-directed design, not deployed or accepted.
+
+
+## Correction cycle 1 of 2 (appended; original plan unchanged)
+
+Trigger: coordinator exact-head assessment REVISE (F1-F5) against c96dae0c. Scope: separate option visibility from business authority; OID-verified roster continuity and selectable Entra recipients; scoped authority resolved at the protected operation; OID-bound grant script; company-bound Contractor path. No documentation-only resolution. Critique is not repeated for the task; corrections are covered by an independent correction review before the clean-head gate.

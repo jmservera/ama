@@ -25,8 +25,9 @@ GRAPH = setup.GRAPH
 SetupError = setup.SetupError
 
 
-def grant(graph, tenant: str, app_id: str, upn: str, *, apply: bool) -> str:
+def grant(graph, tenant: str, app_id: str, upn: str, expected_oid: str, *, apply: bool) -> str:
     tenant, app_id = setup.object_id(tenant), setup.object_id(app_id)
+    expected_oid = setup.object_id(expected_oid)
     setup.token_permissions(graph, tenant)  # refuses a token from a different tenant
     sps = graph.rest(GRAPH + "servicePrincipals?$filter=" + quote(f"appId eq '{app_id}'", safe="=") + "&$select=id,appId,appRoles")
     rows = sps.get("value", [])
@@ -41,9 +42,12 @@ def grant(graph, tenant: str, app_id: str, upn: str, *, apply: bool) -> str:
     if user.get("accountEnabled") is not True or user.get("userType") != "Member":
         raise SetupError("The principal is not an enabled tenant member; nothing was assigned.")
     principal = setup.object_id(user["id"])
+    if principal != expected_oid:
+        raise SetupError("The principal does not resolve to the expected object id; nothing was assigned.")
     resource = setup.object_id(sp["id"])
     path = f"servicePrincipals/{resource}/appRoleAssignedTo"
-    if any(a.get("principalId") == principal and a.get("appRoleId") == role_id for a in graph.pages(path)):
+    if any(a.get("principalId") == principal and a.get("appRoleId") == role_id
+           and a.get("resourceId", resource) == resource for a in graph.pages(path)):
         return "already-assigned"
     if not apply:
         return "would-assign"
@@ -52,7 +56,8 @@ def grant(graph, tenant: str, app_id: str, upn: str, *, apply: bool) -> str:
         raise SetupError("Assignment-write permission is missing; nothing was assigned.")
     graph.rest(GRAPH + path, method="POST", body={"principalId": principal, "resourceId": resource, "appRoleId": role_id})
     setup.wait_for(lambda: graph.pages(path),
-                   lambda found: any(a.get("principalId") == principal and a.get("appRoleId") == role_id for a in found),
+                   lambda found: any(a.get("principalId") == principal and a.get("appRoleId") == role_id
+                                     and a.get("resourceId", resource) == resource for a in found),
                    "The assignment is not yet verified; rerun before relying on it.")
     return "assigned"
 
@@ -65,13 +70,14 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tenant", required=True, help="intended tenant id")
     parser.add_argument("--app-id", required=True, help="intended application (client) id")
-    parser.add_argument("--upn", required=True, help="verified admin user principal name")
+    parser.add_argument("--upn", required=True, help="admin user principal name, resolved then checked against the expected object id")
+    parser.add_argument("--expected-oid", required=True, help="immutable object id of the intended admin; the assignment is refused unless the UPN resolves to it")
     parser.add_argument("--tenant-profile", type=Path, default=setup.PROFILE)
     parser.add_argument("--apply", action="store_true", help="write the assignment (default is a dry run)")
     args = parser.parse_args(argv)
     graph = setup.Azure(args.tenant_profile)
     try:
-        print("result: " + grant(graph, args.tenant, args.app_id, args.upn, apply=args.apply))
+        print("result: " + grant(graph, args.tenant, args.app_id, args.upn, args.expected_oid, apply=args.apply))
     except SetupError as error:
         print(f"refused: {error}", file=sys.stderr)
         return 1

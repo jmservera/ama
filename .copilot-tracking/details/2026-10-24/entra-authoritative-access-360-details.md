@@ -21,3 +21,14 @@ ms.date: 2026-10-24
 ## Tests
 
 * `src/api/tests/test_auth.py` extended; new `test_entra_authoritative.py`; `infra/tests/test_grant_application_admin.py`.
+
+
+## Correction cycle 1 of 2 details (appended)
+
+* identity.py: `matches`, `bind`, registry (`people`, `person`, `register`).
+* auth.py: admin-only role "Application Administrator", staff-role retention, pending Contractor.
+* projection.py/server.py: admin-only allowed set is GET `me`; `_user` binds after authenticate.
+* workbench.py: navigation `access` flag only for admins.
+* change_provenance.py: `_actor` OID re-resolution.
+* grant-application-admin.py: `--expected-oid`.
+* Tests: `test_entra_authoritative` (admin data denial, composition, continuity, scoped authority, registry), `test_auth`, `test_rule_alerts`, `test_private_cutover_proof`, `test_grant_application_admin`.

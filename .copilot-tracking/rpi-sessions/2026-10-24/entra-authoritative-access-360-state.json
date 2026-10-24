@@ -6,7 +6,7 @@
     "task_slug": "demo-admin-bind-360-repair3"
   },
   "mode": "automatic",
-  "active_phase": "Review",
+  "active_phase": "Implement",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -37,6 +37,11 @@
       "decision": "Independent Review executed once",
       "status": "CONFORMANT WITH FOLLOW-UPS",
       "evidence": ".copilot-tracking/reviews/2026-10-24/entra-authoritative-access-360-review.md"
+    },
+    {
+      "decision": "Correction cycle 1 of 2 for coordinator REVISE F1-F5 on c96dae0c",
+      "status": "implemented locally, uncommitted until correction review",
+      "evidence": "changes artifact correction section; focused api 83 OK, infra 24 OK; gate on c96dae0c cancelled, no pass receipt"
     }
   ],
   "blockers": [
@@ -48,7 +53,7 @@
   ],
   "next_action": {
     "phase": "Review",
-    "action": "run rpi-checks --all directly with --lock-timeout 10800 on frozen head, then coordinator release"
+    "action": "Independent correction review of F1-F5 corrections, then commit, clean-head gate with new external path and verify receipt, then coordinator release"
   },
   "prioritized_follow_ups": []
 }

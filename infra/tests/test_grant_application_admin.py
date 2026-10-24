@@ -37,10 +37,10 @@ class FakeGraph:
 
 
 class GrantTests(unittest.TestCase):
-    def run_grant(self, graph, *, apply, tenant=TENANT, perms=("AppRoleAssignment.ReadWrite.All",)):
+    def run_grant(self, graph, *, apply, tenant=TENANT, perms=("AppRoleAssignment.ReadWrite.All",), expected=USER):
         with mock.patch.object(grant.setup, "token_permissions", side_effect=lambda g, t=None: (
                 (_ for _ in ()).throw(grant.SetupError("different tenant")) if t and t != TENANT else set(perms))):
-            return grant.grant(graph, tenant, APP, "admin@example.test", apply=apply)
+            return grant.grant(graph, tenant, APP, "admin@example.test", expected, apply=apply)
 
     def test_dry_run_writes_nothing_and_apply_adds_one_assignment(self):
         g = FakeGraph()
@@ -67,12 +67,20 @@ class GrantTests(unittest.TestCase):
             (FakeGraph(user={"id": USER, "accountEnabled": False, "userType": "Member"}), {}),
             (FakeGraph(user={"id": USER, "accountEnabled": True, "userType": "Guest"}), {}),
             (FakeGraph(), dict(perms=("User.Read",))),
+            (FakeGraph(), dict(expected="77777777-7777-7777-7777-777777777777")),
         ]
         for graph, kw in cases:
             with self.subTest(kw=kw), mock.patch.object(grant.setup, "authority_help"):
                 with self.assertRaises(grant.SetupError):
                     self.run_grant(graph, apply=True, **kw)
             self.assertEqual(graph.posts, [])
+
+    def test_dry_run_a_then_apply_b_cannot_assign_a_different_person(self):
+        g = FakeGraph(user={"id": "88888888-8888-8888-8888-888888888888", "accountEnabled": True, "userType": "Member"})
+        for apply in (False, True):
+            with self.assertRaises(grant.SetupError):
+                self.run_grant(g, apply=apply)
+        self.assertEqual(g.posts, [])
 
 
 if __name__ == "__main__":

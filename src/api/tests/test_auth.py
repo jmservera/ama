@@ -14,7 +14,7 @@ from pathlib import Path
 import test_mvp
 from zava_forward.api import auth
 from zava_forward.api.server import App, make_handler
-from zava_forward.core import identity
+from zava_forward.core import identity, projection
 from zava_forward.core.store import Store
 from zava_forward.core.lawstore import LawStore
 from zava_forward.core.rulecards import SEED_CARDS
@@ -85,7 +85,8 @@ class TrustedProxyTests(Base):
 
     def test_application_admin_alone_and_with_programme_manager(self):
         alone = self.who(principal(roles=("ZavaForward.ApplicationAdmin",)))
-        self.assertEqual((alone["role"], alone["app_admin"]), ("Retrofit Programme Manager", True))
+        self.assertEqual((alone["role"], alone["app_admin"], alone["view_only"]), ("Application Administrator", True, True))
+        self.assertNotIn(alone["role"], projection.STAFF_ROLES)
         both = self.who(principal(roles=("ZavaForward.ProgrammeManager", "ZavaForward.ApplicationAdmin")))
         self.assertEqual((both["role"], both["app_admin"]), ("Retrofit Programme Manager", True))
         other = self.who(principal(roles=("ZavaForward.Coordinator", "ZavaForward.ApplicationAdmin")))
@@ -96,8 +97,20 @@ class TrustedProxyTests(Base):
         user = self.who(principal(roles=("ZavaForward.ApplicationAdmin",)))
         self.assertEqual(user["rule_roles"], [])
 
-    def test_contractor_needs_a_registered_binding_and_custom_map_works(self):
-        self.assertIsNone(self.who(principal(roles=("ZavaForward.Contractor",))))
+    def test_contractor_needs_a_registered_company_binding_and_custom_map_works(self):
+        pending = self.who(principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009"))
+        self.assertEqual(pending["role"], "Contractor")
+        bound = identity.bind(self.store, pending)
+        self.assertEqual((bound["code"], bound["contractor"], bound["oid"]), ("CON-1", "Test Ltd", pending["oid"]))
+        self.assertEqual(bound["derived_code"], identity.code_for(TENANT, pending["oid"]))
+        unbound = self.who(principal(roles=("ZavaForward.Contractor",), oid=OID_NEW))
+        self.assertIsNone(identity.bind(self.store, unbound))
+        self.store.staff["kim2@example.test"] = dict(self.store.staff["kim@example.test"], email="kim2@example.test", code="CON-2")
+        self.assertIsNone(identity.bind(self.store, pending))
+        del self.store.staff["kim2@example.test"]
+        self.store.staff["kim@example.test"]["disabled"] = True
+        self.assertIsNone(identity.bind(self.store, pending))
+        self.store.staff["kim@example.test"]["disabled"] = False
         u = self.who(principal(roles=("Warm.Coord",)), ZF_ROLE_MAP=json.dumps({"Warm.Coord": "Retrofit Coordinator"}))
         self.assertEqual(u["role"], "Retrofit Coordinator")
 
@@ -218,7 +231,7 @@ class RuleHttpTests(Base):
         history = self.call("/api/law/cards/hazard-awareness-clock")[1]["versions"]
         self.assertTrue(all(c["source_freshness"]["status"] == "unknown" for c in history))
         self.assertEqual([c["state"] for c in history], ["draft", "retired"])
-        self.assertEqual(history[-1]["author"], identity.email_for(TENANT, OID_SAM))
+        self.assertEqual(history[-1]["author"], "sam@example.test")  # verified OID continuity with the roster identity
         self.assertEqual(history[-1]["approved_by"], identity.email_for(TENANT, OID_OWNER))
         self.assertTrue(history[-1]["approved_on"])
         self.assertTrue(all(e["simulated"] for e in history[-1]["events"]))
@@ -286,8 +299,8 @@ class RuleHttpTests(Base):
         con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor", "ZavaForward.RuleOwner", "ZavaForward.RuleAuthor"),
                                                 oid="aaaaaaaa-0000-0000-0000-000000000009"), "X-ZF-CSRF": "1"}
         for path in ("/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock"):
-            self.assertEqual(self.call(path, con)[0], 401)
-            self.assertEqual(self.call(path, con, {})[0], 401)
+            self.assertEqual(self.call(path, con)[0], 403)
+            self.assertEqual(self.call(path, con, {})[0], 403)
         self.app.provider = auth.PasswordProvider(self.store, "synthetic")
         cookie = self.app.provider.login("sam@example.test", "synthetic")
         self.assertEqual(self.call(headers={"Cookie": f"zf_session={cookie}"}, body=self.draft())[0], 403)
@@ -340,8 +353,11 @@ class ProxyHttpTests(Base):
         code, me = self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": principal()})
         self.assertEqual((code, me["user"]["role"]), (200, "Resident Liaison Officer"))
         con = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor",), oid="aaaaaaaa-0000-0000-0000-000000000009")}
-        self.assertEqual(self.call("/api/stats", con)[0], 401)
-        self.assertEqual(self.call("/api/cases", con)[0], 401)
+        self.assertEqual(self.call("/api/me", con)[0], 200)
+        self.assertEqual(self.call("/api/stats", con)[0], 403)
+        self.assertEqual(self.call("/api/cases", con)[0], 200)
+        stranger = {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.Contractor",), oid=OID_NEW)}
+        self.assertEqual(self.call("/api/me", stranger)[0], 401)
 
     def test_post_needs_csrf_header_and_logout_redirects(self):
         h = {"X-MS-CLIENT-PRINCIPAL": principal()}
@@ -457,9 +473,8 @@ class ProxyHttpTests(Base):
         with patch("zava_forward.core.profile.own_photo") as photo:
             from zava_forward.core.profile import PhotoError
             photo.side_effect = PhotoError(404, "No Microsoft profile photo has been set.")
-            self.assertEqual(self.call("/api/account/photo", con)[0], 401)
-            self.assertEqual(self.call("/api/me", con)[0], 401)
-            photo.assert_not_called()
+            self.assertEqual(self.call("/api/account/photo", con)[0], 404)
+            self.assertEqual(self.call("/api/me", con)[0], 200)
 
     def test_photo_binary_response_is_private_and_does_not_expose_platform_token(self):
         from zava_forward.api.server import WEB

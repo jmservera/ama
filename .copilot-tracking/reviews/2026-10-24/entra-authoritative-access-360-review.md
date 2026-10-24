@@ -29,3 +29,10 @@ Multi-role composition correct (admin alone view-only; admin plus one staff role
 | 8 | Low | Grant script checks app by id and role value only | Accepted; operator supplies the id |
 
 Review is not repeated within this task. Corrections committed after this review are documentation-only.
+
+
+## Review correction record (correction cycle 1 of 2)
+
+The original Review above (CONFORMANT WITH FOLLOW-UPS on 885dc5fc) stands unchanged; it did not detect F1-F5. The coordinator's exact-head assessment of c96dae0c returned REVISE. The gate attempt against c96dae0c was cancelled while queued because of these defects and no pass receipt exists. Corrections are listed in the changes artifact. A separate independent correction review of the corrected diff is required before the clean-head gate; it is not a duplicate original Review.
+
+Correction review outcome (independent code-review agent, read-only, 2026-10-24): F1 PASS, F2 PASS, F3 PASS, F4 PASS, F5 PASS; no High or Medium findings. Test suites were not run by the reviewer; the exact-head gate follows.
