@@ -593,9 +593,16 @@ Decision:
   principal headers. Parsing a principal header, or setting a trusted-proxy
   flag, is not proof of authentication. Unverified direct-origin traffic is
   denied. The application must not accept tokens for another application.
+  Status: this is a release gate, not yet evidenced by the code, which checks
+  only the trusted-proxy flag. External anonymous, forged-header and
+  direct-origin negative probes must pass before any release or acceptance.
 * The explicit `ZavaForward.ApplicationAdmin` application role supports
   application-option visibility. It is not a wildcard permission for all
   protected actions, records, fields, exports, model inputs or private chats.
+  Known exposure: a view-only principal reads through the Programme Manager
+  projection, so case data, exports and the staff directory that role may read
+  are visible to it. Limiting exports or resident-level fields for view-only
+  principals is a follow-up.
   With a staff role it composes without replacing that role, and that staff
   role alone supplies business-action authority. Without a staff role the
   principal is view-only: it sees the Programme Manager option set, but the

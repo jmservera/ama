@@ -677,8 +677,9 @@ python3 infra/scripts/private-cutover-proof.py smoke --direct-ingress \
 
 The optional session file must be owner-owned mode `0600`, outside the
 repository, with exactly one `cookie` or `token` JSON field. It supplies an
-already authenticated **Contractor** session with provisioned staff binding;
-it does not manufacture roles or authenticate a person. The probe first
+already authenticated **Contractor** session; it does not manufacture roles or
+authenticate a person. Entra Contractor sign-in is currently denied pending a
+company binding, so this probe cannot pass until that exists. The probe first
 requires `/api/me` 200, then `/api/stats` 403: Contractor may read its own
 account but cannot read staff-wide statistics. An administrator is not the
 wrong-role fixture for this endpoint. Missing/unknown staff or invalid sessions

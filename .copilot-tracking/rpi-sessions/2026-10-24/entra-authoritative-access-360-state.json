@@ -6,7 +6,7 @@
     "task_slug": "demo-admin-bind-360-repair3"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-10-24/entra-authoritative-access-360-details.md",
     "critique": null,
     "changes": ".copilot-tracking/changes/2026-10-24/entra-authoritative-access-360-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-10-24/entra-authoritative-access-360-review.md"
   },
   "confirmed_decisions": [
     {
@@ -32,6 +32,11 @@
       "decision": "ApplicationAdmin alone is view-only; with a staff role the staff role applies",
       "status": "implemented",
       "evidence": "test_entra_authoritative.py"
+    },
+    {
+      "decision": "Independent Review executed once",
+      "status": "CONFORMANT WITH FOLLOW-UPS",
+      "evidence": ".copilot-tracking/reviews/2026-10-24/entra-authoritative-access-360-review.md"
     }
   ],
   "blockers": [
@@ -42,8 +47,8 @@
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "commit locally, run full gate under heavy lock, then independent Review"
+    "phase": "Review",
+    "action": "run rpi-checks --all directly with --lock-timeout 10800 on frozen head, then coordinator release"
   },
   "prioritized_follow_ups": []
 }
