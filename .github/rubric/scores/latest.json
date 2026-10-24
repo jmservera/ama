@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T16:36:11+00:00",
-  "commit": "7c39dde5c5ee820439469681c6d801709eea51c7",
+  "scored_at": "2026-10-24T18:09:08+00:00",
+  "commit": "5fa7c3a0dcbbd818531a9e77bf7147cbb0443a93",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40111341495",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40118908891",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "9abe2693489a8bc54e2b5418ef4663d28d7f9ca16e3edb90cbad4811df1cfa3b",
@@ -13,17 +13,18 @@
     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
-    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402"
+    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
+    "thought-leadership": "e6dcd7d7ab1e5c4a054aced6a7703384d2247260b4f82e75869b6a44997536a5"
   },
-  "total": 63,
+  "total": 72,
   "sections": {
     "A": 30,
     "B": 22,
     "C": 11,
-    "D": 0
+    "D": 9
   },
-  "floors_met": false,
-  "outcome": "Incomplete (thought leadership artifact not submitted)",
+  "floors_met": true,
+  "outcome": "Pass",
   "criteria": {
     "A1": {
       "score": 4,
@@ -145,19 +146,27 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 4,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:637-646",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/mve-feature-consolidation-harness/hypotheses.md:1"
+      ],
+      "rationale": "New arXiv draft argues an original thesis (agents accelerate feature-driven decay) with a repo-grounded case and a testable H1-H7 consolidation-harness protocol. Useful, well-evidenced synthesis; not yet a Monday-actionable result since the experiment is unrun."
     },
     "D2": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 3,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:37",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:55-63"
+      ],
+      "rationale": "Structured, cited paper with embedded bibliography, but 14 unresolved TODO(author) items (results section, date, consumption data, naming/partner approvals) mean more than light editing remains before it is publish-ready."
     },
     "D3": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 2,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:55-71"
+      ],
+      "rationale": "A clear arXiv submission path (cs.SE) is identified with checked eligibility notes, but the paper has not been submitted, published, or delivered to any audience yet; internal approvals and endorsement are still pending."
     }
   }
 }
