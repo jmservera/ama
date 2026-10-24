@@ -7,9 +7,9 @@ import copy
 import json
 import threading
 import unittest
-import uuid
 import urllib.error
 import urllib.request
+import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -23,7 +23,6 @@ from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api import auth
 from zava_forward.api.server import App, make_handler
-
 
 TENANT = "11111111-2222-3333-4444-555555555555"
 
@@ -130,7 +129,8 @@ class RuleAlertApi(unittest.TestCase):
             self.assertEqual(
                 self.call("owner", route + "acknowledge", {"note": "SYN"} | forged)[0], 400
             )
-        # Named decision owners are roster emails; an Entra identity fails closed (documented limit).
+        # Named decision owners are roster emails; an Entra identity fails closed (documented
+        # limit).
         self.assertEqual(self.call("owner", route + "outcome", {"note": "SYN"})[0], 403)
         self.assertEqual(self.call("owner", route + "acknowledge", {"note": "SYN"})[0], 403)
         self.assertEqual(

@@ -31,7 +31,13 @@ def navigation(user: dict[str, str]) -> list[Destination]:
         ("#/overview", "Overview", "Programme overview", "stats", True),
         ("#/visits", "Visits", "Programme visits" if manager else "My visits", "visits", True),
         ("#/funding", "Funding", "Programme funding evidence", "funding", True),
-        ("#/finance", "Finance", "Finance review queue", "finance_queue", user.get("role") in projection.FINANCE_VIEW),
+        (
+            "#/finance",
+            "Finance",
+            "Finance review queue",
+            "finance_queue",
+            user.get("role") in projection.FINANCE_VIEW,
+        ),
         ("#/capacity", "Capacity and work orders", "Programme capacity", "packages", manager),
         ("#/closed", "Closed cases", "Closed case directory", "cases", manager),
         ("#/assistants", "Assistant proposals", "My permitted proposals", "assistants", True),
@@ -46,5 +52,9 @@ def navigation(user: dict[str, str]) -> list[Destination]:
                 dest["access"] = "available"
             out.append(dest)
         elif admin:
-            out.append(Destination(href=href, label=label, scope=scope, access="needs a role with this authority"))
+            out.append(
+                Destination(
+                    href=href, label=label, scope=scope, access="needs a role with this authority"
+                )
+            )
     return out

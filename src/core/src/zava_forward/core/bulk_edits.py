@@ -7,8 +7,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any
 
-from . import identity
-from . import projection
+from . import identity, projection
 from .store import ConflictError
 from .workflows import HANDOFF_ACTIVE, MANAGER_ROLES, _due
 

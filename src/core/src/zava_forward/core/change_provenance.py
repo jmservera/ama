@@ -9,8 +9,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any
 
-from . import identity
-from . import projection
+from . import identity, projection
 
 Record = dict[str, Any]
 
@@ -22,10 +21,15 @@ def _actor(store: Any, user: Record) -> Record:
     if identity.is_entra(user):
         actor = identity.verified(user)
         if actor and actor.get("bound"):
-            # Scoped business metadata is resolved by the immutable tenant object id only at this protected operation.
+            # Scoped business metadata is resolved by the immutable tenant object id only at this
+            # protected operation.
             rows = identity.matches(store, actor["tid"], actor["oid"])
             bound = actor["bound"]
-            if len(rows) != 1 or rows[0].get("code") != bound["code"] or str(rows[0].get("email", "")).strip().lower() != bound["email"]:
+            if (
+                len(rows) != 1
+                or rows[0].get("code") != bound["code"]
+                or str(rows[0].get("email", "")).strip().lower() != bound["email"]
+            ):
                 actor = None
             else:
                 business = rows[0]

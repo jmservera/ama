@@ -225,7 +225,9 @@ class BulkEditApi(unittest.TestCase):
         principal["claims"][2]["val"] = "99999999-2222-3333-4444-555555555555"
         wrong = base64.b64encode(json.dumps(principal).encode()).decode()
         self.assertEqual(
-            self.call(PREVIEW, self.request, headers=dict(headers, **{"X-MS-CLIENT-PRINCIPAL": wrong}))[0],
+            self.call(
+                PREVIEW, self.request, headers=dict(headers, **{"X-MS-CLIENT-PRINCIPAL": wrong})
+            )[0],
             401,
         )
         principal["claims"][2]["val"] = TENANT

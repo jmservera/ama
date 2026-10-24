@@ -13,8 +13,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any, Protocol
 
-from . import identity
-from . import ai_registry, projection
+from . import ai_registry, identity, projection
 from .controls import RESIDENT_VIEW_ROLES
 from .documents import ACCEPTED
 
