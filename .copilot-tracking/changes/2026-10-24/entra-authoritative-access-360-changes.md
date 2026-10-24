@@ -64,3 +64,11 @@ new commits.
 * Root fix: `identity.distinct(store, actor, author)` separates storage availability (strict reads raise, denying) from resolution completeness. An author with no alias record and no roster row carrying a different verified object id is unresolved and never distinct from an Entra actor; an unresolved derived-email actor is also not distinct. Plain legacy names keep text comparison. `RuleCardStore.distinct` is wired by the server and applied in `approve`.
 * Tests: unresolved historical author with binding removed and no alias record denies (HTTP 409); linked same person denies; verified distinct owner passes; storage failure denies; earlier tests retained.
 * Not claimed: store `legacy_roster_tenant` is still absent live; recording it is a guarded deployment step. Prior gates on 22ca2c2b and e0edcb43 were interrupted (signal 15), no pass receipt.
+
+## Technical ledger, 2026-10-24T17:46Z (gate hygiene, not an auth finding)
+
+* Coordinator assessed head 4efe1403 PASS. Main advanced to 0f657342; merged as d9a1b84a (docs-only overlap; src and infra unchanged; log.md conflict resolved keeping both entries).
+* Gate on d9a1b84a (`/tmp/ama-360-live/gate-entra-extra-d9a1b84a`) failed ruff lint/format in project-core and project-api (earlier gates were interrupted before the lint step). Failed receipt retained, not a pass.
+* Lint/format-only commit ffbbaef4 (head 9dff4239, tree 9dff4239363d7b8837daf1f01a1b432fa33514a9 is the tree id of that head). Focused tests 87 OK.
+* Gate on that head (`/tmp/ama-360-live/gate-entra-extra-lint`) failed mypy: project-core identity.py:64 assignment type; project-api 75 typing errors in tests/test_entra_authoritative.py (untyped test helpers). Failed receipt retained, not a pass.
+* Repair window (17:39Z) elapsed before another gate could complete. No deployment, admin assignment or live mutation was performed in this cycle; no further automatic retry.
