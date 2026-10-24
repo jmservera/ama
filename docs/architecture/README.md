@@ -1,11 +1,24 @@
 ---
 title: Zava Forward Architecture Views
 description: Editable Excalidraw executive and technical architecture views grounded in PR 68, with Azure icons, interaction contracts and explicit implementation limits
-ms.date: 2026-10-16
+ms.date: 2026-10-23
 ms.topic: concept
 ---
 
 ## Scope and Reading Order
+
+For issue #441, the separate
+[UNREGISTERED resident service proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
+records owner-selected Option B, a portal/workflow increment before the
+independently gated resident-answer task. It includes editable Excalidraw,
+same-model SVG/Chrome PNG and accessible text. Its ID is null; it is not a
+numbered/finalized ADR, native PNG export or deployed portal. Registration
+acceptance remains UNMET, with supported allocator/bootstrap deferred.
+Named review is default; the selected bounded routine exception is proposed
+but OFF pending separate authority/evaluation/release. OD-52-55 remain open.
+Historical executive "no resident portal needed" and staff-assisted topology
+below describe their original baseline, not current proposal exclusion.
+No executive asset, existing ADR or runtime is changed.
 
 For issues #200/#201, use the dated
 [cut-over evidence pack](./cutover-evidence-pack.md), its

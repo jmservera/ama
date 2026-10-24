@@ -7035,3 +7035,76 @@ metadata when the knowledge base was created.
 * Recorded the owner's 2026-10-24 decision that verified Entra tenant, object id and explicit application roles determine staff login, with no SQL staff row or database read on the authentication path. Added a dated subsection to ADR 0002 (the ADR stays Proposed overall) with a reciprocal ADR 0001 lineage note, BRD v0.20.0 (CON-008, FR-053, FR-054, AC-104 to AC-109, NFR-003/AC-050 clarified), PRD v0.19.0 (DD-009, FR-062, FR-063, AC-111 to AC-117) and aligned the architecture and infra READMEs and the task-routing index.
 * ApplicationAdmin alone is view-only (shows the manager option set; the server refuses state-changing requests). The 2026-10-13 SQL-binding observations are retained as history and superseded prospectively for sign-in only.
 * Design and source only: not deployed, no role assignment readback and no real-user login observed. Earlier entries retained.
+
+## [2026-10-23] update | Optional resident requirements and unregistered architecture proposal (#441)
+
+* Integrated verified unsigned BRD v0.20.0 and PRD v0.19.0 source amendments
+  after genuine Research, Plan/details and independent plan critique. Source
+  hashes, reconstructed candidates, original FAIL/BLOCKED quality reports and
+  namespace trace remain in portable issue-specific evidence.
+* Prospectively reconciled FR-044/AC-084 and coupled rules for the owner-selected
+  bounded routine communication proposal, separately gated and OFF. Named
+  review remains default and always applies to consequential, sensitive,
+  uncertain, safety, consent, contractual and financial content. No controlled
+  authority is delegated. Proposed role ownership/shared timeline, managed
+  external identity/scoped grants and assisted channels without detriment
+  replace no settled legal/privacy/service gate.
+* Added six synthetic resident scripts and coupled content/design/WCAG/profile,
+  architecture/capstone and addendum routing without changing EXA-004 or
+  historical staff/map denominators. Targets/scenarios remain proposals and
+  author judgement, not measured benefits, production SLA or cash/headcount.
+* Published architecture as an explicitly UNREGISTERED issue-specific working
+  proposal with id null, selected Option B, original matching Excalidraw/SVG/
+  same-model Chrome PNG and accessible text. Owner deferred registration after
+  actual allocator/bootstrap failure: full registration acceptance remains
+  UNMET, no new registry/config/lineage/Govern claim.
+* Original case study, owner memory, numbered ADRs and earlier log entries
+  remain unchanged. OD-52-55, formal/lifecycle and live approval remain open.
+  This documentation-only proposal does not deliver a portal, live sending,
+  real accounts/data, Azure change or paid inference. Independent final-byte
+  Review and publication gate evidence are recorded separately, not implied
+  by this authoring entry. Shared-path overlap with draft #424/#426/#439
+  requires later reconciliation preserving all append entries; no sibling
+  proposal is imported and no false issue dependency is created.
+
+## [2026-10-23] update | Completed unsigned resident PRD and architecture refinement (#441)
+
+* Integrated completed PRD v0.19.1 and the one reconciled architecture working
+  candidate after a new genuine Research, Plan/details and independent critique.
+  Exact immutable input hashes, source-to-integrated editorial/link mappings and
+  prior working bytes are retained as selected portable issue evidence.
+* All existing requirement definitions/IDs and 30 resident Not-run criteria
+  remain unchanged. Twenty local stories, R0-R5 planning, six-journey verification
+  and qualified full FR trace elaborate the proposal, not execute or approve it.
+* Current independent PRD quality remains FAIL / Validate BLOCKED / Finalize
+  NOT_EVALUATED, singular1<2, seven CAUTION/34 COVERED/zero RISK. All seven
+  findings remain current, including bundles, unsigned BRD, feasibility/GOAL-005,
+  OPEN generic/resident latency/file-size precedence, table shape and FR-059
+  trace. Author-complete does not mean Validate/Finalize/Govern or live approval.
+* The existing architecture location evolves as id:null/unregistered/proposed;
+  prior draft/source bytes remain history, not competing decisions or accepted
+  ADR supersession. Registration stays deferred/UNMET. Unchanged 47-element
+  Excalidraw and same-model SVG/Chrome PNG retain text equivalent and truthful
+  non-native-render provenance.
+* Owner-selected Option B, default human review/routine OFF, assisted channels
+  without detriment, scoped grants, OD-52-55/OQ-028-031 and live gates remain.
+  Correction1 validation/navigation and bot/history are retained; A5/B6 generated
+  score citations stay OPEN without manual score edits or paid scoring.
+* Only directly coupled addendum/index/journey notices change; BRD, original
+  case, owner memory, numbered ADRs and earlier log entries remain unchanged.
+  Draft #439 cost/index/log overlap needs later reconciliation preserving both
+  lanes. No application, sending, real account/data, Azure or paid inference
+  is delivered. Native Review/technical gate evidence is separate; this entry
+  does not attest a completed gate or authorize push/PR changes.
+
+## [2026-10-24] restructure | Merge resident and staff-access requirements (#441)
+
+* Merged the unsigned resident-service increment with the owner-directed
+  Entra-authoritative staff-access requirements. Preserved the earlier resident
+  identifiers and assigned staff access the following BRD IDs (FR-063/064,
+  AC-127 to AC-132) and PRD IDs (DD-010, FR-072/073, AC-141 to AC-147).
+* Updated the canonical BRD, PRD and task-routing index. The prior Entra entry
+  above is retained as a record of the pre-merge identifiers; the PRD's 0.19.2
+  history row likewise records those historical IDs and their reassignment.
+  The resolved rubric score metadata is historical and does not assess this
+  merged candidate. No new approval, acceptance or deployment is claimed.

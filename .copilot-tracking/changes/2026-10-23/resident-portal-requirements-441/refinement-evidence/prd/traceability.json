@@ -1,0 +1,1414 @@
+{
+  "artifact_type": "AUTHOR_TRACEABILITY_NOT_APPROVAL",
+  "source_head": "4017b214bb021244b06264629953d84f29003c53",
+  "prd_id": "PRD-2026-AMA48-001",
+  "brd_id": "BRD-2026-AMA48-001",
+  "source_prd_sha256": "c54a0d5053e2ec7100a0039ff620b6916827dcd04a85e46bd2f42bc6c72771e9",
+  "source_brd_sha256": "c6f9326d376052a6262a1af0cb07d878d3bad14eeef7efaaa91263d73cfa6d01",
+  "candidate_sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+  "rows": [
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-001",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-001",
+        "PRD-2026-AMA48-001::AC-002",
+        "PRD-2026-AMA48-001::AC-043"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-005",
+        "BRD-2026-AMA48-001::FR-006"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-002",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-001",
+        "PRD-2026-AMA48-001::AC-002",
+        "PRD-2026-AMA48-001::AC-003",
+        "PRD-2026-AMA48-001::AC-043"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-005",
+        "BRD-2026-AMA48-001::FR-035"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-003",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-004",
+        "PRD-2026-AMA48-001::AC-005",
+        "PRD-2026-AMA48-001::AC-060",
+        "PRD-2026-AMA48-001::AC-067"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-041",
+        "BRD-2026-AMA48-001::NFR-003"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-004",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-006"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-016",
+        "BRD-2026-AMA48-001::FR-041"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-005",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-007",
+        "PRD-2026-AMA48-001::AC-008",
+        "PRD-2026-AMA48-001::AC-057"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-005",
+        "BRD-2026-AMA48-001::FR-006"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-006",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-009"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::FR-041"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-007",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-009",
+        "PRD-2026-AMA48-001::AC-010"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::RULE-008",
+        "BRD-2026-AMA48-001::RULE-010"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-008",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-010",
+        "PRD-2026-AMA48-001::AC-011",
+        "PRD-2026-AMA48-001::AC-067"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-001",
+        "BRD-2026-AMA48-001::FR-007",
+        "BRD-2026-AMA48-001::FR-016",
+        "BRD-2026-AMA48-001::FR-036"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-009",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-008",
+        "PRD-2026-AMA48-001::AC-012"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-008",
+        "BRD-2026-AMA48-001::FR-029",
+        "BRD-2026-AMA48-001::FR-030"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-010",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-012",
+        "PRD-2026-AMA48-001::AC-013"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-006",
+        "BRD-2026-AMA48-001::FR-008",
+        "BRD-2026-AMA48-001::FR-030"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-011",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-014",
+        "PRD-2026-AMA48-001::AC-036"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-017",
+        "BRD-2026-AMA48-001::FR-018"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-012",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-015",
+        "PRD-2026-AMA48-001::AC-040",
+        "PRD-2026-AMA48-001::AC-073"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-034",
+        "BRD-2026-AMA48-001::FR-035",
+        "BRD-2026-AMA48-001::FR-037",
+        "BRD-2026-AMA48-001::FR-042"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-013",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-016"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-007",
+        "BRD-2026-AMA48-001::FR-010"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-014",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-017",
+        "PRD-2026-AMA48-001::AC-037"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-011",
+        "BRD-2026-AMA48-001::FR-012",
+        "BRD-2026-AMA48-001::FR-013",
+        "BRD-2026-AMA48-001::FR-014",
+        "BRD-2026-AMA48-001::FR-015",
+        "BRD-2026-AMA48-001::FR-017",
+        "BRD-2026-AMA48-001::RULE-005"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-015",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-018",
+        "PRD-2026-AMA48-001::AC-038"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-002",
+        "BRD-2026-AMA48-001::FR-003",
+        "BRD-2026-AMA48-001::RULE-003"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-016",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-019",
+        "PRD-2026-AMA48-001::AC-039"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-019",
+        "BRD-2026-AMA48-001::FR-020",
+        "BRD-2026-AMA48-001::FR-021",
+        "BRD-2026-AMA48-001::FR-022",
+        "BRD-2026-AMA48-001::RULE-008"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-017",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-020",
+        "PRD-2026-AMA48-001::AC-042"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-028",
+        "BRD-2026-AMA48-001::FR-029",
+        "BRD-2026-AMA48-001::FR-030",
+        "BRD-2026-AMA48-001::RULE-013"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-018",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-021",
+        "PRD-2026-AMA48-001::AC-042"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-025",
+        "BRD-2026-AMA48-001::FR-028",
+        "BRD-2026-AMA48-001::RULE-008",
+        "BRD-2026-AMA48-001::RULE-010"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-019",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-022",
+        "PRD-2026-AMA48-001::AC-050"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-023",
+        "BRD-2026-AMA48-001::FR-024",
+        "BRD-2026-AMA48-001::FR-026",
+        "BRD-2026-AMA48-001::FR-027"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-020",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-023"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-033"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-021",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-024"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-033"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-022",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-025",
+        "PRD-2026-AMA48-001::AC-043",
+        "PRD-2026-AMA48-001::AC-057"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-006",
+        "BRD-2026-AMA48-001::FR-033"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-023",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-026"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-025",
+        "BRD-2026-AMA48-001::FR-033"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-024",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-027",
+        "PRD-2026-AMA48-001::AC-041"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-033",
+        "BRD-2026-AMA48-001::FR-041"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-025",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-028"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-009",
+        "BRD-2026-AMA48-001::FR-034",
+        "BRD-2026-AMA48-001::FR-036"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-026",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-028",
+        "PRD-2026-AMA48-001::AC-029",
+        "PRD-2026-AMA48-001::AC-060",
+        "PRD-2026-AMA48-001::AC-070"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-009",
+        "BRD-2026-AMA48-001::FR-036"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-027",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-029",
+        "PRD-2026-AMA48-001::AC-030",
+        "PRD-2026-AMA48-001::AC-060",
+        "PRD-2026-AMA48-001::AC-070"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-009",
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::FR-044",
+        "BRD-2026-AMA48-001::RULE-018"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-028",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-030",
+        "PRD-2026-AMA48-001::AC-061",
+        "PRD-2026-AMA48-001::AC-072"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::NFR-004"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-029",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-031"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-005",
+        "BRD-2026-AMA48-001::FR-006",
+        "BRD-2026-AMA48-001::NFR-005"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-030",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-032"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-044",
+        "BRD-2026-AMA48-001::NFR-006"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-031",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-033"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::RULE-006"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-032",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-034"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-041",
+        "BRD-2026-AMA48-001::NFR-008"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-033",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-035"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-012",
+        "BRD-2026-AMA48-001::FR-017",
+        "BRD-2026-AMA48-001::FR-018",
+        "BRD-2026-AMA48-001::NFR-009"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-034",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-036",
+        "PRD-2026-AMA48-001::AC-040"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-034",
+        "BRD-2026-AMA48-001::FR-041"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-035",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-043"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-041",
+        "BRD-2026-AMA48-001::RULE-019",
+        "BRD-2026-AMA48-001::RULE-020"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-036",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-044",
+        "PRD-2026-AMA48-001::AC-057",
+        "PRD-2026-AMA48-001::AC-058",
+        "PRD-2026-AMA48-001::AC-069"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::FR-043"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-037",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-045",
+        "PRD-2026-AMA48-001::AC-054"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-034",
+        "BRD-2026-AMA48-001::FR-036"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-038",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-046"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-023",
+        "BRD-2026-AMA48-001::FR-024",
+        "BRD-2026-AMA48-001::FR-026",
+        "BRD-2026-AMA48-001::FR-027"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-039",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-047",
+        "PRD-2026-AMA48-001::AC-053"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-024",
+        "BRD-2026-AMA48-001::FR-028",
+        "BRD-2026-AMA48-001::FR-034"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-040",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-048",
+        "PRD-2026-AMA48-001::AC-053"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-009",
+        "BRD-2026-AMA48-001::FR-036"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-041",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-049"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-026",
+        "BRD-2026-AMA48-001::RULE-010"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-042",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-022",
+        "PRD-2026-AMA48-001::AC-050",
+        "PRD-2026-AMA48-001::AC-054"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-023",
+        "BRD-2026-AMA48-001::FR-024",
+        "BRD-2026-AMA48-001::FR-027",
+        "BRD-2026-AMA48-001::RULE-010"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-043",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-013",
+        "PRD-2026-AMA48-001::AC-051",
+        "PRD-2026-AMA48-001::AC-071"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-008",
+        "BRD-2026-AMA48-001::FR-040"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-044",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-052",
+        "PRD-2026-AMA48-001::AC-054",
+        "PRD-2026-AMA48-001::AC-057",
+        "PRD-2026-AMA48-001::AC-058",
+        "PRD-2026-AMA48-001::AC-061",
+        "PRD-2026-AMA48-001::AC-066"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::CON-007",
+        "BRD-2026-AMA48-001::FR-009",
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::RULE-018"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-045",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-037",
+        "PRD-2026-AMA48-001::AC-055",
+        "PRD-2026-AMA48-001::AC-064"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-011",
+        "BRD-2026-AMA48-001::FR-013",
+        "BRD-2026-AMA48-001::FR-045"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-046",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-037",
+        "PRD-2026-AMA48-001::AC-056"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-013",
+        "BRD-2026-AMA48-001::FR-014"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-047",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-058",
+        "PRD-2026-AMA48-001::AC-059",
+        "PRD-2026-AMA48-001::AC-060",
+        "PRD-2026-AMA48-001::AC-061"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-009",
+        "BRD-2026-AMA48-001::FR-036",
+        "BRD-2026-AMA48-001::FR-043"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-048",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-062",
+        "PRD-2026-AMA48-001::AC-065"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-046",
+        "BRD-2026-AMA48-001::RULE-007"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-049",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-063"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-029",
+        "BRD-2026-AMA48-001::FR-030",
+        "BRD-2026-AMA48-001::FR-047"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-050",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-003"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-066",
+        "PRD-2026-AMA48-001::AC-067",
+        "PRD-2026-AMA48-001::AC-068"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-032",
+        "BRD-2026-AMA48-001::FR-048",
+        "BRD-2026-AMA48-001::RULE-014"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-051",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-069"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-043",
+        "BRD-2026-AMA48-001::RULE-020",
+        "BRD-2026-AMA48-001::RULE-022"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-052",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-071"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-034",
+        "BRD-2026-AMA48-001::FR-037",
+        "BRD-2026-AMA48-001::RULE-005"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-053",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-072"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::NFR-004",
+        "BRD-2026-AMA48-001::RULE-020",
+        "BRD-2026-AMA48-001::RULE-024"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-054",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-073"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-037",
+        "BRD-2026-AMA48-001::NFR-008",
+        "BRD-2026-AMA48-001::RULE-019"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-055",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-091",
+        "PRD-2026-AMA48-001::AC-092",
+        "PRD-2026-AMA48-001::AC-093"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-049",
+        "BRD-2026-AMA48-001::RULE-025"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-056",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-094",
+        "PRD-2026-AMA48-001::AC-095"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-049",
+        "BRD-2026-AMA48-001::NFR-011"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-057",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-096",
+        "PRD-2026-AMA48-001::AC-097"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-050",
+        "BRD-2026-AMA48-001::RULE-026"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-058",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-098",
+        "PRD-2026-AMA48-001::AC-099"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::RULE-025"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-059",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-100",
+        "PRD-2026-AMA48-001::AC-101"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-043",
+        "BRD-2026-AMA48-001::FR-049",
+        "BRD-2026-AMA48-001::NFR-010",
+        "BRD-2026-AMA48-001::OD-49"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-060",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-001",
+        "PRD-2026-AMA48-001::GOAL-002"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-104",
+        "PRD-2026-AMA48-001::AC-105",
+        "PRD-2026-AMA48-001::AC-106"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-051"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-061",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-107",
+        "PRD-2026-AMA48-001::AC-108"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-052",
+        "BRD-2026-AMA48-001::NFR-012",
+        "BRD-2026-AMA48-001::OD-51"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Author-derived elaboration of preserved business statements",
+      "implementation_acceptance": "NOT_ASSERTED"
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-062",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-111",
+        "PRD-2026-AMA48-001::AC-112",
+        "PRD-2026-AMA48-001::AC-113"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-053"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-104",
+        "BRD-2026-AMA48-001::AC-105"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-011"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-063",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-114",
+        "PRD-2026-AMA48-001::AC-115"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-054"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-106",
+        "BRD-2026-AMA48-001::AC-107"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-011"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-064",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-116",
+        "PRD-2026-AMA48-001::AC-117"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-055",
+        "BRD-2026-AMA48-001::FR-046"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-108",
+        "BRD-2026-AMA48-001::AC-109",
+        "BRD-2026-AMA48-001::AC-088"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-011"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-065",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-118",
+        "PRD-2026-AMA48-001::AC-119"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-056"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-110",
+        "BRD-2026-AMA48-001::AC-111"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-010",
+        "BRD-2026-AMA48-001::BG-011"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-066",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-120"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-057"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-112"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-010",
+        "BRD-2026-AMA48-001::BG-011"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-067",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-121",
+        "PRD-2026-AMA48-001::AC-122",
+        "PRD-2026-AMA48-001::AC-123"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-058",
+        "BRD-2026-AMA48-001::FR-003",
+        "BRD-2026-AMA48-001::RULE-003"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-113",
+        "BRD-2026-AMA48-001::AC-114"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-003",
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-012"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-068",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-124",
+        "PRD-2026-AMA48-001::AC-125"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-059",
+        "BRD-2026-AMA48-001::RULE-027"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-115",
+        "BRD-2026-AMA48-001::AC-125"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-010"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-069",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-002",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-126",
+        "PRD-2026-AMA48-001::AC-127",
+        "PRD-2026-AMA48-001::AC-128"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-060",
+        "BRD-2026-AMA48-001::FR-045"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-116",
+        "BRD-2026-AMA48-001::AC-117"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-010"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-070",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-129",
+        "PRD-2026-AMA48-001::AC-130",
+        "PRD-2026-AMA48-001::AC-131"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-061",
+        "BRD-2026-AMA48-001::RULE-028",
+        "BRD-2026-AMA48-001::FR-044"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-118",
+        "BRD-2026-AMA48-001::AC-119",
+        "BRD-2026-AMA48-001::AC-126",
+        "BRD-2026-AMA48-001::AC-084"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-003",
+        "BRD-2026-AMA48-001::BG-005",
+        "BRD-2026-AMA48-001::BG-010",
+        "BRD-2026-AMA48-001::BG-012"
+      ]
+    },
+    {
+      "prd_requirement": "PRD-2026-AMA48-001::FR-071",
+      "prd_goals": [
+        "PRD-2026-AMA48-001::GOAL-004",
+        "PRD-2026-AMA48-001::GOAL-005"
+      ],
+      "prd_acceptance_criteria": [
+        "PRD-2026-AMA48-001::AC-132",
+        "PRD-2026-AMA48-001::AC-133"
+      ],
+      "brd_sources": [
+        "BRD-2026-AMA48-001::FR-062"
+      ],
+      "priority": "MUST within existing declared/conditional slice; unsigned author planning classification",
+      "mapping_basis": "Retained #441 resident mapping",
+      "implementation_acceptance": "NOT_ASSERTED",
+      "brd_acceptance_criteria": [
+        "BRD-2026-AMA48-001::AC-123",
+        "BRD-2026-AMA48-001::AC-124"
+      ],
+      "brd_business_goals": [
+        "BRD-2026-AMA48-001::BG-009",
+        "BRD-2026-AMA48-001::BG-011",
+        "BRD-2026-AMA48-001::BG-012"
+      ]
+    }
+  ],
+  "new_brd_ac_coverage": "AC-104 through AC-126 covered by retained resident FR/NFR/rule/goal mapping, not executed acceptance",
+  "inherited_discrepancy": "PRD FR-059 goal matrix adds GOAL-002 beyond its definition; preserved"
+}

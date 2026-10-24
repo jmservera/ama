@@ -68,6 +68,18 @@ rationales in the comment. See the
 [gate repair and activation boundary](../../.github/rubric/README.md).
 Do not treat a saved-scorecard replay as a fresh score for the revised deck.
 
+## Resident proposal pitch boundary (2026-10-23, #441)
+
+The [addendum's resident proposal](../case_study_48_addendum.md#optional-resident-service-proposal-2026-10-23-441)
+and [unregistered architecture working artifact](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
+are unsigned requirements/architecture content, not a deck update, registered
+ADR, implemented portal, activated automation or company signoff. Existing
+executive assets retain their dated staff-assisted baseline; do not present
+them as proof of resident delivery or replace their historical scope labels.
+The proposal's synthetic workload and illustrative net staff-hours are not
+observed benefits, production capacity, cash/headcount or a delivery date.
+Full registration, OD-52-55, live privacy/service/authority and application
+acceptance remain unmet; no rubric score is manually changed.
 ## Main Presentation Cowork Handoff (2026-10-23)
 
 The [complete Cowork authoring package](./pitch/cowork-main-presentation/README.md)

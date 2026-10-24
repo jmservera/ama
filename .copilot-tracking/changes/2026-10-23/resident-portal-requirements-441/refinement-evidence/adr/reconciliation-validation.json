@@ -1,0 +1,291 @@
+{
+  "checkedAt": "2026-10-23T23:21:00.191564+00:00",
+  "status": "RECONCILIATION_CHECKS_PASS_PRD_VALIDATE_AND_ADR_REGISTRATION_BLOCKED",
+  "recommendedCandidate": "resident-service-unregistered-proposal-reconciled.md",
+  "candidateSha256": "8e44d6ffbfe907a5e7e8cd057d0a29e0e977e916456ed0f0d9799efe8e1a4d77",
+  "completedPrdSha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+  "prdManifestSha256": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1",
+  "originalAdrCandidateSha256": "e63a39d1556e55056b7130356cdf63772345d53f4c6a24a6b46223be36f2aba6",
+  "checks": {
+    "originalAdrCustodyUnchanged": {
+      "status": "PASS",
+      "detail": {
+        "files": 17,
+        "mismatch": [],
+        "originalManifestNotExtended": true
+      }
+    },
+    "completedPrdCustodyUnchanged": {
+      "status": "PASS",
+      "detail": {
+        "files": 23,
+        "mismatch": []
+      }
+    },
+    "userExpectedHashes": {
+      "status": "PASS",
+      "detail": {
+        "author-package://resident-442-refinement-20261023/prd/zava-forward-retrofit-programme-demonstrator.md": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+        "author-package://resident-442-refinement-20261023/prd/output-manifest.json": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1",
+        "author-package://resident-442-refinement-20261023/adr/resident-service-unregistered-proposal.md": "e63a39d1556e55056b7130356cdf63772345d53f4c6a24a6b46223be36f2aba6",
+        "author-package://resident-442-refinement-20261023/adr/output-hash-manifest.json": "70990fb8e5df9bfe97cb1bbe681335daa9a086cde858825d94e362363701a499"
+      }
+    },
+    "originalOutputManifestStillAuthenticatesOriginalFiles": {
+      "status": "PASS",
+      "detail": {
+        "files": 16,
+        "mismatch": [],
+        "newReconciliationFilesIntentionallyOutsideOldManifest": true
+      }
+    },
+    "originalSnapshotAndMetadataUnchanged": {
+      "status": "PASS",
+      "detail": {
+        "snapshotFiles": 2494,
+        "mismatch": [],
+        "inventoryIsNotReadCoverage": true
+      }
+    },
+    "completedPrdManifestAndSubsidiaryCustody": {
+      "status": "PASS",
+      "detail": {
+        "authorOutputs": 18,
+        "coLocatedInputs": 3,
+        "mismatch": [],
+        "subsidiaryNotCanonicalDecision": true
+      }
+    },
+    "completedPrdDefinitionPreservation": {
+      "status": "PASS",
+      "detail": {
+        "changeGroups": [
+          {
+            "tag": "replace",
+            "baselineLines": [
+              9,
+              9
+            ],
+            "completedLines": [
+              9,
+              9
+            ],
+            "oldLines": [
+              "exercise_status: \"candidate-pending-review-and-owner-acceptance\""
+            ],
+            "newLineCount": 1
+          },
+          {
+            "tag": "replace",
+            "baselineLines": [
+              12,
+              12
+            ],
+            "completedLines": [
+              12,
+              12
+            ],
+            "oldLines": [
+              "version: \"0.19.0\""
+            ],
+            "newLineCount": 1
+          },
+          {
+            "tag": "replace",
+            "baselineLines": [
+              35,
+              35
+            ],
+            "completedLines": [
+              35,
+              35
+            ],
+            "oldLines": [
+              "> **PRD-2026-AMA48-001** | Exercise: unsigned draft amendment awaiting review and owner acceptance; formal governance: in-review, no new approval | Version: 0.19.0 | Last Updated: 2026-10-23"
+            ],
+            "newLineCount": 1
+          },
+          {
+            "tag": "insert",
+            "baselineLines": [
+              1001,
+              1000
+            ],
+            "completedLines": [
+              1001,
+              1306
+            ],
+            "oldLines": [],
+            "newLineCount": 306
+          },
+          {
+            "tag": "insert",
+            "baselineLines": [
+              2051,
+              2050
+            ],
+            "completedLines": [
+              2357,
+              2459
+            ],
+            "oldLines": [],
+            "newLineCount": 103
+          },
+          {
+            "tag": "insert",
+            "baselineLines": [
+              2549,
+              2548
+            ],
+            "completedLines": [
+              2958,
+              2958
+            ],
+            "oldLines": [],
+            "newLineCount": 1
+          }
+        ],
+        "unexpected": [],
+        "proofBoundary": "Only three metadata/banner lines replaced; all other baseline lines retained in order, with three insertion blocks; no whole-PRD quality pass inferred"
+      }
+    },
+    "exact30ResidentCriteriaAndQualifiedTrace": {
+      "status": "PASS",
+      "detail": {
+        "criteria": 30,
+        "mismatch": [],
+        "delta": "All exact texts/parents/Not-run statuses unchanged; source lines/hash updated; qualified parents supplement old map",
+        "notAcceptance": true
+      }
+    },
+    "unregisteredProposedAndNoGovern": {
+      "status": "PASS",
+      "detail": "Registration owner-deferred; no allocation/supersession/accepted/Govern completion"
+    },
+    "settledOptionAndPreferences": {
+      "status": "PASS",
+      "detail": "Verbatim Option B, primary mermaid, supplementary Excalidraw and eight ASR drivers retained"
+    },
+    "currentIndependentQualityAndAllFindingsPreserved": {
+      "status": "PASS",
+      "detail": {
+        "currentReview": "PRD-2026-AMA48-001-quality-20261023T225531005Z",
+        "summarySha256": "20853b85a852d7df3b8c87ce66fb3c925c40f24b9668d96880d0987d3989e99b",
+        "findings": [
+          "pr442-qual-005",
+          "pr442-qual-040",
+          "pr442-qual-006",
+          "pr442-qual-024",
+          "pr442-qual-041",
+          "pr442-qual-009",
+          "pr442-qual-039"
+        ],
+        "scope": "Presence and disposition check, not independent review re-execution or raw-payload schema certification"
+      }
+    },
+    "precedenceAndSubsidiaryDispositionExplicit": {
+      "status": "PASS",
+      "detail": "Generic/resident NFR applicability unresolved; subsidiary is data, not second decision; future-PRD-read statements removed from new candidate only"
+    },
+    "twentyStoriesAndSixStagesReconciled": {
+      "status": "PASS",
+      "detail": {
+        "storyCount": 20,
+        "stages": 6,
+        "freezeTiming": "R0 freeze / R3 baseline precede R4 AI; R5 reviews results, not retrospective protocol selection"
+      }
+    },
+    "workloadAndJudgementArithmeticSectionUnchanged": {
+      "status": "PASS",
+      "detail": "Original formula/workload/denominator/negative-low narrative retained exactly; previous arithmetic check preserved, no new observed benefit claimed"
+    },
+    "loadedConventionAndToolHashesUnchanged": {
+      "status": "PASS",
+      "detail": {
+        "files": 14,
+        "changed": []
+      }
+    },
+    "unchangedDiagramProvenance": {
+      "status": "PASS",
+      "detail": {
+        "mismatch": [],
+        "elements": 47,
+        "PNG": "Same-model SVG/Chrome historical render; no new/native export",
+        "mermaidNotRendered": true
+      }
+    },
+    "newMarkdownLocalLinksAndBasicShape": {
+      "status": "PASS",
+      "detail": {
+        "markdownFiles": 4,
+        "missingLinks": [],
+        "formatErrors": [],
+        "notClaimed": "Full markdownlint, Mermaid rendering, anchor semantics or whole-PRD table conformance"
+      }
+    },
+    "publicSensitiveScan": {
+      "status": "PASS",
+      "detail": {
+        "exitCode": 0,
+        "stdout": "{\n  \"findings\": [],\n  \"summary\": {\n    \"high\": 0,\n    \"warn\": 0,\n    \"total\": 0\n  }\n}\n",
+        "stderr": "",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/project-planning/adr-author/scripts/scan_sensitive_content.py",
+          "--public",
+          "author-package://resident-442-refinement-20261023/adr/resident-service-unregistered-proposal-reconciled.md",
+          "author-package://resident-442-refinement-20261023/adr/requirement-map-reconciled.md",
+          "author-package://resident-442-refinement-20261023/adr/reconciliation-report.md",
+          "author-package://resident-442-refinement-20261023/adr/integration-handoff-reconciled.md"
+        ],
+        "scope": "Deterministic authored-Markdown scan only, not privacy/security approval"
+      }
+    },
+    "formalFrontmatterIntentionalIdBlockOnly": {
+      "status": "PASS",
+      "detail": {
+        "exitCode": 1,
+        "stdout": "",
+        "stderr": "validate_frontmatter: schema not found at /home/azureuser/.copilot/installed-plugins/hve-core/scripts/linting/schemas/adr-frontmatter.schema.json; using built-in structural checks only\nauthor-package://resident-442-refinement-20261023/adr/resident-service-unregistered-proposal-reconciled.md: id: must be a 4-digit zero-padded string (e.g., '0007')\n",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/home/azureuser/.copilot/installed-plugins/hve-core/hve-core-all/skills/project-planning/adr-author/scripts/validate_frontmatter.py",
+          "author-package://resident-442-refinement-20261023/adr/resident-service-unregistered-proposal-reconciled.md"
+        ],
+        "formalStatus": "BLOCKED id null; no allocator retry or schema/ID workaround"
+      }
+    },
+    "newStableOutputManifestHashes": {
+      "status": "PASS",
+      "detail": {
+        "filesCompared": 9,
+        "mismatch": [],
+        "reportFinalHash": "Verified after stdout capture; no self-referential validation hash"
+      }
+    }
+  },
+  "unexpectedFailures": [],
+  "prdQuality": {
+    "overall": "FAIL",
+    "validate": "BLOCKED",
+    "finalize": "NOT_EVALUATED",
+    "singular": 1,
+    "coreMinimum": 2,
+    "cautions": 7
+  },
+  "registered": false,
+  "governComplete": false,
+  "acceptedHandoff": false,
+  "limitations": [
+    "Unsigned review-publication candidate only; no actual publication/merge",
+    "No independent review of reconciled ADR or repeat PRD quality assessment",
+    "Generic/resident response/file-size precedence and unrelated PRD debt unresolved",
+    "Reported source drift/native validator correction not independently inspected, executed or repaired",
+    "No current worktree/process/gate/remote access; #441/#126 status only user-reported",
+    "No application tests, new diagram export, user research, legal/privacy/security/accessibility approval, Azure or paid inference",
+    "All original custody/manifests retained; new file set has separate manifest"
+  ]
+}
