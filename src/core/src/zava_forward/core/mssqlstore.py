@@ -17,7 +17,7 @@ import os
 import re
 import struct
 
-from .chatthreads import MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX, MSSQL_MIGRATE as CHAT_MIGRATE
+from .chatthreads import MEMORY_ADDED as CHAT_MEMORY_ADDED, MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
 from .sqlstore import INDEXES, SqlStore
 
 COLLATE = "COLLATE Latin1_General_100_BIN2"
@@ -52,6 +52,19 @@ TABLES = {
     "chat_message": CHAT_DDL[1],
     "chat_memory": CHAT_DDL[2],
     "chat_memory_control": CHAT_DDL[3],
+}
+
+def _plain(n):
+    return f"NVARCHAR({n}) {COLLATE}"
+
+
+# Column types for migrations on a ledger table, equal to the fresh-create DDL above (the legacy path keeps the caller's type).
+LEDGER_TYPES = {
+    ("cases", "stage"): _plain(100), ("cases", "area"): _plain(100), ("cases", "wave"): _plain(50), ("cases", "owner_code"): _plain(50),
+    ("cases", "postcode"): _plain(20), ("cases", "address"): _plain(400), ("cases", "rkey"): _plain(200),
+    ("cases", "contractor"): _plain(200), ("cases", "surname"): _plain(200), ("cases", "last_contact"): _plain(40),
+    ("cases", "next_visit"): _plain(40), ("cases", "decision"): _plain(40), ("cases", "fstatus"): _plain(40),
+    ("cases", "body"): _plain("MAX"), ("cases", "search"): _plain("MAX"), ("cases", "search_c"): _plain("MAX"),
 }
 
 APPEND_ONLY = ("IF OBJECT_ID(N'audit_append_only', N'TR') IS NULL EXEC(N'CREATE TRIGGER audit_append_only ON audit "
@@ -214,7 +227,37 @@ class MssqlStore(SqlStore):
         self.db = _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
 
     _epoch_sql = "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
-    _add_column = "ADD"
+
+    def _is_ledger_table(self, table):
+        row = self.db.execute("SELECT ledger_type FROM sys.tables WHERE object_id = OBJECT_ID(?)", (table,)).fetchone()
+        return bool(row and row[0])
+
+    def _add_column_default(self, table, col, sqltype, default, constraint=None):
+        """A ledger table accepts only a nullable column with no default, so add it nullable, backfill the default, then
+        enforce non-null with a CHECK and the default with a constraint. The caller's open transaction makes it all-or-nothing."""
+        if not self._is_ledger_table(table):
+            named = f" CONSTRAINT {constraint}" if constraint else ""
+            self.db.execute(f"ALTER TABLE {table} ADD {col} {sqltype} NOT NULL{named} DEFAULT {default}")
+            return
+        sqltype = "INT" if sqltype == "INTEGER" else LEDGER_TYPES.get((table, col), sqltype)
+        if sqltype == "TEXT":
+            raise SystemExit(f"No ledger column type is defined for {table}.{col}.")
+        self.db.execute(f"ALTER TABLE {table} ADD {col} {sqltype} NULL")
+        self.db.execute(f"UPDATE {table} SET {col} = {default} WHERE {col} IS NULL")
+        self.db.execute(f"ALTER TABLE {table} ADD CONSTRAINT ck_{table}_{col}_nn CHECK ({col} IS NOT NULL)")
+        self.db.execute(f"ALTER TABLE {table} ADD CONSTRAINT {constraint or f'df_{table}_{col}'} DEFAULT {default} FOR {col}")
+
+    def _migrate_chat_memory(self):
+        with self.dblock:
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                for col, default in CHAT_MEMORY_ADDED:
+                    if self.db.execute("SELECT COL_LENGTH(N'chat_memory', ?)", (col,)).fetchone()[0] is None:
+                        self._add_column_default("chat_memory", col, f"NVARCHAR({200 if col == 'source' else 40})", f"N'{default}'", f"df_chat_memory_{col}")
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
 
     def assistant_connection(self):
         return _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
@@ -245,7 +288,8 @@ class MssqlStore(SqlStore):
 
     def _create_indexes(self):
         with self.dblock:
-            for stmt in list(CHAT_MIGRATE) + _indexes() + [CHAT_INDEX]:
+            self._migrate_chat_memory()
+            for stmt in _indexes() + [CHAT_INDEX]:
                 self.db.execute(stmt)
 
     def _columns(self):
