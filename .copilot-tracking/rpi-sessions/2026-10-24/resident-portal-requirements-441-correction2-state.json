@@ -1,0 +1,74 @@
+{
+  "task_id": "jmservera/ama#441",
+  "task_slug": "resident-portal-requirements-441",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-24/resident-portal-requirements-441-correction2-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-24/resident-portal-requirements-441-correction2-plan.md",
+    "details": ".copilot-tracking/details/2026-10-24/resident-portal-requirements-441-correction2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-24/resident-portal-requirements-441-correction2-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-24/resident-portal-requirements-441-correction2-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Pre-Review snapshot only. Authoritative completion/head/refs belong to external same-native session state/handoff; this committed snapshot does not preclaim future commit or gate.",
+      "status": "recorded",
+      "evidence": "Native59f31558-980b-475c-b2e2-3b8d68279ed9 files/441-correction2-state.json"
+    },
+    {
+      "decision": "Owner ordered bounded Research/Plan/independent critique before source edits/Implement/Review then commit stop, no heavy gate/publication.",
+      "status": "confirmed",
+      "evidence": "Native owner request2026-10-24"
+    },
+    {
+      "decision": "Research executed Complete/Ready; actual main accepted internally consistent ADR source mismatch before fix.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-24/resident-portal-requirements-441-correction2-research.md"
+    },
+    {
+      "decision": "One independent critique executed Complete / Pass, zero PC findings BEFORE source edits and verified bot ff. Later table/list formatting only, original critic SHA retained; no repeated critique.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-24/resident-portal-requirements-441-correction2-plan-critique.md"
+    },
+    {
+      "decision": "P01 Complete: real ff816eea7a preserved score hash d86b99ff1aae894dbe6be4faa4f5350201a27ef48ef1f57f2f21d74588634427; two Python files changed, fifteen tests/both validators pass; actual mismatch now fails contextual ADR comparison.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-24/resident-portal-requirements-441-correction2-changes.md"
+    },
+    {
+      "decision": "All original product/custody/quality evidence unchanged; full-branch whitespace FAILED52 including required12refinement, not a passing check. No new full gate or exact-head assessment.",
+      "status": "recorded",
+      "evidence": "Correction2 changes and retained external actual logs."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "One genuine Review after final artifact checks; source corrections stop if defects remain. Commit and session-only exact handoff, no heavy gate/push."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator admission for exact clean candidate gate and independent assessment",
+      "rationale": "Historical f902 receipt/97file assessment do not cover bot plus correction; no authorization to run gate now.",
+      "evidence": "Latest owner request."
+    },
+    {
+      "rank": 2,
+      "task": "Requirements quality, live and native registration follow-ups",
+      "rationale": "Seven current findings/unsigned status,30Notrun,automationOFF,NFRprecedence,OD52-55/OQ28-31,id:null unregistered remain.",
+      "evidence": "Unchanged canonical PRD and proposal/quality summary."
+    },
+    {
+      "rank": 3,
+      "task": "Supported scorer citation disposition",
+      "rationale": "A5/B6 OPEN; no manual score edits or paid dispatch.",
+      "evidence": "Hosted4364841399/4364841447 and prior correction history."
+    }
+  ]
+}

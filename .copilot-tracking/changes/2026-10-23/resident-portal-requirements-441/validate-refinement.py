@@ -51,6 +51,56 @@ def source_bytes(record):
     return source
 
 
+def manifest_inventory(inventory, label):
+    if not isinstance(inventory, (dict, list)) or not inventory:
+        raise ValueError(f"{label}: expected a nonempty manifest dictionary or list")
+    entries = inventory.items() if isinstance(inventory, dict) else (
+        (entry.get("path"), entry) if isinstance(entry, dict) else (None, entry)
+        for entry in inventory
+    )
+    indexed = {}
+    for path, entry in entries:
+        if (not isinstance(path, str) or not path or "\\" in path
+                or Path(path).is_absolute() or ".." in Path(path).parts
+                or Path(path).as_posix() != path or path == "."):
+            raise ValueError(f"{label}: invalid manifest path {path!r}")
+        if path in indexed:
+            raise ValueError(f"{label}: duplicate manifest path {path}")
+        if not isinstance(entry, dict):
+            raise ValueError(f"{label}: invalid manifest entry for {path}")
+        sha = entry.get("sha256")
+        size = entry.get("bytes")
+        if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{64}", sha):
+            raise ValueError(f"{label}: invalid sha256 for {path}")
+        if type(size) is not int or size < 0:
+            raise ValueError(f"{label}: invalid byte size for {path}")
+        indexed[path] = entry
+    return indexed
+
+
+def verify_manifest_sources(name, manifest, field, sources, records):
+    document = json.loads(sources[manifest])
+    if not isinstance(document, dict) or field not in document:
+        raise ValueError(f"{manifest}: missing manifest field {field}")
+    inventory = manifest_inventory(document[field], manifest)
+    # Self manifests cannot inventory themselves; capstone predates reconciliation.
+    unlisted = {manifest.removeprefix(name + "/")}
+    if name == "adr":
+        unlisted.add("capstone-review-boundary.md")
+    for record in records:
+        if not record["source"].startswith(name + "/"):
+            continue
+        path = record["source"].removeprefix(name + "/")
+        if path not in inventory:
+            if path in unlisted:
+                continue
+            raise ValueError(f"{manifest}: selected source not inventoried: {path}")
+        if inventory[path]["sha256"] != record["source_sha256"]:
+            raise ValueError(f"{manifest}: source hash mismatch for {path}")
+        if inventory[path]["bytes"] != record["source_bytes"]:
+            raise ValueError(f"{manifest}: source byte size mismatch for {path}")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--markdownlint-cli", type=Path, required=True)
@@ -63,13 +113,7 @@ def main():
         ("prd", "prd/output-manifest.json", "outputs"),
         ("adr", "adr/reconciliation-output-manifest.json", "files"),
     ]:
-        inventory = json.loads(sources[manifest])[field]
-        for record in records:
-            if not record["source"].startswith(name + "/"):
-                continue
-            path = record["source"].removeprefix(name + "/")
-            if path in inventory:
-                assert inventory[path]["sha256"] == record["source_sha256"], path
+        verify_manifest_sources(name, manifest, field, sources, records)
     pins = {
         "prd/zava-forward-retrofit-programme-demonstrator.md": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
         "prd/output-manifest.json": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1",
