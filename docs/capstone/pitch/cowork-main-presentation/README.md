@@ -16,9 +16,16 @@ funding. The [native revision map](./COWORK-BRIEF.md#owner-requested-cost-recove
 identifies the six revised v2 pages. The current
 [PPTX](../../deck/zava-forward-cowork-v2-draft.pptx) and
 [native PowerPoint PDF](../../deck/zava-forward-cowork-v2-draft.pdf) now include
-this recovery. The [build record](../../../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+this recovery. The [build record](../../deck/cowork-generated/native-recovery-build-2026-10-24.md)
 records 54 slides/notes, 27 native caller returns, exact-part preservation,
 native previews and remaining independent review/approval gates.
+The [evidence guide](./native-recovery/README.md#evidence-and-limits) links the
+retained validation receipt and identifies preview exports as local-only,
+regenerable evidence rather than portable published assets.
+
+Use the [native recovery guide](./native-recovery/README.md) for the durable
+builder, pinned baseline and explicit external-output commands. The copied
+build record retains its historical commands and paths unchanged.
 
 For the current presentation, apply the
 [IoT and optional-resident-portal refinement](../../deck/cowork-generated/refinement-2026-10-23/README.md)
@@ -29,10 +36,23 @@ not reconstruct the complete later Cowork v2 layout. IoT now belongs in the
 main narrative, and the optional portal is under assessment in issue #441,
 not excluded, implemented or measured as a saving.
 
-Give Cowork **this entire folder**, then use [COWORK-BRIEF.md](./COWORK-BRIEF.md)
-as the opening instruction. It contains a complete authoring job, not just an
-outline. No repository access, private stock data or credentials are needed
-to build the proposed presentation.
+Choose the authoring mode before handing over files:
+
+* Current-v2 revision: give Cowork this entire folder **and** the current
+	[54-slide PPTX](../../deck/zava-forward-cowork-v2-draft.pptx), its
+	[current PDF](../../deck/zava-forward-cowork-v2-draft.pdf), the
+	[refinement folder](../../deck/cowork-generated/refinement-2026-10-23/README.md)
+	including its five previews, and the
+	[dated correction record](../../deck/cowork-generated/review-corrections-2026-10-24.md).
+	Preserve their relative paths or provide an explicit file map. The native
+	deck owns v2 slide order, layouts, media, notes and navigation; this folder
+	alone cannot reconstruct it.
+* Original-route offline authoring: this folder alone supplies the original
+	18-slide main route and 27 backups. That is a separate authoring mode, not a
+	rebuild or replacement of the owner-selected 54-slide v2 deck.
+
+Use [COWORK-BRIEF.md](./COWORK-BRIEF.md) as the opening instruction and retain
+the mode distinction. Neither mode needs private stock data or credentials.
 
 The central story is: **more homes ready, with control intact**. Lead with the
 customer outcome and proposed decision, explain the operating model, then
@@ -42,7 +62,7 @@ are not the proposed operating model.
 
 | File or folder | Purpose |
 | --- | --- |
-| [slides.json](./slides.json) | Authoritative content contract: 18 main slides and 27 question-led backups, with copy, notes, timing, evidence and return routes |
+| [slides.json](./slides.json) | Original-route content contract: 18 main slides and 27 backups, plus reusable cost inputs; not authority for all native-v2 slide order or layouts |
 | [speaker-script.md](./speaker-script.md) | Complete first-person main-route script and interruption cues |
 | [backup-slides.md](./backup-slides.md) | Appendix copy, answers, visual instructions and source IDs |
 | [demo-runbook.md](./demo-runbook.md) | Separate ten-minute demo, preflight, live/evidence routes and recovery |

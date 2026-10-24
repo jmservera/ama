@@ -7,7 +7,16 @@ ms.topic: reference
 
 ## The Job
 
-Build a remarkable, executive-first 16:9 PowerPoint from this folder.
+For a current-v2 revision, edit the supplied native 54-slide PowerPoint using
+this folder as a source companion. Require the current PPTX/PDF, the complete
+IoT/portal refinement folder with its five previews, and the dated correction
+record listed in [README.md](./README.md#start-here). If these external inputs
+are absent, request them; do not recreate v2 from this folder's 18-slide route.
+
+For original-route offline authoring only, this folder supplies a separate
+18-slide main route and 27 backups. Do not replace the owner-selected v2 deck
+with that original-route build without an explicit owner decision.
+
 The audience is a mixed customer CXO group and AMA assessment panel.
 Use the exact factual core, distinguish evidence from proposals, and tell one
 connected story. Do not turn this into a tour of cloud products.
@@ -48,11 +57,13 @@ Restore the numerical comparison requested by the owner, using the
 [recovered calculations](./evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24).
 The source script and appendix include it; the current 54-slide PPTX and PDF
 were regenerated through native PowerPoint on 2026-10-24. The
-[completed build record](../../../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+[completed build record](../../deck/cowork-generated/native-recovery-build-2026-10-24.md)
 records the scoped checks and remaining approval gates. Preserve the earlier PR
 review findings and all unrelated staged edits. This is a labelled planning
 scenario, not evidence that issue #435's measured-price and acceptance gates
 have passed or permission to change that issue.
+Use the [retained receipt and evidence-custody guide](./native-recovery/README.md#evidence-and-limits)
+for review; heavy preview exports are local-only and regenerated separately.
 
 | Native v2 page | Applied native revision (2026-10-24) |
 | --- | --- |
@@ -122,12 +133,15 @@ changes; the text guard does not replace visual or Finance/funder review.
 5. `evidence/README.md`, `sources.json` and both evidence reports.
 6. `validation.md`, especially the checks still outstanding.
 
-`slides.json` owns IDs, timing, copy, notes and source associations.
-Do not silently diverge the PPTX from it. Record intentional wording or layout
-changes in a handoff change list and preserve the factual classifications.
-The 18 main slides and 27 backups are the proposed complete inventory.
-Use PowerPoint sections and hyperlink navigation rather than putting
-45 slides into the spoken route.
+For original-route authoring, `slides.json` owns its 18 main-slide and 27
+backup IDs, timing, copy, notes, source associations and reusable cost inputs.
+For current-v2 editing, the supplied native PPTX owns the 54-slide order,
+layouts, notes and navigation; apply the dated revision map and source
+evidence to the corresponding native pages. Do not impose the original
+18-slide timing or inventory on v2. Record deliberate source-to-native wording
+and layout adaptations in the handoff, preserving factual classifications,
+cost calculations and the existing native main-route timing. Use PowerPoint
+sections and hyperlink navigation rather than adding backups to the spoken route.
 
 ## Narrative and Pacing
 

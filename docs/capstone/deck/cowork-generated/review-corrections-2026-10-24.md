@@ -86,8 +86,12 @@ on pages 6, 11, 21, 32, 36 and 52, with revised notes and on-slide scope/price/
 funding caveats. The earlier unavailable-tool statement above is a historical
 record of that stage, not the current build status.
 
-The [execution log and handoff](../../../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+The [execution log and handoff](./native-recovery-build-2026-10-24.md)
 records selective OOXML editing and native PowerPoint 16 PDF/PNG export.
+The [retained validation receipt](../../../reference/resources/tracking-retention-promotion.json)
+and [reproduction/evidence guide](../../pitch/cowork-main-presentation/native-recovery/README.md#evidence-and-limits)
+identify durable inputs and local-only preview exports; original relative
+preview paths are not promised as published assets beside the copied log.
 All 54 slides, 54 note parts and 27 native Last Slide Viewed actions remain.
 Every package member outside the six slide parts and six note parts is
 byte-identical to the saved pre-recovery deck. The builder property validator

@@ -140,3 +140,15 @@ def test_given_missing_or_unsafe_native_cost_slide_when_checked_then_fails(packa
 
     with pytest.raises(subprocess.CalledProcessError):
         rebuild(package, "--check-only", "--check-pptx", str(target))
+
+
+def test_given_current_v2_handoff_when_read_then_external_inputs_and_authority_explicit(package):
+    readme = " ".join((package / "README.md").read_text().split())
+    brief = " ".join((package / "COWORK-BRIEF.md").read_text().split())
+
+    assert "this entire folder **and** the current" in readme
+    assert "refinement-2026-10-23/README.md" in readme
+    assert "review-corrections-2026-10-24.md" in readme
+    assert "this folder alone cannot reconstruct it" in readme
+    assert "If these external inputs are absent, request them" in brief
+    assert "the supplied native PPTX owns the 54-slide order" in brief

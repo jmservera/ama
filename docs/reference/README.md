@@ -20,6 +20,19 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For tracking cleanup and native deck reproduction, use the
+[retention policy](./method/tracking-retention-policy.md),
+[exact archive restore map](./resources/tracking-retention-manifest.json),
+[promotion receipt](./resources/tracking-retention-promotion.json) and
+[native recovery guide](../capstone/pitch/cowork-main-presentation/native-recovery/README.md).
+The 12 byte-preserved assurance files under [reports](./research/reports/)
+retain original outcomes and siblings, including
+[v0.7.0](./research/reports/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md),
+[v0.11.0](./research/reports/2026-10-10/proper-warm-prd-v0-11-0/challenge-disposition.md)
+and [v0.12.0](./research/reports/2026-10-10/proper-warm-prd-v0-12-0/challenge-disposition.md).
+Original tracking records remain; selected historical previews are explicitly
+archive-backed, not live-local. Promotion changes no approval or review gates.
+
 For issue #221, the [core incident boundary](../../src/core/README.md#operator-incidents-and-constructed-restart-221)
 and [API contract](../../src/api/README.md#incident-and-restart-contract-221)
 describe task/version-bound suspension and constructed corrective-test/restart
@@ -367,7 +380,7 @@ or infra acceptance claimed.
 | --- | --- | --- |
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
 | [Case Study 48 Addendum](../case_study_48_addendum.md) | Preserved baseline and mandatory real-platform builds; dated rebuild/identity/session/CI learning and experiment-retirement boundary. Adds proposed RAI release/oversight gates and a provisional humidity/temperature simulator design, map signal and human condition-review path; no sensor inventory, thresholds or production authority is assumed. #19/#24/#27 may retire as learning; #58 needs explicit capability disposition | 2026-10-14 |
-| [Recovered RAI baseline audit](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md) | Six-framework bounded audit of original v0.14.0/source baseline: 29 checks, 7 PASS/11 PARTIAL/11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals. Inline recovery and report contracts validated; baseline report owner-accepted on 2026-10-15 for remediation planning only; controls proposed/Not run, qualified approval pending, live use BLOCKED | 2026-10-14 |
+| [Recovered RAI baseline audit](./research/reports/2026-10-14/rai-report-ama-20261014.md) | Six-framework bounded audit of original v0.14.0/source baseline: 29 checks, 7 PASS/11 PARTIAL/11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals. Inline recovery and report contracts validated; baseline report owner-accepted on 2026-10-15 for remediation planning only; controls proposed/Not run, qualified approval pending, live use BLOCKED | 2026-10-14 |
 | [RAI remediation implementation plan](../../.copilot-tracking/plans/2026-10-15/rai-remediation-plan.md) | Six phases/thirteen tasks covering eleven residuals and eleven unassessed evidence gates; current PRD v0.16.0 IDs, test ownership and default-deny authority. Independent standard critique Complete/Pass; offline engineering ready, real-service/legal/human/live gates remain | 2026-10-15 |
 | [RAI remediation backlog coverage review](../../.copilot-tracking/github-issues/prds/rai-remediation/artifact-analysis.md) | Post-merge Functional Planner review: all thirteen tasks and 22 open checks map to twelve existing issues; owner review added chat issue 164; all thirteen body updates are now applied and verified, without enabling chat or implementing remediation. No issues were created. [Executed handoff](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff.md) records completed owner review and verified issue updates; operational evidence gates remain. | 2026-10-15 |
 | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | v0.19.0 draft candidate: nine controlled workflows, human/resident authority, representative/commitment/remedy and in-use monitoring requirements through FR-048/AC-090. CON-007/AC-086 require real-platform exercise evidence; 52 FRs, 103 ACs, 12 NFRs, 7 constraints, 26 rules, 13 goals, 51 open decisions. v0.19.0 adds a proposal for AI Tokenomics (NFR-012, FR-052, AC-100 to AC-103, OD-51; BG-012 measure extended): metering, limits, Total Cost of AI and cost per accepted outcome above a quality floor, with no price, budget or target set. v0.18.0 adds a proposal for per-user agent chat and memory (BG-013, FR-049/050, RULE-025/026, NFR-010/011, OD-44 to OD-49), inactive until the owner, DPO and Legal decide. Company baselines/approvals and measured benefits remain unresolved; fresh business/quality review required | 2026-10-22 |

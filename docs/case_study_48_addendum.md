@@ -801,7 +801,7 @@ not implementation remediation, verified findings closure or company approval.
 
 The owner authorized a new bounded recovery with complete finding records and
 codebase profile supplied inline, not a retry of the rejected temporary-file
-handoff. The [recovered RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md)
+handoff. The [recovered RAI report](./reference/research/reports/2026-10-14/rai-report-ama-20261014.md)
 completes the original baseline audit at commit
 `1cb398c7b90bec05a5700008a97d0cfac494144a` / PRD v0.14.0. It is not a
 re-audit of v0.15.0 or evidence that this amendment is implemented.
@@ -849,7 +849,7 @@ currentness and conditional EU applicability still require qualified review.
 
 ### Owner Acceptance of Baseline Report (2026-10-15)
 
-The owner explicitly accepted the [recovered baseline RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md#owner-acceptance-2026-10-15)
+The owner explicitly accepted the [recovered baseline RAI report](./reference/research/reports/2026-10-14/rai-report-ama-20261014.md#owner-acceptance-2026-10-15)
 for its findings, limitations and remediation-planning basis. Generation-time PENDING
 entries above remain historical. This is not qualified legal/privacy sign-off,
 remediation closure, approval of PRD v0.16.0 or live-use acceptance. The eleven

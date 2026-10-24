@@ -6959,3 +6959,73 @@ metadata when the knowledge base was created.
   missing caveats, altered native slides and rejected XML entity declarations.
   The delivered PowerPoint passes the guard. No deck/PDF bytes, owner memory,
   earlier log entries, price evidence or approval status were changed.
+
+## 2026-10-24 - Durable Recovery Sources and Verified Tracking Retention
+
+* Promoted the native recovery builder/manifest and pinned original PPTX into
+  durable tools/authoring locations. Preserved the
+  [original build narrative](../capstone/deck/cowork-generated/native-recovery-build-2026-10-24.md)
+  and exactly 12 assurance/PRD report files byte-for-byte, with siblings,
+  original findings and tracking originals retained. Updated active links,
+  not historical log references or report bodies.
+* Added the [retention policy](./method/tracking-retention-policy.md) and
+  [native recovery guide](../capstone/pitch/cowork-main-presentation/native-recovery/README.md).
+  New heavy outputs default to external scratch; active work and original
+  critique/Review evidence remain. Complete local publication, independent
+  review, hosted and human gates are unchanged.
+* Verified the full external archive: 2,420 files / 600 directories /
+  83,975,587 logical file bytes. Restored all 115 selected files /
+  26,219,104 bytes before pruning. The
+  [manifest](./resources/tracking-retention-manifest.json) contains the exact
+  member/hash restore map; the [promotion receipt](./resources/tracking-retention-promotion.json)
+  records actual removals and accounting. The archive is owner-local, not a
+  public artifact or an indefinite availability guarantee.
+* Pruned only the 113 approved older preview images and two older duplicate
+  PPTX outputs. Actual-removal journal matches all 115 paths. Full archive
+  readback and protected-snapshot comparison pass before and after pruning;
+  all 89 current native-build files, original PDF, mentor YAML, current
+  duplicate deliveries and unknown-active RPI evidence remain byte-identical.
+  Historical selected preview links are archive-backed, not live-local.
+* All 37 archive tests, 24 source tests and six registry cases pass. Two
+  independent promoted Builds and Verify runs preserve exactly the six
+  slide/six note changes, 54 nonempty notes, timing, one shape 70001 and
+  27 caller returns. Both candidates and canonical PPTX have identical ZIP
+  member names/bytes. Missing/wrong baselines fail before output creation;
+  both canonical/candidate cost guards pass. Canonical PPTX/PDF hashes remain
+  unchanged.
+* Actual Windows PowerPoint COM rendered the promoted candidate externally:
+  PDF readback confirms 54 pages and recovered arithmetic, with 18 nonblank
+  1600 x 900 previews. Native readback confirms 27 Last Slide Viewed actions.
+  Offline cached PDF/image libraries supplied readback; system PDF CLI tools
+  were unavailable. One pre-existing missing SVG link in the addendum remains
+  outside scope; no new broken active link or fragment is introduced.
+* Checkout reduction is separate from external archive storage and does not
+  shrink Git history. No independent presentation review, accessibility
+  acceptance, current primary-price verification, Finance approval, complete
+  publication gate, PR-thread change, commit, push or cloud operation was
+  performed. Parent-owned tracking plan/details/changes remain unchanged.
+
+## [2026-10-24] query | PR 438 Handoff Corrections and Independent Retention Review
+
+* Clarified original-route offline authoring versus current-v2 editing.
+  The latter requires the native PPTX/PDF, refinement folder and dated
+  corrections; the 18-slide source inventory cannot reconstruct 54 slides.
+  Added the handoff regression and retained the cost-preservation contract.
+* Reconciled all four build-receipt backlinks to the durable narrative,
+  validation receipt and explicit local-only preview custody. The latest
+  missing-receipt review comment is addressed locally, not yet published.
+* Verified and resolved three older published-fix PR threads: exact deck
+  path/size, qualified native labels and matching registry-test semantics.
+  Other handoff/reset/navigation threads were already resolved externally.
+  Left the latest receipt thread open pending publication; no commit or push.
+* Independent implementation review completed with outcome Conformant and no
+  new material findings. Rechecked 67 tests, exact archive/restore/prune
+  evidence, protected source bytes, native packages and 859 links. Nine
+  inherited link defects remain; none was newly introduced. The original
+  adverse plan critique remains unchanged, with its corrections recorded.
+* Current-task plan/details/changes were intentionally reconciled after the
+  successful post-prune snapshot comparison. No older protected evidence or
+  canonical deck bytes changed. Complete publication, current-price,
+  Finance/funder, accessibility and presentation acceptance gates remain
+  separate. Archive portability requires transferring and verifying its
+  actual bytes, not only retaining the repository manifest.

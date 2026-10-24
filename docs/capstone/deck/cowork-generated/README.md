@@ -14,8 +14,9 @@ PPTX/PDF are corrected; original Cowork handoffs and exports remain history.
 The subsequent owner-requested cost recovery is now in pages 6, 11, 21, 32,
 36 and 52 and their notes. The current native PDF has 54 pages; all 54 slides,
 54 note parts and 27 Last Slide Viewed caller actions were retained. Use the
-[build record and preview paths](../../../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
-for this revision. It restores labelled inference and conditional funding
+[build record and preview paths](./native-recovery-build-2026-10-24.md)
+for this revision, with [receipt and local-preview custody](../../pitch/cowork-main-presentation/native-recovery/README.md#evidence-and-limits)
+explicitly distinguished. It restores labelled inference and conditional funding
 scenarios, not verified deployment pricing, full project TCO or issue #435
 acceptance. Earlier price-review findings are preserved below and in the
 dated correction record.
