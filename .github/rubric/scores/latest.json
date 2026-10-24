@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T19:28:30+00:00",
-  "commit": "f093d82c73eb9793347de7ffd344f8be6bd6440c",
+  "scored_at": "2026-10-24T20:06:37+00:00",
+  "commit": "7b182943578e6a6db982ee9137fda81ad8c2cc5e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40125016749",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40127869738",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "9abe2693489a8bc54e2b5418ef4663d28d7f9ca16e3edb90cbad4811df1cfa3b",
@@ -14,7 +14,7 @@
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "828e40638fc41aef0c6b55dbfee52c653dc5cf6916442d0d801230f835141e2e"
+    "thought-leadership": "9dc4e64c21dac49ca591ccc74afa979bc402434329f949e98c743072b9382627"
   },
   "total": 71,
   "sections": {
@@ -148,26 +148,28 @@
     "D1": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:659-697",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1007-1076"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:733-998",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1019-1174",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-20"
       ],
-      "rationale": "Original synthesis of five named mechanisms (specification inflation, proxy capture, learning evaporation, process-gate inflation, feedback starvation) grounded in the author's own 10-day, 183-PR engagement, plus a novel consolidation harness another architect could adopt."
+      "rationale": "Original five-mechanism synthesis and a novel consolidation harness, grounded in the author's own 10-day engagement and reproducible repository metrics; another architect could adopt the harness directly."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1198-1212",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-46"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:38",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1187-1194",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-112"
       ],
-      "rationale": "Structure, figures, tables, bibliography and citations are publication-grade, but 14 unresolved TODO(author) items remain (results placeholder, dates, naming, partner/approval confirmation), so it is not yet ready to file without rework."
+      "rationale": "Full 2213-line paper with sections, tables, figures, embedded bibliography, reproducible checks and a verification report, but 18 TODO(author)/TODO(owner) items remain (results placeholder, dates, naming, approvals, registration URL), so it still needs rework before filing."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:48-82"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-112",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1187-1194"
       ],
-      "rationale": "A concrete arXiv submission path (category, endorsement and disclosure requirements) is researched and documented, but the paper is not submitted, accepted or scheduled anywhere; README still lists pre-submission approvals as outstanding."
+      "rationale": "A concrete arXiv submission path (category, endorsement, disclosure rules) is documented and the package is complete, but it is not submitted, accepted or scheduled; internal approvals and pre-registration remain outstanding."
     }
   }
 }
