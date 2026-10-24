@@ -1,0 +1,121 @@
+{
+  "task_id": "rubric-prepare-main-hotfix",
+  "task_slug": "rubric-prepare-main-hotfix",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": null,
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-10-24/rubric-prepare-main-hotfix-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-24/rubric-prepare-main-hotfix-plan-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Stop the automatic session at the completed PR-creation handoff without starting a child task.",
+      "status": "confirmed",
+      "evidence": "Owner selected Stop automatic session in the post-Review follow-up choice after PR #445 creation. Main merge and scorer testing remain owner-controlled."
+    },
+    {
+      "decision": "Small PR creation is complete; preserve the original candidate and leave main integration to owner review and merge.",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/445 is open, non-draft, head fix/rubric-artifact-size-limit at 5c50b8dbe3e8abce8b6c4b1ec939e8e53f9ed0da, base main at f1e2d830f17558efd868919de1973ea7244a8841. API readback confirms exactly the prepare.py correction and original dated evidence file."
+    },
+    {
+      "decision": "Review execution is Complete for the bounded source and publication handoff; outcome is Residual work, not full-gate or human acceptance.",
+      "status": "Residual work",
+      "evidence": ".copilot-tracking/reviews/2026-10-24/rubric-prepare-main-hotfix-plan-review.md preserves the original Review, independent conditional assessment, one-time local-gate exception, interrupted failed receipt, rejected direct push and successful PR route. Main merge and scorer validation are later owner-controlled work. No second implementation or Review loop was started."
+    },
+    {
+      "decision": "Create a small normal PR from the existing isolated hotfix commit; retain the one-time local-gate exception and leave merge to the owner.",
+      "status": "confirmed",
+      "evidence": "Owner requested 'ok, create a small PR then' after GitHub rejected the direct push with GH013: Changes must be made through a pull request. Candidate 5c50b8dbe3e8abce8b6c4b1ec939e8e53f9ed0da and main base f1e2d830f17558efd868919de1973ea7244a8841 remain unchanged. Branch fix/rubric-artifact-size-limit is available; no duplicate PR or tracked template found."
+    },
+    {
+      "decision": "Retain complete-gate attempt 3 as interrupted evidence, not a passed receipt.",
+      "status": "interrupted",
+      "evidence": "/tmp/ama-prepare-main-hotfix-gate-20261024-3/receipt.json records status failed and failure Interrupted by signal 2. Completed groups: preflight, five project groups, namespace and static. No gate process remains running."
+    },
+    {
+      "decision": "Apply the owner's one-time exception to the complete local gate and publish the existing bounded candidate normally to main; do not change gate policy or dispatch scoring.",
+      "status": "confirmed",
+      "evidence": "Owner explicitly authorized: 'you have my permission to bypass this one, this time only, we'll create a change-scoped gate later. go ahead, make the changes and push them to main so that I can test the scorer again.' This supersedes the complete-gate prerequisite only for this publication, not repository protections or future work."
+    },
+    {
+      "decision": "Resume the existing automatic session from its recorded Review phase; do not treat the latest resume-or-switch request as new consent for a manual-to-automatic switch.",
+      "status": "recorded",
+      "evidence": "On 2026-10-24 the saved state already has mode automatic, session_status running, active_phase Review and status active. Gate attempt 3 is running infrastructure tests. No mode or phase transition occurred; exceptional-action confirmations and required human review remain binding."
+    },
+    {
+      "decision": "Recover the existing automatic continuation, retaining the established task identity and Review phase rather than restarting Research.",
+      "status": "recorded",
+      "evidence": "Owner previously requested 'docker started, go ahead in auto mode'; the existing Review record preserves that autonomous-continuation authorization. Current owner message: 'docker repaired'."
+    },
+    {
+      "decision": "The one-time authorization covers only the bounded prepare.py correction and normal direct-main publication after all required gates pass.",
+      "status": "confirmed",
+      "evidence": "Owner request preserved in original changes record: make a one-time fix directly to main and push prepare.py. No scoring dispatch, force-push or protection change authorized."
+    },
+    {
+      "decision": "Preserve original evidence and candidate 5c50b8dbe3e8abce8b6c4b1ec939e8e53f9ed0da against base f1e2d830f17558efd868919de1973ea7244a8841.",
+      "status": "verified",
+      "evidence": "Clean candidate and freshly fetched main confirmed on 2026-10-24. The changes pointer is rooted in /tmp/ama-prepare-main-hotfix-20261024; the Review and session pointers are rooted in /home/jmservera/source/ama."
+    },
+    {
+      "decision": "Separate Research, Plan, details and critique artifact paths were not recovered; do not invent them or claim critique execution.",
+      "status": "unavailable",
+      "evidence": "Original changes record contains completed Research, Plan and implementation sections. No separate paths or critique verdict appear in the recovered task handoff."
+    },
+    {
+      "decision": "Docker and required local tools are available; run the complete exact-head gate in a new external directory.",
+      "status": "interrupted-under-owner-exception",
+      "evidence": "/tmp/ama-prepare-main-hotfix-gate-20261024-3; preflight, five project test/lint/type groups and namespace/static checks completed successfully. Project discovery: 2392 tests with 468 reported skips; 12 gate-contract tests passed. Offline infrastructure checks running. Required browser, real SQL, images and scans remain. Earlier attempts remain preserved."
+    },
+    {
+      "decision": "Independent exact-head assessment execution is Complete; no attributable defects found; approval is conditional, not publication acceptance.",
+      "status": "conditional",
+      "evidence": "Read-only independent subagent assessed full candidate/base diff and nearby trusted configuration and boundaries. Full gate, receipt verification and any required human approval remain separate. Review record contains the assessment boundary and residual lack of a committed regression test."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "main-integration-pending",
+      "summary": "The fix is in open PR #445, not main; required hosted checks and human review/merge remain separate from PR creation.",
+      "resolution": "Owner reviews and merges through normal repository protections. Do not force, auto-merge, change protections or claim scorer acceptance."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Automatic session stopped by owner. PR #445 remains open for owner review and merge; no automatic child work, merge or scorer dispatch is pending."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Check PR #445 hosted status and support owner review",
+      "rationale": "Lowest-effort next step toward making the fix available on main; preserve the owner's merge decision.",
+      "evidence": "PR #445 is open at the exact reviewed candidate; no merge or hosted approval has been claimed."
+    },
+    {
+      "rank": 2,
+      "task": "Plan a change-scoped local publication gate",
+      "rationale": "Owner-identified engineering improvement that can avoid unrelated full-matrix work while retaining fail-closed coverage; requires later selected scope.",
+      "evidence": "Owner explicitly deferred a change-scoped gate after granting this one-time exception; no permanent policy change was made."
+    },
+    {
+      "rank": 3,
+      "task": "Verify scorer deck recognition after owner merge and rerun",
+      "rationale": "Direct outcome check, dependent on the fix reaching trusted main and a real scoring run; do not dispatch a paid run without separate authorization.",
+      "evidence": "The 2.64 MB deck previously exceeded the erroneously applied global limit; verify fingerprint, missing skip warning and score/floors against baseline 55."
+    },
+    {
+      "rank": 4,
+      "task": "Reconcile stale exact-v2 tests and documentation separately",
+      "rationale": "Lower-priority policy consistency and durable regression coverage; do not expand the small PR or change the authorized wildcard.",
+      "evidence": "Prior handoff records stale exact-v2 expectations, existing external size-override tests and an unrelated deleted-file fixture issue that remains outside this fix."
+    }
+  ]
+}
