@@ -24,7 +24,7 @@ def git(root: Path, *args: str) -> None:
     subprocess.run(["git", *args], cwd=root, check=True, capture_output=True)
 
 
-def make_repo(root: Path) -> Path:
+def make_repo(root: Path, artifact_max_bytes: int | None = None) -> Path:
     """Create a repo on main with two BRD files and a workflow baseline that matches them."""
     git(root, "init", "-b", "main")
     git(root, "config", "user.email", "test@example.com")
@@ -33,7 +33,10 @@ def make_repo(root: Path) -> Path:
     (config / "scores").mkdir(parents=True)
     shutil.copy(RUBRIC_DIR / "rubric.json", config / "rubric.json")
     registry = json.loads((RUBRIC_DIR / "artifacts.json").read_text(encoding="utf-8"))
-    (config / "artifacts.json").write_text(json.dumps(registry | {"max_file_bytes": MAX_BYTES}), encoding="utf-8")
+    registry["max_file_bytes"] = MAX_BYTES
+    if artifact_max_bytes is not None:
+        next(entry for entry in registry["artifacts"] if entry["id"] == "brd")["max_file_bytes"] = artifact_max_bytes
+    (config / "artifacts.json").write_text(json.dumps(registry), encoding="utf-8")
     (root / "docs" / "brds").mkdir(parents=True)
     (root / "docs" / "brds" / "a.md").write_text("# A\n", encoding="utf-8")
     (root / REMOVED).write_text("# B\n", encoding="utf-8")
@@ -227,6 +230,33 @@ def test_given_cowork_registry_when_matching_then_only_current_deck_selected(pat
     matched = prepare.in_scope(path, deck_entry["include"], deck_entry["exclude"])
 
     assert matched is expected
+
+@pytest.mark.parametrize(
+    ("artifact_max_bytes", "file_size", "expected"),
+    [
+        (MAX_BYTES * 2, MAX_BYTES + 1, True),
+        (MAX_BYTES * 2, MAX_BYTES * 2, True),
+        (MAX_BYTES * 2, MAX_BYTES * 2 + 1, False),
+        (None, MAX_BYTES + 1, False),
+    ],
+    ids=["above-global-limit", "at-artifact-limit", "above-artifact-limit", "global-fallback"],
+)
+def test_given_artifact_file_size_when_computed_then_configured_limit_applies(
+    tmp_path, artifact_max_bytes, file_size, expected
+):
+    # Arrange
+    root = make_repo(tmp_path, artifact_max_bytes)
+    git(root, "checkout", "-b", "feature")
+    path = "docs/brds/large.md"
+    (root / path).write_text("x" * file_size, encoding="utf-8")
+    git(root, "add", path)
+    git(root, "commit", "-m", "add sized artifact")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert (path in state["artifacts"]["brd"]["files"]) is expected
 
 
 @pytest.mark.parametrize(
