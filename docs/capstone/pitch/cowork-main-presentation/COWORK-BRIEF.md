@@ -1,7 +1,7 @@
 ---
 title: Cowork Authoring Job
 description: Complete instructions for building the Zava Forward main capstone presentation from this portable folder
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -41,6 +41,47 @@ Integrate these owner-requested refinements without claiming delivery:
   work-in-progress is not inspected implementation or an approved handoff.
   Keep per-message human review normative and routine automation off pending
   explicit requirements-owner disposition and separate release approval.
+
+## Owner-Requested Cost Recovery (2026-10-24)
+
+Restore the numerical comparison requested by the owner, using the
+[recovered calculations](./evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24).
+The source script and appendix include it; the current 54-slide PPTX and PDF
+were regenerated through native PowerPoint on 2026-10-24. The
+[completed build record](../../../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+records the scoped checks and remaining approval gates. Preserve the earlier PR
+review findings and all unrelated staged edits. This is a labelled planning
+scenario, not evidence that issue #435's measured-price and acceptance gates
+have passed or permission to change that issue.
+
+| Native v2 page | Applied native revision (2026-10-24) |
+| --- | --- |
+| 6, S05 forecast build | Replace the AI-cost tile with `USD 6,873`, labelled `whole-cohort inference scenario`; retain GBP 95m works and conditional grant wording. Notes cite E21 and its workload/secondary-price assumptions |
+| 11, S10 economics | Make GBP 6,082/home behind the GBP 94.9m works total explicit; show the conditional GBP 3,041/home behind GBP 47.4m grant. Keep the separate GBP 20,000 fictional package and other sensitivities distinct |
+| 21, S18 AI economics | Lead with `USD 0.44/home`, labelled `INFERENCE PLANNING SCENARIO`; show `20 tasks x 13,768 tokens x USD 1.60/million`, `USD 6,873 / 15,600 homes` and `double workload: USD 0.88/home`. Retain measured accepted-outcome cost as unknown |
+| 32, B05 technology | Keep the dated budget ledger. Add the separate full-project equation from source B05; do not add an inference scenario to the October envelope or invent unpriced implementation/support costs |
+| 36, B09 home economics | Add the benchmark/conditional-grant calculation and evidence-pack explanation from source B09 without losing the fictional package cash-flow arithmetic |
+| 52, B25 Tokenomics | Include the exact inference workings from source B25. Distinguish planned-home cost from accepted-outcome TCA; retain unexecuted money-control requirements |
+
+Use source S09 and S11 speaker notes for the corresponding v2 pages 11 and
+21, adapting transitions to the later story without increasing its time.
+Show the scope and caveats beside the figures, not only in hidden notes.
+Keep currencies visibly separate; any percentage comparison needs a dated
+Finance-approved exchange rate. Never call the full project the cheapest
+line or promise subsidy: only inference has this small modelled unit cost.
+
+The council's proof chain is eligible home/measure -> reviewed assessment ->
+cost and completion evidence -> reviewed application -> award -> claim ->
+cash. Each real scheme defines its evidence and approval requirements.
+Documentation supports valid applications and claims; it does not establish
+eligibility, available allocation, an award or payment. No additional grant
+income or reduction in returns/clawback has been measured.
+
+The historical third-party rate needs primary deployment-price verification
+before being presented as current. Current official funding rules, available
+allocations and scheme dates need Finance/funder review before external use.
+Re-render affected slides, inspect notes/navigation and regenerate the PDF
+after the native revision; the source rebuild does not perform those checks.
 
 ## Read in This Order
 
@@ -106,7 +147,14 @@ index. Animations are optional; the complete static slide must make sense.
 Prefer simple appear/dissolve clicks with a matching static/PDF route.
 No autoplay, zooming camera tour or animation dependency.
 
-Link every backup slide back to its recorded main-slide ID. Add a compact
+For an interruption, every backup must return to the calling main slide,
+using PowerPoint's Last Slide Viewed action or a caller-specific duplicate.
+Never use a fixed topic destination that skips unpresented main-route slides.
+The backup's recorded `return` ID is its topic destination only for entry
+from the appendix index. Retain a separate topic link for that entry route
+and a clearly labelled index link; test both routes in the target viewer.
+This policy is authoritative in `slides.json` under `navigation` and in the
+generated backup notes. Add a compact
 question index immediately before the appendix, as navigation only, outside
 the 18-slide spoken route. Put a hidden or clearly marked section break before
 backup slides so normal advance never enters the appendix accidentally.

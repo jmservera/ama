@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Main Presentation Script
 description: Timed executive script and interruption cues generated from slides.json
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -271,31 +271,29 @@ Return: Better evidence must turn into accepted progress, not a busier dashboard
 
 Evidence: E02, E10, E07
 
-## S09: Three cost ledgers. Three different decisions.
+## S09: Thousands in works and funding per home. Cost the technology separately.
 
 Planned narration 11:00 to 12:30; 90 seconds. Discussion stops the narration clock but consumes the six-minute reserve.
 
 ### On-slide copy
 
-* Retrofit economics: GBP per home and cash exposure
-* Exercise technology: dated USD actuals, forecast and proposal ceiling
-* Production TCO: still requires a separate appraisal
+* Historical benchmark: GBP 6,082 works/home
+* Illustrative grant: GBP 3,041/home; GBP 47.4m across 15,600 homes
+* Technology exercise: USD 700 October ceiling, not full project TCO
 
 ### Say
 
-There are three cost conversations, and combining them would make the business case look more certain than it is.
+We did the arithmetic, and the scale matters. The earlier housing-association benchmark is six thousand and eighty-two pounds of works per home. Apply it to our modelled fifteen thousand six hundred homes and the works scenario is ninety-four point nine million pounds. These are national-benchmark planning figures, not surveyed Zava costs or contractor quotations.
 
-The first is retrofit economics. In the declared one-home exercise, the base cost is twenty thousand pounds, including eighteen thousand contractor cost and two thousand internal allocation. A fictional seven-and-a-half-thousand-pound grant leaves twelve-and-a-half thousand provider base funding, but gross cash exposure is still twenty thousand until grant cash arrives. Contingency and eligibility changes alter that picture. None of those figures is a real award or company commitment.
+If every home and all that cost qualified, a fifty-percent grant share would be three thousand and forty-one pounds per home, below the historical seven-and-a-half-thousand cap: forty-seven point four million pounds across the cohort. That is conditional funding potential, not an allocation or award. Current scheme rules, eligible costs, deadlines and available funding need Finance and funder confirmation.
 
-The second is the cost of running this technology exercise. On 22 October the owner set a seven-hundred-dollar all-in forecast ceiling for the calendar month. That is a scoped budget decision, not a production price or permission to bypass the remaining execution gates. Earlier four-hundred-and-fifty-dollar monthly allocations are historical. The pre-change forecast must be refreshed after scale and edge changes, outside-group costs remain unknown, and authority still expires on 25 October at 16:02 UTC.
+This is why the documentation matters: link each eligible home and measure to reviewed assessments, cost evidence, the approved application and the evidence required for claims. Reconcile application, award, claim and cash separately. Better records can reduce avoidable returns and clawback exposure; they do not create eligibility or guarantee subsidy. We must measure the improvement.
 
-The third is production total cost: integration, support, licensing, security, evaluation, review, accessibility and change, as well as Azure. Lower token cost alone does not establish that business case.
-
-The investment decision is staged: refresh the costs, clear the exact finite test's prerequisites, and stop if the accepted-task economics or controls do not justify expansion.
+The technology exercise has an owner-set seven-hundred-dollar October ceiling, not a production quote or full project cost. Execution gates remain and authority expires on 25 October at 16:02 UTC. We still need implementation, integration, hosting, support and human-review costs. The next AI slide restores the inference calculation, without pretending those other costs disappear.
 
 ### Show and deliver
 
-Three distinct ledger panels, GBP and USD visibly separated. Put 'owner-set October ceiling; paid tranches still blocked' beside USD 700. Backup B09 holds home arithmetic and B05 the forecast limitations.
+Three labelled figures: GBP 6,082 works/home; GBP 3,041 conditional grant/home; USD 700 October exercise ceiling. Beneath, show GBP 94.9m works and GBP 47.4m conditional grant for the 15,600-home scenario. Label historical benchmark, conditional scenario and exercise budget separately; no cross-currency ratio. B09 retains the separate GBP 20,000 exercise package.
 
 ### Interruption and return
 
@@ -303,7 +301,7 @@ CFO: 'Is USD 700 the monthly production price?' No. Use B05 and B09; it is the o
 
 Return: We buy evidence in stages; we do not infer a production business case from a demo bill.
 
-Evidence: E02, E05, E11
+Evidence: E02, E05, E11, E21
 
 ## S10: The runtime is deliberately simpler than the capability map.
 
@@ -339,37 +337,37 @@ Return: Shared workflow state is controlled centrally; model reasoning is bounde
 
 Evidence: E06, E07, E09, E13
 
-## S11: Tokenomics: count accepted outcomes, not just tokens.
+## S11: Modelled inference: about 44 US cents per home. Full project cost is separate.
 
 Planned narration 14:00 to 15:30; 90 seconds. Discussion stops the narration clock but consumes the six-minute reserve.
 
 ### On-slide copy
 
-* Observed: 6,884 tokens over five operator runs
-* Cost per accepted proposal, above a quality floor: unknown
-* Finite calls/tokens today; monetary and depth limits proposed
+* Planning scenario: USD 0.44 inference/home; USD 6,873 for 15,600 homes
+* 20 tasks/home x 13,768 tokens/task x USD 1.60/million
+* Dated third-party price assumption; excludes platform, people and delivery
 
 ### Say
 
-Here is the Tokenomics story, before you have to ask for it. I do not optimise the token invoice in isolation. I want to know what each accepted proposal costs above an agreed quality floor, and whether that proposal contributes to an accepted customer outcome.
+Here is the calculation we used before. Five real operator runs consumed six thousand eight hundred and eighty-four tokens, averaging one thousand three hundred and seventy-six point eight per run. For planning, we allowed twenty AI tasks per home and made each task ten times that observed size: thirteen thousand seven hundred and sixty-eight tokens.
 
-The recorded operator exercise used six thousand eight hundred and eighty-four tokens over five runs. Those were real model paths, but five samples with no human acceptance are not a cost, quality or throughput benchmark. We do not have the dated price source and accepted-outcome denominator needed to state cost per accepted proposal, let alone cost per accepted home.
+We priced every token at one dollar sixty per million, the output rate reported by third-party Azure pricing mirrors on 23 October. That gives forty-four US cents of inference per planned home and about six thousand eight hundred and seventy-three dollars across fifteen thousand six hundred homes. Double the workload and it is about eighty-eight cents per home. This is a transparent sensitivity calculation, not a verified deployment price, usage ceiling or measured cost per accepted home.
 
-Today the bounded assistant path has finite call and token allowances and expiry. That is not a currency guarantee. Metering is partial: some older AI paths discard usage. Complete metering, monetary task and period budgets, and per-request call and depth bounds are proposed requirements, not tested controls. Budget alerts notify; they do not stop a bill.
+Compare the scale with the earlier six-thousand-and-eighty-two-pound works benchmark and illustrative three-thousand-and-forty-one-pound grant share. Do not silently equate dollars and pounds. The inference line is small; implementation, integration, hosting, security, support, evaluation and human review still need costing. The seven-hundred-dollar October envelope already includes its AI spend, so we must not count that twice.
 
-The next test changes one lever, such as model choice, context or routing, compares quality, latency and total accepted-task cost, then keeps or reverses it. Review, correction, hosting and assurance belong in that total. Time saved remains capacity until Finance can say where value is realised.
+For the council, the value is a defensible evidence trail supporting eligible applications and claims, not a promise of automatic subsidy. We still owe measured quality, acceptance, total cost and grant outcomes. Finite tokens are not a money cap; full metering and monetary controls remain requirements to test.
 
 ### Show and deliver
 
-diagrams/07-tokenomics.svg. Main slide should emphasise one metric and two explicit gaps, not reproduce the whole appendix. Show 6,884 as an observation and 'cost/accepted proposal: unknown' at equal prominence.
+Use a large USD 0.44/home with an adjacent 'INFERENCE PLANNING SCENARIO' label. Show the three-factor formula, USD 6,873 cohort total and USD 0.88 doubled-workload sensitivity. Keep dated secondary-source price and exclusions legible. Use diagram 07 only as the separate measurement/control view; it is not a priced forecast. B25 has the exact workings and limitations.
 
 ### Interruption and return
 
 CFO: 'Can the bill run away?' Use B25: finite tokens are not money; monetary/per-task/per-request limits remain proposed. B26 covers caching and routing.
 
-Return: Cheaper counts only if the accepted outcome still clears the quality floor.
+Return: Small inference cost is a planning result; accepted value and total project cost still need evidence.
 
-Evidence: E07, E09, E13, E04, E19
+Evidence: E07, E09, E13, E04, E19, E21
 
 ## S12: We engineered the learning before scaling the build.
 

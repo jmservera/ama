@@ -2,7 +2,7 @@
 title: Capstone Deliverables and Storage Map
 description: Where every capstone asset must be stored so the rubric gate can find and score it, and what scores 0 until it exists
 author: AMA programme
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -47,11 +47,16 @@ IoT is visible on the main architecture build; resident self-service is an
 optional benefit assessment in issue #441, not a delivered channel or saving.
 Assisted routes and human review remain explicit. Five changed slides were
 natively rendered and visually checked; rehearsal, human and live acceptance
-remain separate. The current owner-expanded registry also includes other
-root-level PPTX files; this narrative refinement leaves that choice unchanged.
+remain separate. The corrected registry selects the exact current v2 PPTX
+with a 20 MB allowance; the historical draft and its previews are not scored.
 
-The earlier Zava Forward council proposal is now historical and its binary
-is not retained in this checkout. The owner retired its
+The [2026-10-24 PR review corrections](./deck/cowork-generated/review-corrections-2026-10-24.md)
+qualify current deployment status, remove unsupported inference prices,
+preserve authored diagrams during notes rebuilds, and distinguish caller
+returns from fixed appendix topic links. The imported handoff remains history.
+
+The earlier [Zava Forward council proposal](./deck/draft/zava-forward-executive-draft.pptx)
+is retained as historical evidence, not the scoring candidate. The owner retired its
 duplicate in `docs/presentations/` on 2026-10-11; that folder still holds the
 separate mentor presentation. All decks remain drafts: production approval,
 measured benefits and live pitch evidence are separate gates.
@@ -126,7 +131,7 @@ or slide 13's business-process map.
 ### Architecture and UX Refresh (2026-10-14)
 
 The owner-requested UX Designer and PowerPoint agents informed the current
-[24-slide council proposal](./deck/zava-forward-executive-draft.pptx).
+[24-slide council proposal](./deck/draft/zava-forward-executive-draft.pptx).
 It retains the 18-slide main route and adds only two optional appendices.
 The architecture is adapted into native PowerPoint boxes, text and
 connectors, with individual official Azure service icons, rather than
@@ -134,10 +139,10 @@ shrinking the detailed diagram into a slide-sized picture.
 
 | Slide | Audience and purpose | Rendered preview |
 | --- | --- | --- |
-| 10 | Executive: one workbench, controlled evidence, bounded AI and human authority | [Executive architecture](./deck/architecture-executive-native.png) |
-| 19 | Technical: current runtime, identity, SQL/Blob/model contracts and separate proposal review | [Runtime interactions](./deck/architecture-runtime-native.png) |
-| 23 | Technical: token renewal, deployment, operations, network context and failure domains | [Operations and identity](./deck/architecture-operations-native.png) |
-| 24 | Technical: deferred workers/import, conditional M365, intended edge and unimplemented anchoring | [Deferred topology](./deck/architecture-deferred-native.png) |
+| 10 | Executive: one workbench, controlled evidence, bounded AI and human authority | [Executive architecture](./deck/draft/architecture-executive-native.png) |
+| 19 | Technical: current runtime, identity, SQL/Blob/model contracts and separate proposal review | [Runtime interactions](./deck/draft/architecture-runtime-native.png) |
+| 23 | Technical: token renewal, deployment, operations, network context and failure domains | [Operations and identity](./deck/draft/architecture-operations-native.png) |
+| 24 | Technical: deferred workers/import, conditional M365, intended edge and unimplemented anchoring | [Deferred topology](./deck/draft/architecture-deferred-native.png) |
 
 The UX review made alternatives explicit on the main route, separated
 recorded technical evidence from acceptance still outstanding, and clarified
@@ -221,10 +226,10 @@ At that publication, the 22-slide PPTX matched the checked working copy. The
 do not use them or the superseded 22-slide build as the current full-deck
 source. Use the architecture/UX refresh handover above.
 
-![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/agents-in-retrofit-process-native.png)
+![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/draft/agents-in-retrofit-process-native.png)
 
-The standalone [vector process map](./deck/agents-in-retrofit-process.svg)
-and [original PNG](./deck/agents-in-retrofit-process.png) remain reference
+The standalone [vector process map](./deck/draft/agents-in-retrofit-process.svg)
+and [original PNG](./deck/draft/agents-in-retrofit-process.png) remain reference
 illustrations of the proposed design, not the current editable slide or five
 autonomous managers. The workflow owns progression and accountable people retain
 policy, resident choice, technical acceptance, work release, grant submission,

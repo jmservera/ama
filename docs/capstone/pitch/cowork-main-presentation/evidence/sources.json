@@ -139,6 +139,13 @@
     "supports": "6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison",
     "limit": "No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included."
   },
+  "E21": {
+    "path": "docs/capstone/deck/cowork-generated/BUILD-HANDOFF-v2.md; docs/reference/research/sector/uk-social-housing-retrofit-damp-stats-report.md; ai-cost-evidence.md",
+    "section": "Historical forecast; statistics report rows 1.4, 2.2, 2.9-2.10 and pricing section; Recovered Council Comparison, 2026-10-24",
+    "classification": "Recovered 2026-10-23 planning arithmetic with historical benchmarks and unverified secondary-source pricing, not measured unit economics",
+    "supports": "6,884/5 x 10 x 20 x USD 1.60/million = USD 0.440576/planned home; USD 6,872.9856 across 15,600 homes. GBP 6,082 benchmark gives GBP 94,879,200 works; conditional 50% grant gives GBP 3,041/home and GBP 47,439,600 cohort.",
+    "limit": "No current deployment price, accepted-outcome cost, full project TCO, FX comparison, award, scheme availability or additional grant income established. Do not count AI twice inside an all-in envelope. Current official funding and Finance/funder verification remain required. Distinct from the GBP 20,000 fictional exercise package."
+  },
   "E20": {
     "path": "project-snapshot.json; project-snapshot.html; project-snapshot.png",
     "section": "AMA Plan project 7, retrieved 2026-10-23T07:21:14Z",

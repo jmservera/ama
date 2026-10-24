@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Build portable slide notes and 16:9 Excalidraw/SVG assets from the brief."""
 
+import argparse
 import base64
 import hashlib
 import html
 import json
 import xml.etree.ElementTree as ET
 from collections import Counter
+from datetime import date
+from decimal import Decimal
 from pathlib import Path
+from zipfile import ZipFile
 
 
 ROOT = Path(__file__).resolve().parent
@@ -238,7 +242,7 @@ def write_notes(data):
     lines = [
         "---", "title: Zava Forward Main Presentation Script",
         "description: Timed executive script and interruption cues generated from slides.json",
-        "ms.date: 2026-10-23", "ms.topic: reference", "---", "",
+        "ms.date: 2026-10-24", "ms.topic: reference", "---", "",
         "## Timing contract", "",
         "24 minutes planned narration + 6 minutes discussion = 30 minutes presentation. "
         "The separate demo is 10 minutes. S18 is the short close after the demo; "
@@ -266,16 +270,19 @@ def write_notes(data):
     lines = [
         "---", "title: CXO Backup Slides and Questions",
         "description: Ready-to-build question-led appendix with direct answers, limits and return routes",
-        "ms.date: 2026-10-23", "ms.topic: reference", "---", "",
+        "ms.date: 2026-10-24", "ms.topic: reference", "---", "",
         "## How to use", "",
         "Show only the requested answer. State the answer first, then its strongest evidence "
-        "and limitation. Return to the named main slide. These are anticipated questions, "
+        "and limitation. For interruptions, return to the calling main slide using "
+        "Last Slide Viewed, not the backup's topic destination. Use the recorded topic "
+        "destination only after entry from the question index. These are anticipated questions, "
         "not a transcript of a customer meeting.", "",
     ]
     for slide in data["backup"]:
         lines += [
             f'## {slide["id"]}: {slide["question"]}', "",
-            "Audience: " + slide["audience"] + ". Return to " + slide["return"] + ".", "",
+            "Audience: " + slide["audience"] + ". For interruptions, return to the calling main slide. "
+            "Index entry only: topic destination " + slide["return"] + ".", "",
             "### On-slide copy", "", *[f'* {x}' for x in slide["on_slide"]], "",
             "### Answer", "", slide["answer"], "",
             "### Visual", "", slide["visual"], "",
@@ -340,7 +347,112 @@ Historical &quot;around 180&quot; is an approximate owner recollection, not an e
     (ROOT / "evidence" / "project-snapshot.html").write_text(page)
 
 
+def calculate_costs(data):
+    model = data.get("cost_model")
+    if not model or model.get("source") != "E21" or not model.get("price_basis"):
+        raise ValueError("Keep the E21 cost model, dated price basis and calculations")
+    date.fromisoformat(model["price_date"])
+    names = (
+        "observed_tokens", "observed_runs", "task_size_multiplier", "tasks_per_home",
+        "usd_per_million_tokens", "stock_homes", "below_epc_c_share",
+        "works_gbp_per_home", "conditional_grant_share", "historical_grant_cap_gbp",
+    )
+    values = {name: Decimal(model[name]) for name in names}
+    if any(not value.is_finite() or value <= 0 for value in values.values()):
+        raise ValueError("Cost inputs must be finite and positive")
+    if any(values[name] > 1 for name in ("below_epc_c_share", "conditional_grant_share")):
+        raise ValueError("Cost-model shares must not exceed one")
+    mean_tokens = values["observed_tokens"] / values["observed_runs"]
+    task_tokens = mean_tokens * values["task_size_multiplier"]
+    home_tokens = task_tokens * values["tasks_per_home"]
+    home_inference = home_tokens * values["usd_per_million_tokens"] / Decimal("1000000")
+    homes = values["stock_homes"] * values["below_epc_c_share"]
+    works_home = values["works_gbp_per_home"]
+    grant_home = min(works_home * values["conditional_grant_share"],
+                     values["historical_grant_cap_gbp"])
+    return {
+        **values, "mean_tokens": mean_tokens, "task_tokens": task_tokens,
+        "home_tokens": home_tokens, "home_inference": home_inference,
+        "homes": homes, "cohort_inference": home_inference * homes,
+        "double_home": home_inference * 2,
+        "double_cohort": home_inference * homes * 2,
+        "works_cohort": works_home * homes, "grant_home": grant_home,
+        "grant_cohort": grant_home * homes,
+    }
+
+
+def cost_requirements(costs):
+    exact = lambda name: format(costs[name].normalize(), ",f")
+    home = f'USD {costs["home_inference"]:.2f}'
+    cohort = f'USD {costs["cohort_inference"]:,.0f}'
+    works = f'GBP {exact("works_gbp_per_home")}'
+    grant = f'GBP {exact("grant_home")}'
+    return {
+        "S09": ([works, grant, f'{costs["grant_cohort"] / 1000000:.1f}m'],
+                ["historical", "illustrative", "not full project tco"]),
+        "S11": ([home, cohort, exact("homes"), exact("tasks_per_home") + " tasks",
+                 exact("task_tokens"), f'USD {costs["usd_per_million_tokens"]:.2f}'],
+                ["planning scenario", "price assumption", "excludes"]),
+        "B05": ([exact("cohort_inference"), exact("homes")],
+                ["non-inference", "not production tco"]),
+        "B09": ([works, grant, f'{costs["works_cohort"] / 1000000:.1f}m',
+                 f'{costs["grant_cohort"] / 1000000:.1f}m', "GBP 20,000"],
+                ["historical", "conditional", "fictional"]),
+        "B25": ([exact("observed_tokens"), exact("observed_runs"),
+                 exact("task_size_multiplier"), exact("tasks_per_home"),
+                 f'USD {costs["usd_per_million_tokens"]:.2f}',
+                 exact("home_inference"), exact("cohort_inference"), exact("homes")],
+                ["planned home", "accepted-outcome", "unknown", "proposed"]),
+    }
+
+
+def require_cost_text(label, text, figures, qualifiers):
+    missing = [value for value in figures + qualifiers if value.casefold() not in text.casefold()]
+    if missing:
+        raise ValueError(
+            f"{label}: missing/stale cost figures or caveats: {missing}. "
+            "Recalculate from cost_model, update the evidence, slides and notes; do not omit the comparison."
+        )
+
+
+def check_costs(data, pptx=None):
+    costs = calculate_costs(data)
+    slides = {slide["id"]: slide for slide in data["main"] + data["backup"]}
+    for ident, (figures, qualifiers) in cost_requirements(costs).items():
+        if ident not in slides or "E21" not in slides[ident]["sources"]:
+            raise ValueError(f"{ident}: retain the cost comparison and E21 evidence")
+        require_cost_text(ident, " ".join(slides[ident]["on_slide"]), figures, qualifiers)
+    exact = lambda name: format(costs[name].normalize(), ",f")
+    require_cost_text("B25 workings", slides["B25"]["answer"],
+                      [exact(name) for name in ("mean_tokens", "home_tokens", "double_home", "double_cohort")],
+                      ["not verified", "not cost per accepted outcome"])
+    if pptx:
+        requirements = {
+            6: ([f'USD {costs["cohort_inference"]:,.0f}'], ["inference scenario", "conditional"]),
+            11: ([exact("works_gbp_per_home"), exact("grant_home")], ["historical", "conditional"]),
+            21: ([f'USD {costs["home_inference"]:.2f}', f'USD {costs["double_home"]:.2f}',
+                  exact("task_tokens"), exact("homes")], ["planning scenario", "unknown", "secondary price"]),
+            32: ([exact("cohort_inference"), exact("homes")], ["non-inference", "not yet priced"]),
+            36: ([exact(name) for name in ("works_gbp_per_home", "works_cohort", "grant_home", "grant_cohort")],
+                 ["benchmark", "conditional", "fictional", "not eligibility"]),
+            52: ([exact(name) for name in ("mean_tokens", "task_tokens", "home_tokens", "home_inference", "cohort_inference")],
+                 ["secondary price", "unknown", "proposed", "not run"]),
+        }
+        with ZipFile(pptx) as archive:
+            for number, (figures, qualifiers) in requirements.items():
+                root = ET.fromstring(archive.read(f"ppt/slides/slide{number}.xml"))
+                text = " ".join(root.itertext())
+                require_cost_text(f"PPTX slide {number}", text, figures, qualifiers)
+    print(f'Cost comparison checked: USD {costs["home_inference"]:.6f}/planned home; '
+          f'GBP {costs["works_gbp_per_home"]:,.0f} works; '
+          f'GBP {costs["grant_home"]:,.0f} conditional grant.')
+
+
 def check(data):
+    if data["navigation"]["interruption_return"] != "calling-main-slide":
+        raise ValueError("Interruptions must return to the calling main slide")
+    if data["navigation"]["index_return"] != "backup-topic-slide":
+        raise ValueError("Only index entry uses the backup topic destination")
     assert len({s["id"] for s in data["main"] + data["backup"]}) == (
         len(data["main"]) + len(data["backup"]))
     known = set(json.loads((ROOT / "evidence" / "sources.json").read_text()))
@@ -364,8 +476,19 @@ def check(data):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--reset-diagrams", action="store_true",
+        help="Destructively reset native and SVG diagrams from hard-coded templates; not an export of edited drawings.",
+    )
+    parser.add_argument("--check-only", action="store_true", help="Validate without rewriting generated assets.")
+    parser.add_argument("--check-pptx", type=Path, help="Also check restored costs in the built 54-slide v2 deck.")
+    arguments = parser.parse_args()
     content = json.loads((ROOT / "slides.json").read_text())
-    diagrams()
-    write_notes(content)
-    project_view()
+    check_costs(content, arguments.check_pptx)
+    if arguments.reset_diagrams:
+        diagrams()
+    if not arguments.check_only:
+        write_notes(content)
+        project_view()
     check(content)

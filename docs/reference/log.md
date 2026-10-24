@@ -6835,3 +6835,108 @@ metadata when the knowledge base was created.
   those broken output-index links with explicit source-only status; did not
   restore or delete archival binaries. Retained original v2 PDF/contact sheet
   and handoff contents remain unchanged.
+
+## 2026-10-24 - Report-Only Rubric Model Pilot
+
+* Recorded the owner-approved USD 10, one-run-per-model Sonnet 5, Haiku 4.5
+  and GPT-6 Luna pilot in the existing AI Tokenomics reference and index.
+* Retained the frozen commit, runtime/transport differences, complete-accounting
+  usage fields, USD 0.38631076 equivalent total and individual wall times.
+* Sonnet and Luna returned valid cards but differed on four criteria; Haiku
+  omitted summary and failed strict validation. Missing thought leadership
+  forces D1-D3 to zero, not acceptance. No billable retry, model substitution,
+  workflow/score/baseline change or live status publication was performed.
+* Kept Sonnet pinned. Single-run cost reductions do not establish equivalent
+  grading, stable speed, application value or a reconciled financial saving.
+
+## 2026-10-24 - Pinned-Runtime Native Rubric Submission Follow-Up
+
+* Added the owner-approved Haiku 4.5 and GPT-6 Luna native-MCP extension to
+  the existing AI Tokenomics reference and index; preserved original results.
+* Verified pinned runtime hashes and seven actual stdio/HTTP runtime tests.
+  Each model made one tool call and one locally appended, strict-gate-valid
+  card without a rejected-call correction. Haiku scored 64, Luna 56; nine
+  criterion differences and missing thought leadership remain explicit.
+* Recorded Haiku's 303-character A5 rationale as an instruction violation,
+  separate from schema/gate acceptance. CLI/stdio integration is not full
+  hosted workflow equivalence; no native Sonnet control was run.
+* Follow-up usage was USD 0.12076544 equivalent, USD 0.50707620 aggregate
+  across five approved invocations. No production-model switch, live score
+  publication, commit or push; concurrent owner deck/registry edits excluded.
+
+## [2026-10-24] lint | PR 438 review corrections
+
+* Addressed five unresolved review threads and two additional summary findings:
+  exact v2 scoring path with the existing 20 MB allowance, opt-in destructive
+  diagram reset, caller-sensitive backup returns, qualified deployment labels,
+  unavailable/moved assets and unsupported inference pricing.
+* Added six temporary-package rebuild/navigation regressions; the normal
+  real rebuild leaves native Excalidraw and SVG/PNG previews unchanged.
+  Combined with six existing registry/size checks, all 12 focused tests pass.
+* Preserved imported handoffs and existing uncommitted Tokenomics work.
+  Retargeted retained historical deck/process/architecture assets to draft;
+  unavailable original exports remain explicitly source-only.
+* Corrected current v2 slides/notes and native appendix actions, preserving
+  54 slides/notes, existing media and main-route text outside review scope.
+  All 27 native caller actions and navigation-note reminders were verified;
+  separate topic links serve index entry. The native PDF has 54 pages.
+* Removed unvalidated inference-price and cheapest-cost claims in accordance
+  with issue #435; retained historical usage and unknown accepted-outcome cost.
+  Slides 18/19 qualify implemented functionality with current sign-in/Graph
+  acceptance outstanding against the cutover evidence pack. The dated
+  [correction record](../capstone/deck/cowork-generated/review-corrections-2026-10-24.md)
+  supersedes those handoff claims for current use without rewriting history.
+* Native rendering and independent visual inspection exposed topic-button
+  clearance and oversized word callouts; both were corrected and re-rendered.
+  These are scoped artifact checks, not full accessibility, rehearsal,
+  live-system acceptance, a fresh rubric score or publication clearance.
+
+## 2026-10-24 - Owner-Requested Council Cost Calculation Recovery
+
+* Recovered the earlier v2 planning arithmetic in the
+  [cost evidence](../capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24):
+  6,884/5 tokens x tenfold size x 20 tasks x USD 1.60/million gives
+  USD 0.440576/planned home and USD 6,872.9856 for 15,600 homes.
+  The price remains a dated third-party assumption, not verified deployment
+  pricing, a bill or measured accepted-outcome cost.
+* Restored GBP 6,082/home x 15,600 = GBP 94,879,200 works and the conditional
+  50% illustration of GBP 3,041/home, GBP 47,439,600 cohort grant. Preserved
+  separate fictional package costs, unknown full project TCO, currency
+  boundaries and Finance/funder verification before external use.
+* Updated source S09/S11, B05/B09/B25, evidence IDs, generated script and
+  appendix, package guidance and this index. Clarified how reviewed evidence
+  supports eligible applications/claims without guaranteeing eligibility,
+  funding or additional grant income. Preserved earlier review findings and
+  issue #435's unresolved measured-economics gates; no remote issue changed.
+* Exact decimal arithmetic and all six existing rebuild/navigation tests pass;
+  the rebuild checks 18 main slides, 27 backups and unchanged narration time.
+  Native PPTX/PDF are unchanged: rendering tools and an active PowerPoint
+  editing session were unavailable. The handoff maps the six required native
+  slide revisions. No rehearsal, fresh scoring, full publication gate,
+  commit or push was performed.
+
+## 2026-10-24 - Native Council Cost Recovery Build and Export
+
+* Completed the later execution request: updated pages 6, 11, 21, 32, 36 and
+  52 and their notes in the existing owner-selected 54-slide deck. Replaced
+  the current PPTX/PDF only after scoped checks and native rendering passed;
+  saved the original pair in the dated working directory.
+* Restored the labelled USD 0.440576/planned-home and USD 6,872.9856 cohort
+  inference calculation, GBP 6,082/home benchmark and conditional GBP
+  3,041/home grant. Retained separate fictional package arithmetic, unpriced
+  project P, dated secondary pricing and proposed money-control boundaries.
+* Selective OOXML generation changed exactly six slide and six note parts;
+  every other ZIP member remains byte-identical. Verified 54 slides, 54
+  nonempty note parts, a 54-page native PowerPoint PDF and all 27 Last Slide
+  Viewed caller actions through native COM readback. The PowerPoint builder
+  property validator reported zero issues across 54 slides; exact arithmetic
+  and restored PDF text checks passed.
+* Exported 18 changed/adjacent previews and three contact sheets. Corrected
+  chart-label wrapping, grant-tile fit and a formula/ledger collision before
+  delivery. The [build record](../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+  contains paths, methods, hashes and limitations. Updated the source handoff,
+  output index and dated correction record without erasing adverse history.
+* No issue #435 acceptance, primary-price/current funding verification,
+  independent storytelling review, timed rehearsal, accessibility conformance,
+  fresh hosted score or publication clearance is claimed. Existing staged and
+  unstaged work was preserved; no commit, push, live inference or deployment.

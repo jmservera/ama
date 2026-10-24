@@ -1,7 +1,7 @@
 ---
 title: Executive Audience Strategy and Delivery
 description: Deliberate archetype sequence, interruption budgets, shorter routes and objection handling
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -81,6 +81,12 @@ authorises the longer package, not a silent edit to owner memory.
 2. Answer first in one sentence. State the relevant evidence and its limit.
 3. Ask for a decision only when appropriate; otherwise park the deeper detail
    with an owner and return to the current main slide.
+
+When opening a backup during an interruption, use its Last Slide Viewed
+return action or a caller-specific return, not its fixed topic link. Topic
+destinations are reserved for appendix-index entry. In particular, S01 -> B15,
+S03 -> B06, S06 -> B05 and S15 -> B15 must resume S01, S03, S06 and S15
+respectively. Returning directly to S16, S05 or S09 would skip material.
 
 Useful bridges:
 

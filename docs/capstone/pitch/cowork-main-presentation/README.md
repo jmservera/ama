@@ -1,11 +1,24 @@
 ---
 title: Zava Forward Cowork Main Presentation Handoff
 description: Portable executive-first script, diagrams, demo, Tokenomics and question-led appendix for a 30-minute presentation plus a 10-minute demo
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
 ## Start Here
+
+The owner's 2026-10-24 cost recovery is in the
+[calculation evidence](./evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24),
+source S09/S11 and backups B05/B09/B25. It restores the USD 0.44 planned-home
+inference scenario, GBP 6,082 works benchmark and conditional GBP 3,041/home
+grant illustration, not measured accepted-outcome economics or guaranteed
+funding. The [native revision map](./COWORK-BRIEF.md#owner-requested-cost-recovery-2026-10-24)
+identifies the six revised v2 pages. The current
+[PPTX](../../deck/zava-forward-cowork-v2-draft.pptx) and
+[native PowerPoint PDF](../../deck/zava-forward-cowork-v2-draft.pdf) now include
+this recovery. The [build record](../../../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+records 54 slides/notes, 27 native caller returns, exact-part preservation,
+native previews and remaining independent review/approval gates.
 
 For the current presentation, apply the
 [IoT and optional-resident-portal refinement](../../deck/cowork-generated/refinement-2026-10-23/README.md)
@@ -56,7 +69,8 @@ an additional scheduled talk.
 
 This supersedes the older 15-minute limit **for this requested package only**.
 It does not rewrite owner memory or replace the current 24-slide executive
-PPTX. That deck remains at `docs/capstone/deck/zava-forward-executive-draft.pptx`
+PPTX. That historical deck is retained under
+[deck/draft](../../deck/draft/zava-forward-executive-draft.pptx)
 until the new deck is authored and validated. Publish the eventual executive
 delivery only in `docs/capstone/deck/`, never over the separate mentor deck.
 
@@ -71,7 +85,8 @@ The working presentation branch incorporates `origin/main` commit
 `140d8f4` (PR #433), pulled at the owner's request on 2026-10-23.
 Tokenomics is explicit in main slide S11, diagram 07, backups B25-B27 and
 the worksheet. The main slide states the historical 6,884-token/five-run
-observation, partial metering and unknown accepted-outcome cost.
+observation and a separately labelled recovered inference planning scenario;
+partial metering and unknown accepted-outcome cost remain explicit.
 Monetary budgets and per-request/depth bounds remain proposals, not
 implemented controls. No internal Microsoft presentation content is included.
 
@@ -83,11 +98,22 @@ From any working directory:
 python3 /path/to/cowork-main-presentation/build_assets.py
 ```
 
-This regenerates `.excalidraw`, `.svg`, the main script and backup notes using
-only Python's standard library and the bundled icon bytes. It checks timing,
-source IDs and source geometry. PNG previews and the validation report are
-separate rendered artifacts; regenerate them after diagram edits using an
-SVG renderer and repeat the visual checks. It does not build a PPTX.
+The default rebuild updates the main script, backup notes and board HTML.
+It leaves all native Excalidraw sources and SVG/PNG previews untouched,
+including author edits. Native sources remain the editing authority.
+
+Only to discard native edits and restore the hard-coded diagram templates:
+
+```bash
+python3 /path/to/cowork-main-presentation/build_assets.py --reset-diagrams
+```
+
+`--reset-diagrams` is a destructive reset of all seven `.excalidraw` and
+`.svg` files, not an export of edited drawings. It does not refresh PNGs;
+render and inspect fresh previews after any reset or native-source change.
+The builder checks timing, source IDs and source geometry but does not
+build a PPTX or validate viewer navigation. Backup interruptions return to
+the calling main slide; recorded topic returns apply only to index entry.
 
 Relative links inside this package are portable. Source paths in the evidence
 register are citations against the pinned repository baseline, not files Cowork

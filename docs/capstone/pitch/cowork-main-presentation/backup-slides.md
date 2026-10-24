@@ -1,17 +1,17 @@
 ---
 title: CXO Backup Slides and Questions
 description: Ready-to-build question-led appendix with direct answers, limits and return routes
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
 ## How to use
 
-Show only the requested answer. State the answer first, then its strongest evidence and limitation. Return to the named main slide. These are anticipated questions, not a transcript of a customer meeting.
+Show only the requested answer. State the answer first, then its strongest evidence and limitation. For interruptions, return to the calling main slide using Last Slide Viewed, not the backup's topic destination. Use the recorded topic destination only after entry from the question index. These are anticipated questions, not a transcript of a customer meeting.
 
 ## B01: Why not fix the process and hire more people instead?
 
-Audience: CEO / COO. Return to S02.
+Audience: CEO / COO. For interruptions, return to the calling main slide. Index entry only: topic destination S02.
 
 ### On-slide copy
 
@@ -31,7 +31,7 @@ Evidence: E02, E10
 
 ## B02: Is this replacing our housing system or integrating with it?
 
-Audience: CIO / COO. Return to S04.
+Audience: CIO / COO. For interruptions, return to the calling main slide. Index entry only: topic destination S04.
 
 ### On-slide copy
 
@@ -51,7 +51,7 @@ Evidence: E06, E07
 
 ## B03: Why did you not build exactly the five agents we requested?
 
-Audience: CEO / sponsor / CTO. Return to S07.
+Audience: CEO / sponsor / CTO. For interruptions, return to the calling main slide. Index entry only: topic destination S07.
 
 ### On-slide copy
 
@@ -71,7 +71,7 @@ Evidence: E01, E03, E06, E09
 
 ## B04: How do Decision Models reduce cost and response time?
 
-Audience: CFO / CTO. Return to S06.
+Audience: CFO / CTO. For interruptions, return to the calling main slide. Index entry only: topic destination S06.
 
 ### On-slide copy
 
@@ -91,27 +91,27 @@ Evidence: E04, E05, E15
 
 ## B05: What does the technology cost today?
 
-Audience: CFO. Return to S09.
+Audience: CFO. For interruptions, return to the calling main slide. Index entry only: topic destination S09.
 
 ### On-slide copy
 
-* USD 700 owner-set October all-in forecast ceiling
-* Execution gates remain; authority expires 25 October 16:02 UTC
-* Refresh post-change forecast; outside-group costs unknown
+* USD 700 owner-set October exercise ceiling; not production TCO
+* Modelled programme inference: USD 6,873, not an extra monthly bill
+* Project/home = (non-inference project costs + USD 6,872.9856) / 15,600
 
 ### Answer
 
-The 22 October owner decision sets USD 700 as the replacement calendar-month all-in forecast ceiling, not additional spend or a production quote. It retains the 25 October 16:02 UTC expiry. The planning options do not execute or accept anything: the refreshed forecast, unknown outside-group spend and remaining prerequisites still block paid tranches. The recorded USD 242.36 accrued amount is a partial 11-22 October resource-group observation, estimated until invoiced; USD 535.33 is a pre-change scenario, not the current forecast. Do not add overlapping cost reads or credit unmeasured savings after edge deletion and scale-down. A spending alert is not a hard stop.
+The 22 October owner decision sets USD 700 as the replacement calendar-month all-in forecast ceiling, not additional spend or a production quote. It retains the 25 October 16:02 UTC expiry. A refreshed forecast, unknown outside-group spend and remaining prerequisites still block paid tranches. USD 242.36 is a partial 11-22 October resource-group observation, estimated until invoiced; USD 535.33 is a pre-change scenario, not the current forecast. Do not add overlapping cost reads or credit unmeasured savings. The recovered USD 6,872.9856 is a separate whole-cohort inference scenario, not October accrued spend. For a future same-period appraisal add it only to non-inference implementation, integration, platform, review, assurance and support costs, then divide by 15,600 planned homes. Those other costs are unpriced; no full project total or payback is claimed. Never add AI again to an envelope that already includes it, extrapolate the October ceiling as a production quote or compare USD with GBP without a dated Finance-approved exchange rate.
 
 ### Visual
 
 Dated cost ledger with scope, actual/forecast/proposal and 'superseded for authorisation' label. Use evidence/ai-cost-evidence.md for exact historical actual, not a live-bill claim.
 
-Evidence: E11, E05
+Evidence: E11, E05, E21
 
 ## B06: How do residents retain choice, especially without digital access?
 
-Audience: CEO / resident-services leader. Return to S05.
+Audience: CEO / resident-services leader. For interruptions, return to the calling main slide. Index entry only: topic destination S05.
 
 ### On-slide copy
 
@@ -131,7 +131,7 @@ Evidence: E02, E08, E12, E441
 
 ## B07: What stops a human from rubber-stamping AI?
 
-Audience: Risk / compliance / COO. Return to S05.
+Audience: Risk / compliance / COO. For interruptions, return to the calling main slide. Index entry only: topic destination S05.
 
 ### On-slide copy
 
@@ -151,7 +151,7 @@ Evidence: E02, E09, E12
 
 ## B08: Will this double retrofit delivery and capture GBP 40 million?
 
-Audience: CEO / CFO. Return to S08.
+Audience: CEO / CFO. For interruptions, return to the calling main slide. Index entry only: topic destination S08.
 
 ### On-slide copy
 
@@ -171,27 +171,27 @@ Evidence: E01, E02, E10
 
 ## B09: What is the per-home business case and cash exposure?
 
-Audience: CFO / asset executive. Return to S09.
+Audience: CFO / asset executive. For interruptions, return to the calling main slide. Index entry only: topic destination S09.
 
 ### On-slide copy
 
-* Fictional base: GBP 20,000; envelope: GBP 22,000
-* Fictional grant: GBP 7,500; provider base: GBP 12,500
-* Gross cash before grant receipt: GBP 20,000
+* Historical benchmark: GBP 6,082 works/home; GBP 94.9m cohort
+* Conditional 50% grant illustration: GBP 3,041/home; GBP 47.4m cohort
+* Separate exercise package: GBP 20,000 base; GBP 7,500 fictional grant
 
 ### Answer
 
-The declared exercise is GBP 18,000 contractor cost plus GBP 2,000 internal allocation, with GBP 2,000 contingency. Eligible cost is GBP 16,000. A fictional GBP 7,500 grant leaves GBP 8,500 eligible match plus GBP 4,000 ineligible cost: GBP 12,500 provider base. Fully spent contingency raises provider exposure to GBP 14,500. If eligible cost falls to GBP 12,000, the fictional 50% ceiling limits grant to GBP 6,000, so provider base becomes GBP 14,000. Gross base cash remains GBP 20,000 until grant receipt. No real award, legal funding term or company balance sheet is asserted.
+The earlier national HA benchmark is GBP 6,082/home: 15,600 modelled homes x GBP 6,082 = GBP 94,879,200. Assuming every home and the entire cost qualify, min(50% x GBP 6,082, GBP 7,500 historical ordinary cap) = GBP 3,041/home, or GBP 47,439,600 cohort grant potential. This is not an award, funding allocation or guarantee. Check current official scheme rules, eligibility, co-funding, deadlines and available allocation with Finance/funder owners. A reviewed evidence pack should link eligible property/measure, professional assessment, cost/invoice evidence, quality/completion evidence and application/award/claim/cash records; document requirements remain scheme-specific. Better documentation can reduce avoidable returns or clawback, but no incremental grant gain has been measured. Separately, the approved fictional exercise uses GBP 18,000 contractor plus GBP 2,000 internal = GBP 20,000 base, with GBP 2,000 contingency. GBP 16,000 eligible cost minus GBP 7,500 fictional grant gives GBP 8,500 match; plus GBP 4,000 ineligible = GBP 12,500 provider base. Fully spent contingency raises provider exposure to GBP 14,500. GBP 12,000 eligible cost caps that fictional grant at GBP 6,000, leaving GBP 14,000 provider base. Gross cash before grant receipt remains GBP 20,000. Do not mix that package with the national benchmark or treat either as a company quotation.
 
 ### Visual
 
 Waterfall with separate gross cash and grant receivable lanes. Keep GBP distinct from technology USD.
 
-Evidence: E02
+Evidence: E02, E21
 
 ## B10: Why not deploy each agent independently?
 
-Audience: CTO / CIO. Return to S10.
+Audience: CTO / CIO. For interruptions, return to the calling main slide. Index entry only: topic destination S10.
 
 ### On-slide copy
 
@@ -211,7 +211,7 @@ Evidence: E06, E09, E13
 
 ## B11: What proves the AI is real and useful rather than a template?
 
-Audience: CTO / panel. Return to S11.
+Audience: CTO / panel. For interruptions, return to the calling main slide. Index entry only: topic destination S11.
 
 ### On-slide copy
 
@@ -231,7 +231,7 @@ Evidence: E07, E09, E04, E13
 
 ## B12: Did you validate this with real residents and staff?
 
-Audience: CEO / COO / panel. Return to S12.
+Audience: CEO / COO / panel. For interruptions, return to the calling main slide. Index entry only: topic destination S12.
 
 ### On-slide copy
 
@@ -251,7 +251,7 @@ Evidence: E14, E15, E12
 
 ## B13: How did the requirements become an agent-delivered backlog?
 
-Audience: CIO / engineering leader / panel. Return to S13.
+Audience: CIO / engineering leader / panel. For interruptions, return to the calling main slide. Index entry only: topic destination S13.
 
 ### On-slide copy
 
@@ -271,7 +271,7 @@ Evidence: E14, E16, E17, E20
 
 ## B14: Is this actually agentic if so much is deterministic?
 
-Audience: Innovation leader / CTO. Return to S14.
+Audience: Innovation leader / CTO. For interruptions, return to the calling main slide. Index entry only: topic destination S14.
 
 ### On-slide copy
 
@@ -291,7 +291,7 @@ Evidence: E03, E06, E09
 
 ## B15: What exactly must happen before a pilot or production decision?
 
-Audience: CEO / CIO / risk. Return to S16.
+Audience: CEO / CIO / risk. For interruptions, return to the calling main slide. Index entry only: topic destination S16.
 
 ### On-slide copy
 
@@ -311,7 +311,7 @@ Evidence: E02, E12, E13, E17
 
 ## B16: What happens if the model, cloud or deployment fails?
 
-Audience: COO / CIO. Return to S15.
+Audience: COO / CIO. For interruptions, return to the calling main slide. Index entry only: topic destination S15.
 
 ### On-slide copy
 
@@ -331,7 +331,7 @@ Evidence: E06, E07, E13
 
 ## B17: When can we go live and who owns the next step?
 
-Audience: CEO / sponsor. Return to S16.
+Audience: CEO / sponsor. For interruptions, return to the calling main slide. Index entry only: topic destination S16.
 
 ### On-slide copy
 
@@ -351,7 +351,7 @@ Evidence: E02, E11, E13
 
 ## B18: Can you demonstrate a new live action right now?
 
-Audience: Any executive. Return to S17.
+Audience: Any executive. For interruptions, return to the calling main slide. Index entry only: topic destination S17.
 
 ### On-slide copy
 
@@ -371,7 +371,7 @@ Evidence: E07, E13
 
 ## B19: Where do sensors fit and can AI diagnose damp or mould?
 
-Audience: Asset / safety / CTO. Return to S14.
+Audience: Asset / safety / CTO. For interruptions, return to the calling main slide. Index entry only: topic destination S14.
 
 ### On-slide copy
 
@@ -391,7 +391,7 @@ Evidence: E12
 
 ## B20: Why Azure instead of M365, Power Platform or buying a product?
 
-Audience: CIO / CFO. Return to S10.
+Audience: CIO / CFO. For interruptions, return to the calling main slide. Index entry only: topic destination S10.
 
 ### On-slide copy
 
@@ -411,7 +411,7 @@ Evidence: E02, E03, E06
 
 ## B21: How do you prevent hallucinations and prompt injection?
 
-Audience: CISO / CTO / risk. Return to S11.
+Audience: CISO / CTO / risk. For interruptions, return to the calling main slide. Index entry only: topic destination S11.
 
 ### On-slide copy
 
@@ -431,7 +431,7 @@ Evidence: E09, E12, E07
 
 ## B22: Can customer data leave the UK or train a provider's model?
 
-Audience: DPO / CISO / CIO. Return to S10.
+Audience: DPO / CISO / CIO. For interruptions, return to the calling main slide. Index entry only: topic destination S10.
 
 ### On-slide copy
 
@@ -451,7 +451,7 @@ Evidence: E04, E06, E12, E13
 
 ## B23: How will you know this is fair and accessible?
 
-Audience: CEO / resident services / risk. Return to S15.
+Audience: CEO / resident services / risk. For interruptions, return to the calling main slide. Index entry only: topic destination S15.
 
 ### On-slide copy
 
@@ -471,7 +471,7 @@ Evidence: E02, E12, E15
 
 ## B24: How will you keep policy, law and funding rules current?
 
-Audience: Risk / legal / CFO. Return to S05.
+Audience: Risk / legal / CFO. For interruptions, return to the calling main slide. Index entry only: topic destination S05.
 
 ### On-slide copy
 
@@ -491,27 +491,27 @@ Evidence: E02, E12, E18
 
 ## B25: What is your Tokenomics unit and can the AI bill run away?
 
-Audience: CFO / panel. Return to S11.
+Audience: CFO / panel. For interruptions, return to the calling main slide. Index entry only: topic destination S11.
 
 ### On-slide copy
 
-* Primary AI unit: cost per accepted proposal above a quality floor
-* Also track end-to-end cost per accepted handover separately
-* Partial metering today; currency and request-depth controls proposed
+* Recovered estimate: (6,884 / 5) x 10 x 20 x USD 1.60 / 1m
+* USD 0.440576/planned home; USD 6,872.9856 for 15,600 homes
+* Measured accepted-outcome TCA still unknown; money controls proposed
 
 ### Answer
 
-Use total attributable AI task cost divided by the count of human-accepted proposals that clear a defined quality floor, reported with critical misses, unsupported claims, overrides and reopenings. That denominator still needs owner/Finance agreement under OD-51. If it is zero or unknown, report not measurable, never divide by generated proposals and call it accepted value. The historical five-run exercise has 6,884 tokens but no human-accepted denominator or price table. Current finite calls/tokens/expiry apply per authority reference; they are not independent task/period money budgets or a per-request depth guarantee. BRD FR-052/NFR-012 and PRD AC-108/AC-109 propose those controls; they are not completed implementation.
+The recovered v2 planning scenario takes 1,376.8 observed tokens/run, assumes tenfold task size and twenty tasks/home, then prices all 275,360 tokens/home at the reported USD 1.60/million output rate. It yields USD 0.440576/home and USD 6,872.9856 for 15,600 homes; doubling task count or size gives USD 0.881152/home and USD 13,745.9712 total. The 23 October price is from third-party mirrors, not verified deployment pricing or a reconciled bill. Task count, size, retries and future prices are assumptions, not a lifetime cap. This is cost per planned home, not cost per accepted outcome. The latter requires attributable inference, platform, review, correction, assurance and support divided by human-accepted proposals above an agreed quality floor, with critical misses, unsupported claims, overrides and reopenings. OD-51 is still open; a zero or unknown accepted denominator is not measurable. Current finite calls/tokens/expiry are not independent task/period monetary budgets or universal request-depth bounds. FR-052/NFR-012 and AC-108/AC-109 remain requirements to test.
 
 ### Visual
 
-Numerator: inference + hosting allocation + review/correction + assurance/support. Denominator: accepted proposals above quality floor. Unknowns remain explicit; no fabricated currency value.
+Show the recovered formula and its assumptions beside, not in place of, the accepted-outcome TCA equation. Label planning scenario versus observed acceptance. No guaranteed currency ceiling or cheapest-project claim.
 
-Evidence: E19, E05, E11
+Evidence: E19, E05, E11, E21
 
 ## B26: Why not cache every answer and route everything to the cheapest model?
 
-Audience: CIO / CTO / CFO. Return to S11.
+Audience: CIO / CTO / CFO. For interruptions, return to the calling main slide. Index entry only: topic destination S11.
 
 ### On-slide copy
 
@@ -531,7 +531,7 @@ Evidence: E19, E04, E09
 
 ## B27: What stops chat and agent sprawl multiplying hidden calls?
 
-Audience: CTO / CIO / panel. Return to S11.
+Audience: CTO / CIO / panel. For interruptions, return to the calling main slide. Index entry only: topic destination S11.
 
 ### On-slide copy
 

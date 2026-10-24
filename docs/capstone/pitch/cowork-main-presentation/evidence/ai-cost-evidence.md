@@ -1,7 +1,7 @@
 ---
 title: AI Placement, Cost and Tokenomics Evidence
 description: Curated source-bound findings for the executive script, including negative results and open economic gates
-ms.date: 2026-10-23
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -183,6 +183,77 @@ GBP 6,000, giving GBP 14,000 provider base.
 These are exercise arithmetic, not a company balance sheet, actual award,
 current grant condition or technology price. The original GBP 40m and
 doubling ambitions are not observed outcomes.
+
+## Recovered Council Comparison (2026-10-24)
+
+The earlier [v2 build handoff](../../../deck/cowork-generated/BUILD-HANDOFF-v2.md#the-forecast-and-how-it-was-computed)
+contains the missing planning calculation. Its inputs are preserved here so
+the council can inspect the arithmetic, not mistake an estimate for a bill.
+The [dated statistics report](../../../../reference/research/sector/uk-social-housing-retrofit-damp-stats-report.md)
+records the retrofit benchmark and the third-party Azure price mirrors used
+on 2026-10-23. No current price, scheme availability or legal-currentness
+check is asserted by this recovery.
+
+### AI Inference Scenario
+
+| Step | Calculation | Result |
+| --- | --- | --- |
+| Observed mean | 6,884 tokens / 5 operator runs | 1,376.8 tokens/run, not accepted outcomes |
+| Assumed larger task | 1,376.8 x 10 | 13,768 tokens/task |
+| Assumed work per home | 13,768 x 20 tasks | 275,360 tokens/home |
+| Dated price assumption | All tokens priced at USD 1.60/million, the reported GPT-4.1 mini output rate | Conservative input/output treatment at that rate, not a cap on total use |
+| Inference per home | 275,360 / 1,000,000 x USD 1.60 | USD 0.440576, about USD 0.44 |
+| Modelled cohort | 60,000 x 26% below EPC C | 15,600 homes, not a measured Zava stock survey |
+| Programme inference | USD 0.440576 x 15,600 | USD 6,872.9856, about USD 6,873 |
+| Workload sensitivity | Double assumed task count or tokens/task | USD 0.881152/home; USD 13,745.9712 total |
+
+Twenty tasks and the tenfold multiplier are planning assumptions, not measured
+lifetime usage. Repeated chat, retries, evaluations, other models and future
+price changes can increase costs. The five-run observation does not prove
+quality or acceptance. This illustration does not close the measured
+cost-per-accepted-proposal or cost-per-accepted-home gap.
+
+### Works and Funding Scenario
+
+| Step | Calculation | Result |
+| --- | --- | --- |
+| Historical HA benchmark | Mean modelled cost to reach EPC C in the earlier report | GBP 6,082/home, not a quotation or the GBP 20,000 exercise package |
+| Cohort works | 15,600 x GBP 6,082 | GBP 94,879,200, about GBP 94.9m |
+| Illustrative grant share | min(50% x GBP 6,082, GBP 7,500) | GBP 3,041/home |
+| Illustrative cohort grant | 15,600 x GBP 3,041 | GBP 47,439,600, about GBP 47.4m |
+| Remaining works contribution | GBP 6,082 - GBP 3,041 | GBP 3,041/home before other costs |
+
+The grant calculation assumes every modelled home and the entire benchmark
+cost qualify, sufficient allocation, an award and successful claims. These
+are not established. GBP 7,500 is the historical ordinary cap used in the
+source, not an automatic grant for every home. Actual eligibility, eligible
+costs, scheme-specific caps, co-funding, deadlines and availability require
+current official verification and Finance/funder review. An award is not cash.
+
+### Technology Is Not the Entire Project Cost
+
+The owner-set USD 700 October ceiling is a one-month exercise envelope,
+not a production quote or a 41-month operating commitment. If it were fully
+used, it would equal about 1,589 of the modelled USD 0.440576 home-inference
+bundles. That is a scale comparison only, not evidence that those homes
+were processed. Do not add the USD 700 ceiling and its included AI spend
+as two independent costs.
+
+For a future same-period appraisal, let P be all non-inference project costs
+in USD, including implementation, integration, hosting, support, security,
+evaluation and human review. The illustrative total is P + USD 6,872.9856;
+divide by 15,600 for cost per planned home. P is not yet priced, so no full
+project total, payback or project-to-works percentage can honestly be stated.
+Convert currencies using a dated Finance-approved exchange rate before
+comparing USD technology with GBP works or grants.
+
+Council wording: "Our planning calculation puts model inference at about
+44 US cents per home, against a historical GBP 6,082 works benchmark and an
+illustrative GBP 3,041 grant share. The inference line is small; the full
+project still needs costing. The purpose of better documentation is to
+support eligible, evidenced applications and claims and reduce avoidable
+returns or clawback, not to create eligibility or promise an award. We will
+measure that improvement before claiming additional grant income."
 
 ## Strong CXO Answer Stems
 
