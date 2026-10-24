@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T18:09:08+00:00",
-  "commit": "5fa7c3a0dcbbd818531a9e77bf7147cbb0443a93",
+  "scored_at": "2026-10-24T19:28:30+00:00",
+  "commit": "f093d82c73eb9793347de7ffd344f8be6bd6440c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40118908891",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40125016749",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "9abe2693489a8bc54e2b5418ef4663d28d7f9ca16e3edb90cbad4811df1cfa3b",
@@ -14,17 +14,17 @@
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "e6dcd7d7ab1e5c4a054aced6a7703384d2247260b4f82e75869b6a44997536a5"
+    "thought-leadership": "828e40638fc41aef0c6b55dbfee52c653dc5cf6916442d0d801230f835141e2e"
   },
-  "total": 72,
+  "total": 71,
   "sections": {
     "A": 30,
     "B": 22,
     "C": 11,
-    "D": 9
+    "D": 8
   },
-  "floors_met": true,
-  "outcome": "Pass",
+  "floors_met": false,
+  "outcome": "Not Yet Met (floor)",
   "criteria": {
     "A1": {
       "score": 4,
@@ -146,27 +146,28 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 4,
+      "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:637-646",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/mve-feature-consolidation-harness/hypotheses.md:1"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:659-697",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1007-1076"
       ],
-      "rationale": "New arXiv draft argues an original thesis (agents accelerate feature-driven decay) with a repo-grounded case and a testable H1-H7 consolidation-harness protocol. Useful, well-evidenced synthesis; not yet a Monday-actionable result since the experiment is unrun."
+      "rationale": "Original synthesis of five named mechanisms (specification inflation, proxy capture, learning evaporation, process-gate inflation, feedback starvation) grounded in the author's own 10-day, 183-PR engagement, plus a novel consolidation harness another architect could adopt."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:37",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:55-63"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1198-1212",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-46"
       ],
-      "rationale": "Structured, cited paper with embedded bibliography, but 14 unresolved TODO(author) items (results section, date, consumption data, naming/partner approvals) mean more than light editing remains before it is publish-ready."
+      "rationale": "Structure, figures, tables, bibliography and citations are publication-grade, but 14 unresolved TODO(author) items remain (results placeholder, dates, naming, partner/approval confirmation), so it is not yet ready to file without rework."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:55-71"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:48-82"
       ],
-      "rationale": "A clear arXiv submission path (cs.SE) is identified with checked eligibility notes, but the paper has not been submitted, published, or delivered to any audience yet; internal approvals and endorsement are still pending."
+      "rationale": "A concrete arXiv submission path (category, endorsement and disclosure requirements) is researched and documented, but the paper is not submitted, accepted or scheduled anywhere; README still lists pre-submission approvals as outstanding."
     }
   }
 }
