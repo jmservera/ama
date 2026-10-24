@@ -325,7 +325,7 @@ Route interpretation to:
 * The Housing Building Safety Lead for hazards and safety controls
 * The Housing Finance and Grants Lead for affordability, grant and payment
   interpretations
-* The Agentic Solution Orchestrator for deciding whether evidence supports an
+* The AMA Agentic Solution Orchestrator for deciding whether evidence supports an
   agent, deterministic component or simpler workflow
 
 Ask one focused question at a time when human judgement or an unknown company

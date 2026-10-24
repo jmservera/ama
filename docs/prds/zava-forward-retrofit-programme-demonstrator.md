@@ -297,7 +297,7 @@ suggestion rationale and return-source wording have demonstrable
 inconsistencies. This revision makes those lessons testable without treating
 missing product capabilities as already delivered.
 
-An independent [draft-stage PRD challenge and disposition](../../.copilot-tracking/reviews/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md)
+An independent [draft-stage PRD challenge and disposition](../reference/research/reports/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md)
 led to explicit slice applicability, conflict inputs, per-profile reset
 oracles, exact traceability, receipt/acceptance examples, separately reportable
 checks and constraint classification. The final bounded follow-up found no
@@ -1101,7 +1101,7 @@ no legal risk tier follows from housing context or model location alone.
 The [addendum](../case_study_48_addendum.md#responsible-ai-release-position-2026-10-14)
 sets the executive boundary. The [original failed attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
 is preserved alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
-and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+and [baseline RAI report](../reference/research/reports/2026-10-14/rai-report-ama-20261014.md).
 The report verifies findings against the original v0.14.0/source baseline,
 not implementation of this v0.16.0 proposal or finding closure. ADRs distinguish
 the future estate from the current shared-API control plane.
@@ -1727,7 +1727,7 @@ Nothing here records implementation, requirements approval or live-use acceptanc
 | [2026-10-06 nine-role/eleven-profile UX review](../reference/research/ux/zava-forward-prototype-profile-review.md) | Candidate journey contract, next-prototype slice and FR-011/012/014-017/024/032-035 with AC-034-043; source-based observations and proposed UX tests, not company/user validation |
 | [System One reassessment, 2026-10-10](../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10), Microsoft catalog/API documentation and [2026-10-11 learning](../ideas/typesafe-system-one-agent-fit.md#observed-feasibility-and-parallel-value-experiment-2026-10-11) | DD-007, FR-036/037/044, AC-044/045/052/054/057 and NFR-009; API and source-bound selection feasibility, not calibrated screening or comparative value |
 | Owner direction on form extraction/filling and AI-assisted decisions, 2026-10-10; BRD FR-023/024/026/027 and RULE-009/010; proposed form pattern in the model reassessment | DD-008, FR-038 to FR-043, AC-046 to AC-051/053/054 and Finance journey; evidenced route, deterministic eligibility, separate application/award/claim/cash and human submission; schema/terms unresolved under OQ-015 |
-| [Recovered baseline RAI report, 2026-10-14](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md) and [failed-attempt history](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits) | Original v0.14.0/source baseline: 29 checks, 7 PASS, 11 PARTIAL, 11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals, 2 confirmed/9 downgraded. Informs proposed FR-051 to FR-054, AC-069 to AC-073, NFR-014 and semantic/privacy evaluation; recovery is not remediation closure or human acceptance. |
+| [Recovered baseline RAI report, 2026-10-14](../reference/research/reports/2026-10-14/rai-report-ama-20261014.md) and [failed-attempt history](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits) | Original v0.14.0/source baseline: 29 checks, 7 PASS, 11 PARTIAL, 11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals, 2 confirmed/9 downgraded. Informs proposed FR-051 to FR-054, AC-069 to AC-073, NFR-014 and semantic/privacy evaluation; recovery is not remediation closure or human acceptance. |
 
 ### Review-learning disposition
 
@@ -2094,8 +2094,8 @@ current legal/technical/funding evidence, signed upstream handoff, actual
 delegations and human stakeholder/user reviews; these are not fictional
 company research tasks that must recur before every exercise iteration.
 
-The [historical v0.12.0 independent review](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json)
-and [targeted correction disposition](../../.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md)
+The [historical v0.12.0 independent review](../reference/research/reports/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json)
+and [targeted correction disposition](../reference/research/reports/2026-10-10/proper-warm-prd-v0-12-0/targeted-closure.md)
 retain the formal upstream limitation. Four actionable source findings were
 corrected, including canonical resident-choice decomposition, supplementary
 source classification, forecast-resource precision and result terminology.

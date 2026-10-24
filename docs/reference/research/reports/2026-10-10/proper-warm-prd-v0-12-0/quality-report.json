@@ -1,0 +1,214 @@
+{
+  "schema_version": "PRD_QUALITY_REPORT_V1",
+  "report_id": "PRD-2026-AMA48-001-quality-v0120-20261010T130151Z",
+  "generated_at": "2026-10-10T13:01:51.895Z",
+  "prd": {
+    "id": "PRD-2026-AMA48-001",
+    "version": "0.12.0",
+    "phase": "Validate",
+    "artifact_path": "docs/prds/proper-warm-retrofit-programme-demonstrator.md"
+  },
+  "overall_status": "FAIL",
+  "decision_thresholds": {
+    "iso_29148_core_min_score": 2,
+    "fr_to_ac_min_pct": 80.0,
+    "fr_to_goal_target_pct": 100.0
+  },
+  "gate_decisions": {
+    "validate_exit": "BLOCKED",
+    "finalize_exit": "NOT_EVALUATED"
+  },
+  "summary_counts": {
+    "RISK": 1,
+    "CAUTION": 4,
+    "COVERED": 18,
+    "NOT_APPLICABLE": 0
+  },
+  "severity_breakdown": {
+    "CRITICAL": 0,
+    "HIGH": 1,
+    "MEDIUM": 3,
+    "LOW": 1
+  },
+  "standards_assessed": [
+    {
+      "skill_name": "requirements-quality",
+      "skill_version": "1.1",
+      "overall_status": "RISK",
+      "findings_count": 23
+    }
+  ],
+  "category_summaries": {
+    "iso_29148": {
+      "average_score": 2.0,
+      "weakest_attribute": "singular",
+      "weakest_attribute_score": 1
+    },
+    "nist_800_160": {
+      "covered_categories": 10,
+      "missing_categories": []
+    },
+    "smart": {
+      "goals_total": 4,
+      "goals_passing": 4,
+      "pass_rate_pct": 100.0
+    },
+    "fr_ac_coverage": {
+      "fr_total": 44,
+      "fr_with_ac": 44,
+      "coverage_pct": 100.0,
+      "threshold_pct": 80.0
+    },
+    "fr_goal_coverage": {
+      "fr_total": 44,
+      "fr_with_goal": 44,
+      "goal_total": 4,
+      "coverage_pct": 100.0,
+      "target_pct": 100.0,
+      "waiver_required": false
+    }
+  },
+  "top_findings": [
+    {
+      "finding_id": "req-qual-001",
+      "standard": "requirements-quality",
+      "severity": "HIGH",
+      "status": "RISK",
+      "location": {
+        "section": "Sign-Off and Handoff Readiness",
+        "line_range": "L1430-L1452"
+      },
+      "finding": "The source explicitly declares unmet governed upstream readiness: unsigned BRD v0.15.0 and no current approved upstream quality evidence. Exercise assumption approval does not supply that evidence.",
+      "recommendation": "Preserve the declared limitation; pursue bounded exercise acceptance separately without fabricated handoff or company signatures."
+    },
+    {
+      "finding_id": "req-qual-002",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Functional Requirements; Acceptance Criteria; Independently reportable review checks",
+        "line_range": "L550-L599"
+      },
+      "finding": "Compound parent requirements remain insufficiently atomic, notably FR-014/AC-017/037. Existing named subchecks do not fully decompose all independent obligations.",
+      "recommendation": "Preserve parent trace anchors while creating canonical atomic obligations and separately reported criteria, beginning with the resident bundle."
+    },
+    {
+      "finding_id": "req-qual-003",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Supplementary TR/DH/PR/SA tables",
+        "line_range": "L322-L425"
+      },
+      "finding": "Supplementary obligations lack complete canonical mapping or explicit non-normative disposition; SA-005 conflicts with the declared workbook scope and SA-008 cites the hazard constraint for resident decisions.",
+      "recommendation": "Disposition source aliases, map adopted obligations and correct the workbook scope and resident-authority references."
+    },
+    {
+      "finding_id": "req-qual-004",
+      "standard": "requirements-quality",
+      "severity": "MEDIUM",
+      "status": "CAUTION",
+      "location": {
+        "section": "Exercise Acceptance Contract / Forecast, Dashboard and Financial Oracles",
+        "line_range": "L879-L895"
+      },
+      "finding": "The six-home central oracle needs explicit installation versus QA resource concurrency. Approved one/two-week duration sensitivity is not explicitly required alongside the enumerated capacity sensitivity.",
+      "recommendation": "Declare stage resource pools and independent weekly schedules, preserving approved targets; add the approved two-week duration sensitivity."
+    },
+    {
+      "finding_id": "req-qual-005",
+      "standard": "requirements-quality",
+      "severity": "LOW",
+      "status": "CAUTION",
+      "location": {
+        "section": "Acceptance reporting instructions",
+        "line_range": "L1067-L1091"
+      },
+      "finding": "Not run/Blocked, pass/fail/not-applicable and Observed are used as inconsistent result vocabularies.",
+      "recommendation": "Normalize result states and keep observations separate; unexecuted checks cannot pass but must not masquerade as executed failures."
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "REC-001",
+      "priority": "P1",
+      "target_section": "Sign-Off and Handoff Readiness",
+      "action": "Keep governed upstream status truthful and separate from final exercise owner acceptance. Do not manufacture unavailable company evidence or restart fictional discovery; obtain signed/current upstream evidence only for the corresponding governed adoption route.",
+      "related_finding_ids": [
+        "req-qual-001"
+      ]
+    },
+    {
+      "id": "REC-002",
+      "priority": "P2",
+      "target_section": "Functional Requirements; Acceptance Criteria; Traceability Matrix",
+      "action": "Decompose independent compound obligations into canonical atomic items and separately identifiable AC oracles while preserving existing parent anchors and reciprocal goal/AC mappings. Start with FR-014/AC-017/037; regrade singular against the unchanged minimum score of 2.",
+      "related_finding_ids": [
+        "req-qual-002"
+      ]
+    },
+    {
+      "id": "REC-003",
+      "priority": "P2",
+      "target_section": "Supplementary TR/DH/PR/SA tables",
+      "action": "Explicitly classify these as source/proposal aliases or canonically map adopted obligations. Limit SA-005 to declared supported workbooks, correct SA-008 to resident decision-rights references, and qualify upstream RULE identifiers.",
+      "related_finding_ids": [
+        "req-qual-003"
+      ]
+    },
+    {
+      "id": "REC-004",
+      "priority": "P2",
+      "target_section": "Forecast, Dashboard and Financial Oracles",
+      "action": "Clarify stage-specific resource pools and concurrency required for six accepted central handovers; specify the independent weekly outcome schedule and the approved one/two-week duration sensitivity. Do not derive expected outcomes from the forecast implementation itself.",
+      "related_finding_ids": [
+        "req-qual-004"
+      ]
+    },
+    {
+      "id": "REC-005",
+      "priority": "P3",
+      "target_section": "Exercise Acceptance Contract; Subcheck instructions; Evidence plan",
+      "action": "Standardize Pass/Fail/Not run/Blocked/Not applicable across reporting instructions and keep Observed as evidence rather than a verdict. Require reasons for blocks and versioned exclusions.",
+      "related_finding_ids": [
+        "req-qual-005"
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "id": "WARN-001",
+      "severity": "INFO",
+      "message": "All sixteen exercise assumptions and numeric targets were owner-approved before source edits. Final reviewed PRD acceptance is still pending; future operational OQs are not unanswered exercise questions."
+    },
+    {
+      "id": "WARN-002",
+      "severity": "ADVISORY",
+      "message": "Canonical report rules independently require FAIL and Validate BLOCKED because core singular scores 1, below 2. Even an exercise-only disposition of upstream readiness cannot turn this full-document report into PASS.",
+      "related_finding_ids": [
+        "req-qual-002"
+      ]
+    },
+    {
+      "id": "WARN-003",
+      "severity": "INFO",
+      "message": "The canonical PRD contracts do not state a universal signed-BRD prerequisite for every PRD review. The upstream finding records this source's expressly retained governed readiness condition, not an invented requirement for fictional company signatures before exercise design.",
+      "related_finding_ids": [
+        "req-qual-001"
+      ]
+    },
+    {
+      "id": "WARN-004",
+      "severity": "INFO",
+      "message": "Requirements targets remain unexecuted. This review did not demand implementation results as documentation evidence and did not perform model calls, deployment, spending, user research or acceptance tests."
+    },
+    {
+      "id": "WARN-005",
+      "severity": "INFO",
+      "message": "Both payloads are returned inline. No files were written and no findings_ref is asserted. Requested destination paths are not persisted artifacts."
+    }
+  ],
+  "notes": "CURRENT FULL DOCUMENT REVIEW, Validate, PRD v0.12.0.\nCount summary: 23 findings = 1 RISK + 4 CAUTION + 18 COVERED.\nCore singular score 1 is independently blocking. Conforming score 1 is a\nnon-core concern; FR-to-AC and FR-to-goal coverage each pass at 100%.\nAll four exercise goals pass SMART; all ten NFR categories are present.\n\nSeparate readiness judgement:\nExercise document readiness = NEEDS_REVIEW, with bounded source corrections\nin req-qual-002..005 and final owner acceptance still pending.\nThis is not a second canonical gate or an approval. The current formal\nValidate decision remains BLOCKED; Finalize is NOT_EVALUATED.\nAPPROVED_WITH_COMMENTS cannot be used for this full-document report while\na core ISO threshold is breached. No blanket production approval is given.\n\nHistorical findings:\nThe three v0.11.0 form amendments are now covered: funding-only route\nprerequisites, separate application/claim events and ledger invariance,\nindependent AC-047 checks and exact AC-051 invalidation oracles.\nHistorical missing goal timing and quantitative NFR/scaling concerns are\nresolved by approved exercise contracts. Original reports remain history.\n\nHigh-confidence source corrections:\n- Atomic decomposition: FR-014/AC-017/037 and broader compound parents.\n- Supplementary taxonomy/disposition and SA-005/SA-008 reconciliation.\n- Forecast stage resource/concurrency precision and duration sensitivity.\n- Consistent result-state terminology.\n\nProtected boundaries remain explicit: no-match/unknown/conflict, candidate\nprovenance, individual required-field review, declarations/signatures/\ncertifications/consent protected from AI, server-side permission checks,\nseparate handoff receipt/acceptance and resident-update responsibility,\nindependent human-first hazard handling, ranking invariance and no live\nfinancial or external actions.\n\nSix central handovers is plausible under an explicitly staged concurrent\npipeline, not evidence of real forecast performance. Independent constructed\noutcome schedules are required; missing inputs cannot be zero-error results.\nFinancial arithmetic and USD 450/month cost boundaries reconcile as stated.\nFamily split, 720 field dispositions, twelve pack pairs and critical\ndenominators are declared targets, not measured results.\n\nActual Decision 1 and generative Foundry success evidence remains essential.\nAvailability, replay and workflow-only fallback do not satisfy it.\nActual access/API/processing/cost verification and permission for billable\nwork remain separate implementation prerequisites. The 20%/25% figures are\nscenario hypotheses, not ratified operational benefit commitments.\n\nRequested, uncreated destination paths:\n.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/standard-findings.json\n.copilot-tracking/reviews/2026-10-10/proper-warm-prd-v0-12-0/quality-report.json\n\nPayload counts, severity totals, SMART results, mean/tie handling, phase\ndecisions and references were manually checked against both contracts.\nNo executable schema validator or persistence operation was performed."
+}

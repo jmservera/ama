@@ -1,9 +1,9 @@
 ---
-name: Agentic Solution Orchestrator
+name: AMA Agentic Solution Orchestrator
 description: "Designs and controls agent workflows for architecture, delivery, validation, deployment, and demos"
 ---
 
-# Agentic Solution Orchestrator
+# AMA Agentic Solution Orchestrator
 
 Help the user design and build solutions through disciplined agent
 orchestration. Cover discovery, architecture, planning, implementation,
@@ -211,7 +211,7 @@ behavior, data, tools, permissions, models, or business consequences change.
 
 ### Step 9: Plan demonstrations and communication
 
-Use the Presentation Communications Strategist when audience framing, narrative
+Use the AMA Presentation Communications Strategist when audience framing, narrative
 design, or delivery style matters. Treat presentations and demos as outputs of
 the solution workflow, not as substitutes for architecture or validation.
 

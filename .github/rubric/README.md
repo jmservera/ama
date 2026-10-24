@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-19
+ms.date: 2026-10-24
 ms.topic: how-to
 ---
 
@@ -23,6 +23,32 @@ record-rubric-score (gate)       validates, carries forward unaffected criteria,
 The pass or fail decision is made by [gate.py](scripts/gate.py), never by the model. A pull request passes when its total is greater than or equal to the baseline total on `main`. Criterion drops are listed as warnings. When the pull request merges, its committed `latest.json` becomes the new baseline on `main`.
 
 A criterion can only move when an artifact that informs it changes, and every move must cite a changed file. Deleting a scored file, renaming it outside the registry globs or letting it grow past `max_file_bytes` counts as a change: the scorer can lower the affected criteria by citing the removed path, but a removed path never justifies a higher score.
+
+### Owner-Selected Cowork v2 Deck (2026-10-23)
+
+The registry selects only
+`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` for `capstone-deck`.
+The older executive deck and the
+[imported Cowork source and historical exports](../../docs/capstone/deck/cowork-generated/README.md)
+are not alternate scored decks. The imported source PPTX is encrypted;
+the later owner-supplied public v2 export is installed at the selected path.
+Local verification with the actual extractor reads 54 slides and 54
+speaker-note blocks and confirms Cowork's final slide-39 save marker.
+PDFs and handoff claims do not substitute for extracted notes. These local
+checks are not a fresh hosted assessment or a full content/accessibility review.
+
+`prepare.py` supports an optional artifact-level `max_file_bytes` override.
+Only `capstone-deck` raises this limit to 20,000,000 bytes; other artifacts
+retain the 2,000,000-byte registry default. Files above their effective limit
+are still excluded, and the 200,000,000-byte PPTX decompression guard remains.
+The regression checks cover the exact size boundary, unchanged non-deck
+limit and exclusion of historical/protected deck paths.
+
+These are pending branch changes, not an activated hosted score. PR scoring
+loads its trusted registry and tooling from base `main`. They must reach
+that trusted base before a fresh v2 assessment can use the new selection
+and allowance. Do not edit `scores/latest.json`, fall back to the historical
+deck, or claim a v2 pass while readable slide-and-notes evidence is missing.
 
 ### PPTX Slide Citation Repair
 
@@ -58,6 +84,43 @@ Rerunning an older head's run can hit the branch-moved guard; merging this
 repair alone does not automatically replace PR #61's score.
 
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
+
+## Scorecard Submission Preflight
+
+[Run 40025652570](https://github.com/jmservera/ama/actions/runs/40025652570)
+was rejected because D3 omitted `change_reason`, not because its total fell
+below the 55-point baseline. The template contained the field, but the
+submitted details did not. No valid score was recorded.
+
+The scorer prompt now requires a read-only `jq -e` preflight of the complete
+final arguments before its single `record_rubric_score` call. The embedded
+filter checks all 20 criterion IDs, all 22 argument keys, exact score choices,
+detail keys and types, non-blank summary/rationales, and rationale length.
+It emits the candidate unchanged, without filling missing fields or coercing
+values. A failed preflight must be corrected before submission. Tests execute
+the actual filter from the prompt, including the D3 omission and a score with
+a trailing newline:
+
+```bash
+.venv/bin/python -m pytest .github/rubric/scripts/test_scorecard_adapter.py -q
+```
+
+All 49 adapter tests pass locally after a separate fixture repair. The two
+earlier round-trip/carry-forward failures were reproduced from unchanged
+HEAD: their submitted-card fixture reused an unfinished baseline-derived
+template. Completed-card tests now use explicit synthetic grades, independent
+of the recorded score. Zero/null baseline cases are covered, while unscored
+bootstrap/calibration scaffolds remain rejected. Production template, adapter,
+gate and recorded baseline behavior are unchanged.
+
+This is an executable agent instruction, not a new MCP interception hook.
+The pinned runtime still checks `details` only as a string before append;
+the strict adapter validates its contents afterward. The preflight does not
+prove evidence quality, reject duplicate outer JSON keys, or replace the
+gate's comparison and exactly-one-submission rule. Duplicate keys inside
+encoded details remain rejected by the adapter. No hosted rerun or score
+recovery is implied by these local tests. Deck registration and size support
+on trusted base `main` remain separate from this submission repair.
 
 ## Files
 

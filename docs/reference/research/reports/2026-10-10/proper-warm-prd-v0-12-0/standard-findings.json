@@ -1,0 +1,384 @@
+{
+  "schema_version": "PRD_STANDARD_FINDINGS_V1",
+  "assessment_id": "requirements-quality-PRD-2026-AMA48-001-v0120-20261010T130151Z",
+  "assessed_at": "2026-10-10T13:01:51.895Z",
+  "prd": {
+    "id": "PRD-2026-AMA48-001",
+    "version": "0.12.0",
+    "phase": "Validate",
+    "artifact_path": "docs/prds/proper-warm-retrofit-programme-demonstrator.md"
+  },
+  "standard": {
+    "skill_name": "requirements-quality",
+    "skill_version": "1.1"
+  },
+  "mode": "plan",
+  "assessment_outcome": "plan",
+  "overall_status": "RISK",
+  "summary_counts": {
+    "RISK": 1,
+    "CAUTION": 4,
+    "COVERED": 18,
+    "NOT_APPLICABLE": 0
+  },
+  "findings": [
+    {
+      "finding_id": "req-qual-001",
+      "checklist_item": "upstream-handoff-readiness",
+      "status": "RISK",
+      "severity": "HIGH",
+      "location": {
+        "section": "Sign-Off and Handoff Readiness",
+        "line_range": "L1430-L1452"
+      },
+      "finding": "The PRD explicitly records an unmet formal upstream readiness condition: BRD v0.15.0 is unsigned and lacks current approved upstream quality evidence. Approved exercise assumptions disposition company discovery for exercise design but do not supply that governed evidence.",
+      "recommendation": "Preserve this declared upstream governance limitation and the exact BRD revision. Return the bounded exercise review for owner acceptance without fabricating a handoff, company signatures or upstream quality approval; obtain governed upstream evidence only for the corresponding governed adoption route."
+    },
+    {
+      "finding_id": "req-qual-002",
+      "checklist_item": "iso-29148-singular",
+      "requirement_id": "FR-014",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Functional Requirements; Acceptance Criteria; Independently reportable review checks",
+        "line_range": "L550-L599"
+      },
+      "finding": "Several parent requirements combine independently implementable behaviors; FR-014 bundles service intake, redress, accessible contact, representative authority, measure decisions, withdrawal and appointment outcomes. AC-017/037 and the existing subcheck table do not fully decompose that bundle into individually identifiable obligations and outcomes.",
+      "recommendation": "Retain existing parent IDs as traceability anchors, but decompose their independent obligations into canonical atomic requirements and criteria. Start with FR-014/AC-017/037, then apply the same audit to return/history/ invalidation, provider delivery and quality/handover bundles; preserve reciprocal links and publish one separately reported oracle per obligation."
+    },
+    {
+      "finding_id": "req-qual-003",
+      "checklist_item": "iso-29148-conforming",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Staff data trust and control; Owner direction for pilot readiness; Simplicity and adoption requirements",
+        "line_range": "L322-L425"
+      },
+      "finding": "TR/DH/PR/SA tables continue to express additional MVP or pilot obligations outside the declared FR/AC/NFR/CON requirement namespaces without a complete canonical mapping or an unambiguous non-normative disposition. SA-005 also promises any workbook while FR-029 limits import to declared exercise structures, and SA-008 cites the hazard constraint CON-006 for resident decision rights.",
+      "recommendation": "Mark supplementary rows explicitly as non-normative source/proposal aliases with release disposition, or map each adopted obligation to canonical requirements and ACs. Qualify SA-005 to the declared supported workbook contract and correct SA-008 to CON-003/FR-014/FR-044; qualify upstream RULE references so they are not mistaken for local requirement IDs."
+    },
+    {
+      "finding_id": "req-qual-004",
+      "checklist_item": "forecast-oracle-and-assumption-fidelity",
+      "requirement_id": "NFR-007",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Exercise Acceptance Contract / Forecast, Dashboard and Financial Oracles",
+        "line_range": "L879-L895"
+      },
+      "finding": "The stated six central handovers is consistent with a two-stage pipeline only if installation and independent QA/handover can operate concurrently with sufficient separately declared stage capacity; the text does not explicitly distinguish that from one shared two-homes/week resource pool. EXA-009 also approves one/two-week duration sensitivity, but this section explicitly enumerates only the capacity one/three sensitivity.",
+      "recommendation": "State the resource pool and concurrency rule for each stage and publish the independently authored central weekly handover oracle, preserving the approved six-home week-four target. Explicitly require the approved two-week stage-duration sensitivity alongside the six frozen scenarios, with its independently authored schedule and stated capacity semantics."
+    },
+    {
+      "finding_id": "req-qual-005",
+      "checklist_item": "acceptance-result-state-consistency",
+      "requirement_id": "AC-043",
+      "status": "CAUTION",
+      "severity": "LOW",
+      "location": {
+        "section": "Exercise Acceptance Contract; Independently reportable review checks; Four-Week Evidence Plan",
+        "line_range": "L1067-L1091"
+      },
+      "finding": "The exercise contract distinguishes Not run and Blocked from Pass, but the subcheck instructions allow only pass/fail/not-applicable and call unimplemented required checks failures. The evidence plan then introduces Observed as an outcome without defining its relationship to pass/fail.",
+      "recommendation": "Use one result vocabulary throughout: Pass, Fail, Not run, Blocked and Not applicable, with evidence recorded separately as observations. Required checks that remain unexecuted cannot pass acceptance, but should not be misreported as executed test failures; require explicit reasons and versioned applicability for exclusions."
+    },
+    {
+      "finding_id": "req-qual-006",
+      "checklist_item": "iso-29148-necessary",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Product Context; Workflow Coverage; Functional Requirements",
+        "line_range": "L109-L599"
+      },
+      "finding": "Canonical requirements address the documented shared-case, evidence, coordination, authority and reporting needs. AI assistance is tied to bounded tasks and comparative learning rather than assumed automation benefits.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-007",
+      "checklist_item": "iso-29148-appropriate",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Product boundary; Component Contracts; Design Decisions and Options Gate",
+        "line_range": "L126-L407"
+      },
+      "finding": "One product is justified by shared state, permissions, evidence and handoffs; workflow modules remain delivery increments. DD-001 through DD-008 distinguish proposed design choices from production selection, procurement approval and imposed constraints.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-008",
+      "checklist_item": "iso-29148-unambiguous",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Functional Requirements; Exercise Acceptance Contract; Open Questions",
+        "line_range": "L549-L1428"
+      },
+      "finding": "Current exercise scope, T0, external-action prohibitions, mandatory unknown handling and human decision boundaries are explicit enough for downstream use. Local forecast and reporting ambiguities are separately identified in req-qual-004/005 rather than treated as absent requirements.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-009",
+      "checklist_item": "iso-29148-complete",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Exercise Baseline Authority; Exercise Acceptance Contract; Sign-Off and Handoff Readiness",
+        "line_range": "L82-L1468"
+      },
+      "finding": "The draft supplies exercise role accountability, scoped quantitative targets, source/form contracts, failure handling, financial fixtures and an evidence plan. All sixteen OQs have documented exercise dispositions; future company research and actual inference prerequisites are not represented as answered facts.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-010",
+      "checklist_item": "iso-29148-feasible",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Exercise Baseline Authority; Performance, Scale, Recovery and Budget; Four-Week Evidence Plan",
+        "line_range": "L95-L957"
+      },
+      "finding": "The four-week exercise is bounded by a lean local/minimal-cloud option, reusable contracts, explicit spending allocations and separate core/scale workloads. Real access, API, processing and price verification remains a specific execution prerequisite, not assumed feasibility evidence.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-011",
+      "checklist_item": "iso-29148-verifiable",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Exercise Acceptance Contract; Acceptance Criteria; Independently reportable review checks",
+        "line_range": "L820-L1091"
+      },
+      "finding": "Objective inspection and test methods are specified for critical controls, recovery, performance, chart reconciliation, field disposition and comparisons. AC-047 now has independent extraction subchecks and AC-051 requires exact fixture-owned direct/transitive invalidation sets.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-012",
+      "checklist_item": "iso-29148-correct",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Exercise Baseline Authority; Form Extraction and Assisted Filling; Sign-Off and Handoff Readiness",
+        "line_range": "L82-L1468"
+      },
+      "finding": "The current draft faithfully distinguishes approved exercise assumptions, pending final owner acceptance, unexecuted targets and operational authority. Historical form-route and application/claim isolation defects are corrected; the bounded forecast-fidelity omission is separately recorded.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-013",
+      "checklist_item": "nist-800-160-category-presence",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Non-Functional Requirements; Observability and SLO Measurement Method; Exercise Acceptance Contract",
+        "line_range": "L601-L957"
+      },
+      "finding": "All ten categories are present: NFR-002 covers performance and scaling, NFR-006 recovery, NFR-003 security, NFR-005 privacy, NFR-011 operability, NFR-004/011 telemetry, NFR-001 accessibility, NFR-008 exchange contracts with the declared import/interface boundary, and NFR-010 portability. Presence does not establish implementation effectiveness or conformance.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-014",
+      "checklist_item": "smart-product-goals",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Product Goals",
+        "line_range": "L304-L321"
+      },
+      "finding": "All four goals have bounded exercise populations, quantitative criteria or comparators, plausible scoped delivery with recorded risks, relevance and a T0+4-week deadline. GOAL-004 accepts measured lack of benefit as a learning outcome without activating a failing task or waiving real inference.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-015",
+      "checklist_item": "traceability-identifiers-fr-ac-goal",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Functional Requirements; Acceptance Criteria; Traceability Matrix",
+        "line_range": "L549-L1189"
+      },
+      "finding": "All 44 FR definitions have valid reciprocal links to the 54 AC definitions, and the FR-to-AC matrix matches both tables. Every FR links to at least one of four valid goals; the goal matrix matches the FR goal column, and canonical FR/AC/NFR/CON/GOAL/DD definitions have valid suffixes without duplicate definitions or numbering gaps.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-016",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-001",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-001 identifies owner/upstream scope as its imposing source, names the non-production/data boundary and prohibits live authority and integrations. It is an imposed scope constraint, not desired functionality.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-017",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-002",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-002 identifies the upstream operating model and the retained source-system authority boundary. Separate approval is required to change that integration/authority constraint.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-018",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-003",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-003 cites the case and upstream authority model, names the affected human decision owners and forbids substitution by agents or UI actions. It is a decision-rights constraint distinct from permission implementation.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-019",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-004",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-004 identifies owner/addendum governance as its source and prohibits inferred production, platform or procurement approval. DD-001 remains a proposed design baseline rather than a disguised imposed architecture.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-020",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-005",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-005 imposes an evidence/estate boundary from the owner's estate statement: no dependency on unverified installed services. The storage fallback is correctly kept separate as a design option.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-021",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-006",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-006 names the upstream hazard duty and retained service authority, with an explicit prohibition on delay, clock manipulation, classification and closure. It is a safety/authority boundary rather than a negotiable response-time NFR.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-022",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-007",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-007 identifies upstream authority/separation rules, the bulk-action boundary and non-negotiable independent authorization. FR-007 provides enforcement behavior without changing the constraint's classification.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-023",
+      "checklist_item": "imposed-constraint-classification",
+      "requirement_id": "CON-008",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L959-L970"
+      },
+      "finding": "CON-008 identifies upstream evidence controls and the reporting boundary: forecasts cannot be represented as guarantees or commitments. Forecast quality and reproduction remain separately expressed under NFR-007.",
+      "recommendation": null
+    }
+  ],
+  "iso_29148_attributes": {
+    "necessary": 3,
+    "appropriate": 3,
+    "unambiguous": 2,
+    "complete": 2,
+    "singular": 1,
+    "feasible": 2,
+    "verifiable": 2,
+    "correct": 2,
+    "conforming": 1
+  },
+  "nist_800_160_nfr_categories": {
+    "performance_and_capacity": true,
+    "reliability_and_resilience": true,
+    "security": true,
+    "privacy": true,
+    "scalability_and_elasticity": true,
+    "maintainability_and_operability": true,
+    "observability": true,
+    "usability_and_accessibility": true,
+    "compatibility_and_interoperability": true,
+    "portability": true
+  },
+  "smart_product_goals": [
+    {
+      "goal_id": "GOAL-001",
+      "statement": "By T0+4 weeks, each of the eleven profile scripts shall identify its permitted work, blocker, evidence, owner and next action without an unexplained dead-end or permission breach.",
+      "specific": true,
+      "measurable": true,
+      "achievable": true,
+      "relevant": true,
+      "time_bound": true,
+      "overall": "PASS"
+    },
+    {
+      "goal_id": "GOAL-002",
+      "statement": "By T0+4 weeks, demonstrate the nine connected workflows, including one same-home journey with an EPC conflict, correction, independent handover and financial closure.",
+      "specific": true,
+      "measurable": true,
+      "achievable": true,
+      "relevant": true,
+      "time_bound": true,
+      "overall": "PASS"
+    },
+    {
+      "goal_id": "GOAL-003",
+      "statement": "By T0+4 weeks, produce reconciled cohort dashboards and a reproducible four-week scenario forecast.",
+      "specific": true,
+      "measurable": true,
+      "achievable": true,
+      "relevant": true,
+      "time_bound": true,
+      "overall": "PASS"
+    },
+    {
+      "goal_id": "GOAL-004",
+      "statement": "By T0+4 weeks, establish task-level value or lack of value using real Foundry inference and paired manual/parser comparisons without weakening controls.",
+      "specific": true,
+      "measurable": true,
+      "achievable": true,
+      "relevant": true,
+      "time_bound": true,
+      "overall": "PASS"
+    }
+  ],
+  "fr_ac_coverage": {
+    "fr_total": 44,
+    "fr_with_ac": 44,
+    "coverage_pct": 100.0
+  },
+  "notes": "Scope: independent current full PRD review, not an amendment-only review.\nTaxonomy: FR/AC/NFR/CON; GOAL and DD are adjacent namespaces.\nInventory: 44 FRs, 54 ACs, 13 NFRs, 8 CONs, 4 GOALs, 8 DDs,\n16 future operational OQs, and zero unanswered exercise OQs.\n\nRead evidence: current PRD v0.12.0; owner-approved addendum baseline\nincluding EXA-001..016, numeric targets and evidence plan; BRD v0.15.0;\ncurrent PRD state; original v0.11.0 paired reports and historical\nchallenge disposition. Historical findings were reassessed, not inherited\nas current defects. No historical report was altered.\n\nRubric: canonical requirements-author spec_version 1.1, exposed under\nthe contracts' combined requirements-quality bundle name. Both payload\ncontracts were read before scoring, together with shared score anchors,\nSMART and NIST presence references.\n\nSMART achievability is a plausibility judgement under the documented\nexercise constraints, not successful access, implementation or delivery.\nT0 is final acceptance of the reviewed baseline, not assumption approval.\nHuman exercise-label adjudication is later engineering evidence; it is\nnot company approval or direct user research.\n\nNumeric checks: 30+30+60 families = 120; 60 held-out packs x 12 fields =\n720 dispositions. Related families stay within one split; unresolved\nlabels require counted exclusions and restored coverage. Overall field\ndisposition accuracy includes required abstention; selected-field accuracy\nand answerable-subset coverage are separate. Macro-F1, critical-category\ncounts and finite-suite zero-failure limitations are explicit.\nTwelve counterbalanced pack pairs compare full net effort, not token price.\n\nFinance: GBP 18,000 contractor milestones reconcile to 3,600/12,600/1,800.\nBase 20,000 includes contractor 18,000 plus internal allocation 2,000;\ncontingency 2,000 produces envelope 22,000. Eligible 16,000 and grant\nmin(7,500, 50%) produce provider base 12,500 and gross pre-receipt exposure\n20,000. These are fictional fixtures, not real entitlement or company finance.\nUSD 450/month includes attributable existing charges and accrued liabilities;\nallocations sum to 450 and warn/pause thresholds are 360/405. Labour is\nreported separately; budget alerts alone are not a hard spending cap.\n\nForecast: independent constructed event/capacity schedules, exact reruns,\nweekly cumulative MAE and week-four error are required. Unknown/abstained\npredictions cannot be counted as zero-error results. The six-home central\ntarget is not rejected; stage resource semantics and the approved duration\nsensitivity need the precision identified in req-qual-004.\n\nSafety and authority: candidate-only/no-match, preserved conflicts,\nprotected declarations/signatures/certifications/resident decisions,\nindividual required-field review, API permissions, no self-approval,\nindependent handoff acceptance/update ownership and human-first hazard\ntriage are explicit. Negative or failed models cannot suppress triage,\ninfer consent or change ranking. Reviewed export, application submission,\naward, claim and cash remain distinct.\n\nDecision 1 and generative Foundry success calls are essential demonstration\nevidence. Optional task activation and simpler fallback do not waive that\nevidence requirement. Actual subscription/API/access/processing/cost checks\nremain execution prerequisites; this review did not run them or authorize\nspend/deployment. No benefit, model-quality, accessibility-conformance or\nreal user-validation assertion is made.\n\nAncillary obligations are excluded from the canonical 44-FR denominator\nuntil adopted or dispositioned explicitly. Link coverage is not atomicity,\nbehavioral completeness or passing acceptance evidence.\n\nTimestamp uses the caller-supplied invocation timestamp; no separate\ncompletion clock was available. Findings were checked against contract\nkeys, enumerations, counts and score ranges manually. No files were written."
+}

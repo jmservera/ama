@@ -82,6 +82,12 @@ passing local checks do not satisfy human or hosted approval gates. Missing
 SQL/browser/scanner prerequisites block publication without a cloud fallback,
 skip token, fabricated status or protection change.
 
+For generated-output storage and any cleanup, follow the
+[tracking retention policy](../docs/reference/method/tracking-retention-policy.md).
+It requires explicit archive/restore-backed selection and preserves original
+RPI evidence and all publication/review gates above; it grants no automatic
+historical deletion authority.
+
 ## Web Development Guidance
 
 Apply this guidance to web implementation, design, redesign, styling and review.

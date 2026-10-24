@@ -236,7 +236,8 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
     for entry in registry.get("artifacts", []):
         if entry.get("status") != "active":
             continue
-        files, _oversize = match_files(root, entry.get("include", []), entry.get("exclude", []), max_bytes)
+        artifact_max_bytes = int(entry.get("max_file_bytes", max_bytes))
+        files, _oversize = match_files(root, entry.get("include", []), entry.get("exclude", []), artifact_max_bytes)
         artifacts[entry["id"]] = {
             "title": entry.get("title", entry["id"]),
             "extractor": entry.get("extractor", "text"),
