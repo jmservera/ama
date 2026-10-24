@@ -1,0 +1,67 @@
+PIN 29c6b512f5e68733bb2cc1882343db39f5eb2cad
+CUTOFF_UTC 2026-10-24T16:19:38+00:00
+COMMAND git log --first-parent --format='%H%x09%P%x09%cI%x09%s' PIN; UTC committer-date periods
+COMMAND per integration: git diff --no-ext-diff --no-textconv --numstat -z --find-renames FIRST_PARENT REVISION --
+SELECTION literal merges: every multi-parent first-parent commit; PR integrations: those plus single-parent commits ending (#PR)
+CAUTION PR integrations is a heuristic, not GitHub API PR metadata; first-parent main history may include merges made on topic branches
+CLASS PRECEDENCE tracking; Markdown; tests/checks/evals or test_* and *.test.{js,mjs,ts}; vendored -> other; infra; workflows/actions; product; other
+CLASS product: src/{core,api,agents,orchestrator,importer}/src plus historical mvp/ and prototype/ code, independent of package renaming; suffixes .py .js .mjs .ts .tsx .jsx .css .html .sql
+CLASS documentation: all Markdown outside .copilot-tracking, including agent instructions and workflow Markdown
+CLASS tests: non-Markdown paths matched above; infrastructure: remaining infra/; CI: remaining .github/workflows/ and .github/actions/
+CLASS other: remaining text, including config, auxiliary tooling and vendored code; binary deltas excluded
+RENAMES detected; additions classified at destination and removals at source; pure detected moves add no lines
+LIMIT churn is added/removed lines, not code quality, delivered value or net source size
+
+SELECTION literal merges
+PERIOD 2026-10-08--14 commits=7 direct_excluded=0
+class | added | removed
+product source | 1790 | 122
+tests | 3101 | 507
+documentation | 8127 | 381
+.copilot-tracking artefacts | 230951 | 2629
+infrastructure | 2427 | 50
+CI and workflows | 85 | 63
+other | 23549 | 368
+RATIO tracking_added/product_added=129.022905
+RATIO tracking_churn/product_churn=122.165272
+RATIO (tracking+documentation)_added/product_added=133.563128
+PERIOD 2026-10-15--24 commits=7 direct_excluded=2
+class | added | removed
+product source | 332 | 40
+tests | 2846 | 22
+documentation | 3964 | 194
+.copilot-tracking artefacts | 10309 | 0
+infrastructure | 1906 | 60
+CI and workflows | 397 | 47
+other | 1973 | 381
+RATIO tracking_added/product_added=31.051205
+RATIO tracking_churn/product_churn=27.712366
+RATIO (tracking+documentation)_added/product_added=42.990964
+
+SELECTION PR integrations
+PERIOD 2026-10-08--14 commits=31 direct_excluded=0
+class | added | removed
+product source | 8136 | 421
+tests | 6871 | 537
+documentation | 12065 | 1297
+.copilot-tracking artefacts | 238185 | 2642
+infrastructure | 2708 | 73
+CI and workflows | 240 | 64
+other | 25320 | 1099
+RATIO tracking_added/product_added=29.275442
+RATIO tracking_churn/product_churn=28.143859
+RATIO (tracking+documentation)_added/product_added=30.758358
+PERIOD 2026-10-15--24 commits=177 direct_excluded=2
+class | added | removed
+product source | 23408 | 2184
+tests | 73478 | 1416
+documentation | 25210 | 2455
+.copilot-tracking artefacts | 240369 | 1
+infrastructure | 6162 | 485
+CI and workflows | 897 | 246
+other | 72711 | 1776
+RATIO tracking_added/product_added=10.268669
+RATIO tracking_churn/product_churn=9.392388
+RATIO (tracking+documentation)_added/product_added=11.345651
+
+COMPLEXITY not measured: lizard is not installed; no dependency installed

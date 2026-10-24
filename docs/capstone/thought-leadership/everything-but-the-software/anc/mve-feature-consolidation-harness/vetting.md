@@ -10,7 +10,7 @@ Phase 3 output (HVE Core Experiment Designer). Verdict: **viable as an MVE**, wi
 | Does the MVE make business sense? | Pass | A real decision depends on it: whether to add a consolidation gate to the delivery coordinator, teach it in partner HVE trainings and propose it to HVE Core. The owner sponsors the work and needs the result for the capstone paper. |
 | Is there a crisp problem statement? | Pass | Does a per-feature consolidation step change quality, regressions, changeability and cost when agents add features one after another? See context.md. |
 | Has Responsible AI been considered? | Pass, with notes | Synthetic data only; no personal data. Reliability: results come from small samples and one model, so the paper must not over-generalise. Transparency: publish protocol, prompts, suites, metrics and raw results. Accountability: the owner acts on results. Cost and energy: bounded by a budget ceiling. |
-| Are next steps clear? | Pass | Validated: add the consolidation step to the coordinator, propose a "consolidate" phase or skill to HVE Core maintainers, teach it, report in the paper. Invalidated: report the null result, then test the alternatives the experience report suggests (human demo checkpoints, smaller batches, work-in-progress limits). Mixed: adjust per the iteration plan. |
+| Are next steps clear? | Pass | Validated: follow the H1/H6/H5 adoption rule in mve-plan.md. H1 invalidated: report that the interval rules out the minimum useful effect, then test human checkpoints, smaller batches or work-in-progress limits. Inconclusive or mixed: adjust without enlarging the original confirmatory sample. Non-significance alone is not invalidation. |
 
 ## Red flag check
 
@@ -18,7 +18,7 @@ Phase 3 output (HVE Core Experiment Designer). Verdict: **viable as an MVE**, wi
 | --- | --- | --- |
 | Demos and prototypes | No | The output is a measured comparison, not a showcase. |
 | Skipping ahead | No | The harness is tested before it becomes a coordinator rule. |
-| Solved problems | No | Feature-driven decay is well established for human teams, and several 2025-2026 studies suggest agents accelerate it (context.md, A1-A2). Research found no study that tests a consolidation step interleaved between agent feature steps; SlopCodeBench shows quality instructions alone do not change the degradation rate. Keep the hypotheses focused on that gap. |
+| Solved problems | Partly practised, controlled effect untested in the work reviewed | OpenAI's background clean-up and Anthropic's clean-state sessions already practise related interventions. The proposed contribution is a controlled comparison, not the invention of clean-up. SlopCodeBench distinguishes quality instructions from an interleaved structural intervention. Keep claims bounded to the reviewed work. |
 | Mini-MVP | Risk | Building a polished harness product would turn this into an MVP. Mitigation: the harness is a prompt, a TCR wrapper and a metrics script; experiment code is disposable. |
 | Low commitment or impact | No | Paper deadline and coordinator decision depend on it. |
 | Customer lacks follow-through capacity | No | The owner controls the coordinator and the paper. |

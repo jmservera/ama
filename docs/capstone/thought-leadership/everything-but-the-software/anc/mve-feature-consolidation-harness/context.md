@@ -85,6 +85,6 @@ LLM / agentic software-engineering process: a controlled performance and quality
 
 ## Prior attempts and related practice
 
-* AMA case evidence: feature-first coordinator loop, 15-24 Oct 2026 (the experience report).
+* AMA case evidence: feature-first coordinator loop, 15-24 Oct 2026 (the exploratory case study).
 * HVE practice: Mike Lanzetta's "Hypervelocity Orchestra" uses a 13-item done gate and a sprint-boundary retrospective whose findings block the next sprint; this MVE tests a per-feature variant.
 * Kent Beck: alternate features with consolidation; Tidy First?; test && commit || revert (TCR).

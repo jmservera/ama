@@ -19,6 +19,8 @@ Give a coding agent the same sequence of feature requests, one at a time, under 
 
 Everything except the post-feature step is identical across arms: model and version, agent runtime, feature prompts, starting skeleton, tools, per-feature budget, machine.
 
+Arm B has up to 50% more agent time per feature than A. Arm C holds that extra time constant without refactoring; H5 compares A and B's costs directly. A-B is not a time-matched comparison.
+
 The B-C contrast does not isolate refactoring. B may add behaviour-pinning tests and writes architectural DESIGN.md; C cannot change code or tests and writes issue-oriented REVIEW.md. Later feature sessions read those different notes, so any H7 benefit belongs to the complete package, including tests and documentation.
 
 ## 3. Task suites
@@ -64,7 +66,7 @@ Related design references: SWE-Maintain (Pan et al., 2026) shows the downstream 
 ### Specification format (per feature)
 
 * A short user story, the rules in plain language, and 3-5 **visible** example tests (`tests/examples/test_fNN_*.py`, read-only for the agent).
-* 10-20 **hidden** acceptance tests per feature, kept outside the agent workspace, including interaction tests with earlier features. The cumulative hidden suite after step k contains the hidden tests of F1..Fk.
+* 10-20 **hidden** acceptance tests per feature, kept outside the agent workspace, including interaction tests with earlier features. The cumulative hidden suite after step k contains the hidden tests of F1..Fk, including any missing feature.
 * Specifications and hidden tests are written and frozen before the pilot; a second person (or a second agent session reviewed by the owner) checks each hidden test against its specification.
 
 ### Starting skeleton (identical per suite)
@@ -74,14 +76,15 @@ Related design references: SWE-Maintain (Pan et al., 2026) shows the downstream 
 ## 4. Procedure per run
 
 1. Create a fresh git repository from the skeleton. Record model, runtime and tool versions.
-2. For k = 1..N (N = 10 in both first pass and main study):
+2. For k = 1..N (N = 8 in the first pass; N = 10 in the pilot and main study):
    1. Copy feature k's visible example tests into the workspace.
-   2. **Feature step** (all arms): the runner tags the head `feature-start` (`git tag -f`), then starts a fresh agent session with the feature prompt (`harness/feature-step.prompt.md`). Budget: 30 minutes wall-clock (TODO(owner): confirm, plus a turn or token cap). The agent may commit only when all visible tests pass; uncommitted work at the end of the budget is discarded, so the step either delivers a green increment or nothing.
+  2. **Feature step** (all arms): the runner tags the head `feature-start` (`git tag -f`), then starts a fresh agent session with the feature prompt (`harness/feature-step.prompt.md`). Budget: 30 minutes wall-clock (TODO(owner): confirm, plus a turn or token cap). The agent may commit only when all visible tests pass. If it commits no green increment, the runner resets to the pre-step head, removes that feature's example tests and counts the feature as missing. Its hidden tests remain in the cumulative denominator; runner-owned removal is recorded separately from agent tampering.
    3. **Measure** (scripts, outside the agent): tag the committed head `feature-end`, then run the cumulative hidden suite and the metrics in section 6 on the committed head.
    4. **Post-feature step**: arm A none; arm B consolidation session (`harness/consolidation-step.prompt.md`, 15 minutes); arm C review-only session (`harness/review-only-step.prompt.md`, 15 minutes).
    5. **Measure again** (arms B and C) on the new head.
-3. **Change request**: after all ten feature steps, fresh session with the held-out request, 45-minute budget, same commit rule; run its hidden tests plus the full cumulative suite. CR1 requires ranking (F9) and exports (F10), so no shortened F1-F8 sequence receives the full CR1 test set.
-4. Archive the repository, session logs, metrics and cost records with the run identifier.
+3. **End state**: after the last feature's post-feature step (a no-op in A), freeze the H1 measurement and the set of feature hidden tests that pass.
+4. **Change request**: fresh session with the held-out request, 45-minute budget, same green-commit rule; run its hidden tests plus the full scheduled cumulative suite. Success requires all change-request hidden tests to pass and no feature test that passed at the end state to fail. The first pass uses F1-F8 and a pre-frozen CR1 variant covering regions in lists, field visibility and handoffs. Ranking and export checks require F9-F10 and belong only to full CR1 in the main study. The variant and its hidden tests must be frozen before the pilot; no post-result selection is allowed.
+5. Archive the repository, session logs, metrics and cost records with the run identifier.
 
 Fresh sessions per step mirror the case's coordinator: context travels only through the repository.
 
@@ -143,21 +146,24 @@ Reporting follows the guidelines for empirical studies involving LLMs (Baltes et
 | --- | --- | --- | --- |
 | Build | Suites S1 (and S2), hidden tests, skeleton, prompts, runner, metrics, analysis script | n/a | Days 1-3 |
 | Pilot | S1, arms A and B, one run each, N = 10 | 20 feature + 10 consolidation steps | Day 4 |
-| First pass (minimum viable, exploratory) | S1, arms A and B, 3 runs each, N = 10, plus CR1 | 60 feature + 30 consolidation + 6 CR steps | Days 5-6 |
+| First pass (minimum viable, exploratory) | S1, arms A and B, 4 runs each, N = 8, plus scoped CR1 | 64 feature + 32 consolidation + 8 CR steps | Days 5-6 |
 | Main (if budget allows) | S1 and S2, arms A and B (C optional), 5 runs each, N = 10, plus CRs | 200 feature + 100 consolidation + 20 CR steps | Week 2 |
 
-Upper bound of agent time for the first pass, at the proposed budgets: 42 hours (60 x 30 + 30 x 15 + 6 x 45 minutes), or an idealised 10.5 hours with four parallel sessions, excluding measurement and scheduling overhead. TODO(owner): set the token or premium-request ceiling after the pilot measures real consumption, and record the selected scope, sample sizes and inclusion of C before any non-pilot run. First-pass runs are not counted toward the five main-study runs per arm per suite.
+Upper bound of agent time for the first pass, at the proposed budgets: 46 hours (64 x 30 + 32 x 15 + 8 x 45 = 2,760 minutes), or an idealised 11.5 hours with four parallel sessions, excluding measurement and scheduling overhead. With three runs per arm the exact two-sided Mann-Whitney floor is 2/C(6,3) = 0.10, so p < 0.10 is unattainable; four runs reach 0.029 and five reach 0.008. These are attainability bounds, not a power analysis. Reproduce both calculations with `anc/protocol_checks.py` from the paper package. TODO(owner): set the token or premium-request ceiling after the pilot measures real consumption, and record the selected scope, sample sizes and inclusion of C before any non-pilot run. First-pass runs are not counted toward the five main-study runs per arm per suite.
+
+Pre-registration is pending. Before any run, record the actual registration date and public URL, the approved thresholds, the scoped CR1 specification and the frozen protocol version. Do not infer registration from this local package or backdate it.
 
 Out of scope: human checkpoints inside the loop, multiple models, browser user interfaces, cloud deployment, and running the full RPI workflow per feature (a possible replication once the primary result exists).
 
 ## 9. Proposed analysis plan (freeze before the main runs)
 
-* **H1**: difference in mean cumulative hidden pass rate after the final feature (B minus A) with a 95% bootstrap interval, resampling runs within suite. Validated when the estimated gain is at least 10 percentage points and the interval's lower bound is above zero; invalidated when its upper bound is below 5 points; otherwise inconclusive for evaluable data. A 12-point gain with an interval of [-2, 26] is inconclusive. Supporting model: mixed-effects logistic regression of per-test pass on arm, feature index and their interaction, with random intercepts for suite and run.
-* **H2, H3**: linear mixed models of each measure on arm, feature index and arm-by-index, random intercepts for suite and run; report slopes and interaction with intervals.
+* **H1**: difference in mean cumulative hidden pass rate at the end state, after the last feature's post-feature step (B minus A), with a 95% bootstrap interval, resampling whole runs within suite and arm. Validated when the estimated gain is at least 10 percentage points and the interval's lower bound is above zero; invalidated only when the whole interval is below 5 points; otherwise inconclusive for evaluable data. A 12-point gain with an interval of [-2, 26] is inconclusive. Supporting model: mixed-effects logistic regression of per-test pass on arm, feature index and their interaction, suite as a fixed effect and run as a random intercept. Only two suites are planned, so suite is not a random effect.
+* **H2, H3**: linear mixed models of each measure on arm, feature index and arm-by-index, suite as a fixed effect and run as a random intercept; report slopes and interaction with intervals.
 * **H5**: per-step cost on arm and feature index; cumulative cost curves; ratio of total cost B to A with a bootstrap interval.
-* **H6**: success-rate difference with an exact or Bayesian beta-binomial interval (small n); cost ratio for successful attempts.
+* **H6**: success-rate difference with a 95% exact or Bayesian beta-binomial interval (small n); cost ratio for successful attempts, reporting all failed attempts separately. Freeze the interval method before the pilot. Success means all CR tests pass with no loss of a feature test that passed at the end state.
 * **H4**: non-test lines (as H3); comprehension time and accuracy compared with rank-based tests and effect sizes.
-* Outcome vocabulary per hypothesis (HVE): validated, invalidated, mixed, inconclusive or not evaluable. Decision: go (adopt the harness), no-go (report null and test alternatives) or adjust.
+* Across hypotheses, validate only when the estimate meets its threshold and its 95% benefit interval excludes zero in the beneficial direction. Invalidate only when whole intervals rule out the minimum useful effect in hypotheses.md, respecting joint and alternative criteria. For H5 the beneficial effects are headroom below the 150% ceiling and late-feature savings, with the 125% validation threshold retained. Non-significance or an interval spanning zero without ruling out a useful effect is inconclusive, not invalidated. Small samples can leave the result inconclusive; the rank-test floor is not a power guarantee.
+* Outcome vocabulary per hypothesis (HVE): validated, invalidated, mixed (component findings differ), inconclusive or not evaluable. Mixed component findings do not override the interval rule. Decision: go (adopt the harness), no-go (useful H1 gain ruled out) or adjust.
 * H1 invalidation routes to no-go; inconclusive H1 routes to adjust, without enlarging the confirmatory sample. Go requires H1 and H6 validated and H5 not invalidated, as specified in mve-plan.md.
 * Main-study inference uses only its predeclared fixed sample (five runs per arm per suite), not pilot, first-pass or later extension runs. Report any exploratory extension separately, without pooling it into the original confirmatory estimates or changing their verdict.
 
@@ -170,7 +176,7 @@ Out of scope: human checkpoints inside the loop, multiple models, browser user i
 
 ## 11. Threats to validity
 
-Small samples and LLM variance; one model and runtime; synthetic suites written by the experimenter; complexity metrics as proxies for quality; possible test tampering; the experimenter's stake in the outcome. Mitigations are in sections 3, 6 and 7 and in vetting.md.
+Small samples and LLM variance; one proprietary model and runtime, with no open-weights baseline; synthetic suites written by the experimenter; complexity metrics as proxies for quality; possible test tampering; the experimenter's stake in the outcome. Provider-side changes can limit replication even with an exposed version pinned (Baltes et al., arXiv 2508.15503). Mitigations are in sections 3, 6 and 7 and in vetting.md.
 
 ## 12. Execution with HVE RPI (after the owner confirms mve-plan.md)
 
