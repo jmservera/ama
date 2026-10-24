@@ -47,6 +47,11 @@
       "decision": "Correction cycle 2 of 2 for coordinator REVISE on 22ca2c2b",
       "status": "implemented locally, uncommitted until correction review",
       "evidence": "changes artifact cycle 2 section; gate on 22ca2c2b was interrupted (signal 15), no pass receipt"
+    },
+    {
+      "decision": "Owner-approved extra narrow cycle for self-approval finding on e0edcb43",
+      "status": "implemented locally",
+      "evidence": "changes artifact; gate on e0edcb43 interrupted, no pass receipt"
     }
   ],
   "blockers": [

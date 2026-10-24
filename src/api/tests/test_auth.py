@@ -242,6 +242,26 @@ class RuleHttpTests(Base):
         other = self.call(f"/api/law/cards/hazard-awareness-clock/{version}/approve", self.headers("owner"), {})
         self.assertEqual(other[0], 409)
 
+    def test_unresolved_historical_author_denies_approval_but_distinct_owner_passes(self):
+        me = self.self_headers()
+        derived = identity.email_for(TENANT, OID_SAM)
+        version = self.call(headers=me, body=dict(SEED_CARDS[0], approver=derived))[1]["version"]
+        # Retained draft predating alias registration: drop the alias record and disable the binding first.
+        self.store.data.pop(identity.REGISTRY_KEY, None)
+        self.store.staff["sam@example.test"]["disabled"] = True
+        self.store.data["staff"][0]["disabled"] = True
+        with patch.object(identity, "link", return_value=True):
+            code, body = self.call(f"/api/law/cards/hazard-awareness-clock/{version}/approve", me, {})
+        self.assertEqual(code, 409, body)
+        self.store.data.pop(identity.REGISTRY_KEY, None)
+        self.assertEqual(identity.distinct(self.store, derived, "sam@example.test"), False)
+        self.assertEqual(identity.distinct(self.store, "Unknown Person", "sam@example.test"), True)
+        self.store.staff["sam@example.test"]["disabled"] = False
+        self.assertEqual(identity.distinct(self.store, identity.email_for(TENANT, OID_OWNER), "sam@example.test"), False)
+        identity.link(self.store, identity.verified(auth.TrustedProxyProvider(self.store, ENV).authenticate(
+            {"X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.LiaisonOfficer",), oid=OID_OWNER)})))
+        self.assertTrue(identity.distinct(self.store, identity.email_for(TENANT, OID_OWNER), "sam@example.test"))
+
     def test_running_local_app_full_lifecycle_and_retained_versions(self):
         self.assertEqual(self.call("/healthz")[0], 200)
         self.assertEqual(self.call("/app")[0], 200)

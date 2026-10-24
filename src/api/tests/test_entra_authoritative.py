@@ -254,3 +254,19 @@ class RecipientProjectionTests(EntraHttpTests):
         self.assertIn(identity.email_for(TENANT, other), emails)
         self.assertTrue(all(set(p) == {"code", "name", "email", "role"} for p in me["staff"] if p["email"].endswith("@entra.invalid")))
         self.assertEqual(self.call("/api/me", oid=OID_NEW)[1]["staff"], [])
+
+
+class DistinctTests(ContinuityTests):
+    def test_storage_failure_denies_and_linked_or_verified_distinct_paths(self):
+        bound = identity.bind(self.store, self.entra)
+        identity.link(self.store, bound, strict=True)
+        self.assertFalse(identity.distinct(self.store, identity.email_for(TENANT, self.OID_LEGACY), "legacy@example.test"))
+        self.assertTrue(identity.distinct(self.store, "other@example.test", "legacy@example.test"))
+        self.store.data[identity.REGISTRY_KEY] = "unreadable"
+        self.assertFalse(identity.distinct(self.store, identity.email_for(TENANT, self.OID_LEGACY), "legacy@example.test"))
+
+        class Broken:
+            def __getattr__(self, name):
+                raise OSError("storage down")
+        with self.assertRaises(OSError):
+            identity.distinct(Broken(), "a", "b")

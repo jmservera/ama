@@ -58,3 +58,9 @@ new commits.
 * F3 (MEDIUM): registry read-merge-write is a single `BEGIN IMMEDIATE` transaction (SQLite and the Azure SQL adapter) or a locked JSON update; the registry is keyed by tenant:OID. Test: 12 concurrent registrations all persist on JSON and SQLite.
 * F4 (MEDIUM): `/api/me` staff adds `identity.people` recipients (code, name, email, role only). Test with an empty roster.
 * Not claimed: the web UI does not yet show the navigation `access` flag; derived key remains a 12-hex digest.
+
+## Extra owner-approved cycle (narrow self-approval finding on e0edcb43; rejected tree b5feab60)
+
+* Root fix: `identity.distinct(store, actor, author)` separates storage availability (strict reads raise, denying) from resolution completeness. An author with no alias record and no roster row carrying a different verified object id is unresolved and never distinct from an Entra actor; an unresolved derived-email actor is also not distinct. Plain legacy names keep text comparison. `RuleCardStore.distinct` is wired by the server and applied in `approve`.
+* Tests: unresolved historical author with binding removed and no alias record denies (HTTP 409); linked same person denies; verified distinct owner passes; storage failure denies; earlier tests retained.
+* Not claimed: store `legacy_roster_tenant` is still absent live; recording it is a guarded deployment step. Prior gates on 22ca2c2b and e0edcb43 were interrupted (signal 15), no pass receipt.

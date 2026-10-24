@@ -42,3 +42,9 @@ Correction review outcome (independent code-review agent, read-only, 2026-10-24)
 The original Review and the cycle 1 correction review stand unchanged. Coordinator reassessment REVISE against 22ca2c2b found F2/F3 in identity continuity; F1/F4/F5 were verified corrected. A separate independent review of the cycle 2 corrections is recorded below when run.
 
 Cycle 2 correction review outcome (independent code-review agent, read-only): findings 1-4 PASS, no High. One Medium performance note (a write transaction on every request) was fixed by an unlocked already-recorded check before the transaction; a legacy-data edge (cards drafted before linking) and the need to record `legacy_roster_tenant` are documented, not claimed resolved.
+
+## Review correction record (extra narrow cycle)
+
+Prior reviews stand. The assessor REVISE on e0edcb43 (unresolved historical author permits self-approval) is addressed; independent review outcome follows below.
+
+Extra narrow cycle review outcome (independent code-review agent, read-only): PASS, no High or Medium findings; suites not run by reviewer. Intended behaviour change: an Entra approver is denied on cards whose author is an unresolved plain-text name with no roster oid.

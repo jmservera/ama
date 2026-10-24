@@ -550,6 +550,7 @@ def make_handler(app):
                 return self._json(503, {"error": "The law store is not loaded."})
             rules = app.law.rules
             rules.canonical = lambda name: identity.canonical(app.store, name, strict=True)
+            rules.distinct = lambda actor, author: identity.distinct(app.store, actor, author)
             try:
                 with app.law_lock:
                     if body is None:

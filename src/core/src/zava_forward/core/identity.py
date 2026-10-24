@@ -272,3 +272,22 @@ def canonical(store: Any, name: Any, *, strict: bool = False) -> str:
         if isinstance(e, dict) and text in (e.get("aliases") or []):
             return "entra:" + str(e.get("key"))
     return text
+
+
+def distinct(store: Any, actor: Any, author: Any) -> bool:
+    """True only when the actor is demonstrably a different person from the recorded author.
+
+    Storage availability and resolution completeness are separate: an unreadable registry raises, and an
+    author who cannot be tied to a person (no alias record, no roster row with a different verified object
+    id) is unresolved and never counts as distinct from an Entra actor. Plain names are compared as text.
+    """
+    a, b = canonical(store, actor, strict=True), canonical(store, author, strict=True)
+    if not a.startswith("entra:"):
+        return a != b and not ENTRA_EMAIL.fullmatch(a)
+    if b.startswith("entra:"):
+        return a != b
+    oid = a.rsplit(":", 1)[-1]
+    text = " ".join(str(author).split()).casefold()
+    found = [r for r in _rows(store) if isinstance(r, dict) and text in (
+        " ".join(str(r.get("email", "")).split()).casefold(), " ".join(str(r.get("code", "")).split()).casefold())]
+    return len(found) == 1 and canonical_guid(found[0].get("oid")) not in (None, oid) and found[0].get("oid") != oid

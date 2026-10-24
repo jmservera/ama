@@ -45,3 +45,7 @@ Trigger: coordinator exact-head assessment REVISE (F1-F5) against c96dae0c. Scop
 ## Correction cycle 2 of 2 (appended)
 
 Trigger: coordinator reassessment REVISE of 22ca2c2b. Scope: tenant-aware continuity resolver, canonical distinct-person checks over a transactional alias record, recipient projection. No broad redesign; no third unapproved retry (a remaining blocker goes to an explicit technical ledger).
+
+## Extra narrow cycle (owner approved one)
+
+Scope: unresolved historical author identity denies approval; no history rewrite, no email inference. Result recorded in the changes artifact.

@@ -39,3 +39,7 @@ ms.date: 2026-10-24
 * rulecards.py: `_who` resolver for author/approver/named owner; server.py wires it and links strictly.
 * server.py: `_user` links after bind; `/api/me` staff includes recipients.
 * Tests: `test_auth.RuleHttpTests` alias independence; `test_entra_authoritative` tenant provenance, alias, concurrency, recipient projection.
+
+## Extra narrow cycle details
+
+* identity.py `distinct`; rulecards.py `distinct` hook in `approve`; server.py wiring; tests in test_auth (RuleHttpTests) and test_entra_authoritative (DistinctTests).

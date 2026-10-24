@@ -116,6 +116,7 @@ class RuleError(Exception):
 
 class RuleCardStore:
     canonical = None  # optional resolver mapping a recorded alias to one canonical person key
+    distinct = None  # optional (actor, author) -> bool; when set, only a demonstrably distinct actor may approve
 
     def _who(self, name):
         return self.canonical(name) if self.canonical else _canon(name)
@@ -236,6 +237,8 @@ class RuleCardStore:
     @_mutation
     def approve(self, card_id, version, actor, role, today=None):
         c = self._owner_only(card_id, version, actor, role)
+        if self.distinct is not None and not self.distinct(actor, c["author"]):
+            raise RuleError("an author cannot approve their own card, or the author identity cannot be resolved")
         if self._who(actor) == self._who(c["author"]):
             raise RuleError("an author cannot approve their own card")
         if self.state(card_id, version) != "draft":
