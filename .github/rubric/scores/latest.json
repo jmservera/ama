@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T21:44:47+00:00",
-  "commit": "e58a2184cc1c53f267910e9e981088145107d401",
+  "scored_at": "2026-10-24T21:58:04+00:00",
+  "commit": "6574d75db7742c43e74ef61a6aa76b1902e25f64",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40135111070",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40136038037",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,7 +14,7 @@
     "infrastructure": "5ae0103ecea79755f49c0835da379867fcdbc1cc711b6e2161118cf2b8fcecf6",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "2ed7e04b0ff17682b157b7af465dfac064ad215d62a138c3d05f11f405edf951"
+    "thought-leadership": "74d610f75ccb0933c4fc8dafae620d9100ca0374f52cc9e4245a954b61861314"
   },
   "total": 73,
   "sections": {
@@ -32,7 +32,7 @@
         "src/core/src/zava_forward/core/identity.py:1-400",
         "docs/adrs/0002-pilot-readiness-architecture.md:560-684"
       ],
-      "rationale": "New identity.py is a decoupled module with explicit typed contracts. ADR 0002 documents explicit failure domain and scaling bound."
+      "rationale": "New identity.py is a decoupled module with explicit typed contracts, threaded through auth/server/coordinator/forms/workflows/rulecards. ADR 0002 documents explicit failure domain (REGISTRY_LIMIT overflow, digest-collision note) and a scaling bound."
     },
     "A2": {
       "score": 5,
@@ -55,7 +55,7 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "No implementation change; diff is thought-leadership documentation only. Already at ceiling. Unchanged."
+      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 4,
@@ -63,12 +63,12 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "Cost/metering still only proposed, nothing newly measured in this diff. Unchanged from baseline."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change to the demonstrator in this diff. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
@@ -117,7 +117,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "Pitch documentation set and deck remain complete and navigable; this diff does not touch the pitch/deck documentation. Unchanged."
+      "rationale": "The pitch package is now a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. Capstone documentation is complete and navigable, meeting Excellent."
     },
     "B7": {
       "score": 4,
@@ -129,7 +129,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No BRD stakeholder-framing change in this diff. Unchanged."
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 2,
@@ -148,26 +148,25 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-40",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:60-116",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-20"
       ],
-      "rationale": "Original thesis (agent-accelerated feature decay) grounded in the author's own repo-history evidence and a defined participant-observer case; verified citations and rival explanations. Experiment unrun, so grounding is partial synthesis rather than validated finding."
+      "rationale": "Original single-case synthesis of the author's own 6-week agentic build, naming five decay mechanisms and a consolidation-harness remedy; grounded in real engagement evidence (repo_history_metrics, log). Draft, with open TODOs on model provenance and author voice."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:1-30",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:16-20"
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-checks.out.txt:7-25",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:95-112"
       ],
-      "rationale": "Well-structured, cited (94 matched references) and checked draft, but the paper explicitly states it is 'not submission-ready': 18 unresolved TODO(author) items, pending owner approvals, and no results written. Significant author work remains before publish-ready."
+      "rationale": "Structured 29-page LaTeX paper, 94-ref bibliography, figures, passes structural/compile checks (revision-checks.out.txt); still has 18 open TODO(author) items (dates, provenance, approvals) before it is publish-ready, so light-to-moderate rework remains."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-110",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:12-15"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:109-136"
       ],
-      "rationale": "A specific arXiv submission path (category, eligibility rules, compile instructions) is documented, but nothing has been submitted, approved internally, or delivered to any audience; the experiment has not run and the protocol is unfrozen."
+      "rationale": "README documents an arXiv publication path (category, endorsement rules) but no submission occurred; pre-submission checklist unresolved (approvals, TODOs). Complete package produced but not yet submitted for publication."
     }
   }
 }
