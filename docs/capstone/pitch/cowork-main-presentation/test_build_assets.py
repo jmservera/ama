@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 
@@ -107,3 +108,35 @@ def test_given_current_native_deck_when_checked_then_cost_comparison_preserved(p
     result = rebuild(package, "--check-only", "--check-pptx", str(deck))
 
     assert "Cost comparison checked" in result.stdout
+
+
+@pytest.mark.parametrize("ident,qualifier", [
+    ("S09", "Historical"), ("S11", "Planning scenario"),
+    ("B05", "non-inference"), ("B09", "Conditional"), ("B25", "unknown"),
+])
+def test_given_missing_cost_qualification_when_checked_then_fails(package, ident, qualifier):
+    path = package / "slides.json"
+    data = json.loads(path.read_text())
+    slide = next(slide for slide in data["main"] + data["backup"] if slide["id"] == ident)
+    slide["on_slide"] = [line.replace(qualifier, "") for line in slide["on_slide"]]
+    path.write_text(json.dumps(data))
+
+    with pytest.raises(subprocess.CalledProcessError):
+        rebuild(package, "--check-only")
+
+
+@pytest.mark.parametrize("replacement", [
+    b"<slide><text>Cost comparison omitted</text></slide>",
+    b'<!DOCTYPE slide [<!ENTITY cost "untrusted">]><slide>&cost;</slide>',
+])
+def test_given_missing_or_unsafe_native_cost_slide_when_checked_then_fails(package, replacement):
+    root = Path(__file__).resolve().parents[4]
+    source = root / "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx"
+    target = package / "changed.pptx"
+    with ZipFile(source) as original, ZipFile(target, "w") as changed:
+        for part in original.infolist():
+            content = replacement if part.filename == "ppt/slides/slide21.xml" else original.read(part)
+            changed.writestr(part, content)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        rebuild(package, "--check-only", "--check-pptx", str(target))

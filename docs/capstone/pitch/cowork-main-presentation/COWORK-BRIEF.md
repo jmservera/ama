@@ -83,6 +83,36 @@ allocations and scheme dates need Finance/funder review before external use.
 Re-render affected slides, inspect notes/navigation and regenerate the PDF
 after the native revision; the source rebuild does not perform those checks.
 
+### Required Cost Preservation on Every Rebuild
+
+Keep the AI inference, per-home works and conditional-funding calculations in
+every subsequent version, including the full-project-cost equation and its
+unpriced components. Do not remove them to simplify the story or replace them
+with token counts alone. Reframe or move the explanation when necessary, but
+retain the comparison in the main route and the exact workings in the appendix.
+
+The `cost_model` object in [slides.json](./slides.json) holds explicit inputs.
+[build_assets.py](./build_assets.py) recalculates with decimal arithmetic and
+fails before rewriting notes if source figures or caveats are missing or stale.
+Changing an input is not a price, funding or operational approval. Update E21,
+its dated evidence, all affected figures, notes and native slides together.
+Keep a dated scenario labelled as such when current verification is unavailable;
+do not silently delete it or present the old rate as current.
+
+Before accepting any rebuilt PPTX, run this from the repository root:
+
+```bash
+.venv/bin/python docs/capstone/pitch/cowork-main-presentation/build_assets.py \
+  --check-only --check-pptx docs/capstone/deck/zava-forward-cowork-v2-draft.pptx
+.venv/bin/python -m pytest docs/capstone/pitch/cowork-main-presentation/test_build_assets.py -q
+```
+
+Apply the check to the new candidate path before replacing the delivery copy.
+The native check targets pages 6, 11, 21, 32, 36 and 52. If the approved layout
+or slide order changes, update that mapping and its tests rather than bypassing
+the check. Re-render and inspect the cost slides, their notes and PDF after
+changes; the text guard does not replace visual or Finance/funder review.
+
 ## Read in This Order
 
 1. `README.md` and `audience-and-delivery.md`.

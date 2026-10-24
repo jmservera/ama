@@ -6940,3 +6940,22 @@ metadata when the knowledge base was created.
   independent storytelling review, timed rehearsal, accessibility conformance,
   fresh hosted score or publication clearance is claimed. Existing staged and
   unstaged work was preserved; no commit, push, live inference or deployment.
+
+## [2026-10-24] query | Preserve cost calculations on future slide builds
+
+* The owner requested that later builds retain or recalculate the recovered
+  AI, per-home retrofit and conditional-grant comparison. Added explicit dated
+  E21 inputs to the source `cost_model` and decimal recalculation to the
+  [existing builder](../capstone/pitch/cowork-main-presentation/build_assets.py).
+* Source builds fail before writing notes when required costs, exact workings
+  or caveats are missing or stale. The native-PPTX check covers all six cost
+  pages. Input changes require corresponding evidence, copy, notes and slide
+  updates; old secondary pricing does not become verified current pricing.
+* Documented the mandatory candidate check and regression command in the
+  [authoring brief](../capstone/pitch/cowork-main-presentation/COWORK-BRIEF.md#required-cost-preservation-on-every-rebuild),
+  package README and this index. Retained separate currencies, conditional
+  grant assumptions, unknown full-project TCO and accepted-outcome cost.
+* All 23 focused tests pass, including removed source sections, stale inputs,
+  missing caveats, altered native slides and rejected XML entity declarations.
+  The delivered PowerPoint passes the guard. No deck/PDF bytes, owner memory,
+  earlier log entries, price evidence or approval status were changed.

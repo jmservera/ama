@@ -102,6 +102,22 @@ The default rebuild updates the main script, backup notes and board HTML.
 It leaves all native Excalidraw sources and SVG/PNG previews untouched,
 including author edits. Native sources remain the editing authority.
 
+The recovered costs are a required rebuild contract, not optional slide copy.
+The `cost_model` in [slides.json](./slides.json) retains dated E21 inputs;
+the builder recalculates them using decimal arithmetic and rejects missing or
+stale figures and caveats before writing notes. Input changes require matching
+evidence, source copy, notes and native-slide changes, not silent omission.
+Current-price and grant verification remain separate from arithmetic.
+
+Every future PowerPoint build must also pass the
+[cost preservation gate](./COWORK-BRIEF.md#required-cost-preservation-on-every-rebuild).
+From the repository root, substitute the new candidate path when appropriate:
+
+```bash
+.venv/bin/python docs/capstone/pitch/cowork-main-presentation/build_assets.py --check-only --check-pptx docs/capstone/deck/zava-forward-cowork-v2-draft.pptx
+.venv/bin/python -m pytest docs/capstone/pitch/cowork-main-presentation/test_build_assets.py -q
+```
+
 Only to discard native edits and restore the hard-coded diagram templates:
 
 ```bash
@@ -111,8 +127,9 @@ python3 /path/to/cowork-main-presentation/build_assets.py --reset-diagrams
 `--reset-diagrams` is a destructive reset of all seven `.excalidraw` and
 `.svg` files, not an export of edited drawings. It does not refresh PNGs;
 render and inspect fresh previews after any reset or native-source change.
-The builder checks timing, source IDs and source geometry but does not
-build a PPTX or validate viewer navigation. Backup interruptions return to
+The builder checks timing, source IDs, source geometry and required costs;
+`--check-pptx` also checks the native cost pages without rendering or editing
+them. It does not build a PPTX or validate viewer navigation. Backup interruptions return to
 the calling main slide; recorded topic returns apply only to index entry.
 
 Relative links inside this package are portable. Source paths in the evidence

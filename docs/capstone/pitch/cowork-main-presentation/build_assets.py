@@ -381,8 +381,14 @@ def calculate_costs(data):
     }
 
 
+def cost_number(costs, name):
+    return format(costs[name].normalize(), ",f")
+
+
 def cost_requirements(costs):
-    exact = lambda name: format(costs[name].normalize(), ",f")
+    def exact(name):
+        return cost_number(costs, name)
+
     home = f'USD {costs["home_inference"]:.2f}'
     cohort = f'USD {costs["cohort_inference"]:,.0f}'
     works = f'GBP {exact("works_gbp_per_home")}'
@@ -415,6 +421,11 @@ def require_cost_text(label, text, figures, qualifiers):
         )
 
 
+class CostSlideTreeBuilder(ET.TreeBuilder):
+    def doctype(self, name, pubid, system):
+        raise ValueError("PowerPoint cost checks do not accept XML document types or entities")
+
+
 def check_costs(data, pptx=None):
     costs = calculate_costs(data)
     slides = {slide["id"]: slide for slide in data["main"] + data["backup"]}
@@ -422,7 +433,9 @@ def check_costs(data, pptx=None):
         if ident not in slides or "E21" not in slides[ident]["sources"]:
             raise ValueError(f"{ident}: retain the cost comparison and E21 evidence")
         require_cost_text(ident, " ".join(slides[ident]["on_slide"]), figures, qualifiers)
-    exact = lambda name: format(costs[name].normalize(), ",f")
+    def exact(name):
+        return cost_number(costs, name)
+
     require_cost_text("B25 workings", slides["B25"]["answer"],
                       [exact(name) for name in ("mean_tokens", "home_tokens", "double_home", "double_cohort")],
                       ["not verified", "not cost per accepted outcome"])
@@ -440,7 +453,9 @@ def check_costs(data, pptx=None):
         }
         with ZipFile(pptx) as archive:
             for number, (figures, qualifiers) in requirements.items():
-                root = ET.fromstring(archive.read(f"ppt/slides/slide{number}.xml"))
+                parser = ET.XMLParser(target=CostSlideTreeBuilder())
+                parser.feed(archive.read(f"ppt/slides/slide{number}.xml"))
+                root = parser.close()
                 text = " ".join(root.itertext())
                 require_cost_text(f"PPTX slide {number}", text, figures, qualifiers)
     print(f'Cost comparison checked: USD {costs["home_inference"]:.6f}/planned home; '
