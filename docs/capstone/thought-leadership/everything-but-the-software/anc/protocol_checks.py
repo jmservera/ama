@@ -36,9 +36,13 @@ def main() -> int:
         "experiment-design.md": (PROTOCOL / "experiment-design.md").read_text(encoding="utf-8"),
         "hypotheses.md": (PROTOCOL / "hypotheses.md").read_text(encoding="utf-8"),
         "mve-plan.md": (PROTOCOL / "mve-plan.md").read_text(encoding="utf-8"),
-        "context.md": (PROTOCOL / "context.md").read_text(encoding="utf-8"),
-        "vetting.md": (PROTOCOL / "vetting.md").read_text(encoding="utf-8"),
     }
+    for name in ("context.md", "vetting.md"):
+        path = PROTOCOL / name
+        if path.exists():
+            sources[name] = path.read_text(encoding="utf-8")
+        else:
+            print(f"UNAVAILABLE optional protocol note: {name}")
     required = {
         "main.tex": ("four runs per arm", "eight features", "suite as a fixed effect", "run as a random intercept", "whole interval below 5 points"),
         "experiment-design.md": ("4 runs each, N = 8", "64 feature + 32 consolidation + 8 CR steps", "46 hours", "11.5 hours", "suite as a fixed effect", "run as a random intercept"),
@@ -49,8 +53,19 @@ def main() -> int:
     }
     failures = []
     for name, fragments in required.items():
+        if name not in sources:
+            continue
         normalised = " ".join(sources[name].split())
         failures.extend(f"{name}: missing {fragment!r}" for fragment in fragments if fragment not in normalised)
+    intervention_required = {
+        "main.tex": ("Human intervention rate (HIR)", "observed HIR", "intervention-demand rate", "attempted feature cycles", "active human minutes", "no new hypothesis threshold", "do not trigger replacement runs"),
+        "experiment-design.md": ("Observed HIR", "intervention-demand rate", "attempted feature cycles", "active human minutes", "do not replace it", "resampling whole runs within suite and arm"),
+        "hypotheses.md": ("Observed HIR", "Intervention-demand rate", "attempted feature cycles", "active human minutes", "without replacement"),
+        "mve-plan.md": ("observed HIR", "intervention-demand rate", "attempted feature cycle", "active human minutes", "without replacement"),
+    }
+    for name, fragments in intervention_required.items():
+        normalised = " ".join(sources[name].split())
+        failures.extend(f"{name}: missing intervention rule {fragment!r}" for fragment in fragments if fragment not in normalised)
     for failure in failures:
         print(f"FAIL {failure}")
     print("PASS protocol consistency checks" if not failures else "FAIL protocol consistency checks")

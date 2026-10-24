@@ -86,6 +86,10 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 * Reported the Sonnet 5.5 worker selector introduced on 21 October in PR #420,
    Automatic coordinator selection and the separate deployed assistant model.
    Historical HVE and underlying service versions remain author checks.
+* Added human intervention rate (HIR) and intervention-demand rate as secondary
+   measures, with whole-feature-cycle denominators, event reasons and human
+   minutes. Primary runs remain unassisted; actual rescue is a recorded deviation,
+   not a replacement run. No hypothesis threshold or adoption gate was changed.
 * Added pinned line-churn evidence with literal-merge and squash-integration
    views. Artefact/source additions are 29.28 before the loop and 10.27 during it.
    These counts do not establish structural decay. Complexity was not measured

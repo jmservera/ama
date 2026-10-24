@@ -1304,6 +1304,31 @@ questions about each final code base. Test integrity, through checksums of the
 example tests and counts of tests and assertions, is checked after every
 step.
 
+\emph{Human intervention rate (HIR).} As a secondary measure of harness
+quality, I record observed HIR: the proportion of attempted feature cycles
+receiving unplanned corrective human help. A cycle includes the feature and
+its assigned post-feature step, so B's additional sessions do not enlarge
+its denominator. Failed cycles remain included; repeated interventions in a
+cycle count once for the rate, with event counts recorded separately.
+Primary runs receive no task-specific human coaching or code/test repair.
+I therefore also record an intervention-demand rate with the same denominator:
+cycles containing an explicit request for such help or a block requiring
+manual corrective action. Zero observed HIR under this policy is not evidence
+of autonomy. A timeout or automatic reset alone does not establish demand.
+
+The runner and session logs record each request, block and actual intervention,
+its phase, reason, action and active human minutes, using coding rules frozen
+before the pilot. Routine launches, planned evaluation, required approvals and
+safety stops are recorded separately, not treated as corrective rescue.
+Any corrective help supplied is a protocol deviation; I retain the run,
+label it assisted and report its outcomes separately from unassisted estimates.
+Such deviations do not trigger replacement runs and may leave the confirmatory
+comparison not evaluable at its predeclared sample size.
+I report change-request interventions separately, alongside completion,
+missing features, early termination and unattempted cycles. Lower HIR alone
+is not better: it must not reward silent failure or discourage necessary
+human judgement.
+
 \subsection{Analysis and bias controls}
 
 The difference in final cumulative pass rate is estimated with bootstrap
@@ -1333,6 +1358,11 @@ data are excluded; the comprehension task is blinded; every run is reported;
 and deviations from the protocol are logged. Each hypothesis is recorded as
 validated, invalidated, mixed, inconclusive or not evaluable, and the
 decision as go, no-go or adjust.
+
+HIR is descriptive, with no new hypothesis threshold or adoption gate. I
+report observed and demand rates per run, human minutes and the B--A demand-rate
+difference with a 95\% interval, resampling whole runs within suite and arm.
+The rates accompany correctness and cost, rather than replacing them.
 
 The protocol uses one proprietary model and no open-weights baseline. This
 limits reproducibility and transfer to other models; pinning the exposed
