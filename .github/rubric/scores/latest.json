@@ -2,23 +2,24 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T15:53:11+00:00",
-  "commit": "5c50b8dbe3e8abce8b6c4b1ec939e8e53f9ed0da",
+  "scored_at": "2026-10-24T16:36:11+00:00",
+  "commit": "7c39dde5c5ee820439469681c6d801709eea51c7",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40108674779",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40111341495",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "9abe2693489a8bc54e2b5418ef4663d28d7f9ca16e3edb90cbad4811df1cfa3b",
     "adr": "b626ce960adb5c9f82ec41ef9809fbfe59b536096450567c4361a4c29890e955",
     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
+    "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402"
   },
-  "total": 54,
+  "total": 63,
   "sections": {
     "A": 30,
-    "B": 15,
-    "C": 9,
+    "B": 22,
+    "C": 11,
     "D": 0
   },
   "floors_met": false,
@@ -61,12 +62,12 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch material references an existing smallest-model rule but adds no new evaluation evidence. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
@@ -78,72 +79,70 @@
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch package is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch brief is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivery evidence exists to show register calibration in front of an audience. Baseline retained."
+      "score": 4,
+      "evidence": [
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
+      ],
+      "rationale": "New Audience Map names six CXO archetypes with must-hear content, pitfalls, and a deliberate Sergeant->Therapist->Scientist->Evangelist sequence. Materially stronger written calibration plan than the baseline brief, though still unrehearsed."
     },
     "B3": {
-      "score": 1,
+      "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:1-40"
+        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
       ],
-      "rationale": "Live-scored; detailed preflight and route-selection runbook now exists but explicitly records no rehearsal or executed demo. Readiness remains Needs Improvement; not raised since nothing was delivered."
+      "rationale": "New demo-runbook.md defines an Eight-Minute Core Route with timed beats to the hook and a Route L/E/U fallback with recovery script. Concrete planned readiness beyond the prior one-line statement, but validation.md confirms no rehearsal occurred, so still Needs Improvement."
     },
     "B4": {
-      "score": 1,
+      "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/backup-slides.md:1-16"
+        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:142-150",
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:66-73"
       ],
-      "rationale": "New backup-slide Q&A appendix states these are anticipated questions, not a transcript of a real exchange; no live challenge or concession evidence exists, so readiness is unchanged."
+      "rationale": "New recovery table and bridge answer stems show deliberate prepared depth for pressure questions, an improvement over the baseline's single list. No transcript or rehearsal exists, so still short of demonstrated composure under challenge."
     },
     "B5": {
-      "score": 1,
+      "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:14-30"
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
       ],
-      "rationale": "New timing/delivery plan is detailed preparation but explicitly not yet rehearsed; no pace, timing or presence evidence exists. Readiness unchanged."
+      "rationale": "New Timing and Interruption Contract gives a slide-by-slide narration budget, discussion reserve and route-shortening plan. More developed pacing planning than baseline's unrehearsed-timing statement, but remains unrehearsed per validation.md."
     },
     "B6": {
-      "score": 3,
+      "score": 5,
       "evidence": [
-        "docs/capstone/deck/zava-forward-executive-draft.pptx",
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
-        "docs/capstone/pitch/cowork-main-presentation/README.md:1-30"
+        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "Required capstone-deck artifact is missing from docs/capstone/deck/*.pptx after this diff; gate caps B6 at 3 regardless of the richer, well-organised pitch package added alongside it."
+      "rationale": "The pitch package is now a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. Capstone documentation is complete and navigable, meeting Excellent."
     },
     "B7": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:1-271",
-        "docs/capstone/pitch/cowork-main-presentation/evidence/delivery-method-evidence.md:1-159"
+        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:132-160"
       ],
-      "rationale": "New evidence reports add carefully source-cited, caveated cost and delivery-chain data (labelled scenario figures, dated snapshots), improving storytelling rigor over the baseline brief alone. Still preparation material, not pitch/deck-delivered evidence, so held short of ceiling."
+      "rationale": "The new Recovered Council Comparison gives fully worked, labelled calculations (USD 0.44/home, GBP 6,082/home) tied directly to deck slides 11 and 18 with evidence classes and caveats. Actionable, slide-anchored data storytelling beyond baseline, though still unaudited live."
     },
     "C1": {
       "score": 5,
-      "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
-      ],
-      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; new pitch evidence quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
+      "evidence": [],
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
-      "score": 1,
+      "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/backup-slides.md:1-16"
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:77-83"
       ],
-      "rationale": "Live-scored; the backup-slide appendix contains only prepared answer stems, explicitly anticipated rather than demonstrated, so readiness remains Needs Improvement."
+      "rationale": "New Interruption Protocol instructs restating the challenge in the customer's terms before answering, directly rehearsing the C2 behavior. A concrete written improvement over the baseline's bare answer stems, but no transcript or live exchange exists, so readiness remains Needs Improvement."
     },
     "C3": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:1-60",
-        "docs/capstone/pitch/cowork-main-presentation/evidence/delivery-method-evidence.md:60-120"
+        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:258-266"
       ],
-      "rationale": "Not live-scored; new evidence reports surface risk and limits unprompted, defend a labelled recommendation and distinguish evidence classes carefully, strengthening written data storytelling. Still preparation, not a live exchange, so short of ceiling."
+      "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
       "score": 0,
