@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T20:06:37+00:00",
-  "commit": "7b182943578e6a6db982ee9137fda81ad8c2cc5e",
+  "scored_at": "2026-10-24T20:31:26+00:00",
+  "commit": "f379afcb904a2ebb47db05f2743b987886a2916e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40127869738",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40129655448",
   "fingerprints": {
     "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
     "prd": "9abe2693489a8bc54e2b5418ef4663d28d7f9ca16e3edb90cbad4811df1cfa3b",
@@ -14,14 +14,14 @@
     "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "9dc4e64c21dac49ca591ccc74afa979bc402434329f949e98c743072b9382627"
+    "thought-leadership": "3d64ca8d71849be30854e3853fb15c437273df47f19e3aca3ea018f3fd8ad654"
   },
-  "total": 71,
+  "total": 68,
   "sections": {
     "A": 30,
     "B": 22,
     "C": 11,
-    "D": 8
+    "D": 5
   },
   "floors_met": false,
   "outcome": "Not Yet Met (floor)",
@@ -146,30 +146,30 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 3,
-      "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:733-998",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1019-1174",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-20"
-      ],
-      "rationale": "Original five-mechanism synthesis and a novel consolidation harness, grounded in the author's own 10-day engagement and reproducible repository metrics; another architect could adopt the harness directly."
-    },
-    "D2": {
-      "score": 3,
-      "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:38",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1187-1194",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-112"
-      ],
-      "rationale": "Full 2213-line paper with sections, tables, figures, embedded bibliography, reproducible checks and a verification report, but 18 TODO(author)/TODO(owner) items remain (results placeholder, dates, naming, approvals, registration URL), so it still needs rework before filing."
-    },
-    "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-112",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1187-1194"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:1-16",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1201-1209",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:9-30"
       ],
-      "rationale": "A concrete arXiv submission path (category, endorsement, disclosure rules) is documented and the package is complete, but it is not submitted, accepted or scheduled; internal approvals and pre-registration remain outstanding."
+      "rationale": "Original single-case study of agent-driven feature decay with a defined protocol (H1-H7), rival explanations and reproducible log/history measurements, grounded in this engagement's repository. Experiment itself has not run, so synthesis is strong but unverified empirically."
+    },
+    "D2": {
+      "score": 2,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9-50",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:120-134",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:17-20"
+      ],
+      "rationale": "Well-structured, cited (94 refs) draft with figures and reproducibility scripts, but explicitly a draft: many open TODO(author)/TODO(owner) items, resultsfalse switch, registration pending, author checks and approvals unresolved."
+    },
+    "D3": {
+      "score": 1,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:122-134",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:17-20"
+      ],
+      "rationale": "No publication path, submission or scheduling evidenced; README lists pre-submission approvals, author checks and internal sign-off still outstanding. Produced for the rubric/engagement only so far."
     }
   }
 }
