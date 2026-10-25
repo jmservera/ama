@@ -7136,3 +7136,28 @@ metadata when the knowledge base was created.
 * Recorded a scoped, time-limited owner approval (to 2026-10-25T16:02Z) to use the public OpenStreetMap tile service for the synthetic live demo, applied as a configuration-only change of `ZF_TILE_URL` and `ZF_TILE_ATTRIBUTION` on the existing demo app. The runbook entry is in the
   [infra README](../../infra/README.md) and the dated RPI artifacts are under `.copilot-tracking/*/2026-10-25/demo-basemap-119-*`.
 * The tile usage policy and privacy policy were retrieved by the coordinator; the local regulatory snapshots were not changed. This is not a production provider approval and does not meet #119 licence, cost, coverage, processor or screen-reader acceptance. Earlier log entries are unchanged.
+
+## 2026-10-25 query | Presentation Paper and Journey Story Review
+
+* Updated the owner-selected 54-slide Cowork v2 PPTX and native PDF with
+  the 25 October *Everything But the Software* draft, stage-linked journey
+  hypotheses, a three-lane service blueprint and three representative graphical
+  maps. Role instruments and map counts are not customer interviews or accepted
+  features. The paper remains an exploratory author case and paused,
+  registration-pending protocol with no study results.
+* The PowerPoint Subagent built and natively rendered the revision. Independent
+  communications review identified seven content/visual findings; the final
+  read-only check found all corrected. Preserved the original findings and
+  qualitative coverage of all 20 capstone criteria in the
+  [dated review and reproduction handoff](../capstone/deck/cowork-generated/presentation-review-2026-10-25.md).
+* Corrected historical-versus-current sign-in/Graph claims, unsupported
+  completed legal review, activity-as-value narration and consent ownership.
+  Restored the concrete backlog trace and distinguished the paper's PR/log
+  date windows. Existing cost calculations, all 54 notes, timing, order and
+  27 caller actions remain; the repository cost-preservation guard passes.
+* Updated the current-output README and this index. Native property checks
+  found zero issues and zero new native text overflows; inherited warnings
+  remain recorded. This is scoped artifact/story review, not rehearsal,
+  accessibility conformance, legal/control acceptance, experiment results,
+  rubric scoring or publication clearance. No commit, push, deployment or
+  paid inference occurred; concurrent owner paper work was not changed.
