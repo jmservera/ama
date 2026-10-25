@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T00:05:32+00:00",
-  "commit": "7e49697ab64d1e1a921805a7aa0520d4a2865bcc",
+  "scored_at": "2026-10-25T00:41:45+00:00",
+  "commit": "ac7e38ff907038f83f8bd74e2c28f485eb067bb5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40144833361",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40146924565",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,14 +14,14 @@
     "infrastructure": "5ae0103ecea79755f49c0835da379867fcdbc1cc711b6e2161118cf2b8fcecf6",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "a317e3dd6a3bcca72ebdc1ee228105d2511c2c8cabdbb5a1a70f78e48550b475"
+    "thought-leadership": "5489ba5265777616300abf233ac3fb84cc2d7409a68f2b1ae8e3d4014aa5dcb9"
   },
-  "total": 71,
+  "total": 72,
   "sections": {
     "A": 31,
     "B": 22,
     "C": 11,
-    "D": 7
+    "D": 8
   },
   "floors_met": false,
   "outcome": "Not Yet Met (floor)",
@@ -32,14 +32,14 @@
         "src/core/src/zava_forward/core/identity.py:1-400",
         "docs/adrs/0002-pilot-readiness-architecture.md:560-684"
       ],
-      "rationale": "New identity.py is a decoupled module with explicit typed contracts, threaded through auth/server/coordinator/forms/workflows/rulecards. ADR 0002 documents explicit failure domain (REGISTRY_LIMIT overflow, digest-collision note) and a scaling bound."
+      "rationale": "No A1 evidence changed in this diff, which is thought-leadership only; baseline retained."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
+      "rationale": "No A2 evidence changed in this diff; baseline retained."
     },
     "A3": {
       "score": 5,
@@ -47,7 +47,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
+      "rationale": "No A3 evidence changed in this diff; baseline retained."
     },
     "A4": {
       "score": 5,
@@ -55,7 +55,7 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
+      "rationale": "No A4 evidence changed in this diff; baseline retained."
     },
     "A5": {
       "score": 4,
@@ -63,19 +63,19 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
+      "rationale": "No A5 evidence changed in this diff; baseline retained."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
+      "rationale": "No A6 evidence changed in this diff; baseline retained."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
+      "rationale": "No A7 evidence changed in this diff; baseline retained."
     },
     "B1": {
       "score": 3,
@@ -117,7 +117,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "The pitch package is now a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. Capstone documentation is complete and navigable, meeting Excellent."
+      "rationale": "No change in this diff to the deck/capstone documentation set; baseline retained."
     },
     "B7": {
       "score": 4,
@@ -129,7 +129,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
+      "rationale": "No new BRD/PRD stakeholder-framing change in this diff (thought-leadership only); baseline retained."
     },
     "C2": {
       "score": 2,
@@ -148,26 +148,26 @@
     "D1": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-13",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:443"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-60",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:1-20"
       ],
-      "rationale": "New synthesis grounded in the project's own repo evidence (log.md growth, causal loop, consolidation harness), but 'no study results are reported' and execution is paused; substance unverified."
+      "rationale": "Original 2400+ line paper synthesises decay literature with a real engagement and a worked experiment protocol (H1-H7), but author's own README/clarification says the method attribution was corrected post hoc, numbers are unverified and no study has run; satisfactory, not yet actionable Monday."
     },
     "D2": {
-      "score": 2,
+      "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:85-93",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:443"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9-9",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:163-179"
       ],
-      "rationale": "Full LaTeX paper with figures/bib exists, but 25 unresolved TODO(author) items (unverified stats, pending permissions, incomplete registration) mean it is a draft, not publish-ready."
+      "rationale": "25 unresolved TODO(author) markers in main.tex and an explicit README checklist of required-before-submit work (verify stats, permissions, registration) show substantial structure but significant rework remains; not publish-ready."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-13",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-100"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-20",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:21-23"
       ],
-      "rationale": "arXiv submission path is identified (category, dates checked) but not executed: study paused, registration pending, no public release or external deposit yet made."
+      "rationale": "README states registration and public release/external deposit remain pending and subject to permission; revision-report confirms no publication clearance exists. Produced for the rubric/case study only, no publication path yet identified."
     }
   }
 }
