@@ -16,3 +16,10 @@ The live operation matches the critique amendments and owner constraints: fixed-
 ## Residual items (routed to later work, not repeated in this task)
 * A reviewed helper with cache eviction for external deletes would remove the restart requirement.
 * The owner browser check of the map after the reload remains open.
+
+## Correction record (documentation only, appended after the original review, which is unchanged above)
+Trigger: coordinator comment 6398225740. The original finding 2 said the earlier audit rows were not compared per row; the changes artifact, knowledge-base log and plan amendment 5 stated preservation or full application more strongly. Reconciled: wording now says prior-row preservation is inferred from chain integrity and the append-only ledger, amendment 5 is recorded as partly applied, and the superseded draft details are marked as not a runbook. No runtime validation was run or backfilled; no Azure, SQL or OSM request was made.
+Current verdict for this documentation set: PASS-WITH-FINDINGS stands. Remaining limits: no direct audit-row comparison, owner browser view of the map unverified, no whole-issue acceptance, no provider approval. The external live report `/tmp/ama-360-remove-example-live.md` already carries the inferred-from-chain qualification.
+
+### Review of this correction (one independent code-review run, diff and files only)
+Outcome: PASS-WITH-FINDINGS. All listed checks passed (inferred-not-proven wording, amendment 5 partly applied, superseded details banner, original review unchanged, log additions only with 0 deletions against main, README and log keep both PR 458 and PR 459 content, no overclaims, phase order disclosed). Findings: (1) low, the earlier log entry still carries the stronger wording; left as is because the log is append-only and the later entry corrects it. (2) low, the banner time placeholder; fixed to about 14:25Z. The reviewer did not check external reports or the live database.

@@ -2,6 +2,8 @@
 
 Date: 2026-10-25, before the critique and any live write.
 
+> SUPERSEDED (correction about 14:25Z, documentation only). This is the pre-critique draft, kept as written for chronology. It is NOT a current runbook. Two parts were rejected by the accepted critique recorded in the plan (`plans/2026-10-25/remove-synthetic-example-360-plan.md`, section "Critique outcome"): step 8 below is invalid, because `seq` is a value under the `meta` key `seq` and not a column, so the corrected form is to read the current `meta.value` for key `seq`, write `str(cur+1)` with parameters and require rowcount 1; and the scale-to-zero fallback in "Replica reload" is rejected as not a cache-invalidation guarantee, so the revision is restarted and the replica set change is observed. The executed script was `/tmp/ama-360-rm/rm.py` (external, private), not this text.
+
 ## Transaction (script run through the app PTY exec, current revision, parameterised SQL only)
 Inputs fixed in the script: id `CUTOVER-SYNTHETIC-ONLY`; expected rowversion 1; expected body length 820; expected other-rows digest recorded in research (re-computed inside the transaction; a change by user activity must abort and be re-evaluated, not ignored); expected seed id-set digest.
 

@@ -37,4 +37,6 @@ One independent rubber-duck critique ran on the three files above. Verdict: FAIL
 | 5 | Non-blocking | Prove ledger mechanics | Accepted: capture head before, assert count plus 1, head equals verified chain head, exactly one new `case_removed` entry whose `prev` equals the old head, prior 17 rows hash-equal |
 | 6 | Non-blocking | Explicit mutation guards | Accepted: select by fixed id first, verify rowversion and body SHA-256, require rowcount 1 for delete, meta seq and audit head updates |
 
+Amendment 5 status (correction, documentation only): partly applied. The executed script asserted the chain verifies, count plus 1 and head equals the verified chain head. It did not compare the earlier 17 audit rows byte by byte or by hash, and did not assert an explicit `prev` equality or a single new `case_removed` row beyond count plus 1. Preservation of the earlier rows is inferred from chain integrity and the append-only ledger, not proven by comparison. The "prior 17 rows hash-equal" wording in row 5 above was the plan, not the result. No runtime check was added afterwards.
+
 Critique execution: once, about 12:32Z (earlier text in this file stated 12:44Z/12:45Z in error; file modification times are authoritative). No repeat critique for this task.

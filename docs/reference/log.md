@@ -7701,3 +7701,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Removed the single obsolete synthetic proof case from the deployed `retrofit` database at the owner's request (issue 360): 981 to 980 cases, 444 to 443 open, one appended audit entry, no seed case or earlier audit row changed. The API cache needs a revision restart after an external delete.
 * Recorded the route, guards and limits in the [infrastructure runbook](../../infra/README.md) and the dated `remove-synthetic-example-360` RPI artifacts. No source, image, deploy or configuration change.
+
+## 2026-10-25: correction to the synthetic proof case removal entry
+
+* Corrects the entry above: the earlier 17 audit rows were not compared per row. Preservation is inferred from a verified chain (count 17 to 18, head equal to the audit head) and the append-only ledger, not proven by row or hash comparison. The superseded draft phase details are marked as not a runbook. Documentation only; see the [review correction](../../.copilot-tracking/reviews/2026-10-25/remove-synthetic-example-360-review.md).
