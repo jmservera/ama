@@ -7153,3 +7153,8 @@ metadata when the knowledge base was created.
 * Added the corrections for the #462 local slice review findings: a limiter source option for direct Container Apps ingress (`ZF_DEMO_CLIENT_ADDRESS`, last `X-Forwarded-For` entry only, peer fallback), login and per-request email binding to the start-up map, and an owner-run offline hidden-input verifier tool. See the [API README](../../src/api/README.md#synthetic-resident-showcase-462) and the dated RPI artifacts `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-corrections-*`.
 * Local only: no push, no real password generated or entered, no Azure or live SQL access. Budget, live equality, SQL view and principal, and vault write path stay open. Earlier log entries are unchanged.
 
+
+## [2026-10-25] update | Issue 462 release preflight cost and path evidence
+
+* Added read-only release preflight evidence for #462 (refreshed Cost Management ledger, baseline versus changed resources, priced minimal deployment, principal and vault path metadata) under `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-release-preflight-*`. Raw non-secret metadata is kept privately outside the repository with a hash manifest.
+* Not budget clearance and no Azure change; the cumulative USD 50 cap is not reset. Earlier log entries are unchanged.
