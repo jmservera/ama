@@ -102,3 +102,45 @@ Other corrections:
 * SQL view and read-only principal: a named approval from the owner or coordinator for exactly this database change is still required and must be recorded; the current request authorises no broad role or database change.
 * Purge: no purge is planned and none is a deployment prerequisite. Default soft delete (7 days) retains the three exact-named secrets; the earlier purge-approval question is withdrawn.
 * Withdrawn claim: "secret and the ARM deployment history carry expiry". Secret expiry does not expire ARM deployment history. The SecureString parameter values are not stored in history, but deployment records remain; no cleanup of them is claimed unless a specific, tested deletion of the exact deployment record is added to the plan.
+
+## Addendum: Container Apps consumption meters (appended 2026-10-25T20:02Z; read-only, public sources only)
+
+The text above, including the erratum, is preserved. This closes one gap: the active-memory meter was missing from the first retrieval and the idle-memory rate was substituted. That earlier "about USD 0.5" estimate stays withdrawn; nothing here restores it as an upper bound or as budget clearance.
+
+Cause of the earlier gap: my earlier retrieval printed only the first 12 of 16 returned items, not a pagination fault. Verified now: the API returned Count 16 and NextPageLink null (single page) both without and with `priceType eq 'Consumption'`; every item has type `Consumption`.
+
+Sources and retrieval (2026-10-25T19:59Z to 20:02Z):
+
+* Prices: `https://prices.azure.com/api/retail/prices?api-version=2023-01-01-preview&currencyCode=USD` with filter `serviceName eq 'Azure Container Apps' and armRegionName eq 'uksouth'` (also run with `and priceType eq 'Consumption'`, identical 16 items).
+* Billing rules: `https://learn.microsoft.com/en-us/azure/container-apps/billing` (page `updated_at` 2026-03-25; ms.date 2025-12-09).
+
+Meters (productName Azure Container Apps, UK South, USD, retail price list, not an account-specific or negotiated price):
+
+| Meter | Unit | USD | Effective start | meterId | skuId |
+| --- | --- | --- | --- | --- | --- |
+| Standard vCPU Active Usage | 1 Second | 0.000034 | 2022-06-01 | 2c27faec-4865-58a4-9bca-4c64327315d3 | DZH318Z0B0NC/000B |
+| Standard vCPU Idle Usage | 1 Second | 0.000004 | 2022-06-01 | d95491e7-a951-5eff-a03f-c37ad1a12bc1 | DZH318Z0B0NC/000B |
+| Standard Memory Active Usage | 1 GiB Second | 0.000004 | 2022-06-01 | edbe3fc7-4303-5495-a104-88c166efe547 | DZH318Z0B0NC/000B |
+| Standard Memory Idle Usage | 1 GiB Second | 0.000004 | 2022-06-01 | 0ed3fcd3-a0ae-57bb-9e09-bf1715ac6989 | DZH318Z0B0NC/000B |
+| Standard Requests | 1M | 0.40 | 2022-06-01 | edca2d58-b847-565c-828a-df27aa4bae75 | DZH318Z0B0NC/000B |
+
+All have tierMinimumUnits 0. Environment meters (Management Hour, Private Endpoint, Planned Maintenance Hour, each USD 0.125 per hour, effective 2026-09-01) bill per environment. This plan adds no environment, so it adds none of them; whether the existing environment's meters are already charged is part of the baseline, not this showcase.
+
+Billing rules from the documentation: replicas scaled to zero incur no consumption charge; idle rates apply only when min replicas is above zero, scaled to the minimum and the replica is under 0.01 vCPU and 1,000 bytes per second; otherwise the active rate applies; only requests from outside the environment are billable and health probes are not billable; free grants are per subscription per calendar month: 180,000 vCPU-seconds, 360,000 GiB-seconds and 2 million requests.
+
+Free-grant eligibility: unknown. The grant is shared across every Container App and job in the subscription for October, and the existing apps (for example `ca-cutover-test-api`, min 2 replicas) consume from the same pool. Whether the grant is already exhausted was not queried (no further Cost Management or live reads were made). Estimates below therefore assume no free grant, which is a pricing assumption and not a proof of the actual bill in either direction.
+
+Formula: cost = vCPU x seconds x rate_vCPU + GiB x seconds x rate_GiB + (external requests / 1,000,000) x 0.40, with the active rate while serving and the idle rate for an idle min-replica.
+
+Scenarios for one revision of 0.25 vCPU and 0.5 GiB (no grant, list price, replica count 1; sizing and runtime are assumptions, not plan decisions):
+
+| Scenario | Seconds | vCPU part | Memory part | Requests | Total |
+| --- | --- | --- | --- | --- | --- |
+| A: min 0, active 8 h | 28,800 | 0.25 x 28,800 x 0.000034 = 0.2448 | 0.5 x 28,800 x 0.000004 = 0.0576 | 10,000 = 0.004 | about 0.307 |
+| B: active whole authorised remainder, 20:00Z to 12:00Z (16 h) | 57,600 | 0.4896 | 0.1152 | 10,000 = 0.004 | about 0.609 |
+| C: min 1 replica, idle all 16 h | 57,600 | 0.25 x 57,600 x 0.000004 = 0.0576 | 0.1152 | 0 | about 0.173 |
+| D: B at 0.5 vCPU and 1 GiB | 57,600 | 0.9792 | 0.2304 | 10,000 = 0.004 | about 1.214 |
+
+Scenario B and D exceed the withdrawn 0.50 figure, which confirms that figure was not a bound. These are scenario arithmetic only. They exclude the one-off image build (job consumption at the active rate, not priced here), registry storage and transfer, Key Vault operations, logging ingestion and egress, none of which was priced. Scenario figures are not an upper bound: real active time, scaling above one replica, request counts, bot traffic and any price change are unbounded by this analysis.
+
+Unknowns that remain: free-grant balance; billing lag for the last day; the allocation of shared SQL, registry and monitoring cost to incremental work; whether any account-specific price applies. The cumulative USD 50 incremental cap is not reset, and no valid remaining-budget proof or budget clearance exists. The spend gate stays closed.
