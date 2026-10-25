@@ -2,23 +2,23 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T12:55:31+00:00",
-  "commit": "7b15a6fc146616fa360f17584e2c7e9d00d1659c",
+  "scored_at": "2026-10-25T15:33:12+00:00",
+  "commit": "e36ffdee08a51102a164ef21c9c5abeb921db699",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40194829938",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40206914304",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "605449278408efbd2ef3934b2aad9f317f31a1e2b5b7a873f3db04405a3e07ec",
+    "solution-code": "a03d1c3e90181f270f0b333b190eba7d0eb1a7e232845f1da1b4c2015ac15885",
     "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "cc9c503bcd253a14a7f69abad98776a3640caf7fc444288a2521e728e43af5f6"
   },
-  "total": 73,
+  "total": 72,
   "sections": {
-    "A": 31,
+    "A": 30,
     "B": 22,
     "C": 11,
     "D": 9
@@ -42,12 +42,13 @@
       "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
     },
     "A3": {
-      "score": 5,
+      "score": 4,
       "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:380-560",
-        "src/api/tests/test_operator_suspension.py:614-680"
+        "src/core/src/zava_forward/core/resident_preview.py:175-200",
+        "src/core/src/zava_forward/core/resident_preview.py:460-490",
+        "src/api/src/zava_forward/api/resident_preview/app.py:27-40"
       ],
-      "rationale": "This PR changes infra/scripts (Entra admin CLI tooling), not the scored system's security/RAI controls. No security/RAI control changes in scope. Unchanged."
+      "rationale": "New boundary: default-deny grant resolution, positive-allowlist view decoupled from staff payloads, safe_start refusing cloud/store/AI env vars and normal-data paths, loopback-only binding, strict CSP. A stated, testable threat model with core controls in place."
     },
     "A4": {
       "score": 5,
