@@ -66,3 +66,39 @@ Conclusion: G1 is a hard block on every cloud step; G2 to G4 do not block local 
 ## Planning readiness
 
 Local implementation after the #444 merge: ready, parameterised and fail closed. Cloud steps: blocked by G1; approvals above still needed.
+
+## Erratum and cost correction (appended 2026-10-25, probes 17:03Z to 17:12Z; prospective plan `.copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-cost-correction-plan.md`)
+
+The text above is preserved. The following retracts or corrects it.
+
+Retraction 1: the G1 resource-type breakdown (SQL 21.87, environments 5.63, endpoints 4.56, registry 3.89, apps 3.83 ...) was presented as reconciling to the day total of 22.39. It did not: those type figures sum to about 41.5. They came from a type-grouped daily query. Retracted as an uncorrected breakdown.
+
+Re-query, same scope (group `ama`, ActualCost, USD, 2026-10-24 to 2026-10-25, ungrouped, grouped by ResourceType and by ResourceId; raw JSON kept outside the repository and values-free):
+
+| Query | 24 Oct | 25 Oct | Total |
+| --- | --- | --- | --- |
+| Ungrouped daily | 19.10 | 3.29 | 22.39 |
+| Grouped by ResourceId (60 rows) | not split by day | not split by day | 22.39 |
+| Grouped by ResourceType and day | 38.19 | 3.29 | 41.49 |
+
+The ungrouped and ResourceId results agree at 22.39. The type-by-day result is about double for 24 October only (for example SQL servers 21.58 on one day against about 10.7 a day over 17 to 23 October). The cause is unresolved (possible duplicate cost records for the 24th); the 22.39 figure is used as the working total and the discrepancy is an open data-quality item, not a reconciled fact. The same ResourceType ambiguity affects any Cost Management by-type figure above.
+
+Retraction 2: "conservative upper bound ... 47.75". That was a run-rate scenario (19.10 a day extended to 12:00Z on 26 October), not an upper bound and not a proof of future cost or accrual. Lag of unknown size remains. No headroom conclusion rests on it, and the "at most about USD 2.25" statement is withdrawn. The earlier reading that all `ama` spend is incremental is also withdrawn: the owner's cap is explicitly incremental and excludes the pre-existing baseline.
+
+Reconstruction of incremental changes since 2026-10-24T13:39Z (ARM resources API with createdTime and changedTime; names only):
+
+* Created since cap start: none (0 of 91 resources).
+* Changed since cap start: `ca-cutover-test-demo-api` (2026-10-24T14:02Z) and database `retrofit` (2026-10-25T00:23Z, the seed and obsolete-case work, with no SKU change).
+* Cost Management by ResourceId for the exact resources, 24 to 25 October (reported, lagging): `ca-cutover-test-demo-api` 0.945; job resources used by owner-approved runs (`job-cutover-test-orchestrator` 0.122, `job-cutover-test-init` 0.051, the `job-bind-*` and ledger-verify jobs about 0.02 together). Registry `crcutovertestrzsrg` 2.22 and `retrofit` 11.08 are existing-baseline resources; their change attributable to incremental work (image layers, seeding load) cannot be separated from the data.
+* Reconstructed incremental to date: about USD 1.1 reported for the changed app and jobs, plus an unquantified registry and database share and unknown lag (typically up to 24 to 48 hours for the latest day). This is a reconstruction, not a ledger. The owner is not asked to invent one.
+
+Prospective price for this issue (official Azure Retail Prices API, Container Apps consumption, uksouth, queried now): Standard vCPU active 0.000034 USD per second, vCPU idle 0.000004 USD per second, memory idle 0.000004 USD per GiB second. For 0.25 vCPU and 0.5 GiB, min 0 replicas, 8 hours of active serving: vCPU about 0.25 x 28,800 x 0.000034 = USD 0.24; memory active price was not in the first retrieved rows, so memory is bounded at about the idle rate times 0.5 GiB x 28,800 = USD 0.06 (to be confirmed against the active-memory meter at plan acceptance); one kaniko build of about 15 minutes at 1 vCPU/2 GiB under USD 0.1; identity free; Key Vault operations negligible; no new environment or private endpoint. Planned upper estimate about USD 0.5. This is an estimate for stop-condition use, not a measured cost.
+
+Headroom: not claimed. A bounded reading is plausible (reconstructed incremental about USD 1.1 plus unknowns against USD 50), but the unattributed registry and database share and the lag are not proven, so the spend gate stays closed until the cost record at Phase 1 re-reads Cost Management, states the lag and records the margin. No cap reset or new cap is assumed.
+
+Other corrections:
+
+* G2: the 524/523/522 counts describe the regenerated seed only, not the live database. Live equality is unverified.
+* SQL view and read-only principal: a named approval from the owner or coordinator for exactly this database change is still required and must be recorded; the current request authorises no broad role or database change.
+* Purge: no purge is planned and none is a deployment prerequisite. Default soft delete (7 days) retains the three exact-named secrets; the earlier purge-approval question is withdrawn.
+* Withdrawn claim: "secret and the ARM deployment history carry expiry". Secret expiry does not expire ARM deployment history. The SecureString parameter values are not stored in history, but deployment records remain; no cleanup of them is claimed unless a specific, tested deletion of the exact deployment record is added to the plan.
