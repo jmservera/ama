@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T07:27:49+00:00",
-  "commit": "5b00013543f8f82d271beeba87d939a12909967f",
+  "scored_at": "2026-10-25T08:15:32+00:00",
+  "commit": "ec2985e738319aa963aaaf8b9b120e0f333b51fb",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40172489243",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40175303528",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,7 +14,7 @@
     "infrastructure": "230cf17a20a0293cf542271421e3b0a48c93386df1019d893976034efb2e6de2",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "1499fcd9221bd5c10a6895e9acf44db9abe2166b415648adcbfd9e3a592a5285"
+    "thought-leadership": "933a1abf3889e8dd48fc2f19aa0e8a8b715c1c58a90cd11586f2e4e6d0c59daf"
   },
   "total": 73,
   "sections": {
@@ -148,26 +148,27 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:55-78",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:92-115"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:61-68",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1219",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/repo_history_metrics.out.txt"
       ],
-      "rationale": "Original thesis (agents accelerate decay via five mechanisms) grounded in the author's own six-week engagement: 183 merged PRs, 192-issue backlog, pinned log-growth/churn evidence. Actionable harness proposed; confirmatory results not yet reported."
+      "rationale": "Original case study proposes five original mechanisms and an actionable Monday checklist, grounded in pinned repo-history evidence. Study/results remain unexecuted (resultsfalse), so it is synthesis plus protocol, not a verifiable finding yet."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-20",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:37-38"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:206-224",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:23-24"
       ],
-      "rationale": "Full structured LaTeX paper with abstract, figures and 94-entry bibliography exists, but README states it is 'not submission-ready' and main.tex has 25 unresolved TODO(author) items on verification, permissions, registration. Solid draft, not publish-ready."
+      "rationale": "Full structured draft with abstract, sections, tables, figures and embedded bibliography, but README lists 25 unresolved TODO(author) items, unverified statistics and pending permissions; revision-report.md states it is not submission-ready. Significant rework remains."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:11-15",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:205-213"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:12-15",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:206-215"
       ],
-      "rationale": "No submission has been made. arXiv category and eligibility requirements are identified but 'public release and external deposits remain subject to permission', registration is deferred and execution is paused. Path is scoped but not yet entered."
+      "rationale": "A concrete arXiv path is researched (category, endorsement rule, abstract-length check), but README states execution is paused, registration and release remain subject to permission, and nothing has been submitted or accepted."
     }
   }
 }
