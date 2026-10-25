@@ -14,3 +14,8 @@ ms.date: 2026-10-25
 ## Acceptance
 
 Each defect is worded consistently wherever it recurs (hierarchy, rows, dependencies, proposal); no new requirement ID, date or approval claim; links resolve; BRD, PRD (unless a coupled defect is found), code, legal and memory untouched.
+
+## Integration and final gate details (appended 2026-10-25)
+
+* Conflict rule: log entries keep main's text then this branch's, unchanged; README index keeps both rows; score JSON takes main's version. Any conflict in the PRD, proposal, backlog or source stops the work.
+* Admission evidence recorded: disk 24 GB free, memory 11 GB available, no other rpi-checks runner, output directory absent. Failed or passing receipts are retained, never deleted.
