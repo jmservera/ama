@@ -226,16 +226,86 @@ prevent it.
 
 \subsection{Why agents might accelerate the decay}\label{sec:empirical}
 
-Long-task and multi-turn studies motivate concern about errors inherited from
-earlier steps~\cite{sinha2025illusion,laban2025lost}. SlopCodeBench and
-SWE-CI examine iterative degradation and regressions at repository
-scale~\cite{orlanski2026slopcodebench,chen2026sweci}. However, a randomised
-maintainability study found no significant downstream difference, and chained
-maintenance tasks point to inherited test failures rather than complexity
-alone~\cite{borg2025echoes,pan2026swemaintain}. Neither deterioration nor a
-benefit from consolidation should be assumed across settings.
+Two properties of agentic development could amplify decay. The first is
+\emph{compounding error}. An earlier mistake can become part of the context
+from which the next decision is made: a misunderstood rule becomes code,
+the code becomes a test expectation, and later features are built around the
+same assumption. That chain is a proposed mechanism, not a trace established
+in this case. Compounding is stronger than merely accumulating defects: the
+earlier error must make later work more failure-prone or costly. A declining
+whole-task success rate alone does not establish that dependence.
 
-Review capacity supplies a second possible constraint. Understanding changes
+Zhang et~al.'s earlier \emph{How Language Model Hallucinations Can Snowball}
+shows why consistency is not enough. On three question-answering datasets,
+ChatGPT and GPT-4 produce false justifications after wrong answers, yet often
+reject the individual false claims when questioned in a separate session.
+Their explanation is over-commitment to the earlier answer rather than only
+a lack of knowledge. This is evidence of within-answer snowballing in two
+2023 models, not a code-generation experiment or an estimate of downstream
+repository failures~\cite[Secs.~3.1--3.4]{zhang2023snowball}.
+
+Sinha et~al. test the distinction directly in a controlled execution task.
+Models receive both the lookup dictionary and the plan, then maintain a
+running sum. The authors vary the fraction of incorrect answers in artificial
+prior histories and measure the accuracy of subsequent state updates, not
+merely whether the final total remains correct. More erroneous history reduces
+later accuracy beyond the effect of context length. This is counterfactual
+evidence of \emph{self-conditioning}: earlier mistakes can increase the chance
+of new mistakes. Scaling non-thinking models does not remove the effect, but
+Qwen3 models with thinking enabled avoid it in this setup. The result identifies
+a conditional failure mode, not an inevitable property of all agents or a
+measured rate of repository decay~\cite[Sec.~3.2, Figs.~5--6]{sinha2025illusion}.
+
+Laban et~al. supply complementary conversational evidence. Across six
+generation tasks, including Python and SQL, they report a 39\% average relative
+performance drop when instructions arrive through underspecified multi-turn
+conversation rather than all at once. A concatenated-instruction control
+largely preserves performance, weakening information loss from rephrasing as
+the explanation. Their analyses associate premature answers with lower success
+and describe reliance on earlier incorrect attempts and increasingly bloated
+solutions. These are simulated conversations and diagnostic analyses, not a
+controlled estimate of the cost of a particular inherited coding defect; the
+39\% is not a percentage-point loss or a repository defect
+rate~\cite[Secs.~3.3 and~6.1, App.~F.1--F.2]{laban2025lost}.
+
+The closest repository-level evidence is Pan et~al.'s \emph{SWE-Maintain}
+preprint. It reconstructs 100 three-event maintenance episodes from 50 Python
+repositories and runs each later task from two starting points: the developers'
+preceding patches and the agent's own preceding changes. Task, agent and tests
+are held fixed, and every event uses a fresh session: only the repository
+carries the earlier work forward. Across 1,996 paired later events, agent
+history lowers new-task resolution by 5.6 percentage points (95\% interval
+$[-7.2,-4.1]$). Requiring earlier tests to remain passing widens the gap to
+14.0 points. The average new-task gap grows from 4.0 points at the second
+event to 7.2 at the third, consistent with an accumulating downstream cost,
+though three-event episodes cannot establish a general long-horizon decay
+law~\cite[Secs.~2.5 and~4.1, Table~2]{pan2026swemaintain}.
+
+Their \texttt{python\_unidiff} example makes the proposed propagation concrete:
+an agent first splits an input string into lines, losing line terminators;
+on the next task it reuses that defective logic in the constructor rather
+than repairing it. The same later task succeeds from developer history.
+This is the authors' reported example, not an application run reproduced here.
+The aggregate result also has an important boundary: among the 619 later events
+whose inherited code passes earlier tests and whose next task is not already
+solved, the event-resolution difference is $+2.7$ points (95\% interval
+$[-0.5,+6.1]$), with no detected disadvantage. This is a selected clean-history
+subset, not a randomised repair intervention, and it does not prove equivalent
+maintainability under all changes. It points more directly to inherited
+behavioural failures than to structural complexity as the main observed
+channel~\cite[Sec.~4.2, Table~3; Sec.~5.1, Fig.~5]{pan2026swemaintain}.
+
+These findings should not be flattened into one claim. SlopCodeBench and
+SWE-CI examine iterative structural erosion and behavioural regressions;
+neither outcome alone identifies self-conditioning or error
+propagation~\cite{orlanski2026slopcodebench,chen2026sweci}. A randomised
+maintainability study also found no significant downstream difference between
+AI-assisted and unassisted source code~\cite{borg2025echoes}. The evidence
+supports testing inherited failures, their recovery and their consequences,
+not assuming that every agent-written system deteriorates or that consolidation
+will necessarily help.
+
+The second possible amplifier is output exceeding review capacity. Understanding changes
 is a major challenge of code review; habituation, fragmented context and
 uneven retrieval from long contexts may limit scrutiny as output
 grows~\cite{bacchelli2013review,yu2026habituation,cemri2025multiagent,liu2024lost,hong2025contextrot}.
@@ -1676,6 +1746,20 @@ relative reduction; report absolute counts and differences instead.
 An upward count can reflect more contracts at risk rather than greater decay
 risk, so count and density trajectories must be interpreted together.
 
+\paragraph{Track propagation, not only persistence.}
+The self-conditioning experiment and paired-history maintenance design motivate
+an additional proposed annotation~\cite{sinha2025illusion,pan2026swemaintain}:
+give a candidate inherited fault a traceable identifier, identify its first
+observed contract failure and affected code or rule, then record evidence
+linking distinct later failures to reuse of that fault. A repeated failure of
+the same test is persistence, not a new propagated error. Code/diff and
+execution records must support the link; temporal order or an agent's explanation
+alone does not establish it. Such annotations describe a candidate mechanism,
+not an independent causal estimate. A matched comparison of the same later
+task from faulty and minimally repaired snapshots would be a separate proposed
+extension requiring fixed repair rules, fresh sessions, additional resources
+and a prospective amendment; it is not included in the current run budget.
+
 \paragraph{Separate structural deterioration from legitimate growth.}
 Keep the four H3 metrics and frozen settings at every checkpoint, but also
 measure the independently checked cumulative reference implementation for
@@ -2439,7 +2523,7 @@ P.~Laban, H.~Hayashi, Y.~Zhou, and J.~Neville.
 \newblock {LLMs} get lost in multi-turn conversation.
 \newblock In \emph{International Conference on Learning Representations
 (ICLR)}, 2026.
-\newblock arXiv:2505.06120.
+\newblock arXiv:2505.06120v1, 9 May 2025.
 
 \bibitem{lamanna2026changing}
 C.~Lamanna.
@@ -2602,7 +2686,7 @@ generation.
 R.~Pan, J.~Zhang, L.~Wu, Y.~Zhang, H.~Zhang, and L.~Zhang.
 \newblock Do modifications made by coding agents make subsequent software
 maintenance harder?
-\newblock arXiv:2610.14768, 2026.
+\newblock arXiv preprint arXiv:2610.14768v1, 10 October 2026.
 
 \bibitem{parnas1994aging}
 D.~L. Parnas.
@@ -2696,7 +2780,7 @@ A.~Sinha, A.~Arun, S.~Goel, S.~Staab, and J.~Geiping.
 in {LLMs}.
 \newblock In \emph{International Conference on Learning Representations
 (ICLR)}, 2026.
-\newblock arXiv:2509.09677.
+\newblock arXiv:2509.09677v3, 13 March 2026.
 
 \bibitem{squad2026}
 {Squad contributors}.
@@ -2770,6 +2854,12 @@ H.~Yu, L.~Liu, X.~Jiang, Y.~Jia, S.~Wang, P.~Qian, and Y.~Chen.
 human review of {AI} agent code.
 \newblock KDD 2026 Workshop on Agentic Software Engineering, 2026.
 \newblock arXiv:2606.22721.
+
+\bibitem{zhang2023snowball}
+M.~Zhang, O.~Press, W.~Merrill, A.~Liu, and N.~A. Smith.
+\newblock How language model hallucinations can snowball.
+\newblock arXiv preprint arXiv:2305.13534v1, 22 May 2023.
+\newblock doi:10.48550/arXiv.2305.13534.
 
 \bibitem{zhong2026impossiblebench}
 Z.~Zhong, A.~Raghunathan, and N.~Carlini.

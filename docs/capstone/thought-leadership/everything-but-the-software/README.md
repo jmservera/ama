@@ -8,17 +8,76 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The software-evolution prose restoration below is the latest source record.
+The compounding-error evidence integration below is the latest source record.
 The owner's preferred subtitle and prospective decay-measurement proposal
 remain in place: decay is the hypothesis motivated by a small observational
 base, not an established case result. No experiment results are added. The
 private tagged study kit was not inspected, amended or executed.
 
-The latest external validation build is 44 pages, under
-`/tmp/ama-paper-prose-og72In/`. Earlier builds below are historical.
+The latest external validation build is 45 pages, under
+`/tmp/ama-paper-compounding-P8QOXK/`. Earlier builds below are historical.
 The workspace PDF regenerated during source editing; preservation of its
 initial bytes cannot be claimed. It was not restored over the modified copy.
 The arXiv bundle is not refreshed.
+
+## Compounding-Error Evidence 26 October
+
+The owner requested sources and evidence for compounding error in AI and
+agentic development. The main background now distinguishes accumulating
+failures from an inherited error making later work more failure-prone, and
+separates four kinds of evidence rather than treating them as one result.
+
+This was a bounded primary-source check, not a systematic review. Discovery
+used the arXiv query `compounding errors coding agents`, with the first 25 of
+31 returned records inspected for relevance, plus references from Sinha et al.
+Sources after 26 October 2026 were outside scope. The default research skill's
+Parallel CLI was unavailable; direct primary-page retrieval was used instead.
+No manuscript or private study material was sent to a search service.
+
+The following support states refer to assistant-inspected passages on
+26 October 2026, not independent human verification or replicated experiments.
+
+| Source and inspected version | Claim and genuine locator | Evidence state and interpretation limit |
+| --- | --- | --- |
+| [Zhang et al., arXiv:2305.13534v1](https://arxiv.org/html/2305.13534), 22 May 2023 | Sections 3.1-3.4: wrong QA answers accompanied by false justifications that the same model often rejects in a separate session | Full-text support for scoped snowballing claims; two 2023 models and QA, not code generation or repository propagation. No forced-wrong-prefix experiment is attributed to this study |
+| [Sinha et al., arXiv:2509.09677v3](https://arxiv.org/html/2509.09677v3), 13 March 2026 | Section 3.2 and Figures 5-6: controlled variation of errors in prior histories changes subsequent state-update accuracy; Qwen3 thinking models avoid the effect in this setup | Full-text support, including methods, results and figure captions; synthetic execution task, not a repository-decay estimate. Thinking-model counter-evidence is retained |
+| [Laban et al., arXiv:2505.06120v1](https://arxiv.org/html/2505.06120v1), 9 May 2025 | Sections 3.3 and 6.1, Table 1, Appendix F.1-F.2: sharded/concatenated controls, relative performance loss, early-answer associations and answer bloat | Full-text support for the specified comparisons and diagnostic analyses; simulated conversations, not natural-user observations or a defect-specific coding intervention |
+| [Pan et al., arXiv:2610.14768v1](https://arxiv.org/html/2610.14768v1), 10 October 2026 | Section 2.5; Sections 4.1-4.2, Tables 2-3; Section 5.1, Figure 5: paired history comparison, downstream resolution costs, selected clean-history subset and reuse of defective string-splitting logic | Full-text support for the scoped numerical and example claims; preprint, short Python maintenance chains and no reproduced application run. Clean-history conditioning is not a randomised repair experiment |
+
+The Laban version has an internal reporting discrepancy: its abstract and
+Section 6.1 report an average 39% relative drop, whereas the Figure 1 teaser
+caption says 35%. The manuscript attributes 39% to the main results/Table 1;
+it is neither a percentage-point loss nor a defect rate. This check does not
+resolve the authors' intended teaser figure or independently reanalyse the
+simulation outputs.
+
+SlopCodeBench v2 metadata and abstract were retrieved, but meaningful full-text
+extraction failed; the attempted multi-agent-failure HTML retrieval also failed.
+Their existing contextual citations are not upgraded to fresh full-text
+verification. SWE-CI and the randomised maintainability study remain contextual
+citations, not newly audited results in this pass. Numeric claims from other
+studies remain under the existing author-verification boundary.
+
+Zhang's metadata was extracted with the citation skill's arXiv parser and
+cross-checked with the primary abstract/full-text pages; the arXiv DOI was
+confirmed on the abstract page. No journal reference was supplied by the
+inspected arXiv metadata, so the added citation identifies that preprint rather
+than inventing a venue. Both bibliographies include the new entry and pin
+the inspected Sinha, Laban and Pan versions. The structural checker passes
+with 108 matching cited/embedded/BibTeX keys and results disabled.
+
+The proposed measurement section also adds fault-lineage annotation: a
+distinct later failure needs code/diff and execution evidence linking it to
+an inherited fault. Repeatedly failing the same test is persistence, not a
+new propagated error. A matched faulty-versus-repaired snapshot comparison
+remains a separately resourced prospective extension. Existing arms, numerical
+H1-H7 criteria, sample sizes and budgets are unchanged; the private kit was
+not inspected or executed.
+
+The external build has no TeX warnings, unresolved references or underfull/
+overfull boxes. The changed background on pages 3-4 and measurement note on
+page 26 were visually inspected. These checks do not establish scientific
+acceptance. No experiment, commit, push, registration or submission was run.
 
 ## Software Evolution Prose Restoration 26 October
 
