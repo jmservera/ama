@@ -11,7 +11,7 @@ import os
 import sys
 import tempfile
 
-from .factory import open_store
+from .factory import open_store, sqlite_path
 from .sqlstore import SeedMergeError, SqlStore
 
 
@@ -26,7 +26,11 @@ def main(argv=None, env=None):
         empty = os.path.join(tmp, "empty.json")
         with open(empty, "w", encoding="utf-8") as f:
             json.dump(dict(cases=[], staff=[]), f)
-        return _merge(a, dict(os.environ if env is None else env, ZF_DATA=empty))
+        env = dict(os.environ if env is None else env)
+        # Fix the SQLite target from the caller's settings before ZF_DATA is replaced, or the default path would move.
+        if (env.get("ZF_STORE") or "").lower() == "sqlite":
+            env["ZF_SQLITE"] = sqlite_path(env)
+        return _merge(a, dict(env, ZF_DATA=empty))
 
 
 def _merge(a, env):

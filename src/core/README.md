@@ -2738,7 +2738,8 @@ queue generation, which leaves the stored case content, `seq` and row versions o
 existing cases unchanged; opening the store runs its usual schema checks, so run it
 only against a populated database that the current release already serves (an empty
 target is refused and left empty). A repeat run
-adds nothing and no audit entry. Keep the seed file private and outside the
+adds nothing and no audit entry. For `sqlite`, the target is the same database the app would open from `ZF_SQLITE`, `ZF_STATE` or `ZF_DATA`.
+Keep the seed file private and outside the
 repository. Tests: `tests/test_seed_merge.py`, and `MssqlLedgerMigration` in
 `src/api/tests/test_mssqlstore.py` for ledger and plain SQL Server databases.
 

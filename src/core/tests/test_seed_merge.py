@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import dataset
-from zava_forward.core import seed_merge
+from zava_forward.core import factory, seed_merge
 from zava_forward.core.sqlstore import SeedMergeError, SqlStore
 
 
@@ -218,6 +218,83 @@ class SeedMergeCliTests(SeedMergeBase, unittest.TestCase):
         raw = sqlite3.connect(os.path.join(self.tmp.name, "empty.sqlite"))
         self.addCleanup(raw.close)
         self.assertEqual([raw.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0] for t in ("cases", "staff")], [0, 0])
+
+    def populated_default_dir(self):
+        """A data directory whose default database (no ZF_SQLITE/ZF_STATE) is the populated one."""
+        d = Path(self.tmp.name) / "default"
+        d.mkdir()
+        self.store.db.close()
+        os.replace(self.db, d / "zavaforward.sqlite")
+        for ext in ("-wal", "-shm"):
+            if os.path.exists(self.db + ext):
+                os.replace(self.db + ext, str(d / "zavaforward.sqlite") + ext)
+        self.store = SqlStore(str(self.seed), str(d / "zavaforward.sqlite"))
+        self.addCleanup(self.store.db.close)
+        self.db = str(d / "zavaforward.sqlite")
+        return d
+
+    def count(self, path):
+        import sqlite3
+        raw = sqlite3.connect(path)
+        try:
+            return raw.execute("SELECT COUNT(*) FROM cases").fetchone()[0]
+        finally:
+            raw.close()
+
+    def run_env(self, env, *args):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            return seed_merge.main(["--seed", str(self.seed), *args], env=env), out.getvalue()
+
+    def test_default_path_merges_the_original_database_not_a_temporary_one(self):
+        d = self.populated_default_dir()
+        before = self.count(self.db)
+        kept = Path(self.tmp.name) / "retained-temp"
+        kept.mkdir()
+
+        class Retained:
+            def __init__(self):
+                pass
+
+            def __enter__(self):
+                return str(kept)
+
+            def __exit__(self, *a):
+                return False
+
+        with patch.object(seed_merge.tempfile, "TemporaryDirectory", Retained):
+            code, out = self.run_env(dict(ZF_STORE="sqlite", ZF_DATA=str(d)), "--apply", "--expect-added", "3")
+        self.assertEqual((code, json.loads(out)["applied"]), (0, True))
+        self.assertEqual(self.count(self.db), before + 3)
+        self.assertEqual(list(kept.glob("*.sqlite")), [])
+
+    def test_state_only_and_explicit_sqlite_paths_are_unchanged(self):
+        state = Path(self.tmp.name) / "st"
+        state.mkdir()
+        self.store.db.close()
+        os.replace(self.db, state / "zavaforward.sqlite")
+        code, out = self.run_env(dict(ZF_STORE="sqlite", ZF_STATE=str(state), ZF_DATA=str(self.seed)), "--apply")
+        self.assertEqual(code, 0)
+        self.assertEqual(self.count(str(state / "zavaforward.sqlite")), len(dataset.DATA["cases"]) + 3)
+        other = Path(self.tmp.name) / "other-state"
+        other.mkdir()
+        code, out = self.run_env(dict(ZF_STORE="sqlite", ZF_SQLITE=str(state / "zavaforward.sqlite"), ZF_STATE=str(other)))
+        self.assertEqual((code, json.loads(out)["to_insert"]), (0, 0))
+
+    def test_sqlite_path_matches_previous_resolution_and_mssql_gets_no_sqlite_setting(self):
+        self.assertEqual(factory.sqlite_path(dict(ZF_SQLITE="/x/a.sqlite", ZF_STATE="/s")), "/x/a.sqlite")
+        self.assertEqual(factory.sqlite_path(dict(ZF_STATE="/s", ZF_DATA="/d/z.json")), "/s/zavaforward.sqlite")
+        self.assertEqual(factory.sqlite_path(dict(ZF_DATA="/d/z.json")), "/d/zavaforward.sqlite")
+        seen = {}
+
+        def fake(env):
+            seen.update(env)
+            raise SystemExit(9)
+
+        with patch.object(seed_merge, "open_store", fake), self.assertRaises(SystemExit):
+            self.run_env(dict(ZF_STORE="mssql", ZF_SQL_AUTH="msi", ZF_DATA="/real/seed.json"))
+        self.assertNotIn("ZF_SQLITE", seen)
+        self.assertEqual(seen["ZF_SQL_AUTH"], "msi")
 
     def test_cli_requires_sql_store(self):
         with contextlib.redirect_stderr(io.StringIO()), contextlib.redirect_stdout(io.StringIO()):
