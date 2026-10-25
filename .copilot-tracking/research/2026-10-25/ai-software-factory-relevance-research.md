@@ -80,9 +80,9 @@ affected claims. Authoring belongs to the parent Documentation workflow.
 
 | ID | Question | Type | Priority | Status |
 | --- | --- | --- | --- | --- |
-| Q1 | Does the paper support or challenge feedback-first delivery and reflective delegation? | depth | High | Open |
-| Q2 | What exactly do its efficiency and learning results establish? | depth | High | Open |
-| Q3 | Does it test post-feature consolidation, and which manuscript claims need qualification? | depth | High | Open |
+| Q1 | Does the paper support or challenge feedback-first delivery and reflective delegation? | depth | High | Answered |
+| Q2 | What exactly do its efficiency and learning results establish? | depth | High | Answered |
+| Q3 | Does it test post-feature consolidation, and which manuscript claims need qualification? | depth | High | Answered |
 
 ## Prior Knowledge Gate
 
