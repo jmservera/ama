@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T21:58:04+00:00",
-  "commit": "6574d75db7742c43e74ef61a6aa76b1902e25f64",
+  "scored_at": "2026-10-25T00:05:32+00:00",
+  "commit": "7e49697ab64d1e1a921805a7aa0520d4a2865bcc",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40136038037",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40144833361",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,17 +14,17 @@
     "infrastructure": "5ae0103ecea79755f49c0835da379867fcdbc1cc711b6e2161118cf2b8fcecf6",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "74d610f75ccb0933c4fc8dafae620d9100ca0374f52cc9e4245a954b61861314"
+    "thought-leadership": "a317e3dd6a3bcca72ebdc1ee228105d2511c2c8cabdbb5a1a70f78e48550b475"
   },
-  "total": 73,
+  "total": 71,
   "sections": {
     "A": 31,
     "B": 22,
     "C": 11,
-    "D": 9
+    "D": 7
   },
-  "floors_met": true,
-  "outcome": "Pass",
+  "floors_met": false,
+  "outcome": "Not Yet Met (floor)",
   "criteria": {
     "A1": {
       "score": 5,
@@ -146,27 +146,28 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 4,
-      "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:60-116",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:1-20"
-      ],
-      "rationale": "Original single-case synthesis of the author's own 6-week agentic build, naming five decay mechanisms and a consolidation-harness remedy; grounded in real engagement evidence (repo_history_metrics, log). Draft, with open TODOs on model provenance and author voice."
-    },
-    "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-checks.out.txt:7-25",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:95-112"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-13",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:443"
       ],
-      "rationale": "Structured 29-page LaTeX paper, 94-ref bibliography, figures, passes structural/compile checks (revision-checks.out.txt); still has 18 open TODO(author) items (dates, provenance, approvals) before it is publish-ready, so light-to-moderate rework remains."
+      "rationale": "New synthesis grounded in the project's own repo evidence (log.md growth, causal loop, consolidation harness), but 'no study results are reported' and execution is paused; substance unverified."
+    },
+    "D2": {
+      "score": 2,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:85-93",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:443"
+      ],
+      "rationale": "Full LaTeX paper with figures/bib exists, but 25 unresolved TODO(author) items (unverified stats, pending permissions, incomplete registration) mean it is a draft, not publish-ready."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:109-136"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:9-13",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-100"
       ],
-      "rationale": "README documents an arXiv publication path (category, endorsement rules) but no submission occurred; pre-submission checklist unresolved (approvals, TODOs). Complete package produced but not yet submitted for publication."
+      "rationale": "arXiv submission path is identified (category, dates checked) but not executed: study paused, registration pending, no public release or external deposit yet made."
     }
   }
 }
