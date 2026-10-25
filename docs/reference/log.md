@@ -7161,3 +7161,43 @@ metadata when the knowledge base was created.
   accessibility conformance, legal/control acceptance, experiment results,
   rubric scoring or publication clearance. No commit, push, deployment or
   paid inference occurred; concurrent owner paper work was not changed.
+
+## 2026-10-25 - Thought-Leadership Editorial Critique Revision
+
+* Revised the [paper source](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and [revision account](../capstone/thought-leadership/everything-but-the-software/README.md#critique-revision-25-october)
+  around observed completion/usability divergence, five candidate mechanisms
+  and a prospective package-level consolidation test. Added construct and
+  provenance boundaries, an observation--interpretation--proposition audit,
+  bounded negative cases and a fuller rival-explanation matrix. No new
+  empirical case dataset or independently checked qualitative coding is claimed.
+* Moved extended practitioner accounts, informal observations and the detailed
+  operating practices/checklist to appendices. The recommendations are
+  implications for evaluation, not a separately validated model or permission
+  to bypass required repository, safety or human approval gates.
+* Added six verified scholarly references, with 103 matching bibliography
+  entries. Corrected the critique's RefactorBench count to 100 tasks/nine
+  repositories and distinguished Building to the Test's unchanged-oracle
+  delivery-contract gap from test tampering. Recent preprints, abstract-only
+  verification and unavailable HITS access remain explicit.
+* At the owner's direction, preserved the tagged experiment, arms, hypothesis
+  priorities/thresholds, budgets, sample and prior-run labels. Added a protocol
+  summary and explicit resource, control, precision, multiplicity, annotation,
+  CR1 exposure and unverified-access limits rather than silently redesigning
+  the study. Private study files and earlier ancillary proposals are unchanged.
+* The structural check passes; two external, shell-escape-disabled pdfLaTeX
+  passes produce 42 pages with no warnings or unresolved references. Fresh AI
+  editorial testing is not independent human peer review. Visual PDF review
+  was unavailable; the existing PDF and arXiv bundle are preserved. No study
+  run, commit, push, publication gate or external submission occurred.
+
+## 2026-10-25 - Paper PDF Regeneration Clarification
+
+* The preceding revision entry's PDF-preservation statement is superseded:
+  a separate workspace compiler regenerated the PDF during editing even though
+  the assistant's compilation commands targeted an external directory. The
+  workspace compiler log records 42 pages; the observed PDF hash changed.
+* The owner explicitly selected leaving the current regenerated PDF untouched.
+  No Git-version restore or external-build copy was performed, and pre-edit
+  byte preservation is not claimed. The arXiv bundle was not refreshed by this
+  workflow. Source validation and publication/approval limits remain unchanged.

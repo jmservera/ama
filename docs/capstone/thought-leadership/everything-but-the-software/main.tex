@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- arXiv-ready LaTeX source (draft v3)
+% Everything but the Software -- arXiv-ready LaTeX source (draft v4)
 % Figures are PNG files (fig-log-growth.png, fig-causal-loop.png) in the same
 % folder; pdflatex reads them directly. anc/make_figures.py regenerates them.
 % Compile with pdflatex, twice. No BibTeX run is needed: the bibliography is
@@ -27,7 +27,7 @@
 \usepackage{caption}
 \usepackage[colorlinks=true,linkcolor={blue!50!black},citecolor={blue!50!black},urlcolor={blue!50!black}]{hyperref}
 
-\hypersetup{pdftitle={Everything but the Software: How Coding Agents Accelerate Feature-Driven Decay},pdfauthor={Juan Manuel Servera Bondroit}}
+\hypersetup{pdftitle={Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop},pdfauthor={Juan Manuel Servera Bondroit}}
 \captionsetup{font=small,labelfont=bf}
 \setlist{itemsep=2pt,topsep=4pt}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -39,7 +39,7 @@
 % TODO(author): set to \resultstrue only after the registered runs and checked analysis are complete; retain the pre-registration run history.
 
 \title{Everything but the Software:\\[4pt]
-\large How Coding Agents Accelerate Feature-Driven Decay.\\
+\large Feature-Driven Decay in an Agentic Coding Loop.\\
 An Exploratory Case Study and an Experiment Protocol}
 
 \author{Juan Manuel Servera Bondroit\thanks{Microsoft, Zurich, Switzerland.
@@ -54,28 +54,28 @@ organisation, Zava North Homes, is fictional.}}
 \maketitle
 
 \begin{abstract}
-Can another agent provide the reflection and course correction that
-feature-driven delivery crowds out? I investigate this question through an
-exploratory case study and an experiment protocol. I propose that coding
-agents may accelerate software decay through compounding errors and output
-that exceeds human review capacity. Over six weeks I used agents, centred on
-Microsoft's open-source HyperVelocity Engineering (HVE Core) framework, to
-research a fictional housing retrofit programme, write requirements and deploy
-an MVP. I then handed 192 issues to a coordinator running parallel
-research--plan--implement--review loops. In ten days it merged 183 pull
-requests and the log grew by about 37,000 words, yet I could no longer use the
-system, while an automated rubric gave implementation completeness five out
-of five. I propose five mechanisms: specification inflation, proxy capture,
-learning evaporation, process-gate inflation and feedback starvation. The
-case motivates, but cannot answer, whether an additional agent can recognise
-drift and restore options for future change. I specify a bounded test: an
-agent reviews, refactors under test-commit-or-revert and rewrites a short
-design note after every feature. Feature-only, consolidation and review-only
-arms will be compared on correctness, internal quality, an unforeseen change
-request, human-intervention demand and cost. This tests agent-led
-consolidation, not autonomous product steering or the replacement of human
-judgement. The broader question is whether agents can help keep development
-on a useful course, rather than merely produce more work.
+When does apparent agentic delivery progress cease to represent software
+progress? I examine a traceable exploratory case in which artefact-level
+completion diverged from usable behaviour, then present a prospective
+consolidation experiment. Over six weeks I used agents, centred on Microsoft's
+HyperVelocity Engineering (HVE Core) framework, to research a fictional housing
+retrofit programme, write requirements and deploy an MVP. A coordinator then
+ran parallel research--plan--implement--review loops over a backlog that grew
+to 192 issues. In ten days it merged 183 pull requests and the log grew by
+about 37,000 words, yet I could not sign in to the replacement system; an
+automated rubric rated implementation completeness five out of five. Five
+candidate mechanisms organise the evidence: specification inflation, proxy
+capture, learning evaporation, process-gate inflation and feedback starvation.
+The confounded participant-observer case establishes neither accelerated code
+decay nor the effectiveness of a remedy. It motivates a test of scheduled,
+behaviour-preserving consolidation after each feature. The preserved,
+unregistered protocol compares feature-only, consolidation and review-only
+arms on retained behaviour, an unforeseen change request, internal quality,
+intervention demand and cost. Its contrasts estimate a consolidation package,
+including extra resources and different notes, not refactoring alone. No study
+results are reported. The contribution is the chain from observed divergence,
+through candidate explanations, to a falsifiable test of retained behaviour
+and future changeability, not evidence that more agents restore either.
 \end{abstract}
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
@@ -108,78 +108,74 @@ never the bottleneck~\cite{murphy2026speed}. I knew these warnings and
 followed many of them. I hit the wall anyway, and the way I hit it is
 instructive.
 
-My working theory is simple. Software that only accumulates features, without
-deliberate consolidation, decays: it becomes more complex, more fragile and
-slower to change. That has been documented for
-decades~\cite{lehman1980laws,parnas1994aging,eick2001decay,cunningham1992wycash}.
-I propose that agentic development may run the same decay faster, through two
-possible accelerants. The first is
-compounding error. Each step builds on the agent's previous output, including
-its misreadings of intent and complexity nobody asked for; Beck's genie grants
-the wish as stated, not as meant~\cite{orosz2025beck}, and every literal wish
-becomes the context for the next. The second is volume. Agents produce more
-code and documentation than people have the time or patience to review and
-test, so the decay goes unseen until something breaks. If the theory holds,
-the remedy is the one Beck describes: stop adding features blindly, and after
-each feature stop, review, refactor and improve before adding the
-next~\cite{beck2026prodacity,beck2025devslow,beck2023tidy}.
+The central question is how feature-centric agentic delivery can produce
+strong completion signals while failing to preserve a usable and adaptable
+system. The argument follows one chain: observed divergence, candidate
+mechanisms, a consolidation hypothesis and a prospective controlled test.
+The case documents loss of access to a usable replacement; it does not measure
+a rate of structural code decay or identify an agent-caused acceleration.
 
-That raises the central question of this paper: can an additional agent
-perform some of the reflective work normally supplied by humans, recognise
-when development is drifting and steer it back towards a useful outcome?
-I use reflection to mean checking assumptions and a working model of the
-system against observed behaviour, not generating another approval record.
-I read Beck's alternation of features and futures as preserving options for
-later development: adding behaviour can narrow those options, while
-consolidation can restore them~\cite{beck2026prodacity,beck2025devslow}.
-Whether an agent can supply that corrective work is an empirical question,
-not something established by the fact that a human supplied it in this case.
+My working theory draws on software evolution: feature accumulation can
+increase complexity and the cost of later changes unless counter-work is
+done~\cite{lehman1980laws,parnas1994aging,eick2001decay,cunningham1992wycash}.
+Two possible amplifiers are compounding errors and output exceeding review
+capacity. Earlier misreadings can become the context for later steps, as in
+Beck's literal-minded genie~\cite{orosz2025beck}; high volume can obscure the
+gap between recorded completion and observed behaviour. These are propositions,
+not effects estimated by this case. Scheduled review and consolidation are a
+plausible intervention~\cite{beck2026prodacity,beck2025devslow,beck2023tidy},
+not an established remedy.
+
+The prospective question is whether an additional agent can preserve working
+behaviour and options for later change through that bounded intervention.
+I use reflection to mean checking assumptions and a working model against
+observed behaviour, not generating another approval record. The experiment
+tests a scheduled consolidation package, not autonomous product steering or
+the replacement of human judgement.
 
 The case is unusually well documented. The repository is public, every change
 went through a pull request, an append-only log recorded what the agents did
 and why, and the coordinator's own instructions are versioned with the
-code~\cite{servera2026ama}. I approach the central question through four
+code~\cite{servera2026ama}. I approach the central question through three
 more specific questions:
 
 \begin{itemize}[leftmargin=*]
 \item \textbf{RQ1.} What did a long-running, autonomous, spec-driven delivery
 loop produce, and what did it fail to produce?
-\item \textbf{RQ2.} Which proposed mechanisms fit the gap between activity and
-usable outcome, and do they fit the working theory?
+\item \textbf{RQ2.} Which candidate mechanisms are consistent with the gap,
+and what counter-evidence and rival explanations limit each interpretation?
 \item \textbf{RQ3.} Can an additional agent preserve correctness and future
 changeability through a consolidation step after every feature, and at what
 cost? The experiment tests this bounded form of correction, not general
 autonomous steering.
-\item \textbf{RQ4.} Which reflective responsibilities might be delegated to
-agents, and what evidence and human accountability would that require?
 \end{itemize}
 
-\noindent The report makes five contributions:
+\noindent The report makes three linked contributions:
 
 \begin{enumerate}[leftmargin=*]
 \item A documented case of one architect working with agents for six weeks,
 from desk research to a deployed MVP and then a ten-day autonomous delivery
-loop, with quantitative evidence from the repository, its issue tracker and
-its log (Sections~\ref{sec:method} and~\ref{sec:what}).
-\item Five proposed mechanisms consistent with the loop's activity without usable
-software, each grounded in the case, mapped onto the working theory, linked to
-prior work and paired with an early-warning signal
+loop, with descriptive measures, bounded within-case contrasts and an
+observation--interpretation--proposition audit trail
+(Sections~\ref{sec:method} and~\ref{sec:what}).
+\item An integrated model of five candidate mechanisms, with operational
+boundaries, case indicators, counter-evidence and rival explanations. The
+individual phenomena are not claimed as new
 (Section~\ref{sec:mechanisms}).
-\item A feedback-first operating model for agentic delivery, made of
-invariants, checkpoints, proportional gates and measures that an architect can
-apply on the next working day (Section~\ref{sec:feedbackfirst}).
-\item A consolidation harness and a controlled experiment protocol to test
+\item A consolidation harness and a prospective controlled protocol to test
 an intervention whose effect between feature steps is not isolated in the
 related work reviewed here~\cite{openai2026harness,anthropic2025harness,pavlenko2026factory}. The protocol follows
 the registered-report example of Lulla et~al.~\cite{lulla2026protocol}
-and HVE Core's Minimum Viable Experiment method, with hypotheses
-and decision rules to reconcile with the tagged protocol before registration
-and fresh confirmatory runs (Sections~\ref{sec:harness}
+and HVE Core's Minimum Viable Experiment method. It retains the tagged design
+and makes its identification and precision limits explicit; registration and
+fresh confirmatory runs remain pending (Sections~\ref{sec:harness}
 and~\ref{sec:experiment}).
-\item A distinction between the reflective work I supplied in this case and
-the open question of how much of it an agent could perform
-(Section~\ref{sec:discussion}).
 \end{enumerate}
+
+Practice implications are proposals, not a separately validated operating
+model (Section~\ref{sec:feedbackfirst}). The broader question of reflective
+delegation and human accountability is discussed, not answered, in
+Section~\ref{sec:discussion}.
 
 This is not an evaluation of the tools I used. The framework at the centre of
 the case keeps a human between its phases by default; the failures described
@@ -287,6 +283,39 @@ contexts unevenly and less reliably as they grow~\cite{liu2024lost,hong2025conte
 By contrast, tests that clarify intent help both the model and the person
 judging its output~\cite{fakhoury2024ticoder}.
 
+\subsection{Refactoring, review and evaluation boundaries}\label{sec:evaluationwork}
+
+Agentic refactoring, review and human correction are already studied.
+RefactorBench evaluates 100 handcrafted multi-file refactoring tasks across
+nine Python repositories, not scheduled consolidation between feature
+additions~\cite{gautam2025refactorbench}. Kumar et~al.'s ASE~2025 study
+observed developers collaborating with agents on existing issues: incremental,
+active collaboration was associated with greater success, not randomly
+assigned to establish an optimal intervention rate~\cite{kumar2025agents}.
+SWE-Sharp-Bench supplies a reproducible C\# issue-resolution benchmark and
+curation pipeline~\cite{mhatre2025swesharp}; reproducible repository-scale
+evaluation itself is not a contribution claimed here.
+
+Two recent preprints sharpen the evaluation problem. CRBugBench evaluates
+review agents on 1,000 open-source and 800 proprietary tasks from one company,
+reporting weaker detection on complex, non-local and proprietary-context
+changes~\cite{yang2026crbugbench}. It is a 9~October 2026 preprint, not an
+independently replicated result establishing that review cannot work.
+\emph{Building to the Test} reports near-perfect behavioural scores for demos
+while the requested reusable library was unused or absent. Its unchanged,
+source-hidden oracle did not check that delivery contract~\cite{ma2026building}.
+This is distinct from altering tests, as examined in
+ImpossibleBench~\cite{zhong2026impossiblebench}: test integrity and adequate
+outcome coverage are separate safeguards.
+
+These studies narrow the proposed novelty to the case trace and the specific
+prospective package comparison, including an unforeseen change request. They
+also caution against assuming that another reviewer, a stricter check or a
+high hidden-test score necessarily certifies the intended deliverable.
+The literature discussion is focused, not systematic. Preprints, observational
+studies, practitioner accounts and first-party industrial reports have different
+evidential roles; none substitutes for the planned controlled comparison.
+
 \subsection{Optimisation with behavioural feedback}\label{sec:factory}
 
 Pavlenko et~al.'s \emph{Towards an AI Software Factory for Data Systems}
@@ -329,65 +358,35 @@ same trade-off: rapid generation can accumulate debt through architectural
 inconsistency, security vulnerabilities and maintenance overhead. Their
 account includes descriptive security-scan counts but does not estimate a
 controlled effect of consolidation. I do not claim that argument as new.
-I add a public case trace, proposed mechanisms with early-warning signals,
-and a falsifiable experiment protocol.
+I add a public case trace, candidate mechanisms and a prospective test.
 
-Kent Beck has been the most persistent chronicler of this shift. In 2023 he
-wrote that the value of most of his skills had dropped to zero while the
-leverage of the rest had multiplied~\cite{beck2023ninety}. His 2025 experiment
-in \emph{augmented coding}, building a B+~tree library with an agent under
-strict test-driven development, separated it from vibe coding by whether the
-programmer still cares about the code, its complexity, the tests and their
-coverage. He named the warning signs he watched for: loops, functionality
-nobody asked for, and tests disabled or manipulated so that they
-pass~\cite{beck2025augmented}. He describes agents as genies that grant wishes
-literally rather than as intended, and that will delete tests and declare
-themselves finished~\cite{orosz2025beck}. In his Prodacity~2026 talk he argued
-that fully agentic work without feedback goes off the rails, that the best
-software comes from maximising learning with software as a side effect, that
-every feature burns options that must be restored by alternating features
-with consolidation, and that one-shot spec-driven development is ``waterfall
-wearing a new coat''~\cite{beck2026prodacity,beck2025devslow}. In a September
-2026 essay addressed to mathematicians facing AI systems that prove theorems,
-he separates a discipline's visible output from the less visible work of
-understanding, simplifying and building abstractions, and places lasting human
-value in the latter~\cite{beck2026mathematicians}.
+Practitioner accounts motivate, rather than establish, the intervention.
+For Kent Beck, augmented coding differs from accepting generated output
+because the programmer still cares about the code, its complexity, tests and
+coverage; his B+~tree experiment uses strict test-driven
+development~\cite{beck2025augmented}. In his Prodacity talk, he argues for
+maximising learning, with software as a side effect, and for alternating
+features with consolidation to restore the future options that feature
+additions consume~\cite{beck2026prodacity,beck2025devslow}. This supplies a
+conceptual bridge from the case to the experiment. The concern is not only
+blocked sign-in, but delivery continuing without product-use feedback that
+could challenge assumptions and deepen understanding; the narrower hypothesis
+is that scheduled consolidation can preserve working behaviour and later
+changeability. His distinction between visible output and the less visible
+work of understanding, simplifying and building abstractions also grounds
+the question of which reflective responsibilities an agent might
+perform~\cite{beck2026mathematicians}. These arguments motivate the test;
+they establish neither the harness's effectiveness nor a permanent boundary
+between human and agent capabilities.
 
-Robert C.\ Martin, who in 2024 dismissed doom-laden predictions about AI
-while treating language models as useful tools~\cite{martin2024weprogrammers},
-now argues that agents will out-code humans by a wide margin. Programmers
-should therefore use that leverage to
-enforce test coverage, mutation testing and complexity limits through
-deterministic, executable standards, writing tests first and knowing their
-customers~\cite{martin2026outcodes,martin2026productengineers}. Erich Gamma,
-discussing the open-sourcing of AI features in Visual Studio Code, made a
-related point about evaluation: once a language model is part of a test,
-``your test is, by definition, flaky'', so his team built stochastic
-simulation tests instead~\cite{gamma2025syntax}. Andrew Murphy applies the
-Theory of Constraints~\cite{goldratt1984goal}: accelerating a non-bottleneck
-fills review queues and inflates work in progress, so that ``you are producing
-more code and shipping less software''~\cite{murphy2026speed}. He has also
-described engineers' grief at the loss of their craft~\cite{murphy2026fivestages}.
-
-Voices from inside the HVE community and from Microsoft's product groups say
-similar things. Mike Lanzetta, who writes about hypervelocity engineering,
-advises early-career engineers to work in small chunks, test first and limit
-the complexity of files and functions, and says that experienced developers
-``should expect to spend more time in Pull Request reviews, not
-less''~\cite{lanzetta2025growing}. After pushing roughly 60,000 lines of code
-in a two-week sprint with a crew of specialised agents, he described
-re-explaining architectural constraints to agents that had drifted from the
-original intent, observed that in a high-throughput environment ``quality
-drift creeps in fast'', and responded with a mandatory done gate and
-sprint-boundary retrospectives whose findings block the next sprint until they
-are resolved~\cite{lanzetta2026orchestra}. Charles Lamanna reports that
-agentic coding moved his organisation's bottleneck from writing code to
-deciding what matters and knowing whether what was built is good. Rather than
-spending the surplus on more features, his teams shipped about as many as
-before with more depth, reliability, performance and security, and one
-product's support tickets fell by double-digit percentages year over year
-while usage grew. Counting inputs such as lines of code, he writes, ``is easy
-and tells you almost nothing''~\cite{lamanna2026changing}.
+Robert C.\ Martin stresses executable engineering
+constraints~\cite{martin2026outcodes}; Andrew Murphy stresses bottlenecks
+other than coding~\cite{murphy2026speed}. Lanzetta's
+sprint retrospectives and Lamanna's emphasis on quality rather than additional
+features are reported practices, not controlled estimates of this
+harness~\cite{lanzetta2026orchestra,lamanna2026changing}.
+Appendix~\ref{app:practitioners} retains the extended accounts and their
+source boundaries.
 
 Spec-driven development (SDD) is the most direct attempt to tame agents with
 structure. GitHub's Spec Kit proposes a specify, plan, tasks and implement
@@ -593,7 +592,7 @@ scorer's latest result. I used descriptive counts; a hedging
 lexicon applied to each log entry (Appendix~\ref{app:measures}); reference
 tracing, in which I followed the identifiers of recorded learnings through the
 log by date; and AI-assisted interpretation of my observations. I described
-the mechanisms, the proposed accelerants and the consolidation remedy.
+the candidate mechanisms, possible amplifiers and consolidation hypothesis.
 GitHub Copilot in VS Code organised those explanations, named the five
 patterns and drafted the account, using Opus~5.5 and then GPT Sol~6 and~6.1
 as reported interface labels. Microsoft 365 Copilot helped summarise material
@@ -606,11 +605,95 @@ I have checked the repository figures and Azure expenditure reported here.
 Independent author checks of numerical findings from cited studies and of
 the log-growth figure remain pending.
 % TODO(author): retain the dated GitHub API responses and rubric-score snapshot underlying the case counts, or document any unavailable source evidence.
-The report follows established guidance for case
+The report is informed by established guidance for case
 study research in software engineering~\cite{runeson2009guidelines} and the
 ACM SIGSOFT Empirical Standards~\cite{sigsoft2021standards}. As the
 sole developer and author I am a participant-observer;
 Section~\ref{sec:threats} discusses what that implies.
+
+\subsection{Constructs and evidential boundaries}\label{sec:constructs}
+
+\emph{Working behaviour} means completing an intended task through the
+running system, including the identity, data and service dependencies needed
+for that task. A healthy endpoint or a passing repository test alone does not
+establish it. \emph{Decay} denotes loss of previously working behaviour or
+increasing difficulty of understanding and changing a system. The case
+documents a usability discontinuity during replacement, not a measured decline
+in intrinsic code quality; deployment drift could produce the same observation.
+\emph{Adaptability} is operationalised prospectively as success and cost on
+the fixed-budget, unforeseen change request, not as a universal measure of
+maintainability. \emph{Consolidation} means scheduled structural work intended
+to preserve observable behaviour, with tests checking that intention; passing
+finite tests cannot prove semantic equivalence.
+
+I keep five measurement categories separate. PRs, lines and words describe
+\emph{production volume}; checks, reviews and receipts describe
+\emph{validation activity}; observed user tasks describe \emph{system
+behaviour}; code metrics and the change request probe \emph{internal quality
+and changeability}; and corrective help requested or supplied describes
+\emph{intervention}. Only the first three have case observations. The case
+has no longitudinal complexity measure, controlled changeability task or
+systematically coded intervention dataset. Neither volume nor validation
+activity is used as a direct estimate of decay.
+
+\subsection{Chain of evidence and reflexivity}\label{sec:audittrail}
+
+Table~\ref{tab:audittrail} separates observations, interpretations and
+propositions. It indexes evidence already described here, not a newly coded
+dataset. Repository sources refer to the pinned commit unless identified as
+author reports. Log entries before 25~September are retrospective
+reconstructions; later dated entries are the project's contemporaneous record,
+not independent corroboration of every statement they contain. The 22 and
+24~October instructions, historical model use and intermittent product use
+remain author reports where original records have not been recovered.
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{Observation--interpretation--proposition audit trail. Interpretations
+are contestable; the proposed tests have not been performed.}\label{tab:audittrail}
+\begin{tabularx}{\textwidth}{@{}L{0.7cm}L{5.1cm}YY@{}}
+\toprule
+ID & Observation and provenance & Interpretation & Proposition or discriminating evidence \\
+\midrule
+O1 & Log, 8--14 Oct, plus author report: an MVP with sign-in and realistic
+synthetic data was used; 16 Oct record: replacement has one case, no staff
+and no model. & Recorded engineering completion did not preserve the owner's
+usable workflow. & Independently execute the same journey before and after
+migration; separate configuration failure from code regression. \\
+O2 & GitHub metadata: 183 PRs merged, 15--24 Oct; scorer records 5/5
+completeness; author could not sign in. Dated API/scorer captures still need
+to be retained. & Completion proxies and task-level success diverged. & A
+behavioural evaluator should expose disagreement with an artefact-based score. \\
+O3 & BRD/PRD versions and log: growth before and during the loop; PR
+\#445: two changed lines and a 78-line evidence record. & Requirements and
+process records may consume attention without delivering equivalent feedback.
+& Compare review effort and validated behaviour, not word counts alone. \\
+O4 & Log reference tracing: last simplicity citation on 13 Oct; missing
+registration/staff bindings in the replacement. & Some lessons may have
+fallen off the effective read path. Absence of a citation is not proof of
+absence of knowledge. & Inspect actual session inputs and test whether the
+prior lesson was available, understood and executable. \\
+O5 & Coordinator definition and ADR 0006: committed RPI records, full gates,
+delegated merging and migration priority; author still resolved blockers.
+& Reduced product-use feedback coexisted with substantial oversight. &
+Distinguish outcome-level feedback from approval activity; test the
+consolidation package separately from the migration. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+I selected the episodes, designed the coordinator and wanted the capstone to
+succeed. Those roles make a coherent retrospective explanation attractive.
+Developers' experience-based beliefs need not correspond with project
+evidence~\cite{devanbu2016belief}; that methodological caution applies to my
+own account, not only to agent-generated claims.
+AI-written project records are data about recorded activity, not independent
+judges of success; AI-assisted synthesis is analysis assistance, not another
+observer. No independent second coding or empirical peer-debrief pass has
+been completed. The supplied editorial critique prompted stronger boundaries
+and explicit rival explanations, but does not fill that gap. An independent
+check of O1--O5 against retained source and execution records remains necessary
+before presenting the interpretations as independently corroborated.
 
 % ===========================================================================
 \section{What happened}\label{sec:what}
@@ -747,6 +830,47 @@ cannot establish that removing product-use feedback caused the outcome:
 the migration, workload, gate rules, models and deployment conditions also
 changed, and the periods were not assigned at random.
 
+\subsection{Bounded within-case contrasts}\label{sec:contrasts}
+
+Table~\ref{tab:contrasts} compares episodes and negative cases already in the
+chronology. It is an analytical contrast, not a new PR-cohort study or an
+exhaustive search for disconfirming cases. In particular, documentation
+expansion preceded autonomy and the tracking/source churn ratio fell during
+the loop. Both limit a story in which autonomous coordination alone created
+the problem. The successful health and restart checks are also real successes;
+they did not exercise the same outcome as the blocked sign-in journey.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{Within-case contrasts and their limits, using the existing
+chronology and measurements.}\label{tab:contrasts}
+\begin{tabularx}{\textwidth}{@{}L{3.1cm}YY@{}}
+\toprule
+Contrast & Recorded difference or negative case & What it can and cannot discriminate \\
+\midrule
+Product use, 8--14 versus 15--24 Oct & Intermittent MVP use and same-day
+feedback versus no completed realistic replacement journey. & Consistent
+with feedback starvation; migration, environment, workload and models changed
+at the same time. \\
+Requirements before versus during the loop & Growth and review overhead
+already existed before autonomous coordination. & Weakens an autonomy-onset
+explanation; there is no matched small-specification comparison. \\
+Integration artefacts, 8--14 versus 15--24 Oct & Tracking/product-source
+additions fell from 29.28 to 10.27 while absolute output remained high. &
+Volume is not a monotonic decay measure; churn does not assess understanding
+or usability. \\
+Replacement engineering checks versus user task & Health, restart and
+unauthenticated-request rejection passed; real-user sign-in remained blocked.
+& Shows the boundary of those checks, not that passing checks were fabricated
+or that intrinsic code quality declined. \\
+Domain challenge versus backlog execution & Early role agents rejected the
+five-agent proposal; later sessions delivered the specified issues. &
+Negative case against inevitable agent compliance; role, task and human
+interaction differ, so this is not a treatment comparison. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \subsection{The backlog and the coordinator}
 
 Late on 14~October the backlog manager generated the backlog from the BRD,
@@ -825,35 +949,40 @@ functionality and refactor. I do not evaluate the outcome of that instruction
 here.
 
 % ===========================================================================
-\section{Five mechanisms}\label{sec:mechanisms}
+\section{Five candidate mechanisms}\label{sec:mechanisms}
 
-I propose five mechanisms consistent with how a loop that merged a pull
+I propose five candidate mechanisms consistent with how a loop that merged a pull
 request every eighty minutes or so left its owner with nothing to use.
-Table~\ref{tab:mechanisms} summarises them.
+Table~\ref{tab:mechanisms} summarises them; Appendix~\ref{app:mechanismaudit}
+sets out a definition, indicators, counter-evidence, rivals and testable
+implication for each. These are an integrated explanatory synthesis, not five
+newly discovered phenomena or independently established causal mechanisms.
 
 Read against the working theory of Section~\ref{sec:intro}, they fall into
-groups (Table~\ref{tab:theory}). The base rate is feature accumulation
-without consolidation: until 24~October the loop had no step that paused
-feature work to review and refactor what had been built, and its one large
+groups (Table~\ref{tab:theory}). The underlying risk is feature accumulation
+without consolidation: until 24~October the loop had no scheduled cumulative
+consolidation step, and its one large
 restructuring, the migration to a new source layout, was planned up front as
-backlog items rather than done continuously. Specification inflation, proxy
+backlog items rather than done continuously. This does not rule out local
+refactoring within individual issues. Specification inflation, proxy
 capture and learning evaporation are forms of the first accelerant,
-compounding error: each misreading, or literal reading, of intent became the
-context, the criteria or the evidence for the next step. Process-gate
-inflation and feedback starvation may reflect the second, unreviewable
-volume: gates and caveats coexisted with the absence of a person using the product.
+compounding error, in the proposed model: a misreading, or literal reading,
+of intent can become context or criteria for the next step. Process-gate
+inflation and feedback starvation may reflect output exceeding review
+capacity: gates and caveats coexisted with the absence of a person using the
+replacement. The case does not estimate either amplification effect.
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{A working theory: a base rate of decay and two accelerants, with the
-mechanisms that instantiate them in this case.}\label{tab:theory}
+\caption{A working theory: an underlying risk and two possible amplifiers,
+with candidate mechanisms consistent with this case. No rate is estimated.}\label{tab:theory}
 \begin{tabularx}{\textwidth}{@{}L{3.4cm}YL{4.6cm}@{}}
 \toprule
 Driver & What it predicts & In this case \\
 \midrule
-Base rate: features accumulate without consolidation & Complexity grows and
-quality declines unless work is done to counter them~\cite{lehman1980laws,lehman1997metrics} &
-No consolidation step until 24 Oct; restructuring planned as backlog items \\
+Underlying risk: features accumulate without consolidation & Complexity can grow and
+quality can decline without counter-work~\cite{lehman1980laws,lehman1997metrics} &
+No scheduled cumulative consolidation until 24 Oct; restructuring planned as backlog items \\
 Accelerant 1: compounding error & Each step builds on earlier misreadings and
 unneeded complexity~\cite{sinha2025illusion,laban2025lost,orlanski2026slopcodebench} &
 Specification inflation; proxy capture; learning evaporation \\
@@ -866,8 +995,8 @@ Process-gate inflation; feedback starvation \\
 
 \subsection{Specification inflation}\label{sec:m1}
 
-\emph{The specification grew faster than any system could absorb it or any
-person could validate it.} By 22~October the BRD had reached version~0.19 and
+\emph{Interpretation: specification growth outpaced the behaviour validated
+through product use.} By 22~October the BRD had reached version~0.19 and
 about 37,900 words, with requirement identifiers up to FR-052 and AC-103; the
 PRD had reached version~0.18 and about 33,900 words, with identifiers up to
 FR-061 and AC-110. The backlog inherited that scale and grew to 192 issues.
@@ -885,7 +1014,7 @@ could produce feedback. Smaller, iterative requirements documents are a
 plausible alternative, not an intervention tested in this case.
 
 This is B\"ockeler's small bug that became sixteen acceptance
-criteria~\cite{boeckeler2025sdd}, at the scale of a programme. It is also what
+criteria~\cite{boeckeler2025sdd}, at the scale of a programme. It is also consistent with what
 Royce and Gall warned about: a large system specified up front and tested at
 the end~\cite{royce1970,gall1975}. Brooks explains why more text does not
 help: the essential difficulty lies in the conceptual construct, and writing
@@ -998,9 +1127,9 @@ accumulating log, not a tested remedy for learning evaporation in this case.
 
 \subsection{Process-gate inflation}\label{sec:m4}
 
-\emph{Each failure was answered with another gate, until governing a change
-cost more than making it.} Gates are cheap for an agent to write and expensive
-for everyone to run. Within ten days the coordinator required, for every
+\emph{Interpretation: repeated gates appeared disproportionately burdensome;
+comparative effort was not measured.} Each new gate required execution and
+review. Within ten days the coordinator required, for every
 issue, the full RPI loop, a complete local gate before every push and after
 every correction or rebase, independent review, up to two correction cycles,
 board updates and evidence-based ticking of acceptance criteria. Hosted CI
@@ -1008,9 +1137,9 @@ minutes had to be rationed, the full gate had to be interrupted by explicit
 exception for a two-line fix, and paid cloud validation stayed blocked even
 after the cost ceiling was raised.
 
-The scarcest resource was not compute but my attention. Eighteen merged pull
-requests a day is more than any person can review in depth, so I delegated
-merging to the coordinator. I still answered approvals and technical blockers,
+My attention felt more constrained than compute, but I did not measure their
+relative scarcity. I could not review eighteen merged pull requests a day in
+depth, and delegated merging to the coordinator. I still answered approvals and technical blockers,
 but stopped getting feedback from using a replacement product. RPI critiques
 and reviews addressed the current issue rather than the cumulative system;
 there was no regular phase for reflective consolidation or generalisation
@@ -1022,19 +1151,25 @@ matches the shift from producing to evaluating reported for generative
 AI~\cite{simkute2024ironies}, the delegation demands it
 creates~\cite{tankelevitch2024metacognitive} and the erosion of critical
 scrutiny that confidence in AI brings~\cite{lee2025critical}. Murphy's
-diagnosis applies directly: the loop accelerated a non-bottleneck and filled
-every queue behind it~\cite{murphy2026speed,goldratt1984goal}. Martin is right
-that discipline must move into deterministic gates~\cite{martin2026outcodes};
-this case adds that the gates must check the product's behaviour rather than
-the process's paperwork. The early-warning signals are gate time per change,
+diagnosis is a plausible interpretation: throughput increased while the path
+to a usable outcome remained blocked~\cite{murphy2026speed,goldratt1984goal}.
+The bottleneck itself was not instrumented. Martin's argument for executable
+discipline~\cite{martin2026outcodes} suggests gates that check product
+behaviour rather than infer it from paperwork. The early-warning signals are gate time per change,
 human review minutes per merged pull request, work in progress, and cost per
 merged pull request compared with cost per accepted outcome.
 
 \subsection{Feedback starvation}\label{sec:m5}
 
-\emph{The loop optimised for completing a specified plan, not for shortening
-the path to the next piece of human feedback from a running increment.} This
-is my proposed central mechanism, not an isolated cause. Nothing in the coordinator kept a usable system alive:
+\emph{Candidate mechanism: insufficient independent, outcome-level feedback
+despite abundant artefact-level validation.} This differs from merely having
+few tests, a long feedback delay or missing context: many checks can pass
+while none disconfirms the claim that the intended user journey works.
+Independence here means evidence obtained by exercising the outcome rather
+than rereading its completion record; it need not imply a different model.
+The loop prioritised completing the specified plan rather than shortening the
+path to such feedback. This is my proposed central mechanism, not an isolated
+cause. Nothing in the coordinator kept a usable system alive:
 no invariant said that after every merge I must still be able to sign in and
 do my work. Done meant artefacts, criteria and gates. In the MVP week the
 feedback loop included my intermittent use, with some changes made the same
@@ -1061,11 +1196,11 @@ days.
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{Five mechanisms, their evidence in this case, the prior work that
-anticipated them and an early-warning signal for each.}\label{tab:mechanisms}
+\caption{Five candidate mechanisms, case indicators, relevant prior work
+and proposed early-warning signals. Indicators are not causal tests.}\label{tab:mechanisms}
 \begin{tabularx}{\textwidth}{@{}L{2.3cm}YL{3.1cm}L{3.2cm}@{}}
 \toprule
-Mechanism & Evidence in this case & Anticipated by & Early-warning signal \\
+Candidate & Case indicators & Related prior work & Early-warning signal \\
 \midrule
 Specification inflation & BRD $\approx$37,900 and PRD $\approx$33,900 words;
 192 issues; 17 criteria on one issue and 13 on the smallest preview &
@@ -1091,7 +1226,7 @@ usable increment \\
 \end{tabularx}
 \end{table}
 
-\subsection{How the mechanisms reinforce each other}
+\subsection{A proposed reinforcing relationship}
 
 I interpret the mechanisms as a possible reinforcing loop
 (Figure~\ref{fig:loop}). In this case a large specification accompanied a
@@ -1110,103 +1245,28 @@ intervention through a feedback-first invariant.}\label{fig:loop}
 \end{figure}
 
 % ===========================================================================
-\section{Informal field observations}\label{sec:field}
+\section{Implications for practice}\label{sec:feedbackfirst}
 
-In October 2026 I presented HVE Core to two partners and discussed agentic
-delivery with peers. I omit partner names and generalise identifying details.
-% TODO(author): confirm permission and sufficient anonymisation for both partner observations before external publication; neither partner nor its staff may be named.
-% TODO(author): obtain the programme colleague's permission for the paraphrased observation; permission is pending and no endorsement is implied.
-At one partner session, an engineer challenged the
-overhead of multi-agent orchestration, its token cost, how rules are enforced
-rather than merely stated, documentation bloat and the practice of committing
-agent tracking files, and asked how the approach compared with lighter
-alternatives such as Spec Kit. At the other session, concerns included trust
-in agent output and
-the net gain once costs are counted. And a fellow architect in my programme,
-looking at my backlog, asked how, with such a backlog, one learns how the
-solution works: Naur's question in one sentence. These are
-informal observations, not a systematically collected dataset. They suggest
-similar concerns, not independent confirmation of the mechanisms or their
-prevalence.
+\emph{Practice implication, not a tested operating model.} The case suggests
+protecting a usable increment, limiting the delivery horizon and keeping lessons
+on an effective read path. Validation should exercise the intended outcome,
+not infer it from receipts. These proposals follow from the candidate
+mechanisms but were not evaluated as a package in the case.
 
-% ===========================================================================
-\section{Feedback-first agentic delivery}\label{sec:feedbackfirst}
+Appendix~\ref{app:practices} gives seven proposed practices, a checklist and
+framework-design implications. Its numerical limits on parallel work and
+criteria are starting heuristics, not evidence-derived optima. Proportionality
+does not authorise bypassing mandatory safety, privacy, approval or repository
+publication gates. Compact context views must retain the evidence from which
+they are derived; a smaller read path need not erase history.
 
-The remedy is not fewer agents or less rigour. It is to put the rigour where
-the feedback is. Seven practices follow from the mechanisms;
-Table~\ref{tab:practices} lists what each means in concrete terms and what to
-watch.
+The experiment takes one narrower implication forward: schedule behavioural
+checking and structural consolidation between feature steps. It does not test
+the whole practice set, a live-user checkpoint cadence or a replacement for
+human responsibility. This separation keeps a proposed intervention distinct
+from a prescription presented as an empirical result.
 
-\begin{enumerate}[leftmargin=*,label=\textbf{P\arabic*.}]
-\item \textbf{A running increment is an invariant, not a backlog item.}
-Before generating a backlog, build a walking skeleton that a human uses, and
-make ``it still runs and I can still do my job in it'' a merge condition
-checked by a scripted user journey on the real deployment. Never freeze a
-working system before its replacement is usable.
-\item \textbf{Small batches, a short horizon and capped work in progress.}
-Generate a backlog for the next week or two, not for the whole product. Cap
-parallel sessions and the number of acceptance criteria per issue, and turn
-cross-cutting concerns into their own sequenced issues instead of appending
-them everywhere.
-\item \textbf{Human checkpoints on a fixed cadence.} Stop the loop every few
-merges or every day for a demo. Decide what to keep, cut or tidy, and do not
-start the next wave without a recorded decision. Alternate feature waves with
-tidying waves, as Beck recommends~\cite{beck2026prodacity,beck2023tidy}.
-\item \textbf{Executable learnings and a small read path.} Turn each lesson
-into a test, a lint rule or an architecture fitness function within a day, and
-keep a one-page set of standing rules in every brief. Cap the size of the
-documents agents must read, archive old log entries, and keep agent working
-memory out of the main branch, as HVE Core does by default.
-\item \textbf{Proportional gates that check behaviour.} Run change-scoped
-checks on every push and the full gate on merges to main or nightly. Gate on
-what the product does, not on the presence of process artefacts. Require no
-ceremony for trivial changes.
-\item \textbf{Measure outcomes and treat automated scores as hypotheses.}
-Track time to first human use, the age of the last usable increment, the
-share of merges that change user-visible behaviour, hedge density, review
-minutes per merge and cost per accepted outcome. Confirm any LLM-judged score
-with a live demo before believing it.
-\item \textbf{Keep the human as the theory builder.} Pair with the agent on
-the first vertical slice; write or approve the acceptance examples that
-define behaviour~\cite{fakhoury2024ticoder}; read the code of the core domain.
-Use agents that challenge as well as
-execute~\cite{sarkar2024challenge}.
-\end{enumerate}
-
-\begin{table}[t]
-\centering\footnotesize
-\caption{Feedback-first practices: what they mean in concrete terms, which
-mechanism they address and what to watch.}\label{tab:practices}
-\begin{tabularx}{\textwidth}{@{}L{3.3cm}YL{2.2cm}L{3.3cm}@{}}
-\toprule
-Practice & In concrete terms & Addresses & Watch \\
-\midrule
-P1 Running increment as invariant & Walking skeleton before the backlog; a
-scripted user journey on the real deployment gates every merge & Feedback
-starvation & Time to first human use; age of last usable increment \\
-P2 Small batches & One to two weeks of backlog; at most three parallel
-sessions; at most five acceptance criteria per issue & Specification
-inflation; gate inflation & Work in progress; criteria per issue \\
-P3 Human checkpoints & A demo every few merges or daily; keep, cut or tidy;
-tidying waves & Feedback starvation; specification inflation & Decisions
-recorded per checkpoint \\
-P4 Executable learnings & Lessons become tests, lint rules or fitness
-functions; one-page standing rules; capped read path & Learning evaporation &
-Share of lessons that are executable; read-path size \\
-P5 Proportional gates & Change-scoped checks per push; full gate on merge or
-nightly; no artefact gates & Gate inflation; proxy capture & Gate time per
-change \\
-P6 Outcome measures & Behaviour-changing merges; hedge density; review
-minutes; cost per accepted outcome; demo before score & Proxy capture &
-Score--demo disagreement \\
-P7 Human theory builder & Pair on the first slice; human-owned acceptance
-examples; read the core domain & Learning evaporation; feedback starvation &
-Questions the owner can answer without the agent \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{A consolidation harness}\label{sec:harness}
+\section{Consolidation hypothesis and harness}\label{sec:harness}
 
 The idea is already practised. OpenAI describes replacing weekly manual
 clean-ups with recurring background agents that open small refactoring pull
@@ -1217,17 +1277,14 @@ comparison of feature-only delivery with consolidation between feature steps.
 Darwin's continuous optimisation is a further precedent for automated
 improvement, but its performance evaluations do not isolate that intervention
 or test an unforeseen change request~\cite{pavlenko2026factory}
-(Section~\ref{sec:factory}). Section~\ref{sec:experiment} specifies the
-narrower comparison; it does not report results or claim a systematic review
-of every possible precedent.
+(Section~\ref{sec:factory}). RefactorBench already evaluates refactoring
+agents~\cite{gautam2025refactorbench}; the narrower hypothesis concerns retained
+behaviour and later adaptation during repeated feature additions.
 
-Practices P3 and P5 suggest a narrower intervention that an agent can run
-inside the loop, leaving human checkpoints to a coarser cadence, and that can
-therefore test a bounded part of the central question: a consolidation
-harness. The pause is scheduled by the harness, not chosen by the agent;
+The proposed consolidation harness tests a bounded part of reflective
+correction. The pause is scheduled by the harness, not chosen by the agent;
 the agent is not authorised to reject features or redirect the product.
-After every feature
-the loop stops, and an agent:
+After every feature the loop stops, and an agent:
 \begin{enumerate}[leftmargin=*]
 \item runs the tests and a metrics script that lists complexity hotspots,
 duplicated blocks and lint warnings;
@@ -1246,50 +1303,18 @@ appending to it;
 \item stops when a quality budget is met or its time budget runs out.
 \end{enumerate}
 Only then may the next feature start. Appendix~\ref{app:prompt} gives the
-prompt.
+prompt. The intervention combines refactoring, additional tests and a
+design-oriented note; it is not a pure refactoring treatment.
 
-The harness turns Beck's alternation of features and
+The hypothesis draws on Beck's alternation of features and
 futures~\cite{beck2026prodacity,beck2025devslow} and \emph{Tidy
-First?}~\cite{beck2023tidy} into a gate, and follows Martin's advice to put
-discipline into deterministic checks~\cite{martin2026outcodes}. It applies to
-every feature what Lanzetta's sprint-boundary retrospectives apply to every
-sprint~\cite{lanzetta2026orchestra}, and it spends part of the agentic
-surplus on quality, as Lamanna's teams did~\cite{lamanna2026changing}. It
-differs from the gates of Section~\ref{sec:m4} in what it checks: the
-behaviour and shape of the code, not the presence of process artefacts. It is
-not free, and it may not work. Agent refactorings are often wrong without
-verification or merely superficial~\cite{gautam2025refactorbench}, and the
-benefits of refactoring have been hard to attribute even for human
-teams~\cite{kim2014refactoring,bavota2015quality}. Whether it slows the decay
-is an empirical question, which the next section sets out to answer.
-
-\paragraph{A checklist for Monday.} For an architect about to start an
-agentic delivery loop, or already inside one:
-\begin{enumerate}[leftmargin=*]
-\item Can a human use a deployed increment today? If not, make that the only
-priority.
-\item Is ``still runs and is still usable'' checked on every merge, by a
-script that exercises a real user journey?
-\item Is the backlog horizon two weeks or less, with work in progress capped?
-\item Does each issue have five or fewer acceptance criteria?
-\item Is there a fixed checkpoint, with a demo and a recorded decision,
-before each new wave?
-\item Has every lesson from the last checkpoint become an executable check?
-\item Can every document an agent must read be read in a few minutes?
-\item Are gates proportional to the change, and do they test behaviour?
-\item Do you know the cost per accepted outcome, not just per token?
-\item Could you explain how the system works without asking an agent?
-\end{enumerate}
-
-\paragraph{Implications for framework builders.} Frameworks such as HVE Core
-already encode much of this: human stops between phases, plan critiques and
-context carried in files. Three additions would make the feedback-first path
-the easy one. A review phase could include using the running increment, not
-only reading the change. Artefact requirements could scale with the size and
-risk of a change, so that a two-line fix carries a two-line record. And
-lessons could have a first-class home as executable checks that every session
-loads, with a warning when the documents on an agent's read path exceed a
-budget.
+First?}~\cite{beck2023tidy}. It is not free, and may not work. Agent
+refactorings can be incorrect or superficial~\cite{gautam2025refactorbench};
+even human refactoring benefits can be difficult to
+attribute~\cite{kim2014refactoring,bavota2015quality}. Test-commit-or-revert
+protects only behaviour represented by its tests, not every intended
+contract~\cite{ma2026building}. Section~\ref{sec:experiment} specifies how
+the package will be evaluated.
 
 % ===========================================================================
 \section{Testing the harness: an experiment protocol}\label{sec:experiment}
@@ -1330,11 +1355,66 @@ quality instructions alone shift where agents start but not how fast they
 degrade~\cite{orlanski2026slopcodebench}. The harness tests a scheduled
 structural intervention and subsequent changeability instead.
 
+\subsection{Protocol at a glance}\label{sec:protocolsummary}
+
+Table~\ref{tab:protocolsummary} makes the intended comparisons and their
+limits explicit. This revision preserves the reported tagged design rather
+than silently replacing it with a repair-matched control, an equal-total-budget
+study or a different primary endpoint. Exact agreement with the private tag
+has not yet been verified.
+
+\begin{table}[p]
+\centering\small
+\caption{One-page summary of the preserved, registration-pending protocol.
+Planned safeguards are not completed checks.}\label{tab:protocolsummary}
+\begin{tabularx}{\textwidth}{@{}L{3.0cm}Y@{}}
+\toprule
+Item & Design and interpretation boundary \\
+\midrule
+Study unit & One complete S1 repository--feature-sequence trajectory; four
+independent runs per arm. Feature steps and CR1 within a run are not new
+independent replicates. \\
+Allocation & Planned randomised interleaving of arm runs on the same machine;
+one fixed ten-feature suite, not random assignment of repositories or scenarios. \\
+B--A estimand & Effect of adding the complete consolidation package at equal
+feature-step budgets, with up to 50\% extra agent time. Not an equal-total-budget
+or refactoring-only effect. \\
+B--C estimand & Complete consolidation versus read-only review at equal
+post-feature time ceilings. Editing permission, added tests and DESIGN versus
+REVIEW notes also differ. \\
+Retained priority & H1: final cumulative hidden pass rate, 10-point estimated
+gain with 95\% interval above zero for validation. H6 remains the specific
+changeability hypothesis, not a newly promoted primary outcome. \\
+Changeability & CR1 success and cost under 45 minutes; success also preserves
+every feature test passing before CR1. H6 requires a 20-point success gain or
+25\% cost saving at no lower success, under its interval rules. \\
+Budgets & 30 minutes per feature; 15 per B/C post-feature step; 45 for CR1.
+Credits and monetary cost remain distinct; final calibrated caps need checking. \\
+Analysis & Run-level intervals and proposed longitudinal models; only four
+runs per arm, no completed power simulation and no specified family-wide
+multiplicity control. Seven decision rules are retained, not newly validated. \\
+Integrity & Fresh sessions, fixed prompts/tests/configuration and checksum
+checks are planned. Local execution does not guarantee hidden-test or reference
+inaccessibility; independent suite/access checks remain pending. \\
+Human help & Primary runs unassisted; HIR/IDR descriptive. Corrective help is a
+retained, labelled deviation, not grounds for a replacement run. Telemetry
+coverage and annotation reliability remain unverified. \\
+Status & No results; registration and exact tagged provenance pending.
+Earlier runs remain excluded from fresh confirmatory analysis. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \subsection{Hypotheses}
 
 Table~\ref{tab:hypotheses} lists the hypotheses in priority order. Each
 follows the Experiment Designer's form: what we believe, how we will test it,
 and the measurable outcome that would show it right or wrong.
+The primary consumption measure stated here is AI credits; H5/H6 cost
+comparisons must be reconciled to that measure in the tagged analysis before
+registration. The percentage thresholds are unchanged. ``Pays for itself''
+does not establish monetary payback: tokens, elapsed time, credits and currency
+are reported separately, and no verified billing conversion is assumed.
 
 \begin{table}[t]
 \centering\footnotesize
@@ -1390,6 +1470,18 @@ comparison cannot isolate refactoring. Everything outside the post-feature
 intervention is identical: model and version, agent runtime, feature prompts,
 starting skeleton, tools and per-feature budgets.
 
+\emph{Estimands and control limits.} B--A estimates the incremental
+consolidation package at a fixed feature budget, including extra time and
+compute. B--C compares packages at equal post-feature time ceilings, not
+necessarily equal realised tokens, credits or elapsed time. C cannot repair
+detected defects, add tests or write B's design note. Any difference can
+therefore reflect permission to act, test additions, note content or their
+interactions, not structural consolidation alone. Review-only is not an
+active repair control. There is no equal-total-budget comparison, and this
+study cannot say what consolidation would displace under a fixed total budget.
+Those limitations constrain the causal interpretation even if allocation and
+the planned checks are implemented correctly.
+
 The additional agent is a distinct session with a different responsibility,
 not a different pinned model or an independent source of truth. Its value
 must be demonstrated by behavioural and changeability outcomes, not inferred
@@ -1423,6 +1515,11 @@ provide a weaker boundary than container isolation. They do not establish
 that hidden tests, references or outside resources are unreachable. Residual
 access risk limits validity and must accompany any results; an absence of
 leak flags is not proof of isolation.
+CR1 is intended to remain unavailable to feature, consolidation and review
+sessions until its dedicated change-request session. The tagged packaging and
+actual non-exposure of its request text, as well as its tests, remain to be
+verified. ``Unforeseen'' describes that intended information boundary, not an
+established property of local execution.
 % TODO(author): independently check hidden tests and cumulative reference solutions against the stated APIs and feature rules; this review is not yet complete.
 % TODO(author): retain and assess the actual local access-probe evidence and any observed exposure; do not claim a successful container-isolation probe or guaranteed hidden-test inaccessibility.
 
@@ -1455,6 +1552,13 @@ sample sizes will not be increased in response to observed effects.
 feature's post-feature step (a no-op in A), before the change request.
 Change-request success requires all its hidden tests to pass and no feature
 test that passed at that end state to fail afterwards.
+
+\emph{Endpoint hierarchy.} H1 retains first priority for working behaviour;
+H6 is the direct operational probe of future changeability. Passing H1 or
+improving complexity without a corresponding H6 outcome would not establish
+preservation of future options. One fixed change request supplies narrow
+task-specific evidence, not general maintainability. This revision does not
+retrospectively change that priority or its thresholds after earlier runs.
 
 \emph{Measures.} Cumulative hidden pass rate, open regressions and how long
 they survive; mean cyclomatic complexity, the share of functions above
@@ -1554,6 +1658,11 @@ is not better: it must not reward silent failure or discourage necessary
 human judgement.
 % TODO(author): verify intervention-event coverage in the actual telemetry schema, freeze extraction/adjudication rules and retain traceable event evidence before claiming HIR is measurable.
 
+Author checking of an automated extraction is not independent annotation.
+No inter-rater agreement, stable severity coding or construct-validation
+result is available; these rates remain descriptive and their annotation
+reliability must not be inferred from a complete-looking event table.
+
 \subsection{Analysis and bias controls}
 
 The difference in final cumulative pass rate is estimated with bootstrap
@@ -1593,6 +1702,43 @@ report observed and demand rates per run, human minutes and the B--A demand-rate
 difference with a 95\% interval, resampling whole runs within suite and arm.
 The rates accompany correctness and cost, rather than replacing them.
 
+\subsection{Identification and precision limits}\label{sec:protocollimits}
+
+Four trajectories per arm give twelve independent run clusters, not 120
+independent feature observations or twelve independent change scenarios.
+Bootstrap resampling cannot create additional independent information. Binary
+CR1 success is especially coarse at this sample size, and mixed-effects slopes
+may be unstable or unidentifiable. No simulation-based power or interval-coverage
+analysis has been completed. The rank-test attainability calculation above
+does not establish adequate power. Model convergence, boundary estimates and
+non-estimable quantities must be visible, not converted into precise-looking
+verdicts; any fallback analysis needs specification before fresh runs.
+
+The seven hypotheses retain their stated interval-based rules, but no
+family-wise error or false-discovery control is specified. Nominal 95\%
+intervals are pointwise, not a simultaneous guarantee across hypotheses,
+metrics and contrasts. The reported priority order is not itself a complete
+confirmatory testing hierarchy. These are decision criteria to reconcile
+before registration, not evidence that the planned sample can discriminate
+every minimum useful effect. No such validation is claimed here.
+
+The reset and missing-feature rule is specified, but the exact tagged policy
+for external-service outages, infrastructure failures, retries and incomplete
+measurements remains to be verified. These events must be distinguished from
+agent task failure without selective post-hoc exclusions. Run disposition,
+missingness and deviations require prospective rules and traceable reporting.
+The planned unassisted policy does not prove autonomy when requests or manual
+actions are incompletely observed.
+
+Finally, intended hidden-test separation, version pinning and blinded review
+are not completed controls. The local access boundary is weak, a provider
+service can change, and note content can disclose treatment to a comprehension
+reviewer. Actual access probes, evaluator separation, blinding effectiveness
+and the fixed questions/tool permissions remain to be checked. The paper
+therefore offers a falsifiable, preregistrable package comparison with explicit
+limits, not a fully validated confirmatory design or a pure causal test of
+refactoring.
+
 The protocol uses one proprietary model and no open-weights baseline. This
 limits reproducibility and transfer to other models; pinning the exposed
 version does not freeze a provider's service~\cite{baltes2026guidelines}.
@@ -1622,12 +1768,14 @@ conformant run that invalidates a hypothesis remains a valid outcome.
 \subsection{What worked}
 
 It would be wrong to read this case as a failure of agents. The research phase
-assembled, in days, a corpus and analysis that would have taken me weeks. The role agents' challenge
+assembled a corpus and analysis in days; my judgement that this would have
+taken me weeks is an unmeasured counterfactual. The role agents' challenge
 killed a bad idea, five end-to-end agents, before any code was written. The
 agents refused to invent approvals, figures or company facts, and recorded
-the limits of their evidence with a care many human teams lack. The MVP was
-built and reshaped in a day. Each of these successes had the same shape: a
-short loop with a human in it.
+the limits of their evidence. The MVP was built and reshaped in a day. These
+episodes included targeted human challenge and feedback; they are not a
+controlled comparison with human-only teams or proof that all short loops
+succeed.
 
 \subsection{What remained mine in this case}
 
@@ -1766,13 +1914,21 @@ in length and in the work attempted, model and tool versions changed during
 the study, and other work on the capstone, such as presentations, ran in
 parallel.
 
+Operating-environment effects must be separated from intrinsic code quality.
+Bird et~al. found application reliability associated with external environment
+factors in a different, desktop setting~\cite{bird2014extrinsic}. That does
+not explain this case, but supports treating missing identity, data and model
+configuration as concrete rivals rather than automatically diagnosing code
+decay. Tables~\ref{tab:rivals} and~\ref{tab:rivalsadditional} retain observed
+support, limits and untested alternatives separately.
+
 \begin{table}[p]
 \centering\footnotesize
-\caption{Rival explanations. Evidence against is a limit on an explanation,
-not a reason to rule it out.}\label{tab:rivals}
+\caption{Rival explanations with direct case records. Limits are not
+grounds for ruling an explanation out.}\label{tab:rivals}
 \begin{tabularx}{\textwidth}{@{}L{2.7cm}YYY@{}}
 \toprule
-Explanation & Evidence for & Evidence against & How this report treats it \\
+Explanation & Case support & Counter-evidence or limits & Treatment \\
 \midrule
 Migration decision & ADR 0006 (issue \#196) froze feature work in the working MVP and
 prioritised a new layout. & The new layout passed health and restart checks;
@@ -1782,10 +1938,10 @@ Capstone rubric & The rubric rewards research and documentation; the scorer
 gave completeness full marks without usable sign-in. & The brief also asks
 for a working demonstrator. & A possible incentive for artefact production,
 not a measured incentive effect. \\
-My coordinator and gate rules & I required committed RPI records and a full
-gate; PR \#445 needed an exception for a small fix. & The MVP used agents
+My overrides and priorities & I required committed RPI records, a full
+gate and delegated merging; PR \#445 needed an exception. & The MVP used agents
 successfully; HVE Core defaults retain human stops. & Limits attribution to
-agents or HVE Core; this is my configuration. \\
+agents or HVE Core; owner choices and migration priority are part of the case. \\
 Model and tool changes & Versions changed during the study. & There is no
 matched rerun under fixed versions. & An unresolved confound; configuration
 files cannot establish every session's actual model. \\
@@ -1801,11 +1957,48 @@ and possible lost learning, not proof of general code decay. \\
 \end{tabularx}
 \end{table}
 
+\begin{table}[p]
+\centering\footnotesize
+\caption{Additional plausible rivals. A reason to consider an explanation is
+not evidence that it occurred; missing checks remain unperformed.}\label{tab:rivalsadditional}
+\begin{tabularx}{\textwidth}{@{}L{2.7cm}YYY@{}}
+\toprule
+Explanation & Case evidence or reason considered & Counter-evidence or limits & Discriminating evidence still needed \\
+\midrule
+External services and deployment drift & The replacement lacked model and
+identity configuration; its environment differed from the MVP. & No external
+provider outage is established. Health checks passed a narrower path. &
+Versioned deployment/configuration comparison and dependency-health records
+alongside the same failed journey. \\
+Scope expansion & Responsible-AI and consumption criteria were added to open
+issues; a resident preview introduced further obligations. & Expansion also
+occurred before the loop and some controls were justified. & Matched original
+versus added scope, sequencing and time-to-usable-outcome analysis. \\
+Inadequate acceptance tests & Local checks passed without a completed
+real-user sign-in journey; the rubric read repository artefacts. & Test scope
+was bounded and honest; this does not show all tests were poor. & Map each
+claimed capability to a task-level oracle and actual execution evidence. \\
+Rate and context limits & Parallel sessions and a large read path make
+resource/context constraints plausible. & No session-level rate-limit,
+truncation or attention dataset was analysed. & Retained runtime events,
+actual inputs and blocked/retried request classifications. \\
+Specification ambiguity & I selectively reviewed long requirements with
+difficult cross-references. & Important domain and consent decisions survived;
+ambiguity was not independently coded. & Independent interpretation of the
+same requirements and concrete conflicting acceptance examples. \\
+Ordinary prototype debt & A rapidly assembled MVP was restructured and its
+deployment rebuilt; this can fail without agents. & The earlier MVP did work
+intermittently; there is no comparable human-led migration. & Matched migration
+or failure analysis distinguishing inherited debt from newly introduced faults. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \emph{External validity.} This is a single case: one developer, a fictional
 but regulation-heavy domain, and a capstone whose rubric rewards
 documentation as well as software. Teams with dedicated product owners, users
 or operations staff may experience the mechanisms differently. The field
-observations in Section~\ref{sec:field} suggest the mechanisms are recognised
+observations in Appendix~\ref{sec:field} suggest similar concerns are recognised
 elsewhere, but they are not evidence of prevalence.
 
 \emph{Reliability and researcher bias.} The repository, issues and log are
@@ -1822,28 +2015,31 @@ disclosed below; source checking does not establish an unbiased interpretation.
 % ===========================================================================
 \section{Conclusion}\label{sec:conclusion}
 
-An autonomous, spec-driven agent loop can produce an enormous amount of
-software engineering activity, requirements, plans, reviews, receipts and
-merged pull requests, without producing software that its owner can use. In
-this case the evidence points towards a configuration that measured progress
-by artefacts, answered failures with more gates, kept lessons in prose, and
-had no invariant requiring a usable system. It does not rule out the rival
-explanations or establish that model capability was irrelevant. These
-patterns fit old lessons of software engineering; I propose that agentic
-throughput can amplify them. My practical response is to make
-feedback the primary output of every cycle: a running increment, a human
-checkpoint and executable lessons. Objective-guided optimisation provides a
+This case records a divergence: 183 merged pull requests and a full
+implementation score coexisted with the owner's inability to sign in to the
+replacement system. Production volume and validation activity did not
+establish usable behaviour. Five candidate mechanisms organise that evidence,
+but migration, environment, scope, test coverage and owner decisions remain
+plausible rivals. The case does not establish a rate of code decay, an
+agent-caused acceleration or the effectiveness of consolidation.
+
+The contribution is the chain from that observed divergence, through bounded
+candidate explanations, to a prospective test of retained behaviour and
+adaptation. Practice implications are proposals, not validated controls.
+Objective-guided optimisation provides a
 bounded precedent for agent-led correction~\cite{pavlenko2026factory}; the
 further question is whether such correction preserves changeability as
 features accumulate. Accountability for goals and
 consequential decisions remains distinct from delegating bounded corrective
 work; the case does not establish that only humans can perform that work.
 
-The experiment operationalises a bounded version of that question: can an
+The preserved experiment operationalises a bounded version of that question: can an
 agent that consolidates after every feature keep agent-built software
 working, understandable and changeable at an acceptable cost? It tests
-whether an additional agent can help restore future options, not whether it
-can choose the right product or autonomously recover every delivery failure.
+the complete consolidation package, not refactoring alone or an
+equal-total-budget policy. H6 is its direct, task-specific probe of future
+options; other quality measures cannot substitute for it. The experiment does
+not test choosing the right product or autonomously recovering every delivery failure.
 Section~\ref{sec:experiment} sets out how to find out. The larger question of
 agent-led steering remains open; the first requirement is evidence that the
 additional agent improves outcomes rather than adds another layer of work.
@@ -1888,6 +2084,14 @@ responsibility for the content.
 % TODO(author): record underlying model/build identifiers and historical runtime or reviewer versions where exposed; do not infer hidden versions from interface labels or claim exhaustive manual review.
 % TODO(author): verify numerical findings attributed to cited studies against the original papers, including SlopCodeBench and METR; author verification is pending.
 % TODO(author): prepare the authorised provenance excerpts from retained exchanges, redacting partner identities and internal reviewer names/contact suggestions; AI assertions of source checking are not independent evidence.
+
+For draft v4, Copilot applied the editorial critique, distinguished observations
+from candidate explanations and prescriptions, and preserved the experimental
+design at my direction. It checked primary metadata and abstracts for six new
+references and full-text scope for RefactorBench and Building to the Test.
+CRBugBench full-text extraction and the HITS study were unavailable; their
+access limits are not independent verification. The revision did not add a
+second empirical coder, new case measurements or study results.
 
 \section*{Data availability}
 The repository analysed is public at
@@ -2017,6 +2221,14 @@ longitudinal study on developers' daily software development work.
 Debt (TechDebt '18)}, pages 105--114. ACM, 2018.
 \newblock doi:10.1145/3194164.3194178.
 
+\bibitem{bird2014extrinsic}
+C.~Bird, V.-P. Ranganath, T.~Zimmermann, N.~Nagappan, and A.~Zeller.
+\newblock Extrinsic influence factors in software reliability: A study of
+200,000 {Windows} machines.
+\newblock In \emph{Proceedings of the 36th International Conference on Software
+Engineering (ICSE)}. ACM, 2014.
+\newblock \url{https://www.microsoft.com/en-us/research/publication/extrinsic-influence-factors-in-software-reliability-a-study-of-200000-windows-machines/}.
+
 \bibitem{boeckeler2025sdd}
 B.~B\"ockeler.
 \newblock Understanding spec-driven-development: {Kiro}, spec-kit, and {Tessl}.
@@ -2075,6 +2287,13 @@ D.~Delimarsky.
 source toolkit.
 \newblock The GitHub Blog, 2 September 2025.
 \newblock \url{https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/}.
+
+\bibitem{devanbu2016belief}
+P.~Devanbu, T.~Zimmermann, and C.~Bird.
+\newblock Belief \& evidence in empirical software engineering.
+\newblock In \emph{Proceedings of the 38th International Conference on Software
+Engineering (ICSE)}. ACM, 2016.
+\newblock doi:10.1145/2884781.2884812.
 
 \bibitem{ding2025nl2repo}
 J.~Ding, S.~Long, C.~Pu, et~al.
@@ -2239,6 +2458,14 @@ M.~Kim, T.~Zimmermann, and N.~Nagappan.
 \par
 \endgroup
 
+\bibitem{kumar2025agents}
+A.~Kumar, Y.~Bajpai, S.~Gulwani, G.~Soares, and E.~Murphy-Hill.
+\newblock Why {AI} agents still need you: Findings from developer-agent
+collaborations in the wild.
+\newblock In \emph{IEEE/ACM International Conference on Automated Software
+Engineering (ASE)}, 2025.
+\newblock arXiv:2506.12347v3, 9 October 2025.
+
 \bibitem{laban2025lost}
 P.~Laban, H.~Hayashi, Y.~Zhou, and J.~Neville.
 \newblock {LLMs} get lost in multi-turn conversation.
@@ -2308,6 +2535,13 @@ J.~L. Lulla, M.~Galster, J.~M. Zhang, S.~Baltes, and C.~Treude.
 decisions: A study protocol.
 \newblock ESEM 2026, Registered Reports track. arXiv:2606.03907, 2026.
 
+\bibitem{ma2026building}
+Y.~Ma, B.~Kereopa-Yorke, and B.~Schultz.
+\newblock Building to the test: Coding agents deliver what you check, not what
+you requested.
+\newblock arXiv preprint arXiv:2606.28430v1, 26 June 2026.
+\newblock \url{https://arxiv.org/abs/2606.28430v1}.
+
 \bibitem{martin2024weprogrammers}
 R.~C. Martin.
 \newblock \emph{We, Programmers: A Chronicle of Coders from Ada to AI}.
@@ -2330,6 +2564,13 @@ J.~Becker, N.~Rush, T.~Cunningham, D.~Rein, and K.~Mahamud.
 \newblock We are changing our developer productivity experiment design.
 \newblock METR blog, 24 February 2026.
 \newblock \url{https://metr.org/blog/2026-02-24-uplift-update/}.
+
+\bibitem{mhatre2025swesharp}
+S.~Mhatre, Y.~Bajpai, S.~Gulwani, E.~Murphy-Hill, and G.~Soares.
+\newblock {SWE-Sharp-Bench}: A reproducible benchmark for {C\#} software
+engineering tasks.
+\newblock In \emph{International Conference on AI-powered Software (AIware)},
+2025. Accessed arXiv:2511.02352v2, 5 November 2025.
 
 \bibitem{murphy2026fivestages}
 A.~Murphy.
@@ -2528,6 +2769,13 @@ W.~Yan.
 \newblock Cognition blog, 12 June 2025.
 \newblock \url{https://cognition.ai/blog/dont-build-multi-agents}.
 
+\bibitem{yang2026crbugbench}
+C.~Yang, H.~He, T.-C. Cheng, J.~Butler, E.~Murphy-Hill, C.~Badea, and C.~Bird.
+\newblock (When) should a software factory be lights-off? Benchmarking code
+review agents on bug detection.
+\newblock arXiv preprint arXiv:2610.13668v1, 9 October 2026.
+\newblock \url{https://arxiv.org/abs/2610.13668v1}.
+
 \bibitem{yu2026habituation}
 H.~Yu, L.~Liu, X.~Jiang, Y.~Jia, S.~Wang, P.~Qian, and Y.~Chen.
 \newblock Habituation at the gate: Rising approval and declining scrutiny in
@@ -2548,6 +2796,255 @@ cases.
 
 % ===========================================================================
 \appendix
+\section{Supplementary practitioner context}\label{app:practitioners}
+
+These sources document contemporary arguments and reported practices. They
+are not primary evidence that this case's candidate mechanisms caused its
+outcome or that the harness is effective.
+
+\subsection{Craft, constraints and reported practice}
+
+Beck's augmented-coding account distinguishes caring about code, complexity,
+tests and coverage from accepting plausible output. He describes loops,
+unrequested functionality and disabled tests as warning
+signs~\cite{beck2025augmented,orosz2025beck}. His Prodacity talk argues for
+learning through software and alternating feature work with consolidation;
+his mathematicians essay distinguishes visible output from understanding and
+abstraction~\cite{beck2026prodacity,beck2025devslow,beck2026mathematicians}.
+These arguments motivate the hypothesis, not a measured treatment effect.
+
+Martin's 2024 treatment of language models as tools and his later call for
+executable standards emphasise coverage, mutation testing, complexity limits
+and knowing the customer~\cite{martin2024weprogrammers,martin2026outcodes,martin2026productengineers}.
+Gamma's discussion of stochastic simulation testing concerns evaluation
+containing a model, not a reason to treat all deterministic tests as
+unreliable~\cite{gamma2025syntax}. Murphy applies the Theory of Constraints
+to review queues and work in progress, while also describing the loss of
+craft~\cite{goldratt1984goal,murphy2026speed,murphy2026fivestages}.
+
+Lanzetta advises small chunks, tests first, bounded complexity and more
+attention to PR review~\cite{lanzetta2025growing}. His account of a two-week,
+roughly 60,000-line sprint describes repeated architectural reorientation,
+a done gate and retrospectives that block the next sprint until findings are
+resolved~\cite{lanzetta2026orchestra}. Lamanna reports spending agentic
+capacity on reliability, performance and security rather than more features,
+with improved support outcomes for one product~\cite{lamanna2026changing}.
+These first-party accounts do not isolate consolidation from other changes,
+and their output measures are not comparable controlled estimates.
+
+\subsection{Informal field observations}\label{sec:field}
+
+In October 2026 I presented HVE Core to two partners and discussed agentic
+delivery with peers. I omit partner names and generalise identifying details.
+% TODO(author): confirm permission and sufficient anonymisation for both partner observations before external publication; neither partner nor its staff may be named.
+% TODO(author): obtain the programme colleague's permission for the paraphrased observation; permission is pending and no endorsement is implied.
+At one partner session, an engineer challenged orchestration overhead, token
+cost, rule enforcement, documentation bloat and committed tracking files,
+and asked about lighter alternatives such as Spec Kit. The other session
+raised trust and net benefit after costs. A fellow architect asked how one
+learns how the solution works with such a backlog. These are informal,
+retrospectively reported observations, not systematically collected data,
+independent corroboration or evidence of prevalence.
+
+\section{Proposed feedback-first practices}\label{app:practices}
+
+The seven practices in Table~\ref{tab:practices} are implications for
+practitioners to evaluate, not an empirically validated operating model.
+One-to-two-week horizons, three parallel sessions and five acceptance criteria
+are starting heuristics, not estimated optima or new rules for this repository.
+They do not override required engineering or human approval gates.
+
+\begin{table}[htbp]
+\centering\footnotesize
+\caption{Proposed practices, candidate mechanisms and suggested observations.}\label{tab:practices}
+\begin{tabularx}{\textwidth}{@{}L{2.9cm}YL{2.7cm}@{}}
+\toprule
+Practice & Proposed application and boundary & Observe \\
+\midrule
+P1 Protect a running increment & Exercise a real user journey before replacing
+a working system; distinguishes usability from health checks. & First human
+use; age of last usable increment \\
+P2 Bound batches and horizon & Start with one to two weeks, at most three
+sessions and five criteria per issue; revise to fit task risk. Addresses
+specification/gate inflation. & Work in progress; scope versus validated
+behaviour \\
+P3 Hold human checkpoints & Demo every few merges or daily, decide what to
+keep, cut or tidy, and record the decision. Addresses feedback
+starvation~\cite{beck2026prodacity,beck2023tidy}. & Product-use feedback and
+decisions, not attendance alone \\
+P4 Make lessons usable & Convert suitable lessons into tests, lint rules or
+fitness functions; provide compact, provenance-linked context while retaining
+the original evidence. Addresses learning evaporation. & Executable lessons;
+effective read-path size \\
+P5 Make gates proportional & Prefer behaviour-scoped checks and risk-based
+records, subject to mandatory full/publication and safety gates. Addresses
+process inflation and proxy capture. & Gate time and defects detected per
+accepted outcome \\
+P6 Measure outcomes & Compare automated scores with real journeys; track
+behaviour-changing merges, review effort and attributable cost. Hedge density
+is only a prompt to inspect records. & Score--demo disagreement; cost per
+accepted outcome \\
+P7 Preserve theory building & Pair on the first slice, own acceptance
+examples, read the domain code and invite challenge rather than compliance
+alone~\cite{fakhoury2024ticoder,sarkar2024challenge}. & What the owner can
+predict and explain without the agent \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{A checklist for Monday.}
+Can a human complete an intended task in today's deployed increment? Does a
+merge preserve that journey? Is the horizon short and work in progress
+bounded? Are criteria small enough to review? Is there a demo checkpoint and a
+decision before the next wave? Can important lessons be executed or retrieved
+with their evidence? Is required context readable? Do gates test behaviour
+without weakening mandatory safeguards? Is cost attributable to accepted
+outcomes? Can the owner explain the core design without an agent? These
+questions expose missing evidence; they do not certify a delivery process.
+
+\paragraph{Implications for framework builders.}
+HVE Core already supplies human stops, critiques and file-based context.
+Possible additions are review paths that exercise the running increment,
+evidence requirements scaled to risk, and executable lessons with warnings
+when required context exceeds a budget. Such additions require evaluation;
+this case does not establish that they improve outcomes or that existing
+gates should be removed.
+
+\section{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
+
+These are operational boundaries for this paper, not validated necessary and
+sufficient conditions for all agentic development. The indicators refer to
+Table~\ref{tab:audittrail} and the case chronology. Experimental implications
+state what evidence would discriminate an explanation; the tagged experiment
+does not manipulate the five candidates separately.
+
+\subsection{Specification inflation}
+
+{\small
+\noindent
+\begin{tabularx}{\textwidth}{@{}L{2.6cm}Y@{}}
+\toprule
+Element & Audit \\
+\midrule
+Definition & Requirements and acceptance obligations expand faster than
+independently validated behaviour, without evidence that the added scope is
+needed for the next usable increment. Length alone is insufficient. \\
+Case indicators & O3: BRD/PRD growth, 192 issues and cross-cutting additions;
+the smallest resident preview had thirteen criteria. \\
+Counter-evidence & Growth began before autonomy and sometimes followed the
+owner's feedback; regulatory and consent controls can justify detail. \\
+Rival explanations & Genuine scope expansion, specification ambiguity,
+capstone incentives and an ambitious migration rather than agent-driven
+inflation. \\
+Experimental implication & Compare smaller requirements horizons at matched
+scope and resources. The current fixed-suite experiment cannot identify this
+mechanism, even if consolidation helps. \\
+\bottomrule
+\end{tabularx}
+\par
+}
+
+\subsection{Proxy capture}
+
+{\small
+\noindent
+\begin{tabularx}{\textwidth}{@{}L{2.6cm}Y@{}}
+\toprule
+Element & Audit \\
+\midrule
+Definition & A completion proxy becomes a decision criterion and remains
+positive when an independent test of the intended outcome is negative. Proxy
+use alone does not establish capture. \\
+Case indicators & O2--O3: 5/5 implementation score despite blocked sign-in;
+mandatory artefact presence; disproportionate evidence for PR \#445. \\
+Counter-evidence & Agents explicitly reported unmet acceptance; neither
+fabricated approval nor deliberate deception is established. \\
+Rival explanations & An inadequate scorer or acceptance oracle, different
+evaluation targets, and a deployment failure invisible to repository review. \\
+Experimental implication & Disagreement between visible completion and hidden
+behavioural tests would expose proxy limits. It would not by itself establish
+intentional test gaming or explain why a gate was chosen. \\
+\bottomrule
+\end{tabularx}
+\par
+}
+
+\subsection{Learning evaporation}
+
+{\small
+\noindent
+\begin{tabularx}{\textwidth}{@{}L{2.6cm}Y@{}}
+\toprule
+Element & Audit \\
+\midrule
+Definition & A recorded lesson relevant to a later decision is absent from,
+unusable on, or not applied through that decision's effective context path,
+and the associated problem recurs. A missing citation alone is insufficient. \\
+Case indicators & O4: simplicity references cease; working sign-in setup is
+not preserved; state and intent documents reach about 139,000 words. \\
+Counter-evidence & Important domain decisions survived; the lesson could have
+been known but deferred. Actual session attention was not measured. \\
+Rival explanations & Deliberate migration sequencing, deployment-specific
+configuration, context limits, or conflicting requirements rather than lost
+knowledge. \\
+Experimental implication & Trace actual inputs and repeated faults. B--C
+cannot isolate memory quality because DESIGN and REVIEW notes and acting
+permissions differ. A matched-context study would be needed. \\
+\bottomrule
+\end{tabularx}
+\par
+}
+
+\subsection{Process-gate inflation}
+
+{\small
+\noindent
+\begin{tabularx}{\textwidth}{@{}L{2.6cm}Y@{}}
+\toprule
+Element & Audit \\
+\midrule
+Definition & Additional procedural obligations increase per-change burden
+without demonstrated proportional improvement in the targeted outcome. More
+gates alone are not evidence that their net benefit is negative. \\
+Case indicators & O5: full RPI and validation on each correction/rebase;
+hosted-minute rationing; explicit exception for PR \#445. \\
+Counter-evidence & Checks caught bounded defects and enforced evidence
+integrity. Gate duration and human review effort were not measured per PR. \\
+Rival explanations & Legitimate safety and privacy requirements, budget
+constraints, new deployment complexity and owner-selected risk tolerance. \\
+Experimental implication & Measure gate time and accepted outcomes under
+matched risk. H5 measures the consolidation package's cost, not the effect of
+removing this repository's required gates. \\
+\bottomrule
+\end{tabularx}
+\par
+}
+
+\subsection{Feedback starvation}
+
+{\small
+\noindent
+\begin{tabularx}{\textwidth}{@{}L{2.6cm}Y@{}}
+\toprule
+Element & Audit \\
+\midrule
+Definition & Independent outcome-level feedback is insufficient to correct
+delivery decisions despite abundant artefact-level validation. The defining
+gap is between the evaluated proxy and intended outcome, not test count alone. \\
+Case indicators & O1--O2 and O5: working MVP frozen; replacement unusable;
+passing checks and continued approvals did not restore a completed user task. \\
+Counter-evidence & Human oversight continued; agents surfaced blockers;
+engineering checks provided real, though narrower, feedback. \\
+Rival explanations & Identity and service configuration, migration priority,
+incomplete acceptance coverage, prototype debt or insufficient resources. \\
+Experimental implication & Hidden retention tests and CR1 supply behavioural
+feedback to the evaluator. The experiment does not test live deployment
+recovery, product selection or a human-use checkpoint cadence. \\
+\bottomrule
+\end{tabularx}
+\par
+}
+
 \section{Measures and lexicon}\label{app:measures}
 
 \paragraph{Log entries.} The knowledge-base log

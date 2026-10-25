@@ -1,10 +1,10 @@
 ---
-title: Everything but the Software - arXiv source package (draft v3)
-description: Exploratory case study, author clarifications and registration-pending experiment protocol
+title: Everything but the Software - arXiv source package (draft v4)
+description: Critique-revised exploratory case, candidate mechanisms and preserved registration-pending experiment protocol
 ms.date: 2026-10-25
 ---
 
-Working title: *Everything but the Software: How Coding Agents Accelerate Feature-Driven Decay. An Exploratory Case Study and an Experiment Protocol.*
+Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current status
 
@@ -18,6 +18,101 @@ The separate private experiment kit is the intended study record. The ancillary
 MVE notes here are earlier proposals, not the frozen or registered protocol.
 Do not overwrite the tagged kit with these copies. Registration preparation is
 deferred; public release and external deposits remain subject to permission.
+
+The source is now the critique-revised draft v4. This workflow did not replace
+the PDF with its external build or refresh the arXiv bundle. A separate
+workspace build regenerated the PDF during editing; the owner then explicitly
+selected leaving that current PDF untouched. Pre-edit PDF preservation cannot
+be claimed. The external compilation is validation output, not a submission
+package.
+
+## Critique Revision 25 October
+
+The owner selected author mode, the existing LaTeX format and preservation of
+the tagged experiment. Continued on the current open-PR branch, retaining
+the existing PDF and unrelated worktree changes. No private study files,
+application behaviour, cloud resources or experiment runs were changed.
+
+| Critique area | Treatment in draft v4 |
+| --- | --- |
+| Central claim and causal title | Adopted the single-loop observational subtitle and aligned abstract, three research questions and three contributions to divergence, candidate explanations and a prospective test |
+| Case methodology | Added operational construct boundaries, a five-row observation--interpretation--proposition audit trail, reflexivity and bounded within-case/negative-case contrasts; no new dataset or independent coding is claimed |
+| Mechanisms | Labelled the five explanations as candidates and added a definition, indicators, counter-evidence, rivals and experimental implication for each in an appendix |
+| Practice and practitioner material | Reduced the main discussion, moved extended accounts, informal observations and detailed practices/checklist to appendices, and labelled numerical practice limits as untested heuristics |
+| Rival explanations | Expanded the matrix to distinguish migration, owner decisions, environments/dependencies, scope, acceptance coverage, models, budgets, context/rate limits, ambiguity and prototype debt, including untested alternatives |
+| Protocol interpretation | Added a one-page summary, explicit package-level estimands, endpoint hierarchy, small-sample/cluster limits, multiplicity limits, unverified blinding/access and missing-data rules, credit-versus-currency and CR1 withholding boundaries |
+| Proposed redesign | Not adopted, by owner decision: C remains read-only, no equal-total-budget comparison is added, H1 retains priority and H6 remains the changeability probe. Hypotheses, thresholds, budgets, sample and prior-run labels are unchanged |
+| Additional empirical work | Not invented: power simulations, independent case coding, annotation agreement, suite/access review and actual registered study results remain unperformed or unverified |
+
+An owner-requested follow-up restores a substantive Beck paragraph in the main
+practitioner conversation. It connects care for code and tests, learning through
+product use, preservation of future options and reflective delegation to the
+consolidation hypothesis. This is conceptual motivation, not evidence that the
+harness works. The longer practitioner accounts remain in the appendix.
+
+The revision makes the case and protocol's limits more explicit; it does not
+claim to have resolved all methodological concerns in the critique. New
+evidence tables and protocol limitations add content despite the cuts to
+repetitive practitioner and practice material. No overall word-count reduction
+or venue page-limit acceptance is claimed.
+
+### Citation Corrections and Additions
+
+Primary source retrieval on 25 October supports six new references, now 103
+matching entries in the embedded and reusable bibliographies:
+
+* [Why AI Agents Still Need You](https://arxiv.org/abs/2506.12347v3),
+   accepted at ASE 2025: observed collaboration, not a randomised estimate of
+   optimal human intervention
+* [CRBugBench](https://arxiv.org/abs/2610.13668v1), 9 October 2026 preprint:
+   review-agent evaluation, including complex/non-local and proprietary-context
+   limitations; only metadata and the abstract were retrieved successfully
+* [Building to the Test](https://arxiv.org/abs/2606.28430v1), 26 June 2026
+   preprint: an unchanged partial behavioural oracle can pass a demo while
+   the requested reusable library is unused or absent. This is not evidence
+   that the tests were weakened
+* [SWE-Sharp-Bench](https://arxiv.org/abs/2511.02352v2): an existing reproducible
+   C# issue-resolution benchmark; the accessed v2 is identified rather than
+   implying a review of its later v3
+* [Belief & Evidence](https://www.microsoft.com/en-us/research/publication/belief-evidence-in-empirical-software-engineering/),
+   ICSE 2016: experience-based beliefs need not correspond to project evidence
+* [Extrinsic Influence Factors](https://www.microsoft.com/en-us/research/publication/extrinsic-influence-factors-in-software-reliability-a-study-of-200000-windows-machines/),
+   ICSE 2014: operating-environment effects are distinct from intrinsic code
+   properties, in a different application setting
+
+The existing [RefactorBench source](https://arxiv.org/html/2503.07832v1)
+reports 100 tasks across nine Python repositories, not the critique's
+180-task/20-repository description. Its supplied link pointed to an unrelated
+code-review appendix. The HITS study link required authentication and was not
+used as public study evidence. No protected content was accessed.
+
+Full-text scope was checked for RefactorBench and Building to the Test;
+the other additions rely on primary publication metadata and abstracts.
+These checks are not independent replication, author verification of every
+research statistic or a systematic literature review.
+
+### Revision Validation
+
+* The existing structural checker passes with 103 matching cited references,
+   an abstract of 1,663 source characters, unique resolved labels and results
+   disabled.
+* Two shell-escape-disabled pdfLaTeX passes produce a 42-page PDF without
+   warnings, underfull/overfull boxes or unresolved references. The external
+   build is at `/tmp/ama-paper-critique-o1Iyxr/`. The workspace PDF was separately
+   regenerated during editing and was left untouched after owner clarification.
+* Fresh AI reader testing found three wording gaps about unmeasured effort,
+   CR1 exposure and credit-versus-monetary cost. They were corrected. This is
+   editorial testing, not an independent empirical coder or human peer review.
+* Visual PDF inspection was not performed: no PDF renderer was available in
+   the checked toolchain. Compilation and clean logs do not establish visual
+   quality, accessibility, scholarly acceptance or publication permission.
+* Complete local publication gates, exact-head independent assessment and
+   external approval remain separate. No commit, push or submission is claimed.
+* Tracked-edit whitespace checks and a separate check of the new untracked
+   research record pass. The package README, bibliography and tracking records
+   have no editor diagnostics. The knowledge-base index/log retain earlier
+   Markdown issues, and the editor's workspace LaTeX build retains a rerun
+   notice; the fresh external two-pass log does not.
 
 ## Related Work Review of 25 October
 
@@ -67,7 +162,7 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 97 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 103 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
@@ -240,6 +335,10 @@ the accepted A/B/C design has 120 feature, 80 post-feature and 12 CR sessions:
     * complete independent suite review, reviewer recruitment and HIR coverage checks;
     * reconcile credit and monetary limits, calibration choices and analysis rules;
     * write results and update acknowledgements only after the corresponding work occurs.
+   Also resolve the visible protocol limitations before treating a fresh study
+   as confirmatory: exact costing/endpoint rules, sample precision, multiplicity,
+   failure/missing-data disposition, CR1 non-exposure and effective blinding.
+   This revision preserves the design; it does not supply the missing checks.
 2. Treat the local MVE copies as historical proposals. Archive the exact authorised registered study materials separately, preserving originals and excluding credentials, DLP sidecars and unapproved internal content.
 3. Rewrite in your own voice where needed. The rubric allows AI drafting, but the insight, evidence and recommendation must be yours.
 4. Get the internal approvals Microsoft requires for external publication.
