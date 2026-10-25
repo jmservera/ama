@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -2744,3 +2744,96 @@ Priority generation, latest and review responses retain correct stale/actionable
 flags but withhold `challenge_ids` unless the requesting reader currently has
 both resident-information and recorded-reason rights, even for policy corrections
 on another case.
+
+## Synthetic resident feedback preview (#444)
+
+A separate, read-only, loopback-only web page for owner feedback on what a resident could see.
+It is invented data only: not enrolment, not a live service and not an approved resident design.
+The staff `server.py`, `auth.py`, projection and store are unchanged and are not imported.
+
+Build a disposable fixture and start one server per subject from a clean environment. The
+start-up guard refuses any `ZF_`, `AI_`, `IDENTITY_`, `MSI_`, `AZURE_`, `MSSQL`,
+`APPLICATIONINSIGHTS`, `OPENAI` or `SQL` variable:
+
+```bash
+pip install -e ../core -e ../agents -e .
+env -i PATH="$PATH" HOME="$HOME" python3 -m zava_forward.api.resident_preview --build-fixture /tmp/ama-444-preview-data
+env -i PATH="$PATH" HOME="$HOME" python3 -m zava_forward.api.resident_preview \
+  --data-dir /tmp/ama-444-preview-data --subject SYN-RES-A --port 8444
+```
+
+* Identity is the `--subject` this server process was started with. No password, role selector,
+  cookie, header, query or path value chooses who is viewing, and resident routes take no case id.
+* Routes: `/` page, `/resident/view` JSON, `/resident/about` limits, `/healthz`. Writes return
+  405. Messages, uploads, downloads, appointment replies, consent and AI return 403 and the page
+  shows them as unavailable. `/api/*` and every staff route are 404.
+* The Host header must be a loopback name with the bound port. Only `127.0.0.1` or `::1` binds.
+* The grant file is re-read on every request, so revocation and expiry apply to the next request.
+  Malformed, ambiguous, unknown or unlisted grants deny.
+* Subjects: `SYN-RES-A` (confirmed appointment), `SYN-RES-B` (offer only), `SYN-REP-B`
+  (confirmed representative, receive information and attend), `SYN-REP-WRONG` (grant names a task
+  the domain record does not confirm), and the denied `SYN-RES-EXPIRED`, `SYN-RES-REVOKED`,
+  `SYN-RES-AMBIG` and `SYN-RES-NOGRANT`.
+* Tests: `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests/test_resident_preview_api.py`
+  (real local server, authorization and isolation) and `python -m checks.resident_preview_browser_check`
+  (Chromium on the real server: keyboard, focus, error, 320 px reflow, reduced motion).
+
+Limits: the preview is not WCAG conformance evidence, not an external accessibility audit and
+not live Azure, SQL or AI acceptance. See the [core boundary](../core/README.md#resident-owned-preview-boundary-444).
+
+### Threat model for the synthetic preview (#444)
+
+This section states what the preview protects, what it trusts, and what it does not defend
+against. It is documentation of the existing design, not a security certification, not an
+authentication design and not an approved resident design. Evidence is labelled
+`test` (a named existing test exercises it) or `inspected` (read in the code, not tested).
+
+Scope and non-goals:
+
+* A loopback-only, read-only, synthetic feedback page for the owner. It is not suitable for
+  public hosting, tunnels, shared hosts or real residents, and it has no password, session, TLS
+  or account system by design.
+* A cloud showcase is separate work (issue 462). It needs its own cloud composition, identity
+  and review. It must not relax the loopback, environment and path guards described here.
+
+Assets and trust boundaries:
+
+* Protected: staff-only case data (notes, safeguarding, finance, staff identifiers, chat,
+  memory, other homes and cases) and the grant fixture. Shown: only the allowlisted resident
+  fields (home, measures, progress, next step, appointments, help).
+* Trusted, server-owned: the start-up arguments (`--subject`, dataset, fixture), the process
+  environment and the files on disk. Untrusted: every HTTP request and any text inside dataset
+  fields.
+* Actors considered: the owner starting the process, another user or process on the same host,
+  a web page on another origin, and a request with a forged Host, subject, path or method.
+
+| Threat | Control | Evidence |
+| --- | --- | --- |
+| Viewer claims another identity (header, cookie, query, path) | Identity is only the process `--subject`; routes take no case id | test: `test_claimed_identity_is_ignored_everywhere`, `test_server_owned_identity_each_process_shows_only_its_own_case` |
+| Reading another case or staff data | Positive allowlist view built field by field; no staff payload or `projection.py`; staff routes absent | test: `test_every_view_is_canary_free_and_isolated`, `test_new_staff_field_stays_hidden_until_mapped`, `test_staff_routes_do_not_exist`, `test_every_response_body_is_canary_free` |
+| Missing, unknown, expired, revoked, not-yet-valid, ambiguous or malformed grant | Default deny on every request; the grants file is re-read each time | test: `test_denials`, `test_expiry_applies_at_the_next_request`, `test_revocation_applies_at_the_next_request`, `test_malformed_grants_deny`, `test_denied_subjects_get_403_and_no_data` |
+| Representative without current authority | Domain authority record checked per task and measure; malformed record denies | test: `test_valid_representative_sees_only_covered_tasks`, `test_no_current_authority_denies`, `test_malformed_authority_record_denies_not_crashes`, `test_representative_and_wrong_authority` |
+| Offer shown as a confirmed arrangement, or unknown shown as known | Only `Committed` is confirmed; other states are offers or counted unknown; unmapped stage stays unknown | test: `test_resident_b_offer_is_not_a_confirmed_arrangement`, `test_ended_or_paused_offer_is_not_shown_as_a_live_offer`, `test_unknown_appointment_state_is_counted_not_confirmed`, `test_progress_text_is_mapped_and_unknown_stays_unknown`, `test_booked_stages_do_not_claim_a_booking` |
+| Use of messaging, uploads, downloads, consent or AI | Those paths return 403 for every method and the page shows them as unavailable | test: `test_unavailable_features_are_server_denied_for_every_method` |
+| Writes or store mutation | Known routes reject non-GET methods with 405; the view never mutates; the store is a private temporary copy | test: `test_writes_are_refused_and_store_unchanged`, `test_view_does_not_mutate_the_store`, `test_open_store_works_on_a_private_copy` |
+| Remote exposure | `safe_start` binds only `127.0.0.1` or `::1` and refuses any other host | test: `test_refuses_non_loopback_hosts`, `test_refuses_unsafe_configuration` |
+| Forged Host header (a rebinding-style request) | The Host must be a loopback name with the bound port; this is an extra request guard, not authentication | test: `test_host_header_must_be_loopback_with_the_bound_port` (a live DNS-rebinding test does not exist) |
+| Cloud, store, AI or real data entering the process | Refuses `ZF_`, `AI_`, `IDENTITY_`, `MSI_`, `AZURE_`, `MSSQL`, `APPLICATIONINSIGHTS`, `OPENAI` and `SQL` variables, symlinks, the normal data location and `~/.zava-forward`, and unmarked or mismatched files | test: `test_refuses_cloud_store_ai_and_normal_data_environment`, `test_refuses_missing_symlink_and_normal_location`, `test_refuses_unmarked_or_mismatched_files`, `test_refuses_files_under_the_normal_data_location` |
+| Staff server code reachable from the page | The resident module imports no staff server or auth module | test: `test_resident_module_does_not_load_the_staff_server` |
+| Script injection, framing, cross-origin reads, caching | Strict CSP (`default-src 'none'`, same-origin script, style, image and connect, no forms, no framing), `nosniff`, `X-Frame-Options: DENY`, `no-referrer`, `no-store`, same-origin resource policy; only fixed asset paths are served | test: `test_health_pages_and_security_headers` asserts only `no-store` and `default-src 'none'` on the page assets; inspected: the other CSP directives, `nosniff`, `X-Frame-Options`, `no-referrer`, the resource policy, their presence on JSON and error responses, and `resident.js` sets text with `textContent` and has no `innerHTML` use, and the fixed asset allowlist (no malicious-text or traversal test) |
+| Calls to external services | No external endpoint or third-party load is configured; the page makes a same-origin fetch to its own view route; CSP `connect-src 'self'` | inspected only; egress is not tested |
+
+Residual risks and limits:
+
+* Same-host users and processes can reach the loopback port and, with file access, can alter
+  the grants file, which is re-read on every request without an integrity or ownership check.
+  The preview assumes a single trusted local user.
+* There is no request log, rate limit, concurrency bound or workload bound
+  (`ThreadingHTTPServer`; the grants file is re-read per request), so it is not resilient to
+  availability attacks. Unexpected errors outside the controlled grant denials are not uniformly
+  handled and can end a response or print diagnostics to the process console.
+* The dataset, cases and representative-authority records load once at start-up. Only the grants
+  file is re-read per request, so a change to dataset or representative authority needs a
+  restart. This was reviewed as a Low follow-up.
+* The fixture is invented. It is not evidence about real residents, and no human accessibility
+  or security review, screen-reader audit or conformance claim is made.
