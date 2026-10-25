@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-23
+ms.date: 2026-10-25
 ms.topic: reference
 ---
 
@@ -57,8 +57,14 @@ recovery evidence remain live gates.
 Six proposed synthetic journeys cover sign-in/recovery, own case/documents,
 requested uploads, appointment responses, grounded questions/human handoff
 and assisted continuity. Proposed five concurrent fictional sessions over
-30 minutes and ordinary case/status/receipt API p95 <=2s are exercise targets,
-not production capacity/SLA/date. Identity, scanning and model waits are
+30 minutes and ordinary resident case/status/receipt API p95 <=2s, with resident
+uploads <=10 MiB/file, are owner-selected exercise targets (2026-10-24) that
+preserve staff/core targets through audience-based applicability; they are not
+production capacity/SLA/date. Initial identity uses provider-neutral synthetic
+fixtures with no provider selected; the first milestone is synthetic sign-in,
+own case/documents, cross-case denial, representative revocation and assisted
+recovery, with its date not yet estimable pending engineering sizing and the
+draft backlog awaiting owner acceptance. Identity, scanning and model waits are
 measured separately. The continuing generated 60,000-home/980-case lineage
 does not establish resident accounts or concurrent users.
 
@@ -85,8 +91,8 @@ existing requirement definitions. Its current independent quality result is
 FAIL / Validate BLOCKED / Finalize NOT_EVALUATED, singular 1 below minimum 2,
 7 CAUTION/34 COVERED/0 RISK, not merely copied historical failure. All seven
 findings remain open, including bundled obligations, unsigned BRD, feasibility/
-GOAL-005, generic/resident latency/file-size precedence and inherited table/
-trace debt; see the PRD's linked current summary. All 30 resident criteria
+GOAL-005, generic/resident latency/file-size precedence (authored text
+corrected 2026-10-25, fresh review pending) and inherited table/trace debt; see the PRD's linked current summary. All 30 resident criteria
 remain Not run. The architecture candidate is reconciled to that completed
 unsigned PRD, not registered or accepted by the reconciliation.
 No application, sending, real account/data, Azure change or paid inference

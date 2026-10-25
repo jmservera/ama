@@ -7444,3 +7444,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   current design section. Funding renewal does not extend resident access.
 * Resource provisioning and reachable old-revision health are not SQL/runtime,
   authenticated managed-identity inference, privacy or production acceptance.
+
+## [2026-10-25] update | Resident PRD target applicability and draft backlog (#441)
+
+* Recorded the owner's 2026-10-24 PRD decisions in PRD v0.21.0: resident-route
+  ordinary API p95 <=2s (five synthetic sessions, 30 minutes) and 10 MiB
+  resident uploads, with audience-based applicability that leaves NFR-002
+  staff/core targets unchanged; provider-neutral synthetic identity fixtures
+  with no provider selected; the first milestone composition (R0 plus
+  PR442-S01 to S06). No new identifier, BRD change or approval was made.
+* Aligned the unregistered proposal (id null, still unregistered), the dated
+  addendum and the resident journeys note, and added an index row for the draft
+  backlog under .copilot-tracking/changes/2026-10-25/. The backlog awaits owner
+  acceptance; no implementation issue is created and no delivery date is
+  estimable before engineering sizing.
+* Finding pr442-qual-041 has corrected authored text awaiting fresh independent
+  review; the other six findings, OD-52 to OD-55 and registration UNMET remain.
+  Earlier log entries are unchanged.
