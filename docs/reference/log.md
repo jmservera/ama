@@ -7691,3 +7691,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   or publication is claimed. #349/#350/#360/#432 and human gates remain;
   independent lanes continue while affected validation/publication is blocked.
   Earlier log entries, original case study and memory are unchanged.
+
+## 2026-10-25 stabilization checkpoint main reconciliation (#440)
+
+* Merged main `ea5577b2` into the #440 branch without rewriting history and appended a dated reconciliation note to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#reconciliation-with-later-main-2026-10-25-440).
+* The first checkpoint is kept as historical evidence for main `140d8f49`; native discovery is recorded as attested only, the failed 17383 ms receipt remains a repository record with unknown root cause and an unwaived threshold, and no acceptance, Conformant outcome, publication or cloud approval is claimed.
+* Earlier log entries, the original case study and memory are unchanged.

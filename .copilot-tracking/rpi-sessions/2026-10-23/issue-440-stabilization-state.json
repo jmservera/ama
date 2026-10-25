@@ -92,6 +92,11 @@
       "decision": "Original independent Review executed once: execution Partial, outcome Residual work",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-24/issue-440-stabilization-review.md"
+    },
+    {
+      "decision": "2026-10-25 integration cycle: prospective research/plan/details/critique (Revise, applied) before merge; non-rewriting merge of origin/main ea5577b2",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-25/issue-440-current-main-integration-plan.md"
     }
   ],
   "blockers": [
@@ -113,7 +118,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Queue P05 final gate behind #350/#444 on frozen clean head with fresh origin/main base and new external out path; then verify-receipt. No push/PR."
+    "action": "Run P05 final gate on frozen clean head with fresh origin/main base (integration plan 2026-10-25); no push before verified receipt"
   },
   "prioritized_follow_ups": [
     {

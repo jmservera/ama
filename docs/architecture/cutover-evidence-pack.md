@@ -2083,3 +2083,27 @@ approved or proposed. Epics cannot close merely because their children merged.
 The original critique, failed runs and unchecked human sign-off above remain.
 The shared heavy lock was free after the owned gate and focused repeats; no
 #349 process/output or receipt environment was interrupted, read or reused.
+
+### Reconciliation with later main (2026-10-25, #440)
+
+The checkpoint above describes main `140d8f49` and BRD 0.19.0 / PRD 0.18.0 only.
+Main has since advanced to `ea5577b2` (BRD 0.21.0, PRD 0.20.0, ADR0001/0002
+changes, and #360 Entra-authoritative access, ledger-safe migration and seed
+merge runtime changes). That later runtime was not assessed by the checkpoint,
+which stays historical evidence; a further checkpoint is a separate
+coordinator-scheduled item. The branch now includes main through a
+non-rewriting merge, with the append-only knowledge-base index and log
+conflicts resolved by keeping both sides.
+
+Evidence classes stay separate. The one-time owner-approved native `/agent`
+discovery succeeded only as reported in the coordinator comment on #440
+(6385349053); the retained local transcript does not show the entry, so it is
+attested and not independently reproducible, is not behavioral acceptance, and
+will not be repeated. The seven HVE scenarios remain simulated proxy evidence
+with the human checkbox unchecked. The external failed-receipt directories were
+found absent on 2026-10-24 and are not recreated; the failed 17383 ms against
+1500 ms measurement, its receipt SHA256 and its unknown root cause remain
+repository records only. The threshold is unwaived. The original Review
+(Partial, Residual work) is unchanged. No Conformant outcome, live AI, Entra,
+Azure or resident-UX acceptance is claimed; Azure authority has expired. The
+final full gate on the merged exact head is recorded after it runs.
