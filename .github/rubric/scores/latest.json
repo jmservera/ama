@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T16:59:52+00:00",
-  "commit": "d1a75797da9c2f702b1bac4d1efce44c1b17e382",
+  "scored_at": "2026-10-25T20:50:27+00:00",
+  "commit": "0f71b446ac6a504e264a2abcf2e2cca9dbcdd7db",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40213376828",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40231485239",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,7 +14,7 @@
     "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "d05de8714cf01f18faacaddcb7466ffe0962797daca19e0d9fb36092714dec1e"
+    "thought-leadership": "c1251712170e0f68c73aef8069d60afe5bb3d3abd14602dc764df2270f69cb2b"
   },
   "total": 73,
   "sections": {
@@ -80,21 +80,21 @@
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The deck revision is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch brief is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
       ],
-      "rationale": "Existing Audience Map (unchanged by this PR) names six CXO archetypes with a deliberate persuasion sequence. Baseline retained; no new audience evidence in this diff."
+      "rationale": "New Audience Map names six CXO archetypes with must-hear content, pitfalls, and a deliberate Sergeant->Therapist->Scientist->Evangelist sequence. Materially stronger written calibration plan than the baseline brief, though still unrehearsed."
     },
     "B3": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
       ],
-      "rationale": "Existing demo-runbook.md defines an Eight-Minute Core Route with fallback, but validation.md confirms no rehearsal occurred. This PR's deck changes are narration/graphics polish per presentation-review-2026-10-25.md, not new demo readiness. Needs Improvement, baseline retained."
+      "rationale": "New demo-runbook.md defines an Eight-Minute Core Route with timed beats to the hook and a Route L/E/U fallback with recovery script. Concrete planned readiness beyond the prior one-line statement, but validation.md confirms no rehearsal occurred, so still Needs Improvement."
     },
     "B4": {
       "score": 2,
@@ -109,7 +109,7 @@
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
       ],
-      "rationale": "Existing Timing and Interruption Contract gives a narration budget, but remains unrehearsed per validation.md. This PR's deck edits preserve existing timing lines per presentation-review-2026-10-25.md; baseline retained."
+      "rationale": "New Timing and Interruption Contract gives a slide-by-slide narration budget, discussion reserve and route-shortening plan. More developed pacing planning than baseline's unrehearsed-timing statement, but remains unrehearsed per validation.md."
     },
     "B6": {
       "score": 5,
@@ -117,14 +117,14 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "Pitch package remains a complete, cross-linked documentation set alongside the committed 54-slide deck; the 25 October revision (presentation-review-2026-10-25.md) is narration/graphics polish and a legal-claim correction on 7 of 54 slides, not a reduction in completeness. Excellent, baseline ret..."
+      "rationale": "The pitch package is a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. This round's deck edits are navigation/wording corrections (PR438), not a documentation regression. Capstone documentat..."
     },
     "B7": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:132-160"
       ],
-      "rationale": "Existing Recovered Council Comparison gives worked, labelled calculations tied to deck slides; unchanged by this diff. Baseline retained, still unaudited live."
+      "rationale": "The Recovered Council Comparison gives fully worked, labelled calculations (USD 0.44/home, GBP 6,082/home) tied directly to deck slides 11 and 18 with evidence classes and caveats. Actionable, slide-anchored data storytelling, though still unaudited live. Unaffected by this round's navigation-onl..."
     },
     "C1": {
       "score": 5,
@@ -148,9 +148,10 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:12-16"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:61-68",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:663-742"
       ],
-      "rationale": "Diff changed lines are two cosmetic LaTeX fixes (epstopdf guard, bibitem spacing); no scope or content change to the five-mechanism synthesis. Baseline unchanged."
+      "rationale": "main.tex v4 adds a constructs/boundaries section, an observation-interpretation-proposition audit trail and expanded rival-explanation/within-case-contrast tables responding to critique.md's independent review, deepening rigor. It remains a synthesis plus untested protocol, not yet Monday-actiona..."
     },
     "D2": {
       "score": 3,
@@ -158,14 +159,15 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1322-1325",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:21-23"
       ],
-      "rationale": "Diff adds only a formatting guard and bibitem-wrapping fix; main.tex still carries 25 unresolved TODO(author) items (unchanged count) and revision-report.md still states not submission-ready."
+      "rationale": "Structured draft with abstract, sections, tables and bibliography (now 103 references), but main.tex still carries 25 unresolved TODO(author) items (unchanged count from base) and revision-report.md states the paper is not submission-ready."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:217-222"
       ],
-      "rationale": "No change to submission/registration status in this diff; README still states execution paused and public release deferred pending permission."
+      "rationale": "README v4 still states execution is paused, registration is deferred, and public release remains subject to permission; nothing submitted or accepted."
     }
   }
 }
