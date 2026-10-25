@@ -3163,3 +3163,6 @@ driving the existing store with explicit synthetic inputs.
 
 Tests: `src/core/tests/test_resident_preview.py`. This is feedback tooling, not a resident
 service, and it is not an approval of the resident design in PR 442.
+
+The boundary's assets, trust boundaries, threats, controls, evidence and residual risks are
+stated in the [preview threat model](../api/README.md#threat-model-for-the-synthetic-preview-444).
