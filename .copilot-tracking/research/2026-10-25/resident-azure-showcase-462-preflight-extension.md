@@ -198,3 +198,7 @@ Conclusion: a complete, defensible remaining-headroom proof does not exist. Miss
 3. Named approval for any role at secret scope and for a retrieval client or private job, plus the budget gate before any billable job (the SQL view/principal creation included).
 4. Live equality of `retrofit` with the regenerated seed (counts-only, private path).
 5. Disposition of the ungated push `5963fa3f`; no push until the full gate is verified.
+
+### Erratum to Addendum 2 (2026-10-25)
+
+Addendum 2 says the raw JSON is kept in `/tmp/ama462-pf2`. That is wrong: the directory was deleted after the addendum was written, in the same command. The raw Cost Management and role-assignment JSON is no longer available. The figures in Addendum 2 are the preserved record. Any later cost refresh must be re-queried and kept outside the repository this time.
