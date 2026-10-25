@@ -7335,3 +7335,8 @@ metadata when the knowledge base was created.
   Existing unrelated work and earlier log entries are preserved. Publication
   gates and independent exact-head assessment remain unperformed; no commit,
   push, study execution or arXiv bundle refresh is claimed.
+## [2026-10-24] update | Synthetic resident feedback preview indexed (#444)
+
+* Added an index row for the loopback-only, read-only synthetic resident preview: separate `zava_forward.api.resident_preview` server, `zava_forward.core.resident_preview` boundary and a disposable invented fixture builder. See the src/api and src/core READMEs.
+* Reuses the existing case and domain store behind a resident-owned positive-allowlist view and a default-deny server-side grant. PR 442 was read as unsigned input only. No staff server, auth, projection or store file changed.
+* Not resident enrolment, not a live service, no real data. Live Azure/SQL/real-AI acceptance stays a separate later gate; #444 criteria stay open until proven on the final head.

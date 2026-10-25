@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -3139,3 +3139,30 @@ regressions supplement the JSON/SQLite checks. Subsequent native cached-reader,
 atomic migration/restart, correction-flag rollback and persisted denial-audit
 regressions add focused coverage, not operational acceptance. The bounded
 60,000-case query measurement above is not a whole-workflow load claim.
+
+## Resident-owned preview boundary (#444)
+
+`zava_forward.core.resident_preview` is the narrow boundary behind the synthetic resident
+preview; `zava_forward.core.synthetic.resident_preview_fixture` builds its invented dataset by
+driving the existing store with explicit synthetic inputs.
+
+* `resolve_grant` re-reads a server-owned fixture and returns the one current grant for a subject.
+  Everything else denies by default: unknown subject, no grant, revoked, expired, not yet valid,
+  more than one current grant, malformed or non-empty `actions`, wildcard or empty case ids.
+* `resident_view` builds the response field by field from named, mapped values (a positive
+  allowlist), never from staff payloads or `projection.py`. A new staff field stays hidden until it
+  is mapped. Appointments come from the existing appointment status: only `Committed` is a
+  confirmed arrangement, `Offer` is shown as not confirmed, anything else is counted as unknown.
+* A representative grant shows only fields for tasks the existing domain authority record
+  currently confirms for the stated measure; a malformed record denies rather than raises.
+* `safe_start` refuses cloud, store and AI environment variables, non-loopback hosts, symlinked or
+  missing files, the normal `ZF_DATA` or `~/.zava-forward` location, and files that are not a
+  matching disposable synthetic dataset and fixture. `open_store` works on a private temporary copy
+  so the preview never writes beside the dataset.
+* Stage text is a fixed plain-language map; an unmapped stage stays "unknown".
+
+Tests: `src/core/tests/test_resident_preview.py`. This is feedback tooling, not a resident
+service, and it is not an approval of the resident design in PR 442.
+
+The boundary's assets, trust boundaries, threats, controls, evidence and residual risks are
+stated in the [preview threat model](../api/README.md#threat-model-for-the-synthetic-preview-444).

@@ -10,7 +10,7 @@
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "605449278408efbd2ef3934b2aad9f317f31a1e2b5b7a873f3db04405a3e07ec",
+    "solution-code": "0ed69b2366406940a8c9e9fbb3adac9662b3e4fa2557657399b3efc356cd8445",
     "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/identity.py:1-400",
-        "docs/adrs/0002-pilot-readiness-architecture.md:560-684"
+        "src/api/src/zava_forward/api/resident_preview/app.py:1-20",
+        "src/core/src/zava_forward/core/resident_preview.py:1-10"
       ],
-      "rationale": "New identity.py is a decoupled module with explicit typed contracts, threaded through auth/server/coordinator/forms/workflows/rulecards. ADR 0002 documents explicit failure domain (REGISTRY_LIMIT overflow, digest-collision note) and a scaling bound."
+      "rationale": "New resident_preview module is a cleanly isolated, decoupled boundary (core domain logic separate from api transport), reusing no staff server/auth code. Reinforces existing ceiling; already Excellent."
     },
     "A2": {
       "score": 5,
@@ -44,38 +44,35 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:380-560",
-        "src/api/tests/test_operator_suspension.py:614-680"
+        "src/api/README.md:2790-2840",
+        "src/core/src/zava_forward/core/resident_preview.py:476-512"
       ],
-      "rationale": "This PR changes infra/scripts (Entra admin CLI tooling), not the scored system's security/RAI controls. No security/RAI control changes in scope. Unchanged."
+      "rationale": "Adds a documented threat model (assets, trust boundaries, per-threat control/evidence table) and default-deny safe_start guarding env, loopback and file provenance. Strong defensive evidence, already at ceiling."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:2860-2920",
-        "src/api/checks/regulatory_ux_check.py:102-146"
+        "src/api/tests/test_resident_preview_api.py:1-274",
+        "src/core/tests/test_resident_preview.py:1-359"
       ],
-      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
+      "rationale": "New feature ships complete with unit tests, HTTP integration tests and a browser check script; implementation is thorough. Already at ceiling."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
+        "src/api/README.md:2838-2844"
       ],
-      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
+      "rationale": "Threat model honestly documents the preview has no request log, rate limit or concurrency bound as a residual risk, but no new metering, cost or reliability instrumentation is added for the scored system. Unchanged."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static preview. Unchanged baseline."
     },
     "A7": {
       "score": 4,
-      "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:490-540"
-      ],
-      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
+      "evidence": [],
+      "rationale": "No new agentic orchestration introduced; resident preview is a static read-only HTTP view with no agent involvement. Unchanged."
     },
     "B1": {
       "score": 3,

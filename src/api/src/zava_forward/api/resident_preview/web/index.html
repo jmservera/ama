@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your home improvement progress - synthetic preview, not live</title>
+<link rel="stylesheet" href="/resident.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to your progress</a>
+<div class="synthetic" role="note">
+  <strong>Synthetic preview - not a live resident service.</strong>
+  Everything here is invented test information. Do not use it to make any decision.
+</div>
+<header class="top">
+  <span class="logo" aria-hidden="true">Z</span>
+  <p class="brand">Zava North Homes <small>Home improvement progress</small></p>
+</header>
+<main id="main" tabindex="-1">
+  <h1>Your home improvement progress</h1>
+  <p class="lede">This page only shows information. You cannot change anything here.</p>
+  <div id="status" class="status" role="status" aria-live="polite">Loading your progress...</div>
+  <div id="error" class="error" role="alert" hidden>
+    <h2 id="error-title" tabindex="-1">We cannot show this page</h2>
+    <p id="error-text"></p>
+    <p>You do not need this page. A person can help. Speak to your housing officer or visit your local office.</p>
+    <button type="button" id="retry">Try again</button>
+  </div>
+  <div id="content" hidden></div>
+  <noscript><p>This page needs JavaScript to show your progress. A person can help: speak to your housing officer or visit your local office.</p></noscript>
+</main>
+<footer class="foot">
+  <p>Synthetic preview for owner feedback only. Not enrolment, not a live service.</p>
+  <p><a href="/resident/about">About this preview and its limits</a></p>
+</footer>
+<script src="/resident.js"></script>
+</body>
+</html>
