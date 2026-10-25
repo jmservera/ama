@@ -1,0 +1,30 @@
+{
+  "task_id": "ledger-safe-migration-360",
+  "task_slug": "ledger-safe-migration-360",
+  "parent_task": {"task_id": "entra-authoritative-access-360", "task_slug": "entra-authoritative-access-360"},
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-24/ledger-safe-migration-360-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-24/ledger-safe-migration-360-plan.md",
+    "details": ".copilot-tracking/details/2026-10-24/ledger-safe-migration-360-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-24/ledger-safe-migration-360-plan.md",
+    "changes": ".copilot-tracking/changes/2026-10-24/ledger-safe-migration-360-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-24/ledger-safe-migration-360-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed with local SQL Server 2022 ledger reproduction", "status": "done", "evidence": "research E4-E6"},
+    {"decision": "Critique executed once before implementation, verdict REVISE, four findings applied", "status": "done", "evidence": "plan Critique section"},
+    {"decision": "Review executed once, outcome PASS with three test-quality findings applied afterwards", "status": "done", "evidence": "review artifact"},
+    {"decision": "Owner approved narrow ledger-safe source fix; no live schema workaround", "status": "confirmed", "evidence": "owner message 2026-10-24T21:41Z"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Commit, freeze, run direct exact-head full gate with a new external output, hand off to coordinator"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Deploy fixed image through the approved private route after merge and gate", "rationale": "Unblocks Entra login", "evidence": "revision 0000003 crash-loop"},
+    {"rank": 2, "task": "Fix grant-application-admin.py --apply body_directory defect", "rationale": "Script unusable as documented", "evidence": "live deployment session"},
+    {"rank": 3, "task": "Audit sensor_consumer ALTER COLUMN on ledger databases", "rationale": "Same ledger limitation, not on startup path", "evidence": "critique C2"}
+  ]
+}

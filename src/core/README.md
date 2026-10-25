@@ -2680,6 +2680,15 @@ migration adds the columns and rebuilds keys when the ranking policy version
 changes. Tests check parity with the in-memory store, query plans and a
 60,000-case timing.
 
+In a ledger-enabled Azure SQL database every store table except the append-only audit table is an updatable
+ledger table, and such a table accepts a new column only as nullable with no default. A column-adding
+migration there (`MssqlStore._add_column_default`) therefore adds the column nullable, backfills the same
+default in the same transaction, then adds a `CHECK (col IS NOT NULL)` and the default constraint. Defaults,
+the non-null guarantee and the ledger history are kept; the one difference is that `sys.columns` reports the
+column as nullable, because a ledger table cannot be altered to NOT NULL in place. Ordinary SQL Server and
+SQLite keep the original `NOT NULL DEFAULT` statement. Local SQL Server 2022 ledger tests reproduce the
+Azure SQL error and prove the migration; they are not proof against Azure SQL itself.
+
 Azure SQL is implemented by `mssqlstore.py` and has run with the API managed
 identity. It uses explicit `BIGINT` row versions, `NVARCHAR(MAX)` JSON bodies,
 binary text collation and a transaction-owned `sp_getapplock` writer lock.

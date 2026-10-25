@@ -189,7 +189,10 @@ class SqlStore(Store):
     # ---- dialect hooks (SQLite here; MssqlStore overrides them for Azure SQL)
     dberror = sqlite3.Error
     _epoch_sql = "SELECT (julianday('now')-2440587.5)*86400.0"
-    _add_column = "ADD COLUMN"
+
+    def _add_column_default(self, table, col, sqltype, default):
+        """Add a NOT NULL column with a default to an existing table. Names and defaults are module constants, never input."""
+        self.db.execute(f"ALTER TABLE {table} ADD COLUMN {col} {sqltype} NOT NULL DEFAULT {default}")
 
     def _open(self, db_path):
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
@@ -239,7 +242,7 @@ class SqlStore(Store):
         have = {r[1] for r in self.db.execute("PRAGMA table_info(chat_memory)").fetchall()}
         for c, d in CHAT_MEMORY_ADDED:
             if c not in have:
-                self.db.execute(f"ALTER TABLE chat_memory ADD COLUMN {c} TEXT NOT NULL DEFAULT '{d}'")
+                self._add_column_default("chat_memory", c, "TEXT", f"'{d}'")
 
     def _create_indexes(self):
         self.db.executescript(INDEXES)
@@ -276,7 +279,7 @@ class SqlStore(Store):
             for col in CASE_COLS:
                 if col not in have:
                     defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0", "priority_correction": "0"}
-                    self.db.execute(f"ALTER TABLE cases {self._add_column} {col} {'INTEGER' if col in ('support', 'days', 'priority_correction') else 'TEXT'} NOT NULL DEFAULT {defaults.get(col, chr(39) * 2)}")
+                    self._add_column_default("cases", col, "INTEGER" if col in ("support", "days", "priority_correction") else "TEXT", defaults.get(col, chr(39) * 2))
             want = ranking.CURRENT["version"]
             row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
             encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
@@ -302,7 +305,7 @@ class SqlStore(Store):
             missing = set(QUEUE_COLS) - have
             for col in QUEUE_COLS:
                 if col in missing:
-                    self.db.execute(f"ALTER TABLE cases ADD {col} INTEGER NOT NULL DEFAULT 0")
+                    self._add_column_default("cases", col, "INTEGER", "0")
             if missing:
                 self._meta_set("queue_context", "")
             self.db.execute("COMMIT")
