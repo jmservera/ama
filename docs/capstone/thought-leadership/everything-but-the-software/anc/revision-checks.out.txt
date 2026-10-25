@@ -1,0 +1,31 @@
+BODY_WORDS_APPROX before=10353 after=11766
+COUNT_METHOD introduction through conclusion; tables included; abstract, bibliography and appendices excluded; LaTeX stripped
+ABSTRACT_SOURCE_CHARACTERS 1644 (limit <1920; conservative source count)
+LATEX_CHECK overfull_boxes_above_10pt=0
+BIBLIOGRAPHY cited=94 bibitems=94 bibtex=94
+TODO(author) locations:
+38: % TODO(author): set to \resultstrue once the experiment has run.
+50: % TODO(author): replace with the submission date.
+305: % TODO(author): check this paraphrase against the full text of the essay.
+426: % TODO(author): state the historical HVE Core plugin version or commit; none was found in the pinned repository's install metadata or log.
+435: % TODO(author): confirm how the programme may be named in a public paper.
+490: % TODO(author): identify earlier worker models and actual session/provider versions from retained execution records.
+532: % TODO(author): confirm the division of work in the coding.
+712: % TODO(author): add coding-agent consumption (tokens or premium requests) for 15--24 Oct if available.
+721: % TODO(author): confirm the 22 and 24 October instruction dates and wording from the original conversation; neither instruction was found in docs/reference/log.md or docs/reference/memory.md at 29c6b51.
+1003: % TODO(author): confirm that the anonymised descriptions below are acceptable to the partners and to the colleague concerned.
+1187: % TODO(author): confirm every threshold in the protocol before the pilot.
+1193: % TODO(author): supply the actual pre-registration date; do not backdate it.
+1194: % TODO(author): supply the public pre-registration URL before any run.
+1344: % TODO(author): replace this branch with the results: a figure of cumulative
+1499: % TODO(author): thank reviewers once they have commented.
+1516: % TODO(author): record the underlying Microsoft 365 Copilot model names/versions, historical coding/reviewer models and runtime versions, and the model/version used for this revision where the services expose them.
+1517: % TODO(author): confirm the final division of work and the extent of manual source, statistic and figure checks before submission.
+PASS structural checks
+EXACT_TWO_SIDED_MANN_WHITNEY_FLOOR n_per_arm=3 2/C(6,3)=2/20=0.100000000
+EXACT_TWO_SIDED_MANN_WHITNEY_FLOOR n_per_arm=4 2/C(8,4)=2/70=0.028571429
+EXACT_TWO_SIDED_MANN_WHITNEY_FLOOR n_per_arm=5 2/C(10,5)=2/252=0.007936508
+FIRST_PASS feature_steps=64 consolidation_steps=32 change_request_steps=8
+FIRST_PASS minutes=2760 agent_hours=46 ideal_four_session_hours=11.5
+ASSUMPTIONS S1; A/B; 4 runs/arm; F1-F8; scoped CR1; 30/15/45 minute budgets; no pilot or scheduling/measurement overhead
+PASS protocol consistency checks
