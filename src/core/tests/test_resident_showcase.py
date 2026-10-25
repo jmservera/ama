@@ -117,13 +117,52 @@ class AdmissionTests(unittest.TestCase):
             rs.parse_row([1, 2])
 
     def test_authorise_requires_same_case_and_current_admission(self) -> None:
-        rs.authorise(row(), NOW, "C-1")
+        rs.authorise(row(), NOW, "C-1", "a.demo@example.com")
         with self.assertRaises(rs.ShowcaseDenied):
-            rs.authorise(row(), NOW, "C-2")
+            rs.authorise(row(), NOW, "C-2", "a.demo@example.com")
         with self.assertRaises(rs.ShowcaseDenied):
-            rs.authorise(row(revoked=True), NOW, "C-1")
+            rs.authorise(row(revoked=True), NOW, "C-1", "a.demo@example.com")
         with self.assertRaises(rs.ShowcaseDenied):
-            rs.authorise(row(valid_to=NOW), NOW, "C-1")
+            rs.authorise(row(valid_to=NOW), NOW, "C-1", "a.demo@example.com")
+
+    def test_stale_email_denied_and_unchanged_email_admitted(self) -> None:
+        identity = rs.build_identity_map([row()], NOW)
+        self.assertEqual(identity.email_for("C-1"), "a.demo@example.com")
+        self.assertIsNone(identity.email_for("C-9"))
+        rs.authorise(row(), NOW, "C-1", identity.email_for("C-1"))
+        with self.assertRaises(rs.ShowcaseDenied):
+            rs.authorise(
+                row(email="changed.demo@example.com"), NOW, "C-1", identity.email_for("C-1")
+            )
+        with self.assertRaises(rs.ShowcaseDenied):
+            rs.authorise(row(), NOW, "C-1", None)
+
+
+class ClientKeyTests(unittest.TestCase):
+    peer = "10.0.0.7"
+
+    def key(self, headers: list[str], mode: str = "ingress-rightmost") -> str:
+        return rs.client_key(self.peer, headers, mode)
+
+    def test_default_mode_ignores_every_header(self) -> None:
+        self.assertEqual(self.key(["203.0.113.5"], "peer"), self.peer)
+
+    def test_rightmost_entry_is_used_and_client_prefix_is_ignored(self) -> None:
+        self.assertEqual(self.key(["1.2.3.4, 9.9.9.9, 203.0.113.5"]), "203.0.113.5")
+        self.assertEqual(self.key(["198.51.100.1", "203.0.113.5"]), "203.0.113.5")
+        self.assertEqual(self.key(["1.2.3.4, 2001:db8::1"]), "2001:db8::1")
+        self.assertEqual(self.key(["1.2.3.4, 2001:DB8:0:0:0:0:0:1"]), "2001:db8::1")
+
+    def test_bad_missing_or_decorated_last_entry_falls_back_to_the_peer(self) -> None:
+        for headers in (
+            [],
+            [""],
+            ["1.2.3.4,"],
+            ["1.2.3.4, x"],
+            ["203.0.113.5:443"],
+            ["[2001:db8::1]"],
+        ):
+            self.assertEqual(self.key(headers), self.peer, headers)
 
 
 class PasswordTests(unittest.TestCase):
@@ -331,6 +370,13 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(cfg.sql["auth"], "msi")
         self.assertEqual(cfg.bind, "127.0.0.1")
         self.assertEqual(cfg.expires_at, rs.AUTHORITY_END)
+
+    def test_client_address_mode_defaults_to_peer_and_rejects_unknown(self) -> None:
+        self.assertEqual(rs.config_from_env(self.env(), NOW).client_address, "peer")
+        cfg = rs.config_from_env(self.env(ZF_DEMO_CLIENT_ADDRESS="ingress-rightmost"), NOW)
+        self.assertEqual(cfg.client_address, "ingress-rightmost")
+        for value in ("x-forwarded-for", "forwarded", "*"):
+            self.refuse(ZF_DEMO_CLIENT_ADDRESS=value)
 
     def test_missing_required_values_fail(self) -> None:
         for name in (

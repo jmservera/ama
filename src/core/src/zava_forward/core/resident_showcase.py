@@ -12,6 +12,7 @@ import base64
 import binascii
 import hashlib
 import hmac
+import ipaddress
 import os
 import re
 import secrets
@@ -174,6 +175,9 @@ class IdentityMap:
         key = canonical_email(email)
         return self.cases.get(key) if key else None
 
+    def email_for(self, case_id: str) -> str | None:
+        return next((e for e, c in self.cases.items() if c == case_id), None)
+
 
 def build_identity_map(rows: list[ShowcaseRow], now: datetime) -> IdentityMap:
     """Admit at most 25 rows. Too many rows or a duplicated email fails the whole map closed."""
@@ -192,10 +196,37 @@ def build_identity_map(rows: list[ShowcaseRow], now: datetime) -> IdentityMap:
     return IdentityMap(cases, excluded, len(rows))
 
 
-def authorise(row: ShowcaseRow, now: datetime, session_case_id: str) -> None:
-    """Fresh, per-request authorisation of a stored row. Raises ShowcaseDenied."""
-    if row.case_id != session_case_id or exclusion(row, now) is not None:
+def authorise(
+    row: ShowcaseRow, now: datetime, session_case_id: str, admitted_email: str | None
+) -> None:
+    """Fresh, per-request authorisation of a stored row. Raises ShowcaseDenied.
+
+    The stored email must still equal the email the identity map admitted for this case, so a
+    database change cannot leave a stale email signing in or keep an old session valid.
+    """
+    if (
+        row.case_id != session_case_id
+        or admitted_email is None
+        or row.email != admitted_email
+        or exclusion(row, now) is not None
+    ):
         raise ShowcaseDenied("not_admitted")
+
+
+CLIENT_ADDRESS_MODES = ("peer", "ingress-rightmost")
+
+
+def client_key(peer: str, forwarded_for: list[str], mode: str) -> str:
+    """Limiter key. `peer` is the TCP peer. `ingress-rightmost` trusts only the last
+    X-Forwarded-For entry, which Azure Container Apps ingress appends; earlier entries can be set
+    by the client. A missing or non-IP last entry falls back to the peer, never a client value."""
+    if mode != "ingress-rightmost":
+        return peer
+    last = ",".join(forwarded_for).rpartition(",")[2].strip()
+    try:
+        return str(ipaddress.ip_address(last))
+    except ValueError:
+        return peer
 
 
 def _b64d(value: str) -> bytes:
@@ -417,6 +448,7 @@ class ShowcaseConfig:
     sql: Mapping[str, str]
     bind: str
     port: int
+    client_address: str = "peer"
 
 
 def _loopback(server: str) -> bool:
@@ -476,6 +508,9 @@ def config_from_env(env: Mapping[str, str], now: datetime | None = None) -> Show
         port = int(env.get("PORT", "8089"))
     except ValueError:
         raise ShowcaseConfigError("PORT is not a number.") from None
+    mode = (env.get("ZF_DEMO_CLIENT_ADDRESS") or "peer").strip().lower()
+    if mode not in CLIENT_ADDRESS_MODES:
+        raise ShowcaseConfigError("ZF_DEMO_CLIENT_ADDRESS must be peer or ingress-rightmost.")
     return ShowcaseConfig(
-        expires, hosts, verifier, key, sql, env.get("ZF_DEMO_BIND", "127.0.0.1"), port
+        expires, hosts, verifier, key, sql, env.get("ZF_DEMO_BIND", "127.0.0.1"), port, mode
     )

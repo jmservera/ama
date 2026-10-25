@@ -131,7 +131,7 @@ class DemoTestCase(unittest.TestCase):
         )
         self.start_app(self.reader)
 
-    def start_app(self, reader: FakeReader, key: bytes = KEY) -> None:
+    def start_app(self, reader: FakeReader, key: bytes = KEY, client_address: str = "peer") -> None:
         identity = rs.build_identity_map(reader.list_rows(), NOW)
         self.codec = rs.SessionCodec(key, NOW + timedelta(hours=6), self.clock)
         self.limiter = rs.LoginLimiter(clock=self.clock)
@@ -146,6 +146,7 @@ class DemoTestCase(unittest.TestCase):
             "127.0.0.1",
             0,
             self.clock,
+            client_address,
         )
         self.server: ThreadingHTTPServer = demo.serve(self.app)
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
@@ -343,6 +344,17 @@ class SessionTests(DemoTestCase):
         again.cookies[demo.SESSION_COOKIE] = token
         self.assertEqual(again.call("GET", "/demo/view")[0], 401)
 
+    def test_changed_database_email_denies_old_and_new_email_and_live_sessions(self) -> None:
+        live = self.client()
+        self.assertEqual(live.login("one@example.com"), 200)
+        self.assertEqual(live.call("GET", "/demo/view")[0], 200)
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], email="renamed@example.com")
+        self.assertEqual(live.call("GET", "/demo/view")[0], 401)
+        for email in ("one@example.com", "renamed@example.com"):
+            self.assertEqual(self.client().login(email), 401, email)
+        self.reader.rows["C-1"] = make_row("C-1", "one@example.com")
+        self.assertEqual(self.client().login("one@example.com"), 200)
+
     def test_revoked_or_expired_case_is_denied_on_the_next_request(self) -> None:
         for change in (
             dict(revoked=True),
@@ -399,6 +411,50 @@ class AbuseAndHardeningTests(DemoTestCase):
             self.assertEqual(c.call("POST", "/demo/login", bad, headers=spoof)[0], 401)
         spoof = {"X-Forwarded-For": "203.0.113.99"}
         self.assertEqual(c.call("POST", "/demo/login", bad, headers=spoof)[0], 429)
+
+    def ingress_login(self, forwarded: list[str], password: str = "wrong") -> int:
+        c = self.client()
+        c.prime()
+        conn = http.client.HTTPConnection("127.0.0.1", self.app.port, timeout=10)
+        conn.putrequest("POST", "/demo/login", skip_host=True, skip_accept_encoding=True)
+        for name, value in (
+            ("Host", HOST),
+            ("Content-Type", "application/json"),
+            ("Origin", f"http://{HOST}"),
+            ("Cookie", "; ".join(f"{k}={v}" for k, v in c.cookies.items())),
+            (demo.CSRF_HEADER, c.cookies[demo.CSRF_COOKIE]),
+        ):
+            conn.putheader(name, value)
+        for line in forwarded:
+            conn.putheader("X-Forwarded-For", line)
+        body = json.dumps(dict(email="one@example.com", password=password)).encode()
+        conn.putheader("Content-Length", str(len(body)))
+        conn.endheaders(body)
+        status = conn.getresponse().status
+        conn.close()
+        return status
+
+    def test_ingress_mode_limits_each_trusted_client_separately(self) -> None:
+        self.start_app(self.reader, client_address="ingress-rightmost")
+        for i in range(5):
+            prefix = f"198.51.100.{i}"
+            self.assertEqual(self.ingress_login([f"{prefix}, 203.0.113.5"]), 401)
+        self.assertEqual(self.ingress_login(["198.51.100.99", "203.0.113.5"]), 429)
+        self.assertEqual(self.ingress_login(["203.0.113.5"], FAKE_PASSWORD), 429)
+        self.assertEqual(self.ingress_login(["203.0.113.6"], FAKE_PASSWORD), 200)
+
+    def test_ingress_mode_bad_header_uses_the_shared_peer_bucket(self) -> None:
+        self.start_app(self.reader, client_address="ingress-rightmost")
+        for _ in range(5):
+            self.assertEqual(self.ingress_login(["not-an-ip"]), 401)
+        self.assertEqual(self.ingress_login([]), 429)
+        self.assertEqual(self.ingress_login(["203.0.113.7"], FAKE_PASSWORD), 200)
+
+    def test_overall_cap_still_blocks_every_source_and_is_a_documented_residual(self) -> None:
+        self.start_app(self.reader, client_address="ingress-rightmost")
+        for i in range(60):
+            self.assertEqual(self.ingress_login([f"203.0.113.{i + 10}"]), 401)
+        self.assertEqual(self.ingress_login(["203.0.113.250"], FAKE_PASSWORD), 429)
 
     def test_host_header_must_be_allowlisted(self) -> None:
         for host in ("evil.test.invalid", "", "demo.test.invalid.evil", "127.0.0.1"):

@@ -79,7 +79,9 @@ class ResidentDemo:
         host: str = "127.0.0.1",
         port: int = 8089,
         clock: Callable[[], float] = time.time,
+        client_address: str = "peer",
     ):
+        self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
         self.codec, self.limiter, self.allowed_hosts = codec, limiter, allowed_hosts
         self.expires_at = min(expires_at, rs.AUTHORITY_END)
@@ -115,7 +117,7 @@ class ResidentDemo:
         if row is None:
             return None
         try:
-            rs.authorise(row, self.now(), case_id)
+            rs.authorise(row, self.now(), case_id, self.identity.email_for(case_id))
         except rs.ShowcaseDenied:
             return None
         token: str = self.codec.issue(case_id)[0]
@@ -130,7 +132,7 @@ class ResidentDemo:
         if row is None:
             return None
         try:
-            rs.authorise(row, self.now(), case_id)
+            rs.authorise(row, self.now(), case_id, self.identity.email_for(case_id))
         except rs.ShowcaseDenied:
             return None
         view: dict[str, Any] = rs.showcase_view(row)
@@ -262,7 +264,11 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if not (self._same_origin() and self._csrf_ok()):
                 self._json(403, dict(error="Please reload the page and try again."))
                 return
-            source = self.client_address[0]
+            source = rs.client_key(
+                self.client_address[0],
+                self.headers.get_all("X-Forwarded-For") or [],
+                app.client_address,
+            )
             wait = app.limiter.retry_after(source)
             if wait:
                 self._send(

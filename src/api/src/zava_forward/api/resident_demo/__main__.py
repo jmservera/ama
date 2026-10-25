@@ -38,6 +38,7 @@ def main() -> int:
         config.expires_at,
         config.bind,
         config.port,
+        client_address=config.client_address,
     )
     server = serve(app)
     print(

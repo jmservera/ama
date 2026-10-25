@@ -2862,7 +2862,15 @@ identity and not production authentication. It is a different composition from t
   fake constant. A real shared password has not been generated.
 * Sign-in: `POST /demo/login` with CSRF (signed double-submit cookie and header), a same-origin
   `Origin`, a JSON body of at most 2 KiB, an exact `Host` allowlist and a source-address limiter
-  (5 failures per address, 60 overall per 10 minutes; forwarded headers are never trusted). Wrong
+  (5 failures per source, 60 overall per 10 minutes). The source is the TCP peer by default, which
+  is one shared bucket behind an ingress. With `ZF_DEMO_CLIENT_ADDRESS=ingress-rightmost` the source
+  is the last `X-Forwarded-For` entry, which Azure Container Apps ingress appends
+  ([Microsoft Learn ingress overview](https://learn.microsoft.com/azure/container-apps/ingress-overview),
+  retrieved 2026-10-25); earlier entries are client-controlled and ignored. A missing, non-IP, port-
+  or bracket-bearing last entry falls back to the peer bucket (stricter). Use that setting only for
+  direct Container Apps ingress: another proxy in front would make the last entry that proxy
+  (hypothesis, not tested). Residuals: the overall cap can still be exhausted by a distributed
+  attacker, which blocks sign-in until the window passes, and users behind one NAT share a bucket. Wrong
   password, unknown email and non-example domain all return the same 401 after the same work.
   Because the password is shared, knowing a showcase email is enough to view that invented record by
   design. That is why only synthetic allowlisted rows are reachable.
@@ -2871,8 +2879,9 @@ identity and not production authentication. It is a different composition from t
   revokes the session. The session holds an opaque handle, never a case id, email or URL.
 * Reads: every protected request re-reads the case through the allowlist view and re-checks
   admission, so a revoked, expired, duplicated or unprovenanced row is denied on the next request.
-  There is no row cache. The identity map is built at start-up only to enforce the 25-mapping bound,
-  so adding a resident needs a restart. The page shows only the positive-allowlist fields
+  The email in the start-up map is bound to the case: a row whose email no longer equals it is denied
+  on login and on every request, including live sessions, until restart. There is no row cache.
+  Adding a resident or changing an email needs a restart. The page shows only the positive-allowlist fields
   (home address, planned measures, plain-language progress and next step, help, and what is
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
@@ -2880,6 +2889,13 @@ identity and not production authentication. It is a different composition from t
   by 2026-10-26T12:00Z), the view and a read-only principal that has SELECT on that view only. The
   [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
   only dry-runs unless `--apply` is used from an approved private job.
+* Offline verifier: the owner chooses and keeps the password. Run `python3 infra/scripts/resident_demo_verifier.py > owner-only-file`
+  in an interactive terminal on an owner-controlled machine (no arguments). It prompts twice with
+  hidden input, rejects weak or predictable passwords with a generic reason, and prints only the
+  scrypt verifier. The verifier is credential-derived sensitive material: keep it in a password
+  manager or owner-only file and never in chat or git. The plaintext is briefly in process memory;
+  the rules reject predictable patterns and are not proof of strength, so a password-manager random
+  value is recommended. Tests use fake fixtures only; no real password has been entered.
 * Tests: `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests.test_resident_demo_api`
   (real loopback socket, fake reader and fake password) and, with a loopback throwaway SQL Server
   (`ZF_TEST_MSSQL=1`, `ZF_SQL_SERVER=127.0.0.1`, `ZF_SQL_PORT`, `ZF_SQL_PASSWORD`),

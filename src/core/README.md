@@ -3178,7 +3178,12 @@ unchanged. Only its read-only plain-language constants are reused.
 * `exclusion` and `build_identity_map` admit a row only with non-blank provenance, not revoked, in
   its window, a canonical `example.com` email and exactly one case with that email across all cases.
   At most 25 mappings; more fails the whole map closed. Excluded rows are counted, never listed.
-* `authorise` re-checks one freshly read row for the case in the session.
+* `authorise` re-checks one freshly read row for the case in the session and requires its email to
+  equal the email admitted in the map.
+* `client_key` picks the limiter source: the peer, or under `ingress-rightmost` only the last
+  `X-Forwarded-For` entry, falling back to the peer when it is not a bare IP.
+* `resident_showcase_verifier` holds the password-strength policy and `build_verifier` used by the
+  offline tool `infra/scripts/resident_demo_verifier.py`.
 * `PasswordVerifier` and `make_verifier` use scrypt. `verify_login` does one scrypt run for every
   attempt. `SessionCodec` issues signed, expiring, process-bound session and CSRF tokens.
   `LoginLimiter` is a bounded sliding window.

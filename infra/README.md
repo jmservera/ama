@@ -3147,3 +3147,8 @@ Key Vault grant is made. The approved design names the existing vault `kv-cutove
 is not a retrieval path: no role or private network route exists for it yet. The cloud deployment
 stays blocked on budget headroom proof and the human approvals recorded in the issue 462 tracking
 files.
+
+[`scripts/resident_demo_verifier.py`](scripts/resident_demo_verifier.py) is the owner-run offline
+tool: it takes no arguments, needs an interactive terminal, reads the demo password twice with hidden
+input and prints only the scrypt verifier (sensitive; keep it out of chat and git). It has no
+network, Azure or vault access.

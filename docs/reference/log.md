@@ -7148,3 +7148,8 @@ metadata when the knowledge base was created.
 * Documented the local, unpublished implementation of the fake-email synthetic resident showcase: pure domain and read-only SQL adapter in [core](../../src/core/README.md#synthetic-resident-showcase-boundary-462), server, image and checks in the [API README](../../src/api/README.md#synthetic-resident-showcase-462) and the SQL view and read-only principal in the [infra README](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462).
 * Separate from the #444 loopback preview, whose guard is unchanged. No real password, secret, Azure or live SQL access was used. Cloud deployment, budget headroom, live email equality, the private SQL job and Key Vault retrieval stay blocked. Not resident identity, not enrolment.
 
+## [2026-10-25] update | Synthetic resident showcase review corrections (#462)
+
+* Added the corrections for the #462 local slice review findings: a limiter source option for direct Container Apps ingress (`ZF_DEMO_CLIENT_ADDRESS`, last `X-Forwarded-For` entry only, peer fallback), login and per-request email binding to the start-up map, and an owner-run offline hidden-input verifier tool. See the [API README](../../src/api/README.md#synthetic-resident-showcase-462) and the dated RPI artifacts `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-corrections-*`.
+* Local only: no push, no real password generated or entered, no Azure or live SQL access. Budget, live equality, SQL view and principal, and vault write path stay open. Earlier log entries are unchanged.
+
