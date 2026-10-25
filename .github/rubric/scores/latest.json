@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T03:25:10+00:00",
-  "commit": "69d83645d7934ee66feea438168fbfee2e36fa3b",
+  "scored_at": "2026-10-25T08:26:17+00:00",
+  "commit": "725cd4d3ec794449b4eb29fb13bc8e7dbadfdaf5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40157773904",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40176160459",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -13,17 +13,18 @@
     "solution-code": "785c7a5cff78fb5b00b09ea1e2da45c72dda27e5f1e1779dc42215ff99681402",
     "infrastructure": "230cf17a20a0293cf542271421e3b0a48c93386df1019d893976034efb2e6de2",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
-    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402"
+    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
+    "thought-leadership": "e865f2fa4d6cbfa2c7d15e23e9b79225d30b2ea93d3824cacd05199f1aa19832"
   },
-  "total": 64,
+  "total": 73,
   "sections": {
     "A": 31,
     "B": 22,
     "C": 11,
-    "D": 0
+    "D": 9
   },
-  "floors_met": false,
-  "outcome": "Incomplete (thought leadership artifact not submitted)",
+  "floors_met": true,
+  "outcome": "Pass",
   "criteria": {
     "A1": {
       "score": 5,
@@ -145,19 +146,29 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 4,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:61-68",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1219-1225",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/repo_history_metrics.out.txt"
+      ],
+      "rationale": "Artifact now committed (thought-leadership present). Original five-mechanism synthesis and actionable Monday checklist retained, grounded in pinned repo-history evidence; study unexecuted (resultsfalse) so it is synthesis plus protocol, not a verified finding."
     },
     "D2": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 3,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:190-209",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:21-23"
+      ],
+      "rationale": "Structured draft with abstract, sections, tables, figures and embedded bibliography, but main.tex still carries 25 unresolved TODO(author) items and revision-report.md states the paper is not submission-ready."
     },
     "D3": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 2,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:217-222"
+      ],
+      "rationale": "A concrete arXiv path is researched (category, endorsement rule, abstract-length check), but the README current-status note states execution is paused, registration is deferred, and public release remains subject to permission; nothing submitted or accepted."
     }
   }
 }
