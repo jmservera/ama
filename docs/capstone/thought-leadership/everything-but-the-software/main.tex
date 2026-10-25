@@ -53,29 +53,28 @@ organisation, Zava North Homes, is fictional.}}
 \maketitle
 
 \begin{abstract}
-Software that only accumulates features decays; this has been known since
-the 1970s. I propose that coding agents may accelerate this decay through
-compounding errors and output that exceeds human review capacity. This
-exploratory case study examines that proposition in
-one well-documented case and specifies an experiment to test a remedy. Over
-six weeks I used agents, centred on Microsoft's open-source HyperVelocity
-Engineering (HVE Core) framework, to research a fictional social-housing
-retrofit programme, write requirements and deploy an MVP, then handed a
-backlog of 192 issues to a coordinator of my own design that ran parallel
-research--plan--implement--review loops and merged its own pull requests. In
-ten days, 183 pull requests were merged and the project log grew by about
-37,000 words, yet I no longer had a system I could use, while an LLM-scored
-rubric rated implementation completeness five out of five. I propose five
-mechanisms consistent with the gap: specification inflation, proxy capture, learning
-evaporation, process-gate inflation and feedback starvation. As a remedy I
-propose a consolidation harness that, after every feature, stops the agent to
-review its work, refactor under test-commit-or-revert and rewrite a one-page
-design note before the next feature starts. I specify a controlled
-experiment, designed with HVE Core's Minimum Viable Experiment method, that
-compares the harness with feature-only delivery on cumulative correctness,
-internal quality, changeability and cost. The developer's scarce
-contribution, I argue, is shifting from producing code to designing the loops
-that keep software working.
+Can another agent provide the reflection and course correction that
+feature-driven delivery crowds out? I investigate this question through an
+exploratory case study and an experiment protocol. I propose that coding
+agents may accelerate software decay through compounding errors and output
+that exceeds human review capacity. Over six weeks I used agents, centred on
+Microsoft's open-source HyperVelocity Engineering (HVE Core) framework, to
+research a fictional housing retrofit programme, write requirements and deploy
+an MVP. I then handed 192 issues to a coordinator running parallel
+research--plan--implement--review loops. In ten days it merged 183 pull
+requests and the log grew by about 37,000 words, yet I could no longer use the
+system, while an automated rubric gave implementation completeness five out
+of five. I propose five mechanisms: specification inflation, proxy capture,
+learning evaporation, process-gate inflation and feedback starvation. The
+case motivates, but cannot answer, whether an additional agent can recognise
+drift and restore options for future change. I specify a bounded test: an
+agent reviews, refactors under test-commit-or-revert and rewrites a short
+design note after every feature. Feature-only, consolidation and review-only
+arms will be compared on correctness, internal quality, an unforeseen change
+request, human-intervention demand and cost. This tests agent-led
+consolidation, not autonomous product steering or the replacement of human
+judgement. The broader question is whether agents can help keep development
+on a useful course, rather than merely produce more work.
 \end{abstract}
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
@@ -124,21 +123,34 @@ the remedy is the one Beck describes: stop adding features blindly, and after
 each feature stop, review, refactor and improve before adding the
 next~\cite{beck2026prodacity,beck2025devslow,beck2023tidy}.
 
+That raises the central question of this paper: can an additional agent
+perform some of the reflective work normally supplied by humans, recognise
+when development is drifting and steer it back towards a useful outcome?
+I use reflection to mean checking assumptions and a working model of the
+system against observed behaviour, not generating another approval record.
+I read Beck's alternation of features and futures as preserving options for
+later development: adding behaviour can narrow those options, while
+consolidation can restore them~\cite{beck2026prodacity,beck2025devslow}.
+Whether an agent can supply that corrective work is an empirical question,
+not something established by the fact that a human supplied it in this case.
+
 The case is unusually well documented. The repository is public, every change
 went through a pull request, an append-only log recorded what the agents did
 and why, and the coordinator's own instructions are versioned with the
-code~\cite{servera2026ama}. This makes it possible to go beyond anecdote and
-ask four questions:
+code~\cite{servera2026ama}. I approach the central question through four
+more specific questions:
 
 \begin{itemize}[leftmargin=*]
 \item \textbf{RQ1.} What did a long-running, autonomous, spec-driven delivery
 loop produce, and what did it fail to produce?
 \item \textbf{RQ2.} Which proposed mechanisms fit the gap between activity and
 usable outcome, and do they fit the working theory?
-\item \textbf{RQ3.} Can a harness that consolidates after every feature slow
-the decay, and at what cost? This report specifies the experiment that will
-answer it.
-\item \textbf{RQ4.} What does all this imply for the developer's role?
+\item \textbf{RQ3.} Can an additional agent preserve correctness and future
+changeability through a consolidation step after every feature, and at what
+cost? The experiment tests this bounded form of correction, not general
+autonomous steering.
+\item \textbf{RQ4.} Which reflective responsibilities might be delegated to
+agents, and what evidence and human accountability would that require?
 \end{itemize}
 
 \noindent The report makes five contributions:
@@ -163,8 +175,9 @@ and HVE Core's Minimum Viable Experiment method, with hypotheses
 and decision rules to reconcile with the tagged protocol before registration
 and fresh confirmatory runs (Sections~\ref{sec:harness}
 and~\ref{sec:experiment}).
-\item A reading of the developer's existential crisis grounded in what, in
-this case, remained the human's job (Section~\ref{sec:discussion}).
+\item A distinction between the reflective work I supplied in this case and
+the open question of how much of it an agent could perform
+(Section~\ref{sec:discussion}).
 \end{enumerate}
 
 This is not an evaluation of the tools I used. The framework at the centre of
@@ -1163,7 +1176,10 @@ such a test; it does not report results.
 
 Practices P3 and P5 suggest a narrower intervention that an agent can run
 inside the loop, leaving human checkpoints to a coarser cadence, and that can
-therefore be tested in isolation: a consolidation harness. After every feature
+therefore test a bounded part of the central question: a consolidation
+harness. The pause is scheduled by the harness, not chosen by the agent;
+the agent is not authorised to reject features or redirect the product.
+After every feature
 the loop stops, and an agent:
 \begin{enumerate}[leftmargin=*]
 \item runs the tests and a metrics script that lists complexity hotspots,
@@ -1232,7 +1248,9 @@ budget.
 \section{Testing the harness: an experiment protocol}\label{sec:experiment}
 
 The proposed contribution is a controlled test of a practised but untested
-intervention, not the invention of agent clean-up. Lulla et~al.'s
+intervention, not the invention of agent clean-up. It tests whether an agent
+can perform a bounded part of reflective correction, rather than whether
+another agent can autonomously steer the whole development process. Lulla et~al.'s
 registered-report protocol, which treats agent configurations as experimental
 arms, provides a model for specifying the comparison before observing
 results~\cite{lulla2026protocol}.
@@ -1322,6 +1340,11 @@ review-only. B may add behaviour-pinning tests and writes an architectural
 comparison cannot isolate refactoring. Everything outside the post-feature
 intervention is identical: model and version, agent runtime, feature prompts,
 starting skeleton, tools and per-feature budgets.
+
+The additional agent is a distinct session with a different responsibility,
+not a different pinned model or an independent source of truth. Its value
+must be demonstrated by behavioural and changeability outcomes, not inferred
+from the existence of another review role.
 
 \emph{Runtime and budgets.} I selected \texttt{claude-sonnet-5.5}, medium
 reasoning effort and Copilot CLI~1.0.103, with automatic updates disabled.
@@ -1557,9 +1580,10 @@ the limits of their evidence with a care many human teams lack. The MVP was
 built and reshaped in a day. Each of these successes had the same shape: a
 short loop with a human in it.
 
-\subsection{What remained mine}
+\subsection{What remained mine in this case}
 
-Looking back over six weeks, the parts of the work no agent did were these. I
+Looking back over six weeks, I still supplied several kinds of reflective
+work. I
 decided what not to build. I noticed that something was wrong, not from the
 reports, which were accurate and full of caveats, but from the plain fact
 that I could not use the system. I held the theory of the system, in Naur's sense:
@@ -1575,18 +1599,45 @@ customers~\cite{martin2026productengineers}. The agents were excellent at the
 visible part. They produced proofs of work: pull requests, artefacts,
 receipts and honest caveats. In this case those records did not replace the
 understanding I gained from using a running system. That does not establish
-a general limit on what agents can do.
+a general limit on what agents can do. It identifies responsibilities that
+could be candidates for bounded delegation, not proof that they are
+intrinsically or permanently human.
+
+\subsection{Can another agent restore futures?}
+
+Beck's alternation suggests a different purpose for an additional agent:
+preserving the options that feature execution consumes, rather than
+accelerating the next backlog item~\cite{beck2026prodacity,beck2025devslow}.
+Such an agent would need to inspect the accumulated system, detect drift
+against intended behaviour and take or recommend a corrective action. An
+agent that only reads generated records and approves them could reproduce
+the proxy capture observed here. I propose that a steering role needs
+behavioural evidence, bounded authority to act and checks that can disconfirm
+its judgement. More agents do not by themselves supply those conditions.
+
+The present experiment takes one step towards that question. It asks whether
+an agent-led consolidation package leaves software more able to absorb an
+unforeseen change. H6 is the closest probe of preserved future options;
+complexity and duplication are supporting proxies, not a direct measure of
+all possible futures. The fixed post-feature cadence does not test whether
+the agent can decide when to interrupt delivery, challenge a requirement,
+change the backlog or restore a usable deployment. A positive result would
+support this bounded consolidation role, not unrestricted process steering.
+A null or negative result would challenge this particular intervention, not
+prove that reflective work cannot be delegated to agents.
 
 \subsection{The crisis reframed}
 
 The existential question is usually put as whether machines will replace
-developers. This case suggests a narrower and more useful one: will
-developers notice when the machine is producing everything except the thing
-that matters? Speed of generation is no longer scarce. What is scarce is
-feedback: designing it, protecting it from the volume of activity around it,
-and interpreting it. That is a job, and it is a technical one. It needs the
-old skills, testing, small steps, tidying and walking skeletons, applied to a
-new kind of team. Beck's 2023 recalibration was about which ten per cent of
+developers. I ask instead which parts of reflection and course correction
+agents can perform reliably, and how to tell when they are helping rather
+than reinforcing the original mistake. In this case, producing more work did
+not substitute for feedback. Designing, protecting and interpreting that
+feedback remained my responsibility, but that observation is a starting
+point for testing delegation, not a boundary I assume agents cannot cross.
+The old practices, testing, small steps, tidying and walking skeletons, offer
+ways to make such delegation observable and falsifiable. Beck's 2023
+recalibration was about which ten per cent of
 his skills gained leverage~\cite{beck2023ninety}; in this case, the skills
 that mattered were the ones that keep a feedback loop short. Lamanna's advice
 to judge AI by the same business outcomes as before~\cite{lamanna2026changing},
@@ -1676,17 +1727,20 @@ explanations or establish that model capability was irrelevant. These
 patterns fit old lessons of software engineering; I propose that agentic
 throughput can amplify them. My practical response is to make
 feedback the primary output of every cycle: a running increment, a human
-checkpoint and executable lessons. The developer's role does not disappear in
-that model. It moves to where it always mattered most: deciding what is worth
-building and finding out, as quickly as possible, whether I built it.
+checkpoint and executable lessons. The further question is whether another
+agent can perform some of the reflection and correction that those
+checkpoints currently obtain from a human. Accountability for goals and
+consequential decisions remains distinct from delegating bounded corrective
+work; the case does not establish that only humans can perform that work.
 
-I have also argued something that can be refuted. If software that only
-accumulates features decays, and agents accelerate the decay through
-compounding errors and unreviewable volume, then a harness that consolidates
-after every feature should keep agent-built software working, understandable
-and changeable at an acceptable cost. Section~\ref{sec:experiment} sets out
-how to find out. Whatever the result, it will say more than another week of
-merged pull requests.
+The experiment operationalises a bounded version of that question: can an
+agent that consolidates after every feature keep agent-built software
+working, understandable and changeable at an acceptable cost? It tests
+whether an additional agent can help restore future options, not whether it
+can choose the right product or autonomously recover every delivery failure.
+Section~\ref{sec:experiment} sets out how to find out. The larger question of
+agent-led steering remains open; the first requirement is evidence that the
+additional agent improves outcomes rather than adds another layer of work.
 
 \section*{Acknowledgements}
 % TODO(author): thank reviewers once they have commented.

@@ -164,6 +164,11 @@ Its method attribution and experimental choices are superseded where stated.
    with explicit HIR and demand-rate formulas. The cycle denominator is a
    study-specific adaptation, not a universal standard; incidence, event
    frequency and human effort remain distinct.
+* Reframed the abstract, research questions and discussion around whether an
+   additional agent can perform reflection and course correction. The current
+   consolidation experiment is a bounded first test, not a test of unrestricted
+   steering or proof that reflective work is exclusively human. Tagged study
+   materials, hypotheses and thresholds are unchanged.
 * Preserved earlier protocol proposals and kept `\resultsfalse`. A Git tag is
    not registration, and earlier started runs cannot be retrospectively
    described as preregistered.
@@ -216,4 +221,4 @@ original design after seeing results.
 * Since 21 Jan 2026, a first-time submitter in cs.SE needs either prior authorship in the domain or a personal endorsement from an established arXiv cs.SE author.
 * arXiv asks authors to report significant use of generative AI. AI tools cannot be authors, and authors are responsible for all content.
 * The abstract field limit is 1,920 characters. The conservative source count
-   for this revision is 1,644, including LaTeX syntax and normalised whitespace.
+   after the framing revision is 1,619, including LaTeX syntax and normalised whitespace.
