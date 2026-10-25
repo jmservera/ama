@@ -10,8 +10,8 @@ Details: ../../details/2026-10-25/issue349-tenant-readiness-preflight-main-integ
 
 * [x] Phase 1: Research (read-only).
 * [x] Phase 2: Critique executed once before merge (rubber-duck): Revise. Applied: pre-merge SHA equality check (abort on mismatch); conflict inventory of log.md and rubric score files with the branch score recorded in the changes artifact rather than dropped; claims labelled owner-reported, not independently verified; timestamps and authorship preserved. No repeat critique.
-* [ ] Phase 3: Merge origin/main without rewriting; resolve conflicts keeping both log entries; add changes note.
-* [ ] Phase 4: Focused tests, independent review, then one full gate only if the heavy lock is free.
+* [x] Phase 3: Merge origin/main without rewriting; resolve conflicts keeping both log entries; add changes note.
+* [x] Phase 4 (review done; gate below): Focused tests, independent review, then one full gate only if the heavy lock is free.
 
 Constraints: draft PR stays draft, Refs #349 only, no push or self-merge, no
 criteria ticked, original Conformant review and 2026-10-24 evidence untouched.
@@ -24,3 +24,5 @@ as the ADMIN_ROLE constant in src/api auth.py, outside DEFAULT_ROLE_MAP and
 RULE_ROLE_MAP. Planned minimal change: the test also reads ADMIN_ROLE and expects
 13 roles. Test-only; checker unchanged. Not a repeat critique: within the
 critiqued scope (align tests only on a concrete current contract discrepancy).
+
+Research note: the research expected no test change; A1 supersedes that expectation. The research text is preserved as written.
