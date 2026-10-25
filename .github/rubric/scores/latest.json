@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-24T22:50:56+00:00",
-  "commit": "3a52b9ff82ff96c28540c6afa126e0850a855332",
+  "scored_at": "2026-10-25T00:16:16+00:00",
+  "commit": "a07df32ce9935fe3c3487c587e0c53073b9cc8ed",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40139945049",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40144803999",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "368f24a24fab88fb1d6aa1eeefb2e786eb807822fcf789dd7363eac8d3ed2347",
+    "solution-code": "785c7a5cff78fb5b00b09ea1e2da45c72dda27e5f1e1779dc42215ff99681402",
     "infrastructure": "5ae0103ecea79755f49c0835da379867fcdbc1cc711b6e2161118cf2b8fcecf6",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402"
@@ -46,7 +46,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control changes in this diff (ledger migration logic only). Unchanged."
+      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -54,7 +54,7 @@
         "src/core/README.md:2860-2920",
         "src/api/checks/regulatory_ux_check.py:102-146"
       ],
-      "rationale": "Diff adds a robustness fix (ledger-safe column migration) but no new end-to-end capability; already at ceiling. Unchanged."
+      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
     },
     "A5": {
       "score": 4,
@@ -62,19 +62,19 @@
         "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
         "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
       ],
-      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
+      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/core/src/zava_forward/core/continuity.py:490-540"
       ],
-      "rationale": "No new agentic orchestration introduced; diff is a SQL-store migration resilience fix. Unchanged."
+      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
     },
     "B1": {
       "score": 3,
@@ -113,9 +113,10 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:2680-2695"
+        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "README documents the new ledger migration behaviour clearly and concisely alongside the existing complete, navigable capstone documentation set; remains at Excellent."
+      "rationale": "The pitch package is now a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. Capstone documentation is complete and navigable, meeting Excellent."
     },
     "B7": {
       "score": 4,
@@ -127,7 +128,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No BRD/PRD/ADR files changed in this diff; stakeholder/value framing unaffected. Unchanged."
+      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 2,
