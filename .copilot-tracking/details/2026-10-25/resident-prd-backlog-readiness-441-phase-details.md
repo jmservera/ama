@@ -29,3 +29,7 @@ ms.date: 2026-10-25
 
 Focused link/anchor/trace/hash checks, requirements-quality scope statement,
 Review log, then the repository gate on a clean exact head.
+
+## Correction cycle 1 (2026-10-25)
+
+Narrow PRD fix for the Staff/core versus shared-operation contradiction, a scoped independent quality review with a delta recheck, then a new commit and a new gate with a new output directory.

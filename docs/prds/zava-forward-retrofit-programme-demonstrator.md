@@ -32,7 +32,7 @@ requirement_id_prefixes:
 license: "CC-BY 4.0 (Microsoft HVE-Core)"
 ---
 
-> **PRD-2026-AMA48-001** | Exercise: merged candidate for review, unsigned; formal governance: in-review, no new approval or publication | Version: 0.20.0 | Last Updated: 2026-10-24
+> **PRD-2026-AMA48-001** | Exercise: merged candidate for review, unsigned; formal governance: in-review, no new approval or publication | Version: 0.21.0 | Last Updated: 2026-10-25
 
 The merged candidate preserves the 2026-10-23 resident increment at FR-062 to
 FR-071/AC-111 to AC-140 and appends the 2026-10-24 owner-directed staff-access
@@ -1214,7 +1214,7 @@ fixed 30-minute measurement window after any separately recorded warm-up;
 do not remove timeouts/errors to improve the percentile. Report the ordinary
 API successful-completion distribution and every attempted request/error/
 timeout separately; if failures make the distribution misleading, the run
-is inconclusive or fails the agreed guardrail, not a response-time pass.
+is inconclusive or fails, not a response-time pass. The minimum sample count, error/timeout ceiling and the named owner and location of the frozen request mix are not yet defined; they are open items for RB-03 and must be recorded before any pass is claimed.
 Managed identity, asynchronous scan and model duration are separate end-to-end
 waits with visible pending/failure states. Receipt timing measures durable
 intake, not scan completion.
@@ -1256,10 +1256,10 @@ each request, never a shared implementation, library or store.
 | Operation class | Applicable rule | Applicability and reporting boundary |
 | --- | --- | --- |
 | Resident-audience ordinary case/status/receipt API (permitted own-scope read; durable receipt of an accepted request) | NFR-021/AC-139: p95 <=2s, five concurrent synthetic sessions, 30 minutes, excluding sign-in, scan and model waits | Staff-audience requests are not measured against this target and a resident pass never relaxes NFR-002 |
-| Staff/core operation (list/detail, controlled write, dashboard, import preview, scale run) | NFR-002 unchanged: list/detail 1s, controlled write 2s, dashboard 3s, import preview 10s; 5 MB/file, 100 MB total evidence, scale fixture | Applies to every staff-audience request and any request reaching the same underlying function as a resident route. The two staff sessions in the resident run give observations against these thresholds only; meeting NFR-002 needs its own defined core workload run (five sessions, two writers) |
-| Operation shared by resident and staff paths | Each request is judged by its own audience rule; both distributions are reported separately with request mix | A request that cannot be assigned to exactly one audience rule is `unresolved` and cannot pass; a resident request must never be served through a staff route, role or grant |
+| Staff/core operation (list/detail, controlled write, dashboard, import preview, scale run) | NFR-002 unchanged: list/detail 1s, controlled write 2s, dashboard 3s, import preview 10s; 5 MB/file, 100 MB total evidence, scale fixture | Applies to every staff-audience request, including a staff request that shares implementation with a resident route; it never applies to a resident-audience request. The two staff sessions in the resident run give observations against these thresholds only; meeting NFR-002 needs its own defined core workload run (five sessions, two writers) |
+| Operation shared by resident and staff paths | Each request is judged by its own audience rule; both distributions are reported separately with request mix | A request that cannot be assigned to exactly one audience rule is `unresolved` and cannot pass. A resident-audience request in no listed class (for example appointments or the gated resident-answer task) has no latency or size rule from this section and is `unresolved` until its rule is recorded; a resident request must never be served through a staff route, role or grant |
 | Resident requested upload | PDF/JPEG/PNG, one file/request, maximum 10 MiB (10,485,760 bytes) per file, quarantined pending scan/review | Applies to the resident-upload route only; MB and MiB are not treated as equal |
-| Staff/core evidence file or import | NFR-002 limits unchanged, as written (5 MB/file, 100 MB total, 500-row import at most 5 MB) | Promotion or linking of an accepted resident file into staff evidence is a separate staff action; whether resident files count toward the 100 MB total is an open engineering question, and fixtures stay within the stricter total until decided |
+| Staff/core evidence file or import | NFR-002 limits unchanged, as written (5 MB/file, 100 MB total, 500-row import at most 5 MB) | Promotion or linking of an accepted resident file into staff evidence is a separate staff action and is subject to the staff NFR-002 limits: a file over the staff per-file limit is refused or handled as a recorded exception, never silently accepted. Whether resident files count toward the 100 MB total is an open engineering question; until decided, fixtures keep resident plus staff files within 100 MB. "5 MB" is taken as written and not converted to MiB |
 
 Record operation class, audience, request mix, file units and the applied rule
 for every result. Do not remove errors or timeouts to obtain a percentile.
@@ -3063,7 +3063,7 @@ service/control-owner, privacy/security and release decisions.
 
 * **Template Version:** 1.0.0
 * **Created:** 2026-10-03
-* **Last Updated:** 2026-10-24 (merged unsigned resident increment FR-062 to FR-071 and Entra-authoritative staff access FR-072/073; previous approval and deployment gates retained)
+* **Last Updated:** 2026-10-25 (v0.21.0 owner-target and applicability correction; v0.20.0 merged unsigned resident increment FR-062 to FR-071 and Entra-authoritative staff access FR-072/073; previous approval and deployment gates retained)
 * **Authoring Status:** Amended candidate awaiting requirements review and owner acceptance; formal governance remains in-review
 * **Next Review:** Full-PRD requirement quality and amended exercise acceptance; implementation and governed adoption are separate gates
 

@@ -26,3 +26,9 @@ Recheck is repeated immediately before publication.
 
 * Candidate edits preceded the critique artifact (non-interactive run); disclosed in the critique.
 * Pre-existing broken relative links in the addendum and log (capstone assets, mvp anchors) were not fixed (out of scope).
+
+## Correction cycle 1 (2026-10-25)
+
+* PRD: Staff/core applicability row narrowed to staff-audience requests; added unlisted resident class, staff-limit check on promotion, 5 MB unit note, open sample-definition items; header and Last Updated aligned to 0.21.0.
+* Backlog RB-03 lists the new open items. Index unchanged; log entry appended.
+* Prior commit 2b3f6715 and its receipt (/tmp/rpi-441-gate-1792892963) are retained; they do not cover the new commit. The first gate attempt ended BLOCKED on the global heavy lock timeout, not a functional test; the retry passed.

@@ -7461,3 +7461,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Finding pr442-qual-041 has corrected authored text awaiting fresh independent
   review; the other six findings, OD-52 to OD-55 and registration UNMET remain.
   Earlier log entries are unchanged.
+
+## [2026-10-25] update | Resident target applicability correction cycle 1 (#441)
+
+* Corrected PRD v0.21.0 target-applicability text: staff rules apply to every
+  staff-audience request, including one sharing implementation with a resident
+  route, and never to resident-audience requests; shared implementation does
+  not decide applicability. Added promotion-to-staff-evidence, unlisted
+  resident class, unit and open sample-definition notes. A scoped independent
+  quality review found no residual contradiction; it is not a full-PRD pass.
+  The PRD stays unsigned and the prior entry above is unchanged.

@@ -14,6 +14,7 @@ ms.date: 2026-10-25
 * [x] Phase 4: Draft backlog under changes/2026-10-25/.
 * [x] Phase 5: Independent critique, focused validation, Review, receipt.
 * [ ] Phase 6: Commit, publication gate, push and PR (Refs 441).
+  * Correction cycle 1: applicability row fix, independent scoped review, new commit and gate (see changes record).
 
 Details: [phase details](../../details/2026-10-25/resident-prd-backlog-readiness-441-phase-details.md).
 Critique: [plan critique](../../reviews/plans/2026-10-25/resident-prd-backlog-readiness-441-plan-critique.md).
