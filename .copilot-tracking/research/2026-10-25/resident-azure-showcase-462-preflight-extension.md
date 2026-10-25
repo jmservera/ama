@@ -144,3 +144,57 @@ Scenarios for one revision of 0.25 vCPU and 0.5 GiB (no grant, list price, repli
 Scenario B and D exceed the withdrawn 0.50 figure, which confirms that figure was not a bound. These are scenario arithmetic only. They exclude the one-off image build (job consumption at the active rate, not priced here), registry storage and transfer, Key Vault operations, logging ingestion and egress, none of which was priced. Scenario figures are not an upper bound: real active time, scaling above one replica, request counts, bot traffic and any price change are unbounded by this analysis.
 
 Unknowns that remain: free-grant balance; billing lag for the last day; the allocation of shared SQL, registry and monitoring cost to incremental work; whether any account-specific price applies. The cumulative USD 50 incremental cap is not reset, and no valid remaining-budget proof or budget clearance exists. The spend gate stays closed.
+
+## Addendum 2: deployment-preflight facts and owner-decision dispositions (appended 2026-10-25, probes 21:08Z to 21:20Z; prospective plan `.copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-preflight2-plan.md`)
+
+All earlier text and errata are preserved. Read-only management-plane queries in group `ama` only. No secret list/read, role/network change, SQL login, job start, install, push or PR. No separate critique was run (read-only research extension, no newly authorised action); that is stated, not faked. Raw JSON is kept outside the repository in `/tmp/ama462-pf2` and holds no secrets.
+
+### Owner decisions received 2026-10-25T20:42Z (dispositions)
+
+* Synthetic-only positive-allowlist SQL view plus a dedicated read-only principal: design approval recorded. It authorises no broad access, no creation yet, and does not authorise starting a billable private job before the budget gate.
+* Existing private vault `kv-cutovertest-rzsrg` selected for demo-password storage and private owner retrieval. This names the vault; it is not a role, network grant or proven retrieval path.
+* Resident-only window stays to 2026-10-26T12:00Z; the cumulative USD 50 incremental cap is not reset and excludes the pre-existing baseline; USD 700 applies to `ama` for October only. General live repair authority has expired. Ungated planning push `5963fa3f` remains a disclosed, unresolved deviation not covered by the owner's #436/#459 process acceptance. No production resident acceptance is inferred.
+
+### G1: refreshed Cost Management ledger (ActualCost, USD, group `ama`)
+
+Reconcilable dimensions: ungrouped daily and ResourceId by day agree exactly (103 rows). Cost Management is lagging and revising: 24 Oct 19.096 (unchanged); 25 Oct 5.689 now against 3.294 seen at 16:45Z and 21:00Z earlier, so the latest day rose by about 2.4 USD as data arrived. Total 24.785 since the day of the cap start (daily granularity cannot split 13:39Z). The earlier ResourceType-by-day duplicate ambiguity for 24 Oct stays disclosed and unresolved; no by-type figure is used here.
+
+| Resource (ResourceId) | 24 to 25 Oct USD | Classification |
+| --- | --- | --- |
+| `retrofit` database | 11.233 | pre-existing baseline; incremental share (seed load, no SKU change) unquantified |
+| private endpoint group (combined names) | 3.833 | baseline |
+| `crcutovertestrzsrg` registry | 2.640 | baseline; incremental image storage share unquantified |
+| `ca-cutover-test-api` | 1.610 | baseline |
+| `ca-cutover-test-demo-api` | 1.257 | changed 2026-10-24T14:02Z, owner-authorised work: incremental candidate |
+| `job-cutover-test-orchestrator` / `job-cutover-test-init` | 0.150 / 0.069 | owner-approved runs: incremental candidates |
+| `log-cutover-test` workspace | 0.329 | baseline; logging share unquantified |
+| `kv-cutovertest-rzsrg` | 0.000 | none |
+
+Incremental candidates reported: about USD 1.5 (app 1.257, jobs 0.22), up from 1.1 in the earlier reconstruction because of lag. Unquantified, not invented: registry image-storage share of 2.640, database share of 11.233, logging share of 0.329. No resources were created after the cap start (earlier ARM check). These are actual lagging charges, not a forecast; no forecast or scenario value is mixed into them.
+
+### Pricing of proposed incremental components (public retail API, UK South, USD, 2026-10-25T21:1xZ)
+
+* Container Apps compute: meters and scenarios in Addendum 1, unchanged. About 0.609 for 16 h active at 0.25 vCPU/0.5 GiB is compute only and is not a total bound.
+* Registry (Premium): Data Stored USD 0.10 per GB-month; Premium Registry Unit 1.6666 per day is a fixed existing cost not added by this work; ACR Task vCPU Duration 0.0 per second to 6,000 seconds then 0.0001 per second. A build of about 15 minutes (900 s at 1 vCPU) falls in the zero-priced tier only if the task free tier has not been used this period: unknown. Image growth of an assumed 0.3 GB is about USD 0.03 a month pro-rated, an assumption not a measurement.
+* Log Analytics: ingestion USD 0.00 for the first 5 GB then 2.88 per GB (list; the workspace's actual SKU and commitment are unknown); app console logs are the main source. Volume for one small app is unmeasured: unknown, bounded only by choosing a log cap.
+* Key Vault Standard: operations USD 0.03 per 10,000; three secrets with a few hundred reads is well below USD 0.01. The existing vault's standing cost is baseline.
+* Egress: the Bandwidth service query returned 0 items for the filter used; I could not prove a UK South egress price. Egress for a small text page is expected to fall inside Azure's monthly free allowance, but that is not proven here: unknown.
+* One-off components not priced: image build compute beyond the ACR Task tier, SQL view/principal creation job (explicitly not authorised to start before the budget gate), private retrieval client.
+
+Conclusion: a complete, defensible remaining-headroom proof does not exist. Missing: the incremental shares of registry, SQL and logging, the Cost Management lag on the last day, the free-grant balance, the egress price and log volume. Cloud mutations stay stopped.
+
+### G4: owner retrieval path (ARM metadata and role assignments, no data-plane call)
+
+* Vault `kv-cutovertest-rzsrg`: Standard SKU, RBAC authorisation on, public network access Disabled, ACL default Deny, bypass None, no IP or VNet rules, soft delete on (7 days), purge protection not enabled. A private endpoint `pe-kv-cutovertest-rzsrg` exists, Approved, in subnet `snet-pe` of `vnet-cutover-test`.
+* Roles on the vault scope including inherited: one Key Vault Secrets User for a service principal at vault scope (identity not resolved here); Owner for 2 users, 5 service principals at subscription scope and 1 at group scope; no Key Vault Secrets Officer or Administrator assignment found. Owner is a management-plane role and does not confer secret read or write.
+* Network: the virtual network has three subnets (`snet-aca`, `snet-pe`, `snet-aca-demo`), no peering, and the group holds no VM, Bastion, VPN or DNS-resolver resource. A person's laptop cannot reach the vault's private endpoint, so there is no usable existing private retrieval path for the owner.
+* Minimal missing actions, none taken: (1) a data-plane role at the single secret scope for the owner (Key Vault Secrets User on `resident-demo-password` only, time-bound to 2026-10-26T12:00Z) after the secret exists; (2) a private client to read it, which means either a private job or workload inside the environment that outputs to the owner by a channel the owner designates, or a new private access resource (VM, Bastion, VPN or peering), each of which adds cost and a network change and so needs named owner approval after the budget gate. The vault selection does not supply either. The writer of the secret is the existing secure ARM deployment (management plane), which does not need a data-plane role, so storage is feasible but retrieval is not yet.
+* The vault's soft-delete retention (7 days) and absent purge protection are unchanged; no purge is planned.
+
+### Hard gates still open
+
+1. #444/PR #455 merge, with the fresh gate running; coordinator resume.
+2. Complete remaining-headroom proof (G1 unknowns above).
+3. Named approval for any role at secret scope and for a retrieval client or private job, plus the budget gate before any billable job (the SQL view/principal creation included).
+4. Live equality of `retrofit` with the regenerated seed (counts-only, private path).
+5. Disposition of the ungated push `5963fa3f`; no push until the full gate is verified.
