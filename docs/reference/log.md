@@ -7108,3 +7108,25 @@ metadata when the knowledge base was created.
   history row likewise records those historical IDs and their reassignment.
   The resolved rubric score metadata is historical and does not assess this
   merged candidate. No new approval, acceptance or deployment is claimed.
+
+## 2026-10-25 - AI Software Factory Related-Work Review
+
+* Reviewed Pavlenko et al.'s
+  [Towards an AI Software Factory for Data Systems, v1](https://arxiv.org/html/2609.36323v1),
+  submitted 28 September 2026 and retrieved 25 October 2026, against the
+  thought-leadership manuscript. Added matching versioned references to its
+  embedded bibliography and reusable BibTeX, now 97 references.
+* Integrated bounded objective-guided steering, behavioural feedback and
+  evidence-scoped World Model context. Qualified the threefold application-work
+  productivity estimate, its excluded 57% infrastructure/onboarding time,
+  human review queue and the selected top-20 scope of the 13.8% OSS performance
+  average. These are source-reported findings, not independent replication.
+* Narrowed the novelty claim to scheduled consolidation between feature
+  additions and subsequent changeability. Preserved hypotheses, thresholds,
+  budgets, earlier study evidence and tagged materials. The separate private
+  study kit was not accessed or changed; no study was run.
+* Filed the assessment and source's inconsistent token-efficiency comparators
+  in the [paper package](../capstone/thought-leadership/everything-but-the-software/README.md#related-work-review-of-25-october)
+  and updated the task-routing index. The disputed multiplier is not imported
+  into the manuscript. Existing owner memory and earlier log entries remain
+  unchanged; publication and independent acceptance gates remain separate.

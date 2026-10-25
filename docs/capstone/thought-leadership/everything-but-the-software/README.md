@@ -19,6 +19,47 @@ MVE notes here are earlier proposals, not the frozen or registered protocol.
 Do not overwrite the tagged kit with these copies. Registration preparation is
 deferred; public release and external deposits remain subject to permission.
 
+## Related Work Review of 25 October
+
+Reviewed Pavlenko et al.,
+[Towards an AI Software Factory for Data Systems, v1](https://arxiv.org/html/2609.36323v1),
+submitted 28 September 2026 and retrieved 25 October 2026. The
+[arXiv metadata](https://arxiv.org/abs/2609.36323v1) supplies the 26-author
+bibliographic record. The manuscript and reusable bibliography now include it
+as `pavlenko2026factory`.
+
+* The paper is directly relevant to feedback starvation and reflective
+   delegation. Hotspan selects evidence-backed optimisation targets; Darwin's
+   agents use test and runtime feedback to generate, refine and select
+   hypotheses. This is bounded steering against measurable objectives in
+   existing systems, not evidence of autonomous product selection.
+* Its World Model separates raw evidence from rebuildable views and compact,
+   provenance-linked retrieval. Updates are reviewed. This provides an
+   alternative to expecting every session to read an accumulating log, not a
+   tested remedy for this case's learning evaporation. The fine-tuning evidence
+   is an early circle-packing demonstration, not general proof of durable
+   engineering judgement.
+* The reported threefold productivity estimate concerns application-work PRs
+   per engineer-hour, excluding 57% of team time spent on infrastructure and
+   repository onboarding. Output enters engineering review queues. The 13.8%
+   mean performance gain applies to the best-performing 20 of 45 OSS systems.
+   Neither number is a controlled estimate of maintainability or end-to-end
+   delivery effectiveness.
+* The token-efficiency comparator is inconsistent within v1: the introduction
+   and Section 2.3 associate 22x with OpenEvolve, whereas Section 4 reports 22x
+   against MAP-Elites and 17x against OpenEvolve. The manuscript does not import
+   that multiplier or attempt to resolve the discrepancy.
+* The novelty wording now concerns the effect of scheduled consolidation
+   between feature additions, not the invention of automated improvement or
+   agent reflection. The reviewed paper does not isolate that intervention or
+   evaluate an unforeseen change request. This focused review does not establish
+   an exhaustive literature search.
+
+The experiment's hypotheses, thresholds, budgets and tagged materials are
+unchanged. Reported findings are attributed to the source authors; source
+checking is not independent replication or the manuscript author's pending
+verification of research statistics.
+
 ## Files
 
 | File | Purpose |
@@ -26,7 +67,7 @@ deferred; public release and external deposits remain subject to permission.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 96 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 97 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
