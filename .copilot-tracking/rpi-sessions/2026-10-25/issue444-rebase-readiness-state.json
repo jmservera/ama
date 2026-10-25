@@ -1,25 +1,66 @@
 {
   "task_id": "issue-444-rebase",
   "task_slug": "issue444-rebase-readiness",
-  "parent_task": {"task_id": "issue-444-lineage", "task_slug": "issue444-main-lineage-integration"},
+  "parent_task": {
+    "task_id": "issue-444-lineage",
+    "task_slug": "issue444-main-lineage-integration"
+  },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Review",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-25/issue444-rebase-readiness-research.md",
     "plan": ".copilot-tracking/plans/2026-10-25/issue444-rebase-readiness-plan.md",
     "details": ".copilot-tracking/details/2026-10-25/issue444-rebase-readiness-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-25/issue444-rebase-readiness-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-10-25/issue444-rebase-readiness-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-25/issue444-rebase-readiness-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "Research executed, Ready", "status": "recorded", "evidence": "research artifact"},
-    {"decision": "Critique executed once; Proceed with changes; C1-C3 applied", "status": "recorded", "evidence": "critique artifact"},
-    {"decision": "Coordinator authorises run-owned rebase and force-with-lease push; PR stays draft; no #441 work", "status": "owner-directed", "evidence": "coordinator message 2026-10-25"}
+    {
+      "decision": "Research executed, Ready",
+      "status": "recorded",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once; Proceed with changes; C1-C3 applied",
+      "status": "recorded",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Coordinator authorises run-owned rebase and force-with-lease push; PR stays draft; no #441 work",
+      "status": "owner-directed",
+      "evidence": "coordinator message 2026-10-25"
+    },
+    {
+      "decision": "Rebased onto origin/main 0245944a; no source edits",
+      "status": "recorded",
+      "evidence": "changes artifact"
+    },
+    {
+      "decision": "Review executed once; Conformant with one Low follow-up; 0 correction cycles",
+      "status": "recorded",
+      "evidence": "review artifact"
+    }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Commit pre-rebase evidence, rebase onto origin/main, validate"},
-  "prioritized_follow_ups": null
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Browser check, complete gate, verify, lease push, keep draft"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Re-read dataset per request or document restart for authority edits",
+      "rationale": "Low review finding",
+      "evidence": "review artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Human screen-reader audit and live Azure/SQL/AI acceptance",
+      "rationale": "not performed",
+      "evidence": "changes artifact"
+    }
+  ]
 }
