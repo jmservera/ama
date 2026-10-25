@@ -75,8 +75,10 @@ def main(argv=None) -> int:
     parser.add_argument("--tenant-profile", type=Path, default=setup.PROFILE)
     parser.add_argument("--apply", action="store_true", help="write the assignment (default is a dry run)")
     args = parser.parse_args(argv)
-    graph = setup.Azure(args.tenant_profile)
     try:
+        # Graph writes pass the request body through a private temporary file that Azure.call removes.
+        body_directory = setup.private_path(args.tenant_profile, directory=True) if args.apply else None
+        graph = setup.Azure(args.tenant_profile, body_directory=body_directory)
         print("result: " + grant(graph, args.tenant, args.app_id, args.upn, args.expected_oid, apply=args.apply))
     except SetupError as error:
         print(f"refused: {error}", file=sys.stderr)
