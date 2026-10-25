@@ -2721,6 +2721,28 @@ The app identity needs a contained user with `db_datareader`, `db_datawriter` an
 runs the SQL store suites and the list-read parity suite against a real SQL Server
 when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
 
+### Merging a generated seed into a populated database (issue #360)
+
+`SqlStore` seeds only an empty database, so a populated demo database cannot take
+a baseline that way. `python -m zava_forward.core.seed_merge --seed PATH` (with
+`ZF_STORE=sqlite|mssql` and the usual `ZF_*` settings) calls `SqlStore.merge_seed`,
+an insert-only merge. It is a dry run unless `--apply` is given, prints counts
+only, and `--expect-added N` aborts before any write when the number of cases to
+add differs. In one transaction it first checks that the audit chain matches its
+head, then skips a case that is already stored with identical content, aborts on a
+case or document that differs (nothing is updated or deleted), inserts missing
+shared documents (the stored `continuity` document is kept and reported), never
+inserts staff, never changes `as_of`, recommendations or existing audit rows, and
+appends one `seed_merge` audit entry that carries the seed SHA-256. Applying also recomputes the derived queue flags and
+queue generation, which leaves the stored case content, `seq` and row versions of
+existing cases unchanged; opening the store runs its usual schema checks, so run it
+only against a populated database that the current release already serves (an empty
+target is refused and left empty). A repeat run
+adds nothing and no audit entry. For `sqlite`, the target is the same database the app would open from `ZF_SQLITE`, `ZF_STATE` or `ZF_DATA`.
+Keep the seed file private and outside the
+repository. Tests: `tests/test_seed_merge.py`, and `MssqlLedgerMigration` in
+`src/api/tests/test_mssqlstore.py` for ledger and plain SQL Server databases.
+
 ## Frozen protocol, benefits register and release gates (issue #126)
 
 `src/core/src/zava_forward/core/governance.py` records, and never decides, the pilot governance in the existing store (JSON or SQL, so it survives a restart). Managers use `GET /api/governance` and `POST /api/governance/{protocol-freeze,protocol-approve,benefits-record,benefits-approve,release,breach,restart}`. No AI assistant, ranking or tool has any part in it.

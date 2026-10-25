@@ -2,28 +2,29 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T03:25:10+00:00",
-  "commit": "69d83645d7934ee66feea438168fbfee2e36fa3b",
+  "scored_at": "2026-10-25T12:55:31+00:00",
+  "commit": "7b15a6fc146616fa360f17584e2c7e9d00d1659c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40157773904",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40194829938",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "785c7a5cff78fb5b00b09ea1e2da45c72dda27e5f1e1779dc42215ff99681402",
-    "infrastructure": "230cf17a20a0293cf542271421e3b0a48c93386df1019d893976034efb2e6de2",
+    "solution-code": "605449278408efbd2ef3934b2aad9f317f31a1e2b5b7a873f3db04405a3e07ec",
+    "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
-    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402"
+    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
+    "thought-leadership": "cc9c503bcd253a14a7f69abad98776a3640caf7fc444288a2521e728e43af5f6"
   },
-  "total": 64,
+  "total": 73,
   "sections": {
     "A": 31,
     "B": 22,
     "C": 11,
-    "D": 0
+    "D": 9
   },
-  "floors_met": false,
-  "outcome": "Incomplete (thought leadership artifact not submitted)",
+  "floors_met": true,
+  "outcome": "Pass",
   "criteria": {
     "A1": {
       "score": 5,
@@ -145,19 +146,28 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 4,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:61-68",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:21-47"
+      ],
+      "rationale": "Original five-mechanism synthesis and Monday checklist retained; new related-work review (Pavlenko et al.) adds grounding but does not change scope or add verified results. Still synthesis plus untested protocol."
     },
     "D2": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 3,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1322-1325",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:21-23"
+      ],
+      "rationale": "Structured draft with abstract, sections, tables and bibliography, but main.tex still carries 25 unresolved TODO(author) items and revision-report.md states the paper is not submission-ready."
     },
     "D3": {
-      "score": 0,
-      "evidence": [],
-      "rationale": "Not demonstrable: required artifact not provided: thought-leadership. Maximum 0 until it is committed."
+      "score": 2,
+      "evidence": [
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:217-222"
+      ],
+      "rationale": "A concrete arXiv path is researched, but the README current-status note states execution is paused, registration is deferred, and public release remains subject to permission; nothing submitted or accepted."
     }
   }
 }
