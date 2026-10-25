@@ -7130,3 +7130,9 @@ metadata when the knowledge base was created.
   and updated the task-routing index. The disputed multiplier is not imported
   into the manuscript. Existing owner memory and earlier log entries remain
   unchanged; publication and independent acceptance gates remain separate.
+
+## 2026-10-25 demo basemap configuration (issue 119 demo slice)
+
+* Recorded a scoped, time-limited owner approval (to 2026-10-25T16:02Z) to use the public OpenStreetMap tile service for the synthetic live demo, applied as a configuration-only change of `ZF_TILE_URL` and `ZF_TILE_ATTRIBUTION` on the existing demo app. The runbook entry is in the
+  [infra README](../../infra/README.md) and the dated RPI artifacts are under `.copilot-tracking/*/2026-10-25/demo-basemap-119-*`.
+* The tile usage policy and privacy policy were retrieved by the coordinator; the local regulatory snapshots were not changed. This is not a production provider approval and does not meet #119 licence, cost, coverage, processor or screen-reader acceptance. Earlier log entries are unchanged.
