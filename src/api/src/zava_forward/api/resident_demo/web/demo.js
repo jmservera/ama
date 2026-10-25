@@ -177,11 +177,16 @@
   });
 
   document.getElementById("signout").addEventListener("click", function () {
-    api("/demo/logout", { method: "POST", body: "{}" }).then(function () {
-      content.textContent = "";
-      csrf = "";
-      start();
-    }).catch(function () { fail("We could not sign you out. Close this page to end the session."); });
+    function notConfirmed() {
+      fail("We could not confirm that you were signed out. Your session may still be active on this device and ends by itself within 30 minutes. Select Try again to check, then sign out again.");
+    }
+    fetch("/demo/logout", { method: "POST", headers: { "X-CSRF-Token": csrf, "Content-Type": "application/json" }, body: "{}", cache: "no-store", credentials: "same-origin" })
+      .then(function (r) {
+        if (!r.ok) { notConfirmed(); return; }
+        content.textContent = "";
+        csrf = "";
+        start();
+      }).catch(notConfirmed);
   });
 
   document.getElementById("retry").addEventListener("click", start);

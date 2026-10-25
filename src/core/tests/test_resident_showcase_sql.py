@@ -15,8 +15,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import mssql_python
-
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
 
@@ -32,6 +30,9 @@ ON = os.environ.get("ZF_TEST_MSSQL") == "1" and os.environ.get("ZF_SQL_SERVER") 
     "localhost",
 )
 USER = "zf_showcase_user"
+
+if ON:
+    import mssql_python
 
 
 class RenderTests(unittest.TestCase):
@@ -89,7 +90,7 @@ def _body(email: str, **extra: Any) -> str:
     return json.dumps(body)
 
 
-@unittest.skipUnless(ON, "needs ZF_TEST_MSSQL=1 and a loopback ZF_SQL_SERVER container")
+@unittest.skipUnless(ON, "opt-in loopback SQL Server")
 class SqlBoundaryTests(unittest.TestCase):
     db: str
     base: dict[str, str]
@@ -113,10 +114,14 @@ class SqlBoundaryTests(unittest.TestCase):
         cls.connect = staticmethod(rsql.connector(cls.base))
         from zava_forward.core.mssqlstore import TABLES
 
-        cls.q(TABLES["cases"])
-        cls.q(f"CREATE USER [{USER}] WITHOUT LOGIN")
-        for batch in script.render(USER):
-            cls.q(batch)
+        try:
+            cls.q(TABLES["cases"])
+            cls.q(f"CREATE USER [{USER}] WITHOUT LOGIN")
+            for batch in script.render(USER):
+                cls.q(batch)
+        except BaseException:
+            cls.tearDownClass()
+            raise
 
     @classmethod
     def tearDownClass(cls) -> None:

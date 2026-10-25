@@ -192,6 +192,7 @@ def main() -> None:
         check_sign_in_and_cookies(browser, base)
         check_failure_and_forgery(browser, base)
         check_cross_case_and_logout(browser, base)
+        check_logout_failure(browser, base)
         check_mobile(browser, base)
         browser.close()
     print("resident demo browser check complete", flush=True)
@@ -347,6 +348,61 @@ def check_cross_case_and_logout(browser: Any, base: str) -> None:
     replay.close()
     ctx_a.close()
     ctx_b.close()
+
+
+def check_logout_failure(browser: Any, base: str) -> None:
+    for label, status in (("403", 403), ("503", 503), ("network abort", None)):
+        ctx, page, errors = new_page(browser)
+        page.goto(base + "/")
+        page.wait_for_selector("#signin:not([hidden])")
+        sign_in_by_keyboard(page, "alice.demo@example.com", FAKE_PASSWORD)
+        page.wait_for_selector("#content:not([hidden])")
+        if status is None:
+            page.route("**/demo/logout", lambda route, _request: route.abort())
+        else:
+            page.route(
+                "**/demo/logout",
+                lambda route, _request, code=status: route.fulfill(
+                    status=code, content_type="application/json", body='{"error":"x"}'
+                ),
+            )
+        page.click("#signout")
+        page.wait_for_selector("#error:not([hidden])")
+        text = page.inner_text("#error")
+        check(
+            f"failed sign-out ({label}) hides the home details",
+            page.locator("#content").is_hidden(),
+        )
+        check(
+            f"failed sign-out ({label}) says it is not confirmed and may still be active",
+            "not confirm" in text.lower() and "still be active" in text.lower(),
+        )
+        check(
+            f"failed sign-out ({label}) makes no false page-close claim",
+            "close this page" not in page.inner_text("body").lower(),
+        )
+        check(
+            f"failed sign-out ({label}) keeps the session cookie visible to the browser",
+            "__Host-zfdemo" in {c["name"] for c in ctx.cookies()},
+        )
+        check(
+            f"failed sign-out ({label}) moves focus to the message",
+            page.evaluate("document.activeElement.id") == "error-title",
+        )
+        check(
+            f"failed sign-out ({label}) has no script errors",
+            not [e for e in errors if "Failed to load resource" not in e],
+        )
+        page.unroute("**/demo/logout")
+        page.click("#retry")
+        page.wait_for_selector("#content:not([hidden])")
+        page.click("#signout")
+        page.wait_for_selector("#signin:not([hidden])")
+        check(
+            f"sign-out succeeds after a failed attempt ({label})",
+            "__Host-zfdemo" not in {c["name"] for c in ctx.cookies()},
+        )
+        ctx.close()
 
 
 def check_mobile(browser: Any, base: str) -> None:

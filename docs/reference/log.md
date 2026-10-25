@@ -7158,3 +7158,8 @@ metadata when the knowledge base was created.
 
 * Added read-only release preflight evidence for #462 (refreshed Cost Management ledger, baseline versus changed resources, priced minimal deployment, principal and vault path metadata) under `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-release-preflight-*`. Raw non-secret metadata is kept privately outside the repository with a hash manifest.
 * Not budget clearance and no Azure change; the cumulative USD 50 cap is not reset. Earlier log entries are unchanged.
+
+## [2026-10-25] update | Issue 462 gate-failure correction cycle 1
+
+* Fixed the optional SQL driver import that broke core test collection in the failed local gate, made the demo sign-out report success only on a confirmed response, and added targeted browser (sign-out failure) and `Dockerfile.resident-demo` image checks. See the dated RPI artifacts `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-gate-correction1-*`.
+* The failed gate receipt is retained and stale; the generic runner still does not cover these checks. Local only: no push, no Azure, no real password. Earlier log entries are unchanged.
