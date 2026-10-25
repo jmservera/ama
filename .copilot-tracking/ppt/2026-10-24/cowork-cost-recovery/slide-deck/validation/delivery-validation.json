@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "canonical_equal_candidate": true,
+  "slide_hyperlinks_unchanged": 54,
+  "presentation_order_sections_unchanged": true,
+  "new_local_links_resolve": true,
+  "new_text_bound_overflows": 0,
+  "historical_broken_log_links_untouched": 4,
+  "existing_markdown_diagnostics_not_fixed": true,
+  "pptx_sha256": "39659a3ad9974f802a8418177a9ca0ca8daf7478e71cd82d04cd7677d9ad2cc0",
+  "pdf_sha256": "b816f3f2282ffad4e0afd41cc39ba76a6871bc62c2292c5a62129a4864bd9a9c"
+}

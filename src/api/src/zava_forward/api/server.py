@@ -15,7 +15,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from zava_forward.core import controls, forms, profile
 
-from zava_forward.core import projection, quality, ranking, taskqueues
+from zava_forward.core import identity, projection, quality, ranking, taskqueues
 
 from zava_forward.core import lawstore, rulecards, rule_engine
 from zava_forward.api import auth
@@ -201,7 +201,13 @@ def make_handler(app):
             return m.value if m else None
 
         def _user(self):
-            return app.provider.authenticate(self.headers)
+            user = app.provider.authenticate(self.headers)
+            if user and identity.is_entra(user):
+                # Business-identity continuity and contractor company binding, separate from authentication.
+                user = identity.bind(app.store, user)
+                if user:
+                    identity.link(app.store, user)
+            return user
 
         def _body(self):
             n = int(self.headers.get("Content-Length") or 0)
@@ -363,7 +369,9 @@ def make_handler(app):
                     return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
                 return self._json(404, {"error": "Not found."})
             if url.path == "/api/me":
-                out = projection.me_payload(u, s.counts(u), list(s.staff.values()))
+                admin_only = u.get("role") == identity.ADMIN_ROLE_NAME
+                recipients = [dict(code=p["code"], name=p["name"], email=p["email"], role=p["role"]) for p in identity.people(s)]
+                out = projection.me_payload(u, {} if admin_only else s.counts(u), list(s.staff.values()) + recipients)
                 out["account"] = app.provider.account(self.headers, u)
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)
@@ -541,6 +549,8 @@ def make_handler(app):
             if app.law is None:
                 return self._json(503, {"error": "The law store is not loaded."})
             rules = app.law.rules
+            rules.canonical = lambda name: identity.canonical(app.store, name, strict=True)
+            rules.distinct = lambda actor, author: identity.distinct(app.store, actor, author)
             try:
                 with app.law_lock:
                     if body is None:
@@ -565,12 +575,17 @@ def make_handler(app):
                             raise ValueError("approver must be a provisioned staff email.")
                         owner = owner.strip().lower()
                         person = app.store.staff.get(owner)
+                        if identity.ENTRA_EMAIL.fullmatch(owner):
+                            # An Entra-derived identity names one tenant object id; it cannot equal any staff email.
+                            person = dict(email=owner, role=projection.STAFF_ROLES[0])
                         if not person or person.get("role") not in projection.STAFF_ROLES:
-                            raise ValueError("approver must be a provisioned staff email.")
+                            raise ValueError("approver must be a provisioned staff email or an Entra staff identity.")
                         fields = {k: v for k, v in body.items() if k != "card_id"}
                         fields["approver"] = person["email"].strip().lower()
                         cid = body.get("card_id")
                         cid = cid.strip() if isinstance(cid, str) else cid
+                        if identity.is_entra(user) and not identity.link(app.store, user, strict=True):
+                            raise rulecards.RuleError("identity continuity is unavailable")
                         version = rules.propose(cid, user["email"].strip().lower(), rulecards.AUTHOR, **fields)
                         return self._json(201, {"version": version, "versions": rules.history(cid)})
                     elif len(parts) == 6:
@@ -581,6 +596,8 @@ def make_handler(app):
                                    "release": rules.release, "retire": rules.retire}
                         if action not in actions or not 1 <= version <= 2147483647:
                             return self._json(404, {"error": "Rule action not found."})
+                        if identity.is_entra(user) and not identity.link(app.store, user, strict=True):
+                            raise rulecards.RuleError("identity continuity is unavailable")
                         args = (cid, version, user["email"].strip().lower(), rulecards.OWNER)
                         if action == "hold":
                             rules.hold(*args, note=body.get("note"))
@@ -787,6 +804,8 @@ def make_handler(app):
                 return self._json(401, {"error": "Please sign in."})
             if app.provider.name == "trusted-proxy" and self.headers.get("X-ZF-CSRF") != "1":
                 return self._json(403, {"error": "Missing request header."})
+            if u.get("view_only") and url.path != "/api/logout":
+                return self._json(403, {"error": "Administrator access shows every option but changes nothing; a staff role is needed to act."})
             if url.path == "/api/logout":
                 if app.provider.name == "trusted-proxy":
                     if body.get("switchAccount") is True:

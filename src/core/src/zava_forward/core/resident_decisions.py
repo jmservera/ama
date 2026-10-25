@@ -16,6 +16,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
+from . import identity
 from . import controls as k
 
 DECISION_STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
@@ -247,7 +248,9 @@ def challenge_references_visible(store, user):
     email = user.get("email")
     if not isinstance(email, str):
         return False
-    if hasattr(store, "db"):
+    if identity.is_entra(user):
+        current = identity.verified(user) or {}
+    elif hasattr(store, "db"):
         with store.dblock:
             row = store.db.execute("SELECT body FROM staff WHERE email=?", (email.lower(),)).fetchone()
         current = json.loads(row[0]) if row else {}
@@ -573,7 +576,7 @@ class ResidentDecisionMixin:
     def resident_recorder(self, user, service=False):
         roles = k.RESIDENT_VIEW_ROLES if service else k.RESIDENT_ROLES
         k.require_role(user, roles, "authorised resident-workflow staff")
-        actor = self.staff.get(user.get("email", "").lower())
+        actor = identity.verified(user) if identity.is_entra(user) else self.staff.get(user.get("email", "").lower())
         if not actor or any(actor.get(key) != user.get(key) for key in ("role", "name", "code")):
             raise PermissionError("Resident records require a registered named human staff identity.")
         return actor

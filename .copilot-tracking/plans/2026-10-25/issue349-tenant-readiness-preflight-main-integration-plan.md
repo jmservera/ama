@@ -15,3 +15,12 @@ Details: ../../details/2026-10-25/issue349-tenant-readiness-preflight-main-integ
 
 Constraints: draft PR stays draft, Refs #349 only, no push or self-merge, no
 criteria ticked, original Conformant review and 2026-10-24 evidence untouched.
+
+## Amendment A1 (made after the merge exposed a concrete contract discrepancy)
+
+Focused test test_contract_matches_runtime_role_maps fails on the merged tree:
+main added ApplicationAdmin to the manifest (13 roles) and the runtime exposes it
+as the ADMIN_ROLE constant in src/api auth.py, outside DEFAULT_ROLE_MAP and
+RULE_ROLE_MAP. Planned minimal change: the test also reads ADMIN_ROLE and expects
+13 roles. Test-only; checker unchanged. Not a repeat critique: within the
+critiqued scope (align tests only on a concrete current contract discrepancy).

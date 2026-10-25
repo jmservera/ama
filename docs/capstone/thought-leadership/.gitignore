@@ -1,0 +1,19 @@
+# LaTeX build intermediates
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.blg
+*.bcf
+*.run.xml
+
+# Compiled paper, not figure assets
+main.pdf
+
+# Download/security metadata sidecars
+*:sec.endpointdlp

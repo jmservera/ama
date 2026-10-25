@@ -1,0 +1,48 @@
+{
+  "status": "pass",
+  "pdf_pages": 54,
+  "restored_figure_text_checks": {
+    "6": [
+      "USD 6,873",
+      "whole-cohort inference scenario"
+    ],
+    "11": [
+      "6,082/home",
+      "3,041/home",
+      "94.9m",
+      "47.4m"
+    ],
+    "21": [
+      "USD 0.44/home",
+      "USD 0.88/home",
+      "Unknown"
+    ],
+    "32": [
+      "P + USD 6,872.9856",
+      "USD 700",
+      "P is not yet priced"
+    ],
+    "36": [
+      "94,879,200",
+      "47,439,600",
+      "GBP 12,500"
+    ],
+    "52": [
+      "275,360",
+      "0.440576",
+      "6,872.9856",
+      "unknown"
+    ]
+  },
+  "exact_arithmetic": {
+    "tokens_per_run": "1376.8",
+    "usd_per_planned_home": "0.4405760",
+    "usd_cohort": "6872.9856000",
+    "usd_double_per_home": "0.8811520",
+    "gbp_works": 94879200,
+    "gbp_conditional_grant": 47439600
+  },
+  "notes_nonempty": 54,
+  "pdf_links": 27,
+  "pdf_structure_tree": "xref"
+}

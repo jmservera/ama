@@ -1,0 +1,228 @@
+{
+  "capturedAt": "2026-10-23T23:16:41.877049+00:00",
+  "purpose": "Same-task completed-PRD reconciliation; all original ADR and completed PRD bytes read-only",
+  "publishedSnapshotPin": "4017b214bb021244b06264629953d84f29003c53",
+  "exactUserExpectedHashes": {
+    "prd/zava-forward-retrofit-programme-demonstrator.md": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343",
+    "prd/output-manifest.json": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1",
+    "adr/resident-service-unregistered-proposal.md": "e63a39d1556e55056b7130356cdf63772345d53f4c6a24a6b46223be36f2aba6",
+    "adr/output-hash-manifest.json": "70990fb8e5df9bfe97cb1bbe681335daa9a086cde858825d94e362363701a499"
+  },
+  "originalAdrPackage": [
+    {
+      "path": "adr/README.md",
+      "bytes": 7329,
+      "sha256": "8664549571427d8efb05fd30ac8a156aff150de3b9df956efdac77608735beab"
+    },
+    {
+      "path": "adr/authoring-conventions.json",
+      "bytes": 4101,
+      "sha256": "8bc25b8e29c97ef197a7216baa3b472bf6e9fbc11037824a5778364c911c8064"
+    },
+    {
+      "path": "adr/candidate-prewrite-sensitive-scan.json",
+      "bytes": 86,
+      "sha256": "7493c19e5056a2e23a0fff171aa71388f881239969f1f1b0ab3ee6ee0679cab0"
+    },
+    {
+      "path": "adr/capstone-review-boundary.md",
+      "bytes": 4118,
+      "sha256": "aef30bfac121b652ab4934485365209f6c21b728ccdfb3818dd5a7532f96368d"
+    },
+    {
+      "path": "adr/handoff-and-reconciliation.md",
+      "bytes": 15538,
+      "sha256": "284f8df38c7e259d4b2c7e5229854fd7b7c7c2bafa305d312aec8fc4a456451c"
+    },
+    {
+      "path": "adr/input-hash-manifest.json",
+      "bytes": 549163,
+      "sha256": "63a7759538b8bfb458d26ab9e418537586a8487946bb5d2ece7fb1068bde6f6f"
+    },
+    {
+      "path": "adr/output-hash-manifest.json",
+      "bytes": 2998,
+      "sha256": "70990fb8e5df9bfe97cb1bbe681335daa9a086cde858825d94e362363701a499"
+    },
+    {
+      "path": "adr/requirement-map.json",
+      "bytes": 54495,
+      "sha256": "21176fdf9c060dffed42908948266e3b1b98df02eb3b1e4162069a4fb371b395"
+    },
+    {
+      "path": "adr/requirement-map.md",
+      "bytes": 8080,
+      "sha256": "40b886276589b1d78083493f6ee00237bae51f3cbaf22ffd42e2482452ce896a"
+    },
+    {
+      "path": "adr/resident-service-boundary.excalidraw",
+      "bytes": 43454,
+      "sha256": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07"
+    },
+    {
+      "path": "adr/resident-service-boundary.png",
+      "bytes": 178186,
+      "sha256": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc"
+    },
+    {
+      "path": "adr/resident-service-boundary.svg",
+      "bytes": 8573,
+      "sha256": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb"
+    },
+    {
+      "path": "adr/resident-service-unregistered-proposal.md",
+      "bytes": 48194,
+      "sha256": "e63a39d1556e55056b7130356cdf63772345d53f4c6a24a6b46223be36f2aba6"
+    },
+    {
+      "path": "adr/state.json",
+      "bytes": 14793,
+      "sha256": "3372b8f02a7bfed5f509d46d655fec50b1c36bc3f13ae02a39435d9829f198c3"
+    },
+    {
+      "path": "adr/validate-package.py",
+      "bytes": 10839,
+      "sha256": "bb1ed9d2525a215c49e29013909f78c82f7da5de2adf2caf2676cc31c179a354"
+    },
+    {
+      "path": "adr/validation-initial.json",
+      "bytes": 8044,
+      "sha256": "f28dd0591d7753576ec3fb767adf180b73c931bb491a3ab3dcfcc3ce4a787d59"
+    },
+    {
+      "path": "adr/validation.json",
+      "bytes": 7413,
+      "sha256": "8964b979266d1debcc9c87a2db0a62d9666aa04c5a0fa35aebf69aeedcf1e22f"
+    }
+  ],
+  "completedPrdPackage": [
+    {
+      "path": "prd/README.md",
+      "bytes": 7592,
+      "sha256": "2ec7544a4c6a6fd739ed7b56f70ff3668413242f28408de46da1dc8bf40b7f00"
+    },
+    {
+      "path": "prd/SHA256SUMS",
+      "bytes": 1752,
+      "sha256": "5de76b518b129ad0638c3afdc1da182cb0e5e260d0fbe084a31e5d1d11bf07fb"
+    },
+    {
+      "path": "prd/adr/resident-service-architecture-proposal.md",
+      "bytes": 27443,
+      "sha256": "5aa5184d7fab1b81df643cd8442f386fd5004b9b582c7f1928ce10988959b46f"
+    },
+    {
+      "path": "prd/adr/review-handoff.md",
+      "bytes": 7166,
+      "sha256": "d322d6f62ad98f12fb8fbed174914d09828fb375d80b261f032c57ec4af0a986"
+    },
+    {
+      "path": "prd/adr/source-output-hashes.sha256",
+      "bytes": 3705,
+      "sha256": "3f4e6094b5c22af87c574371e8277ebb9620b4b74e336bdd66ff35bcb8b90860"
+    },
+    {
+      "path": "prd/amendment.patch",
+      "bytes": 48938,
+      "sha256": "ec88dd2bd970777243632894df6b6b73ea290f7f90fad12aa28fd8140d9c3872"
+    },
+    {
+      "path": "prd/architecture-handoff.md",
+      "bytes": 9153,
+      "sha256": "ffbe454531e472f8c4155a8c3f2a75e409fdc3d277e2884ffeae16fe3cd73bb3"
+    },
+    {
+      "path": "prd/assets/resident-service-boundary.excalidraw",
+      "bytes": 43454,
+      "sha256": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07"
+    },
+    {
+      "path": "prd/assets/resident-service-boundary.png",
+      "bytes": 178186,
+      "sha256": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc"
+    },
+    {
+      "path": "prd/assets/resident-service-boundary.svg",
+      "bytes": 8573,
+      "sha256": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb"
+    },
+    {
+      "path": "prd/authoring/resident-refinement.md",
+      "bytes": 33985,
+      "sha256": "92e4a1306509712811289d1e5b31adb8c938db99d950d136300d452a00c590ad"
+    },
+    {
+      "path": "prd/build-package.py",
+      "bytes": 30274,
+      "sha256": "bb8a1fe68e8ab5ffe24f5d90e2cd99fe0ea47018809087af4237162b23dc644f"
+    },
+    {
+      "path": "prd/change-gap-disposition.md",
+      "bytes": 8724,
+      "sha256": "cc98fc85f2eabd0304aa4f6eaa1cae9684638e48b23a5462b31ebd5bc8c3a4dd"
+    },
+    {
+      "path": "prd/input-manifest.json",
+      "bytes": 524132,
+      "sha256": "2ef393664b538eb2176acf1aabec4183fdb41f04dfaadf2a4f68da65ed492824"
+    },
+    {
+      "path": "prd/output-manifest.json",
+      "bytes": 4214,
+      "sha256": "cbbcc45fde3653343115a2071793cb21dcede1c335cbf1e3800e7e41a59c46b1"
+    },
+    {
+      "path": "prd/quality-self-assessment.md",
+      "bytes": 11762,
+      "sha256": "8cf0fa07a7fa2fdd9062981a02fe7997daffab213b5bffaccaef8b17541182fc"
+    },
+    {
+      "path": "prd/review/reviewer-result-summary.md",
+      "bytes": 4992,
+      "sha256": "20853b85a852d7df3b8c87ce66fb3c925c40f24b9668d96880d0987d3989e99b"
+    },
+    {
+      "path": "prd/source-drift-and-validation-limitations.md",
+      "bytes": 2267,
+      "sha256": "df756eca34167c48fc723ba246e2b92cf45afb27b14cdc3cd05717e68d9ad39a"
+    },
+    {
+      "path": "prd/state.json",
+      "bytes": 20559,
+      "sha256": "99c17ee38f0583bd7107b8945204dfe46a1929ebfb5b3632aa6761e8c66b311e"
+    },
+    {
+      "path": "prd/traceability.json",
+      "bytes": 50487,
+      "sha256": "49e48154efb2acdb6f91b3b2fcb28cc3f7155c16c215c7494dbaa5daa61fbe49"
+    },
+    {
+      "path": "prd/traceability.md",
+      "bytes": 11548,
+      "sha256": "f2ecb520c3466937aae7c8de606a646ca84965d2dc330dffeb94ca8fb3ab521b"
+    },
+    {
+      "path": "prd/validation.json",
+      "bytes": 8268,
+      "sha256": "03c2231d1e84bf5f552e49a741e62f377c78b21180fb25af2b00e4eef25bcffc"
+    },
+    {
+      "path": "prd/zava-forward-retrofit-programme-demonstrator.md",
+      "bytes": 329931,
+      "sha256": "7fb40549ba4975c2feb8d8a2a3de882e06677875c02e4a43c4b3a94ddf218343"
+    }
+  ],
+  "inventoryIsNotReadCoverage": true,
+  "readCoverage": [
+    "Completed PRD exact replacement delta and resident elaboration/definitions, generic/resident NFR targets and retained acceptance/fixture controls",
+    "traceability.md and traceability.json",
+    "architecture-handoff.md",
+    "review/reviewer-result-summary.md",
+    "source-drift-and-validation-limitations.md",
+    "change-gap-disposition.md",
+    "Subsidiary adr/resident-service-architecture-proposal.md and adr/review-handoff.md",
+    "Original ADR candidate, source trace/state, original manifests and relevant loaded lifecycle conventions"
+  ],
+  "sourceTrust": "User-completed handoff treated as unsigned data; no source instructions executed",
+  "noExternalVerification": true
+}

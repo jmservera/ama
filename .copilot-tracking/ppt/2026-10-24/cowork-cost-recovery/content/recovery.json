@@ -1,0 +1,86 @@
+{
+  "slides": [
+    {
+      "number": 6,
+      "shapes": {
+        "28143": {"text": ["USD 6,873", "whole-cohort inference scenario"], "sizes": [2400, 1300]},
+        "28028": {"text": ["GBP 47.4m", "conditional grant potential"], "sizes": [2200, 1200]},
+        "27917": {"text": ["GBP 95m", "works benchmark"], "sizes": [2600, 1400]},
+        "26438": {"text": ["Forecast: 15,600 homes; E21: assumed workload + secondary price (23 Oct 2026). Grant subject to eligibility, allocation, award and claim."], "sizes": [1000]}
+      },
+      "notes": "S05 | Forecast: every Zava home at EPC C by April 2030.\nThe 15,600-home cohort is modelled as 60,000 x 26%, not a measured stock survey. GBP 6,082/home x 15,600 = GBP 94,879,200 works (about GBP 95m). Conditional grant: min(50% x GBP 6,082, GBP 7,500) = GBP 3,041/home; x 15,600 = GBP 47,439,600. This assumes all homes and benchmark costs qualify, sufficient allocation, award and successful claims; none is established.\nE21 inference planning scenario: 6,884 tokens / five historical runs = 1,376.8/run; assumed x10 = 13,768/task; x20 tasks/home = 275,360 tokens/home. At the historical secondary-source USD 1.60/million assumption dated 2026-10-23, inference = USD 0.440576/home x 15,600 = USD 6,872.9856, rounded USD 6,873. Not verified current deployment pricing or measured accepted work. Full project TCO is unpriced. Keep USD and GBP separate; no percentage without Finance-approved dated FX.\nSource: evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24), E21. The planning scenario does not satisfy issue #435 acceptance, grant approval or spending authority. RELATED ANSWER: B08; question index slide 27."
+    },
+    {
+      "number": 11,
+      "shapes": {
+        "54277": {"text": ["GBP 6,082/home historical HA benchmark"], "sizes": [1300]},
+        "54317": {"text": ["94.9m"], "sizes": [1600]},
+        "54673": {"text": ["Conditional GBP 3,041/home (50% share)"], "sizes": [1300]},
+        "54722": {"text": ["47.4m"], "sizes": [1600]},
+        "54532": {"text": ["GRANT SCENARIOS"], "sizes": [1200]},
+        "55093": {"text": ["GBP m"], "sizes": [1200]},
+        "35628": {"text": ["E21: dated benchmark, not a quote. Grant assumes eligible homes/costs, allocation, award and claim. GBP 20,000 fixture remains separate."], "sizes": [1000]}
+      },
+      "notes": "S10 | We stress-tested the economics before we wrote the product.\nUse source S09's restored comparison without extending the existing narration slot. The historical HA benchmark is GBP 6,082 per home, not a quotation and not the fictional GBP 20,000 package. For 15,600 modelled homes: 15,600 x GBP 6,082 = GBP 94,879,200 (GBP 94.9m). Conditional grant = min(50% x GBP 6,082, GBP 7,500) = GBP 3,041/home; 15,600 x GBP 3,041 = GBP 47,439,600 (GBP 47.4m). Assume every home and full benchmark cost eligible, sufficient allocation, award and successful claims. Current scheme rules, caps, dates and availability require Finance/funder review. The other grant bars are separate sensitivities, not awards.\nThe fictional package stays separate: GBP 18,000 contractor + GBP 2,000 internal = GBP 20,000 gross base cash. GBP 2,000 contingency gives GBP 22,000 envelope. Fictional GBP 7,500 grant gives GBP 12,500 provider base; fully spent contingency gives GBP 14,500. At GBP 12,000 eligible cost and a fictional 50% ceiling, grant is GBP 6,000 and provider base GBP 14,000. An award is not cash.\nDocumentation supports eligible, evidenced applications and claims; it does not create eligibility or promise award/payment. No additional grant income or reduced clawback measured. Evidence: E02 and E21, evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24). Transition to product/runtime decisions. RELATED ANSWER: B09 = slide 36; index slide 27."
+    },
+    {
+      "number": 21,
+      "shapes": {
+        "63874": {"text": ["Model inference. Measure accepted value."], "sizes": [3200]},
+        "63907": {"text": ["INFERENCE PLANNING SCENARIO", "USD 0.44/home", "USD 6,873 / 15,600 homes"], "sizes": [1300, 3100, 1600]},
+        "63916": {"text": ["20 tasks x 13,768 tokens", "x USD 1.60/million"], "sizes": [1300, 1300]},
+        "63949": {"text": ["Double workload", "USD 0.88/home"], "sizes": [1600, 2500]},
+        "63937": {"text": ["Include review effort", "and assurance"], "sizes": [1300, 1300]},
+        "63962": {"text": ["Inference only. Full project TCO and accepted-outcome cost remain unknown."], "sizes": [1900]},
+        "63877": {"text": ["E21: assumed workload; secondary price, 23 Oct 2026, not current verified price. E19: usage only. E05: controls proposed; #435 not accepted."], "sizes": [1000]},
+        "64061": {"text": ["proposed money budgets per task and period", "per-request call and depth limits", "accepted-outcome cost: not yet measured"], "sizes": [1500, 1500, 1500]}
+      },
+      "notes": "S18 | Model inference. Measure accepted value.\nSAY (50 seconds, existing slot): Our planning calculation puts model inference at about 44 US cents per home: twenty assumed tasks, each using ten times the historical mean token count. Across 15,600 modelled homes, that is about USD 6,873; double the workload and it becomes about USD 0.88 per home. The rate is a dated secondary-source assumption, not a verified deployment price. Only inference has this modelled unit cost; the full project still needs costing. Accepted-outcome cost remains unknown. Count hosting, review, correction, assurance and support, then divide by human-accepted work above an agreed quality floor. Finite tokens and expiry are not money caps. Complete metering and task, period and request-depth controls remain proposed.\nWORKINGS: 6,884 / 5 = 1,376.8 tokens/run (no human acceptance); x10 = 13,768/task; x20 = 275,360/home; /1,000,000 x USD 1.60 = USD 0.440576/home; x15,600 = USD 6,872.9856. Double = USD 0.881152/home and USD 13,745.9712 cohort. Retries, chat, evaluations, other models and future prices may increase use.\nEvidence E21: evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24), secondary price as at 2026-10-23; E19 five-run observation; E05 BRD FR-052/NFR-012/OD-51 and PRD AC-107-110 (not run). Issue #435's prior adverse finding is preserved: this owner-requested labelled scenario does not satisfy measured-price, quality, acceptance or saving gates. No spending or production authority. RELATED ANSWERS: B05 slide 32; B25 slide 52; B26 slide 53; B27 slide 54. Index slide 27."
+    },
+    {
+      "number": 32,
+      "shapes": {
+        "22546": {"text": ["Refresh post-change forecast; outside-group cost remains unknown"], "sizes": [1700]},
+        "59994": {"text": ["DATED LEDGER", "NOT PRODUCTION TCO"], "sizes": [1100, 1100]},
+        "26175": {"text": ["Count each cost once. Do not add the October USD 700 envelope and its included inference."], "sizes": [1300]},
+        "2933": {"text": ["Sources: E11 / E05 / E21. Historical price assumption: 23 Oct 2026; no verified current quote."], "sizes": [1000]}
+      },
+      "add": [
+        {"template": "22541", "id": "70001", "text": ["Future project appraisal", "P + USD 6,872.9856", "Per planned home:", "(P + USD 6,872.9856)", "/ 15,600", "P = non-inference costs", "for the same period.", "P is not yet priced."], "sizes": [1500, 1500, 1400, 1400, 1400, 1300, 1300, 1300], "box": [8905240, 3310000, 2738120, 2190000]}
+      ],
+      "notes": "B05 | What does the technology cost today?\nQuestion-led appendix answer, CFO; outside spoken route.\nThe owner-set USD 700 replacement October all-in forecast ceiling is dated 22 October; not additional spend or a production quote. Authority expires 2026-10-25T16:02Z. Activation remains blocked by refreshed post-change forecast, bounded outside-group U and remaining prerequisites. USD 242.36 is partial 11-22 October resource-group accrued cost, estimated until invoiced and subject to lag. USD 535.33 is pre-change, not current forecast or upper bound. USD 450/month is historical, not current authority. U is unknown, not zero. No post-change saving is measured.\nSEPARATE FUTURE APPRAISAL: P + USD 6,872.9856 total, divided by 15,600 for cost per planned home. P is all non-inference same-period project costs in USD, including implementation, integration, hosting, support, security, evaluation and human review. P remains unpriced; no full-project total, payback or project-to-works percentage. Never add the October USD 700 ceiling and included AI spend as separate independent costs, nor treat it as a 41-month quote. Use approved dated FX before any USD/GBP comparison.\nE11 dated owner decision; E05 unexecuted money-control requirements; E21 recovered inference scenario in evidence/ai-cost-evidence.md (2026-10-24), secondary price as at 2026-10-23. No issue #435 acceptance. Return to caller uses Last Slide Viewed; separate topic link S18 slide 21 only for index entry. Question index slide 27."
+    },
+    {
+      "number": 36,
+      "shapes": {
+        "26205": {"text": ["Benchmark: GBP 6,082/home", "x 15,600 = GBP 94,879,200 works"], "sizes": [1700, 1500], "box": [548640, 1420000, 5433060, 720000]},
+        "26207": {"text": ["Conditional: min(50% x GBP 6,082, GBP 7,500)", "= GBP 3,041/home; x 15,600 = GBP 47,439,600"], "sizes": [1400, 1400], "box": [6210300, 1420000, 5433060, 720000]},
+        "24314": {"text": ["Fictional base GBP 20,000", "GBP 22,000 with contingency"], "sizes": [1700, 1500]},
+        "26309": {"text": ["Gross cash GBP 20,000 before grant", "Fictional receivable GBP 7,500", "An award is not cash."], "sizes": [1300, 1300, 1300], "box": [8046720, 3890000, 3596640, 850000]},
+        "26324": {"text": ["Contingency spent: provider GBP 14,500", "Evidence supports claims; not eligibility, award or payment."], "sizes": [1300, 1300], "box": [8046720, 5050000, 3596640, 760000]},
+        "3603": {"text": ["E02 / E21: historical benchmark, not quote. Grant assumes eligible homes/costs, allocation, award and claim; Finance/funder review required."], "sizes": [950]}
+      },
+      "notes": "B09 | What is the per-home business case and cash exposure?\nQuestion-led appendix answer, CFO/asset executive; outside spoken route.\nHistorical HA benchmark GBP 6,082/home x 15,600 = GBP 94,879,200 works. Conditional grant min(50% x GBP 6,082, GBP 7,500) = GBP 3,041/home; x15,600 = GBP 47,439,600. Remaining works contribution GBP 3,041/home before other costs. All homes/full benchmark cost eligibility, allocation, award and successful claims are assumed, not established. Current official conditions, caps and dates need Finance/funder verification.\nSEPARATE FICTIONAL PACKAGE: GBP 18,000 contractor + GBP 2,000 internal = GBP 20,000 base. GBP 2,000 contingency gives GBP 22,000 envelope. Eligible GBP 16,000 less fictional GBP 7,500 grant = GBP 8,500 match; plus GBP 4,000 ineligible = GBP 12,500 provider base. Fully spent contingency gives GBP 14,500 exposure. At GBP 12,000 eligible cost, fictional 50% cap gives GBP 6,000 grant and GBP 14,000 provider base. Gross cash before grant receipt remains GBP 20,000.\nEVIDENCE PACK: eligible home/measure -> reviewed assessment -> cost and completion evidence -> reviewed application -> award -> claim -> cash. Real schemes define evidence and approvals. Documentation supports valid applications and claims; it does not create eligibility, allocation, award or cash. No extra grant income or reduced returns/clawback measured.\nE02 exercise fixtures; E21 evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24). Keep GBP works distinct from USD technology; no comparison percentage without approved FX. Return to caller: Last Slide Viewed; separate topic S10 slide 11 for index entry only. Question index slide 27."
+    },
+    {
+      "number": 52,
+      "shapes": {
+        "21688": {"text": ["Planning: USD 0.440576/home inference; accepted-outcome TCA unknown"], "sizes": [1800]},
+        "21690": {"text": ["Historical secondary price: 23 Oct 2026. Assumed workload, not current verified deployment price."], "sizes": [1400]},
+        "21708": {"text": ["Observe, then assume"], "sizes": [1800]},
+        "59979": {"text": ["6,884 / 5 = 1,376.8 tokens/run", "x 10 = 13,768 tokens/task", "x 20 = 275,360 tokens/home"], "sizes": [1500, 1500, 1500]},
+        "21723": {"text": ["Price inference only"], "sizes": [1800]},
+        "21732": {"text": ["275,360 / 1m x USD 1.60", "= USD 0.440576/home", "x 15,600 = USD 6,872.9856"], "sizes": [1500, 1500, 1500]},
+        "21742": {"text": ["Measure accepted TCA"], "sizes": [1800]},
+        "59997": {"text": ["Hosting + review + assurance", "Accepted above quality floor", "TCA / accepted work: unknown", "Double workload: USD 0.881152/home"], "sizes": [1300, 1300, 1300, 1200]},
+        "21792": {"text": ["Inference scenario is not total project cost or accepted value"], "sizes": [1700]},
+        "21877": {"text": ["Finite calls / tokens / expiry; partial metering", "Not hard currency or request-depth limits."], "sizes": [1500, 1500]},
+        "21897": {"text": ["Proposed: not run"], "sizes": [1900]},
+        "21918": {"text": ["Complete attribution; task/period money stops", "Request/depth bounds; billing reconciliation."], "sizes": [1500, 1500]},
+        "10283": {"text": ["Sources E19 / E05 / E11 / E21. #435 not accepted; no saving, payback or full-project price established."], "sizes": [1000]},
+        "21963": {"text": ["RECOVERY: 24 OCT 2026"], "sizes": [1200]}
+      },
+      "notes": "B25 | What is your Tokenomics unit and can the AI bill run away?\nQuestion-led appendix answer, CFO/panel; outside spoken route.\nEXACT INFERENCE WORKINGS: 6,884 historical tokens / five runs = 1,376.8/run, not human-accepted work. Assumed x10 = 13,768/task; assumed x20 tasks = 275,360/home. All tokens at the historical secondary-source GPT-4.1-mini output-rate assumption USD 1.60/million (2026-10-23): USD 0.440576/home; x15,600 = USD 6,872.9856. Doubled workload = USD 0.881152/home and USD 13,745.9712 total. Repeated chat, retries, evaluations, other models and price changes may increase use. Not verified current deployment pricing or measured lifetime workload.\nACCEPTED-OUTCOME TCA: total attributable task cost / human-accepted proposals above an agreed quality floor. Include platform/hosting allocation, licensing, integration, staff, review/correction/re-review, assurance, training, support, maintenance and exit, with disclosed energy/capital. Do not double count shared platform. OD-51 still needs owner/Finance denominator, quality floor, budgets, alert owners and dated billing/price basis. Zero/unknown denominator = not measurable. Track accepted handover separately; neither is cost per planned home.\nCONTROLS: finite calls/tokens/expiry and partial assistant-path usage exist; budget notifications are not hard stops. Complete attribution, task/period monetary budgets with hard termination, per-request calls/depth and billing reconciliation are proposed, PRD AC-107-110 not run. Retain critical misses, unsupported claims, overrides and reopenings beside cost. No saving/payback established; full-project P is unpriced. The recovered scenario does not satisfy issue #435 acceptance.\nE19 historical usage, E05 BRD FR-052/NFR-012/OD-51 and PRD acceptance requirements, E11 dated envelope, E21 evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24). Return to caller via Last Slide Viewed; fixed topic S18 slide 21 only for index entry. Question index slide 27."
+    }
+  ]
+}

@@ -296,12 +296,16 @@ class RoleContractTests(unittest.TestCase):
         runtime: set[str] = set()
         for node in ast.walk(tree):
             if isinstance(node, ast.Assign) and any(
+                isinstance(t, ast.Name) and t.id == "ADMIN_ROLE" for t in node.targets
+            ):
+                runtime.add(ast.literal_eval(node.value))
+            if isinstance(node, ast.Assign) and any(
                 isinstance(t, ast.Name) and t.id in {"DEFAULT_ROLE_MAP", "RULE_ROLE_MAP"}
                 for t in node.targets
             ):
                 runtime |= set(ast.literal_eval(node.value))
         self.assertEqual(set(ROLES), runtime)
-        self.assertEqual(len(ROLES), 12)
+        self.assertEqual(len(ROLES), 13)
 
     def roles(self, roles: list[object]) -> PRE.Finding:
         fake = Fake()

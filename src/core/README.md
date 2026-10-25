@@ -2680,6 +2680,15 @@ migration adds the columns and rebuilds keys when the ranking policy version
 changes. Tests check parity with the in-memory store, query plans and a
 60,000-case timing.
 
+In a ledger-enabled Azure SQL database every store table except the append-only audit table is an updatable
+ledger table, and such a table accepts a new column only as nullable with no default. A column-adding
+migration there (`MssqlStore._add_column_default`) therefore adds the column nullable, backfills the same
+default in the same transaction, then adds a `CHECK (col IS NOT NULL)` and the default constraint. Defaults,
+the non-null guarantee and the ledger history are kept; the one difference is that `sys.columns` reports the
+column as nullable, because a ledger table cannot be altered to NOT NULL in place. Ordinary SQL Server and
+SQLite keep the original `NOT NULL DEFAULT` statement. Local SQL Server 2022 ledger tests reproduce the
+Azure SQL error and prove the migration; they are not proof against Azure SQL itself.
+
 Azure SQL is implemented by `mssqlstore.py` and has run with the API managed
 identity. It uses explicit `BIGINT` row versions, `NVARCHAR(MAX)` JSON bodies,
 binary text collation and a transaction-owned `sp_getapplock` writer lock.
@@ -2711,6 +2720,28 @@ The app identity needs a contained user with `db_datareader`, `db_datawriter` an
 `db_ddladmin` (see `infra/scripts/create-sql-users.sql`). `tests/test_mssqlstore.py`
 runs the SQL store suites and the list-read parity suite against a real SQL Server
 when `ZF_TEST_MSSQL=1` (and `ZF_SQL_*` point at a throwaway database).
+
+### Merging a generated seed into a populated database (issue #360)
+
+`SqlStore` seeds only an empty database, so a populated demo database cannot take
+a baseline that way. `python -m zava_forward.core.seed_merge --seed PATH` (with
+`ZF_STORE=sqlite|mssql` and the usual `ZF_*` settings) calls `SqlStore.merge_seed`,
+an insert-only merge. It is a dry run unless `--apply` is given, prints counts
+only, and `--expect-added N` aborts before any write when the number of cases to
+add differs. In one transaction it first checks that the audit chain matches its
+head, then skips a case that is already stored with identical content, aborts on a
+case or document that differs (nothing is updated or deleted), inserts missing
+shared documents (the stored `continuity` document is kept and reported), never
+inserts staff, never changes `as_of`, recommendations or existing audit rows, and
+appends one `seed_merge` audit entry that carries the seed SHA-256. Applying also recomputes the derived queue flags and
+queue generation, which leaves the stored case content, `seq` and row versions of
+existing cases unchanged; opening the store runs its usual schema checks, so run it
+only against a populated database that the current release already serves (an empty
+target is refused and left empty). A repeat run
+adds nothing and no audit entry. For `sqlite`, the target is the same database the app would open from `ZF_SQLITE`, `ZF_STATE` or `ZF_DATA`.
+Keep the seed file private and outside the
+repository. Tests: `tests/test_seed_merge.py`, and `MssqlLedgerMigration` in
+`src/api/tests/test_mssqlstore.py` for ledger and plain SQL Server databases.
 
 ## Frozen protocol, benefits register and release gates (issue #126)
 

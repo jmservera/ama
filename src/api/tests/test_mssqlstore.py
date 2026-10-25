@@ -27,10 +27,12 @@ import test_finance_signoffs as financetests
 import test_timecapture as timetests
 import test_quality_procurement as procurementtests
 import test_procurement_api as procurementapi
+from zava_forward.core.chatthreads import MSSQL_DDL as CHAT_DDL
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError
 
 ON = os.environ.get("ZF_TEST_MSSQL") == "1"
+CHAT_MEMORY_DDL = next(d for d in CHAT_DDL if d.startswith("CREATE TABLE chat_memory ("))
 TABLES = ("chat_memory_control", "chat_memory", "chat_message", "chat_thread", "time_entry", "time_request", "time_enabled", "notice_ack", "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance", "audit_head", "audit", "recommendations", "cases", "staff", "meta")
 
 
@@ -531,6 +533,293 @@ class MssqlWrites(reads.Writes):
 
     def setUp(self):
         wipe()
+
+
+
+class _FakeLedgerDb:
+    """Answers the ledger probe and records every other statement."""
+
+    def __init__(self, ledger):
+        self.ledger, self.log = ledger, []
+
+    def execute(self, sql, args=()):
+        self.log.append(" ".join(sql.split()))
+        return self
+
+    def fetchone(self):
+        return (1,) if self.ledger else (0,)
+
+
+class LedgerAddColumnStatements(unittest.TestCase):
+    """Runs without a server: the exact DDL sequence for ledger and ordinary tables."""
+
+    def store(self, ledger):
+        from zava_forward.core.mssqlstore import MssqlStore
+        s = MssqlStore.__new__(MssqlStore)
+        s.db = _FakeLedgerDb(ledger)
+        return s
+
+    def test_ordinary_table_keeps_not_null_default(self):
+        s = self.store(False)
+        s._add_column_default("cases", "priority_correction", "INTEGER", "0")
+        self.assertEqual(s.db.log[-1], "ALTER TABLE cases ADD priority_correction INTEGER NOT NULL DEFAULT 0")
+        self.assertEqual(len(s.db.log), 2)
+
+    def test_ledger_table_adds_nullable_backfills_then_constrains(self):
+        s = self.store(True)
+        s._add_column_default("cases", "decision", "TEXT", "''")
+        self.assertEqual(s.db.log[1:], [
+            "ALTER TABLE cases ADD decision NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NULL",
+            "UPDATE cases SET decision = '' WHERE decision IS NULL",
+            "ALTER TABLE cases ADD CONSTRAINT ck_cases_decision_nn CHECK (decision IS NOT NULL)",
+            "ALTER TABLE cases ADD CONSTRAINT df_cases_decision DEFAULT '' FOR decision",
+        ])
+
+    def test_unmapped_text_column_on_a_ledger_table_is_refused(self):
+        with self.assertRaises(SystemExit):
+            self.store(True)._add_column_default("cases", "unmapped", "TEXT", "''")
+
+    def test_every_added_case_column_has_a_ledger_type(self):
+        from zava_forward.core.mssqlstore import LEDGER_TYPES
+        from zava_forward.core.sqlstore import CASE_COLS
+        integers = {"closed", "hazard", "support", "days", "priority_correction"}
+        for col in CASE_COLS:
+            self.assertTrue(col in integers or ("cases", col) in LEDGER_TYPES, col)
+
+    def test_sqlite_statement_is_unchanged(self):
+        log = []
+        s = SqlStore.__new__(SqlStore)
+        s.db = _Recorder(__import__("sqlite3").connect(":memory:"), log)
+        s.db.execute("CREATE TABLE cases (id TEXT)")
+        s._add_column_default("cases", "support", "INTEGER", "0")
+        self.assertEqual(log[-1], "ALTER TABLE cases ADD COLUMN support INTEGER NOT NULL DEFAULT 0")
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlLedgerMigration(unittest.TestCase):
+    """Throwaway databases made WITH LEDGER = ON (or off) on the harness server; never Azure SQL."""
+
+    NEW_CASE = ("priority_correction", "queue_new", "queue_priority", "queue_stale", "queue_blocked", "queue_overdue", "queue_unowned")
+    OLD_CASE_TAIL = "  decision "
+    COLS = "id, rowversion, seq, stage, area, wave, owner_code, closed, hazard, postcode, address, body, support, days, rkey, contractor, search, search_c, surname, last_contact, next_visit"
+
+    def setUp(self):
+        import uuid
+        if os.environ.get("ZF_SQL_SERVER") not in ("localhost", "127.0.0.1", "sql"):
+            raise ValueError("Ledger migration tests require the local disposable SQL service, never Azure SQL.")
+        self.name = f"zf_ledger_{uuid.uuid4().hex[:10]}"
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.seed = Path(self.tmp.name) / "synthetic.json"
+        data = reads.dataset(reads.queue_cases(12))
+        data["as_of"] = "2026-10-16"
+        self.seed.write_text(json.dumps(data))
+        self.addCleanup(self.drop_database)
+
+    def conn(self, database):
+        from zava_forward.core.mssqlstore import _Conn, connection_string
+        return _Conn(connection_string({**os.environ, "ZF_SQL_DATABASE": database}))
+
+    def drop_database(self):
+        master = self.conn("master")
+        try:
+            master.execute(f"IF DB_ID(N'{self.name}') IS NOT NULL BEGIN ALTER DATABASE [{self.name}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{self.name}] END")
+        finally:
+            master.close()
+
+    def create_database(self, ledger):
+        master = self.conn("master")
+        try:
+            master.execute(f"CREATE DATABASE [{self.name}]" + (" WITH LEDGER = ON" if ledger else ""))
+        finally:
+            master.close()
+
+    def open_store(self):
+        from zava_forward.core.mssqlstore import MssqlStore
+        store = MssqlStore(str(self.seed), env={**os.environ, "ZF_SQL_DATABASE": self.name}, state_dir=self.tmp.name)
+        self.addCleanup(store.db.close)
+        return store
+
+    def column_facts(self, db, table, names):
+        marks = ",".join("?" * len(names))
+        return db.execute(
+            "SELECT c.name, t.name, c.max_length, c.collation_name FROM sys.columns c JOIN sys.types t ON c.user_type_id = t.user_type_id "
+            f"WHERE c.object_id = OBJECT_ID(?) AND c.name IN ({marks}) ORDER BY c.name", (table, *names)).fetchall()
+
+    def nullable(self, db, table, names):
+        marks = ",".join("?" * len(names))
+        return {r[0]: r[1] for r in db.execute(
+            f"SELECT name, is_nullable FROM sys.columns WHERE object_id = OBJECT_ID(?) AND name IN ({marks})", (table, *names)).fetchall()}
+
+    def make_previous_schema(self, store):
+        """The earlier slice's tables: no later derived, queue or chat memory columns."""
+        from zava_forward.core.mssqlstore import TABLES
+        from zava_forward.core.sqlstore import CASE_COLS, QUEUE_COLS
+        added = [c for c in CASE_COLS if c in ("decision", "fstatus", "priority_correction")] + list(QUEUE_COLS)
+        rows = store.db.execute(f"SELECT {self.COLS} FROM cases ORDER BY id").fetchall()
+        derived = store.db.execute(f"SELECT id, {', '.join(added)} FROM cases ORDER BY id").fetchall()
+        facts = self.column_facts(store.db, "cases", added)
+        store.db.close()
+        db = self.conn(self.name)
+        self.addCleanup(db.close)
+        old_cases = TABLES["cases"][:TABLES["cases"].index(self.OLD_CASE_TAIL)].rstrip().rstrip(",") + ")"
+        old_chat = (CHAT_MEMORY_DDL.replace("item_class NVARCHAR(40) NOT NULL, ", "").replace("source NVARCHAR(200) NOT NULL, ", "")
+                    .replace("updated_at NVARCHAR(40) NOT NULL, ", ""))
+        db.execute("DROP TABLE cases")
+        db.execute("DROP TABLE chat_memory")
+        db.execute(old_cases)
+        db.execute(old_chat)
+        db.executemany(f"INSERT INTO cases ({self.COLS}) VALUES ({','.join('?' * 21)})", rows)
+        return db, added, derived, facts
+
+    def run_previous_schema(self, ledger):
+        self.create_database(ledger)
+        db, added, derived, facts = self.make_previous_schema(self.open_store())
+        self.assertFalse(set(added) & {r[0] for r in db.execute("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID(N'cases')").fetchall()})
+        self.assertEqual(self.table_kind(db, "cases"), "UPDATABLE_LEDGER_TABLE" if ledger else "")
+        return db, added, derived, facts
+
+    def table_kind(self, db, table):
+        row = db.execute("SELECT ledger_type_desc FROM sys.tables WHERE object_id = OBJECT_ID(?)", (table,)).fetchone()
+        return "" if row[0] == "NON_LEDGER_TABLE" else row[0]
+
+    def test_previous_schema_migrates_in_a_ledger_database(self):
+        db, added, derived, facts = self.run_previous_schema(True)
+        transactions = "SELECT COUNT(*) FROM sys.database_ledger_transactions"
+        before = db.execute(transactions).fetchone()[0]
+        store = self.open_store()
+        self.assertGreater(db.execute(transactions).fetchone()[0], before)
+        self.assertEqual(self.column_facts(db, "cases", added), facts)
+        self.assertEqual(db.execute(f"SELECT id, {', '.join(added)} FROM cases ORDER BY id").fetchall(), derived)
+        self.assertEqual(len(store.cases), 12)
+        self.assertEqual(self.table_kind(db, "cases"), "UPDATABLE_LEDGER_TABLE")
+        self.assertEqual(self.table_kind(db, "audit"), "APPEND_ONLY_LEDGER_TABLE")
+        self.assertTrue(store.verify_audit())
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM cases WHERE priority_correction IS NULL OR decision IS NULL").fetchone()[0], 0)
+        self.assertEqual([r[0] for r in db.execute("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID(N'chat_memory') AND name IN ('item_class','source','updated_at') ORDER BY name").fetchall()],
+                         ["item_class", "source", "updated_at"])
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM sys.check_constraints WHERE name LIKE N'ck[_]cases[_]%[_]nn'").fetchone()[0], len(added))
+        with self.assertRaises(store.dberror):
+            db.execute("UPDATE cases SET priority_correction = NULL WHERE id = (SELECT MIN(id) FROM cases)")
+        with self.assertRaises(store.dberror):
+            db.execute("UPDATE cases SET decision = NULL WHERE id = (SELECT MIN(id) FROM cases)")
+        db.execute("INSERT INTO cases (id, seq, stage, area, wave, owner_code, closed, hazard, postcode, address, body) VALUES (N'ZF-DEFAULT', 1, N'', N'', N'', N'', 0, 0, N'', N'', N'{}')")
+        self.assertEqual(db.execute("SELECT priority_correction, queue_new, decision, last_contact FROM cases WHERE id = N'ZF-DEFAULT'").fetchone(), (0, 0, "", "0000"))
+        settled = db.execute(transactions).fetchone()[0]
+        self.open_store()
+        self.assertEqual(db.execute(transactions).fetchone()[0], settled)
+
+    def test_failure_after_backfill_leaves_no_partial_schema_and_can_be_retried(self):
+        from zava_forward.core.mssqlstore import MssqlStore
+        db, added, derived, facts = self.run_previous_schema(True)
+        original, calls = MssqlStore._add_column_default, []
+
+        def fail_on_second(store, *args):
+            calls.append(args[1])
+            if len(calls) == 2:
+                raise RuntimeError("injected after the first backfill")
+            return original(store, *args)
+
+        with patch.object(MssqlStore, "_add_column_default", fail_on_second), self.assertRaises(RuntimeError):
+            self.open_store()
+        self.assertEqual(self.column_facts(db, "cases", added), [])
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM sys.check_constraints WHERE name LIKE N'ck[_]cases[_]%'").fetchone()[0], 0)
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 12)
+        self.open_store()
+        self.assertEqual(self.column_facts(db, "cases", added), facts)
+
+    def test_populated_chat_memory_failure_rolls_back_and_retries(self):
+        from zava_forward.core.chatthreads import MEMORY_ADDED
+        from zava_forward.core.mssqlstore import MssqlStore
+        db, _, _, _ = self.run_previous_schema(True)
+        names = [c for c, _ in MEMORY_ADDED]
+        db.execute("INSERT INTO chat_memory (id, owner, owner_role, content, redactions, created_at) VALUES (N'm1', N'o', N'r', N'kept content', N'', N'2026-10-24')")
+        original, calls = MssqlStore._add_column_default, []
+
+        def fail_after_first_chat_backfill(store, table, *args):
+            if table == "chat_memory":
+                calls.append(args[0])
+                if len(calls) == 2:
+                    raise RuntimeError("injected after the first chat_memory backfill")
+            return original(store, table, *args)
+
+        with patch.object(MssqlStore, "_add_column_default", fail_after_first_chat_backfill), self.assertRaises(RuntimeError):
+            self.open_store()
+        self.assertEqual(calls, names[:2])
+        self.assertEqual(self.column_facts(db, "chat_memory", names), [])
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM sys.check_constraints WHERE name LIKE N'ck[_]chat[_]memory[_]%'").fetchone()[0], 0)
+        self.assertEqual(db.execute("SELECT COUNT(*) FROM sys.default_constraints WHERE name LIKE N'df[_]chat[_]memory[_]%'").fetchone()[0], 0)
+        store = self.open_store()
+        self.assertEqual(len(self.column_facts(db, "chat_memory", names)), len(names))
+        row = db.execute(f"SELECT content, {', '.join(names)} FROM chat_memory WHERE id = N'm1'").fetchone()
+        self.assertEqual(row[0], "kept content")
+        self.assertEqual(list(row[1:]), [d for _, d in MEMORY_ADDED])
+        for col in names:
+            with self.assertRaises(store.dberror):
+                db.execute(f"UPDATE chat_memory SET {col} = NULL WHERE id = N'm1'")
+
+    def test_previous_schema_still_migrates_in_an_ordinary_database(self):
+        db, added, derived, facts = self.run_previous_schema(False)
+        self.open_store()
+        self.assertEqual([r[:2] for r in self.column_facts(db, "cases", added) if r[0] in ("decision", "fstatus")], [("decision", "text"), ("fstatus", "text")])
+        self.assertEqual([r for r in self.column_facts(db, "cases", added) if r[0] not in ("decision", "fstatus")], [r for r in facts if r[0] not in ("decision", "fstatus")])
+        self.assertTrue(all(v == 0 for v in self.nullable(db, "cases", added).values()))
+        self.assertEqual(db.execute(f"SELECT id, {', '.join(added)} FROM cases ORDER BY id").fetchall(), derived)
+
+    def test_fresh_ledger_database_initialises(self):
+        self.create_database(True)
+        store = self.open_store()
+        self.assertEqual(self.table_kind(store.db, "audit"), "APPEND_ONLY_LEDGER_TABLE")
+        self.assertEqual(len(store.cases), 12)
+
+    def merge_roundtrip(self, ledger):
+        import copy
+        self.create_database(ledger)
+        store = self.open_store()
+        store.audit("seed", "proof", "-", "existing")
+        store.save()
+        data = json.loads(self.seed.read_text())
+        data["cases"] += [dict(copy.deepcopy(data["cases"][0]), id=f"ZF-SEED-{n}") for n in range(3)]
+        merge = Path(self.tmp.name) / "merge.json"
+        merge.write_text(json.dumps(data))
+        before = (store.db.execute("SELECT id, body, seq FROM cases ORDER BY id").fetchall(),
+                  store.db.execute("SELECT seq, prev, hash FROM audit ORDER BY seq").fetchall())
+        self.assertEqual(store.merge_seed(merge)["to_insert"], 3)
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 12)
+        with patch.object(SqlStore, "_append_audit", side_effect=RuntimeError("injected")):
+            with self.assertRaises(RuntimeError):
+                store.merge_seed(merge, apply=True)
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 12)
+        self.assertTrue(store.merge_seed(merge, apply=True, expect_added=3)["applied"])
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 15)
+        after = store.db.execute("SELECT seq, prev, hash FROM audit ORDER BY seq").fetchall()
+        self.assertEqual([tuple(r) for r in after[:len(before[1])]], [tuple(r) for r in before[1]])
+        self.assertEqual(len(after), len(before[1]) + 1)
+        now = [tuple(r) for r in store.db.execute("SELECT id, body, seq FROM cases ORDER BY id").fetchall()]
+        for row in before[0]:
+            self.assertIn(tuple(row), now)
+        self.assertFalse(store.merge_seed(merge, apply=True, expect_added=0)["applied"])
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM audit").fetchone()[0], len(after))
+        self.assertTrue(store.verify_audit())
+
+    def test_seed_merge_on_ledger_database(self):
+        self.merge_roundtrip(True)
+
+    def test_seed_merge_on_plain_database(self):
+        self.merge_roundtrip(False)
+
+
+class MssqlLedgerMigrationGuard(unittest.TestCase):
+    def test_remote_server_is_refused_before_any_connection_or_cleanup(self):
+        case = MssqlLedgerMigration("test_fresh_ledger_database_initialises")
+        with patch.dict(os.environ, {"ZF_SQL_SERVER": "example.database.windows.net"}), \
+                patch("zava_forward.core.mssqlstore._Conn", side_effect=AssertionError("connected")) as conn, \
+                patch.object(MssqlLedgerMigration, "drop_database", side_effect=AssertionError("cleanup")) as drop:
+            with self.assertRaises(ValueError):
+                case.setUp()
+            case.doCleanups()
+        conn.assert_not_called()
+        drop.assert_not_called()
 
 
 if __name__ == "__main__":

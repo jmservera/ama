@@ -1,0 +1,142 @@
+{
+  "base": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+  "files": {
+    "brd/.markdownlint.json": {
+      "bytes": 107,
+      "sha256": "64d16f9e376b8d18c19252c98e0fc0370224cd048c2688aa279ead62b8b9baa9"
+    },
+    "brd/amendment.md": {
+      "bytes": 33350,
+      "sha256": "7aa081028e39b6931db76416db23336c05c6dc3c149a1fcb9f44525a65e811ae"
+    },
+    "brd/amendment.patch": {
+      "bytes": 73884,
+      "sha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7"
+    },
+    "brd/change-manifest.md": {
+      "bytes": 11272,
+      "sha256": "3005ee38c185164f1837148faff7097914ab719a2acf91aa5ac6c152e6279320"
+    },
+    "brd/draft-prd-handoff.json": {
+      "bytes": 16725,
+      "sha256": "979fa96b96f59112c83f779b2daf59847111ebbbe3e2458001179e99eaa44a63"
+    },
+    "brd/quality-review.md": {
+      "bytes": 6828,
+      "sha256": "d85e40ccb09cfaf0a08efe55ada4a0beaef8822bb3bfa56281062e28944f37a4"
+    },
+    "brd/render-amendment.py": {
+      "bytes": 15649,
+      "sha256": "4c0678e9307fadf94dc71c7ddf143c3b0a387fca6ceb175a878a52b17967de04"
+    },
+    "brd/state.json": {
+      "bytes": 2733,
+      "sha256": "08bd5d4224970a6913582ffa1c24b2d061f1978fd44265ced0bfdcbd09c1af95"
+    },
+    "brd/validate-package.py": {
+      "bytes": 9822,
+      "sha256": "f351dd36c61a5da3540637bdf3a531dfcee4defa4143ca8c232e129714e43dd3"
+    },
+    "brd/validation.json": {
+      "bytes": 6686,
+      "sha256": "c1798d7458603e97e2386d8a1ad6effd50a5ad3ec7b704d466a5077f41294d56"
+    },
+    "prd/.markdownlint.json": {
+      "bytes": 98,
+      "sha256": "df16d2731c76867aa048bf05d279292d98d0e16cb7cae9351d8338792d19176e"
+    },
+    "prd/adr-handoff.md": {
+      "bytes": 9993,
+      "sha256": "835aa49c4d49a1785a66a35a1b87d1104f9daa4e25a5404384952906f9404da8"
+    },
+    "prd/amendment.md": {
+      "bytes": 12305,
+      "sha256": "a41caa0e47c6b2fc0dbd146dc44cc146de7684d3dbfdbfd2d3aa0db5350b180a"
+    },
+    "prd/amendment.patch": {
+      "bytes": 47478,
+      "sha256": "37e35e478f49165d787c475afed46d94eb5bff7eb8348925b68e8c43e1aed97c"
+    },
+    "prd/change-manifest.md": {
+      "bytes": 6885,
+      "sha256": "b6eaa763d387391efc2abc13d1a84dc24508e1085e2e7e8a2a89a7b6b93bf1a5"
+    },
+    "prd/id-traceability.md": {
+      "bytes": 5357,
+      "sha256": "86160572e1fe833b4ce10ccfe7a9cb0d305466c1cc5296d6091edac7be6dc4d9"
+    },
+    "prd/quality-review.md": {
+      "bytes": 6856,
+      "sha256": "cdf507a8413c8711ea0ea7a20009794fa9dfda5d0a9ae26a4f2704674eea3dd6"
+    },
+    "prd/reviewer-findings.yaml": {
+      "bytes": 7406,
+      "sha256": "288981bd8a42295a00a47531c0c02945f0f4e5600f45f02f9754150fec85fed0"
+    },
+    "prd/reviewer-report.yaml": {
+      "bytes": 5762,
+      "sha256": "6440f4ad3cb27d567eb7f5f97c79ff815a29970e4097cad04e6814fb15eee5fb"
+    },
+    "prd/state.json": {
+      "bytes": 4017,
+      "sha256": "da980b98748f065c7d5d50bba2a7ce93e8e7b95df8ecfd94c524c814d0a8c158"
+    },
+    "prd/validate-package.py": {
+      "bytes": 15269,
+      "sha256": "294588d4b96dc9453ad382829d3efe3a75043accf1f5910384f9c05d83f3c1d4"
+    },
+    "prd/validation.json": {
+      "bytes": 8227,
+      "sha256": "4afbd13e7ca5ef151eedadb7db1057965d00b3c10dc755b8b641329a79593111"
+    },
+    "adr/decide-draft.md": {
+      "bytes": 15999,
+      "sha256": "081ecba847f977c2165e127c8e7f602b4bc73602cd09abbd23c57283bcf278c7"
+    },
+    "adr/proposed-adr-draft.md": {
+      "bytes": 26962,
+      "sha256": "528f062c3e5d476c57c150e0e214a5e208a247c3b2aa5b0f016f7ed477271541"
+    },
+    "adr/integration-manifest.md": {
+      "bytes": 3949,
+      "sha256": "352e4a1ddc8b5aadba1117fa73e183d9c286370479cdc79cb233cd7e90c560a6"
+    },
+    "adr/state.json": {
+      "bytes": 13412,
+      "sha256": "a6f1d5aa9c5cd3b2c58491468a157008a12f59345e0f37c6096d5b4ec2ed4e8d"
+    },
+    "adr/resident-service-boundary.excalidraw": {
+      "bytes": 43454,
+      "sha256": "27600e4581f3d7c440adee3d009f2b71099e85991b4dc2dcfa4130003af78d07"
+    },
+    "adr/resident-service-boundary.svg": {
+      "bytes": 8573,
+      "sha256": "281d291273e87372eb9efd817c1fe54b4adebb53fbd3a87b46d83c846317bdeb"
+    },
+    "adr/resident-service-boundary.png": {
+      "bytes": 178186,
+      "sha256": "118b6cb363ea5686e5f744d5cc3f48b4820d56df14f27825e2d31b3e9f739fcc"
+    },
+    "adr/validation.json": {
+      "bytes": 6290,
+      "sha256": "e026eda48be63997276e53cbff62d82fb98a21074602e371f71e7434baf16dd1"
+    }
+  },
+  "mismatches": [],
+  "candidates": {
+    "brd": {
+      "target": "docs/brds/agentic-retrofit-programme-brd.md",
+      "base_sha256": "25ed596cafc4d9a4d83e2411a59cf0e6d9667c816fc2f537f82a84f3d9c6cf4c",
+      "candidate_sha256": "e318bacc1344c4e730645612371f2a7671926c645ee9370673b0f637a046e535",
+      "patch_sha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7",
+      "hunks": 22
+    },
+    "prd": {
+      "target": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+      "base_sha256": "315798b6c15c72a659403257b840fe7ffddef54614048ae60b1db321dcf6c9e2",
+      "candidate_sha256": "bfe93dc2cb68ec18c76d10794305ee1667c5ecc1937c0c28cd876dae77195f8d",
+      "patch_sha256": "37e35e478f49165d787c475afed46d94eb5bff7eb8348925b68e8c43e1aed97c",
+      "hunks": 29
+    }
+  }
+}

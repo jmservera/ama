@@ -1,7 +1,7 @@
 ---
 title: AI Tokenomics (Total Cost of AI and Value Realised)
 description: What the mentor clue on Tokenomics points to, the public Tokenomics Foundation framing, how it maps to the capstone rubric and the Zava Forward evidence, and what remains unmeasured
-ms.date: 2026-10-22
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -97,6 +97,95 @@ Evidence class: repository observation, not a benchmark.
 * The BRD already treats time saved as capacity and not cash unless a budget
   owner confirms spend will fall (RULE-016, RULE-019), which matches the
   Tokenomics "booked value" test.
+
+## Rubric Scorer Model Pilot (2026-10-24)
+
+Evidence class: one local, owner-authorised screening run per model, not an
+application inference benchmark or a production-model selection decision.
+The owner approved a USD 10 pilot. All three requested model identities were
+confirmed by their CLI usage records; no fallback or paid retry was used.
+
+The same baseline-hidden prompt and registered artifact snapshot came from
+commit `4ed85ba06c3a820591cf86e5d75da8c8db401a8b`. The bundle contained one
+capstone deck, 12 pitch files and registered supporting evidence. The source
+and prompt hashes were verified after execution. Copilot CLI 1.0.103 exposed
+read tools only, with no scoring-output tool, shell, writes, network tools or
+delegation. This differs from the hosted scorer's pinned CLI 1.0.87 and MCP
+submission transport. Model-chosen reads differed despite identical inputs.
+
+| Requested and reported model | Wall time | Inference calls | Reported AI credits | USD equivalent | Result |
+| --- | --- | --- | --- | --- | --- |
+| `claude-sonnet-5` | 121.75 seconds | 15 | 24.018900 | 0.24018900 | Valid raw JSON and adapter card; calibration 61/100 |
+| `claude-haiku-4.5` | 113.76 seconds | 9 | 11.417745 | 0.11417745 | Prose/fenced response; required summary omitted; adapter rejected it |
+| `gpt-6-luna` | 155.89 seconds | 13 | 3.194431 | 0.03194431 | Valid raw JSON and adapter card; calibration 59/100 |
+
+Usage records reported complete accounting. Each credit value is the CLI's
+`totalNanoAiu` divided by 1,000,000,000, not its legacy
+`totalPremiumRequestCost`. USD equivalents use GitHub's published
+[one AI credit = USD 0.01](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing),
+checked 2026-10-24. Total equivalent usage was USD 0.38631076, excluding
+subscription allocation, labour and other infrastructure. These are reported
+usage estimates, not a reconciled invoice or Total Cost of AI.
+
+The unchanged local gate forced D1-D3 to zero because thought leadership was
+absent; both valid cards remain Incomplete, not capstone acceptance. Luna
+matched Sonnet on 16/20 final grades, including the three forced zeros, or
+13/17 remaining criteria. Differences were A4 4/3, A7 4/3, B1 3/4 and C2 3/2
+(Sonnet/Luna). A passing constructed baseline replay does not establish a
+hosted PR pass or identical scores. Haiku was not repaired or assigned an
+accepted total. A hosted required-summary rejection could permit correction;
+this final-response pilot did not test that native retry behavior.
+
+Keep Sonnet pinned: Luna was about 87 percent cheaper but 28 percent slower
+in this sample and did not reproduce the grades. Haiku was about 52 percent
+cheaper and 7 percent faster, but the card was incomplete. One sample cannot
+estimate model variance, stable latency or equivalence; nor does Sonnet's
+score establish ground truth. Next comparisons need repeated, held-out and
+threshold-adjacent examples, independent evidence adjudication and the native
+submission path. No score, workflow, baseline, application model or live
+status was changed. This pilot does not close the application gaps below.
+
+### Native MCP Follow-Up (2026-10-24)
+
+The owner approved one additional invocation each for Haiku 4.5 and GPT-6
+Luna within the original USD 10 total. Both used the original frozen evidence,
+the same native prompt and the real, unmodified safe-output runtime pinned at
+`github/gh-aw-actions@924af5fdc64061cfbf66fb584c8b07e2ac230c60`. Runtime blob
+hashes, generated schema and local stdio/HTTP rejection/append regressions were
+verified; seven checks passed. Model integration used local stdio MCP with CLI
+1.0.103, not the full hosted workflow or its firewall/permission environment.
+
+| Requested and reported model | Wall time | Inference calls | USD equivalent | Native result |
+| --- | --- | --- | --- | --- |
+| `claude-haiku-4.5` | 111.07 seconds | 10 | 0.10206125 | One tool call, one append, strict gate valid; calibration 64/100 |
+| `gpt-6-luna` | 107.97 seconds | 11 | 0.01870419 | One tool call, one append, strict gate valid; calibration 56/100 |
+
+Neither invocation needed a rejected-call correction. Each included the
+required summary and complete details. The original Haiku final-response
+failure remains an observed failure, not a repaired or replaced result.
+Native Haiku's A5 rationale was 303 characters, violating the prompt's
+under-300 instruction even though that limit is not enforced by the strict
+adapter/gate. Tool acceptance therefore does not establish full instruction
+conformance. Luna met the rationale-length check.
+
+The native cards differ on nine of 20 criteria: A3, B1-B6, C1 and C2, including
+a two-point B5 difference. Their three forced D zeros remain identical, and
+both outcomes remain Incomplete. No new Sonnet native run was approved, so
+earlier Sonnet timing and grades are not a same-prompt native control.
+
+Follow-up reported equivalent usage was USD 0.12076544; aggregate usage across
+all five invocations was USD 0.50707620, with complete accounting and requested
+model identities confirmed. Only read tools and the local record tool were
+used. The MCP child environment contained no GitHub credentials; only local
+append files were written. No publisher jobs, live score/status updates,
+production-model switch, commit or push occurred. Later owner changes to the
+live deck/registry are outside this frozen comparison.
+
+Cheaper models can submit structurally valid cards through this pinned MCP
+surface, but equivalent grading and stable speed are still unproven. Keep
+Sonnet pinned pending repeated native-path comparisons, an independent
+criterion-level reference assessment and threshold-adjacent decision checks.
+Do not select the highest-scoring model as the most accurate one.
 
 ## Gaps
 

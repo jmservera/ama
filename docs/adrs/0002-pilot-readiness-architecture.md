@@ -2,7 +2,7 @@
 title: ADR 0002 Pilot-Readiness Architecture for the Zava Forward MVP
 description: Proposed decisions for moving the working MVP to pilot readiness over about 60,000 homes - durable store, Blob, Entra ID and field visibility, deterministic ranking, map scale, deployment and gated staff time capture
 author: AMA programme
-ms.date: 2026-10-19
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -17,6 +17,13 @@ until the open items in [Open items](#open-items) are closed (DH-002, DH-006).
 This ADR amends [ADR 0001](./0001-azure-architecture.md) for the MVP. It does
 not replace the ADR 0001 demonstrator design for the agent, orchestrator and
 import workloads, which remain deferred.
+
+The owner accepted the bounded staff identity and application-role decision
+on 2026-10-24 in
+[Entra-authoritative staff access](#entra-authoritative-staff-access-owner-decision-2026-10-24-refs-360).
+That decision replaces the SQL staff-binding prerequisite for staff sign-in;
+it does not accept this ADR as a whole or establish implementation, deployment,
+human acceptance or operational approval.
 
 ### Private Publisher Capacity Delta (2026-10-19, Refs #360)
 
@@ -334,7 +341,7 @@ proposal controls and bounded operator calls do not prove these new gates.
 
 The [failed assessment attempt](../case_study_48_addendum.md#assessment-attempt-and-evidence-limits)
 is retained alongside the [validated recovery](../case_study_48_addendum.md#verified-recovery-and-open-dispositions-2026-10-14)
-and [baseline RAI report](../../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md).
+and [baseline RAI report](../reference/research/reports/2026-10-14/rai-report-ama-20261014.md).
 Its 11 PARTIAL residuals (8 MEDIUM, 3 LOW) remain open; proposal-only authority,
 source verification and manual routes reduced nine original severity claims.
 The owner accepted the bounded baseline report for remediation planning on
@@ -467,7 +474,12 @@ or immutability).
 
 ### 3. Entra ID sign-in, role claims and field-level visibility
 
-Proposal:
+The original proposal follows. For staff identity and application-role
+authority, the owner decision of 2026-10-24 below takes precedence over any
+requirement to provision or match an internal staff record before sign-in.
+Other proposed controls and their approval status are unchanged.
+
+Original proposal:
 
 * Sign-in uses the Container Apps built-in authentication (Entra ID, one app
   registration, authorisation code flow). The service accepts only requests
@@ -486,6 +498,11 @@ Proposal:
   their own assigned work.
 
 #### Observed exercise identity and session learning (2026-10-13)
+
+Historical observations only. The SQL staff-binding sign-in gate described
+here is superseded prospectively by the 2026-10-24 owner decision below.
+Recorded preservation results and other dated observations are not rewritten
+or represented as evidence for the new implementation.
 
 This dated update supplements, not rewrites, the proposals and historical
 implementation tables. [#65](https://github.com/jmservera/ama/pull/65) and the
@@ -539,6 +556,128 @@ Operational steps and evidence boundaries:
 and [account diagnostics](../../infra/README.md#account-selection-and-safe-flow-diagnostics).
 Actual already-signed-in account replacement, full permissions, accessibility,
 lawful processing and production approval are not established by these checks.
+
+#### Entra-authoritative staff access (owner decision 2026-10-24, Refs #360)
+
+Status: accepted by the AMA project owner on 2026-10-24 for staff identity
+and application-role authority. This records the owner's direction, not a
+completed implementation or successful acceptance test. The remainder of this
+ADR retains its existing status.
+
+Context and alternatives: the earlier exercise required both Entra role
+assignment and a matching SQL staff OID binding. A valid assigned principal
+could therefore be denied because a second identity registry was incomplete
+or cached. The owner selects Entra-authoritative staff identity and application
+roles, rather than repairing or retaining SQL staff provisioning as a login
+prerequisite. Azure SQL remains authoritative for business records, scoped
+object grants and workflow evidence, not staff authentication or application
+role assignment.
+
+Decision:
+
+* Staff sign-in uses a platform-verified Entra principal for the exact
+  configured tenant and application. The service validates the trusted
+  principal's tenant, one unambiguous valid object ID and supported application
+  role claims. Tenant and object ID are canonical UUIDs. Missing, malformed,
+  conflicting or unauthorized claims fail closed. Default Access alone and
+  unrecognized roles do not establish application permission. Preserve the
+  single distinct mapped staff-role rule; explicit supplemental capabilities
+  do not count as a second staff role.
+* Authentication must not query SQL, read a staff cache or require a
+  pre-provisioned staff row. Neither email, UPN, display name, a client-selected
+  role nor a client-supplied identity key grants access. There is no email
+  fallback. Application roles and capabilities are assigned in Entra, not
+  inferred from database roster entries.
+* The authenticating ingress must validate issuer, audience and session/token
+  validity and prevent clients from supplying or bypassing its trusted
+  principal headers. Parsing a principal header, or setting a trusted-proxy
+  flag, is not proof of authentication. Unverified direct-origin traffic is
+  denied. The application must not accept tokens for another application.
+  Status: this is a release gate, not yet evidenced by the code, which checks
+  only the trusted-proxy flag. External anonymous, forged-header and
+  direct-origin negative probes must pass before any release or acceptance.
+* The explicit `ZavaForward.ApplicationAdmin` application role supports
+  application-option visibility. It is not a wildcard permission for protected
+  actions, records, fields, exports, model inputs or private chats. Alone it
+  yields the distinct role "Application Administrator", outside the staff
+  roles: every option is listed, flagged "needs a role with this authority",
+  and the only readable endpoint is the caller's own account; business data,
+  exports, the staff directory and every state change are refused. With one
+  staff role it composes without replacing that role: that role's data,
+  fields, exports and actions apply, every option stays visible and options
+  beyond that role are flagged, and no further authority is added.
+  Every protected operation evaluates its actual role/capability and domain
+  predicates on the server.
+* Case scope, object grants, provider/supplier assignment, field projection,
+  resident consent and representative authority remain business controls.
+  Professional competence, named delegations, Finance authority, independent
+  QA, no-self-approval, rule approval and AI restart requirements are retained.
+  ApplicationAdmin does not grant RuleOwner, AIRestart, professional sign-off,
+  resident choice or another person's private thread/memory access.
+* The canonical tenant/object-ID pair is the stable staff identity for audit,
+  case ownership and distinct-person comparisons, independent of role, email,
+  name and account-selection changes. Derived storage keys must preserve that
+  identity without ambiguous aliasing. Legacy case-owner codes and historical
+  audit entries are retained; any association with an Entra principal is
+  explicit and verified, never guessed from email.
+  Continuity: after authentication, a verified tenant and OID that match
+  exactly one enabled roster row keep that row's business code, email and name for
+  ownership, handoffs and audit (never matched by email; ambiguous or
+  disabled matches fall back to the derived key). A row naming another tenant
+  never matches, and a row without a tenant matches only the tenant the store
+  records as owning legacy rows (`legacy_roster_tenant`); without that record
+  such rows do not match. Person independence (author, approver, named owner)
+  is judged on the canonical tenant and OID: a transactional, append-only
+  alias record links the derived and legacy codes/emails of one verified
+  person, so disabling or failing to read a binding cannot turn an author into
+  a second person. Rule-card authoring and approval fail closed when that
+  record cannot be written or read. Role and capabilities still
+  come only from claims. Scoped finance and contract authority is resolved
+  from the matched row by immutable identity only at the protected operation,
+  with expiry, revocation, scope and independence checks unchanged. Entra
+  staff without a roster binding become selectable handoff recipients once they
+  sign in (a bounded registry written in one serialized read-merge-write
+  transaction and projected to `/api/me` as recipients). A Contractor signs in only
+  with exactly one enabled Contractor row bound to the OID with a company;
+  absent or ambiguous is denied and provider object scope is unchanged. The
+  derived key is a truncated digest, a known collision limit. A roster may retain
+  assignment metadata and labels but must not become a second login or
+  application-role registry.
+* An authenticated principal is not thereby an appointed approver or owner
+  of every case. Unresolved legacy identity associations or required scoped
+  grants deny the affected operation without reinstating SQL provisioning as
+  a general authentication requirement. Re-authorize current permission and
+  scope for protected reads and writes; stale sessions are not evidence that
+  revocation has propagated.
+* Graph or Microsoft 365 reconciliation is explicit, least-privilege and
+  idempotent. Before writing, verify the exact tenant, application/client ID,
+  enterprise service principal, enabled target user object ID and intended
+  application-role ID. Resolve mutable login text only to verify the intended
+  object, not as durable identity. Verify role propagation on the enterprise
+  app. Dry run is non-mutating; apply adds only the authorized missing role
+  definition or assignment and preserves unrelated roles, assignments,
+  principals and application configuration. A repeat run is a no-op.
+  Ambiguous, mismatched or unverifiable targets refuse writes. Runtime staff
+  access does not require directory-management permissions or a SQL initializer.
+
+Consequences: removing the second login registry avoids staff-binding and
+cache-restart failures and keeps staff roles under Entra management. It makes
+the ingress trust boundary, claim freshness and explicit capability checks
+critical, and requires verified continuity between legacy workload identities
+and stable Entra identities. New identity handling must not silently orphan
+ownership/history or widen administrative access. Missing domain authority
+continues to block its protected action, not basic staff authentication.
+
+Lineage and acceptance boundary: this subsection prospectively supersedes
+only the staff-binding login prerequisite in this section and its 2026-10-13
+learning. ADR 0002 continues to amend ADR 0001 for the MVP; other decisions,
+proposals, historical observations and ADR 0004/0005 authority boundaries
+remain unchanged. Source changes, local tests, directory assignments, a
+deployed image and a successful browser sign-in are separate evidence claims.
+No cloud operation, spending, deployment, issue closure, real-data use or
+professional/legal approval is authorized or proven by this decision alone.
+The existing real Azure/SQL/AI, restart/preservation, exact-build review and
+human acceptance gates remain applicable.
 
 #### Proposed field-level visibility
 

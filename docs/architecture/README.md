@@ -1,11 +1,24 @@
 ---
 title: Zava Forward Architecture Views
 description: Editable Excalidraw executive and technical architecture views grounded in PR 68, with Azure icons, interaction contracts and explicit implementation limits
-ms.date: 2026-10-16
+ms.date: 2026-10-23
 ms.topic: concept
 ---
 
 ## Scope and Reading Order
+
+For issue #441, the separate
+[UNREGISTERED resident service proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
+records owner-selected Option B, a portal/workflow increment before the
+independently gated resident-answer task. It includes editable Excalidraw,
+same-model SVG/Chrome PNG and accessible text. Its ID is null; it is not a
+numbered/finalized ADR, native PNG export or deployed portal. Registration
+acceptance remains UNMET, with supported allocator/bootstrap deferred.
+Named review is default; the selected bounded routine exception is proposed
+but OFF pending separate authority/evaluation/release. OD-52-55 remain open.
+Historical executive "no resident portal needed" and staff-assisted topology
+below describe their original baseline, not current proposal exclusion.
+No executive asset, existing ADR or runtime is changed.
 
 For issues #200/#201, use the dated
 [cut-over evidence pack](./cutover-evidence-pack.md), its
@@ -117,7 +130,7 @@ flowchart LR
 
 | Interaction | Contract and boundary | Evidence |
 | --- | --- | --- |
-| Browser -> sign-in -> protected app | Existing Entra registration; EasyAuth verifies identity. The API rechecks the SQL staff binding, role, case scope and fields. `/` is public; `/app` and data APIs are protected. | [Container Apps/auth](../../infra/modules/containerapps.bicep), [auth provider](../../src/api/src/zava_forward/api/auth.py) |
+| Browser -> sign-in -> protected app | Existing Entra registration; EasyAuth verifies identity. Selected design (owner decision 2026-10-24, [ADR 0002](../adrs/0002-pilot-readiness-architecture.md#entra-authoritative-staff-access-owner-decision-2026-10-24-refs-360)): the API takes tenant, object id and app roles from the validated principal with no SQL staff lookup, then enforces case scope and fields; the serving revision is verified separately. `/` is public; `/app` and data APIs are protected. | [Container Apps/auth](../../infra/modules/containerapps.bicep), [auth provider](../../src/api/src/zava_forward/api/auth.py) |
 | Ingress -> API | HTTPS ingress targets port 8088; `/healthz` is the implemented probe. The Python server serves the UI and APIs in one deployment. | [Container Apps](../../infra/modules/containerapps.bicep), [server](../../src/api/src/zava_forward/api/server.py) |
 | API -> SQL | Managed-identity access; controlled workflow, audit and proposal state. Five-assistant deduplication, reservations and fenced claims use short transactions; inference occurs outside database locks. | [SQL module](../../infra/modules/sql.bicep), [SQL adapter](../../src/core/src/zava_forward/core/mssqlstore.py), [assistants](../../src/core/src/zava_forward/core/assistants.py) |
 | API -> Blob | The document adapter transfers bytes to the `evidence` container; SQL retains references and content hashes. Five-assistant capture uses permitted metadata, not arbitrary document contents. | [Document adapter](../../src/core/src/zava_forward/core/documents.py), [storage](../../infra/modules/storage.bicep), [capture allowlists](../../src/core/src/zava_forward/core/assistants.py) |

@@ -11,7 +11,7 @@ import uuid
 from copy import deepcopy
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, insights, ledger, projection, ranking, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, identity, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
@@ -393,7 +393,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if d["status"] == "Ready" and d["gate"]:
                 d["status"] = "Waiting on shared building review"
         d["can_advance"] = c["stage"] == READY_STAGE
-        d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"])
+        d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"] + identity.people(self))
         d["checklist"] = self.checklist(c)
         d["technical_missing"] = missing_items(c)
         d["measure_decisions"] = measure_decision_view(c)

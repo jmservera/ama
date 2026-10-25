@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-22
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -19,6 +19,78 @@ The recommendations are proposals for validation, not approved requirements
 or observed outcomes. Sector benchmarks and illustrative economics are not
 company facts. Where this addendum challenges the original claims or autonomy
 levels, the distinction is intentional; the original remains unchanged.
+
+### Optional resident service proposal (2026-10-23, #441)
+
+Owner direction prospectively adds an optional mobile-responsive resident
+portal and a distinct bounded resident-answer task to the unsigned proposal,
+not to delivered functionality. Historical EXA-004 remains unchanged: no
+resident must use a portal. Phone, email, letters, visits and assisted service
+continue without detriment. Earlier staff-only scope and universal-review
+statements describe their dated baseline, not perpetual exclusion of this
+new proposal. The original case study and earlier executive assets are unchanged.
+
+The [BRD v0.20.0](./brds/agentic-retrofit-programme-brd.md#optional-resident-portal-and-communication-agent-draft-amendment)
+and [PRD v0.19.1](./prds/zava-forward-retrofit-programme-demonstrator.md#resident-answer-and-communication-authority)
+carry the owner-selected proposal: "Propose bounded routine automation; human
+review for consequential, sensitive or uncertain messages; activation separately
+gated." BRD FR-044/AC-084 and RULE-018/022/025/028 are reconciled prospectively.
+Eligible acknowledgements/reminders/grounded status/process replies need
+versioned evaluated task/channel/audience/content limits and separately approved
+activation. Named review remains default until that gate, and always applies
+to consequential, sensitive, uncertain, safety, consent, contractual and
+financial content. No model receives legal, consent, hazard, contract or cost
+authority. No communication exception activates here.
+
+Programme is proposed accountable, Engagement communication, Housing case
+exceptions and Digital technical support, with specialist domain escalation.
+A shared case timeline preserves portal/assisted event provenance and owned
+exceptions; missing connectors use labelled manual capture. No appointee,
+staffing capacity, actual appointment or response SLA is invented.
+Managed external identity provides simple username/password-style UX without
+custom password storage or assumed staff-directory membership. Verified
+person/case/task and explicit household/representative grants, changes,
+revocation and assisted recovery remain distinct from login or works consent.
+Specific provider, actual enrolment, privacy/DPIA/lawful basis, retention and
+recovery evidence remain live gates.
+
+Six proposed synthetic journeys cover sign-in/recovery, own case/documents,
+requested uploads, appointment responses, grounded questions/human handoff
+and assisted continuity. Proposed five concurrent fictional sessions over
+30 minutes and ordinary case/status/receipt API p95 <=2s are exercise targets,
+not production capacity/SLA/date. Identity, scanning and model waits are
+measured separately. The continuing generated 60,000-home/980-case lineage
+does not establish resident accounts or concurrent users.
+
+The BRD's low/base/high author-judgement scenarios retain arrivals 81/90/100
+times durations 4/8/12 weeks = 324/720/1200 WIP, with illustrative net staff
+hours/week approximately -1.594/14.74/94.333 after ongoing onboarding.
+They assume later eligible routine authority, not current savings; subtract
+actual incremental review effort when mandatory without changing case/contact
+denominators. Initial-cohort onboarding is separate/disjoint. These are not
+statistics, validated forecasts, observed benefits, cash or headcount claims.
+
+Owner selected Option B with rationale: "Reuse existing case authority to avoid
+duplicate platforms; deliver the portal/workflow first and independently gate
+the bounded resident-answer task." The linked
+[UNREGISTERED architecture proposal](../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
+has id null, editable Excalidraw and linked same-model SVG/Chrome PNG plus text
+equivalent; it is not a numbered/finalized ADR or native Excalidraw PNG export.
+The owner deferred registration after the actual allocator/bootstrap blocker.
+Full registration acceptance remains UNMET. Original quality FAIL/BLOCKED,
+unsigned requirements, OD-52-55 and formal/live approval remain unresolved.
+The completed PRD refinement adds twenty local stories, R0-R5 planning stages,
+six-journey verification design and qualified author trace without changing
+existing requirement definitions. Its current independent quality result is
+FAIL / Validate BLOCKED / Finalize NOT_EVALUATED, singular 1 below minimum 2,
+7 CAUTION/34 COVERED/0 RISK, not merely copied historical failure. All seven
+findings remain open, including bundled obligations, unsigned BRD, feasibility/
+GOAL-005, generic/resident latency/file-size precedence and inherited table/
+trace debt; see the PRD's linked current summary. All 30 resident criteria
+remain Not run. The architecture candidate is reconciled to that completed
+unsigned PRD, not registered or accepted by the reconciliation.
+No application, sending, real account/data, Azure change or paid inference
+is delivered or authorized by this documentation-only integration.
 
 ### Capstone Review Gate
 
@@ -801,7 +873,7 @@ not implementation remediation, verified findings closure or company approval.
 
 The owner authorized a new bounded recovery with complete finding records and
 codebase profile supplied inline, not a retry of the rejected temporary-file
-handoff. The [recovered RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md)
+handoff. The [recovered RAI report](./reference/research/reports/2026-10-14/rai-report-ama-20261014.md)
 completes the original baseline audit at commit
 `1cb398c7b90bec05a5700008a97d0cfac494144a` / PRD v0.14.0. It is not a
 re-audit of v0.15.0 or evidence that this amendment is implemented.
@@ -849,7 +921,7 @@ currentness and conditional EU applicability still require qualified review.
 
 ### Owner Acceptance of Baseline Report (2026-10-15)
 
-The owner explicitly accepted the [recovered baseline RAI report](../.copilot-tracking/rai-reviews/2026-10-14/rai-report-ama-20261014.md#owner-acceptance-2026-10-15)
+The owner explicitly accepted the [recovered baseline RAI report](./reference/research/reports/2026-10-14/rai-report-ama-20261014.md#owner-acceptance-2026-10-15)
 for its findings, limitations and remediation-planning basis. Generation-time PENDING
 entries above remain historical. This is not qualified legal/privacy sign-off,
 remediation closure, approval of PRD v0.16.0 or live-use acceptance. The eleven

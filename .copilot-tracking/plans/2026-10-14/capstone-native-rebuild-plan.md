@@ -24,7 +24,7 @@ Publish only the validated executive copy in docs/capstone/deck on existing
 
 ## User Decisions and Requirements
 
-* Owner requests the presentation communications strategist and PowerPoint
+* Owner requests the AMA Presentation Communications Strategist and PowerPoint
   builder to help rebuild the capstone.
 * Replace agents-in-retrofit-process.svg in the slide with native boxes.
 * Top-align titles and text in peer boxes so their text appears aligned.

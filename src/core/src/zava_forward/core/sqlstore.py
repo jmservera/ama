@@ -24,6 +24,7 @@ import os
 import sqlite3
 import threading
 from datetime import datetime
+from pathlib import Path
 
 from . import continuity, controls, insights, ledger, projection, ranking, stock, taskqueues
 from zava_forward.core.ai import Ai
@@ -89,6 +90,14 @@ SORT_SQL = {"urgent": "rkey", "waiting": "days DESC, rkey", "contact": "last_con
 FLAG_SQL = {"hazard": "hazard=1", "support": "support=1", "long": f"days>={insights.LONG_WAIT}",
             "nodecision": "decision NOT IN ('Accepted','Declined')",
             "fundingprog": "fstatus IN ('To prepare','Draft ready','Approved','Submitted')", "funding": "fstatus!='Confirmed'"}
+
+
+class SeedMergeError(Exception):
+    """A seed merge refused to write; `report` holds counts only."""
+
+    def __init__(self, message, report):
+        super().__init__(message)
+        self.report = report
 
 
 class _SyncLock:
@@ -189,7 +198,10 @@ class SqlStore(Store):
     # ---- dialect hooks (SQLite here; MssqlStore overrides them for Azure SQL)
     dberror = sqlite3.Error
     _epoch_sql = "SELECT (julianday('now')-2440587.5)*86400.0"
-    _add_column = "ADD COLUMN"
+
+    def _add_column_default(self, table, col, sqltype, default):
+        """Add a NOT NULL column with a default to an existing table. Names and defaults are module constants, never input."""
+        self.db.execute(f"ALTER TABLE {table} ADD COLUMN {col} {sqltype} NOT NULL DEFAULT {default}")
 
     def _open(self, db_path):
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
@@ -239,7 +251,7 @@ class SqlStore(Store):
         have = {r[1] for r in self.db.execute("PRAGMA table_info(chat_memory)").fetchall()}
         for c, d in CHAT_MEMORY_ADDED:
             if c not in have:
-                self.db.execute(f"ALTER TABLE chat_memory ADD COLUMN {c} TEXT NOT NULL DEFAULT '{d}'")
+                self._add_column_default("chat_memory", c, "TEXT", f"'{d}'")
 
     def _create_indexes(self):
         self.db.executescript(INDEXES)
@@ -276,7 +288,7 @@ class SqlStore(Store):
             for col in CASE_COLS:
                 if col not in have:
                     defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0", "priority_correction": "0"}
-                    self.db.execute(f"ALTER TABLE cases {self._add_column} {col} {'INTEGER' if col in ('support', 'days', 'priority_correction') else 'TEXT'} NOT NULL DEFAULT {defaults.get(col, chr(39) * 2)}")
+                    self._add_column_default("cases", col, "INTEGER" if col in ("support", "days", "priority_correction") else "TEXT", defaults.get(col, chr(39) * 2))
             want = ranking.CURRENT["version"]
             row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
             encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
@@ -302,7 +314,7 @@ class SqlStore(Store):
             missing = set(QUEUE_COLS) - have
             for col in QUEUE_COLS:
                 if col in missing:
-                    self.db.execute(f"ALTER TABLE cases ADD {col} INTEGER NOT NULL DEFAULT 0")
+                    self._add_column_default("cases", col, "INTEGER", "0")
             if missing:
                 self._meta_set("queue_context", "")
             self.db.execute("COMMIT")
@@ -430,6 +442,91 @@ class SqlStore(Store):
             except BaseException:
                 self.db.execute("ROLLBACK")
                 raise
+
+    MERGE_PRESERVED_DOCS = ("continuity",)
+    MERGE_BATCH = 50
+
+    def merge_seed(self, data_path, *, apply=False, expect_added=None, actor="seed-merge"):
+        """Insert-only merge of a generated seed into a populated database; returns counts only.
+
+        One transaction. A case id already stored with identical content is skipped and one with different content aborts
+        the merge. A missing document key is inserted, an identical one skipped, a different one aborts unless it is in
+        MERGE_PRESERVED_DOCS (kept and reported). Nothing is updated or deleted, staff, as_of and recommendations are untouched,
+        and one audit entry is appended only when something is inserted. Every guard is recomputed here under the write lock,
+        so a dry run (apply=False) is advisory and writes nothing. expect_added aborts before any write on a mismatch."""
+        import hashlib
+        raw = Path(data_path).read_bytes()
+        src = json.loads(raw)
+        canon = lambda v: json.dumps(v, sort_keys=True)  # noqa: E731
+        cases = src["cases"]
+        for c in cases:
+            c.setdefault("documents", [])
+            c.setdefault("funding", dict(route="Not decided", status="Not started", reference="", draft="", approved_by=None))
+        report = dict(seed_cases=len(cases), existing_cases=0, to_insert=0, identical=0, conflicts=0,
+                      docs_inserted=[], docs_identical=[], docs_preserved=[], seed_as_of=src.get("as_of"),
+                      store_as_of=None, applied=False, audit_appended=False)
+        with self.dblock:
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                rows = self.db.execute("SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq").fetchall()
+                chain = ledger.verify_entries([dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+                                               for a, w, ac, ci, d, p, h in rows])
+                head = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+                if not chain["intact"] or (chain["entries"], chain["head"]) != (head[0], head[1]):
+                    raise SeedMergeError("Audit chain does not match its head; nothing was written.", report)
+                stored = {cid: body for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall()}
+                report["existing_cases"] = len(stored)
+                new_cases = []
+                for c in cases:
+                    body = stored.get(c["id"])
+                    if body is None:
+                        new_cases.append(c)
+                    elif canon(json.loads(body)) == canon(c):
+                        report["identical"] += 1
+                    else:
+                        report["conflicts"] += 1
+                report["to_insert"] = len(new_cases)
+                if len({c["id"] for c in cases}) != len(cases):
+                    raise SeedMergeError("Seed contains duplicate case ids; nothing was written.", report)
+                for key in self.DOCS:
+                    if key not in src:
+                        continue
+                    row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+                    if row is None:
+                        report["docs_inserted"].append(key)
+                    elif canon(json.loads(row[0])) == canon(src[key]):
+                        report["docs_identical"].append(key)
+                    elif key in self.MERGE_PRESERVED_DOCS:
+                        report["docs_preserved"].append(key)
+                    else:
+                        report["conflicts"] += 1
+                report["store_as_of"] = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
+                if report["conflicts"]:
+                    raise SeedMergeError("Seed conflicts with stored content; nothing was written.", report)
+                if expect_added is not None and report["to_insert"] != expect_added:
+                    raise SeedMergeError("Cases to add differ from the expected count; nothing was written.", report)
+                report["total_after"] = report["existing_cases"] + report["to_insert"]
+                if apply and (new_cases or report["docs_inserted"]):
+                    new = self._db_seq() + 1
+                    for start in range(0, len(new_cases), self.MERGE_BATCH):
+                        self.db.executemany(
+                            f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,?,{','.join('?' * len(CASE_COLS))})",
+                            [(r[0], new) + r[1:] for r in map(self._row, new_cases[start:start + self.MERGE_BATCH])])
+                    for key in report["docs_inserted"]:
+                        self._meta_set(key, json.dumps(src[key]))
+                    self._refresh_queue_membership(None)
+                    detail = (f"cases_added={len(new_cases)}; docs_added={','.join(report['docs_inserted']) or 'none'}; "
+                              f"seed_sha256={hashlib.sha256(raw).hexdigest()}")
+                    self._append_audit([(actor, "seed_merge", "-", detail, datetime.now().isoformat(timespec="seconds"))])
+                    self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
+                    self.db.execute("COMMIT")
+                    report.update(applied=True, audit_appended=True)
+                else:
+                    self.db.execute("ROLLBACK")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
+        return report
 
     @staticmethod
     def _row(c):

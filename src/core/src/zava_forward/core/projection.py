@@ -65,6 +65,9 @@ def allowed(user, kind, method="GET"):
     """Default deny: contractors get a short list, staff roles the staff list, unknown roles nothing."""
     if is_contractor(user):
         return kind in (CONTRACTOR_GET if method == "GET" else CONTRACTOR_POST)
+    if user.get("role") == "Application Administrator":
+        # Option visibility only: no case, resident, finance or export data, and no action.
+        return method == "GET" and kind == "me"
     return user.get("role") in STAFF_ROLES and (kind in STAFF_GET if method == "GET" else True)
 
 
@@ -192,4 +195,6 @@ def redact_staff_detail(user, d):
 def me_payload(user, counts, staff):
     if is_contractor(user):
         return dict(user=dict(name=user["name"], role=user["role"], contractor=user.get("contractor")), counts={}, staff=[])
+    if user.get("role") == "Application Administrator":
+        return dict(user=user, counts={}, staff=[])
     return dict(user=user, counts=counts, staff=staff)
