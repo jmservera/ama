@@ -7697,3 +7697,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Merged main `ea5577b2` into the #440 branch without rewriting history and appended a dated reconciliation note to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#reconciliation-with-later-main-2026-10-25-440).
 * The first checkpoint is kept as historical evidence for main `140d8f49`; native discovery is recorded as attested only, the failed 17383 ms receipt remains a repository record with unknown root cause and an unwaived threshold, and no acceptance, Conformant outcome, publication or cloud approval is claimed.
 * Earlier log entries, the original case study and memory are unchanged.
+## 2026-10-25: obsolete synthetic proof case removed from the live demo database
+
+* Removed the single obsolete synthetic proof case from the deployed `retrofit` database at the owner's request (issue 360): 981 to 980 cases, 444 to 443 open, one appended audit entry, no seed case or earlier audit row changed. The API cache needs a revision restart after an external delete.
+* Recorded the route, guards and limits in the [infrastructure runbook](../../infra/README.md) and the dated `remove-synthetic-example-360` RPI artifacts. No source, image, deploy or configuration change.
