@@ -103,6 +103,11 @@ module = ["zava_forward.core.bulk_edits", "zava_forward.core.change_provenance",
           "test_grant_lifecycle_controls", "tests.test_grant_lifecycle_controls"]
 disallow_untyped_calls = false
 
+# Typed seed-merge CLI and tests call the existing untyped SQL store.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.seed_merge", "test_seed_merge", "tests.test_seed_merge"]
+disallow_untyped_calls = false
+
 [[tool.mypy.overrides]]
 module = ["test_progress_event_capture", "tests.test_progress_event_capture"]
 disallow_untyped_calls = false

@@ -772,6 +772,42 @@ class MssqlLedgerMigration(unittest.TestCase):
         self.assertEqual(self.table_kind(store.db, "audit"), "APPEND_ONLY_LEDGER_TABLE")
         self.assertEqual(len(store.cases), 12)
 
+    def merge_roundtrip(self, ledger):
+        import copy
+        self.create_database(ledger)
+        store = self.open_store()
+        store.audit("seed", "proof", "-", "existing")
+        store.save()
+        data = json.loads(self.seed.read_text())
+        data["cases"] += [dict(copy.deepcopy(data["cases"][0]), id=f"ZF-SEED-{n}") for n in range(3)]
+        merge = Path(self.tmp.name) / "merge.json"
+        merge.write_text(json.dumps(data))
+        before = (store.db.execute("SELECT id, body, seq FROM cases ORDER BY id").fetchall(),
+                  store.db.execute("SELECT seq, prev, hash FROM audit ORDER BY seq").fetchall())
+        self.assertEqual(store.merge_seed(merge)["to_insert"], 3)
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 12)
+        with patch.object(SqlStore, "_append_audit", side_effect=RuntimeError("injected")):
+            with self.assertRaises(RuntimeError):
+                store.merge_seed(merge, apply=True)
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 12)
+        self.assertTrue(store.merge_seed(merge, apply=True, expect_added=3)["applied"])
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0], 15)
+        after = store.db.execute("SELECT seq, prev, hash FROM audit ORDER BY seq").fetchall()
+        self.assertEqual([tuple(r) for r in after[:len(before[1])]], [tuple(r) for r in before[1]])
+        self.assertEqual(len(after), len(before[1]) + 1)
+        now = [tuple(r) for r in store.db.execute("SELECT id, body, seq FROM cases ORDER BY id").fetchall()]
+        for row in before[0]:
+            self.assertIn(tuple(row), now)
+        self.assertFalse(store.merge_seed(merge, apply=True, expect_added=0)["applied"])
+        self.assertEqual(store.db.execute("SELECT COUNT(*) FROM audit").fetchone()[0], len(after))
+        self.assertTrue(store.verify_audit())
+
+    def test_seed_merge_on_ledger_database(self):
+        self.merge_roundtrip(True)
+
+    def test_seed_merge_on_plain_database(self):
+        self.merge_roundtrip(False)
+
 
 class MssqlLedgerMigrationGuard(unittest.TestCase):
     def test_remote_server_is_refused_before_any_connection_or_cleanup(self):
