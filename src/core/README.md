@@ -3166,3 +3166,26 @@ service, and it is not an approval of the resident design in PR 442.
 
 The boundary's assets, trust boundaries, threats, controls, evidence and residual risks are
 stated in the [preview threat model](../api/README.md#threat-model-for-the-synthetic-preview-444).
+
+## Synthetic resident showcase boundary (#462)
+
+`zava_forward.core.resident_showcase` is the pure domain for the fake-email resident showcase and
+`resident_showcase_sql` is its read-only adapter. They do not use `resident_preview.safe_start`,
+`resolve_grant`, `resident_view`, `open_store` or `Grant`, so the #444 loopback fixture guard is
+unchanged. Only its read-only plain-language constants are reused.
+
+* `canonical_email`: trim spaces, lower-case, ASCII only, `example.com` only, at most 64 local chars.
+* `exclusion` and `build_identity_map` admit a row only with non-blank provenance, not revoked, in
+  its window, a canonical `example.com` email and exactly one case with that email across all cases.
+  At most 25 mappings; more fails the whole map closed. Excluded rows are counted, never listed.
+* `authorise` re-checks one freshly read row for the case in the session.
+* `PasswordVerifier` and `make_verifier` use scrypt. `verify_login` does one scrypt run for every
+  attempt. `SessionCodec` issues signed, expiring, process-bound session and CSRF tokens.
+  `LoginLimiter` is a bounded sliding window.
+* `showcase_view` is a positive allowlist built field by field. `config_from_env` fails closed.
+* `ShowcaseReader` runs two fixed SELECTs on `[resident_showcase].[v_resident_case]` and nothing else.
+
+Tests: `src/core/tests/test_resident_showcase.py` (no SQL) and `test_resident_showcase_sql.py`
+(loopback SQL Server only). The live synthetic provenance of the homes database is not established:
+cases have no per-case synthetic flag, so the allowlist table, filled only after named approval,
+is the provenance record. See the [API section](../api/README.md#synthetic-resident-showcase-462).

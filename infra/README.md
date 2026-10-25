@@ -3131,3 +3131,19 @@ Open items (not verified here):
 * Evidence for private-network claims must come from a production-profile deployment (uksouth, Azure only). This change was validated by `az bicep build`, lint and static tests only; no deployment ran. Record the deployment evidence before any claim.
 * Confirm Front Door Premium Private Link support for Container Apps environments in uksouth and its current pricing at deployment time.
 * Custom domain name and DNS ownership, and the pilot edge go/no-go, are owner decisions (ADR 0002 open: pilot network design).
+
+## Synthetic resident showcase SQL boundary (issue 462)
+
+[`sql/resident-showcase.sql`](sql/resident-showcase.sql) is the database side of the synthetic
+resident showcase: schema `resident_showcase` (owned by `dbo`), an empty `allowed_case` table whose
+window cannot end after 2026-10-26T12:00Z, the view `v_resident_case` and the grants for one dedicated
+read-only principal. The principal gets SELECT on the view only, no role membership, and explicit
+DENY on `dbo.cases` and on writes, DDL and execute in the schema. SELECT is deliberately not denied at
+schema scope because that would override the view grant.
+[`scripts/resident_showcase_sql.py PRINCIPAL`](scripts/resident_showcase_sql.py) renders it as a dry
+run. `--apply SERVER DATABASE` (and `--create-principal CLIENT_ID`) are for an approved private job
+only; nothing here has been applied to Azure, no allowlist row is inserted, and no role, network or
+Key Vault grant is made. The approved design names the existing vault `kv-cutovertest-rzsrg`, which
+is not a retrieval path: no role or private network route exists for it yet. The cloud deployment
+stays blocked on budget headroom proof and the human approvals recorded in the issue 462 tracking
+files.

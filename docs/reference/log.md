@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-24
+ms.date: 2026-10-25
 ms.topic: reference
 ---
 
@@ -7142,3 +7142,9 @@ metadata when the knowledge base was created.
 * Added an index row for the loopback-only, read-only synthetic resident preview: separate `zava_forward.api.resident_preview` server, `zava_forward.core.resident_preview` boundary and a disposable invented fixture builder. See the src/api and src/core READMEs.
 * Reuses the existing case and domain store behind a resident-owned positive-allowlist view and a default-deny server-side grant. PR 442 was read as unsigned input only. No staff server, auth, projection or store file changed.
 * Not resident enrolment, not a live service, no real data. Live Azure/SQL/real-AI acceptance stays a separate later gate; #444 criteria stay open until proven on the final head.
+
+## [2026-10-25] update | Synthetic resident showcase local slice documented (#462)
+
+* Documented the local, unpublished implementation of the fake-email synthetic resident showcase: pure domain and read-only SQL adapter in [core](../../src/core/README.md#synthetic-resident-showcase-boundary-462), server, image and checks in the [API README](../../src/api/README.md#synthetic-resident-showcase-462) and the SQL view and read-only principal in the [infra README](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462).
+* Separate from the #444 loopback preview, whose guard is unchanged. No real password, secret, Azure or live SQL access was used. Cloud deployment, budget headroom, live email equality, the private SQL job and Key Vault retrieval stay blocked. Not resident identity, not enrolment.
+

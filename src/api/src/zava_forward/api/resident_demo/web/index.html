@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Your home improvement progress - synthetic showcase, not live</title>
+<link rel="stylesheet" href="/demo.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the main content</a>
+<div class="synthetic" role="note">
+  <strong>Synthetic showcase - not a live resident service.</strong>
+  Everything here is invented test information. The sign-in is a shared demonstration sign-in, not proof of who you are. Do not use it to make any decision.
+</div>
+<header class="top">
+  <span class="logo" aria-hidden="true">Z</span>
+  <p class="brand">Zava North Homes <small>Home improvement progress</small></p>
+</header>
+<main id="main" tabindex="-1">
+  <h1>Your home improvement progress</h1>
+  <p class="lede">This page only shows information. You cannot change anything here.</p>
+  <div id="status" class="status" role="status" aria-live="polite">Loading&hellip;</div>
+  <section id="signin" class="card" aria-labelledby="signin-title" hidden>
+    <h2 id="signin-title">Sign in to the showcase</h2>
+    <p>Use the example email address you were given and the shared demonstration password.</p>
+    <form id="signin-form" method="post" action="/demo/login" novalidate>
+      <div id="signin-error" class="inline-error" role="alert" tabindex="-1" hidden></div>
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" inputmode="email" autocomplete="username" spellcheck="false" autocapitalize="none" translate="no" maxlength="254" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" spellcheck="false" maxlength="256" required>
+      <p class="hint">Paste is allowed. Nothing you type is stored on this page.</p>
+      <div class="actions"><button type="submit" id="signin-button">Sign in</button></div>
+    </form>
+  </section>
+  <div id="error" class="error" role="alert" hidden>
+    <h2 id="error-title" tabindex="-1">We cannot show this page</h2>
+    <p id="error-text"></p>
+    <p>You do not need this page. A person can help. Speak to your housing officer or visit your local office.</p>
+    <button type="button" id="retry">Try again</button>
+  </div>
+  <div id="content" hidden></div>
+  <div id="signout-row" class="actions" hidden><button type="button" id="signout" class="secondary">Sign out</button></div>
+  <noscript><p>This page needs JavaScript to sign in and show your progress. A person can help: speak to your housing officer or visit your local office.</p></noscript>
+</main>
+<footer class="foot">
+  <p>Synthetic showcase for owner feedback only. Not enrolment, not real resident identity, not a live service.</p>
+</footer>
+<script src="/demo.js"></script>
+</body>
+</html>

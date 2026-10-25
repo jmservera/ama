@@ -1,0 +1,15 @@
+# Build context is src/ (docker build -f src/api/Dockerfile.resident-demo src). Allow only what the image copies.
+*
+!build-requirements.txt
+!core/pyproject.toml
+!core/src
+!agents/pyproject.toml
+!agents/src
+!orchestrator/pyproject.toml
+!orchestrator/src
+!api/requirements.txt
+!api/pyproject.toml
+!api/src
+**/__pycache__
+**/*.pyc
+**/data
