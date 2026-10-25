@@ -7335,3 +7335,11 @@ metadata when the knowledge base was created.
   Existing unrelated work and earlier log entries are preserved. Publication
   gates and independent exact-head assessment remain unperformed; no commit,
   push, study execution or arXiv bundle refresh is claimed.
+* The [repository-context build record](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-build-record)
+  records the inspected 44-page PDF, 107 matching references and final
+  same/next-page placement for all twelve tables. Replaced `main.pdf` under
+  the existing owner permission; the requested affiliation/no-email author
+  block remains. Earlier build records are historical, not current evidence.
+  Concurrent shared-branch activity included the source changes in commits;
+  this editing session did not commit, merge or push. The final build record
+  and inspected PDF remain local, without a completed publication gate.

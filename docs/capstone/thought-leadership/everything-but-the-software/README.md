@@ -1,12 +1,133 @@
 ---
-title: Everything but the Software - arXiv source package (draft v4)
-description: Critique-revised exploratory case, candidate mechanisms and preserved registration-pending experiment protocol
-ms.date: 2026-10-25
+title: Everything but the Software - source package (draft v5)
+description: Developmentally revised case, bounded candidate explanations and prospective exploratory consolidation protocol
+ms.date: 2026-10-26
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
-## Current status
+## Current Status
+
+The software-evolution prose restoration below is the latest source record.
+The owner's preferred subtitle and prospective decay-measurement proposal
+remain in place: decay is the hypothesis motivated by a small observational
+base, not an established case result. No experiment results are added. The
+private tagged study kit was not inspected, amended or executed.
+
+The latest external validation build is 44 pages, under
+`/tmp/ama-paper-prose-og72In/`. Earlier builds below are historical.
+The workspace PDF regenerated during source editing; preservation of its
+initial bytes cannot be claimed. It was not restored over the modified copy.
+The arXiv bundle is not refreshed.
+
+## Software Evolution Prose Restoration 26 October
+
+At the owner's request, the opening paragraph of "Software that only grows"
+is restored verbatim, including its historical narrative and cited estimates.
+A separate short paragraph retains the limits of the evidence and the
+distinction between motivating decay as a hypothesis and demonstrating it.
+The source checker passes with 107 matching references; the external build
+has no TeX warnings and the restored passage was visually checked on page 3.
+This is not new original-source verification of the statistics, which remains
+pending under the manuscript's existing disclosure.
+
+## Subtitle and Decay Measurement Follow-up 26 October
+
+The owner requested restoration of *Feature-Driven Decay* and notes designing
+the exercise to measure that hypothesis. The manuscript now includes a
+proposed measurement amendment, not a claim about the private runner:
+
+* Freeze a contract panel and eligibility map. Track previously passing,
+   unchanged behaviour after each feature and again after consolidation/review.
+* Record open losses, exposure-normalised density, onset, recurrence,
+   recovery and duration. Distinguish never-implemented behaviour, same-cycle
+   post-feature damage, rejected/reset attempts and missing measurements.
+* Interpret loss counts with their risk sets and full functional coverage;
+   incomplete implementations must not look healthy because they have fewer
+   contracts to lose. Runs remain the independent analysis units.
+* Compare structural trajectories with stage-matched cumulative references
+   to distinguish required feature complexity from excess deterioration. The
+   reference-gap analysis supplements rather than silently replaces H3.
+* Separate final changeability from changeability decline over time. An
+   optional repeated core-contract change on disposable early/late snapshots
+   needs an additional probe, sessions, budget and prospective approval; it
+   is not part of the existing 212-session first pass.
+* State rival and disconfirming patterns, including stable retention,
+   reference-matched growth, acquisition-only benefits and unstable oracles.
+   The existing arms do not identify feature accumulation against a randomised
+   no-feature control.
+
+H1-H7 numerical criteria, existing arms, budgets and sample sizes are unchanged.
+The H2 count interpretation and new measurement definitions require a versioned
+reconciliation with the private kit before fresh runs. No existing tag or
+earlier-run label is rewritten, and no new empirical observation is asserted.
+
+The structural checker passes with 107 matching citation keys, results disabled
+and a 1,848-character source abstract. Shell-escape-disabled compilation has
+no warnings, unresolved references or underfull/overfull boxes. The restored
+title, measurement pages 25-26 and updated pre-run table were visually inspected.
+An editor diagnostic still requested a cross-reference rerun from its separate
+build state; that is distinct from the clean external validation log.
+
+The workspace PDF hash changed from
+`15eaff90df23a95ff528fe23d923ebcc40e20bbf79c5e8b49955fa982ac3c6d7`
+at intake to
+`2df76caf48edf2e1e866e11fa115e310c78d9eb65bad06990fbc37d61774160f`
+during editing. The pre-explicit-build backup has the latter hash, so it is
+not a byte-preserved intake copy. No PDF was reverted. Existing staged work
+remains staged; no commit, push, registration or publication is performed.
+
+## Developmental Revision 26 October
+
+The owner authorised the recommended manuscript revisions on the existing
+branch while preserving other uncommitted work. The revision:
+
+* Replaces the causal decay subtitle with delivery-usability divergence and
+   consistently qualifies the unmatched score/release/capability comparison.
+* Shortens background and repeated practitioner discussion, moves selected
+   external repository observations to an appendix and places case validity
+   beside the five candidate mechanisms. The full rival register remains in
+   an appendix; practices sit in the discussion.
+* Names H1 as final functional coverage, distinguishing acquisition, retention
+   and repair. H5's wording describes bounded overhead and late-feature savings,
+   not monetary payback. Endpoints, thresholds, arms, sample and budgets are
+   unchanged.
+* Adds the intended procedural sequence and an unresolved pre-run decision
+   table covering evaluator feedback, failed-feature continuation, outages,
+   analysis, H4/H7, resource caps and human-help telemetry. These are not
+   verified runner behaviour or newly approved scientific choices.
+* Normalises Figure 1's lower panel to daily hedge matches per 1,000 words.
+   Zero-word days have undefined density, not a fabricated zero rate. Figure 2
+   uses dashed hypothetical links, marks context effects unmeasured and
+   distinguishes proposed human checkpoints from the consolidation experiment.
+* Shortens the human-learning research agenda and AI-assistance disclosure
+   while retaining human responsibility and verification limits. Earlier
+   revision histories and source-access limits below are preserved.
+
+The body is about 14,500 words, down from approximately 17,454, using the
+existing checker: introduction through conclusion, including tables but
+excluding abstract, references and appendices. Case methods begin on page 5
+of the external build rather than page 8 of the prior build. The 107 cited,
+embedded and reusable bibliography keys still match. All seven existing
+tooling tests pass. Final shell-escape-disabled compilation has no warnings,
+unresolved references or underfull/overfull boxes. Whole-document contact
+sheets and full-size changed figures, title, hypothesis and pre-run pages
+were inspected. Visual and structural checks do not establish accessibility
+conformance or scientific acceptance.
+
+The preserved workspace PDF's SHA-256 is
+`2e97f6eeea3ef2aa30817fd953fa888bd22ddfa75b3a86d50aa4a22c4f481cdc`,
+unchanged between the preservation check and build validation. Existing
+staged README/log changes remain staged; this revision does not stage,
+commit, push or submit anything. Full RPI publication gates and independent
+exact-head assessment have not run.
+
+The release-linked case evidence package, original-source checks, actual
+private-kit provenance and information boundaries, pre-run statistical
+decisions, registration and publication permissions remain unresolved.
+No source capture, independent corroboration or approval is fabricated.
+
+## Historical Status Before 26 October
 
 The repository-context revision below is the latest source record. It adds
 bounded observations from Aithena, Squad and PhotoCraft without changing the
@@ -99,6 +220,44 @@ capacity remain alternative explanations.
 Three source references are added to both bibliographies. Hypothesis
 Generation assistance is disclosed under the existing Scientific Agent
 Skills citation; it is not independent empirical verification.
+
+### Repository-Context Build Record
+
+The inspected external build is `/tmp/ama-paper-repository-context-5wfzbv/`.
+It has 44 pages and 107 matching cited/embedded/BibTeX references, with
+results still disabled and the source abstract unchanged at 1,676 characters.
+The seven existing tooling tests pass. Final shell-escape-disabled
+pdfLaTeX passes have no warnings, unresolved references or underfull/overfull
+boxes. A breakable ancillary-file locator resolves the initial text overflow.
+
+Whole-document contact sheets and full-size new/contextual, discussion,
+data-availability and table pages were inspected. Two selective barriers and
+a nearby reference to the additional-rivals table preserve table proximity
+after the added text. The final auxiliary labels and extracted references give:
+
+| Table | First discussion | Table page |
+| --- | --- | --- |
+| 1: Evidence audit trail | 10 | 11 |
+| 2: Timeline | 11 | 12 |
+| 3: Period metrics | 11 | 12 |
+| 4: Churn | 13 | 13 |
+| 5: Within-case contrasts | 14 | 14 |
+| 6: Mechanisms summary | 16 | 16 |
+| 7: Working theory | 16 | 16 |
+| 8: Protocol summary | 22 | 22 |
+| 9: Hypotheses | 23 | 23 |
+| 10: Recorded rivals | 30 | 31 |
+| 11: Additional rivals | 32 | 32 |
+| 12: Appendix practices | 41 | 41 |
+
+This build replaces `main.pdf` under the existing owner permission; earlier
+build maps below are historical. The title page retains the requested role
+and affiliation without an email address. The arXiv bundle is not refreshed.
+This session did not modify unrelated work or run the full clean-candidate
+publication gate and independent exact-head assessment. Concurrent shared-branch
+activity included the source changes in commits; this editing session did not
+commit, merge or push. The final build record and PDF remain local changes.
+This build does not establish publication approval or external submission.
 
 ## Table Flow and Developmental Revision 25 October
 
