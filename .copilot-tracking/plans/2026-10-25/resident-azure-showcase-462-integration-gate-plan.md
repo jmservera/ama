@@ -40,3 +40,23 @@ acceptance. No source edits, push, PR or Azure write. Coordinator source assessm
 G1 budget, G2 synthetic provenance, G3 SQL view and principal, G4 private write path. Cost totals
 25.4677 and MTD 303.711 were recomputed; projections are not verified headroom. No real password or
 verifier accessed.
+
+## Outcome (appended 2026-10-25T23:02Z; the gate failed)
+
+* First attempt (`GATEPID` 1377628) was BLOCKED immediately: "Candidate has ignored inputs". This
+  checkout holds ignored caches and editable-install egg-info used by `/home/azureuser/.venvs/ama462`;
+  nothing was deleted. The gate was rerun from a clean detached worktree
+  `/tmp/ama-462-candidate-581ebda0` at the same commit.
+* Second attempt: actual gate PID 1377819, head `581ebda0142551706cfe359581d427f961228460`, base
+  `c8d16059c0c0a22c4ffba88c6b65ac068f64accc`, output `/tmp/ama-462-local-final-gate1`, log
+  `/tmp/ama-462-gate1b.log`. It ended `BLOCKED: project-core failed (1)` at 23:00Z; failed receipt
+  `receipt.json` retained, status `failed`, owner `d7f386da5fb974b32e0be065`. The API Docker controls step
+  passed before the failure was reported; no other step is claimed.
+* Cause (`0012-project-core.log`): 1341 tests, 1 error, 167 skipped.
+  `src/core/tests/test_resident_showcase_sql.py:18` imports `mssql_python` at module level without a skip,
+  and the runner's core venv does not install it. The core suite therefore fails at import. This is a
+  defect in the committed test from the local slice (b7bcf019), missed because the earlier
+  development venv had the package. It is not fixed here: no source edit is authorised mid-gate or in
+  this turn, and a fix needs a new commit and a full gate rerun.
+* Not verified: `--verify-receipt` was not run (failed receipt). No pass is claimed.
+* Retained, not deleted: the output directory, venvs, logs and the clean candidate worktree.
