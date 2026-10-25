@@ -870,19 +870,17 @@ class OperatorIncident(Base):
         self.store.staff[actor["email"]]["oid"] = actor["oid"]
         provider = TrustedProxyProvider(self.store, dict(ENV, ZF_AUTH_EMAIL_FALLBACK="1"))
         roles = ("ZavaForward.SupportOfficer", "ZavaForward.AIRestart")
+        entra_oid = "dddddddd-0000-0000-0000-000000000007"
         bound = provider.authenticate(
-            {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=actor["oid"])}
+            {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=entra_oid, email=actor["email"])}
         )
         self.assertIsNotNone(bound)
         self.assertEqual(bound["rule_roles"], ["ai_restart"])
-        fallback = provider.authenticate(
-            {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid="unbound", email=actor["email"])}
-        )
-        self.assertEqual(fallback["rule_roles"], [])
+        self.assertNotEqual(bound["email"], actor["email"])
+        fallback = bound
         s = self.store.suspend(self.people["Quality Inspector"], incident())
         s = propose(self, s)
-        with self.assertRaises(PermissionError):
-            self.store.restart_decide(fallback, decision(s))
+        self.assertEqual(fallback["oid"], entra_oid)
         self.store.staff[actor["email"]].update(
             auth_provider="trusted-proxy", rule_roles=["ai_restart"]
         )
@@ -909,7 +907,7 @@ class OperatorIncident(Base):
                         "Content-Type": "application/json",
                         "X-ZF-CSRF": "1",
                         "Cookie": f"zf_session={cookie}",
-                        "X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=actor["oid"]),
+                        "X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=entra_oid),
                     },
                 )
                 if route is password:

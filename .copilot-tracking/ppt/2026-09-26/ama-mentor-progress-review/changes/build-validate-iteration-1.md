@@ -19,4 +19,4 @@
 
 ## Storytelling Review
 
-* Delegated to the Presentation Communications Strategist agent. Output: `research/subagents/storytelling-review.md`.
+* Delegated to the AMA Presentation Communications Strategist agent. Output: `research/subagents/storytelling-review.md`.

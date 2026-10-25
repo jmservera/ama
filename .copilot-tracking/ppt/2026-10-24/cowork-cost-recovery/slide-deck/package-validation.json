@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "slides": 54,
+  "notes": 54,
+  "last_slide_viewed": 27,
+  "unchanged_other_parts": true,
+  "changed_parts": [
+    "ppt/slides/slide6.xml",
+    "ppt/slides/slide11.xml",
+    "ppt/slides/slide21.xml",
+    "ppt/slides/slide32.xml",
+    "ppt/slides/slide36.xml",
+    "ppt/slides/slide52.xml",
+    "ppt/notesSlides/notesSlide6.xml",
+    "ppt/notesSlides/notesSlide11.xml",
+    "ppt/notesSlides/notesSlide21.xml",
+    "ppt/notesSlides/notesSlide32.xml",
+    "ppt/notesSlides/notesSlide36.xml",
+    "ppt/notesSlides/notesSlide52.xml"
+  ],
+  "candidate_sha256": "39659A3AD9974F802A8418177A9CA0CA8DAF7478E71CD82D04CD7677D9AD2CC0"
+}

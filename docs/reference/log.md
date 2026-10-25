@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-22
+ms.date: 2026-10-24
 ms.topic: reference
 ---
 
@@ -317,7 +317,7 @@ metadata when the knowledge base was created.
   RULE-024, the CON-003 citation fix, AC-079, FR-042 to FR-044, OD-39 and the
   OD-34 proposal. BRD counts were updated to 12 BG, 44 FR, 85 AC, 9 NFR,
   6 CON and 24 RULE, and to six quality runs.
-* The Presentation Communications Strategist reviewed the changes. It found
+* The AMA Presentation Communications Strategist reviewed the changes. It found
   one error: the local UK GDPR text omits Article 22 and holds Articles 22A to
   22D, while CON-003 cites 22A to 22C. The error and its other recommendations
   were applied. At the owner's request, the knowledge-organisation slide moved
@@ -455,7 +455,7 @@ metadata when the knowledge base was created.
   counts: 39 non-merge commits from 10 to 27 Sep and 13 BRD commits. The
   slide 12 notes add the lesson to search every derived document when
   fixing an error. The deck has 14 main slides plus an appendix.
-* Review: the Presentation Communications Strategist made eleven findings,
+* Review: the AMA Presentation Communications Strategist made eleven findings,
   and all were accepted after checking. Main notes went from 2,158 to 1,921
   words. The review found a contradiction in the iteration-3 deck: the
   slide 3 card said twelve BRD revisions while the notes and slide 6 said
@@ -517,7 +517,7 @@ metadata when the knowledge base was created.
   controls as examples and qualify Awaab's Law awareness: a hazard photo
   can establish it no later than its arrival. Slides 3 and 15 now say 41
   non-merge commits from 10 to 27 Sep, and slide 15 says three merged PRs.
-* Review: the Presentation Communications Strategist made five findings.
+* Review: the AMA Presentation Communications Strategist made five findings.
   All were accepted, one with changed wording. The review caught the
   draft notes saying all eleven no-agent answers were re-run, which undid
   an iteration 4 fix, and "no verdict changed", which overstated the
@@ -2241,7 +2241,7 @@ metadata when the knowledge base was created.
 
   ## [2026-10-14] query | Capstone narrative refresh and native PowerPoint process map
 
-  * Owner requested the Presentation Communications Strategist and PowerPoint
+  * Owner requested the AMA Presentation Communications Strategist and PowerPoint
     Builder. Rebuilt all 22 executive slides with current bounded technical
     evidence, customer-first decisions, source-linked notes and planned timing.
     Five real operator-service paths/SQL-content/restart proof remain distinct
@@ -6701,3 +6701,410 @@ metadata when the knowledge base was created.
 
 * Corrected the existing addendum subsection and index row. The earlier entry and index wording that called the 535.33 forecast "with no change" and S0 the current baseline are superseded: that figure is a pre-change scenario read about 14:00Z, before an owner-authorized deletion of the cutover-test Front Door Premium profile and its policy and a scale-down of the cutover-test demo API app to zero replicas (verified by read-only inventory, 91 resources at about 14:53Z).
 * No saving or zero residual charge is stated; cost data had not caught up (observed 242.36 unchanged). A refreshed post-change forecast with a fresh inventory and complete post-change days is required before any tranche. Outside-group spend stays unknown; paid execution stays blocked; the 700 ceiling and expiry are unchanged. Earlier entries retained.
+
+## [2026-10-23] add | Executive-first capstone Cowork authoring package
+
+* Added `docs/capstone/pitch/cowork-main-presentation/`: 18 main-slide
+  content contracts with full notes, 27 CXO question-led backups, a separate
+  ten-minute demo with live/evidence/recovery routes, audience guidance and
+  a complete Cowork brief. The requested 30-minute presentation allocates
+  24 minutes to narration and six to interruptions, not an observed rehearsal.
+* Added seven editable 1600x900 Excalidraw views with embedded official Azure
+  icons, SVG/PNG previews, text alternatives and a standard-library generator.
+  Views progress from the business idea to AI placement, runtime, controlled
+  proposals, operations, target sensors and Tokenomics. Current contracts,
+  historical observations, configured paths and deferred work remain distinct.
+* Incorporated merged Tokenomics PR #433, partial metering, historical
+  6,884-token/five-run evidence, proposed economics/control requirements and
+  unknown accepted-outcome cost. Preserved the owner-set October USD 700
+  ceiling, unchanged expiry and blocked post-change execution gates; no
+  production price, model benefit or cash saving is invented.
+* Checked memory/log, historical issue-generation evidence and private AMA
+  Plan project 7 after owner authentication. The historical approximate
+  180 means issues, including epics and stories, not agents or stories alone.
+  The dated current board has 189 items; its bundled image is labelled
+  API-derived, not a GitHub website screenshot or accepted delivery.
+* Updated capstone and reference routing. Existing executive/mentor decks,
+  original case study and owner memory remain unchanged. Final PowerPoint
+  authoring, native-viewer checks, human acceptance, actual rehearsal and
+  fresh live-demo preflight remain outstanding.
+
+## [2026-10-23] ingest | Index retrofit, damp and mould statistics report
+
+* Added the supplied [Retrofit, Damp and Mould Statistics Report](./research/sector/uk-social-housing-retrofit-damp-stats-report.md)
+  to the [reference index](./README.md), in benchmark task routing and the
+  research syntheses catalog.
+* Retained the report's national-versus-company distinction, differing
+  statistical bases, separate Scottish case counts and unconfirmed pricing
+  caveats in the index summary and routing.
+* Left the supplied report unchanged. Indexing does not independently verify
+  its figures, citations or regulatory currentness.
+
+## [2026-10-23] ingest | Cowork outputs and owner-selected v2 scoring candidate
+
+* Imported nine generated outputs under
+  [Cowork presentation outputs](../capstone/deck/cowork-generated/README.md):
+  both handoffs, the protected source PPTX, v1/v2 PDFs, contact sheets and
+  preview archives. Compared every imported file with its source; the existing
+  statistics report is identical and remains canonical rather than duplicated.
+  Added frontmatter and normalized v2 handoff Markdown formatting only.
+* The owner selected v2 for capstone scoring and explicitly confirmed public
+  repository clearance despite the Microsoft Confidential marking. Historical
+  v1 exports and the old executive deck remain separate from current selection.
+* The source PPTX is an encrypted CDFV2 container and cannot be read by the
+  scorer. The owner chose to supply an approved unencrypted v2 export rather
+  than substitute PDF text. Cowork's save-retry report, saved-v2 parity and
+  speaker-note verification remain unresolved; no deck extraction is claimed.
+* Changed the proposed registry to select only the future readable v2 path
+  and added a 20,000,000-byte deck-only allowance with boundary and selection
+  regressions. Other artifacts retain 2,000,000 bytes. Trusted base tooling
+  must receive these changes before hosted scoring can use them; no workflow
+  dispatch, score update, commit, push or acceptance is inferred.
+* Updated the capstone/reference indexes and rubric guide. Reported Cowork
+  checks remain source claims; desktop, accessibility, rehearsal, full rubric,
+  independent review and publication gates are not promoted to passed.
+
+## [2026-10-23] ingest | Public Cowork v2 scoring deck and extraction verification
+
+* The owner supplied a public, unencrypted PPTX after the protected-source
+  blocker. Imported it as the sole registry-selected
+  [v2 scoring deck](../capstone/deck/zava-forward-cowork-v2-draft.pptx),
+  preserving the original encrypted source and historical v1 exports.
+* The actual scorer extractor reads 54 slides and 54 speaker-note blocks;
+  OOXML archive integrity passes and slide 39 contains the final-save wording
+  recorded in Cowork's handoff. The file is 2,632,502 bytes; its SHA-256 is
+  `ebccfee35890332ca7aebd4f14f80141996747a4086c9ea03fda2dda5b53d860`.
+* Updated current capstone/reference routing and the rubric guide. Original
+  import blockers and Cowork's failed-save report remain as dated history,
+  not current claims that the public export is unreadable.
+* Local extraction does not establish complete source/PDF/notes parity,
+  native rendering, accessibility, rehearsal, accepted forecasts or a rubric
+  score. Trusted-base activation, independent review and publication gates
+  remain separate; no commit, push or paid workflow dispatch is inferred.
+
+## [2026-10-23] lint | Cowork import integrity and focused scorer checks
+
+* Verified the v1/v2 PDFs parse as 46/54 pages and the preview ZIPs contain
+  46/54 images with member integrity passing. The v2 PDF also contains the
+  final slide-39 save marker. The parser ignores one invalid object pointer
+  per PDF; strict PDF structure, visual review and semantic parity are not
+  claimed. All binary imports remain unchanged.
+* The complete prepare suite reports 54 passes and one deleted-file scoring
+  fixture failure (`KeyError: 'total'`). The failure reproduces with the
+  original HEAD prepare implementation. All six new deck-selection and
+  size-boundary cases pass; no unrelated fixture repair is included.
+* New output-index and imported-handoff Markdown checks pass. Existing
+  rubric/index/log diagnostics remain outside this import's scope. The full
+  publication gate, independent assessment and hosted scoring were not run.
+
+## [2026-10-23] query | Main-route IoT and optional resident portal presentation refinement
+
+* Owner requested IoT in the main presentation and optional portal benefit
+  assessment rather than categorical exclusion. Read issue #441 and comment
+  6374724922: Option B reuses case/API authority, portal/workflow first and
+  resident-answer task separately gated. The issue is open with a Research
+  integration blocker and no published PR at retrieval; owner-reported local
+  work is not inspected implementation, approved requirements or delivery.
+* Revised v2 slides 9, 13, 19, 33 and 46 and their notes without changing the
+  54-slide inventory or navigation. The main architecture adds a consistently
+  amber, not-live sensor/simulator -> IoT Hub Basic -> API/SQL -> human-review
+  lane. Retained the independent hazard route and no-diagnosis boundary.
+* Portal copy now assesses fewer avoidable calls and staff interruptions,
+  including total review/handling and resident effort, access and comprehension.
+  Assisted channels remain available without detriment; per-message human
+  review stays normative and routine automation off. No numerical saving,
+  cash/headcount result or resident acceptance is asserted.
+* Updated the authoring brief, original slide contract, source ID E441,
+  generated speaker/backup notes and demo commentary. Original Cowork exports
+  and handoffs remain historical. Added a refinement record, native previews
+  and current PDF; retained the owner-expanded registry without modifying it.
+* Packer structural validation passed. Native PowerPoint opened 54 slides,
+  rendered all five changed slides and saved the PDF. Independent visual QA
+  found a clipped IoT sentence and ambiguous target status styling; local
+  corrections were repacked, re-rendered and inspected. Replaced a touched
+  resident banner that implied completed comprehension testing with a future
+  human-validation gate. This is scoped artifact evidence, not accessibility,
+  rehearsal, full capstone/human/live acceptance or publication clearance.
+* Installed-deck checks verify 54 slides and 54 notes with the original
+  slide-39 marker retained. Canonical XML comparison proves only the five
+  intended slides and their notes changed; package membership, all other
+  parts/media, sections and navigation relationships are unchanged. The
+  native PDF has 54 pages and the new IoT/portal wording. Registry untouched.
+* Final link review found inherited references to unretained source
+  deliverables (v1 exports, v2 preview ZIP and protected source PPTX). Replaced
+  those broken output-index links with explicit source-only status; did not
+  restore or delete archival binaries. Retained original v2 PDF/contact sheet
+  and handoff contents remain unchanged.
+
+## 2026-10-24 - Report-Only Rubric Model Pilot
+
+* Recorded the owner-approved USD 10, one-run-per-model Sonnet 5, Haiku 4.5
+  and GPT-6 Luna pilot in the existing AI Tokenomics reference and index.
+* Retained the frozen commit, runtime/transport differences, complete-accounting
+  usage fields, USD 0.38631076 equivalent total and individual wall times.
+* Sonnet and Luna returned valid cards but differed on four criteria; Haiku
+  omitted summary and failed strict validation. Missing thought leadership
+  forces D1-D3 to zero, not acceptance. No billable retry, model substitution,
+  workflow/score/baseline change or live status publication was performed.
+* Kept Sonnet pinned. Single-run cost reductions do not establish equivalent
+  grading, stable speed, application value or a reconciled financial saving.
+
+## 2026-10-24 - Pinned-Runtime Native Rubric Submission Follow-Up
+
+* Added the owner-approved Haiku 4.5 and GPT-6 Luna native-MCP extension to
+  the existing AI Tokenomics reference and index; preserved original results.
+* Verified pinned runtime hashes and seven actual stdio/HTTP runtime tests.
+  Each model made one tool call and one locally appended, strict-gate-valid
+  card without a rejected-call correction. Haiku scored 64, Luna 56; nine
+  criterion differences and missing thought leadership remain explicit.
+* Recorded Haiku's 303-character A5 rationale as an instruction violation,
+  separate from schema/gate acceptance. CLI/stdio integration is not full
+  hosted workflow equivalence; no native Sonnet control was run.
+* Follow-up usage was USD 0.12076544 equivalent, USD 0.50707620 aggregate
+  across five approved invocations. No production-model switch, live score
+  publication, commit or push; concurrent owner deck/registry edits excluded.
+
+## [2026-10-24] lint | PR 438 review corrections
+
+* Addressed five unresolved review threads and two additional summary findings:
+  exact v2 scoring path with the existing 20 MB allowance, opt-in destructive
+  diagram reset, caller-sensitive backup returns, qualified deployment labels,
+  unavailable/moved assets and unsupported inference pricing.
+* Added six temporary-package rebuild/navigation regressions; the normal
+  real rebuild leaves native Excalidraw and SVG/PNG previews unchanged.
+  Combined with six existing registry/size checks, all 12 focused tests pass.
+* Preserved imported handoffs and existing uncommitted Tokenomics work.
+  Retargeted retained historical deck/process/architecture assets to draft;
+  unavailable original exports remain explicitly source-only.
+* Corrected current v2 slides/notes and native appendix actions, preserving
+  54 slides/notes, existing media and main-route text outside review scope.
+  All 27 native caller actions and navigation-note reminders were verified;
+  separate topic links serve index entry. The native PDF has 54 pages.
+* Removed unvalidated inference-price and cheapest-cost claims in accordance
+  with issue #435; retained historical usage and unknown accepted-outcome cost.
+  Slides 18/19 qualify implemented functionality with current sign-in/Graph
+  acceptance outstanding against the cutover evidence pack. The dated
+  [correction record](../capstone/deck/cowork-generated/review-corrections-2026-10-24.md)
+  supersedes those handoff claims for current use without rewriting history.
+* Native rendering and independent visual inspection exposed topic-button
+  clearance and oversized word callouts; both were corrected and re-rendered.
+  These are scoped artifact checks, not full accessibility, rehearsal,
+  live-system acceptance, a fresh rubric score or publication clearance.
+
+## 2026-10-24 - Owner-Requested Council Cost Calculation Recovery
+
+* Recovered the earlier v2 planning arithmetic in the
+  [cost evidence](../capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24):
+  6,884/5 tokens x tenfold size x 20 tasks x USD 1.60/million gives
+  USD 0.440576/planned home and USD 6,872.9856 for 15,600 homes.
+  The price remains a dated third-party assumption, not verified deployment
+  pricing, a bill or measured accepted-outcome cost.
+* Restored GBP 6,082/home x 15,600 = GBP 94,879,200 works and the conditional
+  50% illustration of GBP 3,041/home, GBP 47,439,600 cohort grant. Preserved
+  separate fictional package costs, unknown full project TCO, currency
+  boundaries and Finance/funder verification before external use.
+* Updated source S09/S11, B05/B09/B25, evidence IDs, generated script and
+  appendix, package guidance and this index. Clarified how reviewed evidence
+  supports eligible applications/claims without guaranteeing eligibility,
+  funding or additional grant income. Preserved earlier review findings and
+  issue #435's unresolved measured-economics gates; no remote issue changed.
+* Exact decimal arithmetic and all six existing rebuild/navigation tests pass;
+  the rebuild checks 18 main slides, 27 backups and unchanged narration time.
+  Native PPTX/PDF are unchanged: rendering tools and an active PowerPoint
+  editing session were unavailable. The handoff maps the six required native
+  slide revisions. No rehearsal, fresh scoring, full publication gate,
+  commit or push was performed.
+
+## 2026-10-24 - Native Council Cost Recovery Build and Export
+
+* Completed the later execution request: updated pages 6, 11, 21, 32, 36 and
+  52 and their notes in the existing owner-selected 54-slide deck. Replaced
+  the current PPTX/PDF only after scoped checks and native rendering passed;
+  saved the original pair in the dated working directory.
+* Restored the labelled USD 0.440576/planned-home and USD 6,872.9856 cohort
+  inference calculation, GBP 6,082/home benchmark and conditional GBP
+  3,041/home grant. Retained separate fictional package arithmetic, unpriced
+  project P, dated secondary pricing and proposed money-control boundaries.
+* Selective OOXML generation changed exactly six slide and six note parts;
+  every other ZIP member remains byte-identical. Verified 54 slides, 54
+  nonempty note parts, a 54-page native PowerPoint PDF and all 27 Last Slide
+  Viewed caller actions through native COM readback. The PowerPoint builder
+  property validator reported zero issues across 54 slides; exact arithmetic
+  and restored PDF text checks passed.
+* Exported 18 changed/adjacent previews and three contact sheets. Corrected
+  chart-label wrapping, grant-tile fit and a formula/ledger collision before
+  delivery. The [build record](../../.copilot-tracking/ppt/2026-10-24/cowork-cost-recovery/changes/build-deck.md)
+  contains paths, methods, hashes and limitations. Updated the source handoff,
+  output index and dated correction record without erasing adverse history.
+* No issue #435 acceptance, primary-price/current funding verification,
+  independent storytelling review, timed rehearsal, accessibility conformance,
+  fresh hosted score or publication clearance is claimed. Existing staged and
+  unstaged work was preserved; no commit, push, live inference or deployment.
+
+## [2026-10-24] query | Preserve cost calculations on future slide builds
+
+* The owner requested that later builds retain or recalculate the recovered
+  AI, per-home retrofit and conditional-grant comparison. Added explicit dated
+  E21 inputs to the source `cost_model` and decimal recalculation to the
+  [existing builder](../capstone/pitch/cowork-main-presentation/build_assets.py).
+* Source builds fail before writing notes when required costs, exact workings
+  or caveats are missing or stale. The native-PPTX check covers all six cost
+  pages. Input changes require corresponding evidence, copy, notes and slide
+  updates; old secondary pricing does not become verified current pricing.
+* Documented the mandatory candidate check and regression command in the
+  [authoring brief](../capstone/pitch/cowork-main-presentation/COWORK-BRIEF.md#required-cost-preservation-on-every-rebuild),
+  package README and this index. Retained separate currencies, conditional
+  grant assumptions, unknown full-project TCO and accepted-outcome cost.
+* All 23 focused tests pass, including removed source sections, stale inputs,
+  missing caveats, altered native slides and rejected XML entity declarations.
+  The delivered PowerPoint passes the guard. No deck/PDF bytes, owner memory,
+  earlier log entries, price evidence or approval status were changed.
+
+## 2026-10-24 - Durable Recovery Sources and Verified Tracking Retention
+
+* Promoted the native recovery builder/manifest and pinned original PPTX into
+  durable tools/authoring locations. Preserved the
+  [original build narrative](../capstone/deck/cowork-generated/native-recovery-build-2026-10-24.md)
+  and exactly 12 assurance/PRD report files byte-for-byte, with siblings,
+  original findings and tracking originals retained. Updated active links,
+  not historical log references or report bodies.
+* Added the [retention policy](./method/tracking-retention-policy.md) and
+  [native recovery guide](../capstone/pitch/cowork-main-presentation/native-recovery/README.md).
+  New heavy outputs default to external scratch; active work and original
+  critique/Review evidence remain. Complete local publication, independent
+  review, hosted and human gates are unchanged.
+* Verified the full external archive: 2,420 files / 600 directories /
+  83,975,587 logical file bytes. Restored all 115 selected files /
+  26,219,104 bytes before pruning. The
+  [manifest](./resources/tracking-retention-manifest.json) contains the exact
+  member/hash restore map; the [promotion receipt](./resources/tracking-retention-promotion.json)
+  records actual removals and accounting. The archive is owner-local, not a
+  public artifact or an indefinite availability guarantee.
+* Pruned only the 113 approved older preview images and two older duplicate
+  PPTX outputs. Actual-removal journal matches all 115 paths. Full archive
+  readback and protected-snapshot comparison pass before and after pruning;
+  all 89 current native-build files, original PDF, mentor YAML, current
+  duplicate deliveries and unknown-active RPI evidence remain byte-identical.
+  Historical selected preview links are archive-backed, not live-local.
+* All 37 archive tests, 24 source tests and six registry cases pass. Two
+  independent promoted Builds and Verify runs preserve exactly the six
+  slide/six note changes, 54 nonempty notes, timing, one shape 70001 and
+  27 caller returns. Both candidates and canonical PPTX have identical ZIP
+  member names/bytes. Missing/wrong baselines fail before output creation;
+  both canonical/candidate cost guards pass. Canonical PPTX/PDF hashes remain
+  unchanged.
+* Actual Windows PowerPoint COM rendered the promoted candidate externally:
+  PDF readback confirms 54 pages and recovered arithmetic, with 18 nonblank
+  1600 x 900 previews. Native readback confirms 27 Last Slide Viewed actions.
+  Offline cached PDF/image libraries supplied readback; system PDF CLI tools
+  were unavailable. One pre-existing missing SVG link in the addendum remains
+  outside scope; no new broken active link or fragment is introduced.
+* Checkout reduction is separate from external archive storage and does not
+  shrink Git history. No independent presentation review, accessibility
+  acceptance, current primary-price verification, Finance approval, complete
+  publication gate, PR-thread change, commit, push or cloud operation was
+  performed. Parent-owned tracking plan/details/changes remain unchanged.
+
+## [2026-10-24] query | PR 438 Handoff Corrections and Independent Retention Review
+
+* Clarified original-route offline authoring versus current-v2 editing.
+  The latter requires the native PPTX/PDF, refinement folder and dated
+  corrections; the 18-slide source inventory cannot reconstruct 54 slides.
+  Added the handoff regression and retained the cost-preservation contract.
+* Reconciled all four build-receipt backlinks to the durable narrative,
+  validation receipt and explicit local-only preview custody. The latest
+  missing-receipt review comment is addressed locally, not yet published.
+* Verified and resolved three older published-fix PR threads: exact deck
+  path/size, qualified native labels and matching registry-test semantics.
+  Other handoff/reset/navigation threads were already resolved externally.
+  Left the latest receipt thread open pending publication; no commit or push.
+* Independent implementation review completed with outcome Conformant and no
+  new material findings. Rechecked 67 tests, exact archive/restore/prune
+  evidence, protected source bytes, native packages and 859 links. Nine
+  inherited link defects remain; none was newly introduced. The original
+  adverse plan critique remains unchanged, with its corrections recorded.
+* Current-task plan/details/changes were intentionally reconciled after the
+  successful post-prune snapshot comparison. No older protected evidence or
+  canonical deck bytes changed. Complete publication, current-price,
+  Finance/funder, accessibility and presentation acceptance gates remain
+  separate. Archive portability requires transferring and verifying its
+  actual bytes, not only retaining the repository manifest.
+
+## [2026-10-24] update | Entra-authoritative staff access, owner decision (#360)
+
+* Recorded the owner's 2026-10-24 decision that verified Entra tenant, object id and explicit application roles determine staff login, with no SQL staff row or database read on the authentication path. Added a dated subsection to ADR 0002 (the ADR stays Proposed overall) with a reciprocal ADR 0001 lineage note, BRD v0.20.0 (CON-008, FR-053, FR-054, AC-104 to AC-109, NFR-003/AC-050 clarified), PRD v0.19.0 (DD-009, FR-062, FR-063, AC-111 to AC-117) and aligned the architecture and infra READMEs and the task-routing index.
+* ApplicationAdmin alone is view-only (shows the manager option set; the server refuses state-changing requests). The 2026-10-13 SQL-binding observations are retained as history and superseded prospectively for sign-in only.
+* Design and source only: not deployed, no role assignment readback and no real-user login observed. Earlier entries retained.
+
+## [2026-10-23] update | Optional resident requirements and unregistered architecture proposal (#441)
+
+* Integrated verified unsigned BRD v0.20.0 and PRD v0.19.0 source amendments
+  after genuine Research, Plan/details and independent plan critique. Source
+  hashes, reconstructed candidates, original FAIL/BLOCKED quality reports and
+  namespace trace remain in portable issue-specific evidence.
+* Prospectively reconciled FR-044/AC-084 and coupled rules for the owner-selected
+  bounded routine communication proposal, separately gated and OFF. Named
+  review remains default and always applies to consequential, sensitive,
+  uncertain, safety, consent, contractual and financial content. No controlled
+  authority is delegated. Proposed role ownership/shared timeline, managed
+  external identity/scoped grants and assisted channels without detriment
+  replace no settled legal/privacy/service gate.
+* Added six synthetic resident scripts and coupled content/design/WCAG/profile,
+  architecture/capstone and addendum routing without changing EXA-004 or
+  historical staff/map denominators. Targets/scenarios remain proposals and
+  author judgement, not measured benefits, production SLA or cash/headcount.
+* Published architecture as an explicitly UNREGISTERED issue-specific working
+  proposal with id null, selected Option B, original matching Excalidraw/SVG/
+  same-model Chrome PNG and accessible text. Owner deferred registration after
+  actual allocator/bootstrap failure: full registration acceptance remains
+  UNMET, no new registry/config/lineage/Govern claim.
+* Original case study, owner memory, numbered ADRs and earlier log entries
+  remain unchanged. OD-52-55, formal/lifecycle and live approval remain open.
+  This documentation-only proposal does not deliver a portal, live sending,
+  real accounts/data, Azure change or paid inference. Independent final-byte
+  Review and publication gate evidence are recorded separately, not implied
+  by this authoring entry. Shared-path overlap with draft #424/#426/#439
+  requires later reconciliation preserving all append entries; no sibling
+  proposal is imported and no false issue dependency is created.
+
+## [2026-10-23] update | Completed unsigned resident PRD and architecture refinement (#441)
+
+* Integrated completed PRD v0.19.1 and the one reconciled architecture working
+  candidate after a new genuine Research, Plan/details and independent critique.
+  Exact immutable input hashes, source-to-integrated editorial/link mappings and
+  prior working bytes are retained as selected portable issue evidence.
+* All existing requirement definitions/IDs and 30 resident Not-run criteria
+  remain unchanged. Twenty local stories, R0-R5 planning, six-journey verification
+  and qualified full FR trace elaborate the proposal, not execute or approve it.
+* Current independent PRD quality remains FAIL / Validate BLOCKED / Finalize
+  NOT_EVALUATED, singular1<2, seven CAUTION/34 COVERED/zero RISK. All seven
+  findings remain current, including bundles, unsigned BRD, feasibility/GOAL-005,
+  OPEN generic/resident latency/file-size precedence, table shape and FR-059
+  trace. Author-complete does not mean Validate/Finalize/Govern or live approval.
+* The existing architecture location evolves as id:null/unregistered/proposed;
+  prior draft/source bytes remain history, not competing decisions or accepted
+  ADR supersession. Registration stays deferred/UNMET. Unchanged 47-element
+  Excalidraw and same-model SVG/Chrome PNG retain text equivalent and truthful
+  non-native-render provenance.
+* Owner-selected Option B, default human review/routine OFF, assisted channels
+  without detriment, scoped grants, OD-52-55/OQ-028-031 and live gates remain.
+  Correction1 validation/navigation and bot/history are retained; A5/B6 generated
+  score citations stay OPEN without manual score edits or paid scoring.
+* Only directly coupled addendum/index/journey notices change; BRD, original
+  case, owner memory, numbered ADRs and earlier log entries remain unchanged.
+  Draft #439 cost/index/log overlap needs later reconciliation preserving both
+  lanes. No application, sending, real account/data, Azure or paid inference
+  is delivered. Native Review/technical gate evidence is separate; this entry
+  does not attest a completed gate or authorize push/PR changes.
+
+## [2026-10-24] restructure | Merge resident and staff-access requirements (#441)
+
+* Merged the unsigned resident-service increment with the owner-directed
+  Entra-authoritative staff-access requirements. Preserved the earlier resident
+  identifiers and assigned staff access the following BRD IDs (FR-063/064,
+  AC-127 to AC-132) and PRD IDs (DD-010, FR-072/073, AC-141 to AC-147).
+* Updated the canonical BRD, PRD and task-routing index. The prior Entra entry
+  above is retained as a record of the pre-merge identifiers; the PRD's 0.19.2
+  history row likewise records those historical IDs and their reassignment.
+  The resolved rubric score metadata is historical and does not assess this
+  merged candidate. No new approval, acceptance or deployment is claimed.

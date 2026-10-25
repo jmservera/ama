@@ -4,7 +4,7 @@ date: 2026-10-14
 scope: "Neighbourhood officer, assisted intake, complaint/redress proxy"
 status: "Evidence-grounded hypotheses; not observed company journeys"
 evidence_cutoff: 2026-10-11
-ms.date: 2026-10-14
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -77,7 +77,10 @@ Motivation: fair hearing, accountable remedy, no disguising service failure as r
 
 ## Future opportunities: invented asks, bounded help
 
-Asks are invented, not quotations. Start in synthetic shadow testing. No model diagnoses, infers/secures consent, sanctions tenancies or closes complaints. Named humans review every resident communication, check safe routes and control sending [S2; S6].
+Asks are invented, not quotations. Start in synthetic shadow testing. No model
+diagnoses, infers/secures consent, sanctions tenancies or closes complaints.
+The original all-message-review baseline remains default; the owner-selected
+2026-10-23 proposal below adds only a separately gated bounded routine exception.
 
 | Invented ask / concept | Agent task or proactive action; evidence required | Approval / autonomy; error and manual fallback | Measurable net gain; non-AI comparator |
 | --- | --- | --- | --- |
@@ -87,6 +90,36 @@ Asks are invented, not quotations. Start in synthetic shadow testing. No model d
 | "What happened to my referral?" | Assemble source-linked sent/received/accepted/returned timeline and flag missing acceptance; needs authoritative events and staffed escalation roster. | Raise-only internal task suggestion; sender remains chase owner until accepted. Missing integration is shown as unknown; phone receiving team and log evidence manually. | Acceptance delay and unresolved referrals, net of false-alert handling; compare deterministic ageing report. |
 | "The contractor never came; don't mark me absent." | Draft contradictory-evidence comparison and accessible update; needs resident account, confirmed booking, provider event evidence and capacity. | Contract manager decides event code; Housing reviews message. Conflicting evidence stays disputed; manual callback/rebooking, no resident penalty. | Misclassified visits, repeat failures and coordination minutes per kept appointment; compare standardized outcome codes and liaison calls. |
 
+
+## Prospective resident service and frontline continuity (2026-10-23, #441)
+
+The [six proposed resident scripts](./residents.md#proposed-optional-resident-increment-2026-10-23-441)
+add optional self-service without replacing phone/email/visits or requiring
+portal completion. They are proposed synthetic tests, not changed officer
+powers, real channels or resident validation. Programme is accountable,
+Engagement owns communication, Housing case exceptions, Digital technical
+support, with specialist escalation. Actual appointees, staffing and response
+SLAs remain unknown.
+
+Staff see the same permitted timeline for portal and assisted contacts:
+actor/reporter, source/channel, occurred/recorded times, delivery/receipt,
+review/acceptance and next-action owner. No connector is assumed; missing
+integrations use labelled manual capture. Duplicate/ambiguous/lost-ack events
+remain in owned queues, never hidden as accepted handoffs. Original accounts
+are retained; a report is not substantive proof, consent or a diagnosis.
+Staff phone capture and a resident upload/appointment response do not grant
+rights or confirm works; Housing handles case exceptions and specialist
+owners retain authority.
+
+BRD FR-044/AC-084 and RULE-028 now consistently propose bounded routine
+acknowledgements/reminders/grounded status/process replies within versioned
+evaluated limits after separate activation. Named human review remains
+default and always applies to consequential, sensitive, uncertain, safety,
+consent, contractual and financial content. No exception activates here;
+manual case/help/hazard routes survive model outage. Escalation ages are
+constructed queue fixtures, not actual service promises.
+See [canonical PRD](../../../../prds/zava-forward-retrofit-programme-demonstrator.md#resident-answer-and-communication-authority)
+for grant/revocation, managed identity and open OD-52-55 evidence.
 
 ## Validation and decision gates
 

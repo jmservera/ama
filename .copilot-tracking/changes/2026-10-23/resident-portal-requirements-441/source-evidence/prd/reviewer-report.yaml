@@ -1,0 +1,130 @@
+schema_version: PRD_QUALITY_REPORT_V1
+report_id: PRD-2026-AMA48-001-quality-20261023T172745Z
+generated_at: "2026-10-23T17:27:45Z"
+prd:
+  id: PRD-2026-AMA48-001
+  version: 0.19.0
+  phase: Validate
+  artifact_path: docs/prds/zava-forward-retrofit-programme-demonstrator.md
+overall_status: FAIL
+decision_thresholds:
+  iso_29148_core_min_score: 2
+  fr_to_ac_min_pct: 80.0
+  fr_to_goal_target_pct: 100.0
+gate_decisions:
+  validate_exit: BLOCKED
+  finalize_exit: NOT_EVALUATED
+summary_counts:
+  RISK: 2
+  CAUTION: 3
+  COVERED: 0
+  NOT_APPLICABLE: 0
+severity_breakdown:
+  CRITICAL: 0
+  HIGH: 2
+  MEDIUM: 3
+  LOW: 0
+standards_assessed:
+  - skill_name: requirements-quality
+    skill_version: "1.1"
+    overall_status: RISK
+    findings_count: 5
+category_summaries:
+  iso_29148:
+    average_score: 2.33
+    weakest_attribute: feasible
+    weakest_attribute_score: 1
+  nist_800_160:
+    covered_categories: 10
+    missing_categories: []
+  smart:
+    goals_total: 5
+    goals_passing: 4
+    pass_rate_pct: 80.0
+  fr_ac_coverage:
+    fr_total: 71
+    fr_with_ac: 71
+    coverage_pct: 100.0
+    threshold_pct: 80.0
+  fr_goal_coverage:
+    fr_total: 71
+    fr_with_goal: 71
+    goal_total: 5
+    coverage_pct: 100.0
+    target_pct: 100.0
+    waiver_required: false
+top_findings:
+  - finding_id: req-qual-001
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Candidate source and amendment.patch"
+    finding: "The exact candidate could not be reconstructed or hash-checked; the available checkout is not the specified pinned base."
+    recommendation: "Supply or independently reconstruct and review the exact candidate bytes before relying on this gate."
+  - finding_id: req-qual-002
+    standard: requirements-quality
+    severity: HIGH
+    status: RISK
+    location:
+      section: "Optional resident-service direction; upstream authority boundary"
+      line_range: L78-L109
+    finding: "The upstream BRD is an unsigned draft with Define BLOCKED and Govern NOT_EVALUATED, not a canonical approved handoff."
+    recommendation: "Keep this PRD amendment unsigned and blocked; do not treat draft links or handoff content as approval."
+  - finding_id: req-qual-003
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: "Product Goals"
+      line_range: L385-L386
+    finding: "GOAL-005 lacks a date or measurement window and has unconfirmed feasibility, so it fails SMART time-bound and achievable."
+    recommendation: "State a bounded milestone and provide feasibility evidence, or retain the goal as deferred."
+  - finding_id: req-qual-004
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: "Resident-answer and communication authority; FR-070 and AC-129"
+      line_range: L1044-L1054
+    finding: "Inherited BRD FR-044/AC-084 conflict remains unresolved; the PRD correctly keeps policy activation gated."
+    recommendation: "Keep routine activation OFF until the parent reconciles the BRD wording and resolves OD-53."
+  - finding_id: req-qual-005
+    standard: requirements-quality
+    severity: MEDIUM
+    status: CAUTION
+    location:
+      section: "Constraints"
+    finding: "The exact pinned candidate and CON rows were not independently available, so the requested per-constraint checks remain unverified."
+    recommendation: "Inspect every CON-### in the exact candidate for source, boundary, non-negotiability, category, and correct separation."
+recommendations:
+  - id: REC-001
+    priority: P1
+    target_section: "Candidate source and upstream authority boundary"
+    action: "Verify the exact candidate against the pinned v0.18.0 source and keep the unsigned, blocked upstream handoff explicitly non-authoritative; re-run quality review only on those exact bytes."
+    related_finding_ids: [req-qual-001, req-qual-002]
+  - id: REC-002
+    priority: P2
+    target_section: "Product Goals"
+    action: "Give GOAL-005 a bounded acceptance date or measurement window and record feasibility evidence, or preserve its deferred status without claiming SMART completion."
+    related_finding_ids: [req-qual-003]
+  - id: REC-003
+    priority: P2
+    target_section: "Resident-answer and communication authority"
+    action: "Keep the routine policy OFF and preserve per-message human review until BRD FR-044/AC-084 is reconciled and OD-53 authority is resolved."
+    related_finding_ids: [req-qual-004]
+  - id: REC-004
+    priority: P2
+    target_section: "Constraints"
+    action: "Review the exact pinned CON-### rows individually before asserting constraint-validation coverage."
+    related_finding_ids: [req-qual-005]
+warnings:
+  - id: WARN-001
+    severity: WARNING
+    message: "This is a bounded review based on the amendment and patch plus supplied upstream handoff and quality-review evidence. The exact pinned source was not available through the read-only file interface and the in-memory validator was not executed; declared counts and links were not independently recomputed."
+    related_finding_ids: [req-qual-001, req-qual-005]
+  - id: WARN-002
+    severity: ADVISORY
+    message: "The inherited BRD FR-044/AC-084 contradiction blocks routine exception activation, not the expressly unsigned draft's bounded scope. Staff chat and the regulatory assistant's no-send boundary must remain unchanged."
+    related_finding_ids: [req-qual-004]
+notes: "Gate decisions apply to the bounded Validate review only. No Finalize assessment, ADR decision, signature, waiver, implementation evidence, or approval is represented. No files were written. The 14.74 net staff-hours/week, 48 one-off onboarding hours, and low/high sensitivities are draft illustrative assumptions, not forecasts or cash claims."

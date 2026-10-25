@@ -420,6 +420,9 @@ class QueueSqlPortability(unittest.TestCase):
             def fetchall(self) -> list[tuple[str]]:
                 return [("id",), ("body",)]
 
+            def fetchone(self) -> tuple[int] | None:
+                return (0,)
+
         store: Any = object.__new__(MssqlStore)
         store.db = Db()
         store._migrate_queues()

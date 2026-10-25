@@ -9,7 +9,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 from typing import Any
 
-from . import projection
+from . import identity, projection
 
 Record = dict[str, Any]
 
@@ -17,7 +17,23 @@ Record = dict[str, Any]
 def _actor(store: Any, user: Record) -> Record:
     email = user.get("email")
     actor = None
-    if isinstance(email, str):
+    business = None
+    if identity.is_entra(user):
+        actor = identity.verified(user)
+        if actor and actor.get("bound"):
+            # Scoped business metadata is resolved by the immutable tenant object id only at this
+            # protected operation.
+            rows = identity.matches(store, actor["tid"], actor["oid"])
+            bound = actor["bound"]
+            if (
+                len(rows) != 1
+                or rows[0].get("code") != bound["code"]
+                or str(rows[0].get("email", "")).strip().lower() != bound["email"]
+            ):
+                actor = None
+            else:
+                business = rows[0]
+    elif isinstance(email, str):
         if hasattr(store, "db"):
             with store.dblock:
                 row = store.db.execute(
@@ -34,7 +50,12 @@ def _actor(store: Any, user: Record) -> Record:
         or any(actor.get(k) != user.get(k) for k in ("email", "code", "name", "role", "oid"))
     ):
         raise PermissionError("Current registered named staff must record this change.")
-    return deepcopy(actor)
+    actor = deepcopy(actor)
+    if business:
+        for key in ("financial_authority", "contract_authorities"):
+            if key in business:
+                actor[key] = deepcopy(business[key])
+    return actor
 
 
 def validate_sql(store: Any) -> None:

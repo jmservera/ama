@@ -2,36 +2,36 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-22T19:49:51+00:00",
-  "commit": "928d148f750c3066ce2e755a6451864c181de725",
+  "scored_at": "2026-10-25T03:25:10+00:00",
+  "commit": "69d83645d7934ee66feea438168fbfee2e36fa3b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/39840274826",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40157773904",
   "fingerprints": {
-    "brd": "092b7ab029710671d3c7f9144e91c880bfddacf974699b6dd2688217126fa986",
-    "prd": "5d3831f1da50a37c1732fd7e467c2f7721f4b570f55e9c97c8a440bdb67aed3a",
-    "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
-    "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
-    "infrastructure": "41703876a35d545fefc6c862605a59f3bc46873777d20c9c528af1c73051dd2d",
-    "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f",
-    "pitch": "71de7dc55165e9c45fd562af41a7753472ec9d93467e21d616a7af01ff138ebb"
+    "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
+    "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
+    "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
+    "solution-code": "785c7a5cff78fb5b00b09ea1e2da45c72dda27e5f1e1779dc42215ff99681402",
+    "infrastructure": "230cf17a20a0293cf542271421e3b0a48c93386df1019d893976034efb2e6de2",
+    "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
+    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402"
   },
-  "total": 55,
+  "total": 64,
   "sections": {
-    "A": 30,
-    "B": 16,
-    "C": 9,
+    "A": 31,
+    "B": 22,
+    "C": 11,
     "D": 0
   },
   "floors_met": false,
   "outcome": "Incomplete (thought leadership artifact not submitted)",
   "criteria": {
     "A1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:50-260",
-        "src/api/src/zava_forward/api/server.py:851-875"
+        "src/core/src/zava_forward/core/identity.py:1-400",
+        "docs/adrs/0002-pilot-readiness-architecture.md:560-684"
       ],
-      "rationale": "Diff is BRD/PRD proposal text (NFR-012, FR-052) and a new pitch brief; no architecture or code change. Unchanged from baseline."
+      "rationale": "New identity.py is a decoupled module with explicit typed contracts, threaded through auth/server/coordinator/forms/workflows/rulecards. ADR 0002 documents explicit failure domain (REGISTRY_LIMIT overflow, digest-collision note) and a scaling bound."
     },
     "A2": {
       "score": 5,
@@ -46,7 +46,7 @@
         "src/core/src/zava_forward/core/continuity.py:380-560",
         "src/api/tests/test_operator_suspension.py:614-680"
       ],
-      "rationale": "No security/RAI control changes in this proposal-only diff. Unchanged."
+      "rationale": "This PR changes infra/scripts (Entra admin CLI tooling), not the scored system's security/RAI controls. No security/RAI control changes in scope. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -82,67 +82,67 @@
       "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch brief is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivery evidence exists to show register calibration in front of an audience. Baseline retained."
-    },
-    "B3": {
-      "score": 1,
-      "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
-      ],
-      "rationale": "The pitch artifact is now committed, so the 0 not-demonstrable floor no longer applies. The brief states the deck is unchanged and the material has not been rehearsed; no demo script, timing or recovery evidence exists, so readiness is Needs Improvement."
-    },
-    "B4": {
-      "score": 1,
-      "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:95-104"
-      ],
-      "rationale": "The brief drafts executive Q&A answer stems but these are prepared text, not a demonstrated live exchange under challenge; no transcript or rehearsal exists, so readiness is Needs Improvement."
-    },
-    "B5": {
-      "score": 1,
-      "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:9-16"
-      ],
-      "rationale": "The brief states the 795-second main route has not been rehearsed against this material; no pace, timing or presence evidence exists yet."
-    },
-    "B6": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:1-137",
-        "src/api/README.md:2555-2561"
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
       ],
-      "rationale": "New pitch brief is a well-organised, navigable preparation document; capstone deck remains unchanged and already well structured. Still capped at Good(4); some documentation remains dense elsewhere."
+      "rationale": "New Audience Map names six CXO archetypes with must-hear content, pitfalls, and a deliberate Sergeant->Therapist->Scientist->Evangelist sequence. Materially stronger written calibration plan than the baseline brief, though still unrehearsed."
+    },
+    "B3": {
+      "score": 2,
+      "evidence": [
+        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
+      ],
+      "rationale": "New demo-runbook.md defines an Eight-Minute Core Route with timed beats to the hook and a Route L/E/U fallback with recovery script. Concrete planned readiness beyond the prior one-line statement, but validation.md confirms no rehearsal occurred, so still Needs Improvement."
+    },
+    "B4": {
+      "score": 2,
+      "evidence": [
+        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:142-150",
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:66-73"
+      ],
+      "rationale": "New recovery table and bridge answer stems show deliberate prepared depth for pressure questions, an improvement over the baseline's single list. No transcript or rehearsal exists, so still short of demonstrated composure under challenge."
+    },
+    "B5": {
+      "score": 2,
+      "evidence": [
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
+      ],
+      "rationale": "New Timing and Interruption Contract gives a slide-by-slide narration budget, discussion reserve and route-shortening plan. More developed pacing planning than baseline's unrehearsed-timing statement, but remains unrehearsed per validation.md."
+    },
+    "B6": {
+      "score": 5,
+      "evidence": [
+        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
+      ],
+      "rationale": "The pitch package is now a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. Capstone documentation is complete and navigable, meeting Excellent."
     },
     "B7": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:85-93"
+        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:132-160"
       ],
-      "rationale": "The pitch brief states concrete, labelled numbers (6,884 tokens over five runs) with evidence-class caveats, but this is preparation material, not evidence delivered in an actual pitch or the deck. Claims carefully labelled; short of ceiling since much remains 'unknown' pending measurement."
+      "rationale": "The new Recovered Council Comparison gives fully worked, labelled calculations (USD 0.44/home, GBP 6,082/home) tied directly to deck slides 11 and 18 with evidence classes and caveats. Actionable, slide-anchored data storytelling beyond baseline, though still unaudited live."
     },
     "C1": {
       "score": 5,
-      "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1521-1521"
-      ],
+      "evidence": [],
       "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
-      "score": 1,
+      "score": 2,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:95-104"
+        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:77-83"
       ],
-      "rationale": "Live-scored; the pitch artifact now exists so the not-demonstrable floor lifts, but it only contains prepared answer stems, not a demonstrated live exchange showing restating challenges or conceding points. Readiness is Needs Improvement."
+      "rationale": "New Interruption Protocol instructs restating the challenge in the customer's terms before answering, directly rehearsing the C2 behavior. A concrete written improvement over the baseline's bare answer stems, but no transcript or live exchange exists, so readiness remains Needs Improvement."
     },
     "C3": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:19-26",
-        "docs/capstone/pitch/tokenomics-pitch-brief.md:106-116"
+        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:258-266"
       ],
-      "rationale": "Not live-scored; pitch artifact now committed. The brief defends a recommendation (Option A), surfaces risk unprompted (Claims to Keep Out), and includes credible 'I will not estimate one' stems. Written preparation, not a live exchange, so short of ceiling."
+      "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
       "score": 0,

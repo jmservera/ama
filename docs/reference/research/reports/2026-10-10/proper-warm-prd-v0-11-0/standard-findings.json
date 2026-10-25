@@ -1,0 +1,263 @@
+{
+  "schema_version": "PRD_STANDARD_FINDINGS_V1",
+  "assessment_id": "requirements-quality-PRD-2026-AMA48-001-20261010T092151Z",
+  "assessed_at": "2026-10-10T09:21:51.343Z",
+  "prd": {
+    "id": "PRD-2026-AMA48-001",
+    "version": "0.11.0",
+    "phase": "Build",
+    "artifact_path": "docs/prds/proper-warm-retrofit-programme-demonstrator.md"
+  },
+  "standard": {
+    "skill_name": "requirements-quality",
+    "skill_version": "1.1"
+  },
+  "mode": "plan",
+  "assessment_outcome": "plan",
+  "overall_status": "RISK",
+  "summary_counts": {
+    "RISK": 1,
+    "CAUTION": 6,
+    "COVERED": 7,
+    "NOT_APPLICABLE": 0
+  },
+  "findings": [
+    {
+      "finding_id": "req-qual-001",
+      "checklist_item": "upstream-handoff-and-human-review",
+      "status": "RISK",
+      "severity": "HIGH",
+      "location": {
+        "section": "Sign-Off and Handoff Readiness",
+        "line_range": "L1246-L1272"
+      },
+      "finding": "Pre-existing full-document readiness blocker: the PRD explicitly lacks a signed current upstream handoff, current valid upstream quality evidence, named product/control owners and required human reviews. Its evidence section also calls the upstream draft v0.14.1, whereas the linked BRD currently identifies itself as v0.15.0.",
+      "recommendation": "Preserve draft status. Before requesting formal validation, identify the exact upstream revision, obtain its signed handoff and current quality evidence, reconcile source-version references, and record named owner and representative human reviews; this challenge is not a substitute."
+    },
+    {
+      "finding_id": "req-qual-002",
+      "checklist_item": "iso-29148-unambiguous",
+      "requirement_id": "FR-038",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Form Extraction and Assisted Filling; Functional Requirements",
+        "line_range": "L451-L570"
+      },
+      "finding": "Amendment defect: the form pattern explicitly applies FR-038 through FR-043 to technical, work-package and invoice forms, but FR-038 requires every assisted form to bind a scheme/route/template schema and blocks preparation for an unknown route. This makes a funding-route prerequisite appear mandatory for otherwise valid non-funding forms.",
+      "recommendation": "Make an approved versioned form schema the universal prerequisite. Apply evidenced scheme/funding-route prerequisites only to funding forms; use an explicit not-applicable funding association for other form types. Extend AC-046 with a technical or invoice fixture that opens without a funding route while an unknown-route funding form remains blocked."
+    },
+    {
+      "finding_id": "req-qual-003",
+      "checklist_item": "iso-29148-complete",
+      "requirement_id": "FR-042",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Functional Requirements; Acceptance Criteria",
+        "line_range": "L544-L568"
+      },
+      "finding": "Amendment integration defect: FR-042 and the new prose distinguish an application from a claim, but FR-019 and AC-022 retain one unqualified submitted/accepted/rejected grant-state sequence. AC-050 checks separate packs without expressly testing that an externally evidenced application submission or rejection cannot change claim submission, claim acceptance or award/cash status.",
+      "recommendation": "Qualify submission and disposition records by application or claim and link each to its route, scheme, pack version and external evidence. Align FR-019/AC-022 with FR-042/AC-050 and add independent application submitted/rejected and claim submitted/accepted fixtures; neither may imply an award or cash receipt."
+    },
+    {
+      "finding_id": "req-qual-004",
+      "checklist_item": "iso-29148-singular",
+      "requirement_id": "AC-047",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Acceptance Criteria; Independently reportable review checks",
+        "line_range": "L877-L913"
+      },
+      "finding": "Amendment testability defect within a pre-existing compound-requirement pattern: AC-047 combines extraction provenance, candidate-only selection, conflict retention and unreadable-source recovery, but has no named independent subchecks comparable to AC-045/049/050/051/054. AC-051 names a declared dependency graph but does not require the fixture to publish exact affected and unaffected field/calculation/review sets independently of the implementation.",
+      "recommendation": "Retain stable parent IDs and name independently reported AC-047 checks for parsing/OCR lineage, candidate/no-match selection, conflicts and manual recovery. Require AC-051 fixture manifests to enumerate expected transitive invalidation sets, unaffected reviews and blocked export status before execution; compare actual sets exactly, not merely a generic stale flag."
+    },
+    {
+      "finding_id": "req-qual-005",
+      "checklist_item": "smart-product-goals",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Product Goals"
+      },
+      "finding": "Pre-existing goal-maturity gap: all four product goals lack a committed time horizon and demonstrated achievability; several measurements depend on unapproved workloads, protocols or thresholds. Explicitly deferred SMART status is honest draft framing, not a passing SMART assessment.",
+      "recommendation": "Before finalization, name accountable goal owners, approve scoped measurement protocols and achievable targets, and attach a time horizon or dated decision point to each goal. Do not convert the unratified upstream percentage targets into PRD commitments."
+    },
+    {
+      "finding_id": "req-qual-006",
+      "checklist_item": "nist-800-160-category-presence",
+      "requirement_id": "NFR-002",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Non-Functional Requirements; Observability and SLO Measurement Method",
+        "line_range": "L573-L693"
+      },
+      "finding": "Pre-existing quantitative NFR gap: NFR-002 defers all capacity and timing thresholds, so it does not meet the rubric's quantitative presence indicator for performance_and_capacity. No canonical NFR specifies a scaling dimension and load range; the separate PR-005 whole-stock proposal does not establish scalability_and_elasticity NFR coverage.",
+      "recommendation": "Before relevant build acceptance, approve a constructed workload, capacity and latency limits, and a scaling dimension/load range under canonical NFRs. Report observations only until those targets are agreed and measured; do not infer results from the 60,000-home scenario."
+    },
+    {
+      "finding_id": "req-qual-007",
+      "checklist_item": "iso-29148-conforming",
+      "status": "CAUTION",
+      "severity": "MEDIUM",
+      "location": {
+        "section": "Staff data trust and control; Owner direction for pilot readiness; Simplicity and adoption requirements"
+      },
+      "finding": "Pre-existing taxonomy gap: TR, DH, PR and SA tables contain additional proposed requirements outside the declared FR/AC/NFR/CON taxonomy. Some rows explicitly introduce new behavior or defer adding acceptance criteria, so the 44-FR coverage figure is not coverage of every obligation expressed in the document.",
+      "recommendation": "Keep these identifiers as source/proposal aliases, but map normative obligations to canonical FR/NFR/CON items and ACs or mark them explicitly non-normative and deferred. Preserve the current 44-FR metric as canonical link coverage, not total behavioral completeness."
+    },
+    {
+      "finding_id": "req-qual-008",
+      "checklist_item": "iso-29148-necessary",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Product Context; AI-Assisted Decision Coverage; Functional Requirements"
+      },
+      "finding": "The canonical requirements address documented coordination, evidence, authority and reporting needs. The amendment connects bounded assistance to existing workflow tasks and GOAL-004 rather than making model adoption a product outcome.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-009",
+      "checklist_item": "iso-29148-appropriate",
+      "requirement_id": "DD-007",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Design Decisions and Options Gate; Bounded-Agent Orchestration Pattern"
+      },
+      "finding": "DD-007/008 remain proposed design decisions rather than requirement namespaces or production selections. Static capability routing, an API-only controlled write path and application-owned evidence explanations appropriately separate parsing, typed selection, generation and authority.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-010",
+      "checklist_item": "iso-29148-feasible",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Component Contracts and Failure Domains; AI Model Selection and Evaluation Harness; Open Questions"
+      },
+      "finding": "The non-production design provides manual, parser/rules and disabled-model paths, with explicit serving, cost, privacy and evaluation prerequisites under OQ-015/016. Feasibility is bounded and conditional; no deployment, performance or local benefit result is asserted.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-011",
+      "checklist_item": "iso-29148-verifiable",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Acceptance Criteria; AI Model Selection and Evaluation Harness; Success Metrics"
+      },
+      "finding": "Canonical acceptance behaviors and held-out comparisons are explicit, including deterministic financial validation, export fidelity, protected-field denial, model failures and review effort. Independent reporting is established for several compound ACs; remaining test-oracle precision is separately identified in req-qual-004.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-012",
+      "checklist_item": "iso-29148-correct",
+      "requirement_id": "FR-044",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Form Extraction and Assisted Filling; Bounded-Agent Orchestration Pattern; Open Questions"
+      },
+      "finding": "The amendment preserves raw/provenance/conflict/unknown handling, separates OCR from text-only scoring, and excludes declarations, signatures, certifications and resident decisions from AI pre-fill. Human review does not become controlled approval; first human triage, ranking invariance, privacy/serving gates and absence of live submission are explicit and consistent with the dated reassessment.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-013",
+      "checklist_item": "traceability-identifiers-fr-ac-goal",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Functional Requirements; Acceptance Criteria; Traceability Matrix"
+      },
+      "finding": "All 44 canonical FR definitions link to valid ACs and at least one of four valid goals; all 54 AC definitions have valid FR references. FR-036 through FR-044 match the AC Covers table, FR-to-AC matrix and expanded FR-to-goal matrix exactly; canonical FR/AC/NFR/CON/GOAL/DD definitions have valid three-digit identifiers without duplicate definitions or numbering gaps.",
+      "recommendation": null
+    },
+    {
+      "finding_id": "req-qual-014",
+      "checklist_item": "imposed-constraint-classification",
+      "status": "COVERED",
+      "severity": "N/A",
+      "location": {
+        "section": "Constraints",
+        "line_range": "L788-L799"
+      },
+      "finding": "CON-001 through CON-008 each name a category, imposing source, affected boundary and prohibited or non-negotiable condition. They constrain demonstrator scope, retained authority, evidence and decision rights; the hybrid architecture and document-store fallback remain design decisions rather than disguised constraints or quality targets.",
+      "recommendation": null
+    }
+  ],
+  "iso_29148_attributes": {
+    "necessary": 3,
+    "appropriate": 3,
+    "unambiguous": 2,
+    "complete": 2,
+    "singular": 1,
+    "feasible": 2,
+    "verifiable": 2,
+    "correct": 2,
+    "conforming": 1
+  },
+  "nist_800_160_nfr_categories": {
+    "performance_and_capacity": false,
+    "reliability_and_resilience": true,
+    "security": true,
+    "privacy": true,
+    "scalability_and_elasticity": false,
+    "maintainability_and_operability": true,
+    "observability": true,
+    "usability_and_accessibility": true,
+    "compatibility_and_interoperability": true,
+    "portability": true
+  },
+  "smart_product_goals": [
+    {
+      "goal_id": "GOAL-001",
+      "statement": "Give each authorised role a useful view of the same governed work, evidence and next action across the whole workflow portfolio.",
+      "specific": true,
+      "measurable": false,
+      "achievable": false,
+      "relevant": true,
+      "time_bound": false,
+      "overall": "FAIL"
+    },
+    {
+      "goal_id": "GOAL-002",
+      "statement": "Demonstrate the nine connected workflows end to end with explicit authority, returns, shared building dependencies and finance/quality gates.",
+      "specific": true,
+      "measurable": true,
+      "achievable": false,
+      "relevant": true,
+      "time_bound": false,
+      "overall": "FAIL"
+    },
+    {
+      "goal_id": "GOAL-003",
+      "statement": "Help coordinators and stakeholders understand current progress, historical flow and plausible delivery scenarios.",
+      "specific": true,
+      "measurable": true,
+      "achievable": false,
+      "relevant": true,
+      "time_bound": false,
+      "overall": "FAIL"
+    },
+    {
+      "goal_id": "GOAL-004",
+      "statement": "Establish whether bounded agents improve selected tasks over workflow-only handling without weakening resident, safety, quality or financial controls.",
+      "specific": true,
+      "measurable": false,
+      "achievable": false,
+      "relevant": true,
+      "time_bound": false,
+      "overall": "FAIL"
+    }
+  ],
+  "fr_ac_coverage": {
+    "fr_total": 44,
+    "fr_with_ac": 44,
+    "coverage_pct": 100.0
+  },
+  "notes": "One bounded, read-only draft-stage challenge; no files changed and no agents invoked.\nBoth authoritative payload contracts were read in full before scoring.\nThe full PRD was read for context, together with the dated System One reassessment\nand relevant BRD funding-control requirements and rules.\n\nLimitation: available tools expose file reads but no git execution. The diff\nagainst origin/main could not be obtained. Amendment attribution follows the\ncaller's specified scope and current v0.11.0 text, not a verified git diff.\nDo not treat this assessment as confirmation of changed-line scope.\n\nCanonical definition inventory:\nFR-001..044: Functional Requirements, L525-L569, one definition per table row.\nAC-001..054: Acceptance Criteria, L834-L887, one definition per table row.\nNFR-001..013: Non-Functional Requirements, L573-L645.\nCON-001..008: Constraints, L792-L799.\nGOAL-001..004: Product Goals table.\nDD-001..008: Design Decisions and Options Gate table.\nRepeated references and parent-AC subcheck rows are not duplicate definitions.\nAdditional proposal namespaces are addressed by req-qual-007.\n\nExact amendment FR -> AC -> goal links:\nFR-036: AC-044; GOAL-002, GOAL-004.\nFR-037: AC-045, AC-054; GOAL-002, GOAL-004.\nFR-038: AC-046; GOAL-001, GOAL-002.\nFR-039: AC-047, AC-053; GOAL-001, GOAL-004.\nFR-040: AC-048, AC-053; GOAL-001, GOAL-002, GOAL-004.\nFR-041: AC-049; GOAL-002.\nFR-042: AC-050, AC-054; GOAL-001, GOAL-002.\nFR-043: AC-051; GOAL-002.\nFR-044: AC-052, AC-054; GOAL-001, GOAL-002, GOAL-004.\nAmendment canonical link coverage: 9/9 FRs, 11/11 ACs referenced, 100% FR-to-goal.\n\nFull-document canonical link coverage is 44/44 FRs and 54/54 linked ACs.\nAll ACs remain Not Started; link coverage is neither behavioral completeness\nnor acceptance evidence. Release increments, form metrics, Finance journey\nand OQ-015/016 contain explicit amendment links.\n\nAmendment-only assessment: three surgical corrections, req-qual-002..004;\nno high-confidence new live-submission, consequential-authority, invented-fact,\nmodel-rationale, OCR-capability or personal-data serving permission was found.\nThe compound-statement pattern predates the amendment and remains present.\nOverall scores apply to the full canonical draft, not only nine new FRs.\n\nNIST covered categories: reliability_and_resilience, security, privacy,\nmaintainability_and_operability, observability, usability_and_accessibility,\ncompatibility_and_interoperability, portability. Presence does not certify\ncontrol effectiveness or SLO attainment. Vendor-source claims were assessed\nas research evidence, not independently verified deployment results."
+}

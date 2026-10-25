@@ -1,0 +1,21 @@
+metric,value,unit,evidence_class,status,denominator_or_scope,limitation,source
+operator_usage,6884,tokens,dated repository observation,historical,five operator runs,no human acceptance or price,E19
+operator_runs,5,runs,dated repository observation,historical,bounded gpt-4.1-mini operator exercise,not representative of production volume or quality,E19
+mean_usage,1376.8,tokens per run,arithmetic from observation,historical,6884 divided by 5,not tokens per human-accepted proposal,E19
+accepted_proposal_count,unknown,proposals,unmeasured,unknown,quality floor and OD-51 denominator must be agreed,never substitute generated count,E19
+dated_model_price,unknown,currency per model billing unit,unmeasured,unknown,exact model deployment geography and agreement,no cost calculation authorised by token count,E19
+cost_per_accepted_proposal,unknown,currency per accepted proposal,proposed unit,not measured,total attributable task cost divided by accepted proposals above quality floor,undefined for zero or unknown denominator,E19
+cost_per_accepted_handover,unknown,currency per accepted home,distinct end-to-end unit,not measured,programme cost and accepted handovers,not interchangeable with accepted proposals,E19
+existing_ai_allowance,finite,calls and tokens,source design,existing bounded assistant path,authority reference with expiry,not a currency guarantee or universal per-request limit,E19
+usage_metering,partial,model paths,source observation,gap,assistant usage where supplied,legacy Ai.run and look_at paths discard usage,E19
+money_task_period_budgets,proposed,currency,requirements,Not run,BRD NFR-012 and PRD AC-109,not implemented controls,E19
+request_call_depth_limits,proposed,calls and depth,requirements,Not run,individual request,finite authority alone does not establish this,E19
+exercise_forecast_ceiling,700,USD,owner budget decision 2026-10-22,execution gates still blocked,October all-in forecast including unknown outside-group term,expires 2026-10-25T16:02Z and not a production price,E11
+old_exercise_allocation,450,USD per month,historical exercise assumption,superseded for current spend authority,EXA-012,do not reuse as current cap,E02
+prechange_forecast,535.33,USD,dated historical forecast,requires refresh,pre edge deletion and scale-down,not valid to approve next tranche,E11
+observed_exercise_accrual,242.36,USD,dated 2026-10-22 observation,historical partial period,11-22 October resource group ama only,estimated until invoiced and outside-group spend unknown,E11
+home_base,20000,GBP,fictional exercise assumption,illustrative,18000 contractor plus 2000 internal,not a real quote or commitment,E02
+home_contingency,2000,GBP,fictional exercise assumption,illustrative,home envelope 22000,not technology spend,E02
+fictional_grant,7500,GBP,fictional exercise assumption,illustrative,eligible cost 16000 with fictional ceiling,award is not cash,E02
+provider_base_funding,12500,GBP,fictional arithmetic,illustrative,20000 minus 7500,gross cash before receipt remains 20000,E02
+value_destination,unconfirmed,capacity or booked value,Finance decision,pending,removed or avoided spend or freed capital where defensible,no cash-saving or payback claim,E19

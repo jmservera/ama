@@ -1,0 +1,196 @@
+{
+  "checked_at": "2026-10-23T16:58:37.220246+00:00",
+  "status": "static-document-checks-passed-not-business-approval",
+  "upstream_commit": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+  "upstream_brd_sha256": "25ed596cafc4d9a4d83e2411a59cf0e6d9667c816fc2f537f82a84f3d9c6cf4c",
+  "candidate_brd_sha256": "e318bacc1344c4e730645612371f2a7671926c645ee9370673b0f637a046e535",
+  "patch_sha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7",
+  "definitions": {
+    "BG": {
+      "count": 13,
+      "max": "BG-013"
+    },
+    "FR": {
+      "count": 62,
+      "max": "FR-062"
+    },
+    "AC": {
+      "count": 126,
+      "max": "AC-126"
+    },
+    "NFR": {
+      "count": 14,
+      "max": "NFR-014"
+    },
+    "CON": {
+      "count": 7,
+      "max": "CON-007"
+    },
+    "RULE": {
+      "count": 28,
+      "max": "RULE-028"
+    },
+    "OD": {
+      "count": 55,
+      "max": "OD-55"
+    },
+    "DD": {
+      "count": 0,
+      "max": null
+    }
+  },
+  "checks": {
+    "exact_base_patch_hunks_and_reconstructed_candidate": "PASS",
+    "git_apply_numstat_parser": "PASS; no application to checkout or index",
+    "all_original_requirement_ids_preserved": "PASS",
+    "no_duplicate_canonical_definitions": "PASS",
+    "fr_matrix_matches_all_62_requirement_rows": "PASS",
+    "new_goal_matrix_links_and_contiguous_tables": "PASS",
+    "fr_to_ac": {
+      "covered": 62,
+      "total": 62,
+      "pct": 100.0
+    },
+    "fr_to_bg": {
+      "covered": 62,
+      "total": 62,
+      "pct": 100.0
+    },
+    "draft_handoff_hashes_counts_and_new_links": "PASS",
+    "scenario_formulas_and_break_even": "PASS",
+    "current_origin_main_still_matches_pinned_base": "PASS",
+    "canonical_signed_handoff_or_fake_signoff_absent": "PASS"
+  },
+  "markdownlint": {
+    "tool": "markdownlint-cli@0.45.0",
+    "profile": ".markdownlint.json",
+    "profile_exceptions": {
+      "MD013": "Existing BRD uses long table rows",
+      "MD041": "Existing BRD uses H2 top-level headings",
+      "MD033.allowed_elements": [
+        "br; existing table style"
+      ]
+    },
+    "baseline_note": "The original bare #58 issue reference triggers MD018. Candidate escapes the literal hash without changing its meaning; baseline failures are recorded, not claimed passed.",
+    "default_unmodified_rules_claimed": false,
+    "artifacts": [
+      {
+        "artifact": "pinned-base-brd",
+        "exit_code": 1,
+        "diagnostics": "stdin:2261:1 MD018/no-missing-space-atx No space after hash on atx style heading [Context: \"#58's owner cap removal applie...\"]\n"
+      },
+      {
+        "artifact": "amended-candidate-brd",
+        "exit_code": 0,
+        "diagnostics": ""
+      },
+      {
+        "artifact": "amendment.md",
+        "exit_code": 0,
+        "diagnostics": ""
+      },
+      {
+        "artifact": "change-manifest.md",
+        "exit_code": 0,
+        "diagnostics": ""
+      },
+      {
+        "artifact": "quality-review.md",
+        "exit_code": 0,
+        "diagnostics": ""
+      }
+    ]
+  },
+  "calculated_scenarios": {
+    "low": {
+      "concurrent_home_cases_W": 324,
+      "routine_calls_per_week": 97.2,
+      "separate_email_document_transactions_per_week": 81.0,
+      "baseline_routine_staff_hours_per_week_B": 18.36,
+      "gross_avoided_hours_per_week_G": 2.754,
+      "additional_review_hours_per_week_H": 0.648,
+      "reconciliation_hours_per_week_J": 0.26999999999999996,
+      "routine_net_released_hours_per_week_N": 0.8359999999999999,
+      "new_intake_onboarding_hours_per_week_O": 2.43,
+      "net_released_hours_including_intake_per_week_F": -1.5940000000000003,
+      "initial_active_cohort_onboarding_staff_hours_I_one_off": 9.72
+    },
+    "base": {
+      "concurrent_home_cases_W": 720,
+      "routine_calls_per_week": 360.0,
+      "separate_email_document_transactions_per_week": 288.0,
+      "baseline_routine_staff_hours_per_week_B": 84.0,
+      "gross_avoided_hours_per_week_G": 27.3,
+      "additional_review_hours_per_week_H": 3.6,
+      "reconciliation_hours_per_week_J": 0.9600000000000001,
+      "routine_net_released_hours_per_week_N": 20.74,
+      "new_intake_onboarding_hours_per_week_O": 6.0,
+      "net_released_hours_including_intake_per_week_F": 14.739999999999998,
+      "initial_active_cohort_onboarding_staff_hours_I_one_off": 48.0
+    },
+    "high": {
+      "concurrent_home_cases_W": 1200,
+      "routine_calls_per_week": 840.0,
+      "separate_email_document_transactions_per_week": 720.0,
+      "baseline_routine_staff_hours_per_week_B": 239.99999999999997,
+      "gross_avoided_hours_per_week_G": 125.99999999999997,
+      "additional_review_hours_per_week_H": 14.0,
+      "reconciliation_hours_per_week_J": 2.0,
+      "routine_net_released_hours_per_week_N": 105.99999999999997,
+      "new_intake_onboarding_hours_per_week_O": 11.666666666666666,
+      "net_released_hours_including_intake_per_week_F": 94.3333333333333,
+      "initial_active_cohort_onboarding_staff_hours_I_one_off": 140.0
+    }
+  },
+  "quality_gate": {
+    "define_exit": "BLOCKED",
+    "govern_exit": "NOT_EVALUATED",
+    "signoff": null
+  },
+  "not_run": [
+    "application/heavy tests",
+    "concurrent sole full validation gate",
+    "Azure/tenant/paid operations",
+    "real resident deployment",
+    "independent final-byte governance review"
+  ],
+  "generated_artifacts_only": "Patch and this check record are derived under the authorized session directory; authored texts use apply_patch",
+  "files": {
+    ".markdownlint.json": {
+      "sha256": "64d16f9e376b8d18c19252c98e0fc0370224cd048c2688aa279ead62b8b9baa9",
+      "bytes": 107
+    },
+    "amendment.md": {
+      "sha256": "7aa081028e39b6931db76416db23336c05c6dc3c149a1fcb9f44525a65e811ae",
+      "bytes": 33350
+    },
+    "amendment.patch": {
+      "sha256": "3014b8600cbc4e11dc1e0ef82160bb13bf698aab985e5ded42dd1d28142eb3e7",
+      "bytes": 73884
+    },
+    "change-manifest.md": {
+      "sha256": "3005ee38c185164f1837148faff7097914ab719a2acf91aa5ac6c152e6279320",
+      "bytes": 11272
+    },
+    "draft-prd-handoff.json": {
+      "sha256": "979fa96b96f59112c83f779b2daf59847111ebbbe3e2458001179e99eaa44a63",
+      "bytes": 16725
+    },
+    "quality-review.md": {
+      "sha256": "d85e40ccb09cfaf0a08efe55ada4a0beaef8822bb3bfa56281062e28944f37a4",
+      "bytes": 6828
+    },
+    "render-amendment.py": {
+      "sha256": "4c0678e9307fadf94dc71c7ddf143c3b0a387fca6ceb175a878a52b17967de04",
+      "bytes": 15649
+    },
+    "state.json": {
+      "sha256": "08bd5d4224970a6913582ffa1c24b2d061f1978fd44265ced0bfdcbd09c1af95",
+      "bytes": 2733
+    },
+    "validate-package.py": {
+      "sha256": "f351dd36c61a5da3540637bdf3a531dfcee4defa4143ca8c232e129714e43dd3",
+      "bytes": 9822
+    }
+  }
+}

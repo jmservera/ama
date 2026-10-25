@@ -1,9 +1,26 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-10-18
+ms.date: 2026-10-23
 ms.topic: reference
 ---
+
+## Prospective resident increment (2026-10-23, #441)
+
+The [six synthetic resident scripts](./customer-journeys/residents.md#proposed-optional-resident-increment-2026-10-23-441)
+now describe proposed optional resident/representative scope, not built screens,
+new observed personas or completion of #154/#156/#233. Historical T01-T11 and
+C01-C04 below retain their original staff-focused denominator and findings.
+No real user validation or changed company service is inferred.
+Shared case timeline/owned exceptions, assisted routes without detriment,
+managed external identity with separate scoped grants/revocation/recovery and
+the separately gated bounded routine policy are carried into the
+[canonical PRD](../../../prds/zava-forward-retrofit-programme-demonstrator.md#optional-resident-service--draft-amendment).
+Named review remains default and always covers consequential/sensitive/
+uncertain/safety/consent/contract/finance content; no activation here.
+The architecture proposal remains explicitly unregistered, OD-52-55 open.
+Resident-specific states/designs, accessibility and exact application
+acceptance must be evidenced later rather than inferred from the staff suite.
 
 ## Design traceability and review gate (2026-10-18, #156)
 

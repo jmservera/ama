@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench WCAG 2.2 Conformance Baseline
 description: Proposed target level and scope, first audit, automated check coverage, manual check record template and accessibility statement draft for the workbench (issue #151)
-ms.date: 2026-10-15
+ms.date: 2026-10-23
 ms.topic: reference
 ---
 
@@ -102,6 +102,35 @@ at 320, 390 and 1280 px and 200% text size.
 
 Release rule (proposed, O-3): a release that changes a screen needs the
 affected rows re-run and any new failure recorded or fixed.
+
+## Proposed resident task audit (2026-10-23, #441)
+
+This prospective extension covers the six
+[synthetic resident scripts](./customer-journeys/residents.md#proposed-optional-resident-increment-2026-10-23-441),
+not an implemented portal, changed historic staff audit or fresh conformance
+claim. Existing gaps and manual records above remain. Reuse the proposed
+WCAG 2.2 AA engineering target, keyboard and accessible names/status/errors,
+320/390/1280 CSS px, 200% text resize and 400% zoom/reflow where applicable.
+Test password-manager/paste support and accessible recovery without cognitive
+tests, shared-device/session clearing, safe revoked-grant errors, upload
+progress/failure, source/as-of/unknown and independently reachable human help.
+Third-party identity/file surfaces need end-to-end task assessment, not a
+blanket exemption because provider internals are external.
+
+| Proposed task | Keyboard | Screen reader | Resize/reflow | Task result |
+| --- | --- | --- | --- | --- |
+| Sign-in/recovery and scoped grants | Not run | Not run | Not run | Not run |
+| Own case and approved documents | Not run | Not run | Not run | Not run |
+| Requested upload and receipt/checks | Not run | Not run | Not run | Not run |
+| Appointment response, not confirmation | Not run | Not run | Not run | Not run |
+| Grounded answer/unknown and human handoff | Not run | Not run | Not run | Not run |
+| Assisted continuity without detriment | Not run | Not run | Not run | Not run |
+
+Record exact build, tester/date, browser/AT versions, criteria, task success
+and negative-state results. Direct accessible resident/representative research,
+privacy/service approval and acceptance remain required, not supplied by
+these proposed scripts or automated tests of the existing staff workbench.
+No new legal/W3C-currentness check is claimed by this documentation change.
 
 ## Accessibility statement (draft)
 
