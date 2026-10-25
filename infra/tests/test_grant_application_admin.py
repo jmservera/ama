@@ -4,6 +4,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -182,6 +183,17 @@ class GrantCliTests(unittest.TestCase):
         code, _, err = self.cli(az, "--apply", profile=repo_profile)
         self.assertEqual(code, 1)
         self.assertEqual(az.calls, [])
+
+    def test_apply_refuses_a_symlinked_profile_before_any_az_call(self):
+        link = os.path.join(tempfile.mkdtemp(prefix="grant-cli-link-"), "profile")
+        self.addCleanup(shutil.rmtree, os.path.dirname(link), True)
+        os.symlink(self.profile, link)
+        az = OfflineAz()
+        code, _, err = self.cli(az, "--apply", profile=link)
+        self.assertEqual(code, 1)
+        self.assertIn("symbolic link", err)
+        self.assertEqual(az.calls, [])
+        self.assertEqual(os.listdir(self.profile), [])
 
     def test_output_carries_no_token(self):
         az = OfflineAz()
