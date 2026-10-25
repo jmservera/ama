@@ -15,7 +15,9 @@
     "details": ".copilot-tracking/details/2026-10-25/resident-prd-backlog-readiness-441-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-prd-backlog-readiness-441-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-25/resident-prd-backlog-readiness-441-changes.md",
-    "review": ".copilot-tracking/reviews/logs/2026-10-25/resident-prd-backlog-readiness-441-review.md"
+    "review": ".copilot-tracking/reviews/logs/2026-10-25/resident-prd-backlog-readiness-441-review.md",
+    "plan_correction2": ".copilot-tracking/plans/2026-10-25/resident-prd-backlog-readiness-441-correction2-plan.md",
+    "critique_correction2": ".copilot-tracking/reviews/plans/2026-10-25/resident-prd-backlog-readiness-441-correction2-critique.md"
   },
   "confirmed_decisions": [
     {
@@ -42,6 +44,11 @@
       "decision": "Correction cycle 1: applicability contradiction fixed; independent scoped review run; no full-PRD pass; no coordinator approval claimed",
       "status": "recorded",
       "evidence": "critique file, correction section"
+    },
+    {
+      "decision": "Correction cycle 2: paired protocol freeze moved to RB-01; graph reviewed independently (not full-PRD); earlier owner-ready claims superseded",
+      "status": "recorded",
+      "evidence": "correction2 critique"
     }
   ],
   "blockers": [
@@ -58,7 +65,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Publish correction commit with new gate; coordinator assessment and owner acceptance pending"
+    "action": "Coordinator re-assessment before renewed owner review; PR stays draft"
   },
   "prioritized_follow_ups": [
     {

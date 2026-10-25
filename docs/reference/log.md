@@ -7471,3 +7471,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   resident class, unit and open sample-definition notes. A scoped independent
   quality review found no residual contradiction; it is not a full-PRD pass.
   The PRD stays unsigned and the prior entry above is unchanged.
+
+## [2026-10-25] update | Resident backlog paired-protocol freeze correction (#441)
+
+* Moved the paired effort and adverse-outcome protocol freeze into draft backlog item RB-01 (R0) and made all comparison runs depend on it; RB-21 now only collects and reviews results in R5. Documentation and draft backlog only; the PRD stays unsigned, the proposal unregistered and owner acceptance pending. Earlier entries are unchanged.

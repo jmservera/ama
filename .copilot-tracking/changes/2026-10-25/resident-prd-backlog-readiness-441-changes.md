@@ -39,3 +39,9 @@ Recheck is repeated immediately before publication.
 * Gate 3 (af5bcb00, lock timeout 3600): VERIFIED, but the push was rejected because bot commit 37277a0e advanced the remote branch; that receipt does not cover later commits.
 * Gate 4 (rebased 70a6f63b): BLOCKED at the end, because origin/main moved to 36996d70 (unrelated infra change); failed receipt retained.
 * Remote history was not rewritten: origin/main was merged (rubric score file conflict resolved to main's bot-owned version) and the final head is gated again.
+
+## Correction cycle 2 (2026-10-25)
+
+* Fast-forwarded cleanly to bot head 0099fc2a (score JSON only); main 36996d70. The gate 6 receipt (/tmp/rpi-441-gate6-1792905854, VERIFIED on 397b21e1) is retained and does not cover this work.
+* Backlog only: paired protocol freeze moved to RB-01 (R0); RB-21 is R5 collection and review; RB-13 to RB-20, RB-21, RB-22 and RB-24 dependencies corrected. PRD and proposal needed no edit: they already require the freeze in R0 and result collection in R5.
+* Prospective plan/details and critique: see the correction2 files; stale cycle 1 wording is superseded by appended history only.

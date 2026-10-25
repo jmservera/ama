@@ -22,3 +22,7 @@ Checked: link/anchor validation of changed files (no new broken links), no new r
 ## Correction cycle 1 (appended 2026-10-25)
 
 Prior review content is unchanged. RV-001 now has a fresh independent scoped review (see critique file): applicability contradiction corrected; pr442-qual-041 remains not closed. RV-002 to RV-004 are unchanged. Open: AC-139 sample count, error ceiling and mix owner (RB-03). Owner acceptance and coordinator source review remain outstanding.
+
+## Correction cycle 2 (appended 2026-10-25)
+
+Coordinator blocking finding on RB-21 dependency sequencing: corrected in the draft backlog (see correction2 critique). The earlier statement that the slice was ready for owner review is superseded; the coordinator must re-assess. RV-001 to RV-004 are unchanged.
