@@ -2,23 +2,23 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T15:33:12+00:00",
-  "commit": "e36ffdee08a51102a164ef21c9c5abeb921db699",
+  "scored_at": "2026-10-25T17:26:45+00:00",
+  "commit": "a3ce598429e06493dd369610a9f463bc5cf8b878",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40206914304",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40215798743",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "a03d1c3e90181f270f0b333b190eba7d0eb1a7e232845f1da1b4c2015ac15885",
+    "solution-code": "0ed69b2366406940a8c9e9fbb3adac9662b3e4fa2557657399b3efc356cd8445",
     "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
     "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "cc9c503bcd253a14a7f69abad98776a3640caf7fc444288a2521e728e43af5f6"
   },
-  "total": 72,
+  "total": 73,
   "sections": {
-    "A": 30,
+    "A": 31,
     "B": 22,
     "C": 11,
     "D": 9
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/identity.py:1-400",
-        "docs/adrs/0002-pilot-readiness-architecture.md:560-684"
+        "src/api/src/zava_forward/api/resident_preview/app.py:1-20",
+        "src/core/src/zava_forward/core/resident_preview.py:1-10"
       ],
-      "rationale": "New identity.py is a decoupled module with explicit typed contracts, threaded through auth/server/coordinator/forms/workflows/rulecards. ADR 0002 documents explicit failure domain (REGISTRY_LIMIT overflow, digest-collision note) and a scaling bound."
+      "rationale": "New resident_preview module is a cleanly isolated, decoupled boundary (core domain logic separate from api transport), reusing no staff server/auth code. Reinforces existing ceiling; already Excellent."
     },
     "A2": {
       "score": 5,
@@ -42,41 +42,37 @@
       "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
     },
     "A3": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_preview.py:175-200",
-        "src/core/src/zava_forward/core/resident_preview.py:460-490",
-        "src/api/src/zava_forward/api/resident_preview/app.py:27-40"
+        "src/api/README.md:2790-2840",
+        "src/core/src/zava_forward/core/resident_preview.py:476-512"
       ],
-      "rationale": "New boundary: default-deny grant resolution, positive-allowlist view decoupled from staff payloads, safe_start refusing cloud/store/AI env vars and normal-data paths, loopback-only binding, strict CSP. A stated, testable threat model with core controls in place."
+      "rationale": "Adds a documented threat model (assets, trust boundaries, per-threat control/evidence table) and default-deny safe_start guarding env, loopback and file provenance. Strong defensive evidence, already at ceiling."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:2860-2920",
-        "src/api/checks/regulatory_ux_check.py:102-146"
+        "src/api/tests/test_resident_preview_api.py:1-274",
+        "src/core/tests/test_resident_preview.py:1-359"
       ],
-      "rationale": "No implementation change; diff is BRD/PRD/pitch documentation only. Already at ceiling. Unchanged."
+      "rationale": "New feature ships complete with unit tests, HTTP integration tests and a browser check script; implementation is thorough. Already at ceiling."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "docs/brds/agentic-retrofit-programme-brd.md:1698-1736",
-        "docs/prds/zava-forward-retrofit-programme-demonstrator.md:988-998"
+        "src/api/README.md:2838-2844"
       ],
-      "rationale": "NFR-012/FR-052 propose metering, limits and Total Cost of AI reporting, and the pitch brief states a method for cost per accepted proposal, but nothing is measured or instrumented yet; still only resilience evidenced, cost remains a proposal. Unchanged from baseline."
+      "rationale": "Threat model honestly documents the preview has no request log, rate limit or concurrency bound as a residual risk, but no new metering, cost or reliability instrumentation is added for the scored system. Unchanged."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; pitch brief references an existing smallest-model rule (#\u200b108) but adds no new evaluation evidence. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static preview. Unchanged baseline."
     },
     "A7": {
       "score": 4,
-      "evidence": [
-        "src/core/src/zava_forward/core/continuity.py:490-540"
-      ],
-      "rationale": "No new agentic orchestration introduced by this documentation-only diff. Unchanged."
+      "evidence": [],
+      "rationale": "No new agentic orchestration introduced; resident preview is a static read-only HTTP view with no agent involvement. Unchanged."
     },
     "B1": {
       "score": 3,
@@ -118,7 +114,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "The pitch package is now a complete, cross-linked documentation set (README index, validation receipt, evidence folder, native-recovery guide) alongside the committed 54-slide deck. Capstone documentation is complete and navigable, meeting Excellent."
+      "rationale": "The pitch package is a complete, cross-linked documentation set alongside the committed deck. This PR's changes are software-component README/threat-model docs, not capstone deck documentation, so no further change. Already Excellent."
     },
     "B7": {
       "score": 4,
