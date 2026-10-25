@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-24
+ms.date: 2026-10-25
 ---
 
 ## Purpose
@@ -370,6 +370,7 @@ or infra acceptance claimed.
 | Compare cheaper rubric-scoring models | [Dated Sonnet/Haiku/Luna pilot](./resources/ai-tokenomics.md#rubric-scorer-model-pilot-2026-10-24) | Original final-response pilot plus two pinned-runtime native MCP invocations: one valid append each but nine grade differences and Haiku rationale overlength; not full hosted equivalence or application-model acceptance |
 | Complete exact-head validation after a rubric score append | [Rubric publication lifecycle](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion) | Bounded visibility wait, exact resulting SHA, failed-push/concurrent-movement denial; final-head receipt and independent/hosted checks without recursive scoring |
 | Design a looped agent goal | [Capstone Deliverables and Storage Map](../capstone/README.md) | Where each capstone asset (deck, pitch transcripts, thought leadership artifact, code) must be stored for the rubric gate, and which criteria score 0 until it exists |
+| Compare feedback-first agent delivery with AI software factories | [Thought-leadership source review](../capstone/thought-leadership/everything-but-the-software/README.md#related-work-review-of-25-october) | Pavlenko et al. v1: bounded optimisation, evidence-scoped memory, qualified efficiency estimates and distinction from the unchanged post-feature consolidation experiment |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Prepare for questions on AI cost, Tokenomics or cost per outcome | [AI Tokenomics](./resources/ai-tokenomics.md) | [Tokenomics pitch brief](../capstone/pitch/tokenomics-pitch-brief.md), [BRD AI economics](../brds/agentic-retrofit-programme-brd.md#ai-consumption-economics-tokenomics) (NFR-012, FR-052, OD-51), PRD NFR-017 and FR-061, [ADR 0001 cost model](../adrs/0001-azure-architecture.md#operational-targets-and-cost-model) and the [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) criteria A5, A6, B7 |

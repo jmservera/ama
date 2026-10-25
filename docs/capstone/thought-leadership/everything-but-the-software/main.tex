@@ -168,8 +168,8 @@ prior work and paired with an early-warning signal
 invariants, checkpoints, proportional gates and measures that an architect can
 apply on the next working day (Section~\ref{sec:feedbackfirst}).
 \item A consolidation harness and a controlled experiment protocol to test
-an intervention that is practised but untested in the controlled comparisons
-I found~\cite{openai2026harness,anthropic2025harness}. The protocol follows
+an intervention whose effect between feature steps is not isolated in the
+related work reviewed here~\cite{openai2026harness,anthropic2025harness,pavlenko2026factory}. The protocol follows
 the registered-report example of Lulla et~al.~\cite{lulla2026protocol}
 and HVE Core's Minimum Viable Experiment method, with hypotheses
 and decision rules to reconcile with the tagged protocol before registration
@@ -285,6 +285,40 @@ that each see a fragment~\cite{yan2025multiagents}; and models use long
 contexts unevenly and less reliably as they grow~\cite{liu2024lost,hong2025contextrot}.
 By contrast, tests that clarify intent help both the model and the person
 judging its output~\cite{fakhoury2024ticoder}.
+
+\subsection{Optimisation with behavioural feedback}\label{sec:factory}
+
+Pavlenko et~al.'s \emph{Towards an AI Software Factory for Data Systems}
+offers a complementary case~\cite{pavlenko2026factory}. They describe an
+Amdahl's-law limit: faster coding alone yields limited improvement across the
+development lifecycle. Their response deliberately narrows the problem to
+\emph{Evolutionary Coding Tasks}: existing, human-architected systems with
+stable semantics and automatically measurable objectives, such as latency.
+Hotspan uses telemetry, code analysis and past reviews to select optimisation
+targets and package evaluations. Darwin combines local code--test--debug--reflect
+cycles with agents that generate, refine and select hypotheses across candidate
+solutions. This is agent-led steering within an explicit objective, not merely
+faster execution of a fixed backlog.
+
+The authors report improvements across 45 open-source systems, with a mean
+performance gain of 13.8\% for the best-performing twenty, not the full set.
+For a Microsoft performance team, they report 0.35 pull requests per
+engineer-hour of application work, estimated at three times the rate with
+agentic coding tools. That calculation excludes the 57\% of team time spent
+building infrastructure and onboarding repositories; the output enters
+engineering review queues. These are reported optimisation results and an
+application-work productivity estimate, not a controlled estimate of
+end-to-end delivery, maintainability or future changeability. General semantic
+equivalence, automated reviewing and privacy-preserving shadow execution
+remain open challenges in their account~\cite{pavlenko2026factory}.
+
+The contrast matters for this paper. It is evidence against treating high
+agent throughput as inherently unproductive: an explicit objective and
+behavioural feedback can support useful improvement. It does not isolate the
+effect of consolidation between feature additions or establish that autonomous
+optimisation can choose the right product. The proposed experiment addresses
+that narrower consolidation question, not the invention of agent-led
+reflection or continuous optimisation.
 
 \subsection{The practitioner conversation}\label{sec:practitioners}
 
@@ -953,6 +987,14 @@ ideally, executable. The early-warning signals are lessons that exist only as
 prose, a read path that grows faster than the code, and problems that have to
 be solved twice.
 
+Pavlenko et~al.'s World Model offers a different design: preserve raw evidence,
+derive rebuildable views and retrieve compact, task-specific context with
+provenance and access controls. Updates are reviewed, and measured outcomes
+feed later decisions~\cite{pavlenko2026factory}. This distinguishes storing
+lessons from making them usable in the next decision; a small read path need
+not mean discarding history. It is an architectural alternative to an
+accumulating log, not a tested remedy for learning evaporation in this case.
+
 \subsection{Process-gate inflation}\label{sec:m4}
 
 \emph{Each failure was answered with another gate, until governing a change
@@ -1170,9 +1212,13 @@ clean-ups with recurring background agents that open small refactoring pull
 requests, alongside a documentation-gardening agent~\cite{openai2026harness}.
 Anthropic asks each session to leave a clean state and update a progress
 file~\cite{anthropic2025harness}. Neither account reports a controlled
-comparison. As far as I can find, consolidation between feature steps is
-practised but untested in that sense. Section~\ref{sec:experiment} specifies
-such a test; it does not report results.
+comparison of feature-only delivery with consolidation between feature steps.
+Darwin's continuous optimisation is a further precedent for automated
+improvement, but its performance evaluations do not isolate that intervention
+or test an unforeseen change request~\cite{pavlenko2026factory}
+(Section~\ref{sec:factory}). Section~\ref{sec:experiment} specifies the
+narrower comparison; it does not report results or claim a systematic review
+of every possible precedent.
 
 Practices P3 and P5 suggest a narrower intervention that an agent can run
 inside the loop, leaving human checkpoints to a coarser cadence, and that can
@@ -1247,8 +1293,9 @@ budget.
 % ===========================================================================
 \section{Testing the harness: an experiment protocol}\label{sec:experiment}
 
-The proposed contribution is a controlled test of a practised but untested
-intervention, not the invention of agent clean-up. It tests whether an agent
+The proposed contribution is a controlled comparison of scheduled post-feature
+consolidation, not the invention of agent clean-up or objective-guided
+optimisation~\cite{pavlenko2026factory}. It tests whether an agent
 can perform a bounded part of reflective correction, rather than whether
 another agent can autonomously steer the whole development process. Lulla et~al.'s
 registered-report protocol, which treats agent configurations as experimental
@@ -1275,11 +1322,12 @@ registration once external deposit is authorised.
 % TODO(author): record and verify the protocol tag, full commit SHA, suite and analysis checksums, prior-run chronology and data already seen; do not infer a pre-run freeze from a later upload.
 % TODO(author): reconcile the hypotheses, thresholds and analysis implementation with that snapshot, including H6 interval estimation, before registration and fresh confirmatory runs.
 % TODO(author): supply the actual registration date and URL after registration is complete; do not backdate it or confuse a draft or Git tag with registration.
-I found no study that tests consolidation steps
-interleaved between agent feature steps. The closest, SlopCodeBench, shows
-that quality instructions alone shift where agents start but not how fast
-they degrade~\cite{orlanski2026slopcodebench}; the harness tests a structural
-intervention instead.
+The related work reviewed here does not isolate consolidation steps interleaved
+between successive feature additions. Darwin evaluates optimisation against
+measurable objectives~\cite{pavlenko2026factory}; SlopCodeBench shows that
+quality instructions alone shift where agents start but not how fast they
+degrade~\cite{orlanski2026slopcodebench}. The harness tests a scheduled
+structural intervention and subsequent changeability instead.
 
 \subsection{Hypotheses}
 
@@ -1615,6 +1663,17 @@ the proxy capture observed here. I propose that a steering role needs
 behavioural evidence, bounded authority to act and checks that can disconfirm
 its judgement. More agents do not by themselves supply those conditions.
 
+Darwin already delegates parts of this steering: agents turn observations
+into hypotheses and guide which candidate to explore next. Its boundary is
+important. Search improves an explicit objective within an existing
+architecture; engineers can steer objective setting and evaluation packaging,
+World Model updates are reviewed, and production output still enters human
+review queues~\cite{pavlenko2026factory}. This narrows the open question
+from whether agents can perform any reflection to whether their correction
+preserves useful future options as requirements change. Performance gains do
+not establish that result, but they are a relevant precedent for bounded
+delegation.
+
 The present experiment takes one step towards that question. It asks whether
 an agent-led consolidation package leaves software more able to absorb an
 unforeseen change. H6 is the closest probe of preserved future options;
@@ -1772,9 +1831,10 @@ explanations or establish that model capability was irrelevant. These
 patterns fit old lessons of software engineering; I propose that agentic
 throughput can amplify them. My practical response is to make
 feedback the primary output of every cycle: a running increment, a human
-checkpoint and executable lessons. The further question is whether another
-agent can perform some of the reflection and correction that those
-checkpoints currently obtain from a human. Accountability for goals and
+checkpoint and executable lessons. Objective-guided optimisation provides a
+bounded precedent for agent-led correction~\cite{pavlenko2026factory}; the
+further question is whether such correction preserves changeability as
+features accumulate. Accountability for goals and
 consequential decisions remains distinct from delegating bounded corrective
 work; the case does not establish that only humans can perform that work.
 
@@ -1819,7 +1879,10 @@ with the supplied scripts. Bibliographic checks do not establish the validity
 of every claim in a source. For future HIR analysis I plan to use Cowork to
 extract events and will personally check classifications against source
 records and resolve ambiguous cases. These are planned checks, not completed
-results. I selected the case, made the analytical judgements and take
+results. Copilot also compared Pavlenko et~al.'s version~1 paper against the
+manuscript and revised the related-work, learning and bounded-steering
+discussion. Checking that source's reported scope and metadata is not an
+independent verification of its experiments. I selected the case, made the analytical judgements and take
 responsibility for the content.
 % TODO(author): record underlying model/build identifiers and historical runtime or reviewer versions where exposed; do not infer hidden versions from interface labels or claim exhaustive manual review.
 % TODO(author): verify numerical findings attributed to cited studies against the original papers, including SlopCodeBench and METR; author verification is pending.
@@ -2333,6 +2396,16 @@ D.~L. Parnas.
 \newblock In \emph{Proceedings of the 16th International Conference on Software
 Engineering (ICSE '94)}, pages 279--287. IEEE, 1994.
 \newblock doi:10.1109/ICSE.1994.296790.
+
+\bibitem{pavlenko2026factory}
+A.~Pavlenko, B.~Crivat, B.~Haynes, C.~Curino, F.~Psallidas, J.~Slawinski,
+J.~Freischuetz, L.~Pereira~Sanchez, M.~Weimer, M.~Demarne, M.~Jasny,
+M.~Gandhi, M.~Bovykin, M.~Milletari, P.~Ghosh, Q.~Bai, R.~Ramakrishnan,
+R.~Pandita, S.~Matusevich, S.~Venkataraman, S.~Krishnan, M.~T.~Mahmood,
+T.~Bang, V.~Emani, X.~Zhao, and Y.~Zhu.
+\newblock Towards an {AI} software factory for data systems.
+\newblock arXiv:2609.36323v1, 28 September 2026.
+\newblock \url{https://arxiv.org/abs/2609.36323v1}.
 
 \bibitem{peralta2026merged}
 S.~R.~O. Peralta, F.~Hoshi, H.~Washizaki, N.~Ubayashi, I.~Kondo, Y.~Higo,
