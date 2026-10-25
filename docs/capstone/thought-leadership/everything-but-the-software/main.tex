@@ -1626,6 +1626,51 @@ support this bounded consolidation role, not unrestricted process steering.
 A null or negative result would challenge this particular intervention, not
 prove that reflective work cannot be delegated to agents.
 
+\subsection{If drift is contained, what remains for us?}\label{sec:humanquestions}
+
+Even if an agent can contain code drift, the human questions do not
+disappear. Better software outcomes would not, by themselves, establish how
+people should participate in producing them. Three questions remain open.
+
+\emph{What is our role in the process?} If agents can both implement features
+and consolidate the result, do we primarily choose problems, frame intent and
+judge consequences, or does meaningful participation also require working on
+the system itself? One possible direction is to spend more of the human
+effort on understanding users, challenging goals, designing experiments and
+deciding what not to build. That is a proposal for using the capacity released
+by automation, not evidence that these activities belong exclusively to
+humans or that implementation no longer contributes to understanding.
+
+\emph{How much should we intervene?} Too little involvement may leave us
+unable to recognise a wrong direction; intervening in every step may prevent
+the delegation we hoped to achieve. A possible starting point is a cadence of
+hands-on product use, with additional intervention when uncertainty,
+consequences or difficulty of reversal increase. The appropriate balance
+remains untested. HIR and intervention demand describe help supplied or
+requested; they do not identify an optimal level of involvement. A timely
+intervention that challenges an assumption or protects a user may be valuable,
+even if it raises the measured rate.
+
+\emph{What will we learn, and how?} We may learn more about the domain and
+the consequences of our choices while learning less through implementation.
+But if agents also perform the correction, where will the understanding
+needed to question them come from? Naur's theory building and Bainbridge's
+warning about eroded operator skills make this a practical concern as well
+as a philosophical one~\cite{naur1985theory,bainbridge1983ironies}. Possible
+practices include predicting behaviour before trying an increment,
+investigating surprises and periodically explaining or changing the core
+design without agent assistance. Whether these preserve understanding,
+especially for people still learning the craft, needs separate study;
+producing another design note would not establish that they do.
+
+These questions concern agency, expertise, responsibility and the meaning of
+the work, not only throughput. Some aspects could be studied through human
+task performance, comprehension and learning over time; what participation
+we value also requires judgement that a code-quality result cannot settle.
+This paper offers directions for that inquiry, not answers. Neither the case
+nor the proposed experiment determines what humans should do, how much we
+should intervene or what we will learn if code drift is contained.
+
 \subsection{The crisis reframed}
 
 The existential question is usually put as whether machines will replace
@@ -1741,6 +1786,10 @@ can choose the right product or autonomously recover every delivery failure.
 Section~\ref{sec:experiment} sets out how to find out. The larger question of
 agent-led steering remains open; the first requirement is evidence that the
 additional agent improves outcomes rather than adds another layer of work.
+Even then, what people should do, when they should intervene and how they
+will continue to learn remain open questions. The proposals in
+Section~\ref{sec:humanquestions} are starting points, not conclusions of this
+study.
 
 \section*{Acknowledgements}
 % TODO(author): thank reviewers once they have commented.
