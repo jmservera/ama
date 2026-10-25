@@ -8,23 +8,162 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current status
 
+The repository-context revision below is the latest source record. It adds
+bounded observations from Aithena, Squad and PhotoCraft without changing the
+title, subtitle, author affiliation or H1-H7 experiment. AMA remains the
+single principal case; these selected examples are not comparative results.
+
+The table-flow revision below supersedes earlier confirmatory first-pass
+wording and PDF-handling instructions. The title and subtitle are unchanged.
+The four-runs-per-arm first pass is now explicitly exploratory; any later
+confirmatory study needs a separately specified prospective analysis plan.
+
 The 25 October author clarification supersedes the earlier method and study
 descriptions below. Execution is paused. The author reports tagging the protocol;
 the exact snapshot and completed registration remain to be supplied. Earlier
 runs retain their original labels and timestamps and will not enter the fresh
-registered confirmatory analysis. No study results are reported.
+first-pass analysis. No study results are reported.
 
 The separate private experiment kit is the intended study record. The ancillary
 MVE notes here are earlier proposals, not the frozen or registered protocol.
 Do not overwrite the tagged kit with these copies. Registration preparation is
 deferred; public release and external deposits remain subject to permission.
 
-The source is now the critique-revised draft v4. This workflow did not replace
+The source is now the critique-revised draft v4. The earlier workflow did not replace
 the PDF with its external build or refresh the arXiv bundle. A separate
 workspace build regenerated the PDF during editing; the owner then explicitly
 selected leaving that current PDF untouched. Pre-edit PDF preservation cannot
 be claimed. The external compilation is validation output, not a submission
 package.
+
+## Repository Context and Hypothesis Revision 25 October
+
+The author clarified that the hypothesis predates AMA. Aithena's maintenance
+difficulty is retrospective author testimony, not an independently measured
+complexity trajectory. The expectation that HVE's research, plan critique
+and implementation review would improve on simpler workflows is identified
+as an expectation, not an established framework advantage.
+
+The [minimised observation record](./anc/repository-observations-2026-10-25.json)
+retains source SHAs, queries, counts, sampling rules, claim locators and
+exploratory rivals/predictions. It excludes reporter identities, raw issue
+bodies, attachments, private standards and proprietary application material.
+Public project code was inspected narrowly, not executed. No unspecified
+Microsoft Office clone was selected or treated as evidence.
+
+| Source | Inspection boundary | Supported observation and qualification |
+| --- | --- | --- |
+| [PhotoCraft](https://github.com/storytold/photocraft/tree/5bb853654196eca807212ff8955ba2eb293071ea) | Pinned `main`; README/agent instructions, CI, architecture, scorecard, gap/parity records, menu-count implementation; 15 declared bug reports and two selected PR bodies | A Photoshop reimplementation, not the entire Adobe suite. Its 631/631 menu count checks recognised command/tool/UI paths, not execution of every reference workflow. Its own 10 October assessment distinguishes about 76% breadth from about 45% readiness; these are historical, partly subjective project estimates |
+| [Aithena](https://github.com/jmservera/aithena/tree/f27aa2e9f949ea76f2a437249e68b52670a22835) | Pinned `dev`; Squad records, verification script, six selected audit reports, two narrow source traces and all open-PR metadata | Review/retrospective/quality-gate machinery exists. Active preflight tests coexist with unconditional Phase 3 scenario skips; the indexer acknowledges in a `finally` block. No runtime failure, lost document or measured maintainability effect is claimed |
+| [Squad](https://github.com/bradygaster/squad/blob/481c944596abfa2053e2acd88d765639f994d795/README.md) | Corrected repository, pinned `dev` README | Persistent learning and human-led accountability are explicit; current documentation is not historical-version evidence for Aithena |
+
+At the 25 October 2026 22:52:26 UTC count query:
+
+| Tracker category | PhotoCraft | Aithena |
+| --- | --- | --- |
+| Open issues excluding PRs | 2,060 | 34 |
+| Open issues with exact `bug` label | 212 | 3 |
+| Closed issues | 2,604 | 705 |
+| Open PRs | 1,091 | 35 |
+| Merged PRs | 3,189 | 842 |
+| Closed-unmerged PRs | 610 | 240 |
+
+The complete PhotoCraft open-PR inventory contains 49 drafts. REST's combined
+`open_issues_count` is not a bug count. The bug-body sample consists of the
+ten newest and five oldest open bug-labelled issues by creation time, not a
+representative defect sample. Selected reports cover printing, PSD opening,
+platform differences and network-share prompts; the latter explicitly says
+the file saves. Some reports are duplicates or need clarification. Issue
+labels, open state and pinned source refer to different kinds of evidence;
+the separate live API requests are not an atomic snapshot.
+
+Counter-evidence is retained rather than omitted: meaningful corpus and
+layer checks, fixed gaps and large merged output; PhotoCraft PR #9552's
+helper-consolidation proposal; and 34 of Aithena's 35 open PRs labelled
+`dependencies`, with the remaining PR supplying benchmark evidence. Queue
+size is not a measure of architectural decay or unfinished feature count.
+PhotoCraft's own third-party export-oracle gap is narrower than an absence
+of behavioural tests. Its scorecard/gap documents disagree on a corpus
+denominator; no success ratio is calculated from those fields. Historical
+performance and parity estimates are not presented as fresh measurements.
+
+The manuscript derives a candidate distinction between issue-level
+correction and cumulative system steering. A separate matched-resource,
+independent-oracle comparison could distinguish human-specific judgement,
+agent-led steering and coverage explanations. No superiority, human
+necessity, defect incidence or causal effect is established, and the tagged
+consolidation experiment is not silently redesigned. Selection after the
+author's experience, alpha-stage scope, adoption/detection and review
+capacity remain alternative explanations.
+
+Three source references are added to both bibliographies. Hypothesis
+Generation assistance is disclosed under the existing Scientific Agent
+Skills citation; it is not independent empirical verification.
+
+## Table Flow and Developmental Revision 25 October
+
+The owner authorised continuing on the existing PR branch, preserving other
+uncommitted work and replacing `main.pdf` with this revision's build.
+
+* Ordinary tables now use `[!htbp]`, with selective `placeins` barriers between
+  the case, mechanisms, practice, protocol, discussion and conclusion.
+  The mechanisms summary follows its introduction; the practices table stays
+  in its appendix. No `[H]` forcing or historical evidence relocation is used.
+* A bridge distinguishes the missing identity/staff configuration from the
+  future-changeability hypothesis. Consolidation is not claimed to have
+  prevented the observed sign-in failure.
+* By owner decision, the first pass is exploratory. Existing arms, thresholds,
+  budgets and sample sizes are retained; H4 accuracy non-inferiority and H7
+  endpoint/zero-or-negative-gap policies are explicitly unresolved. Binary
+  intervals, model fallbacks, failure disposition and any later confirmatory
+  hierarchy require prospective decisions, not invented editorial fixes.
+* A compact evidence-package requirement names the missing score scope,
+  release/configuration and failed-journey linkage. No new API captures,
+  same-release verification, registration or study results are claimed.
+* Universal attention and causal scrutiny claims are bounded, and repeated
+  protocol qualifications are shortened using cross-references.
+* Both bibliographies include Kassis et al., *Scientific Agent Skills*,
+  doi:10.48550/arXiv.2609.00065, for the revision method. The latest arXiv
+  record was checked on 25 October 2026 (v2, five authors, no published
+  journal reference shown); the citation uses the unversioned DOI.
+
+The earlier revision and validation records below remain historical. They
+do not establish this revision's PDF placement or publication gates.
+
+### Table-Flow Build Record
+
+The external build at `/tmp/ama-paper-tableflow-aprrsq/` has 42 pages.
+Final shell-escape-disabled pdfLaTeX passes report no warnings, unresolved
+references or underfull/overfull boxes. The structural checker passes with
+104 matching references, results disabled and a 1,676-character source
+abstract; all seven existing paper-tooling tests pass.
+
+Rendered whole-document contact sheets and full-size table pages were
+inspected. The revised PDF replaces `main.pdf` with owner permission; the
+arXiv bundle is not refreshed. Auxiliary labels and extracted PDF references
+give these locations:
+
+| Table | First discussion | Table page |
+| --- | --- | --- |
+| 1: Evidence audit trail | 9 | 10 |
+| 2: Timeline | 10 | 11 |
+| 3: Period metrics | 10 | 11 |
+| 4: Churn | 10 | 11 |
+| 5: Within-case contrasts | 12 | 12 |
+| 6: Mechanisms summary | 14 | 14 |
+| 7: Working theory | 14 | 15 |
+| 8: Protocol summary | 20 | 21 |
+| 9: Hypotheses | 22 | 22 |
+| 10: Recorded rivals | 29 | 29 |
+| 11: Additional rivals | 29 | 30 |
+| 12: Appendix practices | 39 | 39 |
+
+The larger protocol and additional-rivals tables use nearby dedicated pages.
+This layout inspection is not an accessibility certification, independent
+empirical review or verification of missing source evidence. Existing
+unrelated staged/unstaged/untracked work is preserved. The complete
+clean-candidate publication gate and independent exact-head assessment
+have not run; no commit, push or external submission is claimed.
 
 ## Critique Revision 25 October
 
@@ -162,7 +301,7 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 103 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 104 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
@@ -217,8 +356,8 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 
 * Overleaf: upload the zip as a new project. The compiler is pdfLaTeX. The zip has `main.tex` and `anc/` at its root, the layout arXiv expects.
 * Locally: run `pdflatex main.tex` twice.
-* Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
-* The switch `\resultsfalse` near the top keeps the study status note visible. Set `\resultstrue` only after the registered runs and checked analysis are complete.
+* Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, placeins, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
+* The switch `\resultsfalse` near the top keeps the study status note visible. Set `\resultstrue` only after the prospectively documented runs and checked analysis are complete.
 
 ## What changed in draft v2
 
@@ -331,7 +470,7 @@ the accepted A/B/C design has 120 feature, 80 post-feature and 12 CR sessions:
     * recover historical runtime/build identifiers without inventing unexposed versions;
     * obtain permissions and confirm partner anonymisation without naming either partner or its staff;
     * verify the exact tagged protocol, suite, analysis and prior-run chronology before registration;
-    * complete registration before fresh confirmatory runs and retain the real date and URL;
+    * document the exploratory-framing amendment and complete registration before fresh runs, retaining the real date and URL;
     * complete independent suite review, reviewer recruitment and HIR coverage checks;
     * reconcile credit and monetary limits, calibration choices and analysis rules;
     * write results and update acknowledgements only after the corresponding work occurs.
@@ -350,8 +489,8 @@ the accepted A/B/C design has 120 feature, 80 post-feature and 12 CR sessions:
 Continue from the separately tagged private study kit, not from the earlier
 ancillary proposal copies. Verify that the tagged record matches the accepted
 design and analysis before registration. Preserve every earlier run and its
-original labels and timestamps; start fresh confirmatory runs only after
-registration. Do not change frozen materials in place or silently replace the
+original labels and timestamps; start the fresh exploratory first pass only after
+prospective documentation and registration. Do not change frozen materials in place or silently replace the
 original design after seeing results.
 
 ## arXiv notes (checked 24 Oct 2026)

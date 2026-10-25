@@ -201,6 +201,12 @@ remain open; no new legal or redress authority is inferred.
 
 ## Task Routing
 
+For scientific-paper writing, revision or assisted review, use
+[AMA Scientific Paper Writer and Reviewer](../../.github/agents/ama-scientific-paper-writer-reviewer.agent.md)
+and [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md).
+The agent separates editing from read-only review and labels generic guidance
+when actual venue requirements or scientific evidence cannot be verified.
+
 The new #360 bounded RG loop records [actual publisher capacity refusals](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360)
 and the [dated acceptance delta](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19).
 Owner RG-resource authority is resolved, but unrestricted SKU GET/quota did
@@ -372,6 +378,8 @@ or infra acceptance claimed.
 | Design a looped agent goal | [Capstone Deliverables and Storage Map](../capstone/README.md) | Where each capstone asset (deck, pitch transcripts, thought leadership artifact, code) must be stored for the rubric gate, and which criteria score 0 until it exists |
 | Compare feedback-first agent delivery with AI software factories | [Thought-leadership source review](../capstone/thought-leadership/everything-but-the-software/README.md#related-work-review-of-25-october) | Pavlenko et al. v1: bounded optimisation, evidence-scoped memory, qualified efficiency estimates and distinction from the unchanged post-feature consolidation experiment |
 | Trace the critique-revised agentic-delivery paper | [Draft v4 revision and boundaries](../capstone/thought-leadership/everything-but-the-software/README.md#critique-revision-25-october) | Observed usability/completion divergence, candidate-mechanism audits, expanded rivals, verified citation corrections and preserved protocol with explicit identification/precision limits; no results, independent empirical review or publication approval |
+| Trace the paper's table-flow and exploratory first-pass revision | [Table flow and developmental revision](../capstone/thought-leadership/everything-but-the-software/README.md#table-flow-and-developmental-revision-25-october) | Unchanged title/subtitle; nearby table placement, operational-failure bridge, unresolved H4/H7 definitions and owner-selected exploratory framing; no private-tag amendment or new empirical evidence |
+| Trace the broader motivation for the paper's steering hypothesis | [Repository-context revision](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-and-hypothesis-revision-25-october) | Pinned Aithena, Squad and PhotoCraft observations, dated tracker counts, menu-versus-behaviour distinction and retained counter-evidence; purposive context, not comparative framework results, measured decay or proof of human necessity |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Prepare for questions on AI cost, Tokenomics or cost per outcome | [AI Tokenomics](./resources/ai-tokenomics.md) | [Tokenomics pitch brief](../capstone/pitch/tokenomics-pitch-brief.md), [BRD AI economics](../brds/agentic-retrofit-programme-brd.md#ai-consumption-economics-tokenomics) (NFR-012, FR-052, OD-51), PRD NFR-017 and FR-061, [ADR 0001 cost model](../adrs/0001-azure-architecture.md#operational-targets-and-cost-model) and the [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) criteria A5, A6, B7 |
@@ -461,6 +469,7 @@ official links for every snapshot. Check it before relying on any file below.
 | --- | --- |
 | [Project Memory](./memory.md) | AMA programme process, capstone rubric review requirement, customer-first presentation and demo guidance, and owner preferences |
 | [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) | Complete FY27 participant rubric for technical excellence, communication and executive presence, consultative and stakeholder skills, and the thought leadership artifact |
+| [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md) | Genre-sensitive writing techniques, evidence and venue-policy qualifications, and a dated four-source register |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
 | [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
 
@@ -471,6 +480,7 @@ official links for every snapshot. Check it before relying on any file below.
 | `company-*` in [.github/agents/](../../.github/agents/) | Zava North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
 | [company-executive-reviewer.agent.md](../../.github/agents/company-executive-reviewer.agent.md) | Owner-delegated, draft-only target ratification or changes-requested decision; not company approval or operational authority |
 | `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration, presentation communications and backlog delivery coordination |
+| [AMA Scientific Paper Writer and Reviewer](../../.github/agents/ama-scientific-paper-writer-reviewer.agent.md) | Scoped write, revise and read-only assisted review modes with explicit evidence limits and human intellectual ownership |
 
 ## Maintenance
 

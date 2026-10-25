@@ -19,6 +19,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{placeins}
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{xcolor}
@@ -36,16 +37,16 @@
 \renewcommand{\arraystretch}{1.15}
 \newif\ifresults
 \resultsfalse
-% TODO(author): set to \resultstrue only after the registered runs and checked analysis are complete; retain the pre-registration run history.
+% TODO(author): set to \resultstrue only after the prospectively documented runs and checked analysis are complete; retain the earlier run history.
 
 \title{Everything but the Software:\\[4pt]
 \large Feature-Driven Decay in an Agentic Coding Loop.\\
 An Exploratory Case Study and an Experiment Protocol}
 
-\author{Juan Manuel Servera Bondroit\thanks{Microsoft, Zurich, Switzerland.
-Contact: \texttt{juanserv@microsoft.com}. The views expressed are the
+\author{Juan Manuel Servera Bondroit\thanks{The views expressed are the
 author's own and do not necessarily reflect those of Microsoft. The case
-organisation, Zava North Homes, is fictional.}}
+organisation, Zava North Homes, is fictional.}\\[4pt]
+\small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
 
 \date{Draft of 25 October 2026}
 % TODO(author): replace with the submission date.
@@ -68,8 +69,8 @@ candidate mechanisms organise the evidence: specification inflation, proxy
 capture, learning evaporation, process-gate inflation and feedback starvation.
 The confounded participant-observer case establishes neither accelerated code
 decay nor the effectiveness of a remedy. It motivates a test of scheduled,
-behaviour-preserving consolidation after each feature. The preserved,
-unregistered protocol compares feature-only, consolidation and review-only
+behaviour-preserving consolidation after each feature. The unregistered, exploratory first-pass protocol compares feature-only,
+consolidation and review-only
 arms on retained behaviour, an unforeseen change request, internal quality,
 intervention demand and cost. Its contrasts estimate a consolidation package,
 including extra resources and different notes, not refactoring alone. No study
@@ -107,6 +108,16 @@ Andrew Murphy reminds engineering leaders that the speed of writing code was
 never the bottleneck~\cite{murphy2026speed}. I knew these warnings and
 followed many of them. I hit the wall anyway, and the way I hit it is
 instructive.
+
+The hypothesis did not originate with this repository alone. In an earlier
+attempt, Aithena, I used Squad and found the resulting system too complex
+to maintain comfortably; that is my retrospective judgement, not a measured
+complexity result. I expected HVE Core's research, plan critique and
+post-implementation review to improve on less structured agent workflows.
+That expectation was not a controlled framework comparison. AMA is the
+focal, traceable case; selected public repository observations, especially
+PhotoCraft's attempt at Photoshop parity, provide additional motivation
+(Section~\ref{sec:repositoryobservations}).
 
 The central question is how feature-centric agentic delivery can produce
 strong completion signals while failing to preserve a usable and adaptable
@@ -167,8 +178,8 @@ an intervention whose effect between feature steps is not isolated in the
 related work reviewed here~\cite{openai2026harness,anthropic2025harness,pavlenko2026factory}. The protocol follows
 the registered-report example of Lulla et~al.~\cite{lulla2026protocol}
 and HVE Core's Minimum Viable Experiment method. It retains the tagged design
-and makes its identification and precision limits explicit; registration and
-fresh confirmatory runs remain pending (Sections~\ref{sec:harness}
+and makes its identification and precision limits explicit; prospective
+documentation and fresh exploratory runs remain pending (Sections~\ref{sec:harness}
 and~\ref{sec:experiment}).
 \end{enumerate}
 
@@ -477,6 +488,80 @@ case. Its snapshot commit is
 \texttt{e9af018fe5ffbfbc72321a8bca21fb987359af08}. Historical use is my account;
 the snapshot identifiers do not establish an installation date.
 
+\subsection{Motivating experience and external repository observations}\label{sec:repositoryobservations}
+
+\emph{Aithena and Squad.} Aithena is my book-search project, with PDF
+ingestion, full-text and embedding-based search, and a browser interface.
+At the inspected \texttt{dev} revision \texttt{f27aa2e}, its Squad records
+describe specialist agents, shared decisions, a work monitor, pre-task design
+review and post-failure retrospectives~\cite{servera2026aithena}. Squad's
+current documentation describes persistent learning through repository
+files, but explicitly calls the framework human-led and retains human
+accountability for priorities, review and decisions~\cite{squad2026}.
+These are designed feedback mechanisms, not evidence that every session
+used them effectively or that self-improvement was demonstrated.
+
+There are concrete reasons to inspect the integration boundary rather than
+rely on my complexity judgement. Aithena issue \#1828 reports misleading
+end-to-end coverage from skipped Phase~3 scenarios. The pinned test file
+contains active preflight assertions as well as unconditional
+\texttt{pytest.skip} calls in fixture-dependent scenarios: neither ``all
+tests are skipped'' nor ``all intended behaviour is tested'' follows.
+Issue \#1804 reports ingestion acknowledgement after processing failures;
+the pinned callback places \texttt{basic\_ack} in its \texttt{finally}
+block. This static observation supports examining the failure contract,
+not a claim that a particular document was lost in a reproduced run.
+The repository also records quality gates, releases and substantive search
+functionality. Of its 35 open PRs at retrieval, 34 carried a dependency
+label; that queue cannot reasonably be treated as 35 unfinished product
+features or a measure of architectural decay~\cite{servera2026aithena}.
+
+\emph{PhotoCraft: a known target is not a complete oracle.} PhotoCraft
+describes itself as an early-alpha, clean-room Rust reimplementation of
+Adobe Photoshop, not the whole Adobe suite~\cite{photocraft2026}.
+Its controls include dependency-layer checks, regression tests, real-file
+corpora, visual inspection instructions and a common command interface for
+the UI, CLI and MCP. Its committed scorecard reports 631 of 631 menu items
+live. The inspected \texttt{parity.rs} counts catalogue entries for which
+\texttt{is\_live} recognises a command, tool or UI handler; it does not execute
+each Photoshop workflow or compare its result. The project's README
+explicitly warns that menu wiring is not behaviour.
+
+The distinction is visible in the project's own records. Its dated
+10~October parity assessment estimated about 76\% feature breadth but
+about 45\% readiness for real work; these are project-defined, partly
+subjective estimates, not independently validated measurements or a fresh
+assessment of the inspected revision. Its gap register separately records
+PSD exchange and interactive-performance limitations. It states that its
+exports are not opened in a third-party editor by an automated test.
+This is narrower and more informative than treating a large implementation
+surface as established Photoshop equivalence~\cite{photocraft2026}.
+
+At the 25~October 2026, 22:52~UTC tracker snapshot, PhotoCraft had 2,060
+open issues, including 212 carrying the \texttt{bug} label, and 1,091 open
+PRs; the paginated PR list contained 49 drafts. It also had 2,604 closed
+issues and 3,189 merged PRs. Those counts describe tracker state, not unique
+confirmed defects, failed implementations or a defect rate. Selected open
+reports describe Windows printing attempting to call CUPS (\#5328), repeated
+save/conflict prompts on a network share despite the file being saved
+(\#9440), and a crash opening a large PSD (\#9448). These reports were not
+reproduced here. The sample also contains duplicate labels, while PR
+\#9552 proposes sharing duplicated helpers across crates: evidence of
+reported problems and corrective work, not an absence of consolidation.
+An open queue can reflect active contribution, review capacity, overlapping
+proposals or ordinary alpha-stage development~\cite{photocraft2026}.
+
+Knowing Photoshop's visible features makes reference-based testing
+conceivable, not automatic. File interchange, platform behaviour, large
+documents, responsiveness and interacting tools need explicit inputs,
+oracles and acceptance tolerances. Computer use could help exercise those
+comparisons; access to the original application alone does not establish
+that they occurred. These selected examples motivate a candidate distinction
+between \emph{issue-level correction} and \emph{cumulative system steering}.
+They do not establish that HVE Core or Squad is inferior to simpler agents,
+that every large agent-built project deteriorates, or that steering must
+permanently remain human.
+
 % ===========================================================================
 \section{Case and method}\label{sec:method}
 
@@ -605,11 +690,28 @@ I have checked the repository figures and Azure expenditure reported here.
 Independent author checks of numerical findings from cited studies and of
 the log-growth figure remain pending.
 % TODO(author): retain the dated GitHub API responses and rubric-score snapshot underlying the case counts, or document any unavailable source evidence.
+The central discrepancy needs a compact, release-linked evidence package:
+the dated score and its assessed capability scope, the deployment revision
+and configuration, and dated evidence of the failed sign-in journey. The
+retained account does not yet establish that the scorer assessed the same
+release and capability claim as the usability observation. Until those links
+are checked, I report their coexistence in the case chronology, not a
+verified same-release contradiction.
 The report is informed by established guidance for case
 study research in software engineering~\cite{runeson2009guidelines} and the
 ACM SIGSOFT Empirical Standards~\cite{sigsoft2021standards}. As the
 sole developer and author I am a participant-observer;
 Section~\ref{sec:threats} discusses what that implies.
+
+The contextual observations in Section~\ref{sec:repositoryobservations}
+were added on 25~October after the case analysis. They use purposively
+selected public repositories, pinned source files, GitHub tracker counts,
+and ten newest plus five oldest open \texttt{bug}-labelled PhotoCraft
+reports. They are not a systematically sampled multi-case study and are
+not pooled with AMA's measurements. The ancillary repository-observation
+record states the retrieval boundary, locators and exclusions. No external
+application, original Photoshop installation or reference-parity suite was
+executed.
 
 \subsection{Constructs and evidential boundaries}\label{sec:constructs}
 
@@ -647,7 +749,7 @@ not independent corroboration of every statement they contain. The 22 and
 24~October instructions, historical model use and intermittent product use
 remain author reports where original records have not been recovered.
 
-\begin{table}[p]
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{Observation--interpretation--proposition audit trail. Interpretations
 are contestable; the proposed tests have not been performed.}\label{tab:audittrail}
@@ -696,12 +798,13 @@ check of O1--O5 against retained source and execution records remains necessary
 before presenting the interpretations as independently corroborated.
 
 % ===========================================================================
+\FloatBarrier
 \section{What happened}\label{sec:what}
 
 Table~\ref{tab:timeline} summarises the case and Table~\ref{tab:metrics}
 compares the periods before and during the delivery loop.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering\small
 \caption{Timeline of the case (all dates 2026).}\label{tab:timeline}
 \begin{tabularx}{\textwidth}{@{}L{2.2cm}L{2.9cm}Y@{}}
@@ -734,7 +837,7 @@ and refactoring instruction (24 Oct). \\
 \end{tabularx}
 \end{table}
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering\small
 \caption{Before and during the delivery loop. Counts from the repository at
 commit \texttt{29c6b51} and the GitHub API on 24 October 2026; hedging
@@ -757,6 +860,7 @@ sign-in blocked \\
 \end{tabularx}
 \end{table}
 
+\FloatBarrier
 \subsection{Research, requirements and a usable MVP}
 
 Table~\ref{tab:churn} adds code-level activity from the pinned history.
@@ -770,7 +874,7 @@ rules and commands are printed there. The additions and removals show work
 volume, not net code size, maintainability or delivered value. No complexity
 comparison was made because \texttt{lizard} was not installed.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering\small
 \caption{Text lines added and removed in first-parent integrations, including
 PR-numbered squash commits, through \texttt{29c6b51}. Detected pure renames
@@ -840,7 +944,7 @@ the loop. Both limit a story in which autonomous coordination alone created
 the problem. The successful health and restart checks are also real successes;
 they did not exercise the same outcome as the blocked sign-in journey.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{Within-case contrasts and their limits, using the existing
 chronology and measurements.}\label{tab:contrasts}
@@ -949,6 +1053,7 @@ functionality and refactor. I do not evaluate the outcome of that instruction
 here.
 
 % ===========================================================================
+\FloatBarrier
 \section{Five candidate mechanisms}\label{sec:mechanisms}
 
 I propose five candidate mechanisms consistent with how a loop that merged a pull
@@ -957,6 +1062,38 @@ Table~\ref{tab:mechanisms} summarises them; Appendix~\ref{app:mechanismaudit}
 sets out a definition, indicators, counter-evidence, rivals and testable
 implication for each. These are an integrated explanatory synthesis, not five
 newly discovered phenomena or independently established causal mechanisms.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Five candidate mechanisms, case indicators, relevant prior work
+and proposed early-warning signals. Indicators are not causal tests.}\label{tab:mechanisms}
+\begin{tabularx}{\textwidth}{@{}L{2.3cm}YL{3.1cm}L{3.2cm}@{}}
+\toprule
+Candidate & Case indicators & Related prior work & Early-warning signal \\
+\midrule
+Specification inflation & BRD $\approx$37,900 and PRD $\approx$33,900 words;
+192 issues; 17 criteria on one issue and 13 on the smallest preview &
+Royce; Gall; Brooks; B\"ockeler; Beck & Specification growth versus
+human-validated behaviour \\
+Proxy capture & Artefacts made a merge gate; 78-line evidence record for a
+two-line fix; LLM judge scores completeness 5/5 with no usable system; hedge
+density tripled & Goodhart; Strathern; Beck's genie; ImpossibleBench; METR &
+Artefacts per behaviour change; scores that disagree with a live demo \\
+Learning evaporation & Simplicity and sign-in lessons absent from briefs;
+last cited 13 Oct; read path $\approx$139,000 words & Naur; context studies;
+multi-agent failure taxonomy & Lessons that exist only as prose; problems
+solved twice \\
+Process-gate inflation & Full gate on every push; CI minutes rationed;
+exception for a two-line fix; 18 merges a day delegated & Bainbridge;
+ironies of generative AI; Murphy; Goldratt & Gate time per change; review
+minutes per merge \\
+Feedback starvation & Working MVP frozen; replacement unusable after ten
+days; request for a demo turned into more issues & XP; walking skeleton;
+tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
+usable increment \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 Read against the working theory of Section~\ref{sec:intro}, they fall into
 groups (Table~\ref{tab:theory}). The underlying risk is feature accumulation
@@ -972,7 +1109,7 @@ inflation and feedback starvation may reflect output exceeding review
 capacity: gates and caveats coexisted with the absence of a person using the
 replacement. The case does not estimate either amplification effect.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{A working theory: an underlying risk and two possible amplifiers,
 with candidate mechanisms consistent with this case. No rate is estimated.}\label{tab:theory}
@@ -1101,9 +1238,10 @@ The read path itself decayed. The knowledge-base index, which every agent is
 told to read first, accumulated 1,069 words of issue-specific status notes
 ahead of its first instruction. The index, the log, the BRD and the PRD, the
 documents that define the project's state and intent, total about 139,000
-words, or roughly 180,000 tokens at a typical ratio of 1.3 tokens per word:
-more than any agent can attend to reliably, even when it fits in its context
-window~\cite{liu2024lost,hong2025contextrot}.
+words, or roughly 180,000 tokens at a typical ratio of 1.3 tokens per word.
+Long contexts can reduce reliable retrieval even when the material fits in
+the context window~\cite{liu2024lost,hong2025contextrot}; the case does not
+measure any session's effective attention capacity.
 
 Naur explains why recording was not enough. A program's theory lives in the
 people who build it, and a second team with full documentation can still
@@ -1149,8 +1287,9 @@ work I learned most from, using the product, and left me the part people are
 worst at, monitoring a stream of plausible, well-documented changes. It
 matches the shift from producing to evaluating reported for generative
 AI~\cite{simkute2024ironies}, the delegation demands it
-creates~\cite{tankelevitch2024metacognitive} and the erosion of critical
-scrutiny that confidence in AI brings~\cite{lee2025critical}. Murphy's
+creates~\cite{tankelevitch2024metacognitive}. Higher confidence in AI was
+associated with reduced self-reported critical scrutiny in the cited
+study~\cite{lee2025critical}, not established as its cause. Murphy's
 diagnosis is a plausible interpretation: throughput increased while the path
 to a usable outcome remained blocked~\cite{murphy2026speed,goldratt1984goal}.
 The bottleneck itself was not instrumented. Martin's argument for executable
@@ -1194,38 +1333,6 @@ human use of a running increment, and the age of the last increment a human
 has verified as usable. At the time of writing the latter was at least ten
 days.
 
-\begin{table}[t]
-\centering\footnotesize
-\caption{Five candidate mechanisms, case indicators, relevant prior work
-and proposed early-warning signals. Indicators are not causal tests.}\label{tab:mechanisms}
-\begin{tabularx}{\textwidth}{@{}L{2.3cm}YL{3.1cm}L{3.2cm}@{}}
-\toprule
-Candidate & Case indicators & Related prior work & Early-warning signal \\
-\midrule
-Specification inflation & BRD $\approx$37,900 and PRD $\approx$33,900 words;
-192 issues; 17 criteria on one issue and 13 on the smallest preview &
-Royce; Gall; Brooks; B\"ockeler; Beck & Specification growth versus
-human-validated behaviour \\
-Proxy capture & Artefacts made a merge gate; 78-line evidence record for a
-two-line fix; LLM judge scores completeness 5/5 with no usable system; hedge
-density tripled & Goodhart; Strathern; Beck's genie; ImpossibleBench; METR &
-Artefacts per behaviour change; scores that disagree with a live demo \\
-Learning evaporation & Simplicity and sign-in lessons absent from briefs;
-last cited 13 Oct; read path $\approx$139,000 words & Naur; context studies;
-multi-agent failure taxonomy & Lessons that exist only as prose; problems
-solved twice \\
-Process-gate inflation & Full gate on every push; CI minutes rationed;
-exception for a two-line fix; 18 merges a day delegated & Bainbridge;
-ironies of generative AI; Murphy; Goldratt & Gate time per change; review
-minutes per merge \\
-Feedback starvation & Working MVP frozen; replacement unusable after ten
-days; request for a demo turned into more issues & XP; walking skeleton;
-tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
-usable increment \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
 \subsection{A proposed reinforcing relationship}
 
 I interpret the mechanisms as a possible reinforcing loop
@@ -1245,6 +1352,7 @@ intervention through a feedback-first invariant.}\label{fig:loop}
 \end{figure}
 
 % ===========================================================================
+\FloatBarrier
 \section{Implications for practice}\label{sec:feedbackfirst}
 
 \emph{Practice implication, not a tested operating model.} The case suggests
@@ -1267,6 +1375,15 @@ human responsibility. This separation keeps a proposed intervention distinct
 from a prescription presented as an empirical result.
 
 \section{Consolidation hypothesis and harness}\label{sec:harness}
+
+The observed operational failure and the prospective hypothesis are distinct.
+Missing deployment identity and staff bindings are concrete obstacles to
+sign-in; structural code consolidation would not necessarily restore either.
+Recovery of that journey requires configuration and end-to-end verification.
+Consolidation is worth testing for a different reason: repeated feature work
+may make later changes harder, even when deployment dependencies are correct.
+The experiment probes that possibility through retained tests and CR1; it
+does not claim that consolidation would have prevented this episode.
 
 The idea is already practised. OpenAI describes replacing weekly manual
 clean-ups with recurring background agents that open small refactoring pull
@@ -1317,6 +1434,7 @@ contract~\cite{ma2026building}. Section~\ref{sec:experiment} specifies how
 the package will be evaluated.
 
 % ===========================================================================
+\FloatBarrier
 \section{Testing the harness: an experiment protocol}\label{sec:experiment}
 
 The proposed contribution is a controlled comparison of scheduled post-feature
@@ -1333,12 +1451,15 @@ that involve language models~\cite{baltes2026guidelines} and for software
 engineering experiments in general~\cite{wohlin2012experimentation}. The
 execution choices below incorporate my decisions of 25~October 2026.
 I stopped execution and tagged the protocol. Registration is pending, and
-the exact tagged snapshot still needs to be recorded here. Earlier smoke,
-pilot and any other pre-registration runs will retain their original labels
-and timestamps. None will enter the registered confirmatory analysis, which
-will use only fresh runs started after registration. I will disclose what
-earlier data I saw and how it informed the design; a later registration does
-not retrospectively cover those runs.
+the exact tagged snapshot still needs to be recorded here. Following the
+developmental review, I now frame the four-runs-per-arm first pass as an
+exploratory package comparison, not seven confirmatory tests. The arms,
+budgets, sample size and provisional thresholds below are retained; the
+private tag has not been amended or verified by this manuscript revision.
+Earlier smoke, pilot and other pre-registration runs retain their original
+labels and timestamps and will not be pooled with the fresh first pass.
+I will disclose what earlier data I saw and how it informed the design;
+a later registration does not retrospectively cover those runs.
 
 The experiment kit is in a separate private repository. The ancillary
 protocol notes packaged with this paper are earlier proposals, not evidence
@@ -1346,7 +1467,7 @@ of the executed or registered configuration. I will archive the reconciled
 protocol, suite, prompts, configuration and analysis snapshot with the
 registration once external deposit is authorised.
 % TODO(author): record and verify the protocol tag, full commit SHA, suite and analysis checksums, prior-run chronology and data already seen; do not infer a pre-run freeze from a later upload.
-% TODO(author): reconcile the hypotheses, thresholds and analysis implementation with that snapshot, including H6 interval estimation, before registration and fresh confirmatory runs.
+% TODO(author): document the exploratory-framing amendment and reconcile hypotheses, thresholds and analysis with the tagged snapshot before registration and fresh runs; preserve the original tag.
 % TODO(author): supply the actual registration date and URL after registration is complete; do not backdate it or confuse a draft or Git tag with registration.
 The related work reviewed here does not isolate consolidation steps interleaved
 between successive feature additions. Darwin evaluates optimisation against
@@ -1363,9 +1484,9 @@ than silently replacing it with a repair-matched control, an equal-total-budget
 study or a different primary endpoint. Exact agreement with the private tag
 has not yet been verified.
 
-\begin{table}[p]
+\begin{table}[!htbp]
 \centering\small
-\caption{One-page summary of the preserved, registration-pending protocol.
+\caption{Summary of the exploratory, registration-pending first-pass protocol.
 Planned safeguards are not completed checks.}\label{tab:protocolsummary}
 \begin{tabularx}{\textwidth}{@{}L{3.0cm}Y@{}}
 \toprule
@@ -1390,24 +1511,25 @@ every feature test passing before CR1. H6 requires a 20-point success gain or
 25\% cost saving at no lower success, under its interval rules. \\
 Budgets & 30 minutes per feature; 15 per B/C post-feature step; 45 for CR1.
 Credits and monetary cost remain distinct; final calibrated caps need checking. \\
-Analysis & Run-level intervals and proposed longitudinal models; only four
-runs per arm, no completed power simulation and no specified family-wide
-multiplicity control. Seven decision rules are retained, not newly validated. \\
+Analysis & Exploratory run-level estimates; only four runs per arm, no
+completed power simulation or family-wide multiplicity control. Seven
+provisional rules are retained, not confirmatory verdicts. \\
 Integrity & Fresh sessions, fixed prompts/tests/configuration and checksum
 checks are planned. Local execution does not guarantee hidden-test or reference
 inaccessibility; independent suite/access checks remain pending. \\
 Human help & Primary runs unassisted; HIR/IDR descriptive. Corrective help is a
 retained, labelled deviation, not grounds for a replacement run. Telemetry
 coverage and annotation reliability remain unverified. \\
-Status & No results; registration and exact tagged provenance pending.
-Earlier runs remain excluded from fresh confirmatory analysis. \\
+Status & No results; registration, a documented framing amendment and exact
+tagged provenance pending. Earlier runs remain excluded from the fresh first pass. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
+\FloatBarrier
 \subsection{Hypotheses}
 
-Table~\ref{tab:hypotheses} lists the hypotheses in priority order. Each
+Table~\ref{tab:hypotheses} lists provisional hypotheses in priority order. Each
 follows the Experiment Designer's form: what we believe, how we will test it,
 and the measurable outcome that would show it right or wrong.
 The primary consumption measure stated here is AI credits; H5/H6 cost
@@ -1416,12 +1538,12 @@ registration. The percentage thresholds are unchanged. ``Pays for itself''
 does not establish monetary payback: tokens, elapsed time, credits and currency
 are reported separately, and no verified billing conversion is assumed.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{Hypotheses, compared after the final feature unless stated. A is
 feature-only delivery, B adds the consolidation harness, C adds a
-read-only review of equal budget. These decision rules must match the
-registered snapshot. Wrong means
+read-only review of equal budget. These provisional rules require prospective
+reconciliation; they are not confirmatory verdicts. Wrong means
 interval evidence rules out the minimum useful effect, not no significance;
 other evaluable outcomes are inconclusive.}\label{tab:hypotheses}
 \begin{tabularx}{\textwidth}{@{}L{0.7cm}L{3.5cm}YL{3.0cm}@{}}
@@ -1453,6 +1575,18 @@ by at least half of the B--A gap & Intervals rule out the half-gap benefit \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\emph{Unresolved H4 and H7 definitions.} H4 needs a fixed accuracy scoring
+rule and a justified non-inferiority margin, together with an interval-based
+criterion for excluding accuracy losses beyond that margin. A nonsignificant
+accuracy difference does not establish ``as accurate''. H7 needs a named
+endpoint, beneficial direction, analysis scale and interval method for the
+dependent B--C and B--A contrasts. Its half-gap rule also needs a prospective
+policy for zero or negative B--A gaps: a zero or negative threshold cannot
+by itself establish benefit over review-only. Until those choices are
+documented, H4's joint claim and H7's half-gap claim are not evaluable under
+their stated rules; component estimates can still be reported exploratorily.
+This revision does not invent margins, endpoints or replacement thresholds.
 
 \subsection{Design}
 
@@ -1496,7 +1630,7 @@ configuration before the fresh study runs. The total pilot-and-first-pass
 ceiling is 2,500 AI credits, raised from an initial 1,000-credit proposal.
 I also stated a \$500 monetary budget. Credit consumption and currency cost
 are not interchangeable without a verified billing conversion.
-% TODO(author): verify the final post-calibration credit cap, runtime/version evidence and the relation between the 2,500-credit ceiling and the separate monetary budget before fresh confirmatory runs.
+% TODO(author): verify the final post-calibration credit cap, runtime/version evidence and the relation between the 2,500-credit ceiling and the separate monetary budget before fresh runs.
 
 \emph{Suites.} Suite S1 is a ten-feature retrofit case workbench drawn from
 the case domain, whose features deliberately interact: lifecycle, handoffs,
@@ -1533,7 +1667,7 @@ runs the cumulative hidden suite, which covers every feature scheduled so
 far, including missing features, and collects the metrics. A pilot calibrates
 budgets with one run per arm over ten features, without CR1. The selected
 first pass uses S1, arms A, B and C, with four independent runs per arm,
-ten features and CR1. This is the planned registered comparison, not data to
+ten features and CR1. This is the exploratory first pass, not data to
 pool with earlier started runs. An optional main study would use S1 and S2,
 five runs per arm and ten features, under a separate prospective plan and
 authorisation. With three runs per arm
@@ -1545,7 +1679,7 @@ attainability bounds, not a power analysis. The selected first pass has
 sessions and twenty agent-hours, making 262 sessions and 109 agent-hours
 combined. These bounds exclude measurement and scheduling overhead and do
 not establish affordability under the credit ceiling. Sample sizes and
-stopping rules must be registered before the fresh confirmatory runs;
+stopping rules must be documented prospectively before the fresh runs;
 sample sizes will not be increased in response to observed effects.
 
 \emph{End state and change request.} H1's end state is after the last
@@ -1642,7 +1776,7 @@ The intended sources are the session telemetry and retained logs. I plan to
 use Cowork to extract requests, blocks and actual interventions, then personally
 check classifications against source records and resolve ambiguous cases.
 The extraction must link each event to its cycle, phase, reason, action and
-active human minutes, using rules fixed before fresh confirmatory runs.
+active human minutes, using rules fixed before fresh runs.
 Telemetry coverage of human-help requests and corrective actions, including
 actions outside the CLI, has not yet been verified. Missing records cannot
 be interpreted as zero interventions; incomplete coverage makes the affected
@@ -1650,7 +1784,7 @@ measure not evaluable. Routine launches, planned evaluation, required approvals 
 safety stops are recorded separately, not treated as corrective rescue.
 Any corrective help supplied is a protocol deviation; I retain the run,
 label it assisted and report its outcomes separately from unassisted estimates.
-Such deviations do not trigger replacement runs and may leave the confirmatory
+Such deviations do not trigger replacement runs and may leave the unassisted
 comparison not evaluable at its predeclared sample size.
 I report change-request interventions separately, alongside completion,
 missing features, early termination and unattempted cycles. Lower HIR alone
@@ -1665,22 +1799,20 @@ reliability must not be inferred from a complete-looking event table.
 
 \subsection{Analysis and bias controls}
 
-The difference in final cumulative pass rate is estimated with bootstrap
+The proposed analysis estimates the difference in final cumulative pass rate with bootstrap
 intervals that resample runs within arm. S1 trends are estimated with
 mixed-effects models that include an arm-by-feature-index interaction and
 run as a random intercept. A later multi-suite study would treat suite as a
 fixed effect and resample within suite and arm. Because code generation is not
 deterministic, even at temperature zero~\cite{ouyang2025nondeterminism}, every
 condition is run several times and intervals are reported rather than single
-values. The S1 first pass has a fixed sample size; pilot and all
-pre-registration runs are excluded from its confirmatory analysis. A later
-main study would also exclude those earlier data. Overlapping
-intervals do not trigger extra confirmatory runs: any extension is separately
-labelled exploratory and is not pooled into the original analysis. For H1,
-validation requires a gain of at least 10 percentage points and a 95\%
+values. The S1 first pass has a fixed sample size and excludes all earlier
+runs. Intervals do not trigger extra runs or pooling; any extension needs a
+separate prospective plan. Under the retained provisional H1 rule,
+support requires a gain of at least 10 percentage points and a 95\%
 interval wholly above zero; invalidation requires its upper bound to be below
-5 points. All other evaluable H1 outcomes are inconclusive and route to
-adjust, not no-go. For every hypothesis, validation requires the estimate
+5 points. All other evaluable H1 outcomes are inconclusive. For the other
+evaluable hypotheses, the provisional support rule requires the estimate
 to meet its stated threshold and the 95\% interval for the benefit to exclude
 zero in the beneficial direction. Invalidation requires the whole interval
 to fall short of the stated minimum effect of interest, applying the joint
@@ -1693,9 +1825,10 @@ the same machine; frozen hidden tests, metrics and analysis before fresh
 registered runs; exclusion of pilot data; blinded comprehension assessment;
 reporting of every run; and a divergence log. Independent suite review,
 verified access boundaries and the final analysis checks are still pending,
-not completed safeguards. Each hypothesis is recorded as
-validated, invalidated, mixed, inconclusive or not evaluable, and the
-decision as go, no-go or adjust.
+not completed safeguards. The first pass will report estimates, intervals,
+deviations and non-estimable quantities, not confirmatory validation or
+go/no-go verdicts. Any comparison with the provisional thresholds will be
+labelled exploratory.
 
 HIR is descriptive, with no new hypothesis threshold or adoption gate. I
 report observed and demand rates per run, human minutes and the B--A demand-rate
@@ -1712,15 +1845,22 @@ may be unstable or unidentifiable. No simulation-based power or interval-coverag
 analysis has been completed. The rank-test attainability calculation above
 does not establish adequate power. Model convergence, boundary estimates and
 non-estimable quantities must be visible, not converted into precise-looking
-verdicts; any fallback analysis needs specification before fresh runs.
+verdicts. Before fresh runs, the analysis plan must fix interval methods for
+binary CR1 risk differences and conditional cost comparisons, including how
+failures and zero-success arms enter each estimand. It must also specify
+diagnostics and fallback or not-estimable rules for bootstrap intervals and
+longitudinal models. No method is selected merely because it produces a
+finite or favourable interval.
 
 The seven hypotheses retain their stated interval-based rules, but no
 family-wise error or false-discovery control is specified. Nominal 95\%
 intervals are pointwise, not a simultaneous guarantee across hypotheses,
 metrics and contrasts. The reported priority order is not itself a complete
-confirmatory testing hierarchy. These are decision criteria to reconcile
-before registration, not evidence that the planned sample can discriminate
-every minimum useful effect. No such validation is claimed here.
+confirmatory testing hierarchy. The first pass is therefore exploratory.
+A later confirmatory study would need a prospectively fixed primary contrast,
+endpoint hierarchy, multiplicity policy and precision justification before
+new data collection; these cannot be repaired by labelling seven pointwise
+intervals confirmatory after observing them.
 
 The reset and missing-feature rule is specified, but the exact tagged policy
 for external-service outages, infrastructure failures, retries and incomplete
@@ -1735,9 +1875,8 @@ are not completed controls. The local access boundary is weak, a provider
 service can change, and note content can disclose treatment to a comprehension
 reviewer. Actual access probes, evaluator separation, blinding effectiveness
 and the fixed questions/tool permissions remain to be checked. The paper
-therefore offers a falsifiable, preregistrable package comparison with explicit
-limits, not a fully validated confirmatory design or a pure causal test of
-refactoring.
+therefore offers an exploratory package comparison with explicit limits.
+The package-level identification limits are stated in the design above.
 
 The protocol uses one proprietary model and no open-weights baseline. This
 limits reproducibility and transfer to other models; pinning the exposed
@@ -1755,14 +1894,16 @@ This version presents the protocol, not study results. As of 25~October
 2026 I had stopped execution and reported tagging the protocol. Registration
 was still pending. Earlier real-agent runs are retained as pre-registration
 evidence under their original labels and timestamps, not retrospectively
-declared preregistered. I will start fresh runs only after registration and
-exclude every earlier run from confirmatory analysis. The exact tag and
-registration record remain to be supplied. Results, including null and
-negative results, will be added in a revision after checked analysis; a
-conformant run that invalidates a hypothesis remains a valid outcome.
+declared preregistered. The fresh first pass is now explicitly exploratory;
+the framing amendment and analysis choices must be documented before those
+runs begin, after registration. The exact tag and registration record remain
+to be supplied. Results, including null, negative and inconclusive findings,
+will be added after checked analysis. No earlier run will be relabelled to
+fit the new framing.
 \fi
 
 % ===========================================================================
+\FloatBarrier
 \section{Discussion: the existential crisis, revisited}\label{sec:discussion}
 
 \subsection{What worked}
@@ -1834,6 +1975,20 @@ support this bounded consolidation role, not unrestricted process steering.
 A null or negative result would challenge this particular intervention, not
 prove that reflective work cannot be delegated to agents.
 
+The broader working hypothesis is that local critique, review and
+repository-persisted learning can leave cumulative integration and
+changeability insufficiently checked. Aithena and PhotoCraft motivate that
+question without identifying its cause. A separate prospective test could
+compare human-led and agent-led steering under matched resources, using
+independently specified cross-feature journeys and later change requests,
+not issue totals. If an agent-led condition consistently detects and
+corrects the same cross-feature failures while preserving changeability,
+that would weaken a human-specific necessity claim. If apparent differences
+disappear after equalising oracle coverage, coverage rather than the
+identity of the steering actor would be a stronger explanation. The current
+consolidation protocol does not make either comparison; its H1--H7 rules
+remain unchanged.
+
 \subsection{If drift is contained, what remains for us?}\label{sec:humanquestions}
 
 Even if an agent can contain code drift, the human questions do not
@@ -1899,6 +2054,7 @@ builds the system in which agents work~\cite{lanzetta2026orchestra}, point in
 the same direction.
 
 % ===========================================================================
+\FloatBarrier
 \section{Threats to validity}\label{sec:threats}
 
 \emph{Construct validity.} Word counts and a hedging lexicon are crude proxies
@@ -1919,10 +2075,10 @@ Bird et~al. found application reliability associated with external environment
 factors in a different, desktop setting~\cite{bird2014extrinsic}. That does
 not explain this case, but supports treating missing identity, data and model
 configuration as concrete rivals rather than automatically diagnosing code
-decay. Tables~\ref{tab:rivals} and~\ref{tab:rivalsadditional} retain observed
-support, limits and untested alternatives separately.
+decay. Table~\ref{tab:rivals} retains directly recorded rivals and their
+limits.
 
-\begin{table}[p]
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{Rival explanations with direct case records. Limits are not
 grounds for ruling an explanation out.}\label{tab:rivals}
@@ -1957,7 +2113,11 @@ and possible lost learning, not proof of general code decay. \\
 \end{tabularx}
 \end{table}
 
-\begin{table}[p]
+\FloatBarrier
+Table~\ref{tab:rivalsadditional} separates additional, untested alternatives
+from those records.
+
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{Additional plausible rivals. A reason to consider an explanation is
 not evidence that it occurred; missing checks remain unperformed.}\label{tab:rivalsadditional}
@@ -2001,6 +2161,15 @@ or operations staff may experience the mechanisms differently. The field
 observations in Appendix~\ref{sec:field} suggest similar concerns are recognised
 elsewhere, but they are not evidence of prevalence.
 
+The external repository examples were selected because they appeared
+relevant to my concern, not independently of outcome. Reports can be
+duplicated, stale or unreproduced; labels are inconsistent, and review
+queues reflect contributor volume and maintainer capacity as well as
+software condition. Current framework documentation does not establish
+the historical runtime configuration. These observations broaden the
+motivation, not the empirical generalisability or causal identification
+of the focal case.
+
 \emph{Reliability and researcher bias.} The repository, issues and log are
 public, and Appendix~\ref{app:measures} defines the measures so that they can
 be recomputed. The experiment's own threats, and their mitigations, are part
@@ -2013,6 +2182,7 @@ coding. AI assistance in analysis and drafting is
 disclosed below; source checking does not establish an unbiased interpretation.
 
 % ===========================================================================
+\FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
 
 This case records a divergence: 183 merged pull requests and a full
@@ -2033,12 +2203,12 @@ features accumulate. Accountability for goals and
 consequential decisions remains distinct from delegating bounded corrective
 work; the case does not establish that only humans can perform that work.
 
-The preserved experiment operationalises a bounded version of that question: can an
+The exploratory first pass operationalises a bounded version of that question: can an
 agent that consolidates after every feature keep agent-built software
 working, understandable and changeable at an acceptable cost? It tests
-the complete consolidation package, not refactoring alone or an
-equal-total-budget policy. H6 is its direct, task-specific probe of future
-options; other quality measures cannot substitute for it. The experiment does
+the package-level question defined in Section~\ref{sec:experiment}.
+H6 is its direct, task-specific probe of future options; other quality
+measures cannot substitute for it. The experiment does
 not test choosing the right product or autonomously recovering every delivery failure.
 Section~\ref{sec:experiment} sets out how to find out. The larger question of
 agent-led steering remains open; the first requirement is evidence that the
@@ -2093,11 +2263,28 @@ CRBugBench full-text extraction and the HITS study were unavailable; their
 access limits are not independent verification. The revision did not add a
 second empirical coder, new case measurements or study results.
 
+In the table-flow revision, Copilot used the Scholar Evaluation and Scientific
+Writing skills from Scientific Agent Skills~\cite{kassis2026skills} for
+qualitative developmental editing, not scoring or a publication recommendation.
+At my direction, it preserved the title and subtitle and reframed the first
+pass as exploratory without changing the private tagged study kit.
+
+For the repository-context revision, I supplied the prior Aithena experience
+and candidate steering hypothesis. Copilot used the Hypothesis Generation
+skill~\cite{kassis2026skills} to inspect public repository records, distinguish
+reports from reproduced failures and formulate rival predictions. It did not
+run those applications or establish an independent replication.
+
 \section*{Data availability}
 The repository analysed is public at
 \url{https://github.com/jmservera/ama}; this report uses commit
 \texttt{29c6b512f5e68733bb2cc1882343db39f5eb2cad}. The log-measurement and
 figure-generation scripts are provided with the source. The ancillary
+file \nolinkurl{anc/repository-observations-2026-10-25.json} records the
+additional repositories' source revisions, tracker counts, sampling
+boundary and claim locators without reporter identities or attachments.
+Live issue states can change independently of the pinned source commits.
+The ancillary
 experiment notes in HVE Core's Minimum Viable Experiment format are earlier
 proposals, not the tagged study record. The separate study kit is held
 in a private repository; it is not yet a public replication archive. The
@@ -2442,6 +2629,13 @@ A.~Karpathy.
 \newblock Post on {X} introducing ``vibe coding'', 2 February 2025.
 \newblock \url{https://x.com/karpathy/status/1886192184808149383}.
 
+\bibitem{kassis2026skills}
+T.~Kassis, V.~Agarwal, Y.~He, D.~Patel, and A.~M.~Brueckner.
+\newblock Scientific agent skills: A library of procedural knowledge for
+research agents.
+\newblock arXiv:2609.00065, 2026.
+\newblock doi:10.48550/arXiv.2609.00065.
+
 \bibitem{kelly2019hgdagger}
 M.~Kelly, C.~Sidrane, K.~Driggs-Campbell, and M.~J. Kochenderfer.
 \newblock {HG-DAgger}: Interactive imitation learning with human experts.
@@ -2659,6 +2853,13 @@ H.~Mukai, N.~Yoshida, K.~Kusama, H.~Tanaka, and Y.~Fan.
 \newblock Why are agentic pull requests merged or rejected? An empirical study.
 \newblock arXiv:2605.22534, 2026.
 
+\bibitem{photocraft2026}
+{PhotoCraft contributors}.
+\newblock {PhotoCraft}: Source, parity records and public tracker observations.
+\newblock GitHub, source commit \texttt{5bb8536}; retrieved 25 October 2026.
+\newblock \url{https://github.com/storytold/photocraft/tree/5bb853654196eca807212ff8955ba2eb293071ea}.
+\newblock Dated counts and claim locators in the ancillary repository-observation record.
+
 \bibitem{royce1970}
 W.~W. Royce.
 \newblock Managing the development of large software systems.
@@ -2684,6 +2885,13 @@ A.~Sarkar.
 \newblock {AI} should challenge, not obey.
 \newblock \emph{Communications of the ACM}, 67(10):18--21, 2024.
 \newblock doi:10.1145/3649404.
+
+\bibitem{servera2026aithena}
+J.~M. Servera~Bondroit.
+\newblock Aithena: Source, {Squad} records and public tracker observations.
+\newblock GitHub, source commit \texttt{f27aa2e}; retrieved 25 October 2026.
+\newblock \url{https://github.com/jmservera/aithena/tree/f27aa2e9f949ea76f2a437249e68b52670a22835}.
+\newblock Dated counts and claim locators in the ancillary repository-observation record.
 
 \bibitem{servera2026ama}
 J.~M. Servera~Bondroit.
@@ -2715,6 +2923,12 @@ in {LLMs}.
 \newblock In \emph{International Conference on Learning Representations
 (ICLR)}, 2026.
 \newblock arXiv:2509.09677.
+
+\bibitem{squad2026}
+{Squad contributors}.
+\newblock {Squad}: Human-led {AI} agent teams.
+\newblock GitHub, \texttt{dev} commit \texttt{481c944}; retrieved 25 October 2026.
+\newblock \url{https://github.com/bradygaster/squad/blob/481c944596abfa2053e2acd88d765639f994d795/README.md}.
 
 \bibitem{strathern1997improving}
 M.~Strathern.
@@ -2854,7 +3068,7 @@ One-to-two-week horizons, three parallel sessions and five acceptance criteria
 are starting heuristics, not estimated optima or new rules for this repository.
 They do not override required engineering or human approval gates.
 
-\begin{table}[htbp]
+\begin{table}[!htbp]
 \centering\footnotesize
 \caption{Proposed practices, candidate mechanisms and suggested observations.}\label{tab:practices}
 \begin{tabularx}{\textwidth}{@{}L{2.9cm}YL{2.7cm}@{}}
