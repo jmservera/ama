@@ -133,17 +133,15 @@ Consolidation is a bounded, behaviour-preserving step:
 5. Rewrite `DESIGN.md` in at most 300 words: the structure, where each rule lives, known debts. Replace, do not append.
 6. Stop when the quality budget is met (no function above complexity 10, duplicated lines below 3%, zero warnings in the configured lint set) or the time budget is used.
 
-`tcr` (test && commit || revert):
-
-```bash
-#!/usr/bin/env bash
-# Usage: ./tcr "message"
-if make test > /tmp/tcr.log 2>&1; then
-  git add -A && git commit -q -m "tcr: ${1:-refactor}" && echo "TCR: committed"
-else
-  git reset -q --hard && git clean -qfd -e reports/ && echo "TCR: reverted, tests failed" && tail -n 20 /tmp/tcr.log
-fi
-```
+Use the exported [tcr helper](tcr) (test && commit || revert), rather than a
+separate inline implementation. Copy it to an explicitly disposable experiment
+worktree before using `./tcr "message"`. It commits all changes on success;
+test, staging or commit failure discards uncommitted tracked and untracked
+changes, except untracked `reports/` content. Tracked reports are still reset.
+It uses a unique temporary log, removes it on exit and returns a nonzero status
+on failure, including when rollback fails. Never run it against the AMA or
+private study repository. Separate invocations need separate worktrees; unique
+logs do not make concurrent Git mutations in one worktree safe.
 
 ## 6. Measures and instrumentation
 

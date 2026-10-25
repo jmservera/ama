@@ -30,13 +30,34 @@ deferred; public release and external deposits remain subject to permission.
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
-| `anc/check_paper.py` | Reproduces the approximate body count against the starting draft and checks citations, labels, environments, braces, inline comments and abstract length. |
+| `anc/check_paper.py` | Reports the current approximate body count and checks citations, labels, environments, braces, inline comments and abstract length. Historical comparison is optional. |
+| `anc/test_paper_tooling.py` | Isolated stdlib regressions for the paper checker and exported TCR helper. |
 | `anc/protocol_checks.py` | Historical check of rank-test floors and the earlier eight-feature A/B proposal; it does not check the current ten-feature A/B/C design. |
 | `anc/repo_history_metrics.py` | Measures path-class line churn at the pinned commit, separating literal merges from PR-numbered first-parent integrations. |
 | `anc/repo_history_metrics.out.txt` | Saved history measurement, including definitions, commands and limitations. |
 | `anc/mve-feature-consolidation-harness/` | Earlier MVE proposal notes: divergence log, experiment design, hypotheses and plan. Not the separate tagged study kit. |
 
 arXiv publishes everything under `anc/` as ancillary files.
+
+### Tooling export provenance
+
+The minimal [TCR helper](anc/mve-feature-consolidation-harness/tcr) is adapted
+from private `jmservera/ama-thought-mve`, `skeleton/tcr`, commit
+`20e7f97c5c162cffd0f771ce501e146081912edc`, Git blob
+`aa35d75d77ec13aab2384481917e66c243e8ba64`, using the source supplied by the
+parent. The adaptation replaces the shared log with a cleaned-up per-invocation
+log and includes test, staging and commit failures in the rollback path, with
+stage-specific diagnostics and nonzero status. It retains `make -s test`, the
+`tcr:` commit prefix and the untracked `reports/` exclusion. This is not the
+full registered study kit, and no fix to the private source is claimed.
+
+The helper is destructive: use it only in an explicitly disposable worktree,
+never in AMA or the private study repository. See its
+[usage and rollback limits](anc/mve-feature-consolidation-harness/experiment-design.md#5-the-harness-consolidation-step-arm-b).
+The checker runs without Git or repository metadata, including source archives;
+when the old object is missing it reports `HISTORICAL_COMPARISON UNAVAILABLE`
+and still validates the current paper. Existing historical-comparison output
+is retained when that source is available.
 
 ## Figures
 
@@ -151,6 +172,7 @@ Run the saved checks from the repository root, using its existing environment:
 
 ```bash
 .venv/bin/python docs/capstone/thought-leadership/everything-but-the-software/anc/check_paper.py
+.venv/bin/python -B -m unittest discover -s docs/capstone/thought-leadership/everything-but-the-software/anc -p test_paper_tooling.py -v
 .venv/bin/python docs/capstone/thought-leadership/everything-but-the-software/anc/repo_history_metrics.py
 ```
 

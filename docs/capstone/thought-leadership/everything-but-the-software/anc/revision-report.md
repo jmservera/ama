@@ -362,3 +362,144 @@ Research disposition: executed. Review-comment triage is complete within the
 requested scope; implementation planning is not applicable because code fixes
 were not requested. The remaining code findings are not resolved. No code,
 thread-resolution, issue, commit, push or experiment-kit mutation was performed.
+
+## 2026-10-25: Author-Approved Code Corrections
+
+This later direction supersedes the preceding review-only boundary for the
+specific remaining PR defects. The owner requested fixes using needed code
+from the private kit, then a push and resolution of addressed or obsolete
+review comments. Commit and push are now authorised; merge is not.
+
+The worktree was clean at `ac7e38ff` on `thought-leadership-doc`. The owner
+also explicitly authorised isolated validation checkouts, virtual environments,
+Docker resources and receipts under `/tmp`; source edits remain restricted to
+the thought-leadership folder. No private-kit mutation is authorised.
+
+The private source is `jmservera/ama-thought-mve` at
+`20e7f97c5c162cffd0f771ce501e146081912edc`. Its `skeleton/tcr` still shares
+`/tmp/tcr.log` and leaves staging/commit failures outside the rollback branch.
+Copying it unchanged is not a fix. The exported helper must correct both
+behaviours and retain the failed-test exit status.
+
+### Approved Implementation Plan
+
+* [x] P01: Correct the paper tooling and retained TCR example, with focused
+  regression tests. Historical baseline comparison is optional; structural
+  validation must still run without Git or the old object. Port only the
+  needed TCR helper, not the private kit or its results, credentials or DLP
+  sidecars. Use a unique cleaned-up log and roll back test, staging and commit
+  failures. Never execute rollback against either existing repository.
+* [x] P02: Verify the source, tests, Markdown, PDF and PR-thread dispositions;
+  obtain independent scoped review. Preserve original adverse findings and
+  distinguish removed paths from fixes in the private kit.
+* [ ] P03: Commit the reviewed fixes and dated evidence with privacy-safe
+  identity; fetch main, run and verify the complete local publication gate
+  with an external receipt, then push only the validated exact head. Resolve
+  only verified addressed or obsolete review threads with truthful evidence.
+
+### Implementation State
+
+P01 and P02 are complete within their bounded scopes. P03 publication remains
+pending the committed exact-head gate and remote disposition. The parent fetched
+main, whose current base is `df3e9643c1cf20b2fe143ad73819b3b8b393b003`,
+and resolved the authenticated account before committing. No publication-gate
+pass, commit, push, experiment or review-thread mutation is yet claimed in this
+record. No tracking-directory writes were made.
+Earlier findings and outcomes above remain historical evidence, not overwritten
+acceptance results.
+
+### P01 Implementation Evidence
+
+All six changed paths are beneath this paper directory:
+
+* `anc/check_paper.py`: discover the repository root through Git rather than
+  fixed archive depth. Treat absent Git, metadata, baseline objects or unusable
+  historical source as optional comparison failure, visibly `UNAVAILABLE`.
+  Current-paper checks still run; missing Introduction or abstract now returns
+  structural failure instead of raising during counting. Normal baseline output
+  is retained when history exists.
+* `anc/test_paper_tooling.py`: new stdlib unittest regressions using shallow
+  source archives and fake commands in owned temporary directories under `/tmp`.
+  Child environments are explicit allowlists and do not inherit credentials.
+* `anc/mve-feature-consolidation-harness/tcr`: minimal executable export, mode
+  `755`, adapted from the parent-supplied private source at commit
+  `20e7f97c5c162cffd0f771ce501e146081912edc`, path `skeleton/tcr`, blob
+  `aa35d75d77ec13aab2384481917e66c243e8ba64`. Unique `mktemp` logs are cleaned on
+  exit; tests, staging and commit share the tested success path. Failures report
+  their stage, attempt rollback and preserve the failing command's nonzero
+  status. Rollback failure is reported without claiming successful reversion.
+* `anc/mve-feature-consolidation-harness/experiment-design.md`: replace only
+  the unsafe duplicate snippet with the exported helper link and destructive-use
+  limits. The untracked `reports/` exclusion is retained; tracked reports are
+  still reset. Concurrent invocations require separate worktrees.
+* `README.md`: record export provenance, optional-history behaviour, usage limits
+  and the focused regression command. No private-source fix or complete
+  registered-kit export is claimed.
+* `anc/revision-report.md`: update only this approved section's P01 state and
+  evidence; retain the parent's plan and prior adverse outcomes.
+
+Focused validation on 25 October 2026, from the repository root:
+
+```bash
+.venv/bin/python -B -m unittest discover -s docs/capstone/thought-leadership/everything-but-the-software/anc -p test_paper_tooling.py -v
+shellcheck docs/capstone/thought-leadership/everything-but-the-software/anc/mve-feature-consolidation-harness/tcr
+bash -n docs/capstone/thought-leadership/everything-but-the-software/anc/mve-feature-consolidation-harness/tcr
+.venv/bin/python -B docs/capstone/thought-leadership/everything-but-the-software/anc/check_paper.py
+git diff --check
+```
+
+The cheap checker regression ran immediately after the first substantive edit:
+3 tests passed. The final focused run reports `Ran 7 tests in 4.959s`, `OK`.
+Coverage includes absent Git, repository and baseline; successful comparison;
+24 invalid-paper subcases across those three absence modes; TCR success and
+test/staging/commit failure; rollback failure; and log cleanup. The concurrent
+case blocks both fake test commands on FIFOs, verifies two distinct live logs,
+then releases them and checks separated diagnostics and cleanup. Fake `git`
+records commands only: no real reset, clean or commit was executed anywhere.
+
+ShellCheck and `bash -n` exited zero without diagnostics. The real current-paper
+check exited zero: `before=10353 after=13475`, abstract 1,644 source characters,
+96 matching citations/bibitems/BibTeX entries, `PASS structural checks`, with
+the results switch false. Whitespace review passed. Editor diagnostics still
+report generic Bandit B404/B603 subprocess warnings and B108 for explicitly
+authorised `/tmp` fixtures; no suppression or dependency change was added.
+The calls use argument lists without a shell, and fixture directories use
+`TemporaryDirectory`. These warnings are disclosed for P02 review, not claimed
+as a clean security assessment.
+
+The unchanged manuscript and bibliography SHA-256 values match the dated
+source-identified values above (`12e11445...e21ea` and `ef9e0036...7f068`). No
+PDF rebuild, private results/configuration/DLP inspection, full repository
+publication gate, independent acceptance or remote-thread disposition is claimed.
+No P01 blocker remains; P02 must assess the source and focused evidence before
+P03 can proceed under the parent's publication safeguards.
+
+### P02 Independent Review and Parent Reconciliation
+
+The specialised Functional reviewer was tool-blocked and issued no acceptance.
+A fresh independent RPI review inspected the actual local diff and untracked
+helper/tests and recorded limited P01 acceptance with no material findings in
+[its review artifact](research/subagents/2026-10-25/pr-448-code-fix-review.md).
+It independently ran all seven regression tests, two additional isolated fixture
+probes, ShellCheck, Bash syntax, the current-paper checker and whitespace checks.
+The parent reran all seven tests successfully. No real Git rollback was invoked.
+
+Manuscript and bibliography bytes are unchanged from the HIR amendment and its
+successful two-pass PDF validation. Generic Bandit subprocess and explicit
+temporary-directory warnings were examined without suppression; controlled
+argument lists, explicit child environments and private temporary directories
+provided no concrete defect in this scoped review. This is not a formal
+security assessment or a study-suite validation.
+
+The refreshed PR feedback introduces no new current-path code defect. Threads
+on the optional-history checker and both TCR hazards are addressed by these
+changes and tests. Missing-directory/README instructions were superseded by the
+historical-proposal distinction. Removed-kit findings are obsolete locations in
+this PR, not verified fixes in the private repository; this distinction must be
+included when replying or resolving them. The original adverse records remain.
+
+P03 must commit these reviewed bytes and dated evidence, then run and verify a
+fresh complete local gate against current main. The final receipt must remain
+external. Any correction, commit, rebase or changed input after the gate requires
+a new complete gate. Push, hosted review and thread disposition are not proven
+by the pre-commit P02 acceptance.

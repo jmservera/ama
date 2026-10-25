@@ -2,7 +2,7 @@
 """Check paper structure and reproduce approximate body counts without texcount.
 
 Run from the repository root with .venv/bin/python followed by this path.
-The baseline is the unmodified draft at the revision's starting commit.
+The optional baseline is the unmodified draft at the revision's starting commit.
 The optional normalisation only sorts existing bibliography entry blocks.
 """
 
@@ -59,21 +59,48 @@ def normalise_bibliography() -> None:
     bibfile.write_text(bibtext[:matches[0].start()] + "\n\n".join(block for _, block in sorted(blocks_by_key)) + "\n", encoding="utf-8")
 
 
+def historical_text(package: Path) -> str | None:
+    """Return the historical source when Git and the baseline are available."""
+    git = shutil.which("git")
+    if git is None:
+        return None
+    try:
+        root = Path(subprocess.run(
+            [git, "rev-parse", "--show-toplevel"], cwd=package,
+            capture_output=True, text=True, check=True,
+        ).stdout.strip())
+        relative = (package / "main.tex").relative_to(root).as_posix()
+        return subprocess.run(
+            [git, "show", f"{BASELINE}:{relative}"], cwd=root,
+            capture_output=True, text=True, check=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        return None
+
+
 def main() -> int:
     args = create_parser().parse_args()
     if args.normalise_bibliography:
         normalise_bibliography()
     text = (PACKAGE / "main.tex").read_text(encoding="utf-8")
     clean = strip_comments(text)
-    root = PACKAGE.parents[3]
-    git = shutil.which("git")
-    if git is None:
-        raise RuntimeError("git is unavailable")
-    relative = (PACKAGE / "main.tex").relative_to(root).as_posix()
-    baseline = subprocess.run([git, "show", f"{BASELINE}:{relative}"], cwd=root, capture_output=True, text=True, check=True).stdout
-    print(f"BODY_WORDS_APPROX before={body_words(baseline)} after={body_words(text)}")
-    print("COUNT_METHOD introduction through conclusion; tables included; abstract, bibliography and appendices excluded; LaTeX stripped")
     failures = []
+    try:
+        after = body_words(text)
+    except IndexError:
+        after = "UNAVAILABLE"
+        failures.append("Introduction section is missing")
+    baseline = historical_text(PACKAGE)
+    before = "UNAVAILABLE"
+    if baseline is not None:
+        try:
+            before = str(body_words(baseline))
+        except IndexError:
+            pass
+    print(f"BODY_WORDS_APPROX before={before} after={after}")
+    if before == "UNAVAILABLE":
+        print(f"HISTORICAL_COMPARISON UNAVAILABLE baseline={BASELINE}; Git, repository, baseline object or historical source unavailable")
+    print("COUNT_METHOD introduction through conclusion; tables included; abstract, bibliography and appendices excluded; LaTeX stripped")
     citations = {key.strip() for group in re.findall(r"\\cite\w*(?:\[[^]]*\])*\{([^}]+)\}", clean) for key in group.split(",")}
     bibitems = re.findall(r"\\bibitem\{([^}]+)\}", clean)
     bibkeys = re.findall(r"(?m)^@\w+\{([^,]+),", (PACKAGE / "references.bib").read_text(encoding="utf-8"))
@@ -118,7 +145,10 @@ def main() -> int:
         comment = re.search(r"(?<!\\)%", line)
         if comment and line[:comment.start()].strip():
             failures.append(f"inline percent comment at line {number}: inspect for swallowed paper text")
-    abstract = clean.split(r"\begin{abstract}", 1)[1].split(r"\end{abstract}", 1)[0]
+    abstract_match = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", clean, re.S)
+    abstract = abstract_match.group(1) if abstract_match else ""
+    if abstract_match is None:
+        failures.append("abstract environment is missing or unclosed")
     characters = len(" ".join(abstract.split()))
     print(f"ABSTRACT_SOURCE_CHARACTERS {characters} (limit <1920; conservative source count)")
     if characters >= 1920:
