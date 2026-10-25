@@ -675,8 +675,10 @@ authorisation, so a shared function or store cannot be used to relax a staff
 target or to serve a resident through a staff route. A request that cannot be
 assigned to exactly one rule is `unresolved` and cannot pass. MB and MiB are not
 silently equated. Whether resident files count toward the 100 MB per-home evidence
-total, and any promotion of a resident file into staff evidence, stay open
-engineering/owner questions. This corrects the authored precedence text for
+total stays an open engineering/owner question. Promotion or linking of a resident
+file into staff evidence is a separate staff action subject to the NFR-002 limits
+(an over-limit file is refused or handled as a recorded exception), as in the PRD
+guardrail. This corrects the authored precedence text for
 pr442-qual-041; it needs fresh independent review and is not an approval.
 
 The completed PRD calls for freezing request mix/sample method and a 30-minute
@@ -699,7 +701,7 @@ no dates, estimates, new tracker issues or implementation are commissioned.
 | R1 / PR442-S01–S04 | C1/C2/C5/C8; old S1 plus assisted recovery in S3 | Managed synthetic identity and current grant/revocation/shared-device negatives; essential privacy/accessibility not postponed. |
 | R2 / PR442-S05–S08 | C2/C3/C4; portal/document portion of old S2 | Own published case/document and safe requested upload; receipt/scan/review/acceptance/publication distinct. |
 | R3 / PR442-S09–S14 | C3/C5/C8/C9; workflow part of old S2, S3 and portal-only comparator in S4 | Appointment intent, shared timeline/manual capture, accepted handoff and no-detriment service; freeze portal-only comparator before AI attribution. |
-| R4 / PR442-S15–S18 | C2/C6/C7/C8/C9; old S5/S6 | Separate task registry/evaluation/release and finite limits; named review default, routine OFF; retain R3/human question route if task fails. |
+| R4 / PR442-S15–S18 | C2/C6/C7/C8/C9; old S5/S6 | S15/S16: separate task registry/evaluation/release and finite limits, named review default; retain R3/human question route if the task fails. S17/S18: deny-by-default dispatch and suspension after S15/S16; OD-53 evidence only before any positive routine activation or simulated-outbox positive test; routine OFF. |
 | R5 / PR442-S19–S20 | C1–C9; result-review part of old S4/S7 | Collect all six journeys and 30 criteria, paired effort/adverse/load results only when authorised; no unrun privacy/accessibility check disguised as accepted. |
 
 **Protocol timing clarification:** PR442-S19 is placed in R5 as a story, but

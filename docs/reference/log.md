@@ -7475,3 +7475,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-10-25] update | Resident backlog paired-protocol freeze correction (#441)
 
 * Moved the paired effort and adverse-outcome protocol freeze into draft backlog item RB-01 (R0) and made all comparison runs depend on it; RB-21 now only collects and reviews results in R5. Documentation and draft backlog only; the PRD stays unsigned, the proposal unregistered and owner acceptance pending. Earlier entries are unchanged.
+
+## [2026-10-25] update | Resident R4 gating split and promotion wording (#441)
+
+* Owner-authorised bounded follow-up: the draft backlog and unregistered proposal now separate the R4 task-release gate (RB-17/18) from the OD-53 routine-dispatch gate (RB-19/20), and the proposal's staff-promotion wording matches the PRD guardrail. Documentation only; PRD unsigned, proposal unregistered, owner acceptance still pending. Earlier entries are unchanged.
