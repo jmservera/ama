@@ -82,8 +82,8 @@ STAGE_TEXT = {
         "We will offer you a time. Nothing is booked until it is confirmed.",
     ),
     "Survey booked": (
-        "A survey of your home is booked.",
-        "Check the confirmed arrangements below.",
+        "A survey of your home is being arranged.",
+        "Any confirmed time is shown under Confirmed arrangements, if your page shows it.",
     ),
     "Survey write-up": (
         "The survey has happened and is being written up.",
@@ -134,8 +134,8 @@ STAGE_TEXT = {
         "We will share any confirmed visit below.",
     ),
     "Install booked": (
-        "Installation is recorded as booked.",
-        "Check the confirmed arrangements below.",
+        "Installation is being arranged.",
+        "Any confirmed time is shown under Confirmed arrangements, if your page shows it.",
     ),
     "Works under way": (
         "Works are under way.",

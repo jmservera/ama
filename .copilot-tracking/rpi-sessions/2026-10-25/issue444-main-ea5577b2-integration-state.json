@@ -3,7 +3,7 @@
   "task_slug": "issue444-main-ea5577b2-integration",
   "parent_task": {"task_id": "issue-444-rebase", "task_slug": "issue444-rebase-readiness"},
   "mode": "automatic",
-  "active_phase": "Implement",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {

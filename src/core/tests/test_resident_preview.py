@@ -114,6 +114,12 @@ class ResidentView(Base):
         finally:
             del case["new_staff_field"]
 
+    def test_booked_stages_do_not_claim_a_booking(self) -> None:
+        for stage in ("Survey booked", "Install booked"):
+            text = " ".join(rp.STAGE_TEXT[stage]).lower()
+            self.assertNotIn("is booked", text, stage)
+            self.assertNotIn("recorded as booked", text, stage)
+
     def test_view_does_not_mutate_the_store(self) -> None:
         before = json.dumps(self.store.data, sort_keys=True)
         for subject in ("SYN-RES-A", "SYN-RES-B", "SYN-REP-B", "SYN-REP-WRONG"):
