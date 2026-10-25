@@ -32,3 +32,10 @@ Recheck is repeated immediately before publication.
 * PRD: Staff/core applicability row narrowed to staff-audience requests; added unlisted resident class, staff-limit check on promotion, 5 MB unit note, open sample-definition items; header and Last Updated aligned to 0.21.0.
 * Backlog RB-03 lists the new open items. Index unchanged; log entry appended.
 * Prior commit 2b3f6715 and its receipt (/tmp/rpi-441-gate-1792892963) are retained; they do not cover the new commit. The first gate attempt ended BLOCKED on the global heavy lock timeout, not a functional test; the retry passed.
+
+## Gate attempts in correction cycle 1
+
+* Gate 2 (af5bcb00): BLOCKED, global heavy-resource lock timeout (default 600 s); no functional failure.
+* Gate 3 (af5bcb00, lock timeout 3600): VERIFIED, but the push was rejected because bot commit 37277a0e advanced the remote branch; that receipt does not cover later commits.
+* Gate 4 (rebased 70a6f63b): BLOCKED at the end, because origin/main moved to 36996d70 (unrelated infra change); failed receipt retained.
+* Remote history was not rewritten: origin/main was merged (rubric score file conflict resolved to main's bot-owned version) and the final head is gated again.
