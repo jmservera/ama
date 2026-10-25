@@ -17,7 +17,7 @@ from argparse import Namespace
 from pathlib import Path
 
 from zava_forward.api.workbench import navigation
-from zava_forward.core import ai_tasks, ledger, projection, ranking, taskqueues
+from zava_forward.core import ai_tasks, identity, ledger, projection, ranking, taskqueues
 from zava_forward.core.store import Store
 
 SCRIPT = Path(__file__).with_name("check-demo-feedback.py")
@@ -67,6 +67,25 @@ def contractor_me():
         account=dict(name="Test Contractor", email="", provider="trusted-proxy"),
         map=dict(tiles="https://tiles.example.invalid", attribution="Synthetic"),
         navigation=navigation(CONTRACTOR_USER),
+    )
+    return dict(status=200, body=json.loads(json.dumps(body)))
+
+
+def admin_me():
+    user = identity.principal(
+        "11111111-1111-4111-8111-111111111111",
+        "22222222-2222-4222-8222-222222222222",
+        identity.ADMIN_ROLE_NAME,
+        name="Test Administrator",
+        roles=(identity.ADMIN_ROLE_NAME,),
+        app_admin=True,
+    )
+    body = projection.me_payload(user, {}, [])
+    body.update(
+        account=dict(name=user["name"], email="", provider="trusted-proxy"),
+        map=dict(tiles=None, attribution=""),
+        navigation=navigation(user),
+        work_queues=taskqueues.contract(ranking.CURRENT),
     )
     return dict(status=200, body=json.loads(json.dumps(body)))
 
@@ -289,6 +308,25 @@ class MeContract(unittest.TestCase):
 
     def test_malformed_response_is_blocked(self):
         self.assertEqual(self.status(dict(body={})), "blocked")
+
+    def test_runtime_admin_only_response_passes_without_acceptance(self):
+        report = report_for(bundle(me=admin_me()))
+        self.assertEqual(statuses(report)["me_contract"], "pass")
+        self.assertEqual(report["overall"], "blocked")
+        self.assertEqual(report["acceptance"], "not-accepted")
+        self.assertEqual(statuses(report)["admin_account"], "not-run")
+
+    def test_admin_payload_rejects_business_data_or_missing_flag(self):
+        for mutate in (
+            lambda b: b.update(counts=dict(mine=1, hazards=0, open=2)),
+            lambda b: b.update(staff=[dict(email="a@example.invalid", role="x")]),
+            lambda b: b["user"].update(app_admin=False),
+            lambda b: b.pop("work_queues"),
+        ):
+            with self.subTest(mutate=mutate):
+                me = admin_me()
+                mutate(me["body"])
+                self.assertEqual(self.status(me), "fail")
 
     def test_contractor_contract_passes(self):
         self.assertEqual(self.status(contractor_me()), "pass")
@@ -915,6 +953,14 @@ class InputSafety(unittest.TestCase):
         ):
             with self.subTest(content=content[:12]):
                 self.blocked_reason(content)
+
+    def test_excessive_json_nesting_is_blocked_not_raised(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "evidence.json"
+            path.write_text("[" * 10000 + "]" * 10000, encoding="utf-8")
+            report = cdf.build_report(str(path), OPTIONS)
+        self.assertEqual(report["overall"], "blocked")
+        self.assertIn("nesting", json.dumps(report))
 
     def test_non_standard_json_constants_are_blocked(self):
         for constant in ("NaN", "Infinity", "-Infinity"):

@@ -66,7 +66,7 @@ class Verdict(Exception):
 def load_runtime():
     try:
         from zava_forward.api.workbench import navigation
-        from zava_forward.core import projection, ranking, taskqueues
+        from zava_forward.core import identity, projection, ranking, taskqueues
         from zava_forward.core.store import Store
     except ImportError as error:
         raise Verdict(
@@ -74,6 +74,7 @@ def load_runtime():
             f"Installed zava_forward packages are unavailable ({error}); pip install src/core src/agents src/api.",
         ) from error
     return SimpleNamespace(
+        identity=identity,
         projection=projection,
         ranking=ranking,
         taskqueues=taskqueues,
@@ -114,6 +115,10 @@ def load_evidence(path):
         ) from error
     except UnicodeDecodeError as error:
         raise Verdict(BLOCKED, "Evidence file is not valid UTF-8.") from error
+    except RecursionError as error:
+        raise Verdict(
+            BLOCKED, "Evidence JSON nesting is too deep to parse safely."
+        ) from error
     except ValueError as error:
         raise Verdict(BLOCKED, f"Evidence file is not valid JSON: {error}.") from error
     if not isinstance(data, dict):
@@ -214,9 +219,11 @@ def check_me(evidence, options, runtime):
     user = need_dict(body.get("user"), "/api/me user")
     projection = runtime.projection
     role = user.get("role")
-    if role not in projection.STAFF_ROLES and role != projection.CONTRACTOR:
+    admin = role == runtime.identity.ADMIN_ROLE_NAME
+    if role not in projection.STAFF_ROLES and role != projection.CONTRACTOR and not admin:
         raise Verdict(
-            FAIL, f"Role {role!r} is neither a staff role nor the contractor role."
+            FAIL,
+            f"Role {role!r} is not a staff, contractor or Application Administrator role.",
         )
     if options.expect_role is not None and role != options.expect_role:
         raise Verdict(
@@ -240,6 +247,21 @@ def check_me(evidence, options, runtime):
             raise Verdict(
                 FAIL,
                 "Contractor payload must be user{name,role,contractor} with empty counts and staff.",
+            )
+    elif admin:
+        if (
+            user.get("app_admin") is not True
+            or body["counts"] != {}
+            or body["staff"] != []
+        ):
+            raise Verdict(
+                FAIL,
+                "Application Administrator payload must have app_admin true with empty counts and staff.",
+            )
+        if body["work_queues"] != runtime.taskqueues.contract(runtime.ranking.CURRENT):
+            raise Verdict(
+                FAIL,
+                "work_queues differs from the current runtime task-queue contract.",
             )
     else:
         counts = need_dict(body["counts"], "/api/me counts")
