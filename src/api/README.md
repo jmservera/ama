@@ -2365,6 +2365,9 @@ records the tested/deployed image and identity initialization.
   sent; there is no live integration with housing or repairs systems.
 * In development the map loads tiles from tile.openstreetmap.org unless
   `ZF_TILE_URL` is set. No licensed provider has been chosen or tested.
+  The live demo app has `ZF_TILE_URL` set to the public OSM tile URL under a
+  scoped, time-limited owner approval for synthetic data only (see
+  [infra README](../../infra/README.md)); that is not a production provider choice.
 * Local development defaults to local state/documents; Azure selects the
   SQL/Blob backends through configuration. Do not apply local-disk durability
   claims to that deployment or infer tested Blob restoration/erasure from
