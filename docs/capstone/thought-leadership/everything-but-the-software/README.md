@@ -26,7 +26,7 @@ deferred; public release and external deposits remain subject to permission.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 94 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 96 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
@@ -139,6 +139,10 @@ Its method attribution and experimental choices are superseded where stated.
    and adjudication. Telemetry coverage is unverified; missing events do not
    establish zero interventions. Independent suite review, research-statistic
    checks, figure verification and reviewer participation remain TODOs.
+* Added HG-DAgger and ThriftyDAgger as intervention-measurement precedents,
+   with explicit HIR and demand-rate formulas. The cycle denominator is a
+   study-specific adaptation, not a universal standard; incidence, event
+   frequency and human effort remain distinct.
 * Preserved earlier protocol proposals and kept `\resultsfalse`. A Git tag is
    not registration, and earlier started runs cannot be retrospectively
    described as preregistered.

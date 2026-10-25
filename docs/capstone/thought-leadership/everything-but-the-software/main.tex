@@ -1400,17 +1400,67 @@ in the registration. I plan to invite two independent comprehension reviewers;
 their agreement and the assessment remain pending.
 % TODO(author): obtain the two prospective reviewers' agreement, freeze the blinded questions, scoring and timing rules, and report actual participation without implying acceptance or endorsement.
 
+\emph{Intervention measures in prior work.} Intervention-based robot learning
+provides useful measurement precedents. In
+HG-DAgger, the human decides when to take control, provides an uninterrupted
+corrective trajectory and explicitly returns control to the learned
+policy~\cite{kelly2019hgdagger}. ThriftyDAgger distinguishes the number of
+interventions, human actions and robot actions per episode, alongside
+autonomous and intervention-aided success~\cite{hoque2022thriftydagger}.
+Its supervisor-burden model separates switching overhead from the length of
+assistance: $B(\pi)=C(\pi)[L+I(\pi)]$, where $C$ is the expected number of
+switches from autonomous to supervisor control per episode, $L$ is the
+round-trip switching latency and $I$ is the expected number of supervisor
+actions per intervention. Latency is expressed in action timesteps, not
+coding-agent tokens. Fewer interventions can therefore coexist with longer
+human involvement; continuous monitoring is another burden not captured by
+active correction time alone.
+
+These studies motivate separating intervention incidence, frequency and
+effort, but are not evidence of coding-harness effectiveness. A frequency
+such as events per hour uses exposure time as its denominator; a human-control
+share uses human-controlled timesteps divided by all timesteps. Neither is
+the same as the proportion of tasks needing help. I adapt the latter to
+feature cycles and state the denominator explicitly, rather than claim one
+universal HIR formula. I retain failed cycles, unlike ThriftyDAgger's
+successful-episode summaries in its main evaluation; its supplement also
+reports totals over all trajectories.
+
 \emph{Human intervention rate (HIR).} As a secondary measure of harness
 quality, I record observed HIR: the proportion of attempted feature cycles
 receiving unplanned corrective human help. A cycle includes the feature and
 its assigned post-feature step, so B's additional sessions do not enlarge
 its denominator. Failed cycles remain included; repeated interventions in a
 cycle count once for the rate, with event counts recorded separately.
+For run $r$, let $n_r$ be the number of attempted feature cycles and $h_{rj}$
+the number of qualifying corrective-help events in cycle $j$. Then
+\begin{equation}
+\mathrm{HIR}_r
+= \frac{N_{\mathrm{assisted},r}}{n_r}
+= \frac{1}{n_r}\sum_{j=1}^{n_r}\mathbf{1}\{h_{rj}>0\}.
+\label{eq:hir}
+\end{equation}
+The indicator is one when the condition holds and zero otherwise; multiplying
+Equation~\ref{eq:hir} by 100 gives a percentage. By contrast,
+$\sum_j h_{rj}/n_r$ is events per cycle and can exceed one. I report event
+counts and active human minutes separately so that a brief clarification and
+a long repair do not appear equivalent merely because both affect one cycle.
+These are incidence and effort measures, not interchangeable estimates of
+total supervisory workload. If no cycle is attempted, the rate is undefined,
+not zero.
+
 Primary runs receive no task-specific human coaching or code/test repair.
 I therefore also record an intervention-demand rate with the same denominator:
 cycles containing an explicit request for such help or a block requiring
-manual corrective action. Zero observed HIR under this policy is not evidence
-of autonomy. A timeout or automatic reset alone does not establish demand.
+manual corrective action. With $d_{rj}=1$ for such a cycle and zero otherwise,
+\begin{equation}
+\mathrm{IDR}_r = \frac{1}{n_r}\sum_{j=1}^{n_r}d_{rj}.
+\label{eq:intervention-demand}
+\end{equation}
+A request need not result in assistance, and an unsolicited human correction
+need not follow a recorded request; I code the two separately. Zero observed
+HIR under this policy is not evidence of autonomy. A timeout or automatic
+reset alone does not establish demand.
 
 The intended sources are the session telemetry and retained logs. I plan to
 use Cowork to extract requests, blocks and actual interventions, then personally
@@ -1979,6 +2029,16 @@ K.~Hong, A.~Troynikov, and J.~Huber.
 \newblock Technical report, Chroma, July 2025.
 \newblock \url{https://trychroma.com/research/context-rot}.
 
+\bibitem{hoque2022thriftydagger}
+R.~Hoque, A.~Balakrishna, E.~Novoseller, A.~Wilcox, D.~S. Brown, and
+K.~Goldberg.
+\newblock {ThriftyDAgger}: Budget-aware novelty and risk gating for
+interactive imitation learning.
+\newblock In \emph{Proceedings of the 5th Conference on Robot Learning},
+volume 164 of \emph{Proceedings of Machine Learning Research}, pages
+598--608. PMLR, 2022.
+\newblock \url{https://proceedings.mlr.press/v164/hoque22a.html}.
+
 \bibitem{hunt1999pragmatic}
 A.~Hunt and D.~Thomas.
 \newblock \emph{The Pragmatic Programmer: From Journeyman to Master}.
@@ -1995,6 +2055,11 @@ A.~Hunt and D.~Thomas.
 A.~Karpathy.
 \newblock Post on {X} introducing ``vibe coding'', 2 February 2025.
 \newblock \url{https://x.com/karpathy/status/1886192184808149383}.
+
+\bibitem{kelly2019hgdagger}
+M.~Kelly, C.~Sidrane, K.~Driggs-Campbell, and M.~J. Kochenderfer.
+\newblock {HG-DAgger}: Interactive imitation learning with human experts.
+\newblock arXiv:1810.02890v2, 2019 (first posted 2018).
 
 \bibitem{kim2014refactoring}
 M.~Kim, T.~Zimmermann, and N.~Nagappan.

@@ -4,6 +4,10 @@ description: Phase outcomes, verified sources, reproducible numbers and remainin
 ms.date: 2026-10-24
 ---
 
+The original report below is historical evidence for the 24 October revision.
+Its word counts and TODO locations are not current-source verification. The
+dated 25 October addendum at the end identifies the later source and PR review.
+
 ## Scope and Outcome
 
 All edits are inside docs/capstone/thought-leadership/. The starting working
@@ -224,3 +228,137 @@ Two alternatives that better match the measured case are:
   and Usability
 * Merged Pull Requests, Missing Usability: A Case Study and Consolidation
   Experiment Protocol
+
+## 2026-10-25: HIR Amendment and PR 448 Review
+
+The original sections and saved `revision-checks.out.txt` above describe the
+24 October revision. Their counts, TODO locations and experiment choices are
+historical, not verification of the current manuscript.
+
+### Brief and Boundaries
+
+The owner requested more HIR literature and a measurement formula, followed by
+review of the comments and issues in PR 448, using an RPI subagent for code.
+This is feedback triage, not a publication gate, full independent code review
+or permission to implement code changes, publish, resolve threads or merge.
+
+All writes remain inside `docs/capstone/thought-leadership/`. The trusted
+research evidence root is this paper's `anc/` folder. No tracking-directory,
+application, infrastructure or private experiment-kit writes are authorised.
+The parent's primary record is this report. The delegated code lane owns only
+`research/subagents/2026-10-25/pr-448-code-subagent-research.md` below `anc/`.
+
+### Sources and Snapshot Identity
+
+* W1: [PR 448](https://github.com/jmservera/ama/pull/448), retrieved 25 October
+  2026. Queried remote head: `a2b80b184ae3eec059aa4b83eb49c28d3bf61432`;
+  base: `df3e9643c1cf20b2fe143ad73819b3b8b393b003`. The API lists 21 changed
+  files, including two rubric-output files outside the permitted edit scope.
+* The active-PR response contains 25 review threads, 19 unresolved, and 22
+  timeline entries. Several unresolved locations refer to the removed kit.
+* Local committed base: `7e49697ab64d1e1a921805a7aa0520d4a2865bcc`.
+  The HIR amendment is uncommitted and is not evidence about the remote head.
+
+### HIR Literature and Focused Validation
+
+* [HG-DAgger, full text](https://arxiv.org/html/1810.02890v2): human-controlled
+  takeover, sustained corrective control and explicit release. The v2 text is
+  dated 2019; the initial preprint is from 2018.
+* [ThriftyDAgger, full text](https://arxiv.org/html/2109.08273v1) and
+  [PMLR publication metadata](https://proceedings.mlr.press/v164/hoque22a.html):
+  distinguishes intervention counts, actions, duration and success; the
+  proceedings publication is PMLR 164:598-608 (2022).
+* The manuscript's HIR equation is explicitly a cycle-based adaptation, not a
+  universal robotics or coding-agent standard. Demand and assistance remain
+  separately coded; failed cycles remain in the denominator.
+* Two pdfLaTeX passes and `check_paper.py --check-latex-log` passed after the
+  HIR amendment: approximate body 13,475 words; abstract 1,644 source characters;
+  96 cited keys, bibitems and BibTeX entries; no overfull boxes above 10pt;
+  results switch false. These checks do not validate source claims or HIR
+  telemetry coverage. The original 24 October transcript is preserved.
+* Web PDF extraction failed and `pdftotext` and local Python PDF parsers were
+  unavailable. The two primary HTML texts supplied the definitions; no parser
+  packages were installed and no unverified PDF extraction is claimed.
+
+### Research Controls and Participation
+
+Posture is focused, from the owner's named PR and code-feedback scope. The
+selected RPI Researcher lane will inspect current code evidence, seek a cheap
+discriminating check and test counter-evidence before returning. Its research
+must be read-only apart from its exact evidence file. No intake question is
+needed because review scope and write restrictions are explicit. Review
+comments are evidence to verify, not authority to expand the task.
+
+### Review State
+
+The RPI Researcher completed a focused Wider, Deeper and Contrarian lane in
+[its evidence record](research/subagents/2026-10-25/pr-448-code-subagent-research.md).
+The lane inspected local sources, not exact Git objects. The parent separately
+retrieved the checker and retained TCR example at the exact remote PR head
+through GitHub and confirmed the same relevant code. No private tagged-kit
+review is claimed.
+
+| Feedback | Current disposition | Evidence and limitation |
+| --- | --- | --- |
+| Historical baseline blocks structural checks, thread index 5 | Confirmed live, code fix outstanding. | `check_paper.py:74` invokes `git show` with `check=True` before structural validation. An in-memory missing-baseline reproduction raised `CalledProcessError` before those checks; no source or Git history was changed. |
+| TCR commit failures bypass rollback, old-kit index 6 | Confirmed in the retained historical example, despite removal of the original commented path. | `mve-feature-consolidation-harness/experiment-design.md:141-144` tests only `make test` in the condition; failing `git add` or `git commit` in its success body never enters the rollback branch. Confirmed from exact-head control flow, not by running destructive Git commands. |
+| Shared TCR log, index 23 and old-kit index 7 | Confirmed live in the retained historical example. | The same lines use `/tmp/tcr.log` for every invocation, while the proposal schedules parallel sessions. No parallel rollback wrapper was executed. |
+| Missing checker directory, index 14 | Superseded as stated; not proof of current protocol agreement. | The retained directory exists. `protocol_checks.py` checks an older design and treats absent context/vetting notes as optional; the current README explicitly labels this limitation. |
+| README continuation and completeness, indices 15 and 22 | Claims narrowed, but historical assets remain incomplete. | README and manuscript identify the local copies as earlier proposals and defer the exact registered archive. Missing context, vetting and prompt assets are not represented as supplied study materials. |
+| Stale revision evidence, index 24 and general review note | Addressed locally by this dated, source-identified addendum; original evidence retained. | New structural/build results and hashes are below. The earlier transcript and original report outcomes were not rewritten. This local addition is not yet part of the remote PR. |
+| Removed-kit analyzer, evaluation isolation, collection errors, empty suites, consent, egress, Ruff, generated-report counts and duplicate protocol | Outside the current PR tree; transferred risks remain unverified. | Indices 8-13 and 16-20 point to absent `consolidation-mve-kit` paths. Removal is not a fix. The separate tagged private kit and its live data were not audited or changed. |
+
+### PR Checks and Linked Issues
+
+The GitHub GraphQL response for PR 448 reports no linked closing issues and
+`hasNextPage: false`. The only status returned by the status-check tool is
+`rubric/score`, successful at 71/100 versus baseline 64/100. It reports zero
+approvals required and no changes-requested review. This is not publication
+clearance, scientific validation or an independent exact-head acceptance gate.
+
+The rubric bot's general comment is internally inconsistent: it reports
+section D as 7/15 and describes D1/D2/D3 as 3/2/2, while their table rows show
+new scores of zero. Treat that comment as automated feedback, not a verified
+readiness result. No rubric-output files outside the permitted folder were
+modified.
+
+### Source-Identified Local Validation
+
+These hashes identify the HIR-amended local source, not a clean committed
+candidate or a publication-gate receipt:
+
+```text
+main.tex
+12e114450b87688329f19f4532ef51d84c393e5d75087c68636eaac6686e21ea
+references.bib
+ef9e0036446a0cc64f85c6cce21386d489760a49596076bbed6910b47e47f068
+anc/check_paper.py
+5a6b2b3df22925853efe5dcfe57c850ca5f25cbeccc8ded1b5197340712c7a4e
+```
+
+After two pdfLaTeX passes, the current log reports a 32-page PDF. The focused
+checker reports 13,475 approximate body words, 1,644 abstract source characters,
+96 matching cited/bibitem/BibTeX keys, no overfull boxes above 10pt and a false
+results switch. Current TODO locations include figure verification at 728,
+tag/registration records at 1257-1259, independent suite review at 1354,
+reviewer agreement at 1401, HIR telemetry coverage at 1483 and research-statistic
+verification at 1722. These positions belong only to the source hash above.
+
+Source-claim verification, independent test/reference review, actual telemetry
+coverage, registration and publication permissions were not completed. The
+historical protocol-agreement check and full local publication gate were not
+rerun; the latter also requires authorised commits and other prerequisites.
+
+### Parent Synthesis and Continuation
+
+Wider separated current paths from removed kit paths. Deeper read the owning
+checker and TCR code and checked the original feedback. Contrarian evidence
+showed that the old missing-directory claim is superseded and that current
+documentation limits the ancillary package's authority, but did not disprove
+the baseline or TCR defects. The parent's exact-head source retrieval closes
+that snapshot gap for the two surviving code surfaces only.
+
+Research disposition: executed. Review-comment triage is complete within the
+requested scope; implementation planning is not applicable because code fixes
+were not requested. The remaining code findings are not resolved. No code,
+thread-resolution, issue, commit, push or experiment-kit mutation was performed.
