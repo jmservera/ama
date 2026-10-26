@@ -349,6 +349,10 @@ class SessionCodec:
             self._revoked = {k: v for k, v in self._revoked.items() if v > now}
             if len(self._revoked) < 4096:
                 self._revoked[found[1]] = now + SESSION_SECONDS + 1
+            else:
+                # Store full: rotate the nonce so every token, this one included, stops verifying.
+                self._nonce = os.urandom(16)
+                self._revoked = {}
 
     def new_csrf(self) -> str:
         body = secrets.token_hex(16)

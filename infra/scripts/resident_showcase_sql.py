@@ -44,6 +44,61 @@ def principal_statement(principal: str, client_id: str) -> str:
     )
 
 
+class PrincipalError(Exception):
+    """An existing database principal is not exactly the resident app identity with no extra rights."""
+
+
+VIEW = "resident_showcase.v_resident_case"
+
+
+def verify_principal(cursor, principal: str, client_id: str) -> None:
+    """Read-only. Fail closed unless the user is the external identity with this SID, in no role,
+    holding only CONNECT and SELECT on the resident view (denies are harmless)."""
+    if not NAME.fullmatch(principal):
+        raise ValueError("The principal name must be 3 to 60 letters, digits, _ or -.")
+    sid = uuid.UUID(client_id).bytes_le
+    cursor.execute(
+        "SELECT type, authentication_type_desc, sid FROM sys.database_principals "
+        f"WHERE name = N'{principal}'"
+    )
+    rows = cursor.fetchall()
+    if len(rows) != 1:
+        raise PrincipalError("The resident database user is missing or ambiguous.")
+    kind, auth, actual = rows[0]
+    if kind != "E" or auth != "EXTERNAL" or bytes(actual or b"") != sid:
+        raise PrincipalError("The existing database user is not the resident managed identity.")
+    cursor.execute(
+        "SELECT COUNT(*) FROM sys.database_role_members "
+        f"WHERE member_principal_id = DATABASE_PRINCIPAL_ID(N'{principal}')"
+    )
+    if cursor.fetchall()[0][0]:
+        raise PrincipalError("The resident database user belongs to a role; refusing.")
+    cursor.execute(
+        "SELECT p.state, p.permission_name, p.class, "
+        "OBJECT_SCHEMA_NAME(p.major_id) + N'.' + OBJECT_NAME(p.major_id) "
+        "FROM sys.database_permissions p "
+        f"WHERE p.grantee_principal_id = DATABASE_PRINCIPAL_ID(N'{principal}')"
+    )
+    for state, permission, klass, target in cursor.fetchall():
+        if str(state).strip() == "D":
+            continue
+        allowed = (str(state).strip() == "G" and (permission, klass) == ("CONNECT", 0)) or (
+            str(state).strip() == "G" and (permission, klass, target) == ("SELECT", 1, VIEW)
+        )
+        if not allowed:
+            raise PrincipalError(
+                "The resident database user holds rights beyond its view; refusing."
+            )
+    # Every user inherits public, so a user-object or schema grant to public is also effective access.
+    cursor.execute(
+        "SELECT COUNT(*) FROM sys.database_permissions p WHERE p.grantee_principal_id = 0 "
+        "AND p.state IN ('G', 'W') AND (p.class = 3 OR (p.class = 1 "
+        "AND OBJECT_SCHEMA_NAME(p.major_id) NOT IN (N'sys', N'INFORMATION_SCHEMA')))"
+    )
+    if cursor.fetchall()[0][0]:
+        raise PrincipalError("The public role grants user data access; refusing.")
+
+
 def _token() -> str:
     return subprocess.run(
         [
@@ -67,11 +122,21 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("principal")
     parser.add_argument("--create-principal", metavar="CLIENT_ID")
+    parser.add_argument(
+        "--client-id", metavar="CLIENT_ID", help="resident identity client id to verify"
+    )
     parser.add_argument("--apply", nargs=2, metavar=("SERVER", "DATABASE"))
     args = parser.parse_args(argv)
     batches = render(args.principal)
     if args.create_principal:
         batches.insert(0, principal_statement(args.principal, args.create_principal))
+    client_id = args.create_principal or args.client_id
+    if args.apply and not client_id:
+        print(
+            "--apply needs --create-principal or --client-id to verify the user.",
+            file=sys.stderr,
+        )
+        return 2
     if not args.apply:
         print("-- dry run: nothing executed\n" + "\nGO\n".join(batches))
         return 0
@@ -87,9 +152,17 @@ def main(argv: list[str] | None = None) -> int:
         attrs_before=attrs,
     )
     cursor = conn.cursor()
-    for batch in batches:
-        cursor.execute(batch)
-    conn.close()
+    try:
+        if args.create_principal:
+            cursor.execute(batches.pop(0))
+        verify_principal(cursor, args.principal, client_id)
+        for batch in batches:
+            cursor.execute(batch)
+    except PrincipalError as error:
+        print(f"Refused: {error}", file=sys.stderr)
+        return 1
+    finally:
+        conn.close()
     print(f"applied {len(batches)} batches for principal {args.principal}")
     return 0
 

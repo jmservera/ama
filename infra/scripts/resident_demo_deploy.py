@@ -131,7 +131,10 @@ def main(
         if not interactive:
             raise DeployError("Run this in an interactive terminal; piped input is refused.")
         try:
-            expires = secrets_helper.parse_expiry(args.expires, now())
+            # Closing ingress is always safe, so rollback accepts an expired window; opening needs a live one.
+            expires = secrets_helper.parse_expiry(
+                args.expires, now(), require_future=not args.no_ingress
+            )
         except secrets_helper.HelperError as error:
             raise DeployError(str(error)) from None
         cli = (make_cli or (lambda path: setup.Azure(path, body_directory=path)))(
@@ -172,7 +175,7 @@ def main(
         print("To deploy, type exactly:\n" + phrase, file=stderr)
         if ask("Confirm: ").strip() != phrase:
             raise DeployError("Confirmation did not match; nothing was deployed.")
-        secrets_helper.parse_expiry(args.expires, now())
+        secrets_helper.parse_expiry(args.expires, now(), require_future=not args.no_ingress)
         cli.call(["deployment", "group", "create", "-g", "ama", "--name", name, *base])
         app = cli.call(["containerapp", "show", "-g", "ama", "-n", APP])
         scale = app["properties"]["template"]["scale"]

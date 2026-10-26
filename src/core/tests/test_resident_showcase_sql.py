@@ -35,6 +35,75 @@ if ON:
     import mssql_python
 
 
+class FakeCursor:
+    def __init__(self, principal=None, members=0, permissions=(), public=0):
+        self.public = public
+        self.principal, self.members, self.permissions, self.rows, self.sql = (
+            principal,
+            members,
+            permissions,
+            [],
+            [],
+        )
+
+    def execute(self, sql):
+        self.sql.append(sql)
+        if "sys.database_principals" in sql:
+            self.rows = [self.principal] if self.principal else []
+        elif "grantee_principal_id = 0" in sql:
+            self.rows = [(self.public,)]
+        elif "database_role_members" in sql:
+            self.rows = [(self.members,)]
+        else:
+            self.rows = list(self.permissions)
+
+    def fetchall(self):
+        return self.rows
+
+
+CLIENT = "11111111-2222-3333-4444-555555555555"
+GOOD_USER = ("E", "EXTERNAL", uuid.UUID(CLIENT).bytes_le)
+OK_PERMS = (
+    ("G", "CONNECT", 0, None),
+    ("G", "SELECT", 1, "resident_showcase.v_resident_case"),
+    ("D", "SELECT", 1, "dbo.cases"),
+)
+
+
+class PrincipalVerificationTests(unittest.TestCase):
+    def verify(self, **kw):
+        script.verify_principal(FakeCursor(**kw), "id-resident", CLIENT)
+
+    def test_exact_identity_and_view_only_rights_pass(self) -> None:
+        self.verify(principal=GOOD_USER, permissions=OK_PERMS)
+
+    def test_name_only_reuse_is_refused(self) -> None:
+        bad = (
+            dict(principal=None),
+            dict(principal=("E", "EXTERNAL", uuid.uuid4().bytes_le)),
+            dict(principal=("S", "NONE", uuid.UUID(CLIENT).bytes_le)),
+            dict(principal=("E", "EXTERNAL", None)),
+            dict(principal=GOOD_USER, members=1),
+            dict(principal=GOOD_USER, permissions=OK_PERMS, public=1),
+            dict(principal=GOOD_USER, permissions=(("G", "SELECT", 1, "dbo.chat"),)),
+            dict(principal=GOOD_USER, permissions=(("G", "SELECT", 0, None),)),
+            dict(
+                principal=GOOD_USER,
+                permissions=(("W", "SELECT", 1, "resident_showcase.v_resident_case"),),
+            ),
+            dict(
+                principal=GOOD_USER,
+                permissions=(("G", "INSERT", 1, "resident_showcase.v_resident_case"),),
+            ),
+        )
+        for case in bad:
+            with self.assertRaises(script.PrincipalError, msg=str(case)):
+                self.verify(**case)
+
+    def test_apply_without_a_client_id_is_refused_before_connecting(self) -> None:
+        self.assertEqual(script.main(["id-resident", "--apply", "srv", "db"]), 2)
+
+
 class RenderTests(unittest.TestCase):
     def test_principal_substituted_and_validated(self) -> None:
         batches = script.render("id-cutover-test-resident-demo")

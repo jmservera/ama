@@ -77,6 +77,22 @@ class CliTests(unittest.TestCase):
         self.assertTrue(rs.PasswordVerifier(out.strip()).verify(GOOD))
         self.assertNotIn(GOOD, out + err)
 
+    def test_echo_that_cannot_be_disabled_is_refused_before_input(self) -> None:
+        import getpass
+        import warnings
+
+        read: list[str] = []
+
+        def unsafe(text: str) -> str:
+            warnings.warn("Can not control echo", getpass.GetPassWarning, stacklevel=2)
+            read.append(text)
+            return GOOD
+
+        out, err = io.StringIO(), io.StringIO()
+        code = load_main()(["tool"], True, out, err, unsafe)
+        self.assertEqual((code, out.getvalue(), read), (1, "", []))
+        self.assertNotIn(GOOD, err.getvalue())
+
     def test_arguments_and_non_interactive_input_are_refused_before_any_prompt(self) -> None:
         for argv, interactive in ((["tool", GOOD], True), (["tool"], False)):
             code, out, err, asked = self.run_main(argv, interactive, [GOOD, GOOD])

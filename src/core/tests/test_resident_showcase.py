@@ -246,6 +246,17 @@ class SessionTests(unittest.TestCase):
         self.assertIsNone(self.codec.verify(a))
         self.assertIsNotNone(self.codec.verify(b))
 
+    def test_full_revocation_store_still_ends_the_logging_out_session(self) -> None:
+        first, _ = self.codec.issue("C-1")
+        other, _ = self.codec.issue("C-2")
+        for index in range(4096):
+            self.codec._revoked[f"s{index}"] = NOW.timestamp() + 10_000
+        self.codec.revoke(first)
+        self.assertIsNone(self.codec.verify(first))
+        self.assertIsNone(self.codec.verify(other))  # fail closed: every session ends
+        fresh, _ = self.codec.issue("C-1")
+        self.assertIsNotNone(self.codec.verify(fresh))
+
     def test_never_outlives_showcase_expiry(self) -> None:
         end = NOW + timedelta(seconds=60)
         codec = rs.SessionCodec(self.key, end, self.clock)

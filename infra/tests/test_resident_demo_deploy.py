@@ -36,7 +36,14 @@ OWNED = [
 
 def compiled() -> dict:
     result = subprocess.run(
-        ["az", "bicep", "build", "--file", str(INFRA / "resident-demo.bicep"), "--stdout"],
+        [
+            "az",
+            "bicep",
+            "build",
+            "--file",
+            str(INFRA / "resident-demo.bicep"),
+            "--stdout",
+        ],
         capture_output=True,
         text=True,
         check=False,
@@ -72,7 +79,8 @@ class TemplateTests(unittest.TestCase):
     def test_scale_is_zero_to_one_with_no_jobs_or_schedules(self):
         text = json.dumps(self.template)
         self.assertEqual(
-            self.app["properties"]["template"]["scale"], {"minReplicas": 0, "maxReplicas": 1}
+            self.app["properties"]["template"]["scale"],
+            {"minReplicas": 0, "maxReplicas": 1},
         )
         for banned in (
             "Microsoft.App/jobs",
@@ -114,7 +122,10 @@ class TemplateTests(unittest.TestCase):
         self.assertEqual(text.count("4633458b-17de-408a-b874-0445c86b69e6"), 1)
         assignments = [r for r in self.resources if r["type"].endswith("roleAssignments")]
         scopes = sorted(
-            re.findall(r"secrets', '([a-z-]+)'|'(resident-demo-[a-z-]+)'", json.dumps(assignments))
+            re.findall(
+                r"secrets', '([a-z-]+)'|'(resident-demo-[a-z-]+)'",
+                json.dumps(assignments),
+            )
         )
         self.assertTrue(scopes)
         self.assertIn("@sha256:", text)
@@ -149,7 +160,16 @@ def create(ids):
 
 
 class CommandTests(unittest.TestCase):
-    def run_cmd(self, cli, *extra, apply=False, typed=None, expires=EXPIRES, image=IMAGE, tty=True):
+    def run_cmd(
+        self,
+        cli,
+        *extra,
+        apply=False,
+        typed=None,
+        expires=EXPIRES,
+        image=IMAGE,
+        tty=True,
+    ):
         with tempfile.TemporaryDirectory() as home:
             profile = Path(home) / "p"
             profile.mkdir(mode=0o700)
@@ -178,7 +198,13 @@ class CommandTests(unittest.TestCase):
                 else DEPLOY.confirmation(SUB, expires, IMAGE, "--no-ingress" not in extra)
             )
             code = DEPLOY.main(
-                argv, tty, out, err, ask=lambda _: phrase, now=lambda: NOW, make_cli=lambda _: cli
+                argv,
+                tty,
+                out,
+                err,
+                ask=lambda _: phrase,
+                now=lambda: NOW,
+                make_cli=lambda _: cli,
             )
         self.output = out.getvalue() + err.getvalue()
         return code
@@ -233,7 +259,9 @@ class CommandTests(unittest.TestCase):
         with self.assertRaises(DEPLOY.DeployError):
             DEPLOY.check_changes(plan, upper)
 
-    def test_compiled_inventory_including_guard_passes_and_unknown_nested_is_refused(self):
+    def test_compiled_inventory_including_guard_passes_and_unknown_nested_is_refused(
+        self,
+    ):
         template = compiled()
         names = {
             r["type"]: r["name"] for r in template["resources"] if r["type"].endswith("deployments")
@@ -242,7 +270,8 @@ class CommandTests(unittest.TestCase):
         guard = ROOT + "Microsoft.Resources/deployments/" + names["Microsoft.Resources/deployments"]
         self.assertIn(guard, OWNED)
         self.assertEqual(
-            DEPLOY.check_changes({"status": "Succeeded", "changes": create(OWNED)}, SUB), 6
+            DEPLOY.check_changes({"status": "Succeeded", "changes": create(OWNED)}, SUB),
+            6,
         )
         other = ROOT + "Microsoft.Resources/deployments/resident-demo-scope-2"
         for bad in (other, ROOT + "Microsoft.Resources/deployments/main"):
@@ -251,13 +280,21 @@ class CommandTests(unittest.TestCase):
 
     def test_ignored_and_unchanged_resources_do_not_block(self):
         extra = [
-            {"changeType": "Ignore", "resourceId": ROOT + "Microsoft.App/containerApps/ca-api"},
+            {
+                "changeType": "Ignore",
+                "resourceId": ROOT + "Microsoft.App/containerApps/ca-api",
+            },
             {"changeType": "NoChange", "resourceId": OWNED[0]},
         ]
         self.assertEqual(self.run_cmd(FakeCli(create(OWNED[1:]) + extra)), 0)
 
     def test_expiry_image_and_terminal_fail_closed(self):
-        for expires in ("2026-11-01T00:00:01Z", "2026-10-27T08:00:00Z", "2026-10-31", ""):
+        for expires in (
+            "2026-11-01T00:00:01Z",
+            "2026-10-27T08:00:00Z",
+            "2026-10-31",
+            "",
+        ):
             cli = FakeCli(create(OWNED))
             self.assertEqual(self.run_cmd(cli, expires=expires), 1, expires)
             self.assertEqual(cli.calls, [])
@@ -276,6 +313,22 @@ class CommandTests(unittest.TestCase):
         cli = FakeCli(create(OWNED))
         self.assertEqual(self.run_cmd(cli, "--no-ingress", apply=True), 0)
         self.assertIn("externalIngress=false", cli.calls[0])
+
+    def test_rollback_is_permitted_at_and_after_expiry_but_opening_is_not(self):
+        for expires in ("2026-10-27T08:00:00Z", "2026-11-01T00:00:00Z"):
+            cli = FakeCli(create(OWNED))
+            self.assertEqual(
+                self.run_cmd(cli, "--no-ingress", apply=True, expires=expires),
+                0,
+                expires,
+            )
+            self.assertIn("externalIngress=false", cli.calls[0])
+        cli = FakeCli(create(OWNED))
+        self.assertEqual(self.run_cmd(cli, apply=True, expires="2026-10-27T08:00:00Z"), 1)
+        self.assertEqual(cli.calls, [])
+        cli = FakeCli(create(OWNED))
+        self.assertEqual(self.run_cmd(cli, "--no-ingress", expires="2026-11-01T00:00:01Z"), 1)
+        self.assertEqual(cli.calls, [])
 
 
 if __name__ == "__main__":

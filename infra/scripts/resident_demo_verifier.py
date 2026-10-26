@@ -11,6 +11,7 @@ chat or git. Nothing here generates a password or contacts Azure.
 
 import getpass
 import sys
+import warnings
 from collections.abc import Callable
 from typing import TextIO
 
@@ -20,6 +21,13 @@ GUIDE = (
     "The verifier is derived from your password. Treat it as sensitive: keep it in a "
     "password manager or an owner-only local file. Do not paste it into chat or commit it."
 )
+
+
+def hidden(prompt: Callable[[str], str], text: str) -> str:
+    """Treat a failure to disable echo as an error before any input is accepted."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", getpass.GetPassWarning)
+        return prompt(text)
 
 
 def main(
@@ -33,16 +41,17 @@ def main(
         print("This tool takes no arguments.", file=stderr)
         return 2
     if not interactive:
-        print(
-            "Run this in an interactive terminal; piped input is refused.", file=stderr
-        )
+        print("Run this in an interactive terminal; piped input is refused.", file=stderr)
         return 2
     try:
-        first = prompt("Demo password (hidden): ")
-        if prompt("Repeat it (hidden): ") != first:
+        first = hidden(prompt, "Demo password (hidden): ")
+        if hidden(prompt, "Repeat it (hidden): ") != first:
             print("The two entries differ.", file=stderr)
             return 1
         verifier = build_verifier(first)
+    except getpass.GetPassWarning:
+        print("The terminal cannot hide typing; nothing was read.", file=stderr)
+        return 1
     except ValueError as error:
         print(f"Rejected: {error}", file=stderr)
         return 1

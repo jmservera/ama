@@ -60,7 +60,10 @@ class FakeCli:
         if path.lower() == VAULT.lower():
             return {
                 "id": VAULT,
-                "properties": {"publicNetworkAccess": "Disabled", "enableRbacAuthorization": True},
+                "properties": {
+                    "publicNetworkAccess": "Disabled",
+                    "enableRbacAuthorization": True,
+                },
             }
         if path.endswith("/secrets"):
             return {}
@@ -90,7 +93,13 @@ class HelperCase(unittest.TestCase):
         patch.object(CREDENTIAL.time, "sleep").start()
 
     def run_helper(
-        self, *extra, apply=False, interactive=True, hidden=VERIFIER, typed=None, expires=EXPIRES
+        self,
+        *extra,
+        apply=False,
+        interactive=True,
+        hidden=VERIFIER,
+        typed=None,
+        expires=EXPIRES,
     ):
         argv = [
             "x",
@@ -146,7 +155,8 @@ class DryRunAndApply(HelperCase):
         template = self.cli.template
         assert template is not None
         self.assertEqual(
-            [r["name"] for r in template["resources"]], [f"kv-cutovertest-rzsrg/{n}" for n in NAMES]
+            [r["name"] for r in template["resources"]],
+            [f"kv-cutovertest-rzsrg/{n}" for n in NAMES],
         )
         self.assertTrue(all(p["type"] == "secureString" for p in template["parameters"].values()))
         self.assertNotIn("outputs", template)
@@ -160,14 +170,50 @@ class DryRunAndApply(HelperCase):
         self.assertEqual(self.run_helper(apply=True, interactive=False), 1)
         self.assertEqual(self.run_helper(apply=True, typed="yes"), 1)
         self.assertEqual(
-            self.run_helper(apply=True, typed=HELPER.confirmation(SUB, "2026-10-26T10:00:00Z")), 1
+            self.run_helper(apply=True, typed=HELPER.confirmation(SUB, "2026-10-26T10:00:00Z")),
+            1,
         )
         self.assertEqual((self.cli.writes, self.cli.calls), ([], []))
         self.assert_no_leak()
 
+    def test_echo_that_cannot_be_disabled_is_refused_before_input(self):
+        import getpass
+        import warnings
+
+        read = []
+
+        def unsafe(_):
+            warnings.warn("no echo control", getpass.GetPassWarning, stacklevel=2)
+            read.append(1)
+            return VERIFIER
+
+        out, err = io.StringIO(), io.StringIO()
+        code = HELPER.main(
+            [
+                "x",
+                "--subscription",
+                SUB,
+                "--expires",
+                "2026-10-31T23:00:00Z",
+                "--tenant-profile",
+                str(self.profile),
+                "--apply",
+            ],
+            True,
+            out,
+            err,
+            prompt=unsafe,
+            ask=lambda _: "",
+            now=lambda: NOW,
+            make_cli=lambda _: self.cli,
+        )
+        self.assertEqual((code, read, self.cli.writes), (1, [], []))
+        self.assertNotIn(VERIFIER, out.getvalue() + err.getvalue())
+
     def test_verifier_file_path_is_accepted(self):
         self.assertEqual(
-            self.run_helper("--verifier-file", str(self.private_file()), hidden="unused"), 0
+            self.run_helper("--verifier-file", str(self.private_file()), hidden="unused"),
+            0,
         )
         self.assert_no_leak()
 
@@ -233,7 +279,8 @@ class Refusals(HelperCase):
         os.mkfifo(fifo, 0o600)
         done: list[int] = []
         worker = threading.Thread(
-            target=lambda: done.append(self.run_helper("--verifier-file", str(fifo))), daemon=True
+            target=lambda: done.append(self.run_helper("--verifier-file", str(fifo))),
+            daemon=True,
         )
         worker.start()
         worker.join(5)
@@ -272,7 +319,10 @@ class Refusals(HelperCase):
         def outside(ids):
             return [
                 *({"changeType": "Create", "resourceId": i} for i in ids),
-                {"changeType": "Create", "resourceId": "/subscriptions/x/resourceGroups/other/a"},
+                {
+                    "changeType": "Create",
+                    "resourceId": "/subscriptions/x/resourceGroups/other/a",
+                },
             ]
 
         def extra(ids):
@@ -312,7 +362,8 @@ class EmployeePathUnchanged(HelperCase):
                 CREDENTIAL.store(self.cli, app, "kv-cutovertest-rzsrg", name, "v", EXPIRES)
         entra = "entra-" + "a" * 32 + "-" + "b" * 12
         self.assertIn(
-            entra, CREDENTIAL.store(self.cli, app, "kv-cutovertest-rzsrg", entra, "v", EXPIRES)
+            entra,
+            CREDENTIAL.store(self.cli, app, "kv-cutovertest-rzsrg", entra, "v", EXPIRES),
         )
         self.assertEqual(list(self.cli.template["parameters"]), ["credential"])
 

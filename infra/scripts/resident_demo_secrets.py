@@ -26,6 +26,7 @@ import re
 import secrets
 import stat
 import sys
+import warnings
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -48,18 +49,28 @@ MAX_FILE_BYTES = 1024
 GUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 
 
+def hidden_prompt(prompt: Callable[[str], str], text: str) -> str:
+    """Refuse, before any input is read, when the terminal cannot hide the typed text."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", getpass.GetPassWarning)
+        try:
+            return prompt(text)
+        except getpass.GetPassWarning:
+            raise HelperError("The terminal cannot hide typing; nothing was read.") from None
+
+
 class HelperError(ValueError):
     """Sanitized refusal; messages never carry secret material."""
 
 
-def parse_expiry(value: str, now: datetime) -> str:
+def parse_expiry(value: str, now: datetime, require_future: bool = True) -> str:
     if not value.endswith("Z"):
         raise HelperError("Expiry must be an ISO UTC time ending in Z.")
     try:
         moment = datetime.fromisoformat(value[:-1] + "+00:00")
     except ValueError:
         raise HelperError("Expiry is not a valid ISO UTC time.") from None
-    if moment <= now:
+    if require_future and moment <= now:
         raise HelperError("Expiry is not in the future.")
     if moment > MAX_EXPIRY:
         raise HelperError("Expiry is later than the authority limit 2026-11-01T00:00:00Z.")
@@ -104,7 +115,10 @@ def confirmation(subscription: str, expires: str) -> str:
 class QuietParser(argparse.ArgumentParser):
     def error(self, message: str) -> Any:
         # Never echo argument text: a mistaken secret on the command line must not be printed.
-        self.exit(2, "Invalid arguments; see --help. Secrets are never accepted as arguments.\n")
+        self.exit(
+            2,
+            "Invalid arguments; see --help. Secrets are never accepted as arguments.\n",
+        )
 
 
 def main(
@@ -138,7 +152,7 @@ def main(
         spec = (
             read_private_file(args.verifier_file)
             if args.verifier_file
-            else prompt("Verifier from resident_demo_verifier.py (hidden): ")
+            else hidden_prompt(prompt, "Verifier from resident_demo_verifier.py (hidden): ")
         )
         try:
             PasswordVerifier(spec.strip())
@@ -175,7 +189,10 @@ def main(
         print(f"Failed: {error}", file=stderr)
         return 1
     except setup.AzureError as error:
-        print(f"Failed: Azure request error ({error.kind}); no value was printed.", file=stderr)
+        print(
+            f"Failed: Azure request error ({error.kind}); no value was printed.",
+            file=stderr,
+        )
         return 1
     except (EOFError, KeyboardInterrupt):
         print("Cancelled.", file=stderr)
