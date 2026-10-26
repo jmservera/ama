@@ -70,6 +70,7 @@ disallow_untyped_calls = false
 
 [tool.setuptools.package-data]
 "zava_forward.api" = ["web/*", "web/vendor/*", "web/vendor/images/*"]
+"zava_forward.api.resident_preview" = ["web/*"]
 
 [[tool.mypy.overrides]]
 module = ["test_progress_report_api", "tests.test_progress_report_api"]

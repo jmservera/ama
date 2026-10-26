@@ -7136,3 +7136,9 @@ metadata when the knowledge base was created.
 * Recorded a scoped, time-limited owner approval (to 2026-10-25T16:02Z) to use the public OpenStreetMap tile service for the synthetic live demo, applied as a configuration-only change of `ZF_TILE_URL` and `ZF_TILE_ATTRIBUTION` on the existing demo app. The runbook entry is in the
   [infra README](../../infra/README.md) and the dated RPI artifacts are under `.copilot-tracking/*/2026-10-25/demo-basemap-119-*`.
 * The tile usage policy and privacy policy were retrieved by the coordinator; the local regulatory snapshots were not changed. This is not a production provider approval and does not meet #119 licence, cost, coverage, processor or screen-reader acceptance. Earlier log entries are unchanged.
+
+## [2026-10-24] update | Synthetic resident feedback preview indexed (#444)
+
+* Added an index row for the loopback-only, read-only synthetic resident preview: separate `zava_forward.api.resident_preview` server, `zava_forward.core.resident_preview` boundary and a disposable invented fixture builder. See the src/api and src/core READMEs.
+* Reuses the existing case and domain store behind a resident-owned positive-allowlist view and a default-deny server-side grant. PR 442 was read as unsigned input only. No staff server, auth, projection or store file changed.
+* Not resident enrolment, not a live service, no real data. Live Azure/SQL/real-AI acceptance stays a separate later gate; #444 criteria stay open until proven on the final head.
