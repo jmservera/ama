@@ -19,9 +19,9 @@
 <main id="main" tabindex="-1">
   <h1>Your home improvement progress</h1>
   <p class="lede">This page only shows information. You cannot change anything here.</p>
-  <div id="status" class="status" role="status" aria-live="polite">Loading your progress...</div>
-  <div id="error" class="error" role="alert" hidden>
-    <h2 id="error-title" tabindex="-1">We cannot show this page</h2>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <div id="error" class="error" hidden>
+    <h2 id="error-title" tabindex="-1" aria-describedby="error-text">We cannot show this page</h2>
     <p id="error-text"></p>
     <p>You do not need this page. A person can help. Speak to your housing officer or visit your local office.</p>
     <button type="button" id="retry">Try again</button>
