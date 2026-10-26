@@ -92,6 +92,8 @@ def main() -> None:
             check_offer_only(browser, root)
             check_mobile(browser, root)
             check_error_and_recovery(browser, root)
+            check_retry_focus_and_announcements(browser, root)
+            check_skip_target_and_no_script(browser, root)
             check_representative(browser, root)
             browser.close()
     print("resident preview browser check complete", flush=True)
@@ -171,9 +173,9 @@ def check_error_and_recovery(browser: Any, root: Path) -> None:
         data = json.loads(original)
         data["grants"][0]["revoked"] = True
         grants.write_text(json.dumps(data))
-        page.click("#retry") if page.locator("#retry").is_visible() else page.reload()
+        page.reload()
         page.wait_for_selector("#error:not([hidden])")
-        check("revoked access shows an error alert", page.get_by_role("alert").is_visible())
+        check("revoked access shows a visible error panel", page.locator("#error").is_visible())
         check("error heading receives focus", page.evaluate("document.activeElement.id") == "error-title")
         check("error offers a human route", "housing officer" in page.inner_text("#error"))
         check("no resident data after revocation", "Synthetic Row" not in page.inner_text("body"))
@@ -198,6 +200,87 @@ def check_error_and_recovery(browser: Any, root: Path) -> None:
         page.wait_for_selector("#error:not([hidden])")
         check("network failure shows a recoverable error", "could not reach" in page.inner_text("#error"))
         check("network failure error is focused", page.evaluate("document.activeElement.id") == "error-title")
+        page.context.close()
+
+
+def active_id(page: Page) -> str:
+    return str(page.evaluate("document.activeElement.id || document.activeElement.tagName"))
+
+
+def release(page: Page, held: list[Any]) -> None:
+    for _ in range(100):
+        if held:
+            held.pop().continue_()
+            return
+        page.wait_for_timeout(50)
+    raise AssertionError("resident view request was not held")
+
+
+def check_retry_focus_and_announcements(browser: Any, root: Path) -> None:
+    grants = root / "grants.json"
+    original = grants.read_text()
+    data = json.loads(original)
+    data["grants"][0]["revoked"] = True
+    grants.write_text(json.dumps(data))
+    try:
+        with preview(root, "SYN-RES-A") as base:
+            page, errors, _ = new_page(browser, 320, 640)
+            held: list[Any] = []
+            page.route("**/resident/view", lambda route: held.append(route))
+            page.goto(base + "/")
+            page.wait_for_selector("#status:not(:empty)")
+            check("initial loading status is announced by the live region", "Loading your progress" in page.inner_text("#status"))
+            check("status is a polite live region", page.get_attribute("#status", "role") == "status" and page.get_attribute("#status", "aria-live") == "polite")
+            release(page, held)
+            page.wait_for_selector("#error:not([hidden])")
+            check("error container is not also an alert live region", page.locator("[role=alert]").count() == 0)
+            check("error heading is the focus target", active_id(page) == "error-title")
+            check("error heading is described by the error text", page.get_attribute("#error-title", "aria-describedby") == "error-text")
+            check("error text and human route are in the described panel", "housing officer" in page.inner_text("#error") and page.inner_text("#error-text") != "")
+            page.keyboard.press("Tab")
+            check("retry is the next keyboard stop", active_id(page) == "retry")
+            page.keyboard.press("Enter")
+            check("focus moves to main immediately after retry", active_id(page) == "main")
+            check("loading status is announced during retry", "Loading your progress" in page.inner_text("#status"))
+            check("error panel is hidden while loading", page.locator("#error").is_hidden())
+            page.wait_for_timeout(200)
+            check("focus stays on main while the request is pending", active_id(page) == "main")
+            release(page, held)
+            page.wait_for_selector("#error:not([hidden])")
+            check("repeat failure returns focus to the error heading", active_id(page) == "error-title")
+            grants.write_text(original)
+            page.keyboard.press("Tab")
+            page.keyboard.press("Enter")
+            check("focus is on main after the second retry starts", active_id(page) == "main")
+            release(page, held)
+            page.wait_for_selector("#content:not([hidden])")
+            check("focus stays on main after recovery, never body", active_id(page) == "main")
+            check("recovery is announced in the status region", page.inner_text("#status") == "Your progress has loaded.")
+            check("recovered view has no error panel or alert", page.locator("#error").is_hidden() and page.locator("[role=alert]").count() == 0)
+            check("320px has no horizontal scroll after recovery", page.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth"))
+            check("only the expected refused-request console errors in the retry flow", all("status of 403" in e for e in errors))
+            page.context.close()
+    finally:
+        grants.write_text(original)
+
+
+def check_skip_target_and_no_script(browser: Any, root: Path) -> None:
+    with preview(root, "SYN-RES-A") as base:
+        context = browser.new_context(java_script_enabled=False, viewport={"width": 1024, "height": 800})
+        page = context.new_page()
+        page.goto(base + "/")
+        check("no loading text is shown without JavaScript", page.inner_text("#status").strip() == "")
+        check("no-script message gives a human route", "speak to your housing officer" in page.inner_text("noscript").lower())
+        context.close()
+        page, _, _ = new_page(browser)
+        page.goto(base + "/")
+        page.wait_for_selector("#content:not([hidden])")
+        page.keyboard.press("Tab")
+        page.keyboard.press("Enter")
+        check("skip link target is focused", active_id(page) == "main")
+        width = page.evaluate("getComputedStyle(document.activeElement).outlineWidth")
+        style = page.evaluate("getComputedStyle(document.activeElement).outlineStyle")
+        check("skip link target shows a focus indicator of at least 3px", style != "none" and float(width.replace("px", "")) >= 3)
         page.context.close()
 
 
