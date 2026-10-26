@@ -594,6 +594,65 @@ class GateTests(unittest.TestCase):
             with self.assertRaises(gate.GateError):
                 gate.verify(self.root, path, self.base)
 
+    def test_scanned_image_builds_skip_layer_cache(self) -> None:
+        fresh = gate.image_build_argv("D", "T", "C", fresh=True)
+        cached = gate.image_build_argv("D", "T", "C", fresh=False)
+        self.assertEqual(fresh[:4], ["docker", "build", "--no-cache", "--memory=3g"])
+        self.assertIn("--cpu-quota=200000", fresh)
+        self.assertNotIn("--no-cache", cached)
+        self.assertEqual([a for a in fresh if a != "--no-cache"], cached)
+        receipt = {
+            "extras": [],
+            "images": {
+                "mssql": "sha256:" + "c" * 64,
+                **{
+                    name: {
+                        "id": "sha256:" + "d" * 64,
+                        "tag": "zava-forward-"
+                        + ("api" if name == "logo-0600" else name.removeprefix("image-"))
+                        + ":rpi-"
+                        + "a" * 24
+                        + ("-logo0600" if name == "logo-0600" else ""),
+                    }
+                    for name in ("logo-0600", *[f"image-{p}" for p in gate.IMAGES])
+                },
+            },
+            "owner": "a" * 24,
+            "sql": {"container": "b" * 64, "port": "25432"},
+        }
+        builds = {}
+        for check in gate.required_checks(self.root, receipt):
+            if check["argv"][:2] == ["docker", "build"]:
+                builds[check["group"]] = check["argv"]
+        self.assertEqual(len(builds), 5)
+        for group, argv in builds.items():
+            self.assertEqual("--no-cache" in argv, group != "logo-0600", group)
+
+    def test_runner_image_build_uses_shared_argv(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        seen: list[list[str]] = []
+
+        def record(argv: list[str], **kwargs: Any) -> str:
+            seen.append(argv)
+            if argv[:2] == ["docker", "build"]:
+                raise RuntimeError("stop after build")
+            return ""
+
+        for stress in (False, True):
+            seen.clear()
+            with (
+                patch.object(runner, "command", side_effect=record),
+                patch.object(runner, "python", return_value="python3"),
+                patch.object(gate.shutil, "copytree"),
+                patch.object(Path, "chmod"),
+            ):
+                with self.assertRaises(RuntimeError):
+                    runner.image("api", stress=stress)
+            builds = [a for a in seen if a[:2] == ["docker", "build"]]
+            self.assertEqual(len(builds), 1)
+            self.assertEqual("--no-cache" in builds[0], not stress)
+
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
         self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")
