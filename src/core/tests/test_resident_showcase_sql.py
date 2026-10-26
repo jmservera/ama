@@ -111,7 +111,7 @@ class PrincipalVerificationTests(unittest.TestCase):
         with self.assertRaises(script.PrincipalError):
             script.verify_principal(cursor, "id-resident", CLIENT)
         text = cursor.sql[-1]
-        self.assertIn("p.class = 0 AND p.permission_name NOT IN (N'CONNECT'", text)
+        self.assertIn("NOT ((p.class = 0 AND p.permission_name IN (N'CONNECT'", text)
         self.assertIn("VIEW ANY COLUMN ENCRYPTION KEY DEFINITION", text)
         self.assertIn("p.state IN ('G', 'W')", text)
 
@@ -450,6 +450,27 @@ class SqlBoundaryTests(unittest.TestCase):
         self.addCleanup(self.q, "REVOKE VIEW DEFINITION FROM public")
         with self.assertRaises(script.PrincipalError):
             self.rights(USER)
+
+    def test_real_sql_public_privileged_and_principal_grants_are_refused(self) -> None:
+        name = "zf_target_probe"
+        self.scratch_user(name)
+        for grant in (
+            f"GRANT IMPERSONATE ON USER::[{name}] TO public",
+            "GRANT ALTER ANY USER TO public",
+            "GRANT CONTROL ON SCHEMA::dbo TO public",
+            f"GRANT VIEW DEFINITION ON USER::[{name}] TO public",
+            "GRANT EXECUTE TO public",
+        ):
+            with self.subTest(grant=grant):
+                self.q(grant)
+                try:
+                    with self.assertRaises(script.PrincipalError):
+                        self.rights(USER)
+                finally:
+                    self.q(
+                        grant.replace("GRANT", "REVOKE", 1).replace(" TO public", " FROM public")
+                    )
+        self.rights(USER)
 
     def test_real_sql_schema_owner_is_refused(self) -> None:
         name = "zf_owner_probe"

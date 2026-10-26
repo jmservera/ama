@@ -58,9 +58,9 @@ def verify_principal(cursor, principal: str, client_id: str) -> None:
 
     The public role is inherited by every user. Default public permissions are exactly: database
     scope CONNECT, VIEW ANY COLUMN ENCRYPTION KEY DEFINITION and VIEW ANY COLUMN MASTER KEY
-    DEFINITION, plus object grants in the sys and INFORMATION_SCHEMA schemas. Any other public
-    grant at database scope, on a schema (class 3), or on an object in another schema is
-    prohibited."""
+    DEFINITION, plus object grants in the sys and INFORMATION_SCHEMA schemas. Any other grant to
+    public, in any permission class (including IMPERSONATE, CONTROL, ALTER, TAKE OWNERSHIP, VIEW
+    DEFINITION, EXECUTE and grants on database principals), is prohibited."""
     if not NAME.fullmatch(principal):
         raise ValueError("The principal name must be 3 to 60 letters, digits, _ or -.")
     sid = uuid.UUID(client_id).bytes_le
@@ -114,13 +114,14 @@ def verify_rights(cursor, principal: str) -> None:
             raise PrincipalError(
                 "The resident database user holds rights beyond its view; refusing."
             )
-    # Every user inherits public, so a database-scope, schema or object grant to public is effective access.
+    # Every user inherits public, so any grant to public outside the documented defaults, in any
+    # permission class (database, schema, object, database principal, ...), is effective access.
     cursor.execute(
         "SELECT COUNT(*) FROM sys.database_permissions p WHERE p.grantee_principal_id = 0 "
-        "AND p.state IN ('G', 'W') AND ((p.class = 0 AND p.permission_name NOT IN (N'CONNECT', "
+        "AND p.state IN ('G', 'W') AND NOT ((p.class = 0 AND p.permission_name IN (N'CONNECT', "
         "N'VIEW ANY COLUMN ENCRYPTION KEY DEFINITION', N'VIEW ANY COLUMN MASTER KEY DEFINITION')) "
-        "OR p.class = 3 OR (p.class = 1 "
-        "AND OBJECT_SCHEMA_NAME(p.major_id) NOT IN (N'sys', N'INFORMATION_SCHEMA')))"
+        "OR (p.class = 1 "
+        "AND ISNULL(OBJECT_SCHEMA_NAME(p.major_id), N'') IN (N'sys', N'INFORMATION_SCHEMA')))"
     )
     if cursor.fetchall()[0][0]:
         raise PrincipalError("The public role grants user data access; refusing.")

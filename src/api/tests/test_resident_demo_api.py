@@ -328,6 +328,20 @@ class SessionTests(DemoTestCase):
         replay.cookies[demo.SESSION_COOKIE] = token
         self.assertEqual(replay.call("GET", "/demo/view")[0], 401)
 
+    def test_second_tab_does_not_break_first_tab_sign_out(self) -> None:
+        c = self.client()
+        c.login("one@example.com")
+        first = c.cookies[demo.CSRF_COOKIE]
+        second = c.call("GET", "/demo/session")[1]["csrf"]  # a second tab loads the page
+        self.assertEqual(first, second)
+        self.assertEqual(
+            c.call("POST", "/demo/logout", {}, headers={demo.CSRF_HEADER: first})[0], 200
+        )
+        self.assertEqual(c.call("GET", "/demo/view")[0], 401)
+        fresh = Client(self.app.port, f"{HOST}:{self.app.port}")
+        self.assertNotEqual(fresh.call("GET", "/demo/session")[1]["csrf"], first)
+        self.assertEqual(c.call("POST", "/demo/logout", {}, csrf=False)[0], 403)
+
     def test_logout_needs_csrf(self) -> None:
         c = self.client()
         c.login("one@example.com")

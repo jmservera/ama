@@ -203,7 +203,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             return parsed if isinstance(parsed, dict) else None
 
         def _csrf_cookie(self) -> tuple[str, str]:
-            token = app.codec.new_csrf()
+            held = _cookies(self.headers.get("Cookie")).get(CSRF_COOKIE)
+            # Reuse a valid token so a second tab does not invalidate the first tab's sign-out.
+            token = held if app.codec.csrf_ok(held, held) and held else app.codec.new_csrf()
             return token, _set_cookie(CSRF_COOKIE, token, rs.SESSION_SECONDS, False)
 
         def _route(self) -> None:
