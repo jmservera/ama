@@ -34,7 +34,10 @@
     {"identity": "token-maintenance", "resource": "tokenStore", "scope": "Token store account", "roleId": "db58b8e5-c6ad-4a2a-8342-4190687cbf4a", "reason": "Obtain user delegation key to mint the short-lived SAS", "bicep": "modules/authTokenStore.bicep"},
     {"identity": "token-maintenance", "resource": "tokenStore", "scope": "auth-tokens container", "roleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe", "reason": "Prune expired token blobs", "bicep": "modules/authTokenStore.bicep"},
     {"identity": "token-maintenance", "resource": "keyvault", "scope": "Secret entra-token-store-sas only", "roleId": "b86a8fe4-44ce-4948-aee5-eccb2c155cd7", "reason": "Write the renewed SAS to its one secret", "bicep": "modules/authTokenStore.bicep"},
-    {"identity": "token-maintenance", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull the maintenance job image", "bicep": "modules/authTokenStore.bicep"}
+    {"identity": "token-maintenance", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull the maintenance job image", "bicep": "modules/authTokenStore.bicep"},
+    {"identity": "resident-demo", "resource": "keyvault", "scope": "Secret resident-demo-password-verifier only", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the synthetic demo password verifier for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
+    {"identity": "resident-demo", "resource": "keyvault", "scope": "Secret resident-demo-session-key only", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the synthetic demo session key for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
+    {"identity": "resident-demo", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image (digest-pinned) for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"}
   ],
   "customRoles": [
     {

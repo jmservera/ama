@@ -111,7 +111,7 @@ class TemplateTests(unittest.TestCase):
 
     def test_roles_are_secret_scoped_and_image_is_digest_guarded(self):
         text = json.dumps(self.template)
-        self.assertEqual(text.count("4633458b-17de-408a-b874-0151c3af1c1b"), 1)
+        self.assertEqual(text.count("4633458b-17de-408a-b874-0445c86b69e6"), 1)
         assignments = [r for r in self.resources if r["type"].endswith("roleAssignments")]
         scopes = sorted(
             re.findall(r"secrets', '([a-z-]+)'|'(resident-demo-[a-z-]+)'", json.dumps(assignments))
