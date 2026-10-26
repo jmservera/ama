@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-25T23:21:33+00:00",
-  "commit": "dae712e9e825f74601dc9dad329739ea612d1c7e",
+  "scored_at": "2026-10-26T00:04:02+00:00",
+  "commit": "5971ec828d816d019791172e3a1e36f8ce96aa93",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40243646295",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40247069787",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,14 +14,14 @@
     "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "ec38c96ce5ce9f1f27b12cf941a2de4bb1cef0f705d33fd176830c031f949914"
+    "thought-leadership": "7d5ebe8b39ecd64b52f30f4ad8da2ab0e92177b8fad498122469ab43e4e8187b"
   },
-  "total": 74,
+  "total": 73,
   "sections": {
     "A": 31,
     "B": 22,
     "C": 11,
-    "D": 10
+    "D": 9
   },
   "floors_met": true,
   "outcome": "Pass",
@@ -91,7 +91,7 @@
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
       ],
-      "rationale": "New demo-runbook.md defines an Eight-Minute Core Route with timed beats and a fallback route. Concrete planned readiness, but validation.md confirms no rehearsal occurred, so still Needs Improvement."
+      "rationale": "New demo-runbook.md defines an Eight-Minute Core Route with timed beats and fallback. Concrete planned readiness beyond prior statement, but validation.md confirms no rehearsal occurred."
     },
     "B4": {
       "score": 2,
@@ -106,7 +106,7 @@
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
       ],
-      "rationale": "New Timing and Interruption Contract gives slide-by-slide narration budget and route-shortening plan. More developed pacing planning than baseline, but remains unrehearsed per validation.md."
+      "rationale": "New Timing and Interruption Contract gives a slide-by-slide narration budget and route-shortening plan. More developed pacing planning than baseline, but remains unrehearsed per validation.md."
     },
     "B6": {
       "score": 5,
@@ -121,7 +121,7 @@
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:132-160"
       ],
-      "rationale": "The Recovered Council Comparison gives fully worked, labelled calculations tied directly to deck slides with evidence classes and caveats. Actionable, slide-anchored data storytelling beyond baseline."
+      "rationale": "The Recovered Council Comparison gives worked calculations (USD 0.44/home, GBP 6,082/home) tied to deck slides 11 and 18, confirmed in extracted deck text. Actionable, slide-anchored storytelling, though still unaudited live."
     },
     "C1": {
       "score": 5,
@@ -143,12 +143,12 @@
       "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
     },
     "D1": {
-      "score": 5,
+      "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:750-796",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:33-39"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:61-68",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:21-47"
       ],
-      "rationale": "New observation-interpretation-proposition audit trail ties claims to specific commits/PRs/dates with discriminating-evidence tests; repository-context adds external PhotoCraft/Aithena comparisons and a fuller rival matrix. Stronger grounding than prior synthesis-only state."
+      "rationale": "Original five-mechanism synthesis retained; new related-work review adds grounding but does not change scope or add verified results. Still synthesis plus untested protocol."
     },
     "D2": {
       "score": 3,
@@ -156,7 +156,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1322-1325",
         "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:21-23"
       ],
-      "rationale": "Structured draft with abstract, sections, tables and bibliography, but main.tex still carries 25 unresolved TODO(author) items and revision-report.md states the paper is not submission-ready."
+      "rationale": "Structured draft with abstract, sections, tables and bibliography, but main.tex still carries 25 unresolved TODO(author) items (confirmed via grep) and revision-report.md states the paper is not submission-ready."
     },
     "D3": {
       "score": 2,
@@ -164,7 +164,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19",
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:217-222"
       ],
-      "rationale": "A concrete arXiv path is researched, but the README states execution is paused, registration is deferred, and public release remains subject to permission; nothing submitted or accepted."
+      "rationale": "A concrete arXiv path is researched, but the README current-status note confirms execution is paused, registration deferred, and public release still subject to permission; nothing submitted or accepted."
     }
   }
 }
