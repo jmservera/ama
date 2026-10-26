@@ -8,6 +8,7 @@ the network, credentials, private data or a real deployment.
 import ast
 import contextlib
 import copy
+import functools
 import importlib.util
 import io
 import json
@@ -91,23 +92,8 @@ def admin_me():
     return dict(status=200, body=json.loads(json.dumps(body)))
 
 
-def ledger_report(count):
-    entries, prev = [], ledger.GENESIS
-    for n in range(count):
-        entry = ledger.make_entry(
-            "coord@example.invalid",
-            "log_contact",
-            "ZF-1",
-            f"outcome {n}",
-            prev,
-            at="2026-10-22T10:00:00",
-        )
-        entries.append(entry)
-        prev = entry["hash"]
-    return dict(status=200, body=ledger.verify_entries(entries))
-
-
-def contact(outcome, channel="Phone"):
+def handcrafted_contact(outcome, channel="Phone"):
+    """Named handcrafted boundary constructor, used only where the constructed dataset cannot reach the state (the 40-contact cap)."""
     return dict(
         at="2026-10-22T10:00",
         purpose="Update",
@@ -119,51 +105,38 @@ def contact(outcome, channel="Phone"):
     )
 
 
+# Cached as immutable JSON text so no caller can mutate a shared baseline.
+@functools.lru_cache(maxsize=None)
+def _case_write_snapshot(outcome, note, prior):
+    with tempfile.TemporaryDirectory() as directory:
+        return json.dumps(
+            RuntimeFixture(directory).case_write(outcome=outcome, note=note, prior=prior)
+        )
+
+
+@functools.lru_cache(maxsize=None)
+def _ai_snapshot():
+    with tempfile.TemporaryDirectory() as directory:
+        return json.dumps(RuntimeFixture(directory).ai())
+
+
+def runtime_case_write(outcome, note, prior):
+    return json.loads(_case_write_snapshot(outcome, note, prior))
+
+
+def runtime_ai_record():
+    return json.loads(_ai_snapshot())
+
+
 def case_write(outcome="Left voicemail", restart=True):
-    old = [contact("Earlier two"), contact("Earlier one")]
-    new = [contact(outcome[:80])] + old
-    return dict(
-        synthetic=True,
-        case_id="ZF-1",
-        request=dict(outcome=outcome, note="", channel="Phone"),
-        before=dict(status=200, body=dict(id="ZF-1", contacts=old)),
-        write=dict(status=200, body=dict(id="ZF-1", contacts=copy.deepcopy(new))),
-        after=dict(status=200, body=dict(id="ZF-1", contacts=copy.deepcopy(new))),
-        audit_before=ledger_report(2),
-        audit_after=ledger_report(3),
-        restart_between_write_and_read=restart,
-    )
+    """Runtime-produced baseline (two earlier contacts, then one write); restart=False only changes the declaration."""
+    case = runtime_case_write(outcome, CALL_NOTE, ("Earlier one", "Earlier two"))
+    case["restart_between_write_and_read"] = restart
+    return case
 
 
 def ai_record():
-    item = dict(
-        case_id="ZF-1",
-        resident="R",
-        address="A",
-        stage="S",
-        rank=1,
-        reason="Because.",
-        cites=["Stage: S"],
-    )
-    return dict(
-        status=200,
-        body=dict(
-            id="r1",
-            source="ai",
-            model="synthetic-model",
-            validated=True,
-            mode="ai",
-            status="Proposed",
-            label=Store.REC_LABEL,
-            fallback_reason=None,
-            latency_ms=812,
-            quarantine=None,
-            release=dict(id="rel-1", version="1", digest="sha256:" + "cd" * 32),
-            release_denied=False,
-            epoch_current=True,
-            items=[item],
-        ),
-    )
+    return runtime_ai_record()
 
 
 def programme(total=980):
@@ -545,14 +518,15 @@ class CaseWriteReload(unittest.TestCase):
         self.assertEqual(self.status(case), "fail")
 
     def test_capped_response_keeps_forty_newest(self):
-        old = [contact(f"Earlier {n}") for n in range(40)]
-        new = [contact("Left voicemail")] + old[:39]
+        old = [handcrafted_contact(f"Earlier {n}") for n in range(40)]
+        new = [handcrafted_contact("Left voicemail")] + old[:39]
         case = case_write()
+        case["request"]["note"] = ""
         case["before"]["body"]["contacts"] = old
         for name in ("write", "after"):
             case[name]["body"]["contacts"] = copy.deepcopy(new)
         self.assertEqual(self.status(case), "blocked")
-        case["write"]["body"]["contacts"] = [contact("Left voicemail")] + copy.deepcopy(
+        case["write"]["body"]["contacts"] = [handcrafted_contact("Left voicemail")] + copy.deepcopy(
             old
         )
         self.assertEqual(self.status(case), "fail")
@@ -965,8 +939,9 @@ class InputSafety(unittest.TestCase):
 
     def test_non_standard_json_constants_are_blocked(self):
         for constant in ("NaN", "Infinity", "-Infinity"):
+            latency = ai_record()["body"]["latency_ms"]
             raw = json.dumps(bundle()).replace(
-                '"latency_ms": 812', f'"latency_ms": {constant}'
+                f'"latency_ms": {json.dumps(latency)}', f'"latency_ms": {constant}'
             )
             self.assertIn(constant, raw)
             with self.subTest(constant=constant):
@@ -1050,7 +1025,7 @@ def core_helpers():
 
     for module in (dataset, release_support):
         if Path(module.__file__).resolve().parent != CORE_TESTS.resolve():
-            raise unittest.SkipTest(f"{module.__name__} is not the checkout helper")
+            raise AssertionError(f"{module.__name__} resolved outside {CORE_TESTS}: {module.__file__}")
     return dataset, release_support
 
 
@@ -1080,18 +1055,20 @@ class RuntimeFixture:
         self.store.ai._chat = lambda *a, **k: json.dumps(self.items)
         release_support.install(self.store)
 
-    def case_write(self, case_id="ZF-1"):
+    def case_write(self, case_id="ZF-1", outcome=CALL_OUTCOME, note=CALL_NOTE, channel="Phone", prior=()):
         store = self.store
+        for earlier in prior:
+            store.log_call(self.user, case_id, earlier, "", "Phone")
         before = ok(store.detail(case_id, self.user))
         audit_before = ok(store.verify_ledger())
-        store.log_call(self.user, case_id, CALL_OUTCOME, CALL_NOTE, "Phone")
+        store.log_call(self.user, case_id, outcome, note, channel)
         write = ok(store.detail(case_id, self.user))
         audit_after = ok(store.verify_ledger())
         reloaded = Store(*self.paths)
         return dict(
             synthetic=True,
             case_id=case_id,
-            request=dict(outcome=CALL_OUTCOME, note=CALL_NOTE, channel="Phone"),
+            request=dict(outcome=outcome, note=note, channel=channel),
             before=before,
             write=write,
             after=ok(reloaded.detail(case_id, self.user)),
@@ -1105,6 +1082,44 @@ class RuntimeFixture:
 
 
 class RuntimeProducedEvidence(unittest.TestCase):
+    def test_default_bundle_sections_are_copies_of_runtime_returns(self):
+        captured = {}
+        real_case, real_ai = RuntimeFixture.case_write, RuntimeFixture.ai
+
+        def spy_case(self, *args, **kwargs):
+            captured["case_write"] = real_case(self, *args, **kwargs)
+            return captured["case_write"]
+
+        def spy_ai(self):
+            captured["ai"] = real_ai(self)
+            return captured["ai"]
+
+        _case_write_snapshot.cache_clear()
+        _ai_snapshot.cache_clear()
+        self.addCleanup(_case_write_snapshot.cache_clear)
+        self.addCleanup(_ai_snapshot.cache_clear)
+        RuntimeFixture.case_write, RuntimeFixture.ai = spy_case, spy_ai
+        self.addCleanup(setattr, RuntimeFixture, "case_write", real_case)
+        self.addCleanup(setattr, RuntimeFixture, "ai", real_ai)
+        data = bundle()
+        self.assertEqual(sorted(captured), ["ai", "case_write"])
+        for key in ("case_write", "ai"):
+            self.assertEqual(data[key], captured[key])
+            self.assertIsNot(data[key], captured[key])
+        self.assertEqual(len(data["case_write"]["write"]["body"]["contacts"]), 3)
+        self.assertEqual(data["ai"]["body"]["release"]["id"], "offline-output-test:priority")
+
+    def test_default_fixtures_are_isolated_copies(self):
+        first, second = case_write(), case_write()
+        first["write"]["body"]["contacts"][0]["outcome"] = "Changed"
+        self.assertEqual(second["write"]["body"]["contacts"][0]["outcome"], CALL_OUTCOME)
+        ai_record()["body"]["items"].clear()
+        self.assertTrue(ai_record()["body"]["items"])
+
+    def test_long_outcome_is_truncated_by_the_runtime_not_the_fixture(self):
+        written = case_write("x" * 120)["write"]["body"]["contacts"][0]
+        self.assertEqual(written["outcome"], "x" * 80)
+
     def build(self, **kwargs):
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)
