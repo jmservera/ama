@@ -49,4 +49,10 @@ and evidence run afterwards.
 ## Limits
 
 Focused evidence of the changed build path, not a gate, not whole-issue or
-live-tenant acceptance. Root disk fell from 6.4 to 6.0 GB free after the run.
+live-tenant acceptance. Root free space was 6.4 GB before the run, 5.7 GB in df-after.txt (taken before own tags were removed) and 6.0 GB after removal.
+
+## Independent review dispositions (original return preserved in reviews/)
+
+* Low, disk figure mismatch: accepted and corrected above.
+* Low, negative-test gap: already disclosed; unchanged.
+* Verdict Approve, no blocking issue; bounded to this correction, not whole-issue.
