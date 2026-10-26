@@ -105,6 +105,18 @@ class ResidentHttp(unittest.TestCase):
         self.assertIn("Synthetic preview - not a live resident service", page)
         self.assertNotIn("<script>", page.replace('<script src="/resident.js"></script>', ""))
 
+    def test_page_focus_and_announcement_contract(self) -> None:
+        live = self.live("SYN-RES-A")
+        page = live.call("GET", "/")[2].decode()
+        css = live.call("GET", "/resident.css")[2].decode()
+        status = '<div id="status" class="status" role="status" aria-live="polite"></div>'
+        self.assertIn(status, page)
+        self.assertNotIn('role="alert"', page)
+        self.assertIn('<h2 id="error-title" tabindex="-1" aria-describedby="error-text">', page)
+        self.assertIn('<main id="main" tabindex="-1">', page)
+        self.assertIn("<noscript>", page)
+        self.assertNotIn("main:focus{outline:none}", css)
+
     def test_server_owned_identity_each_process_shows_only_its_own_case(self) -> None:
         a = self.live("SYN-RES-A").json("/resident/view")[1]
         b = self.live("SYN-RES-B").json("/resident/view")[1]
