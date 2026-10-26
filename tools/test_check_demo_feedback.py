@@ -11,6 +11,7 @@ import copy
 import importlib.util
 import io
 import json
+import sys
 import tempfile
 import unittest
 from argparse import Namespace
@@ -1032,6 +1033,160 @@ class CommandLine(unittest.TestCase):
             )
             self.assertEqual(code, 2)
             self.assertEqual(json.loads(out)["acceptance"], "not-accepted")
+
+
+CORE_TESTS = Path(__file__).resolve().parents[1] / "src" / "core" / "tests"
+HAZARD_CITE = "Open safety issues: 1"
+CALL_NOTE = "Synthetic runtime note"
+CALL_OUTCOME = "Left voicemail"
+
+
+def core_helpers():
+    """Load the repository's constructed dataset and offline release helper, bound to this checkout."""
+    if str(CORE_TESTS) not in sys.path:
+        sys.path.insert(0, str(CORE_TESTS))
+    import dataset
+    import release_support
+
+    for module in (dataset, release_support):
+        if Path(module.__file__).resolve().parent != CORE_TESTS.resolve():
+            raise unittest.SkipTest(f"{module.__name__} is not the checkout helper")
+    return dataset, release_support
+
+
+def ok(body):
+    return dict(status=200, body=json.loads(json.dumps(body)))
+
+
+class RuntimeFixture:
+    """Evidence produced by the real Store methods behind the server routes, with only the AI boundary scripted."""
+
+    def __init__(self, directory, ai_items=None):
+        dataset, release_support = core_helpers()
+        self.directory = Path(directory)
+        data_path = self.directory / "zavaforward.json"
+        data_path.write_text(json.dumps(dataset.DATA), encoding="utf-8")
+        self.paths = (
+            str(data_path),
+            str(self.directory / "live.json"),
+            str(self.directory / "audit.jsonl"),
+        )
+        self.store = Store(*self.paths)
+        self.user = dataset.DATA["staff"][0]
+        self.store.ai.endpoint = "http://scripted-model.invalid"
+        self.items = ai_items or [
+            dict(case_id="ZF-4", reason="Open damp hazard.", cites=[HAZARD_CITE])
+        ]
+        self.store.ai._chat = lambda *a, **k: json.dumps(self.items)
+        release_support.install(self.store)
+
+    def case_write(self, case_id="ZF-1"):
+        store = self.store
+        before = ok(store.detail(case_id, self.user))
+        audit_before = ok(store.verify_ledger())
+        store.log_call(self.user, case_id, CALL_OUTCOME, CALL_NOTE, "Phone")
+        write = ok(store.detail(case_id, self.user))
+        audit_after = ok(store.verify_ledger())
+        reloaded = Store(*self.paths)
+        return dict(
+            synthetic=True,
+            case_id=case_id,
+            request=dict(outcome=CALL_OUTCOME, note=CALL_NOTE, channel="Phone"),
+            before=before,
+            write=write,
+            after=ok(reloaded.detail(case_id, self.user)),
+            audit_before=audit_before,
+            audit_after=audit_after,
+            restart_between_write_and_read=True,
+        )
+
+    def ai(self):
+        return ok(self.store.ai_priority(self.user, 1))
+
+
+class RuntimeProducedEvidence(unittest.TestCase):
+    def build(self, **kwargs):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        return RuntimeFixture(directory.name, **kwargs)
+
+    def test_runtime_contact_and_ai_evidence_pass_the_unchanged_checker(self):
+        fixture = self.build()
+        ai = fixture.ai()
+        body = ai["body"]
+        self.assertEqual(body["source"], "ai")
+        self.assertIs(body["validated"], True)
+        self.assertIsNone(body.get("fallback_reason"))
+        self.assertIs(body["release_denied"], False)
+        self.assertEqual(body["release"]["id"], "offline-output-test:priority")
+        self.assertEqual(body["release"]["version"], "scripted-output-v1")
+        report = report_for(bundle(case_write=fixture.case_write(), ai=ai))
+        states = statuses(report)
+        self.assertEqual(states["case_write_reload"], "blocked", report)
+        reason = next(c["reason"] for c in report["checks"] if c["id"] == "case_write_reload")
+        self.assertIn("response-shape consistent", reason)
+        self.assertEqual(states["ai_evidence"], "pass", report)
+        self.assertEqual(report["overall"], "blocked")
+        self.assertEqual(report["acceptance"], "not-accepted")
+
+    def test_runtime_contact_is_newest_first_and_survives_reload(self):
+        evidence = self.build().case_write()
+        newest = evidence["after"]["body"]["contacts"][0]
+        self.assertEqual(newest["outcome"], CALL_OUTCOME)
+        self.assertEqual(newest["note"], CALL_NOTE)
+        self.assertEqual(
+            evidence["after"]["body"]["contacts"], evidence["write"]["body"]["contacts"]
+        )
+        self.assertEqual(
+            len(evidence["write"]["body"]["contacts"]),
+            len(evidence["before"]["body"]["contacts"]) + 1,
+        )
+
+    def test_runtime_contact_mutations_fail_closed(self):
+        fixture = self.build()
+        ai = fixture.ai()
+        evidence = fixture.case_write()
+        dropped = copy.deepcopy(evidence)
+        dropped["after"]["body"]["contacts"] = dropped["before"]["body"]["contacts"]
+        changed = copy.deepcopy(evidence)
+        changed["request"]["outcome"] = "Different outcome"
+        broken = copy.deepcopy(evidence)
+        broken["audit_after"]["body"]["intact"] = False
+        for name, mutated in (("dropped", dropped), ("changed", changed), ("broken", broken)):
+            with self.subTest(name):
+                report = report_for(bundle(case_write=mutated, ai=ai))
+                self.assertEqual(statuses(report)["case_write_reload"], "fail", report)
+
+    def test_runtime_template_fallbacks_are_rejected_by_the_checker(self):
+        scripts = {
+            "unresolved citation": [
+                dict(case_id="ZF-4", reason="Open damp hazard.", cites=["Invented source: 9"])
+            ],
+            "hazard case omitted": [
+                dict(case_id="ZF-1", reason="Routine.", cites=["Stage: Survey"])
+            ],
+        }
+        for name, items in scripts.items():
+            with self.subTest(name):
+                fixture = self.build(ai_items=items)
+                ai = fixture.ai()
+                self.assertNotEqual(ai["body"]["source"], "ai")
+                report = report_for(bundle(case_write=fixture.case_write(), ai=ai))
+                self.assertEqual(statuses(report)["ai_evidence"], "fail", report)
+
+    def test_runtime_ai_mutations_fail_closed(self):
+        fixture = self.build()
+        ai = fixture.ai()
+        for name, change in (
+            ("no cites", lambda b: b["items"][0].update(cites=[])),
+            ("wrong label", lambda b: b.update(label="Approved")),
+            ("denied release", lambda b: b.update(release_denied=True)),
+        ):
+            with self.subTest(name):
+                mutated = copy.deepcopy(ai)
+                change(mutated["body"])
+                report = report_for(bundle(case_write=fixture.case_write(), ai=mutated))
+                self.assertEqual(statuses(report)["ai_evidence"], "fail", report)
 
 
 if __name__ == "__main__":
