@@ -4,7 +4,9 @@ description: Release evidence and the one source blocker found (allowlist cap). 
 ms.date: 2026-10-26
 ---
 
-## Research (2026-10-26)
+Research, plan and review are split into sibling records under `.copilot-tracking/{research,plans,reviews}/2026-10-26/`. The plan and review were written after the interim ungated deployment.
+
+## Research summary (2026-10-26)
 
 * The resident image `zava-resident-demo:release-462-55c239d9` was built `--no-cache` and scanned with Trivy 0.76.0 using `src/trivy.yaml`: 0 HIGH or CRITICAL findings.
 * ACR `crcutovertestrzsrg` (Premium) had public access disabled, export policy disabled, bypass None, default action Allow and no IP rules. A first push attempt failed because exports were disabled; the owner approved a temporary export-policy change at 2026-10-26 23:12Z.
@@ -36,7 +38,7 @@ ms.date: 2026-10-26
 
 ## Review
 
-No independent review has been performed for this change. Review is pending on the PR.
+Implementer review recorded in the reviews note; no independent review yet.
 
 ## Interim deployment (2026-10-26, ungated)
 
