@@ -5,6 +5,7 @@
   var errorTitle = document.getElementById("error-title");
   var errorText = document.getElementById("error-text");
   var content = document.getElementById("content");
+  var main = document.getElementById("main");
 
   function el(tag, text, cls) {
     var node = document.createElement(tag);
@@ -46,7 +47,7 @@
     return section;
   }
 
-  function render(view) {
+  function render(view, announce) {
     content.textContent = "";
     if (view.authority_note) {
       var note = card("Who this is for");
@@ -115,7 +116,7 @@
 
     errorEl.hidden = true;
     content.hidden = false;
-    statusEl.textContent = "";
+    statusEl.textContent = announce ? "Your progress has loaded." : "";
   }
 
   function fail(message) {
@@ -126,7 +127,9 @@
     errorTitle.focus();
   }
 
-  function load() {
+  function load(fromRetry) {
+    // Move focus off the retry button before it is hidden so it never drops to the body.
+    if (fromRetry) main.focus();
     errorEl.hidden = true;
     statusEl.textContent = "Loading your progress...";
     fetch("/resident/view", { headers: { Accept: "application/json" }, cache: "no-store" })
@@ -134,7 +137,7 @@
         return r.json().then(function (body) { return { ok: r.ok, status: r.status, body: body }; });
       })
       .then(function (res) {
-        if (res.ok) render(res.body);
+        if (res.ok) render(res.body, fromRetry);
         else fail(res.body.error || "Something went wrong.");
       })
       .catch(function () {
@@ -142,6 +145,6 @@
       });
   }
 
-  document.getElementById("retry").addEventListener("click", load);
-  load();
+  document.getElementById("retry").addEventListener("click", function () { load(true); });
+  load(false);
 })();

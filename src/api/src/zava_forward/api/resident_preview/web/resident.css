@@ -27,7 +27,6 @@ body{margin:0;font:var(--fontSizeBase400)/1.5 var(--fontFamilyBase);color:var(--
 .brand small{display:block;font-weight:400;font-size:.85rem}
 .logo{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:.6rem;background:var(--surface);color:var(--brand);font-weight:700;flex:none}
 main{max-width:46rem;margin:0 auto;padding:var(--spacingHorizontalL)}
-main:focus{outline:none}
 h1{font-size:var(--fontSizeBase600);line-height:2rem;margin:.5rem 0}
 h2{font-size:var(--fontSizeBase500);margin:0 0 .5rem}
 .lede{color:var(--muted);margin-top:0}
