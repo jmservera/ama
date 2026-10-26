@@ -216,6 +216,16 @@ selected leaving that current PDF untouched. Pre-edit PDF preservation cannot
 be claimed. The external compilation is validation output, not a submission
 package.
 
+## Reader Layout and Developmental Revision 25 October
+
+This historical revision narrowed the subtitle to delivery-signal/usability
+divergence, adjusted the narrative and table placement, and retained the
+exploratory protocol without changing its hypotheses, thresholds, budgets or
+sample. Its external 43-page PDF was reported without compiler warnings or
+unresolved references; rendered-page and table-proximity checks were performed.
+The structural check recorded 104 matching references. The later table-flow
+revision below supersedes this build's layout and PDF evidence.
+
 ## Repository Context and Hypothesis Revision 25 October
 
 The author clarified that the hypothesis predates AMA. Aithena's maintenance
@@ -347,6 +357,8 @@ uncommitted work and replacing `main.pdf` with this revision's build.
 
 The earlier revision and validation records below remain historical. They
 do not establish this revision's PDF placement or publication gates.
+
+<a id="current-source-reconciliation-25-october"></a>
 
 ### Table-Flow Build Record
 

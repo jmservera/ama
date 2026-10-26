@@ -358,6 +358,12 @@ function Test-StoryPackage {
             $Spec = @($Manifest.slides | Where-Object number -eq $Number)
             if (-not $Spec.Count) { continue }
             $Spec = $Spec[0]
+            $ExpectedSlide = Set-StorySlide $Source $Spec
+            $ExpectedNotes = Set-StoryNotes $Source $Spec
+            if ((Get-ByteHash $ExpectedSlide) -cne (Get-ByteHash (Get-PartBytes $Candidate "ppt/slides/slide$Number.xml")) -or
+                (Get-ByteHash $ExpectedNotes) -cne (Get-ByteHash (Get-PartBytes $Candidate "ppt/notesSlides/notesSlide$Number.xml"))) {
+                throw "Story content mismatch on slide $Number"
+            }
             foreach ($Id in $Spec.keep_ids | Where-Object { $_ -notin @($Spec.headers.id) }) {
                 $Selector = "//p:sp[p:nvSpPr/p:cNvPr[@id='$Id']]"
                 if ($Before.SelectSingleNode($Selector, $Namespaces).OuterXml -cne $After.SelectSingleNode($Selector, $Namespaces).OuterXml) {
@@ -456,6 +462,9 @@ function Invoke-StoryRender {
             $Slide.Export($LocalImage, 'PNG', 2000, 1125)
             Copy-Item -LiteralPath $LocalImage -Destination (Join-Path $Native $ImageName)
             if ($Slide.SlideIndex -notin @(7, 8, 13, 15, 22, 39, 40, 51)) { continue }
+            $StorySpec = @($Manifest.slides | Where-Object number -eq $Slide.SlideIndex)
+            $HeaderIds = @()
+            if ($StorySpec.Count) { $HeaderIds = @($StorySpec[0].headers | ForEach-Object { [int]$_.id }) }
             foreach ($Shape in $Slide.Shapes) {
                 if (-not $Shape.HasTextFrame -or -not $Shape.TextFrame2.HasText) { continue }
                 $Frame = $Shape.TextFrame2
@@ -469,6 +478,7 @@ function Invoke-StoryRender {
                     bound_width = $Range.BoundWidth; available_width = $AvailableWidth
                     overflow = ($Range.BoundHeight -gt $AvailableHeight + 0.75 -or $Range.BoundWidth -gt $AvailableWidth + 0.75)
                     new_shape = ($Shape.Name.StartsWith('Story-') -or
+                        $Shape.Id -in $HeaderIds -or
                         ($Slide.SlideIndex -eq 15 -and $Shape.Id -in @(55656, 55715)) -or
                         ($Slide.SlideIndex -eq 51 -and $Shape.Id -eq 19627))
                 }
@@ -505,9 +515,18 @@ if ($MyInvocation.InvocationName -ne '.') {
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $RepoRoot = (Resolve-Path -LiteralPath $RepoRoot).ProviderPath
     $Output = [IO.Path]::GetFullPath($OutputDir)
-    $Prefix = $RepoRoot.TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    $Prefix = $RepoRoot.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
     if ($Output -eq $RepoRoot -or $Output.StartsWith($Prefix, [StringComparison]::OrdinalIgnoreCase)) {
         throw 'OutputDir must be external to the repository'
+    }
+    $Ancestor = $Output
+    while ($Ancestor) {
+        if (Test-Path -LiteralPath $Ancestor) {
+            $Item = Get-Item -LiteralPath $Ancestor -Force
+            if ($Item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'OutputDir must not traverse links' }
+            if (-not $Item.PSIsContainer) { throw 'OutputDir ancestors must be directories' }
+        }
+        $Ancestor = [IO.Path]::GetDirectoryName($Ancestor)
     }
     [void][IO.Directory]::CreateDirectory($Output)
     $InputPath = Join-Path $RepoRoot 'docs/capstone/deck/zava-forward-cowork-v2-draft.pptx'

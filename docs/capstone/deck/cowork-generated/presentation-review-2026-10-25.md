@@ -74,7 +74,8 @@ resident portal is optional and separately gated.
 The new [paper package](../../thought-leadership/everything-but-the-software/README.md)
 and [manuscript](../../thought-leadership/everything-but-the-software/main.tex)
 govern the paper story, including the 25 October author clarification.
-Manuscript Table 2 distinguishes 183 merged PRs on 15-24 October from
+The manuscript's "Before and during the delivery loop" table distinguishes
+183 merged PRs on 15-24 October from
 36,755 log words appended on 15-22 October. Neither establishes causation
 or structural decay. The dated 189 board items elsewhere in the deck have a
 different denominator and window.
