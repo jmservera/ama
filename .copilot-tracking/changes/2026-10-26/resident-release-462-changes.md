@@ -37,3 +37,13 @@ ms.date: 2026-10-26
 ## Review
 
 No independent review has been performed for this change. Review is pending on the PR.
+
+## Interim deployment (2026-10-26, ungated)
+
+* Built from clean PR #465 head `8e9ea68b04f1856589d4ad9cab695d9e1905dedc` with `--no-cache`: image `sha256:8620c5b3cb76fa5584f93eb4c282617551174c5d6d400e025b43e4c9d47954d4` in ACR `crcutovertestrzsrg`. Trivy: 0 HIGH or CRITICAL.
+* This image is UNGATED: the full PR gate and independent review of #465 run separately and did not precede deployment (coordinator decision, owner priority).
+* ACR push used the temporary export and /32 route; read back identical to the before file (public disabled, exports disabled, no IP rule, default Allow).
+* Startup log: `522 residents admitted (0 excluded)`; revision `ca-resident-demo--0000001` Healthy.
+* Ingress opened 2026-10-26T23:33:45Z for a 60 minute window, planned close 2026-10-27T00:33:45Z (app expiry 2026-10-31T23:59Z).
+* Checks without the owner password (all passed): no session gets sign-in state only; `/demo/view` 401 without cookie, with forged and with tampered cookie; wrong password and non-allowlisted email get the same neutral 401; cross-origin login 403; missing CSRF 403; malformed JSON 401; bad Host 404; logout without a session 200 signed_in false; security headers present (CSP, nosniff, DENY frames, no-store).
+* Remaining for the owner: positive login with the shared password, cross-case isolation after login, logout of a real session, session expiry.
