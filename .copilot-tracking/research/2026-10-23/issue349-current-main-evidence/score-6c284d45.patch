@@ -1,0 +1,78 @@
+From 6c284d4547de7c52a360b2ec2406ea2078a98f16 Mon Sep 17 00:00:00 2001
+From: "github-actions[bot]"
+ <41898282+github-actions[bot]@users.noreply.github.com>
+Date: Fri, 23 Oct 2026 06:32:04 +0000
+Subject: [PATCH] chore(rubric): record score 48/100
+
+---
+ .github/rubric/scores/latest.json | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/.github/rubric/scores/latest.json b/.github/rubric/scores/latest.json
+index db9634a7..4a1cc06d 100644
+--- a/.github/rubric/scores/latest.json
++++ b/.github/rubric/scores/latest.json
+@@ -2,16 +2,16 @@
+   "schema_version": 1,
+   "rubric_version": 2,
+   "source": "workflow",
+-  "scored_at": "2026-10-22T21:43:55+00:00",
+-  "commit": "1ad2d5ad4f63124f41a59464f62ce8e2b00165d9",
++  "scored_at": "2026-10-23T06:32:03+00:00",
++  "commit": "3eebcc3922188f5ddd614bfa5d4583b082f4e1c5",
+   "model": "claude-sonnet-5",
+-  "run_url": "https://github.com/jmservera/ama/actions/runs/39858593879",
++  "run_url": "https://github.com/jmservera/ama/actions/runs/39911419263",
+   "fingerprints": {
+     "brd": "4138cb7e724d78fe1a15fcb2196ea8126b3d42fca49ed80115d0c5e59fdcc2be",
+     "prd": "c3d0b28a7d142045460cebf636a2be790e1a39e628a61a28096ffab537e15b6a",
+     "adr": "cde100caa110d5ea94bc2f85faf3fdf35a497e58b4adb38188b3d15268a5100c",
+     "solution-code": "57304029660dde5bd4683c88ddaddde05f8f48a4674752490daf26e035d8adec",
+-    "infrastructure": "c8294e0fe476429e647f7aeb8ce078a838dd4f770ad96b72cc9c7cdba7ad1cc6",
++    "infrastructure": "f8733b10efac1fac36bbd7346c897bbf9d933c26c197452bf85d3ea1f3eff3ec",
+     "capstone-deck": "37c72ededfffafb53bb2d94b1f637d13f0fd0cf2dd4c85dd0e1a87375b6f4e2f"
+   },
+   "total": 48,
+@@ -27,9 +27,10 @@
+     "A1": {
+       "score": 4,
+       "evidence": [
+-        "infra/scripts/tenant-readiness-preflight.py:1-627"
++        "src/core/src/zava_forward/core/continuity.py:50-260",
++        "src/api/src/zava_forward/api/server.py:851-875"
+       ],
+-      "rationale": "New standalone read-only preflight script, cleanly decoupled (own guard/Az/Finding classes), consistent with existing modular infra scripts. Does not add new architectural documentation or scaling evidence beyond baseline."
++      "rationale": "Diff adds infra/scripts/tenant-readiness-preflight.py: a standalone, well-isolated read-only checker (guard/transport/Finding separation). Modest addition following existing modular patterns, not a new architectural capability; unchanged from baseline."
+     },
+     "A2": {
+       "score": 5,
+@@ -41,10 +42,10 @@
+     "A3": {
+       "score": 5,
+       "evidence": [
+-        "infra/scripts/tenant-readiness-preflight.py:66-105",
+-        "infra/tests/test_tenant_readiness_preflight.py:1044-1061"
++        "src/core/src/zava_forward/core/continuity.py:380-560",
++        "src/api/tests/test_operator_suspension.py:614-680"
+       ],
+-      "rationale": "Diff adds a strict read-only guard allowlisting exact az CLI templates (blocking login/credential-reset/secret-show), a closed output schema restricted to booleans/counts/role keys, and tests proving tenant/client/secret identifiers are never leaked. Reinforces existing max score with concrete, t..."
++      "rationale": "infra/scripts/tenant-readiness-preflight.py enforces a strict read-only allowlist (guard()), sanitizes identifiers from output, and infra/tests/test_tenant_readiness_preflight.py (35 tests) verifies no secret/identifier leakage and rejection of all non-template calls. Reinforces, but criterion al..."
+     },
+     "A4": {
+       "score": 5,
+@@ -57,9 +58,10 @@
+     "A5": {
+       "score": 4,
+       "evidence": [
+-        "infra/scripts/tenant-readiness-preflight.py:1-627"
++        "src/api/tests/test_operator_suspension.py:614-665",
++        "src/core/src/zava_forward/core/sqlstore.py:572-630"
+       ],
+-      "rationale": "New diagnostic tool adds operational read-only checks (ingress, auth, Graph registration) but no new metrics/traces or cost modeling; unchanged from baseline evidence of resilience without full instrumentation."
++      "rationale": "New preflight script reports readiness check statuses only; it adds no cost or performance measurement, metrics, or traces. Still only resilience-adjacent evidence, not both cost and performance measured; unchanged from baseline."
+     },
+     "A6": {
+       "score": 3,
+-- 
+2.43.0
+
