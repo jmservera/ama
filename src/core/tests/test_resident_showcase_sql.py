@@ -36,17 +36,19 @@ if ON:
 
 
 class FakeCursor:
-    def __init__(self, principal=None, members=0, permissions=(), public=0):
+    def __init__(
+        self,
+        principal: tuple[Any, ...] | None = None,
+        members: int = 0,
+        permissions: tuple[tuple[Any, ...], ...] = (),
+        public: int = 0,
+    ) -> None:
         self.public = public
-        self.principal, self.members, self.permissions, self.rows, self.sql = (
-            principal,
-            members,
-            permissions,
-            [],
-            [],
-        )
+        self.principal, self.members, self.permissions = principal, members, permissions
+        self.rows: list[Any] = []
+        self.sql: list[str] = []
 
-    def execute(self, sql):
+    def execute(self, sql: str) -> None:
         self.sql.append(sql)
         if "sys.database_principals" in sql:
             self.rows = [self.principal] if self.principal else []
@@ -57,7 +59,7 @@ class FakeCursor:
         else:
             self.rows = list(self.permissions)
 
-    def fetchall(self):
+    def fetchall(self) -> list[Any]:
         return self.rows
 
 
@@ -71,7 +73,7 @@ OK_PERMS = (
 
 
 class PrincipalVerificationTests(unittest.TestCase):
-    def verify(self, **kw):
+    def verify(self, **kw: Any) -> None:
         script.verify_principal(FakeCursor(**kw), "id-resident", CLIENT)
 
     def test_exact_identity_and_view_only_rights_pass(self) -> None:
