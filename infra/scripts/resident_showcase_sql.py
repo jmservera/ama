@@ -89,10 +89,11 @@ def verify_principal(cursor, principal: str, client_id: str) -> None:
             raise PrincipalError(
                 "The resident database user holds rights beyond its view; refusing."
             )
-    # Every user inherits public, so a user-object or schema grant to public is also effective access.
+    # Every user inherits public, so a database-scope, schema or object grant to public is effective access.
     cursor.execute(
         "SELECT COUNT(*) FROM sys.database_permissions p WHERE p.grantee_principal_id = 0 "
-        "AND p.state IN ('G', 'W') AND (p.class = 3 OR (p.class = 1 "
+        "AND p.state IN ('G', 'W') AND ((p.class = 0 AND p.permission_name <> N'CONNECT') "
+        "OR p.class = 3 OR (p.class = 1 "
         "AND OBJECT_SCHEMA_NAME(p.major_id) NOT IN (N'sys', N'INFORMATION_SCHEMA')))"
     )
     if cursor.fetchall()[0][0]:

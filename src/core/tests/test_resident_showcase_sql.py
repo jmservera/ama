@@ -102,6 +102,14 @@ class PrincipalVerificationTests(unittest.TestCase):
             with self.assertRaises(script.PrincipalError, msg=str(case)):
                 self.verify(**case)
 
+    def test_public_database_scope_grants_are_detected_beyond_connect(self) -> None:
+        cursor = FakeCursor(principal=GOOD_USER, permissions=OK_PERMS, public=1)
+        with self.assertRaises(script.PrincipalError):
+            script.verify_principal(cursor, "id-resident", CLIENT)
+        text = cursor.sql[-1]
+        self.assertIn("p.class = 0 AND p.permission_name <> N'CONNECT'", text)
+        self.assertIn("p.state IN ('G', 'W')", text)
+
     def test_apply_without_a_client_id_is_refused_before_connecting(self) -> None:
         self.assertEqual(script.main(["id-resident", "--apply", "srv", "db"]), 2)
 

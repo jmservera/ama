@@ -16,6 +16,7 @@ import ipaddress
 import os
 import re
 import secrets
+import threading
 import time
 from collections import deque
 from collections.abc import Callable, Mapping
@@ -310,6 +311,7 @@ class SessionCodec:
         self._key, self._nonce, self._clock = key, nonce or os.urandom(16), clock
         self._end = min(expires_at, AUTHORITY_END).timestamp()
         self._revoked: dict[str, float] = {}
+        self._lock = threading.Lock()
 
     def handle(self, case_id: str) -> str:
         return hmac.new(self._key, b"handle|" + case_id.encode(), "sha256").hexdigest()[:24]
@@ -343,16 +345,17 @@ class SessionCodec:
         return handle, sid
 
     def revoke(self, token: str | None) -> None:
-        found = self.verify(token)
-        if found:
-            now = self._clock()
-            self._revoked = {k: v for k, v in self._revoked.items() if v > now}
-            if len(self._revoked) < 4096:
-                self._revoked[found[1]] = now + SESSION_SECONDS + 1
-            else:
-                # Store full: rotate the nonce so every token, this one included, stops verifying.
-                self._nonce = os.urandom(16)
-                self._revoked = {}
+        with self._lock:  # prune and insert must not interleave across request threads
+            found = self.verify(token)
+            if found:
+                now = self._clock()
+                self._revoked = {k: v for k, v in self._revoked.items() if v > now}
+                if len(self._revoked) < 4096:
+                    self._revoked[found[1]] = now + SESSION_SECONDS + 1
+                else:
+                    # Store full: rotate the nonce so every token stops verifying.
+                    self._nonce = os.urandom(16)
+                    self._revoked = {}
 
     def new_csrf(self) -> str:
         body = secrets.token_hex(16)

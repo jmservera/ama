@@ -2889,8 +2889,8 @@ identity and not production authentication. It is a different composition from t
   by 2026-11-01T00:00Z (exclusive, through 31 October UTC)), the view and a read-only principal that has SELECT on that view only. The
   [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
   only dry-runs unless `--apply` is used from an approved private job.
-* Offline verifier: the owner chooses and keeps the password. Run `python3 infra/scripts/resident_demo_verifier.py > owner-only-file`
-  in an interactive terminal on an owner-controlled machine (no arguments). It prompts twice with
+* Offline verifier: the owner chooses and keeps the password. Run `(umask 077; python3 infra/scripts/resident_demo_verifier.py > owner-only-file)`
+  (the subshell makes the file mode 0600 from creation) in an interactive terminal on an owner-controlled machine (no arguments). It prompts twice with
   hidden input, rejects weak or predictable passwords with a generic reason, and prints only the
   scrypt verifier. The verifier is credential-derived sensitive material: keep it in a password
   manager or owner-only file and never in chat or git. The plaintext is briefly in process memory;

@@ -1,4 +1,6 @@
 import base64
+import sys
+import threading
 import unittest
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -245,6 +247,22 @@ class SessionTests(unittest.TestCase):
         self.codec.revoke(a)
         self.assertIsNone(self.codec.verify(a))
         self.assertIsNotNone(self.codec.verify(b))
+
+    def test_concurrent_logouts_do_not_lose_revocations(self) -> None:
+        tokens = [self.codec.issue(f"C-{i}")[0] for i in range(40)]
+        old = sys.getswitchinterval()
+        sys.setswitchinterval(1e-6)
+        try:
+            for _ in range(3):
+                threads = [threading.Thread(target=self.codec.revoke, args=(t,)) for t in tokens]
+                for th in threads:
+                    th.start()
+                for th in threads:
+                    th.join()
+                self.assertTrue(all(self.codec.verify(t) is None for t in tokens))
+                tokens = [self.codec.issue(f"C-{i}")[0] for i in range(40)]
+        finally:
+            sys.setswitchinterval(old)
 
     def test_full_revocation_store_still_ends_the_logging_out_session(self) -> None:
         first, _ = self.codec.issue("C-1")

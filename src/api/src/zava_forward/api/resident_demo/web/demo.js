@@ -28,7 +28,7 @@
     return section;
   }
 
-  function render(view) {
+  function render(view, announce) {
     content.textContent = "";
     if (view.banner) {
       var note = card("About this showcase");
@@ -85,7 +85,14 @@
     signin.hidden = true;
     content.hidden = false;
     signoutRow.hidden = false;
-    statusEl.textContent = "";
+    statusEl.textContent = announce || "";
+    if (announce) {
+      var first = content.querySelector("h2");
+      if (first) {
+        first.setAttribute("tabindex", "-1");
+        first.focus();
+      }
+    }
   }
 
   function showSignin(message) {
@@ -124,10 +131,10 @@
       });
   }
 
-  function loadView() {
+  function loadView(announce) {
     statusEl.textContent = "Loading your progress\u2026";
     return api("/demo/view").then(function (res) {
-      if (res.ok) render(res.body);
+      if (res.ok) render(res.body, announce);
       else if (res.status === 401) showSignin("Please sign in again.");
       else fail(res.body.error || "Something went wrong.");
     });
@@ -165,7 +172,7 @@
         document.getElementById("password").value = "";
         if (res.ok) {
           csrf = res.body.csrf || csrf;
-          return loadView();
+          return loadView("You are signed in. Your progress is shown below.");
         }
         if (res.status === 403) { start(); return; }
         showSignin(res.body.error || "We could not sign you in.");

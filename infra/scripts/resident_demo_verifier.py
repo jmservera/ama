@@ -6,7 +6,9 @@ a hidden prompt (twice), prints ONLY the verifier on standard output and keeps n
 arguments and refuses piped input, so the password cannot arrive in a command line, environment
 variable, history or pipe. It does not claim memory or swap safety: the plaintext exists briefly
 in this process. Keep the verifier in a password manager or an owner-only local file, never in
-chat or git. Nothing here generates a password or contacts Azure.
+chat or git. If you redirect output, create the file as owner-only from the start, for example
+`(umask 077; python3 resident_demo_verifier.py > owner-only-file)`.
+Nothing here generates a password or contacts Azure.
 """
 
 import getpass

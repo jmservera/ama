@@ -471,6 +471,12 @@ class AbuseAndHardeningTests(DemoTestCase):
             for key, value in demo.HEADERS.items():
                 self.assertEqual(response.headers.get(key), value, (path, key))
 
+    def test_sign_in_moves_focus_to_content_heading_and_announces(self) -> None:
+        script = (demo.WEB / "demo.js").read_text()
+        self.assertIn("You are signed in. Your progress is shown below.", script)
+        self.assertIn('content.querySelector("h2")', script)
+        self.assertIn("first.focus()", script)
+
     def test_assets_are_scriptless_inline_free_and_synthetic_labelled(self) -> None:
         c = self.client()
         _, _, page = c.call("GET", "/")
