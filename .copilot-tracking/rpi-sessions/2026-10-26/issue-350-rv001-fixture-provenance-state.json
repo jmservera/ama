@@ -1,0 +1,28 @@
+{
+  "task_id": "issue-350-rv001-fixture-provenance",
+  "task_slug": "issue-350-rv001-fixture-provenance",
+  "parent_task": {"task_id": "issue-350-main-c8d16059-integration", "task_slug": "issue-350-main-c8d16059-integration"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-26/issue-350-rv001-fixture-provenance-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-26/issue-350-rv001-fixture-provenance-plan.md",
+    "details": ".copilot-tracking/details/2026-10-26/issue-350-rv001-fixture-provenance-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-26/issue-350-rv001-fixture-provenance-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-26/issue-350-rv001-fixture-provenance-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-26/issue-350-rv001-fixture-provenance-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once before source edit", "status": "Revise, PC-501..504 applied", "evidence": "critique artifact; commit 7a366d5f"},
+    {"decision": "Review executed once", "status": "Non-conformant, RV-001 partially resolved (RV-501)", "evidence": "review artifact; outcome not relabelled"},
+    {"decision": "Checker production unchanged", "status": "confirmed", "evidence": "only tools/test_check_demo_feedback.py changed; 85 tests OK"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator assessment before any gate; later gate uses --lock-timeout 0 on base c8d16059"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Route default bundle() case_write and ai_record through RuntimeFixture where shape tests allow (RV-501 residual)", "rationale": "Closes remaining hand-built default fixtures", "evidence": "review RV-501"},
+    {"rank": 2, "task": "Exercise HTTP routes via the api make_handler in a loopback test", "rationale": "Runtime call path currently skips routing", "evidence": "changes record limits"}
+  ]
+}

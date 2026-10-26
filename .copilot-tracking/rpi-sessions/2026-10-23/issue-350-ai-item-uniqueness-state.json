@@ -1,0 +1,33 @@
+{
+  "task_id": "issue-350-ai-item-uniqueness",
+  "task_slug": "issue-350-ai-item-uniqueness",
+  "parent_task": {"task_id": "issue-350-ai-item-shape", "task_slug": "issue-350-ai-item-shape"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-23/issue-350-ai-item-uniqueness-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-23/issue-350-ai-item-uniqueness-plan.md",
+    "details": ".copilot-tracking/details/2026-10-23/issue-350-ai-item-uniqueness-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-23/issue-350-ai-item-uniqueness-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-23/issue-350-ai-item-uniqueness-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-23/issue-350-ai-item-uniqueness-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the full ordered RPI loop and stop after validation without publication", "status": "confirmed", "evidence": "Explicit caller request dated 2026-10-23"},
+    {"decision": "Preserve PR 436 and all prior evidence; no history/remote mutation", "status": "confirmed", "evidence": "Caller constraints and initial clean exact starting HEAD"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C5; ordered Wider/Deeper/Contrarian waves and actual duplicate reproduction"},
+    {"decision": "One final-candidate critique executed, original verdict Revise", "status": "disposed; Plan Ready", "evidence": "Plan Critique Disposition: PC-001/PC-002 rejected as inapplicable worker-local restrictions; original preserved"},
+    {"decision": "One original RPI Review executed against bounded correction", "status": "Complete / Residual work; no in-scope blocking defect", "evidence": ".copilot-tracking/reviews/logs/2026-10-23/issue-350-ai-item-uniqueness-review.md; RV-001 authorized delivery, RV-002 separate lineage and acceptance"}
+  ],
+  "blockers": [
+    {"id": "pr-lineage", "summary": "Published PR branch and local candidate have divergent ancestry", "resolution": "Coordinator resolves separately; no push or history changes in this task"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Authorized delivery: reviewed RPI source work complete and caches preserved/cleaned; commit candidate, exactly one fixed-base gate and verifier, then stop per caller. Final commit/receipt/stopped state external to preserve exact-head identity."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator resolves PR 436 lineage", "rationale": "Publication remains explicitly forbidden and ancestry divergent", "evidence": "Caller direction and RV-002"},
+    {"rank": 2, "task": "Independent coordinator exact-head assessment", "rationale": "Separate assurance authority after local validation, not implementer self-review", "evidence": "RV-002"},
+    {"rank": 3, "task": "Owner-governed original deployed acceptance", "rationale": "Broader live prerequisites remain outside offline correction", "evidence": "RV-002; issue 350 OPEN with ten unticked criteria"}
+  ]
+}
