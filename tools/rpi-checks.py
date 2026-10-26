@@ -284,6 +284,22 @@ def environment_identity(out: Path) -> dict[str, str]:
     return result
 
 
+def image_build_argv(dockerfile: str, tag: str, context: str, *, fresh: bool) -> list[str]:
+    # Scanned images skip the layer cache so apt-get upgrade always runs.
+    return [
+        "docker",
+        "build",
+        *(["--no-cache"] if fresh else []),
+        "--memory=3g",
+        "--cpu-quota=200000",
+        "-f",
+        dockerfile,
+        "-t",
+        tag,
+        context,
+    ]
+
+
 def required_groups(extras: list[str]) -> list[str]:
     return [
         "preflight",
@@ -562,17 +578,9 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         if image["tag"] != tag or re.fullmatch("sha256:[0-9a-f]{64}", image["id"]) is None:
             raise GateError("Receipt image identity is invalid")
         add(
-            [
-                "docker",
-                "build",
-                "--memory=3g",
-                "--cpu-quota=200000",
-                "-f",
-                f"{context}/{project}/Dockerfile",
-                "-t",
-                tag,
-                context,
-            ],
+            image_build_argv(
+                f"{context}/{project}/Dockerfile", tag, context, fresh=name != "logo-0600"
+            ),
             timeout=1800,
         )
         add(["docker", "image", "inspect", tag])
@@ -1371,17 +1379,9 @@ class Runner:
                 (context / "api/src/zava_forward/api/web/zava-logo.png").chmod(0o600)
             tag = f"zava-forward-{project}:rpi-{self.token}" + ("-logo0600" if stress else "")
             self.command(
-                [
-                    "docker",
-                    "build",
-                    "--memory=3g",
-                    "--cpu-quota=200000",
-                    "-f",
-                    str(context / project / "Dockerfile"),
-                    "-t",
-                    tag,
-                    str(context),
-                ],
+                image_build_argv(
+                    str(context / project / "Dockerfile"), tag, str(context), fresh=not stress
+                ),
                 timeout=1800,
             )
             metadata = json.loads(self.command(["docker", "image", "inspect", tag]))[0]
