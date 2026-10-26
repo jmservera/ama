@@ -28,7 +28,7 @@ from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 
 AUTHORITY_END = datetime(2026, 11, 1, 0, 0, tzinfo=UTC)  # exclusive: through 31 Oct UTC
-MAX_MAPPINGS = 25
+MAX_MAPPINGS = 1000
 SESSION_SECONDS = 1800
 BANNER = (
     "Synthetic demo - not a real resident service. This sign-in uses a shared demo password "
@@ -181,9 +181,9 @@ class IdentityMap:
 
 
 def build_identity_map(rows: list[ShowcaseRow], now: datetime) -> IdentityMap:
-    """Admit at most 25 rows. Too many rows or a duplicated email fails the whole map closed."""
+    """Admit at most 1000 rows. Too many rows or a duplicated email fails the whole map closed."""
     if len(rows) > MAX_MAPPINGS:
-        raise ShowcaseConfigError("The allowlist supplies more than 25 showcase mappings.")
+        raise ShowcaseConfigError("The allowlist supplies more than 1000 showcase mappings.")
     cases: dict[str, str] = {}
     excluded = dict.fromkeys(EXCLUSION_REASONS, 0)
     for row in rows:
