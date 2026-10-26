@@ -3155,7 +3155,8 @@ network, Azure or vault access.
 
 [`scripts/resident_demo_secrets.py`](scripts/resident_demo_secrets.py) is the owner-run secret
 delivery helper for later use; it has not been run against Azure. It is a dry run by default (local
-validation plus vault metadata only, no value sent). `--apply` writes exactly
+validation plus vault metadata only, no value sent); a dry run is not what-if proof, because the
+what-if runs only under `--apply`. `--apply` writes exactly
 `resident-demo-password-verifier` and `resident-demo-session-key` to `kv-cutovertest-rzsrg` in one
 secure ARM deployment, only after a what-if proves two new secrets there, with an expiry no later
 than 2026-10-26T12:00:00Z. The verifier comes from a hidden prompt or an owner-only 0600 file outside

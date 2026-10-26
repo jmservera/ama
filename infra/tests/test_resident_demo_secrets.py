@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import tempfile
+import threading
 import unittest
 from datetime import UTC, datetime
 from pathlib import Path
@@ -227,10 +228,24 @@ class Refusals(HelperCase):
         self.assertEqual(self.run_helper("--verifier-file", str(repo_file)), 1)
         self.assertEqual(self.cli.calls, [])
 
+    def test_fifo_verifier_file_is_refused_without_blocking(self):
+        fifo = self.home / "verifier.fifo"
+        os.mkfifo(fifo, 0o600)
+        done: list[int] = []
+        worker = threading.Thread(
+            target=lambda: done.append(self.run_helper("--verifier-file", str(fifo))), daemon=True
+        )
+        worker.start()
+        worker.join(5)
+        self.assertFalse(worker.is_alive(), "helper blocked on a FIFO")
+        self.assertEqual(done, [1])
+        self.assertEqual(self.cli.calls, [])
+
     def test_malformed_or_plain_password_values_are_refused_without_echo(self):
         for bad in ("", "Plain-Looking-Password-123!", "scrypt$1$1$1$a$b"):
             self.assertEqual(self.run_helper(hidden=bad), 1)
-            self.assertNotIn(bad or "\0", self.output.replace("scrypt$", "") or "\0")
+            if bad:
+                self.assertNotIn(bad, self.output)
         self.assertEqual(self.cli.calls, [])
 
     def test_bad_subscription_and_unknown_arguments_do_not_echo_values(self):

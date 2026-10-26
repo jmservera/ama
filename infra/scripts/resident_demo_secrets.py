@@ -72,7 +72,7 @@ def read_private_file(path: Path) -> str:
     if setup.REPO == resolved or setup.REPO in resolved.parents:
         raise HelperError("Keep the verifier file outside the repository.")
     try:
-        descriptor = os.open(resolved, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+        descriptor = os.open(resolved, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
     except OSError:
         raise HelperError("The verifier file cannot be opened (missing or a link).") from None
     try:

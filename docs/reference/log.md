@@ -7171,3 +7171,7 @@ Added a module-scoped mypy ignore_missing_imports override for the optional mssq
 ## 2026-10-26 issue 462 owner-local secret delivery helper
 
 Added infra/scripts/resident_demo_secrets.py and a fixed-name store_resident_demo path in credential_arm.py for the two resident demo secrets (dry run default, typed-phrase apply, expiry cap, fake-fixture tests). Plan, changes and one independent Conformant review are under .copilot-tracking. Tool authoring only: no Azure write, no real password, verifier or session key, no gate. The gate 4 receipt is stale for the new head; budget, provenance, SQL principal and private-vault write path remain open.
+
+## 2026-10-26 issue 462 secret helper correction 1
+
+FIFO-safe verifier file open, stronger malformed-value assertion and README dry-run wording. The reported namespace-env import failure traced to stale editable paths in a retained gate env; the runner reinstalls the projects, so no runner change. Local only: no gate, push or Azure.

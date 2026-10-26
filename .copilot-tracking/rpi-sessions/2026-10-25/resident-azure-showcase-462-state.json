@@ -111,6 +111,11 @@
       "decision": "Secret-delivery helper slice 2026-10-26: critique Revise (PC-001..004 dispositioned), one independent Review Conformant (4 Low routed later); local commit only, no gate, no cloud",
       "status": "recorded",
       "evidence": "plan, changes and review artifacts above"
+    },
+    {
+      "decision": "Helper correction 1: SH-001 diagnosed as stale editable paths in a retained env, no runner change; Low1/3/4 fixed; independent review Conformant",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/*/2026-10-26/*correction1*"
     }
   ],
   "blockers": [
@@ -142,7 +147,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator assessment, capacity admission and fresh full gate for the new head; G1-G4 still open; apply needs separate exact write approval"
+    "action": "Coordinator assessment, capacity admission, fresh full gate on new head; G1-G4 open"
   },
   "prioritized_follow_ups": [
     {
