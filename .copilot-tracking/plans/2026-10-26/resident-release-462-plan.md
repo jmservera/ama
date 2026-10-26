@@ -13,3 +13,5 @@ This plan was recorded after the interim ungated deployment, not before it. It r
 5. Source change: raise `MAX_MAPPINGS` from 25 to 1000 (core, SQL reader message, SQL comment, README, tests use the constant).
 
 Bound rationale: 1000 is above the 980 cases in the current data and keeps the fail-closed refusal and the `fetchmany(MAX_MAPPINGS + 2)` read bound. It is a documented demo bound, not a scale target.
+
+Disclosure: step 4 (ingress on an ungated image) was a coordinator assumption and a deviation from the required gates, not an authorised bypass. The release is not accepted until the exact-head full gate, independent review and the owner's live authenticated journeys pass; ingress stays closed until then unless the owner decides otherwise.

@@ -19,3 +19,7 @@ Scope: the PR 465 source diff (8 files), reviewed by the implementing session af
 ## Outcome
 
 No open source findings from this review. Not yet performed: independent review, hosted review, full gate on the final head, and the owner's positive login and cross-case isolation tests.
+
+## Disposition
+
+The interim ungated rollout is a disclosed deviation, not an alternative to the gates. The release is NOT accepted pending the exact-head full gate, independent review (hosted review resolved) and the owner's live authenticated journeys. Ingress is not to be re-opened before those pass unless the owner explicitly decides otherwise.
