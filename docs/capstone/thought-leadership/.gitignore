@@ -13,7 +13,9 @@
 *.run.xml
 
 # Compiled paper, not figure assets
-main.pdf
+# main.pdf
 
 # Download/security metadata sidecars
 *:sec.endpointdlp
+
+arxiv/

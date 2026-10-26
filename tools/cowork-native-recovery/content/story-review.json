@@ -1,0 +1,244 @@
+{
+  "revision": "2026-10-25-independent-findings-repair",
+  "source_sha256": "39659a3ad9974f802a8418177a9ca0ca8daf7478e71cd82d04cd7677d9ad2cc0",
+  "boundary": "Presentation implementation and native rendering only. No independent acceptance, experiment execution, spending or canonical publication.",
+  "text_only_slides": [
+    {
+      "number": 15,
+      "replacements": [
+        {"id":55656, "from":"LIVE IN MVP", "to":"MVP (HIST.)"},
+        {"id":55715, "from":"LIVE IN MVP", "to":"MVP (HIST.)"}
+      ],
+      "elements": [
+        {"key":"historical-mvp-caption", "box":[0.6,6.44,12.13,0.24], "text":"Historical MVP, 12-14 Oct; current staff sign-in/Graph acceptance outstanding.", "size":12}
+      ],
+      "note_replacements": [
+        {"from":"And it lives inside Microsoft 365. Staff sign in with Entra ID today, the profile comes from Microsoft Graph,", "to":"In the historical MVP of 12-14 October, Entra ID sign-in and Microsoft Graph profile integration were demonstrated. Current staff sign-in/Graph acceptance remains outstanding. For the wider Microsoft 365 integration,"}
+      ]
+    },
+    {
+      "number": 51,
+      "replacements": [
+        {"id":19627, "from":"Legal dates come from official government publications (Oct 2026); Zava's legal review confirms them.", "to":"Dated official-source snapshots; currentness and named legal review required before consequential use."}
+      ],
+      "elements": [],
+      "note_replacements": [
+        {"from":"Legal dates come from official government publications (Oct 2026); Zava's legal review confirms them.", "to":"Dated official-source snapshots; currentness and named legal review required before consequential use."}
+      ]
+    }
+  ],
+  "notes_only": [
+    {
+      "number": 7,
+      "replacements": [
+        {"from":"Before we show you the product, I want you to see the work underneath it, because that is where the value is.", "to":"These counts show activity, not accepted value; the lesson is to preserve short, usable feedback loops."},
+        {"from":"And here is the part I am proudest of: the contributors are one architect, GitHub Copilot and automation. That is the delivery model we are proposing for Zava too: a small accountable team, multiplied by AI, governed by evidence.", "to":"The recorded contributors are one architect, GitHub Copilot and automation. These activity counts do not validate a long coordinator loop or establish accepted delivery for Zava."}
+      ]
+    }
+  ],
+  "slides": [
+    {
+      "number": 8,
+      "code": "S07",
+      "subject": "Research into design",
+      "keep_ids": [33792, 33794, 33797, 33801],
+      "headers": [],
+      "elements": [
+        {"key":"metrics", "box":[0.6,1.55,12.13,0.42], "text":"9 role contributions     /     28 stage-based maps     /     24 bounded opportunities", "size":20, "bold":true},
+        {"key":"status", "box":[0.6,2.05,12.13,0.3], "text":"Desk research + role instruments, not resident or staff validation", "size":14},
+        {"key":"journey-1", "geometry":"chevron", "fill":"E8F1ED", "box":[0.6,2.55,1.52,0.9], "text":"1 Report /\nnominate", "size":14, "bold":true},
+        {"key":"journey-2", "geometry":"chevron", "fill":"CEDFD6", "box":[2.12,2.55,1.52,0.9], "text":"2 Understand\nhome", "size":14, "bold":true},
+        {"key":"journey-3", "geometry":"chevron", "fill":"E8F1ED", "box":[3.64,2.55,1.52,0.9], "text":"3 Decide\nscope", "size":14, "bold":true},
+        {"key":"journey-4", "geometry":"chevron", "fill":"CEDFD6", "box":[5.16,2.55,1.52,0.9], "text":"4 Coordinate\nready work", "size":14, "bold":true},
+        {"key":"journey-5", "geometry":"chevron", "fill":"E8F1ED", "box":[6.68,2.55,1.52,0.9], "text":"5 Deliver /\ncapture", "size":14, "bold":true},
+        {"key":"journey-6", "geometry":"chevron", "fill":"CEDFD6", "box":[8.2,2.55,1.52,0.9], "text":"6 Inspect /\nremedy", "size":14, "bold":true},
+        {"key":"journey-7", "geometry":"chevron", "fill":"E8F1ED", "box":[9.72,2.55,1.52,0.9], "text":"7 Handover /\nlive with it", "size":14, "bold":true},
+        {"key":"journey-8", "geometry":"chevron", "fill":"CEDFD6", "box":[11.24,2.55,1.49,0.9], "text":"8 Reconcile /\nlearn", "size":14, "bold":true},
+        {"key":"pain-link-1", "geometry":"downArrow", "fill":"173F35", "box":[2.66,3.51,0.26,0.32]},
+        {"key":"pain-link-2", "geometry":"downArrow", "fill":"173F35", "box":[5.75,3.51,0.26,0.32]},
+        {"key":"pain-link-3", "geometry":"downArrow", "fill":"173F35", "box":[8.84,3.51,0.26,0.32]},
+        {"key":"hypothesis-label-1", "box":[0.6,4.0,3.7,0.33], "text":"1-2 / PAIN HYPOTHESIS", "size":12, "bold":true},
+        {"key":"hypothesis-label-2", "box":[4.75,4.0,3.7,0.33], "text":"4 / PAIN HYPOTHESIS", "size":12, "bold":true},
+        {"key":"hypothesis-label-3", "box":[8.9,4.0,3.83,0.33], "text":"3 + 6 / PAIN HYPOTHESIS", "size":12, "bold":true},
+        {"key":"hypothesis-1", "box":[0.6,4.45,3.7,0.4], "text":"Repeated story", "size":19, "bold":true},
+        {"key":"hypothesis-2", "box":[4.75,4.45,3.7,0.4], "text":"Unowned promises", "size":19, "bold":true},
+        {"key":"hypothesis-3", "box":[8.9,4.45,3.83,0.4], "text":"Stale reviews", "size":19, "bold":true},
+        {"key":"response-1", "box":[0.6,5.05,3.7,0.9], "text":"TEST: one sourced case;\nsafe sharing, less repetition", "size":17},
+        {"key":"response-2", "box":[4.75,5.05,3.7,0.9], "text":"TEST: named receiver;\nsender chases acceptance", "size":17},
+        {"key":"response-3", "box":[8.9,5.05,3.83,0.9], "text":"TEST: separate decisions;\nreopen affected reviews", "size":17},
+        {"key":"source-date", "box":[0.6,6.25,12.13,0.28], "text":"Journey atlas: 14 Oct research / 23 Oct reconciliation. Counts describe research coverage, not measured benefit.", "size":12}
+      ],
+      "script": [
+        "We began with the people moving a home forward, not an agent for every department. Nine company-role research instruments contributed to desk research. The atlas covers 28 stage-based maps and 24 bounded opportunities.",
+        "Across the eight-stage journey, three hypotheses recur: people repeat their story, a sent promise has no accepted receiver, and a changed scope leaves a review stale. The design response is one case, a named receiving owner, and separate decisions whose dependencies can be checked.",
+        "These maps informed the design; they are not direct resident or staff research. The next test is whether real people can complete these tasks, including assisted routes, without transferring effort or weakening choice."
+      ],
+      "diagram": "Eight connected, numbered native chevrons: 1 report or nominate -> 2 understand home and household -> 3 decide scope and feasibility -> 4 coordinate ready work -> 5 deliver and capture -> 6 inspect and remedy -> 7 handover and live with measures -> 8 reconcile and learn. Stage-linked pain hypotheses: 1-2 repeated story, test one sourced case and safe sharing; 4 unowned promises, test a named receiver with sender chase until accepted; 3 and 6 stale reviews, test separate version-bound decisions and reopen affected reviews. Arrows attach these hypotheses below the relevant journey stages; words and numbers carry the meaning without colour.",
+      "caveats": ["The 27 companion maps plus the atlas leasehold-service staff map make 28 stage-based maps; two added subjourneys are not silently counted as additional maps.", "All pain and gain statements are hypotheses or desired outcomes, not measured emotion scores, quotations, customer endorsement or delivered gains.", "Resident choice, independent professional and Finance decisions, assisted routes and independent hazard intake remain intact."],
+      "sources": ["docs/reference/research/ux/customer-journeys/customer-journey-atlas.md", "docs/reference/research/ux/customer-journeys/residents.md", "docs/reference/research/ux/customer-journeys/programme.md", "docs/reference/research/ux/customer-journeys/finance.md"],
+      "navigation": "S07 main route; B12 research-validation answer is slide 39. Existing footer/navigation is unchanged."
+    },
+    {
+      "number": 13,
+      "code": "S12",
+      "subject": "The same-home service blueprint",
+      "keep_ids": [38856, 38858, 38861, 38865],
+      "headers": [
+        {"id":38856, "box":[0.6,0.4,12.13,0.35], "text":"ACT 3 / THE PRODUCT", "size":12},
+        {"id":38858, "box":[0.6,0.85,12.13,0.6], "text":"One home, end to end: every exception has an owner.", "size":28}
+      ],
+      "elements": [
+        {"key":"status", "box":[0.6,1.52,12.13,0.32], "text":"Fictional service synthesis: a proposed experience, not an actual system trace or delivered-feature claim", "size":13},
+        {"key":"moment-1", "box":[2.05,2.0,1.92,0.64], "text":"Report /\nunderstand", "size":16, "bold":true},
+        {"key":"moment-2", "box":[4.2,2.0,1.92,0.64], "text":"Choose\nscope", "size":16, "bold":true},
+        {"key":"moment-3", "box":[6.35,2.0,1.92,0.64], "text":"Book /\ndeliver", "size":16, "bold":true},
+        {"key":"moment-4", "box":[8.5,2.0,1.92,0.64], "text":"Inspect /\nhandover", "size":16, "bold":true},
+        {"key":"moment-5", "box":[10.65,2.0,2.08,0.64], "text":"Claim /\nreconcile", "size":16, "bold":true},
+        {"key":"resident-band", "box":[0.6,2.75,12.13,0.75], "fill":"E8F1ED"},
+        {"key":"resident-label", "box":[0.72,2.89,1.2,0.4], "text":"Resident", "size":15, "bold":true},
+        {"key":"resident-1", "box":[2.05,2.85,1.92,0.55], "text":"Tell it once;\nchoose support", "size":14},
+        {"key":"resident-2", "box":[4.2,2.85,1.92,0.55], "text":"Agree, defer\nor decline", "size":14},
+        {"key":"resident-3", "box":[6.35,2.85,1.92,0.55], "text":"Confirm slot;\nraise changes", "size":14},
+        {"key":"resident-4", "box":[8.5,2.85,1.92,0.55], "text":"Practise controls;\nreport concerns", "size":14},
+        {"key":"resident-5", "box":[10.65,2.85,2.0,0.55], "text":"Keep aftercare\nand redress", "size":14},
+        {"key":"delivery-label", "box":[0.72,3.8,1.2,0.55], "text":"Delivery\nteam", "size":15, "bold":true},
+        {"key":"delivery-1", "box":[2.05,3.8,1.92,0.62], "text":"Resolve identity;\nrecord evidence", "size":14},
+        {"key":"delivery-2", "box":[4.2,3.8,1.92,0.62], "fill":"FFF1D6", "text":"CHANGE: scope\nreview reopens", "size":14, "bold":true},
+        {"key":"delivery-3", "box":[6.35,3.8,1.92,0.62], "text":"Accept capacity;\nrelease / capture", "size":14},
+        {"key":"delivery-4", "box":[8.5,3.8,1.92,0.62], "text":"Remedy returns;\nexplain handover", "size":14},
+        {"key":"delivery-5", "box":[10.65,3.8,2.0,0.62], "text":"Retain defects\nand open owners", "size":14},
+        {"key":"finance-band", "box":[0.6,4.65,12.13,0.8], "fill":"E8F1ED"},
+        {"key":"finance-label", "box":[0.72,4.79,1.2,0.55], "text":"Finance\n+ QA", "size":15, "bold":true},
+        {"key":"finance-1", "box":[2.05,4.78,1.92,0.55], "text":"Check route /\nevidence gaps", "size":14},
+        {"key":"finance-2", "box":[4.2,4.78,1.92,0.55], "text":"Finance: budget\nResident: works choice", "size":12},
+        {"key":"finance-3", "box":[6.35,4.78,1.92,0.55], "fill":"FFF1D6", "text":"CHANGE: recheck\ncommitment version", "size":13, "bold":true},
+        {"key":"finance-4", "box":[8.5,4.78,1.92,0.55], "text":"Independent QA;\naccept or return", "size":14},
+        {"key":"finance-5", "box":[10.65,4.78,2.0,0.55], "text":"Reconcile claim\nagainst cash", "size":14},
+        {"key":"exception", "box":[0.6,5.63,12.13,0.42], "fill":"FFF1D6", "text":"CHANGE EXCEPTION   Changed scope -> named receiver -> affected reviews reopen -> resident update", "size":15, "bold":true},
+        {"key":"boundary", "box":[0.6,6.16,12.13,0.26], "text":"Hazards use an independent human route. Access, silence or a booking never implies works consent.", "size":12}
+      ],
+      "script": [
+        "Follow the same fictional home across five moments, with the resident, delivery team and Finance plus QA visible together. This is a service blueprint synthesised from research, not an actual system trace or a claim that every feature is delivered.",
+        "The resident can agree, defer or decline specific works. Delivery accepts competent capacity, not merely an offered date. Independent QA can return work; resident handover does not settle a claim or create cash.",
+        "When scope changes, the exception has a named receiver. Only dependent reviews reopen, with a separate resident update. Hazard intake never waits for the retrofit workflow, and a survey visit or booking is never inferred works consent."
+      ],
+      "diagram": "Five columns: report/understand; choose scope; book/deliver; inspect/handover; claim/reconcile. Three lanes: resident choice and aftercare; delivery evidence, design, capacity and remedy; Finance and independent QA route, affordability, inspection and cash. At scope choice Finance owns budget and the resident owns works choice; independent QA accepts or returns at inspection. Amber cells explicitly labelled CHANGE mark scope review reopening and commitment-version rechecking; the CHANGE EXCEPTION rail names the receiver, reopens affected reviews and updates the resident. Hazard intake stays a parallel independent human route. Labels, not colour alone, identify the exception.",
+      "caveats": ["Fictional synthesis, not a customer observation, live transaction trace, delivered-feature checklist or measured outcome.", "Finance and QA share a drawing lane, not a decision authority: professional review, resident consent, Finance approval, independent QA, handover and financial closure remain separate.", "Phone, letter, visits and assisted service remain usable; no portal is required. Hazards, withdrawal, safeguarding and redress do not wait for the sequential rail."],
+      "sources": ["docs/reference/research/ux/customer-journeys/customer-journey-atlas.md", "docs/reference/research/ux/customer-journeys/residents.md", "docs/reference/research/ux/customer-journeys/programme.md", "docs/reference/research/ux/customer-journeys/finance.md", "docs/case_study_48_addendum.md"],
+      "navigation": "S12 main route; existing B06 and B23 answer references and all package relationships remain unchanged."
+    },
+    {
+      "number": 22,
+      "code": "S19",
+      "subject": "Delivery learning: Everything But the Software",
+      "keep_ids": [30774, 30776, 30779, 30783],
+      "headers": [{"id":30776, "box":[0.6,0.85,12.13,0.6], "text":"Everything But the Software", "size":30}],
+      "elements": [
+        {"key":"attribution", "box":[0.6,1.55,12.13,0.35], "text":"Author retrospective / exploratory single case / non-causal", "size":14},
+        {"key":"prs", "box":[0.6,2.15,4.0,0.67], "text":"183 merged PRs", "size":31, "bold":true},
+        {"key":"prs-window", "box":[0.6,2.9,4.0,0.4], "text":"15-24 Oct 2026", "size":19},
+        {"key":"log", "box":[0.6,3.5,4.0,0.6], "text":"36,755 log words", "size":27, "bold":true},
+        {"key":"log-label", "box":[0.6,4.2,4.0,0.4], "text":"added 15-22 Oct 2026", "size":18},
+        {"key":"contrast-bg", "box":[5.0,2.15,7.73,2.5], "fill":"E8F1ED"},
+        {"key":"contrast-label", "box":[5.23,2.4,7.1,0.3], "text":"THE OUTCOME THAT CHALLENGED THE OUTPUT", "size":12, "bold":true},
+        {"key":"contrast", "box":[5.23,2.98,7.1,0.92], "text":"The author could no longer\nuse the replacement.", "size":26, "bold":true},
+        {"key":"contrast-limit", "box":[5.23,4.1,7.1,0.32], "text":"Output counts do not establish usable delivery or causation.", "size":14},
+        {"key":"feedback", "box":[0.6,5.05,12.13,0.48], "text":"Feature   ->   Tests   ->   Use journey   ->   Keep / cut / tidy", "size":22, "bold":true},
+        {"key":"proposal", "box":[0.6,5.68,12.13,0.4], "text":"Bounded paper test: can another agent supply reflection? Paused; registration pending; no results.", "size":16},
+        {"key":"paper-source", "box":[0.6,6.24,12.13,0.29], "text":"Current source: Everything But the Software, 25 Oct 2026; 'Before and during the delivery loop' defines the windows.", "size":12}
+      ],
+      "script": [
+        "The latest delivery lesson is the draft paper Everything But the Software, with author clarification dated 25 October 2026. The 'Before and during the delivery loop' table records 183 merged pull requests over 15-24 October and 36,755 words appended to the knowledge-base log over 15-22 October. These are different windows; the author could no longer use the replacement.",
+        "This is an exploratory single case with rival explanations, not causal proof that agents degrade software. It challenges counting output as usable delivery. My proposed feedback rail is feature, tests, use journey, then keep, cut or tidy before adding more.",
+        "The research question is whether an additional agent can perform bounded reflection and course correction, not whether reflection is exclusively human. The selected S1 comparison is four runs per arm, ten features and full CR1. The proposed consolidation experiment is paused, registration is pending and there are no study results. HVE has human stops by default; the long coordinator loop was owner-designed. B/C share an equal extra budget while A has less time; differing tests and notes also prevent isolating pure refactoring.",
+        "The paper experiment is separate. Zava's next decision is to validate one usable home journey against the comparator."
+      ],
+      "diagram": "Contrast: 183 merged PRs over 15-24 October and 36,755 added knowledge-base log words over 15-22 October versus the author unable to use the replacement. Proposed feedback rail: Feature -> Tests -> Use journey -> Keep/cut/tidy -> next feature. The paper's bounded experiment is paused, registration pending and no results; this is an exploratory non-causal single case, not published or accepted research.",
+      "caveats": ["The 'Before and during the delivery loop' table defines 183 merged PRs as 15-24 October and 36,755 appended log words as 15-22 October. These are retrospective activity measures, not controlled productivity or causation measures.", "The paper's 192 initial issues, the dated 23 October board snapshot of 189 items and the 183-PR window are distinct scopes and must never be substituted for one another.", "Experiment execution is paused, registration pending, exact tagged materials still to be supplied; no study results or retrospective preregistration claim.", "HVE normally stops for human handoffs. The case coordinator loop was owner-designed; it is not the default HVE workflow. Existing cost caveats remain unvalidated prices."],
+      "sources": ["docs/capstone/thought-leadership/everything-but-the-software/main.tex", "docs/capstone/thought-leadership/everything-but-the-software/README.md"],
+      "navigation": "S19 main route; B13 on slide 40 carries method context and planned experiment detail. Existing footer and links remain unchanged."
+    },
+    {
+      "number": 39,
+      "code": "B12",
+      "subject": "Research validation and representative maps",
+      "keep_ids": [4253, 4310, 4368, 4427, 4487, 2],
+      "headers": [],
+      "elements": [
+        {"key":"answer", "box":[0.6,1.55,12.13,0.42], "text":"No direct resident or staff research has been completed for this design.", "size":21, "bold":true},
+        {"key":"scope", "box":[0.6,2.1,12.13,0.3], "text":"Representative five-stage maps / pain hypotheses / desired gains, not measured outcomes", "size":14},
+        {"key":"resident-label", "box":[0.6,2.61,1.65,0.4], "text":"Resident", "size":18, "bold":true},
+        {"key":"resident-1", "geometry":"chevron", "fill":"E8F1ED", "box":[2.4,2.55,2.06,0.57], "text":"1 Hear /\nreport", "size":14, "bold":true},
+        {"key":"resident-2", "geometry":"chevron", "fill":"CEDFD6", "box":[4.46,2.55,2.06,0.57], "text":"2 Survey", "size":14, "bold":true},
+        {"key":"resident-3", "geometry":"chevron", "fill":"E8F1ED", "box":[6.52,2.55,2.06,0.57], "text":"3 Choose\nworks", "size":14, "bold":true},
+        {"key":"resident-4", "geometry":"chevron", "fill":"CEDFD6", "box":[8.58,2.55,2.06,0.57], "text":"4 Appointment", "size":14, "bold":true},
+        {"key":"resident-5", "geometry":"chevron", "fill":"E8F1ED", "box":[10.64,2.55,2.09,0.57], "text":"5 Live with\nmeasures", "size":14, "bold":true},
+        {"key":"resident-pain", "box":[2.4,3.2,10.33,0.32], "text":"Hypothesis: repeat story / pressure.  Gain sought: meaningful choice + owned aftercare.", "size":14},
+        {"key":"assessor-label", "box":[0.6,3.74,1.65,0.4], "text":"Assessor", "size":18, "bold":true},
+        {"key":"assessor-1", "geometry":"chevron", "fill":"E8F1ED", "box":[2.4,3.68,2.06,0.57], "text":"1 Prepare", "size":14, "bold":true},
+        {"key":"assessor-2", "geometry":"chevron", "fill":"CEDFD6", "box":[4.46,3.68,2.06,0.57], "text":"2 Arrange\naccess", "size":14, "bold":true},
+        {"key":"assessor-3", "geometry":"chevron", "fill":"E8F1ED", "box":[6.52,3.68,2.06,0.57], "text":"3 Observe", "size":14, "bold":true},
+        {"key":"assessor-4", "geometry":"chevron", "fill":"CEDFD6", "box":[8.58,3.68,2.06,0.57], "text":"4 Write up", "size":14, "bold":true},
+        {"key":"assessor-5", "geometry":"chevron", "fill":"E8F1ED", "box":[10.64,3.68,2.09,0.57], "text":"5 Clarify /\nrevisit", "size":14, "bold":true},
+        {"key":"assessor-pain", "box":[2.4,4.33,10.33,0.32], "text":"Hypothesis: missing records / re-keying.  Gain sought: a sourced, traceable assessment.", "size":14},
+        {"key":"finance-label", "box":[0.6,4.83,1.65,0.72], "text":"Finance\npreparer", "size":18, "bold":true},
+        {"key":"finance-1", "geometry":"chevron", "fill":"E8F1ED", "box":[2.4,4.81,2.06,0.57], "text":"1 Establish\nneed", "size":14, "bold":true},
+        {"key":"finance-2", "geometry":"chevron", "fill":"CEDFD6", "box":[4.46,4.81,2.06,0.57], "text":"2 Check route", "size":14, "bold":true},
+        {"key":"finance-3", "geometry":"chevron", "fill":"E8F1ED", "box":[6.52,4.81,2.06,0.57], "text":"3 Assemble\ncase", "size":14, "bold":true},
+        {"key":"finance-4", "geometry":"chevron", "fill":"CEDFD6", "box":[8.58,4.81,2.06,0.57], "text":"4 Maintain\nclaim", "size":14, "bold":true},
+        {"key":"finance-5", "geometry":"chevron", "fill":"E8F1ED", "box":[10.64,4.81,2.09,0.57], "text":"5 Reconcile", "size":14, "bold":true},
+        {"key":"finance-pain", "box":[2.4,5.46,10.33,0.32], "text":"Hypothesis: conflicting versions / unsupported scope.  Gain sought: a defensible pack.", "size":14},
+        {"key":"next", "box":[0.6,5.98,12.13,0.35], "text":"Next: direct task/comprehension tests, assisted routes, real handoffs and net effort. No endorsement.", "size":13, "bold":true},
+        {"key":"atlas-source", "box":[0.6,6.4,12.13,0.27], "text":"Current source: journey atlas, 14 Oct 2026 research / 23 Oct reconciliation; representative hypotheses, not user validation.", "size":12}
+      ],
+      "script": [
+        "The plain answer is no: this design has not been validated through direct resident or staff research. Owner feedback, prototype review and nine role instruments informed it, but none is customer endorsement.",
+        "These three representative maps expose testable hypotheses: the resident needs meaningful choice without repeating the story; the assessor needs traceable preparation and observations; the Finance preparer needs version-correct evidence and separate cash reconciliation.",
+        "The next empirical work is direct, privacy-governed task and comprehension testing with relevant residents and staff, including assisted routes, access needs, handoff failures and net effort. Desired gains stay hypotheses until that evidence exists."
+      ],
+      "diagram": "Three horizontal maps, each made of five connected, numbered native chevrons. Resident: 1 hear/report -> 2 survey -> 3 choose works -> 4 appointment -> 5 live with measures. Pain hypothesis: repeated story or pressure; desired gain: meaningful choice and owned aftercare. Assessor: 1 prepare -> 2 arrange access -> 3 observe -> 4 write up -> 5 clarify/revisit. Pain hypothesis: missing records or re-keying; desired gain: sourced, traceable assessment. Finance preparer: 1 establish need -> 2 check route -> 3 assemble case -> 4 maintain award/claim evidence -> 5 reconcile. Pain hypothesis: conflicting versions or unsupported scope; desired gain: a defensible pack. Stage labels, numbers and hypothesis/gain text preserve meaning without colour. No user validation or emotion score is asserted.",
+      "caveats": ["No direct resident/staff interviews, observation, task validation, acceptance or endorsement is supplied by owner feedback or role-agent instruments.", "These are three representative maps from the 28-map research coverage, not exhaustive validated user coverage. Pain hypotheses and desired gains are not measurements.", "The next empirical validation needs appropriate privacy/research controls and relevant people; no participant recruitment, completion date or result is invented."],
+      "sources": ["docs/reference/research/ux/customer-journeys/customer-journey-atlas.md", "docs/reference/research/ux/customer-journeys/residents.md", "docs/reference/research/ux/customer-journeys/programme.md", "docs/reference/research/ux/customer-journeys/finance.md"],
+      "navigation": "B12 appendix answer. Preserve Last Slide Viewed caller, fixed Topic: S07 / slide 8, and Index: slide 27 controls."
+    },
+    {
+      "number": 40,
+      "code": "B13",
+      "subject": "HVE delivery context and planned consolidation experiment",
+      "keep_ids": [4548, 4610, 4673, 4737, 4802, 2],
+      "headers": [],
+      "elements": [
+        {"key":"trace-date", "box":[0.6,1.53,12.13,0.31], "text":"CONCRETE BACKLOG TRACE / retained 23 Oct 2026 deck snapshot", "size":12, "bold":true},
+        {"key":"trace-1", "geometry":"chevron", "fill":"E8F1ED", "box":[0.6,1.96,2.426,0.52], "text":"BRD / PRD", "size":17, "bold":true},
+        {"key":"trace-2", "geometry":"chevron", "fill":"CEDFD6", "box":[3.026,1.96,2.426,0.52], "text":"Epic #73", "size":17, "bold":true},
+        {"key":"trace-3", "geometry":"chevron", "fill":"E8F1ED", "box":[5.452,1.96,2.426,0.52], "text":"Feature #76", "size":17, "bold":true},
+        {"key":"trace-4", "geometry":"chevron", "fill":"CEDFD6", "box":[7.878,1.96,2.426,0.52], "text":"Story #77", "size":17, "bold":true},
+        {"key":"trace-5", "geometry":"chevron", "fill":"E8F1ED", "box":[10.304,1.96,2.426,0.52], "text":"PR #376", "size":17, "bold":true},
+        {"key":"trace-limit", "box":[0.6,2.61,12.13,0.32], "text":"PR evidence is not whole-journey acceptance. HVE has human stops; the coordinator was owner-designed.", "size":14},
+        {"key":"question", "box":[0.6,3.13,12.13,0.43], "text":"Paper's bounded test: can another agent supply reflection between features?", "size":20, "bold":true},
+        {"key":"arm-a-bg", "box":[0.6,3.78,3.8,1.22], "fill":"E8F1ED"},
+        {"key":"arm-b-bg", "box":[4.77,3.78,3.8,1.22], "fill":"E8F1ED"},
+        {"key":"arm-c-bg", "box":[8.94,3.78,3.79,1.22], "fill":"E8F1ED"},
+        {"key":"arm-a", "box":[0.8,3.95,3.4,0.38], "text":"A / Feature only", "size":20, "bold":true},
+        {"key":"arm-a-detail", "box":[0.8,4.49,3.4,0.31], "text":"No extra review budget", "size":15},
+        {"key":"arm-b", "box":[4.97,3.95,3.4,0.38], "text":"B / Consolidate", "size":20, "bold":true},
+        {"key":"arm-b-detail", "box":[4.97,4.49,3.4,0.31], "text":"Review / refactor + tests / note", "size":15},
+        {"key":"arm-c", "box":[9.14,3.95,3.39,0.38], "text":"C / Read-only review", "size":20, "bold":true},
+        {"key":"arm-c-detail", "box":[9.14,4.49,3.39,0.31], "text":"Same extra budget as B", "size":15},
+        {"key":"design", "box":[0.6,5.2,12.13,0.4], "text":"Planned S1: 4 runs per arm / 10 features + CR1. Exploratory case, not causal proof.", "size":16, "bold":true},
+        {"key":"paused", "box":[0.6,5.83,12.13,0.35], "text":"PAUSED / registration pending / no results. B/C have extra time vs A; tests and notes also differ.", "size":14, "bold":true},
+        {"key":"paper-source", "box":[0.6,6.36,12.13,0.29], "text":"Current source: Everything But the Software, draft + author clarification, 25 Oct 2026. Historical trace retained above.", "size":12}
+      ],
+      "script": [
+        "The original deck and notes preserve this concrete trace in their 23 October 2026 snapshot: BRD/PRD -> epic #73 -> feature #76 -> story #77 -> PR #376. Story #77 concerns queue definitions and versioned reset; PR #376 records local browser verification. A general upstream BRD/PRD label is used, not a newly asserted requirement ID. PR evidence is not whole-journey acceptance, current cloud readiness or human acceptance. This retained dated trace is not a fresh remote issue verification. HVE supplied research, plan, implement and review context, normally with human handoffs. The owner-designed coordinator connected those loops; that automation is not a default HVE claim.",
+        "The planned first pass compares three packages: A adds features only; B adds a review/refactor step, behaviour-pinning tests and an architectural DESIGN.md note; C uses the same extra budget for read-only review, no changed tests and an issue-oriented REVIEW.md note. It uses S1, four independent runs per arm, ten features and the unforeseen change request CR1.",
+        "B and C can use up to 50 percent more agent time per feature than A. B versus C also changes tests and the notes read by later sessions, so it cannot isolate refactoring. The study is paused and registration pending, with no results. An extra agent is not an independent source of truth.",
+        "Keep the dated 23 October board snapshot of 189 items separate from the paper's 192 initial issues and its 183 merged PRs over 15-24 October. A closed item or local test does not establish usable delivery, current cloud readiness or customer acceptance."
+      ],
+      "diagram": "Top rail, retained 23 October 2026 snapshot: BRD/PRD -> epic #73 -> feature #76 -> story #77 -> PR #376. PR evidence is not whole-journey acceptance. HVE normally has human stops; the coordinator was owner-designed. Separate paper question: can another agent supply bounded reflection between features? Three planned arms: A feature-only, no extra review budget; B feature plus review/refactor, optional behaviour-pinning tests and architectural DESIGN.md; C feature plus equal-budget read-only review and issue REVIEW.md, without test changes. Four runs per arm, ten features and full unforeseen CR1. B/C use extra time versus A, and B/C tests and notes confound pure-refactoring attribution. Paused, registration pending, no results; the case is exploratory and not causal proof.",
+      "caveats": ["The selected 25 October design supersedes older ancillary eight-feature protocols. The private tagged kit remains untouched; exact snapshot and completed registration remain to be supplied.", "Execution paused; no study results. Earlier runs remain pre-registration and cannot enter fresh registered confirmatory analysis. No study run, model call or spending is authorised by this slide.", "The additional agent is a separate session with a bounded responsibility, not an independent truth source or proof that reflection is exclusively human.", "B versus A is not time-matched. B versus C compares the entire consolidation package, including differing tests and DESIGN.md versus REVIEW.md notes, not refactoring alone.", "Existing B13 title is retained as the requirements-to-backlog context question; the answer now extends to delivery learning and the proposed experiment. Existing footer source labels remain historical; current evidence paths are in these notes."],
+      "sources": ["docs/capstone/deck/zava-forward-cowork-v2-draft.pptx", "docs/capstone/thought-leadership/everything-but-the-software/main.tex", "docs/capstone/thought-leadership/everything-but-the-software/README.md"],
+      "navigation": "B13 appendix answer. Preserve Last Slide Viewed caller, fixed Topic: S19 / slide 22, and Index: slide 27. B14 autonomy on slide 41 remains entirely byte-identical."
+    }
+  ]
+}
