@@ -1,0 +1,79 @@
+{
+  "task_id": "issue-350-demo-feedback-harness",
+  "task_slug": "issue-350-demo-feedback-harness",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-22/issue-350-demo-feedback-harness-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-22/issue-350-demo-feedback-harness-plan.md",
+    "details": ".copilot-tracking/details/2026-10-22/issue-350-demo-feedback-harness-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-22/issue-350-demo-feedback-harness-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-22/issue-350-demo-feedback-harness-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-22/issue-350-demo-feedback-harness-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic single-task run; owner prompt directs research, plan, implement, review in order",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-22"
+    },
+    {
+      "decision": "Offline only; no Azure, tenant, RBAC, paid inference or credentials; #349/#360 not claimed complete",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-22"
+    },
+    {
+      "decision": "Ownership limited to tools/check-demo-feedback.py, tools/test_check_demo_feedback.py and own .copilot-tracking files",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-22"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; build new standalone checker importing installed runtime modules",
+      "status": "confirmed",
+      "evidence": "research artifact C1-C16, W1, W2"
+    },
+    {
+      "decision": "Plan critique executed once, verdict Revise, 7 findings (PC-001..007) applied directly; no user decision needed; plan ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-22/issue-350-demo-feedback-harness-plan-critique.md"
+    },
+    {
+      "decision": "Implementation P01/P02 complete; 45 focused tests and targeted Ruff pass",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-22/issue-350-demo-feedback-harness-changes.md"
+    },
+    {
+      "decision": "Review executed once; execution Complete; outcome Residual work; RV-001..RV-004 routed",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-22/issue-350-demo-feedback-harness-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Run full gate on committed head, verify receipt, push, open draft PR, then offer ranked follow-ups"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Generate case-write and AI fixtures from a real Store (RV-001)",
+      "rationale": "Closes schema-drift gap cheaply",
+      "evidence": "RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Per-check scope and tighter write/loader checks (RV-002, RV-003)",
+      "rationale": "Small robustness wins",
+      "evidence": "RV-002, RV-003"
+    },
+    {
+      "rank": 3,
+      "task": "Owner decision on registering the test module in the gate (RV-004)",
+      "rationale": "Prevents silent regression; outside slice ownership",
+      "evidence": "RV-004"
+    }
+  ]
+}
