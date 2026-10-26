@@ -53,7 +53,14 @@ VIEW = "resident_showcase.v_resident_case"
 
 def verify_principal(cursor, principal: str, client_id: str) -> None:
     """Read-only. Fail closed unless the user is the external identity with this SID, in no role,
-    holding only CONNECT and SELECT on the resident view (denies are harmless)."""
+    owns nothing (no schema, object, type, XML schema collection or database principal) and holds
+    only CONNECT and SELECT on the resident view (denies are harmless).
+
+    The public role is inherited by every user. Default public permissions are exactly: database
+    scope CONNECT, VIEW ANY COLUMN ENCRYPTION KEY DEFINITION and VIEW ANY COLUMN MASTER KEY
+    DEFINITION, plus object grants in the sys and INFORMATION_SCHEMA schemas. Any other public
+    grant at database scope, on a schema (class 3), or on an object in another schema is
+    prohibited."""
     if not NAME.fullmatch(principal):
         raise ValueError("The principal name must be 3 to 60 letters, digits, _ or -.")
     sid = uuid.UUID(client_id).bytes_le
@@ -67,12 +74,30 @@ def verify_principal(cursor, principal: str, client_id: str) -> None:
     kind, auth, actual = rows[0]
     if kind != "E" or auth != "EXTERNAL" or bytes(actual or b"") != sid:
         raise PrincipalError("The existing database user is not the resident managed identity.")
+    verify_rights(cursor, principal)
+
+
+def verify_rights(cursor, principal: str) -> None:
+    """The role, ownership and permission predicates; they do not depend on the external SID."""
+    if not NAME.fullmatch(principal):
+        raise ValueError("The principal name must be 3 to 60 letters, digits, _ or -.")
     cursor.execute(
         "SELECT COUNT(*) FROM sys.database_role_members "
         f"WHERE member_principal_id = DATABASE_PRINCIPAL_ID(N'{principal}')"
     )
     if cursor.fetchall()[0][0]:
         raise PrincipalError("The resident database user belongs to a role; refusing.")
+    owner = "DATABASE_PRINCIPAL_ID(N'" + principal + "')"
+    cursor.execute(
+        "SELECT (SELECT COUNT(*) FROM sys.schemas WHERE principal_id = " + owner + ") "
+        "+ (SELECT COUNT(*) FROM sys.objects WHERE principal_id = " + owner + ") "
+        "+ (SELECT COUNT(*) FROM sys.types WHERE principal_id = " + owner + ") "
+        "+ (SELECT COUNT(*) FROM sys.xml_schema_collections WHERE principal_id = " + owner + ") "
+        "+ (SELECT COUNT(*) FROM sys.database_principals WHERE owning_principal_id = " + owner + ") "
+        "AS owned"
+    )
+    if cursor.fetchall()[0][0]:
+        raise PrincipalError("The resident database user owns database objects; refusing.")
     cursor.execute(
         "SELECT p.state, p.permission_name, p.class, "
         "OBJECT_SCHEMA_NAME(p.major_id) + N'.' + OBJECT_NAME(p.major_id) "
@@ -92,7 +117,8 @@ def verify_principal(cursor, principal: str, client_id: str) -> None:
     # Every user inherits public, so a database-scope, schema or object grant to public is effective access.
     cursor.execute(
         "SELECT COUNT(*) FROM sys.database_permissions p WHERE p.grantee_principal_id = 0 "
-        "AND p.state IN ('G', 'W') AND ((p.class = 0 AND p.permission_name <> N'CONNECT') "
+        "AND p.state IN ('G', 'W') AND ((p.class = 0 AND p.permission_name NOT IN (N'CONNECT', "
+        "N'VIEW ANY COLUMN ENCRYPTION KEY DEFINITION', N'VIEW ANY COLUMN MASTER KEY DEFINITION')) "
         "OR p.class = 3 OR (p.class = 1 "
         "AND OBJECT_SCHEMA_NAME(p.major_id) NOT IN (N'sys', N'INFORMATION_SCHEMA')))"
     )

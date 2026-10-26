@@ -477,6 +477,11 @@ class AbuseAndHardeningTests(DemoTestCase):
         self.assertIn('content.querySelector("h2")', script)
         self.assertIn("first.focus()", script)
 
+    def test_sign_out_focuses_sign_in_heading_and_announces(self) -> None:
+        script = (demo.WEB / "demo.js").read_text()
+        self.assertIn("You have signed out.", script)
+        self.assertIn('getElementById("signin-title").focus()', script)
+
     def test_assets_are_scriptless_inline_free_and_synthetic_labelled(self) -> None:
         c = self.client()
         _, _, page = c.call("GET", "/")

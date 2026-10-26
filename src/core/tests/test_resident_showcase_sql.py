@@ -39,18 +39,21 @@ class FakeCursor:
     def __init__(
         self,
         principal: tuple[Any, ...] | None = None,
+        owned: int = 0,
         members: int = 0,
         permissions: tuple[tuple[Any, ...], ...] = (),
         public: int = 0,
     ) -> None:
-        self.public = public
+        self.public, self.owned = public, owned
         self.principal, self.members, self.permissions = principal, members, permissions
         self.rows: list[Any] = []
         self.sql: list[str] = []
 
     def execute(self, sql: str) -> None:
         self.sql.append(sql)
-        if "sys.database_principals" in sql:
+        if "AS owned" in sql:
+            self.rows = [(self.owned,)]
+        elif "sys.database_principals" in sql:
             self.rows = [self.principal] if self.principal else []
         elif "grantee_principal_id = 0" in sql:
             self.rows = [(self.public,)]
@@ -86,6 +89,7 @@ class PrincipalVerificationTests(unittest.TestCase):
             dict(principal=("S", "NONE", uuid.UUID(CLIENT).bytes_le)),
             dict(principal=("E", "EXTERNAL", None)),
             dict(principal=GOOD_USER, members=1),
+            dict(principal=GOOD_USER, owned=1, permissions=OK_PERMS),
             dict(principal=GOOD_USER, permissions=OK_PERMS, public=1),
             dict(principal=GOOD_USER, permissions=(("G", "SELECT", 1, "dbo.chat"),)),
             dict(principal=GOOD_USER, permissions=(("G", "SELECT", 0, None),)),
@@ -107,7 +111,8 @@ class PrincipalVerificationTests(unittest.TestCase):
         with self.assertRaises(script.PrincipalError):
             script.verify_principal(cursor, "id-resident", CLIENT)
         text = cursor.sql[-1]
-        self.assertIn("p.class = 0 AND p.permission_name <> N'CONNECT'", text)
+        self.assertIn("p.class = 0 AND p.permission_name NOT IN (N'CONNECT'", text)
+        self.assertIn("VIEW ANY COLUMN ENCRYPTION KEY DEFINITION", text)
         self.assertIn("p.state IN ('G', 'W')", text)
 
     def test_apply_without_a_client_id_is_refused_before_connecting(self) -> None:
@@ -388,6 +393,76 @@ class SqlBoundaryTests(unittest.TestCase):
             "VIEW ANY COLUMN MASTER KEY DEFINITION",
         }
         self.assertLessEqual(database, public_defaults)
+
+    def rights(self, name: str) -> None:
+        conn = self.connect()
+        try:
+            script.verify_rights(conn.cursor(), name)
+        finally:
+            conn.close()
+
+    def scratch_user(self, name: str, *statements: str) -> None:
+        self.addCleanup(self.cleanup_user, name)
+        self.q(f"CREATE USER [{name}] WITHOUT LOGIN")
+        for statement in statements:
+            self.q(statement)
+
+    @classmethod
+    def cleanup_user(cls, name: str) -> None:
+        for sql in (
+            "DROP SCHEMA IF EXISTS [zf_owned]",
+            "DROP TABLE IF EXISTS dbo.zf_public_probe",
+            f"ALTER ROLE db_datareader DROP MEMBER [{name}]",
+            f"DROP USER IF EXISTS [{name}]",
+        ):
+            try:
+                cls.q(sql)
+            except Exception:  # noqa: BLE001 - best-effort scratch cleanup of absent objects
+                continue
+
+    def test_real_sql_clean_principal_passes_and_defaults_are_allowed(self) -> None:
+        self.rights(USER)
+        # the default public database-scope grants are present and must not be refused
+        defaults = {
+            r[0]
+            for r in self.q(
+                "SELECT permission_name FROM sys.database_permissions "
+                "WHERE grantee_principal_id = 0 AND class = 0"
+            )
+        }
+        self.assertEqual(
+            defaults,
+            {
+                "VIEW ANY COLUMN ENCRYPTION KEY DEFINITION",
+                "VIEW ANY COLUMN MASTER KEY DEFINITION",
+            },
+        )
+
+    def test_real_sql_public_grant_on_user_table_is_refused(self) -> None:
+        self.q("CREATE TABLE dbo.zf_public_probe (a int)")
+        self.addCleanup(self.q, "DROP TABLE IF EXISTS dbo.zf_public_probe")
+        self.q("GRANT SELECT ON OBJECT::dbo.zf_public_probe TO public")
+        with self.assertRaises(script.PrincipalError):
+            self.rights(USER)
+
+    def test_real_sql_public_database_scope_grant_is_refused(self) -> None:
+        self.q("GRANT VIEW DEFINITION TO public")
+        self.addCleanup(self.q, "REVOKE VIEW DEFINITION FROM public")
+        with self.assertRaises(script.PrincipalError):
+            self.rights(USER)
+
+    def test_real_sql_schema_owner_is_refused(self) -> None:
+        name = "zf_owner_probe"
+        self.scratch_user(name)
+        self.q(f"CREATE SCHEMA [zf_owned] AUTHORIZATION [{name}]")
+        with self.assertRaises(script.PrincipalError):
+            self.rights(name)
+
+    def test_real_sql_role_member_is_refused(self) -> None:
+        name = "zf_role_probe"
+        self.scratch_user(name, f"ALTER ROLE db_datareader ADD MEMBER [{name}]")
+        with self.assertRaises(script.PrincipalError):
+            self.rights(name)
 
     def test_apply_is_idempotent_and_keeps_data(self) -> None:
         self.add_case("C-1", _body("a@example.com"))

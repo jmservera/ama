@@ -140,6 +140,8 @@
     });
   }
 
+  var signedOut = false;
+
   function start() {
     errorEl.hidden = true;
     statusEl.textContent = "Loading\u2026";
@@ -149,6 +151,12 @@
         csrf = res.body.csrf;
         if (res.body.signed_in) return loadView();
         showSignin();
+        if (signedOut) {
+          signedOut = false;
+          statusEl.textContent = "You have signed out.";
+          document.getElementById("signin-title").setAttribute("tabindex", "-1");
+          document.getElementById("signin-title").focus();
+        }
       })
       .catch(function () {
         fail("We could not reach the showcase. Check your connection, then try again.");
@@ -192,6 +200,7 @@
         if (!r.ok) { notConfirmed(); return; }
         content.textContent = "";
         csrf = "";
+        signedOut = true;
         start();
       }).catch(notConfirmed);
   });
