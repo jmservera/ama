@@ -28,3 +28,36 @@ Date: 2026-10-26. Research: ../../research/2026-10-26/issue444-focus-followup-re
 ## Out of scope
 
 Ellipsis character, theme-color/color-scheme, translate=no, touch-action, text-wrap, raw-JSON footer, heading refinements (remain routed Low follow-ups).
+
+## Critique (one pass, independent `rubber-duck` agent, before implementation)
+
+Execution: executed once, read-only, verdict **request changes**. Not repeated for this task. Recovered verbatim 2026-10-26 15:35 from this native session's own event log (`events.jsonl` event index 361, `tool.execution_complete`, `toolCallId toolu_01XF5Yp7K7hM31D15axh64tn`, `2026-10-26T09:44:19.565Z`); see `issue444-focus-followup-critique-recovery-note.md` for the recovery record. The verbatim critique response:
+
+> 1. **High — Error detail may no longer be announced reliably.**
+> Evidence: `.copilot-tracking/plans/2026-10-26/issue444-focus-followup-plan.md:18` (pre-revision draft); current dynamic message is separate from the focused heading at `src/api/src/zava_forward/api/resident_preview/web/resident.js:121-126`. Focusing only "We cannot show this page" need not announce `#error-text` or the human-help route. Removing `role="alert"` trades a possible duplicate for potentially missing the actual error.
+> **Fix:** retain a dedicated live announcement for the error text (or reliably associate it with the focused target via `aria-describedby`) and move focus to a non-duplicative recovery target. Do not claim exactly one spoken announcement without AT validation.
+>
+> 2. **High — Retry focus ordering is underspecified and can still briefly drop focus to `body`.**
+> Evidence: plan said to "hide the error" then move focus (pre-revision draft, now `...plan.md:17`); current hide operation removes the focused retry subtree at `resident.js:129-131`.
+> **Fix:** focus `#main` *before* setting `errorEl.hidden = true`, then update the status and start the request. Make that ordering an explicit implementation requirement and test it.
+>
+> 3. **Medium — The proposed focus-event test cannot prove "never rests on body."**
+> Evidence: `.copilot-tracking/details/2026-10-26/issue444-focus-followup-details.md:20` (pre-revision draft). Hiding a focused element can change `activeElement` without a useful `focusin` event on `body`; recording focus events therefore misses the exact regression asserted.
+> **Fix:** use the delayed request to assert `activeElement === main` immediately after activating retry and throughout the pending state; make ordering in item 2 the primary prevention.
+>
+> 4. **Medium — "One live announcement per state" is overclaimed by DOM-only tests.**
+> Evidence: acceptance claim (pre-revision draft, now `...plan.md:23`), while the research explicitly says no screen-reader test is possible under "Unknowns." Role counts, text, and focus assertions establish DOM intent, not spoken output.
+> **Fix:** reword acceptance to "one intended live-region mechanism and one focus movement," and retain the existing no-screen-reader-claim boundary.
+>
+> **Existing assertions:** the only resident-preview alert assertion found is intentionally slated for replacement: `src/api/checks/resident_preview_browser_check.py:174-177`. No other current Python assertion was found for the static resident-preview loading text.
+>
+> **Verdict: request changes** — resolve the error-announcement mechanism and focus ordering before implementation.
+
+### Dispositions (as accepted and acted on before implementation)
+
+| ID | Severity | Finding | Disposition |
+| --- | --- | --- | --- |
+| C1 | High | Removing role=alert may leave the error detail and help route unannounced. | Accepted. Heading gets `aria-describedby` to the error text; no AT-speech claim. |
+| C2 | High | Hiding the focused retry before moving focus can drop focus to body. | Accepted. Focus `#main` before hiding; tested. |
+| C3 | Medium | Focus-event observer cannot prove never-on-body. | Accepted. Assert `activeElement` immediately after Enter and across the delayed pending state instead. |
+| C4 | Medium | "One live announcement" overclaims from DOM tests. | Accepted. Reworded acceptance. |
