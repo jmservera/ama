@@ -24,7 +24,10 @@ def log_growth(dpi):
     start, end = dt.date(2026, 9, 25), dt.date(2026, 10, 22)
     days = [start + dt.timedelta(i) for i in range((end - start).days + 1)]
     words = [d.get(x.isoformat(), [0, 0, 0])[1] / 1000 for x in days]
-    hed = [d.get(x.isoformat(), [0, 0, 0])[2] for x in days]
+    hedge_density = [
+        1000 * daily[2] / daily[1] if daily[1] else math.nan
+        for daily in (d.get(day.isoformat(), [0, 0, 0]) for day in days)
+    ]
     x = list(range(len(days)))
     rcParams.update({"font.size": 8})
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6.6, 3.5), sharex=True,
@@ -32,8 +35,8 @@ def log_growth(dpi):
     loop = days.index(dt.date(2026, 10, 15))
     ax1.bar(x, words, color=["#9aa5b1" if i < loop else "#1f4e79" for i in x], width=0.8)
     ax1.set_ylabel("Words appended\n(thousands)")
-    ax2.bar(x, hed, color=["#c9a227" if i < loop else "#8b1e1e" for i in x], width=0.8)
-    ax2.set_ylabel("Hedging\nphrases")
+    ax2.bar(x, hedge_density, color=["#c9a227" if i < loop else "#8b1e1e" for i in x], width=0.8)
+    ax2.set_ylabel("Hedge matches\nper 1,000 words")
     for ax in (ax1, ax2):
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
@@ -57,9 +60,9 @@ def causal_loop(dpi):
     nodes = ["Large up-front\nspecification\n(BRD, PRD, ADRs)",
              "Large backlog and\nmany parallel\nagent loops",
              "Artefacts and gates\nstand in for \u201cdone\u201d\n(proxy capture)",
-             "Control documents\noutgrow the agents'\nworking context",
-             "Lessons drop off\nthe read path\n(learning evaporation)",
-             "No running increment\na human can use\n(feedback starvation)",
+             "Long read path\nmay impair retrieval\n(unmeasured)",
+             "Lessons may drop off\nthe effective read path\n(learning evaporation)",
+             "Replacement unusable\nby the owner\n(feedback starvation)",
              "Owner answers gaps\nwith more rules,\ncriteria and gates"]
     angles = [90, 28, -17, -66, -114, -163, 152]
     rx, ry, w, h = 2.35, 1.32, 1.55, 0.52
@@ -81,17 +84,17 @@ def causal_loop(dpi):
     for i in range(len(nodes)):
         a, b = pos[i], pos[(i + 1) % len(nodes)]
         s, e = edge(*a, *b), edge(*b, *a)
-        ax.add_patch(FancyArrowPatch(s, e, connectionstyle="arc3,rad=-0.15", arrowstyle="-|>", mutation_scale=9, lw=0.9, color="0.25"))
+        ax.add_patch(FancyArrowPatch(s, e, connectionstyle="arc3,rad=-0.15", arrowstyle="-|>", mutation_scale=9, lw=0.9, linestyle="--", color="0.25"))
         if i == 5:
             mid = ((s[0] + e[0]) / 2 - 0.07, (s[1] + e[1]) / 2)
-    ax.text(0, 0.06, "R", ha="center", va="center", fontsize=18, fontweight="bold", color="#1f4e79")
-    ax.text(0, -0.24, "reinforcing loop", ha="center", va="center", fontsize=7, color="#1f4e79")
+    ax.text(0, 0.06, "R?", ha="center", va="center", fontsize=18, fontweight="bold", color="#1f4e79")
+    ax.text(0, -0.24, "hypothesised links", ha="center", va="center", fontsize=7, color="#1f4e79")
     mx, my = mid
     for off in (0.0, -0.075):
         ax.plot([mx - 0.11, mx + 0.11], [my - 0.04 + off, my + 0.04 + off], color="#2e7d32", lw=2.0, solid_capstyle="butt")
-    ax.text(mx - 0.17, my - 0.04, "intervene\nhere", ha="right", va="center", fontsize=6.8, color="#1b5e20")
+    ax.text(mx - 0.17, my - 0.04, "proposed\nintervention", ha="right", va="center", fontsize=6.8, color="#1b5e20")
     ax.add_patch(FancyBboxPatch((-2.9, -1.95), 5.8, 0.26, boxstyle="round,pad=0.02", fc="#e9f4ea", ec="#2e7d32", lw=0.9))
-    ax.text(0, -1.82, "Feedback-first invariant: every cycle ends with a running increment and a human checkpoint",
+    ax.text(0, -1.82, "Proposed human checkpoints and usable increments: outside the consolidation experiment",
             ha="center", va="center", fontsize=7, color="#1b5e20")
     fig.savefig(os.path.join(OUT, "fig-causal-loop.png"), dpi=dpi, bbox_inches="tight", facecolor="white")
     plt.close(fig)

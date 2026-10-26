@@ -1,0 +1,156 @@
+{
+  "record_type": "exploratory_contextual_repository_observations",
+  "search_boundary": {
+    "schema_version": "2.0",
+    "search_boundary_id": "REPOSITORIES-2026-10-25",
+    "searched_on": "2026-10-25",
+    "searched_by": "GitHub Copilot CLI at the manuscript author's direction",
+    "purpose": "Contextualise a candidate system-steering hypothesis, not estimate prevalence or compare framework effects.",
+    "databases_or_indexes": ["GitHub public REST and GraphQL APIs"],
+    "queries": [
+      "User-named repositories: storytold/photocraft, jmservera/aithena, bradygaster/squad",
+      "GraphQL per repository: issues(states:OPEN), issues(states:CLOSED), issues(states:OPEN,labels:[\"bug\"]), pullRequests(states:OPEN), pullRequests(states:MERGED), pullRequests(states:CLOSED); retrieve totalCount for each",
+      "REST /repos/storytold/photocraft/issues?state=open&labels=bug&sort=created&direction=desc&per_page=10",
+      "REST /repos/storytold/photocraft/issues?state=open&labels=bug&sort=created&direction=asc&per_page=5",
+      "REST /repos/storytold/photocraft/pulls?state=open&sort=created&direction=asc&per_page=100, all pages",
+      "REST /repos/jmservera/aithena/pulls?state=open&per_page=100",
+      "Purposively selected Aithena audit issues: 1804, 1815, 1817, 1823, 1828, 1830",
+      "Pinned README, agent/process, CI, parity/gap records and narrowly traced source files"
+    ],
+    "date_limits": "Live tracker state on 25 October 2026; documents retain their own historical assessment dates.",
+    "language_limits": "Selected English-language project records; no language-complete search.",
+    "inclusion_scope": "Public source and project reports bearing on controls, test coverage, behaviour, integration, maintenance and rivals.",
+    "exclusion_scope": "Private standards, reporter identities/contact details, attachments, proprietary application code/assets, runtime reproduction, and an unspecified Microsoft Office clone.",
+    "known_limitations": [
+      "Repositories were selected by the author after experience or perceived relevance, not sampled independently of outcomes.",
+      "Counts, paginated inventories and individual records are separate live requests, not an atomic database snapshot.",
+      "Labels/reports are not verified unique defects; open PRs are not all feature implementations or failed integrations.",
+      "Documentation describes intended practices, not their adherence or effectiveness.",
+      "Source commits do not freeze issue or PR state.",
+      "No external application or original Photoshop instance was executed.",
+      "No independent coder, controlled framework comparison, measured complexity series or systematic multi-case replication.",
+      "The author's Aithena maintainability judgement is retrospective testimony."
+    ],
+    "last_result_screened_or_stop_rule": "All 1091 listed open PhotoCraft PR metadata records; bodies of the declared 15 bug reports and two selected PRs; all 35 open Aithena PR metadata records, six selected audit issue bodies, and bounded source traces. No exhaustive issue-body or repository-code audit.",
+    "novelty_status": "not_assessed"
+  },
+  "counts_retrieved_at_utc": "2026-10-25T22:52:26Z",
+  "repositories": [
+    {
+      "repository": "storytold/photocraft",
+      "branch": "main",
+      "source_commit": "5bb853654196eca807212ff8955ba2eb293071ea",
+      "created_at_utc": "2026-09-30T13:37:48Z",
+      "counts": {
+        "open_issues_excluding_prs": 2060,
+        "closed_issues": 2604,
+        "open_issues_with_exact_bug_label": 212,
+        "open_prs": 1091,
+        "merged_prs": 3189,
+        "closed_unmerged_prs": 610,
+        "drafts_in_paginated_open_pr_inventory": 49
+      },
+      "source_locators": [
+        {"path": "README.md", "claim": "Early-alpha Photoshop reimplementation; common command interface; explicit wiring-versus-behaviour warning."},
+        {"path": "AGENTS.md", "claim": "Parity goal, layered dependencies, testing and visual-check instructions; references private external craftrules not inspected."},
+        {"path": ".github/workflows/ci.yml", "claim": "Layer checks, workspace tests and pinned/hash-verified corpus jobs; configurations inspected, not executed."},
+        {"path": "crates/ui-egui/src/parity.rs", "lines": "1-5, 80-87", "claim": "Menu-catalogue live-count floor, not execution of reference workflows."},
+        {"path": "crates/ui-egui/src/menus.rs", "lines": "923-937", "claim": "is_live recognises commands, tools and UI handlers."},
+        {"path": "docs/target-app-parity.md", "claim": "Historical 10 October assessment: approximately 76% feature breadth versus approximately 45% ready-for-real-work, project-defined estimates; retracts earlier surface-based optimism."},
+        {"path": "docs/scorecard.md", "claim": "631/631 live menu items; other dimensions distinguish gaps. Performance baseline is historical and not a new benchmark."},
+        {"path": "docs/gaps.md", "claim": "PSD interchange and performance gaps; notes lack of opening exports in a third-party editor as an automated test; also records fixes."},
+        {"path": "docs/architecture.md", "claim": "Layering and command-interface architecture."}
+      ],
+      "bug_sample": {
+        "selection": "Ten newest plus five oldest open bug-labelled issues by creation time.",
+        "newest_issue_numbers": [9515, 9514, 9510, 9496, 9477, 9473, 9463, 9453, 9448, 9440],
+        "oldest_issue_numbers": [5196, 5265, 5328, 5350, 5357],
+        "reported_examples": [
+          {"issue": 5328, "url": "https://github.com/storytold/photocraft/issues/5328", "observation": "Windows printing reportedly invokes Linux lp/CUPS; not reproduced."},
+          {"issue": 9440, "url": "https://github.com/storytold/photocraft/issues/9440", "observation": "Network-share save/close conflict prompts; reporter explicitly says the file saves, not data loss."},
+          {"issue": 9448, "url": "https://github.com/storytold/photocraft/issues/9448", "observation": "Reported crash opening PSD files larger than 250 MB; not reproduced."},
+          {"issue": 9463, "url": "https://github.com/storytold/photocraft/issues/9463", "observation": "Reported responsiveness regression plus positive workflow feedback; no instrumented comparison."}
+        ],
+        "counter_evidence": "Some sample reports have duplicate/multiple-issue/needs-info labels; some include positive feedback. No defect-rate denominator."
+      },
+      "selected_prs": [
+        {"number": 344, "url": "https://github.com/storytold/photocraft/pull/344", "created_at_utc": "2026-10-06T14:53:33Z", "observation": "Oldest listed open PR; describes GUI interaction fixes, resolution-based checks and Claude Code generation. One example, not a queue-wide delay/conflict estimate."},
+        {"number": 9552, "url": "https://github.com/storytold/photocraft/pull/9552", "observation": "Open proposal to share helpers across crates; 60 changed files, 644 additions, 917 deletions at inspection. Counter-evidence to absence of consolidation, not proven behaviour preservation."}
+      ],
+      "source_inconsistencies_not_used_as_measures": [
+        "Photoshop corpus denominators differ between scorecard and gap records; no pooled success ratio is calculated.",
+        "Parity document header update date and historical headline assessment date differ; the 76%/45% estimates are attributed to 10 October, not 25 October.",
+        "Performance baseline predates the source snapshot and records high system load; no causal performance claim is drawn."
+      ]
+    },
+    {
+      "repository": "jmservera/aithena",
+      "branch": "dev",
+      "source_commit": "f27aa2e9f949ea76f2a437249e68b52670a22835",
+      "counts": {
+        "open_issues_excluding_prs": 34,
+        "closed_issues": 705,
+        "open_issues_with_exact_bug_label": 3,
+        "open_prs": 35,
+        "merged_prs": 842,
+        "closed_unmerged_prs": 240,
+        "open_prs_labelled_dependencies": 34
+      },
+      "source_locators": [
+        {"path": "README.md", "claim": "Book-search stack and version/release description."},
+        {"path": ".squad/team.md", "claim": "Human product owner, coordinator, specialist agents and work-monitor roles."},
+        {"path": ".squad/ceremonies.md", "claim": "Pre-task design review and retrospectives on failure/rejection."},
+        {"path": ".squad/quality-gates.md", "claim": "Documented verification and service-specific checks, not proof all sessions used them."},
+        {"path": ".squad/scripts/verify.sh", "claim": "Local verification script; inspected, not executed."},
+        {"path": "src/solr-search/tests/test_e2e_solr10_phase3.py", "lines": "40-79, 83-199", "claim": "Active preflight assertions coexist with unconditional scenario skip calls; no all-skipped suite claim."},
+        {"path": "src/document-indexer/document_indexer/__main__.py", "lines": "550-567", "claim": "Failure logging/persistence followed by basic_ack in finally; static inspection only, no reproduced document-loss claim."},
+        {"path": "docker-compose.yml", "claim": "Distributed service dependencies; configuration presence is not a maintainability measure."}
+      ],
+      "selected_audit_issues": [
+        {"number": 1804, "url": "https://github.com/jmservera/aithena/issues/1804", "reported_concern": "Failure acknowledgement and retry/dead-letter contract; callback traced narrowly."},
+        {"number": 1815, "url": "https://github.com/jmservera/aithena/issues/1815", "reported_concern": "Deployment/state coupling; not an independent vulnerability assessment."},
+        {"number": 1817, "url": "https://github.com/jmservera/aithena/issues/1817", "reported_concern": "Release/version documentation drift; not independently reproduced."},
+        {"number": 1823, "url": "https://github.com/jmservera/aithena/issues/1823", "reported_concern": "Frontend/backend upload-limit mismatch; not independently reproduced."},
+        {"number": 1828, "url": "https://github.com/jmservera/aithena/issues/1828", "reported_concern": "Skipped Phase 3 coverage; pinned source also contains active preflight tests."},
+        {"number": 1830, "url": "https://github.com/jmservera/aithena/issues/1830", "reported_concern": "Local-gate coverage omissions; no full gate-equivalence audit performed."}
+      ],
+      "pr_counter_evidence": "34 of 35 open PRs labelled dependencies; sole other PR 1753 supplies Solr benchmark evidence. Queue size is not unfinished-feature count."
+    },
+    {
+      "repository": "bradygaster/squad",
+      "branch": "dev",
+      "source_commit": "481c944596abfa2053e2acd88d765639f994d795",
+      "source_locators": [
+        {"path": "README.md", "claim": "Human-led teams, persistent files/shared decisions/learning and explicit human accountability; not historical-version proof for Aithena."}
+      ]
+    }
+  ],
+  "candidate_interpretations": [
+    {
+      "status": "candidate; exploratory after inspection",
+      "claim": "Issue-level correction can coexist with insufficient cumulative integration and changeability feedback.",
+      "prediction_for_a_separate_study": "Under matched resources and independent cross-feature oracles, steering that acts on system-level evidence should improve unseen journeys or later changeability relative to issue-only correction.",
+      "rival": "Differences arise from oracle coverage rather than the actor or reflection process.",
+      "disconfirming_pattern": "No system-level advantage under adequate measurement, or differences vanish when oracle coverage is matched.",
+      "indeterminate": "Intervals too imprecise, unequal implementation effort, or invalid reference measurements."
+    },
+    {
+      "status": "candidate; author-origin human-steering conjecture remains untested",
+      "claim": "Human judgement contributes something not supplied by the compared agent-only steering condition.",
+      "prediction_for_a_separate_study": "A matched-resource human-led condition improves independently specified journeys and preserves changeability relative to agent-led steering.",
+      "rival": "An agent given equivalent reference evidence, authority and budget supplies the same corrections.",
+      "disconfirming_pattern": "Agent-led steering consistently detects/corrects the same failures while preserving changeability; this weakens a human-specific necessity claim.",
+      "indeterminate": "Human/agent resources or decision rights are not comparable; no non-inferiority margin or precision plan has been set."
+    },
+    {
+      "status": "candidate; rival explanation",
+      "claim": "Tracker backlog reflects alpha-stage breadth, adoption/detection and review capacity rather than longitudinal decay.",
+      "prediction_for_a_separate_study": "After accounting for scope, reporting exposure and duplicate reports, independently sampled task behaviour improves despite a large open queue.",
+      "rival": "Previously working cross-feature journeys deteriorate as output accumulates.",
+      "disconfirming_pattern": "Reliable release-linked regressions persist under comparable scope/exposure and adequate oracles.",
+      "indeterminate": "No comparable release-level journey series or exposure denominator."
+    }
+  ],
+  "protocol_boundary": "No changes to current H1-H7 hypotheses, arms, budgets, thresholds or tagged/private study kit. Future comparisons need their own prospective measurement and analysis decisions.",
+  "retention": "Minimised paraphrases, identifiers and public locators only; no reporter identities, raw issue bodies, attachment contents or private standards."
+}
