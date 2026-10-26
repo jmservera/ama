@@ -2,8 +2,9 @@
 """Deploy ONLY the resident demo (identity, app, three scoped role assignments) in group ama.
 
 Dry run by default: it runs an ARM what-if of infra/resident-demo.bicep and refuses unless every
-actionable change is one of the five resident-owned resources below. `--apply` repeats that proof,
-then deploys. It never uses main.bicep or deploy.py, so it cannot restore the API minimum of two
+actionable change is one of the six resident-owned resources below (the five resources and the
+exact nested guard deployment resident-demo-scope; no other deployment is allowed). `--apply`
+repeats that proof, then deploys. It never uses main.bicep or deploy.py, so it cannot restore the API minimum of two
 replicas, the cron schedules or the event job, and it never touches the SQL database, the
 environment, the registry or the vault beyond the two secret-scoped role assignments.
 
@@ -31,6 +32,7 @@ import resident_demo_secrets as secrets_helper  # noqa: E402
 setup = secrets_helper.setup
 TEMPLATE = HERE.parent / "resident-demo.bicep"
 APP = "ca-resident-demo"
+GUARD = "resident-demo-scope"
 IDENTITY = "id-resident-demo"
 VAULT = "kv-cutovertest-rzsrg"
 REGISTRY = "crcutovertestrzsrg"
@@ -52,6 +54,7 @@ def allowed_ids(subscription: str) -> dict[str, str]:
         "app": root + "microsoft.app/containerapps/" + APP,
         "vault": root + "microsoft.keyvault/vaults/" + VAULT + "/secrets/",
         "registry": root + "microsoft.containerregistry/registries/" + REGISTRY,
+        "guard": root + "microsoft.resources/deployments/" + GUARD,
     }
 
 
@@ -68,7 +71,7 @@ def check_changes(plan: Any, subscription: str) -> int:
         if kind in ("Ignore", "NoChange"):
             continue
         resource = str(change.get("resourceId", "")).lower()
-        owned = resource in (ids["identity"], ids["app"])
+        owned = resource in (ids["identity"], ids["app"], ids["guard"])
         if marker in resource:
             scope = resource.split(marker)[0]
             owned = scope == ids["registry"] or (

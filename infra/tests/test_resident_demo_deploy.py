@@ -26,6 +26,7 @@ VAULT = ROOT + "Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/"
 OWNED = [
     ROOT + "Microsoft.ManagedIdentity/userAssignedIdentities/id-resident-demo",
     ROOT + "Microsoft.App/containerApps/ca-resident-demo",
+    ROOT + "Microsoft.Resources/deployments/resident-demo-scope",
     VAULT + "resident-demo-password-verifier/providers/Microsoft.Authorization/roleAssignments/a",
     VAULT + "resident-demo-session-key/providers/Microsoft.Authorization/roleAssignments/b",
     ROOT + "Microsoft.ContainerRegistry/registries/crcutovertestrzsrg"
@@ -227,10 +228,26 @@ class CommandTests(unittest.TestCase):
         upper = SUB.replace("1", "a").upper()
         owned = [i.replace(SUB, upper) for i in OWNED]
         plan = {"status": "Succeeded", "changes": create(owned)}
-        self.assertEqual(DEPLOY.check_changes(plan, upper), 5)
+        self.assertEqual(DEPLOY.check_changes(plan, upper), 6)
         plan["changes"] = create([*owned, ROOT.replace(SUB, upper) + "Microsoft.App/jobs/x"])
         with self.assertRaises(DEPLOY.DeployError):
             DEPLOY.check_changes(plan, upper)
+
+    def test_compiled_inventory_including_guard_passes_and_unknown_nested_is_refused(self):
+        template = compiled()
+        names = {
+            r["type"]: r["name"] for r in template["resources"] if r["type"].endswith("deployments")
+        }
+        self.assertEqual(names, {"Microsoft.Resources/deployments": "resident-demo-scope"})
+        guard = ROOT + "Microsoft.Resources/deployments/" + names["Microsoft.Resources/deployments"]
+        self.assertIn(guard, OWNED)
+        self.assertEqual(
+            DEPLOY.check_changes({"status": "Succeeded", "changes": create(OWNED)}, SUB), 6
+        )
+        other = ROOT + "Microsoft.Resources/deployments/resident-demo-scope-2"
+        for bad in (other, ROOT + "Microsoft.Resources/deployments/main"):
+            with self.assertRaises(DEPLOY.DeployError):
+                DEPLOY.check_changes({"status": "Succeeded", "changes": create([*OWNED, bad])}, SUB)
 
     def test_ignored_and_unchanged_resources_do_not_block(self):
         extra = [

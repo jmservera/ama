@@ -3178,9 +3178,12 @@ The Owner ARM secret write needs no extra Key Vault writer role; that path is st
 against the private vault, and no broader role is proposed.
 
 The command is a dry run by default: it runs a what-if and refuses unless every actionable change
-is one of those five resources. `--apply` repeats it, asks for a typed phrase, deploys, and reads
+is one of those five resources or the exact nested guard deployment `resident-demo-scope`; no other
+deployment is accepted, and an unverified nested what-if shape is refused. `--apply` repeats it, asks for a typed phrase, deploys, and reads
 back minimum 0 and maximum 1. It is not an authority; it needs a separate approval and a cleared
 cost and headroom check. Stop conditions (all UTC): any minimum replica above 0, a new schedule or
 event, an unexpected resource type, daily `ama` cost well above baseline, or time reaching
 2026-11-01T00:00:00Z. Rollback is a rerun with `--no-ingress`; after expiry, confirm no active
-revision serves traffic. Image builds, logs and egress costs are not estimated here.
+revision serves traffic. The template default is public ingress, so the first operational stage must pass `--no-ingress`
+until the private-vault and SQL proofs exist. None of this has been validated live: tests use a
+fake CLI and the compiled template only. Image builds, logs and egress costs are not estimated here.

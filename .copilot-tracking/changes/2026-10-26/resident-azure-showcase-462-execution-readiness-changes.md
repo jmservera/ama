@@ -37,3 +37,17 @@ Images created: none. Containers created: none. Nothing to dispose or retain.
 
 G1 headroom, G2 live synthetic email provenance, G3 SQL principal/view, G4 private-vault write path,
 hosted checks and coordinator assessment. The earlier gate receipt is stale for any new head.
+
+## Correction 2026-10-26T13:45Z (coordinator-confirmed defect, implemented after the prospective brief in the plan)
+
+* Defect: the compiled template contains the nested guard deployment `resident-demo-scope`, which
+  `check_changes` refused, so a real what-if could not pass; my fake OWNED list omitted it.
+* Fix: `check_changes` allows exactly that one deployment id; no other deployment is allowed. New
+  regression `test_compiled_inventory_including_guard_passes_and_unknown_nested_is_refused`
+  derives the compiled deployment resource, requires it in the owned set and refuses other nested
+  deployments. OWNED fixtures now include the guard (6 resources).
+* Docs: first operational stage must use `--no-ingress`; nothing is validated live; nested what-if
+  shapes beyond this id are refused (official nested expansion format unverified).
+* Tests: 29 infra resident tests OK; ruff check and format clean. The original review and its Low
+  finding are unchanged; no new review was run (coordinator accepted this route).
+* Docker: images and containers created: none.

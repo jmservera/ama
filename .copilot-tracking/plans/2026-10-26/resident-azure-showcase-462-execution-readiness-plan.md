@@ -47,3 +47,16 @@ Consequence: the plan's change set grows by an expiry-window change across core,
 * Expiry decision (coordinator): exclusive cutoff 2026-11-01T00:00:00Z (through 31 Oct UTC), enforced by service and tooling, documented as UTC.
 * Key Vault writer: the earlier proposal of an extra Key Vault writer role is corrected. The caller is Owner on ama; if the ARM secret write path is verified, no extra data-plane role is proposed. Whether it works through the private-only vault stays unproven (G4); no broad role.
 * Stage released (local only): expiry update; resident-only template and explicit command with a what-if deny guard; all six critique findings. No cloud action, no main.bicep/deploy.py route, no secrets, no heavy checks.
+
+## Prospective brief: guard-deployment allowlist correction (2026-10-26T13:40Z, before edits)
+
+Coordinator reproduced a fail-closed defect at b383983e: the compiled template includes the nested
+guard deployment `Microsoft.Resources/deployments/resident-demo-scope`, which `check_changes`
+rejects, so the real what-if cannot pass. My fake OWNED list omitted it. Decision: allow exactly
+that one resource id (resource group ama, name resident-demo-scope), never other deployments.
+Nested what-if formats are not verified from official docs here, so anything else stays refused.
+Add a regression that derives the compiled resource inventory (including the guard) and asserts
+each is accepted, plus an unknown nested deployment refused. Docs state the first operational
+stage must use --no-ingress until private-vault and SQL proof exist; no live validation is claimed.
+The original independent review and its Low finding are preserved; no new review is fabricated.
+Then a normal merge of fresh origin/main with a prospective note, taking main's bot latest.json.
