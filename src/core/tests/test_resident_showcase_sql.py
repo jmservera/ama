@@ -164,7 +164,7 @@ class SqlBoundaryTests(unittest.TestCase):
         provenance: str = "owner-approved local fixture",
         revoked: int = 0,
         start: str = "2026-10-01T00:00:00",
-        end: str = "2026-10-26T12:00:00",
+        end: str = "2026-11-01T00:00:00",
     ) -> None:
         self.q(
             "INSERT INTO resident_showcase.allowed_case (case_id, provenance, valid_from, valid_to,"
@@ -256,7 +256,7 @@ class SqlBoundaryTests(unittest.TestCase):
         with self.assertRaises(mssql_python.Error):
             self.allow("C-1", provenance="   ")
         with self.assertRaises(mssql_python.Error):
-            self.allow("C-1", end="2026-10-26T12:00:01")
+            self.allow("C-1", end="2026-11-01T00:00:01")
 
     def test_principal_reads_only_the_view(self) -> None:
         self.add_case("C-1", _body("a@example.com"))

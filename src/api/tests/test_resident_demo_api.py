@@ -541,7 +541,7 @@ class BoundaryTests(unittest.TestCase):
 
         from zava_forward.api.resident_demo import __main__ as entry
 
-        for env in ({}, {"ZF_STORE": "mssql", "ZF_DEMO_EXPIRES_AT": "2026-10-26T12:00:00Z"}):
+        for env in ({}, {"ZF_STORE": "mssql", "ZF_DEMO_EXPIRES_AT": "2026-11-01T00:00:00Z"}):
             err = io.StringIO()
             with mock.patch.dict(os.environ, env, clear=True), contextlib.redirect_stderr(err):
                 self.assertEqual(entry.main(), 2)

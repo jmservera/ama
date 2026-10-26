@@ -18,7 +18,7 @@ CREATE TABLE resident_showcase.allowed_case (
   valid_to DATETIME2(0) NOT NULL,
   revoked BIT NOT NULL CONSTRAINT df_allowed_case_revoked DEFAULT 0,
   CONSTRAINT ck_allowed_case_provenance CHECK (LEN(LTRIM(RTRIM(provenance))) > 0),
-  CONSTRAINT ck_allowed_case_window CHECK (valid_to > valid_from AND valid_to <= '2026-10-26T12:00:00')
+  CONSTRAINT ck_allowed_case_window CHECK (valid_to > valid_from AND valid_to <= '2026-11-01T00:00:00')
 );
 GO
 CREATE OR ALTER VIEW resident_showcase.v_resident_case AS

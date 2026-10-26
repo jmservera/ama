@@ -26,7 +26,7 @@ from typing import Any
 from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 
-AUTHORITY_END = datetime(2026, 10, 26, 12, 0, tzinfo=UTC)
+AUTHORITY_END = datetime(2026, 11, 1, 0, 0, tzinfo=UTC)  # exclusive: through 31 Oct UTC
 MAX_MAPPINGS = 25
 SESSION_SECONDS = 1800
 BANNER = (

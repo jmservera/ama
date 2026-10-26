@@ -350,7 +350,7 @@ class ViewTests(unittest.TestCase):
 class ConfigTests(unittest.TestCase):
     def env(self, **over: Any) -> dict[str, str]:
         base = {
-            "ZF_DEMO_EXPIRES_AT": "2026-10-26T12:00:00Z",
+            "ZF_DEMO_EXPIRES_AT": "2026-11-01T00:00:00Z",
             "ZF_DEMO_ALLOWED_HOSTS": "demo.example.invalid",
             "ZF_DEMO_PASSWORD_VERIFIER": rs.make_verifier(FAKE_PASSWORD, n=2**14),
             "ZF_DEMO_SESSION_KEY": FAKE_KEY,
@@ -389,8 +389,17 @@ class ConfigTests(unittest.TestCase):
         ):
             self.refuse(**{name: None})
 
+    def test_authority_cutoff_is_the_exclusive_utc_end_of_31_october(self) -> None:
+        self.assertEqual(rs.AUTHORITY_END, datetime(2026, 11, 1, tzinfo=UTC))
+        far = row(
+            valid_from=rs.AUTHORITY_END - timedelta(days=2),
+            valid_to=rs.AUTHORITY_END + timedelta(days=2),
+        )
+        self.assertIsNone(rs.exclusion(far, rs.AUTHORITY_END - timedelta(seconds=1)))
+        self.assertIsNotNone(rs.exclusion(far, rs.AUTHORITY_END))
+
     def test_expiry_rules(self) -> None:
-        self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T12:00:01Z")
+        self.refuse(ZF_DEMO_EXPIRES_AT="2026-11-01T00:00:01Z")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-25T11:59:59Z")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T11:00:00")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T13:00:00+01:00")

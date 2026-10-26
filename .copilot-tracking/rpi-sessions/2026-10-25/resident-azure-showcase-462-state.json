@@ -8,11 +8,11 @@
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-research.md",
-    "plan": ".copilot-tracking/plans/2026-10-26/resident-azure-showcase-462-secret-delivery-plan.md",
+    "plan": ".copilot-tracking/plans/2026-10-26/resident-azure-showcase-462-execution-readiness-plan.md",
     "details": ".copilot-tracking/details/2026-10-25/resident-azure-showcase-462-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-azure-showcase-462-plan-critique.md",
-    "changes": ".copilot-tracking/changes/2026-10-26/resident-azure-showcase-462-secret-delivery-changes.md",
-    "review": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-secret-delivery-review.md",
+    "changes": ".copilot-tracking/changes/2026-10-26/resident-azure-showcase-462-execution-readiness-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-execution-readiness-review.md",
     "research_extension": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-preflight-extension.md",
     "local_slice_research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-local-slice-research.md",
     "local_slice_plan": ".copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-local-slice-plan.md",
@@ -116,6 +116,21 @@
       "decision": "Helper correction 1: SH-001 diagnosed as stale editable paths in a retained env, no runner change; Low1/3/4 fixed; independent review Conformant",
       "status": "recorded",
       "evidence": ".copilot-tracking/*/2026-10-26/*correction1*"
+    },
+    {
+      "decision": "13:14Z owner approval: continue publication (late plan accepted only for that); bounded Azure execution, up to USD5 additional to 2026-10-31, ama only, min0, STOP if cost headroom unprovable",
+      "status": "recorded",
+      "evidence": "coordinator message 13:16Z"
+    },
+    {
+      "decision": "Read-only readiness pass 13:16-13:35Z: fresh cost 30.8926 upper bound, ACA paused verified, one critique Revise (expiry 12Z blocker); no mutation",
+      "status": "recorded",
+      "evidence": "/home/azureuser/.ama462-evidence/release-readiness-2026-10-26-1316/readiness-assessment.txt"
+    },
+    {
+      "decision": "Local source stage 13:3xZ: cutoff 2026-11-01T00:00Z exclusive, resident-only template and command",
+      "status": "implemented locally; one independent review: one Low, fixed",
+      "evidence": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-execution-readiness-review.md"
     }
   ],
   "blockers": [
@@ -146,8 +161,8 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Coordinator assessment, capacity admission, fresh full gate on new head; G1-G4 open"
+    "phase": "Review",
+    "action": "Coordinator assessment; cloud stages need G1 headroom, G2 provenance, G3 SQL, G4 private-vault write proof, fresh gate and hosted checks"
   },
   "prioritized_follow_ups": [
     {

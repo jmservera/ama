@@ -7175,3 +7175,7 @@ Added infra/scripts/resident_demo_secrets.py and a fixed-name store_resident_dem
 ## 2026-10-26 issue 462 secret helper correction 1
 
 FIFO-safe verifier file open, stronger malformed-value assertion and README dry-run wording. The reported namespace-env import failure traced to stale editable paths in a retained gate env; the runner reinstalls the projects, so no runner change. Local only: no gate, push or Azure.
+
+## 2026-10-26 issue 462 execution-readiness local stage
+
+Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff across core, SQL, secret helper, docs and tests. Added the resident-only infra/resident-demo.bicep and infra/scripts/resident_demo_deploy.py (what-if deny guard, min 0 / max 1, no main stack or schedules). Local only; no cloud action. See the 2026-10-26 execution-readiness plan, changes and review under .copilot-tracking.

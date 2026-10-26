@@ -176,7 +176,7 @@ class Refusals(HelperCase):
     def test_expiry_is_mandatory_future_and_not_past_the_authority_limit(self):
         for bad in (
             "",
-            "2026-10-26T12:00:01Z",
+            "2026-11-01T00:00:01Z",
             "2026-10-26T07:00:00Z",
             "2026-10-26T11:00:00",
             "tomorrow",
@@ -184,7 +184,7 @@ class Refusals(HelperCase):
         ):
             self.assertEqual(self.run_helper(apply=True, expires=bad), 1, bad)
         self.assertEqual((self.cli.writes, self.cli.calls), ([], []))
-        self.assertEqual(self.run_helper(expires="2026-10-26T12:00:00Z"), 0)
+        self.assertEqual(self.run_helper(expires="2026-11-01T00:00:00Z"), 0)
 
     def test_expiry_is_rechecked_immediately_before_the_write(self):
         clock = iter([NOW, datetime(2026, 10, 26, 13, 0, tzinfo=UTC)])

@@ -4,7 +4,7 @@
 Dry run by default: it validates your inputs locally and reads only vault metadata; no secret value
 leaves this process. `--apply` writes exactly two fixed secrets, resident-demo-password-verifier
 and resident-demo-session-key, in ONE secure ARM deployment to kv-cutovertest-rzsrg after a
-what-if proves two new secrets there, both expiring no later than 2026-10-26T12:00:00Z.
+what-if proves two new secrets there, both expiring no later than 2026-11-01T00:00:00Z.
 
 The verifier comes from a hidden prompt or an owner-only (mode 0600) file outside the repository;
 make it with resident_demo_verifier.py. The session key is generated here at apply time and is
@@ -43,7 +43,7 @@ _spec.loader.exec_module(setup)
 
 from zava_forward.core.resident_showcase import PasswordVerifier, ShowcaseConfigError  # noqa: E402
 
-MAX_EXPIRY = datetime(2026, 10, 26, 12, 0, tzinfo=UTC)
+MAX_EXPIRY = datetime(2026, 11, 1, 0, 0, tzinfo=UTC)
 MAX_FILE_BYTES = 1024
 GUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 
@@ -62,7 +62,7 @@ def parse_expiry(value: str, now: datetime) -> str:
     if moment <= now:
         raise HelperError("Expiry is not in the future.")
     if moment > MAX_EXPIRY:
-        raise HelperError("Expiry is later than the authority limit 2026-10-26T12:00:00Z.")
+        raise HelperError("Expiry is later than the authority limit 2026-11-01T00:00:00Z.")
     return value
 
 

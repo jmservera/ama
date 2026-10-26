@@ -2851,7 +2851,7 @@ identity and not production authentication. It is a different composition from t
   volume, no staff, Entra or AI settings, no secret in the image).
 * Configuration (environment only; the server refuses to start on any missing, expired, mixed or
   unsafe value, and never echoes a value):
-  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, not after 2026-10-26T12:00Z),
+  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, not after 2026-11-01T00:00Z (exclusive, through 31 October UTC)),
   `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
   the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
   `ZF_SQL_DATABASE`, optional `ZF_SQL_CLIENT_ID` for managed-identity sign-in, `PORT`, `ZF_DEMO_BIND`.
@@ -2886,7 +2886,7 @@ identity and not production authentication. It is a different composition from t
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
   the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
-  by 2026-10-26T12:00Z), the view and a read-only principal that has SELECT on that view only. The
+  by 2026-11-01T00:00Z (exclusive, through 31 October UTC)), the view and a read-only principal that has SELECT on that view only. The
   [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
   only dry-runs unless `--apply` is used from an approved private job.
 * Offline verifier: the owner chooses and keeps the password. Run `python3 infra/scripts/resident_demo_verifier.py > owner-only-file`
