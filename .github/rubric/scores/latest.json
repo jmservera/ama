@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-26T21:31:23+00:00",
-  "commit": "4f4ddcaf7a8652f7c0e9b80df18c849c537d47c9",
+  "scored_at": "2026-10-26T22:09:25+00:00",
+  "commit": "5d9c62fff32ab56eafeef1aea584b6b988aab9d0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40404322618",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40409330755",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "b6bd6d1169b115df3cee4df0753711c8d269e016b03a1a39ec8ad992eaaf9557",
-    "infrastructure": "c8e0fcc80f8f86e44fb427540e1a648fbd9b46b853e8e238a01590d96f28ed58",
+    "solution-code": "f6f4ec2b3d0e4154977ae15e311dd4b47ec5c30e0e725168461006abaa06c932",
+    "infrastructure": "363b17e40ce68c1dc855de0b63140414a6e5dc8fb7951e55f7f522d0a1d9a3e4",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
@@ -52,11 +52,10 @@
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_resident_demo_api.py:1-581",
-        "src/core/tests/test_resident_showcase.py:1-474",
-        "infra/tests/test_resident_demo_deploy.py:1-335"
+        "src/api/tests/test_resident_preview_api.py:1-274",
+        "src/core/tests/test_resident_preview.py:1-359"
       ],
-      "rationale": "New resident-demo feature ships complete: scrypt sign-in, CSRF, rate limiting, SQL view, unit/integration/SQL/browser checks, and Bicep infra with tests. Already at ceiling; evidence reinforces unchanged score."
+      "rationale": "New feature ships complete with unit tests, HTTP integration tests and a browser check script; implementation is thorough. Already at ceiling."
     },
     "A5": {
       "score": 4,
@@ -68,12 +67,12 @@
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static preview/demo. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static preview. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No new agentic orchestration introduced; resident demo is a static read-only HTTP sign-in view with no agent involvement. Unchanged."
+      "rationale": "No new agentic orchestration introduced; resident preview is a static read-only HTTP view with no agent involvement. Unchanged."
     },
     "B1": {
       "score": 3,
@@ -115,7 +114,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "No deck or capstone documentation files changed in this diff (only infra/src/api/src/core resident-demo code). Baseline Excellent retained unchanged."
+      "rationale": "Deck accuracy fixes (removed false sign-in/legal-review claims on slides 18 and 51) reinforce already-excellent, complete documentation. Already Excellent, unchanged."
     },
     "B7": {
       "score": 5,
