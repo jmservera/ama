@@ -3152,3 +3152,15 @@ files.
 tool: it takes no arguments, needs an interactive terminal, reads the demo password twice with hidden
 input and prints only the scrypt verifier (sensitive; keep it out of chat and git). It has no
 network, Azure or vault access.
+
+[`scripts/resident_demo_secrets.py`](scripts/resident_demo_secrets.py) is the owner-run secret
+delivery helper for later use; it has not been run against Azure. It is a dry run by default (local
+validation plus vault metadata only, no value sent). `--apply` writes exactly
+`resident-demo-password-verifier` and `resident-demo-session-key` to `kv-cutovertest-rzsrg` in one
+secure ARM deployment, only after a what-if proves two new secrets there, with an expiry no later
+than 2026-10-26T12:00:00Z. The verifier comes from a hidden prompt or an owner-only 0600 file outside
+the repository; the session key is generated at apply time and never printed. It is not an
+authority: it needs a separate exact write approval, cleared budget and a proven private write
+path, and Azure roles remain the enforcing control. A part-failed write is not cleaned up
+automatically; reconcile it under a separate approval. The employee `credential_arm.store` name
+allowlist is unchanged.

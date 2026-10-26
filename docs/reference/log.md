@@ -7167,3 +7167,7 @@ metadata when the knowledge base was created.
 ## 2026-10-26 issue 462 correction cycle 2
 
 Added a module-scoped mypy ignore_missing_imports override for the optional mssql_python driver in src/core/pyproject.toml after gate-2 failed mypy. Plan, changes and review are under .copilot-tracking/*/2026-10-26/. Gate-2 receipt remains failed and retained.
+
+## 2026-10-26 issue 462 owner-local secret delivery helper
+
+Added infra/scripts/resident_demo_secrets.py and a fixed-name store_resident_demo path in credential_arm.py for the two resident demo secrets (dry run default, typed-phrase apply, expiry cap, fake-fixture tests). Plan, changes and one independent Conformant review are under .copilot-tracking. Tool authoring only: no Azure write, no real password, verifier or session key, no gate. The gate 4 receipt is stale for the new head; budget, provenance, SQL principal and private-vault write path remain open.

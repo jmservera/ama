@@ -43,6 +43,11 @@ def preflight(cli: Any, app: dict[str, Any], vault: str) -> None:
     cli.rest(ARM + resource + "/secrets?api-version=" + VAULT_VERSION)
 
 
+RESIDENT_VAULT = "kv-cutovertest-rzsrg"
+RESIDENT_VERIFIER = "resident-demo-password-verifier"
+RESIDENT_SESSION_KEY = "resident-demo-session-key"
+
+
 def store(
     cli: Any,
     app: dict[str, Any],
@@ -53,38 +58,82 @@ def store(
     *,
     seconds: int = 180,
 ) -> str:
-    resource = vault_id(cli, app, vault)
+    vault_id(cli, app, vault)
     if not re.fullmatch(r"entra-[a-f0-9]{32}-[a-f0-9]{12}", name) or not value:
         raise CredentialError("Credential handoff name/value is invalid; storage was not changed.")
+    return _deploy(cli, app, vault, [(name, "credential", value)], expiration, seconds, "entra-")[
+        name
+    ]
+
+
+def store_resident_demo(
+    cli: Any,
+    app: dict[str, Any],
+    verifier: str,
+    session_key: str,
+    expiration: str,
+    *,
+    seconds: int = 180,
+) -> dict[str, str]:
+    """Write exactly the two fixed resident demo secrets in one deployment."""
+    if not verifier or not session_key or verifier == session_key:
+        raise CredentialError("Resident demo secret values are invalid; storage was not changed.")
+    return _deploy(
+        cli,
+        app,
+        RESIDENT_VAULT,
+        [
+            (RESIDENT_VERIFIER, "verifier", verifier),
+            (RESIDENT_SESSION_KEY, "sessionKey", session_key),
+        ],
+        expiration,
+        seconds,
+        "resident-demo-",
+    )
+
+
+def _deploy(
+    cli: Any,
+    app: dict[str, Any],
+    vault: str,
+    items: list[tuple[str, str, str]],
+    expiration: str,
+    seconds: int,
+    prefix: str,
+) -> dict[str, str]:
+    """Names are validated by the public callers; every item must be one new secret."""
+    resource = vault_id(cli, app, vault)
     expires = int(datetime.fromisoformat(expiration.replace("Z", "+00:00")).timestamp())
-    secret_id = resource + "/secrets/" + name
+    secret_ids = {name: resource + "/secrets/" + name for name, _, _ in items}
     deployment = (
         resource.split("/providers/")[0]
-        + "/providers/Microsoft.Resources/deployments/entra-"
+        + "/providers/Microsoft.Resources/deployments/"
+        + prefix
         + uuid.uuid4().hex
     )
     url = ARM + deployment + "?api-version=" + DEPLOYMENT_VERSION
     template = {
         "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
-        "parameters": {"credential": {"type": "secureString"}},
+        "parameters": {parameter: {"type": "secureString"} for _, parameter, _ in items},
         "resources": [
             {
                 "type": "Microsoft.KeyVault/vaults/secrets",
                 "apiVersion": VAULT_VERSION,
                 "name": vault + "/" + name,
                 "properties": {
-                    "value": "[parameters('credential')]",
+                    "value": f"[parameters('{parameter}')]",
                     "attributes": {"enabled": True, "exp": expires},
                 },
             }
+            for name, parameter, _ in items
         ],
     }
     body = {
         "properties": {
             "mode": "Incremental",
             "template": template,
-            "parameters": {"credential": {"value": value}},
+            "parameters": {parameter: {"value": value} for _, parameter, value in items},
         }
     }
     previous = cli.deadline
@@ -126,16 +175,19 @@ def store(
             if isinstance(changes, list)
             else []
         )
+        wanted = {secret_id.lower() for secret_id in secret_ids.values()}
+        found = [change.get("resourceId", "").lower() for change in actionable]
         if (
             planned.get("status") != "Succeeded"
             or not isinstance(changes, list)
             or any(not change.get("resourceId", "").lower().startswith(root) for change in changes)
-            or len(actionable) != 1
-            or actionable[0].get("resourceId", "").lower() != secret_id.lower()
-            or actionable[0].get("changeType") != "Create"
+            or len(actionable) != len(items)
+            or set(found) != wanted
+            or len(set(found)) != len(found)
+            or any(change.get("changeType") != "Create" for change in actionable)
         ):
             raise CredentialError(
-                "Credential what-if did not prove exactly one new selected-vault secret. "
+                "Credential what-if did not prove only new selected-vault secrets. "
                 "No deployment was applied; reconcile any orphan credential before retrying."
             )
         cli.rest(url, method="PUT", body=body)
@@ -145,20 +197,23 @@ def store(
             if state in {"Failed", "Canceled"}:
                 raise CredentialError("Credential deployment failed; auth was not switched.")
             if state == "Succeeded":
-                metadata = cli.rest(ARM + secret_id + "?api-version=" + VAULT_VERSION)
-                properties = metadata["properties"]
-                attributes = properties["attributes"]
-                expected_uri = f"https://{vault}.vault.azure.net/secrets/{name}"
-                if (
-                    metadata["id"].lower() == secret_id.lower()
-                    and attributes.get("enabled") is True
-                    and attributes.get("exp") == expires
-                    and properties.get("secretUri") == expected_uri
-                ):
-                    return expected_uri
-                raise CredentialError(
-                    "Credential metadata was not verified; auth was not switched."
-                )
+                references: dict[str, str] = {}
+                for name, secret_id in secret_ids.items():
+                    metadata = cli.rest(ARM + secret_id + "?api-version=" + VAULT_VERSION)
+                    properties = metadata["properties"]
+                    attributes = properties["attributes"]
+                    expected_uri = f"https://{vault}.vault.azure.net/secrets/{name}"
+                    if not (
+                        metadata["id"].lower() == secret_id.lower()
+                        and attributes.get("enabled") is True
+                        and attributes.get("exp") == expires
+                        and properties.get("secretUri") == expected_uri
+                    ):
+                        raise CredentialError(
+                            "Credential metadata was not verified; auth was not switched."
+                        )
+                    references[name] = expected_uri
+                return references
             time.sleep(2)
         raise CredentialError(
             "Credential deployment timed out; reconcile deployment/credential before retrying."
