@@ -28,3 +28,7 @@ Before the fix (unchanged web files): probe recorded `activeElement` BODY during
 * Loading text keeps "..." and the button label "Try again" keeps repository plain-language casing; the fetched guideline prefers "…" and Title Case. Routed Low follow-up.
 * theme-color, color-scheme, translate=no, touch-action, text-wrap, raw-JSON footer remain routed Low follow-ups.
 * Announcements are asserted through DOM roles, live-region text and focus in Chromium only; no screen-reader speech test. No comprehensive accessibility, screen-reader or resident acceptance claim. Issue #444 criteria are not ticked and the issue is not closed.
+
+## Integration with main fcf7e127 (2026-10-26)
+
+Normal merge of origin/main fcf7e12735c9e4e69f83df9d643ec8e28a981409 into the branch: no conflicts, no log.md or rubric-bot file edit by this branch, no source change from integration. Prospective note: `.copilot-tracking/plans/2026-10-26/issue444-focus-followup-main-fcf7e127-integration-plan.md`. Cheap recheck: `tests.test_resident_preview_api` OK (merged tree). Browser and full suites not rerun (no new concern); the complete gate awaits coordinator admission.
