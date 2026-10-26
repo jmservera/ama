@@ -7163,3 +7163,7 @@ metadata when the knowledge base was created.
 
 * Fixed the optional SQL driver import that broke core test collection in the failed local gate, made the demo sign-out report success only on a confirmed response, and added targeted browser (sign-out failure) and `Dockerfile.resident-demo` image checks. See the dated RPI artifacts `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-gate-correction1-*`.
 * The failed gate receipt is retained and stale; the generic runner still does not cover these checks. Local only: no push, no Azure, no real password. Earlier log entries are unchanged.
+
+## 2026-10-26 issue 462 correction cycle 2
+
+Added a module-scoped mypy ignore_missing_imports override for the optional mssql_python driver in src/core/pyproject.toml after gate-2 failed mypy. Plan, changes and review are under .copilot-tracking/*/2026-10-26/. Gate-2 receipt remains failed and retained.

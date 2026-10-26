@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "completed",
+  "status": "active",
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-research.md",
@@ -101,6 +101,11 @@
       "decision": "Gate-failure correction cycle 1 (optional SQL driver collection, honest sign-out, image and browser targeted checks)",
       "status": "critique request_changes applied; one original review Conformant; local only",
       "evidence": "2026-10-25T23:30Z; failed 581ebda0 receipt retained and stale; fresh full gate awaits coordinator admission"
+    },
+    {
+      "decision": "Correction cycle 2: mypy override for mssql_python in core; review Conformant",
+      "status": "reviewed",
+      "evidence": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-correction2-review.md"
     }
   ],
   "blockers": [
@@ -131,8 +136,8 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Coordinator capacity admission and fresh full gate from a clean worktree; runner coverage gap follow-up; G1-G4 open"
+    "phase": "Review",
+    "action": "Commit locally, then one targeted SQL/browser/image run from clean candidate; no full gate without coordinator admission"
   },
   "prioritized_follow_ups": [
     {
