@@ -19,7 +19,7 @@ from argparse import Namespace
 from pathlib import Path
 
 from zava_forward.api.workbench import navigation
-from zava_forward.core import ai_tasks, identity, ledger, projection, ranking, taskqueues
+from zava_forward.core import ai_tasks, identity, projection, ranking, taskqueues
 from zava_forward.core.store import Store
 
 SCRIPT = Path(__file__).with_name("check-demo-feedback.py")
@@ -93,7 +93,7 @@ def admin_me():
 
 
 def handcrafted_contact(outcome, channel="Phone"):
-    """Named handcrafted boundary constructor, used only where the constructed dataset cannot reach the state (the 40-contact cap)."""
+    """Handcrafted boundary constructor for states the dataset cannot reach (40-contact cap)."""
     return dict(
         at="2026-10-22T10:00",
         purpose="Update",
@@ -106,15 +106,17 @@ def handcrafted_contact(outcome, channel="Phone"):
 
 
 # Cached as immutable JSON text so no caller can mutate a shared baseline.
-@functools.lru_cache(maxsize=None)
+@functools.cache
 def _case_write_snapshot(outcome, note, prior):
     with tempfile.TemporaryDirectory() as directory:
         return json.dumps(
-            RuntimeFixture(directory).case_write(outcome=outcome, note=note, prior=prior)
+            RuntimeFixture(directory).case_write(
+                outcome=outcome, note=note, prior=prior
+            )
         )
 
 
-@functools.lru_cache(maxsize=None)
+@functools.cache
 def _ai_snapshot():
     with tempfile.TemporaryDirectory() as directory:
         return json.dumps(RuntimeFixture(directory).ai())
@@ -129,7 +131,7 @@ def runtime_ai_record():
 
 
 def case_write(outcome="Left voicemail", restart=True):
-    """Runtime-produced baseline (two earlier contacts, then one write); restart=False only changes the declaration."""
+    """Runtime baseline (two earlier contacts, one write); restart=False changes only the flag."""
     case = runtime_case_write(outcome, CALL_NOTE, ("Earlier one", "Earlier two"))
     case["restart_between_write_and_read"] = restart
     return case
@@ -526,9 +528,9 @@ class CaseWriteReload(unittest.TestCase):
         for name in ("write", "after"):
             case[name]["body"]["contacts"] = copy.deepcopy(new)
         self.assertEqual(self.status(case), "blocked")
-        case["write"]["body"]["contacts"] = [handcrafted_contact("Left voicemail")] + copy.deepcopy(
-            old
-        )
+        case["write"]["body"]["contacts"] = [
+            handcrafted_contact("Left voicemail")
+        ] + copy.deepcopy(old)
         self.assertEqual(self.status(case), "fail")
 
     def test_held_note_is_blocked(self):
@@ -1017,7 +1019,7 @@ CALL_OUTCOME = "Left voicemail"
 
 
 def core_helpers():
-    """Load the repository's constructed dataset and offline release helper, bound to this checkout."""
+    """Load the constructed dataset and offline release helper, bound to this checkout."""
     if str(CORE_TESTS) not in sys.path:
         sys.path.insert(0, str(CORE_TESTS))
     import dataset
@@ -1025,7 +1027,9 @@ def core_helpers():
 
     for module in (dataset, release_support):
         if Path(module.__file__).resolve().parent != CORE_TESTS.resolve():
-            raise AssertionError(f"{module.__name__} resolved outside {CORE_TESTS}: {module.__file__}")
+            raise AssertionError(
+                f"{module.__name__} resolved outside {CORE_TESTS}: {module.__file__}"
+            )
     return dataset, release_support
 
 
@@ -1034,7 +1038,7 @@ def ok(body):
 
 
 class RuntimeFixture:
-    """Evidence produced by the real Store methods behind the server routes, with only the AI boundary scripted."""
+    """Evidence from the real Store methods behind the server routes; only AI is scripted."""
 
     def __init__(self, directory, ai_items=None):
         dataset, release_support = core_helpers()
@@ -1055,7 +1059,14 @@ class RuntimeFixture:
         self.store.ai._chat = lambda *a, **k: json.dumps(self.items)
         release_support.install(self.store)
 
-    def case_write(self, case_id="ZF-1", outcome=CALL_OUTCOME, note=CALL_NOTE, channel="Phone", prior=()):
+    def case_write(
+        self,
+        case_id="ZF-1",
+        outcome=CALL_OUTCOME,
+        note=CALL_NOTE,
+        channel="Phone",
+        prior=(),
+    ):
         store = self.store
         for earlier in prior:
             store.log_call(self.user, case_id, earlier, "", "Phone")
@@ -1107,12 +1118,16 @@ class RuntimeProducedEvidence(unittest.TestCase):
             self.assertEqual(data[key], captured[key])
             self.assertIsNot(data[key], captured[key])
         self.assertEqual(len(data["case_write"]["write"]["body"]["contacts"]), 3)
-        self.assertEqual(data["ai"]["body"]["release"]["id"], "offline-output-test:priority")
+        self.assertEqual(
+            data["ai"]["body"]["release"]["id"], "offline-output-test:priority"
+        )
 
     def test_default_fixtures_are_isolated_copies(self):
         first, second = case_write(), case_write()
         first["write"]["body"]["contacts"][0]["outcome"] = "Changed"
-        self.assertEqual(second["write"]["body"]["contacts"][0]["outcome"], CALL_OUTCOME)
+        self.assertEqual(
+            second["write"]["body"]["contacts"][0]["outcome"], CALL_OUTCOME
+        )
         ai_record()["body"]["items"].clear()
         self.assertTrue(ai_record()["body"]["items"])
 
@@ -1138,7 +1153,9 @@ class RuntimeProducedEvidence(unittest.TestCase):
         report = report_for(bundle(case_write=fixture.case_write(), ai=ai))
         states = statuses(report)
         self.assertEqual(states["case_write_reload"], "blocked", report)
-        reason = next(c["reason"] for c in report["checks"] if c["id"] == "case_write_reload")
+        reason = next(
+            c["reason"] for c in report["checks"] if c["id"] == "case_write_reload"
+        )
         self.assertIn("response-shape consistent", reason)
         self.assertEqual(states["ai_evidence"], "pass", report)
         self.assertEqual(report["overall"], "blocked")
@@ -1167,7 +1184,11 @@ class RuntimeProducedEvidence(unittest.TestCase):
         changed["request"]["outcome"] = "Different outcome"
         broken = copy.deepcopy(evidence)
         broken["audit_after"]["body"]["intact"] = False
-        for name, mutated in (("dropped", dropped), ("changed", changed), ("broken", broken)):
+        for name, mutated in (
+            ("dropped", dropped),
+            ("changed", changed),
+            ("broken", broken),
+        ):
             with self.subTest(name):
                 report = report_for(bundle(case_write=mutated, ai=ai))
                 self.assertEqual(statuses(report)["case_write_reload"], "fail", report)
@@ -1175,7 +1196,11 @@ class RuntimeProducedEvidence(unittest.TestCase):
     def test_runtime_template_fallbacks_are_rejected_by_the_checker(self):
         scripts = {
             "unresolved citation": [
-                dict(case_id="ZF-4", reason="Open damp hazard.", cites=["Invented source: 9"])
+                dict(
+                    case_id="ZF-4",
+                    reason="Open damp hazard.",
+                    cites=["Invented source: 9"],
+                )
             ],
             "hazard case omitted": [
                 dict(case_id="ZF-1", reason="Routine.", cites=["Stage: Survey"])
