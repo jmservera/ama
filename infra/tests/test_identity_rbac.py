@@ -33,6 +33,13 @@ SCOPE_NAMES = {
 STORAGE_SCOPES = {"blob": "Storage account, blob service", "queue": "Storage account, queue service"}
 MODULE_FILES = {"modules/keyvault.bicep": "keyvault", "modules/registry.bicep": "registry",
                 "modules/foundry.bicep": "foundry", "modules/iothub.bicep": "iotHub"}
+STANDALONE = {
+    "resident-demo.bicep": ("resident-demo", {
+        "verifier": "Secret resident-demo-password-verifier only",
+        "sessionKey": "Secret resident-demo-session-key only",
+        "registry": "Container registry",
+    }),
+}
 ROLE_RESOURCE = re.compile(
     r"^resource \w+ 'Microsoft\.Authorization/roleAssignments@[^']+' = .*?^\}", re.S | re.M)
 
@@ -44,11 +51,21 @@ def parse_bicep_assignments() -> list[tuple[str, str, str]]:
         if path == "main.bicep" or path in {r["bicep"] for r in MATRIX.get("customRoles", [])}:
             continue
         variables = dict(re.findall(r"^(?:var|param) (\w+)(?: string)? = '(" + GUID.pattern + ")'", text, re.M))
+        variables.update(re.findall(
+            r"^var (\w+) = subscriptionResourceId\('Microsoft\.Authorization/roleDefinitions', '(" + GUID.pattern + r")'\)",
+            text, re.M))
         for block in ROLE_RESOURCE.findall(text):
             if path == "modules/storage.bicep":
                 continue
             scope = re.search(r"scope: (\w+)", block).group(1)
             principal = re.search(r"principalId: ([\w.]+)", block).group(1)
+            if path in STANDALONE:
+                identity, scope_names = STANDALONE[path]
+                role_ref = re.search(r"roleDefinitionId: (\w+)", block)
+                inline = re.search(r"roleDefinitions', '(" + GUID.pattern + r")'\)", block)
+                role = inline.group(1) if inline else variables[role_ref.group(1)]
+                found.append((identity, role, scope_names[scope]))
+                continue
             role = re.search(r"roleDefinitions', ('?[\w-]+'?)\)", block).group(1)
             role = role.strip("'") if role.startswith("'") else variables[role]
             identities = ({"token-maintenance"} if principal == "maintenance.properties.principalId"

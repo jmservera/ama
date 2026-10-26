@@ -2837,3 +2837,74 @@ Residual risks and limits:
   restart. This was reviewed as a Low follow-up.
 * The fixture is invented. It is not evidence about real residents, and no human accessibility
   or security review, screen-reader audit or conformance claim is made.
+
+## Synthetic resident showcase (#462)
+
+A separate, read-only web page where a demo resident signs in with a fake `example.com` email and
+one shared demonstration password, then sees only their own invented home record from the existing
+homes SQL database. It is a temporary owner showcase, not resident enrolment, not real resident
+identity and not production authentication. It is a different composition from the loopback-only
+#444 preview above: that preview and its fixture guard are unchanged and are not imported.
+
+* Server: `python -m zava_forward.api.resident_demo`, image `src/api/Dockerfile.resident-demo`
+  (`docker build -f src/api/Dockerfile.resident-demo src`; non-root uid 10001; no data or state
+  volume, no staff, Entra or AI settings, no secret in the image).
+* Configuration (environment only; the server refuses to start on any missing, expired, mixed or
+  unsafe value, and never echoes a value):
+  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, not after 2026-11-01T00:00Z (exclusive, through 31 October UTC)),
+  `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
+  the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
+  `ZF_SQL_DATABASE`, optional `ZF_SQL_CLIENT_ID` for managed-identity sign-in, `PORT`, `ZF_DEMO_BIND`.
+  Any `ZF_STORE*`, `ZF_ENTRA*`, `ZF_AI*`, `AI_*`, `AZURE_OPENAI*`, `ZF_DATA*` or `ZF_STATE*` setting
+  stops start-up. A loopback-only SQL test server may use `ZF_SQL_AUTH=password`.
+* Secrets: the verifier and session key come from a named vault or configuration reference at
+  deployment. Nothing in this repository holds a password or its verifier. Tests use an unmistakable
+  fake constant. A real shared password has not been generated.
+* Sign-in: `POST /demo/login` with CSRF (signed double-submit cookie and header), a same-origin
+  `Origin`, a JSON body of at most 2 KiB, an exact `Host` allowlist and a source-address limiter
+  (5 failures per source, 60 overall per 10 minutes). The source is the TCP peer by default, which
+  is one shared bucket behind an ingress. With `ZF_DEMO_CLIENT_ADDRESS=ingress-rightmost` the source
+  is the last `X-Forwarded-For` entry, which Azure Container Apps ingress appends
+  ([Microsoft Learn ingress overview](https://learn.microsoft.com/azure/container-apps/ingress-overview),
+  retrieved 2026-10-25); earlier entries are client-controlled and ignored. A missing, non-IP, port-
+  or bracket-bearing last entry falls back to the peer bucket (stricter). Use that setting only for
+  direct Container Apps ingress: another proxy in front would make the last entry that proxy
+  (hypothesis, not tested). Residuals: the overall cap can still be exhausted by a distributed
+  attacker, which blocks sign-in until the window passes, and users behind one NAT share a bucket. Wrong
+  password, unknown email and non-example domain all return the same 401 after the same work.
+  Because the password is shared, knowing a showcase email is enough to view that invented record by
+  design. That is why only synthetic allowlisted rows are reachable.
+* Session: `__Host-zfdemo` (HttpOnly) and `__Host-zfdemo-csrf`, both Secure and SameSite=Strict,
+  30 minutes absolute and never past the showcase end. A restart ends every session and logout
+  revokes the session. The session holds an opaque handle, never a case id, email or URL.
+* Reads: every protected request re-reads the case through the allowlist view and re-checks
+  admission, so a revoked, expired, duplicated or unprovenanced row is denied on the next request.
+  The email in the start-up map is bound to the case: a row whose email no longer equals it is denied
+  on login and on every request, including live sessions, until restart. There is no row cache.
+  Adding a resident or changing an email needs a restart. The page shows only the positive-allowlist fields
+  (home address, planned measures, plain-language progress and next step, help, and what is
+  unavailable). Anything else is hidden until it is mapped.
+* SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
+  the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
+  by 2026-11-01T00:00Z (exclusive, through 31 October UTC)), the view and a read-only principal that has SELECT on that view only. The
+  [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
+  only dry-runs unless `--apply` is used from an approved private job.
+* Offline verifier: the owner chooses and keeps the password. Run `(umask 077; python3 infra/scripts/resident_demo_verifier.py > owner-only-file)`
+  (the subshell makes the file mode 0600 from creation) in an interactive terminal on an owner-controlled machine (no arguments). It prompts twice with
+  hidden input, rejects weak or predictable passwords with a generic reason, and prints only the
+  scrypt verifier. The verifier is credential-derived sensitive material: keep it in a password
+  manager or owner-only file and never in chat or git. The plaintext is briefly in process memory;
+  the rules reject predictable patterns and are not proof of strength, so a password-manager random
+  value is recommended. Tests use fake fixtures only; no real password has been entered.
+* Tests: `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests.test_resident_demo_api`
+  (real loopback socket, fake reader and fake password) and, with a loopback throwaway SQL Server
+  (`ZF_TEST_MSSQL=1`, `ZF_SQL_SERVER=127.0.0.1`, `ZF_SQL_PORT`, `ZF_SQL_PASSWORD`),
+  `src/core/tests/test_resident_showcase_sql.py` for the view and principal. The browser check is
+  `ZF_SQL_PORT=... ZF_SQL_PASSWORD=... python -m checks.resident_demo_browser_check`: it drives the
+  real server in Chromium over real SQL with the real `__Host-` cookies, a keyboard-only sign-in, a
+  forged-cookie 401, cross-case denial and logout replay.
+
+Live criteria still blocked (not proven here): remaining budget headroom, live email-to-case
+equality in the homes database, the private job that creates the view and principal, the Key Vault
+secret retrieval role and client, and any deployment. The page is not WCAG conformance evidence.
+

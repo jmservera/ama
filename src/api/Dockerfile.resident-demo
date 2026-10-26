@@ -1,0 +1,38 @@
+# Synthetic resident showcase image (issue 462). Build context is src/:
+#   docker build -f src/api/Dockerfile.resident-demo src
+# Same digest-pinned base and hashed requirements as the staff image. It carries no dataset, no state
+# volume, no staff or AI settings and no secret. Configuration is supplied at run time (see
+# src/api/README.md, "Synthetic resident showcase"); with any setting missing, expired or mixed it exits.
+# python:3.12-slim-bookworm, latest digest verified 2026-10-16. Bump deliberately and re-run the tests.
+FROM python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 AS build
+WORKDIR /build
+COPY build-requirements.txt .
+RUN pip install --no-cache-dir --require-hashes -r build-requirements.txt
+COPY core/pyproject.toml ./core/pyproject.toml
+COPY core/src ./core/src
+COPY agents/pyproject.toml ./agents/pyproject.toml
+COPY agents/src ./agents/src
+COPY api/pyproject.toml ./api/pyproject.toml
+COPY api/src ./api/src
+RUN pip wheel --no-cache-dir --no-deps --no-build-isolation --wheel-dir /wheels ./core ./agents ./api
+
+FROM python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
+# libltdl7 and libkrb5-3 are the runtime libraries the Azure SQL driver (mssql-python, bundled ODBC Driver 18) loads.
+RUN apt-get update && apt-get upgrade -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends libltdl7 libkrb5-3 \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin app \
+    && mkdir -p /app
+WORKDIR /app
+COPY api/requirements.txt .
+RUN --mount=type=bind,from=build,source=/wheels,target=/wheels \
+    pip install --no-cache-dir --require-hashes -r requirements.txt \
+    && pip install --no-cache-dir --no-index --no-deps /wheels/*.whl \
+    && rm requirements.txt \
+    && chmod -R a+rX /usr/local/lib/python3.12/site-packages/zava_forward/api/resident_demo/web
+USER 10001:10001
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8089 ZF_DEMO_BIND=0.0.0.0
+EXPOSE 8089
+# The Host header must be an allowlisted name, so the probe sends the first configured host.
+HEALTHCHECK --interval=30s --timeout=3s CMD ["python", "-c", "import os,urllib.request as u;h=os.environ['ZF_DEMO_ALLOWED_HOSTS'].split(',')[0].strip();u.urlopen(u.Request('http://127.0.0.1:'+os.environ['PORT']+'/healthz',headers={'Host':h}),timeout=2)"]
+CMD ["python", "-m", "zava_forward.api.resident_demo"]

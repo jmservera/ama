@@ -3131,3 +3131,59 @@ Open items (not verified here):
 * Evidence for private-network claims must come from a production-profile deployment (uksouth, Azure only). This change was validated by `az bicep build`, lint and static tests only; no deployment ran. Record the deployment evidence before any claim.
 * Confirm Front Door Premium Private Link support for Container Apps environments in uksouth and its current pricing at deployment time.
 * Custom domain name and DNS ownership, and the pilot edge go/no-go, are owner decisions (ADR 0002 open: pilot network design).
+
+## Synthetic resident showcase SQL boundary (issue 462)
+
+[`sql/resident-showcase.sql`](sql/resident-showcase.sql) is the database side of the synthetic
+resident showcase: schema `resident_showcase` (owned by `dbo`), an empty `allowed_case` table whose
+window cannot end after 2026-11-01T00:00Z (exclusive, through 31 October UTC), the view `v_resident_case` and the grants for one dedicated
+read-only principal. The principal gets SELECT on the view only, no role membership, and explicit
+DENY on `dbo.cases` and on writes, DDL and execute in the schema. SELECT is deliberately not denied at
+schema scope because that would override the view grant.
+[`scripts/resident_showcase_sql.py PRINCIPAL`](scripts/resident_showcase_sql.py) renders it as a dry
+run. `--apply SERVER DATABASE` (and `--create-principal CLIENT_ID`) are for an approved private job
+only; nothing here has been applied to Azure, no allowlist row is inserted, and no role, network or
+Key Vault grant is made. The approved design names the existing vault `kv-cutovertest-rzsrg`, which
+is not a retrieval path: no role or private network route exists for it yet. The cloud deployment
+stays blocked on budget headroom proof and the human approvals recorded in the issue 462 tracking
+files.
+
+[`scripts/resident_demo_verifier.py`](scripts/resident_demo_verifier.py) is the owner-run offline
+tool: it takes no arguments, needs an interactive terminal, reads the demo password twice with hidden
+input and prints only the scrypt verifier (sensitive; keep it out of chat and git). It has no
+network, Azure or vault access.
+
+[`scripts/resident_demo_secrets.py`](scripts/resident_demo_secrets.py) is the owner-run secret
+delivery helper for later use; it has not been run against Azure. It is a dry run by default (local
+validation plus vault metadata only, no value sent); a dry run is not what-if proof, because the
+what-if runs only under `--apply`. `--apply` writes exactly
+`resident-demo-password-verifier` and `resident-demo-session-key` to `kv-cutovertest-rzsrg` in one
+secure ARM deployment, only after a what-if proves two new secrets there, with an expiry no later
+than 2026-11-01T00:00:00Z. The verifier comes from a hidden prompt or an owner-only 0600 file outside
+the repository; the session key is generated at apply time and never printed. It is not an
+authority: it needs a separate exact write approval, cleared budget and a proven private write
+path, and Azure roles remain the enforcing control. A part-failed write is not cleaned up
+automatically; reconcile it under a separate approval. The employee `credential_arm.store` name
+allowlist is unchanged.
+
+The resident demo app has its own template, `infra/resident-demo.bicep`, and command,
+`scripts/resident_demo_deploy.py`. They never use `main.bicep` or `scripts/deploy.py`, so they
+cannot restore the API minimum of two replicas, cron schedules or the event job. The template
+creates only `id-resident-demo`, `ca-resident-demo` (0.25 vCPU, 0.5 GiB, minimum 0, maximum 1,
+image by `@sha256:` digest in the fixed registry, Key Vault references without versions) and three
+role assignments: Key Vault Secrets User on each of the two resident secrets, and AcrPull on the
+registry. It sets the full runtime contract (`ZF_DEMO_*`, `ZF_SQL_*` with managed identity,
+`PORT`) and a scope guard that refuses outside `ama` or an expiry after 2026-11-01T00:00:00Z.
+The Owner ARM secret write needs no extra Key Vault writer role; that path is still unproven
+against the private vault, and no broader role is proposed.
+
+The command is a dry run by default: it runs a what-if and refuses unless every actionable change
+is one of those five resources or the exact nested guard deployment `resident-demo-scope`; no other
+deployment is accepted, and an unverified nested what-if shape is refused. `--apply` repeats it, asks for a typed phrase, deploys, and reads
+back minimum 0 and maximum 1. It is not an authority; it needs a separate approval and a cleared
+cost and headroom check. Stop conditions (all UTC): any minimum replica above 0, a new schedule or
+event, an unexpected resource type, daily `ama` cost well above baseline, or time reaching
+2026-11-01T00:00:00Z. Rollback is a rerun with `--no-ingress`; after expiry, confirm no active
+revision serves traffic. The template default is public ingress, so the first operational stage must pass `--no-ingress`
+until the private-vault and SQL proofs exist. None of this has been validated live: tests use a
+fake CLI and the compiled template only. Image builds, logs and egress costs are not estimated here.

@@ -1,0 +1,175 @@
+{
+  "task_id": "resident-azure-showcase-462",
+  "task_slug": "resident-azure-showcase-462",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-26/resident-azure-showcase-462-execution-readiness-plan.md",
+    "details": ".copilot-tracking/details/2026-10-25/resident-azure-showcase-462-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-azure-showcase-462-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-26/resident-azure-showcase-462-execution-readiness-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-execution-readiness-review.md",
+    "research_extension": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-preflight-extension.md",
+    "local_slice_research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-local-slice-research.md",
+    "local_slice_plan": ".copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-local-slice-plan.md",
+    "local_slice_details": ".copilot-tracking/details/2026-10-25/resident-azure-showcase-462-local-slice-details.md",
+    "local_slice_critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-azure-showcase-462-local-slice-plan-critique.md",
+    "retrieval_research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-retrieval-research.md",
+    "retrieval_plan": ".copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-retrieval-plan.md",
+    "retrieval_critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-azure-showcase-462-retrieval-proposal-critique.md",
+    "retrieval_proposal": ".copilot-tracking/changes/2026-10-25/resident-azure-showcase-462-retrieval-proposal.md",
+    "corrections_research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-corrections-research.md",
+    "corrections_plan": ".copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-corrections-plan.md",
+    "corrections_details": ".copilot-tracking/details/2026-10-25/resident-azure-showcase-462-corrections-details.md",
+    "corrections_critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-azure-showcase-462-corrections-plan-critique.md",
+    "corrections_changes": ".copilot-tracking/changes/2026-10-25/resident-azure-showcase-462-corrections-changes.md",
+    "corrections_review": ".copilot-tracking/reviews/2026-10-25/resident-azure-showcase-462-corrections-review.md",
+    "release_preflight_plan": ".copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-release-preflight-plan.md",
+    "release_preflight_evidence": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-release-preflight-evidence.md",
+    "release_preflight_review": ".copilot-tracking/reviews/2026-10-25/resident-azure-showcase-462-release-preflight-review.md",
+    "gate_correction1_research": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-gate-correction1-research.md",
+    "gate_correction1_plan": ".copilot-tracking/plans/2026-10-25/resident-azure-showcase-462-gate-correction1-plan.md",
+    "gate_correction1_changes": ".copilot-tracking/changes/2026-10-25/resident-azure-showcase-462-gate-correction1-changes.md",
+    "gate_correction1_review": ".copilot-tracking/reviews/2026-10-25/resident-azure-showcase-462-gate-correction1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; planning readiness Ready, implementation not ready",
+      "status": "done",
+      "evidence": "research artifact, Planning readiness"
+    },
+    {
+      "decision": "Critique executed once before implementation, verdict REVISE, four findings accepted and applied as dated amendments",
+      "status": "done",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Authority is research and plan only until #444 / PR #455 merges; no runtime code, cherry-pick, stacking, deploy or credential generation",
+      "status": "confirmed",
+      "evidence": "owner/coordinator instruction 2026-10-25"
+    },
+    {
+      "decision": "Review not executed: no implementation exists, so no review of changes can be original or genuine",
+      "status": "pending",
+      "evidence": "no changes artifact"
+    },
+    {
+      "decision": "Commit 5963fa3f was pushed without the required full gate; preserved, no rewrite, no further push until the gate is verified; disclose in changes; owner disposition pending",
+      "status": "deviation-disclosed",
+      "evidence": "preflight extension, Chronology disclosure"
+    },
+    {
+      "decision": "Local slice critique executed once (REVISE, PC-001..PC-005 applied)",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-25/resident-azure-showcase-462-local-slice-plan-critique.md"
+    },
+    {
+      "decision": "Local slice implemented; focused tests, lint, type, local SQL, Docker build and browser check passed; heavy gate not run",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-10-25/resident-azure-showcase-462-local-slice-changes.md"
+    },
+    {
+      "decision": "Review executed once; outcome Conformant with follow-ups (1 Medium, 1 Low)",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-10-25/resident-azure-showcase-462-local-slice-review.md"
+    },
+    {
+      "decision": "Owner 2026-10-25 accepted the disclosed ungated 5963fa3f push deviation; clears only that process hold, no technical gate, no retrospective compliance",
+      "status": "recorded",
+      "evidence": "owner instruction"
+    },
+    {
+      "decision": "Retrieval proposal researched, planned, critiqued once (Revise, applied); awaiting owner approval; nothing executed",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-10-25/resident-azure-showcase-462-retrieval-proposal.md"
+    },
+    {
+      "decision": "Owner approved Option C (owner-held password, offline verifier tool, sharing Only me); corrections research, plan, critique (Revise, applied once) and implementation done locally; one original review Conformant with no findings; Medium limiter and Low stale-email corrected locally with disclosed residuals; no real password, push or cloud action",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-10-25/resident-azure-showcase-462-corrections-review.md"
+    },
+    {
+      "decision": "Release preflight evidence (read-only) done 2026-10-25; raw retained privately outside repo; one review request-changes applied; budget: thin conditional release, stop at all-in reported 27.8; not a clearance",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-10-25/resident-azure-showcase-462-release-preflight-evidence.md"
+    },
+    {
+      "decision": "Gate-failure correction cycle 1 (optional SQL driver collection, honest sign-out, image and browser targeted checks)",
+      "status": "critique request_changes applied; one original review Conformant; local only",
+      "evidence": "2026-10-25T23:30Z; failed 581ebda0 receipt retained and stale; fresh full gate awaits coordinator admission"
+    },
+    {
+      "decision": "Correction cycle 2: mypy override for mssql_python in core; review Conformant",
+      "status": "reviewed",
+      "evidence": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-correction2-review.md"
+    },
+    {
+      "decision": "Secret-delivery helper slice 2026-10-26: critique Revise (PC-001..004 dispositioned), one independent Review Conformant (4 Low routed later); local commit only, no gate, no cloud",
+      "status": "recorded",
+      "evidence": "plan, changes and review artifacts above"
+    },
+    {
+      "decision": "Helper correction 1: SH-001 diagnosed as stale editable paths in a retained env, no runner change; Low1/3/4 fixed; independent review Conformant",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/*/2026-10-26/*correction1*"
+    },
+    {
+      "decision": "13:14Z owner approval: continue publication (late plan accepted only for that); bounded Azure execution, up to USD5 additional to 2026-10-31, ama only, min0, STOP if cost headroom unprovable",
+      "status": "recorded",
+      "evidence": "coordinator message 13:16Z"
+    },
+    {
+      "decision": "Read-only readiness pass 13:16-13:35Z: fresh cost 30.8926 upper bound, ACA paused verified, one critique Revise (expiry 12Z blocker); no mutation",
+      "status": "recorded",
+      "evidence": "/home/azureuser/.ama462-evidence/release-readiness-2026-10-26-1316/readiness-assessment.txt"
+    },
+    {
+      "decision": "Local source stage 13:3xZ: cutoff 2026-11-01T00:00Z exclusive, resident-only template and command",
+      "status": "implemented locally; one independent review: one Low, fixed",
+      "evidence": ".copilot-tracking/reviews/2026-10-26/resident-azure-showcase-462-execution-readiness-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "G5",
+      "summary": "#444 / PR #455 open, rubric/score failing 72/100 vs 73/100",
+      "resolution": "Coordinator corrects the evidence in the same-session #444 work; merge; coordinator resumes this session with the merge SHA"
+    },
+    {
+      "id": "G1",
+      "summary": "Conservative bound: all ama spend since 2026-10-24T13:39Z projected to 2026-10-26T12:00Z is about USD 47.75 (22.39 reported, lagging), leaving at most about USD 2.25; narrower incremental reading unprovable without owner baseline and itemised ledger. Hard block on all cloud steps",
+      "resolution": "Coordinator or owner supplies the ledger; cost record then written before any paid mutation"
+    },
+    {
+      "id": "G2",
+      "summary": "Seed 20260901 regenerated offline, counts only: 980 cases, 524 emails all example.com, 523 distinct, 1 duplicate pair excluded, 522 uniquely mappable; live equality unverified (private SQL)",
+      "resolution": "Counts-only probe in an approved private path, or owner decision on an external authoritative mapping; fail closed otherwise"
+    },
+    {
+      "id": "G3",
+      "summary": "VM identity has Owner on ama only; SQL admin is id-cutover-test-init so view/principal need a private job run as that identity (approval, cost); no SQL access from here",
+      "resolution": "Owner or coordinator confirms authority and approves the view"
+    },
+    {
+      "id": "G4",
+      "summary": "Vault private-only, Deny, purge protection off, soft delete 7 days; no existing human secret-read route; owner route needs named approval. Local implementation not blocked by G2-G4",
+      "resolution": "Scoped time-bound Secrets User on the single secret plus private route, or coordinator private job"
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "Coordinator assessment; cloud stages need G1 headroom, G2 provenance, G3 SQL, G4 private-vault write proof, fresh gate and hosted checks"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Resolve G1 to G4 and run the complete exact-head gate",
+      "rationale": "all deployment remains blocked on them",
+      "evidence": ".copilot-tracking/changes/2026-10-25/resident-azure-showcase-462-corrections-changes.md"
+    }
+  ]
+}

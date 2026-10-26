@@ -67,6 +67,11 @@ module = ["zava_forward.core.chat_panel", "zava_forward.core.rule_engine",
           "zava_forward.core.source_monitor", "zava_forward.core.forms"]
 disallow_untyped_calls = false
 
+# Optional SQL driver (the sql extra); core CI and the isolated gate venv install core without it.
+[[tool.mypy.overrides]]
+module = ["mssql_python"]
+ignore_missing_imports = true
+
 [tool.setuptools.package-data]
 "zava_forward.core" = ["policies/*.json", "law/*.json"]
 

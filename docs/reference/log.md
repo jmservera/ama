@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-24
+ms.date: 2026-10-25
 ms.topic: reference
 ---
 
@@ -7143,6 +7143,42 @@ metadata when the knowledge base was created.
 * Reuses the existing case and domain store behind a resident-owned positive-allowlist view and a default-deny server-side grant. PR 442 was read as unsigned input only. No staff server, auth, projection or store file changed.
 * Not resident enrolment, not a live service, no real data. Live Azure/SQL/real-AI acceptance stays a separate later gate; #444 criteria stay open until proven on the final head.
 
+## [2026-10-25] update | Synthetic resident showcase local slice documented (#462)
+
+* Documented the local, unpublished implementation of the fake-email synthetic resident showcase: pure domain and read-only SQL adapter in [core](../../src/core/README.md#synthetic-resident-showcase-boundary-462), server, image and checks in the [API README](../../src/api/README.md#synthetic-resident-showcase-462) and the SQL view and read-only principal in the [infra README](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462).
+* Separate from the #444 loopback preview, whose guard is unchanged. No real password, secret, Azure or live SQL access was used. Cloud deployment, budget headroom, live email equality, the private SQL job and Key Vault retrieval stay blocked. Not resident identity, not enrolment.
+
+## [2026-10-25] update | Synthetic resident showcase review corrections (#462)
+
+* Added the corrections for the #462 local slice review findings: a limiter source option for direct Container Apps ingress (`ZF_DEMO_CLIENT_ADDRESS`, last `X-Forwarded-For` entry only, peer fallback), login and per-request email binding to the start-up map, and an owner-run offline hidden-input verifier tool. See the [API README](../../src/api/README.md#synthetic-resident-showcase-462) and the dated RPI artifacts `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-corrections-*`.
+* Local only: no push, no real password generated or entered, no Azure or live SQL access. Budget, live equality, SQL view and principal, and vault write path stay open. Earlier log entries are unchanged.
+
+
+## [2026-10-25] update | Issue 462 release preflight cost and path evidence
+
+* Added read-only release preflight evidence for #462 (refreshed Cost Management ledger, baseline versus changed resources, priced minimal deployment, principal and vault path metadata) under `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-release-preflight-*`. Raw non-secret metadata is kept privately outside the repository with a hash manifest.
+* Not budget clearance and no Azure change; the cumulative USD 50 cap is not reset. Earlier log entries are unchanged.
+
+## [2026-10-25] update | Issue 462 gate-failure correction cycle 1
+
+* Fixed the optional SQL driver import that broke core test collection in the failed local gate, made the demo sign-out report success only on a confirmed response, and added targeted browser (sign-out failure) and `Dockerfile.resident-demo` image checks. See the dated RPI artifacts `.copilot-tracking/*/2026-10-25/resident-azure-showcase-462-gate-correction1-*`.
+* The failed gate receipt is retained and stale; the generic runner still does not cover these checks. Local only: no push, no Azure, no real password. Earlier log entries are unchanged.
+
+## 2026-10-26 issue 462 correction cycle 2
+
+Added a module-scoped mypy ignore_missing_imports override for the optional mssql_python driver in src/core/pyproject.toml after gate-2 failed mypy. Plan, changes and review are under .copilot-tracking/*/2026-10-26/. Gate-2 receipt remains failed and retained.
+
+## 2026-10-26 issue 462 owner-local secret delivery helper
+
+Added infra/scripts/resident_demo_secrets.py and a fixed-name store_resident_demo path in credential_arm.py for the two resident demo secrets (dry run default, typed-phrase apply, expiry cap, fake-fixture tests). Plan, changes and one independent Conformant review are under .copilot-tracking. Tool authoring only: no Azure write, no real password, verifier or session key, no gate. The gate 4 receipt is stale for the new head; budget, provenance, SQL principal and private-vault write path remain open.
+
+## 2026-10-26 issue 462 secret helper correction 1
+
+FIFO-safe verifier file open, stronger malformed-value assertion and README dry-run wording. The reported namespace-env import failure traced to stale editable paths in a retained gate env; the runner reinstalls the projects, so no runner change. Local only: no gate, push or Azure.
+
+## 2026-10-26 issue 462 execution-readiness local stage
+
+Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff across core, SQL, secret helper, docs and tests. Added the resident-only infra/resident-demo.bicep and infra/scripts/resident_demo_deploy.py (what-if deny guard, min 0 / max 1, no main stack or schedules). Local only; no cloud action. See the 2026-10-26 execution-readiness plan, changes and review under .copilot-tracking.
 ## 2026-10-25 query | Presentation Paper and Journey Story Review
 
 * Updated the owner-selected 54-slide Cowork v2 PPTX and native PDF with

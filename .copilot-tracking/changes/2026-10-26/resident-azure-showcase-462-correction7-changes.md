@@ -1,0 +1,3 @@
+# Changes: correction 7 (#462), 2026-10-26
+Implemented as in the plan. The first real-SQL run had one failing assertion of mine: public CONNECT is not a stored public grant (default public database-scope grants are only the two VIEW ANY COLUMN ... KEY DEFINITION); the assertion was corrected and the full class passed (27 tests, 0 skipped on the live run).
+Results: core mypy strict, ruff check and format clean; real-SQL class 27 OK on a throwaway mssql 2022 container (removed afterwards, heavy lock held); api resident 50+ OK; infra OK; node --check OK. Full gate not run; the d91302ea receipt is historical for the new head.
