@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-26T20:55:18+00:00",
-  "commit": "91cd24c89004a8aa335fa3aa47c95ee9eea9cf3c",
+  "scored_at": "2026-10-26T21:31:23+00:00",
+  "commit": "4f4ddcaf7a8652f7c0e9b80df18c849c537d47c9",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40398943501",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40404322618",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "f442083baa9d101f89813d721feab6183ff173818b9f4b4056e63adaa80f0c51",
-    "infrastructure": "299f7dc027db51c4d9befe4b0b8b145878dd87e4b50207bfcbb9bf3eb925ac6f",
+    "solution-code": "b6bd6d1169b115df3cee4df0753711c8d269e016b03a1a39ec8ad992eaaf9557",
+    "infrastructure": "c8e0fcc80f8f86e44fb427540e1a648fbd9b46b853e8e238a01590d96f28ed58",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_showcase.py:1-10",
-        "src/api/src/zava_forward/api/resident_demo/app.py:1-6"
+        "src/api/src/zava_forward/api/resident_preview/app.py:1-20",
+        "src/core/src/zava_forward/core/resident_preview.py:1-10"
       ],
-      "rationale": "New resident_showcase domain module is pure/dependency-free; app.py adapter depends on it, never reverse. Clean separation from staff server and #\u200b444 preview. Reinforces ceiling; unchanged."
+      "rationale": "New resident_preview module is a cleanly isolated, decoupled boundary (core domain logic separate from api transport), reusing no staff server/auth code. Reinforces existing ceiling; already Excellent."
     },
     "A2": {
       "score": 5,
@@ -44,37 +44,36 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:2854-2862",
-        "infra/sql/resident-showcase.sql:47-52",
-        "src/api/src/zava_forward/api/resident_demo/app.py:35-49"
+        "src/api/README.md:2790-2840",
+        "src/core/src/zava_forward/core/resident_preview.py:476-512"
       ],
-      "rationale": "Adds documented controls (CSRF double-submit, strict CSP/cookie flags, deny-first SQL grants, re-check-on-every-request admission) matching the existing threat-model style. Reinforces already-excellent baseline; unchanged."
+      "rationale": "Adds a documented threat model (assets, trust boundaries, per-threat control/evidence table) and default-deny safe_start guarding env, loopback and file provenance. Strong defensive evidence, already at ceiling."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_resident_demo_api.py:1-50",
-        "src/core/tests/test_resident_showcase.py:1-50",
-        "infra/tests/test_resident_demo_deploy.py:1-50"
+        "src/api/tests/test_resident_demo_api.py:1-581",
+        "src/core/tests/test_resident_showcase.py:1-474",
+        "infra/tests/test_resident_demo_deploy.py:1-335"
       ],
-      "rationale": "New feature ships with unit tests, HTTP integration tests, SQL adapter tests, infra what-if tests and a browser check; gaps (budget, live SQL, deployment) are proactively disclosed. Already at ceiling; unchanged."
+      "rationale": "New resident-demo feature ships complete: scrypt sign-in, CSRF, rate limiting, SQL view, unit/integration/SQL/browser checks, and Bicep infra with tests. Already at ceiling; evidence reinforces unchanged score."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "src/api/README.md:2865-2866"
+        "src/api/README.md:2838-2844"
       ],
-      "rationale": "New showcase documents disclosed limits (no deployment, budget headroom unproven) but adds no structured logging, metrics or measured cost/performance for the scored system. Unchanged."
+      "rationale": "Threat model honestly documents the preview has no request log, rate limit or concurrency bound as a residual risk, but no new metering, cost or reliability instrumentation is added for the scored system. Unchanged."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; resident showcase is non-AI CRUD-style sign-in over SQL. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static preview/demo. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No new agentic orchestration; resident showcase is a static, non-agentic HTTP sign-in/read view. Unchanged."
+      "rationale": "No new agentic orchestration introduced; resident demo is a static read-only HTTP sign-in view with no agent involvement. Unchanged."
     },
     "B1": {
       "score": 3,
@@ -112,8 +111,11 @@
     },
     "B6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This diff touches only infrastructure and solution code, not the capstone deck or documentation narrative; no change to written-communication evidence. Unchanged."
+      "evidence": [
+        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
+      ],
+      "rationale": "No deck or capstone documentation files changed in this diff (only infra/src/api/src/core resident-demo code). Baseline Excellent retained unchanged."
     },
     "B7": {
       "score": 5,
