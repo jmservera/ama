@@ -68,3 +68,12 @@ a cowork-native-recovery tool and the bot rubric score files; none touch residen
 normal merge (no rebase or amend), taking main's actual bot `.github/rubric/scores/latest.json`
 and badge, preserving both sides of README and log entries. No unmerged sibling (PR437) is merged.
 Stop if any other file conflicts. The old gate receipt is not valid for the merged head.
+
+## Prospective note: merge origin/main fcf7e127 (2026-10-26T14:11Z, before merging)
+
+GitHub main (ls-remote and fetch agree) is fcf7e12735c9e4e69f83df9d643ec8e28a981409, containing
+merged runner fix PR437. Non-doc changes: tools/rpi-checks.py, tools/test_rpi_checks.py, the tenant
+readiness preflight script and test, and the bot rubric score file. None touch resident source.
+Plan: normal merge (no rebase or amend), take main's bot latest.json, keep both sides of log.md,
+run the cheap runner and resident tests, then prepare an external gate plan and new candidate.
+No full gate until coordinator admission. No push, cloud, SQL or secret work.
