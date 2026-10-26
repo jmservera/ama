@@ -60,3 +60,11 @@ each is accepted, plus an unknown nested deployment refused. Docs state the firs
 stage must use --no-ingress until private-vault and SQL proof exist; no live validation is claimed.
 The original independent review and its Low finding are preserved; no new review is fabricated.
 Then a normal merge of fresh origin/main with a prospective note, taking main's bot latest.json.
+
+## Prospective note: merge fresh origin/main (2026-10-26T13:48Z, before merging)
+
+origin/main is acafc6ee. Its changes beyond docs are an ama scientific paper agent, requirements.txt,
+a cowork-native-recovery tool and the bot rubric score files; none touch resident source. Plan: a
+normal merge (no rebase or amend), taking main's actual bot `.github/rubric/scores/latest.json`
+and badge, preserving both sides of README and log entries. No unmerged sibling (PR437) is merged.
+Stop if any other file conflicts. The old gate receipt is not valid for the merged head.

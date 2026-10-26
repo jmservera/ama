@@ -1,23 +1,487 @@
 ---
-title: Everything but the Software - arXiv source package (draft v3)
-description: Exploratory case study, author clarifications and registration-pending experiment protocol
-ms.date: 2026-10-25
+title: Everything but the Software - source package (draft v5)
+description: Developmentally revised case, bounded candidate explanations and prospective exploratory consolidation protocol
+ms.date: 2026-10-26
 ---
 
-Working title: *Everything but the Software: How Coding Agents Accelerate Feature-Driven Decay. An Exploratory Case Study and an Experiment Protocol.*
+Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
-## Current status
+## Current Status
+
+The compounding-error evidence integration below is the latest source record.
+The owner's preferred subtitle and prospective decay-measurement proposal
+remain in place: decay is the hypothesis motivated by a small observational
+base, not an established case result. No experiment results are added. The
+private tagged study kit was not inspected, amended or executed.
+
+The latest external validation build is 45 pages, under
+`/tmp/ama-paper-compounding-P8QOXK/`. Earlier builds below are historical.
+The workspace PDF regenerated during source editing; preservation of its
+initial bytes cannot be claimed. It was not restored over the modified copy.
+The arXiv bundle is not refreshed.
+
+## Compounding-Error Evidence 26 October
+
+The owner requested sources and evidence for compounding error in AI and
+agentic development. The main background now distinguishes accumulating
+failures from an inherited error making later work more failure-prone, and
+separates four kinds of evidence rather than treating them as one result.
+
+This was a bounded primary-source check, not a systematic review. Discovery
+used the arXiv query `compounding errors coding agents`, with the first 25 of
+31 returned records inspected for relevance, plus references from Sinha et al.
+Sources after 26 October 2026 were outside scope. The default research skill's
+Parallel CLI was unavailable; direct primary-page retrieval was used instead.
+No manuscript or private study material was sent to a search service.
+
+The following support states refer to assistant-inspected passages on
+26 October 2026, not independent human verification or replicated experiments.
+
+| Source and inspected version | Claim and genuine locator | Evidence state and interpretation limit |
+| --- | --- | --- |
+| [Zhang et al., arXiv:2305.13534v1](https://arxiv.org/html/2305.13534), 22 May 2023 | Sections 3.1-3.4: wrong QA answers accompanied by false justifications that the same model often rejects in a separate session | Full-text support for scoped snowballing claims; two 2023 models and QA, not code generation or repository propagation. No forced-wrong-prefix experiment is attributed to this study |
+| [Sinha et al., arXiv:2509.09677v3](https://arxiv.org/html/2509.09677v3), 13 March 2026 | Section 3.2 and Figures 5-6: controlled variation of errors in prior histories changes subsequent state-update accuracy; Qwen3 thinking models avoid the effect in this setup | Full-text support, including methods, results and figure captions; synthetic execution task, not a repository-decay estimate. Thinking-model counter-evidence is retained |
+| [Laban et al., arXiv:2505.06120v1](https://arxiv.org/html/2505.06120v1), 9 May 2025 | Sections 3.3 and 6.1, Table 1, Appendix F.1-F.2: sharded/concatenated controls, relative performance loss, early-answer associations and answer bloat | Full-text support for the specified comparisons and diagnostic analyses; simulated conversations, not natural-user observations or a defect-specific coding intervention |
+| [Pan et al., arXiv:2610.14768v1](https://arxiv.org/html/2610.14768v1), 10 October 2026 | Section 2.5; Sections 4.1-4.2, Tables 2-3; Section 5.1, Figure 5: paired history comparison, downstream resolution costs, selected clean-history subset and reuse of defective string-splitting logic | Full-text support for the scoped numerical and example claims; preprint, short Python maintenance chains and no reproduced application run. Clean-history conditioning is not a randomised repair experiment |
+
+The Laban version has an internal reporting discrepancy: its abstract and
+Section 6.1 report an average 39% relative drop, whereas the Figure 1 teaser
+caption says 35%. The manuscript attributes 39% to the main results/Table 1;
+it is neither a percentage-point loss nor a defect rate. This check does not
+resolve the authors' intended teaser figure or independently reanalyse the
+simulation outputs.
+
+SlopCodeBench v2 metadata and abstract were retrieved, but meaningful full-text
+extraction failed; the attempted multi-agent-failure HTML retrieval also failed.
+Their existing contextual citations are not upgraded to fresh full-text
+verification. SWE-CI and the randomised maintainability study remain contextual
+citations, not newly audited results in this pass. Numeric claims from other
+studies remain under the existing author-verification boundary.
+
+Zhang's metadata was extracted with the citation skill's arXiv parser and
+cross-checked with the primary abstract/full-text pages; the arXiv DOI was
+confirmed on the abstract page. No journal reference was supplied by the
+inspected arXiv metadata, so the added citation identifies that preprint rather
+than inventing a venue. Both bibliographies include the new entry and pin
+the inspected Sinha, Laban and Pan versions. The structural checker passes
+with 108 matching cited/embedded/BibTeX keys and results disabled.
+
+The proposed measurement section also adds fault-lineage annotation: a
+distinct later failure needs code/diff and execution evidence linking it to
+an inherited fault. Repeatedly failing the same test is persistence, not a
+new propagated error. A matched faulty-versus-repaired snapshot comparison
+remains a separately resourced prospective extension. Existing arms, numerical
+H1-H7 criteria, sample sizes and budgets are unchanged; the private kit was
+not inspected or executed.
+
+The external build has no TeX warnings, unresolved references or underfull/
+overfull boxes. The changed background on pages 3-4 and measurement note on
+page 26 were visually inspected. These checks do not establish scientific
+acceptance. No experiment, commit, push, registration or submission was run.
+
+## Software Evolution Prose Restoration 26 October
+
+At the owner's request, the opening paragraph of "Software that only grows"
+is restored verbatim, including its historical narrative and cited estimates.
+A separate short paragraph retains the limits of the evidence and the
+distinction between motivating decay as a hypothesis and demonstrating it.
+The source checker passes with 107 matching references; the external build
+has no TeX warnings and the restored passage was visually checked on page 3.
+This is not new original-source verification of the statistics, which remains
+pending under the manuscript's existing disclosure.
+
+## Subtitle and Decay Measurement Follow-up 26 October
+
+The owner requested restoration of *Feature-Driven Decay* and notes designing
+the exercise to measure that hypothesis. The manuscript now includes a
+proposed measurement amendment, not a claim about the private runner:
+
+* Freeze a contract panel and eligibility map. Track previously passing,
+   unchanged behaviour after each feature and again after consolidation/review.
+* Record open losses, exposure-normalised density, onset, recurrence,
+   recovery and duration. Distinguish never-implemented behaviour, same-cycle
+   post-feature damage, rejected/reset attempts and missing measurements.
+* Interpret loss counts with their risk sets and full functional coverage;
+   incomplete implementations must not look healthy because they have fewer
+   contracts to lose. Runs remain the independent analysis units.
+* Compare structural trajectories with stage-matched cumulative references
+   to distinguish required feature complexity from excess deterioration. The
+   reference-gap analysis supplements rather than silently replaces H3.
+* Separate final changeability from changeability decline over time. An
+   optional repeated core-contract change on disposable early/late snapshots
+   needs an additional probe, sessions, budget and prospective approval; it
+   is not part of the existing 212-session first pass.
+* State rival and disconfirming patterns, including stable retention,
+   reference-matched growth, acquisition-only benefits and unstable oracles.
+   The existing arms do not identify feature accumulation against a randomised
+   no-feature control.
+
+H1-H7 numerical criteria, existing arms, budgets and sample sizes are unchanged.
+The H2 count interpretation and new measurement definitions require a versioned
+reconciliation with the private kit before fresh runs. No existing tag or
+earlier-run label is rewritten, and no new empirical observation is asserted.
+
+The structural checker passes with 107 matching citation keys, results disabled
+and a 1,848-character source abstract. Shell-escape-disabled compilation has
+no warnings, unresolved references or underfull/overfull boxes. The restored
+title, measurement pages 25-26 and updated pre-run table were visually inspected.
+An editor diagnostic still requested a cross-reference rerun from its separate
+build state; that is distinct from the clean external validation log.
+
+The workspace PDF hash changed from
+`15eaff90df23a95ff528fe23d923ebcc40e20bbf79c5e8b49955fa982ac3c6d7`
+at intake to
+`2df76caf48edf2e1e866e11fa115e310c78d9eb65bad06990fbc37d61774160f`
+during editing. The pre-explicit-build backup has the latter hash, so it is
+not a byte-preserved intake copy. No PDF was reverted. Existing staged work
+remains staged; no commit, push, registration or publication is performed.
+
+## Developmental Revision 26 October
+
+The owner authorised the recommended manuscript revisions on the existing
+branch while preserving other uncommitted work. The revision:
+
+* Replaces the causal decay subtitle with delivery-usability divergence and
+   consistently qualifies the unmatched score/release/capability comparison.
+* Shortens background and repeated practitioner discussion, moves selected
+   external repository observations to an appendix and places case validity
+   beside the five candidate mechanisms. The full rival register remains in
+   an appendix; practices sit in the discussion.
+* Names H1 as final functional coverage, distinguishing acquisition, retention
+   and repair. H5's wording describes bounded overhead and late-feature savings,
+   not monetary payback. Endpoints, thresholds, arms, sample and budgets are
+   unchanged.
+* Adds the intended procedural sequence and an unresolved pre-run decision
+   table covering evaluator feedback, failed-feature continuation, outages,
+   analysis, H4/H7, resource caps and human-help telemetry. These are not
+   verified runner behaviour or newly approved scientific choices.
+* Normalises Figure 1's lower panel to daily hedge matches per 1,000 words.
+   Zero-word days have undefined density, not a fabricated zero rate. Figure 2
+   uses dashed hypothetical links, marks context effects unmeasured and
+   distinguishes proposed human checkpoints from the consolidation experiment.
+* Shortens the human-learning research agenda and AI-assistance disclosure
+   while retaining human responsibility and verification limits. Earlier
+   revision histories and source-access limits below are preserved.
+
+The body is about 14,500 words, down from approximately 17,454, using the
+existing checker: introduction through conclusion, including tables but
+excluding abstract, references and appendices. Case methods begin on page 5
+of the external build rather than page 8 of the prior build. The 107 cited,
+embedded and reusable bibliography keys still match. All seven existing
+tooling tests pass. Final shell-escape-disabled compilation has no warnings,
+unresolved references or underfull/overfull boxes. Whole-document contact
+sheets and full-size changed figures, title, hypothesis and pre-run pages
+were inspected. Visual and structural checks do not establish accessibility
+conformance or scientific acceptance.
+
+The preserved workspace PDF's SHA-256 is
+`2e97f6eeea3ef2aa30817fd953fa888bd22ddfa75b3a86d50aa4a22c4f481cdc`,
+unchanged between the preservation check and build validation. Existing
+staged README/log changes remain staged; this revision does not stage,
+commit, push or submit anything. Full RPI publication gates and independent
+exact-head assessment have not run.
+
+The release-linked case evidence package, original-source checks, actual
+private-kit provenance and information boundaries, pre-run statistical
+decisions, registration and publication permissions remain unresolved.
+No source capture, independent corroboration or approval is fabricated.
+
+## Historical Status Before 26 October
+
+The repository-context revision below is the latest source record. It adds
+bounded observations from Aithena, Squad and PhotoCraft without changing the
+title, subtitle, author affiliation or H1-H7 experiment. AMA remains the
+single principal case; these selected examples are not comparative results.
+
+The table-flow revision below supersedes earlier confirmatory first-pass
+wording and PDF-handling instructions. The title and subtitle are unchanged.
+The four-runs-per-arm first pass is now explicitly exploratory; any later
+confirmatory study needs a separately specified prospective analysis plan.
 
 The 25 October author clarification supersedes the earlier method and study
 descriptions below. Execution is paused. The author reports tagging the protocol;
 the exact snapshot and completed registration remain to be supplied. Earlier
 runs retain their original labels and timestamps and will not enter the fresh
-registered confirmatory analysis. No study results are reported.
+first-pass analysis. No study results are reported.
 
 The separate private experiment kit is the intended study record. The ancillary
 MVE notes here are earlier proposals, not the frozen or registered protocol.
 Do not overwrite the tagged kit with these copies. Registration preparation is
 deferred; public release and external deposits remain subject to permission.
+
+The source is now the critique-revised draft v4. The earlier workflow did not replace
+the PDF with its external build or refresh the arXiv bundle. A separate
+workspace build regenerated the PDF during editing; the owner then explicitly
+selected leaving that current PDF untouched. Pre-edit PDF preservation cannot
+be claimed. The external compilation is validation output, not a submission
+package.
+
+## Reader Layout and Developmental Revision 25 October
+
+This historical revision narrowed the subtitle to delivery-signal/usability
+divergence, adjusted the narrative and table placement, and retained the
+exploratory protocol without changing its hypotheses, thresholds, budgets or
+sample. Its external 43-page PDF was reported without compiler warnings or
+unresolved references; rendered-page and table-proximity checks were performed.
+The structural check recorded 104 matching references. The later table-flow
+revision below supersedes this build's layout and PDF evidence.
+
+## Repository Context and Hypothesis Revision 25 October
+
+The author clarified that the hypothesis predates AMA. Aithena's maintenance
+difficulty is retrospective author testimony, not an independently measured
+complexity trajectory. The expectation that HVE's research, plan critique
+and implementation review would improve on simpler workflows is identified
+as an expectation, not an established framework advantage.
+
+The [minimised observation record](./anc/repository-observations-2026-10-25.json)
+retains source SHAs, queries, counts, sampling rules, claim locators and
+exploratory rivals/predictions. It excludes reporter identities, raw issue
+bodies, attachments, private standards and proprietary application material.
+Public project code was inspected narrowly, not executed. No unspecified
+Microsoft Office clone was selected or treated as evidence.
+
+| Source | Inspection boundary | Supported observation and qualification |
+| --- | --- | --- |
+| [PhotoCraft](https://github.com/storytold/photocraft/tree/5bb853654196eca807212ff8955ba2eb293071ea) | Pinned `main`; README/agent instructions, CI, architecture, scorecard, gap/parity records, menu-count implementation; 15 declared bug reports and two selected PR bodies | A Photoshop reimplementation, not the entire Adobe suite. Its 631/631 menu count checks recognised command/tool/UI paths, not execution of every reference workflow. Its own 10 October assessment distinguishes about 76% breadth from about 45% readiness; these are historical, partly subjective project estimates |
+| [Aithena](https://github.com/jmservera/aithena/tree/f27aa2e9f949ea76f2a437249e68b52670a22835) | Pinned `dev`; Squad records, verification script, six selected audit reports, two narrow source traces and all open-PR metadata | Review/retrospective/quality-gate machinery exists. Active preflight tests coexist with unconditional Phase 3 scenario skips; the indexer acknowledges in a `finally` block. No runtime failure, lost document or measured maintainability effect is claimed |
+| [Squad](https://github.com/bradygaster/squad/blob/481c944596abfa2053e2acd88d765639f994d795/README.md) | Corrected repository, pinned `dev` README | Persistent learning and human-led accountability are explicit; current documentation is not historical-version evidence for Aithena |
+
+At the 25 October 2026 22:52:26 UTC count query:
+
+| Tracker category | PhotoCraft | Aithena |
+| --- | --- | --- |
+| Open issues excluding PRs | 2,060 | 34 |
+| Open issues with exact `bug` label | 212 | 3 |
+| Closed issues | 2,604 | 705 |
+| Open PRs | 1,091 | 35 |
+| Merged PRs | 3,189 | 842 |
+| Closed-unmerged PRs | 610 | 240 |
+
+The complete PhotoCraft open-PR inventory contains 49 drafts. REST's combined
+`open_issues_count` is not a bug count. The bug-body sample consists of the
+ten newest and five oldest open bug-labelled issues by creation time, not a
+representative defect sample. Selected reports cover printing, PSD opening,
+platform differences and network-share prompts; the latter explicitly says
+the file saves. Some reports are duplicates or need clarification. Issue
+labels, open state and pinned source refer to different kinds of evidence;
+the separate live API requests are not an atomic snapshot.
+
+Counter-evidence is retained rather than omitted: meaningful corpus and
+layer checks, fixed gaps and large merged output; PhotoCraft PR #9552's
+helper-consolidation proposal; and 34 of Aithena's 35 open PRs labelled
+`dependencies`, with the remaining PR supplying benchmark evidence. Queue
+size is not a measure of architectural decay or unfinished feature count.
+PhotoCraft's own third-party export-oracle gap is narrower than an absence
+of behavioural tests. Its scorecard/gap documents disagree on a corpus
+denominator; no success ratio is calculated from those fields. Historical
+performance and parity estimates are not presented as fresh measurements.
+
+The manuscript derives a candidate distinction between issue-level
+correction and cumulative system steering. A separate matched-resource,
+independent-oracle comparison could distinguish human-specific judgement,
+agent-led steering and coverage explanations. No superiority, human
+necessity, defect incidence or causal effect is established, and the tagged
+consolidation experiment is not silently redesigned. Selection after the
+author's experience, alpha-stage scope, adoption/detection and review
+capacity remain alternative explanations.
+
+Three source references are added to both bibliographies. Hypothesis
+Generation assistance is disclosed under the existing Scientific Agent
+Skills citation; it is not independent empirical verification.
+
+### Repository-Context Build Record
+
+The inspected external build is `/tmp/ama-paper-repository-context-5wfzbv/`.
+It has 44 pages and 107 matching cited/embedded/BibTeX references, with
+results still disabled and the source abstract unchanged at 1,676 characters.
+The seven existing tooling tests pass. Final shell-escape-disabled
+pdfLaTeX passes have no warnings, unresolved references or underfull/overfull
+boxes. A breakable ancillary-file locator resolves the initial text overflow.
+
+Whole-document contact sheets and full-size new/contextual, discussion,
+data-availability and table pages were inspected. Two selective barriers and
+a nearby reference to the additional-rivals table preserve table proximity
+after the added text. The final auxiliary labels and extracted references give:
+
+| Table | First discussion | Table page |
+| --- | --- | --- |
+| 1: Evidence audit trail | 10 | 11 |
+| 2: Timeline | 11 | 12 |
+| 3: Period metrics | 11 | 12 |
+| 4: Churn | 13 | 13 |
+| 5: Within-case contrasts | 14 | 14 |
+| 6: Mechanisms summary | 16 | 16 |
+| 7: Working theory | 16 | 16 |
+| 8: Protocol summary | 22 | 22 |
+| 9: Hypotheses | 23 | 23 |
+| 10: Recorded rivals | 30 | 31 |
+| 11: Additional rivals | 32 | 32 |
+| 12: Appendix practices | 41 | 41 |
+
+This build replaces `main.pdf` under the existing owner permission; earlier
+build maps below are historical. The title page retains the requested role
+and affiliation without an email address. The arXiv bundle is not refreshed.
+This session did not modify unrelated work or run the full clean-candidate
+publication gate and independent exact-head assessment. Concurrent shared-branch
+activity included the source changes in commits; this editing session did not
+commit, merge or push. The final build record and PDF remain local changes.
+This build does not establish publication approval or external submission.
+
+## Table Flow and Developmental Revision 25 October
+
+The owner authorised continuing on the existing PR branch, preserving other
+uncommitted work and replacing `main.pdf` with this revision's build.
+
+* Ordinary tables now use `[!htbp]`, with selective `placeins` barriers between
+  the case, mechanisms, practice, protocol, discussion and conclusion.
+  The mechanisms summary follows its introduction; the practices table stays
+  in its appendix. No `[H]` forcing or historical evidence relocation is used.
+* A bridge distinguishes the missing identity/staff configuration from the
+  future-changeability hypothesis. Consolidation is not claimed to have
+  prevented the observed sign-in failure.
+* By owner decision, the first pass is exploratory. Existing arms, thresholds,
+  budgets and sample sizes are retained; H4 accuracy non-inferiority and H7
+  endpoint/zero-or-negative-gap policies are explicitly unresolved. Binary
+  intervals, model fallbacks, failure disposition and any later confirmatory
+  hierarchy require prospective decisions, not invented editorial fixes.
+* A compact evidence-package requirement names the missing score scope,
+  release/configuration and failed-journey linkage. No new API captures,
+  same-release verification, registration or study results are claimed.
+* Universal attention and causal scrutiny claims are bounded, and repeated
+  protocol qualifications are shortened using cross-references.
+* Both bibliographies include Kassis et al., *Scientific Agent Skills*,
+  doi:10.48550/arXiv.2609.00065, for the revision method. The latest arXiv
+  record was checked on 25 October 2026 (v2, five authors, no published
+  journal reference shown); the citation uses the unversioned DOI.
+
+The earlier revision and validation records below remain historical. They
+do not establish this revision's PDF placement or publication gates.
+
+<a id="current-source-reconciliation-25-october"></a>
+
+### Table-Flow Build Record
+
+The external build at `/tmp/ama-paper-tableflow-aprrsq/` has 42 pages.
+Final shell-escape-disabled pdfLaTeX passes report no warnings, unresolved
+references or underfull/overfull boxes. The structural checker passes with
+104 matching references, results disabled and a 1,676-character source
+abstract; all seven existing paper-tooling tests pass.
+
+Rendered whole-document contact sheets and full-size table pages were
+inspected. The revised PDF replaces `main.pdf` with owner permission; the
+arXiv bundle is not refreshed. Auxiliary labels and extracted PDF references
+give these locations:
+
+| Table | First discussion | Table page |
+| --- | --- | --- |
+| 1: Evidence audit trail | 9 | 10 |
+| 2: Timeline | 10 | 11 |
+| 3: Period metrics | 10 | 11 |
+| 4: Churn | 10 | 11 |
+| 5: Within-case contrasts | 12 | 12 |
+| 6: Mechanisms summary | 14 | 14 |
+| 7: Working theory | 14 | 15 |
+| 8: Protocol summary | 20 | 21 |
+| 9: Hypotheses | 22 | 22 |
+| 10: Recorded rivals | 29 | 29 |
+| 11: Additional rivals | 29 | 30 |
+| 12: Appendix practices | 39 | 39 |
+
+The larger protocol and additional-rivals tables use nearby dedicated pages.
+This layout inspection is not an accessibility certification, independent
+empirical review or verification of missing source evidence. Existing
+unrelated staged/unstaged/untracked work is preserved. The complete
+clean-candidate publication gate and independent exact-head assessment
+have not run; no commit, push or external submission is claimed.
+
+## Critique Revision 25 October
+
+The owner selected author mode, the existing LaTeX format and preservation of
+the tagged experiment. Continued on the current open-PR branch, retaining
+the existing PDF and unrelated worktree changes. No private study files,
+application behaviour, cloud resources or experiment runs were changed.
+
+| Critique area | Treatment in draft v4 |
+| --- | --- |
+| Central claim and causal title | Adopted the single-loop observational subtitle and aligned abstract, three research questions and three contributions to divergence, candidate explanations and a prospective test |
+| Case methodology | Added operational construct boundaries, a five-row observation--interpretation--proposition audit trail, reflexivity and bounded within-case/negative-case contrasts; no new dataset or independent coding is claimed |
+| Mechanisms | Labelled the five explanations as candidates and added a definition, indicators, counter-evidence, rivals and experimental implication for each in an appendix |
+| Practice and practitioner material | Reduced the main discussion, moved extended accounts, informal observations and detailed practices/checklist to appendices, and labelled numerical practice limits as untested heuristics |
+| Rival explanations | Expanded the matrix to distinguish migration, owner decisions, environments/dependencies, scope, acceptance coverage, models, budgets, context/rate limits, ambiguity and prototype debt, including untested alternatives |
+| Protocol interpretation | Added a one-page summary, explicit package-level estimands, endpoint hierarchy, small-sample/cluster limits, multiplicity limits, unverified blinding/access and missing-data rules, credit-versus-currency and CR1 withholding boundaries |
+| Proposed redesign | Not adopted, by owner decision: C remains read-only, no equal-total-budget comparison is added, H1 retains priority and H6 remains the changeability probe. Hypotheses, thresholds, budgets, sample and prior-run labels are unchanged |
+| Additional empirical work | Not invented: power simulations, independent case coding, annotation agreement, suite/access review and actual registered study results remain unperformed or unverified |
+
+An owner-requested follow-up restores a substantive Beck paragraph in the main
+practitioner conversation. It connects care for code and tests, learning through
+product use, preservation of future options and reflective delegation to the
+consolidation hypothesis. This is conceptual motivation, not evidence that the
+harness works. The longer practitioner accounts remain in the appendix.
+
+The revision makes the case and protocol's limits more explicit; it does not
+claim to have resolved all methodological concerns in the critique. New
+evidence tables and protocol limitations add content despite the cuts to
+repetitive practitioner and practice material. No overall word-count reduction
+or venue page-limit acceptance is claimed.
+
+### Citation Corrections and Additions
+
+Primary source retrieval on 25 October supports six new references, now 103
+matching entries in the embedded and reusable bibliographies:
+
+* [Why AI Agents Still Need You](https://arxiv.org/abs/2506.12347v3),
+   accepted at ASE 2025: observed collaboration, not a randomised estimate of
+   optimal human intervention
+* [CRBugBench](https://arxiv.org/abs/2610.13668v1), 9 October 2026 preprint:
+   review-agent evaluation, including complex/non-local and proprietary-context
+   limitations; only metadata and the abstract were retrieved successfully
+* [Building to the Test](https://arxiv.org/abs/2606.28430v1), 26 June 2026
+   preprint: an unchanged partial behavioural oracle can pass a demo while
+   the requested reusable library is unused or absent. This is not evidence
+   that the tests were weakened
+* [SWE-Sharp-Bench](https://arxiv.org/abs/2511.02352v2): an existing reproducible
+   C# issue-resolution benchmark; the accessed v2 is identified rather than
+   implying a review of its later v3
+* [Belief & Evidence](https://www.microsoft.com/en-us/research/publication/belief-evidence-in-empirical-software-engineering/),
+   ICSE 2016: experience-based beliefs need not correspond to project evidence
+* [Extrinsic Influence Factors](https://www.microsoft.com/en-us/research/publication/extrinsic-influence-factors-in-software-reliability-a-study-of-200000-windows-machines/),
+   ICSE 2014: operating-environment effects are distinct from intrinsic code
+   properties, in a different application setting
+
+The existing [RefactorBench source](https://arxiv.org/html/2503.07832v1)
+reports 100 tasks across nine Python repositories, not the critique's
+180-task/20-repository description. Its supplied link pointed to an unrelated
+code-review appendix. The HITS study link required authentication and was not
+used as public study evidence. No protected content was accessed.
+
+Full-text scope was checked for RefactorBench and Building to the Test;
+the other additions rely on primary publication metadata and abstracts.
+These checks are not independent replication, author verification of every
+research statistic or a systematic literature review.
+
+### Revision Validation
+
+* The existing structural checker passes with 103 matching cited references,
+   an abstract of 1,663 source characters, unique resolved labels and results
+   disabled.
+* Two shell-escape-disabled pdfLaTeX passes produce a 42-page PDF without
+   warnings, underfull/overfull boxes or unresolved references. The external
+   build is at `/tmp/ama-paper-critique-o1Iyxr/`. The workspace PDF was separately
+   regenerated during editing and was left untouched after owner clarification.
+* Fresh AI reader testing found three wording gaps about unmeasured effort,
+   CR1 exposure and credit-versus-monetary cost. They were corrected. This is
+   editorial testing, not an independent empirical coder or human peer review.
+* Visual PDF inspection was not performed: no PDF renderer was available in
+   the checked toolchain. Compilation and clean logs do not establish visual
+   quality, accessibility, scholarly acceptance or publication permission.
+* Complete local publication gates, exact-head independent assessment and
+   external approval remain separate. No commit, push or submission is claimed.
+* Tracked-edit whitespace checks and a separate check of the new untracked
+   research record pass. The package README, bibliography and tracking records
+   have no editor diagnostics. The knowledge-base index/log retain earlier
+   Markdown issues, and the editor's workspace LaTeX build retains a rerun
+   notice; the fresh external two-pass log does not.
 
 ## Related Work Review of 25 October
 
@@ -67,7 +531,7 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 97 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 104 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
@@ -122,8 +586,8 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 
 * Overleaf: upload the zip as a new project. The compiler is pdfLaTeX. The zip has `main.tex` and `anc/` at its root, the layout arXiv expects.
 * Locally: run `pdflatex main.tex` twice.
-* Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
-* The switch `\resultsfalse` near the top keeps the study status note visible. Set `\resultstrue` only after the registered runs and checked analysis are complete.
+* Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, placeins, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
+* The switch `\resultsfalse` near the top keeps the study status note visible. Set `\resultstrue` only after the prospectively documented runs and checked analysis are complete.
 
 ## What changed in draft v2
 
@@ -236,10 +700,14 @@ the accepted A/B/C design has 120 feature, 80 post-feature and 12 CR sessions:
     * recover historical runtime/build identifiers without inventing unexposed versions;
     * obtain permissions and confirm partner anonymisation without naming either partner or its staff;
     * verify the exact tagged protocol, suite, analysis and prior-run chronology before registration;
-    * complete registration before fresh confirmatory runs and retain the real date and URL;
+    * document the exploratory-framing amendment and complete registration before fresh runs, retaining the real date and URL;
     * complete independent suite review, reviewer recruitment and HIR coverage checks;
     * reconcile credit and monetary limits, calibration choices and analysis rules;
     * write results and update acknowledgements only after the corresponding work occurs.
+   Also resolve the visible protocol limitations before treating a fresh study
+   as confirmatory: exact costing/endpoint rules, sample precision, multiplicity,
+   failure/missing-data disposition, CR1 non-exposure and effective blinding.
+   This revision preserves the design; it does not supply the missing checks.
 2. Treat the local MVE copies as historical proposals. Archive the exact authorised registered study materials separately, preserving originals and excluding credentials, DLP sidecars and unapproved internal content.
 3. Rewrite in your own voice where needed. The rubric allows AI drafting, but the insight, evidence and recommendation must be yours.
 4. Get the internal approvals Microsoft requires for external publication.
@@ -251,8 +719,8 @@ the accepted A/B/C design has 120 feature, 80 post-feature and 12 CR sessions:
 Continue from the separately tagged private study kit, not from the earlier
 ancillary proposal copies. Verify that the tagged record matches the accepted
 design and analysis before registration. Preserve every earlier run and its
-original labels and timestamps; start fresh confirmatory runs only after
-registration. Do not change frozen materials in place or silently replace the
+original labels and timestamps; start the fresh exploratory first pass only after
+prospective documentation and registration. Do not change frozen materials in place or silently replace the
 original design after seeing results.
 
 ## arXiv notes (checked 24 Oct 2026)

@@ -2,24 +2,24 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-26T01:15:39+00:00",
-  "commit": "11808a01d9776886104f8c166c7596f832b61d87",
+  "scored_at": "2026-10-26T08:17:20+00:00",
+  "commit": "d852cf7429d9e6478f4dd4c48aa2227aa103d695",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40252147595",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40289720733",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "8972c44aa03908e9ad935bdf47b3468783adc30ebee7576b4734ea461d889408",
-    "infrastructure": "75de2ded882d7984f9e3ca208ef41416f1a3578cddec3422a4b59a1c17007651",
-    "capstone-deck": "6ac00911d6919b544ad5dbe9ff18d862d0b5016ee7a7fb7598c63bfd9939ef1c",
+    "solution-code": "0ed69b2366406940a8c9e9fbb3adac9662b3e4fa2557657399b3efc356cd8445",
+    "infrastructure": "36bd2ce01d844cfa69a154d2f3090d03b55461d78674f16845141eeca1abc55f",
+    "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "cc9c503bcd253a14a7f69abad98776a3640caf7fc444288a2521e728e43af5f6"
+    "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
   },
-  "total": 73,
+  "total": 74,
   "sections": {
     "A": 31,
-    "B": 22,
+    "B": 23,
     "C": 11,
     "D": 9
   },
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_showcase.py:1-20",
-        "infra/sql/resident-showcase.sql:1-20"
+        "src/api/src/zava_forward/api/resident_preview/app.py:1-20",
+        "src/core/src/zava_forward/core/resident_preview.py:1-10"
       ],
-      "rationale": "New resident_demo/resident_showcase feature (issue 462) reuses the same clean separation: pure core domain module, SQL adapter and HTTP transport, with an explicit SQL view/DENY boundary. Reinforces existing ceiling; already Excellent."
+      "rationale": "New resident_preview module is a cleanly isolated, decoupled boundary (core domain logic separate from api transport), reusing no staff server/auth code. Reinforces existing ceiling; already Excellent."
     },
     "A2": {
       "score": 5,
@@ -44,55 +44,54 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:2838-2900",
-        "infra/sql/resident-showcase.sql:40-59"
+        "src/api/README.md:2790-2840",
+        "src/core/src/zava_forward/core/resident_preview.py:476-512"
       ],
-      "rationale": "New feature documents a detailed threat model: CSRF double-submit, Host allowlist, per-source and global rate limiting, scrypt verifier, per-request re-authorisation against a SQL view with explicit DENY on the base table. Reinforces existing ceiling; already Excellent."
+      "rationale": "Adds a documented threat model (assets, trust boundaries, per-threat control/evidence table) and default-deny safe_start guarding env, loopback and file provenance. Strong defensive evidence, already at ceiling."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/tests/test_resident_showcase.py:1-50",
-        "src/api/checks/resident_demo_browser_check.py:1-30"
+        "src/api/tests/test_resident_preview_api.py:1-274",
+        "src/core/tests/test_resident_preview.py:1-359"
       ],
-      "rationale": "New feature ships with unit tests (core and api), a SQL integration test, a real-browser check and a container image check covering sign-in, CSRF, cross-case denial, logout and refusal-to-start cases. Thorough as documented; already at ceiling."
+      "rationale": "New feature ships complete with unit tests, HTTP integration tests and a browser check script; implementation is thorough. Already at ceiling."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/app.py:60-75",
-        "src/api/checks/resident_demo_image_check.py:1-20"
+        "src/api/README.md:2838-2844"
       ],
-      "rationale": "Health endpoint, bounded concurrency semaphore, sliding-window rate limiter and read-only/non-root/cap-drop container hardening are present; no new cost-per-unit metering is added. Consistent with baseline (instrumented and resilient, cost not modelled)."
+      "rationale": "Threat model honestly documents the preview has no request log, rate limit or concurrency bound as a residual risk, but no new metering, cost or reliability instrumentation is added for the scored system. Unchanged."
     },
     "A6": {
       "score": 3,
       "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static showcase. Unchanged baseline."
+      "rationale": "No AI model-choice or evaluation-harness change in this diff; the new module is a non-AI static preview. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No new agentic orchestration introduced; resident showcase is a password-gated read-only HTTP view with no agent involvement. Unchanged."
+      "rationale": "No new agentic orchestration introduced; resident preview is a static read-only HTTP view with no agent involvement. Unchanged."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. The new pitch brief is prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists in this PR either. The new pitch brief/deck notes remain prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
     },
     "B2": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
       ],
-      "rationale": "New Audience Map names six CXO archetypes with must-hear content, pitfalls, and a deliberate Sergeant->Therapist->Scientist->Evangelist sequence. Materially stronger written calibration plan than the baseline brief, though still unrehearsed."
+      "rationale": "Pitch package unchanged in this PR; baseline Audience Map evidence retained. Still unrehearsed."
     },
     "B3": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
       ],
-      "rationale": "New demo-runbook.md defines an Eight-Minute Core Route with timed beats to the hook and a Route L/E/U fallback with recovery script. Concrete planned readiness beyond the prior one-line statement, but validation.md confirms no rehearsal occurred, so still Needs Improvement."
+      "rationale": "Demo runbook unchanged in this PR; validation.md still records no rehearsal. Needs Improvement retained."
     },
     "B4": {
       "score": 2,
@@ -107,21 +106,23 @@
       "evidence": [
         "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
       ],
-      "rationale": "New Timing and Interruption Contract gives a slide-by-slide narration budget, discussion reserve and route-shortening plan. More developed pacing planning than baseline's unrehearsed-timing statement, but remains unrehearsed per validation.md."
+      "rationale": "Timing contract unchanged in this PR; deck timing lines confirmed byte-identical. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 5,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45"
+        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
+        "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "Capstone deck documentation is untouched by this diff; changed files are infra/README.md and src/api/README.md component docs, not deck material. B6 scores deck/capstone docs separately, so unaffected. Already Excellent."
+      "rationale": "Deck accuracy fixes (removed false sign-in/legal-review claims on slides 18 and 51) reinforce already-excellent, complete documentation. Already Excellent, unchanged."
     },
     "B7": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:132-160"
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide22",
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40"
       ],
-      "rationale": "The new Recovered Council Comparison gives fully worked, labelled calculations (USD 0.44/home, GBP 6,082/home) tied directly to deck slides 11 and 18 with evidence classes and caveats. Actionable, slide-anchored data storytelling beyond baseline, though still unaudited live."
+      "rationale": "Slides 22/40 now interpret retrospective activity counts (183 PRs, 36,755 words) instead of implying value/causation, closing a prior inherited storytelling gap; meets Excellent descriptor."
     },
     "C1": {
       "score": 5,
@@ -145,26 +146,25 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:61-68",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:21-47"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
       ],
-      "rationale": "Original five-mechanism synthesis and Monday checklist retained; new related-work review (Pavlenko et al.) adds grounding but does not change scope or add verified results. Still synthesis plus untested protocol."
+      "rationale": "Revision reframes mechanisms as candidate, adds a rival-explanations table and an audit trail, and de-causalises title/abstract, strengthening rigor. Still a non-causal single-case synthesis plus untested protocol; score retained."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1322-1325",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:21-23"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "Structured draft with abstract, sections, tables and bibliography, but main.tex still carries 25 unresolved TODO(author) items and revision-report.md states the paper is not submission-ready."
+      "rationale": "main.tex still carries 25 unresolved TODO(author) items (unchanged count) and README confirms execution paused, arXiv bundle not refreshed. Draft structured but not submission-ready, unchanged."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:217-222"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "A concrete arXiv path is researched, but the README current-status note states execution is paused, registration is deferred, and public release remains subject to permission; nothing submitted or accepted."
+      "rationale": "README still states execution is paused, registration deferred and public release subject to permission; no new submission, registration or acceptance evidence. Unchanged."
     }
   }
 }

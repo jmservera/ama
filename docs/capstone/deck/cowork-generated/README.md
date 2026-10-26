@@ -1,11 +1,20 @@
 ---
 title: Cowork Presentation Outputs
 description: Imported v1 and v2 presentation outputs, owner-selected public v2 scoring deck and verified local extraction
-ms.date: 2026-10-24
+ms.date: 2026-10-25
 ms.topic: reference
 ---
 
 ## Current Candidate
+
+The [25 October presentation review](./presentation-review-2026-10-25.md)
+is the latest story revision of the current PPTX/PDF. It integrates
+*Everything But the Software*, connected customer-journey maps and a
+three-lane service blueprint, with corrected historical-access and legal-review
+claims. Separate independent review found its seven findings corrected.
+The deck still has 54 slides, all notes and 27 caller returns; the six recovered
+cost slides are byte-identical. Rehearsal, user research, accessibility,
+current legal/deployment acceptance and publication gates remain outstanding.
 
 The [dated PR #438 corrections](./review-corrections-2026-10-24.md) now govern
 current deployment labels, price claims and backup navigation. The current

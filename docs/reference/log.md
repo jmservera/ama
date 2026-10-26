@@ -7179,3 +7179,209 @@ FIFO-safe verifier file open, stronger malformed-value assertion and README dry-
 ## 2026-10-26 issue 462 execution-readiness local stage
 
 Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff across core, SQL, secret helper, docs and tests. Added the resident-only infra/resident-demo.bicep and infra/scripts/resident_demo_deploy.py (what-if deny guard, min 0 / max 1, no main stack or schedules). Local only; no cloud action. See the 2026-10-26 execution-readiness plan, changes and review under .copilot-tracking.
+## 2026-10-25 query | Presentation Paper and Journey Story Review
+
+* Updated the owner-selected 54-slide Cowork v2 PPTX and native PDF with
+  the 25 October *Everything But the Software* draft, stage-linked journey
+  hypotheses, a three-lane service blueprint and three representative graphical
+  maps. Role instruments and map counts are not customer interviews or accepted
+  features. The paper remains an exploratory author case and paused,
+  registration-pending protocol with no study results.
+* The PowerPoint Subagent built and natively rendered the revision. Independent
+  communications review identified seven content/visual findings; the final
+  read-only check found all corrected. Preserved the original findings and
+  qualitative coverage of all 20 capstone criteria in the
+  [dated review and reproduction handoff](../capstone/deck/cowork-generated/presentation-review-2026-10-25.md).
+* Corrected historical-versus-current sign-in/Graph claims, unsupported
+  completed legal review, activity-as-value narration and consent ownership.
+  Restored the concrete backlog trace and distinguished the paper's PR/log
+  date windows. Existing cost calculations, all 54 notes, timing, order and
+  27 caller actions remain; the repository cost-preservation guard passes.
+* Updated the current-output README and this index. Native property checks
+  found zero issues and zero new native text overflows; inherited warnings
+  remain recorded. This is scoped artifact/story review, not rehearsal,
+  accessibility conformance, legal/control acceptance, experiment results,
+  rubric scoring or publication clearance. No commit, push, deployment or
+  paid inference occurred; concurrent owner paper work was not changed.
+
+## 2026-10-25 - Thought-Leadership Editorial Critique Revision
+
+* Revised the [paper source](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and [revision account](../capstone/thought-leadership/everything-but-the-software/README.md#critique-revision-25-october)
+  around observed completion/usability divergence, five candidate mechanisms
+  and a prospective package-level consolidation test. Added construct and
+  provenance boundaries, an observation--interpretation--proposition audit,
+  bounded negative cases and a fuller rival-explanation matrix. No new
+  empirical case dataset or independently checked qualitative coding is claimed.
+* Moved extended practitioner accounts, informal observations and the detailed
+  operating practices/checklist to appendices. The recommendations are
+  implications for evaluation, not a separately validated model or permission
+  to bypass required repository, safety or human approval gates.
+* Added six verified scholarly references, with 103 matching bibliography
+  entries. Corrected the critique's RefactorBench count to 100 tasks/nine
+  repositories and distinguished Building to the Test's unchanged-oracle
+  delivery-contract gap from test tampering. Recent preprints, abstract-only
+  verification and unavailable HITS access remain explicit.
+* At the owner's direction, preserved the tagged experiment, arms, hypothesis
+  priorities/thresholds, budgets, sample and prior-run labels. Added a protocol
+  summary and explicit resource, control, precision, multiplicity, annotation,
+  CR1 exposure and unverified-access limits rather than silently redesigning
+  the study. Private study files and earlier ancillary proposals are unchanged.
+* The structural check passes; two external, shell-escape-disabled pdfLaTeX
+  passes produce 42 pages with no warnings or unresolved references. Fresh AI
+  editorial testing is not independent human peer review. Visual PDF review
+  was unavailable; the existing PDF and arXiv bundle are preserved. No study
+  run, commit, push, publication gate or external submission occurred.
+
+## 2026-10-25 - Paper PDF Regeneration Clarification
+
+* The preceding revision entry's PDF-preservation statement is superseded:
+  a separate workspace compiler regenerated the PDF during editing even though
+  the assistant's compilation commands targeted an external directory. The
+  workspace compiler log records 42 pages; the observed PDF hash changed.
+* The owner explicitly selected leaving the current regenerated PDF untouched.
+  No Git-version restore or external-build copy was performed, and pre-edit
+  byte preservation is not claimed. The arXiv bundle was not refreshed by this
+  workflow. Source validation and publication/approval limits remain unchanged.
+
+## 2026-10-25 ingest | Scientific Paper Writing and Review
+
+* Added [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md)
+  with original paraphrases of Drake and Han, Bosworth, Bushman and Pope,
+  verified source identities, retrieval date and pinpoint guidance. Preserved
+  the MDPI follow-up 403, Bushman's unverified publication date and text-only
+  figure coverage rather than claiming fresh access or visual verification.
+* Added [AMA Scientific Paper Writer and Reviewer](../../.github/agents/ama-scientific-paper-writer-reviewer.agent.md)
+  with scoped write, revise and read-only review modes, claim-source evidence
+  states, scientific-integrity boundaries and human ownership. Actual venue,
+  confidentiality and AI rules take priority over optional writing heuristics;
+  capstone guidance applies only when relevant.
+* Updated the [reference index](./README.md) only for scientific-writing task,
+  method and agent routing, and appended this ingest entry without changing
+  earlier log entries. Manuscript, bibliography, PDF and owner memory are outside
+  this authoring task.
+* Independent static review, behavior scenarios and final validation remain
+  pending. Authoring does not establish scientific acceptance, venue compliance,
+  independent human peer review or publication approval.
+
+## [2026-10-25] query | Paper layout and developmental revision
+
+* Applied the owner-approved developmental improvements to the
+  [paper source](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  and [package record](../capstone/thought-leadership/everything-but-the-software/README.md#reader-layout-and-developmental-revision-25-october).
+  The subtitle now describes delivery-signal/usability divergence rather than
+  implying measured feature-caused decay. Float options, selective barriers
+  and the relocated mechanisms summary keep every numbered table on the
+  same page or the next page after its first reference.
+* The author selected an exploratory four-run-per-arm first pass. The private
+  tagged kit, arms, thresholds, budgets, sample and prior-run labels remain
+  unchanged. Later confirmatory use requires separately reconciled H4/H7,
+  intervals/precision, multiplicity and failure rules; no numerical accuracy
+  margin or replacement hypothesis rule is invented.
+* Distinguished the operational sign-in obstacle from the consolidation
+  hypothesis and period-level coexistence from a verified same-release
+  score/journey contradiction. Missing dated source captures, deployment
+  bindings and failed-journey traces remain unverified, not newly recovered
+  evidence. Narrowed universal/causal claims and shortened repeated caveats.
+* Added and disclosed Scientific Agent Skills with matching citations, after
+  checking current arXiv metadata. The structural checker passes with 104
+  references and results disabled. The external 43-page PDF has no final
+  warnings or unresolved references; rendered-page inspection and table
+  proximity checks were performed, not accessibility certification.
+* The owner selected preserving the modified repository PDF and unrelated
+  untracked research record on PR #460. External validation output and a
+  session-local revised PDF remain separate. A workspace compiler regenerated
+  the repository PDF during editing; the saved owner-selected bytes are
+  restored after the final source change. No private study edit, experiment,
+  commit, push, complete publication gate or independent exact-head
+  assessment is claimed. The existing dirty/untracked work prevents the
+  required clean-candidate publication gate.
+
+## 2026-10-25 - Paper Source Reconciliation and Fresh Layout Inspection
+
+* Reconciled the [paper source](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  with the existing draft v5 revision account after finding the source still
+  used draft v4's title, restrictive table floats and confirmatory first-pass
+  wording. The owner selected the current branch and preservation of existing
+  changes, with an exploratory first pass and explicit pending H4/H7 decisions.
+* Retained all legacy hypothesis thresholds without inventing accuracy margins,
+  H7 endpoints or interval methods. Added the missing operational-failure
+  bridge, same-release verification requirements, bounded literature wording
+  and Scientific Agent Skills disclosure/reference. No missing empirical
+  evidence, experiment result or private-kit reconciliation is fabricated.
+* The [current build record](../capstone/thought-leadership/everything-but-the-software/README.md#current-source-reconciliation-25-october)
+  supersedes earlier build figures for this source: the external PDF has
+  42 pages and all twelve tables are on the same page or the next page after
+  their first reference. Structural checks pass with 104 matching references;
+  final compiler logs have no warnings or underfull/overfull boxes. Rendered
+  layout inspection prompted removal of an almost-empty audit-section page.
+* Preserved the pre-edit repository PDF separately and restored its saved
+  bytes after source-triggered workspace regeneration. Current revised PDF
+  and previews remain in session storage. Existing unrelated/untracked files,
+  earlier log entries and the arXiv package are unchanged. Complete publication
+  gates and independent exact-head assessment remain unperformed; no commit,
+  push, study run or publication approval is claimed.
+
+## [2026-10-25] query | Owner-authorised paper table flow and exploratory framing
+
+* Applied the supplied developmental recommendations to the
+  [manuscript](../capstone/thought-leadership/everything-but-the-software/main.tex),
+  preserving its title and subtitle. The owner selected the existing PR #460
+  branch, preservation of other changes and replacement of the revised PDF.
+  This supersedes earlier PDF-preservation instructions for this revision.
+* Used flexible table placement and selective barriers; moved the mechanisms
+  summary beside its introduction and kept proposed practices in the appendix.
+  All twelve tables are now on the same or next page after first substantive
+  discussion. The [build record](../capstone/thought-leadership/everything-but-the-software/README.md#table-flow-build-record)
+  records exact pages, a 42-page rebuild, rendered layout inspection, matching
+  references and the existing tooling checks.
+* The owner selected exploratory first-pass framing rather than seven
+  confirmatory verdicts. Existing arms, thresholds, budgets and sample sizes
+  remain; H4 accuracy non-inferiority, H7 endpoint/gap treatment, interval and
+  fallback methods, and later confirmatory controls need prospective decisions.
+  No private tag was changed or verified and no study was executed.
+* Distinguished sign-in configuration recovery from the changeability
+  hypothesis, bounded attention/scrutiny language, and made missing score,
+  deployment and journey linkage explicit. No same-release verification,
+  API/scorer capture or other missing evidence was invented.
+* Added the Scientific Agent Skills method disclosure and matching embedded/
+  reusable reference using the latest arXiv metadata retrieved on 25 October.
+  Updated the index and package README; preserved earlier log entries and
+  unrelated staged/unstaged/untracked work. Complete clean-candidate publication
+  gates and independent exact-head assessment remain unperformed. No commit,
+  push, publication approval or arXiv bundle refresh is claimed.
+
+## [2026-10-25] research | Contextual repositories and the paper's steering hypothesis
+
+* Extended the [paper](../capstone/thought-leadership/everything-but-the-software/main.tex)
+  at the owner's request with prior Aithena experience and selected public
+  observations from Aithena, corrected Squad and especially PhotoCraft.
+  AMA remains the single principal case. The title, subtitle, role/affiliation
+  and H1-H7 protocol are unchanged.
+* The [source review](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-and-hypothesis-revision-25-october)
+  distinguishes PhotoCraft's live-menu metric from behavioural parity,
+  historical self-estimates from new measurements, bug reports from reproduced
+  failures, and open queues from defect rates. It retains tests, fixes,
+  consolidation proposals, alpha-stage scope and Aithena's dependency-heavy
+  PR queue as counter-evidence and rivals.
+* Added a [minimised dated observation record](../capstone/thought-leadership/everything-but-the-software/anc/repository-observations-2026-10-25.json)
+  with source SHAs, queries, tracker counts, declared sampling, locators and
+  exploratory candidate predictions. No external applications were executed,
+  private standards accessed or reporter identities/attachments retained in
+  the source package. Static Aithena traces do not establish runtime data loss
+  or a measured complexity effect.
+* Added matching repository references and disclosed Hypothesis Generation
+  assistance under Scientific Agent Skills. A matched-resource future
+  steering/oracle comparison is explicitly separate from the existing study;
+  no framework superiority, human necessity or causal effect is established.
+  Existing unrelated work and earlier log entries are preserved. Publication
+  gates and independent exact-head assessment remain unperformed; no commit,
+  push, study execution or arXiv bundle refresh is claimed.
+* The [repository-context build record](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-build-record)
+  records the inspected 44-page PDF, 107 matching references and final
+  same/next-page placement for all twelve tables. Replaced `main.pdf` under
+  the existing owner permission; the requested affiliation/no-email author
+  block remains. Earlier build records are historical, not current evidence.
+  Concurrent shared-branch activity included the source changes in commits;
+  this editing session did not commit, merge or push. The final build record
+  and inspected PDF remain local, without a completed publication gate.

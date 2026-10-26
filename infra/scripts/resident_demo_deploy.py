@@ -5,8 +5,8 @@ Dry run by default: it runs an ARM what-if of infra/resident-demo.bicep and refu
 actionable change is one of the six resident-owned resources below (the five resources and the
 exact nested guard deployment resident-demo-scope; no other deployment is allowed). `--apply`
 repeats that proof, then deploys. It never uses main.bicep or deploy.py, so it cannot restore the
-API minimum of two replicas, the cron schedules or the event job, and it never touches the SQL database, the
-environment, the registry or the vault beyond the two secret-scoped role assignments.
+API minimum of two replicas, the cron schedules or the event job, and it never touches the SQL
+database, the environment, the registry or the vault beyond the two secret-scoped role assignments.
 
 Needs: the two owner-written secrets already in the private vault, the resident SQL principal and
 view already created, and a separate exact execution approval with a cleared budget check. Running
