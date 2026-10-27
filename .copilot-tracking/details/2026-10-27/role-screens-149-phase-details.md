@@ -176,3 +176,11 @@ P04-T02 is complete: independent Review Complete / Residual work at parent
 6a4eae03 and exact independent role heads, with no new blocking findings.
 P04-T03 awaits hosted checks and evidence
 publication. No readiness, integrated, human or live acceptance is inferred.
+
+Final hosted rubric passed and appended provenance-only parent 4140ebbf.
+P04-T03 now waits for Source CI 40538254240 at that final parent and the same
+independent assessment's bounded final-identity reconciliation. All children
+are rebased onto that parent, with parent/trace 26 and each role 27 focused
+tests passed again. No source, score-value or authority change; no extra
+heavy gate or rubric dispatch. Prior outcomes remain historical, not silently
+transferred. No merge or issue acceptance.

@@ -3,7 +3,7 @@
   "task_slug": "role-screens-149",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Source CI and rubric passed for corrected source parent 6a4eae03; rubric legitimately appended final parent 4140ebbf with timestamp/commit/run-URL-only changes. Parent fast-forwarded and independent children rebased; source/scenario bytes identical. Parent/trace 26 and each role 27 focused tests pass. Dispatch existing Source CI once for exact final parent; no material source change, heavy gate or rubric rerun.",
+      "status": "final-identity-reconciliation-active",
+      "evidence": "Source CI 40535557178 success; rubric 40535556827 success 77/100 vs 77/100; final Source CI 40538254240 pending; final same-reviewer identity reconciliation required"
+    },
     {
       "decision": "Owner-requested independent final-head Review executed Complete; outcome Residual work, zero new blocking findings. Parent 6a4eae03 and exact independent role heads assessed; historical RV-001 corrected at #231's current head. Original Review/critique retain their adverse outcomes unchanged. Engineering assessment is not hosted/human approval.",
       "status": "executed-residual-work",
@@ -94,13 +99,13 @@
   "blockers": [
     {
       "id": "HOSTED-001",
-      "summary": "Stale binding corrected and local full units pass; current-head hosted checks remain pending.",
-      "resolution": "Wait for every hosted check on the final parent head. Preserve original failed logs; do not reuse the old partial receipt or fabricate statuses."
+      "summary": "Corrected source checks and rubric passed, but rubric appended final score-only head 4140ebbf; its exact-head Source CI and same-reviewer identity reconciliation remain pending.",
+      "resolution": "Wait for Source CI 40538254240 and independent final-identity reconciliation on 4140ebbf before readiness. Preserve original failures and assessed boundaries; do not transfer the old receipt or fabricate statuses."
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Independent assessment Complete / Residual work is recorded. Publish the evidence-only trace update and PR bodies, then wait for every actual current-parent hosted check to pass before marking only #496 ready. Any parent head drift requires exact-head reconciliation; retain all human/integration residuals and no merge."
+    "phase": "Review",
+    "action": "Finalize the same independent assessment for rubric-only final parent 4140ebbf and source-identical rebased child identities, preserving all prior outcomes. Wait for exact-head Source CI 40538254240, then update PR evidence and mark only #496 ready if every hosted check passes and final engineering result remains acceptable. No merge."
   },
   "prioritized_follow_ups": [
     {

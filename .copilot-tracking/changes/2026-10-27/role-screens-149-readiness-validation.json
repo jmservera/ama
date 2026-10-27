@@ -82,5 +82,39 @@
   "hosted_status": "pending",
   "review_status": "pending",
   "clean_selection": [],
-  "clean_command": "git clean -fdxq; empty dry-run; removed nothing"
+  "clean_command": "git clean -fdxq; empty dry-run; removed nothing",
+  "rubric_tail_reconciliation": {
+    "parent_head": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+    "original_assessed_source_parent": "6a4eae033776c81131119245dd0e99505be44823",
+    "only_changed_file": ".github/rubric/scores/latest.json",
+    "only_changed_keys": [
+      "scored_at",
+      "commit",
+      "run_url"
+    ],
+    "all_source_scenario_and_score_values_unchanged": true,
+    "independent_heads_before_final_trace_evidence": {
+      "149": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "232": "f2c067d685934fa0b0bbe7c21af4f55dec73dcad",
+      "227": "74abd87c14f9e4c2e19a6cb396bff1e9cf1dd297",
+      "230": "16420553b3bdc046855d5aa0e8b87affd247a16e",
+      "225": "1e78afca65d1059716992f8de45aa2e5be11d589",
+      "226": "915393924d557b14cec94d803426f3cf32efcf4a",
+      "228": "4194070a923184155652163ee3687dfef6843271",
+      "229": "4788d972023011ae2fe794e090cff5ce9a397009",
+      "231": "3197c113849b1436c6b0053fb6049c00d0013e83",
+      "233": "82c85426171364a810d5d442fddcbd0a17958a61"
+    },
+    "focused_units": {
+      "parent": 26,
+      "trace": 26,
+      "each_role_child": 27,
+      "status": "passed"
+    },
+    "exact_final_head_source_ci": "https://github.com/jmservera/ama/actions/runs/40538254240",
+    "source_ci_status_at_record": "pending",
+    "review_final_identity_status": "pending",
+    "additional_heavy_gates": 0,
+    "additional_rubric_dispatches": 0
+  }
 }

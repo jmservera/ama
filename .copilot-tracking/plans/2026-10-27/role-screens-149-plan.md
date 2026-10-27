@@ -7,9 +7,10 @@ ms.date: 2026-10-27
 ## Task Metadata
 
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
-Readiness: P04 source-binding correction and local units pass. Independent
-final-head Review is Complete / Residual work; hosted checks remain pending.
-All ten PRs remain draft.
+Readiness: binding/local units pass and independent Review is Complete /
+Residual work at the corrected source heads. Hosted rubric then appended
+score-only 4140ebbf; its final exact-head reconciliation and Source CI remain
+pending. All ten PRs remain draft.
 This current evidence snapshot is trace-child-only.
 Original critique and Review verdicts preserved.
 

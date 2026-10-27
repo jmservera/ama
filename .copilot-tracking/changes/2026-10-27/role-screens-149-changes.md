@@ -386,3 +386,22 @@ independent engineering assessment, not an invented GitHub/human approval.
 Hosted source/core now passes; remaining hosted API/rubric checks are pending.
 No ready transition until all actually pass. Integration, human/AT/WCAG,
 complete Fluent and approved domain inputs remain distinct residual follow-ups.
+
+## Final hosted rubric tail and exact-head reconciliation
+
+Source CI 40535557178 passed all checks at corrected parent 6a4eae03.
+Rubric 40535556827 passed 77/100 versus baseline 77/100, then legitimately
+appended 4140ebbf34174f2bdc9f6e980533797e92410ca9. Only three recorded
+score provenance values changed: timestamp, scored commit and run URL.
+All application/test/tool bytes, scenario metadata and score/fingerprint
+values stayed unchanged. No score was hand-edited or fabricated.
+
+Local parent fast-forwarded to that remote tail; children were rebased onto
+it without integration. Parent/trace 26 and each role child 27 focused
+integrity/host/workbench units passed again. No material source change,
+additional heavy gate or transfer of the old receipt. Existing Source CI
+was dispatched once at the final parent, run 40538254240; no rubric rerun.
+The same independent reviewer will finalize the existing canonical assessment
+at the final identities using the bounded metadata/source-identity delta.
+Original assessed boundaries/outcomes and original adverse evidence remain
+preserved. Parent stays draft until final exact-head conditions actually pass.
