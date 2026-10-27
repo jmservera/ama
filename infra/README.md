@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-19
+ms.date: 2026-10-27
 ms.topic: how-to
 ---
 
@@ -936,6 +936,7 @@ remain an owner design decision, not an executable instruction here.
 | Registry quarantine (`registryQuarantineEnabled`) | `false`, explicit development opt-out | `true` | `true` |
 | `enableLocks` | `false` | `false` | `true` |
 | `zoneRedundant` (storage ZRS, SQL zone, registry and Container Apps) | `false` | `false` | `false` PLACEHOLDER pending selected-region support and owner decision |
+| `apiMinReplicas` (API minimum, independent of security profile) | `0` | `0` | `0`; explicitly choose `2` for always-on production |
 | Service SKUs | IoT Hub `B1`/1 unit; SQL `GP_S_Gen5`/2 max vCores; Log Analytics `PerGB2018`; registry Premium; Foundry `S0`; Container Apps Consumption | same | same; not a pilot sizing approval |
 | Model SKU/quota inputs (`modelDeployments`) | `standard`: gpt-4.1-mini; `capable`: gpt-4.1; both version 2025-04-14, `GlobalStandard`, capacity 30 | same defaults, subject to checks | same defaults; catalog checked below, quota and approved subscription binding unknown |
 | Retention (fixed unless a documented module input exists) | Log Analytics 90 days; SQL PITR 14 days; blob/container soft delete 30 days; ACR 30 days; audit/digest immutability 365 days unlocked; IoT 1 day | same | same; not a legally approved retention schedule |
@@ -945,6 +946,15 @@ remain an owner design decision, not an executable instruction here.
 
 Rules:
 
+* `apiMinReplicas` defaults to `0` in `main.bicep` and the Container Apps
+  module, allowing the API to scale to zero for cost-safe demos. Requests
+  after idle periods may incur cold-start latency. The valid range is `0` to
+  `4`, matching the unchanged API maximum of `4`; the HTTP concurrency rule
+  remains `50`. For always-on production replicas, set
+  `param apiMinReplicas = 2` in the private parameter copy. Selecting the
+  production security profile alone does not increase the minimum. This
+  controls only the API; it does not eliminate other infrastructure costs
+  or disable background workloads.
 * Production is the template default. Only dev opts out of purge protection
   and quarantine explicitly. Test/pilot retain both. Development with the
   default inputs retains all controls; SQL cannot opt out in any profile.
@@ -3168,7 +3178,7 @@ allowlist is unchanged.
 
 The resident demo app has its own template, `infra/resident-demo.bicep`, and command,
 `scripts/resident_demo_deploy.py`. They never use `main.bicep` or `scripts/deploy.py`, so they
-cannot restore the API minimum of two replicas, cron schedules or the event job. The template
+cannot change the main API's parameterized minimum, cron schedules or the event job. The template
 creates only `id-resident-demo`, `ca-resident-demo` (0.25 vCPU, 0.5 GiB, minimum 0, maximum 1,
 image by `@sha256:` digest in the fixed registry, Key Vault references without versions) and three
 role assignments: Key Vault Secrets User on each of the two resident secrets, and AcrPull on the

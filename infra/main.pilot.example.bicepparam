@@ -15,6 +15,7 @@ param sqlAdminGroupName = 'sg-zava-forward-sql-admins' // PLACEHOLDER
 param sqlAdminGroupObjectId = '00000000-0000-0000-0000-000000000000' // PLACEHOLDER
 param entraClientId = '' // PLACEHOLDER: set after app registration
 param zoneRedundant = false // PLACEHOLDER: owner decides after selected-region service support checks
+param apiMinReplicas = 0
 param enableLocks = true
 param deploymentProfile = 'production'
 param allowPublicNetworkAccess = false

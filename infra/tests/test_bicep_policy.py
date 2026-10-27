@@ -370,12 +370,71 @@ class BicepPolicyTests(unittest.TestCase):
                 ],
             )
 
+    def test_api_minimum_replicas_parameter_contract(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        standalone = compile_bicep("modules/containerapps.bicep")
+        for name, template in (("main", self.main), ("nested", apps), ("module", standalone)):
+            with self.subTest(template=name):
+                parameter = template["parameters"]["apiMinReplicas"]
+                self.assertEqual(parameter["type"], "int")
+                self.assertEqual(parameter["defaultValue"], 0)
+                self.assertEqual(parameter["minValue"], 0)
+                self.assertEqual(parameter["maxValue"], 4)
+                self.assertIn("cost-safe demos", parameter["metadata"]["description"])
+                self.assertIn("set 2 explicitly", parameter["metadata"]["description"])
+        forwarded = module(self.main, "containerapps")["properties"]["parameters"]["apiMinReplicas"]
+        self.assertEqual(forwarded["value"], "[parameters('apiMinReplicas')]")
+        for template in (apps, standalone):
+            api = next(
+                r
+                for r in resources(template)
+                if r["type"] == "Microsoft.App/containerApps"
+                and r["properties"]["template"]["containers"][0]["name"] == "api"
+            )
+            scale = api["properties"]["template"]["scale"]
+            for minimum in (self.defaults["apiMinReplicas"], 1, 2, 4):
+                with self.subTest(minimum=minimum, template=template is standalone):
+                    passed = evaluate(forwarded["value"], {"apiMinReplicas": minimum}, {})
+                    self.assertEqual(
+                        evaluate(scale["minReplicas"], {"apiMinReplicas": passed}, {}),
+                        minimum,
+                    )
+
+    def test_parameter_examples_keep_api_scaled_to_zero(self) -> None:
+        for name in (
+            "main.bicepparam",
+            "main.test.bicepparam",
+            "main.pilot.example.bicepparam",
+        ):
+            with self.subTest(parameters=name):
+                result = subprocess.run(
+                    ["az", "bicep", "build-params", "--file", str(INFRA / name), "--stdout"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                compiled = json.loads(json.loads(result.stdout)["parametersJson"])
+                self.assertEqual(compiled["parameters"]["apiMinReplicas"]["value"], 0)
+
     def test_api_replicas_probes_and_private_edge_contract(self) -> None:
         apps = module_template(self.main, "containerapps")
         api = next(r for r in resources(apps) if r["type"] == "Microsoft.App/containerApps")
         template = api["properties"]["template"]
-        self.assertEqual(template["scale"]["minReplicas"], 2)
+        self.assertEqual(template["scale"]["minReplicas"], "[parameters('apiMinReplicas')]")
         self.assertEqual(template["scale"]["maxReplicas"], 4)
+        self.assertEqual(
+            template["scale"]["rules"],
+            [{"name": "http", "http": {"metadata": {"concurrentRequests": "50"}}}],
+        )
+        agents = next(
+            r
+            for r in resources(apps)
+            if r["type"] == "Microsoft.App/containerApps"
+            and r["properties"]["template"]["containers"][0]["name"] == "agents"
+        )
+        self.assertEqual(agents["properties"]["template"]["scale"]["minReplicas"], 0)
+        self.assertEqual(agents["properties"]["template"]["scale"]["maxReplicas"], 5)
         self.assertEqual(
             template["containers"][0]["probes"],
             [
