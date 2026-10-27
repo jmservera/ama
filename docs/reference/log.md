@@ -7396,3 +7396,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   preferred managed identity and disabled adapter requiring future reviewed
   tariff and durable shared reservation controls. No model calls, Azure changes,
   real-provider activation or live resident acceptance is established.
+
+## [2026-10-23] query | Current scoped cost and minimum development demo refresh (#126)
+
+* Updated the existing Case Study 48 addendum cost proposal and index row with
+  sanitized read-only evidence retrieved about 10:55-10:56Z: USD 261.82 reported
+  RG `ama` actual and USD 457.34 conditional RG service-derived month-end total.
+  Subscription actual/forecast reads failed; no retry or all-in completeness
+  inference from the 91 visible resources, all currently in `ama`.
+* All-in actual/forecast and comparable USD 700 headroom remain Unknown. Exact
+  ingestion lag and complete post-change-day evidence remain unverified; no
+  Front Door/WAF accrued charge was subtracted, and historical evidence stays.
+* Proposed one shared two-hour existing-resource development window, public
+  welcome distinct from signed-in feedback, minimal SQL/private Blob/bootstrap
+  and one bounded real AI coordination draft. Exact incremental prices,
+  cost-complete owner export, operator/technical readiness and separate finite
+  approval block activation; expiry remains 2026-10-25T16:02Z.
+* No Azure mutation, paid/data-plane call, private data/roster/secret read,
+  site-usability claim, legal/DPO/pilot/production approval or #126 acceptance.
+  OD-51 remains open without an invented denominator, quality floor or
+  production economics. Earlier log entries are unchanged.
