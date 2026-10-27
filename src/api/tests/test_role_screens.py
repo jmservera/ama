@@ -40,8 +40,13 @@ class RoleScreens(unittest.TestCase):
 
     def test_safety_keeps_all_items_and_separate_human_response_evidence(self) -> None:
         source = (WEB / "screen-safety.js").read_text()
-        for field in ("item.sent_at", "item.received_at", "item.accepted_at",
-                      "item.follow_up", "decision?.evidence"):
+        for field in (
+            "item.sent_at",
+            "item.received_at",
+            "item.accepted_at",
+            "item.follow_up",
+            "decision?.evidence",
+        ):
             self.assertIn(field, source)
         self.assertNotIn(".filter(", source)
         self.assertNotIn(".slice(", source)
