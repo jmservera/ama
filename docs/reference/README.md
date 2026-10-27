@@ -30,6 +30,13 @@ registration until separately approved sender-role propagation verification.
 These are source-only definitions and local checks, not Azure what-if,
 provisioning, actual budget headroom, credential issue or OD-43 acceptance.
 
+For #179, the [dated indoor-envelope correction and criterion audit](./research/iot-sensor-analytics-research-plan.md#indoor-record-derived-envelope-correction-2026-10-27-179)
+records v2 per-outdoor-pair dwelling/household-derived bounds in both projection
+paths, replacing the fixed 8 C and 15..98% exercise clips. Model inputs,
+coefficients and bounded-noise parameters remain exercise values. The pinned
+public 17,544-hour ERA5 record supplies regression evidence, not calibrated
+indoor physics, a safety threshold, OD-43 or whole-parent/live PRD acceptance.
+
 For #199-#203, the
 [owner-authorized 2026-10-27 directory retirement](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
 records explicit cut-over sign-off, local archive `v0.21.0`, removal of the
