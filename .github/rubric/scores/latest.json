@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T04:23:14+00:00",
-  "commit": "f28cb710c9b370f96797168cc409e9ca599eae23",
+  "scored_at": "2026-10-27T09:13:58+00:00",
+  "commit": "d1b12ad9d1d5d52117e7c7a78321928986456fec",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40448727735",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40478268066",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
@@ -14,7 +14,7 @@
     "infrastructure": "2f7ff2f7a2e149e32ed5eb81d8fae8b279b28b2b00d47849b4e11b94462585c3",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
+    "thought-leadership": "067cda445da41bfa951d895a97fda125a5bb58a403a41b1037f1567ed3f3526e"
   },
   "total": 75,
   "sections": {
