@@ -73,7 +73,7 @@ module = ["mssql_python"]
 ignore_missing_imports = true
 
 [tool.setuptools.package-data]
-"zava_forward.core" = ["policies/*.json", "law/*.json"]
+"zava_forward.core" = ["policies/*.json", "law/*.json", "resident-demo.json"]
 
 # Typed test harness calling the migrated, not-yet-typed Store interface.
 [[tool.mypy.overrides]]

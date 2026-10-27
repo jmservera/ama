@@ -14,7 +14,9 @@ param image string
 @description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')
 param sqlServerFqdn string
 param sqlDatabaseName string
-@description('Explicit UTC expiry, at most 2026-11-01T00:00:00Z (exclusive). The service refuses to start after it.')
+@description('Explicit UTC expiry, no later than the packaged resident demo policy maximum (inclusive). The service refuses to start at or after its configured expiry.')
+@minLength(20)
+@maxLength(20)
 param expiresAt string
 @description('False is the rollback: the app has no ingress and cannot be reached.')
 param externalIngress bool = true
@@ -24,8 +26,9 @@ var appName = 'ca-resident-demo'
 var identityName = 'id-resident-demo'
 var verifierSecret = 'resident-demo-password-verifier'
 var sessionSecret = 'resident-demo-session-key'
+var maximumExpiry = loadJsonContent('../src/core/src/zava_forward/core/resident-demo.json').maximum_expiry_utc
 var digestOk = contains(image, '@sha256:') && !contains(image, ' ') && startsWith(image, '${registryServer}/')
-var scopeOk = resourceGroup().name == 'ama' && environmentName == 'cae-cutover-test-demo' && digestOk && expiresAt <= '2026-11-01T00:00:00Z'
+var scopeOk = resourceGroup().name == 'ama' && environmentName == 'cae-cutover-test-demo' && digestOk && endsWith(expiresAt, 'Z') && dateTimeToEpoch(expiresAt) <= dateTimeToEpoch(maximumExpiry)
 
 module guard './modules/staff-initializer-guard.bicep' = {
   name: 'resident-demo-scope'

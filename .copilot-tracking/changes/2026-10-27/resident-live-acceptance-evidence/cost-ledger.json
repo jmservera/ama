@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-27",
+  "group": "ama",
+  "authority": "Owner task 2026-10-27, citing coordination_state owner-approvals-2026-10-27; table not independently available in this session",
+  "additional_cap_usd": 30,
+  "renewed_cap_usd": 700,
+  "renewed_cap_authority_end": "2026-12-31",
+  "cap_interpretation": "Continued monthly ama ceiling, based on the original October monthly ceiling and renewed wording. Not a cumulative October-December allowance or forecast claim.",
+  "resident_expires_at": "2026-10-31T23:59:00Z",
+  "actual_cost_month_to_date_usd": 315.535491423131,
+  "actual_cost_source": "actual-cost.json; ActualCost CostUSD MonthToDate; reporting lag unknown",
+  "remaining_official_forecast_usd": {
+    "2026-10": 118.33709617465566,
+    "2026-11": 605.7771015167236,
+    "2026-12": 616.7678909301758
+  },
+  "forecast_source": "forecast-cost.json; CostManagement forecast API2023-11-01, 2026-10-27 through2026-12-31, includeActualCost=false",
+  "conservative_monthly_comparison_with_single_30_reservation_usd": {
+    "2026-10_actual_plus_remaining_forecast_plus_30": 463.87258759778666,
+    "2026-11_forecast_plus_30": 635.7771015167236,
+    "2026-12_forecast_plus_30": 646.7678909301758
+  },
+  "allocation_counted_once_not_new_authority": {
+    "previous_release_reservation_usd": 1,
+    "retained_model_reservation_usd": 20,
+    "resident_feedback_window_reservation_usd": 5,
+    "remaining_contingency_usd": 4
+  },
+  "resident_compute_estimate": {
+    "basis": "Prior release retail rates, uksouth, no free grant assumed",
+    "vcpu": 0.25,
+    "gib": 0.5,
+    "max_replicas": 1,
+    "vcpu_second_usd": 0.000034,
+    "gib_second_usd": 0.000004,
+    "conservative_seconds_through_expiry": 396000,
+    "continuous_compute_upper_estimate_usd": 4.158,
+    "request_rate_per_million_usd": 0.4,
+    "not_a_total_bound": "Requests, logging, vault, registry/storage and egress remain additional and uncertain within reservation/contingency; scale-to-zero is not a hard monetary cap."
+  },
+  "new_operations": {
+    "resident_revision_reactivation": "Admitted after baseline and cost comparison, exact prior tested digest only",
+    "external_ingress": "Admitted for owner feedback, HTTPS only until existing application expiry",
+    "azure_image_builds": 0,
+    "model_calls": 0,
+    "new_roles": 0,
+    "new_endpoints": 0,
+    "new_jobs": 0
+  },
+  "existing_budget_alerts": "Existing two USD300 monthly group budget alerts are unchanged and stale versus new owner authority; alerts are not hard enforcement.",
+  "expiry_closure": {
+    "owner_handoff": "@jmservera via PR and final outcome",
+    "deadline": "2026-10-31T23:59:00Z",
+    "status": "Pending future operator execution",
+    "residual_cost": "Application expiry stops content but not ingress; post-expiry requests may incur costs until close/deactivate."
+  },
+  "stop_conditions": [
+    "Unexpected image, app minima, maxReplicas, job triggers, SQL sizing or resource scope",
+    "Resident reservation or overall cap threatened; no unapproved use of retained model allocation",
+    "Expiry reached: owner closes resident ingress and deactivates tested revision immediately; never delete ama"
+  ],
+  "actual_billing": "Unknown delayed actual incremental charges; estimates and forecasts are not invoice, hard cap or future baseline commitment."
+}

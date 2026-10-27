@@ -3169,7 +3169,7 @@ validation plus vault metadata only, no value sent); a dry run is not what-if pr
 what-if runs only under `--apply`. `--apply` writes exactly
 `resident-demo-password-verifier` and `resident-demo-session-key` to `kv-cutovertest-rzsrg` in one
 secure ARM deployment, only after a what-if proves two new secrets there, with an expiry no later
-than 2026-11-01T00:00:00Z. The verifier comes from a hidden prompt or an owner-only 0600 file outside
+than the resident policy cap (2026-12-31T23:59:59Z inclusive). The verifier comes from a hidden prompt or an owner-only 0600 file outside
 the repository; the session key is generated at apply time and never printed. It is not an
 authority: it needs a separate exact write approval, cleared budget and a proven private write
 path, and Azure roles remain the enforcing control. A part-failed write is not cleaned up
@@ -3183,7 +3183,7 @@ creates only `id-resident-demo`, `ca-resident-demo` (0.25 vCPU, 0.5 GiB, minimum
 image by `@sha256:` digest in the fixed registry, Key Vault references without versions) and three
 role assignments: Key Vault Secrets User on each of the two resident secrets, and AcrPull on the
 registry. It sets the full runtime contract (`ZF_DEMO_*`, `ZF_SQL_*` with managed identity,
-`PORT`) and a scope guard that refuses outside `ama` or an expiry after 2026-11-01T00:00:00Z.
+`PORT`) and a scope guard that refuses outside `ama` or an expiry after the shared policy cap.
 The Owner ARM secret write needs no extra Key Vault writer role; that path is still unproven
 against the private vault, and no broader role is proposed.
 
@@ -3193,7 +3193,7 @@ deployment is accepted, and an unverified nested what-if shape is refused. `--ap
 back minimum 0 and maximum 1. It is not an authority; it needs a separate approval and a cleared
 cost and headroom check. Stop conditions (all UTC): any minimum replica above 0, a new schedule or
 event, an unexpected resource type, daily `ama` cost well above baseline, or time reaching
-2026-11-01T00:00:00Z. Rollback is a rerun with `--no-ingress`; after expiry, confirm no active
+the configured expiry. Rollback is a rerun with `--no-ingress`; after expiry, confirm no active
 revision serves traffic. The template default is public ingress, so the first operational stage must pass `--no-ingress`
 until the private-vault and SQL proofs exist. None of this has been validated live: tests use a
 fake CLI and the compiled template only. Image builds, logs and egress costs are not estimated here.
@@ -3245,3 +3245,50 @@ See the [design/cost envelope](../docs/architecture/resident-assistant-prototype
 The USD20 ceiling is application-controlled inference admission, not an Azure
 budget alert or subscription-wide spending guarantee. Funding through December
 does not extend the existing November 1 exclusive resident-access boundary.
+
+### Renewed resident feedback window (2026-10-27, Refs #462, #466)
+
+The owner superseded the October-only test window: public feedback access is
+authorized through `2026-12-31T23:59:00Z`, within USD30 additional resident spend
+inside the renewed USD700 `ama` cap through December31. This supersedes the
+historical staging/closure language above, not production identity acceptance.
+The single source of the maximum expiry is
+[`resident-demo.json`](../src/core/src/zava_forward/core/resident-demo.json):
+`2026-12-31T23:59:59Z` inclusive. Bicep loads it at compilation; the packaged
+runtime and secret/deploy helpers use the same value. Configured expiry is still
+exclusive for serving: startup and requests fail closed at/after that instant.
+The 1000-mapping refusal remains. The optional model provider's separate
+authority is not extended; the deterministic assistant remains available.
+
+Deploy only through the resident Bicep helper, with an immutable rebuilt digest:
+
+```bash
+python3 infra/scripts/resident_demo_deploy.py \
+  --subscription <approved-subscription> \
+  --expires 2026-12-31T23:59:00Z \
+  --image crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:<digest> \
+  --sql-server sql-cutover-test-rzsrg.database.windows.net \
+  --sql-database retrofit --apply
+```
+
+Default `externalIngress=true` is intentional. Leave ingress open and the revision
+active for owner testing and the November demonstration; do not install a closure
+watchdog or use an imperative app update. Keep min0/max1 and all other app minima0
+and eight jobs Manual. Idle replicas scale to zero; the first request can have a
+cold-start delay and may need a retry. Scale-to-zero is not a monetary cap:
+monitor actual/delayed charges and stop before the USD30 allowance is exhausted.
+
+The owner signs in with an admitted synthetic `@example.com` resident email and
+the existing owner-held shared password. Any arbitrary email is not admitted.
+No credential is retrieved or printed by this deployment helper.
+Authenticated isolation, gauges/history, assistant, top-right logout and genuine
+1800-second expiry must be verified by the owner when the password is unavailable
+to the operator; anonymous denials and local fixtures are not substitutes.
+
+Important independent expiry boundaries: the existing SQL allowlist constraint
+and row windows retain their original November1 limit. Existing vault-secret
+validity is not changed by an app deployment. December ingress therefore does
+not prove December resident-data access. Renewing SQL authorizations or secret
+metadata requires a separately approved owner/private operation; this change
+does not mutate SQL rows, permissions or secrets. Preserve these limits in any
+demonstration-readiness claim. Never delete resource group `ama`.

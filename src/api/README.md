@@ -2905,7 +2905,9 @@ identity and not production authentication. It is a different composition from t
   volume, no staff, Entra or AI settings, no secret in the image).
 * Configuration (environment only; the server refuses to start on any missing, expired, mixed or
   unsafe value, and never echoes a value):
-  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, not after 2026-11-01T00:00Z (exclusive, through 31 October UTC)),
+  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, no later than the packaged
+  `resident-demo.json` cap, currently2026-12-31T23:59:59Z inclusive;
+  startup and requests refuse at/after the configured expiry),
   `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
   the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
   `ZF_SQL_DATABASE`, optional `ZF_SQL_CLIENT_ID` for managed-identity sign-in, `PORT`, `ZF_DEMO_BIND`.

@@ -1,0 +1,34 @@
+{
+  "expiry": "2026-12-31T23:59:00Z",
+  "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:fab6a85318f65db006bc610f3b3aff8ae799046d1b9a1813662b3b315c1b6fc7",
+  "ingress": {
+    "additionalPortMappings": null,
+    "allowInsecure": false,
+    "clientCertificateMode": null,
+    "corsPolicy": null,
+    "customDomains": null,
+    "exposedPort": 0,
+    "external": true,
+    "fqdn": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+    "ipSecurityRestrictions": null,
+    "stickySessions": null,
+    "targetPort": 8089,
+    "targetPortHttpScheme": null,
+    "traffic": [
+      {
+        "latestRevision": true,
+        "weight": 100
+      }
+    ],
+    "transport": "Http"
+  },
+  "ready": "ca-resident-demo--0000003",
+  "revision": "ca-resident-demo--0000003",
+  "scale": {
+    "cooldownPeriod": 300,
+    "maxReplicas": 1,
+    "minReplicas": 0,
+    "pollingInterval": 30,
+    "rules": null
+  }
+}

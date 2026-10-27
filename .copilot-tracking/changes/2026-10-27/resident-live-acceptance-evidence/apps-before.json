@@ -1,0 +1,294 @@
+[
+  {
+    "containers": [
+      {
+        "args": null,
+        "command": null,
+        "envNames": [
+          "APPLICATIONINSIGHTS_CONNECTION_STRING",
+          "OTEL_SERVICE_NAMESPACE",
+          "AZURE_CLIENT_ID",
+          "SQL_SERVER",
+          "SQL_DATABASE",
+          "BLOB_ENDPOINT",
+          "QUEUE_ENDPOINT",
+          "KEY_VAULT_URI",
+          "EVIDENCE_STORE",
+          "SHAREPOINT_SITE_ID",
+          "ENTRA_TENANT_ID",
+          "ENTRA_CLIENT_ID",
+          "ZF_TILE_URL",
+          "ZF_TILE_ATTRIBUTION",
+          "ZF_STORE",
+          "ZF_SQL_SERVER",
+          "ZF_SQL_DATABASE",
+          "ZF_SQL_AUTH",
+          "ZF_SQL_CLIENT_ID",
+          "ZF_DOC_STORE",
+          "ZF_BLOB_ACCOUNT_URL",
+          "ZF_BLOB_CONTAINER",
+          "ZF_BLOB_CLIENT_ID",
+          "ZF_AUTH",
+          "ZF_TRUSTED_PROXY",
+          "ZF_ENTRA_TENANT_ID",
+          "ZF_ENV"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+        "name": "api",
+        "resources": {
+          "cpu": 0.5,
+          "ephemeralStorage": "2Gi",
+          "memory": "1Gi"
+        }
+      }
+    ],
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "ingress": {
+      "additionalPortMappings": null,
+      "allowInsecure": false,
+      "clientCertificateMode": null,
+      "corsPolicy": null,
+      "customDomains": null,
+      "exposedPort": 0,
+      "external": true,
+      "fqdn": "ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+      "ipSecurityRestrictions": null,
+      "stickySessions": null,
+      "targetPort": 8088,
+      "targetPortHttpScheme": null,
+      "traffic": [
+        {
+          "latestRevision": true,
+          "weight": 100
+        }
+      ],
+      "transport": "Auto"
+    },
+    "mode": "Single",
+    "name": "ca-cutover-test-api",
+    "scale": {
+      "cooldownPeriod": 300,
+      "maxReplicas": 4,
+      "minReplicas": 0,
+      "pollingInterval": 30,
+      "rules": [
+        {
+          "http": {
+            "metadata": {
+              "concurrentRequests": "50"
+            }
+          },
+          "name": "http"
+        }
+      ]
+    }
+  },
+  {
+    "containers": [
+      {
+        "args": null,
+        "command": null,
+        "envNames": [
+          "APPLICATIONINSIGHTS_CONNECTION_STRING",
+          "OTEL_SERVICE_NAMESPACE",
+          "AZURE_CLIENT_ID",
+          "FOUNDRY_ENDPOINT",
+          "FOUNDRY_PROJECT",
+          "MODEL_DEPLOYMENT_DEFAULT",
+          "MODEL_DEPLOYMENT_CAPABLE",
+          "QUEUE_ENDPOINT",
+          "TASK_QUEUE",
+          "POISON_QUEUE",
+          "API_BASE_URL",
+          "API_AUDIENCE"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:79ec0c252c22e271fb5e833437dab1e217cca7f46cc683a48e4216c9c917fcf0",
+        "name": "agents",
+        "resources": {
+          "cpu": 0.5,
+          "ephemeralStorage": "2Gi",
+          "memory": "1Gi"
+        }
+      }
+    ],
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents": {
+          "clientId": "90356998-49da-417d-9230-34e801e7b44f",
+          "principalId": "820e0c28-88dc-48c6-a79b-120bfd6b507a"
+        }
+      }
+    },
+    "ingress": null,
+    "mode": "Single",
+    "name": "ca-cutover-test-agents",
+    "scale": {
+      "cooldownPeriod": 300,
+      "maxReplicas": 5,
+      "minReplicas": 0,
+      "pollingInterval": 30,
+      "rules": [
+        {
+          "custom": {
+            "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents",
+            "metadata": {
+              "accountName": "stcutovertestrzsrg",
+              "cloud": "AzurePublicCloud",
+              "queueLength": "5",
+              "queueName": "agent-tasks"
+            },
+            "type": "azure-queue"
+          },
+          "name": "agent-task-queue"
+        }
+      ]
+    }
+  },
+  {
+    "containers": [
+      {
+        "args": null,
+        "command": null,
+        "envNames": [
+          "APPLICATIONINSIGHTS_CONNECTION_STRING",
+          "OTEL_SERVICE_NAMESPACE",
+          "AZURE_CLIENT_ID",
+          "SQL_SERVER",
+          "SQL_DATABASE",
+          "BLOB_ENDPOINT",
+          "QUEUE_ENDPOINT",
+          "KEY_VAULT_URI",
+          "EVIDENCE_STORE",
+          "SHAREPOINT_SITE_ID",
+          "ZF_TILE_URL",
+          "ZF_TILE_ATTRIBUTION",
+          "ZF_STORE",
+          "ZF_SQL_SERVER",
+          "ZF_SQL_DATABASE",
+          "ZF_SQL_AUTH",
+          "ZF_SQL_CLIENT_ID",
+          "ZF_DOC_STORE",
+          "ZF_BLOB_ACCOUNT_URL",
+          "ZF_BLOB_CONTAINER",
+          "ZF_BLOB_CLIENT_ID",
+          "ZF_AUTH",
+          "ZF_TRUSTED_PROXY",
+          "ZF_ENV",
+          "ZF_ENTRA_TENANT_ID",
+          "ENTRA_TENANT_ID",
+          "ENTRA_CLIENT_ID"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e",
+        "name": "api",
+        "resources": {
+          "cpu": 0.5,
+          "ephemeralStorage": "2Gi",
+          "memory": "1Gi"
+        }
+      }
+    ],
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "ingress": {
+      "additionalPortMappings": null,
+      "allowInsecure": false,
+      "clientCertificateMode": null,
+      "corsPolicy": null,
+      "customDomains": null,
+      "exposedPort": 0,
+      "external": true,
+      "fqdn": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+      "ipSecurityRestrictions": [],
+      "stickySessions": null,
+      "targetPort": 8088,
+      "targetPortHttpScheme": null,
+      "traffic": [
+        {
+          "latestRevision": true,
+          "weight": 100
+        }
+      ],
+      "transport": "Auto"
+    },
+    "mode": "Single",
+    "name": "ca-cutover-test-demo-api",
+    "scale": {
+      "cooldownPeriod": 300,
+      "maxReplicas": 4,
+      "minReplicas": 0,
+      "pollingInterval": 30,
+      "rules": [
+        {
+          "http": {
+            "metadata": {
+              "concurrentRequests": "50"
+            }
+          },
+          "name": "http"
+        }
+      ]
+    }
+  },
+  {
+    "containers": [
+      {
+        "args": null,
+        "command": null,
+        "envNames": [
+          "ZF_DEMO_EXPIRES_AT",
+          "ZF_DEMO_ALLOWED_HOSTS",
+          "ZF_DEMO_CLIENT_ADDRESS",
+          "ZF_DEMO_PASSWORD_VERIFIER",
+          "ZF_DEMO_SESSION_KEY",
+          "ZF_SQL_AUTH",
+          "ZF_SQL_CLIENT_ID",
+          "ZF_SQL_SERVER",
+          "ZF_SQL_DATABASE",
+          "PORT"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:0568deb725e7258c3b09d425b6c0a28a736a2e23434fc22c350bac6333888043",
+        "name": "resident-demo",
+        "resources": {
+          "cpu": 0.25,
+          "ephemeralStorage": "1Gi",
+          "memory": "0.5Gi"
+        }
+      }
+    ],
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-resident-demo": {
+          "clientId": "ba252cc4-6059-4248-9f21-f6ae7f0cd4d1",
+          "principalId": "ab308885-7010-41b8-8b70-9ef5eabe40d0"
+        }
+      }
+    },
+    "ingress": null,
+    "mode": "Single",
+    "name": "ca-resident-demo",
+    "scale": {
+      "cooldownPeriod": 300,
+      "maxReplicas": 1,
+      "minReplicas": 0,
+      "pollingInterval": 30,
+      "rules": null
+    }
+  }
+]

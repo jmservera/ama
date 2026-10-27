@@ -10,8 +10,8 @@ database, the environment, the registry or the vault beyond the two secret-scope
 
 Needs: the two owner-written secrets already in the private vault, the resident SQL principal and
 view already created, and a separate exact execution approval with a cleared budget check. Running
---apply is not an authority. Expiry is a UTC instant no later than 2026-11-01T00:00:00Z. Rollback is
-a rerun with --no-ingress; stop conditions are in infra/README.md. No secret value is handled here.
+--apply is not an authority. Expiry is a UTC instant no later than the packaged policy cap.
+Rollback is a rerun with --no-ingress; see infra/README.md. No secret value is handled here.
 """
 
 from __future__ import annotations
@@ -131,7 +131,7 @@ def main(
         if not interactive:
             raise DeployError("Run this in an interactive terminal; piped input is refused.")
         try:
-            # Closing ingress is always safe, so rollback accepts an expired window; opening needs a live one.
+            # Rollback accepts an expired window; opening requires a live one.
             expires = secrets_helper.parse_expiry(
                 args.expires, now(), require_future=not args.no_ingress
             )
