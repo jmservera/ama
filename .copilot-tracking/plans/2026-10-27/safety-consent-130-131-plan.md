@@ -6,18 +6,19 @@
 * Task ID: 130-131
 * Task slug: safety-consent-130-131
 * Date: 2026-10-27
-* Status: Ready for bounded implementation; original critique Revise preserved
+* Status: Bounded RPI complete; Review Residual work; operational acceptance blocked
 * Details: .copilot-tracking/details/2026-10-27/safety-consent-130-131-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-27/safety-consent-130-131-plan-critique.md
 
 ## Executive Summary
 
-Implement independent staff-recorded nomination/correction and unverified
+Implemented independent staff-recorded nomination/correction and unverified
 household tenure intake in the existing transactional resident ledger.
-Keep original accounts, named acknowledgement owners, manual channels and
+Preserves original accounts, named acknowledgement owners, manual channels and
 revision history. Registered unresolved tenure blocks affected work; no
 screen or agent gains lease, consent, safety or cost authority.
-Publish one draft PR with Refs #130 and Refs #131, not whole-issue closure.
+Published draft PR https://github.com/jmservera/ama/pull/509 with Refs #130
+and Refs #131, not whole-issue closure. Source commit: ebb80098.
 
 ### What You May Not Know
 
@@ -93,7 +94,7 @@ These are bounded implementation criteria, not substitutes for issue criteria.
 * [x] Tenure remains Unknown and affected gates hold; no API payload can approve
   tenure, legal responsibility, consent or cost.
 * [x] Unrelated decisions, ranking, support status and hazard history unchanged.
-* [ ] Exact human blockers and issue-criterion evidence appear in the draft PR.
+* [x] Exact human blockers and issue-criterion evidence appear in draft PR #509.
 
 ## Phase Checklist
 
@@ -113,10 +114,10 @@ Persist reported status, all revisions and unresolved data/Legal handoff.
 Details: P01-T02 in phase details.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Evidence and handoff
+### [x] P02: Evidence and handoff
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Local regression, documentation and publication
+#### [x] P02-T01: Local regression, documentation and publication
 
 Run focused core/API tests then the required API discovery. Run existing core
 lint/type commands for touched targets where available. Record exact outcomes,
@@ -166,5 +167,8 @@ must be checked by canary tests or exact allow-list evidence.
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-27/safety-consent-130-131-changes.md.
-Ready only for independent intake after critique disposition. Do not silently
-convert these bounded criteria into issue closure.
+Bounded implementation and one Review complete; draft #509 verified open,
+draft, main-based and with no closing issue references. No further source work
+or Review in this task. Stop operational extensions at the user-directed
+human decision boundary. Do not convert these bounded criteria into issue
+closure. Original critique and Review outcomes are preserved.

@@ -10,7 +10,7 @@ Research: .copilot-tracking/research/2026-10-27/safety-consent-130-131-research.
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete bounded implementation | P01-T01, P01-T02 |
-| P02 | Local validation/publication in progress | P02-T01 |
+| P02 | Complete; draft PR #509 | P02-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Independent intake and holds
@@ -90,3 +90,13 @@ SQL-specific methods for writer-time actor/owner/revision change and committed
 outcome; up to three API methods for both intake routes, permission/schema/
 current-registry denial and non-sensitive projections. Reuse existing generic
 postcommit tests; assert no handler side effects outside supplied case/audit.
+
+## Final Completion Evidence
+
+P01/P02 and all three bounded tasks complete. Final core boundary suites:
+373 tests OK, 87 skipped. Required API discovery: 1124 tests OK, 314 skipped.
+Focused Ruff/format/mypy and diff checks pass. Review executed exactly once,
+Complete / Residual work, no material bounded-source defect.
+Draft https://github.com/jmservera/ama/pull/509 targets main, source ebb80098,
+no closing issue references. Whole-issue and operational acceptance remains
+blocked by named human decisions; no second Review or further source edit.

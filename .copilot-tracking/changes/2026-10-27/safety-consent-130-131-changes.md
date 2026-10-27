@@ -9,9 +9,9 @@ Details: .copilot-tracking/details/2026-10-27/safety-consent-130-131-phase-detai
 
 ## Execution Status
 
-In progress. Declared scope: full bounded plan, not full issue acceptance.
-Completed: P01, P01-T01, P01-T02 and P02-T01 local validation/documentation.
-Remaining: independent Review and P02/P02-T01 final publication evidence.
+Complete for the full bounded plan, not full issue acceptance.
+Completed: P01, P01-T01, P01-T02, P02 and P02-T01.
+No remaining active implementation task; human operational follow-ups remain.
 Write boundary: resident core/API tests, core ledger/projection and component
 READMEs plus dated evidence. No web, new assistant, SQL schema or Azure changes.
 
@@ -124,4 +124,28 @@ Publish draft-only with the verified local evidence and complete unproven
 criterion matrix; do not imply hosted/human approval or full-tier gate readiness.
 The original Review finding and outcome remain unchanged.
 
-Publication remains pending; P02 stays unchecked until the actual draft exists.
+### P02-T01: Actual publication
+
+Committed implementation, tests, component docs and original dated RPI evidence
+as ebb800983ac359e846230998c752e7519f12e282 using authenticated account-derived
+privacy-safe author/committer email and required Co-authored-by trailer.
+Pushed only docs/safety-consent-130, no force, no main write.
+Opened https://github.com/jmservera/ama/pull/509 and verified:
+OPEN, isDraft=true, base main, correct branch and remote head,
+closingIssuesReferences=[].
+PR body includes every original/RAI criterion group with exact partial/blocked
+boundary, local commands/results and named human decisions. No issue criterion
+was ticked and no Closes reference is used.
+
+Final evidence-only publication update reconciles P02/plan/details/state in
+the same PR. No production source changed after the independent Review.
+No hosted result, full gate, real SQL Server/browser, actual participant,
+Legal approval or operational release is implied by publishing a draft.
+
+## Return-to-Caller State
+
+Bounded RPI execution complete, Review Complete / Residual work. Actual issue
+acceptance blocked. User directed a stop when human decisions are needed;
+stop automatic continuation after the draft handoff, with no child work begun.
+First follow-up: Legal/Home Ownership/Finance/DPO/Compliance decisions.
+Second: nomination OD-41/42 and real participant/authority evidence.
