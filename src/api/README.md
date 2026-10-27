@@ -2903,12 +2903,21 @@ identity and not production authentication. It is a different composition from t
 * Session: `__Host-zfdemo` (HttpOnly) and `__Host-zfdemo-csrf`, both Secure and SameSite=Strict,
   30 minutes absolute and never past the showcase end. A restart ends every session and logout
   revokes the session. The session holds an opaque handle, never a case id, email or URL.
+* Account control (#467): the top-right Account disclosure shows the signed-in synthetic email
+  and Sign out, matching the employee site's native account panel. Escape closes it and returns
+  focus to Account. Successful sign-out returns focus to the sign-in heading. The authorised
+  `/demo/view` includes only that account's canonical `account.email`; anonymous/session responses
+  do not include it. Hidden/error/signed-out account controls clear their displayed email.
+  The focused no-SQL browser check runs from `src/api` with
+  `PYTHONPATH=tests python -m checks.resident_account_check`, using only constructed test rows and the actual
+  loopback HTTP app. It checks keyboard/focus, restored identity, narrow widths and logout recovery;
+  it does not establish human screen-reader or accessibility acceptance.
 * Reads: every protected request re-reads the case through the allowlist view and re-checks
   admission, so a revoked, expired, duplicated or unprovenanced row is denied on the next request.
   The email in the start-up map is bound to the case: a row whose email no longer equals it is denied
   on login and on every request, including live sessions, until restart. There is no row cache.
   Adding a resident or changing an email needs a restart. The page shows only the positive-allowlist fields
-  (home address, planned measures, plain-language progress and next step, help, and what is
+  (own account email, home address, planned measures, plain-language progress and next step, help, and what is
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
   the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
@@ -2933,3 +2942,50 @@ identity and not production authentication. It is a different composition from t
 Live criteria still blocked (not proven here): remaining budget headroom, live email-to-case
 equality in the homes database, the private job that creates the view and principal, the Key Vault
 secret retrieval role and client, and any deployment. The page is not WCAG conformance evidence.
+
+### Own-home synthetic sensor history (#468)
+
+`GET /demo/view` includes `sensors` with `synthetic: true`, a non-live notice and
+up to 48 stored observations in chronological order. Each observation contains
+UTC `observed_at`, nullable `temperature_c`/`humidity_pct` and explicit channel
+statuses. It contains no home, sensor or reading IDs. Signed-session case
+selection and fresh admission checks are unchanged; URL/header home selectors
+have no authority.
+
+The source view definition optionally reads the existing generated
+`dbo.sensor_register` and `dbo.sensor_reading` tables from
+[`sensor_backfill`](../core/src/zava_forward/core/synthetic/sensor_backfill.py).
+Both register and reading home IDs must exactly match the case's `home.stock_id`,
+and both source labels must be `SYNTHETIC`, using binary comparisons plus
+length checks after common Unicode conversion (no trimming or SQL space-padding
+equivalence). The
+principal still has SELECT on only the resident view. No request generates data,
+opens an exported snapshot or reads a private stock file.
+
+At a separately authorised view apply, absent sensor tables produce an empty
+history, not invented readings. Existing deployed view definitions do not have
+the new columns: coordinate any later application deployment with that reviewed
+view update. Creating/loading the tables, applying the view, changing grants
+and deploying are not performed or authorised by this source increment.
+Source/mocked checks do not prove T-SQL compilation or live data availability.
+
+The UI shows the latest stored observation, including its unavailable state,
+not an older apparently normal replacement. Missing channels, out-of-range
+values and labelled OUTLIER/STUCK faults have text and gaps rather than zero
+gauges. The fictional generator ranges (-10 to 45 degrees C and 0 to 100 percent)
+are display bounds, not health limits. Two static SVG histories have unit labels
+and an equivalent keyboard-accessible data table. No animation or chart library
+is added. This is not safety advice or a WCAG conformance claim.
+
+With editable core/agents/API and API development dependencies installed, run
+the SQL-free constructed-reader browser exercise from `src/api`:
+
+```bash
+python -m checks.resident_sensors_browser_check
+```
+
+It starts the actual HTTP app on loopback with fresh fictional output from the
+existing sensor generator, uses real demo cookies and Chromium, and closes the
+server after checking own-home values, isolation, table, missing/fault/empty
+states, keyboard focus, reduced motion and 320/390/1280 px reflow. It does not
+use the SQL-configured application entry point, Azure or private datasets.

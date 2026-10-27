@@ -333,6 +333,7 @@ class ViewTests(unittest.TestCase):
                 "read_only",
                 "home",
                 "measures",
+                "sensors",
                 "progress",
                 "next_step",
                 "unavailable",

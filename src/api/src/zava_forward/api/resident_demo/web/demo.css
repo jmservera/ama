@@ -22,8 +22,15 @@ body{margin:0;font:var(--fontSizeBase400)/1.5 var(--fontFamilyBase);color:var(--
 .skip:focus{top:.5rem}
 :focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
 .synthetic{background:var(--caution-bg);border-bottom:3px solid var(--caution);padding:.6rem var(--spacingHorizontalL);color:var(--ink)}
-.top{display:flex;gap:.75rem;align-items:center;background:var(--brand);color:#fff;padding:.6rem var(--spacingHorizontalL)}
-.brand{margin:0;font-weight:600;font-size:1.15rem}
+.top{display:flex;flex-wrap:wrap;gap:var(--spacingHorizontalM);align-items:center;background:var(--brand);color:#fff;padding:.6rem var(--spacingHorizontalL)}
+.brand{margin:0;min-width:0;flex:1;font-weight:600;font-size:1.15rem}
+.account{position:relative;margin-left:auto;flex:none}
+.account summary{display:flex;align-items:center;min-height:2.75rem;padding:var(--spacingHorizontalS) var(--spacingHorizontalM);border:1px solid currentColor;border-radius:var(--borderRadiusMedium);cursor:pointer;list-style:none;touch-action:manipulation}
+.account summary::-webkit-details-marker{display:none}
+.account summary:hover,.account[open] summary{background:var(--colorBrandBackgroundHover)}
+.account-panel{position:absolute;right:0;top:calc(100% + var(--spacingHorizontalS));z-index:2;width:20rem;max-width:calc(100vw - 2 * var(--spacingHorizontalL));padding:var(--spacingHorizontalL);border:1px solid var(--line);border-radius:var(--borderRadiusXLarge);background:var(--surface);color:var(--ink);overflow-wrap:anywhere}
+.account-panel p{margin:var(--spacingHorizontalS) 0}
+.account-panel button{width:100%;margin-top:var(--spacingHorizontalS)}
 .brand small{display:block;font-weight:400;font-size:.85rem}
 .logo{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:.6rem;background:var(--surface);color:var(--brand);font-weight:700;flex:none}
 main{max-width:46rem;margin:0 auto;padding:var(--spacingHorizontalL)}
@@ -66,3 +73,23 @@ button,input,label{touch-action:manipulation}
 h1,h2{text-wrap:balance}
 .assistant select{font:inherit;width:100%;min-height:2.75rem;padding:var(--spacingHorizontalS);border:1px solid #5c6670;border-radius:var(--borderRadiusMedium);background:var(--surface);color:var(--ink);touch-action:manipulation}
 .assistant h3{font-size:var(--fontSizeBase400);margin-bottom:var(--spacingHorizontalS)}
+.sensor-gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:var(--spacingHorizontalL)}
+.sensor-gauge{min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:var(--borderRadiusMedium);padding:var(--spacingHorizontalM)}
+.sensor-gauge label,.sensor-gauge h3{margin:0;font-size:var(--fontSizeBase400)}
+.sensor-gauge meter{display:block;width:100%;height:2rem;accent-color:var(--brand)}
+.sensor-value{font-size:var(--fontSizeBase500);font-variant-numeric:tabular-nums;margin:var(--spacingHorizontalS) 0}
+.sensor-chart{margin:var(--spacingHorizontalXXL) 0}
+.sensor-chart h3{font-size:var(--fontSizeBase400);margin:0}
+.sensor-chart svg{display:block;width:100%;height:auto;color:var(--ink)}
+.sensor-chart text{fill:currentColor;font:var(--fontSizeBase400) var(--fontFamilyBase);font-variant-numeric:tabular-nums}
+.sensor-chart figcaption{color:var(--muted)}
+.sensor-axis{stroke:var(--muted);fill:none}
+.sensor-line{stroke:var(--brand);stroke-width:2;fill:none}
+.sensor-point{fill:var(--brand)}
+.sensor-table{max-width:100%;overflow-x:auto;margin-top:var(--spacingHorizontalM)}
+.sensor-table table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.sensor-table caption{text-align:left;padding:var(--spacingHorizontalS)}
+.sensor-table th,.sensor-table td{text-align:left;vertical-align:top;padding:var(--spacingHorizontalS);border-bottom:1px solid var(--line)}
+.sensor-table th{font-weight:600}
+details summary{cursor:pointer;min-height:2.75rem;padding:var(--spacingHorizontalS);touch-action:manipulation}
+details summary:hover{background:var(--soft)}
