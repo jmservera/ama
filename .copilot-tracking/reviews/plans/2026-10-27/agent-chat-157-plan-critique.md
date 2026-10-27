@@ -214,3 +214,97 @@
 The active planning parent should resolve the four direct findings, finalize
 the candidate and continue the ordered RPI loop. No second critique, additional
 agent dispatch or user response is requested.
+
+## Correction cycle 1 critique (2026-10-27, PR #503)
+
+### Metadata and Assessment Boundary
+
+* Task: 157 / agent-chat-157; branch: feat/agent-chat-157.
+* Critique execution status: Complete.
+* Verdict: Pass for P04/P04-T01 only.
+* Severity summary: 0 Critical, 0 High, 0 Medium, 0 Low.
+* Assessment count: One independent final-candidate correction critique.
+* Inputs: only the correction appendices of
+  .copilot-tracking/research/2026-10-27/agent-chat-157-research.md:153-209,
+  .copilot-tracking/plans/2026-10-27/agent-chat-157-plan.md:167-215 and
+  .copilot-tracking/details/2026-10-27/agent-chat-157-phase-details.md:95-131,
+  plus the bounded source/workflow evidence below. The existing critique was
+  read to preserve its content and verdict, not reassessed.
+* Criterion boundary: the caller-selected structural disclaimer locator,
+  preservation of both original text assertions, the locked harness-only edit
+  allocation, and the specified local validation and parent handoff.
+* Exclusions: original implementation acceptance, RV-001 accounting repair,
+  production markup/style changes, issue closure, live approval and heavy gates.
+  The original Revise critique, original Not accepted Review and all existing
+  follow-ups remain unchanged.
+
+### Coverage Assessment and Resolution Evidence
+
+| Requirement, research, phase, or task ID | Coverage | Exact evidence and assessment |
+| --- | --- | --- |
+| C8-C9; P04-T01 selector correction | Covered | src/api/src/zava_forward/api/web/chat.js:99-102 places the disclaimer `p.muted` immediately after the direct `summary`, before the privacy sibling. src/api/checks/regulatory_ux_check.py:297-303 opens the panel and applies both text assertions to the ambiguous direct-child `.muted` locator. The proposed `#chat-panel > summary + p.muted` identifies the disclaimer structurally without expected-text filtering or broad ancestor matching. |
+| P04-T01 assertion preservation | Covered | Correction details require one `disclaimer` locator, count equal to one, visibility, and both unchanged `to_contain_text` assertions. These checks cover a missing, hidden or ambiguous selected target and preserve the unapproved-label and independent-review wording contracts. |
+| Locked executable scope | Covered | Correction plan limits executable edits to src/api/checks/regulatory_ux_check.py, zero removals, at most one locator variable and two added assertions, with no new methods/files. Repointing the two existing assertions fits that allocation; no production change is needed. |
+| C10; browser validation | Covered | .github/workflows/src-ci.yml:94-104 runs both checks.design_system_browser_check and checks.regulatory_ux_check, downloads axe 4.10.3 with explicit failure/retry/timeouts, and supplies `--axe` and `--out`. Correction details retain both modules, the exact pinned download contract, matching regulatory test-helper paths and external evidence outputs. src/api/checks/regulatory_ux_check.py:198-203 checks the downloaded content hash; omitting axe is explicitly not successful validation. |
+| P04-T01 unit/lint/type validation | Covered | .github/workflows/src-ci.yml:79-93 specifies API discovery, project Ruff/format, mypy and isolated browser-harness lint/format. Correction details require API discovery with core/agents test paths, project checks, mypy and the isolated checks for the changed harness. No unrelated full/heavy gate is introduced. |
+| Dependencies and disposition | Covered | Independent critique precedes implementation; actual changed browser validation precedes package checks; one bounded independent Review follows final validation. The same draft PR is retained, original outcomes remain intact, and remote recheck/rebase is conditional on divergence. |
+
+### Findings
+
+No actionable correction finding was identified; no PC-C1 ID is assigned.
+The supplied correction plan is credible within the locked scope. The locator
+fix removes the evidenced strict-mode ambiguity without making either required
+text assertion easier to satisfy.
+
+### Strengths, Residual Risks and Limitations
+
+* Explicit count and visibility assertions strengthen the selected disclaimer
+  contract while leaving the privacy warning untouched.
+* The uniqueness assertion concerns the structurally selected target, not a
+  general audit of all disclaimer-like paragraphs elsewhere in the DOM.
+* The adjacent-sibling dependency intentionally detects a changed disclaimer
+  position rather than silently selecting the first or text-matching element.
+* Browser and package results are still implementation evidence to obtain,
+  not outcomes established by this critique. No tests, browser executions,
+  dependency operations, downloads, Azure calls or private-data reads occurred.
+* The caller records an existing authorized environment and session output
+  location. Neither was accessed or written during this critique. Environment
+  availability and downstream execution remain the parent's responsibility.
+* Existing modified research/plan/details/state files were left untouched.
+  Only this existing critique file was appended. No additional agent or
+  planning lane was invoked.
+* This Pass does not change original acceptance, resolve RV-001 through RV-005,
+  establish accessibility conformance or authorize a publication claim beyond
+  the caller's bounded correction process.
+
+### Parent Disposition Route
+
+* Highest-impact finding: None.
+* Action owner: Active planning parent, then P04 implementer.
+* Smallest next action: Finalize the bounded P04 candidate and perform the
+  locked harness edit; no planning revision or further critique is needed.
+* Required completion evidence: the exact diff shows only the existing
+  harness executable edit, both original text assertions retained, one locator
+  variable at most, two added assertions at most, no removals or new methods/
+  files; record both browser outcomes with pinned axe evidence, API discovery
+  outcomes/skips, Ruff/format and mypy outcomes, including failed attempts.
+* Then append the single bounded independent correction Review and return
+  its disposition to the parent. A failed check or an in-scope blocking Review
+  finding is not success and must be explicitly resolved or reported blocked;
+  preserve the original Review verdict and do not claim independent acceptance
+  of a later unreviewed head. Original human/accounting blockers stay open.
+* User response required: No.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/research/2026-10-27/agent-chat-157-research.md](.copilot-tracking/research/2026-10-27/agent-chat-157-research.md) | Correction C8-C10 evidence |
+| [.copilot-tracking/plans/2026-10-27/agent-chat-157-plan.md](.copilot-tracking/plans/2026-10-27/agent-chat-157-plan.md) | Bounded P04 candidate |
+| [.copilot-tracking/details/2026-10-27/agent-chat-157-phase-details.md](.copilot-tracking/details/2026-10-27/agent-chat-157-phase-details.md) | Locked correction and validation contract |
+| [.copilot-tracking/reviews/plans/2026-10-27/agent-chat-157-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-27/agent-chat-157-plan-critique.md) | Preserved original critique and this appended correction assessment |
+
+## Next Steps
+
+The active planning parent may finalize P04 and continue the bounded correction
+implementation, specified validation and single independent Review. No user
+action, additional planning lane or duplicate critique is required. This
+critique stops here.

@@ -207,3 +207,86 @@ another review pipeline or silently updating/rebasing the supplied branch.
 An external merge-base PR reference was generated (218107 bytes) for delivery;
 it is not a review receipt or accepted-head claim. Hosted checks remain
 separate and were not replaced by local or cloud invocations.
+
+## Correction cycle 1: disclaimer locator (2026-10-27, PR #503)
+
+Declared implementation scope: P04/P04-T01 only. Original P01-P03 evidence,
+Not accepted Review and RV-001 through RV-005 remain historical/open.
+Research C8-C10 reproduced the exact browser strict-mode failure. Correction
+plan and details are ready after one independent critique: Complete / Pass,
+no findings. Starting harness-only correction with no approved scope divergence.
+
+The existing isolated pip environment is reused. System Python initially
+failed to import `zava_forward`; no unnecessary dependency restore was done.
+First reproduction omitted required `--out` and failed argument parsing; the
+second supplied external output and failed at the exact two-element locator.
+Neither is represented as a successful validation run.
+
+### P04 implementation and completed local checks
+
+Only executable edit: `src/api/checks/regulatory_ux_check.py` selects the
+summary-adjacent disclaimer with `#chat-panel > summary + p.muted`. It requires
+one visible match and retains both original text assertions. No app, markup,
+privacy warning, workflow/check name, dependency or authority change.
+
+Using `/tmp/ama-chat157-venv/bin` first on PATH, from `src/api`:
+
+| Check | Result |
+| --- | --- |
+| `python -m checks.design_system_browser_check` | Passed; includes design-system and workbench checks, Chromium 156.0.8078.4 |
+| Workflow cdnjs curl flags and pinned axe 4.10.3 | Downloaded; harness verified SHA-256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb` |
+| `PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.regulatory_ux_check --axe <session-files>/axe-4.10.3.min.js --out <session-files>/chat157-correction1-after.json` | Passed; 19 browser states, zero axe violations |
+| `ruff check . && ruff format --check .` | Passed; 46 files already formatted |
+| `mypy` | Passed; 88 source files |
+| Workflow isolated strict Ruff/format for both browser modules | Passed; E,F,I,B,UP, Python 3.12, 100 columns; 2 files already formatted |
+| `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q` | OK; 1129 tests in 472.030s, 315 skipped |
+| `git diff --check` | Passed |
+
+Already installed Chromium was exercised rather than reinstalled. These are
+the workflow's actual browser module invocations with its same pinned scanner,
+not substitute unit tests. Owned loopback servers verified health and cleaned
+up through their existing harnesses. Generated output stays external in
+`/home/azureuser/.copilot/session-state/d2054f18-e53f-46e7-b8cc-2b699bfae36b/files/`.
+Browser JSON explicitly retains staff comprehension Not run/unmet; no human
+screen-reader or WCAG conformance acceptance is inferred.
+
+Four runtime DOM-mutation negative controls (no repository source mutation)
+each reran the actual regulatory harness, omitted axe for these assertion-only
+checks, and proved AssertionError on a missing paragraph, hidden paragraph,
+missing unapproved label and missing independent-review wording. All four
+were rejected. An expected connection BrokenPipe diagnostic appeared during
+early-failing browser teardown; the four negative assertion checks completed.
+No new test file/method or removed test. No semantic grounding claim.
+
+Correction executable boundary: parent HEAD `f84755a5`, harness diff SHA-256
+`9ef9f0cfe198e800e0845536e358155ff91214f6603b234a5fe05bc012c579a2`.
+No full or scoped heavy gate was run; this is a small selector fix.
+
+### Correction Review handoff
+
+P04/P04-T01 implemented and validated; no remaining implementation work in
+this correction. API discovery completed with exit zero; existing opt-in and
+environment-dependent tests remain skipped, not claimed executed. Browser
+checks were separately run with real Chromium and pinned axe as above.
+All P04 plan/details/check outcomes are reconciled for one independent bounded
+Review. RV-001 through RV-005, the original Not accepted outcome and whole-issue
+human/live/stabilization blockers remain unchanged. No issue checkbox ticked.
+
+### Correction Review and publication preparation
+
+The one independent correction Review is Complete / Conformant for P04 only,
+no new findings. Original Complete / Not accepted and RV-001 through RV-005
+remain untouched. Scanner incompletes (including contrast in ten states) and
+missing human comprehension/wording evidence are retained, not converted to
+accessibility acceptance.
+
+Pre-commit fetch found remote rubric commit `0d535bb0` after parent
+`f84755a5`, changing only `.github/rubric/scores/latest.json`. The owner
+explicitly authorized rebase over that bot commit. Commit the reviewed
+correction first, then rebase without autostash, preserving the bot score.
+No source/validation input change is expected from this metadata-only base;
+verify executable hash and unchanged baseline comparison after rebase.
+Authenticated GitHub id/login resolves to the already configured repository-local
+privacy-safe address `8036360+jmservera@users.noreply.github.com`; use it for
+author and committer. The git-commit skill's `get_changed_files` tool is not
+available; inspected Git diff/status substitutes rather than inventing output.

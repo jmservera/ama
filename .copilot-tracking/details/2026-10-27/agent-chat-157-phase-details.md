@@ -91,3 +91,49 @@ packages Ruff/format/mypy passed; node syntax passed; migration tests 25 passed
 after restoring declared missing dependencies with pip. Supplemental full
 core/API discovery remains in progress. This is not a claim those suites pass.
 The subsequent lifecycle Review owns the one read-only independent assessment.
+
+## Correction cycle 1 details (2026-10-27)
+
+<!-- rpi:phase id=P04 -->
+### P04: Correct and validate the disclaimer browser contract
+<!-- rpi:task id=P04-T01 -->
+#### P04-T01: Harness-only targeting and local validation
+
+Research C8-C10 reproduces the strict-mode failure: both the original disclaimer
+and new `#chat-privacy` are direct `.muted` children. Use the existing structural
+position `#chat-panel > summary + p.muted`, assign it to `disclaimer`, assert
+exactly one visible match, and retain the two original `to_contain_text`
+assertions. No `.first`, expected-text filtering, broad panel assertion,
+privacy-warning removal or production UI edit.
+
+From `src/api`, prepend `/tmp/ama-chat157-venv/bin` to PATH, using the existing
+installed Python 3.12.3 distributions/tools. This is equivalent to invoking
+`python3` from the isolated environment; no manifest/dependency change.
+
+* `python -m checks.design_system_browser_check`
+* Fetch axe from the workflow's exact cdnjs 4.10.3 URL, using the same fail,
+  retry and timeout flags into the session files directory.
+* `PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.regulatory_ux_check
+  --axe <session-files>/axe-4.10.3.min.js --out <session-files>/chat157-correction1-after.json`
+* `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q`
+* `ruff check . && ruff format --check .`; `mypy`.
+* Run workflow's isolated strict Ruff check and format check for the changed
+  harness as well, since project config exempts browser harness formatting.
+
+If existing Chromium is unavailable, install only after that failure with
+Playwright's documented install command; no preemptive reinstall. A real pinned
+axe run is required; an omitted axe argument is only failure reproduction.
+No heavy `rpi-checks` run: this is a small selector correction.
+
+Completion: updated P04 markers, exact local outcomes/skips in changes, original
+verdicts untouched, one independent bounded correction Review appended, same
+draft PR updated. Remote recheck/rebase is conditional on actual divergence.
+No scope change, live acceptance or human decision is inferred.
+
+P04 completion: the single harness edit is implemented exactly as planned.
+Both browser modules with pinned axe passed (19 regulatory states, zero
+violations); negative missing/hidden/label/review-boundary controls all failed
+as intended. API discovery OK, 1129 tests / 315 skipped in 472.030s; API Ruff,
+format/mypy and isolated strict browser Ruff/format passed. Details and changes
+agree; generated JSON remains external. No remaining in-scope implementation.
+Original human/semantic/accounting/stabilization work is outside this correction.

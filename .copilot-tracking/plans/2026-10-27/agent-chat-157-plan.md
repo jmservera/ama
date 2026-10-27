@@ -163,3 +163,62 @@ Changes path: .copilot-tracking/changes/2026-10-27/agent-chat-157-changes.md.
 P01-P03 complete for independent engineering. Proceed once to Review using the
 changes acceptance disposition and generated evaluation failure. Core/API broad
 discovery results remain pending and must not be inferred from targeted passes.
+
+## Correction cycle 1 plan (2026-10-27, PR #503)
+
+Task identity remains 157 / agent-chat-157; this owner-selected correction
+appends a separately bounded loop, not a rewrite or repetition of the original
+assessment. Research C8-C10 is complete and Ready.
+
+Executive summary: select only the summary-adjacent disclaimer paragraph in the
+regulatory UX harness. Keep both original text assertions; add uniqueness and
+visibility checks. Preserve the actual privacy warning and all app behavior.
+No new user decision or independent planning lane is needed for this small fix.
+
+### Correction user decisions, requirements and scope
+
+* Owner requests research, plan, implement, Review in order, appending artifacts.
+* Same branch/draft PR #503; fetch first and rebase over remote bot if needed.
+* Run both browser modules from the hosted step, with pinned axe, plus full
+  API unit discovery, Ruff check/format and mypy.
+* No full/heavy gate, Azure, secrets, private data, uv, new issue checkbox or
+  change to the original Not accepted outcome. Keep all original follow-ups.
+
+### Correction goals and acceptance
+
+Harness-only targeting must fail if the disclaimer is missing, duplicated,
+hidden or loses either its unapproved label or independent-review wording.
+Regression coverage, not semantic grounding or human accessibility acceptance.
+The existing newly added privacy sibling must remain unchanged.
+
+<!-- rpi:phase id=P04 -->
+### [x] P04: Correct and validate the disclaimer browser contract
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Scope the locator and execute local hosted-equivalent checks
+
+Edit only `src/api/checks/regulatory_ux_check.py` for executable changes.
+Test ownership: existing browser harness; removals none; additions at most one
+local locator variable and two browser assertions, no new test methods/files.
+Canonical targets: that harness and appended existing RPI artifacts/state.
+Generated browser outputs and downloaded pinned axe stay in the session files
+directory, never committed. Test the actual changed browser contract before
+package checks; report all skipped unit checks and any failed attempts.
+Independent critique precedes implementation. Independent Review follows final
+validation once for this correction and appends the existing Review record.
+Commit and push only this bounded correction with evidence; update existing
+PR body using Refs and no closure/readiness claims. No force push.
+
+### Correction follow-ups and critique readiness
+
+RV-001 through RV-005 remain unchanged and outside P04. Candidate plan/details
+are ready for one bounded critique; no source changes yet.
+
+Correction critique disposition: execution Complete, verdict Pass, no findings.
+One independent P04 critique is appended in the existing critique artifact;
+the original Revise verdict is unchanged. P04 is implementation-ready.
+
+Correction implementation handoff: P04 complete, no source deviation. Both
+browser modules passed with pinned axe (19 regulatory states, zero violations),
+four negative disclaimer controls rejected, API discovery OK (1129 tests,
+315 skipped), project and isolated harness Ruff/format and API mypy passed.
+One bounded correction Review is now eligible; original RV-001 remains open.

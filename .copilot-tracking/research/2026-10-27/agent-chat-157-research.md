@@ -149,3 +149,61 @@ Ready for independent engineering only (C2-C7); live activation and full issue
 acceptance blocked by human decisions. Research disposition: executed.
 Q1/Q2 answered; Q3 answered with explicit unavailable evidence above.
 Self-check: three ordered inline waves, traced alternatives and open gates.
+
+## Correction cycle 1 intake (2026-10-27, PR #503)
+
+Focused convergence research for the owner's selected browser-regression
+correction. Preserve all original findings, critique and Not accepted Review.
+Scope: the ambiguous chat disclaimer locator in the synthetic regulatory UX
+check, its actual markup and the exact hosted browser commands. No activation,
+accounting repair, issue closure, workflow rename or unrelated UI redesign.
+Acceptance: retain both disclaimer assertions, execute both browser modules in
+the hosted step, API unit discovery, Ruff/format and mypy; append dated RPI
+evidence, commit and push to the same draft PR.
+
+Research root remains `.copilot-tracking/`. Existing issue/ADR/BRD/PRD evidence
+will be rechecked proportionately. Caller explicitly selects the full ordered
+loop without routine phase prompts and authorizes fetch/rebase over a remote
+rubric commit if required. Initial fetch found a clean worktree and HEAD equal
+to `origin/feat/agent-chat-157` at `f84755a5`; no rebase is currently needed.
+Existing human/legal/grounding/accounting blockers remain outside this fix.
+Research and implementation are inline; independent bounded critique and Review
+are the only delegated gates. No heavy gate is selected for this small change.
+
+### Correction research cycle: Wider, Deeper, Contrarian
+
+1. Wider: reread #157/#159/#162/#163/#164, PR #503, KB index, memory,
+   original/addendum and existing dated RPI records. Rechecked ADR 0004/0006,
+   PRD SA-004/FR-025-028/044/047/055-059 and BRD RULE-025/026:
+   unapproved labels and independent human review must remain asserted.
+   The workflow's single browser step runs two modules, not just design-system.
+   Reflection: fix test targeting, not the valid new privacy warning.
+2. Deeper: C8 `src/api/src/zava_forward/api/web/chat.js:99-102` renders the
+   disclaimer immediately after the summary, then `#chat-privacy`. Both have
+   class `muted`. C9 `src/api/checks/regulatory_ux_check.py:298-303` uses a
+   single-element text assertion against both siblings. Executing that module
+   locally with its required `--out` reproduces the exact strict-mode error.
+   The first invocation without `--out` failed CLI argument validation; no
+   browser checks ran in that invocation. Reflection: select the summary's
+   adjacent disclaimer paragraph without changing either text assertion.
+3. Contrarian: `.first`, filtering by expected text, or asserting the entire
+   panel can hide ambiguity or permit nested answer text to satisfy the check.
+   Removing the privacy paragraph would regress the original warning work.
+   C10 `.github/workflows/src-ci.yml:94-104` requires pinned axe 4.10.3 for
+   the regulatory check after both design-system/workbench exercises.
+   Reflection: structural selector plus explicit uniqueness and visibility
+   checks preserves and strengthens the disclaimer contract; run both modules
+   with axe, not only a unit-test proxy.
+
+Correction findings use C8-C10; GitHub issue/PR retrieval date is 2026-10-27.
+Selected approach: harness-only `#chat-panel > summary + p.muted` with a
+count of one and visibility, retaining both original text assertions.
+No application markup/style changes, so no web-design/style skill or fresh
+conformance review is represented as executed. No new domain decision needed.
+Existing isolated `/tmp/ama-chat157-venv` imports the installed packages,
+Playwright and Python 3.12.3; system Python lacked `zava_forward`. Reuse the
+existing environment rather than reinstall unnecessarily.
+
+Research disposition: executed, complete; Planning Readiness: Ready for this
+correction only. No further cycle required: exact failure reproduced and both
+alternative and validation contracts resolved. Original blockers stay open.

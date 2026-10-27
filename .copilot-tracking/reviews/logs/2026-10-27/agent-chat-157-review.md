@@ -287,3 +287,115 @@ it to a later rpi-implement invocation; do not fix source or run another Review
 under this task. Preserve Complete / Not accepted and the frozen boundary.
 Route RV-002 to later authorized research and RV-003/004/005 to their distinct
 owners. No live processing, spend, human approval or issue closure is granted.
+
+## Correction cycle 1 Review (2026-10-27, PR #503)
+
+### Opening Review State
+
+* Interpreted goal: independently assess the owner-selected P04/P04-T01 disclaimer-locator correction once, not the original P01-P03 implementation.
+* Scope: actual uncommitted src/api/checks/regulatory_ux_check.py diff against HEAD f84755a5d8ca0954f8344fe7cac7265b74f4a56e on feat/agent-chat-157; correction appendices, relevant chat markup/workflow and supplied local validation only.
+* Evidence readiness: five correction appendices are available and reconciled as ready for Review; actual executable diff SHA-256 matches the supplied 9ef9f0cfe198e800e0845536e358155ff91214f6603b234a5fe05bc012c579a2. External browser evidence remains to inspect.
+* Acceptance basis: structural summary-adjacent disclaimer targeting, both unchanged original text expectations, one visible selected target, unchanged production markup/privacy warning, locked harness-only scope and specified local check evidence.
+* First comparison boundary: correction plan/details and Complete / Pass correction critique against the actual harness diff, relevant chat.js markup and hosted workflow.
+* Active boundaries: write only this existing Review record by appending; no tests, agents, source edits, private data, secrets, cloud, dependency operations, heavy gates or publication actions.
+* Initial blockers: none identified for forming this bounded evidence set. Original Not accepted and RV-001 through RV-005 remain unchanged and outside P04.
+
+### Scope and Execution Status
+
+* Review execution: Complete. One independent post-implementation assessment of P04/P04-T01 only, dated 2026-10-27.
+* Assessed executable boundary: src/api/checks/regulatory_ux_check.py, HEAD f84755a5d8ca0954f8344fe7cac7265b74f4a56e to the supplied working-tree diff, SHA-256 9ef9f0cfe198e800e0845536e358155ff91214f6603b234a5fe05bc012c579a2.
+* Actual diff: one local locator assignment, two added assertions, and repointing the two existing text assertions; no removed assertion, new method, new test file or production change. The textual diff's four removed lines are the replaced locator/wrapping lines, not removed test coverage.
+* Source context inspected: src/api/src/zava_forward/api/web/chat.js, src/api/checks/regulatory_ux_check.py and the relevant browser/workflow invocation in .github/workflows/src-ci.yml; the design-system harness's workbench delegation was also confirmed.
+* Compared artifacts: correction appendices in the existing research, plan, phase details, changes and plan critique. Original Review content was retained for historical boundaries, not reassessed. Existing modified artifacts/state were not changed by this Review.
+* Exclusions: original multi-file implementation, RV-001 accounting repair, semantic effectiveness, human approval, issue acceptance, hosted execution, exact-head publication gates and live activation.
+
+### Plan-to-Change and Completion Reconciliation
+
+| Scope | Evidence and reconciliation | Assessment |
+| --- | --- | --- |
+| C8-C9 / P04-T01 targeting | chat.js constructs the disclaimer directly after the panel summary, then a separate privacy paragraph with the same muted class. The old direct-child selector matches both; the new summary-adjacent p.muted targets only the disclaimer. | Reconciled with the reproduced strict-mode failure and actual markup. |
+| P04-T01 contract preservation | Actual diff retains the exact original expected strings `AI suggestion, not approved` and `it can only request a proposal that someone else reviews` in two to_contain_text assertions. A count of one and visibility precede them. | Conformant; no .first, expected-text filtering or broad-panel workaround. |
+| Locked executable allocation | Only the harness has an executable diff. git diff HEAD for chat.js and src-ci.yml is empty. The privacy warning and production markup remain unchanged. | Conformant; one variable and two added assertions, with both original text checks preserved. |
+| C10 / local validation | Correction plan, details and changes agree on both browser modules, pinned axe, API discovery, project and isolated harness Ruff/format, and mypy. P04 and P04-T01 are checked complete. | Reconciled with supplied outcomes and directly inspected browser JSON; no check rerun by reviewer. |
+| Completion and handoff | No remaining P04 implementation is reported. Same-draft publication and PR-body update remain parent actions after this Review, not already completed work. | No premature completion or publication inference. |
+
+### Implementation-Time Updates and Critique Assessment
+
+* Research C8-C10, the correction plan and phase details describe the same harness-only fix and validation contract. The original implementation and acceptance history are not overwritten.
+* The independent correction critique records Complete / Pass with no findings, before the reported implementation. Its locked allocation matches the actual diff; no divergent decision, missing critique disposition or material implementation-time scope change was identified.
+* The source and diff support the selected structural dependency: moving, removing or hiding the intended summary-adjacent paragraph cannot be masked by a later answer or by the privacy warning satisfying a broad ancestor assertion.
+* The count assertion establishes uniqueness of the structurally selected target, not a document-wide duplicate-disclaimer audit. A second nonadjacent lookalike is outside that selector, as the critique explicitly notes; no broader uniqueness guarantee is claimed.
+* Earlier candidate-stage sentences such as "no source changes yet" remain dated staging history. The later implementation handoffs and completed markers consistently identify the current P04 state; they do not justify rewriting original outcomes.
+
+### Validation Evidence and Reconciliation
+
+No tests, scanners, browsers or heavy gates were executed during this Review.
+Previously reported executions are not represented as independently rerun.
+
+| Check or evidence | Status and provenance | Assessment |
+| --- | --- | --- |
+| Exact executable diff and SHA-256 | Independently inspected; matches the supplied expected hash. | Assessed correction boundary is confirmed. |
+| checks.design_system_browser_check | Supplied local pass, including workbench; actual harness delegates to workbench_check and workflow invokes this module. | Consistent with required local browser scope; not hosted-check acceptance. |
+| checks.regulatory_ux_check with pinned axe | Supplied local pass; read-only external chat157-correction1-after.json independently parsed: outcome passed, axe executed, version 4.10.3, expected SHA-256 880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb, 19 states, zero recorded violations. | Reconciled with workflow pin and harness content-hash assertion. |
+| Four runtime assertion negative controls | Supplied missing/hidden/label/review-boundary mutations each rejected; changes distinguish these axe-omitted assertion probes from the real pinned-axe pass. | Supports fail-closed disclaimer assertions; not rerun or treated as full scanner passes. |
+| Full API discovery | Supplied OK: 1129 tests in 472.030 seconds, 315 skipped. | Skips remain unexecuted; no all-tests-executed claim. |
+| API Ruff and format / mypy | Supplied pass: 46 formatted files and 88 mypy source files. | Matches the correction's package-check contract. |
+| Isolated strict browser-harness Ruff and format | Supplied pass for both browser modules under workflow settings. | Changed harness covered despite project migration exemptions. |
+| Failed setup/reproduction attempts | Changes disclose initial system import failure, missing --out argument failure and subsequent original strict-mode reproduction. | Not mislabeled as successful checks; final supplied outcomes are distinct. |
+| Full/heavy, cloud, human and hosted checks | Not run in this Review; full/heavy gates excluded by owner, and no new hosted or human evidence supplied. | No substitute gate, skip token or acceptance claim. |
+
+External browser evidence inspected read-only:
+/home/azureuser/.copilot/session-state/d2054f18-e53f-46e7-b8cc-2b699bfae36b/files/chat157-correction1-after.json.
+The optional API raw summary under /tmp was not accessed; the API result above
+is supplied evidence corroborated by the changes record, not a raw-log audit.
+
+The browser JSON also records color-contrast incomplete results in ten states,
+staff comprehension "Not run; unmet" and resident wording review "Not supplied;
+unmet". Zero recorded violations therefore does not mean every automated check
+resolved or accessibility acceptance achieved. These limitations are outside
+the locator correction and preserve the existing human-accessibility route;
+no fresh whole-surface or WCAG conformance review is claimed.
+
+### Findings, Follow-Ups and Routing
+
+* New substantive correction findings: none. No RV-C1 identifier is assigned.
+* Severity summary for P04: 0 Critical, 0 High, 0 Medium, 0 Low.
+* Correction defects, decision gaps and material evidence gaps: none identified within the assessed boundary.
+* Original RV-001 through RV-005 and original Complete / Not accepted remain unchanged. P04 does not fix denied-turn accounting, establish semantic grounding, supply human decisions or accessibility acceptance, or complete #440 stabilization.
+* Original plan follow-ups remain outside P04 and are mirrored in the correction handoff. Their existing destinations remain: RV-001 to later rpi-implement; RV-002 to later authorized rpi-research; RV-003 to owner/DPO/Legal/access and activation authorities; RV-004 to the named accessibility participant and owner; RV-005 to the parent/#440 stabilization owner. These are retained routes, not new correction findings.
+* Correction blockers: none. Remaining implementation work in P04: none. Same-draft commit/push and PR qualification are the active parent's remaining delivery actions under the owner's separate authorization.
+
+### Correction Outcome and Closeout Routing Record
+
+* Execution status: Complete.
+* Outcome: Conformant, for the exact assessed P04/P04-T01 correction only.
+* Rationale: the matched executable diff applies the planned structural selector, preserves both original text expectations, adds selected-target count/visibility, leaves production markup unchanged and reconciles the specified supplied validation.
+* This outcome is not whole-PR acceptance, a changed original Review verdict, resolution of RV-001 through RV-005, issue closure, exact-head publication approval or live/model activation.
+
+| Finding class | Correction destination | Owner or next action |
+| --- | --- | --- |
+| Implementation defect | None | No additional P04 implementation required by this Review. |
+| Decision gap or invalid assumption | None | No correction planning revision required. |
+| Material evidence gap | None within P04 | Original research and human evidence routes remain separate. |
+| Non-blocking residual work | Existing distinct follow-ups only | Retain original RV-001 through RV-005 routes and qualifications. |
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/research/2026-10-27/agent-chat-157-research.md](.copilot-tracking/research/2026-10-27/agent-chat-157-research.md) | Correction C8-C10 research and original boundary |
+| [.copilot-tracking/plans/2026-10-27/agent-chat-157-plan.md](.copilot-tracking/plans/2026-10-27/agent-chat-157-plan.md) | P04 completion and retained follow-ups |
+| [.copilot-tracking/details/2026-10-27/agent-chat-157-phase-details.md](.copilot-tracking/details/2026-10-27/agent-chat-157-phase-details.md) | Locked correction and validation contract |
+| [.copilot-tracking/changes/2026-10-27/agent-chat-157-changes.md](.copilot-tracking/changes/2026-10-27/agent-chat-157-changes.md) | Supplied implementation outcomes and skips |
+| [.copilot-tracking/reviews/plans/2026-10-27/agent-chat-157-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-27/agent-chat-157-plan-critique.md) | Correction Complete / Pass; original critique preserved |
+| [src/api/checks/regulatory_ux_check.py](src/api/checks/regulatory_ux_check.py) | Exact assessed executable correction |
+| [src/api/src/zava_forward/api/web/chat.js](src/api/src/zava_forward/api/web/chat.js) | Unchanged disclaimer and privacy markup |
+| [src/api/checks/design_system_browser_check.py](src/api/checks/design_system_browser_check.py) | Existing workbench delegation |
+| [.github/workflows/src-ci.yml](.github/workflows/src-ci.yml) | Local validation equivalence and pinned scanner contract |
+| [.copilot-tracking/reviews/logs/2026-10-27/agent-chat-157-review.md](.copilot-tracking/reviews/logs/2026-10-27/agent-chat-157-review.md) | Preserved original Review and this bounded assessment |
+
+## Next Steps
+
+Return Complete / Conformant for P04 to the active parent for the
+owner-authorized same-draft delivery on PR #503, retaining the original
+Not accepted outcome and all open findings in its qualifications. No further
+Review, heavy gate or user action is requested by this bounded assessment.
+The parent owns publication; this reviewer stops without committing or pushing.
