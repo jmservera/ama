@@ -54,6 +54,10 @@ param enableEntraTokenStore bool = false
 param entraTokenStoreReady bool = false
 @description('Container images. The default placeholder lets infrastructure deploy before application images exist.')
 param apiImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
+@description('Minimum API replicas. Default 0 permits scale-to-zero for cost-safe demos and cold starts; set 2 explicitly for always-on production replicas.')
+@minValue(0)
+@maxValue(4)
+param apiMinReplicas int = 0
 @description('Enable direct model calls from the existing MVP API. Leave false for the proposed separate agent-runner topology; true grants the API model invocation rights and configures AI_ENDPOINT.')
 param enableApiAi bool = false
 @description('False bootstraps dependencies without exposing placeholder apps. Build/push the real image, provision the auth secret and seed SQL, then redeploy with true.')
@@ -343,6 +347,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     entraClientSecretName: entraClientSecretName
     entraCredentialStore: entraCredentialStore
     deployWorkloads: deployApplications
+    apiMinReplicas: apiMinReplicas
     deployBackgroundWorkloads: deployBackgroundWorkloads
     entraBearerOnly: entraBearerOnly
     entraRoleMap: entraRoleMap

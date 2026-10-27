@@ -13,6 +13,7 @@ param sqlAdminGroupName = 'sg-zava-forward-sql-admins' // PLACEHOLDER
 param sqlAdminGroupObjectId = '00000000-0000-0000-0000-000000000000' // PLACEHOLDER
 param entraClientId = '' // PLACEHOLDER: set after infra/scripts/create-api-app-registration.sh
 param zoneRedundant = false
+param apiMinReplicas = 0
 param enableLocks = false
 param deploymentProfile = 'production'
 param allowPublicNetworkAccess = false
