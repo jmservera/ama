@@ -2,7 +2,6 @@
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
 ms.date: 2026-10-29
-ms.date: 2026-10-23
 ---
 
 ## Purpose
@@ -52,6 +51,14 @@ Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 The same synthesis records the bounded correction: actual global send-attempt
 admission after setup, partial-construction cleanup and selected-snapshot
 descriptor/frame provenance. Local regressions do not close live criteria.
+
+For #146, the [monitoring runbooks and evidence/gap matrix](../../infra/monitoring-runbooks.md)
+record the source-only job/IoT alert candidates, aggregate operations workbook,
+existing alert/budget catalogue and corrected ledger 26-hour query range.
+New candidates default disabled; proposed roles are not named appointments.
+Actual cost/AI metering and variance remain Unknown/unreconciled, and existing
+diagnostic privacy exclusion, poison signals, RAI incident integration and live
+owner/threshold approvals remain unmet. No deployment or issue closure follows.
 
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)

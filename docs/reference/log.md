@@ -8139,3 +8139,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Fluent 2, native semantics, non-colour signals and reduced motion remain.
   No live contact, portal implementation, operational Legal/DPO decision,
   human usability/AT acceptance or whole-issue closure is claimed.
+## [2026-10-27] ingest | Source-only monitoring candidates (Refs #146)
+
+* Added [operator runbooks and the complete issue evidence/gap matrix](../../infra/monitoring-runbooks.md),
+  source-only job/IoT metric alert candidates and an aggregate operations
+  workbook; updated infra navigation and this knowledge-base index.
+* Corrected the ledger missing-success rule's outer query range to 26 hours.
+  Existing alert names, thresholds and budget notification conditions are
+  preserved; budget notification is not a hard cap.
+* New candidates default disabled; proposed roles are not named appointments.
+  Actual owners/live thresholds, privacy exclusion, poison-queue and AI/harm
+  signal integration, same-period billing/price reconciliation and accepted
+  notification/suspension drills remain unresolved.
+* Workbook missing data is Insufficient/Blocked and actual cost/AI metering
+  remains Unknown/unreconciled. Source definitions and local checks are not a
+  deployment, live approval, SLO claim or issue acceptance.

@@ -1,0 +1,81 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "name": "status-and-boundary",
+      "content": {
+        "json": "# Zava Forward operations\nSource-only candidate, not operational acceptance. Select a window below. No telemetry, missing approvals or query/access errors mean **Insufficient / Blocked**, never healthy or zero cost. Application Insights instrumentation and availability tests are not provisioned by this workbook. Request success is not availability. Proposed ADR 0001 targets are unmeasured, not approved SLO attainment.\n\n[Operator runbooks and acceptance gaps](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md). New job/IoT alert candidates are disabled by default; check actual deployed rule status separately. No poison-queue, AI-limit or RAI-harm aggregate alert is installed by this candidate."
+      }
+    },
+    {
+      "type": 9,
+      "name": "window",
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "window",
+            "name": "TimeRange",
+            "type": 4,
+            "isRequired": true,
+            "value": { "durationMs": 86400000 },
+            "typeSettings": { "selectableValues": [ { "durationMs": 3600000 }, { "durationMs": 86400000 }, { "durationMs": 2592000000 } ] }
+          }
+        ]
+      }
+    },
+    {
+      "type": 1,
+      "name": "sample-caveat",
+      "content": {
+        "json": "## Requests, errors and latency\nCounts use Application Insights ItemCount sampling weights; p95 is weighted request DurationMs, not average platform latency or end-to-end scenario completion. Invalid/missing fields are excluded and counted. The result names the selected window and as-of UTC. Empty/absent tables return Insufficient; permission, schema or query failures remain **Blocked** even if a panel shows an error. Query source validation is not service execution."
+      }
+    },
+    {
+      "type": 3,
+      "name": "requests",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "Sample-weighted requests, failures and p95 (ms)",
+        "query": "let samples = union isfuzzy=true (datatable(TimeGenerated:datetime, _ResourceId:string, ItemCount:int, Success:bool, DurationMs:real)[]), (AppRequests | project TimeGenerated, _ResourceId, ItemCount, Success, DurationMs); samples | where _ResourceId =~ '__APP_INSIGHTS_ID__' and TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) | extend Valid = isnotnull(ItemCount) and ItemCount > 0 and isnotnull(Success) and isnotnull(DurationMs) and DurationMs >= 0 | summarize ObservedRows=count(), InvalidRows=countif(not(Valid)), WeightedRequests=sumif(ItemCount, Valid), WeightedFailures=sumif(ItemCount, Valid and Success == false), P95Ms=percentilew(iff(Valid, DurationMs, real(null)), iff(Valid, ItemCount, 0), 95) | extend Status=iff(WeightedRequests > 0 and InvalidRows == 0, 'Observed samples; not SLO acceptance', 'Insufficient'), FailurePercent=iff(WeightedRequests > 0, 100.0 * WeightedFailures / WeightedRequests, real(null)), P95Ms=iff(WeightedRequests > 0, P95Ms, real(null)), WeightedRequests=iff(WeightedRequests > 0, WeightedRequests, long(null)), WeightedFailures=iff(WeightedRequests > 0, WeightedFailures, long(null)), WindowStart={TimeRange:start}, WindowEnd={TimeRange:end}, AsOfUtc=now() | project Status, WindowStart, WindowEnd, AsOfUtc, ObservedRows, InvalidRows, WeightedRequests, WeightedFailures, FailurePercent, P95Ms",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 3,
+      "name": "availability",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "Availability-test samples (not request success or a production SLO)",
+        "query": "let samples = union isfuzzy=true (datatable(TimeGenerated:datetime, _ResourceId:string, ItemCount:int, Success:bool)[]), (AppAvailabilityResults | project TimeGenerated, _ResourceId, ItemCount, Success); samples | where _ResourceId =~ '__APP_INSIGHTS_ID__' and TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) | extend Valid = isnotnull(ItemCount) and ItemCount > 0 and isnotnull(Success) | summarize ObservedRows=count(), InvalidRows=countif(not(Valid)), WeightedTests=sumif(ItemCount, Valid), WeightedSuccessfulTests=sumif(ItemCount, Valid and Success == true) | extend Status=iff(WeightedTests > 0 and InvalidRows == 0, 'Observed tests; not SLO acceptance', 'Insufficient'), TestSuccessPercent=iff(WeightedTests > 0, 100.0 * WeightedSuccessfulTests / WeightedTests, real(null)), WeightedTests=iff(WeightedTests > 0, WeightedTests, long(null)), WeightedSuccessfulTests=iff(WeightedTests > 0, WeightedSuccessfulTests, long(null)), WindowStart={TimeRange:start}, WindowEnd={TimeRange:end}, AsOfUtc=now() | project Status, WindowStart, WindowEnd, AsOfUtc, ObservedRows, InvalidRows, WeightedTests, WeightedSuccessfulTests, TestSuccessPercent",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 1,
+      "name": "cost-and-budget",
+      "content": {
+        "json": "## Cost against budget: Unknown / unreconciled\nConfigured resource-group monthly budget: **__MONTHLY_BUDGET__ in the billing currency**, resource `__BUDGET_NAME__`. This is a template setting, not an observed bill, approved new allocation or remaining headroom. Actual spend: **Unknown**. Forecast: **Unknown**. Variance against budget: **Unknown / unreconciled**. Open the resource group's Cost Management > Cost analysis and Budgets in the Azure portal; record the exact same calendar month, scope, billing currency, retrieval date and billing record before any comparison.\n\nThe existing budget sends notifications above **80% actual** and **100% forecast**. Notification is **not a hard cap** and does not stop workloads, dispatch or billing. Delayed cost records do not establish headroom. [Budget response](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#budget-actual80)."
+      }
+    },
+    {
+      "type": 1,
+      "name": "ai-usage-and-harm",
+      "content": {
+        "json": "## AI consumption and harm: Blocked / insufficient\n| Surface | Capability and period | Current evidence |\n| --- | --- | --- |\n| Calls; input/output/cached tokens; retries/failures | Not connected | Insufficient; partial protected assistant audit is not a complete metered feed |\n| Azure cost record / dated versioned price | Not connected | Unknown; no consumption-to-currency conversion |\n| Metered-to-billing variance | Same scope/month/currency not established | Unknown / unreconciled, not zero |\n| Calls/tokens/budget/expiry alerts | Owner and approved limits not established | Blocked; no installed aggregate breach signal |\n| Harm/quality/disparity/review burden | Task/release/cohort/window/denominator not supplied | Insufficient; approval rate is not safety evidence |\n| Disabled task monitoring | Named owner/manual route not verified | Blocked; inspect existing audit/continuity surfaces |\n\nUse the existing protected SQL audit/report and incident-control paths, not a new telemetry store. Do not copy prompts, source text, sensitive reasons, tokens, identities, readings or chat here. Human threshold/owner approval, repeat-event/window reconciliation and an owned suspension drill remain required. Constructed fixtures are synthetic, not actual approval. [AI limit gap](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#ai-limits) and [incident response](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#rai-harm)."
+      }
+    }
+  ],
+  "isLocked": false,
+  "fallbackResourceIds": ["__WORKSPACE_ID__"],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

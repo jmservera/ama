@@ -21,9 +21,13 @@ param teamsWebhookUrl string = ''
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
-@description('Monthly budget in the billing currency, with alerts at 80 and 100 percent forecast and actual.')
+@description('Monthly budget in the billing currency. Notifications above 80 percent actual and 100 percent forecast are not a hard cap.')
 param monthlyBudget int = 300
 param budgetStartDate string = utcNow('yyyy-MM-01')
+@description('Enable new job/IoT alert candidates only after separate named-human signal, owner and threshold approval. Defaults disabled; see infra/monitoring-runbooks.md.')
+param enableCandidateMonitoringAlerts bool = false
+@description('Non-secret reference to separate monitoring activation approval. Empty or whitespace keeps candidates disabled; a string is not approval evidence by itself.')
+param monitoringApprovalReference string = ''
 @description('IoT Hub tier for simulated in-use monitoring (ADR 0003 decision 6, issue 140).')
 @allowed(['B1'])
 param iotHubSku string = 'B1'
@@ -566,6 +570,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
     scopes: [monitoring.outputs.workspaceId]
     evaluationFrequency: 'PT1H'
     windowSize: 'P1D'
+    overrideQueryTimeRange: 'PT26H'
     criteria: {
       allOf: [
         {
@@ -578,6 +583,31 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
       ]
     }
     actions: { actionGroups: [monitoring.outputs.actionGroupId] }
+  }
+}
+
+module operationalMonitoring 'modules/operationalMonitoring.bicep' = {
+  name: 'operational-monitoring'
+  dependsOn: [guard, apps]
+  params: {
+    prefix: prefix
+    location: location
+    tags: allTags
+    workspaceId: monitoring.outputs.workspaceId
+    appInsightsId: monitoring.outputs.appInsightsId
+    actionGroupId: monitoring.outputs.actionGroupId
+    iotHubId: iotHub.outputs.id
+    jobNames: deployApplications && deployBackgroundWorkloads ? concat([
+      demoDirectIngress ? 'job-${applicationPrefix}-orch' : 'job-${applicationPrefix}-orchestrator'
+      ledgerJobName
+      demoDirectIngress ? 'job-${applicationPrefix}-load' : 'job-${applicationPrefix}-import'
+    ], enableEntraTokenStore ? [
+      demoDirectIngress ? 'job-${applicationPrefix}-auth' : 'job-${applicationPrefix}-auth-renewal'
+    ] : []) : []
+    monthlyBudget: monthlyBudget
+    budgetName: budget.name
+    enableCandidateAlerts: enableCandidateMonitoringAlerts
+    approvalReference: monitoringApprovalReference
   }
 }
 
@@ -620,5 +650,6 @@ output iotHubRoutingEnabled bool = iotHub.outputs.routingEnabled
 output foundryEndpoint string = foundry.outputs.endpoint
 output identityPrincipalIds object = identity.outputs.principalIds
 output logAnalyticsWorkspace string = monitoring.outputs.workspaceName
+output operationsWorkbookId string = operationalMonitoring.outputs.workbookId
 output publicEdgeHostName string = enablePublicEdge ? edge!.outputs.publicHostName : ''
 output entraRedirectUri string = enablePublicEdge ? edge!.outputs.entraRedirectUri : ''
