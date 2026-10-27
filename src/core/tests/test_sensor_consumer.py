@@ -16,6 +16,12 @@ from zava_forward.core.sensor_consumer import (
     SensorConsumer,
     preflight,
 )
+from zava_forward.core.synthetic import (
+    sensor_backfill,
+    sensor_faults,
+    sensor_identity,
+    sensor_stock,
+)
 
 
 class SensorConsumerTests(unittest.TestCase):
@@ -91,6 +97,97 @@ class SensorConsumerTests(unittest.TestCase):
         ).fetchone()
         self.assertEqual(stored[0], "sensor-fault-input-v1")
         self.assertEqual(float(stored[1]), float(str(row["temperature_c"])))
+
+    def canonical_rows(self, home_id: str, fault: str | None = None) -> list[Observation]:
+        stock = sensor_stock.select(
+            [dict(synthetic_home_id=home_id, is_synthetic="true", monitoring_consent="granted")],
+            1,
+        )
+        sensor = stock.sensors(183)[0]
+        source = sensor_backfill.readings(
+            {**sensor, "fault_profile": "none"},
+            days=1,
+            outdoor=[(10.0, 70.0), (11.0, 72.0)],
+        )
+        packet = next(
+            sensor_faults.packets(
+                source,
+                sensor_faults.configure({fault: 1.0} if fault else {}),
+                183,
+                str(sensor["sensor_id"]),
+            )
+        )
+        return [dict(row) for row in packet.rows]
+
+    def test_canonical_stock_identity_admission_and_replay(self) -> None:
+        for home_id in ("stock-home-0000000000001", "H" * 64, "hôme-α-Case", "hôme-α-case"):
+            with self.subTest(home_id=home_id):
+                row = self.canonical_rows(home_id)[0]
+                dbrow = self.store.db.execute("SELECT body FROM cases WHERE id='ZF-1'").fetchone()
+                case = json.loads(dbrow[0])
+                case["id"] = home_id
+                self.store.db.execute(
+                    "UPDATE cases SET id=?, body=? WHERE id='ZF-1'",
+                    (home_id, json.dumps(case)),
+                )
+                control = replace(
+                    CONTROL, home_id=home_id, sensor_id=sensor_identity.sensor_key(home_id)
+                )
+                self.consumer.configure(POLICY, [control])
+                before = self.snapshot()
+                receipt = self.consume([row])[0]
+                self.assertEqual(receipt.reason, "ACCEPTED")
+                self.assertEqual(self.consume([row])[0], replace(receipt, replay=True))
+                stored = self.store.db.execute(
+                    "SELECT home_id FROM sensor_reading WHERE sensor_id=?",
+                    (control.sensor_id,),
+                ).fetchone()
+                self.assertEqual(stored[0], home_id)
+                self.assertEqual(self.snapshot(), before)
+                self.store.db.execute(
+                    "UPDATE cases SET id='ZF-1', body=? WHERE id=?",
+                    (dbrow[0], home_id),
+                )
+
+    def test_stock_export_domain_does_not_bypass_case_availability(self) -> None:
+        for home_id in ("not-a-case-0000000000001", "H" * 65, "H" * 128):
+            with self.subTest(home_id=home_id):
+                row = self.canonical_rows(home_id)[0]
+                self.assertEqual(row["home_id"], home_id)
+                self.consumer.configure(
+                    POLICY, [replace(CONTROL, home_id=home_id, sensor_id=str(row["sensor_id"]))]
+                )
+                self.assert_rejected(row, "HOME_UNAVAILABLE")
+        self.assertEqual(self.snapshot(), self.before)
+
+    def test_compact_stock_fault_reaches_unmapped_not_identity(self) -> None:
+        home_id = "stock-home-0000000000001"
+        row = self.canonical_rows(home_id, "unmapped")[0]
+        self.assertEqual(len(str(row["sensor_id"])), 20)
+        self.assertIsNone(SensorConsumer._shape(row))
+        self.assert_rejected(row, "UNMAPPED")
+
+    def test_canonical_stock_controls_remain_independent(self) -> None:
+        home_id = "stock-home-0000000000001"
+        self.store.db.execute("UPDATE cases SET id=? WHERE id='ZF-1'", (home_id,))
+        row = self.canonical_rows(home_id)[0]
+        control = replace(CONTROL, home_id=home_id, sensor_id=str(row["sensor_id"]))
+        for index, (changed, reason) in enumerate(
+            (
+                (replace(control, consent="unknown"), "CONSENT"),
+                (replace(control, consent="declined"), "CONSENT"),
+                (replace(control, calibration_confirmed=False), "CALIBRATION"),
+            )
+        ):
+            self.consumer.configure(POLICY, [changed])
+            self.assert_rejected({**row, "reading_id": f"STOCK-CONTROL-{index}"}, reason)
+        self.assertEqual(self.counts(), (0, 3, 3))
+
+    def test_canonical_identity_rejects_malformed_keys(self) -> None:
+        row = observations()[0]
+        for home_id in ("", " padded", "padded ", "bad\nkey", "H" * 129, "\ud800"):
+            with self.subTest(home_id=repr(home_id)):
+                self.assert_rejected({**row, "home_id": home_id}, "IDENTITY")
 
     def test_fault_observations_only_quality(self) -> None:
         for fault, reason in (

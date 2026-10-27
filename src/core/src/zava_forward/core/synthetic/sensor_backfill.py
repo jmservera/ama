@@ -25,7 +25,7 @@ import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults
+from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults, sensor_identity
 from zava_forward.core.synthetic import indoor_projection
 
 VERSION = "sensor-backfill-v2"
@@ -181,7 +181,7 @@ def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes
 
 def revision_sources(*, faults: bool = False) -> tuple[Path, ...]:
     return (*scale_fixture.revision_sources(), Path(__file__), Path(sensor_stock.__file__),
-            Path(stock_fabric.__file__), Path(indoor_projection.__file__),
+            Path(stock_fabric.__file__), Path(indoor_projection.__file__), Path(sensor_identity.__file__),
             *((Path(sensor_faults.__file__),) if faults else ()))
 
 

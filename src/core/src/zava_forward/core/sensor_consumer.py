@@ -14,6 +14,7 @@ from typing import Protocol, cast
 from .mssqlstore import MssqlStore
 from .sqlstore import SqlStore
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
+from .synthetic.sensor_identity import home_key
 
 IDENTITY = re.compile(r"[A-Z0-9][A-Z0-9_-]*\Z")
 NUMBER = re.compile(r"-?(?:0|[1-9][0-9]{0,2})(?:\.[0-9]{1,2})?\Z")
@@ -142,7 +143,7 @@ class SensorControl:
     humidity_unit: str
 
     def validate(self) -> None:
-        if not _identity(self.sensor_id, 20) or not _identity(self.home_id, 64):
+        if not _identity(self.sensor_id, 20) or not home_key(self.home_id):
             raise ValueError("INVALID_CONTROL_IDENTITY")
         if self.consent not in ("granted", "unknown", "declined"):
             raise ValueError("INVALID_CONTROL_CONSENT")
@@ -293,6 +294,7 @@ class SensorConsumer:
             # Explicit case equality on fresh keys; legacy inputs use uppercase ASCII only.
             reading = reading.replace("VARCHAR(73)", f"VARCHAR(73) {self._collation}")
             reading = reading.replace("VARCHAR(96)", f"VARCHAR(96) {self._collation}")
+            reading = reading.replace("NVARCHAR(128)", f"NVARCHAR(128) {self._collation}")
             tables["sensor_reading"] = reading.rstrip(";")
         else:
             tables["sensor_reading"] = (
@@ -376,9 +378,11 @@ class SensorConsumer:
             return "SCHEMA"
         if row["schema_version"] != SCHEMA_VERSION or row["source_type"] != "SYNTHETIC":
             return "SCHEMA"
-        for name, length in (("sensor_id", 20), ("reading_id", 40), ("home_id", 12)):
+        for name, length in (("sensor_id", 20), ("reading_id", 40)):
             if not _identity(row[name], length):
                 return "IDENTITY"
+        if not home_key(row["home_id"]):
+            return "IDENTITY"
         if not _identity(row["scenario"], 20):
             return "PROVENANCE"
         seed = str(row["seed"])
@@ -507,8 +511,20 @@ class SensorConsumer:
             raise ConsumerError("SENSOR_CONTROLS_MALFORMED")
         if control.home_id != row["home_id"]:
             return "HOME_MISMATCH"
+        if len(control.home_id.encode("utf-16-le")) // 2 > 64:
+            return "HOME_UNAVAILABLE"
         if db.execute("SELECT id FROM cases WHERE id=?", (control.home_id,)).fetchone() is None:
             return "HOME_UNAVAILABLE"
+        if self.mssql:
+            column = db.execute(
+                "SELECT DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS"
+                " WHERE TABLE_NAME='sensor_reading' AND COLUMN_NAME='home_id'"
+            ).fetchone()
+            if column is None or (
+                int(str(column[1])) < len(control.home_id.encode("utf-16-le")) // 2
+                or (not control.home_id.isascii() and column[0] != "nvarchar")
+            ):
+                raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
         if not utc(control.mapping_start) <= observed < utc(control.mapping_end):
             return "MAPPING_INTERVAL"
         if control.consent != "granted":
