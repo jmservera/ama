@@ -37,7 +37,8 @@
     {"identity": "token-maintenance", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull the maintenance job image", "bicep": "modules/authTokenStore.bicep"},
     {"identity": "resident-demo", "resource": "keyvault", "scope": "Secret resident-demo-password-verifier only", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the synthetic demo password verifier for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
     {"identity": "resident-demo", "resource": "keyvault", "scope": "Secret resident-demo-session-key only", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the synthetic demo session key for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
-    {"identity": "resident-demo", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image (digest-pinned) for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"}
+    {"identity": "resident-demo", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image (digest-pinned) for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
+    {"identity": "resident-demo", "resource": "resident-assistant", "scope": "Resident assistant OpenAI account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Bounded resident inference on the dedicated account only, explicit opt-in (issue 469)", "bicep": "resident-assistant.bicep"}
   ],
   "customRoles": [
     {

@@ -54,7 +54,8 @@ VIEW = "resident_showcase.v_resident_case"
 def verify_principal(cursor, principal: str, client_id: str) -> None:
     """Read-only. Fail closed unless the user is the external identity with this SID, in no role,
     owns nothing (no schema, object, type, XML schema collection or database principal) and holds
-    only CONNECT and SELECT on the resident view (denies are harmless).
+    only CONNECT, SELECT on the resident view and the two optional accounting
+    procedure EXECUTEs (denies are harmless).
 
     The public role is inherited by every user. Default public permissions are exactly: database
     scope CONNECT, VIEW ANY COLUMN ENCRYPTION KEY DEFINITION and VIEW ANY COLUMN MASTER KEY
@@ -109,6 +110,11 @@ def verify_rights(cursor, principal: str) -> None:
             continue
         allowed = (str(state).strip() == "G" and (permission, klass) == ("CONNECT", 0)) or (
             str(state).strip() == "G" and (permission, klass, target) == ("SELECT", 1, VIEW)
+        ) or (
+            str(state).strip() == "G"
+            and permission == "EXECUTE"
+            and klass == 1
+            and target in ("resident_ai.reserve", "resident_ai.complete")
         )
         if not allowed:
             raise PrincipalError(

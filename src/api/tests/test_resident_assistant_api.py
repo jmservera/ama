@@ -9,7 +9,9 @@ from unittest.mock import Mock
 
 from zava_forward.core.resident_assistant import AssistantUnavailable, Topic
 
+from test_resident_aoai import ENDPOINT, reply
 from test_resident_demo_api import DemoTestCase
+from zava_forward.api.resident_demo.aoai import AzureAdvisor, resident_key
 from zava_forward.api.resident_demo.assistant import EXPIRES, AzureTopicProvider
 
 
@@ -167,6 +169,54 @@ class AssistantApiTests(DemoTestCase):
             self.assertTrue(body["sources"])
             self.assertEqual(body["label"], "Summary by rules")
         self.assertEqual(client.call("GET", "/demo/assistant")[0], 405)
+
+    def test_real_advisor_own_case_prompt_and_explicit_fallback(self) -> None:
+        accounting, token, transport = Mock(), Mock(return_value="FAKE"), Mock(return_value=reply())
+        self.app.assistant_advisor = AzureAdvisor(
+            ENDPOINT, accounting, token, transport=transport, clock=lambda: EXPIRES - 10
+        )
+        for email, absent, key in (
+            ("one@example.com", "Design work", resident_key("C-1")),
+            ("two@example.com", "arranging a survey", resident_key("C-2")),
+        ):
+            client = self.client()
+            client.login(email)
+            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+            self.assertEqual(status, 200)
+            prompt = transport.call_args.args[1].decode()
+            self.assertNotIn(absent, prompt)
+            self.assertNotIn(email, prompt)
+            self.assertNotIn("Test Street", prompt)
+            accounting.reserve.assert_called_with(key)
+            self.assertIn("AI suggestion", body["label"])
+        accounting.reserve.return_value = None
+        status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+        self.assertEqual(status, 200)
+        self.assertIn("Summary by rules", body["label"])
+
+    def test_revocation_during_inference_or_fallback_never_discloses_stale_case(self) -> None:
+        for fails in (False, True):
+            self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=False)
+            accounting = Mock()
+
+            def transport(url: str, data: bytes, token: str, fails: bool = fails) -> bytes:
+                self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
+                if fails:
+                    raise OSError("hidden")
+                return reply()
+
+            self.app.assistant_advisor = AzureAdvisor(
+                ENDPOINT,
+                accounting,
+                lambda: "FAKE",
+                transport=transport,
+                clock=lambda: EXPIRES - 10,
+            )
+            client = self.client()
+            client.login("one@example.com")
+            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+            self.assertEqual(status, 401)
+            self.assertNotIn("answer", body)
 
 
 if __name__ == "__main__":

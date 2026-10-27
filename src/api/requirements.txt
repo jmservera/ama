@@ -13,7 +13,9 @@ azure-core==1.41.0 \
 azure-identity==1.26.0 \
     --hash=sha256:3c60d9682b3ac01507388d474cb5a5ffbe54152a96b6cdcaa7013da9315cf186 \
     --hash=sha256:61b4538b87df10d2d6d44b77cd5ea28a8929fd4929d58b45bf3f230f7daba02e
-    # via mssql-python
+    # via
+    #   -r requirements.in
+    #   mssql-python
 azure-storage-blob==12.31.0 \
     --hash=sha256:0c0cb601d3462491d09ea96023cd791bb9dd4b173bf950daf3cff34ff47ba5b5 \
     --hash=sha256:997b393cfcbdc4b186d5911790d91f80387f7edc12c4d73eab963a2d26e5b2a9

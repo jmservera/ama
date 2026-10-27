@@ -3197,3 +3197,51 @@ event, an unexpected resource type, daily `ama` cost well above baseline, or tim
 revision serves traffic. The template default is public ingress, so the first operational stage must pass `--no-ingress`
 until the private-vault and SQL proofs exist. None of this has been validated live: tests use a
 fake CLI and the compiled template only. Image builds, logs and egress costs are not estimated here.
+
+## Resident Azure OpenAI (#469)
+
+`resident-assistant.bicep` is standalone and defaults `enabled=false`. It never
+deploys the resident app, changes ingress or creates identity/group/storage
+resources. Only RG `ama` is active. The explicit `enabled=true` deployment
+creates `aoai-resident-469` in Sweden Central, `resident-mini` with
+gpt-4.1-mini 2025-04-14 / Standard / capacity 1, and one account-scoped
+Cognitive Services OpenAI User assignment for existing `id-resident-demo`.
+Local auth and dynamic throttling are disabled; model auto-upgrade is disabled.
+No production template imports or enables this resource.
+
+The 2026-10-27 actual deployment `resident-assistant-469` succeeded with these
+three resources only. Its role assignment suffix is
+`59b49580-bbf9-53d5-80eb-a389ac963e52`; no test resources were created.
+The resident revision remained `ca-resident-demo--0000002`; its reachable
+`/healthz` returned HTTP200, which does not establish new model activation.
+
+Before enabling the new runtime, an authorised existing Entra SQL administrator
+must review and apply `sql/resident-assistant.sql` in the existing database:
+
+```bash
+python3 infra/scripts/resident_assistant_sql.py id-resident-demo \
+  --client-id <existing-resident-client-id>
+# Above is dry-run only. On the existing authorised private SQL host, add:
+# --apply sql-cutover-test-rzsrg retrofit
+```
+
+The helper verifies the existing identity SID and narrow rights before and after;
+it creates no user/role and uses no key/password. It adds only two exact SQL
+object EXECUTEs in a separate accounting schema. The original resident-view
+SELECT and case-write/DDL denials remain. Reruns preserve spend; never reset
+or delete the budget/attempt tables to reopen allowance. Missing ledger rows
+fail closed. SQL UTC time and one locked global budget row protect the hard
+USD20 ceiling and five-attempt rolling-hour per-resident limit.
+
+Then deploy the reviewed resident image through the existing rollout gate,
+preserving all ingress, secret references and min0/max1 settings, and explicitly
+set the namespaced assistant settings in the [API guide](../src/api/README.md#resident-advisory-assistant-prototype-469).
+No app rollout, SQL migration or authenticated MI inference is implied by
+account provisioning. Rollback is `ZF_DEMO_ASSISTANT_ENABLED=false`; retain
+the ledger. Never use developer-token inference as a managed-identity smoke
+substitute or run an unmetered diagnostic request.
+
+See the [design/cost envelope](../docs/architecture/resident-assistant-prototype.md).
+The USD20 ceiling is application-controlled inference admission, not an Azure
+budget alert or subscription-wide spending guarantee. Funding through December
+does not extend the existing November 1 exclusive resident-access boundary.

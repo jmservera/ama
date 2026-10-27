@@ -5,6 +5,7 @@ It refuses to start on any missing, expired, mixed (staff, Entra, AI) or unsafe 
 the SQL allowlist view admits no resident. It never reads the password, only its scrypt verifier.
 """
 
+import logging
 import os
 import sys
 from datetime import UTC, datetime
@@ -12,13 +13,16 @@ from datetime import UTC, datetime
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
 
+from .aoai import configured_advisor
 from .app import ResidentDemo, serve
 
 
 def main() -> int:
+    logging.basicConfig(level=logging.INFO)
     try:
         config = rs.config_from_env(os.environ)
         reader = rsql.ShowcaseReader(rsql.connector(config.sql))
+        advisor = configured_advisor(os.environ, rsql.connector(config.sql))
         identity = rs.build_identity_map(reader.list_rows(), datetime.now(UTC))
         if not identity.cases:
             raise rs.ShowcaseConfigError("The allowlist view admits no showcase resident.")
@@ -39,6 +43,7 @@ def main() -> int:
         config.bind,
         config.port,
         client_address=config.client_address,
+        assistant_advisor=advisor,
     )
     server = serve(app)
     print(
