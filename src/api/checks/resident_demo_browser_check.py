@@ -261,6 +261,7 @@ def check_sign_in_and_cookies(browser: Any, base: str) -> None:
         context.request.get(base + "/demo/view").status == 200,
     )
     check("unavailable actions are disabled buttons", page.locator("button[disabled]").count() >= 1)
+    page.locator("#account > summary").click()
     check("sign out is reachable", page.locator("#signout").is_visible())
     check("no script errors", not errors)
     context.close()
@@ -327,6 +328,7 @@ def check_cross_case_and_logout(browser: Any, base: str) -> None:
         == 401,
     )
     cross.close()
+    page_a.locator("#account > summary").click()
     page_a.click("#signout")
     page_a.wait_for_selector("#signin:not([hidden])")
     check(
@@ -366,6 +368,7 @@ def check_logout_failure(browser: Any, base: str) -> None:
                     status=code, content_type="application/json", body='{"error":"x"}'
                 ),
             )
+        page.locator("#account > summary").click()
         page.click("#signout")
         page.wait_for_selector("#error:not([hidden])")
         text = page.inner_text("#error")
@@ -396,6 +399,7 @@ def check_logout_failure(browser: Any, base: str) -> None:
         page.unroute("**/demo/logout")
         page.click("#retry")
         page.wait_for_selector("#content:not([hidden])")
+        page.locator("#account > summary").click()
         page.click("#signout")
         page.wait_for_selector("#signin:not([hidden])")
         check(
