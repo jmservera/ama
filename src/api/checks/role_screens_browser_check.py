@@ -12,7 +12,14 @@ from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 # Independent child branches extend only their own installed-screen expectation.
-SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    "230": ("pam@example.test", "Programme coordination and returned work", (
+        "SYN missing roof reference", "SYN sender", "SYN-RETURN-230",
+        "SYN-REQUEST-232 accessible update", "Chase owner", "Proposed receiver",
+        "Loft insulation: Paused", "Quality", "Proposed budget",
+        "Missing or stale evidence remains blocking",
+    )),
+}
 
 
 def run_browser(base: str) -> None:
