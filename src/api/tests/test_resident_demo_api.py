@@ -177,6 +177,7 @@ class SignInTests(DemoTestCase):
                 "read_only",
                 "home",
                 "measures",
+                "sensors",
                 "progress",
                 "next_step",
                 "unavailable",
@@ -186,6 +187,43 @@ class SignInTests(DemoTestCase):
         text = json.dumps(view)
         for hidden in ("one@example.com", "two@example.com", "case_id", "C-2", "provenance"):
             self.assertNotIn(hidden, text)
+
+    def test_sensor_history_is_session_owned_and_rechecked(self) -> None:
+        for case_id, value in (("C-1", 19.5), ("C-2", 28.5)):
+            home_id = "STOCK-" + case_id
+            sensors = rs.parse_sensors(
+                [
+                    {
+                        "home_id": home_id,
+                        "observed_at": "2026-10-25T12:00:00Z",
+                        "temperature_c": value,
+                        "humidity_pct": 60,
+                        "source_type": "SYNTHETIC",
+                        "injected_fault": "",
+                    }
+                ],
+                home_id,
+            )
+            self.reader.rows[case_id] = replace(
+                self.reader.rows[case_id], sensor_home_id=home_id, sensors=sensors
+            )
+        alice, bob = self.client(), self.client()
+        self.assertEqual(alice.login("one@example.com"), 200)
+        self.assertEqual(bob.login("two@example.com"), 200)
+        for client, own in ((alice, 19.5), (bob, 28.5)):
+            for path in ("/demo/view", "/demo/view?case_id=C-2&home_id=STOCK-C-2"):
+                status, view, response = client.call(
+                    "GET", path, headers={"X-Case-Id": "C-2", "X-Home-Id": "STOCK-C-2"}
+                )
+                self.assertEqual(status, 200)
+                self.assertEqual(view["sensors"]["history"][0]["temperature_c"], own)
+                self.assertEqual(response.getheader("Cache-Control"), "no-store")
+                self.assertNotIn("STOCK-", json.dumps(view))
+        self.assertEqual(self.client().call("GET", "/demo/view")[0], 401)
+        self.assertEqual(alice.call("GET", "/demo/view/STOCK-C-2")[0], 404)
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
+        self.assertEqual(alice.call("GET", "/demo/view")[0], 401)
+        self.assertEqual(bob.call("GET", "/demo/view")[0], 200)
 
     def test_email_is_canonicalised_at_login(self) -> None:
         self.assertEqual(self.client().login("  ONE@Example.COM "), 200)
