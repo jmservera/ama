@@ -219,3 +219,9 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
 .next-action{font-weight:600;margin-top:var(--sp-2)}
 @media(max-width:600px){.card{padding:var(--sp-3)}.row>*{max-width:100%}.blocked dl{grid-template-columns:1fr}.brand{flex-shrink:1}}
+.screen-links { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-block: var(--sp-4); }
+.screen-links a[aria-current="page"] { font-weight: 600; text-decoration-thickness: .2em; }
+.screen-evidence { min-width: 0; overflow-wrap: anywhere; }
+.screen-evidence h2, .screen-evidence h3 { text-wrap: balance; }
+.screen-record { content-visibility: auto; contain-intrinsic-size: auto 20rem; }
+.screen-evidence td { font-variant-numeric: tabular-nums; }

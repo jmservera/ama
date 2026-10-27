@@ -23,7 +23,12 @@ def navigation(user: dict[str, str]) -> list[Destination]:
     if not admin and not projection.allowed(user, "cases"):
         return []
     if projection.is_contractor(user):
-        return [Destination(href="#/", label="My jobs", scope="Assigned contractor jobs")]
+        return [
+            Destination(href="#/", label="My jobs", scope="Assigned contractor jobs"),
+            Destination(
+                href="#/screens", label="Specialist screens", scope="Installed assigned-job screens"
+            ),
+        ]
     manager = user.get("role") in MANAGER_ROLES
     links = [
         ("#/", "My cases", "My assigned cases", "cases", True),
@@ -42,6 +47,7 @@ def navigation(user: dict[str, str]) -> list[Destination]:
         ("#/closed", "Closed cases", "Closed case directory", "cases", manager),
         ("#/assistants", "Assistant proposals", "My permitted proposals", "assistants", True),
         ("#/time", "Time capture", "My time records", "time", True),
+        ("#/screens", "Specialist screens", "Installed role screens", "cases", True),
     ]
     out = []
     for href, label, scope, kind, role_ok in links:
