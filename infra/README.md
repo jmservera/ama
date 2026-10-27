@@ -1274,7 +1274,7 @@ legal approval. Real owners and sources remain a gap before operational reliance
 
 | Identity | Scope and role | Reason |
 | --- | --- | --- |
-| api | Key Vault Secrets User; blob Data Contributor; queue Message Sender; AcrPull; OpenAI User and Azure AI User (only when `enableApiAi`); IoT Hub Event Hubs Data Receiver; SQL reader, writer, ddladmin | Serve the workbench, enqueue tasks, read telemetry |
+| api | Key Vault Secrets User; blob Data Contributor; queue Message Sender; AcrPull; OpenAI User and Azure AI User (only when `enableApiAi`); Data Receiver on the dedicated IoT telemetry Event Hub; SQL reader, writer, ddladmin | Serve the workbench, enqueue tasks, read telemetry |
 | agents | queue Data Contributor; AcrPull; OpenAI User and Azure AI User; no SQL | Run agents, reach data only through the API |
 | orchestrator | queue Message Sender; AcrPull; no SQL | Enqueue only |
 | import | blob and queue Data Contributor; AcrPull; SQL reader and writer | Imports |
@@ -3097,22 +3097,122 @@ all Bicep entry points, compiled controls, mutation regressions and scoped ruff.
 
 ## IoT Hub (issue 140, ADR 0003 decision 6)
 
-`modules/iothub.bicep` provisions the device-to-cloud ingestion boundary for simulated in-use monitoring. Decisions recorded here are proposals pending owner approval of ADR 0003.
+`modules/iothub.bicep` defines the device-to-cloud boundary for simulated
+monitoring. The 2026-10-27 owner direction approves source authoring and local
+validation within Free/B1, `ama` and the overall USD700 cap, **not deployment**.
+Never delete resource group `ama`. No resource group, device, key, credential
+rotation, live transport or Azure what-if is created/executed by this work.
 
 | Item | Decision |
 | --- | --- |
-| Region | uksouth (owner decision) |
-| Tier and units | B1, 1 unit: device-to-cloud and message routing only, enough for the simulator. Move to S1 (parameter `iotHubSku`) only if twins, cloud-to-device or IoT Edge are needed |
-| Cost | Estimate of 25 per month in the billing currency, set as a hub-scoped budget (`iotHubMonthlyCost`) with 80 percent actual and 100 percent forecast alerts. An estimate: confirm against the Azure pricing page before provisioning |
-| Retention | Built-in endpoint keeps messages 1 day (`iotHubRetentionDays`, maximum 7). Azure SQL is the system of record |
-| Consumer | Consumer group `api-consumer` on the built-in endpoint; the API managed identity has only Azure Event Hubs Data Receiver on the hub |
-| Service credentials | `disableLocalAuth` is true: no shared access policy or connection string exists, so none can be stored in source or logs |
-| Network | Production profile: public access disabled, private endpoint with `privatelink.azure-devices.net` and `privatelink.servicebus.windows.net`. Development profile: public access allowed for a throwaway stack |
-| Diagnostics | Connections, DeviceIdentityOperations, Routes, Configurations and metrics to Log Analytics. DeviceTelemetry is not logged, keeping readings and device ids out of logs |
-| Device identity | Individual device identities with per-device keys or X.509 certificates, issued by the simulator provisioning step (#185). Device Provisioning Service is deferred until real sensors are in scope |
-| Credential owner | Juan Manuel Servera issues and rotates device credentials (owner decision); device keys are held in Key Vault, never in source |
+| Region and scope | `uksouth`, existing `ama` only. Named checks in main's parameter guard precede the entire main graph; a separate module guard protects standalone use. Independent SQL and global-resource locations are not changed |
+| Tier and units | B1, exactly one unit, two partitions by default. S1 and scale-out are rejected by constraints. Free is not selected: its limited allowance and inability to upgrade are not a drop-in Basic profile. Twins, cloud-to-device and device management remain excluded |
+| Retention | One day in the built-in transport endpoint and custom Event Hub, configurable 1-7 days. This is not SQL/DPO record retention; Azure SQL remains the record system |
+| Consumer | `api-consumer` on `sensor-readings` in dedicated Standard Event Hubs namespace `eh-<hub-name>`, one TU, no auto-inflate. API identity gets only Azure Event Hubs Data Receiver on that event hub |
+| Routing identity | IoT Hub system-assigned identity gets Data Sender on its dedicated namespace. All DeviceMessages route to the custom Event Hub when explicitly activated; built-in fallback is disabled |
+| Service credentials | Local service auth disabled on both services; no service key lookup, value or connection string in Bicep/outputs. Disabled shared access does not prove provider-generated policies/keys do not exist |
+| Network | Hub: public disabled by default, unconditional private endpoint and both IoT/servicebus DNS zones. Public hub access requires the existing explicit development profile opt-in. Namespace: always public Disabled, default Deny, unconditional private endpoint with servicebus DNS; trusted Microsoft services exception permits system-identity routing, still requiring sender RBAC. This is not IoT egress through its private endpoint |
+| Diagnostics | `AllMetrics` to the supplied Log Analytics workspace on hub and namespace; `allLogs` explicitly disabled. Connections and DeviceIdentityOperations also contain device IDs, so excluding DeviceTelemetry alone is insufficient. No raw readings, device IDs or keys are intentionally exported. This does not erase historical logs or cover every external diagnostic setting |
+| Device provisioning | Individual device-registry identities, one per simulated sensor/gateway, provisioned later under #185. Per-device symmetric SAS or X.509, never a shared service policy; device SAS remains enabled, module SAS disabled. DPS is deferred; disabling service SAS is not compatible with assuming DPS already works |
+| Credential owner | Juan Manuel Servera is the selected exercise issue/rotate/revoke owner. Later #185 work must place credentials in the approved Key Vault, control access, record expiry/rotation and revoke compromised identities without logging values. No real operational appointment, key read/write or credential issuance is established here |
 
-Gates: `az bicep build` and `az bicep lint` run in `mvp-validation.yml`; `infra/tests/test_iothub_module.py` guards the module. Open: a live `az deployment group what-if` against the target resource group needs subscription access and has not been run; real pricing confirmation; B1 private endpoint behaviour verified in a deployment.
+### Keyless consumer and explicit activation
+
+The earlier receiver assignment on IoT Hub was ineffective: Microsoft says
+the built-in Event Hubs-compatible endpoint still requires a shared access
+key. The custom Event Hub is an Entra consumption adapter; it does not replace
+IoT Hub's per-device boundary or implement the #110 consumer. Nonsecret main
+outputs `iotHubEventHubNamespaceFqdn`, `iotHubEventHubName`,
+`iotHubConsumerGroup` and `iotHubRoutingEnabled` describe its future contract.
+The namespace output is a hostname without scheme, port or trailing slash,
+including when Azure returns `https://<host>:443/`. The routing endpoint is
+constructed separately as `sb://<host>/` from that same normalized hostname.
+
+`iotHubRoutingReady=false` (default; module `routingReady`) is **bootstrap
+only**: system identity, namespace, entity, group, roles and endpoints are
+defined, but no custom routing endpoint is registered and no route/fallback
+is active. Do not enrol devices or send messages in this state. A system
+identity exists only after hub creation; registering its routing endpoint
+before its sender grant has propagated can fail. The hub therefore does not
+depend on its own downstream sender assignment, which would form a cycle.
+
+Only a later separately authorized operator may apply bootstrap, verify actual
+sender authorization/propagation, record that evidence, and then apply the same
+definition with `iotHubRoutingReady=true`. Preserve true in every subsequent
+private parameter set: omitting it reverts to bootstrap and disables routing.
+Do not run the generic deployment pipeline for an activated hub without
+reviewing its effective parameter set and what-if. No automatic apply/retry,
+device provisioning, SDK activation or live propagation check runs here.
+
+### Transport budget entry (2026-10-27)
+
+The public [Azure Retail Prices API](https://prices.azure.com/api/retail/prices),
+queried for `armRegionName eq 'uksouth'`, USD, Consumption, returned B1 Unit
+USD10/month (product `IoT Hub`), Standard Throughput Unit USD0.03/hour and
+Standard Ingress Events USD0.028/million (product `Event Hubs`). These are public
+list-price estimates, not the subscription's actual offer, spend or headroom.
+
+| Component | Monthly USD scenario |
+| --- | --- |
+| B1, one unit | 10.00 |
+| Standard Event Hubs, one TU for 730 hours | 21.90 |
+| Ingress, illustrative 400,000 events/day for 30 days, each <=64 KiB | 0.336 |
+| Two private endpoints | 14.60 planning allowance, assuming USD0.01/endpoint-hour; not verified by the fetched regional price response |
+| Shared DNS, metric ingestion, endpoint data processing and contingency | 13.164 planning allowance, not a measured usage/quote |
+| Total planned transport allocation | 60.00/month, inside rather than additional to the overall USD700 cap |
+
+The [Private Link pricing page](https://azure.microsoft.com/en-us/pricing/details/private-link/)
+retrieved on 2026-10-27 returned currency placeholders, not a usable numeric
+quote. Endpoint/variable allowances above are explicit modelling assumptions.
+The ingress example is not a traffic forecast; IoT B1 metering uses 4 KiB
+blocks, so larger observations reduce its daily observation capacity.
+Peak throughput, December funding duration, billing-currency conversion,
+current aggregate spend, commitments and remaining USD700 headroom must all be
+checked before provisioning. USD60/month is not an approved extra purchase or
+a claim the complete programme fits the cap. This authoring task spends zero
+on Azure resources.
+
+`iotHubMonthlyCost` / `monthlyCostEstimate` defaults to 60 in the actual
+billing currency, constrained to 1-700; do not treat that number as USD unless
+the account currency/conversion is reconciled. The dedicated monthly budget
+filters hub, namespace and both endpoint resource IDs, with 80% actual and
+100% forecast alerts. Shared workspace/DNS charges remain in the overall
+budget. Azure budgets send alerts, **not hard spending stops**; this template
+cannot enforce the aggregate cap.
+
+### Acceptance and validation boundary
+
+Build/lint are wired through the existing `mvp-validation.yml` check;
+`infra/tests/test_iothub_module.py` now examines compiled resources, both
+activation states and rejection mutations. The existing
+`Infrastructure PR what-if` workflow checks trusted candidate Bicep through
+approved plan environments in `ama`; its presence does not mean it ran.
+This task uses local tests only, not the full RPI gate.
+
+| #140 criterion | Authored evidence | Remaining evidence |
+| --- | --- | --- |
+| Tier, region, units, cost, retention | Decision table, constraints and budget scenario above | Actual price/currency/headroom and quota verification before provisioning |
+| Hub, consumer/routing and diagnostics | Compiled Bicep and semantic/mutation tests | No actual routed message or Log Analytics arrival |
+| API identity / no keys | Event-hub-scoped receiver, separate system sender, role matrix and key-auth guards | Actual #110 SDK/token transport |
+| Production network | Both endpoints/DNS, disabled public namespace and trusted-service exception | Actual private resolution and access denial/success |
+| Provisioning and owner | Individual identities and named exercise credential owner above | #185 implementation and actual issue/rotate/revoke evidence |
+| Gates and cost entry | Local build/lint/infra tests, existing owner-gated what-if wiring, bounded budget definition | Live what-if not run/authorized; not whole-issue closure |
+
+BRD OD-43 remains open for real inventory, lawful basis/DPIA, resident choice,
+record retention, calibration, freshness/thresholds and human review ownership.
+No operational monitoring or human approval follows from passing local checks.
+Incremental deployment would not remove old role assignments/resources absent
+from the new source; any live reconciliation needs separate exact-resource
+authority, never resource-group deletion.
+
+Official references, retrieved 2026-10-27:
+
+* [IoT Hub Entra authorization and built-in-endpoint limitation](https://learn.microsoft.com/en-us/azure/iot-hub/authenticate-authorize-azure-ad)
+* [Managed-identity routing and role propagation](https://learn.microsoft.com/en-us/azure/iot-hub/iot-hub-managed-identity)
+* [IoT private networking](https://learn.microsoft.com/en-us/azure/iot-hub/virtual-network-support)
+* [Event Hubs private access and trusted-service exception](https://learn.microsoft.com/en-us/azure/event-hubs/private-link-service)
+* [Tier capabilities and metering](https://learn.microsoft.com/en-us/azure/iot-hub/iot-hub-scaling)
+* [Monitoring log schemas, including device IDs](https://learn.microsoft.com/en-us/azure/iot-hub/monitor-iot-hub-reference)
 
 ## Private networking and public edge (issue 143, ADR 0002 decision 6)
 

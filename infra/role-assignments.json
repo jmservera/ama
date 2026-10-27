@@ -11,6 +11,7 @@
     "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd": "Cognitive Services OpenAI User",
     "53ca6127-db72-4b80-b1b0-d745d6d5456d": "Azure AI User",
     "a638d3c7-ab3a-418d-83e6-5f17a39d4fde": "Azure Event Hubs Data Receiver",
+    "2b629674-e913-4c01-ae53-ef4638d8f975": "Azure Event Hubs Data Sender",
     "db58b8e5-c6ad-4a2a-8342-4190687cbf4a": "Storage Blob Delegator",
     "b86a8fe4-44ce-4948-aee5-eccb2c155cd7": "Key Vault Secrets Officer"
   },
@@ -21,7 +22,8 @@
     {"identity": "api", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image", "bicep": "modules/registry.bicep"},
     {"identity": "api", "resource": "foundry", "scope": "Foundry account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Call model deployments for the AI assistants (when enableApiAi)", "bicep": "modules/foundry.bicep"},
     {"identity": "api", "resource": "foundry", "scope": "Foundry account", "roleId": "53ca6127-db72-4b80-b1b0-d745d6d5456d", "reason": "Use Foundry agents and project APIs (when enableApiAi)", "bicep": "modules/foundry.bicep"},
-    {"identity": "api", "resource": "iotHub", "scope": "IoT Hub", "roleId": "a638d3c7-ab3a-418d-83e6-5f17a39d4fde", "reason": "Read-only receipt of device telemetry from the built-in endpoint (issue 140)", "bicep": "modules/iothub.bicep"},
+    {"identity": "api", "resource": "iotHub", "scope": "IoT telemetry Event Hub", "roleId": "a638d3c7-ab3a-418d-83e6-5f17a39d4fde", "reason": "Receive only from the dedicated routed Event Hub; the IoT built-in endpoint does not support Entra consumption (issue 140)", "bicep": "modules/iothub.bicep"},
+    {"identity": "iot-hub", "resource": "iotHub", "scope": "IoT telemetry namespace", "roleId": "2b629674-e913-4c01-ae53-ef4638d8f975", "reason": "System-assigned hub identity sends through the trusted-service exception to its dedicated Event Hubs namespace (issue 140)", "bicep": "modules/iothub.bicep"},
     {"identity": "agents", "resource": "storage", "scope": "Storage account, queue service", "roleId": "974c5e8b-45b9-4653-ba55-5f855dd0fb88", "reason": "Consume and complete agent tasks", "bicep": "main.bicep"},
     {"identity": "agents", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image", "bicep": "modules/registry.bicep"},
     {"identity": "agents", "resource": "foundry", "scope": "Foundry account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Call model deployments", "bicep": "modules/foundry.bicep"},

@@ -24,7 +24,8 @@ SCOPE_NAMES = {
     ("modules/keyvault.bicep", "vault"): "Key Vault",
     ("modules/registry.bicep", "registry"): "Container registry",
     ("modules/foundry.bicep", "account"): "Foundry account",
-    ("modules/iothub.bicep", "hub"): "IoT Hub",
+    ("modules/iothub.bicep", "telemetry"): "IoT telemetry Event Hub",
+    ("modules/iothub.bicep", "telemetryNamespace"): "IoT telemetry namespace",
     ("modules/authTokenStore.bicep", "account"): "Token store account",
     ("modules/authTokenStore.bicep", "tokens"): "auth-tokens container",
     ("modules/authTokenStore.bicep", "secret"): "Secret entra-token-store-sas only",
@@ -71,8 +72,12 @@ def parse_bicep_assignments() -> list[tuple[str, str, str]]:
                 continue
             role = re.search(r"roleDefinitions', ('?[\w-]+'?)\)", block).group(1)
             role = role.strip("'") if role.startswith("'") else variables[role]
-            identities = ({"token-maintenance"} if principal == "maintenance.properties.principalId"
-                          else module_principals(MODULE_FILES[path]))
+            if principal == "maintenance.properties.principalId":
+                identities = {"token-maintenance"}
+            elif path == "modules/iothub.bicep" and principal == "hub.identity.principalId":
+                identities = {"iot-hub"}
+            else:
+                identities = module_principals(MODULE_FILES[path])
             for identity in identities:
                 found.append((identity, role, SCOPE_NAMES[(path, scope)]))
     var_ids = dict(re.findall(r"var (\w+) = '(" + GUID.pattern + ")'", MAIN))
@@ -134,8 +139,13 @@ class RoleMatrixTests(unittest.TestCase):
         self.assertIn("= if (includeResultRelay) {", relay_assignment)
 
     def test_iot_hub_grants_receiver_only_to_api(self) -> None:
-        self.assertEqual([(r["identity"], r["roleId"]) for r in self.rows("iotHub")],
-                         [("api", "a638d3c7-ab3a-418d-83e6-5f17a39d4fde")])
+        self.assertEqual(
+            [(r["identity"], r["roleId"], r["scope"]) for r in self.rows("iotHub")],
+            [
+                ("api", "a638d3c7-ab3a-418d-83e6-5f17a39d4fde", "IoT telemetry Event Hub"),
+                ("iot-hub", "2b629674-e913-4c01-ae53-ef4638d8f975", "IoT telemetry namespace"),
+            ],
+        )
 
     def test_identities_match_bicep_and_sql_grants(self) -> None:
         workloads = re.search(r"var workloads = \[(.*?)\]", BICEP["modules/identity.bicep"]).group(1)

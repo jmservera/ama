@@ -7567,6 +7567,29 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   source checkpoint. No private data, physical/production acceptance, human
   approval, issue closure or main merge is asserted.
 
+## [2026-10-27] query | Source-only IoT infrastructure definition (Refs #140)
+
+* Recorded the owner's 2026-10-27 ADR 0003 authoring authorization: Free/B1
+  envelope, `ama`/`uksouth`, overall USD700 cap, never delete `ama`, no deployment.
+* Corrected the existing keyless-consumer claim using official Microsoft
+  guidance retrieved 2026-10-27: the built-in IoT endpoint still requires a
+  shared service key; managed-identity consumption uses a dedicated custom
+  Standard Event Hub. Recorded the separate system-sender/API-receiver scopes,
+  private endpoints and trusted-service routing exception.
+* Corrected diagnostic minimisation: connection and identity-operation logs
+  also contain device IDs. The source now exports metrics only and explicitly
+  disables resource logs; this is not historical log erasure.
+* Filed the public B1/TU/ingress price inputs and explicit unverified
+  endpoint/variable allowances in a USD60/month transport scenario, inside
+  rather than additional to USD700. Actual currency, commitments and remaining
+  aggregate headroom remain unverified and block provisioning.
+* Updated `infra/README.md`, ADR 0003 and the knowledge-base index. Explicit
+  bootstrap omits endpoint registration; later activation requires separate
+  approval and actual sender-role propagation. Individual device credential
+  work remains #185; SDK transport #110 and BRD OD-43 human gates remain open.
+* No Azure what-if, deployment, secret read, device creation, operational
+  approval, issue closure or full RPI gate is claimed.
+
 ## [2026-10-27] restructure | Owner-authorized source cut-over (Refs #199-#203)
 
 * Owner explicitly SIGNED OFF cut-over #201 on 2026-10-27 in the retirement

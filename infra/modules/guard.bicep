@@ -1,6 +1,14 @@
 // Parameter guard (the outputs only reference the parameters). Each minLength constraint fails template validation, before
 // any resource changes, with a message that names the unsupported combination.
 @minLength(1)
+@description('Must not be empty. Empty means the target resource group is not ama; never create or delete a resource group for this stack.')
+param resourceGroupMustBeAma string
+
+@minLength(1)
+@description('Must not be empty. Empty means the primary location is not uksouth. Independently selected SQL and global service locations are unchanged.')
+param primaryLocationMustBeUKSouth string
+
+@minLength(1)
 @description('Must not be empty. Empty means the production profile was combined with allowPublicNetworkAccess=true; use deploymentProfile=development for a reachable throwaway stack.')
 param productionProfileForbidsPublicNetworkAccess string
 
@@ -77,6 +85,8 @@ param appCredentialRequiresDirectDemo string
 param appCredentialBlocksApplicationDeployment string
 
 output checked array = [
+  resourceGroupMustBeAma
+  primaryLocationMustBeUKSouth
   pilotRequiresProductionProfile
   publicEdgeRequiresProductionProfile
   publicEdgeRequiresApplications

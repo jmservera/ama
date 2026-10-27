@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T18:38:28+00:00",
-  "commit": "1ed59d7578da2cdd395453ac5a5ef6784de1c460",
+  "scored_at": "2026-10-27T19:50:57+00:00",
+  "commit": "f1be9b1d7c9c0476b21160b67200b6c55d560fd3",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40560161654",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40569657958",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
-    "adr": "c8f2acbb99abf16e65a7119d7f848b2e0bbfa254572c3da881a11f8422c36a7f",
+    "adr": "3bcdf19475e01fd6796a69fbde86ee268b907d3bca5011e2cc363680fcc81a48",
     "solution-code": "adeccfe3b6ec28ed21a6a42d67ff088dae1a917a6671f2f9294a0c3090643b0e",
-    "infrastructure": "af65ce38ca8fa4dd19005ee7104cb20f8c9a9bd4e7a506fd731d725889404185",
+    "infrastructure": "222b173b734c0581993f9dad7de0c66f2af5f7b2d0649f06c2636dd42432769a",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "067cda445da41bfa951d895a97fda125a5bb58a403a41b1037f1567ed3f3526e"
@@ -34,22 +34,22 @@
         "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
-      "rationale": "This PR only adds a client-side registerRoleScreen plugin host (src/api) reusing existing read-only endpoints; it does not touch the core synthetic modularity evidence this score rests on. Ceiling retained."
+      "rationale": "This PR changes infra (IoT Hub/Event Hub scope guards, routing) and an ADR; it does not touch the core synthetic modularity evidence this score rests on. Ceiling retained."
     },
     "A2": {
       "score": 5,
       "evidence": [
-        "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
+        "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md:35-62"
       ],
-      "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
+      "rationale": "ADR amendment adds careful trade-off reasoning (keyless routing, tier/scope constraints, cost scenario) but was already at ceiling; no basis to exceed it. Unchanged."
     },
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/sensor_consumer.py:511-527",
-        "src/core/src/zava_forward/core/synthetic/sensor_identity.py:9-23"
+        "infra/modules/iothub.bicep:1-130",
+        "infra/tests/test_iothub_module.py:1-40"
       ],
-      "rationale": "This PR adds a UI plugin host with no new authorization surface (tests assert no POST/innerHTML, server still enforces role filtering), consistent with but not adding to existing security evidence. Unchanged."
+      "rationale": "Diff strengthens security posture (scope guards, keyless Event Hub RBAC separation, disabled public access, mutation tests) consistent with existing ceiling evidence; already at ceiling so unchanged."
     },
     "A4": {
       "score": 5,
@@ -63,10 +63,10 @@
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:1256-1320",
-        "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:594-650"
+        "infra/README.md:3097-3160",
+        "infra/main.bicep:25-40"
       ],
-      "rationale": "No observability, reliability, performance or cost evidence changed by this UI-only diff. Unchanged."
+      "rationale": "ADR/README add a detailed cost-estimation scenario and budget wiring (operations/cost evidence), but this criterion was already at ceiling and the change does not establish new observability/reliability evidence beyond it. Unchanged."
     },
     "A6": {
       "score": 5,
@@ -117,7 +117,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "This diff changes src/api component code, tests and its README; no capstone deck or capstone documentation files changed. Unchanged baseline."
+      "rationale": "This diff changes only infra/ADR files; no capstone deck or capstone documentation files changed. Unchanged baseline ceiling."
     },
     "B7": {
       "score": 5,
@@ -152,7 +152,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
       ],
-      "rationale": "Revision reframes mechanisms as candidate, adds a rival-explanations table and an audit trail, and de-causalises title/abstract, strengthening rigor. Still a non-causal single-case synthesis plus untested protocol; score retained."
+      "rationale": "Thought-leadership artifact unchanged in this PR; baseline evidence retained unchanged."
     },
     "D2": {
       "score": 3,
@@ -160,14 +160,14 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "main.tex still carries 25 unresolved TODO(author) items (unchanged count) and README confirms execution paused, arXiv bundle not refreshed. Draft structured but not submission-ready, unchanged."
+      "rationale": "main.tex still carries unresolved TODO(author) items; README confirms execution paused. Unchanged."
     },
     "D3": {
       "score": 2,
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "README still states execution is paused, registration deferred and public release subject to permission; no new submission, registration or acceptance evidence. Unchanged."
+      "rationale": "README still states execution is paused, registration deferred. Unchanged."
     }
   }
 }

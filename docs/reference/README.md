@@ -20,6 +20,16 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
+and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
+record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,
+metrics-only diagnostics and a USD60/month model inside the overall USD700
+cap. The old built-in-endpoint receiver role was not a supported Entra path;
+connection/identity logs also contain device IDs. Bootstrap omits endpoint
+registration until separately approved sender-role propagation verification.
+These are source-only definitions and local checks, not Azure what-if,
+provisioning, actual budget headroom, credential issue or OD-43 acceptance.
+
 For #199-#203, the
 [owner-authorized 2026-10-27 directory retirement](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
 records explicit cut-over sign-off, local archive `v0.21.0`, removal of the
