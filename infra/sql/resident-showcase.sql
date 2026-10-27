@@ -7,7 +7,7 @@
 -- ships EMPTY: nothing is visible until an owner-approved step inserts rows with a provenance
 -- reference. Email canonical form is identical to the application: trim spaces, lower-case, ASCII
 -- only, compared with Latin1_General_100_BIN2; duplicates are counted across ALL cases. The view
--- is not capped: the application refuses more than 25 rows instead of silently truncating.
+-- is not capped: the application refuses more than 1000 rows instead of silently truncating.
 IF SCHEMA_ID(N'resident_showcase') IS NULL EXEC(N'CREATE SCHEMA resident_showcase AUTHORIZATION dbo');
 GO
 IF OBJECT_ID(N'resident_showcase.allowed_case', N'U') IS NULL

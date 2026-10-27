@@ -128,7 +128,7 @@ class ShowcaseReader:
     def list_rows(self) -> list[ShowcaseRow]:
         rows = self._run(LIST_SQL, ())
         if len(rows) > MAX_MAPPINGS:
-            raise ShowcaseConfigError("The allowlist supplies more than 25 showcase mappings.")
+            raise ShowcaseConfigError("The allowlist supplies more than 1000 showcase mappings.")
         return rows
 
     def fetch_case(self, case_id: str) -> ShowcaseRow | None:

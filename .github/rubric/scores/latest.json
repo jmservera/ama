@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-26T22:22:56+00:00",
-  "commit": "8306e473bc878c27148e18ff4d1fef4b50cccfb3",
+  "scored_at": "2026-10-27T00:04:54+00:00",
+  "commit": "9aed05e0abc8ce6ff458e4810bb546920558cf16",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40411122937",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40423176709",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "f37207c14aba084c04548047a5032290f5ca025e36f44bf1e43a3263155017ed",
-    "infrastructure": "cac31ac09f154868bd4ffe983e2f3d7b0b49a128df16584b81f433d1d34c5cfb",
+    "solution-code": "99940a6c53eae6db8c50a6b51cbcb29639f538751cd9787b7b841863830f84db",
+    "infrastructure": "373822cf914b8c16420542b1b5bb7bb30e453491e28f2a4bf4eb2d83bc77d820",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
@@ -57,14 +57,14 @@
         "src/core/tests/test_resident_showcase.py:1-40",
         "src/api/checks/resident_demo_browser_check.py:1-40"
       ],
-      "rationale": "Full feature shipped with unit tests, HTTP API tests, SQL integration tests and an end-to-end browser check (keyboard-only sign-in, forged-cookie denial, cross-case denial, logout replay). Already at ceiling."
+      "rationale": "Full feature shipped with unit tests, HTTP API tests, SQL integration tests and an end-to-end browser check. Already at ceiling."
     },
     "A5": {
       "score": 4,
       "evidence": [
         "src/api/README.md:2837-2910"
       ],
-      "rationale": "Documents a per-source and overall login rate limiter and explicit residual-risk disclosure (distributed attacker can exhaust overall cap), but still no metrics/alerting/cost instrumentation added for the scored system. Unchanged baseline."
+      "rationale": "Documents a per-source and overall login rate limiter and residual-risk disclosure, but still no metrics/alerting/cost instrumentation added. Unchanged baseline."
     },
     "A6": {
       "score": 3,
@@ -74,7 +74,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No new agentic orchestration; resident showcase is a static authenticated HTTP view with no agent involvement, identical in kind to prior non-agentic surfaces. Unchanged baseline."
+      "rationale": "No new agentic orchestration; resident showcase is a static authenticated HTTP view with no agent involvement. Unchanged baseline."
     },
     "B1": {
       "score": 3,
@@ -116,7 +116,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "No deck or capstone documentation files changed in this diff (infra/src READMEs only); B6 scope evidence is unaffected. Unchanged baseline."
+      "rationale": "This diff only changes a numeric cap (25->1000) in infra/core/tests plus one README line; no deck or capstone documentation files changed. B6 scope evidence unaffected. Unchanged baseline."
     },
     "B7": {
       "score": 5,
