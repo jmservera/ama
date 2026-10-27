@@ -117,8 +117,21 @@ Before the scoped gate, rerun local units with this worktree's src/*/src
 before installed packages, plus parent/child real browser selectors. Correct
 #231 using source-owned selective invalidation, preserving supplied versions,
 genuine reassessment/returned/missing states and professional authority.
-The one gate remains unspent. Original critique/Review and earlier failures
-are preserved; no tracking deletion is selected.
+Parent and nine independent children have been rebased; all eight child
+selectors/workbench browsers and local focused units passed again. RV-001
+is implemented with source-owned coordination-only invalidation, executable
+Node regression (observed failing before fix) and painted browser assertions.
+The original Review remains adverse at its original heads, not repeated.
+Full parent API static checks pass after normalizing the directly related
+new test formatting. Final evidence/format-only parent ancestry is propagated
+to children before publication. The one gate remains unspent. Original
+critique/Review and earlier failures are preserved; no tracking deletion
+is selected. Exact generated-cache cleanup requires preservation/readback
+and selected restore proof before the owner-required git clean -fdxq.
+
+The parent evidence snapshot precedes its own gate. Preserve the final
+external partial receipt and PR evidence without changing the gated parent.
+Post-publication state evidence may be committed to trace-only #233 only.
 
 Per-story outputs, source contracts, role restrictions, unit budgets and exact
 local/browser selectors are allocated in the plan's Delivery and Validation

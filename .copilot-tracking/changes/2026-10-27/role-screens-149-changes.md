@@ -168,3 +168,70 @@ and rebase independent children. Validation uses external existing pip tools
 with explicit current-worktree source imports, real Chromium selectors, then
 one foreground --changed gate, timeout 0 and a fresh external output. Cleanup
 must preserve original evidence; no tracking deletion selected.
+
+## Rebased validation and RV-001 implementation result
+
+Parent rebased without conflicts onto 2e031c89 as 01779c72. All nine children
+were rebased onto that parent, preserving independent role diffs and trace-only
+#233. Shared runtime/host/check bytes match the pre-rebase source; main's
+resident expiry/reachability change is inherited rather than overwritten.
+
+| Story | Revalidated head | Focused units | Chromium selector and existing workbench |
+| --- | --- | --- | --- |
+| #232 | 1792538b | 8 passed | Passed |
+| #227 | f468a9f4 | 8 passed | Passed |
+| #230 | 393314fe | 8 passed | Passed |
+| #225 | 076ef5a1 | 8 passed | Passed |
+| #226 | 2f217ed4 | 8 passed | Passed |
+| #228 | 99245cac | 8 passed | Passed |
+| #229 | c89d9667 | 8 passed | Passed |
+| #231 | 76a4fb95 | 8 passed; additional 27 passed | Passed, including selective invalidation |
+
+Parent seven focused units, empty-host Chromium and existing workbench passed.
+Every Python invocation used PYTHONDONTWRITEBYTECODE=1 and this worktree's
+five src/*/src roots before shared tests/installed distributions. An import
+probe confirms the current-worktree API module path. Chromium 156.0.8078.4
+and an owned responsive loopback API exercised all eight screens independently,
+including read-only/denied/expired/failed/late/empty, keyboard/reflow and
+reduced-motion checks. No aggregate integration or human acceptance inferred.
+External logs and screenshot files are under
+/tmp/ama-role-screens-149-followup-20261027; generated committed JSON records
+their hashes, exact tested heads and execution summaries.
+
+#231 correction 76a4fb95 preserves source review status/version/reason and
+removes the blanket current-design equality. Real core selective invalidation
+marks only coordination Needs reassessment; executable Node rendering and
+painted browser cells verify assessment/design/building retain supplied
+older-version sign-offs. Missing version/review and same-version Returned are
+also tested. The regression failed before the correction, then passed.
+No historical stale coordination sign-off is displayed as Signed off.
+Source/professional authority is unchanged. Original Review remains
+Complete / Not accepted at its original boundary; this later implementation
+does not rewrite it or claim independent closure/approval.
+
+Final API static precheck found one formatting-only defect in the parent-owned
+new role-screen unit file. Repository Ruff formatting corrected that directly
+related delivery defect before the single gate. Complete API Ruff check,
+format check (46 files) and mypy (88 source files) then passed. This changes
+no runtime source and will be propagated to children by a final evidence/
+format-only parent rebase. No second critique or independent Review ran.
+
+## Final candidate and publication boundary
+
+P03-T02 remains pending the single gate and draft PR creation. This committed
+snapshot necessarily precedes its own exact-head receipt. The authoritative
+receipt stays external; its verification and publication result will be
+attached to PR evidence without another parent commit invalidating the gate.
+Any final delivery-status artifact is confined to the trace-only #233 child.
+No success, PR number or approval is predicted here.
+
+Owner explicitly requires git clean -fdxq. The finite observed selection is
+regenerable .ruff_cache/, src/api/.ruff_cache/, empty .venv/, and bytecode/
+egg-info under the core, agents and API project src roots. No tracking
+deletion is selected. Before cleanup, archive/read back the entire tracking
+snapshot and exact selected generated paths externally, restore selected
+members and verify hashes; compare the exact dry-run and refuse drift.
+Run the one foreground --changed --lock-timeout 0 gate using its built-in
+/tmp/ama-rpi-heavy.lock and a fresh /mnt/ama-rpi-gates/ directory. A failed
+gate, verification failure or current-base drift blocks publication without
+a second attempt. No cloud fallback, uv, credentials or main force-push.
