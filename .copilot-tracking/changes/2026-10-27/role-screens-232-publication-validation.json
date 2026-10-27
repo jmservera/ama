@@ -1,0 +1,17 @@
+{
+  "story": "232",
+  "scope": "Formatting-only child unit correction; no production/harness changes or parent gate mutation",
+  "parent": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+  "prior_child_head": "d98c49dbb92a87dda4c6bfe552cff605f792c36c",
+  "original_review": "Preserved unchanged; not repeated; no independent approval inferred",
+  "checks": {
+    "232-final-static.log": {
+      "sha256": "f008e0c04ed77a528d9862b275c28910bab6a784a869fb9da1d217332648ba75",
+      "output": "All checks passed!\nunformatted: File would be reformatted\n  --> tests/test_role_screens.py:43:23\n   |\n42 |         source = (WEB / \"screen-engagement.js\").read_text()\n   -         for field in (\"m.context?.design_version\", \"answer.context_revision\",\n   -                       \"update.safe_contact_ref\", \"request.remedy?.status\"):\n43 +         for field in (\n44 +             \"m.context?.design_version\",\n45 +             \"answer.context_revision\",\n46 +             \"update.safe_contact_ref\",\n47 +             \"request.remedy?.status\",\n48 +         ):\n49 |             self.assertIn(field, source)\n50 |         self.assertIn(\"Paused and Withdrawn\", source)\n51 |         self.assertNotIn(\"caseApi(\", source)\n   -         self.assertNotIn('href: `tel:', source)\n52 +         self.assertNotIn(\"href: `tel:\", source)\n   |\n\n1 file would be reformatted, 45 files already formatted\n"
+    },
+    "232-final-static-corrected.log": {
+      "sha256": "2c3dff1e2d4d9e2c1f21079d3eda2889396a19e12bc055c919b0382dc6513880",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n"
+    }
+  }
+}
