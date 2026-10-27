@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/mvp-cutover-201-research.md",
@@ -44,12 +44,36 @@
       "decision": "Exactly one independent post-implementation Review executed Complete; outcome Conformant within P01/P02; no findings",
       "status": "source accepted; publication pending",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-27/mvp-cutover-201-review.md; source diff sha256 c06d4a24ea2c37e8166fa7c3d05fbaf4fdaff675a335f170e777e6ffef165404"
+    },
+    {
+      "decision": "Source/evidence committed and authorized branch pushed; PR #499 opened with Refs #199-#203, tag remains local",
+      "status": "completed",
+      "evidence": "Commit 0e4271ece29de72c2fa4e2be48bb420c3724539f; https://github.com/jmservera/ama/pull/499; independent exact-head identity receipt external"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Perform owner-authorized Conventional Commit, branch-only push and Refs-only PR; retain hosted/owner gates"
+    "action": "Owner may publish local archive tag, review retained hosted checks/PR and later select remaining acceptance work; no automatic child task"
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner publishes archive v0.21.0",
+      "rationale": "Smallest owner-only action preserves the archive remotely; agent tag push explicitly prohibited",
+      "evidence": "PR #499 and README.md: git push origin refs/tags/v0.21.0:refs/tags/v0.21.0"
+    },
+    {
+      "rank": 2,
+      "task": "Review retained hosted checks and decide PR #499 merge",
+      "rationale": "Highest immediate delivery value; source/scoped Review does not replace hosted or human approval",
+      "evidence": "PR #499; original Complete / Conformant Review with hosted checks unrun"
+    },
+    {
+      "rank": 3,
+      "task": "Reconcile broader #199-#203 acceptance after merge",
+      "rationale": "Keep all-suite parity, deployed health, rubric comparison and release evidence distinct before any closure",
+      "evidence": "PR #499 per-issue acceptance table; research W1-W5"
+    }
+  ]
 }

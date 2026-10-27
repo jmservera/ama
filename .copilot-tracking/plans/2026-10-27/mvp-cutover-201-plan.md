@@ -6,7 +6,7 @@
 * Task ID: issue-201
 * Task slug: mvp-cutover-201
 * Date: 2026-10-27
-* Planning status: Ready; original Revise critique disposed without repetition
+* Planning status: Executed; original Revise critique and Conformant Review preserved
 * Details: .copilot-tracking/details/2026-10-27/mvp-cutover-201-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-27/mvp-cutover-201-plan-critique.md
 
@@ -128,7 +128,7 @@ only tracked eligible text (never data/private paths) and local changed links.
 No full gate; do not call --changed unless actually needed.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and publish
+### [x] P03: Review and publish
 
 Dependency: P02.
 
@@ -140,7 +140,7 @@ source/evidence assessment. Do not repair/rerun Review in this task; route any
 findings separately, blocking ready publication if material.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit and publish authorized maintenance PR
+#### [x] P03-T02: Commit and publish authorized maintenance PR
 
 Resolve gh account and repo-local noreply identity, commit source plus original
 RPI evidence with Conventional Commit/trailer, push only explicit branch ref
@@ -187,9 +187,14 @@ critique needed. Original finding wording and verdict remain unchanged.
 
 ## Handoff
 
-P01/P02 and P03-T01 complete. Independent Review executed Complete / Conformant
-for source and scoped validation; no substantive findings. P03-T02 publication
-remains. Changes record includes original
+All P01/P02/P03 tasks complete. Independent Review executed Complete / Conformant
+for source and scoped validation; no substantive findings. Commit
+0e4271ece29de72c2fa4e2be48bb420c3724539f was independently identity-checked,
+pushed only to the authorized topic branch and published in PR #499:
+https://github.com/jmservera/ama/pull/499. Changes record includes original
 prerequisite failures, repaired environment, final passing scoped tests and
 semantic assertions. No routine approval is needed for the explicit
 owner-requested loop/publication. No full gate ran or is required for this task.
+Only tracking metadata changes after the original source Review; source-diff
+identity remains frozen. Tag publication, hosted results, owner merge and
+broader issue acceptance remain external follow-ups.

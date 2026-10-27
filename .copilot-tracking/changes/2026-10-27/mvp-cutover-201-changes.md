@@ -11,8 +11,8 @@
 
 ## Execution Status
 
-Partial full plan: P01/P02 and P03-T01 complete; P03-T02 publication remains.
-Implementation/source scope complete and independently reviewed, not yet published.
+Complete full plan: P01/P02/P03 and every task marker complete.
+Implementation/source scope independently reviewed and published in PR #499.
 Approved write boundary: named pointer deletion, existing live documentation,
 dated RPI artifacts. No workflow/runtime/test changes or generated snapshots.
 
@@ -164,7 +164,8 @@ None.
 
 ## Remaining Work
 
-P03-T02 authorized publication.
+None within the bounded task. Retained hosted checks, owner merge, tag/release
+publication and wider issue acceptance are distinct follow-ups.
 
 ## Independent Review Result
 
@@ -178,6 +179,47 @@ c06d4a24ea2c37e8166fa7c3d05fbaf4fdaff675a335f170e777e6ffef165404.
 Parent independently reproduced this unchanged hash after fresh main fetch;
 source remained at reviewed base65a514ed. No second Review or in-task fixes.
 
+## Publication (P03-T02)
+
+Fresh gh account-derived privacy-safe identity configured repository-locally
+for author and committer. Conventional source/evidence commit:
+0e4271ece29de72c2fa4e2be48bb420c3724539f,
+chore: retire legacy MVP directories after owner sign-off.
+Required Copilot co-author trailer is present. No private identity was used.
+
+Independent exact-head publication identity assessment passed, external
+exact-head-initial.json beside scoped logs. This checks committed source hash,
+original Review/critique identity, clean branch, local tag, no legacy tracked
+paths and unchanged workflows; it is not another RPI Review or full gate.
+
+Fetched main unchanged at65a514ed immediately before branch publication.
+Pushed only HEAD:refs/heads/chore/mvp-cutover-201 with --no-follow-tags and
+push.followTags=false. Opened main-target PR #499:
+https://github.com/jmservera/ama/pull/499.
+The PR explicitly records owner SIGNED OFF #201 on2026-10-27, archive target/
+exact owner push command, local validation/skip boundaries, original Review,
+and Refs for all five issues with their unmet acceptance. No issue was closed,
+tag pushed, release published, protection changed or main merged.
+
+PR-template discovery found none. Shared public-output policy was read and
+applied; no content concern was found. Existing independent RPI assessment
+and complete source diff were reused rather than rerunning redundant parallel
+PR reviews under the host's no-duplicate-review/no-trivial-delegation rule.
+PR helper instructions were located under installed rules/ after their
+documented instructions/ path proved absent. The generic staged-change MCP
+tool was unavailable; permitted Git CLI staging/diff review was used.
+
+Read-only hosted inventory additionally confirms Source projects CI is active;
+legacy MVP workflows are disabled_manually, unchanged by this task.
+Latest observed Source CI main run39130862637 succeeded at older
+612cbed78a35a4ab426571aa7d2aeb0ae6d691dd, not current main or this PR.
+Do not treat that historical green as current-candidate evidence.
+
+This final bookkeeping commit changes tracking records only. Original
+critique/Review bytes and all non-tracking source are preserved. External
+final exact-head identity/readback records bind the eventual publication head
+without self-referential committed receipt hashes.
+
 ## Follow-Up Items
 
 Owner/coordinator retains hosted CI, deployed health, full baseline parity,
@@ -185,5 +227,8 @@ post-merge rubric comparison and archive tag publication/release.
 
 ## Return-to-Caller State
 
-Implementation and original Review complete; automatic parent owns authorized
-commit/push/PR only. Preserve original critique and Review unchanged.
+Bounded task complete, PR #499 open. Automatic session remains running at
+Follow-up, awaiting owner-selected action; no new child work starts.
+Ranked follow-ups: owner archive tag publication (exact command above), retained
+hosted checks and owner merge, then broader #199-#203 acceptance evidence.
+No blockers within delivered scope; no human/hosted approval is inferred.

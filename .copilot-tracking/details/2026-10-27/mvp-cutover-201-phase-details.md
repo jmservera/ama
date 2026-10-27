@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | P01 | Preserve and retire | Complete | P01-T01, P01-T02 |
 | P02 | Validate | Complete | P02-T01 |
-| P03 | Review and publish | Review Complete / Conformant; publication pending | P03-T01, P03-T02 |
+| P03 | Review and publish | Complete; PR #499 published, tag unpushed | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve and retire
@@ -130,3 +130,10 @@ per-issue remaining criteria. All five use Refs unconditionally in this PR;
 no deployment/run/approval invented.
 Do not merge or modify branch protection. Hosted checks are retained, not
 replaced by scoped testing.
+
+Observed completion: original source/evidence commit
+0e4271ece29de72c2fa4e2be48bb420c3724539f, branch-only --no-follow-tags push,
+and open main-target PR https://github.com/jmservera/ama/pull/499.
+Exact-head initial identity assessment passed independently; no new Review.
+This later bookkeeping changes only tracking records. Final-head identity/
+remote readback remain external publication receipts, not source changes.
