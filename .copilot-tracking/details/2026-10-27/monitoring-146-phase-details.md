@@ -6,12 +6,16 @@ ms.date: 2026-10-27
 Task ID: 146. Source-only boundary; no deployment. Research C1-C10 and W1-W4
 are the evidence baseline; no repeated research is needed.
 
-Current status: P01/P02 complete. Combined infrastructure regressions: 87 passed,
+Current status: P01/P02/P03 source-only delivery complete. Combined infrastructure regressions: 87 passed,
 zero skips. Official workbook JSON Schema, 32 workload/name combinations, six
 activation combinations, metric contracts, ledger lookback, 24 runbook anchors
 and 15 criterion rows passed source checks. See changes record for commands,
 original failure/correction and external output path. KQL/portal/live acceptance
-not run. P03 independent Review and draft publication remain parent-owned.
+not run. P03 independent Review Complete / Residual work is preserved at
+.copilot-tracking/reviews/logs/2026-10-27/monitoring-146-review.md.
+Draft publication: https://github.com/jmservera/ama/pull/512, Refs #146.
+Final publication records do not alter assessed source. Actual operation and
+RV-001 through RV-004 remain blocked; no later implementation in this task.
 
 <!-- phase: P01 -->
 ## P01: Author monitoring definitions and operator guidance

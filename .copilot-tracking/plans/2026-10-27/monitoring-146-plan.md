@@ -3,7 +3,8 @@ title: Monitoring 146 implementation plan
 ms.date: 2026-10-27
 ---
 
-Task ID: 146. Slug: monitoring-146. Status: implementation-ready.
+Task ID: 146. Slug: monitoring-146. Status: source-only authoring complete;
+independent Review Complete / Residual work; operational acceptance blocked.
 
 ## Executive Summary
 
@@ -112,8 +113,8 @@ coverage uses existing Bicep policy/container/IoT/governance/secret tests.
 <!-- phase: P03 -->
 ### P03: Independent Review and draft publication
 
-* [ ] P03-T01: One fresh independent exact-source Review; preserve its outcome.
-* [ ] P03-T02: Commit with privacy-safe identity and required trailer, push topic
+* [x] P03-T01: One fresh independent exact-source Review; preserve its outcome.
+* [x] P03-T02: Commit with privacy-safe identity and required trailer, push topic
   branch, open one draft PR to main with Refs #146 and exact evidence/gaps.
 
 ## Critique Disposition
@@ -143,6 +144,11 @@ blocked; this is readiness only for independent source authoring. No re-critique
 
 ## Handoff
 
-After critique dispositions, Implement produces
-.copilot-tracking/changes/2026-10-27/monitoring-146-changes.md, then one Review.
-No return-to-implementation loop after Review; findings route to follow-up.
+P01/P02 source authoring and local validation complete. P03 independent Review
+is Complete / Residual work at source 64148474e6c6e8cbedfeb09b1f4e9a3775b15318,
+preserved at .copilot-tracking/reviews/logs/2026-10-27/monitoring-146-review.md.
+Draft PR: https://github.com/jmservera/ama/pull/512, Refs #146, no closure claim.
+Final publication records do not change assessed implementation. No
+return-to-implementation or second Review. Stop at human decisions; RV-001
+through RV-004 require separate owner-selected follow-ups. No whole-issue,
+full-gate, final-publication-head independent assessment or live acceptance.
