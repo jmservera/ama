@@ -26,6 +26,23 @@ P01 climate and P02 identity are dependency-ready, isolated child implementation
 P03 parent integration and P04 Review/publication pending their completion.
 Actual commands/results and child heads will be recorded here.
 
+### P02: Canonical identity child
+
+Completed at 6fc8d0fef27839f720ddbbb1c13c91a1ca52c128 on existing
+docs/backfill-consumer-183-stack. Compact collision-checked sensor keys preserve
+canonical 128-unit export keys; consumer's 64-unit available-case boundary and
+all independent controls stay explicit. Actual 35 consumer and 16 stock tests,
+targeted Ruff/format/mypy passed. SQL Server remains pending aggregate gate.
+Seven added methods, no removals. Child's dated approved changes record owns
+detailed evidence. No private reads, remote publication or shared-schema widening.
+
+### P03 dependency refinement
+
+Immediately relevant sequencing refinement, no user decision: composition and
+already-delivered child merges can proceed against agreed climate adapter seam
+while isolated P01 acquisition executes. Final source integration and aggregate
+validation still depend on P01. No repeated critique; current plan reconciled.
+
 ## Validation and Remaining Work
 
 No new implementation validation yet. Required: focused/package tests,

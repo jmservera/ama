@@ -102,10 +102,10 @@ year; implement a core-owned validated climate input and tests. Do not copy
 unrelated candidate history or silently modify #425.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Canonical identity child implementation
+### [x] P02: Canonical identity child implementation
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Adapt canonical identities and consumer boundary on #485
+#### [x] P02-T01: Adapt canonical identities and consumer boundary on #485
 
 Preserve stock home IDs, bound sensor IDs with collision detection, retain
 consumer independent controls and SQL parity, and prove real consumer admission
@@ -155,6 +155,9 @@ P01 and P02 are independent whole phases in separate worktrees and may execute
 in parallel. P03 depends on P01/P02 and existing #482-#484. P04 depends on
 aggregate behavior/evidence. This phase split is execution ownership only;
 critique PC references retain their original phase labels as historical evidence.
+P03 composition and already-delivered child integration may proceed against
+the agreed ClimateHistory.series/manifest seam while P01 acquisition completes;
+final climate merge and aggregate validation still require completed P01.
 
 ## Locked Test Ownership and Targets
 
