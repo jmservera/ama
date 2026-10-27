@@ -4,8 +4,9 @@ description: Issue 179 model correction and acceptance audit
 ms.date: 2026-10-27
 ---
 
-Task ID: 179. Slug: indoor-derived-bounds-179. Readiness: implementation-ready
-after direct PC-001 disposition. Research: executed / Ready.
+Task ID: 179. Slug: indoor-derived-bounds-179. Task status: Complete.
+Planning readiness was implementation-ready after direct PC-001 disposition.
+Research: executed / Ready. Single Review: Complete / Conformant.
 
 ## Executive Summary
 
@@ -103,7 +104,7 @@ replay 60,000 homes or change workflow/check names.
 #### [x] P01-T02: Add independent envelopes, tails and public-record/composed tests
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Evidence, validation and publication
+### [x] P02: Evidence, validation and publication
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Update core README, synthesis, index and append-only log
@@ -112,7 +113,7 @@ replay 60,000 homes or change workflow/check names.
 #### [x] P02-T02: Run local checks and record exact results and criterion audit
 
 <!-- rpi:task id=P02-T03 -->
-#### [ ] P02-T03: Obtain one Review, commit, push and open one evidenced PR
+#### [x] P02-T03: Obtain one Review, commit, push and open one evidenced PR
 
 ## Critique Disposition
 
@@ -133,8 +134,11 @@ resolve OD-43. Parent/live PRD acceptance is not inferred.
 
 Implementation changes record:
 .copilot-tracking/changes/2026-10-27/indoor-derived-bounds-179-changes.md.
-P01/P02-T01/P02-T02 are complete. P02-T03 single Review is Complete /
-Conformant with no findings; commit/push/PR is the remaining publication action.
+All P01/P02 tasks are complete. Single Review is Complete / Conformant with no
+findings. Implementation/original evidence commit 3d24537a was pushed and one
+PR to main opened: https://github.com/jmservera/ama/pull/502.
 The API's original missing-dependency failure and successful affected-module
 retry are both retained. Source edits and PC-001 test evidence are complete;
-no new critique, source work or Review is planned.
+no new critique, source work or Review is planned. Final evidence-only
+bookkeeping preserves the assessed source fingerprints. Owner merge/hosted
+checks remain separate from this completed manual full-loop task.

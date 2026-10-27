@@ -9,8 +9,9 @@ ms.date: 2026-10-27
 Task 179 / indoor-derived-bounds-179. Implement P01 and P02 of
 .copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md.
 Research Ready; one critique Complete / Revise, PC-001 directly applied.
-P01-T01/P01-T02 and P02-T01 complete. P02-T02 local validation active;
-P02-T03 single Review/publication remains.
+Execution: Complete for the full plan. All P01/P02 markers are complete.
+Single Review: Complete / Conformant; PR502 published. Earlier checkpoints
+and failures below are preserved with their later dispositions.
 
 ## Decisions and Boundaries
 
@@ -30,7 +31,8 @@ Combined relevant core check passed: 142 tests, one existing optional SQL skip
 tests, actual full public history traversal, stock/fault/privacy/provenance,
 household/dated effects, historical writer/replay and consumer regressions.
 Existing unclosed-file ResourceWarnings were emitted by test_sensor_backfill;
-no test failed. API discovery still running.
+no test failed. API discovery was still running at that checkpoint; final
+failure/restoration/retry evidence is recorded below.
 Ruff/mypy were absent; installed the project's declared dev extra into the
 isolated venv. Initial lint found formatting/import issues in the new code;
 the formatting/import corrections are complete. Final changed-file ruff,
@@ -122,6 +124,8 @@ the approved test budget; it changes no scope or user decision.
 
 ## Completion and Review Handoff
 
+### Initial Pre-Review Checkpoint (Historical)
+
 Model, tests and documentation are complete, with core and static checks
 passing. Review-ready engineering boundary: P01 and P02-T01, completed
 P02-T02 checks and all #179 criteria. Supplemental API discovery remains
@@ -159,3 +163,20 @@ No source fix or second Review followed. No significant divergence.
 Implementation and local validation are complete (P01/P02-T01/P02-T02).
 P02-T03 publication remains; owner merge/hosted checks and future live
 calibration/OD-43 are separate. Publication may use Closes #179, Refs #177.
+
+## Publication and Final State
+
+P02-T03 complete. Initial implementation and all original RPI evidence were
+committed as 3d24537aab944fad5e1812dd819a87b7d5b27b5b with Conventional Commit
+and required Copilot co-author trailer. Local privacy-safe author/committer
+email resolved from authenticated gh account, not private/global configuration.
+Pushed only feat/indoor-derived-bounds-179, without force; one PR to main:
+https://github.com/jmservera/ama/pull/502 (Closes #179, Refs #177).
+
+All P01/P02 tasks complete; manual full requested loop ends at Review,
+task completed/session stopped. No additional child work is started. Final
+evidence-only bookkeeping records publication; model/test fingerprints in the
+Review stay unchanged. No second critique/Review, merge, deployment, full gate,
+private-data read or unearned approval. Owner review/merge and hosted checks
+are the next action. Future real-use calibration/OD-43 stays a distinct
+owner-selected follow-up.

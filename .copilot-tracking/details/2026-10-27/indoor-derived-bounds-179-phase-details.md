@@ -92,4 +92,8 @@ API discovery: 744 passed/310 skipped/four missing-SDK import errors; installing
 the unchanged API manifest into the isolated session venv and retrying only
 four affected modules produced 61 passed/six skipped/zero errors (67 run).
 No unresolved test failure or source change. One independent Review:
-Complete / Conformant, no findings; P02-T03 publication remains.
+Complete / Conformant, no findings. P02-T03 is complete: initial implementation
+and original evidence committed as 3d24537a, topic branch pushed and one main
+PR opened at https://github.com/jmservera/ama/pull/502. Final evidence-only
+bookkeeping does not change the reviewed model/test bytes or imply merge/
+hosted/operational approval.
