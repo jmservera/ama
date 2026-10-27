@@ -208,3 +208,76 @@
 * Claims cite stable internal/external IDs; no source acceptance or accessibility result invented.
 * Artifacts remain local until publication policy permits push. Local commit is not publication.
 * No paid inference, real datasets, secrets, Azure operations or destructive cleanup performed.
+
+## Resumed cycle 2: owner-authorized continuation
+
+The original blocked result above is preserved. On 2026-10-27 the owner
+explicitly authorized one scoped --changed parent gate instead of --all for
+this delivery. B1 is resolved, not waived by the delivery agent. Resolution
+comment: https://github.com/jmservera/ama/issues/149#issuecomment-6444333817.
+
+### Wider
+
+Re-read all nine current GitHub story bodies (#225-#233), the existing
+workbench manifest and navigation, API guide, and the three UX standards.
+Eight existing authenticated roles serve eleven research perspectives.
+There are no separate Asset Executive, Procurement or Data Steward logins.
+Those perspectives must not become a role switcher or invented authority.
+The original eleven-perspective manifest already permits explicit deferrals.
+
+### Deeper
+
+* C7: src/api/src/zava_forward/api/workbench.py:16 supplies navigation only;
+  endpoint guards and core projection retain authority.
+* C8: src/api/src/zava_forward/api/web/app.js:145 owns route cancellation,
+  unsaved changes and status; api() rejects denied requests and ended sessions.
+* C9: src/core/src/zava_forward/core/projection.py:145 preserves resident
+  evidence only for existing authorized roles, redacts staff notes by need,
+  and removes finance from non-finance roles. Reuse these exact responses.
+* C10: src/api/src/zava_forward/api/web/panels.js:123 already renders scope
+  revisions, measure decisions, service requests and update commitments;
+  new specialist views can read those same fields without a new write path.
+* C11: src/api/src/zava_forward/api/web/app.js:750 already distinguishes
+  hazard sending, receipt, acceptance, repair and human restart evidence.
+* C12: src/api/checks/design_system_browser_check.py:226 starts a loopback
+  server with constructed fixtures and a scrubbed environment, waits for
+  health and terminates its own process. Reuse this harness, not a deployed app.
+* C13: src/api/checks/workbench-manifest.json:21 records eleven perspectives
+  and nine workflows as partial/deferred, not delivered acceptance.
+* C14: src/api/src/zava_forward/api/web/ops.js:23 keeps independent quality
+  acceptance, defects and reinspection distinct from provider submission.
+* C15: src/api/src/zava_forward/api/web/panels.js:87 retains both stock
+  sources; authority and eligibility remain Unknown without human evidence.
+
+### Contrarian
+
+Rejected a new parallel backend or screen-only fixtures: existing scoped case
+reads contain the evidence and unknowns. Rejected fabricated eligibility,
+prices, hazard clocks and new staff roles. Missing source inputs remain
+visible with a responsible role and manual next action; no request to invent
+them is needed. No story authorizes new paid inference; AI economics is a
+design section with Unknown inputs, not an AI invocation.
+
+A parent containing all child commits would empty independently reviewable
+child PRs targeting that same parent. Therefore the parent is a draft shared
+foundation/integration anchor. Each independent child starts from its shared
+foundation and is reviewed before owner-controlled integration. The parent
+PR remains draft and explicitly does not claim integrated role delivery.
+Local child tests cover their own exact source; the single scoped gate covers
+the exact parent candidate only. Integration after review invalidates that
+receipt and requires the next owner-authorized validation, not a fabricated
+aggregate pass.
+
+### Synthesis and readiness
+
+Selected: a shared read-only specialist-screen host in the existing workbench,
+with native links, URL case/page state, bounded lists, existing server-scoped
+reads and separately reviewable role modules. Preserve normal workbench and
+manual paths; the contractor module uses only its existing restricted reads.
+Priority order remains #232, #227, #230, #225, then #226/#228/#229/#231,
+and cross-role trace #233 last.
+
+Research disposition: executed (resumed cycle complete).
+Planning Readiness: Ready for bounded synthetic engineering delivery, not
+whole-issue, integrated, human usability or WCAG acceptance.
+No further research cycle is needed for the read-only design boundary.

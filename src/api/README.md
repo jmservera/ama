@@ -6,6 +6,34 @@ ms.date: 2026-10-27
 ms.topic: reference
 ---
 
+## Specialist screen delivery (#149)
+
+The existing workbench includes a **Specialist screens** destination. Installed
+role-specific modules appear only for the signed-in existing role; this is not a
+role simulator or new authorization. The shared parent alone has no installed
+modules. Child PRs add independent read-only evidence views before owner review
+and integration. Select a home explicitly; selection and queue page are in the
+URL. Reset changes only the view. Existing case workspaces remain available.
+
+Views reuse server-projected case reads, native controls and Fluent-derived
+tokens. Missing or withheld evidence is not readiness. They never send resident
+contact, change a record or approve work. Direct user, screen-reader and WCAG
+acceptance, distinct professional identities and integrated-feature validation
+remain separate from local engineering checks.
+
+From `src/api`, with project dev distributions installed:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_workbench test_role_screens -q
+PYTHONDONTWRITEBYTECODE=1 python -m checks.role_screens_browser_check
+```
+
+An installed child's check adds its story number, for example
+`python -m checks.role_screens_browser_check 232`. Checks own a synthetic
+loopback server and do not read the normal working dataset or call Azure.
+The parent's scoped receipt covers its exact foundation head, not unmerged
+child implementations or subsequent integration.
+
 ## Resident advisory assistant prototype (#469)
 
 The separate resident showcase panel offers three fixed questions through
