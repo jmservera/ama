@@ -40,8 +40,13 @@ class RoleScreens(unittest.TestCase):
 
     def test_programme_keeps_returns_and_independent_responsibilities(self) -> None:
         source = (WEB / "screen-programme.js").read_text()
-        for field in ("item.receiving_owner", "item.reason", "handoff?.chase_owner",
-                      "c.resident_update?.owner_identity", "c.technical_missing"):
+        for field in (
+            "item.receiving_owner",
+            "item.reason",
+            "handoff?.chase_owner",
+            "c.resident_update?.owner_identity",
+            "c.technical_missing",
+        ):
             self.assertIn(field, source)
         self.assertIn("not stages assembled from different example homes", source)
         self.assertNotIn("post(", source)
