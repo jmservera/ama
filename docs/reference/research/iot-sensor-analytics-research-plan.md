@@ -354,8 +354,12 @@ Six thousand explicitly generated synthetic dated measures were supplied, not
 inferred from private history. Actual owned-loopback SQL sensor/API tests also
 passed all 45 cases, including canonical keys and independent controls.
 No exact unread-private-register equality or full-hourly/diurnal-scale
-validation is asserted. The single scoped parent gate and independent Review
-remain separate publication requirements.
+validation is asserted. The original independent Review executed Complete /
+Not accepted: Medium RV-001 identifies a composed-loader pre-replay budget
+check that trusts unverified manifest counts. Later implementation must enforce
+the actual-stock budget before reconstruction. The original Review is preserved,
+the parent remains draft, and the sole scoped gate is pending at this source
+checkpoint. Runtime success does not establish source acceptance.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

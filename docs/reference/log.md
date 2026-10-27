@@ -7513,3 +7513,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Full core 1,427 tests (186 expected skips), static/types and actual owned SQL
   sensor/API 45 tests passed. Original Review and one scoped parent publication
   gate remain separate, not implied by this runtime evidence.
+* Original approved-integration Review executed Complete / Not accepted at
+  263e1dbf: one Medium composed-loader budget defect RV-001, routed to later
+  implementation without rewriting or repeating Review. Preserve successful
+  aggregate evidence but keep parent draft. Single scoped gate is pending at
+  this committed source checkpoint; receipt and publication facts remain external.

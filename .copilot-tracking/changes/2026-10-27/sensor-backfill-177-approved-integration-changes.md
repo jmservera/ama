@@ -150,3 +150,28 @@ P04-T01 original Review and P04-T02 gate/publication remain unchecked; this is
 review readiness, not publication or whole-issue acceptance.
 Known scientific, regional, private-register and real monitoring limitations
 remain explicit follow-ups, not hidden validation failures or invented approval.
+
+## Original Review and Final Pre-Gate Checkpoint
+
+Independent Review execution Complete; outcome Not accepted. Assessed
+implementation 263e1dbfddd0587528c37dca5b8abb9697208dc9 against historical
+base864a5021. One Medium RV-001: composed loader uses an unverified manifest
+home count in its pre-replay budget check; inconsistent metadata can cause
+reconstruction above max_rows before rejection. No consumer admission bypass
+was demonstrated. Original record preserved; no correction or second Review
+performed in this loop. Route to later rpi-implement with a bounded pre-write
+refusal regression. Parent must remain draft.
+
+P04-T01 checked for executed Review, not acceptance. P04-T02 intentionally
+unchecked at this committed source checkpoint. Administrative completion will
+be recorded externally and in PR bodies, without a post-gate source commit.
+Fresh fetched main2e031c89a18ce1ceb3de4fda014fddcb90231fda supersedes the
+Review's fixed historical comparison for the upcoming gate only; no rebase.
+Exactly one authorized foreground changed gate will target a fresh
+/mnt/ama-rpi-gates/177-approved-integration-parent-gate-20261027-final with
+--lock-timeout 0 after archive/readback/restore/hash-verified finite cache
+selection and git clean -fdxq. Original Review and historical receipts do not
+become a passing exact-head/source acceptance assessment by this operation.
+Publish new child heads before parent; update decision-blocker comments and
+all five child/parent bodies truthfully. No ready transition while RV-001 open,
+regardless of gate/hosted success; no main merge.

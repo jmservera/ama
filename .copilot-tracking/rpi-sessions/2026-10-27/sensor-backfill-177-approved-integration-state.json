@@ -3,8 +3,8 @@
   "task_slug": "sensor-backfill-177-approved-integration",
   "parent_task": {"task_id": "177", "task_slug": "sensor-backfill-177"},
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-approved-integration-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-27/sensor-backfill-177-approved-integration-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-27/sensor-backfill-177-approved-integration-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-27/sensor-backfill-177-approved-integration-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md"
   },
   "confirmed_decisions": [
     {"decision": "Full RPI loop and child integration authorized", "status": "confirmed", "evidence": "User request 2026-10-27"},
@@ -22,9 +22,13 @@
     {"decision": "One final-candidate critique executed Complete, verdict Revise; PC-001 through PC-004 directly resolved, no repeat", "status": "dispositioned", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#critique-disposition"},
     {"decision": "P01 climate and P02 canonical identity complete; all five child heads merged normally into parent", "status": "complete", "evidence": "Climate 09ea9e23, identity 6fc8d0fe; integration merge d3973924"},
     {"decision": "Core 1427 tests pass (186 expected skips); full Ruff/format/mypy pass; actual owned SQL sensor suite 45 tests pass", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/core-unit.log and sensor-sql.log"},
-    {"decision": "Full generated 60000-home 730-day daily run passes every-row/every-ID verification: 43800000 rows, 703111263 compressed reading bytes; exact private-register equality and full-hourly scale not claimed", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/scale-summary.json"}
+    {"decision": "Full generated 60000-home 730-day daily run passes every-row/every-ID verification: 43800000 rows, 703111263 compressed reading bytes; exact private-register equality and full-hourly scale not claimed", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/scale-summary.json"},
+    {"decision": "Original independent Review execution Complete; outcome Not accepted; assessed implementation 263e1dbf at base864a5021; one Medium RV-001, routed later rpi-implement without another Review", "status": "not-accepted", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md"}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Review", "action": "P01-P03 complete and reconciled; commit implementation then activate rpi-review for one original independent Review"},
-  "prioritized_follow_ups": null
+  "blockers": [{"id": "RV-001", "summary": "Composed loader trusts unverified manifest home count before replay-budget check; one Medium implementation defect prevents ready status", "resolution": "Later rpi-implement must validate actual selected sensor count and pre-write budget; preserve original Review"}],
+  "next_action": {"phase": "Follow-up", "action": "Pre-gate committed checkpoint: archive/restore-verify finite task caches, clean -fdxq, one --changed --lock-timeout0 gate against fresh main to /mnt/ama-rpi-gates/177-approved-integration-parent-gate-20261027-final; publish external receipt and truthful draft evidence, never ready while RV-001 remains; await separately selected rpi-implement follow-up"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Correct RV-001 actual-stock replay budget before regeneration", "rationale": "Small bounded implementation fix with regression; blocks parent readiness and protects CPU/storage limits", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md#rv-001-medium-composed-replay-budget-trusts-manifest-home-count-before-regenerating-the-supplied-stock"},
+    {"rank": 2, "task": "Scope production physical/source/regional qualification and real monitoring approvals", "rationale": "Higher effort and excluded from synthetic demo; required only before consequential production use", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#follow-up-items"}
+  ]
 }

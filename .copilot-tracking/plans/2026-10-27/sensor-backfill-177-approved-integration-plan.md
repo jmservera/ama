@@ -132,7 +132,7 @@ estimate, deterministic replay sample, ID reconciliation and fault separation.
 ### [ ] P04: Review, one gate and truthful publication
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Record one independent Review
+#### [x] P04-T01: Record one independent Review
 
 Reconcile implementation markers and evidence first; activate rpi-review once.
 Route findings as later work, never repeat Review in this task.
@@ -187,9 +187,13 @@ does not establish full private-stock admission.
 
 ## Follow-Up Items
 
+* RV-001 Medium: later rpi-implement must validate composed replay's manifest count against actual granted sensors and enforce the row budget before write. Original Review execution Complete, outcome Not accepted; keep parent draft. This routed defect is not fixed or re-reviewed in this completed loop.
 * Production physical/source/regional qualification and real monitoring approval remain outside this synthetic exercise.
 
 ## Handoff
 
-Ready for Implement; all four critique findings resolved by direct planning
-correction, no renewed owner decision or second critique.
+P01-P03 complete; P04-T01 original Review Complete / Not accepted at
+263e1dbf, with one Medium RV-001 routed to later implementation. Original
+critique and Review remain unchanged. P04-T02 publication administration is
+pending at the final pre-gate source checkpoint; its receipt/PR evidence is
+external to avoid invalidating the sole gate. Do not mark the parent ready.

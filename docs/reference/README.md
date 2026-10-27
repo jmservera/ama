@@ -25,6 +25,9 @@ preserves the original five-child blocked outcome and records the approved
 continuation: paired ERA5 source, canonical stock-ID adaptation, opt-in composed
 generator and aggregate evidence boundary. Synthetic-demo approval does not
 establish private-stock equality, physical calibration or whole-issue acceptance.
+The continuation's original Review is Complete / Not accepted: one Medium
+loader replay-budget defect RV-001 is routed to later implementation; parent
+readiness remains blocked despite successful aggregate runtime evidence.
 
 The [resident advisory assistant design](../architecture/resident-assistant-prototype.md)
 records #469's bounded own-case Azure OpenAI integration, deterministic
