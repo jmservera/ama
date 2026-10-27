@@ -499,6 +499,57 @@ read.
 | R4 Explainability and review | Draft the reviewer view, resident-safe wording and non-AI comparator; check accessibility and no-diagnosis wording | Review-ready explanation set | DPO, Resident Engagement and Safety review wording; no diagnosis or blame |
 | R5 Real-data readiness | Confirm inventory, mapping, calibration, lawful basis, retention and thresholds with owners | Updated OD-43 disposition | Named owners approve before any non-synthetic use |
 
+## Bounded R3 exercise scenario pack (2026-10-27, Refs #190)
+
+The [installed scenario CLI](../../../src/core/README.md#synthetic-scenario-validation-pack-190-192-193-194)
+and [sensor dictionary](./retrofit-synthetic-data/data-dictionary.md#separate-scenario-validation-pack)
+provide seven damp/data-quality scenarios and four before/after retrofit
+scenarios using clean merged backfill rows and the shared observation schema.
+They live in a separate external snapshot, not general stock history.
+Analysis receives only `analysis/`; evaluator labels, RNG keys, expected
+directions/sizes, manifest and results stay in `truth/`. Seed 190 is the common
+observation provenance value, not a feature used by the comparator.
+
+All new thresholds, magnitudes, intervals and outcomes are labelled exercise
+assumptions. `sensor-comparator-exercise-v1` classifies only observed RH
+persistence/repeated overnight peaks after field/unit/grid/order/coverage/
+flatline checks. It is not the competent-reviewer-approved R2 method, a
+dew-point/surface-moisture calculation or a diagnosis. Condensation-prone is
+an evaluator scenario label, not a finding of actual condensation. Constructed
+constant weather and periodic residuals are explicit; the pack does not
+silently inherit ERA5 provenance, physical calibration or source bounds.
+
+At seed 190/default RH threshold 75%, the seven-case exercise comparison has
+three true-positive and two true-negative binary cases, plus two independently
+correct insufficient cases (sensor fault and 75% missing data). It reports
+zero binary misses/false alerts, five eligible/binary-classified cases and zero
+abstentions, not thousands of independent observation-level trials. Altered
+predictions/truth and zero-denominator tests prove that misses, false alerts,
+wrong sufficiency and abstentions change the counters. Sensitivity reruns
+70/75/85% against fixed truth; 85% exposes missed targets rather than rewriting
+the expected labels. These hand-designed counts do not estimate operational
+prevalence, calibrated sensitivity/specificity or acceptable real-world risk.
+
+Four retrofit cases separately check eight early/late mean deltas:
+improvement +2 C/-10 RH points; no change 0/0; delayed +1.5 C/-6 points from
+day 21 rather than completion day 14; adverse -1 C/+8 points. Every magnitude
+is fictional. Matched seven-day residual cycles and exact activation tests
+isolate the constructed step; they are not a causal evaluation, attribution
+to residents or a savings promise. Missing/invalid windows return INSUFFICIENT,
+null deltas and explicit expected/present/valid counts. Four retrofit cases
+never enter the damp binary confusion population.
+
+The pack emits one result per check (seven outcomes plus eight deltas), raw
+sufficiency reasons/counts, fixed-truth confusion denominators and sensitivity
+notes. The [core tests](../../../src/core/tests/test_sensor_scenarios.py) prove
+seed/byte reproducibility, retained-reading replay, truth separation, threshold
+boundaries, missing-gap/day/night behavior and safe output. This supplies
+bounded #192 scenario evidence, not completion of the R3 gate: agreed miss/
+false-alert limits and R2 competent reviewer/Asset sign-off remain open.
+Actual #193 use by #111/#133 tests and runnable live #184 remain unproven;
+standalone fixture tests are not substituted for those consumers.
+R1-R5 statuses and all resident/human approval safeguards above remain unchanged.
+
 ## Constraints
 
 * Derived signals only create a human condition-review task. They never

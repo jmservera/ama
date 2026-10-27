@@ -64,6 +64,17 @@ distinguishes the intentionally changed v2 indoor model from new containing
 snapshot versions and their version-bound golden; published historical bytes
 and unchanged scale/register goldens are preserved.
 
+For #190/#192/#193/#194, the
+[bounded R3 exercise pack](./research/iot-sensor-analytics-research-plan.md#bounded-r3-exercise-scenario-pack-2026-10-27-refs-190),
+[sensor dictionary](./research/retrofit-synthetic-data/data-dictionary.md#sensor-data)
+and [two-stage guide](../../src/core/README.md#two-stage-simulator-operation-and-limits-194)
+record seven damp/data-quality cases, four retrofit cases, separate truth,
+per-check results, confusion/sensitivity and exact climate provenance.
+These are synthetic exercise overlays, not validated building physics,
+diagnosis or actual works. Actual #111/#133 test use, a runnable live publisher,
+R2 competent approval and agreed R3 limits remain unmet; no parent closure or
+owner deferral is inferred.
+
 For #199-#203, the
 [owner-authorized 2026-10-27 directory retirement](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
 records explicit cut-over sign-off, local archive `v0.21.0`, removal of the
