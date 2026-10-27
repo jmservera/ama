@@ -2,23 +2,23 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T00:04:54+00:00",
-  "commit": "9aed05e0abc8ce6ff458e4810bb546920558cf16",
+  "scored_at": "2026-10-27T02:25:28+00:00",
+  "commit": "032f93b0fc6a50df534d418c5e169562b57603bf",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40423176709",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40437543590",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "99940a6c53eae6db8c50a6b51cbcb29639f538751cd9787b7b841863830f84db",
-    "infrastructure": "373822cf914b8c16420542b1b5bb7bb30e453491e28f2a4bf4eb2d83bc77d820",
+    "solution-code": "4eecb26cf22375a1e35ebbdf4359d7f726dd4197a6f60bd9d63f1bdafa74bf01",
+    "infrastructure": "8ae7dc9355ea77fe41d09f904f5ab91c5456ac7daee827e0642d4943f99b4fea",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
   },
-  "total": 74,
+  "total": 75,
   "sections": {
-    "A": 31,
+    "A": 32,
     "B": 23,
     "C": 11,
     "D": 9
@@ -67,9 +67,13 @@
       "rationale": "Documents a per-source and overall login rate limiter and residual-risk disclosure, but still no metrics/alerting/cost instrumentation added. Unchanged baseline."
     },
     "A6": {
-      "score": 3,
-      "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; resident showcase is a non-AI, read-only authenticated view over SQL. Unchanged baseline."
+      "score": 4,
+      "evidence": [
+        "docs/architecture/resident-assistant-prototype.md:14-23",
+        "src/api/src/zava_forward/api/resident_demo/assistant.py:1-70",
+        "src/api/tests/test_resident_assistant_provider.py:40-100"
+      ],
+      "rationale": "Design note compares local-rules, GPT-4.1 nano/mini and free-text on cost/quality/availability with unverified-tariff caveats, defaulting to zero-cost local rules. Disabled adapter has contract tests for budget, timeout and invalid-reply failure modes, but no live evaluation since never activated."
     },
     "A7": {
       "score": 4,
