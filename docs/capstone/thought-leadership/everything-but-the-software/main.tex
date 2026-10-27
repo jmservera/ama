@@ -76,9 +76,8 @@ feature-only delivery, scheduled consolidation and read-only review.
 Its principal outcomes are final behavioural coverage, retained-contract
 loss, an unforeseen change request and resource cost. The consolidation arm
 includes additional resources, tests and a different handover note.
-The pilot has not started; no experimental results are reported. The aim is to
-determine whether consolidation improves the state left for later work,
-rather than merely the output recorded at each step.
+The pilot has not started; no experimental results are reported. The pilot
+asks whether consolidation improves the system inherited by later feature work.
 \end{abstract}
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
@@ -148,9 +147,9 @@ Section~\ref{sec:background} distinguishes these pathways; the case then
 examines how they interact with completion proxies, review capacity and
 product-use feedback.
 
-I use \emph{feature-driven decay} to name the prospectively investigated
-phenomenon, loss of retained behaviour or increasing change burden across
-feature steps, not an effect established by the AMA case.
+I use \emph{feature-driven decay} to describe loss of retained behaviour or
+increasing change burden across feature steps. Whether feature-driven decay
+occurs remains a question for the prospective study.
 
 Three questions guide the investigation:
 
@@ -184,9 +183,10 @@ Core's Minimum Viable Experiment method
 \end{enumerate}
 
 The case concerns a migration and a configuration I designed, including
-delegated delivery and merge decisions. It generates hypotheses, not a causal
-estimate. The planned pilot estimates a multi-component, extra-resource
-package comparison; it does not isolate refactoring or validate the five
+delegated delivery and merge decisions. The case suggests hypotheses whose
+causal relationships remain to be tested. The planned pilot estimates a
+multi-component, extra-resource package comparison; it does not isolate
+refactoring or validate the five
 case mechanisms individually. It is not running, and registration and
 launch checks remain pending. The case's validity and the pilot's
 identification limits are consolidated in Sections~\ref{sec:threats}
@@ -419,9 +419,9 @@ the obligations and behaviours those instructions induce.
 Anthropic's context-engineering account describes the practical tension:
 provide enough information to guide action, but avoid brittle prompt logic
 and an expanding catalogue of exceptions~\cite{rajasekaran2025context}.
-The maintenance task is not simply to shorten every prompt. It is to preserve
-necessary constraints while replacing local patches with coherent rules,
-executable checks and task-specific retrieval. To test the corrective-rule
+Maintaining these instructions means preserving necessary constraints while
+replacing accumulated exceptions with coherent rules, executable checks and
+task-specific retrieval. To test the corrective-rule
 spiral directly would require versioned instructions, actual session inputs
 and outcomes across successive revisions. The AMA record supplies document
 growth and rule changes; the consolidation protocol tests a bounded form of
@@ -431,8 +431,8 @@ SkillOpt supplies counterevidence to treating instruction change as
 inherently harmful. Its first-party account describes bounded edits to
 skill files, held-out validation and retention of successful versions
 without changing the target model's weights~\cite{microsoft2026skillopt}.
-The relevant distinction is maintained, evaluated procedural knowledge
-versus unchecked accumulation, not simply shorter versus longer guidance.
+Procedural knowledge needs evaluation and maintenance; its length alone
+tells us little about its quality.
 
 \subsection{Refactoring, review and evaluation boundaries}\label{sec:evaluationwork}
 
@@ -463,13 +463,13 @@ These studies narrow the proposed novelty to the case trace and the specific
 prospective package comparison, including an unforeseen change request. They
 also caution against assuming that another reviewer, a stricter check or a
 high hidden-test score necessarily certifies the intended deliverable.
-The literature discussion is focused, not systematic. Preprints, observational
+Preprints, observational
 studies, practitioner accounts and first-party industrial reports have different
 evidential roles; none substitutes for the planned controlled comparison.
 AgentRx's first-party release describes evidence-backed diagnosis of a
 trajectory's first critical failure~\cite{microsoft2026agentrx}. It motivates
-traceable failure localisation, not a claim that the AMA mechanisms have
-already been independently diagnosed.
+traceable failure localisation. An independent diagnosis of the AMA mechanisms
+remains outstanding.
 
 \subsection{Optimisation with behavioural feedback}\label{sec:factory}
 
@@ -528,8 +528,8 @@ completion proxies against their intended outcomes~\cite{goodhart1975,strathern1
 
 \subsection{HyperVelocity Engineering (HVE Core)}\label{sec:hve}
 
-HVE Core is an open-source framework from Microsoft that describes itself as
-a lifecycle wrapper for GitHub Copilot, not an autonomous worker dispatcher.
+HVE Core is an open-source framework from Microsoft that supplies workflow
+structure for GitHub Copilot; my coordinator provided autonomous worker dispatch.
 Its Research, Plan, Implement and Review (RPI) workflow leaves dated records
 under \texttt{.copilot-tracking}, with explicit human stops and review.
 I used those file-based handovers and its Experiment Designer's Minimum
@@ -641,9 +641,10 @@ layout the first priority and barred new feature code from the MVP.
 I use an exploratory single-case design, with myself as participant-observer.
 The case is the delivery of this repository from 11~September to
 24~October 2026. The unit of analysis is the autonomous loop of
-15--24~October. The MVP period of 8--14~October, when I used the system
-intermittently to refine ideas and the user experience,
-provides a within-case contrast, not a control group. I chose the case because
+15--24~October. I compare the loop with the preceding MVP period of
+8--14~October within the same case, acknowledging the uncontrolled differences
+between them. I used the system intermittently during that period to refine
+ideas and the user experience. I chose the case because
 it is revelatory: a public, contemporaneous trace of an autonomous agent loop.
 
 I analysed the public repository at commit \texttt{29c6b51} (24~October 2026,
@@ -704,7 +705,8 @@ and readiness. Their outcomes are not pooled with AMA. The two new figures
 replot published values rather than digitising curves or running the original
 systems. Versioned claims, locators and transcription details are retained
 in the source package README and \nolinkurl{anc/published-evidence.json}.
-This is a focused narrative synthesis, not a systematic literature review.
+The review offers a focused narrative synthesis, with no claim to systematic
+coverage.
 
 \subsection{Constructs and evidential boundaries}\label{sec:constructs}
 
@@ -713,8 +715,8 @@ running system, including the identity, data and service dependencies needed
 for that task. A healthy endpoint or a passing repository test alone does not
 establish it. \emph{Decay} denotes loss of previously working behaviour or
 increasing difficulty of understanding and changing a system. The case
-documents a usability discontinuity during replacement, not a measured decline
-in intrinsic code quality; deployment drift could produce the same observation.
+records lost usability during replacement; any decline in intrinsic code
+quality remains unmeasured. Deployment drift could produce the same observation.
 \emph{Adaptability} is operationalised prospectively as success and cost on
 the fixed-budget, unforeseen change request, not as a universal measure of
 maintainability. \emph{Consolidation} means scheduled structural work intended
@@ -734,8 +736,9 @@ activity is used as a direct estimate of decay.
 \subsection{Chain of evidence and reflexivity}\label{sec:audittrail}
 
 Table~\ref{tab:audittrail} separates observations, interpretations and
-propositions. It indexes evidence already described here, not a newly coded
-dataset. Repository sources refer to the pinned commit unless identified as
+propositions. The table organises the evidence already presented; it adds no
+newly coded observations. Repository sources refer to the pinned commit unless
+identified as
 author reports. Log entries before 25~September are retrospective
 reconstructions; later dated entries are the project's contemporaneous record,
 not independent corroboration of every statement they contain. The 22 and
@@ -784,17 +787,17 @@ succeed. Those roles make a coherent retrospective explanation attractive.
 Developers' experience-based beliefs need not correspond with project
 evidence~\cite{devanbu2016belief}; that methodological caution applies to my
 own account, not only to agent-generated claims.
-AI-written project records are data about recorded activity, not independent
-judges of success; AI-assisted synthesis is analysis assistance, not another
-observer. No independent second coding or empirical peer-debrief pass has
+I treated AI-written records as accounts of project activity and used AI to
+assist synthesis. Neither provides independent corroboration.
+No independent second coding or empirical peer-debrief pass has
 been completed. The supplied editorial critique prompted stronger boundaries
 and explicit rival explanations, but does not fill that gap. An independent
 check of O1--O5 against retained source and execution records remains necessary
 before presenting the interpretations as independently corroborated.
 The machine-readable index \nolinkurl{anc/case-evidence-matrix.json}
 separates reported locators, author accounts and missing execution or
-release identifiers. Null identifiers are gaps to resolve, not evidence that
-the corresponding link was checked.
+release identifiers. Each null identifier marks an evidence link that still
+needs checking.
 
 % ===========================================================================
 \FloatBarrier
@@ -869,8 +872,9 @@ multi-parent merges and PR-numbered squash commits: 31 before the loop and
 177 during it. These are not the API pull-request counts in
 Table~\ref{tab:metrics}; the literal-merge subset, seven in each period, is
 also reported in \texttt{anc/repo\_history\_metrics.out.txt}. Classification
-rules and commands are printed there. The additions and removals show work
-volume, not net code size, maintainability or delivered value. No complexity
+rules and commands are printed there. These figures quantify editing activity.
+Net code size, maintainability and delivered value require different measures.
+No complexity
 comparison was made because \texttt{lizard} was not installed.
 
 \begin{table}[!htbp]
@@ -925,10 +929,9 @@ those ideas into requirements, ADRs and the hierarchical backlog.
 
 I treat 8--14~October as a within-case contrast with 15--24~October:
 intermittent use of a usable MVP versus no realistic end-to-end task completed
-in the replacement during the autonomous loop. I remained involved, mainly
-answering approval requests and resolving technical blockers to keep the loop
-running. The contrast concerns product-use feedback, not the complete removal
-of human oversight. It is consistent with the importance of feedback, but
+in the replacement during the autonomous loop. I continued handling approvals
+and technical blockers, but could no longer complete realistic tasks in the
+replacement. This contrast is consistent with the importance of feedback, but
 cannot establish that removing product-use feedback caused the outcome:
 the migration, workload, gate rules, models and deployment conditions also
 changed, and the periods were not assigned at random.
@@ -1191,17 +1194,17 @@ into the deliverable.
 
 In the first-parent integration view, tracking-artefact additions were
 10.27 times product-source additions during the loop, compared with 29.28
-before it (\nolinkurl{anc/repo_history_metrics.out.txt}). This supports concern
-about artefact volume, not a claim that the ratio rose when autonomy began.
+before it (\nolinkurl{anc/repo_history_metrics.out.txt}). Artefact volume remained
+high during the loop, while its ratio to product-source additions fell.
 Churn alone does not establish code decay.
 
 \emph{Evaluation.} The rubric scorer, a language model reading the repository,
 rated implementation completeness at five out of five, ``all required
 capabilities working end to end'', citing a README and a check script, at a
-time when I could not sign in to the replacement. The score's release and
-capability scope have not yet been linked to that deployment and journey
-(Section~\ref{sec:audittrail}); this is chronological coexistence, not a
-verified same-release contradiction. The judge read repository text rather
+time when I could not sign in to the replacement. The score and blocked
+sign-in occurred during the same period. I still need to check whether the
+score covered that release and journey (Section~\ref{sec:audittrail}).
+The judge read repository text rather
 than executing the intended journey. Neither its repeatability nor its
 agreement with observed product behaviour was measured; its score cannot
 substitute for that behavioural check.
@@ -1226,8 +1229,8 @@ hedge density, and any divergence between automated scores and a live demo.
 
 \emph{Some recorded lessons appeared to fall off the loop's read path, while
 important design decisions survived.} Maintaining the structured log and
-memory became difficult as the record grew. I observed drift, not a complete
-loss of the project's theory. Before the loop, my
+memory became difficult as the record grew. Important design decisions
+survived, even as some recorded lessons appeared to be lost. Before the loop, my
 use of the MVP produced concrete lessons: the simplicity requirements, a
 deliberately public development profile for throwaway stacks, and the
 callback, role and staff-binding steps that made sign-in work. All were
@@ -1256,8 +1259,9 @@ a larger instruction set with weaker access to the relevant lesson.
 Naur explains why recording was not enough. A program's theory lives in the
 people who build it, and a second team with full documentation can still
 destroy a design's simplicity~\cite{naur1985theory}. In an agent loop, every
-session may face an analogous reconstruction problem; this is an analogy,
-not a measured loss of understanding. Advice to share full context between
+session may face an analogous reconstruction problem. The comparison with
+Naur is interpretive. The case provides no measure of lost understanding.
+Advice to share full context between
 agents~\cite{yan2025multiagents} and the failure modes catalogued for
 multi-agent systems~\cite{cemri2025multiagent} describe the same risk. HVE
 Core's choice to carry context in files on disk is necessary but not
@@ -1271,8 +1275,9 @@ derive rebuildable views and retrieve compact, task-specific context with
 provenance and access controls. Updates are reviewed, and measured outcomes
 feed later decisions~\cite{pavlenko2026factory}. This distinguishes storing
 lessons from making them usable in the next decision; a small read path need
-not mean discarding history. It is an architectural alternative to an
-accumulating log, not a tested remedy for learning evaporation in this case.
+not mean discarding history. This architecture offers another way to retrieve
+accumulated lessons. Its effect on learning evaporation in this case remains
+untested.
 
 \subsection{Process-gate inflation}\label{sec:m4}
 
@@ -1320,8 +1325,9 @@ while none disconfirms the claim that the intended user journey works.
 Independence here means evidence obtained by exercising the outcome rather
 than rereading its completion record; it need not imply a different model.
 The loop prioritised completing the specified plan rather than shortening the
-path to such feedback. This is my proposed central mechanism, not an isolated
-cause. Nothing in the coordinator kept a usable system alive:
+path to such feedback. I regard feedback starvation as central to the account,
+although the case cannot separate its contribution from the other mechanisms.
+Nothing in the coordinator kept a usable system alive:
 no invariant said that after every merge I must still be able to sign in and
 do my work. Done meant artefacts, criteria and gates. In the MVP week the
 feedback loop included my intermittent use, with some changes made the same
@@ -1360,7 +1366,8 @@ checkpoint as conditions of every cycle, to test whether they interrupt it.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\linewidth]{fig-causal-loop.png}
-\caption{Hypothesised reinforcing relationships, not estimated causal links.
+\caption{Proposed reinforcing relationships drawn from the case interpretation.
+Their causal effects remain unmeasured.
 Context overload is unmeasured. The proposed human-checkpoint intervention
 differs from the consolidation package tested in Section~\ref{sec:experiment}.}\label{fig:loop}
 \end{figure}
@@ -1433,8 +1440,8 @@ consolidates the retained repository between feature steps and measures
 retained contracts and a withheld change request.
 
 The proposed consolidation harness tests a bounded part of reflective
-correction. The pause is scheduled by the harness, not chosen by the agent;
-the agent is not authorised to reject features or redirect the product.
+correction. The harness schedules each pause. The agent is not authorised to
+reject features or redirect the product.
 After every feature the loop stops, and an agent:
 \begin{enumerate}[leftmargin=*]
 \item runs the tests and a metrics script that lists complexity hotspots,
@@ -1475,9 +1482,9 @@ the package will be evaluated.
 \FloatBarrier
 \section{Testing the harness: an experiment protocol}\label{sec:experiment}
 
-The proposed contribution is a controlled comparison of scheduled post-feature
-consolidation, not the invention of agent clean-up or objective-guided
-optimisation~\cite{pavlenko2026factory}. It tests whether an agent
+The study compares scheduled post-feature consolidation with feature-only
+delivery and read-only review, building on existing agent clean-up and
+optimisation work~\cite{pavlenko2026factory}. It tests whether an agent
 can perform a bounded part of reflective correction, rather than whether
 another agent can autonomously steer the whole development process. Lulla et~al.'s
 registered-report protocol, which treats agent configurations as experimental
@@ -1634,8 +1641,8 @@ study cannot say what consolidation would displace under a fixed total budget.
 Those limitations constrain the causal interpretation even if allocation and
 the planned checks are implemented correctly.
 
-The additional agent is a distinct session with a different responsibility,
-not a different pinned model or an independent source of truth. Its value
+The same pinned model receives a fresh session and a different brief; its
+conclusions still require verification. Its value
 must be demonstrated by behavioural and changeability outcomes, not inferred
 from the existence of another review role.
 
@@ -1670,13 +1677,14 @@ leak flags is not proof of isolation.
 CR1 is intended to remain unavailable to feature, consolidation and review
 sessions until its dedicated change-request session. The tagged packaging and
 actual non-exposure of its request text, as well as its tests, remain to be
-verified. ``Unforeseen'' describes that intended information boundary, not an
-established property of local execution.
+verified. Calling CR1 ``unforeseen'' depends on keeping it hidden until its
+dedicated session; that access boundary still needs verification.
 % TODO(author): independently check hidden tests and cumulative reference solutions against the stated APIs and feature rules; this review is not yet complete.
 % TODO(author): retain and assess the actual local access-probe evidence and any observed exposure; do not claim a successful container-isolation probe or guaranteed hidden-test inaccessibility.
 
-\emph{Procedure and information flow.} The intended sequence below describes
-the reported design, not verified private-runner behaviour. Repository context
+\emph{Procedure and information flow.} The procedure describes the intended
+design. I still need to verify that the private runner implements it.
+Repository context
 is passed between fresh sessions; the evaluator is outside the working
 repository. Access separation and result visibility still require verification.
 \begin{enumerate}[leftmargin=*]
@@ -1703,8 +1711,9 @@ before fresh runs, not in retrospective choices after inspecting outcomes.
 A separate budget-calibration stage is planned with one run per arm over
 ten features, without CR1; its data will not be pooled into the pilot.
 The selected pilot uses S1, arms A, B and C, with four independent runs per
-arm, ten features and CR1. Its twelve trajectories estimate feasibility and
-variation, not seven stable hypothesis effects. The pilot has
+arm, ten features and CR1. The twelve trajectories will assess feasibility and
+variation. Stable estimates for all seven original hypotheses would require a
+larger study. The pilot has
 120 feature, 40 consolidation, 40 review and twelve change-request sessions:
 212 sessions and an upper bound of 89 agent-hours. The separate calibration stage adds fifty
 sessions and twenty agent-hours, making 262 sessions and 109 agent-hours
@@ -1960,8 +1969,8 @@ interval or observed effect triggers replacement or additional pilot runs.
 
 \subsection{Identification and precision limits}\label{sec:protocollimits}
 
-Four trajectories per arm give twelve independent run clusters, not 120
-independent feature observations. They support pilot estimation and
+With four trajectories per arm, the 120 feature steps are repeated observations
+within twelve independent trajectories. They support pilot estimation and
 measurement checks, not seven stable effect claims. One suite, one proprietary
 model and one binary change request restrict transfer; a single final CR1
 cannot establish general or longitudinal maintainability. No power or
@@ -2065,8 +2074,9 @@ work: choosing what not to build, recognising the unusable replacement and
 deciding which earlier lessons mattered. Naur's theory-building account
 helps describe that retained understanding~\cite{naur1985theory}.
 Beck's distinction between visible output and understanding supplies another
-framing~\cite{beck2026mathematicians}. These are responsibilities I exercised
-in this case, not evidence that agents cannot exercise them. The narrower
+framing~\cite{beck2026mathematicians}. These were the judgements I supplied
+during the case. Whether agents could make comparable judgements remains
+open. The narrower
 experimental question is whether bounded post-feature correction preserves
 behaviour and later changeability.
 
@@ -2118,11 +2128,11 @@ deployment dependencies remain central to explaining that particular failure.
 The planned twelve-trajectory pilot asks what scheduled consolidation leaves
 for later work. It separates final behavioural coverage from retained-contract
 loss, probes an unforeseen change and reports the resources consumed.
-Secondary metrics describe, rather than validate, the proposed mechanisms.
+Secondary metrics provide descriptive evidence; testing the proposed mechanisms
+would require further work.
 The pilot has not started; launch checks and registration remain pending.
-The practical question is not how many agents take part, but whether
-their combined work preserves the behaviour and options on which subsequent
-features depend.
+What matters is whether the agents' combined work preserves the behaviour and
+options needed by subsequent features.
 
 \section*{Acknowledgements}
 % TODO(author): thank reviewers once they have commented.
