@@ -7,16 +7,38 @@ from datetime import datetime
 
 from .household_conditions import Condition
 
-VERSION = "indoor-projection-exercise-v1"
-COMPOSED_VERSION = "indoor-projection-composed-exercise-v1"
+VERSION = "indoor-projection-exercise-v2"
+COMPOSED_VERSION = "indoor-projection-composed-exercise-v2"
+TEMPERATURE_SIGMA_C = 0.3
+HUMIDITY_SIGMA_PCT = 1.5
+NOISE_LIMIT_SIGMAS = 3.0
+NOISE_PARAMETERS = {
+    "classification": "Noise scales and tail cap are exercise values, not confidence intervals.",
+    "temperature_sigma_c": TEMPERATURE_SIGMA_C,
+    "humidity_sigma_pct": HUMIDITY_SIGMA_PCT,
+    "limit_sigmas": NOISE_LIMIT_SIGMAS,
+    "residual": "clip(Normal(0,sigma), -limit_sigmas*sigma, limit_sigmas*sigma)",
+}
+OUTPUT_BOUNDS = {
+    "basis": "Per supplied outdoor temperature/RH pair and dwelling model; not calibrated physics.",
+    "temperature_c": "[B - 3*0.3, B + 3*0.3], B = noiseless indoor temperature",
+    "humidity_pct": "clip([100*V/sat(B+3*0.3)-3*1.5,"
+    " 100*V/sat(B-3*0.3)+3*1.5], 0, 100), V = model vapour",
+    "relative_humidity_domain": "0..100 percent, including saturation;"
+    " not a healthy-home threshold",
+    "scope": "Nominal projection before injected sensor faults; CSV rounding may differ by 0.005.",
+}
 COMPOSED_PARAMETERS = {
     "version": COMPOSED_VERSION,
     "classification": "Uncalibrated synthetic exercise composition, not measured performance.",
     "loss": "dwelling * age * construction * active dated measure multiplier",
-    "temperature": "max(8, household setpoint + min(0,(outdoor-5)*0.08*loss)"
-    " + max(0,(outdoor-16)*0.35) + Normal(0,0.3))",
+    "temperature": "B + bounded residual(sigma=0.3),"
+    " B = household setpoint + min(0,(outdoor-5)*0.08*loss)"
+    " + max(0,(outdoor-16)*0.35)",
     "vapour": "sat(outdoor)*RH/100 + household moisture*loss/ventilation",
-    "humidity": "clip(100*vapour/sat(indoor) + Normal(0,1.5), 15, 98)",
+    "humidity": "clip(100*vapour/sat(indoor) + bounded residual(sigma=1.5), 0, 100)",
+    "noise": NOISE_PARAMETERS,
+    "output_bounds": OUTPUT_BOUNDS,
     "legacy_retrofit_flag": "Not used; explicit dated history only",
 }
 DWELLINGS = {
@@ -39,15 +61,18 @@ PARAMETERS = {
     "classification": "Every coefficient, schedule, noise scale and domain is an exercise value.",
     "outdoor_api_domain": {"temperature_c": [-80.0, 60.0], "humidity_pct": [0.0, 100.0]},
     "loss": "dwelling * age * (0.75 if legacy retrofit flag else 1) * construction",
-    "temperature": "max(8, setpoint + min(0,(outdoor-5)*0.08*loss)"
-    " + max(0,(outdoor-16)*0.35) + Normal(0,0.3))",
+    "temperature": "B + bounded residual(sigma=0.3),"
+    " B = setpoint + min(0,(outdoor-5)*0.08*loss) + max(0,(outdoor-16)*0.35)",
     "humidity": "clip(100*(sat(outdoor)*RH/100 + moisture*loss)/sat(indoor)"
-    " + Normal(0,1.5), 15, 98)",
+    " + bounded residual(sigma=1.5), 0, 100)",
+    "noise": NOISE_PARAMETERS,
+    "output_bounds": OUTPUT_BOUNDS,
     "saturation_hpa": "6.112 * exp(17.62*T/(243.12+T)); coefficients retained as exercise values",
     "heating": "all_day 07-23; morning_evening 06-09/17-22; low 17-21 (UTC, end exclusive)",
     "setpoint_c": "20.5 when scheduled and outdoor <15; otherwise 17",
     "moisture_hpa": "1.6 when scheduled; otherwise 1.2",
-    "historical_bounds": "Not established: no approved paired outdoor record is supplied.",
+    "historical_bounds": "Derived per supplied pair; default outdoor series is synthetic."
+    " Historical source provenance belongs to the caller's climate manifest.",
 }
 
 
@@ -65,6 +90,33 @@ def saturation_pressure(temperature: float) -> float:
     return 6.112 * math.exp(17.62 * temperature / (243.12 + temperature))
 
 
+def _bounded_noise(rng: random.Random, sigma: float) -> float:
+    limit = NOISE_LIMIT_SIGMAS * sigma
+    return max(-limit, min(limit, rng.gauss(0, sigma)))
+
+
+def _project(
+    rng: random.Random,
+    t_out: float,
+    rh_out: float,
+    loss: float,
+    setpoint: float,
+    moisture_hpa: float,
+) -> tuple[float, float]:
+    base = setpoint + min(0.0, (t_out - 5) * 0.08 * loss) + max(0.0, (t_out - 16) * 0.35)
+    temperature = base + _bounded_noise(rng, TEMPERATURE_SIGMA_C)
+    vapour = saturation_pressure(t_out) * rh_out / 100 + moisture_hpa
+    humidity = max(
+        0.0,
+        min(
+            100.0,
+            100 * vapour / saturation_pressure(temperature)
+            + _bounded_noise(rng, HUMIDITY_SIGMA_PCT),
+        ),
+    )
+    return temperature, humidity
+
+
 def project(
     sensor: Mapping[str, object],
     rng: random.Random,
@@ -72,7 +124,7 @@ def project(
     outdoor_temperature: float,
     outdoor_humidity: float,
 ) -> tuple[float, float]:
-    """Preserve the legacy equation/RNG order over its supported exercise domain."""
+    """Derive a nominal indoor envelope from each outdoor pair and exercise dwelling."""
     offset = at.utcoffset()
     if offset is None or offset.total_seconds() != 0:
         raise ValueError("Projection time must be UTC-aware")
@@ -102,11 +154,7 @@ def project(
     loss *= construction
     heated = schedules[pattern]
     setpoint = 20.5 if heated and t_out < 15 else 17.0
-    base = setpoint + min(0.0, (t_out - 5) * 0.08 * loss) + max(0.0, (t_out - 16) * 0.35)
-    t_in = max(8.0, base + rng.gauss(0, 0.3))
-    vapour = saturation_pressure(t_out) * rh_out / 100 + (1.6 * loss if heated else 1.2 * loss)
-    rh_in = max(15.0, min(98.0, 100 * vapour / saturation_pressure(t_in) + rng.gauss(0, 1.5)))
-    return t_in, rh_in
+    return _project(rng, t_out, rh_out, loss, setpoint, (1.6 if heated else 1.2) * loss)
 
 
 def project_composed(
@@ -143,10 +191,4 @@ def project_composed(
     ventilation = _number(household.ventilation_multiplier, 0.8, 1.2, "ventilation")
     moisture = _number(household.moisture_increment_hpa, 0.0, 2.4, "moisture")
     loss = DWELLINGS[dwelling] * AGE_BANDS[age] * construction * multiplier
-    base = setpoint + min(0.0, (t_out - 5) * 0.08 * loss) + max(0.0, (t_out - 16) * 0.35)
-    temperature = max(8.0, base + rng.gauss(0, 0.3))
-    vapour = saturation_pressure(t_out) * rh_out / 100 + moisture * loss / ventilation
-    humidity = max(
-        15.0, min(98.0, 100 * vapour / saturation_pressure(temperature) + rng.gauss(0, 1.5))
-    )
-    return temperature, humidity
+    return _project(rng, t_out, rh_out, loss, setpoint, moisture * loss / ventilation)

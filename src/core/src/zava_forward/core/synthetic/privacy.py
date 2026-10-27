@@ -8,6 +8,8 @@ import re
 from datetime import date
 from pathlib import Path
 
+from .sensor_backfill import STOCK_VERSION
+
 PATTERNS = {
     "email": re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+"),
     "uk_phone": re.compile(
@@ -225,7 +227,8 @@ def snapshot_issues(out: Path, kind: str) -> list[str]:
         if not isinstance(shards, list):
             raise ValueError("Sensor manifest requires shards")
         files = ["estimate.json", "sensors.csv", *(str(row["file"]) for row in shards)]
-        if manifest.get("version") == "sensor-backfill-stock-v1":
+        stock_mode = manifest.get("version") in ("sensor-backfill-stock-v1", STOCK_VERSION)
+        if stock_mode:
             files.append("stock-fabric.csv")
     else:
         raise ValueError("Unknown snapshot kind")
@@ -253,7 +256,7 @@ def snapshot_issues(out: Path, kind: str) -> list[str]:
             label = "is_synthetic" if name == "stock-fabric.csv" else "source_type"
             empty_selection = (
                 name == "sensors.csv"
-                and manifest.get("version") == "sensor-backfill-stock-v1"
+                and stock_mode
                 and manifest.get("homes_covered") == 0
                 and manifest.get("rows") == 0
                 and manifest.get("shards") == []

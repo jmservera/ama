@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T20:48:35+00:00",
-  "commit": "388b460b8c6bc2851b66aace5c6402ce925af8b8",
+  "scored_at": "2026-10-27T22:57:42+00:00",
+  "commit": "86479fab306f47fb887721a696cb053b05fc4049",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40579530798",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40597727255",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "3bcdf19475e01fd6796a69fbde86ee268b907d3bca5011e2cc363680fcc81a48",
-    "solution-code": "f236f610fa4299a0d3eac54ad79e8b0fde2014a10ec46081271fc4f9c5a8605a",
+    "solution-code": "1bcb28f93e3e83dd288c735f0a2eff1acb978d206786900c2f97490741ef02e5",
     "infrastructure": "847149d8a5008158615c0dd2d286c5b3872ef9180e18ffb8b1c420552018a661",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -34,7 +34,7 @@
         "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
-      "rationale": "This PR changes infra (release workflow gating, SBOM, pilot-lock guard) only; it does not touch the core synthetic modularity evidence this score rests on. Ceiling retained."
+      "rationale": "Diff is scoped to synthetic indoor_projection/sensor_backfill/privacy modules and their tests (v2 envelope derivation, snapshot version bumps). Baseline modularity evidence is untouched. Ceiling retained."
     },
     "A2": {
       "score": 5,
@@ -46,39 +46,36 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "infra/modules/iothub.bicep:1-130",
-        "infra/tests/test_iothub_module.py:1-40"
-      ],
-      "rationale": "Diff adds release-gating and pilot-lock guard checks consistent with existing security ceiling evidence; already at ceiling so unchanged."
-    },
-    "A4": {
-      "score": 5,
-      "evidence": [
         "src/core/tests/test_historical_backfill.py:1-150",
         "src/core/tests/test_climate_history.py:1-40",
         "src/core/tests/test_sensor_stock.py:1-40"
       ],
-      "rationale": "This diff is infra-only (release gate, SBOM, lock guard); it does not change implementation-completeness evidence. Unchanged."
+      "rationale": "Change adds stale-snapshot-version rejection tests in synthetic privacy/backfill, consistent with existing baseline evidence; does not shift this criterion's ceiling. Unchanged."
     },
-    "A5": {
+    "A4": {
       "score": 5,
       "evidence": [
         "infra/README.md:263-283",
         "infra/main.bicep:99-105"
       ],
-      "rationale": "README/main.bicep add release-gate and SBOM operations detail consistent with the existing operations ceiling; already at ceiling so unchanged."
+      "rationale": "Diff is solution-code only (synthetic data generator envelopes/versioning); it does not change the infra/operations completeness evidence this score rests on. Unchanged."
     },
-    "A6": {
+    "A5": {
       "score": 5,
       "evidence": [
         "src/api/src/zava_forward/api/resident_demo/aoai.py:109-224"
       ],
-      "rationale": "No AI model, prompt, evaluation or guardrail code changed in this infra-only diff. Unchanged baseline."
+      "rationale": "No AI model, prompt, evaluation or guardrail code changed in this synthetic-data diff. Unchanged baseline."
+    },
+    "A6": {
+      "score": 5,
+      "evidence": [],
+      "rationale": "No agentic orchestration changed in this diff; it only touches synthetic sensor data generation. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No agentic orchestration changed in this infra-only diff. Unchanged baseline."
+      "rationale": "Diff changes only src/core synthetic generator code/tests; no capstone deck or documentation files changed. Unchanged baseline ceiling."
     },
     "B1": {
       "score": 3,
@@ -117,7 +114,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "This diff changes only infra files; no capstone deck or capstone documentation files changed. Unchanged baseline ceiling."
+      "rationale": "Diff changes only src/core synthetic generator code and tests, not the capstone deck or documentation. Baseline unchanged."
     },
     "B7": {
       "score": 5,

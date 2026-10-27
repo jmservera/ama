@@ -7642,3 +7642,33 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   inactive/zero replicas; all four app minima 0, eight Manual jobs and SQL
   Standard/10 DTU preserved. Publication gates and independent Review are
   recorded separately; this entry is not hosted or human approval.
+
+## [2026-10-27] query | Indoor outdoor-record-derived exercise bounds (#179)
+
+* Updated the existing IoT research synthesis with a dated three-criterion
+  #179 audit and indexed it in the knowledge-base README; core README records
+  the v2 equations, assumptions, envelopes and changed seeded-value boundary.
+* Both indoor paths now derive bounds from each supplied outdoor pair and
+  dwelling/household model with explicitly exercise-valued capped noise,
+  replacing the fixed 8 C floor and 15..98% clips. Physical RH saturation
+  remains distinct from an exercise threshold.
+* Added independent equation/envelope, RNG order/state, forced-tail,
+  saturation, domain/sensitivity and pinned public hourly-history tests.
+  No new climate retrieval, private data, calibration or live approval.
+* Preserved original historical stack, aggregate hashes, adverse Review and
+  legal/operational blockers. Model-consistent synthetic bounds do not close
+  parent #177 or establish PRD AC-066--068, OD-43 or real-dwelling physics.
+
+## [2026-10-27] query | Indoor snapshot versioning correction (#179, PR #502)
+
+* Filed the deliberate projection-v2 row-change decision in the existing
+  synthetic-data determinism/versioning synthesis, core README and index.
+  New default/stock/composed/fault snapshot versions distinguish new bytes
+  without changing fault algorithms, reading schemas or published datasets.
+* Preserved the original sensor golden hash as historical evidence; current
+  golden binds literal snapshot/model versions. Scale/register goldens remain
+  unchanged. Current loaders reject stale snapshot versions, while privacy
+  auditing still recognizes historical and current stock snapshot layouts.
+* Original targeted validation and adverse hosted failure remain in dated RPI
+  evidence. The correction requires exact full core CI tests, lint and mypy;
+  no cloud, private dataset, heavy gate or real-use approval is introduced.

@@ -30,7 +30,10 @@ from pathlib import Path
 from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults, sensor_identity
 from zava_forward.core.synthetic import indoor_projection, household_conditions, retrofit_effects
 
-VERSION = "sensor-backfill-v2"
+VERSION = "sensor-backfill-v3"
+STOCK_VERSION = "sensor-backfill-stock-v2"
+FAULT_VERSION = "sensor-backfill-faults-v2"
+COMPOSED_VERSION = "sensor-backfill-integrated-v2"
 SCHEMA_VERSION = "reading-v1"
 SEED = 183
 SOURCE_TYPE = "SYNTHETIC"
@@ -341,7 +344,7 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
             writer.writerows(stock.fabric_rows())
         extra_files.append(fabric_path)
         manifest.update(
-            version="sensor-backfill-stock-v1", stock_fixture_version=None,
+            version=STOCK_VERSION, stock_fixture_version=None,
             stock_seed=stock_fabric.SEED, stock_homes_declared=stock.register_homes,
             stock_input_sha256=stock.input_sha256, stock_fabric_version=stock_fabric.VERSION,
             stock_adapter_version=sensor_stock.VERSION, coverage=stock.coverage(),
@@ -352,7 +355,8 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         manifest["parameters"]["construction_loss"] = sensor_stock.CONSTRUCTION_LOSS
         manifest["parameters"]["classification"] = "All projection and fault parameters are exercise values, not calibrated building physics or resident judgements."
     if faults is not None:
-        manifest.update(version=sensor_faults.VERSION, schema_version=sensor_faults.SCHEMA_VERSION,
+        manifest.update(version=FAULT_VERSION, fault_model_version=sensor_faults.VERSION,
+                        schema_version=sensor_faults.SCHEMA_VERSION,
                         storage="Synthetic CSV observations with explicit units/calibration; not compatible with the legacy SQL loader")
         manifest.pop("ddl_contract", None)
         if stock is not None:
@@ -361,7 +365,7 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         histories = [dict(measure_id=m.measure_id, home_id=m.home_id, kind=m.kind,
                           completed_at=m.completed_at.isoformat(), is_synthetic=m.is_synthetic)
                      for m in sorted(measures, key=lambda m: (m.home_id, m.completed_at, m.measure_id))]
-        manifest.update(version="sensor-backfill-integrated-v1", schema_version=sensor_faults.SCHEMA_VERSION,
+        manifest.update(version=COMPOSED_VERSION, schema_version=sensor_faults.SCHEMA_VERSION,
                         climate_source=climate.manifest(), composed_model=indoor_projection.COMPOSED_PARAMETERS,
                         household_model=dict(version=household_conditions.VERSION,
                                              distributions=household_conditions.DISTRIBUTIONS),
@@ -461,7 +465,7 @@ def load_with_consumer(consumer, out, *, stock, climate, received_at,
     if manifest_path.is_symlink() or manifest_path.stat().st_size > 16_000_000:
         raise ValueError("Unsupported sensor manifest")
     metadata = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if not isinstance(metadata, dict) or metadata.get("version") != "sensor-backfill-integrated-v1":
+    if not isinstance(metadata, dict) or metadata.get("version") != COMPOSED_VERSION:
         raise ValueError("Current composed synthetic snapshot required")
     seed, homes, days, cadence = (metadata[k] for k in ("seed", "homes_covered", "days", "cadence_minutes"))
     if any(type(value) is not int for value in (seed, homes, days, cadence, max_rows)):
@@ -515,8 +519,8 @@ def _verify_snapshot(out, replay, stock, max_rows):
         raise _FaultInput()
     if not isinstance(metadata, dict) or metadata.get("source_type") != SOURCE_TYPE:
         raise ValueError("Synthetic source required")
-    stock_mode = metadata.get("version") == "sensor-backfill-stock-v1"
-    if metadata.get("version") not in (VERSION, "sensor-backfill-stock-v1") or (
+    stock_mode = metadata.get("version") == STOCK_VERSION
+    if metadata.get("version") not in (VERSION, STOCK_VERSION) or (
         metadata.get("schema_version") != SCHEMA_VERSION
         or metadata.get("generator_revision") != provenance.source_revision(revision_sources())
         or stock_mode != isinstance(stock, sensor_stock.Selection)

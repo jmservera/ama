@@ -215,6 +215,7 @@ class SensorStockTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             manifest = sb.write(root, stock=stock, days=2)
+            self.assertEqual(manifest["version"], "sensor-backfill-stock-v2")
             self.assertEqual(manifest["rows"], 0)
             estimate = manifest["estimate"]
             self.assertIsInstance(estimate, dict)

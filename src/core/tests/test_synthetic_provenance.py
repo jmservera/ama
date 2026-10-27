@@ -227,6 +227,12 @@ class PrivacyMutationTests(unittest.TestCase):
             empty_out = Path(tmp) / "excluded"
             sensor_backfill.write(empty_out, stock=excluded, days=1, cadence=360)
             self.assertEqual(privacy.snapshot_issues(empty_out, "sensor"), [])
+            for snapshot in (out, empty_out):
+                path = snapshot / "manifest.json"
+                manifest = json.loads(path.read_text())
+                for version in ("sensor-backfill-stock-v1", "sensor-backfill-stock-v2"):
+                    path.write_text(json.dumps({**manifest, "version": version}))
+                    self.assertEqual(privacy.snapshot_issues(snapshot, "sensor"), [])
 
     def test_integrity_manifest_label_unknown_file_and_malformed_fail_separately(self) -> None:
         out = self.root / "scale"

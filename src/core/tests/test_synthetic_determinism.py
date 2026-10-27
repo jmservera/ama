@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import patch
 
-from zava_forward.core.synthetic import provenance
+from zava_forward.core.synthetic import indoor_projection, provenance
 from zava_forward.core.synthetic import scale_fixture as sf
 from zava_forward.core.synthetic import sensor_backfill as sb
 
@@ -93,7 +93,7 @@ class SyntheticDeterminismTests(unittest.TestCase):
                         count += 1
             self.assertEqual(manifest["rows"], count)
 
-    def test_historical_payloads_are_unchanged(self) -> None:
+    def test_versioned_payload_goldens(self) -> None:
         expected = {
             "scale": {
                 "events.jsonl": "32157fc81abf5c9d6a12dfe564283ec1f067736ea6cf1f1f5864e5cf64e70e60",
@@ -104,7 +104,7 @@ class SyntheticDeterminismTests(unittest.TestCase):
             },
             "sensor": {
                 "readings-0000.csv": (
-                    "657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549"
+                    "25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b"
                 ),
                 "sensors.csv": "1bb5907d55570685a40f0603abd9086def4bd3540726d5f13316d6816b99c400",
             },
@@ -119,6 +119,12 @@ class SyntheticDeterminismTests(unittest.TestCase):
                         hashlib.sha256((root / generator / name).read_bytes()).hexdigest(), digest
                     )
             manifest = json.loads((root / "sensor/manifest.json").read_text())
+            self.assertEqual(manifest["version"], "sensor-backfill-v3")
+            self.assertEqual(indoor_projection.VERSION, "indoor-projection-exercise-v2")
+            self.assertEqual(
+                manifest["parameters"]["indoor_projection"]["version"],
+                "indoor-projection-exercise-v2",
+            )
             self.assertEqual(manifest["start"], sb.START.isoformat())
             self.assertEqual(manifest["as_of"], "2024-10-04")
             self.assertEqual(sb.resolve_window(730, 60)[1].date().isoformat(), "2026-10-01")

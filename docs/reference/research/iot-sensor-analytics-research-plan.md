@@ -373,6 +373,46 @@ The new gate, independent exact-head publication assessment and hosted checks
 are separate prerequisites; no second full Review, full-stock rerun, private-
 register equality, production or human approval is inferred.
 
+### Indoor record-derived envelope correction (2026-10-27, #179)
+
+The later #179 correction replaces the fixed exercise 8 C floor and 15..98%
+RH clips in both projection paths. This supersedes the earlier current-value
+claim that legacy default reading bytes are unchanged, not the original
+stack's findings, tests, Review outcome or recorded aggregate hashes.
+Versions `indoor-projection-exercise-v2` and
+`indoor-projection-composed-exercise-v2` retain the noiseless equations and
+two-draw RNG order but cap each Gaussian residual at three standard deviations.
+The cap, scales, schedules, model coefficients and supported input domains
+remain explicitly exercise assumptions.
+
+For each retained outdoor temperature/RH pair and dwelling model, calculate
+noiseless indoor temperature `B` and vapour `V`. Temperature bounds are
+`[B-0.9,B+0.9]` C; RH bounds are
+`[100*V/sat(B+0.9)-4.5,100*V/sat(B-0.9)+4.5]`, with each endpoint limited
+to the physical 0..100% RH domain. The [core model documentation](../../../src/core/README.md#register-backed-sensor-history-177)
+defines inputs, equations, tail policy, provenance, rounding and nominal/fault
+boundaries. No independent fixed indoor floor/clip is substituted.
+
+The [projection regression suite](../../../src/core/tests/test_indoor_projection.py)
+checks actual hash-pinned public 2023-2024 ERA5 pairs through legacy and
+composed generator paths: all 17,544 hourly pairs for apartments and detached
+dwellings, with independently reconstructed equations, household conditions
+and an explicit synthetic dated retrofit. It also checks supported-domain
+endpoints, forced tails, saturation, weather/fabric sensitivity and exact
+equation/RNG behaviour. These are engineering checks of an exercise model,
+not observed indoor data or empirical physical calibration.
+
+| #179 criterion | Re-evaluation and evidence boundary |
+| --- | --- |
+| 1. Inputs, equations and parameters documented and versioned | Supported by both v2 parameter mappings, manifest/model fingerprint binding tests and the core documentation. |
+| 2. Every parameter sourced or labelled exercise | All coefficients, factors, schedules, domains and noise/tail parameters are explicitly exercise-valued; physical RH saturation is distinguished. No new parameter source is asserted. |
+| 3. Indoor series within plausible bounds derived from outdoor record | Supported at the synthetic exercise boundary by per-pair temperature/vapour-derived envelopes, full retained public hourly-record traversal through both paths and adversarial tests. Not calibrated or validated as a real dwelling model. |
+
+This correction does not establish PRD AC-066 live IoT Hub/SQL/AI acceptance,
+AC-067 operational analysis, AC-068 competent method/threshold approval, OD-43,
+private-stock equality or whole-parent #177 acceptance. Existing monitoring
+choice, manual/safety and human approval boundaries are unchanged.
+
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 
 The source audit at upstream `74617981b71bc3f10bd21d0b78691bc3cf36c473`

@@ -2144,18 +2144,69 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
 The following three component descriptions preserve their original independent
 delivery boundaries. Their approved opt-in integration is described below.
 
-The #179 stacked exercise component extracts the unchanged indoor equation
-to `synthetic.indoor_projection`, version `indoor-projection-exercise-v1`.
-Every factor, schedule, noise scale and coefficient is an exercise assumption;
-`PARAMETERS` records equations and UTC schedule boundaries in each manifest.
-Its supported input domain (-80..60 C, 0..100% RH, known fabric factors) is
-an API guard, not measured climate bounds or a healthy-home threshold.
-Invalid inputs raise `ValueError`. Legacy reading values and RNG order are
-preserved for supported inputs; source fingerprints intentionally change and
-include the extracted helper. Existing snapshots are not migrated.
-No paired historical record or physics calibration is supplied, so #179's
-record-derived physical-bounds criterion remains unmet. This child does not
-integrate the separately reviewed dated-retrofit/household components.
+The #179 exercise component is `synthetic.indoor_projection`. As of 2026-10-27,
+`indoor-projection-exercise-v2` and `indoor-projection-composed-exercise-v2`
+replace v1's fixed 8 C floor and 15..98% RH clips with per-outdoor-record,
+dwelling-derived nominal envelopes. Both paths use the same calculation.
+Every factor, schedule, coefficient, noise scale and tail cap is an exercise
+assumption, not calibrated building physics. `PARAMETERS` and
+`COMPOSED_PARAMETERS` record equations, noise policy and envelope derivation
+in manifests. The supported outdoor input domain (-80..60 C, 0..100% RH,
+known fabric factors) remains an API guard, not measured climate bounds or a
+healthy-home threshold; invalid inputs raise `ValueError`.
+
+For each supplied outdoor pair, let `L` be the dwelling/age/construction loss
+with its applicable retrofit factor. The noiseless indoor temperature is
+`B = setpoint + min(0,(outdoor-5)*0.08*L) + max(0,(outdoor-16)*0.35)`.
+Model vapour `V = sat(outdoor)*outdoor_RH/100 + moisture*L`, divided by the
+ventilation multiplier on the moisture term in composed mode. The saturation
+equation is `sat(T) = 6.112*exp(17.62*T/(243.12+T))` hPa; these coefficients
+also remain exercise values. Temperature and RH residuals are Gaussian draws
+with exercise standard deviations 0.3 C and 1.5 percentage points, each capped
+at +/-3 standard deviations. This tail cap is a selected exercise policy,
+not an empirical confidence interval.
+
+Nominal temperature therefore lies in `[B-0.9, B+0.9]` C. Since saturation
+pressure increases over the supported indoor range and `V >= 0`, nominal RH
+lies between `100*V/sat(B+0.9)-4.5` and `100*V/sat(B-0.9)+4.5`, with each
+endpoint limited to the physical RH domain 0..100%. Saturation can reach 100%;
+there is no replacement fixed exercise humidity floor or ceiling. These bounds
+are causal functions of each actual outdoor pair and dwelling/household input,
+not typed historical extrema. CSV rounding can differ from an endpoint by
+0.005. Injected faults are deliberately outside the nominal-bound guarantee.
+
+Tests traverse all 17,544 paired hours of the pinned public Durham ERA5
+record through both generator paths for two synthetic dwelling forms, with
+explicit household conditions and a dated synthetic retrofit, independently
+checking each row's envelope. Endpoint, forced-tail, saturation and exact
+equation/RNG tests supplement that record-specific evidence. Default outdoor
+inputs remain the labelled synthetic seasonal series; the approved paired
+history requires the explicit climate mode below. This establishes
+model-consistent exercise bounds, not measured indoor plausibility, safety,
+building-physics calibration or operational acceptance.
+The two Gaussian draws retain their order; v2 intentionally changes nominal
+values where v1 clipped or an uncapped tail escaped. Source fingerprints bind
+the helper. Old snapshots remain unchanged and require their original generator
+revision for replay; they are not silently migrated.
+
+Snapshot versions also advance for these intentional row changes: default
+`sensor-backfill-v3`, register `sensor-backfill-stock-v2`, paired-climate
+`sensor-backfill-integrated-v2`, and non-composed fault output
+`sensor-backfill-faults-v2`. The fault snapshot records
+`fault_model_version=sensor-fault-packets-v1`; its packet algorithm, truth
+version and reading schemas are unchanged. Fault-enabled composed output uses
+the integrated v2 snapshot version. Loaders admit only current versions and
+exact current-revision replays; historical snapshots require their original
+generator revision/runtime, not relabelling or automatic migration.
+
+The versioned golden in `tests/test_synthetic_determinism.py` pins default v3
+with projection v2. For its seed183, 12-home, three-day fixture, the reading
+SHA-256 changes from
+`657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549` to
+`25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b`.
+Scale payload and sensor-register goldens remain unchanged. This is a new
+generator baseline, not approval to refresh or overwrite published datasets;
+follow the [snapshot version and refresh policy](../../docs/reference/research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15).
 
 The #180 stacked `synthetic.retrofit_effects` component is deliberately not yet
 wired into the writer. It accepts explicit synthetic `Measure` records with
@@ -2187,7 +2238,7 @@ No demographic inputs, resident assessment or attribution are used.
 The writer still uses its legacy schedules until #179/#183 integration;
 no full household-model history or resident choice approval is claimed.
 
-The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
+The explicit `--register` mode (`sensor-backfill-stock-v2`) reuses merged
 `stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
 attributes or treating the scale fixture as the private stock. Supply a wholly
 synthetic CSV with `synthetic_home_id`, `is_synthetic=true`,
@@ -2232,8 +2283,9 @@ precast concrete 1.10, Timber frame 0.90, partial-fill cavity 0.85 and full-fill
 cavity 0.75. Heating schedules are seeded equal-choice morning/evening, all-day
 or low; they are variation fixtures, not judgements of residents. All factors
 and bounds are exercise assumptions, not calibrated physics or climatic facts.
-The current equations and basic fault rates remain in `sensor_backfill.py`;
-construction factors and exact fabric mappings are in `sensor_stock.py`.
+The shared indoor equations are in `indoor_projection.py`; basic fault rates
+remain in `sensor_backfill.py`, and construction factors and exact fabric
+mappings are in `sensor_stock.py`.
 No dated measure history is supplied: `retrofitted=False` is a modelling
 assumption, not evidence that no works occurred, and no before/after claim follows.
 
@@ -2244,8 +2296,9 @@ for the existing `UNMAPPED-` fault namespace. Reading IDs append epoch seconds.
 Home IDs preserve case and Unicode and must fit 128 UTF-16 code units. For a fresh
 SQL Server database apply `STOCK_SQL_DDL` (`stock-reading-v1`, sensor
 VARCHAR(73), reading VARCHAR(96), home NVARCHAR(128)), then call
-`load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV payloads
-are unchanged; do not use the narrow legacy DDL for stock mode. The loader
+`load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV field
+layouts are unchanged; v2 projection values can differ. Do not use the narrow
+legacy DDL for stock mode. The loader
 does not migrate databases. SQLite tests and portable conditional-insert checks
 do not prove live SQL Server execution.
 
@@ -2290,7 +2343,8 @@ No dates, consent or calibration are inferred from the stock.
 Composed projection is separately versioned: baseline dwelling/age/construction
 loss is multiplied by active dated measures; household setpoint affects indoor
 temperature, and household moisture divided by ventilation affects vapour.
-The legacy `project()` equation and default seeded values remain unchanged.
+Both projection paths now use the v2 derived envelopes described above;
+noiseless equations and RNG draw order are retained, not v1 output values.
 All model coefficients/distributions are exercise assumptions. Manifest hashes
 bind climate/metadata, stock, explicit measure history, source revisions, seed,
 window, cadence, payloads and model versions. No operational approval claim
